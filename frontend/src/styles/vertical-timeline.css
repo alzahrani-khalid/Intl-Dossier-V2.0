@@ -29,7 +29,9 @@
 
 /* Icon container */
 .vertical-timeline-element-icon {
-  box-shadow: 0 0 0 4px hsl(var(--background)), inset 0 2px 0 rgba(0, 0, 0, 0.08),
+  box-shadow:
+    0 0 0 4px hsl(var(--background)),
+    inset 0 2px 0 rgba(0, 0, 0, 0.08),
     0 3px 0 4px rgba(0, 0, 0, 0.05) !important;
   width: 44px !important;
   height: 44px !important;
@@ -39,7 +41,9 @@
 
 .vertical-timeline-element-icon:hover {
   transform: scale(1.1) !important;
-  box-shadow: 0 0 0 6px hsl(var(--background)), inset 0 2px 0 rgba(0, 0, 0, 0.08),
+  box-shadow:
+    0 0 0 6px hsl(var(--background)),
+    inset 0 2px 0 rgba(0, 0, 0, 0.08),
     0 6px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
@@ -116,14 +120,14 @@
 /* Date */
 .vertical-timeline-element-date {
   color: hsl(var(--muted-foreground)) !important;
-  font-size: 0.875rem !important;
+  font-size: 0.75rem !important;
   font-weight: 600 !important;
   padding: 0.5rem 0 !important;
 }
 
 @media only screen and (min-width: 1170px) {
   .vertical-timeline-element-date {
-    font-size: 1rem !important;
+    font-size: 0.8125rem !important;
   }
 }
 
@@ -137,21 +141,21 @@
 /* Title */
 .vertical-timeline-element-title {
   color: hsl(var(--foreground)) !important;
-  font-size: 1rem !important;
+  font-size: 0.875rem !important;
   font-weight: 600 !important;
   margin-bottom: 0.5rem !important;
 }
 
 @media only screen and (min-width: 768px) {
   .vertical-timeline-element-title {
-    font-size: 1.125rem !important;
+    font-size: 0.9375rem !important;
   }
 }
 
 /* Description text */
 .vertical-timeline-element-content p {
   color: hsl(var(--muted-foreground)) !important;
-  font-size: 0.875rem !important;
+  font-size: 0.8125rem !important;
   line-height: 1.6 !important;
   margin: 0.5rem 0 !important;
 }
@@ -211,10 +215,12 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   60% {
     opacity: 1;
     transform: translateY(-10px);
   }
+
   100% {
     transform: translateY(0);
   }
@@ -231,6 +237,7 @@
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -238,7 +245,9 @@
 
 /* Dark mode adjustments */
 :root[data-color-mode='dark'] .vertical-timeline-element-icon {
-  box-shadow: 0 0 0 4px hsl(var(--background)), inset 0 2px 0 rgba(255, 255, 255, 0.08),
+  box-shadow:
+    0 0 0 4px hsl(var(--background)),
+    inset 0 2px 0 rgba(255, 255, 255, 0.08),
     0 3px 0 4px rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -319,10 +328,14 @@
 @keyframes pulse-high {
   0%,
   100% {
-    box-shadow: 0 0 0 4px hsl(var(--background)), 0 0 0 8px hsl(0 84% 60% / 0.4);
+    box-shadow:
+      0 0 0 4px hsl(var(--background)),
+      0 0 0 8px hsl(0 84% 60% / 0.4);
   }
+
   50% {
-    box-shadow: 0 0 0 4px hsl(var(--background)), 0 0 0 12px hsl(0 84% 60% / 0.1);
+    box-shadow:
+      0 0 0 4px hsl(var(--background)),
+      0 0 0 12px hsl(0 84% 60% / 0.1);
   }
 }
-

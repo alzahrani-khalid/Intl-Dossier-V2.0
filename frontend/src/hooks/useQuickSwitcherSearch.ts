@@ -6,8 +6,9 @@
  * Returns search results organized into DOSSIERS and RELATED WORK sections.
  *
  * Features:
- * - Debounced search with 300ms delay
+ * - Debounced search with 150ms delay (optimized for fast feel)
  * - Caching with 60s staleTime
+ * - placeholderData for smooth transitions
  * - Recent items from localStorage
  * - Bilingual support (EN/AR)
  */
@@ -178,7 +179,8 @@ export function useQuickSwitcherSearch(
     enabled?: boolean
   } = {},
 ) {
-  const { debounceMs = 300, limit = 20, enabled = true } = options
+  // Reduced debounce from 300ms to 150ms for faster perceived response
+  const { debounceMs = 150, limit = 20, enabled = true } = options
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
@@ -202,15 +204,18 @@ export function useQuickSwitcherSearch(
     }
   }, [])
 
-  // TanStack Query for search
+  // TanStack Query for search with optimized settings
   const searchQuery = useQuery({
     queryKey: ['quickswitcher-search', debouncedQuery, limit],
     queryFn: () => fetchQuickSwitcherSearch(debouncedQuery, limit),
     enabled: enabled && debouncedQuery.trim().length >= 2,
-    staleTime: 60 * 1000, // 1 minute
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 60 * 1000, // 1 minute - cache results for fast re-queries
+    gcTime: 5 * 60 * 1000, // 5 minutes - keep in garbage collection cache
     retry: 1,
+    // Use previous data while fetching for smooth transitions
     placeholderData: (previousData) => previousData,
+    // Refetch on window focus disabled for command palette
+    refetchOnWindowFocus: false,
   })
 
   // Add item to recent items

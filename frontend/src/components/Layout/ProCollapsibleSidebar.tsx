@@ -322,9 +322,9 @@ export function ProCollapsibleSidebar({
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-4 border-t border-sidebar-border">
+        <div className="px-3 py-2 border-t border-sidebar-border">
           {/* Settings & Help */}
-          <div className="space-y-1 mb-4">
+          <div className="space-y-0.5 mb-2">
             {bottomNavigationItems.map((item) => (
               <SidebarLink
                 key={item.id}
@@ -337,7 +337,7 @@ export function ProCollapsibleSidebar({
 
           {/* Theme, Language & Notifications Controls */}
           {effectiveIsOpen && (
-            <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="flex items-center justify-center gap-1.5 mb-2">
               <LanguageToggle compact />
               <ThemeSelector />
               <NotificationPanel />
@@ -345,7 +345,7 @@ export function ProCollapsibleSidebar({
           )}
 
           {/* User Profile */}
-          <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-sidebar-accent/50 transition-colors">
+          <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-sidebar-accent/50 transition-colors">
             <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
               <span className="text-sm font-bold">{userInitials}</span>
             </div>

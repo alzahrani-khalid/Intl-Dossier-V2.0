@@ -14,49 +14,22 @@ import { supabase } from '@/lib/supabase'
 // Type Definitions (mirrored from Zod schemas)
 // ============================================================================
 
-export type IntelligenceType = 'economic' | 'political' | 'security' | 'bilateral' | 'general'
-export type RefreshStatus = 'fresh' | 'stale' | 'refreshing' | 'error' | 'expired'
+import type {
+  IntelligenceReport as SharedIntelligenceReport,
+  DataSourceMetadata as SharedDataSourceMetadata,
+  AnythingLLMMetadata as SharedAnythingLLMMetadata,
+  IntelligenceType as SharedIntelligenceType,
+  RefreshStatus as SharedRefreshStatus,
+} from '../types/intelligence-reports.types'
+import { isIntelligenceExpired } from '../types/intelligence-reports.types'
+
+export type IntelligenceType = SharedIntelligenceType
+export type RefreshStatus = SharedRefreshStatus
+export type DataSourceMetadata = SharedDataSourceMetadata
+export type AnythingLLMMetadata = SharedAnythingLLMMetadata
+export type IntelligenceReport = SharedIntelligenceReport
 export type Priority = 'low' | 'normal' | 'high'
 export type Language = 'en' | 'ar'
-
-export interface DataSourceMetadata {
-  source: string
-  endpoint?: string
-  retrieved_at: string
-  confidence?: number
-}
-
-export interface AnythingLLMMetadata {
-  model?: string
-  tokens_used?: number
-  sources_cited?: string[]
-}
-
-export interface IntelligenceReport {
-  id: string
-  entity_id: string
-  entity_type: 'country' | 'organization' | 'forum' | 'topic' | 'working_group'
-  intelligence_type: IntelligenceType
-  title: string
-  title_ar?: string
-  content: string
-  content_ar?: string
-  confidence_score: number
-  refresh_status: RefreshStatus
-  cache_expires_at: string
-  cache_created_at: string
-  last_refreshed_at: string
-  is_expired: boolean
-  time_until_expiry_hours?: number
-  data_sources_metadata: DataSourceMetadata[]
-  metrics?: Record<string, string> | null // Key indicators (GDP growth, inflation, etc.)
-  anythingllm_workspace_id?: string
-  anythingllm_query?: string
-  anythingllm_response_metadata?: AnythingLLMMetadata
-  version: number
-  created_at: string
-  updated_at: string
-}
 
 export interface GetIntelligenceParams {
   entity_id: string
@@ -390,7 +363,9 @@ export async function isIntelligenceStale(entityId: string): Promise<boolean> {
       include_stale: true,
     })
 
-    return response.data.some((report) => report.is_expired || report.refresh_status === 'stale')
+    return response.data.some(
+      (report) => isIntelligenceExpired(report) || report.refresh_status === 'stale',
+    )
   } catch (error) {
     console.error('Failed to check intelligence staleness:', error)
     return false
@@ -425,7 +400,7 @@ export async function getStaleIntelligenceTypes(entityId: string): Promise<Intel
     })
 
     return response.data
-      .filter((report) => report.is_expired || report.refresh_status === 'stale')
+      .filter((report) => isIntelligenceExpired(report) || report.refresh_status === 'stale')
       .map((report) => report.intelligence_type)
   } catch (error) {
     console.error('Failed to get stale intelligence types:', error)

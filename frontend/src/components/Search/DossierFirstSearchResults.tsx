@@ -237,9 +237,9 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
     <button
       onClick={handleClick}
       className={cn(
-        'w-full text-start rounded-lg border border-gray-200 p-4 transition-all',
-        'hover:border-blue-500 hover:shadow-md dark:border-gray-700 dark:hover:border-blue-400',
-        'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+        'w-full text-start rounded-xl border border-border/40 bg-card/60 backdrop-blur-sm p-5 transition-all duration-300',
+        'hover:border-primary/20 hover:bg-card/90 hover:shadow-lg hover:-translate-y-0.5',
+        'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2',
       )}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -384,9 +384,9 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
     <button
       onClick={handleClick}
       className={cn(
-        'w-full text-start rounded-lg border border-gray-200 p-3 transition-all',
-        'hover:border-blue-500 hover:shadow-md dark:border-gray-700 dark:hover:border-blue-400',
-        'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+        'w-full text-start rounded-xl border border-border/40 bg-card/60 backdrop-blur-sm p-4 transition-all duration-300',
+        'hover:border-primary/20 hover:bg-card/90 hover:shadow-lg hover:-translate-y-0.5',
+        'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2',
       )}
       dir={isRTL ? 'rtl' : 'ltr'}
     >

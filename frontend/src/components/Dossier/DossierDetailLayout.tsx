@@ -176,7 +176,7 @@ export function DossierDetailLayout({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 truncate">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight mb-2 truncate text-foreground">
             {isRTL ? dossier.name_ar : dossier.name_en}
           </h1>
           {(dossier.description_en || dossier.description_ar) && (

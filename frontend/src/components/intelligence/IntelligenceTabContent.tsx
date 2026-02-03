@@ -330,9 +330,9 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           </p>
         </div>
 
-        {/* Geographic Context Summary - Replaces Filters */}
+        {/* Geographic Context Summary - Compact */}
         {dossier?.extension && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4 bg-muted/50 rounded-lg border">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 p-3 bg-muted/50 rounded-lg border">
             {/* ISO Code */}
             <div className="flex items-start gap-2">
               <Globe className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
@@ -416,7 +416,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
       {/* Dashboard Sections Grid - Mobile First Responsive */}
       <div
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
         role="list"
         aria-label={t('intelligence.dashboardSectionsLabel', 'Intelligence sections')}
       >

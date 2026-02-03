@@ -301,16 +301,18 @@ export function CommandPalette({ className }: CommandPaletteProps) {
   }, [location.pathname])
 
   // Use the QuickSwitcher search hook for dossier/work item search
+  // Reduced debounce to 150ms for faster perceived response
   const {
     setQuery: setDossierQuery,
     dossiers,
     relatedWork,
     recentItems,
     isLoading: isSearchLoading,
+    isFetching: isSearchFetching,
     handleDossierSelect,
     handleWorkItemSelect,
     getDisplayTitle,
-  } = useQuickSwitcherSearch({ enabled: isCommandPaletteOpen, debounceMs: 200 })
+  } = useQuickSwitcherSearch({ enabled: isCommandPaletteOpen, debounceMs: 150 })
 
   // Sync search query with dossier query
   useEffect(() => {
@@ -728,8 +730,8 @@ export function CommandPalette({ className }: CommandPaletteProps) {
             </div>
           </CommandEmpty>
 
-          {/* Loading indicator for search */}
-          {isSearchLoading && searchQuery.trim().length >= 2 && (
+          {/* Loading indicator for search - only show for initial load, not refetch */}
+          {isSearchLoading && !isSearchFetching && searchQuery.trim().length >= 2 && (
             <div className="flex items-center justify-center py-4 text-sm text-muted-foreground">
               <Loader2 className="me-2 size-4 animate-spin" />
               {tQs('searching', 'Searching...')}
@@ -815,7 +817,16 @@ export function CommandPalette({ className }: CommandPaletteProps) {
           {/* DOSSIERS Section (when searching) */}
           {searchQuery.trim().length >= 2 && dossiers.length > 0 && (
             <>
-              <CommandGroup heading={tQs('dossiers_section', 'Dossiers')}>
+              <CommandGroup
+                heading={
+                  <span className="flex items-center gap-2">
+                    {tQs('dossiers_section', 'Dossiers')}
+                    {isSearchFetching && (
+                      <Loader2 className="size-3 animate-spin text-muted-foreground" />
+                    )}
+                  </span>
+                }
+              >
                 {dossiers.map((dossier) => {
                   const DossierIcon: React.ElementType = dossierTypeIcons[dossier.type] || Folder
                   const badge = getDossierBadge(dossier.type)
@@ -851,7 +862,16 @@ export function CommandPalette({ className }: CommandPaletteProps) {
           {/* RELATED WORK Section (when searching) */}
           {searchQuery.trim().length >= 2 && relatedWork.length > 0 && (
             <>
-              <CommandGroup heading={tQs('related_work_section', 'Related Work')}>
+              <CommandGroup
+                heading={
+                  <span className="flex items-center gap-2">
+                    {tQs('related_work_section', 'Related Work')}
+                    {isSearchFetching && dossiers.length === 0 && (
+                      <Loader2 className="size-3 animate-spin text-muted-foreground" />
+                    )}
+                  </span>
+                }
+              >
                 {relatedWork.map((item) => {
                   const WorkIcon: React.ElementType = workTypeIcons[item.type] || FileText
                   const badge = getWorkItemBadge(item.type)
