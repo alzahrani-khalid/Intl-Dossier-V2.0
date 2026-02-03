@@ -14,9 +14,36 @@ env:
   PNPM_VERSION: '10.18.3'
 
 jobs:
+  repo-policy:
+    name: Repo Policy (Secrets/Artifacts)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Block committed env files and build artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Disallow tracked environment files (except *.example templates and ios/.xcode.env)
+          env_files="$(git ls-files | grep -E '(^|/)\\.env($|\\.)|\\.env$' || true)"
+          forbidden_env_files="$(echo "$env_files" | grep -v -E '\\.example$|^ios/\\.xcode\\.env$' | sed '/^$/d' || true)"
+          if [ -n "${forbidden_env_files:-}" ]; then
+            echo "Forbidden tracked env files found (use *.example templates instead):"
+            echo "$forbidden_env_files"
+            exit 1
+          fi
+
+          # Disallow tracked build artifacts
+          if git ls-files | grep -q '^frontend/dist-test/'; then
+            echo 'Forbidden tracked build artifacts found: frontend/dist-test/'
+            exit 1
+          fi
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    needs: [repo-policy]
     steps:
       - uses: actions/checkout@v4
 
@@ -43,6 +70,7 @@ jobs:
   test-unit:
     name: Unit Tests
     runs-on: ubuntu-latest
+    needs: [repo-policy]
     steps:
       - uses: actions/checkout@v4
 
@@ -73,6 +101,7 @@ jobs:
   test-e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
+    needs: [repo-policy]
     services:
       postgres:
         image: postgres:16-alpine
