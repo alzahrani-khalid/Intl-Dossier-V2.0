@@ -232,13 +232,15 @@ export const httpsRedirect = (req: Request, res: Response, next: NextFunction): 
   // Skip HTTPS redirect for internal Docker network requests
   // These come from nginx proxy or internal services
   const host = req.get('host') || ''
+  const forwardedProto = req.get('x-forwarded-proto')
   const isInternalRequest =
     host.startsWith('localhost') ||
     host.startsWith('127.0.0.1') ||
     host.startsWith('backend') ||
     host.includes(':4000') ||
     // Requests proxied through nginx will have x-forwarded-proto set
-    req.get('x-forwarded-proto') === 'https'
+    // Skip redirect for any proxied request (nginx handles SSL termination)
+    !!forwardedProto
 
   if (isInternalRequest) {
     next()
