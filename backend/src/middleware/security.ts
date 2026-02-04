@@ -229,7 +229,23 @@ export const httpsRedirect = (req: Request, res: Response, next: NextFunction): 
     return
   }
 
-  if (NODE_ENV === 'production' && !req.secure && req.get('x-forwarded-proto') !== 'https') {
+  // Skip HTTPS redirect for internal Docker network requests
+  // These come from nginx proxy or internal services
+  const host = req.get('host') || ''
+  const isInternalRequest =
+    host.startsWith('localhost') ||
+    host.startsWith('127.0.0.1') ||
+    host.startsWith('backend') ||
+    host.includes(':4000') ||
+    // Requests proxied through nginx will have x-forwarded-proto set
+    req.get('x-forwarded-proto') === 'https'
+
+  if (isInternalRequest) {
+    next()
+    return
+  }
+
+  if (NODE_ENV === 'production' && !req.secure) {
     logWarn('HTTP request redirected to HTTPS', {
       path: req.path,
       method: req.method,
