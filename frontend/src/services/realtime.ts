@@ -42,6 +42,19 @@ export interface RealtimeActions {
 
 type RealtimeConnectionState = 'connecting' | 'open' | 'closing' | 'closed'
 
+// Forward declaration for lazy initialization of connection monitoring
+// This prevents the WebSocket error "closed before connection established"
+// when the module loads before authentication or before any subscriptions exist
+let isMonitoringSetup = false
+let setupConnectionMonitoringFn: (() => void) | null = null
+
+const initializeRealtimeMonitoring = () => {
+  if (!isMonitoringSetup && setupConnectionMonitoringFn) {
+    setupConnectionMonitoringFn()
+    isMonitoringSetup = true
+  }
+}
+
 // Zustand store for realtime state
 export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
   subscribeWithSelector((set, get) => ({
@@ -52,6 +65,9 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
     lastError: null,
 
     subscribe: ({ table, event, callback, filter }) => {
+      // Initialize monitoring on first subscription
+      initializeRealtimeMonitoring()
+
       const subscriptionId = crypto.randomUUID()
       const { subscriptions } = get()
 
@@ -274,8 +290,11 @@ const setupConnectionMonitoring = () => {
   }
 }
 
-// Initialize connection monitoring
-setupConnectionMonitoring()
+// Store the setup function reference for lazy initialization
+setupConnectionMonitoringFn = setupConnectionMonitoring
+
+// Export for manual initialization if needed (e.g., after auth)
+export { initializeRealtimeMonitoring }
 
 // Hook for easy subscription management
 export function useRealtimeSubscription() {
@@ -320,6 +339,9 @@ export function usePresence(channelName: string) {
   const [isOnline, setIsOnline] = React.useState(false)
 
   React.useEffect(() => {
+    // Initialize monitoring on first presence subscription
+    initializeRealtimeMonitoring()
+
     const channel = supabase.channel(channelName, {
       config: {
         presence: {
