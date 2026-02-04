@@ -109,19 +109,16 @@ function addJsExtensions(filePath) {
 }
 
 // Files to exclude (Deno edge functions and truly problematic files)
-// Note: AI files are now safe to include - they use Edge Functions for embeddings in production
+// Note: AI files are now safe - they use Edge Functions for embeddings in production
+// The embeddings-service detects production and uses Edge Functions instead of local ONNX
 const excludePatterns = [
   'src/api/ai-extraction/',
   'src/api/pdf-generation/',
   'src/utils/session-invalidator.ts',
   'src/graphql/',
   'src/realtime/WebSocketServer.ts',
-  // Only exclude files that directly use ONNX at import time
-  'src/api/voice.ts', // Uses direct ONNX for transcription
-  'src/api/search.ts', // Uses local embeddings
-  'src/services/semantic-search.service.ts',
-  'src/services/vector.service.ts',
-  'src/services/search.service.ts',
+  // Voice transcription uses Whisper API in production but has ONNX imports
+  'src/api/voice.ts',
   'src/adapters/',
   'src/workers/',
 ];
