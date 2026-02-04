@@ -139,9 +139,20 @@ services:
     environment:
       STORAGE_DIR: /app/server/storage
       SERVER_PORT: 3001
-      # Optional: Configure LLM provider
-      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      # LLM Provider Configuration
+      LLM_PROVIDER: openai
+      OPEN_AI_KEY: ${OPEN_AI_KEY}
+      OPEN_MODEL_PREF: ${OPEN_MODEL_PREF:-gpt-4}
+      # Embedding Configuration
+      EMBEDDING_ENGINE: openai
+      EMBEDDING_MODEL_PREF: text-embedding-ada-002
+      EMBEDDING_MODEL_MAX_CHUNK_LENGTH: 800
+      # Vector DB
+      VECTOR_DB: lancedb
+      # Auth Token for API access
+      AUTH_TOKEN: ${ANYTHINGLLM_API_KEY}
+      # Disable telemetry
+      DISABLE_TELEMETRY: 'true'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/health']
       interval: 30s
