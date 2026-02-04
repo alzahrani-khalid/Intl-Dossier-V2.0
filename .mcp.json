@@ -38,6 +38,10 @@
         "ANYTHINGLLM_API_KEY": "T70PG8S-WRD4EXH-KEVN4ZB-WM1SEG2",
         "ANYTHINGLLM_BASE_URL": "http://localhost:3001/api/v1"
       }
+    },
+    "heroui-react": {
+      "command": "npx",
+      "args": ["-y", "@heroui/react-mcp@latest"]
     }
   }
 }
