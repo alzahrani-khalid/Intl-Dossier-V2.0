@@ -49,6 +49,8 @@ import {
   ConditionalField,
 } from '@/components/ui/form-wizard'
 import { DossierTypeSelector } from '@/components/Dossier/DossierTypeSelector'
+import { AIFieldAssist } from '@/components/Dossier/AIFieldAssist'
+import type { GeneratedFields } from '@/hooks/useAIFieldAssist'
 import {
   Form,
   FormControl,
@@ -206,7 +208,6 @@ const typeIcons: Partial<Record<DossierType, typeof Globe>> = {
   person: UserCircle,
 }
 
-import type { TemplateSection } from '@/types/dossier-template.types'
 import type { DossierExtensionData } from '@/services/dossier-api'
 
 /**
@@ -297,11 +298,9 @@ interface DossierCreateWizardProps {
   onSuccess?: (dossierId: string, dossierType?: DossierType) => void
   onCancel?: () => void
   className?: string
-  /** Initial dossier type (when using a template) */
+  /** Initial dossier type (pre-selected) */
   initialType?: DossierType
-  /** Template sections for guidance (when using a template) */
-  templateSections?: TemplateSection[]
-  /** Recommended tags from template */
+  /** Recommended tags */
   recommendedTags?: string[]
 }
 
@@ -310,7 +309,6 @@ export function DossierCreateWizard({
   onCancel,
   className,
   initialType,
-  templateSections,
   recommendedTags,
 }: DossierCreateWizardProps) {
   const { t, i18n } = useTranslation(['dossier', 'form-wizard', 'contextual-help'])
@@ -393,6 +391,34 @@ export function DossierCreateWizard({
       form.setValue('type', type)
       updateDraft({ type })
       setCurrentStep(1) // Auto-advance to next step
+    },
+    [form, updateDraft],
+  )
+
+  // Handle AI-generated fields
+  const handleAIGenerate = useCallback(
+    (fields: GeneratedFields) => {
+      // Update form fields with AI-generated values
+      form.setValue('name_en', fields.name_en)
+      form.setValue('name_ar', fields.name_ar)
+      if (fields.description_en) {
+        form.setValue('description_en', fields.description_en)
+      }
+      if (fields.description_ar) {
+        form.setValue('description_ar', fields.description_ar)
+      }
+      if (fields.suggested_tags && fields.suggested_tags.length > 0) {
+        form.setValue('tags', fields.suggested_tags)
+      }
+
+      // Also update draft
+      updateDraft({
+        name_en: fields.name_en,
+        name_ar: fields.name_ar,
+        description_en: fields.description_en || undefined,
+        description_ar: fields.description_ar || undefined,
+        tags: fields.suggested_tags || [],
+      })
     },
     [form, updateDraft],
   )
@@ -504,9 +530,9 @@ export function DossierCreateWizard({
       toast.success(t('dossier:create.success'))
 
       if (onSuccess) {
-        onSuccess(newDossier.id, newDossier.type)
+        onSuccess(newDossier.id, newDossier.type as DossierType)
       } else {
-        navigate({ to: getDossierDetailPath(newDossier.id, newDossier.type) })
+        navigate({ to: getDossierDetailPath(newDossier.id, newDossier.type as DossierType) })
       }
     } catch (error: any) {
       toast.error(error?.message || t('dossier:create.error'))
@@ -545,6 +571,15 @@ export function DossierCreateWizard({
       case 1: // Basic information
         return (
           <FormWizardStep stepId="basic" className="space-y-4">
+            {/* AI Field Assist - Optional helper */}
+            {selectedType && (
+              <AIFieldAssist
+                dossierType={selectedType as DossierType}
+                onGenerate={handleAIGenerate}
+                className="mb-2"
+              />
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* English Name */}
               <FormField

@@ -3,8 +3,8 @@ import authRouter from './auth'
 import countriesRouter from './countries'
 import mouRouter from './mous'
 import eventsRouter from './events'
-// AI router disabled in production due to ONNX Runtime incompatibility with Alpine Linux
-// import aiRouter from './ai'
+// AI router - uses its own supabaseAuth middleware
+import aiRouter from './ai'
 import documentsRouter from './documents'
 // Search router disabled due to AI/ONNX dependencies
 // import searchRouter from './search'
@@ -60,8 +60,8 @@ apiRouter.use('/auth', authRouter)
 // Public search route disabled due to AI/ONNX dependencies
 // apiRouter.use('/search', searchRouter)
 
-// AI routes disabled in production due to ONNX Runtime incompatibility
-// apiRouter.use('/ai', aiRouter)
+// AI routes - mounted before authenticateToken as they use supabaseAuth
+apiRouter.use('/ai', aiRouter)
 
 // Protected routes (require authentication)
 apiRouter.use(authenticateToken)

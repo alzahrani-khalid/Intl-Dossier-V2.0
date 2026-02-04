@@ -116,10 +116,10 @@ export const aiConfig: AIConfig = {
     },
     anythingllm: {
       provider: 'anythingllm',
-      apiKey: process.env.ANYTHING_LLM_API_KEY,
-      baseUrl: process.env.ANYTHING_LLM_API_URL || 'http://localhost:3001/api',
-      defaultModel: 'gpt-4o-mini',
-      enabled: !!process.env.ANYTHING_LLM_API_URL || process.env.AI_USE_ANYTHINGLLM === 'true',
+      apiKey: process.env.ANYTHINGLLM_API_KEY,
+      baseUrl: process.env.ANYTHINGLLM_API_URL || 'http://localhost:3001',
+      defaultModel: 'workspace-chat',
+      enabled: !!process.env.ANYTHINGLLM_API_URL || process.env.AI_USE_ANYTHINGLLM === 'true',
     },
   },
   features: {
@@ -154,7 +154,7 @@ export const aiConfig: AIConfig = {
   routing: {
     arabicThreshold: 0.3,
     defaultProvider:
-      process.env.AI_USE_ANYTHINGLLM === 'true' || process.env.ANYTHING_LLM_API_URL
+      process.env.AI_USE_ANYTHINGLLM === 'true' || process.env.ANYTHINGLLM_API_URL
         ? 'anythingllm'
         : ((process.env.ANTHROPIC_API_KEY ? 'anthropic' : 'openai') as AIProvider),
     arabicProvider: null,

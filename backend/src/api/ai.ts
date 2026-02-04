@@ -11,6 +11,7 @@ import multer from 'multer'
 import briefsRouter from './ai/briefs.js'
 import chatRouter from './ai/chat.js'
 import intakeLinkingRouter from './ai/intake-linking.js'
+import dossierFieldAssistRouter from './ai/dossier-field-assist.js'
 import { getAIFeatureStatus, aiConfig } from '../ai/config.js'
 import { embeddingsService } from '../ai/embeddings-service.js'
 
@@ -109,6 +110,9 @@ router.use('/briefs', briefsRouter)
 
 // Mount AI chat routes (SSE streaming)
 router.use('/chat', chatRouter)
+
+// Mount dossier field assist routes (AnythingLLM integration)
+router.use('/dossier-field-assist', dossierFieldAssistRouter)
 
 // Mount AI entity linking routes
 router.use('/', intakeLinkingRouter)

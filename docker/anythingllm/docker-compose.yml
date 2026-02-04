@@ -9,7 +9,7 @@ services:
     image: mintplexlabs/anythingllm:latest
     container_name: anythingllm
     ports:
-      - "3001:3001"
+      - '3001:3001'
     environment:
       # Server configuration
       - SERVER_PORT=3001
@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/api/ping"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/ping']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -65,7 +65,8 @@ services:
 
 volumes:
   anythingllm_storage:
-    driver: local
+    external: true
+    name: intl-dossierv20_anythingllm_data
   anythingllm_documents:
     driver: local
   anythingllm_outputs:
@@ -75,7 +76,6 @@ networks:
   intl-dossier-network:
     driver: bridge
     name: intl-dossier-network
-
 # Usage Instructions:
 # 1. Create .env file in this directory with:
 #    ANYTHINGLLM_API_KEY=your-api-key-here
