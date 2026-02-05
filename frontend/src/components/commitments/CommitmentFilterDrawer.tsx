@@ -11,48 +11,38 @@
  * - Mobile-first, RTL-compatible, 44x44px touch targets
  */
 
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetFooter,
-} from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { CalendarIcon, X } from 'lucide-react';
-import { format } from 'date-fns';
-import { ar, enUS } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { CalendarIcon, X } from 'lucide-react'
+import { format } from 'date-fns'
+import { ar, enUS } from 'date-fns/locale'
+import { cn } from '@/lib/utils'
 import type {
   CommitmentStatus,
   CommitmentPriority,
   CommitmentOwnerType,
   CommitmentFilters,
-} from '@/types/commitment.types';
+} from '@/types/commitment.types'
 
 export interface CommitmentFilterDrawerProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  filters: CommitmentFilters;
-  onFiltersChange: (filters: CommitmentFilters) => void;
-  onApply: () => void;
-  onClear: () => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  filters: CommitmentFilters
+  onFiltersChange: (filters: CommitmentFilters) => void
+  onApply: () => void
+  onClear: () => void
 }
 
-const STATUS_OPTIONS: CommitmentStatus[] = ['pending', 'in_progress', 'completed', 'cancelled'];
-const PRIORITY_OPTIONS: CommitmentPriority[] = ['low', 'medium', 'high', 'critical'];
-const OWNER_TYPE_OPTIONS: CommitmentOwnerType[] = ['internal', 'external'];
+const STATUS_OPTIONS: CommitmentStatus[] = ['pending', 'in_progress', 'completed', 'cancelled']
+const PRIORITY_OPTIONS: CommitmentPriority[] = ['low', 'medium', 'high', 'urgent']
+const OWNER_TYPE_OPTIONS: CommitmentOwnerType[] = ['internal', 'external']
 
 export function CommitmentFilterDrawer({
   open,
@@ -62,75 +52,75 @@ export function CommitmentFilterDrawer({
   onApply,
   onClear,
 }: CommitmentFilterDrawerProps) {
-  const { t, i18n } = useTranslation('commitments');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('commitments')
+  const isRTL = i18n.language === 'ar'
 
   // Local state for form values
-  const [localFilters, setLocalFilters] = useState<CommitmentFilters>(filters);
+  const [localFilters, setLocalFilters] = useState<CommitmentFilters>(filters)
 
   // Sync local state with props when drawer opens
   useEffect(() => {
     if (open) {
-      setLocalFilters(filters);
+      setLocalFilters(filters)
     }
-  }, [open, filters]);
+  }, [open, filters])
 
   // Handle status toggle
   const handleStatusToggle = (status: CommitmentStatus) => {
-    const currentStatus = localFilters.status || [];
+    const currentStatus = localFilters.status || []
     const newStatus = currentStatus.includes(status)
       ? currentStatus.filter((s) => s !== status)
-      : [...currentStatus, status];
-    setLocalFilters({ ...localFilters, status: newStatus.length > 0 ? newStatus : undefined });
-  };
+      : [...currentStatus, status]
+    setLocalFilters({ ...localFilters, status: newStatus.length > 0 ? newStatus : undefined })
+  }
 
   // Handle priority toggle
   const handlePriorityToggle = (priority: CommitmentPriority) => {
-    const currentPriority = localFilters.priority || [];
+    const currentPriority = localFilters.priority || []
     const newPriority = currentPriority.includes(priority)
       ? currentPriority.filter((p) => p !== priority)
-      : [...currentPriority, priority];
-    setLocalFilters({ ...localFilters, priority: newPriority.length > 0 ? newPriority : undefined });
-  };
+      : [...currentPriority, priority]
+    setLocalFilters({ ...localFilters, priority: newPriority.length > 0 ? newPriority : undefined })
+  }
 
   // Handle owner type selection
   const handleOwnerTypeChange = (ownerType: CommitmentOwnerType | undefined) => {
-    setLocalFilters({ ...localFilters, ownerType });
-  };
+    setLocalFilters({ ...localFilters, ownerType })
+  }
 
   // Handle overdue toggle
   const handleOverdueToggle = (checked: boolean) => {
-    setLocalFilters({ ...localFilters, overdue: checked || undefined });
-  };
+    setLocalFilters({ ...localFilters, overdue: checked || undefined })
+  }
 
   // Handle date range changes
   const handleDateFromChange = (date: Date | undefined) => {
     setLocalFilters({
       ...localFilters,
       dueDateFrom: date ? date.toISOString().split('T')[0] : undefined,
-    });
-  };
+    })
+  }
 
   const handleDateToChange = (date: Date | undefined) => {
     setLocalFilters({
       ...localFilters,
       dueDateTo: date ? date.toISOString().split('T')[0] : undefined,
-    });
-  };
+    })
+  }
 
   // Apply filters
   const handleApply = () => {
-    onFiltersChange(localFilters);
-    onApply();
-    onOpenChange(false);
-  };
+    onFiltersChange(localFilters)
+    onApply()
+    onOpenChange(false)
+  }
 
   // Clear filters
   const handleClear = () => {
-    setLocalFilters({});
-    onFiltersChange({});
-    onClear();
-  };
+    setLocalFilters({})
+    onFiltersChange({})
+    onClear()
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -146,9 +136,7 @@ export function CommitmentFilterDrawer({
         <div className="py-6 space-y-6">
           {/* Status Filter */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-start block">
-              {t('filters.status')}
-            </Label>
+            <Label className="text-sm font-medium text-start block">{t('filters.status')}</Label>
             <div className="grid grid-cols-2 gap-2">
               {STATUS_OPTIONS.map((status) => (
                 <label
@@ -167,9 +155,7 @@ export function CommitmentFilterDrawer({
 
           {/* Priority Filter */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-start block">
-              {t('filters.priority')}
-            </Label>
+            <Label className="text-sm font-medium text-start block">{t('filters.priority')}</Label>
             <div className="grid grid-cols-2 gap-2">
               {PRIORITY_OPTIONS.map((priority) => (
                 <label
@@ -188,9 +174,7 @@ export function CommitmentFilterDrawer({
 
           {/* Owner Type Filter */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-start block">
-              {t('filters.ownerType')}
-            </Label>
+            <Label className="text-sm font-medium text-start block">{t('filters.ownerType')}</Label>
             <div className="flex flex-wrap gap-2">
               <Button
                 type="button"
@@ -219,37 +203,28 @@ export function CommitmentFilterDrawer({
           {/* Overdue Toggle - T042 */}
           <div className="flex items-center justify-between p-4 rounded-lg border">
             <div className="space-y-0.5">
-              <Label className="text-sm font-medium text-start block">
-                {t('filters.overdue')}
-              </Label>
+              <Label className="text-sm font-medium text-start block">{t('filters.overdue')}</Label>
               <p className="text-xs text-muted-foreground text-start">
                 {t('filters.overdueDescription')}
               </p>
             </div>
-            <Switch
-              checked={localFilters.overdue || false}
-              onCheckedChange={handleOverdueToggle}
-            />
+            <Switch checked={localFilters.overdue || false} onCheckedChange={handleOverdueToggle} />
           </div>
 
           {/* Date Range Filter - T042a */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-start block">
-              {t('filters.dueDate')}
-            </Label>
+            <Label className="text-sm font-medium text-start block">{t('filters.dueDate')}</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* From Date */}
               <div className="space-y-1.5">
-                <Label className="text-xs text-muted-foreground">
-                  {t('filters.dueDateFrom')}
-                </Label>
+                <Label className="text-xs text-muted-foreground">{t('filters.dueDateFrom')}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       className={cn(
                         'w-full min-h-11 justify-start text-start font-normal',
-                        !localFilters.dueDateFrom && 'text-muted-foreground'
+                        !localFilters.dueDateFrom && 'text-muted-foreground',
                       )}
                     >
                       <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -264,8 +239,8 @@ export function CommitmentFilterDrawer({
                         <X
                           className={`size-4 ${isRTL ? 'me-auto ms-2' : 'ms-auto me-2'} opacity-50 hover:opacity-100`}
                           onClick={(e) => {
-                            e.stopPropagation();
-                            handleDateFromChange(undefined);
+                            e.stopPropagation()
+                            handleDateFromChange(undefined)
                           }}
                         />
                       )}
@@ -274,7 +249,9 @@ export function CommitmentFilterDrawer({
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={localFilters.dueDateFrom ? new Date(localFilters.dueDateFrom) : undefined}
+                      selected={
+                        localFilters.dueDateFrom ? new Date(localFilters.dueDateFrom) : undefined
+                      }
                       onSelect={handleDateFromChange}
                       initialFocus
                       locale={isRTL ? ar : enUS}
@@ -285,16 +262,14 @@ export function CommitmentFilterDrawer({
 
               {/* To Date */}
               <div className="space-y-1.5">
-                <Label className="text-xs text-muted-foreground">
-                  {t('filters.dueDateTo')}
-                </Label>
+                <Label className="text-xs text-muted-foreground">{t('filters.dueDateTo')}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       className={cn(
                         'w-full min-h-11 justify-start text-start font-normal',
-                        !localFilters.dueDateTo && 'text-muted-foreground'
+                        !localFilters.dueDateTo && 'text-muted-foreground',
                       )}
                     >
                       <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -309,8 +284,8 @@ export function CommitmentFilterDrawer({
                         <X
                           className={`size-4 ${isRTL ? 'me-auto ms-2' : 'ms-auto me-2'} opacity-50 hover:opacity-100`}
                           onClick={(e) => {
-                            e.stopPropagation();
-                            handleDateToChange(undefined);
+                            e.stopPropagation()
+                            handleDateToChange(undefined)
                           }}
                         />
                       )}
@@ -319,12 +294,12 @@ export function CommitmentFilterDrawer({
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={localFilters.dueDateTo ? new Date(localFilters.dueDateTo) : undefined}
+                      selected={
+                        localFilters.dueDateTo ? new Date(localFilters.dueDateTo) : undefined
+                      }
                       onSelect={handleDateToChange}
                       disabled={(date) =>
-                        localFilters.dueDateFrom
-                          ? date < new Date(localFilters.dueDateFrom)
-                          : false
+                        localFilters.dueDateFrom ? date < new Date(localFilters.dueDateFrom) : false
                       }
                       initialFocus
                       locale={isRTL ? ar : enUS}
@@ -345,15 +320,11 @@ export function CommitmentFilterDrawer({
           >
             {t('filters.clear')}
           </Button>
-          <Button
-            type="button"
-            onClick={handleApply}
-            className="min-h-11 w-full sm:flex-1"
-          >
+          <Button type="button" onClick={handleApply} className="min-h-11 w-full sm:flex-1">
             {t('filters.apply')}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

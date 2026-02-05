@@ -1,4 +1,7 @@
 /**
+ * @deprecated Use the tasks API instead (services/tasks-api.ts). This hook queries
+ * the legacy assignments table. New code should use useTasks/useMyTasks hooks.
+ *
  * useAssignmentDetail Hook
  *
  * TanStack Query hook with Supabase Realtime subscription for assignment detail.

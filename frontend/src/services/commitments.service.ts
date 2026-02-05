@@ -461,7 +461,7 @@ export function getCommitmentStatusColor(status: CommitmentStatus): string {
  */
 export function getCommitmentPriorityColor(priority: CommitmentPriority): string {
   switch (priority) {
-    case 'critical':
+    case 'urgent':
       return 'text-red-600 dark:text-red-400'
     case 'high':
       return 'text-orange-600 dark:text-orange-400'

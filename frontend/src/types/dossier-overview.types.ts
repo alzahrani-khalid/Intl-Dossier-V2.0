@@ -122,25 +122,13 @@ export interface DocumentsSection {
 // =============================================
 
 /**
- * Work item source types
+ * Work item types - imported from canonical source
  */
-export type WorkItemSource = 'task' | 'commitment' | 'intake'
+import type { WorkSource, WorkStatus, Priority } from './work-item.types'
 
-/**
- * Work item status
- */
-export type WorkItemStatus =
-  | 'pending'
-  | 'in_progress'
-  | 'review'
-  | 'completed'
-  | 'cancelled'
-  | 'overdue'
-
-/**
- * Work item priority
- */
-export type WorkItemPriority = 'low' | 'medium' | 'high' | 'urgent'
+export type WorkItemSource = WorkSource
+export type WorkItemPriority = Priority
+export type WorkItemStatus = WorkStatus | 'overdue'
 
 /**
  * A work item linked to the dossier

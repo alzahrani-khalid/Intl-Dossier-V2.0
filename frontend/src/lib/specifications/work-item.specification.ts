@@ -15,47 +15,24 @@
 import type { Specification, SupabaseQueryBuilder, SpecificationJSON, DateRange } from './types'
 import { BaseSpecification } from './base'
 import { allOf } from './composite'
+import type {
+  WorkSource,
+  TrackingType,
+  UnifiedWorkStatus as WorkItemStatus,
+  Priority as WorkItemPriority,
+  UnifiedWorkItem,
+} from '@/types/work-item.types'
 
-// ============================================
-// Work Item Types (from unified-work.types.ts)
-// ============================================
-
-export type WorkSource = 'commitment' | 'task' | 'intake'
-export type TrackingType = 'delivery' | 'follow_up' | 'sla'
-export type WorkItemStatus =
-  | 'pending'
-  | 'in_progress'
-  | 'completed'
-  | 'cancelled'
-  | 'overdue'
-  | 'resolved'
-  | 'closed'
-  | 'done'
-export type WorkItemPriority = 'low' | 'medium' | 'high' | 'critical' | 'urgent'
+export type { WorkSource, TrackingType, WorkItemStatus, WorkItemPriority }
 
 /**
  * Represents a unified work item (commitment, task, or intake ticket)
  */
-export interface WorkItem {
-  id: string
-  source: WorkSource
-  title: string
-  description: string | null
-  priority: string
-  status: string
-  assigned_to: string
-  deadline: string | null
-  completed_at: string | null
-  created_at: string
-  updated_at: string
-  dossier_id: string | null
-  tracking_type: TrackingType
-  is_overdue: boolean
-  days_until_due: number | null
-}
+export type WorkItem = UnifiedWorkItem
 
 /**
  * Filter parameters for work items (matches WorkItemFilters)
+ * Extended with assignedTo and dateRange for specification use
  */
 export interface WorkItemFilters {
   sources?: WorkSource[]

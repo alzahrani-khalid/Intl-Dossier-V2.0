@@ -30,7 +30,7 @@
     "low": "منخفض",
     "medium": "متوسط",
     "high": "عالي",
-    "critical": "حرج"
+    "urgent": "عاجل"
   },
   "ownerType": {
     "label": "نوع المسؤول",
