@@ -133,6 +133,9 @@
   .ai { border-color: #818cf8; background: #10102a; }
   .support { border-color: #64748b; background: #0f0f1a; }
   .ui-layer { border-color: #06b6d4; background: #0a1a1e; }
+  .backend { border-color: #ef4444; background: #1a0808; }
+  .mobile { border-color: #f97316; background: #1a1008; }
+  .infra { border-color: #84cc16; background: #0d1a08; }
 
   /* ── Flow Diagram ───────────────── */
   .flow-container {
@@ -503,6 +506,36 @@
   .map-node.mn-ai { background: #10102a; border: 1.5px solid #818cf8; color: #a5b4fc; }
   .map-node.mn-user { background: #0d1a16; border: 1.5px solid #6ee7b7; color: #6ee7b7; }
   .map-node.mn-ui { background: #0a1a1e; border: 1.5px solid #06b6d4; color: #22d3ee; }
+  .map-node.mn-backend { background: #1a0808; border: 1.5px solid #ef4444; color: #f87171; }
+  .map-node.mn-mobile { background: #1a1008; border: 1.5px solid #f97316; color: #fb923c; }
+  .map-node.mn-infra { background: #0d1a08; border: 1.5px solid #84cc16; color: #a3e635; }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+  }
+  .stat-card {
+    padding: 20px 16px;
+    border-radius: 12px;
+    background: #111127;
+    border: 1px solid #1e1e3a;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: #3b82f6; }
+  .stat-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: #888;
+    line-height: 1.3;
+  }
 
   .connector-label {
     display: block;
@@ -577,6 +610,9 @@
     <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div>UI & Frontend Layer</div>
     <div class="legend-item"><div class="legend-dot" style="background:#6ee7b7"></div>Users & Auth</div>
     <div class="legend-item"><div class="legend-dot" style="background:#64748b"></div>Supporting Entities</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Backend & API</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>Mobile (Expo)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#84cc16"></div>Infrastructure</div>
     <div style="display:flex;gap:8px;align-items:center;margin-inline-start:12px;padding-inline-start:12px;border-inline-start:1px solid #333">
       <span class="change-badge cb-new">new</span>
       <span class="change-badge cb-changed">changed</span>
@@ -1525,13 +1561,13 @@
   <div class="section">
     <div class="section-title" style="color:#f472b6">8. Full Entity Connection Map</div>
     <p style="color:#888; font-size:0.82rem; margin-bottom:24px">
-      Every entity type and how it connects to the dossier-centric system. 8 layers from UI to database.
+      Every entity type and how it connects to the dossier-centric system. 11 layers from UI to database.
     </p>
 
     <div class="connection-diagram" style="padding:32px 24px;">
 
       <!-- Layer 0: UI / Frontend -->
-      <div class="map-layer-label">UI Layer &mdash; Frontend Architecture <span class="change-badge cb-new">new</span></div>
+      <div class="map-layer-label">UI Layer &mdash; Frontend Architecture</div>
       <div class="map-layer" style="margin-bottom:32px;">
         <div class="map-node mn-ui">
           🏠 AppShell
@@ -1552,6 +1588,52 @@
         <div class="map-node mn-ui">
           📱 Context FAB
           <span class="connector-label">Route-aware speed dial</span>
+        </div>
+      </div>
+
+      <!-- Layer 0b: Mobile -->
+      <div class="map-layer-label">Mobile Layer &mdash; Expo + React Native <span class="change-badge cb-new">new</span></div>
+      <div class="map-layer" style="margin-bottom:32px;">
+        <div class="map-node mn-mobile">
+          📱 Expo SDK 53
+          <span class="connector-label">iOS + Android</span>
+        </div>
+        <div class="map-node mn-mobile">
+          💾 WatermelonDB
+          <span class="connector-label">Offline-first SQLite</span>
+        </div>
+        <div class="map-node mn-mobile">
+          🎨 RN Paper 5.12
+          <span class="connector-label">Material Design 3</span>
+        </div>
+        <div class="map-node mn-mobile">
+          🔐 Biometric Auth
+          <span class="connector-label">Touch ID / Face ID</span>
+        </div>
+        <div class="map-node mn-mobile">
+          🔔 Push Notifications
+          <span class="connector-label">expo-notifications</span>
+        </div>
+      </div>
+
+      <!-- Layer 0c: Backend API -->
+      <div class="map-layer-label">Backend Layer &mdash; Express API <span class="change-badge cb-new">new</span></div>
+      <div class="map-layer" style="margin-bottom:32px;">
+        <div class="map-node mn-backend">
+          ⚙️ Express 5.1
+          <span class="connector-label">99 services, 44 routes</span>
+        </div>
+        <div class="map-node mn-backend">
+          🏗️ Hexagonal Arch
+          <span class="connector-label">Ports &amp; Adapters</span>
+        </div>
+        <div class="map-node mn-backend">
+          ⚡ 287 Edge Functions
+          <span class="connector-label">Supabase serverless</span>
+        </div>
+        <div class="map-node mn-backend">
+          🔄 BullMQ + Redis
+          <span class="connector-label">Background jobs &amp; cache</span>
         </div>
       </div>
 
@@ -1873,8 +1955,449 @@
     </div>
   </div>
 
+  <div class="sep"></div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 11. BACKEND ARCHITECTURE               -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color:#f87171">11. Backend Architecture <span class="change-badge cb-new">new section</span></div>
+    <p style="color:#888; font-size:0.82rem; margin-bottom:20px">
+      Node.js 18+ / Express 5.1 API using <strong>Hexagonal Architecture</strong> (Ports &amp; Adapters) with Inversify DI. Plus 287 Supabase Edge Functions.
+    </p>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+
+      <!-- Hexagonal Core -->
+      <div style="background:#111127; border:1.5px solid #ef4444; border-radius:14px; padding:24px; grid-column: span 2;">
+        <div style="font-weight:700; color:#f87171; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🏗️</span> Hexagonal Architecture (Ports &amp; Adapters)
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:12px;">
+          <div style="padding:12px 14px; border-radius:8px; background:#1a0808; border:1px solid #7f1d1d; font-size:0.75rem;">
+            <strong style="color:#f87171">Core / Domain</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:4px;">Business rules, domain services<br>No external dependencies</div>
+          </div>
+          <div style="padding:12px 14px; border-radius:8px; background:#1a0808; border:1px solid #7f1d1d; font-size:0.75rem;">
+            <strong style="color:#f87171">Ports (Interfaces)</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:4px;">IRepository, ICachePort<br>ILoggerPort, INotificationPort</div>
+          </div>
+          <div style="padding:12px 14px; border-radius:8px; background:#1a0808; border:1px solid #7f1d1d; font-size:0.75rem;">
+            <strong style="color:#f87171">Adapters</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:4px;">Supabase repos, Redis cache<br>Winston logger, BullMQ jobs</div>
+          </div>
+          <div style="padding:12px 14px; border-radius:8px; background:#1a0808; border:1px solid #7f1d1d; font-size:0.75rem;">
+            <strong style="color:#f87171">Container (DI)</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:4px;">Inversify IoC container<br>Token-based injection</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Services -->
+      <div style="background:#111127; border:1.5px solid #ef4444; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#f87171; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">⚙️</span> 99 Backend Services
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Key Services:</strong><br>
+          &bull; <code style="color:#f87171">TaskService</code> &mdash; Kanban workflow<br>
+          &bull; <code style="color:#f87171">CommitmentService</code> &mdash; Promise tracking<br>
+          &bull; <code style="color:#f87171">SearchService</code> &mdash; Full-text + vector<br>
+          &bull; <code style="color:#f87171">IntelligenceService</code> &mdash; Intel signals<br>
+          &bull; <code style="color:#f87171">RelationshipHealthService</code> &mdash; Graph analytics<br>
+          &bull; <code style="color:#f87171">ai-extraction.service</code> &mdash; LLM extraction<br>
+          &bull; <code style="color:#f87171">AnalyticsService</code> &mdash; Dashboards
+        </div>
+      </div>
+
+      <!-- API & Middleware -->
+      <div style="background:#111127; border:1.5px solid #ef4444; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#f87171; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🛣️</span> 44 API Routes + 22 Middleware
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Routes:</strong> after-action, ai, commitments, intake, dossiers, calendar, positions, relationships, contacts, search, admin&hellip;<br><br>
+          <strong>Middleware:</strong><br>
+          &bull; <code style="color:#f87171">auth.middleware</code> &mdash; JWT validation<br>
+          &bull; <code style="color:#f87171">rate-limit</code> &mdash; Request throttling<br>
+          &bull; <code style="color:#f87171">validation</code> &mdash; Zod schema validation
+        </div>
+      </div>
+
+      <!-- Edge Functions -->
+      <div style="background:#111127; border:1.5px solid #ef4444; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#f87171; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">⚡</span> 287 Supabase Edge Functions
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Categories:</strong><br>
+          &bull; After-Actions (18) &mdash; CRUD + approval + versions<br>
+          &bull; AI Services (12) &mdash; extract, summarize, link<br>
+          &bull; Assignments (25) &mdash; auto-assign, escalate<br>
+          &bull; Dossiers (40+) &mdash; CRUD, search, relationships<br>
+          &bull; Documents (15) &mdash; upload, OCR, versions<br>
+          &bull; Calendar (10) &mdash; conflict detection, sync<br>
+          &bull; Intake (20) &mdash; triage, entity linking, dedup<br>
+          &bull; Analytics (15) &mdash; dashboards, KPIs
+        </div>
+      </div>
+
+      <!-- Background Jobs -->
+      <div style="background:#111127; border:1.5px solid #ef4444; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#f87171; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🔄</span> Background Jobs (BullMQ + Redis)
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Job Processors:</strong><br>
+          &bull; <code style="color:#f87171">embedding-processor</code> &mdash; Vector gen queue<br>
+          &bull; <code style="color:#f87171">sla-monitor</code> &mdash; Deadline tracking<br>
+          &bull; <code style="color:#f87171">notification-sender</code> &mdash; Push/email<br><br>
+          <strong>Caching:</strong> Redis 7.x via ioredis<br>
+          <strong>Queue:</strong> BullMQ v5.61 (Redis-backed)
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 12. MOBILE APPLICATION                  -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color:#fb923c">12. Mobile Application (Expo + React Native) <span class="change-badge cb-new">new section</span></div>
+    <p style="color:#888; font-size:0.82rem; margin-bottom:20px">
+      Offline-first mobile app with <strong>Expo SDK 53</strong>, <strong>React Native 0.79</strong>, and <strong>WatermelonDB</strong> for local persistence. Supports iOS &amp; Android.
+    </p>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
+
+      <!-- Core Stack -->
+      <div style="background:#111127; border:1.5px solid #f97316; border-radius:14px; padding:24px; grid-column: span 2;">
+        <div style="font-weight:700; color:#fb923c; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">📱</span> Mobile Tech Stack
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:10px; margin-top:8px;">
+          <div style="padding:10px 14px; border-radius:8px; background:#1a1008; border:1px solid #7c2d12; font-size:0.75rem;">
+            <strong style="color:#fb923c">React Native 0.79</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:2px;">With Expo SDK 53</div>
+          </div>
+          <div style="padding:10px 14px; border-radius:8px; background:#1a1008; border:1px solid #7c2d12; font-size:0.75rem;">
+            <strong style="color:#fb923c">WatermelonDB 0.28</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:2px;">Offline-first SQLite</div>
+          </div>
+          <div style="padding:10px 14px; border-radius:8px; background:#1a1008; border:1px solid #7c2d12; font-size:0.75rem;">
+            <strong style="color:#fb923c">React Native Paper 5.12</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:2px;">Material Design 3 UI</div>
+          </div>
+          <div style="padding:10px 14px; border-radius:8px; background:#1a1008; border:1px solid #7c2d12; font-size:0.75rem;">
+            <strong style="color:#fb923c">React Navigation 7</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:2px;">Native stack + bottom tabs</div>
+          </div>
+          <div style="padding:10px 14px; border-radius:8px; background:#1a1008; border:1px solid #7c2d12; font-size:0.75rem;">
+            <strong style="color:#fb923c">TanStack Query v5</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:2px;">Server state management</div>
+          </div>
+          <div style="padding:10px 14px; border-radius:8px; background:#1a1008; border:1px solid #7c2d12; font-size:0.75rem;">
+            <strong style="color:#fb923c">i18next</strong>
+            <div style="color:#666; font-size:0.68rem; margin-top:2px;">EN/AR bilingual</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Offline Sync -->
+      <div style="background:#111127; border:1.5px solid #f97316; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#fb923c; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🔄</span> Offline-First Sync
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Strategy:</strong> Incremental sync via WatermelonDB<br><br>
+          <strong>Sync Flow:</strong><br>
+          &bull; Pull: Server &rarr; WatermelonDB (delta sync)<br>
+          &bull; Push: Local changes &rarr; Supabase API<br>
+          &bull; Conflict resolution: Last-write-wins<br><br>
+          <strong>Schema:</strong> 11 entities with offline storage<br>
+          <strong>Cleanup:</strong> Automated stale data removal
+        </div>
+      </div>
+
+      <!-- Auth & Security -->
+      <div style="background:#111127; border:1.5px solid #f97316; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#fb923c; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🔐</span> Auth &amp; Security
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Primary:</strong> Supabase Auth (JWT)<br>
+          <strong>Biometrics:</strong> expo-local-authentication<br>
+          &bull; Touch ID / Face ID<br>
+          &bull; Fallback to PIN/password<br><br>
+          <strong>Push:</strong> expo-notifications<br>
+          &bull; Real-time alerts for work items<br>
+          &bull; Deadline reminders
+        </div>
+      </div>
+
+      <!-- Mobile Features -->
+      <div style="background:#111127; border:1.5px solid #f97316; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#fb923c; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">✨</span> Key Mobile Features
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          &bull; Dossier browsing (all 7 types)<br>
+          &bull; Work item management (tasks, commitments)<br>
+          &bull; Camera document capture &amp; upload<br>
+          &bull; Offline-first with background sync<br>
+          &bull; Biometric lock on app open<br>
+          &bull; Push notifications for deadlines<br>
+          &bull; Full Arabic RTL support<br>
+          &bull; Material Design 3 theming
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 13. INFRASTRUCTURE & DEVOPS             -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color:#a3e635">13. Infrastructure &amp; DevOps <span class="change-badge cb-new">new section</span></div>
+    <p style="color:#888; font-size:0.82rem; margin-bottom:20px">
+      Monorepo with <strong>Turborepo</strong> + <strong>pnpm</strong>. Production on <strong>DigitalOcean</strong> with Docker Compose. Full monitoring via <strong>Prometheus + Grafana</strong>.
+    </p>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+
+      <!-- Data Flow -->
+      <div style="background:#111127; border:1.5px solid #84cc16; border-radius:14px; padding:24px; grid-column: span 3;">
+        <div style="font-weight:700; color:#a3e635; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🌐</span> System Data Flow
+        </div>
+        <div class="flow-container">
+          <div class="flow">
+            <div class="flow-step">
+              <div class="flow-box" style="border-color:#06b6d4">
+                <div class="label" style="color:#22d3ee">React Frontend</div>
+                <div class="desc">Vite + TanStack Router/Query<br>Port 5173 (dev) / Nginx (prod)</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-box" style="border-color:#84cc16">
+                <div class="label" style="color:#a3e635">Nginx Reverse Proxy</div>
+                <div class="desc">SSL termination, routing<br>Port 80/443</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-box" style="border-color:#ef4444">
+                <div class="label" style="color:#f87171">Express API</div>
+                <div class="desc">99 services, 44 routes<br>Port 4000</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-box" style="border-color:#3b82f6">
+                <div class="label" style="color:#60a5fa">Supabase</div>
+                <div class="desc">PostgreSQL 17 + 287 Edge Functions<br>Auth, RLS, Realtime, Storage</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-box" style="border-color:#818cf8">
+                <div class="label" style="color:#a5b4fc">AnythingLLM</div>
+                <div class="desc">Self-hosted AI<br>Port 3001</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-box" style="border-color:#ef4444">
+                <div class="label" style="color:#f87171">Redis</div>
+                <div class="desc">Cache + BullMQ queues<br>Port 6379</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Production Environment -->
+      <div style="background:#111127; border:1.5px solid #84cc16; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#a3e635; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🚀</span> Production (DigitalOcean)
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Droplet:</strong> 138.197.195.242<br>
+          <strong>OS:</strong> Ubuntu (Docker-based)<br><br>
+          <strong>Docker Compose Services:</strong><br>
+          &bull; <code style="color:#a3e635">nginx</code> &mdash; Reverse proxy (80/443)<br>
+          &bull; <code style="color:#a3e635">frontend</code> &mdash; React/Vite container<br>
+          &bull; <code style="color:#a3e635">backend</code> &mdash; Express API container<br>
+          &bull; <code style="color:#a3e635">redis</code> &mdash; Caching layer<br>
+          &bull; <code style="color:#a3e635">anythingllm</code> &mdash; AI service<br>
+          &bull; <code style="color:#a3e635">certbot</code> &mdash; SSL cert renewal
+        </div>
+      </div>
+
+      <!-- Staging / Supabase -->
+      <div style="background:#111127; border:1.5px solid #84cc16; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#a3e635; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🗄️</span> Supabase (Staging)
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Project:</strong> Intl-Dossier<br>
+          <strong>Region:</strong> eu-west-2<br>
+          <strong>DB:</strong> PostgreSQL 17.6<br><br>
+          <strong>Extensions:</strong><br>
+          &bull; <code style="color:#a3e635">pgvector</code> &mdash; Vector embeddings<br>
+          &bull; <code style="color:#a3e635">pg_trgm</code> &mdash; Fuzzy text matching<br>
+          &bull; <code style="color:#a3e635">pg_tsvector</code> &mdash; Full-text search<br><br>
+          <strong>Migrations:</strong> 382 SQL files<br>
+          <strong>RLS:</strong> Enabled on all tables
+        </div>
+      </div>
+
+      <!-- Monitoring -->
+      <div style="background:#111127; border:1.5px solid #84cc16; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#a3e635; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">📊</span> Monitoring Stack
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Prometheus</strong> &mdash; Metrics collection (:9090)<br>
+          <strong>Grafana</strong> &mdash; Dashboards &amp; alerts (:3002)<br>
+          <strong>Node Exporter</strong> &mdash; System metrics<br>
+          <strong>Redis Exporter</strong> &mdash; Cache metrics<br>
+          <strong>Alertmanager</strong> &mdash; Alert routing<br><br>
+          <strong>Docker profile:</strong> <code style="color:#a3e635">monitoring</code><br>
+          Other profiles: <code style="color:#666">ai</code>, <code style="color:#666">full</code>
+        </div>
+      </div>
+
+      <!-- Build & Dev Tooling -->
+      <div style="background:#111127; border:1.5px solid #84cc16; border-radius:14px; padding:24px;">
+        <div style="font-weight:700; color:#a3e635; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem">🛠️</span> Build &amp; Dev Tooling
+        </div>
+        <div style="font-size:0.75rem; color:#888; line-height:1.5;">
+          <strong>Monorepo:</strong> Turborepo v2.6<br>
+          <strong>Package Mgr:</strong> pnpm 10.18<br>
+          <strong>Node:</strong> &ge;20.19.0<br><br>
+          <strong>Workspaces:</strong><br>
+          &bull; <code style="color:#a3e635">frontend/</code> &mdash; React + Vite<br>
+          &bull; <code style="color:#a3e635">backend/</code> &mdash; Express API<br>
+          &bull; <code style="color:#a3e635">mobile/</code> &mdash; Expo app<br>
+          &bull; <code style="color:#a3e635">shared/</code> &mdash; Common types<br><br>
+          <strong>CI:</strong> Husky + lint-staged<br>
+          <strong>Test:</strong> Vitest (unit), Playwright (E2E)
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 14. SYSTEM STATISTICS                   -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color:#fbbf24">14. System at a Glance <span class="change-badge cb-new">new section</span></div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" style="color:#22d3ee">746</div>
+        <div class="stat-label">Frontend Components (TSX)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#22d3ee">76</div>
+        <div class="stat-label">UI Library Components</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#22d3ee">247</div>
+        <div class="stat-label">Custom React Hooks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#f87171">99</div>
+        <div class="stat-label">Backend Services</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#f87171">44</div>
+        <div class="stat-label">API Route Handlers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#f87171">22</div>
+        <div class="stat-label">Middleware Modules</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#a5b4fc">287</div>
+        <div class="stat-label">Supabase Edge Functions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#60a5fa">382</div>
+        <div class="stat-label">DB Migrations (SQL)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#60a5fa">7</div>
+        <div class="stat-label">Dossier Entity Types</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#a78bfa">114</div>
+        <div class="stat-label">TypeScript Type Files</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#fb923c">4</div>
+        <div class="stat-label">Monorepo Workspaces</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#34d399">2</div>
+        <div class="stat-label">Languages (EN/AR)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 15. FULL TECH STACK REFERENCE           -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color:#94a3b8">15. Full Technology Stack <span class="change-badge cb-new">new section</span></div>
+
+    <table class="inherit-table">
+      <thead>
+        <tr>
+          <th style="width:140px;">Layer</th>
+          <th>Technologies</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-cyan">Frontend</span></td>
+          <td style="font-size:0.78rem; color:#aaa;">React 19, TypeScript 5.9, TanStack Router/Query v5, Tailwind CSS 3.4, HeroUI v3, Aceternity UI, shadcn/ui, Framer Motion, Zustand, Jotai, i18next, Vite 5.3</td>
+        </tr>
+        <tr>
+          <td><span class="badge" style="background:#1a1008;color:#fb923c;">Mobile</span></td>
+          <td style="font-size:0.78rem; color:#aaa;">React Native 0.79, Expo SDK 53, WatermelonDB 0.28, React Native Paper 5.12, React Navigation 7, Expo Router, TanStack Query, i18next</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">Backend</span></td>
+          <td style="font-size:0.78rem; color:#aaa;">Node.js 18+, Express 5.1, TypeScript 5.5 (strict), Supabase JS v2.75, BullMQ 5.61, Redis (ioredis), Inversify (DI), Winston (logging)</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">Database</span></td>
+          <td style="font-size:0.78rem; color:#aaa;">PostgreSQL 17 (Supabase), pgvector (1536-dim embeddings), pg_trgm (fuzzy matching), RLS policies, Materialized Views, 382 migrations</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-purple">AI / ML</span></td>
+          <td style="font-size:0.78rem; color:#aaa;">AnythingLLM (self-hosted), OpenAI GPT-4, text-embedding-ada-002, Mastra agents, @xenova/transformers (BGE-M3), LanceDB</td>
+        </tr>
+        <tr>
+          <td><span class="badge" style="background:#0d1a08;color:#a3e635;">DevOps</span></td>
+          <td style="font-size:0.78rem; color:#aaa;">Docker + Docker Compose, Nginx, Prometheus, Grafana, Alertmanager, DigitalOcean, Supabase CLI, Turborepo, pnpm, Husky, Vitest, Playwright</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <div style="text-align:center; padding:40px 0 20px; color:#444; font-size:0.75rem;">
-    Intl-Dossier System Architecture &mdash; Updated 2026-02-05 &mdash; "If it matters to international relations, it lives in a dossier."
+    Intl-Dossier System Architecture &mdash; Updated 2026-02-05 &mdash; 15 sections &mdash; "If it matters to international relations, it lives in a dossier."
   </div>
 
 </div>

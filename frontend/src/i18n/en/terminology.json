@@ -1,0 +1,207 @@
+{
+  "title": "Terminology Glossary",
+  "description": "Bilingual diplomatic and technical terminology management",
+
+  "list": {
+    "title": "Terminology",
+    "description": "View and manage diplomatic terminology",
+    "empty": "No terms found",
+    "emptyDescription": "Add your first term to build the glossary",
+    "create": "Add Term",
+    "search": "Search terminology..."
+  },
+
+  "detail": {
+    "title": "Term Details",
+    "translations": "Translations",
+    "relatedTerms": "Related Terms",
+    "usageHistory": "Usage History"
+  },
+
+  "form": {
+    "create": "Add Term",
+    "edit": "Edit Term",
+    "termEn": "Term (English)",
+    "termAr": "Term (Arabic)",
+    "abbreviationEn": "Abbreviation (English)",
+    "abbreviationAr": "Abbreviation (Arabic)",
+    "definitionEn": "Definition (English)",
+    "definitionAr": "Definition (Arabic)",
+    "usageNotesEn": "Usage Notes (English)",
+    "usageNotesAr": "Usage Notes (Arabic)",
+    "exampleSentenceEn": "Example Sentence (English)",
+    "exampleSentenceAr": "Example Sentence (Arabic)",
+    "domain": "Domain",
+    "subdomain": "Subdomain",
+    "source": "Source",
+    "sourceUrl": "Source URL",
+    "parentTerm": "Parent Term",
+    "relatedTerms": "Related Terms",
+    "synonymsEn": "Synonyms (English)",
+    "synonymsAr": "Synonyms (Arabic)",
+    "tags": "Tags",
+    "frequencyOfUse": "Frequency of Use",
+    "isApproved": "Approved",
+    "isActive": "Active"
+  },
+
+  "domains": {
+    "diplomatic": "Diplomatic",
+    "legal": "Legal",
+    "technical": "Technical",
+    "organizational": "Organizational",
+    "un_system": "UN System",
+    "oic_system": "OIC System",
+    "gcc_system": "GCC System",
+    "government": "Government",
+    "correspondence": "Correspondence",
+    "document_type": "Document Type",
+    "priority": "Priority",
+    "role": "Role",
+    "status": "Status",
+    "process": "Process",
+    "general": "General"
+  },
+
+  "frequency": {
+    "rare": "Rare",
+    "uncommon": "Uncommon",
+    "common": "Common",
+    "frequent": "Frequent",
+    "very_frequent": "Very Frequent"
+  },
+
+  "translations": {
+    "title": "Additional Translations",
+    "description": "Translations in other languages",
+    "create": "Add Translation",
+    "edit": "Edit Translation",
+    "delete": "Delete Translation",
+    "empty": "No additional translations",
+    "emptyDescription": "Add translations in other languages",
+    "languageCode": "Language Code",
+    "languageName": "Language Name",
+    "term": "Term",
+    "abbreviation": "Abbreviation",
+    "definition": "Definition",
+    "usageNotes": "Usage Notes",
+    "isApproved": "Approved"
+  },
+
+  "usageLog": {
+    "title": "Usage Log",
+    "description": "Track where this term has been used",
+    "entityType": "Entity Type",
+    "entityId": "Entity",
+    "contextSnippet": "Context",
+    "language": "Language",
+    "usedAt": "Used At"
+  },
+
+  "relatedTerms": {
+    "title": "Related Terms",
+    "description": "Terms related to this entry",
+    "add": "Add Related Term",
+    "remove": "Remove Relationship",
+    "relationType": "Relation Type",
+    "relationTypes": {
+      "related": "Related",
+      "parent": "Parent Term",
+      "child": "Child Term"
+    }
+  },
+
+  "mostUsed": {
+    "title": "Most Used Terms",
+    "description": "Frequently used terminology",
+    "usageCount": "Usage Count",
+    "viewAll": "View All"
+  },
+
+  "search": {
+    "title": "Search Terminology",
+    "placeholder": "Search terms in English or Arabic...",
+    "noResults": "No terms found",
+    "matchScore": "Match Score",
+    "searchInDomain": "Search in domain"
+  },
+
+  "approval": {
+    "title": "Term Approval",
+    "pending": "Pending Approval",
+    "approved": "Approved",
+    "approvedBy": "Approved By",
+    "approvedAt": "Approved At",
+    "approve": "Approve Term",
+    "reject": "Reject Term"
+  },
+
+  "filters": {
+    "domain": "Domain",
+    "subdomain": "Subdomain",
+    "isApproved": "Approved Only",
+    "isActive": "Active Only",
+    "hasAbbreviation": "Has Abbreviation",
+    "frequencyOfUse": "Frequency",
+    "createdAfter": "Created After",
+    "createdBefore": "Created Before"
+  },
+
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "approve": "Approve",
+    "reject": "Reject",
+    "deactivate": "Deactivate",
+    "activate": "Activate",
+    "export": "Export Glossary",
+    "import": "Import Terms",
+    "copyToClipboard": "Copy to Clipboard",
+    "viewUsage": "View Usage"
+  },
+
+  "validation": {
+    "termEnRequired": "English term is required",
+    "termArRequired": "Arabic term is required",
+    "domainRequired": "Domain is required",
+    "duplicateTerm": "A term with this name already exists in this domain"
+  },
+
+  "notifications": {
+    "termCreated": "Term added successfully",
+    "termUpdated": "Term updated successfully",
+    "termDeleted": "Term deleted successfully",
+    "termApproved": "Term approved",
+    "termRejected": "Term rejected",
+    "translationAdded": "Translation added successfully",
+    "translationUpdated": "Translation updated successfully",
+    "copiedToClipboard": "Term copied to clipboard"
+  },
+
+  "import": {
+    "title": "Import Terminology",
+    "description": "Import terms from CSV or Excel file",
+    "selectFile": "Select File",
+    "preview": "Preview",
+    "confirm": "Confirm Import",
+    "duplicateHandling": "Duplicate Handling",
+    "skipDuplicates": "Skip duplicates",
+    "updateDuplicates": "Update duplicates",
+    "importResults": "Import Results",
+    "termsImported": "terms imported",
+    "termsSkipped": "terms skipped",
+    "errors": "errors"
+  },
+
+  "export": {
+    "title": "Export Glossary",
+    "description": "Export terminology to file",
+    "format": "Format",
+    "csv": "CSV",
+    "excel": "Excel",
+    "json": "JSON",
+    "includeDomain": "Include domain filter",
+    "includeInactive": "Include inactive terms",
+    "download": "Download"
+  }
+}

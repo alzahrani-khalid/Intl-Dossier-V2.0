@@ -1,0 +1,338 @@
+{
+  "title": "Committees",
+  "description": "Manage committees, nominations, and memberships",
+
+  "list": {
+    "title": "Committees",
+    "description": "View and manage all committees",
+    "empty": "No committees found",
+    "emptyDescription": "Create your first committee to get started",
+    "create": "Create Committee"
+  },
+
+  "detail": {
+    "title": "Committee Details",
+    "members": "Members",
+    "nominations": "Nominations",
+    "documents": "Documents"
+  },
+
+  "form": {
+    "create": "Create Committee",
+    "edit": "Edit Committee",
+    "name": "Committee Name",
+    "description": "Description",
+    "mandate": "Mandate",
+    "forum": "Parent Forum",
+    "organization": "Parent Organization",
+    "memberCount": "Expected Member Count",
+    "minMembers": "Minimum Members",
+    "maxMembers": "Maximum Members",
+    "termStart": "Term Start",
+    "termEnd": "Term End",
+    "termDuration": "Term Duration (months)",
+    "isRenewable": "Term is Renewable",
+    "meetingFrequency": "Meeting Frequency",
+    "nextMeetingDate": "Next Meeting Date",
+    "charterUrl": "Charter URL",
+    "secretariatEmail": "Secretariat Email",
+    "secretariatContact": "Secretariat Contact",
+    "isStanding": "Standing Committee",
+    "isPublic": "Public Committee"
+  },
+
+  "types": {
+    "jury": "Jury",
+    "steering": "Steering Committee",
+    "technical": "Technical Committee",
+    "advisory": "Advisory Board",
+    "executive": "Executive Committee",
+    "working": "Working Group",
+    "drafting": "Drafting Committee",
+    "credentials": "Credentials Committee",
+    "budget": "Budget Committee",
+    "nominations": "Nominations Committee",
+    "ethics": "Ethics Committee",
+    "audit": "Audit Committee",
+    "other": "Other"
+  },
+
+  "status": {
+    "forming": "Forming",
+    "active": "Active",
+    "suspended": "Suspended",
+    "dissolved": "Dissolved",
+    "reconstituting": "Reconstituting"
+  },
+
+  "meetingFrequency": {
+    "weekly": "Weekly",
+    "biweekly": "Bi-weekly",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "biannual": "Bi-annual",
+    "annual": "Annual",
+    "ad_hoc": "Ad Hoc"
+  },
+
+  "nominations": {
+    "title": "Nominations",
+    "description": "Manage committee member nominations",
+    "create": "Submit Nomination",
+    "edit": "Edit Nomination",
+    "delete": "Withdraw Nomination",
+    "empty": "No nominations",
+    "emptyDescription": "Submit a nomination to get started",
+    "nominee": "Nominee",
+    "nomineeName": "Nominee Name",
+    "nomineeTitle": "Nominee Title",
+    "nomineeBio": "Nominee Biography",
+    "nomineeEmail": "Nominee Email",
+    "nomineePhone": "Nominee Phone",
+    "nominatedBy": "Nominated By",
+    "nominatedByType": "Nominator Type",
+    "nominationDate": "Nomination Date",
+    "nominationLetter": "Nomination Letter",
+    "justification": "Justification",
+    "requestedRole": "Requested Role",
+    "requestedTermStart": "Requested Term Start",
+    "requestedTermEnd": "Requested Term End",
+    "cvUrl": "CV URL",
+    "supportingDocuments": "Supporting Documents",
+    "reviewedBy": "Reviewed By",
+    "reviewedAt": "Reviewed At",
+    "statusReason": "Status Reason"
+  },
+
+  "nominatorTypes": {
+    "organization": "Organization",
+    "country": "Country",
+    "person": "Person",
+    "self": "Self-Nomination"
+  },
+
+  "nominationStatus": {
+    "pending": "Pending",
+    "under_review": "Under Review",
+    "shortlisted": "Shortlisted",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "withdrawn": "Withdrawn",
+    "expired": "Expired"
+  },
+
+  "members": {
+    "title": "Members",
+    "description": "Manage committee members",
+    "create": "Add Member",
+    "edit": "Edit Member",
+    "delete": "Remove Member",
+    "empty": "No members",
+    "emptyDescription": "Add members to this committee",
+    "name": "Member Name",
+    "title_field": "Title",
+    "representing": "Representing",
+    "representingType": "Representing Type",
+    "role": "Role",
+    "termStart": "Term Start",
+    "termEnd": "Term End",
+    "isCurrent": "Current Member",
+    "meetingsAttended": "Meetings Attended",
+    "meetingsTotal": "Total Meetings",
+    "lastAttendance": "Last Attendance",
+    "attendanceRate": "Attendance Rate",
+    "statusReason": "Status Reason",
+    "statusEffectiveDate": "Status Effective Date"
+  },
+
+  "memberRoles": {
+    "chair": "Chair",
+    "vice_chair": "Vice Chair",
+    "member": "Member",
+    "alternate": "Alternate",
+    "observer": "Observer",
+    "secretary": "Secretary",
+    "rapporteur": "Rapporteur"
+  },
+
+  "memberStatus": {
+    "active": "Active",
+    "on_leave": "On Leave",
+    "suspended": "Suspended",
+    "resigned": "Resigned",
+    "removed": "Removed",
+    "term_ended": "Term Ended"
+  },
+
+  "representingTypes": {
+    "organization": "Organization",
+    "country": "Country",
+    "self": "Self"
+  },
+
+  "awards": {
+    "title": "Awards & Competitions",
+    "description": "Manage awards and competition programs",
+    "create": "Create Award",
+    "edit": "Edit Award",
+    "delete": "Delete Award",
+    "empty": "No awards",
+    "emptyDescription": "Create your first award program",
+    "name": "Award Name",
+    "awardDescription": "Description",
+    "frequency": "Frequency",
+    "isActive": "Active"
+  },
+
+  "awardTypes": {
+    "excellence": "Excellence Award",
+    "achievement": "Achievement Award",
+    "innovation": "Innovation Award",
+    "best_practice": "Best Practice Award",
+    "contribution": "Contribution Award",
+    "lifetime": "Lifetime Achievement",
+    "recognition": "Recognition Award",
+    "competition": "Competition",
+    "scholarship": "Scholarship",
+    "grant": "Grant",
+    "other": "Other"
+  },
+
+  "awardFrequency": {
+    "annual": "Annual",
+    "biennial": "Biennial",
+    "triennial": "Triennial",
+    "quadrennial": "Quadrennial",
+    "one_time": "One Time",
+    "ongoing": "Ongoing"
+  },
+
+  "tracks": {
+    "title": "Award Tracks",
+    "description": "Manage award categories and tracks",
+    "create": "Create Track",
+    "edit": "Edit Track",
+    "delete": "Delete Track",
+    "name": "Track Name",
+    "category": "Category",
+    "criteria": "Criteria",
+    "maxSubmissions": "Maximum Submissions",
+    "deadline": "Submission Deadline"
+  },
+
+  "trackCategories": {
+    "individual": "Individual",
+    "organization": "Organization",
+    "project": "Project",
+    "research": "Research",
+    "team": "Team",
+    "startup": "Startup",
+    "government": "Government",
+    "ngo": "NGO",
+    "private_sector": "Private Sector"
+  },
+
+  "submissions": {
+    "title": "Submissions",
+    "description": "Manage award submissions",
+    "create": "Submit Entry",
+    "edit": "Edit Submission",
+    "delete": "Withdraw Submission",
+    "empty": "No submissions",
+    "emptyDescription": "Submit your first entry",
+    "submittingOrg": "Submitting Organization",
+    "submissionTitle": "Submission Title",
+    "submissionDescription": "Description",
+    "submittedAt": "Submitted At",
+    "submittedBy": "Submitted By"
+  },
+
+  "submissionStatus": {
+    "draft": "Draft",
+    "submitted": "Submitted",
+    "under_review": "Under Review",
+    "shortlisted": "Shortlisted",
+    "finalist": "Finalist",
+    "winner": "Winner",
+    "runner_up": "Runner Up",
+    "honorable_mention": "Honorable Mention",
+    "rejected": "Rejected",
+    "withdrawn": "Withdrawn",
+    "disqualified": "Disqualified"
+  },
+
+  "reviews": {
+    "title": "Reviews",
+    "description": "Manage submission reviews",
+    "create": "Add Review",
+    "edit": "Edit Review",
+    "reviewer": "Reviewer",
+    "reviewerRole": "Reviewer Role",
+    "score": "Score",
+    "maxScore": "Maximum Score",
+    "recommendation": "Recommendation",
+    "reviewComments": "Comments",
+    "reviewedAt": "Reviewed At"
+  },
+
+  "reviewerRoles": {
+    "juror": "Juror",
+    "expert": "Expert Reviewer",
+    "preliminary": "Preliminary Reviewer",
+    "final": "Final Reviewer"
+  },
+
+  "recommendations": {
+    "strongly_recommend": "Strongly Recommend",
+    "recommend": "Recommend",
+    "neutral": "Neutral",
+    "not_recommend": "Do Not Recommend",
+    "strongly_not_recommend": "Strongly Do Not Recommend"
+  },
+
+  "filters": {
+    "forumId": "Forum",
+    "organizationId": "Organization",
+    "committeeType": "Committee Type",
+    "status": "Status",
+    "isPublic": "Public Only",
+    "nominationStatus": "Nomination Status",
+    "memberRole": "Member Role",
+    "memberStatus": "Member Status",
+    "isCurrent": "Current Members Only"
+  },
+
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "approve": "Approve",
+    "reject": "Reject",
+    "shortlist": "Shortlist",
+    "withdraw": "Withdraw",
+    "submitNomination": "Submit Nomination",
+    "reviewNomination": "Review Nomination",
+    "addMember": "Add Member",
+    "removeMember": "Remove Member",
+    "updateStatus": "Update Status",
+    "viewProfile": "View Profile",
+    "downloadCV": "Download CV"
+  },
+
+  "validation": {
+    "nameRequired": "Committee name is required",
+    "nomineeRequired": "Nominee information is required",
+    "justificationRequired": "Justification is required",
+    "termStartRequired": "Term start date is required",
+    "invalidTermDates": "Term end must be after term start"
+  },
+
+  "notifications": {
+    "committeeCreated": "Committee created successfully",
+    "committeeUpdated": "Committee updated successfully",
+    "nominationSubmitted": "Nomination submitted successfully",
+    "nominationApproved": "Nomination approved",
+    "nominationRejected": "Nomination rejected",
+    "memberAdded": "Member added successfully",
+    "memberRemoved": "Member removed successfully"
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "title": "MoU Lifecycle",
+  "description": "Manage MoU lifecycle stages, parties, and government decisions",
+
+  "lifecycle": {
+    "title": "Lifecycle Management",
+    "currentStage": "Current Stage",
+    "history": "Lifecycle History",
+    "updateStage": "Update Stage",
+    "stageUpdated": "Stage updated successfully"
+  },
+
+  "stages": {
+    "draft": "Draft",
+    "negotiation": "Negotiation",
+    "legal_review": "Legal Review",
+    "signed": "Signed",
+    "cabinet_pending": "Cabinet Pending",
+    "cabinet_approved": "Cabinet Approved",
+    "ratification": "Ratification",
+    "ratified": "Ratified",
+    "in_force": "In Force",
+    "expired": "Expired",
+    "terminated": "Terminated",
+    "superseded": "Superseded"
+  },
+
+  "stageDescriptions": {
+    "draft": "Initial draft being prepared",
+    "negotiation": "Under negotiation with parties",
+    "legal_review": "Under legal review",
+    "signed": "Signed by all parties",
+    "cabinet_pending": "Pending cabinet approval",
+    "cabinet_approved": "Approved by cabinet",
+    "ratification": "Awaiting ratification",
+    "ratified": "Ratified by all parties",
+    "in_force": "Currently in force",
+    "expired": "Agreement has expired",
+    "terminated": "Agreement has been terminated",
+    "superseded": "Replaced by new agreement"
+  },
+
+  "parties": {
+    "title": "MoU Parties",
+    "description": "Manage signatory parties and their status",
+    "create": "Add Party",
+    "edit": "Edit Party",
+    "delete": "Remove Party",
+    "empty": "No parties added",
+    "emptyDescription": "Add signatory parties to this MoU",
+    "partyType": "Party Type",
+    "role": "Role",
+    "signedAt": "Signed At",
+    "signedAtHijri": "Signed At (Hijri)",
+    "signedBy": "Signed By",
+    "signedByTitle": "Title",
+    "status": "Status"
+  },
+
+  "partyTypes": {
+    "country": "Country",
+    "organization": "Organization"
+  },
+
+  "partyRoles": {
+    "signatory": "Signatory",
+    "witness": "Witness",
+    "guarantor": "Guarantor",
+    "observer": "Observer",
+    "implementing": "Implementing Party"
+  },
+
+  "partyStatus": {
+    "pending": "Pending",
+    "signed": "Signed",
+    "ratified": "Ratified",
+    "withdrawn": "Withdrawn"
+  },
+
+  "governmentDecisions": {
+    "title": "Government Decisions",
+    "description": "Track cabinet resolutions and royal decrees",
+    "create": "Add Decision",
+    "edit": "Edit Decision",
+    "delete": "Delete Decision",
+    "empty": "No government decisions",
+    "emptyDescription": "Add related government decisions",
+    "referenceNumber": "Reference Number",
+    "decisionDate": "Decision Date",
+    "decisionDateHijri": "Decision Date (Hijri)",
+    "publishedDate": "Published Date",
+    "gazetteReference": "Gazette Reference",
+    "summary": "Summary",
+    "fullText": "Full Text",
+    "documentUrl": "Document URL",
+    "issuingAuthority": "Issuing Authority",
+    "supersededBy": "Superseded By",
+    "amends": "Amends"
+  },
+
+  "decisionTypes": {
+    "cabinet_resolution": "Cabinet Resolution",
+    "royal_decree": "Royal Decree",
+    "royal_order": "Royal Order",
+    "ministerial_order": "Ministerial Order",
+    "ministerial_circular": "Ministerial Circular",
+    "council_decision": "Council Decision"
+  },
+
+  "decisionStatus": {
+    "draft": "Draft",
+    "active": "Active",
+    "amended": "Amended",
+    "superseded": "Superseded",
+    "revoked": "Revoked"
+  },
+
+  "sensitivityLevels": {
+    "public": "Public",
+    "internal": "Internal",
+    "confidential": "Confidential",
+    "secret": "Secret"
+  },
+
+  "effectTypes": {
+    "authorized": "Authorized",
+    "implemented": "Implemented",
+    "ratified": "Ratified",
+    "amended": "Amended",
+    "terminated": "Terminated",
+    "referenced": "Referenced"
+  },
+
+  "affectedEntities": {
+    "title": "Affected Entities",
+    "description": "Entities affected by this decision",
+    "add": "Add Affected Entity",
+    "entityType": "Entity Type",
+    "effectType": "Effect Type"
+  },
+
+  "entityTypes": {
+    "country": "Country",
+    "organization": "Organization",
+    "mou": "MoU",
+    "dossier": "Dossier",
+    "person": "Person"
+  },
+
+  "cabinetApproval": {
+    "title": "Cabinet Approval",
+    "reference": "Cabinet Reference",
+    "date": "Cabinet Date",
+    "pending": "Pending Cabinet Approval",
+    "approved": "Cabinet Approved"
+  },
+
+  "royalDecree": {
+    "title": "Royal Decree",
+    "reference": "Royal Decree Reference",
+    "date": "Royal Decree Date",
+    "dateHijri": "Royal Decree Date (Hijri)"
+  },
+
+  "amendmentChain": {
+    "title": "Amendment Chain",
+    "description": "View the chain of amendments",
+    "position": "Position in Chain",
+    "viewChain": "View Full Chain"
+  },
+
+  "filters": {
+    "lifecycleStage": "Lifecycle Stage",
+    "partyId": "Party",
+    "partyType": "Party Type",
+    "hasCabinetApproval": "Has Cabinet Approval",
+    "hasRoyalDecree": "Has Royal Decree",
+    "decisionType": "Decision Type",
+    "status": "Status",
+    "fromDate": "From Date",
+    "toDate": "To Date"
+  },
+
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "approve": "Approve",
+    "reject": "Reject",
+    "updateLifecycle": "Update Lifecycle",
+    "addParty": "Add Party",
+    "removeParty": "Remove Party",
+    "viewDecision": "View Decision",
+    "downloadDocument": "Download Document"
+  },
+
+  "validation": {
+    "referenceRequired": "Reference number is required",
+    "dateRequired": "Date is required",
+    "titleRequired": "Title is required",
+    "partyRequired": "At least one party is required",
+    "invalidDateRange": "End date must be after start date"
+  },
+
+  "notifications": {
+    "partyAdded": "Party added successfully",
+    "partyRemoved": "Party removed successfully",
+    "decisionCreated": "Decision created successfully",
+    "decisionUpdated": "Decision updated successfully",
+    "lifecycleUpdated": "Lifecycle stage updated successfully"
+  }
+}
