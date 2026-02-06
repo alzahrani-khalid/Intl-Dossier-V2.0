@@ -551,6 +551,9 @@ export function DossierCreateWizard({
 
   // Handle form submission
   const handleComplete = async () => {
+    // Prevent double-submission
+    if (createMutation.isPending) return
+
     try {
       const values = form.getValues()
       if (!values.type) {
@@ -586,8 +589,8 @@ export function DossierCreateWizard({
       } else {
         navigate({ to: getDossierDetailPath(newDossier.id, newDossier.type as DossierType) })
       }
-    } catch (error: any) {
-      toast.error(error?.message || t('dossier:create.error'))
+    } catch {
+      // Error toast is already shown by useCreateDossier's onError handler
     }
   }
 

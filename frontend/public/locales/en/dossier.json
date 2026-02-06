@@ -333,7 +333,8 @@
     "helpTitle": "Need Help",
     "helpText": "Select the appropriate dossier type based on the entity you're tracking. Required fields are marked with an asterisk (*). You can always edit the dossier later.",
     "success": "Dossier created successfully",
-    "error": "Failed to create dossier"
+    "error": "Failed to create dossier",
+    "duplicate": "{{defaultValue}}"
   },
   "update": {
     "title": "Edit Dossier",

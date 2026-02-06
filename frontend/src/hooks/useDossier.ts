@@ -228,7 +228,15 @@ export function useCreateDossier() {
       toast.success(t('dossier.create.success', { name: data.name_en }))
     },
     onError: (error: DossierAPIError) => {
-      toast.error(t('dossier.create.error', { message: error.message }))
+      if (error.status === 409 || error.code === 'DUPLICATE_DOSSIER') {
+        toast.error(
+          t('dossier.create.duplicate', {
+            defaultValue: error.message || 'A dossier with this name already exists.',
+          }),
+        )
+      } else {
+        toast.error(t('dossier.create.error', { message: error.message }))
+      }
     },
   })
 }

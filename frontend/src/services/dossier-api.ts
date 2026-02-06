@@ -380,7 +380,14 @@ async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     let error: ApiErrorResponse
     try {
-      error = (await response.json()) as ApiErrorResponse
+      const body = await response.json()
+      // Edge Functions wrap errors in { error: { code, message_en, ... } }
+      const err = body?.error ?? body
+      error = {
+        message: err.message_en || err.message || response.statusText,
+        code: err.code,
+        details: err.details,
+      }
     } catch {
       error = { message: response.statusText }
     }
