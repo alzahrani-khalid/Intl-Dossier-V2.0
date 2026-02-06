@@ -63,6 +63,8 @@ export interface SearchResponse {
 export interface AutocompleteRequest {
   query: string
   types?: DossierType[]
+  /** Filter by specific dossier type (organization, country, etc.) */
+  dossierType?: DossierType
   limit?: number
 }
 
@@ -247,6 +249,11 @@ export async function autocompleteDossiers(
     params.append('limit', String(request.limit))
   }
 
+  // Filter by dossier sub-type (organization, country, etc.)
+  if (request.dossierType) {
+    params.append('dossier_type', request.dossierType)
+  }
+
   // Use search-suggest endpoint (not search/autocomplete)
   const url = `${supabaseUrl}/functions/v1/search-suggest?${params.toString()}`
   const response = await fetch(url, {
@@ -260,7 +267,7 @@ export async function autocompleteDossiers(
   return {
     suggestions: suggestResponse.suggestions.map((s) => ({
       id: s.id,
-      type: (s.type === 'dossier' ? 'country' : s.type) as DossierType, // Map 'dossier' to actual type
+      type: s.type as DossierType, // Now returns actual dossier type (country, organization, etc.)
       name_en: s.title_en,
       name_ar: s.title_ar,
       status: 'active', // Default status since search-suggest doesn't return it

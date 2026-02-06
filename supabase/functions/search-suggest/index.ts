@@ -8,12 +8,13 @@
  * Query Parameters:
  * - q: Search prefix (required, max 100 chars)
  * - type: Entity type filter (optional, comma-separated)
+ * - dossier_type: Dossier sub-type filter (optional, e.g., organization, country)
  * - limit: Number of suggestions (optional, default 10, max 20)
  *
  * Performance Target: <200ms absolute (p100)
  */
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
 
@@ -34,6 +35,7 @@ serve(async (req: Request) => {
     const url = new URL(req.url);
     const query = url.searchParams.get('q');
     const entityTypes = url.searchParams.get('type') || 'all';
+    const dossierTypeFilter = url.searchParams.get('dossier_type'); // Filter by dossier sub-type
     const limit = parseInt(url.searchParams.get('limit') || '10');
 
     // Validate query
@@ -42,11 +44,11 @@ serve(async (req: Request) => {
         JSON.stringify({
           error: 'bad_request',
           message: 'Query parameter is required and cannot be empty',
-          message_ar: 'معلمة الاستعلام مطلوبة ولا يمكن أن تكون فارغة'
+          message_ar: 'معلمة الاستعلام مطلوبة ولا يمكن أن تكون فارغة',
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -57,11 +59,11 @@ serve(async (req: Request) => {
         JSON.stringify({
           error: 'bad_request',
           message: 'Query too long (maximum 100 characters for suggestions)',
-          message_ar: 'الاستعلام طويل جدًا (الحد الأقصى 100 حرفًا للاقتراحات)'
+          message_ar: 'الاستعلام طويل جدًا (الحد الأقصى 100 حرفًا للاقتراحات)',
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -76,11 +78,11 @@ serve(async (req: Request) => {
         JSON.stringify({
           error: 'unauthorized',
           message: 'Authorization header required',
-          message_ar: 'مطلوب رأس التفويض'
+          message_ar: 'مطلوب رأس التفويض',
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -89,9 +91,9 @@ serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey, {
       global: {
         headers: {
-          Authorization: authHeader
-        }
-      }
+          Authorization: authHeader,
+        },
+      },
     });
 
     // Detect language
@@ -111,18 +113,19 @@ serve(async (req: Request) => {
     const normalizedQuery = query.toLowerCase().trim();
 
     // Parse entity types
-    const requestedTypes = entityTypes === 'all'
-      ? ['dossiers', 'people', 'engagements', 'positions', 'mous', 'documents']
-      : entityTypes.split(',').map(t => t.trim());
+    const requestedTypes =
+      entityTypes === 'all'
+        ? ['dossiers', 'people', 'engagements', 'positions', 'mous', 'documents']
+        : entityTypes.split(',').map((t) => t.trim());
 
     // Map entity types to tables
     const tableMap: Record<string, string> = {
-      'dossiers': 'dossiers',
-      'people': 'users',  // Changed from staff_profiles to users
-      'engagements': 'engagements',
-      'positions': 'positions',
-      'mous': 'mous',
-      'documents': 'attachments'
+      dossiers: 'dossiers',
+      people: 'users', // Changed from staff_profiles to users
+      engagements: 'engagements',
+      positions: 'positions',
+      mous: 'mous',
+      documents: 'attachments',
     };
 
     // Execute prefix search across entity types using trigram similarity
@@ -158,12 +161,23 @@ serve(async (req: Request) => {
         selectFields += `, ${titleField}, ${titleFieldAr}`;
         if (descField) selectFields += `, ${descField}, ${descFieldAr}`;
 
-        // Query with prefix match (faster than full similarity for typeahead)
-        const { data, error } = await supabase
+        // For dossiers table, also select the type field
+        if (tableName === 'dossiers') {
+          selectFields += ', type';
+        }
+
+        // Build base query with prefix match (faster than full similarity for typeahead)
+        let queryBuilder = supabase
           .from(tableName)
           .select(selectFields)
-          .or(`${titleField}.ilike.${normalizedQuery}%,${titleFieldAr}.ilike.${normalizedQuery}%`)
-          .limit(validatedLimit);
+          .or(`${titleField}.ilike.${normalizedQuery}%,${titleFieldAr}.ilike.${normalizedQuery}%`);
+
+        // Apply dossier type filter if specified and querying dossiers
+        if (tableName === 'dossiers' && dossierTypeFilter) {
+          queryBuilder = queryBuilder.eq('type', dossierTypeFilter);
+        }
+
+        const { data, error } = await queryBuilder.limit(validatedLimit);
 
         if (error) {
           console.error(`Error getting suggestions for ${type}:`, error);
@@ -172,9 +186,15 @@ serve(async (req: Request) => {
 
         // Add to suggestions with proper type mapping
         if (data && data.length > 0) {
-          const typeLabel = type === 'people' ? 'person' : type.slice(0, -1);
-
           const typedSuggestions = data.map((item: any) => {
+            // For dossiers, use the actual dossier type (country, organization, etc.)
+            // For other entities, use the entity type (person, engagement, position, etc.)
+            let typeLabel: string;
+            if (tableName === 'dossiers' && item.type) {
+              typeLabel = item.type; // Use actual dossier type (country, organization, forum, etc.)
+            } else {
+              typeLabel = type === 'people' ? 'person' : type.slice(0, -1);
+            }
             const title_en = item[titleField] || '';
             const title_ar = item[titleFieldAr] || '';
             const preview_en = item[descField] || '';
@@ -183,8 +203,8 @@ serve(async (req: Request) => {
             // Calculate simple match score based on prefix position
             const enMatch = title_en.toLowerCase().indexOf(normalizedQuery);
             const arMatch = title_ar.indexOf(normalizedQuery);
-            const matchPos = enMatch >= 0 ? enMatch : (arMatch >= 0 ? arMatch : 99);
-            const score = 1.0 - (matchPos * 0.1); // Earlier matches score higher
+            const matchPos = enMatch >= 0 ? enMatch : arMatch >= 0 ? arMatch : 99;
+            const score = 1.0 - matchPos * 0.1; // Earlier matches score higher
 
             return {
               id: item.id,
@@ -194,7 +214,7 @@ serve(async (req: Request) => {
               preview_en: preview_en.substring(0, 100), // Limit preview length
               preview_ar: preview_ar.substring(0, 100),
               score: Math.max(0.1, Math.min(1.0, score)),
-              match_position: matchPos
+              match_position: matchPos,
             };
           });
 
@@ -230,40 +250,36 @@ serve(async (req: Request) => {
       query: {
         original: query,
         normalized: normalizedQuery,
-        language_detected: languageDetected
+        language_detected: languageDetected,
       },
       took_ms: tookMs,
       cache_hit: false, // TODO: Implement Redis cache check
       metadata: {
         total_suggestions: limitedSuggestions.length,
-        types_searched: requestedTypes
-      }
+        types_searched: requestedTypes,
+      },
     };
 
-    return new Response(
-      JSON.stringify(response),
-      {
-        status: 200,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-          'X-Response-Time': `${tookMs}ms`,
-          'X-Cache-Hit': 'false'
-        }
-      }
-    );
-
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+        'X-Response-Time': `${tookMs}ms`,
+        'X-Cache-Hit': 'false',
+      },
+    });
   } catch (error) {
     console.error('Suggestion error:', error);
     return new Response(
       JSON.stringify({
         error: 'internal_server_error',
         message: error instanceof Error ? error.message : 'An unexpected error occurred',
-        message_ar: 'حدث خطأ غير متوقع'
+        message_ar: 'حدث خطأ غير متوقع',
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }

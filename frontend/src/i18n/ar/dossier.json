@@ -83,6 +83,9 @@
     "nameAr": "الاسم (بالعربية)",
     "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
     "nameArPlaceholder": "أدخل الاسم بالعربية",
+    "abbreviation": "الاختصار",
+    "abbreviationPlaceholder": "مثال: WDF, WHO, SDGs",
+    "abbreviationDescription": "رمز أو اختصار قصير (20 حرف كحد أقصى)",
     "descriptionEn": "الوصف (بالإنجليزية)",
     "descriptionAr": "الوصف (بالعربية)",
     "descriptionEnPlaceholder": "أدخل الوصف بالإنجليزية",
@@ -114,13 +117,27 @@
       "biographyEnPlaceholder": "أدخل الخلفية والمؤهلات",
       "biographyArPlaceholder": "أدخل الخلفية والمؤهلات"
     },
+    "organization": {
+      "type": "نوع المنظمة",
+      "typePlaceholder": "اختر نوع المنظمة",
+      "types": {
+        "government": "حكومية",
+        "ngo": "منظمة غير حكومية",
+        "international": "دولية",
+        "private": "قطاع خاص",
+        "academic": "أكاديمية"
+      }
+    },
     "forum": {
-      "numberOfSessions": "عدد الجلسات",
-      "numberOfSessionsDescription": "إجمالي عدد الجلسات المخطط لها",
-      "registrationFee": "رسوم التسجيل",
-      "currency": "العملة",
-      "agendaUrl": "رابط جدول الأعمال",
-      "liveStreamUrl": "رابط البث المباشر"
+      "organizingBody": "الجهة المنظمة",
+      "organizingBodyDescription": "المنظمة المسؤولة عن تنظيم هذا المنتدى",
+      "selectOrganizingBody": "اختر منظمة...",
+      "noOrganizingBody": "لم يتم اختيار جهة منظمة",
+      "quickAddOrg": "إضافة منظمة سريعة",
+      "quickAddOrgDescription": "إنشاء ملف منظمة جديد. يمكنك إضافة المزيد من التفاصيل لاحقاً.",
+      "createOrg": "إنشاء المنظمة",
+      "orgCreated": "تم إنشاء المنظمة \"{{name}}\" بنجاح",
+      "orgCreateFailed": "فشل في إنشاء المنظمة"
     },
     "topic": {
       "category": "تصنيف الموضوع",
@@ -150,7 +167,8 @@
     },
     "cancel": "إلغاء",
     "create": "إنشاء دوسيه",
-    "update": "تحديث الدوسيه"
+    "update": "تحديث الدوسيه",
+    "creating": "جاري الإنشاء..."
   },
   "field": {
     "isoCode": "رمز ISO",

@@ -21,9 +21,9 @@
 
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, FileText } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { DossierCreateWizard } from '@/components/Dossier/DossierCreateWizard'
 import { cn } from '@/lib/utils'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
@@ -70,17 +70,6 @@ export function DossierCreatePage() {
 
       {/* Main Content - Wizard directly */}
       <Card className="max-w-4xl mx-auto">
-        <CardHeader className="p-4 sm:p-6">
-          <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
-            <CardTitle className="text-lg sm:text-xl text-start">
-              {t('create.selectTypeTitle')}
-            </CardTitle>
-          </div>
-          <CardDescription className="text-sm sm:text-base text-start">
-            {t('create.selectTypeDescription')}
-          </CardDescription>
-        </CardHeader>
         <CardContent className="p-4 sm:p-6">
           <DossierCreateWizard onSuccess={handleSuccess} onCancel={handleBack} />
         </CardContent>

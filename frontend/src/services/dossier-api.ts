@@ -68,6 +68,7 @@ export interface OrganizationExtension {
 }
 
 export interface ForumExtension {
+  organizing_body_id?: string
   number_of_sessions?: number
   keynote_speakers?: Array<{ name: string; title: string; org: string }>
   sponsors?: Array<unknown>
@@ -284,6 +285,7 @@ export interface CreateDossierRequest {
   type: DossierType
   name_en: string
   name_ar: string
+  abbreviation?: string
   description_en?: string
   description_ar?: string
   status?: DossierStatus
@@ -296,6 +298,7 @@ export interface CreateDossierRequest {
 export interface UpdateDossierRequest {
   name_en?: string
   name_ar?: string
+  abbreviation?: string
   description_en?: string
   description_ar?: string
   status?: DossierStatus

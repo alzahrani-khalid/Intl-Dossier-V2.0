@@ -22,6 +22,7 @@
     "typeToSearch": "Type at least 2 characters to search",
     "searching": "Searching...",
     "clear": "Clear",
+    "createNew": "Create \"{{name}}\"",
     "linkedTo": "Linked to",
     "creating": "Creating...",
     "createCommitment": "Create Commitment",

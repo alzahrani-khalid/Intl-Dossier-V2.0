@@ -22,6 +22,7 @@
     "typeToSearch": "اكتب حرفين على الأقل للبحث",
     "searching": "جاري البحث...",
     "clear": "مسح",
+    "createNew": "إنشاء \"{{name}}\"",
     "linkedTo": "مرتبط بـ",
     "creating": "جاري الإنشاء...",
     "createCommitment": "إنشاء التزام",

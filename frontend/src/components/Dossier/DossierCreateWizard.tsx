@@ -49,6 +49,7 @@ import {
   ConditionalField,
 } from '@/components/ui/form-wizard'
 import { DossierTypeSelector } from '@/components/Dossier/DossierTypeSelector'
+import { DossierPicker } from '@/components/work-creation/DossierPicker'
 import { AIFieldAssist } from '@/components/Dossier/AIFieldAssist'
 import type { GeneratedFields } from '@/hooks/useAIFieldAssist'
 import {
@@ -73,13 +74,23 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { getDossierDetailPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 
 import { useCreateDossier } from '@/hooks/useDossier'
 import { useDossierNameSimilarity } from '@/hooks/useDossierNameSimilarity'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import type { DossierType, CreateDossierRequest } from '@/services/dossier-api'
+import { createDossier, type DossierType, type CreateDossierRequest } from '@/services/dossier-api'
 
 // Draft key for localStorage
 const DRAFT_KEY = 'dossier-create-draft'
@@ -91,6 +102,11 @@ const dossierSchema = z.object({
     .optional(),
   name_en: z.string().min(2, { message: 'English name must be at least 2 characters' }),
   name_ar: z.string().min(2, { message: 'Arabic name must be at least 2 characters' }),
+  abbreviation: z
+    .string()
+    .max(20, { message: 'Abbreviation must be at most 20 characters' })
+    .optional()
+    .or(z.literal('')),
   description_en: z.string().optional(),
   description_ar: z.string().optional(),
   status: z.enum(['active', 'inactive', 'archived', 'deleted']).default('active'),
@@ -131,11 +147,7 @@ const dossierSchema = z.object({
       location_en: z.string().optional(),
       location_ar: z.string().optional(),
       // Forum fields
-      number_of_sessions: z.number().positive().optional(),
-      registration_fee: z.number().nonnegative().optional(),
-      currency: z.string().length(3).optional().or(z.literal('')),
-      agenda_url: z.string().url().optional().or(z.literal('')),
-      live_stream_url: z.string().url().optional().or(z.literal('')),
+      organizing_body_id: z.string().uuid().optional().or(z.literal('')),
       // Topic fields (column names are theme_* for backward compatibility)
       theme_category: z.enum(['policy', 'technical', 'strategic', 'operational']).optional(),
       // Working Group fields
@@ -154,6 +166,7 @@ const defaultValues: DossierFormData = {
   type: undefined,
   name_en: '',
   name_ar: '',
+  abbreviation: '',
   description_en: '',
   description_ar: '',
   status: 'active',
@@ -182,11 +195,7 @@ const defaultValues: DossierFormData = {
     location_en: '',
     location_ar: '',
     // Forum fields
-    number_of_sessions: undefined,
-    registration_fee: undefined,
-    currency: '',
-    agenda_url: '',
-    live_stream_url: '',
+    organizing_body_id: '',
     // Topic fields
     theme_category: undefined,
     // Working Group fields
@@ -269,11 +278,7 @@ function filterExtensionDataByType(
 
     case 'forum':
       return filterEmpty({
-        number_of_sessions: extensionData.number_of_sessions,
-        registration_fee: extensionData.registration_fee,
-        currency: extensionData.currency,
-        agenda_url: extensionData.agenda_url,
-        live_stream_url: extensionData.live_stream_url,
+        organizing_body_id: extensionData.organizing_body_id,
       })
 
     case 'topic':
@@ -363,6 +368,15 @@ export function DossierCreateWizard({
     return 0
   })
 
+  // Quick-add organization modal state
+  const [showQuickAddOrg, setShowQuickAddOrg] = useState(false)
+  const [quickAddOrgName, setQuickAddOrgName] = useState('')
+  const [quickAddOrgType, setQuickAddOrgType] = useState<
+    'government' | 'ngo' | 'private' | 'international' | 'academic'
+  >('international')
+  const [isCreatingOrg, setIsCreatingOrg] = useState(false)
+  const [organizingBodyName, setOrganizingBodyName] = useState('')
+
   // Duplicate detection - check for similar dossier names
   // NOTE: Must be placed after currentStep is defined
   const {
@@ -422,6 +436,43 @@ export function DossierCreateWizard({
     },
     [form, updateDraft],
   )
+
+  // Handle quick-add organization
+  const handleQuickAddOrg = useCallback(async () => {
+    if (!quickAddOrgName.trim()) return
+
+    setIsCreatingOrg(true)
+    try {
+      const newOrg = await createDossier({
+        type: 'organization',
+        name_en: quickAddOrgName,
+        name_ar: quickAddOrgName, // User can edit later
+        status: 'active',
+        sensitivity_level: 1,
+        extensionData: {
+          org_type: quickAddOrgType,
+        },
+      })
+
+      // Set the newly created organization as the organizing body
+      form.setValue('extension_data.organizing_body_id', newOrg.id)
+      setOrganizingBodyName(quickAddOrgName)
+
+      toast.success(
+        t('dossier:form.forum.orgCreated', 'Organization "{{name}}" created successfully', {
+          name: quickAddOrgName,
+        }),
+      )
+      setShowQuickAddOrg(false)
+      setQuickAddOrgName('')
+      setQuickAddOrgType('international')
+    } catch (error) {
+      console.error('Failed to create organization:', error)
+      toast.error(t('dossier:form.forum.orgCreateFailed', 'Failed to create organization'))
+    } finally {
+      setIsCreatingOrg(false)
+    }
+  }, [quickAddOrgName, quickAddOrgType, form, t])
 
   // Steps configuration
   const steps = useMemo(
@@ -517,6 +568,7 @@ export function DossierCreateWizard({
         type: values.type as DossierType,
         name_en: values.name_en,
         name_ar: values.name_ar,
+        abbreviation: values.abbreviation || undefined,
         description_en: values.description_en || undefined,
         description_ar: values.description_ar || undefined,
         status: values.status,
@@ -652,6 +704,32 @@ export function DossierCreateWizard({
                 )}
               />
             </div>
+
+            {/* Abbreviation Field - applies to all dossier types */}
+            <FormField
+              control={form.control}
+              name="abbreviation"
+              render={({ field }) => (
+                <FormItem className="max-w-xs">
+                  <FormLabel>{t('dossier:form.abbreviation')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder={t('dossier:form.abbreviationPlaceholder')}
+                      className="min-h-11 uppercase"
+                      maxLength={20}
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase()
+                        field.onChange(value)
+                        updateDraft({ abbreviation: value })
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>{t('dossier:form.abbreviationDescription')}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Duplicate Detection Warning */}
             {(isCheckingDuplicates || similarDossiers.length > 0) && (
@@ -1256,119 +1334,46 @@ export function DossierCreateWizard({
             {/* Forum fields */}
             <ConditionalField show={selectedType === 'forum'}>
               <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="extension_data.number_of_sessions"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('dossier:form.forum.numberOfSessions')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            min="1"
-                            placeholder="5"
-                            className="min-h-11"
-                            onChange={(e) =>
-                              field.onChange(e.target.value ? parseInt(e.target.value) : undefined)
+                <FormField
+                  control={form.control}
+                  name="extension_data.organizing_body_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('dossier:form.forum.organizingBody')}</FormLabel>
+                      <FormControl>
+                        <DossierPicker
+                          value={field.value || undefined}
+                          onChange={(dossierId, dossier) => {
+                            field.onChange(dossierId || '')
+                            // Store the selected dossier info for display in review
+                            if (dossier) {
+                              form.setValue('extension_data.organizing_body_id', dossier.id)
+                              // Use the appropriate language name based on current locale
+                              const displayName = isRTL
+                                ? dossier.name_ar || dossier.name_en
+                                : dossier.name_en
+                              setOrganizingBodyName(displayName)
+                            } else {
+                              setOrganizingBodyName('')
                             }
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          {t('dossier:form.forum.numberOfSessionsDescription')}
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="extension_data.registration_fee"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('dossier:form.forum.registrationFee')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            placeholder="0"
-                            className="min-h-11"
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? parseFloat(e.target.value) : undefined,
-                              )
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="extension_data.currency"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('dossier:form.forum.currency')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="USD"
-                            maxLength={3}
-                            className="min-h-11 uppercase"
-                          />
-                        </FormControl>
-                        <FormDescription>3-letter currency code</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="extension_data.agenda_url"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('dossier:form.forum.agendaUrl')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="url"
-                            placeholder="https://example.com/agenda"
-                            className="min-h-11"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="extension_data.live_stream_url"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('dossier:form.forum.liveStreamUrl')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="url"
-                            placeholder="https://example.com/stream"
-                            className="min-h-11"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                          }}
+                          placeholder={t('dossier:form.forum.selectOrganizingBody')}
+                          filterByDossierType="organization"
+                          allowQuickAdd
+                          onQuickAdd={(name) => {
+                            // Open the quick-add organization modal
+                            setQuickAddOrgName(name)
+                            setShowQuickAddOrg(true)
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        {t('dossier:form.forum.organizingBodyDescription')}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </ConditionalField>
 
@@ -1518,13 +1523,18 @@ export function DossierCreateWizard({
           <FormWizardStep stepId="review" className="space-y-4">
             <Card>
               <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   {selectedType &&
                     (() => {
                       const Icon = typeIcons[selectedType as DossierType]
                       return Icon ? <Icon className="h-5 w-5 text-primary" /> : null
                     })()}
                   <CardTitle className="text-lg">
+                    {formValues.abbreviation && (
+                      <span className="text-muted-foreground me-2">
+                        ({formValues.abbreviation})
+                      </span>
+                    )}
                     {isRTL ? formValues.name_ar : formValues.name_en}
                   </CardTitle>
                   <Badge variant="outline" className="ms-auto">
@@ -1688,59 +1698,19 @@ export function DossierCreateWizard({
                 )}
 
                 {/* Forum review */}
-                {selectedType === 'forum' && (
-                  <>
-                    <Separator />
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                      {formValues.extension_data?.number_of_sessions && (
-                        <div>
-                          <p className="text-muted-foreground">
-                            {t('dossier:form.forum.numberOfSessions')}
-                          </p>
-                          <p className="font-medium">
-                            {formValues.extension_data.number_of_sessions}
-                          </p>
-                        </div>
-                      )}
-                      {formValues.extension_data?.registration_fee !== undefined && (
-                        <div>
-                          <p className="text-muted-foreground">
-                            {t('dossier:form.forum.registrationFee')}
-                          </p>
-                          <p className="font-medium">
-                            {formValues.extension_data.registration_fee}{' '}
-                            {formValues.extension_data.currency || ''}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    {(formValues.extension_data?.agenda_url ||
-                      formValues.extension_data?.live_stream_url) && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-4">
-                        {formValues.extension_data.agenda_url && (
-                          <div>
-                            <p className="text-muted-foreground">
-                              {t('dossier:form.forum.agendaUrl')}
-                            </p>
-                            <p className="font-medium text-primary truncate">
-                              {formValues.extension_data.agenda_url}
-                            </p>
-                          </div>
-                        )}
-                        {formValues.extension_data.live_stream_url && (
-                          <div>
-                            <p className="text-muted-foreground">
-                              {t('dossier:form.forum.liveStreamUrl')}
-                            </p>
-                            <p className="font-medium text-primary truncate">
-                              {formValues.extension_data.live_stream_url}
-                            </p>
-                          </div>
-                        )}
+                {selectedType === 'forum' &&
+                  formValues.extension_data?.organizing_body_id &&
+                  organizingBodyName && (
+                    <>
+                      <Separator />
+                      <div className="text-sm">
+                        <p className="text-muted-foreground">
+                          {t('dossier:form.forum.organizingBody')}
+                        </p>
+                        <p className="font-medium">{organizingBodyName}</p>
                       </div>
-                    )}
-                  </>
-                )}
+                    </>
+                  )}
 
                 {/* Topic review */}
                 {selectedType === 'topic' && formValues.extension_data?.theme_category && (
@@ -1853,6 +1823,87 @@ export function DossierCreateWizard({
           </form>
         </Form>
       </FormProvider>
+
+      {/* Quick-add Organization Dialog */}
+      <Dialog open={showQuickAddOrg} onOpenChange={setShowQuickAddOrg}>
+        <DialogContent className="sm:max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogHeader>
+            <DialogTitle>
+              {t('dossier:form.forum.quickAddOrg', 'Quick Add Organization')}
+            </DialogTitle>
+            <DialogDescription>
+              {t(
+                'dossier:form.forum.quickAddOrgDescription',
+                'Create a new organization dossier. You can add more details later.',
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="org-name-en">{t('dossier:form.nameEn')}</Label>
+              <Input
+                id="org-name-en"
+                value={quickAddOrgName}
+                onChange={(e) => setQuickAddOrgName(e.target.value)}
+                placeholder={t('dossier:form.nameEnPlaceholder')}
+                className="min-h-11"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="org-type">{t('dossier:form.organization.type')}</Label>
+              <Select
+                value={quickAddOrgType}
+                onValueChange={(value) => setQuickAddOrgType(value as typeof quickAddOrgType)}
+              >
+                <SelectTrigger className="min-h-11">
+                  <SelectValue placeholder={t('dossier:form.organization.typePlaceholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="international">
+                    {t('dossier:form.organization.types.international')}
+                  </SelectItem>
+                  <SelectItem value="government">
+                    {t('dossier:form.organization.types.government')}
+                  </SelectItem>
+                  <SelectItem value="ngo">{t('dossier:form.organization.types.ngo')}</SelectItem>
+                  <SelectItem value="academic">
+                    {t('dossier:form.organization.types.academic')}
+                  </SelectItem>
+                  <SelectItem value="private">
+                    {t('dossier:form.organization.types.private')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowQuickAddOrg(false)}
+              disabled={isCreatingOrg}
+              className="min-h-11"
+            >
+              {t('dossier:form.cancel')}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleQuickAddOrg}
+              disabled={!quickAddOrgName.trim() || isCreatingOrg}
+              className="min-h-11"
+            >
+              {isCreatingOrg ? (
+                <>
+                  <Loader2 className="size-4 me-2 animate-spin" />
+                  {t('dossier:form.creating', 'Creating...')}
+                </>
+              ) : (
+                t('dossier:form.forum.createOrg', 'Create Organization')
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
