@@ -47,7 +47,7 @@ import {
   Bell,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Button, type ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 
 // ============================================================================
 // Types
@@ -319,7 +319,7 @@ export function ContextAwareFAB({
 
   // Handle scroll direction detection
   React.useEffect(() => {
-    if (!hideOnScroll) return
+    if (!hideOnScroll) return undefined
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY

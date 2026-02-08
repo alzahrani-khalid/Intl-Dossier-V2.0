@@ -735,7 +735,9 @@ function EnhancedGraphVisualizationInner({
         {showMiniMap && (
           <MiniMap
             position={isRTL ? 'bottom-left' : 'bottom-right'}
-            nodeColor={(node) => NODE_COLORS[node.data?.type] || '#6b7280'}
+            nodeColor={(node) =>
+              NODE_COLORS[node.data?.type as keyof typeof NODE_COLORS] || '#6b7280'
+            }
             nodeBorderRadius={8}
             maskColor="rgba(0, 0, 0, 0.1)"
             className="!bottom-20 sm:!bottom-4"

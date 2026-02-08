@@ -7,7 +7,7 @@
  * task forces, and collaborative working groups.
  */
 
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import {
@@ -83,7 +83,6 @@ import type {
   WorkingGroupStatus,
   MeetingFrequency,
 } from '@/types/working-group.types'
-import { WORKING_GROUP_TYPE_LABELS, MEETING_FREQUENCY_LABELS } from '@/types/working-group.types'
 
 const WORKING_GROUP_TYPES: WorkingGroupType[] = [
   'committee',

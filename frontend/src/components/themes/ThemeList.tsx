@@ -8,7 +8,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, Plus, Filter, FolderTree, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
+import { Search, Plus, FolderTree, AlertCircle, RefreshCw } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'

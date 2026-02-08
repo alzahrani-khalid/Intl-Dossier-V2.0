@@ -6,11 +6,11 @@
  * Mobile-first, RTL-compatible
  */
 
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, useFieldArray } from 'react-hook-form'
-import { format, addDays, addHours, setHours, setMinutes } from 'date-fns'
-import { Plus, Trash2, Calendar, Users, Clock, MapPin, Video, X } from 'lucide-react'
+import { format, addDays } from 'date-fns'
+import { Plus, Trash2, Video } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,10 +25,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { useCreatePoll, useAddParticipants } from '@/hooks/useAvailabilityPolling'
+import { useCreatePoll } from '@/hooks/useAvailabilityPolling'
 import type {
   CreatePollRequest,
   VotingRule,
@@ -138,7 +137,7 @@ export function AvailabilityPollCreator({
 
     if (lastSlot) {
       // Try to add a slot 2 hours after the last one
-      const lastHour = parseInt(lastSlot.startTime.split(':')[0])
+      const lastHour = parseInt(lastSlot.startTime.split(':')[0]!)
       if (lastHour < 16) {
         newDate = lastSlot.date
         newStartTime = `${String(lastHour + 2).padStart(2, '0')}:00`
@@ -149,7 +148,7 @@ export function AvailabilityPollCreator({
       }
     }
 
-    const endHour = parseInt(newStartTime.split(':')[0]) + Math.ceil(duration / 60)
+    const endHour = parseInt(newStartTime.split(':')[0]!) + Math.ceil(duration / 60)
     const newEndTime = `${String(Math.min(endHour, 23)).padStart(2, '0')}:00`
 
     appendSlot({
@@ -426,7 +425,7 @@ export function AvailabilityPollCreator({
                         max={1}
                         step={0.1}
                         className="flex-1"
-                        onValueChange={(value) => setValue(`slots.${index}.preference`, value[0])}
+                        onValueChange={(value) => setValue(`slots.${index}.preference`, value[0]!)}
                       />
                       <span className="text-xs w-8">
                         {Math.round((watch(`slots.${index}.preference`) || 0.5) * 100)}%

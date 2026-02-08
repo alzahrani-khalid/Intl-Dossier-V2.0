@@ -75,7 +75,7 @@ async function fetchDossierActivityTimeline(
 
   // Add filters as query params
   if (request.filters?.work_item_types?.length) {
-    params.set('work_item_type', request.filters.work_item_types[0])
+    params.set('work_item_type', request.filters.work_item_types[0]!)
   }
   if (request.filters?.overdue_only) {
     params.set('overdue_only', 'true')

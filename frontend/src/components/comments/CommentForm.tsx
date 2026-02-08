@@ -10,7 +10,7 @@
 
 import React, { useState, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Send, X, Eye, EyeOff, Users, Lock } from 'lucide-react'
+import { Send, X, Eye, Users, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Select,

@@ -6,25 +6,25 @@
  * Error handling for loading, errors, not found, and wrong types.
  */
 
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { useDossier } from '@/hooks/useDossier';
-import { isEngagementDossier } from '@/lib/dossier-type-guards';
-import { EngagementDossierPage } from '@/pages/dossiers/EngagementDossierPage';
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import { AlertCircle, ArrowLeft } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { useDossier } from '@/hooks/useDossier'
+import { isEngagementDossier } from '@/lib/dossier-type-guards'
+import { EngagementDossierPage } from '@/pages/dossiers/EngagementDossierPage'
 
 export const Route = createFileRoute('/_protected/dossiers/engagements/$id')({
   component: EngagementDossierDetailRoute,
-});
+})
 
 function EngagementDossierDetailRoute() {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const { id } = Route.useParams();
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const { id } = Route.useParams()
 
-  const { data: dossier, isLoading, error } = useDossier(id, ['stats', 'owners', 'contacts']);
+  const { data: dossier, isLoading, error } = useDossier(id, ['stats', 'owners', 'contacts'])
 
   // Loading state
   if (isLoading) {
@@ -34,11 +34,9 @@ function EngagementDossierDetailRoute() {
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        <p className="text-sm sm:text-base text-muted-foreground">
-          {t('detail.loading')}
-        </p>
+        <p className="text-sm sm:text-base text-muted-foreground">{t('detail.loading')}</p>
       </div>
-    );
+    )
   }
 
   // Error state
@@ -64,7 +62,7 @@ function EngagementDossierDetailRoute() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
   // Not found state
@@ -77,9 +75,7 @@ function EngagementDossierDetailRoute() {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>{t('detail.notFound')}</AlertTitle>
-          <AlertDescription>
-            {t('detail.errorGeneric')}
-          </AlertDescription>
+          <AlertDescription>{t('detail.errorGeneric')}</AlertDescription>
         </Alert>
         <div className="mt-4 sm:mt-6">
           <Link to="/dossiers">
@@ -90,13 +86,13 @@ function EngagementDossierDetailRoute() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
   // Wrong type validation
-  if (!isEngagementDossier(dossier)) {
-    const actualType = t(`type.${dossier.type}`);
-    const expectedType = t('type.engagement');
+  if (!isEngagementDossier(dossier as any)) {
+    const actualType = t(`type.${dossier.type}`)
+    const expectedType = t('type.engagement')
 
     return (
       <div
@@ -111,7 +107,7 @@ function EngagementDossierDetailRoute() {
           </AlertDescription>
         </Alert>
         <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
-          <Link to={`/dossiers/${dossier.type}s/$id`} params={{ id: dossier.id }}>
+          <Link to={`/dossiers/${dossier.type}s/$id`} params={{ id: dossier.id } as any}>
             <Button className="gap-2 w-full sm:w-auto">
               {t('action.viewCorrectType', { type: actualType })}
             </Button>
@@ -124,8 +120,8 @@ function EngagementDossierDetailRoute() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
-  return <EngagementDossierPage dossier={dossier} />;
+  return <EngagementDossierPage dossier={dossier as any} />
 }

@@ -160,7 +160,13 @@
     "tags": "الوسوم",
     "webhooks": "الويب هوك",
     "workflowAutomation": "أتمتة سير العمل",
-    "briefingBooks": "كتب الإحاطة"
+    "briefingBooks": "كتب الإحاطة",
+    "listView": "عرض القائمة",
+    "boardView": "عرض اللوحة",
+    "requests": "الطلبات",
+    "incomingRequests": "الطلبات الواردة",
+    "awaitingResponse": "بانتظار الرد",
+    "main": "الرئيسية"
   },
   "search": {
     "title": "البحث",

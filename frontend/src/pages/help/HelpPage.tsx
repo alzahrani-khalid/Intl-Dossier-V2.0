@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -247,7 +247,7 @@ export function HelpPage() {
               <Card>
                 <CardContent className="pt-6">
                   <Accordion type="single" collapsible className="w-full">
-                    {filteredFAQ.map((item, index) => {
+                    {filteredFAQ.map((item, _index) => {
                       const Icon = item.icon
                       return (
                         <AccordionItem key={item.id} value={item.id}>

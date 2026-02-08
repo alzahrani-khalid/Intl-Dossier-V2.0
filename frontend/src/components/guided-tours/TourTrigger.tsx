@@ -59,6 +59,7 @@ export function TourTrigger({
       return () => clearTimeout(timer)
     } else {
       setIsVisible(false)
+      return undefined
     }
   }, [shouldShow])
 

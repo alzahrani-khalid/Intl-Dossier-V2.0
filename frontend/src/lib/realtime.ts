@@ -110,7 +110,7 @@ class RealtimeManager {
     // Setup presence handlers
     if (config.onPresenceSync) {
       channel.on('presence', { event: 'sync' }, () => {
-        const state = channel.presenceState()
+        const state = channel.presenceState() as unknown as RealtimePresenceState<PresencePayload>
         config.onPresenceSync!(state)
       })
     }

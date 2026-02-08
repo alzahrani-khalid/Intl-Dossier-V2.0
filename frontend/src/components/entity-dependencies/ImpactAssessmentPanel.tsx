@@ -207,7 +207,7 @@ function SummaryStats({ assessment }: SummaryStatsProps) {
   const { t, i18n } = useTranslation('entity-dependencies')
   const isRTL = i18n.language === 'ar'
 
-  const affectedByCategory = assessment.affected_entities?.reduce(
+  const _affectedByCategory = assessment.affected_entities?.reduce(
     (acc, entity) => {
       acc[entity.impact_category] = (acc[entity.impact_category] || 0) + 1
       return acc

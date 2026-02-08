@@ -194,7 +194,7 @@ export function RelationshipNavigator({
                 </div>
 
                 <div className="space-y-2">
-                  {nodesByDegree[parseInt(degree)].map((node) => {
+                  {nodesByDegree[parseInt(degree)]!.map((node) => {
                     const name = isRTL ? node.name_ar : node.name_en
 
                     return (

@@ -3,7 +3,7 @@
  * Custom hooks for managing granular field-level permissions
  */
 
-import { useMemo, useCallback } from 'react'
+import { useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type {

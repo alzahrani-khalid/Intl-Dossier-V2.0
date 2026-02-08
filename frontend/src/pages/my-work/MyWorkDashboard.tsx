@@ -39,6 +39,7 @@ export default function MyWorkDashboard() {
     search,
     sortBy = 'deadline',
     sortOrder = 'asc',
+    assignee,
   } = searchParams
 
   // Build filters from URL state
@@ -52,7 +53,10 @@ export default function MyWorkDashboard() {
         tasks: 'task',
         intake: 'intake',
       }
-      result.sources = [sourceMap[tab]]
+      const mapped = sourceMap[tab]
+      if (mapped) {
+        result.sources = [mapped]
+      }
     }
 
     // Tracking type filter
@@ -72,8 +76,13 @@ export default function MyWorkDashboard() {
       result.searchQuery = search
     }
 
+    // Assignee filter (manager drill-down)
+    if (assignee) {
+      result.assigneeId = assignee
+    }
+
     return result
-  }, [tab, trackingType, filter, search])
+  }, [tab, trackingType, filter, search, assignee])
 
   // Fetch data
   const { summary, metrics, items } = useMyWorkDashboard(
@@ -96,11 +105,12 @@ export default function MyWorkDashboard() {
   const updateSearch = useCallback(
     (updates: Partial<typeof searchParams>) => {
       navigate({
-        search: (prev) => ({ ...prev, ...updates }),
+        to: '/my-work',
+        search: { ...searchParams, ...updates },
         replace: true,
       })
     },
-    [navigate],
+    [navigate, searchParams],
   )
 
   const handleTabChange = useCallback(
@@ -138,6 +148,15 @@ export default function MyWorkDashboard() {
     [updateSearch],
   )
 
+  // Manager drill-down: click team member to filter by assignee
+  const handleMemberClick = useCallback(
+    (memberId: string) => {
+      // Toggle: click again to clear
+      updateSearch({ assignee: assignee === memberId ? undefined : memberId })
+    },
+    [updateSearch, assignee],
+  )
+
   // Flatten paginated items
   const workItems = useMemo(() => {
     return items.data?.pages.flatMap((page) => page.items) || []
@@ -159,7 +178,7 @@ export default function MyWorkDashboard() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate({ to: '/my-work/board' })}
+          onClick={() => navigate({ to: '/my-work/board', search: { mode: 'status' } as any })}
           className="flex items-center gap-2 self-start sm:self-auto"
         >
           <LayoutGrid className="h-4 w-4" />
@@ -180,7 +199,12 @@ export default function MyWorkDashboard() {
 
       {/* Team Workload Panel (managers only) */}
       {teamWorkload.data && teamWorkload.data.length > 0 && (
-        <TeamWorkloadPanel teamMembers={teamWorkload.data} isLoading={teamWorkload.isLoading} />
+        <TeamWorkloadPanel
+          teamMembers={teamWorkload.data}
+          isLoading={teamWorkload.isLoading}
+          onMemberClick={handleMemberClick}
+          selectedMemberId={assignee}
+        />
       )}
 
       {/* Tabs for Source Filter */}

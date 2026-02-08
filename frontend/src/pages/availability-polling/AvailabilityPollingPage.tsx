@@ -26,7 +26,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Dialog,
   DialogContent,
@@ -44,7 +44,7 @@ import {
   AvailabilityPollVoter,
   AvailabilityPollResults,
 } from '@/components/availability-polling'
-import type { AvailabilityPoll, PollStatus } from '@/types/availability-polling.types'
+import type { AvailabilityPoll } from '@/types/availability-polling.types'
 import { POLL_STATUS_COLORS } from '@/types/availability-polling.types'
 
 type ViewMode = 'grid' | 'list'

@@ -321,15 +321,39 @@ export interface DossierFilters {
   sort_order?: 'asc' | 'desc'
 }
 
-export interface DossierWithExtension extends Dossier {
+export interface DossierWithExtension
+  extends Omit<Dossier, 'type' | 'status' | 'expires_at' | 'freshness_status'> {
+  type: DossierType
+  status: DossierStatus
   extension?: DossierExtensionData
+  /** Runtime-computed freshness indicator from content-expiration system */
+  freshness_status?:
+    | 'fresh'
+    | 'stale'
+    | 'expired'
+    | 'current'
+    | 'review_pending'
+    | 'outdated'
+    | 'refreshing'
+    | 'archived'
+    | null
+  /** Expiration timestamp from content-expiration system */
+  expires_at?: string | null
 }
 
 export interface DossiersListResponse {
-  dossiers: DossierWithExtension[]
-  total_count: number
-  page: number
-  page_size: number
+  data: DossierWithExtension[]
+  pagination: {
+    next_cursor: string | null
+    has_more: boolean
+    total_count: number
+  }
+  /** @deprecated Use pagination.total_count */
+  total?: number
+  /** @deprecated */
+  page?: number
+  /** @deprecated */
+  page_size?: number
 }
 
 /**

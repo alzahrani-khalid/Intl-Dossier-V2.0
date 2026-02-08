@@ -173,7 +173,7 @@ const MOU_NOTIFICATION_KEYS = {
   preferences: () => [...MOU_NOTIFICATION_KEYS.all, 'preferences'] as const,
   summary: () => [...MOU_NOTIFICATION_KEYS.all, 'summary'] as const,
   queue: (status?: string) => [...MOU_NOTIFICATION_KEYS.all, 'queue', status] as const,
-  history: (filters?: Record<string, string>) =>
+  history: (filters?: Record<string, string | undefined>) =>
     [...MOU_NOTIFICATION_KEYS.all, 'history', filters] as const,
 }
 

@@ -37,7 +37,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { useCommitteeMembers, useUpdateMember, useRemoveMember } from '@/hooks/useCommittees'
+import { useCommitteeMembers, useRemoveCommitteeMember } from '@/hooks/useCommittees'
 import type {
   MemberWithDetails,
   MemberRole,
@@ -66,9 +66,13 @@ export function MembersList({ committeeId, onAddMember, onEditMember }: MembersL
 
   // Fetch members
   const { data: membersData, isLoading, error, refetch } = useCommitteeMembers(committeeId, filters)
-  const removeMember = useRemoveMember()
+  const removeMember = useRemoveCommitteeMember()
 
-  const members = membersData?.data || []
+  const members =
+    (Array.isArray(membersData)
+      ? membersData
+      : (((membersData as unknown as Record<string, unknown>)?.data as MemberWithDetails[]) ??
+        [])) || []
 
   // Filter by search
   const filteredMembers = members.filter((member) => {
@@ -88,7 +92,7 @@ export function MembersList({ committeeId, onAddMember, onEditMember }: MembersL
   // Handle remove
   const handleRemove = async (member: MemberWithDetails) => {
     if (window.confirm(t('actions.removeMember', 'Remove this member?'))) {
-      await removeMember.mutateAsync({ memberId: member.id, committeeId })
+      await removeMember.mutateAsync({ id: member.id, committeeId })
     }
   }
 

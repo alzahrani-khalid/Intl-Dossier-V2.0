@@ -6,7 +6,6 @@
  * Mobile-first design with RTL support.
  */
 
-import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
@@ -28,7 +27,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import {
   Select,
@@ -117,7 +115,7 @@ export function PersonCreatePage() {
           : undefined,
       })
 
-      navigate({ to: '/persons/$personId', params: { personId: result.id } })
+      navigate({ to: '/persons/$personId', params: { personId: result.id } as any })
     } catch (error) {
       // Error handled by mutation
     }

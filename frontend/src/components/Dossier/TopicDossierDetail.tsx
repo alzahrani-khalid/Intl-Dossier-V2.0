@@ -7,17 +7,16 @@
  * Mobile-first design with RTL support.
  */
 
-import { useTranslation } from 'react-i18next';
-import { useSessionStorage } from '@/hooks/useSessionStorage';
-import { CollapsibleSection } from '@/components/Dossier/CollapsibleSection';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Target, FileText, Network, FolderTree } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { DossierWithExtension } from '@/services/dossier-api';
+import { useTranslation } from 'react-i18next'
+import { useSessionStorage } from '@/hooks/useSessionStorage'
+import { CollapsibleSection } from '@/components/Dossier/CollapsibleSection'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Target, FileText, Network, FolderTree } from 'lucide-react'
+import type { DossierWithExtension } from '@/services/dossier-api'
 
 interface TopicDossierDetailProps {
-  dossier: DossierWithExtension & { type: 'topic' };
+  dossier: DossierWithExtension & { type: 'topic' }
 }
 
 /**
@@ -25,10 +24,10 @@ interface TopicDossierDetailProps {
  * Displays strategic context, category, and parent topic if applicable
  */
 function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier'] }) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
-  const extension = dossier.extension as { topic_category?: string; parent_topic_id?: string };
+  const extension = dossier.extension as { topic_category?: string; parent_topic_id?: string }
 
   return (
     <Card>
@@ -81,7 +80,7 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 /**
@@ -89,7 +88,7 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
  * Shows countries, organizations, and engagements related to this topic
  */
 function RelatedDossiers({ dossierId }: { dossierId: string }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
 
   return (
     <Card>
@@ -113,7 +112,7 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 /**
@@ -121,7 +120,7 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
  * Policy papers, reports, and guidelines related to this topic
  */
 function KeyDocuments({ dossierId }: { dossierId: string }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
 
   return (
     <Card>
@@ -145,7 +144,7 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 /**
@@ -153,7 +152,7 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
  * Child topics under this policy area
  */
 function Subtopics({ dossierId }: { dossierId: string }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
 
   return (
     <Card>
@@ -177,81 +176,76 @@ function Subtopics({ dossierId }: { dossierId: string }) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 /**
  * Main Topic Dossier Detail Component
  */
 export function TopicDossierDetail({ dossier }: TopicDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Session storage for section collapse state
-  const [policyOpen, setPolicyOpen] = useSessionStorage(
-    `topic-${dossier.id}-policy-open`,
-    true
-  );
+  const [policyOpen, setPolicyOpen] = useSessionStorage(`topic-${dossier.id}-policy-open`, true)
 
-  const [relatedOpen, setRelatedOpen] = useSessionStorage(
-    `topic-${dossier.id}-related-open`,
-    true
-  );
+  const [relatedOpen, setRelatedOpen] = useSessionStorage(`topic-${dossier.id}-related-open`, true)
 
   const [documentsOpen, setDocumentsOpen] = useSessionStorage(
     `topic-${dossier.id}-documents-open`,
-    true
-  );
+    true,
+  )
 
   const [subtopicsOpen, setSubtopicsOpen] = useSessionStorage(
     `topic-${dossier.id}-subtopics-open`,
-    true
-  );
+    true,
+  )
 
   return (
-    <div
-      className="space-y-4 sm:space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Policy Overview Section */}
       <CollapsibleSection
+        id={`topic-${dossier.id}-policy`}
         title={t('sections.topic.policyOverview')}
         description={t('sections.topic.policyOverviewDescription')}
-        isOpen={policyOpen}
-        onToggle={setPolicyOpen}
+        isExpanded={policyOpen}
+        onToggle={(expanded) => setPolicyOpen(expanded)}
       >
         <PolicyOverview dossier={dossier} />
       </CollapsibleSection>
 
       {/* Related Dossiers Section */}
       <CollapsibleSection
+        id={`topic-${dossier.id}-related`}
         title={t('sections.topic.relatedDossiers')}
         description={t('sections.topic.relatedDossiersDescription')}
-        isOpen={relatedOpen}
-        onToggle={setRelatedOpen}
+        isExpanded={relatedOpen}
+        onToggle={(expanded) => setRelatedOpen(expanded)}
       >
         <RelatedDossiers dossierId={dossier.id} />
       </CollapsibleSection>
 
       {/* Key Documents Section */}
       <CollapsibleSection
+        id={`topic-${dossier.id}-documents`}
         title={t('sections.topic.keyDocuments')}
         description={t('sections.topic.keyDocumentsDescription')}
-        isOpen={documentsOpen}
-        onToggle={setDocumentsOpen}
+        isExpanded={documentsOpen}
+        onToggle={(expanded) => setDocumentsOpen(expanded)}
       >
         <KeyDocuments dossierId={dossier.id} />
       </CollapsibleSection>
 
       {/* Subtopics Section */}
       <CollapsibleSection
+        id={`topic-${dossier.id}-subtopics`}
         title={t('sections.topic.subtopics')}
         description={t('sections.topic.subtopicsDescription')}
-        isOpen={subtopicsOpen}
-        onToggle={setSubtopicsOpen}
+        isExpanded={subtopicsOpen}
+        onToggle={(expanded) => setSubtopicsOpen(expanded)}
       >
         <Subtopics dossierId={dossier.id} />
       </CollapsibleSection>
     </div>
-  );
+  )
 }

@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { useDraggable } from '@dnd-kit/core'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
@@ -124,7 +123,7 @@ export function FieldList({ fields, onAddColumn, onAddFilter, onAddGrouping }: F
       if (!groups[field.entity]) {
         groups[field.entity] = []
       }
-      groups[field.entity].push(field)
+      groups[field.entity]!.push(field)
     }
 
     return groups

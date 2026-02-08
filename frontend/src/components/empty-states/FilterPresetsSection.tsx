@@ -62,7 +62,7 @@ function getColorClasses(theme?: string): string {
     purple:
       'bg-purple-50 hover:bg-purple-100 border-purple-200 dark:bg-purple-950/30 dark:hover:bg-purple-950/50 dark:border-purple-900',
   }
-  return colors[theme || 'default'] || colors.default
+  return colors[theme || 'default'] || colors.default!
 }
 
 /**
@@ -77,7 +77,7 @@ function getIconColorClasses(theme?: string): string {
     red: 'text-red-600 dark:text-red-400',
     purple: 'text-purple-600 dark:text-purple-400',
   }
-  return colors[theme || 'default'] || colors.default
+  return colors[theme || 'default'] || colors.default!
 }
 
 /**

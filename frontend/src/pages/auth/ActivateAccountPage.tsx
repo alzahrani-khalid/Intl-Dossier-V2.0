@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+// Search params parsed from URL (replaces react-router-dom's useSearchParams)
 import { useActivateAccount } from '@/hooks/use-user-management'
 import { Button } from '@/components/ui/button'
 import {
@@ -132,8 +132,7 @@ function PasswordStrength({ password, isRTL }: PasswordStrengthProps) {
 export function ActivateAccountPage() {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
-  const [searchParams] = useSearchParams()
-  const activationToken = searchParams.get('token')
+  const activationToken = new URLSearchParams(window.location.search).get('token')
   const { mutate: activateAccount, isPending } = useActivateAccount()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)

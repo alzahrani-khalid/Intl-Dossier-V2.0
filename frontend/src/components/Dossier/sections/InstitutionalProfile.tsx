@@ -14,7 +14,7 @@
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { Building2, Calendar, Globe, Hash, Network, Mail, Phone, MapPin, Flag } from 'lucide-react'
-import type { OrganizationDossier } from '@/lib/dossier-type-guards'
+import type { OrganizationDossier, OrganizationExtension } from '@/lib/dossier-type-guards'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { supabase } from '@/lib/supabase-client'
 
@@ -25,7 +25,7 @@ interface InstitutionalProfileProps {
 export function InstitutionalProfile({ dossier }: InstitutionalProfileProps) {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const extension = dossier.extension ?? {}
+  const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
 
   // Fetch headquarters country name if headquarters_country_id exists
   const { data: headquartersCountry } = useQuery({
@@ -141,8 +141,10 @@ export function InstitutionalProfile({ dossier }: InstitutionalProfileProps) {
           {extension.org_code && (
             <p className="text-sm text-muted-foreground">{extension.org_code}</p>
           )}
-          {dossier.description && (
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{dossier.description}</p>
+          {(isRTL ? dossier.description_ar : dossier.description_en) && (
+            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+              {isRTL ? dossier.description_ar : dossier.description_en}
+            </p>
           )}
         </div>
       </div>

@@ -4,7 +4,6 @@
  * Allows users to configure filters for their report data.
  */
 
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -91,9 +90,11 @@ function FilterRow({ filter, fields, isRTL, onUpdate, onRemove }: FilterRowProps
   const { t } = useTranslation('report-builder')
 
   const selectedField = fields.find((f) => f.id === filter.fieldId)
-  const availableOperators = selectedField
-    ? operatorsByType[selectedField.type] || operatorsByType.string
-    : operatorsByType.string
+  const availableOperators = (
+    selectedField
+      ? operatorsByType[selectedField.type] || operatorsByType.string
+      : operatorsByType.string
+  )!
 
   const needsValue = !['is_null', 'is_not_null'].includes(filter.operator)
   const needsEndValue = filter.operator === 'between'
@@ -223,7 +224,7 @@ export function FilterBuilder({
     if (filterableFields.length === 0) return
 
     onAddFilter({
-      fieldId: filterableFields[0].id,
+      fieldId: filterableFields[0]!.id,
       operator: 'equals',
       value: '',
     })
@@ -272,7 +273,7 @@ export function FilterBuilder({
 
         <ScrollArea className={cn(filters.filters.length > 3 && 'h-[300px]')}>
           <div className="space-y-2">
-            {filters.filters.map((filter, index) => (
+            {filters.filters.map((filter, _index) => (
               <FilterRow
                 key={filter.id}
                 filter={filter}

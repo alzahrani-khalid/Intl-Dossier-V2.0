@@ -14,9 +14,8 @@ import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { Camera, Upload, X, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
-import { useUploadBusinessCard, getConfidenceColor, getConfidenceLevel } from '@/hooks/useOCR'
+import { Camera, Upload, X, AlertCircle, Loader2 } from 'lucide-react'
+import { useUploadBusinessCard } from '@/hooks/useOCR'
 import type { OCRParsedFields } from '@/services/ocr-api'
 
 interface BusinessCardScannerProps {

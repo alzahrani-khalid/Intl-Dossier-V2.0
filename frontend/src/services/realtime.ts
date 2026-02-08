@@ -1,9 +1,14 @@
 import React from 'react'
-import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js'
+import type {
+  RealtimeChannel,
+  RealtimePostgresChangesPayload,
+  RealtimePostgresChangesFilter,
+} from '@supabase/supabase-js'
+import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { supabase } from '../lib/supabase'
-import type { JsonObject, PresenceData } from '@/types/common.types'
+import type { PresenceData } from '@/types/common.types'
 
 // Generic record type for realtime payloads
 type RealtimeRecord = Record<string, unknown>
@@ -73,13 +78,13 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
 
       try {
         const channel = supabase.channel(`${table}-${event}-${subscriptionId}`).on(
-          'postgres_changes' as const,
+          'postgres_changes',
           {
-            event,
+            event: event as '*',
             schema: 'public',
             table,
             filter,
-          },
+          } as RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
           (payload: RealtimePostgresChangesPayload<RealtimeRecord>) => {
             callback(payload)
           },
@@ -155,12 +160,12 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
             const newChannel = supabase
               .channel(`${subscription.table}-${subscription.event}-${id}`)
               .on(
-                'postgres_changes' as const,
+                'postgres_changes',
                 {
-                  event: subscription.event,
+                  event: subscription.event as '*',
                   schema: 'public',
                   table: subscription.table,
-                },
+                } as RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
                 subscription.callback,
               )
 
@@ -323,7 +328,7 @@ export function useTableSubscription<T extends Record<string, unknown> = Realtim
     const subscriptionId = subscribe({
       table,
       event,
-      callback,
+      callback: callback as (payload: RealtimePostgresChangesPayload<RealtimeRecord>) => void,
       filter,
     })
 
@@ -353,7 +358,7 @@ export function usePresence(channelName: string) {
     channel
       .on('presence', { event: 'sync' }, () => {
         const newPresence = channel.presenceState()
-        setPresence(new Map(Object.entries(newPresence)))
+        setPresence(new Map(Object.entries(newPresence)) as unknown as Map<string, PresenceData[]>)
       })
       .on('presence', { event: 'join' }, ({ key: _key, newPresences: _newPresences }) => {
         // User joined

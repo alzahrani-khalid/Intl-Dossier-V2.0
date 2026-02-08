@@ -33,7 +33,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useTagAnalytics, useRefreshTagAnalytics } from '@/hooks/useTagHierarchy'
 import { getTagName, TAG_ENTITY_TYPE_LABELS } from '@/types/tag-hierarchy.types'
-import type { TagUsageAnalytics } from '@/types/tag-hierarchy.types'
 
 interface TagAnalyticsProps {
   className?: string

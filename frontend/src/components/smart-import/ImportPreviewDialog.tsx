@@ -37,7 +37,7 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
 import {
   Select,
   SelectContent,
@@ -173,7 +173,7 @@ export function ImportPreviewDialog({
   const updateMapping = useCallback((index: number, updates: Partial<FieldMapping>) => {
     setFieldMappings((prev) => {
       const next = [...prev]
-      next[index] = { ...next[index], ...updates }
+      next[index] = { ...next[index]!, ...updates } as FieldMapping
       return next
     })
   }, [])

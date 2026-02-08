@@ -149,7 +149,7 @@ export function OnboardingEmptyState({
 
   // Get relevant checklist items for this entity type
   const relevantItems = checklist?.items.filter((item) => item.entityType === entityType)
-  const hasRelevantItems = relevantItems && relevantItems.length > 0
+  const _hasRelevantItems = relevantItems && relevantItems.length > 0
 
   // Should we show the onboarding section?
   const shouldShowOnboarding = showChecklist && !isFullyCompleted && !isDismissed && !isLoading

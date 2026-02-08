@@ -168,11 +168,14 @@ export function useUpdateRelationship() {
 
       // Optimistically update the cache
       if (previousRelationship) {
-        queryClient.setQueryData<RelationshipWithDossiers>(relationshipKeys.detail(id), {
-          ...previousRelationship,
-          ...request,
-          updated_at: new Date().toISOString(),
-        })
+        queryClient.setQueryData<RelationshipWithDossiers>(
+          relationshipKeys.detail(id),
+          () =>
+            ({
+              ...previousRelationship,
+              ...request,
+            }) as RelationshipWithDossiers,
+        )
       }
 
       return { previousRelationship }
@@ -226,7 +229,7 @@ export function useDeleteRelationship() {
 
       return { previousRelationship }
     },
-    onSuccess: (_, id, context) => {
+    onSuccess: (_, _id, context) => {
       // Invalidate all lists to refetch without deleted item
       queryClient.invalidateQueries({ queryKey: relationshipKeys.lists() })
       queryClient.invalidateQueries({ queryKey: relationshipKeys.all })

@@ -7,11 +7,11 @@
  * Mobile-first with RTL support.
  */
 
-import React, { useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, type Locale } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
-import { Check, X, MoreHorizontal, User } from 'lucide-react'
+import { Check, X, MoreHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -24,7 +24,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import type { TrackChangeWithAuthor, TrackChangeType } from '@/types/collaborative-editing.types'
+import type { TrackChangeWithAuthor } from '@/types/collaborative-editing.types'
 
 export interface TrackChangesOverlayProps {
   changes: TrackChangeWithAuthor[]

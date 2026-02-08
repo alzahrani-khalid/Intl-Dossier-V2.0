@@ -17,9 +17,9 @@
  * - Mobile-first, RTL-compatible design
  */
 
-import { createFileRoute } from '@tanstack/react-router';
-import { z } from 'zod';
-import MyWorkDashboard from '@/pages/my-work/MyWorkDashboard';
+import { createFileRoute } from '@tanstack/react-router'
+import { z } from 'zod'
+import MyWorkDashboard from '@/pages/my-work/MyWorkDashboard'
 
 // URL search params schema for type-safe routing
 const myWorkSearchSchema = z.object({
@@ -29,11 +29,12 @@ const myWorkSearchSchema = z.object({
   search: z.string().optional(),
   sortBy: z.enum(['deadline', 'created_at', 'priority']).optional().default('deadline'),
   sortOrder: z.enum(['asc', 'desc']).optional().default('asc'),
-});
+  assignee: z.string().uuid().optional(),
+})
 
-export type MyWorkSearchParams = z.infer<typeof myWorkSearchSchema>;
+export type MyWorkSearchParams = z.infer<typeof myWorkSearchSchema>
 
 export const Route = createFileRoute('/_protected/my-work/')({
   component: MyWorkDashboard,
   validateSearch: (search) => myWorkSearchSchema.parse(search),
-});
+})

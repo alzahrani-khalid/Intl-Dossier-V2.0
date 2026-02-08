@@ -76,6 +76,7 @@ export interface VoiceMemo {
   storagePath: string
   storageBucket: string
   localUri?: string
+  playbackUrl?: string
   isCachedOffline: boolean
 
   // Transcription

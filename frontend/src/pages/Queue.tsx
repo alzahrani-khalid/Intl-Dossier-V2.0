@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { SLACountdown } from '../components/SLACountdown'
 import { useTicketList } from '../hooks/useIntakeApi'
-import type { IntakeTicket } from '../types/intake'
 
 interface QueueFilters {
   status?: string
@@ -230,7 +229,7 @@ export function Queue() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-                  {data.tickets.map((ticket: IntakeTicket) => (
+                  {data.tickets.map((ticket: any) => (
                     <tr
                       key={ticket.id}
                       className="cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -240,24 +239,24 @@ export function Queue() {
                           to={`/intake/tickets/${ticket.id}`}
                           className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                         >
-                          {ticket.ticket_number}
+                          {ticket.ticketNumber}
                         </Link>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {i18n.language === 'ar' && ticket.title_ar
-                            ? ticket.title_ar
-                            : ticket.title}
+                          {i18n.language === 'ar' && ticket.titleAr ? ticket.titleAr : ticket.title}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                        {t(`form.requestType.options.${ticket.request_type}`, ticket.request_type)}
+                        {String(
+                          t(`form.requestType.options.${ticket.requestType}`, ticket.requestType),
+                        )}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4">
                         <span
                           className={`text-sm font-semibold ${getPriorityColor(ticket.priority)}`}
                         >
-                          {t(`queue.priority.${ticket.priority}`, ticket.priority)}
+                          {String(t(`queue.priority.${ticket.priority}`, ticket.priority))}
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4">
@@ -266,13 +265,13 @@ export function Queue() {
                             ticket.status,
                           )}`}
                         >
-                          {t(`queue.status.${ticket.status}`, ticket.status)}
+                          {String(t(`queue.status.${ticket.status}`, ticket.status))}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         {ticket.status !== 'closed' &&
                           ticket.status !== 'converted' &&
-                          ticket.submitted_at && (
+                          ticket.submittedAt && (
                             <SLACountdown
                               ticketId={ticket.id}
                               targetMinutes={
@@ -281,13 +280,13 @@ export function Queue() {
                                   : 1440
                               }
                               eventType="resolution"
-                              startedAt={ticket.submitted_at}
+                              startedAt={ticket.submittedAt}
                               className="max-w-xs"
                             />
                           )}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(ticket.created_at).toLocaleDateString(i18n.language)}
+                        {new Date(ticket.createdAt).toLocaleDateString(i18n.language)}
                       </td>
                     </tr>
                   ))}

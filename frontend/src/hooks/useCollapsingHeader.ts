@@ -24,7 +24,7 @@ export interface UseCollapsingHeaderOptions {
   /** Distance to scroll before header collapses fully (default: 100) */
   collapseDistance?: number
   /** Container element to attach scroll listener (default: window) */
-  containerRef?: React.RefObject<HTMLElement>
+  containerRef?: React.RefObject<HTMLElement | null>
   /** Whether the header behavior is enabled (default: true) */
   enabled?: boolean
 }

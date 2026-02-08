@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { arSA, enUS } from 'date-fns/locale'
-import { Calendar, Clock, MapPin, Users, Loader2 } from 'lucide-react'
+import { Calendar, Clock, MapPin, Loader2 } from 'lucide-react'
 import { MilestonePlannerEmptyState } from '@/components/milestone-planning'
 import { useMilestonePlanning } from '@/hooks/useMilestonePlanning'
 import { supabase } from '@/lib/supabase'
@@ -156,7 +156,7 @@ export function EventTimeline({ dossierId, dossierType = 'Engagement' }: EventTi
         {/* Timeline line */}
         <div className="absolute start-4 top-0 bottom-0 w-0.5 bg-border" />
 
-        {calendarEntries.map((entry, index) => {
+        {calendarEntries.map((entry, _index) => {
           const title = isRTL ? entry.title_ar || entry.title_en : entry.title_en || entry.title_ar
           const description = isRTL
             ? entry.description_ar || entry.description_en

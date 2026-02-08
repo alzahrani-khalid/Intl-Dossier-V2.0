@@ -38,7 +38,7 @@ export function DelegationCard({
   const startsAt = new Date(delegation.valid_from)
   const daysUntilExpiry = differenceInDays(expiresAt, now)
   const isExpired = isPast(expiresAt)
-  const isNotStarted = isFuture(startsAt)
+  const _isNotStarted = isFuture(startsAt)
   const isRevoked = !!delegation.revoked_at
   const isExpiringSoon = !isExpired && !isRevoked && daysUntilExpiry <= 7
 
@@ -65,9 +65,9 @@ export function DelegationCard({
 
   // Get initials for avatar
   const getInitials = (email: string) => {
-    const parts = email.split('@')[0].split(/[._-]/)
+    const parts = email.split('@')[0]!.split(/[._-]/)
     if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+      return `${parts[0]![0]}${parts[1]![0]}`.toUpperCase()
     }
     return email.slice(0, 2).toUpperCase()
   }

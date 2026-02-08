@@ -100,7 +100,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
                   {t('status.currentTerm')}
                 </Badge>
               )}
-              <Badge className={importanceBadge.className}>{importanceBadge.label}</Badge>
+              <Badge className={importanceBadge?.className}>{importanceBadge?.label}</Badge>
               {party && extension.party_abbreviation && (
                 <Badge variant="outline">{extension.party_abbreviation}</Badge>
               )}
@@ -123,7 +123,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
                 <div>
                   <p className="font-medium">{officeName}</p>
                   <p className="text-sm text-muted-foreground">
-                    {getOfficeTypeLabel(extension.office_type)}
+                    {getOfficeTypeLabel(extension.office_type!)}
                   </p>
                 </div>
               </div>

@@ -91,7 +91,7 @@ export function DelegationList({
   }
 
   // Determine card type based on list type and delegation
-  const getCardType = (delegation: Delegation): 'granted' | 'received' => {
+  const getCardType = (_delegation: Delegation): 'granted' | 'received' => {
     // For 'all' type, we need to check the delegation's relationship
     if (type === 'all') {
       // If the current user is the grantor, show as 'granted'

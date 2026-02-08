@@ -20,7 +20,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
   onChange,
 }) => {
   const { t, i18n } = useTranslation('intake')
-  const isRTL = i18n.language === 'ar'
+  const _isRTL = i18n.language === 'ar'
 
   const handleFieldChange = (fieldName: string, fieldValue: any) => {
     onChange({

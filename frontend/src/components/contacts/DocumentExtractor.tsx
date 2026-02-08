@@ -6,7 +6,7 @@
  * Features file upload, processing progress indicator, and extracted contacts preview.
  */
 
-import React, { useState, useRef, useCallback, useEffect } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -18,7 +18,7 @@ import { useUploadDocument, useDocumentStatus, getConfidenceColor } from '@/hook
 import type { ExtractedContact } from '@/services/ocr-api'
 import type { Database } from '@/types/contact-directory.types'
 
-type ContactInsert = Database['public']['Tables']['cd_contacts']['Insert']
+type ContactInsert = Database['public']['Tables']['contacts']['Insert']
 
 interface DocumentExtractorProps {
   onExtracted: (contacts: Partial<ContactInsert>[]) => void
@@ -40,7 +40,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
   const uploadMutation = useUploadDocument()
 
   // Poll document status with automatic polling
-  const { data: statusData, isLoading: isPolling } = useDocumentStatus(documentSourceId, {
+  const { data: statusData, isLoading: _isPolling } = useDocumentStatus(documentSourceId, {
     enabled: !!documentSourceId && !processingComplete && !processingError,
     onCompleted: (data) => {
       setProcessingComplete(true)
@@ -123,7 +123,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
 
   // Get file icon based on extension
   const getFileIcon = (fileName: string) => {
-    const ext = fileName.toLowerCase().split('.').pop()
+    const _ext = fileName.toLowerCase().split('.').pop()
     return <FileText className="h-8 w-8 text-muted-foreground" />
   }
 

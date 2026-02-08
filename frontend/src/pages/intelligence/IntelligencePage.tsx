@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/Table/DataTable'
+import type { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 
@@ -103,8 +104,11 @@ export function IntelligencePage() {
           const titleAr = raw.title_ar ?? titleEn
           const summaryEn = raw.executive_summary_en ?? raw.summary_en ?? raw.summary ?? ''
           const summaryAr = raw.executive_summary_ar ?? raw.summary_ar ?? summaryEn
-          const confidence = raw.confidence_level ?? raw.confidence ?? 'medium'
-          const classification = raw.classification ?? 'internal'
+          const confidence = (raw.confidence_level ??
+            raw.confidence ??
+            'medium') as IntelligenceReport['confidence_level']
+          const classification = (raw.classification ??
+            'internal') as IntelligenceReport['classification']
           const status = raw.status ?? 'draft'
           const createdAt = raw.created_at ?? raw.createdAt ?? new Date().toISOString()
           const publishedAt = raw.published_at ?? null
@@ -261,97 +265,109 @@ export function IntelligencePage() {
     )
   }
 
-  const columns = [
+  const columns: ColumnDef<IntelligenceReport>[] = [
     {
-      key: 'report',
+      id: 'report',
       header: t('intelligence.report'),
-      cell: (report: IntelligenceReport) => (
-        <div>
-          <div className="font-mono text-xs text-muted-foreground mb-1">{report.report_number}</div>
-          <div className="font-medium">{isRTL ? report.title_ar : report.title_en}</div>
-          <div className="text-sm text-muted-foreground line-clamp-2 mt-1">
-            {isRTL ? report.executive_summary_ar : report.executive_summary_en}
+      cell: ({ row }) => {
+        const report = row.original
+        return (
+          <div>
+            <div className="font-mono text-xs text-muted-foreground mb-1">
+              {report.report_number}
+            </div>
+            <div className="font-medium">{isRTL ? report.title_ar : report.title_en}</div>
+            <div className="text-sm text-muted-foreground line-clamp-2 mt-1">
+              {isRTL ? report.executive_summary_ar : report.executive_summary_en}
+            </div>
           </div>
-        </div>
-      ),
+        )
+      },
     },
     {
-      key: 'analysis',
+      id: 'analysis',
       header: t('intelligence.analysisType'),
-      cell: (report: IntelligenceReport) => <AnalysisTypeBadges types={report.analysis_type} />,
+      cell: ({ row }) => <AnalysisTypeBadges types={row.original.analysis_type} />,
     },
     {
-      key: 'confidence',
+      id: 'confidence',
       header: t('intelligence.confidence'),
-      cell: (report: IntelligenceReport) => <ConfidenceIndicator level={report.confidence_level} />,
+      cell: ({ row }) => <ConfidenceIndicator level={row.original.confidence_level} />,
     },
     {
-      key: 'classification',
+      id: 'classification',
       header: t('intelligence.classification'),
-      cell: (report: IntelligenceReport) => (
-        <ClassificationBadge classification={report.classification} />
-      ),
+      cell: ({ row }) => <ClassificationBadge classification={row.original.classification} />,
     },
     {
-      key: 'findings',
+      id: 'findings',
       header: t('intelligence.keyFindings'),
-      cell: (report: IntelligenceReport) => (
-        <div className="text-sm">
-          <span className="font-medium">{report.key_findings?.length || 0}</span>
-          <span className="text-muted-foreground"> {t('intelligence.findings')}</span>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const report = row.original
+        return (
+          <div className="text-sm">
+            <span className="font-medium">{report.key_findings?.length || 0}</span>
+            <span className="text-muted-foreground"> {t('intelligence.findings')}</span>
+          </div>
+        )
+      },
     },
     {
-      key: 'status',
+      id: 'status',
       header: t('intelligence.status'),
-      cell: (report: IntelligenceReport) => (
-        <div className="space-y-1">
-          <span
-            className={`
+      cell: ({ row }) => {
+        const report = row.original
+        return (
+          <div className="space-y-1">
+            <span
+              className={`
  inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
  ${report.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
  ${report.status === 'review' ? 'bg-yellow-100 text-yellow-800' : ''}
  ${report.status === 'approved' ? 'bg-blue-100 text-blue-800' : ''}
  ${report.status === 'published' ? 'bg-green-100 text-green-800' : ''}
  `}
-          >
-            {t(`intelligence.statuses.${report.status}`)}
-          </span>
-          {report.published_at && (
-            <div className="text-xs text-muted-foreground">
-              {format(new Date(report.published_at), 'dd MMM yyyy')}
-            </div>
-          )}
-        </div>
-      ),
-    },
-    {
-      key: 'people',
-      header: t('intelligence.people'),
-      cell: (report: IntelligenceReport) => (
-        <div className="text-sm space-y-1">
-          <div>
-            <span className="text-muted-foreground">{t('intelligence.author')}:</span>{' '}
-            {report.author.full_name}
+            >
+              {t(`intelligence.statuses.${report.status}`)}
+            </span>
+            {report.published_at && (
+              <div className="text-xs text-muted-foreground">
+                {format(new Date(report.published_at), 'dd MMM yyyy')}
+              </div>
+            )}
           </div>
-          {report.reviewed_by && (
-            <div>
-              <span className="text-muted-foreground">{t('intelligence.reviewer')}:</span>{' '}
-              {report.reviewed_by.full_name}
-            </div>
-          )}
-          {report.approved_by && (
-            <div>
-              <span className="text-muted-foreground">{t('intelligence.approver')}:</span>{' '}
-              {report.approved_by.full_name}
-            </div>
-          )}
-        </div>
-      ),
+        )
+      },
     },
     {
-      key: 'actions',
+      id: 'people',
+      header: t('intelligence.people'),
+      cell: ({ row }) => {
+        const report = row.original
+        return (
+          <div className="text-sm space-y-1">
+            <div>
+              <span className="text-muted-foreground">{t('intelligence.author')}:</span>{' '}
+              {report.author.full_name}
+            </div>
+            {report.reviewed_by && (
+              <div>
+                <span className="text-muted-foreground">{t('intelligence.reviewer')}:</span>{' '}
+                {report.reviewed_by.full_name}
+              </div>
+            )}
+            {report.approved_by && (
+              <div>
+                <span className="text-muted-foreground">{t('intelligence.approver')}:</span>{' '}
+                {report.approved_by.full_name}
+              </div>
+            )}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'actions',
       header: '',
       cell: () => (
         <Button size="sm" variant="ghost">

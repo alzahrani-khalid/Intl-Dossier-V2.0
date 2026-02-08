@@ -56,9 +56,9 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
   // Calculate trend (simple comparison)
   const trendData = data.trend_data || []
   const recentCompliance =
-    trendData.length > 1 ? trendData[trendData.length - 1]?.compliance_pct : null
+    trendData.length > 1 ? (trendData[trendData.length - 1]?.compliance_pct ?? null) : null
   const previousCompliance =
-    trendData.length > 1 ? trendData[trendData.length - 2]?.compliance_pct : null
+    trendData.length > 1 ? (trendData[trendData.length - 2]?.compliance_pct ?? null) : null
   const complianceTrend =
     recentCompliance !== null && previousCompliance !== null
       ? recentCompliance - previousCompliance

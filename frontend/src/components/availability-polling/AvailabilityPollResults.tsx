@@ -27,7 +27,6 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import {
   Table,
   TableBody,
@@ -40,8 +39,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils'
 
 import { usePollDetails, useClosePoll, useAutoSchedule } from '@/hooks/useAvailabilityPolling'
-import type { OptimalSlot, PollSlot, PollParticipant } from '@/types/availability-polling.types'
-import { RESPONSE_COLORS, POLL_STATUS_COLORS } from '@/types/availability-polling.types'
+import { POLL_STATUS_COLORS } from '@/types/availability-polling.types'
 
 interface AvailabilityPollResultsProps {
   pollId: string

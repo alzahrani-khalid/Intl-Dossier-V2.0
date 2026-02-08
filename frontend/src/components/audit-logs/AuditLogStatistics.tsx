@@ -10,7 +10,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { BarChart3, Plus, Edit3, Trash2, Database, Loader2 } from 'lucide-react'
+import { BarChart3, Plus, Edit3, Trash2, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -100,7 +100,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
     : []
 
   // Calculate max for bar width
-  const maxTableCount = topTables.length > 0 ? topTables[0].count : 1
+  const maxTableCount = topTables.length > 0 ? topTables[0]!.count : 1
 
   return (
     <Card className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>

@@ -10,7 +10,8 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseUrl } from '@/lib/supabase'
+import { agendaKeys } from '@/types/meeting-agenda.types'
 import type {
   AgendaFull,
   AgendaListItem,
@@ -30,7 +31,6 @@ import type {
   CompleteItemInput,
   ReorderItemsInput,
   CreateFromTemplateInput,
-  agendaKeys,
 } from '@/types/meeting-agenda.types'
 
 // ============================================
@@ -48,7 +48,7 @@ async function callAgendaFunction<T>(
     throw new Error('Not authenticated')
   }
 
-  const response = await fetch(`${supabase.supabaseUrl}/functions/v1/meeting-agendas`, {
+  const response = await fetch(`${supabaseUrl}/functions/v1/meeting-agendas`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${session.access_token}`,
@@ -592,7 +592,7 @@ export function useAgendaItemDragDrop(agendaId: string) {
     // Optimistic update
     const reorderedItems = Array.from(items)
     const [removed] = reorderedItems.splice(sourceIndex, 1)
-    reorderedItems.splice(destinationIndex, 0, removed)
+    reorderedItems.splice(destinationIndex, 0, removed!)
 
     // Update sort_order for affected items
     const itemOrders: ReorderItemsInput[] = reorderedItems.map((item, index) => ({

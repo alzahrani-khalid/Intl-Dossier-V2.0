@@ -3,15 +3,15 @@ import type { RefObject } from 'react'
 
 export function useInView(
   ref: RefObject<HTMLElement>,
-  options?: IntersectionObserverInit
+  options?: IntersectionObserverInit,
 ): boolean {
   const [isInView, setIsInView] = useState(false)
 
   useEffect(() => {
-    if (!ref.current) return
+    if (!ref.current) return undefined
 
     const observer = new IntersectionObserver(([entry]) => {
-      setIsInView(entry.isIntersecting)
+      setIsInView(entry!.isIntersecting)
     }, options)
 
     observer.observe(ref.current)

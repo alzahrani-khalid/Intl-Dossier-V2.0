@@ -86,8 +86,8 @@ export class CircuitBreakerService {
     } catch (error) {
       this.onFailure()
 
-      // Use fallback if circuit opened or in half-open
-      if (this.state === 'open' && fallback) {
+      // Use fallback if circuit opened or in half-open (re-check after onFailure may have changed state)
+      if ((this.state as CircuitState) === 'open' && fallback) {
         console.warn('[CircuitBreaker] Circuit opened, using fallback')
         try {
           const data = await fallback()

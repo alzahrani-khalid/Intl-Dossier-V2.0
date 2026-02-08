@@ -12,6 +12,8 @@ export interface ViewportInfo {
 export interface ResponsiveState extends ViewportInfo {
   alias: BreakpointAlias
   deviceType: BreakpointDeviceType
+  /** Alias for deviceType - convenience accessor for responsive components */
+  viewport: BreakpointDeviceType
   isMobile: boolean
   isTablet: boolean
   isDesktop: boolean
@@ -25,9 +27,7 @@ export interface ResponsiveState extends ViewportInfo {
 
 function readPxVar(variableName: string): number | undefined {
   if (typeof window === 'undefined') return undefined
-  const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue(variableName)
-    .trim()
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(variableName).trim()
   if (!raw) return undefined
   const match = raw.match(/(\d+(?:\.\d+)?)px/)
   return match ? Number(match[1]) : Number(raw)
@@ -74,7 +74,7 @@ export function useResponsive(): ResponsiveState {
   const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return undefined
     const handleResize = () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = requestAnimationFrame(() => {
@@ -97,7 +97,10 @@ export function useResponsive(): ResponsiveState {
     }
   }, [])
 
-  const alias = useMemo(() => aliasForWidth(viewport.width, breakpoints), [viewport.width, breakpoints])
+  const alias = useMemo(
+    () => aliasForWidth(viewport.width, breakpoints),
+    [viewport.width, breakpoints],
+  )
   const deviceType = useMemo(() => deviceForAlias(alias), [alias])
 
   const up = (a: BreakpointAlias) => viewport.width >= breakpoints[a]
@@ -109,6 +112,7 @@ export function useResponsive(): ResponsiveState {
     ...viewport,
     alias,
     deviceType,
+    viewport: deviceType,
     isMobile: deviceType === 'mobile',
     isTablet: deviceType === 'tablet',
     isDesktop: deviceType === 'desktop',
@@ -121,4 +125,3 @@ export function useResponsive(): ResponsiveState {
 }
 
 export type { BreakpointAlias }
-

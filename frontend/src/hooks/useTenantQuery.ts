@@ -131,7 +131,11 @@ export function useTenantMutation<
     onSuccess: async (data, variables, context) => {
       // Call original onSuccess if provided
       if (onSuccess) {
-        await onSuccess(data, variables, context)
+        await (onSuccess as (data: TData, variables: TVariables, context: TContext) => unknown)(
+          data,
+          variables,
+          context,
+        )
       }
 
       // Invalidate tenant-scoped queries

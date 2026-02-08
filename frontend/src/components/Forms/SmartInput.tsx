@@ -309,7 +309,7 @@ function formatCurrency(value: string, currencyCode?: string): string {
   }
 
   // Format with thousand separators
-  const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  const intPart = parts[0]!.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   const decPart = parts[1] ? '.' + parts[1].slice(0, 2) : ''
 
   const formatted = intPart + decPart

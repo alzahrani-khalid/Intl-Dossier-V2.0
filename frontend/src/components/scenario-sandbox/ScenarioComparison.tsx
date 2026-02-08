@@ -207,7 +207,7 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
                         {scenario.negative_outcomes}
                       </span>
                       {scenario.negative_outcomes === minNegative &&
-                        scenario.negative_outcomes < scenarios[0].negative_outcomes && (
+                        scenario.negative_outcomes < scenarios[0]!.negative_outcomes && (
                           <CheckCircle2 className="h-4 w-4 text-green-500" />
                         )}
                     </div>

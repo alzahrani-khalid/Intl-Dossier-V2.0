@@ -109,7 +109,7 @@ export function OnboardingTourTrigger({
   // Check if user has completed or skipped onboarding
   const onboardingProgress = progress['onboarding']
   const hasCompletedTour = onboardingProgress?.isCompleted || hasCompletedOnboarding()
-  const hasSkippedTour = onboardingProgress?.wasSkipped
+  const _hasSkippedTour = onboardingProgress?.wasSkipped
 
   // Start tour handler
   const handleStartTour = useCallback(() => {
@@ -135,10 +135,10 @@ export function OnboardingTourTrigger({
     setHasMounted(true)
 
     // Don't show if tours are disabled or a tour is already active
-    if (!toursEnabled || isActive) return
+    if (!toursEnabled || isActive) return undefined
 
     // Don't show if user has already seen onboarding
-    if (hasSeenOnboarding()) return
+    if (hasSeenOnboarding()) return undefined
 
     // Show welcome prompt after delay to let the page render
     const timer = setTimeout(() => {

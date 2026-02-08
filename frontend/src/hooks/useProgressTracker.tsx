@@ -260,7 +260,7 @@ export function useBatchProgress<T>() {
         }
 
         try {
-          await processor(items[i], i)
+          await processor(items[i]!, i)
           tracker.increment({
             currentStep: options?.initialStep
               ? `${options.initialStep} (${i + 1}/${items.length})`

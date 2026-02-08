@@ -109,8 +109,8 @@ export async function searchContacts(params: ContactSearchParams): Promise<Conta
   } = params
 
   let queryBuilder = supabase
-    .from('cd_contacts')
-    .select('*, organization:cd_organizations!organization_id(id, name, name_ar)', {
+    .from('contacts')
+    .select('*, organization:organizations!organization_id(id, name, name_ar)', {
       count: 'exact',
     })
 
@@ -165,9 +165,9 @@ export async function checkDuplicates(input: ContactCreateInput): Promise<Duplic
  */
 export async function createContact(input: ContactCreateInput): Promise<ContactResponse> {
   const { data, error } = await supabase
-    .from('cd_contacts')
+    .from('contacts')
     .insert(input)
-    .select('*, organization:cd_organizations!organization_id(id, name, name_ar)')
+    .select('*, organization:organizations!organization_id(id, name, name_ar)')
     .single()
 
   if (error) throw error

@@ -4,7 +4,7 @@
  * TypeScript types for the Front Door Intake system
  */
 
-import type { DynamicFields, AuditChanges, JsonValue, Metadata } from './common.types'
+import type { DynamicFields, AuditChanges, Metadata } from './common.types'
 
 export type RequestType = 'engagement' | 'position' | 'mou_action' | 'foresight'
 
@@ -472,6 +472,10 @@ export interface TicketListResponse {
     totalPages: number
     totalItems: number
   }
+  /** Convenience accessor - total number of pages (same as pagination.totalPages) */
+  total_pages: number
+  /** Convenience accessor - total number of items (same as pagination.totalItems) */
+  total_count: number
 }
 
 export interface TicketDetailResponse extends TicketResponse {

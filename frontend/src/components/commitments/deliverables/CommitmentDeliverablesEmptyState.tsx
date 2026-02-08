@@ -74,7 +74,7 @@ export function CommitmentDeliverablesEmptyState({
   const [isApplyingTemplate, setIsApplyingTemplate] = useState<string | null>(null)
 
   const bulkCreateMutation = useBulkCreateDeliverables()
-  const createMutation = useCreateDeliverable()
+  const _createMutation = useCreateDeliverable()
 
   // Quick add templates (subset for display)
   const quickAddTypes: CommitmentDeliverableType[] = [

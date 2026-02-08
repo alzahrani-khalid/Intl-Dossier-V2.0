@@ -25,7 +25,7 @@ function generateDateSeries(days: number): string[] {
   for (let i = days; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
-    dates.push(date.toISOString().split('T')[0])
+    dates.push(date.toISOString().split('T')[0]!)
   }
 
   return dates
@@ -73,8 +73,8 @@ export function generateSampleEngagementMetrics(): EngagementMetrics {
 
   const engagementTrend: TimeSeriesDataPoint[] = dates.map((date, index) => ({
     date,
-    value: Math.round(trendValues[index]),
-    label: `${Math.round(trendValues[index])} engagements`,
+    value: Math.round(trendValues[index]!),
+    label: `${Math.round(trendValues[index]!)} engagements`,
   }))
 
   return {
@@ -107,8 +107,8 @@ export function generateSampleRelationshipHealthTrends(): RelationshipHealthTren
 
   const scoreTrend: TimeSeriesDataPoint[] = dates.map((date, index) => ({
     date,
-    value: scoreValues[index],
-    label: `${scoreValues[index].toFixed(1)}`,
+    value: scoreValues[index]!,
+    label: `${scoreValues[index]!.toFixed(1)}`,
   }))
 
   return {
@@ -151,8 +151,8 @@ export function generateSampleCommitmentFulfillment(): CommitmentFulfillment {
 
   const fulfillmentTrend: TimeSeriesDataPoint[] = dates.map((date, index) => ({
     date,
-    value: fulfillmentValues[index],
-    label: `${fulfillmentValues[index].toFixed(1)}%`,
+    value: fulfillmentValues[index]!,
+    label: `${fulfillmentValues[index]!.toFixed(1)}%`,
   }))
 
   return {

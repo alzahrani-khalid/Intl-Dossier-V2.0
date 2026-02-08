@@ -221,7 +221,7 @@ export function SearchResultCard({
   const isRTL = i18n.language === 'ar'
   const [showRelationshipPath, setShowRelationshipPath] = useState(false)
 
-  const config = entityTypeConfig[result.entityType] || entityTypeConfig.document
+  const config = (entityTypeConfig[result.entityType] || entityTypeConfig.document)!
   const Icon = config.icon
 
   // Highlight search query in text

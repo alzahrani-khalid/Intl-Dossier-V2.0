@@ -7,61 +7,66 @@
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#POST /assignments/comments/create
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createClient } from '@/lib/supabase-client';
-import { useToast } from '@/hooks/use-toast';
-import { useTranslation } from 'react-i18next';
-import { AssignmentDetailResponse } from './useAssignmentDetail';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createClient } from '@/lib/supabase-client'
+import { useToast } from '@/hooks/use-toast'
+import { useTranslation } from 'react-i18next'
+import { AssignmentDetailResponse } from './useAssignmentDetail'
 
-const supabase = createClient();
+const supabase = createClient()
 
 export interface AddCommentRequest {
-  assignment_id: string;
-  text: string;
+  assignment_id: string
+  text: string
 }
 
 export interface AddCommentResponse {
-  comment_id: string;
-  created_at: string;
-  mentions: string[];
+  comment_id: string
+  created_at: string
+  mentions: string[]
 }
 
 export function useAddComment() {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-  const { t } = useTranslation(['assignments', 'common']);
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+  const { t } = useTranslation(['assignments', 'common'])
 
-  return useMutation<AddCommentResponse, Error, AddCommentRequest, { previous: AssignmentDetailResponse | undefined }>({
+  return useMutation<
+    AddCommentResponse,
+    Error,
+    AddCommentRequest,
+    { previous: AssignmentDetailResponse | undefined }
+  >({
     mutationFn: async (request: AddCommentRequest) => {
       const { data, error } = await supabase.functions.invoke('assignments-comments-create', {
         method: 'POST',
         body: request,
-      });
+      })
 
       if (error) {
-        throw new Error(error.message || 'Failed to add comment');
+        throw new Error(error.message || 'Failed to add comment')
       }
 
-      return data as AddCommentResponse;
+      return data as AddCommentResponse
     },
 
     onMutate: async (newComment) => {
       // Cancel outgoing refetches to avoid overwriting optimistic update
-      await queryClient.cancelQueries({ queryKey: ['assignment', newComment.assignment_id] });
+      await queryClient.cancelQueries({ queryKey: ['assignment', newComment.assignment_id] })
 
       // Snapshot previous value
       const previous = queryClient.getQueryData<AssignmentDetailResponse>([
         'assignment',
         newComment.assignment_id,
-      ]);
+      ])
 
       // Optimistically add temp comment
       queryClient.setQueryData<AssignmentDetailResponse>(
         ['assignment', newComment.assignment_id],
         (old) => {
-          if (!old) return old;
+          if (!old) return old
 
-          const user = supabase.auth.getUser();
+          const _user = supabase.auth.getUser()
           const tempComment = {
             id: 'temp-' + Date.now(),
             assignment_id: newComment.assignment_id,
@@ -69,26 +74,23 @@ export function useAddComment() {
             text: newComment.text,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
-          };
+          }
 
           return {
             ...old,
             comments: [...old.comments, tempComment],
-          };
-        }
-      );
+          }
+        },
+      )
 
       // Return context for rollback
-      return { previous };
+      return { previous }
     },
 
     onError: (error, variables, context) => {
       // Rollback optimistic update
       if (context?.previous) {
-        queryClient.setQueryData(
-          ['assignment', variables.assignment_id],
-          context.previous
-        );
+        queryClient.setQueryData(['assignment', variables.assignment_id], context.previous)
       }
 
       // Show error toast
@@ -96,17 +98,17 @@ export function useAddComment() {
         title: t('assignments:comments.error.title'),
         description: error.message || t('common:errors.unknown'),
         variant: 'destructive',
-      });
+      })
     },
 
-    onSettled: (data, error, variables) => {
+    onSettled: (_data, _error, variables) => {
       // Always refetch to ensure consistency
       queryClient.invalidateQueries({
         queryKey: ['assignment', variables.assignment_id],
-      });
+      })
     },
 
-    onSuccess: (data, variables) => {
+    onSuccess: (data, _variables) => {
       // Show success toast if mentions were created
       if (data.mentions && data.mentions.length > 0) {
         toast({
@@ -116,8 +118,8 @@ export function useAddComment() {
             users: data.mentions.join(', '),
           }),
           variant: 'default',
-        });
+        })
       }
     },
-  });
+  })
 }

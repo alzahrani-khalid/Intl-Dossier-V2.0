@@ -7,7 +7,6 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { Shield } from 'lucide-react'
 import { ComplianceRulesManager } from '@/components/compliance/ComplianceRulesManager'
 
 export const Route = createFileRoute('/_protected/compliance-demo')({

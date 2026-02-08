@@ -6,7 +6,6 @@
  * Mobile-first, RTL-supported.
  */
 
-import { useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Activity,
@@ -113,9 +112,9 @@ function getInitials(name: string | null): string {
   if (!name) return '?'
   const words = name.trim().split(/\s+/)
   if (words.length === 1) {
-    return words[0].slice(0, 2).toUpperCase()
+    return words[0]!.slice(0, 2).toUpperCase()
   }
-  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase()
+  return (words[0]!.charAt(0) + words[words.length - 1]!.charAt(0)).toUpperCase()
 }
 
 /**

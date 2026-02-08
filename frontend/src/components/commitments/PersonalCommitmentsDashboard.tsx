@@ -80,7 +80,7 @@ export function PersonalCommitmentsDashboard() {
   }
 
   const activeStatuses: CommitmentStatus[] = ['pending', 'in_progress']
-  const overdueStatuses: CommitmentStatus[] = ['pending', 'in_progress'] // overdue filter applied separately
+  const _overdueStatuses: CommitmentStatus[] = ['pending', 'in_progress'] // overdue filter applied separately
   const completedStatuses: CommitmentStatus[] = ['completed']
 
   return (

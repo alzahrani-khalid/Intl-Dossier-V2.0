@@ -465,7 +465,18 @@ export const REPORT_TYPE_LABELS: Record<InfluenceReportType, { en: string; ar: s
 /**
  * Metric labels
  */
-export const METRIC_LABELS: Record<string, { en: string; ar: string }> = {
+export const METRIC_LABELS: { [key: string]: { en: string; ar: string } } & Record<
+  | 'degree_centrality'
+  | 'betweenness_centrality'
+  | 'closeness_centrality'
+  | 'eigenvector_centrality'
+  | 'engagement_frequency'
+  | 'engagement_reach'
+  | 'avg_relationship_health'
+  | 'strong_relationships'
+  | 'weak_relationships',
+  { en: string; ar: string }
+> = {
   degree_centrality: { en: 'Connections', ar: 'الاتصالات' },
   betweenness_centrality: { en: 'Bridge Position', ar: 'موقع الجسر' },
   closeness_centrality: { en: 'Network Reach', ar: 'الوصول للشبكة' },

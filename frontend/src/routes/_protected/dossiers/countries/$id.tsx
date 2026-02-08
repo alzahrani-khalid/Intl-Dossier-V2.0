@@ -8,26 +8,26 @@
  * Performance Optimization (T064): Uses React.lazy() for code splitting
  */
 
-import { createFileRoute } from '@tanstack/react-router';
-import { lazy, Suspense } from 'react';
-import { useDossier } from '@/hooks/useDossier';
-import { isCountryDossier } from '@/lib/dossier-type-guards';
-import { CountryDossierSkeleton } from '@/components/Dossier/DossierLoadingSkeletons';
-import { AlertCircle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { Link } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
+import { createFileRoute } from '@tanstack/react-router'
+import { lazy, Suspense } from 'react'
+import { useDossier } from '@/hooks/useDossier'
+import { isCountryDossier } from '@/lib/dossier-type-guards'
+import { CountryDossierSkeleton } from '@/components/Dossier/DossierLoadingSkeletons'
+import { AlertCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Link } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
 
 // Lazy load the CountryDossierPage component (T064)
 const CountryDossierPage = lazy(() =>
   import('@/pages/dossiers/CountryDossierPage').then((module) => ({
     default: module.CountryDossierPage,
-  }))
-);
+  })),
+)
 
 // Search params for tab navigation
 interface CountryDossierSearchParams {
-  tab?: string;
+  tab?: string
 }
 
 export const Route = createFileRoute('/_protected/dossiers/countries/$id')({
@@ -35,22 +35,22 @@ export const Route = createFileRoute('/_protected/dossiers/countries/$id')({
   validateSearch: (search: Record<string, unknown>): CountryDossierSearchParams => {
     return {
       tab: search.tab as string | undefined,
-    };
+    }
   },
-});
+})
 
 function CountryDossierDetailRoute() {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const { id } = Route.useParams();
-  const searchParams = Route.useSearch();
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const { id } = Route.useParams()
+  const searchParams = Route.useSearch()
 
   // Fetch dossier with country-specific includes
-  const { data: dossier, isLoading, error } = useDossier(id, ['stats', 'owners', 'contacts']);
+  const { data: dossier, isLoading, error } = useDossier(id, ['stats', 'owners', 'contacts'])
 
   // Loading state - use country-specific skeleton
   if (isLoading) {
-    return <CountryDossierSkeleton />;
+    return <CountryDossierSkeleton />
   }
 
   // Error state
@@ -85,11 +85,11 @@ function CountryDossierDetailRoute() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Type validation - ensure this is actually a country dossier
-  if (!dossier || !isCountryDossier(dossier)) {
+  if (!dossier || !isCountryDossier(dossier as any)) {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16"
@@ -108,7 +108,7 @@ function CountryDossierDetailRoute() {
               <p className="text-sm sm:text-base text-destructive/90">
                 {t('detail.wrongTypeDescription', {
                   expectedType: t('type.country'),
-                  actualType: dossier ? t(`type.${dossier.dossier_type}`) : 'unknown',
+                  actualType: dossier ? t(`type.${dossier.type}`) : 'unknown',
                 })}
               </p>
               <div className="mt-4 flex flex-col sm:flex-row gap-2">
@@ -117,8 +117,8 @@ function CountryDossierDetailRoute() {
                 </Button>
                 {dossier && (
                   <Button variant="outline" asChild>
-                    <Link to={`/dossiers/${dossier.dossier_type}s/${dossier.id}`}>
-                      {t('action.viewCorrectType', { type: t(`type.${dossier.dossier_type}`) })}
+                    <Link to={`/dossiers/${dossier.type}s/${dossier.id}`}>
+                      {t('action.viewCorrectType', { type: t(`type.${dossier.type}`) })}
                     </Link>
                   </Button>
                 )}
@@ -127,13 +127,13 @@ function CountryDossierDetailRoute() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Render country-specific detail page with Suspense for lazy loading (T064)
   return (
     <Suspense fallback={<CountryDossierSkeleton />}>
-      <CountryDossierPage dossier={dossier} initialTab={searchParams.tab} />
+      <CountryDossierPage dossier={dossier as any} initialTab={searchParams.tab} />
     </Suspense>
-  );
+  )
 }

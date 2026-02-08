@@ -7,7 +7,7 @@
  * Mobile-first, RTL-compatible
  */
 
-import * as React from 'react'
+import * as _React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'

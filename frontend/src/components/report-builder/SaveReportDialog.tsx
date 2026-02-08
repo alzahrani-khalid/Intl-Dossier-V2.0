@@ -38,7 +38,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Save, Loader2, X } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import type {
   ReportConfiguration,
   ReportAccessLevel,

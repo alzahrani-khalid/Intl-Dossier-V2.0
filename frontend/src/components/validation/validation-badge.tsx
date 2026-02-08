@@ -19,19 +19,23 @@ export function ValidationBadge({
   size = 'sm',
   position = 'inline',
 }: ValidationBadgeProps) {
-  const { enableValidation } = useCompliance()
-  const { lastValidation, isValid } = useComponentCompliance({
-    componentName,
-    validateOnMount: true,
-  })
+  const { lastResult, validateElement } = useCompliance()
 
-  if (!enableValidation || process.env.NODE_ENV !== 'development') {
+  // Run validation on mount
+  React.useEffect(() => {
+    validateElement(componentName)
+  }, [componentName, validateElement])
+
+  if (process.env.NODE_ENV !== 'development') {
     return null
   }
 
-  const errors = lastValidation.errors.filter((e) => e.severity === 'error')
-  const warnings = lastValidation.errors.filter((e) => e.severity === 'warning')
-  const info = lastValidation.errors.filter((e) => e.severity === 'info')
+  const validationResults = lastResult?.results || []
+  const isValid = lastResult?.passed ?? true
+
+  const errors = validationResults.filter((e) => e.severity === 'error')
+  const warnings = validationResults.filter((e) => e.severity === 'warning')
+  const info = validationResults.filter((e) => e.severity === 'info')
 
   const sizeClasses = {
     sm: 'text-xs px-1.5 py-0.5',
@@ -121,19 +125,15 @@ export interface ValidationSummaryProps {
 }
 
 export function ValidationSummary({ componentNames, className }: ValidationSummaryProps) {
-  const { enableValidation } = useCompliance()
+  const { lastResult } = useCompliance()
 
-  if (!enableValidation || process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== 'development') {
     return null
   }
 
-  const validComponents = componentNames.filter((name) => {
-    const { isValid } = useComponentCompliance({
-      componentName: name,
-      validateOnMount: true,
-    })
-    return isValid
-  })
+  // Since useCompliance doesn't support per-component validation in this context,
+  // use the overall lastResult to determine compliance
+  const validComponents = lastResult?.passed ? componentNames : []
 
   const percentage = Math.round((validComponents.length / componentNames.length) * 100)
 
@@ -163,5 +163,3 @@ export function ValidationSummary({ componentNames, className }: ValidationSumma
     </div>
   )
 }
-
-import { useComponentCompliance } from '../../hooks/use-compliance'

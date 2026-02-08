@@ -6,37 +6,39 @@
  * Supports selective refresh for individual intelligence types.
  */
 
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { RefreshCw, ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next'
+import { RefreshCw, ChevronDown } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import type { IntelligenceType } from '@/types/intelligence-reports.types';
+} from '@/components/ui/dropdown-menu'
+import type { IntelligenceType } from '@/types/intelligence-reports.types'
 
 export interface RefreshButtonProps {
   /** Current intelligence types to refresh */
-  intelligenceTypes?: IntelligenceType[];
+  intelligenceTypes?: IntelligenceType[]
 
   /** Callback when refresh is triggered */
-  onRefresh: (types: IntelligenceType[]) => void;
+  onRefresh: (types: IntelligenceType[]) => void
 
   /** Loading state */
-  isLoading?: boolean;
+  isLoading?: boolean
 
   /** Disabled state */
-  disabled?: boolean;
+  disabled?: boolean
 
   /** Show dropdown for selective refresh */
-  showTypeSelection?: boolean;
+  showTypeSelection?: boolean
+
+  /** Size variant (passed through, not used internally) */
+  size?: 'sm' | 'md' | 'lg'
 
   /** Additional CSS classes */
-  className?: string;
+  className?: string
 }
 
 const INTELLIGENCE_TYPE_LABELS: Record<IntelligenceType, { en: string; ar: string }> = {
@@ -45,7 +47,7 @@ const INTELLIGENCE_TYPE_LABELS: Record<IntelligenceType, { en: string; ar: strin
   security: { en: 'Security', ar: 'أمني' },
   bilateral: { en: 'Bilateral', ar: 'ثنائي' },
   general: { en: 'General', ar: 'عام' },
-};
+}
 
 export function RefreshButton({
   intelligenceTypes = ['economic', 'political', 'security', 'bilateral'],
@@ -55,16 +57,16 @@ export function RefreshButton({
   showTypeSelection = true,
   className,
 }: RefreshButtonProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   const handleRefreshAll = () => {
-    onRefresh(intelligenceTypes);
-  };
+    onRefresh(intelligenceTypes)
+  }
 
   const handleRefreshType = (type: IntelligenceType) => {
-    onRefresh([type]);
-  };
+    onRefresh([type])
+  }
 
   if (!showTypeSelection) {
     // Simple refresh button without dropdown
@@ -79,14 +81,12 @@ export function RefreshButton({
         aria-label={t('intelligence.refreshButtonLabel', 'Refresh intelligence data')}
         aria-busy={isLoading}
       >
-        <RefreshCw
-          className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-        />
+        <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
         <span className="text-sm sm:text-base">
           {isLoading ? t('intelligence.refreshing') : t('intelligence.refresh')}
         </span>
       </Button>
-    );
+    )
   }
 
   return (
@@ -101,9 +101,7 @@ export function RefreshButton({
         aria-label={t('intelligence.refreshAllLabel', 'Refresh all intelligence types')}
         aria-busy={isLoading}
       >
-        <RefreshCw
-          className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-        />
+        <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
         <span className="hidden text-sm sm:inline sm:text-base">
           {isLoading ? t('intelligence.refreshing') : t('intelligence.refreshAll')}
         </span>
@@ -126,11 +124,7 @@ export function RefreshButton({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-48">
-          <DropdownMenuItem
-            onClick={handleRefreshAll}
-            disabled={isLoading}
-            className="gap-2"
-          >
+          <DropdownMenuItem onClick={handleRefreshAll} disabled={isLoading} className="gap-2">
             <RefreshCw className="h-4 w-4" />
             <span>{t('intelligence.refreshAll')}</span>
           </DropdownMenuItem>
@@ -144,14 +138,12 @@ export function RefreshButton({
             >
               <RefreshCw className="h-4 w-4" />
               <span>
-                {isRTL
-                  ? INTELLIGENCE_TYPE_LABELS[type].ar
-                  : INTELLIGENCE_TYPE_LABELS[type].en}
+                {isRTL ? INTELLIGENCE_TYPE_LABELS[type].ar : INTELLIGENCE_TYPE_LABELS[type].en}
               </span>
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }

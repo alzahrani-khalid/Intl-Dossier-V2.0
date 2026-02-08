@@ -1,11 +1,19 @@
 // Enhanced Custom React Flow Edges with Dotted Lines and Impact Badges
 import { memo } from 'react'
-import { EdgeProps, getBezierPath, EdgeLabelRenderer, BaseEdge } from '@xyflow/react'
+import {
+  type EdgeProps,
+  type Edge,
+  getBezierPath,
+  EdgeLabelRenderer,
+  BaseEdge,
+} from '@xyflow/react'
 
-interface CustomEdgeData {
+interface CustomEdgeData extends Record<string, unknown> {
   label?: string
   strength?: 'primary' | 'secondary' | 'observer'
 }
+
+type CustomEdge = Edge<CustomEdgeData>
 
 // Custom Edge Component with dotted lines and impact badges
 export const CustomEdge = memo((({
@@ -18,7 +26,7 @@ export const CustomEdge = memo((({
   targetPosition,
   data,
   markerEnd,
-}: EdgeProps<CustomEdgeData>) => {
+}: EdgeProps<CustomEdge>) => {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -28,7 +36,7 @@ export const CustomEdge = memo((({
     targetPosition,
   })
 
-  const { label, strength = 'secondary' } = data || {}
+  const { label, strength = 'secondary' } = (data || {}) as CustomEdgeData
 
   // Get edge styling based on strength (matching impact levels) - Theme aware
   const getEdgeStyle = () => {
@@ -80,7 +88,7 @@ export const CustomEdge = memo((({
       <BaseEdge
         id={id}
         path={edgePath}
-        markerEnd={markerEnd}
+        markerEnd={markerEnd as string}
         style={{
           stroke: style.stroke,
           strokeWidth: style.strokeWidth,
@@ -143,7 +151,7 @@ export const SimpleCustomEdge = memo((({
   targetPosition,
   data,
   markerEnd,
-}: EdgeProps<CustomEdgeData>) => {
+}: EdgeProps<CustomEdge>) => {
   const [edgePath] = getBezierPath({
     sourceX,
     sourceY,
@@ -153,7 +161,7 @@ export const SimpleCustomEdge = memo((({
     targetPosition,
   })
 
-  const { strength = 'secondary' } = data || {}
+  const { strength = 'secondary' } = (data || {}) as CustomEdgeData
 
   // Theme-aware stroke colors
   const strokeColor =
@@ -168,7 +176,7 @@ export const SimpleCustomEdge = memo((({
     <BaseEdge
       id={id}
       path={edgePath}
-      markerEnd={markerEnd}
+      markerEnd={markerEnd as string}
       style={{
         stroke: strokeColor,
         strokeWidth,

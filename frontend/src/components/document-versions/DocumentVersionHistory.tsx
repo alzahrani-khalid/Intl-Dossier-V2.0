@@ -298,7 +298,7 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
           // Only allow 2 selections for comparison
           if (next.size >= 2) {
             const [first] = next
-            next.delete(first)
+            next.delete(first!)
           }
           next.add(version.version_number)
         } else {
@@ -314,7 +314,7 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
   const handleCompare = useCallback(() => {
     if (selectedVersions.size === 2) {
       const [a, b] = Array.from(selectedVersions).sort((x, y) => x - y)
-      onCompare?.(a, b)
+      onCompare?.(a!, b!)
     }
   }, [selectedVersions, onCompare])
 
@@ -422,7 +422,7 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
                     onRevert={handleRevertClick}
                     allowRevert={allowRevert}
                     locale={isRTL ? 'ar-SA' : 'en-US'}
-                    t={t}
+                    t={t as any}
                   />
                 ))}
               </div>

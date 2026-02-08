@@ -17,7 +17,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, Home, ChevronRight } from 'lucide-react'
+import { AlertCircle, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 

@@ -17,7 +17,6 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import {
   Select,
@@ -117,7 +116,7 @@ export function CommitmentForm({
       const updateInput: UpdateCommitmentInput = {
         title: values.title,
         description: values.description,
-        due_date: values.due_date.toISOString().split('T')[0],
+        due_date: values.due_date.toISOString().split('T')[0]!,
         priority: values.priority,
         owner_type: values.owner_type,
         owner_user_id: values.owner_type === 'internal' ? values.owner_user_id : null,
@@ -141,7 +140,7 @@ export function CommitmentForm({
         after_action_id: afterActionId ?? null,
         title: values.title,
         description: values.description,
-        due_date: values.due_date.toISOString().split('T')[0],
+        due_date: values.due_date.toISOString().split('T')[0]!,
         priority: values.priority,
         owner_type: values.owner_type,
         owner_user_id: values.owner_type === 'internal' ? values.owner_user_id : null,

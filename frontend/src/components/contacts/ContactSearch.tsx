@@ -30,7 +30,7 @@ import {
 import type { ContactSearchParams } from '@/services/contact-api'
 import type { Database } from '@/types/contact-directory.types'
 
-type Organization = Database['public']['Tables']['cd_organizations']['Row']
+type Organization = Database['public']['Tables']['organizations']['Row']
 
 interface ContactSearchProps {
   onSearch: (params: ContactSearchParams) => void
@@ -50,27 +50,21 @@ export function ContactSearch({
   const { t, i18n } = useTranslation('contacts')
   const isRTL = i18n.language === 'ar'
 
-  const [searchTerm, setSearchTerm] = useState(defaultParams?.search || '')
+  const [searchTerm, setSearchTerm] = useState(defaultParams?.query || '')
   const [organizationId, setOrganizationId] = useState(defaultParams?.organization_id || '')
   const [selectedTags, setSelectedTags] = useState<string[]>(defaultParams?.tags || [])
-  const [sourceType, setSourceType] = useState<'manual' | 'business_card' | 'document' | ''>(
-    (defaultParams?.source_type as 'manual' | 'business_card' | 'document') || '',
-  )
-  const [sortBy, setSortBy] = useState<'full_name' | 'created_at' | 'updated_at'>(
-    defaultParams?.sort_by || 'full_name',
+  const [sortBy, setSortBy] = useState<'name' | 'organization' | 'created_at' | 'updated_at'>(
+    defaultParams?.sort_by || 'name',
   )
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(defaultParams?.sort_order || 'asc')
-  const [includeArchived, setIncludeArchived] = useState(defaultParams?.include_archived || false)
 
   const handleSearch = () => {
     const params: ContactSearchParams = {
-      search: searchTerm || undefined,
+      query: searchTerm || undefined,
       organization_id: organizationId || undefined,
       tags: selectedTags.length > 0 ? selectedTags : undefined,
-      source_type: sourceType || undefined,
       sort_by: sortBy,
       sort_order: sortOrder,
-      include_archived: includeArchived,
     }
     onSearch(params)
   }
@@ -79,10 +73,8 @@ export function ContactSearch({
     setSearchTerm('')
     setOrganizationId('')
     setSelectedTags([])
-    setSourceType('')
-    setSortBy('full_name')
+    setSortBy('name')
     setSortOrder('asc')
-    setIncludeArchived(false)
     onSearch({})
   }
 
@@ -96,10 +88,8 @@ export function ContactSearch({
     searchTerm ||
     organizationId ||
     selectedTags.length > 0 ||
-    sourceType ||
-    sortBy !== 'full_name' ||
-    sortOrder !== 'asc' ||
-    includeArchived
+    sortBy !== 'name' ||
+    sortOrder !== 'asc'
 
   return (
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -146,14 +136,10 @@ export function ContactSearch({
                 setOrganizationId={setOrganizationId}
                 selectedTags={selectedTags}
                 toggleTag={toggleTag}
-                sourceType={sourceType}
-                setSourceType={setSourceType}
                 sortBy={sortBy}
                 setSortBy={setSortBy}
                 sortOrder={sortOrder}
                 setSortOrder={setSortOrder}
-                includeArchived={includeArchived}
-                setIncludeArchived={setIncludeArchived}
                 isRTL={isRTL}
                 t={t}
               />
@@ -179,14 +165,10 @@ export function ContactSearch({
           setOrganizationId={setOrganizationId}
           selectedTags={selectedTags}
           toggleTag={toggleTag}
-          sourceType={sourceType}
-          setSourceType={setSourceType}
           sortBy={sortBy}
           setSortBy={setSortBy}
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
-          includeArchived={includeArchived}
-          setIncludeArchived={setIncludeArchived}
           isRTL={isRTL}
           t={t}
         />
@@ -207,14 +189,8 @@ export function ContactSearch({
           })}
           {organizationId && (
             <Badge variant="secondary" className="gap-1">
-              {organizations.find((o) => o.id === organizationId)?.name}
+              {organizations.find((o) => o.id === organizationId)?.org_code}
               <X className="h-3 w-3 cursor-pointer" onClick={() => setOrganizationId('')} />
-            </Badge>
-          )}
-          {sourceType && (
-            <Badge variant="secondary" className="gap-1">
-              {t(`contactDirectory.sourceTypes.${sourceType}`)}
-              <X className="h-3 w-3 cursor-pointer" onClick={() => setSourceType('')} />
             </Badge>
           )}
           <Button variant="ghost" size="sm" onClick={handleReset} className="h-7 text-xs">
@@ -234,15 +210,11 @@ function FilterContent({
   setOrganizationId,
   selectedTags,
   toggleTag,
-  sourceType,
-  setSourceType,
   sortBy,
   setSortBy,
   sortOrder,
   setSortOrder,
-  includeArchived,
-  setIncludeArchived,
-  isRTL,
+  _isRTL,
   t,
 }: any) {
   return (
@@ -255,16 +227,16 @@ function FilterContent({
           </label>
           <Select
             value={organizationId || 'all'}
-            onValueChange={(value) => setOrganizationId(value === 'all' ? '' : value)}
+            onValueChange={(value: string) => setOrganizationId(value === 'all' ? '' : value)}
           >
             <SelectTrigger className="h-10">
               <SelectValue placeholder={t('contactDirectory.search.all_organizations')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('contactDirectory.search.all_organizations')}</SelectItem>
-              {organizations.map((org: any) => (
+              {organizations.map((org: Organization) => (
                 <SelectItem key={org.id} value={org.id}>
-                  {org.name}
+                  {org.org_code}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -279,7 +251,7 @@ function FilterContent({
             {t('contactDirectory.search.filter_by_tags')}
           </label>
           <div className="flex flex-wrap gap-2">
-            {tags.map((tag: any) => {
+            {tags.map((tag: { id: string; name: string; color?: string }) => {
               const isSelected = selectedTags.includes(tag.id)
               return (
                 <Badge
@@ -301,29 +273,6 @@ function FilterContent({
         </div>
       )}
 
-      {/* Source Type Filter */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">
-          {t('contactDirectory.search.filter_by_source')}
-        </label>
-        <Select
-          value={sourceType || 'all'}
-          onValueChange={(value) => setSourceType(value === 'all' ? '' : (value as any))}
-        >
-          <SelectTrigger className="h-10">
-            <SelectValue placeholder={t('contactDirectory.search.all_sources')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t('contactDirectory.search.all_sources')}</SelectItem>
-            <SelectItem value="manual">{t('contactDirectory.sourceTypes.manual')}</SelectItem>
-            <SelectItem value="business_card">
-              {t('contactDirectory.sourceTypes.businessCard')}
-            </SelectItem>
-            <SelectItem value="document">{t('contactDirectory.sourceTypes.document')}</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       {/* Sort Options */}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
@@ -333,7 +282,7 @@ function FilterContent({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="full_name">{t('contactDirectory.search.sort_name')}</SelectItem>
+              <SelectItem value="name">{t('contactDirectory.search.sort_name')}</SelectItem>
               <SelectItem value="created_at">
                 {t('contactDirectory.search.sort_created')}
               </SelectItem>
@@ -356,20 +305,6 @@ function FilterContent({
             </SelectContent>
           </Select>
         </div>
-      </div>
-
-      {/* Include Archived Toggle */}
-      <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="include-archived"
-          checked={includeArchived}
-          onChange={(e) => setIncludeArchived(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300"
-        />
-        <label htmlFor="include-archived" className="text-sm">
-          {t('contactDirectory.search.include_archived')}
-        </label>
       </div>
     </>
   )

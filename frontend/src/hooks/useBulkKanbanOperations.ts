@@ -16,6 +16,12 @@ import { useToast } from '@/hooks/use-toast'
 import { kanbanKeys } from '@/hooks/useUnifiedKanban'
 import type { WorkItem, WorkSource, SelectionState, Priority } from '@/types/work-item.types'
 
+interface BulkDossierLinkParams {
+  itemIds: string[]
+  dossierId: string
+  items: WorkItem[]
+}
+
 interface BulkMoveParams {
   itemIds: string[]
   targetColumn: string
@@ -313,6 +319,69 @@ export function useBulkPriority() {
 }
 
 /**
+ * Hook for bulk dossier link operations
+ */
+export function useBulkDossierLink() {
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+
+  return useMutation({
+    mutationFn: async ({ itemIds, dossierId, items }: BulkDossierLinkParams) => {
+      const results = await Promise.allSettled(
+        itemIds.map(async (itemId) => {
+          const item = items.find((i) => i.id === itemId)
+          if (!item) throw new Error(`Item ${itemId} not found`)
+
+          // Insert into work_item_dossiers junction table
+          const { error } = await supabase.from('work_item_dossiers').upsert(
+            {
+              work_item_id: itemId,
+              dossier_id: dossierId,
+              work_item_source: item.source,
+              inheritance_source: 'direct',
+            },
+            { onConflict: 'work_item_id,dossier_id' },
+          )
+
+          if (error) throw error
+          return { itemId, success: true }
+        }),
+      )
+
+      const succeeded = results.filter((r) => r.status === 'fulfilled').length
+      const failed = results.filter((r) => r.status === 'rejected').length
+
+      return { succeeded, failed, total: itemIds.length }
+    },
+
+    onSuccess: ({ succeeded, failed, total }) => {
+      queryClient.invalidateQueries({ queryKey: kanbanKeys.all })
+
+      if (failed === 0) {
+        toast({
+          title: 'Items linked to dossier',
+          description: `Linked ${succeeded} item${succeeded > 1 ? 's' : ''} to the dossier.`,
+        })
+      } else {
+        toast({
+          title: 'Partial success',
+          description: `Linked ${succeeded} of ${total} items. ${failed} failed.`,
+          variant: 'destructive',
+        })
+      }
+    },
+
+    onError: (error) => {
+      toast({
+        title: 'Failed to link items',
+        description: error instanceof Error ? error.message : 'Unknown error',
+        variant: 'destructive',
+      })
+    },
+  })
+}
+
+/**
  * Combined hook for all bulk operations
  */
 export function useBulkKanbanOperations(items: WorkItem[]) {
@@ -320,6 +389,7 @@ export function useBulkKanbanOperations(items: WorkItem[]) {
   const bulkMove = useBulkMove()
   const bulkAssign = useBulkAssign()
   const bulkPriority = useBulkPriority()
+  const bulkDossierLink = useBulkDossierLink()
 
   const moveSelected = useCallback(
     async (targetColumn: string) => {
@@ -360,12 +430,30 @@ export function useBulkKanbanOperations(items: WorkItem[]) {
     [selection, bulkPriority, items],
   )
 
+  const linkSelectedToDossier = useCallback(
+    async (dossierId: string) => {
+      if (selection.selectedCount === 0) return
+      await bulkDossierLink.mutateAsync({
+        itemIds: Array.from(selection.selectionState.selectedIds),
+        dossierId,
+        items,
+      })
+      selection.clearSelection()
+    },
+    [selection, bulkDossierLink, items],
+  )
+
   return {
     ...selection,
     moveSelected,
     assignSelected,
     updatePrioritySelected,
-    isLoading: bulkMove.isPending || bulkAssign.isPending || bulkPriority.isPending,
+    linkSelectedToDossier,
+    isLoading:
+      bulkMove.isPending ||
+      bulkAssign.isPending ||
+      bulkPriority.isPending ||
+      bulkDossierLink.isPending,
   }
 }
 

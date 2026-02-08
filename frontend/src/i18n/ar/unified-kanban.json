@@ -31,7 +31,9 @@
     "clearSelection": "مسح التحديد",
     "success": "تم تنفيذ الإجراء الجماعي",
     "partialSuccess": "تم تحديث {{succeeded}} من {{total}} عناصر",
-    "failed": "فشل الإجراء الجماعي"
+    "failed": "فشل الإجراء الجماعي",
+    "linkToDossier": "ربط بملف",
+    "selectDossier": "اختر ملفاً..."
   },
   "columnModes": {
     "label": "تجميع حسب",
@@ -81,7 +83,8 @@
     "priority": "الأولوية",
     "allPriorities": "جميع الأولويات",
     "overdueOnly": "المتأخرة فقط",
-    "clear": "مسح التصفية"
+    "clear": "مسح التصفية",
+    "searchPlaceholder": "البحث في عناصر العمل..."
   },
   "sorting": {
     "label": "ترتيب حسب",

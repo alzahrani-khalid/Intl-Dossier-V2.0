@@ -2,16 +2,23 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 
 // Theme type - extensible for future themes
 type Theme = 'canvas' // Add 'ocean' | 'sunset' etc. when needed
-type ColorMode = 'light' | 'dark'
+type ColorMode = 'light' | 'dark' | 'system'
 
 // Available themes for validation and UI
 export const AVAILABLE_THEMES = ['canvas'] as const
 
+// Available color modes for UI toggles
+export const AVAILABLE_COLOR_MODES: ColorMode[] = ['light', 'dark', 'system'] as const
+
 interface ThemeContextValue {
   theme: Theme
   colorMode: ColorMode
+  /** The actual resolved color mode (system resolves to light or dark) */
+  resolvedColorMode: 'light' | 'dark'
   setTheme: (theme: Theme) => void
   setColorMode: (mode: ColorMode) => void
+  /** Toggle between light and dark */
+  toggleColorMode: () => void
   isDark: boolean
 }
 
@@ -62,6 +69,14 @@ export function ThemeProvider({
     return prefersDark ? 'dark' : 'light'
   })
 
+  // Resolve color mode for applying to DOM
+  const effectiveColorMode: 'light' | 'dark' =
+    colorMode === 'system'
+      ? typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : colorMode
+
   // Apply theme to document
   useEffect(() => {
     const root = document.documentElement
@@ -70,12 +85,12 @@ export function ThemeProvider({
     root.setAttribute('data-theme', theme)
 
     // Set color mode via .dark class (shadcn pattern)
-    if (colorMode === 'dark') {
+    if (effectiveColorMode === 'dark') {
       root.classList.add('dark')
     } else {
       root.classList.remove('dark')
     }
-  }, [theme, colorMode])
+  }, [theme, effectiveColorMode])
 
   const setTheme = useCallback(
     (newTheme: Theme) => {
@@ -177,12 +192,26 @@ export function ThemeProvider({
     return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
 
+  // Resolve 'system' to actual light/dark
+  const resolvedColorMode: 'light' | 'dark' =
+    colorMode === 'system'
+      ? typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : colorMode
+
+  const toggleColorMode = useCallback(() => {
+    setColorMode(resolvedColorMode === 'light' ? 'dark' : 'light')
+  }, [resolvedColorMode, setColorMode])
+
   const value: ThemeContextValue = {
     theme,
     colorMode,
+    resolvedColorMode,
     setTheme,
     setColorMode,
-    isDark: colorMode === 'dark',
+    toggleColorMode,
+    isDark: resolvedColorMode === 'dark',
   }
 
   return (

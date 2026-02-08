@@ -1,4 +1,4 @@
-import { AuthError, User, Session } from '@supabase/supabase-js'
+import { AuthError, Session } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { supabase } from '../lib/supabase'
@@ -632,7 +632,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 )
 
 // Auth event listeners
-supabase.auth.onAuthStateChange(async (event, session) => {
+supabase.auth.onAuthStateChange(async (event, _session) => {
   const { checkAuth } = useAuthStore.getState()
 
   if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {

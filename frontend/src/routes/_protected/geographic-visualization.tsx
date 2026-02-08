@@ -5,7 +5,7 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 import { GeographicVisualizationPage } from '@/pages/geographic-visualization/GeographicVisualizationPage'
-import type { TimeRange } from '@/types/geographic-visualization.types'
+import type { TimeRange } from '@/types/analytics.types'
 
 // Search params schema
 interface GeoVisualizationSearchParams {

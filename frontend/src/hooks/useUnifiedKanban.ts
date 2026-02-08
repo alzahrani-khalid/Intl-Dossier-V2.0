@@ -13,7 +13,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useToast } from '@/hooks/use-toast'
 import { mapStatusToColumnKey } from '@/components/unified-kanban/utils/column-definitions'
@@ -63,6 +63,7 @@ interface UseUnifiedKanbanOptions {
   contextId?: string
   columnMode?: KanbanColumnMode
   sourceFilter?: WorkSource[]
+  searchQuery?: string
   limitPerColumn?: number
   enabled?: boolean
 }
@@ -98,6 +99,8 @@ interface KanbanRpcRow {
 export const kanbanKeys = {
   all: ['unified-kanban'] as const,
   list: (params: UseUnifiedKanbanOptions) => [...kanbanKeys.all, 'list', params] as const,
+  columnCounts: (params: UseUnifiedKanbanOptions) =>
+    [...kanbanKeys.all, 'column-counts', params] as const,
 }
 
 // ============================================
@@ -160,20 +163,65 @@ export function useUnifiedKanban(options: UseUnifiedKanbanOptions) {
     contextId,
     columnMode = 'status',
     sourceFilter,
+    searchQuery,
     limitPerColumn = 50,
     enabled = true,
   } = options
 
+  // Track per-column limits for Load More
+  const [columnLimits, setColumnLimits] = useState<Record<string, number>>({})
+
+  // Reset column limits when filters change
+  useEffect(() => {
+    setColumnLimits({})
+  }, [contextType, contextId, columnMode, sourceFilter, searchQuery])
+
+  // Fetch column counts
+  const countsQuery = useQuery({
+    queryKey: kanbanKeys.columnCounts(options),
+    queryFn: async (): Promise<Record<string, number>> => {
+      const { data, error } = await supabase.rpc('get_kanban_column_counts', {
+        p_context_type: contextType,
+        p_context_id: contextId || null,
+        p_column_mode: columnMode,
+        p_source_filter: sourceFilter?.length ? sourceFilter : null,
+        p_search_query: searchQuery?.trim() || null,
+      })
+
+      if (error) {
+        // Fallback gracefully if RPC doesn't exist yet
+        console.warn('[useUnifiedKanban] Column counts RPC error:', error.message)
+        return {}
+      }
+
+      const counts: Record<string, number> = {}
+      for (const row of data as Array<{ column_key: string; total_count: number }>) {
+        counts[row.column_key] = Number(row.total_count)
+      }
+      return counts
+    },
+    enabled,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
+  })
+
   // Fetch kanban data
   const query = useQuery({
-    queryKey: kanbanKeys.list(options),
+    queryKey: kanbanKeys.list({
+      ...options,
+      limitPerColumn: Math.max(limitPerColumn, ...Object.values(columnLimits)),
+    }),
     queryFn: async (): Promise<KanbanData> => {
+      // Use the maximum limit across all columns (RPC applies limit per column)
+      const effectiveLimit = Math.max(limitPerColumn, ...Object.values(columnLimits), 0)
+
       const { data, error } = await supabase.rpc('get_unified_work_kanban', {
         p_context_type: contextType,
         p_context_id: contextId || null,
         p_column_mode: columnMode,
         p_source_filter: sourceFilter?.length ? sourceFilter : null,
-        p_limit_per_column: limitPerColumn,
+        p_search_query: searchQuery?.trim() || null,
+        p_limit_per_column: effectiveLimit || limitPerColumn,
       })
 
       if (error) {
@@ -186,17 +234,38 @@ export function useUnifiedKanban(options: UseUnifiedKanbanOptions) {
       // Get unique column keys and sort them
       const columnOrder = [...new Set(items.map((i) => i.column_key))]
 
+      // Calculate hasMore using column counts
+      const totalCounts = countsQuery.data || {}
+      const hasMore: Record<string, boolean> = {}
+      for (const key of columnOrder) {
+        const loaded = columns[key]?.length || 0
+        const total = totalCounts[key] || 0
+        hasMore[key] = loaded < total
+      }
+
       return {
         columns,
         columnOrder,
         totalCount: items.length,
-        hasMore: {}, // TODO: Implement per-column pagination
+        hasMore,
+        totalCountPerColumn: totalCounts,
       }
     },
     enabled,
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 30 * 1000,
     refetchOnWindowFocus: true,
   })
+
+  // Load more items for a specific column
+  const loadMoreForColumn = useCallback(
+    (columnKey: string) => {
+      setColumnLimits((prev) => ({
+        ...prev,
+        [columnKey]: (prev[columnKey] || limitPerColumn) + limitPerColumn,
+      }))
+    },
+    [limitPerColumn],
+  )
 
   // Flatten items for easier access
   const allItems = useMemo(() => {
@@ -210,6 +279,9 @@ export function useUnifiedKanban(options: UseUnifiedKanbanOptions) {
     columns: query.data?.columns || {},
     columnOrder: query.data?.columnOrder || [],
     totalCount: query.data?.totalCount || 0,
+    hasMore: query.data?.hasMore || {},
+    totalCountPerColumn: query.data?.totalCountPerColumn || {},
+    loadMoreForColumn,
   }
 }
 
@@ -425,7 +497,7 @@ export function useUnifiedKanbanRealtime(
 
   // Set up subscriptions using useEffect (not useCallback!)
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) return undefined
 
     const channels: ReturnType<typeof supabase.channel>[] = []
 

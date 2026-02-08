@@ -417,7 +417,7 @@ export function useHighPriorityRecommendations(limit = 5) {
 /**
  * Hook for fetching recommendations for a specific relationship
  */
-export function useRelationshipRecommendations(relationshipId: string, enabled = true) {
+export function useRelationshipRecommendations(relationshipId: string, _enabled = true) {
   return useEngagementRecommendations({
     relationship_id: relationshipId,
     status: ['pending', 'viewed'],
@@ -429,7 +429,7 @@ export function useRelationshipRecommendations(relationshipId: string, enabled =
 /**
  * Hook for fetching recommendations for a specific dossier
  */
-export function useDossierRecommendations(dossierId: string, enabled = true) {
+export function useDossierRecommendations(dossierId: string, _enabled = true) {
   return useEngagementRecommendations({
     target_dossier_id: dossierId,
     status: ['pending', 'viewed'],

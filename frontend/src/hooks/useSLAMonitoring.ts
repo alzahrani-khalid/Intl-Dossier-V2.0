@@ -253,7 +253,8 @@ export function useCreateSLAPolicy() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (input: SLAPolicyInput) => postSLAEndpoint<SLAPolicy>('policies', input),
+    mutationFn: (input: SLAPolicyInput) =>
+      postSLAEndpoint<SLAPolicy>('policies', input as unknown as Record<string, unknown>),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
     },

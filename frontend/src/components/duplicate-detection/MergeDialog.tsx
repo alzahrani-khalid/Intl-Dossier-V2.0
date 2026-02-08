@@ -44,6 +44,7 @@ import type {
   DuplicateCandidateListItem,
   FieldResolution,
   DuplicateEntityType,
+  MatchDetails,
 } from '@/types/duplicate-detection.types'
 
 interface MergeDialogProps {
@@ -127,7 +128,7 @@ export function MergeDialog({
 
   // Build field comparisons from match details
   const fieldComparisons: FieldComparisonRow[] = useMemo(() => {
-    const details = candidate.match_details || {}
+    const details: Partial<MatchDetails> = candidate.match_details || {}
     const fields: FieldComparisonRow[] = []
 
     // Name comparison

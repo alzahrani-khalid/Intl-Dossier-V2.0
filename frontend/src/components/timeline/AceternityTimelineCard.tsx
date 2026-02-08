@@ -11,10 +11,10 @@
  * - RTL support with logical properties
  */
 
-import { useEffect, useId, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
+import { useEffect, useId, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Calendar,
   Users,
@@ -29,18 +29,18 @@ import {
   ExternalLink,
   Download,
   X,
-} from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useOutsideClick } from '@/hooks/use-outside-click';
-import { cn } from '@/lib/utils';
-import type { UnifiedTimelineEvent } from '@/types/timeline.types';
+} from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useOutsideClick } from '@/hooks/use-outside-click'
+import { cn } from '@/lib/utils'
+import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 
 interface AceternityTimelineCardProps {
-  event: UnifiedTimelineEvent;
-  index: number;
-  isEven: boolean;
+  event: UnifiedTimelineEvent
+  index: number
+  isEven: boolean
 }
 
 /**
@@ -57,9 +57,9 @@ const getEventIcon = (eventType: string): React.ElementType => {
     relationship: Users,
     commitment: CheckCircle2,
     decision: AlertCircle,
-  };
-  return iconMap[eventType] || Calendar;
-};
+  }
+  return iconMap[eventType] || Calendar
+}
 
 /**
  * Get event type color for icon background
@@ -67,7 +67,7 @@ const getEventIcon = (eventType: string): React.ElementType => {
 const getEventColor = (eventType: string, metadata: any): string => {
   // Use metadata color if available, otherwise default colors
   if (metadata.color) {
-    return metadata.color;
+    return metadata.color
   }
 
   const colorMap: Record<string, string> = {
@@ -80,9 +80,9 @@ const getEventColor = (eventType: string, metadata: any): string => {
     relationship: 'pink',
     commitment: 'teal',
     decision: 'red',
-  };
-  return colorMap[eventType] || 'gray';
-};
+  }
+  return colorMap[eventType] || 'gray'
+}
 
 /**
  * Get priority color classes
@@ -92,9 +92,9 @@ const getPriorityColor = (priority: string): string => {
     high: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
     medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
     low: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  };
-  return colorMap[priority] || colorMap.low;
-};
+  }
+  return colorMap[priority] || colorMap.low!
+}
 
 /**
  * Get status color classes
@@ -106,23 +106,23 @@ const getStatusColor = (status: string): string => {
     completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
     cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
     postponed: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-  };
-  return colorMap[status] || colorMap.planned;
-};
+  }
+  return colorMap[status] || colorMap.planned!
+}
 
 /**
  * Format date for display
  */
 const formatEventDate = (dateString: string, locale: string): string => {
-  const date = new Date(dateString);
+  const date = new Date(dateString)
   return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  }).format(date);
-};
+  }).format(date)
+}
 
 /**
  * Close icon component
@@ -148,49 +148,49 @@ function CloseIcon() {
       <path d="M18 6l-12 12" />
       <path d="M6 6l12 12" />
     </motion.svg>
-  );
+  )
 }
 
 export function AceternityTimelineCard({ event, index, isEven }: AceternityTimelineCardProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const navigate = useNavigate();
-  const isRTL = i18n.language === 'ar';
-  const [isActive, setIsActive] = useState(false);
-  const id = useId();
-  const ref = useRef<HTMLDivElement>(null);
+  const { t, i18n } = useTranslation('dossier')
+  const navigate = useNavigate()
+  const isRTL = i18n.language === 'ar'
+  const [isActive, setIsActive] = useState(false)
+  const id = useId()
+  const ref = useRef<HTMLDivElement>(null)
 
-  const EventIcon = getEventIcon(event.event_type);
-  const color = getEventColor(event.event_type, event.metadata);
-  const title = isRTL ? event.title_ar : event.title_en;
-  const description = isRTL ? event.description_ar : event.description_en;
-  const formattedDate = formatEventDate(event.event_date, i18n.language);
+  const EventIcon = getEventIcon(event.event_type)
+  const color = getEventColor(event.event_type, event.metadata)
+  const title = isRTL ? event.title_ar : event.title_en
+  const description = isRTL ? event.description_ar : event.description_en
+  const formattedDate = formatEventDate(event.event_date, i18n.language)
 
   // Handle escape key and body overflow
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
-        setIsActive(false);
+        setIsActive(false)
       }
     }
 
     if (isActive) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = 'auto'
     }
 
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isActive]);
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isActive])
 
-  useOutsideClick(ref, () => setIsActive(false));
+  useOutsideClick(ref as React.RefObject<HTMLElement>, () => setIsActive(false))
 
   const handleNavigate = () => {
     if (event.metadata.navigation_url) {
-      setIsActive(false);
-      navigate({ to: event.metadata.navigation_url });
+      setIsActive(false)
+      navigate({ to: event.metadata.navigation_url })
     }
-  };
+  }
 
   return (
     <>
@@ -209,7 +209,10 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
       {/* Modal Content */}
       <AnimatePresence>
         {isActive && (
-          <div className="fixed inset-0 grid place-items-center z-[101] p-4" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div
+            className="fixed inset-0 grid place-items-center z-[101] p-4"
+            dir={isRTL ? 'rtl' : 'ltr'}
+          >
             {/* Close Button */}
             <motion.button
               key={`button-${event.id}-${id}`}
@@ -231,11 +234,13 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
               className="w-full max-w-2xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden shadow-2xl"
             >
               {/* Event Icon Header */}
-              <div className={cn(
-                "w-full h-32 sm:h-40 flex items-center justify-center",
-                `bg-${color}-500 dark:bg-${color}-600`,
-                "sm:rounded-t-3xl"
-              )}>
+              <div
+                className={cn(
+                  'w-full h-32 sm:h-40 flex items-center justify-center',
+                  `bg-${color}-500 dark:bg-${color}-600`,
+                  'sm:rounded-t-3xl',
+                )}
+              >
                 <EventIcon className="h-16 w-16 sm:h-20 sm:w-20 text-white" />
               </div>
 
@@ -291,7 +296,12 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                   {/* Location */}
                   {(event.metadata.location_en || event.metadata.location_ar) && (
                     <div className="flex items-start gap-3">
-                      <MapPin className={cn('h-5 w-5 mt-0.5 text-muted-foreground', isRTL && 'rotate-180')} />
+                      <MapPin
+                        className={cn(
+                          'h-5 w-5 mt-0.5 text-muted-foreground',
+                          isRTL && 'rotate-180',
+                        )}
+                      />
                       <div className="flex-1 text-start">
                         <p className="font-medium text-sm">{t('timeline.location')}</p>
                         <p className="text-sm text-muted-foreground">
@@ -323,7 +333,9 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                             className="flex items-center gap-2 rounded-full bg-muted px-3 py-1.5"
                           >
                             <Avatar className="h-6 w-6">
-                              {participant.avatar_url && <AvatarImage src={participant.avatar_url} />}
+                              {participant.avatar_url && (
+                                <AvatarImage src={participant.avatar_url} />
+                              )}
                               <AvatarFallback className="text-xs">
                                 {(isRTL ? participant.name_ar : participant.name_en)
                                   .split(' ')
@@ -361,7 +373,9 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                             className="flex items-center gap-3 rounded-lg bg-muted px-4 py-3 text-sm hover:bg-muted/80 transition-colors group"
                           >
                             <FileText className="h-5 w-5 text-muted-foreground" />
-                            <span className="flex-1 text-start truncate font-medium">{attachment.filename}</span>
+                            <span className="flex-1 text-start truncate font-medium">
+                              {attachment.filename}
+                            </span>
                             <Download className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                           </a>
                         ))}
@@ -400,14 +414,16 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
       </AnimatePresence>
 
       {/* Timeline Structure - Mobile & Desktop Layouts */}
-      <div className={cn(
-        "relative w-full flex justify-start",
-        // Mobile: simple left-aligned layout
-        "gap-4",
-        // Desktop: centered timeline with alternating cards
-        "md:gap-10"
-      )} dir={isRTL ? 'rtl' : 'ltr'}>
-
+      <div
+        className={cn(
+          'relative w-full flex justify-start',
+          // Mobile: simple left-aligned layout
+          'gap-4',
+          // Desktop: centered timeline with alternating cards
+          'md:gap-10',
+        )}
+        dir={isRTL ? 'rtl' : 'ltr'}
+      >
         {/* MOBILE LAYOUT: Date/Time + Dot on left, Card on right */}
         <div className="md:hidden flex gap-4 w-full">
           {/* Date/Time & Dot */}
@@ -430,11 +446,11 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
             <div
               onClick={() => setIsActive(true)}
               className={cn(
-                "h-10 w-10 rounded-full flex items-center justify-center cursor-pointer flex-shrink-0",
-                "shadow-lg hover:shadow-xl transition-all duration-200",
-                "border-4 border-background",
+                'h-10 w-10 rounded-full flex items-center justify-center cursor-pointer flex-shrink-0',
+                'shadow-lg hover:shadow-xl transition-all duration-200',
+                'border-4 border-background',
                 `bg-${color}-500 dark:bg-${color}-600`,
-                "hover:scale-110 active:scale-95"
+                'hover:scale-110 active:scale-95',
               )}
             >
               <EventIcon className="h-5 w-5 text-white" />
@@ -476,11 +492,13 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
         </div>
 
         {/* DESKTOP LAYOUT: Alternating Cards with Centered Timeline */}
-        <div className={cn(
-          "hidden md:flex w-full justify-start items-start gap-10",
-          // Position content based on alternation
-          isEven ? "flex-row" : "flex-row-reverse"
-        )}>
+        <div
+          className={cn(
+            'hidden md:flex w-full justify-start items-start gap-10',
+            // Position content based on alternation
+            isEven ? 'flex-row' : 'flex-row-reverse',
+          )}
+        >
           {/* Card Section */}
           <motion.div
             layoutId={`card-${event.id}-${id}`}
@@ -491,26 +509,30 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
               <motion.h4
                 layoutId={`title-${event.id}-${id}`}
                 className={cn(
-                  "font-semibold text-lg text-card-foreground",
-                  isEven ? "text-end" : "text-start"
+                  'font-semibold text-lg text-card-foreground',
+                  isEven ? 'text-end' : 'text-start',
                 )}
               >
                 {title}
               </motion.h4>
 
               {description && (
-                <p className={cn(
-                  "text-sm text-muted-foreground line-clamp-2",
-                  isEven ? "text-end" : "text-start"
-                )}>
+                <p
+                  className={cn(
+                    'text-sm text-muted-foreground line-clamp-2',
+                    isEven ? 'text-end' : 'text-start',
+                  )}
+                >
                   {description}
                 </p>
               )}
 
-              <div className={cn(
-                "flex flex-wrap gap-2 pt-1",
-                isEven ? "justify-end" : "justify-start"
-              )}>
+              <div
+                className={cn(
+                  'flex flex-wrap gap-2 pt-1',
+                  isEven ? 'justify-end' : 'justify-start',
+                )}
+              >
                 <Badge variant="outline" className={getPriorityColor(event.priority)}>
                   {t(`timeline.priority.${event.priority}`)}
                 </Badge>
@@ -524,10 +546,12 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
           </motion.div>
 
           {/* Date/Time Section (between card and dot) */}
-          <div className={cn(
-            "sticky top-40 flex flex-col items-center z-40 flex-shrink-0",
-            isEven ? "text-start" : "text-end"
-          )}>
+          <div
+            className={cn(
+              'sticky top-40 flex flex-col items-center z-40 flex-shrink-0',
+              isEven ? 'text-start' : 'text-end',
+            )}
+          >
             <motion.time className="font-bold text-xl lg:text-2xl text-foreground whitespace-nowrap">
               {new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
                 month: 'short',
@@ -547,11 +571,11 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
             <div
               onClick={() => setIsActive(true)}
               className={cn(
-                "h-10 w-10 rounded-full flex items-center justify-center cursor-pointer",
-                "shadow-lg hover:shadow-xl transition-all duration-200",
-                "border-4 border-background",
+                'h-10 w-10 rounded-full flex items-center justify-center cursor-pointer',
+                'shadow-lg hover:shadow-xl transition-all duration-200',
+                'border-4 border-background',
                 `bg-${color}-500 dark:bg-${color}-600`,
-                "hover:scale-110 active:scale-95"
+                'hover:scale-110 active:scale-95',
               )}
             >
               <EventIcon className="h-5 w-5 text-white" />
@@ -560,5 +584,5 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
         </div>
       </div>
     </>
-  );
+  )
 }

@@ -3,126 +3,131 @@
  * Admin system utilities and maintenance
  */
 
-import { createFileRoute } from '@tanstack/react-router';
-import { useState, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Progress } from '@/components/ui/progress';
-import { useMutation } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
-import { 
-  Settings, 
-  Globe, 
-  RefreshCw, 
-  CheckCircle2, 
-  XCircle, 
+import { createFileRoute } from '@tanstack/react-router'
+import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Progress } from '@/components/ui/progress'
+import { useMutation } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+import {
+  Settings,
+  Globe,
+  RefreshCw,
+  CheckCircle2,
+  XCircle,
   AlertCircle,
   Database,
-  Download
-} from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+  Download,
+} from 'lucide-react'
 
 export const Route = createFileRoute('/_protected/admin/system')({
   component: AdminSystemPage,
   beforeLoad: async () => {
     // Check admin role
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    const isAdmin = user?.user_metadata?.role === 'admin' || user?.app_metadata?.role === 'admin';
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    const user = session?.user
+    const isAdmin = user?.user_metadata?.role === 'admin' || user?.app_metadata?.role === 'admin'
 
     if (!isAdmin) {
-      throw new Error('Admin access required');
+      throw new Error('Admin access required')
     }
   },
-});
+})
 
-const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1';
+const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
 
 interface PopulateCountriesResponse {
-  success: boolean;
-  progress_id?: string;
+  success: boolean
+  progress_id?: string
   summary: {
-    total: number;
-    processed: number;
-    successful: number;
-    failed: number;
-  };
-  errors?: string[];
-  message_en: string;
-  message_ar: string;
-  error?: string;
+    total: number
+    processed: number
+    successful: number
+    failed: number
+  }
+  errors?: string[]
+  message_en: string
+  message_ar: string
+  error?: string
 }
 
 interface ProgressData {
-  id: string;
-  operation_type: string;
-  total_items: number;
-  processed_items: number;
-  successful_items: number;
-  failed_items: number;
-  status: 'running' | 'completed' | 'failed';
-  percentage: number;
-  is_complete: boolean;
+  id: string
+  operation_type: string
+  total_items: number
+  processed_items: number
+  successful_items: number
+  failed_items: number
+  status: 'running' | 'completed' | 'failed'
+  percentage: number
+  is_complete: boolean
 }
 
 async function populateCountries(): Promise<PopulateCountriesResponse> {
-  const { data: { session } } = await supabase.auth.getSession();
-  
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
   const response = await fetch(`${API_BASE_URL}/populate-countries-v2`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${session?.access_token}`,
+      Authorization: `Bearer ${session?.access_token}`,
       'Content-Type': 'application/json',
     },
-  });
+  })
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message_en || error.error || 'Failed to populate countries');
+    const error = await response.json()
+    throw new Error(error.message_en || error.error || 'Failed to populate countries')
   }
 
-  return response.json();
+  return response.json()
 }
 
 async function fetchProgress(progressId: string): Promise<ProgressData> {
-  const { data: { session } } = await supabase.auth.getSession();
-  
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
   const response = await fetch(`${API_BASE_URL}/operation-progress?id=${progressId}`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${session?.access_token}`,
+      Authorization: `Bearer ${session?.access_token}`,
     },
-  });
+  })
 
   if (!response.ok) {
-    throw new Error('Failed to fetch progress');
+    throw new Error('Failed to fetch progress')
   }
 
-  const data = await response.json();
-  return data.progress;
+  const data = await response.json()
+  return data.progress
 }
 
 function AdminSystemPage() {
-  const { t, i18n } = useTranslation('admin');
-  const isRTL = i18n.language === 'ar';
-  const [result, setResult] = useState<PopulateCountriesResponse | null>(null);
-  const [progress, setProgress] = useState<ProgressData | null>(null);
-  const [progressId, setProgressId] = useState<string | null>(null);
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const { t, i18n } = useTranslation('admin')
+  const isRTL = i18n.language === 'ar'
+  const [result, setResult] = useState<PopulateCountriesResponse | null>(null)
+  const [progress, setProgress] = useState<ProgressData | null>(null)
+  const [_progressId, setProgressId] = useState<string | null>(null)
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   const populateMutation = useMutation({
     mutationFn: populateCountries,
     onSuccess: (data) => {
       if (data.progress_id) {
-        setProgressId(data.progress_id);
+        setProgressId(data.progress_id)
         // Start polling for progress
-        startProgressPolling(data.progress_id);
+        startProgressPolling(data.progress_id)
       } else {
         // If no progress_id, operation completed immediately
-        setResult(data);
+        setResult(data)
       }
     },
     onError: (error: Error) => {
@@ -132,40 +137,40 @@ function AdminSystemPage() {
         message_en: error.message,
         message_ar: 'فشل في تحديث بيانات الدول',
         error: error.message,
-      });
-      stopProgressPolling();
+      })
+      stopProgressPolling()
     },
-  });
+  })
 
   // Poll for progress updates
   const startProgressPolling = (id: string) => {
     // Clear any existing interval
-    stopProgressPolling();
+    stopProgressPolling()
 
     // Poll immediately
-    pollProgress(id);
+    pollProgress(id)
 
     // Then poll every 2 seconds
     pollingIntervalRef.current = setInterval(() => {
-      pollProgress(id);
-    }, 2000);
-  };
+      pollProgress(id)
+    }, 2000)
+  }
 
   const stopProgressPolling = () => {
     if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
+      clearInterval(pollingIntervalRef.current)
+      pollingIntervalRef.current = null
     }
-  };
+  }
 
   const pollProgress = async (id: string) => {
     try {
-      const progressData = await fetchProgress(id);
-      setProgress(progressData);
+      const progressData = await fetchProgress(id)
+      setProgress(progressData)
 
       // If completed, stop polling and show final result
       if (progressData.is_complete) {
-        stopProgressPolling();
+        stopProgressPolling()
         setResult({
           success: progressData.status === 'completed',
           summary: {
@@ -176,27 +181,27 @@ function AdminSystemPage() {
           },
           message_en: `Successfully processed ${progressData.successful_items} countries`,
           message_ar: `تم معالجة ${progressData.successful_items} دولة بنجاح`,
-        });
+        })
       }
     } catch (error) {
-      console.error('Failed to fetch progress:', error);
+      console.error('Failed to fetch progress:', error)
       // Don't stop polling on error, might be temporary
     }
-  };
+  }
 
   // Cleanup polling on unmount
   useEffect(() => {
     return () => {
-      stopProgressPolling();
-    };
-  }, []);
+      stopProgressPolling()
+    }
+  }, [])
 
   const handlePopulateCountries = () => {
-    setResult(null);
-    setProgress(null);
-    setProgressId(null);
-    populateMutation.mutate();
-  };
+    setResult(null)
+    setProgress(null)
+    setProgressId(null)
+    populateMutation.mutate()
+  }
 
   return (
     <div className="container mx-auto py-6 space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -206,9 +211,7 @@ function AdminSystemPage() {
           <Settings className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">
-            {t('system.title', 'System Utilities')}
-          </h1>
+          <h1 className="text-3xl font-bold">{t('system.title', 'System Utilities')}</h1>
           <p className="text-muted-foreground">
             {t('system.subtitle', 'Maintenance and data management tools')}
           </p>
@@ -219,9 +222,7 @@ function AdminSystemPage() {
       <Alert variant="default" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
         <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
         <AlertDescription className="text-yellow-800 dark:text-yellow-200">
-          <p className="font-medium">
-            {t('system.warning', 'Admin Privileges Active')}
-          </p>
+          <p className="font-medium">{t('system.warning', 'Admin Privileges Active')}</p>
           <p className="text-sm mt-1">
             {t('system.warningText', 'These operations modify system data. Use with caution.')}
           </p>
@@ -241,7 +242,10 @@ function AdminSystemPage() {
                   {t('system.populateCountries.title', 'Populate Country Data')}
                 </CardTitle>
                 <CardDescription>
-                  {t('system.populateCountries.description', 'Fetch and update geographic data for all countries from REST Countries API')}
+                  {t(
+                    'system.populateCountries.description',
+                    'Fetch and update geographic data for all countries from REST Countries API',
+                  )}
                 </CardDescription>
               </div>
             </div>
@@ -327,8 +331,7 @@ function AdminSystemPage() {
                       {t('system.populateCountries.processing', 'Processing')}:{' '}
                       <span className="font-bold text-foreground">
                         {progress.processed_items}/{progress.total_items}
-                      </span>
-                      {' '}
+                      </span>{' '}
                       {t('system.populateCountries.countries', 'countries')}
                     </>
                   ) : (
@@ -336,18 +339,13 @@ function AdminSystemPage() {
                   )}
                 </span>
                 {progress && (
-                  <span className="text-lg font-bold text-emerald-600">
-                    {progress.percentage}%
-                  </span>
+                  <span className="text-lg font-bold text-emerald-600">{progress.percentage}%</span>
                 )}
               </div>
-              
+
               {/* Progress Bar */}
               <div className="relative">
-                <Progress 
-                  value={progress?.percentage || 0} 
-                  className="w-full h-3"
-                />
+                <Progress value={progress?.percentage || 0} className="w-full h-3" />
               </div>
 
               {/* Progress Details */}
@@ -355,21 +353,30 @@ function AdminSystemPage() {
                 <div className="grid grid-cols-3 gap-2 text-xs">
                   <div className="text-center p-2 bg-background rounded">
                     <div className="font-bold text-blue-600">{progress.successful_items}</div>
-                    <div className="text-muted-foreground">{t('system.populateCountries.successful', 'Successful')}</div>
+                    <div className="text-muted-foreground">
+                      {t('system.populateCountries.successful', 'Successful')}
+                    </div>
                   </div>
                   <div className="text-center p-2 bg-background rounded">
-                    <div className="font-bold text-yellow-600">{progress.processed_items - progress.successful_items - progress.failed_items}</div>
-                    <div className="text-muted-foreground">{t('system.populateCountries.pending', 'Pending')}</div>
+                    <div className="font-bold text-yellow-600">
+                      {progress.processed_items - progress.successful_items - progress.failed_items}
+                    </div>
+                    <div className="text-muted-foreground">
+                      {t('system.populateCountries.pending', 'Pending')}
+                    </div>
                   </div>
                   <div className="text-center p-2 bg-background rounded">
                     <div className="font-bold text-red-600">{progress.failed_items}</div>
-                    <div className="text-muted-foreground">{t('system.populateCountries.failed', 'Failed')}</div>
+                    <div className="text-muted-foreground">
+                      {t('system.populateCountries.failed', 'Failed')}
+                    </div>
                   </div>
                 </div>
               )}
 
               <p className="text-xs text-muted-foreground text-center">
-                {!progress && t('system.populateCountries.estimatedTime', 'This may take 2-3 minutes')}
+                {!progress &&
+                  t('system.populateCountries.estimatedTime', 'This may take 2-3 minutes')}
                 {progress && progress.percentage < 100 && (
                   <span className="flex items-center justify-center gap-1">
                     <RefreshCw className="h-3 w-3 animate-spin inline" />
@@ -384,7 +391,9 @@ function AdminSystemPage() {
           {result && (
             <Alert
               variant={result.success ? 'default' : 'destructive'}
-              className={result.success ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : ''}
+              className={
+                result.success ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : ''
+              }
             >
               {result.success ? (
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
@@ -394,7 +403,13 @@ function AdminSystemPage() {
               <AlertDescription>
                 <div className="space-y-3">
                   {/* Message */}
-                  <p className={result.success ? 'text-emerald-800 dark:text-emerald-200 font-medium' : 'font-medium'}>
+                  <p
+                    className={
+                      result.success
+                        ? 'text-emerald-800 dark:text-emerald-200 font-medium'
+                        : 'font-medium'
+                    }
+                  >
                     {isRTL ? result.message_ar : result.message_en}
                   </p>
 
@@ -426,7 +441,9 @@ function AdminSystemPage() {
                         </div>
                       </div>
                       <div className="text-center p-2 bg-background rounded">
-                        <div className={`text-2xl font-bold ${result.summary.failed > 0 ? 'text-red-600' : 'text-gray-400'}`}>
+                        <div
+                          className={`text-2xl font-bold ${result.summary.failed > 0 ? 'text-red-600' : 'text-gray-400'}`}
+                        >
                           {result.summary.failed}
                         </div>
                         <div className="text-xs text-muted-foreground">
@@ -440,7 +457,8 @@ function AdminSystemPage() {
                   {result.errors && result.errors.length > 0 && (
                     <details className="text-sm">
                       <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-                        {t('system.populateCountries.viewErrors', 'View error details')} ({result.errors.length})
+                        {t('system.populateCountries.viewErrors', 'View error details')} (
+                        {result.errors.length})
                       </summary>
                       <ul className="mt-2 space-y-1 text-xs max-h-40 overflow-y-auto">
                         {result.errors.map((error, idx) => (
@@ -460,15 +478,22 @@ function AdminSystemPage() {
           {/* Help Text */}
           <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
             <p>
-              💡 {t('system.populateCountries.tip1', 'This operation is safe to run multiple times - it will update existing countries.')}
+              💡{' '}
+              {t(
+                'system.populateCountries.tip1',
+                'This operation is safe to run multiple times - it will update existing countries.',
+              )}
             </p>
             <p>
-              💡 {t('system.populateCountries.tip2', 'Run this annually to keep population and area data up to date.')}
+              💡{' '}
+              {t(
+                'system.populateCountries.tip2',
+                'Run this annually to keep population and area data up to date.',
+              )}
             </p>
           </div>
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
-

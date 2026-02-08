@@ -14,7 +14,7 @@ import { useQuery } from '@tanstack/react-query'
 import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsight'
 import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useMemo, useCallback, memo } from 'react'
+import { useMemo, memo } from 'react'
 import {
   ReactFlow,
   Node,
@@ -111,7 +111,7 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
   const {
     data: relations,
     isLoading,
-    error: relationsError,
+    error: _relationsError,
   } = useQuery({
     queryKey: ['diplomatic-relations', dossierId],
     queryFn: async () => {
@@ -313,7 +313,7 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
           <Skeleton className="h-48 w-full" />
         ) : bilateralIntelligence && bilateralIntelligence.data.length > 0 ? (
           <IntelligenceInsight
-            intelligence={bilateralIntelligence.data[0]}
+            intelligence={bilateralIntelligence.data[0]!}
             onRefresh={handleBilateralRefresh}
             isRefreshing={isRefreshingBilateral}
             dossierType="countries"

@@ -224,10 +224,10 @@ export function RelationshipGraph({
 
   // Handle node click - navigate to related dossier
   const onNodeClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
+    (_event: React.MouseEvent, node: Node) => {
       if (node.id !== dossierId) {
         // Get the dossier type from node data
-        const nodeType = node.data?.referenceType || 'country'
+        const nodeType = String(node.data?.referenceType || 'country')
         navigate({ to: getDossierDetailPath(node.id, nodeType) })
       }
     },
@@ -259,7 +259,7 @@ export function RelationshipGraph({
       if (nodeId !== dossierId) {
         // Find the node to get its type
         const targetNode = nodes.find((n) => n.id === nodeId)
-        const nodeType = targetNode?.data?.referenceType || 'country'
+        const nodeType = String(targetNode?.data?.referenceType || 'country')
         navigate({ to: getDossierDetailPath(nodeId, nodeType) })
       }
     },

@@ -98,7 +98,7 @@ export interface Dossier {
 export interface DossierCreate {
   name_en: string
   name_ar: string
-  type: DossierType
+  type: DossierTypeCanonical
   sensitivity_level?: SensitivityLevel
   description_en?: string
   description_ar?: string
@@ -115,7 +115,7 @@ export interface DossierUpdate {
   version?: number
   name_en?: string
   name_ar?: string
-  status?: DossierStatus
+  status?: DossierStatusCanonical
   sensitivity_level?: SensitivityLevel
   description_en?: string
   description_ar?: string
@@ -263,8 +263,8 @@ export interface DossierDetailResponse extends Dossier {
 }
 
 export interface DossierFilters {
-  type?: DossierType
-  status?: DossierStatus
+  type?: DossierTypeCanonical
+  status?: DossierStatusCanonical
   sensitivity?: SensitivityLevel
   owner_id?: string
   tags?: string[]

@@ -126,14 +126,14 @@ function ForumDossierDetailRoute() {
             <h2 className="text-lg sm:text-xl font-semibold mb-2">{t('detail.wrongType')}</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-4">
               {t('detail.wrongTypeDescription', {
-                actualType: t(`type.${dossier.type}`),
-                expectedType: t('type.forum'),
+                actualType: t(`type.${dossier.type}` as any),
+                expectedType: t('type.forum' as any),
               })}
             </p>
             <div className="flex gap-3">
               <Button asChild>
                 <Link to={`/dossiers/${dossier.type}s/${id}`}>
-                  {t('action.viewCorrectType', { type: t(`type.${dossier.type}`) })}
+                  {t('action.viewCorrectType', { type: t(`type.${dossier.type}` as any) })}
                 </Link>
               </Button>
               <Button asChild variant="outline">

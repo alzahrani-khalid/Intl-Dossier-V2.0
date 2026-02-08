@@ -126,7 +126,7 @@ interface ProgressBadgeProps {
 }
 
 function ProgressBadge({ completed, total }: ProgressBadgeProps) {
-  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0
+  const _percentage = total > 0 ? Math.round((completed / total) * 100) : 0
   const isComplete = completed === total
 
   return (

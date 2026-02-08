@@ -78,7 +78,7 @@ export function useEscalateAssignment() {
       })
     },
 
-    onError: (error, variables) => {
+    onError: (error, _variables) => {
       // Show error toast
       toast({
         title: t('assignments:escalate.error.title'),

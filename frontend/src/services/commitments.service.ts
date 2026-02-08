@@ -22,7 +22,6 @@ import type {
   EvidenceUrlResponse,
   CommitmentStatus,
   CommitmentPriority,
-  DEFAULT_PAGE_SIZE,
 } from '@/types/commitment.types'
 
 // Re-export types for convenience
@@ -112,7 +111,7 @@ export async function getCommitments(
     throw new Error(`Failed to fetch commitments: ${error.message}`)
   }
 
-  const commitments = data ?? []
+  const commitments = (data ?? []) as Commitment[]
   const hasMore = commitments.length > limit
 
   // Remove the extra item if present

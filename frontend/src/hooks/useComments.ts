@@ -385,7 +385,7 @@ export function useToggleReaction() {
 
       return response.json() as Promise<ToggleReactionResponse>
     },
-    onSuccess: (result, variables) => {
+    onSuccess: (_result, variables) => {
       // Optimistically update the cache
       queryClient.invalidateQueries({
         queryKey: commentQueryKeys.list({
@@ -401,8 +401,8 @@ export function useToggleReaction() {
  * Hook to get the current user's reactions for optimistic UI updates
  */
 export function useUserReactionsForComment(
-  commentId: string,
-  currentReactions: Record<string, number>,
+  _commentId: string,
+  _currentReactions: Record<string, number>,
 ): CommentReactionEmoji[] {
   // In a real implementation, you'd track this in state or fetch from API
   // For now, return empty array - the API would need to return user's reactions

@@ -11,9 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { usePosition } from '../../../hooks/usePosition'
 import { usePositionAnalytics } from '../../../hooks/usePositionAnalytics'
-import { useEngagementPositions } from '../../../hooks/useEngagementPositions'
 import { PositionAnalyticsCard } from '../../../components/positions/PositionAnalyticsCard'
-import { PositionEditor } from '../../../components/positions/PositionEditor'
 import { Button } from '../../../components/ui/button'
 import {
   Card,
@@ -54,7 +52,7 @@ function PositionDetailPage() {
   const { data: position, isLoading, error } = usePosition(positionId)
 
   // Fetch analytics
-  const { data: analytics } = usePositionAnalytics(positionId)
+  const { analytics } = usePositionAnalytics({ positionId })
 
   // Fetch related engagements (where this position is attached)
   // Note: This would need a new endpoint or query parameter
@@ -101,12 +99,12 @@ function PositionDetailPage() {
 
   if (!position) return null
 
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     draft: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
-    review: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200',
+    under_review: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200',
     approved: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-200',
     published: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-200',
-    archived: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-200',
+    unpublished: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-200',
   }
 
   return (
@@ -136,17 +134,19 @@ function PositionDetailPage() {
                   <Badge className={statusColors[position.status]}>
                     {t(`positions:status.${position.status}`)}
                   </Badge>
-                  <Badge variant="outline">{t(`positions:type.${position.type}`)}</Badge>
+                  <Badge variant="outline">
+                    {t(`positions:type.${position.position_type_id}`)}
+                  </Badge>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
                     {format(new Date(position.updated_at), 'PPP', { locale })}
                   </span>
-                  {position.created_by && (
+                  {position.author_id && (
                     <span className="flex items-center gap-1">
                       <User className="h-4 w-4" />
-                      {position.created_by}
+                      {position.author_id}
                     </span>
                   )}
                 </div>
@@ -155,7 +155,7 @@ function PositionDetailPage() {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
-              {position.status !== 'archived' && (
+              {position.status !== 'unpublished' && (
                 <Button variant="outline" size="sm">
                   <Edit className="h-4 w-4" />
                   {t('positions:detail.edit')}
@@ -163,7 +163,7 @@ function PositionDetailPage() {
               )}
               <Button variant="outline" size="sm">
                 <Archive className="h-4 w-4" />
-                {position.status === 'archived'
+                {position.status === 'unpublished'
                   ? t('positions:detail.restore')
                   : t('positions:detail.archive')}
               </Button>
@@ -230,7 +230,7 @@ function PositionDetailPage() {
           {/* Sidebar - Analytics and Metadata */}
           <div className="space-y-6">
             {/* Analytics Card */}
-            {analytics && <PositionAnalyticsCard positionId={positionId} analytics={analytics} />}
+            {analytics && <PositionAnalyticsCard positionId={positionId} />}
 
             {/* Metadata Card */}
             <Card>
@@ -242,9 +242,12 @@ function PositionDetailPage() {
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                     {t('positions:detail.dossier')}
                   </p>
-                  {position.dossier_id ? (
+                  {(position as any).dossier_id ? (
                     <Link
-                      to={getDossierDetailPath(position.dossier_id, position.dossier_type)}
+                      to={getDossierDetailPath(
+                        (position as any).dossier_id,
+                        (position as any).dossier_type,
+                      )}
                       className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       {t('positions:detail.view_dossier')}

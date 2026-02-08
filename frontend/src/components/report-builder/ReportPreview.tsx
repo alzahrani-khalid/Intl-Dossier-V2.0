@@ -123,7 +123,7 @@ export function ReportPreview({
               <TableRow key={index}>
                 {visibleColumns.map((column) => {
                   const [, field] = column.fieldId.split('.')
-                  const value = row[field]
+                  const value = row[field!]
                   return (
                     <TableCell key={column.id} className="whitespace-nowrap">
                       {formatCellValue(value)}
@@ -233,7 +233,7 @@ export function ReportPreview({
           {showLegend && <Legend />}
           <Area
             type="monotone"
-            dataKey={yField}
+            dataKey={yField!}
             fill={CHART_COLORS[0]}
             fillOpacity={0.3}
             stroke={CHART_COLORS[0]}
@@ -254,8 +254,8 @@ export function ReportPreview({
 
       // Group by colorField and sum yAxisField
       const grouped: Record<string, number> = {}
-      const colorField = colorFieldId ? colorFieldId.split('.')[1] : Object.keys(chartData[0])[0]
-      const valueField = yAxisFieldId ? yAxisFieldId.split('.')[1] : Object.keys(chartData[0])[1]
+      const colorField = colorFieldId ? colorFieldId.split('.')[1]! : Object.keys(chartData[0]!)[0]!
+      const valueField = yAxisFieldId ? yAxisFieldId.split('.')[1]! : Object.keys(chartData[0]!)[1]!
 
       chartData.forEach((item) => {
         const key = String(item[colorField] || 'Unknown')
@@ -280,10 +280,13 @@ export function ReportPreview({
             cy="50%"
             outerRadius={100}
             label={
-              showLabels ? ({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%` : false
+              showLabels
+                ? ((({ name, percent }: { name: string; percent: number }) =>
+                    `${name}: ${(Number(percent) * 100).toFixed(0)}%`) as any)
+                : false
             }
           >
-            {pieData.map((entry, index) => (
+            {pieData.map((_entry, index) => (
               <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
             ))}
           </Pie>

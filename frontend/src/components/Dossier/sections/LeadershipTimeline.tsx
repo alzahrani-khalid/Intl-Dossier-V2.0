@@ -30,7 +30,7 @@ import {
   useDeleteLeadership,
   useEndLeadershipTenure,
 } from '@/hooks/useOrganizationLeadership'
-import type { LeadershipWithDetails, PositionLevel, AppointmentType } from '@/types/contacts.types'
+import type { LeadershipWithDetails, PositionLevel } from '@/types/contacts.types'
 
 interface LeadershipTimelineProps {
   organizationId: string

@@ -50,7 +50,7 @@ export function DashboardPage() {
   const {
     data: summary,
     isLoading: summaryLoading,
-    isError: summaryError,
+    isError: _summaryError,
   } = useDossierDashboardSummary()
 
   return (

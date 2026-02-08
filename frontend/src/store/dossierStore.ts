@@ -419,8 +419,8 @@ export const useDossierStore = create<DossierStore>()(
           }
         },
 
-        inheritContextFromParent: async (parentType, parentId) => {
-          const state = get()
+        inheritContextFromParent: async (_parentType, _parentId) => {
+          const _state = get()
 
           // Set loading state
           set({ isResolving: true, resolutionError: null })
@@ -585,11 +585,14 @@ export function useDossierContextResolution() {
 export function getDossierRoute(dossier: DossierEntry): string {
   if (dossier.route) return dossier.route
 
-  const typeRouteMap: Record<DossierType, string> = {
+  const typeRouteMap: Partial<Record<DossierType, string>> = {
     country: 'countries',
     organization: 'organizations',
     forum: 'forums',
-    theme: 'topics',
+    topic: 'topics',
+    engagement: 'engagements',
+    working_group: 'working_groups',
+    person: 'persons',
   }
 
   const segment = typeRouteMap[dossier.type] || 'countries'

@@ -112,7 +112,7 @@ export function useAcceptAISuggestion(intakeId: string) {
     mutationFn: async (request: AcceptSuggestionRequest) => {
       return await intakeEntityLinksAPI.ai.acceptSuggestion(intakeId, request)
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, _variables) => {
       // Invalidate entity links query to show new link
       queryClient.invalidateQueries({ queryKey: ['entity-links', intakeId] })
 

@@ -80,6 +80,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     setValue,
     formState: { errors, isSubmitting },
     reset,
+    // @ts-expect-error Type instantiation too deep
   } = useForm<IntakeFormData>({
     resolver: zodResolver(createIntakeSchema(t, tDossier)),
     defaultValues: initialData || {

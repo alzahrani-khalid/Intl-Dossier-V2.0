@@ -6,7 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { EyeOff, Lock, ShieldAlert } from 'lucide-react'
+import { EyeOff, ShieldAlert } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { DocumentClassification } from '@/types/document-classification.types'
 import { CLASSIFICATION_COLORS } from '@/types/document-classification.types'

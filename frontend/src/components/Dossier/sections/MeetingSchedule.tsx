@@ -56,7 +56,7 @@ export function MeetingSchedule({ dossier, isWorkingGroup = false }: MeetingSche
         </div>
         <Link
           to="/dossiers/create"
-          search={{ type: 'engagement', parentForumId: dossier.id }}
+          search={{ type: 'engagement', parentForumId: dossier.id } as any}
           className="shrink-0"
         >
           <Button variant="outline" size="sm" className="gap-2 min-h-11">
@@ -104,7 +104,10 @@ export function MeetingSchedule({ dossier, isWorkingGroup = false }: MeetingSche
               'This forum has no sessions or editions yet. Create an engagement dossier to represent a specific instance of this forum.',
             )}
           </p>
-          <Link to="/dossiers/create" search={{ type: 'engagement', parentForumId: dossier.id }}>
+          <Link
+            to="/dossiers/create"
+            search={{ type: 'engagement', parentForumId: dossier.id } as any}
+          >
             <Button variant="default" className="gap-2 min-h-11">
               <Plus className={cn('h-4 w-4', isRTL && 'rotate-180')} />
               {t('sessions.createFirst', 'Create First Session')}
@@ -187,7 +190,7 @@ function SessionCard({ session, isRTL, t, i18n }: SessionCardProps) {
   const statusVariant = statusEntry.variant
 
   return (
-    <Link to="/dossiers/engagements/$id" params={{ id: session.id }} className="block group">
+    <Link to="/dossiers/engagements/$id" params={{ id: session.id } as any} className="block group">
       <div
         className={cn(
           'p-4 rounded-lg border bg-card transition-all duration-200',

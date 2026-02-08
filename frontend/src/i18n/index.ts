@@ -510,7 +510,7 @@ i18n
 
     // Add missing keys handling
     saveMissing: false,
-    missingKeyHandler: (lng, ns, key) => {
+    missingKeyHandler: (lng, _ns, key) => {
       if (process.env.NODE_ENV === 'development') {
         console.warn(`Missing translation key: ${key} for language: ${lng}`)
       }

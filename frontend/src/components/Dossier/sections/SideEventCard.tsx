@@ -63,7 +63,7 @@ export function SideEventCard({
     try {
       const [hours, minutes] = time.split(':')
       const date = new Date()
-      date.setHours(parseInt(hours), parseInt(minutes))
+      date.setHours(parseInt(hours!), parseInt(minutes!))
       return date.toLocaleTimeString(i18n.language, {
         hour: '2-digit',
         minute: '2-digit',
@@ -74,7 +74,7 @@ export function SideEventCard({
   }
 
   // Format date
-  const formatDate = (dateStr: string) => {
+  const _formatDate = (dateStr: string) => {
     try {
       return new Date(dateStr).toLocaleDateString(i18n.language, {
         weekday: 'short',

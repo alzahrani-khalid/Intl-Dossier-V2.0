@@ -85,7 +85,7 @@ export async function invokeEdgeFunction<T>(
 ): Promise<EdgeFunctionResult<T>> {
   try {
     const { data, error } = await supabase.functions.invoke<T>(functionName, {
-      body: options.body,
+      body: options.body as Record<string, any> | undefined,
       headers: options.headers,
       method: options.method,
     })

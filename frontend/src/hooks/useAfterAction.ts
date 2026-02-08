@@ -2,6 +2,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 
 // Types based on API spec
+export interface Attachment {
+  id: string
+  file_key: string
+  file_name: string
+  file_size: number
+  mime_type: string
+  uploaded_at: string
+  uploaded_by: string
+}
+
 export interface Decision {
   id: string
   after_action_id: string
@@ -85,6 +95,7 @@ export interface AfterActionRecord {
   id: string
   engagement_id: string
   dossier_id: string
+  title?: string
   publication_status: 'draft' | 'published' | 'edit_requested' | 'edit_approved' | 'edit_rejected'
   is_confidential: boolean
   attendees?: string[]
@@ -93,13 +104,20 @@ export interface AfterActionRecord {
   commitments?: Commitment[]
   risks?: Risk[]
   follow_up_actions?: FollowUpAction[]
+  linked_tasks?: Array<{ id: string; title?: string; status?: string }>
   created_by: string
+  created_by_name?: string
   created_at: string
   updated_by?: string | null
   updated_at: string
   published_by?: string | null
+  published_by_name?: string
   published_at?: string | null
   version: number
+  /** Internal optimistic update version counter */
+  _version?: number
+  attachments?: Attachment[]
+  [key: string]: unknown
 }
 
 export interface CreateAfterActionRequest {

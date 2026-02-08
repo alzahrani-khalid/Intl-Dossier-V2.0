@@ -209,7 +209,7 @@ function GraphVisualizationInner({
   }, [rawEdges, filteredNodes, selectedRelationshipType])
 
   // T086: Transform nodes to React Flow format with memoization
-  const nodes: Node[] = useMemo(() => {
+  const nodes = useMemo(() => {
     return filteredNodes.map((node, index) => {
       const angle = (index / filteredNodes.length) * 2 * Math.PI
       const radius = 250
@@ -227,7 +227,7 @@ function GraphVisualizationInner({
           borderWidth: node.degree === 0 ? 3 : 2,
         },
       }
-    })
+    }) as unknown as Node[]
   }, [filteredNodes])
 
   // T086: Transform edges to React Flow format with memoization
@@ -286,7 +286,7 @@ function GraphVisualizationInner({
         {showMiniMap && (
           <MiniMap
             position={isRTL ? 'bottom-left' : 'bottom-right'}
-            nodeColor={(node) => getNodeColor(node.data?.type || '')}
+            nodeColor={(node) => getNodeColor(String(node.data?.type || ''))}
             nodeBorderRadius={8}
             maskColor="rgba(0, 0, 0, 0.1)"
           />

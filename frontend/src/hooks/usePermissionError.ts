@@ -59,13 +59,13 @@ function parseApiError(apiError: PermissionDeniedApiError): PermissionDeniedErro
  */
 function generateSuggestedActions(
   error: PermissionDeniedError,
-  t: (key: string) => string,
+  _t: (key: string) => string,
 ): PermissionAction[] {
   const actions: PermissionAction[] = []
 
   // Primary action: Request access if there are granters
   if (error.accessGranters.length > 0) {
-    const primaryGranter = error.accessGranters.find((g) => g.isPrimary) || error.accessGranters[0]
+    const _primaryGranter = error.accessGranters.find((g) => g.isPrimary) || error.accessGranters[0]
     actions.push({
       id: 'request-access',
       type: 'open_modal',
@@ -254,9 +254,9 @@ export function usePermissionError(): UsePermissionErrorReturn {
  * Hook to check if user has permission for a resource
  */
 export function useHasPermission(
-  resourceType: ResourceType,
+  _resourceType: ResourceType,
   permission: PermissionType,
-  resourceId?: string,
+  _resourceId?: string,
 ) {
   const user = useAuthStore((state) => state.user)
 

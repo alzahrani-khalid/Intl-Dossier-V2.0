@@ -283,6 +283,8 @@ function transformSummaryResponse(data: Record<string, unknown>): DossierStatist
 
     last_refresh: data.last_refresh as string,
 
-    by_type: (data.by_type as DossierStatisticsSummary['by_type']) || {},
+    by_type:
+      (data.by_type as DossierStatisticsSummary['by_type']) ||
+      ({} as DossierStatisticsSummary['by_type']),
   }
 }

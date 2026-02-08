@@ -6,41 +6,40 @@
  * Mobile-first layout with RTL support.
  */
 
-import { useTranslation } from 'react-i18next';
-import { FileText, Loader2, AlertCircle } from 'lucide-react';
-import { BilateralAgreementCard } from '@/components/dossiers/BilateralAgreementCard';
-import { useBilateralAgreements } from '@/hooks/useBilateralAgreements';
-import { useIntelligence } from '@/hooks/useIntelligence';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { Link } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next'
+import { FileText, AlertCircle } from 'lucide-react'
+import { BilateralAgreementCard } from '@/components/dossiers/BilateralAgreementCard'
+import { useBilateralAgreements } from '@/hooks/useBilateralAgreements'
+import { useIntelligence } from '@/hooks/useIntelligence'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
+import { Link } from '@tanstack/react-router'
 
 interface BilateralAgreementsProps {
-  dossierId: string;
+  dossierId: string
 }
 
 export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Fetch bilateral agreements from mous table (T079)
   const {
     data: agreements,
     isLoading: isLoadingAgreements,
     error: agreementsError,
-  } = useBilateralAgreements({ countryId: dossierId });
+  } = useBilateralAgreements({ countryId: dossierId })
 
   // Fetch bilateral intelligence for AI summaries (T082)
-  const {
-    data: bilateralIntelligence,
-    isLoading: isLoadingIntelligence,
-  } = useIntelligence({
+  const { data: bilateralIntelligence, isLoading: _isLoadingIntelligence } = useIntelligence({
     entity_id: dossierId,
     intelligence_type: 'bilateral',
-  });
+  })
 
   // Extract AI summary if available
-  const aiSummary = bilateralIntelligence?.data?.[0]?.executive_summary_en || bilateralIntelligence?.data?.[0]?.executive_summary_ar;
+  // IntelligenceReport uses 'content' field, not 'executive_summary_en'
+  const firstReport = bilateralIntelligence?.data?.[0]
+  const aiSummary = firstReport?.content || firstReport?.content_ar
 
   // Loading state
   if (isLoadingAgreements) {
@@ -50,7 +49,7 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
         <Skeleton className="h-48 w-full" />
         <Skeleton className="h-48 w-full" />
       </div>
-    );
+    )
   }
 
   // Error state
@@ -64,11 +63,9 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
           {t('common.error', 'Error loading data')}
         </h3>
-        <p className="text-sm text-muted-foreground max-w-md px-4">
-          {agreementsError.message}
-        </p>
+        <p className="text-sm text-muted-foreground max-w-md px-4">{agreementsError.message}</p>
       </div>
-    );
+    )
   }
 
   // Empty state with AI-suggested opportunities (T087-T088)
@@ -89,7 +86,10 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
         </h3>
 
         <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
-          {t('sections.country.bilateralAgreementsEmptyDescription', 'No bilateral agreements or MoUs have been recorded for this country yet.')}
+          {t(
+            'sections.country.bilateralAgreementsEmptyDescription',
+            'No bilateral agreements or MoUs have been recorded for this country yet.',
+          )}
         </p>
 
         {/* AI-Suggested Opportunities (T088) */}
@@ -110,12 +110,10 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
         )}
 
         <Button asChild variant="outline" size="sm">
-          <Link to="/mous">
-            {t('common.view_all_agreements', 'View All Agreements')}
-          </Link>
+          <Link to="/mous">{t('common.view_all_agreements', 'View All Agreements')}</Link>
         </Button>
       </div>
-    );
+    )
   }
 
   // Display agreements grid (T081)
@@ -127,7 +125,7 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
           {t('sections.country.bilateralAgreements', 'Bilateral Agreements')} ({agreements.length})
         </h3>
         <Button asChild variant="outline" size="sm">
-          <Link to="/mous" search={{ country_id: dossierId }}>
+          <Link to="/mous" search={{ country_id: dossierId } as any}>
             {t('common.view_all', 'View All')}
           </Link>
         </Button>
@@ -142,11 +140,11 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
             aiSummary={aiSummary} // Share same AI summary across cards (T082)
             onClick={() => {
               // Navigate to agreement detail (T090)
-              window.location.href = `/mous?id=${agreement.id}`;
+              window.location.href = `/mous?id=${agreement.id}`
             }}
           />
         ))}
       </div>
     </div>
-  );
+  )
 }

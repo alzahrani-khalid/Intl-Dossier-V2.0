@@ -18,12 +18,11 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Search, Loader2, FileText, AlertCircle, Filter } from 'lucide-react'
 import { TemplateCard } from './TemplateCard'
 import { DocumentWizard } from './DocumentWizard'
-import { useDocumentTemplates, useTemplatesForEntity } from '@/hooks/useDocumentTemplates'
+import { useTemplatesForEntity } from '@/hooks/useDocumentTemplates'
 import type {
   DocumentTemplate,
   DocumentTemplateCategory,

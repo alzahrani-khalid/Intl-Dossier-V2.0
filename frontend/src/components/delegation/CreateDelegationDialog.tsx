@@ -7,8 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
-import { format, addDays, addMonths } from 'date-fns'
+import { format, addMonths } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import {
   Dialog,
@@ -46,7 +45,7 @@ interface CreateDelegationDialogProps {
   users?: Array<{ id: string; email: string; full_name: string }>
 }
 
-interface FormData {
+interface _FormData {
   grantee_id: string
   valid_until: Date | undefined
   reason: string

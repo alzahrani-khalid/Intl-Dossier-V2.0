@@ -28,7 +28,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { useMouParties, useDeleteMouParty } from '@/hooks/useMouLifecycle'
+import { useMouParties, useRemoveMouParty } from '@/hooks/useMouLifecycle'
 import type {
   MouPartyWithEntity,
   MouPartyRole,
@@ -50,9 +50,13 @@ export function MouPartiesList({ mouId, onAddParty, onEditParty }: MouPartiesLis
 
   // Fetch parties
   const { data: partiesData, isLoading, error, refetch } = useMouParties(mouId)
-  const deleteParty = useDeleteMouParty()
+  const deleteParty = useRemoveMouParty()
 
-  const parties = partiesData?.data || []
+  const parties =
+    (Array.isArray(partiesData)
+      ? partiesData
+      : (((partiesData as unknown as Record<string, unknown>)?.data as MouPartyWithEntity[]) ??
+        [])) || []
 
   // Group by role
   const signatories = parties.filter((p) => p.role === 'signatory')
@@ -61,7 +65,7 @@ export function MouPartiesList({ mouId, onAddParty, onEditParty }: MouPartiesLis
   // Handle delete
   const handleDelete = async (party: MouPartyWithEntity) => {
     if (window.confirm(t('actions.removeParty', 'Remove this party?'))) {
-      await deleteParty.mutateAsync({ partyId: party.id, mouId })
+      await deleteParty.mutateAsync({ id: party.id, mouId })
     }
   }
 

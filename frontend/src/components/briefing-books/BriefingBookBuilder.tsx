@@ -66,7 +66,7 @@ import type {
   DEFAULT_SECTIONS,
   BRIEFING_TOPICS,
 } from '@/types/briefing-book.types'
-import type { DossierType } from '@/types/dossier'
+import type { DossierType, SensitivityLevel } from '@/types/dossier'
 
 interface BriefingBookBuilderProps {
   onSuccess?: () => void
@@ -78,11 +78,11 @@ const STEPS = ['entities', 'sections', 'options', 'review'] as const
 type Step = (typeof STEPS)[number]
 
 // Entity type icons
-const entityIcons: Record<DossierType, typeof Globe> = {
+const entityIcons: Partial<Record<DossierType, typeof Globe>> = {
   country: Globe,
   organization: Building2,
   forum: Users,
-  theme: Palette,
+  topic: Palette,
 }
 
 // Sortable section item component
@@ -141,7 +141,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
       onSuccess?.()
     },
   })
-  const { data: templates } = useBriefingBookTemplates()
+  const { data: _templates } = useBriefingBookTemplates()
   const { data: dossiersList } = useDossiers({})
 
   // Wizard state
@@ -243,7 +243,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
     includeBookmarks: true,
     includeCoverPage: true,
     includeExecutiveSummary: true,
-    maxSensitivityLevel: 'high',
+    maxSensitivityLevel: 3 as SensitivityLevel,
   })
 
   // Date range state
@@ -385,7 +385,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
         description_en: config.description_en,
         description_ar: config.description_ar,
         entities: config.entities as BriefingBookEntity[],
-        dateRange,
+        dateRange: dateRange as any,
         topics: config.topics as BriefingBookTopic[],
         sections: config.sections as BriefingBookSection[],
         format: config.format as BriefingBookFormat,
@@ -410,13 +410,13 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
 
   const goBack = () => {
     if (canGoBack) {
-      setCurrentStep(STEPS[currentStepIndex - 1])
+      setCurrentStep(STEPS[currentStepIndex - 1]!)
     }
   }
 
   const goNext = () => {
     if (canGoNext) {
-      setCurrentStep(STEPS[currentStepIndex + 1])
+      setCurrentStep(STEPS[currentStepIndex + 1]!)
     }
   }
 
@@ -473,7 +473,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
             {(config.entities?.length ?? 0) > 0 && (
               <div className="flex flex-wrap gap-2">
                 {config.entities?.map((entity) => {
-                  const Icon = entityIcons[entity.type]
+                  const Icon = entityIcons[entity.type] || Globe
                   return (
                     <Badge
                       key={entity.id}
@@ -505,7 +505,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
             <ScrollArea className="h-[300px] sm:h-[400px] border rounded-lg">
               <div className="p-4 space-y-2">
                 {filteredDossiers.map((dossier) => {
-                  const Icon = entityIcons[dossier.type]
+                  const Icon = entityIcons[dossier.type] || Globe
                   const isSelected = selectedEntityIds.has(dossier.id)
 
                   return (
@@ -798,11 +798,11 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                 {t('builder.options.sensitivity.description')}
               </p>
               <Select
-                value={config.maxSensitivityLevel}
+                value={String(config.maxSensitivityLevel ?? 3)}
                 onValueChange={(v) =>
                   setConfig((prev) => ({
                     ...prev,
-                    maxSensitivityLevel: v as 'low' | 'medium' | 'high',
+                    maxSensitivityLevel: Number(v) as SensitivityLevel,
                   }))
                 }
               >
@@ -810,9 +810,9 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">{t('builder.options.sensitivity.low')}</SelectItem>
-                  <SelectItem value="medium">{t('builder.options.sensitivity.medium')}</SelectItem>
-                  <SelectItem value="high">{t('builder.options.sensitivity.high')}</SelectItem>
+                  <SelectItem value="1">{t('builder.options.sensitivity.low')}</SelectItem>
+                  <SelectItem value="2">{t('builder.options.sensitivity.medium')}</SelectItem>
+                  <SelectItem value="3">{t('builder.options.sensitivity.high')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -938,7 +938,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                   <p className="text-sm font-medium">Entities:</p>
                   <div className="flex flex-wrap gap-2">
                     {config.entities?.map((entity) => {
-                      const Icon = entityIcons[entity.type]
+                      const Icon = entityIcons[entity.type] || Globe
                       return (
                         <Badge key={entity.id} variant="secondary" className="gap-1">
                           <Icon className="h-3 w-3" />

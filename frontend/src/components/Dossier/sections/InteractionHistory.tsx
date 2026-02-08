@@ -158,7 +158,7 @@ export function InteractionHistory({ dossierId }: InteractionHistoryProps) {
                         <h4 className="font-semibold text-sm sm:text-base">
                           <Link
                             to="/engagements/$engagementId"
-                            params={{ engagementId: engagement.id }}
+                            params={{ engagementId: engagement.id } as any}
                             className="hover:underline text-primary"
                           >
                             {engagementName}

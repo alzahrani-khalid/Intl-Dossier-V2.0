@@ -211,7 +211,7 @@ export function DossierContextProvider({
     addToRecentDossiers,
     resolveContextFromUrl,
     inheritContextFromParent,
-    setResolvedContext: storeSetResolvedContext,
+    setResolvedContext: _storeSetResolvedContext,
   } = useDossierStore()
 
   // Try to get dossier_id from URL search params

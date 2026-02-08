@@ -34,7 +34,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 import { useThemeTree } from '@/hooks/useThemes'
 import type { ThemeNode } from '@/types/theme.types'
@@ -344,7 +343,7 @@ export function ThemeHierarchy({
               onEdit={onEditTheme}
               onDelete={onDeleteTheme}
               onAddChild={onAddChildTheme}
-              t={t}
+              t={t as any}
             />
           ))}
         </div>

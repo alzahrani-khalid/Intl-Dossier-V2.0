@@ -88,7 +88,7 @@ export function AttendeesList({
   })
 
   // Group by role for desktop view
-  const attendeesByRole = sortedAttendees.reduce(
+  const _attendeesByRole = sortedAttendees.reduce(
     (acc, attendee) => {
       if (!acc[attendee.role]) {
         acc[attendee.role] = []

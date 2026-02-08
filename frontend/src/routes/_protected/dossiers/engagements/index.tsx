@@ -5,12 +5,12 @@
  * Mobile-first, RTL-compatible, WCAG AA compliant.
  */
 
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { Loader2, Plus, CalendarDays } from 'lucide-react';
-import { useDossiersByType } from '@/hooks/useDossier';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import { Loader2, Plus, CalendarDays } from 'lucide-react'
+import { useDossiersByType } from '@/hooks/useDossier'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -18,36 +18,36 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { useState } from 'react';
+} from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/_protected/dossiers/engagements/')({
   component: EngagementsListPage,
-});
+})
 
 function EngagementsListPage() {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const pageSize = 20;
+  const [searchQuery, setSearchQuery] = useState('')
+  const [page, setPage] = useState(1)
+  const pageSize = 20
 
   // Fetch engagement dossiers
-  const { data, isLoading, error } = useDossiersByType('engagement', page, pageSize);
+  const { data, isLoading, error } = useDossiersByType('engagement', page, pageSize)
 
   // Filter by search query (client-side for now)
   const filteredDossiers = data?.data.filter((dossier) => {
-    if (!searchQuery) return true;
-    const searchLower = searchQuery.toLowerCase();
+    if (!searchQuery) return true
+    const searchLower = searchQuery.toLowerCase()
     return (
       dossier.name_en.toLowerCase().includes(searchLower) ||
       dossier.name_ar?.toLowerCase().includes(searchLower) ||
       dossier.description_en?.toLowerCase().includes(searchLower) ||
       dossier.description_ar?.toLowerCase().includes(searchLower)
-    );
-  });
+    )
+  })
 
   return (
     <div
@@ -59,9 +59,7 @@ function EngagementsListPage() {
         <div className="flex items-center gap-3">
           <CalendarDays className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
           <div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-              {t('type.engagement')}
-            </h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">{t('type.engagement')}</h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-1">
               {t('typeDescription.engagement')}
             </p>
@@ -105,9 +103,7 @@ function EngagementsListPage() {
           <h3 className="text-base sm:text-lg font-semibold text-destructive mb-2">
             {t('list.error')}
           </h3>
-          <p className="text-sm sm:text-base text-destructive/90">
-            {error.message}
-          </p>
+          <p className="text-sm sm:text-base text-destructive/90">{error.message}</p>
         </div>
       )}
 
@@ -119,15 +115,11 @@ function EngagementsListPage() {
             {searchQuery ? t('list.emptyFiltered') : t('list.empty')}
           </h3>
           <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6">
-            {searchQuery
-              ? t('list.emptyFilteredDescription')
-              : t('list.emptyDescription')}
+            {searchQuery ? t('list.emptyFilteredDescription') : t('list.emptyDescription')}
           </p>
           {!searchQuery && (
             <Button asChild>
-              <Link to="/dossiers/create">
-                {t('action.create')}
-              </Link>
+              <Link to="/dossiers/create">{t('action.create')}</Link>
             </Button>
           )}
         </div>
@@ -171,9 +163,7 @@ function EngagementsListPage() {
                     </TableCell>
                     <TableCell className="text-end">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/dossiers/engagements/${dossier.id}`}>
-                          {t('action.view')}
-                        </Link>
+                        <Link to={`/dossiers/engagements/${dossier.id}`}>{t('action.view')}</Link>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -213,7 +203,7 @@ function EngagementsListPage() {
           </div>
 
           {/* Pagination */}
-          {data && data.total > pageSize && (
+          {data && data.total! > pageSize && (
             <div className="mt-8 flex items-center justify-between">
               <Button
                 variant="outline"
@@ -225,12 +215,12 @@ function EngagementsListPage() {
               <span className="text-sm text-muted-foreground">
                 {t('list.pageInfo', {
                   current: page,
-                  total: Math.ceil(data.total / pageSize),
+                  total: Math.ceil(data.total! / pageSize),
                 })}
               </span>
               <Button
                 variant="outline"
-                disabled={page * pageSize >= data.total}
+                disabled={page * pageSize >= data.total!}
                 onClick={() => setPage((p) => p + 1)}
               >
                 {t('action.next')}
@@ -240,5 +230,5 @@ function EngagementsListPage() {
         </>
       )}
     </div>
-  );
+  )
 }

@@ -307,7 +307,7 @@ export function getColorClass(template: EntityTemplate): string {
     teal: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300',
   }
 
-  return colorMap[template.color] || colorMap.blue
+  return (colorMap[template.color] || colorMap.blue)!
 }
 
 /**

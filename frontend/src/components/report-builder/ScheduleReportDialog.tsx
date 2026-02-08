@@ -37,7 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Calendar, Loader2, Plus, X, Clock } from 'lucide-react'
+import { Calendar, Loader2, X, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ReportSchedule, ScheduleFrequency, ExportFormat } from '@/types/report-builder.types'
 

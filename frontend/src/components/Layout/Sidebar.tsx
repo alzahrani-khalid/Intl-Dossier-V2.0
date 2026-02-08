@@ -3,9 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import {
   Home,
-  Globe2,
-  Building2,
-  Users,
   FileText,
   Calendar,
   ScrollText,
@@ -29,7 +26,6 @@ import {
   Download,
   UserCog,
   ChevronRight,
-  Target,
   Shield,
 } from 'lucide-react'
 import { useUIStore } from '../../store/uiStore'
@@ -288,7 +284,7 @@ export function Sidebar() {
             </button>
             {isExpanded && (
               <ul className="mt-1 space-y-1">
-                {item.children.map((child) => renderNavItem(child, level + 1))}
+                {item.children?.map((child) => renderNavItem(child, level + 1))}
               </ul>
             )}
           </>

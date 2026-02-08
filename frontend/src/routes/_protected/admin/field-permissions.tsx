@@ -165,7 +165,7 @@ function FieldPermissionsPage() {
       if (!grouped[def.entity_type]) {
         grouped[def.entity_type] = []
       }
-      grouped[def.entity_type].push(def)
+      grouped[def.entity_type]!.push(def)
     })
     return grouped
   }, [definitions])

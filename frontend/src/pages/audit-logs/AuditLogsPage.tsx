@@ -24,7 +24,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -32,7 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
 import {
   AuditLogFilters,
   AuditLogTable,
@@ -51,7 +51,7 @@ export function AuditLogsPage() {
   const isRTL = i18n.language === 'ar'
 
   const [showStatistics, setShowStatistics] = useState(false)
-  const [selectedLog, setSelectedLog] = useState<AuditLogEntry | null>(null)
+  const [_selectedLog, setSelectedLog] = useState<AuditLogEntry | null>(null)
 
   const {
     logs,

@@ -6,7 +6,7 @@
  * Mobile-first with RTL support.
  */
 
-import { memo, useMemo, useCallback } from 'react'
+import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   ArrowLeftRight,
@@ -29,7 +29,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import type {
@@ -41,7 +41,7 @@ import type {
   DiffStats,
   DocumentVersion,
 } from '@/types/document-version.types'
-import { calculateSizeDiff, formatVersionLabel } from '@/types/document-version.types'
+import { calculateSizeDiff } from '@/types/document-version.types'
 
 /**
  * Format file size in human-readable format
@@ -160,7 +160,7 @@ const SideBySideDiff = memo(function SideBySideDiff({
   versionB: DocumentVersion
 }) {
   const { t, i18n } = useTranslation('document-versions')
-  const isRTL = i18n.language === 'ar'
+  const _isRTL = i18n.language === 'ar'
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

@@ -19,7 +19,7 @@
  * @module frontend/src/components/entity-links/AISuggestionPanel
  */
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Sparkles, AlertCircle, Search, RefreshCw, CheckCircle2 } from 'lucide-react'
 import { Button } from '../ui/button'
@@ -32,7 +32,7 @@ import {
   useAcceptAISuggestion,
   useAISuggestionAnalytics,
 } from '../../hooks/use-ai-suggestions'
-import type { AILinkSuggestion } from '../../types/ai-suggestions.types'
+import type { AILinkSuggestion as BackendAILinkSuggestion } from '../../../../backend/src/types/ai-suggestions.types'
 
 interface AISuggestionPanelProps {
   intakeId: string
@@ -75,10 +75,7 @@ export function AISuggestionPanel({
   // Track when suggestions are received
   useEffect(() => {
     if (suggestionsResponse && suggestionStartTime) {
-      analytics.trackSuggestionGenerated(
-        suggestionsResponse.suggestions.length,
-        suggestionsResponse.metadata?.cache_hit ?? false,
-      )
+      analytics.trackSuggestionGenerated(suggestionsResponse.suggestions.length, false)
     }
   }, [suggestionsResponse, suggestionStartTime, analytics])
 
@@ -87,28 +84,23 @@ export function AISuggestionPanel({
     setSuggestionStartTime(Date.now())
   }
 
-  const handleAcceptSuggestion = (suggestion: AILinkSuggestion) => {
+  const handleAcceptSuggestion = (suggestion: BackendAILinkSuggestion) => {
     const acceptStartTime = Date.now()
 
     acceptMutation.mutate(
       {
-        suggestion_id: suggestion.suggestion_id,
-        entity_id: suggestion.entity_id,
-        entity_type: suggestion.entity_type,
+        suggestion_id: suggestion.id,
+        entity_id: suggestion.suggested_entity_id,
+        entity_type: suggestion.suggested_entity_type,
         link_type: suggestion.suggested_link_type,
       },
       {
         onSuccess: (data) => {
           const timeToAccept = Date.now() - acceptStartTime
 
-          analytics.trackSuggestionAccepted(
-            suggestion.suggestion_id,
-            suggestion.rank,
-            suggestion.confidence_score,
-            timeToAccept,
-          )
+          analytics.trackSuggestionAccepted(suggestion.id, 0, suggestion.confidence, timeToAccept)
 
-          onSuggestionAccepted(data.link)
+          onSuggestionAccepted(data)
         },
       },
     )
@@ -291,25 +283,25 @@ export function AISuggestionPanel({
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {suggestions.map((suggestion) => (
-            <Card
-              key={suggestion.suggestion_id}
-              className="p-4 hover:border-primary transition-colors"
-            >
+            <Card key={suggestion.id} className="p-4 hover:border-primary transition-colors">
               <div className="space-y-3">
                 {/* Entity name and type */}
                 <div>
                   <h4 className="font-semibold text-start text-sm sm:text-base line-clamp-2">
-                    {suggestion.entity_name}
+                    {suggestion.suggested_entity_id}
                   </h4>
                   <p className="text-xs text-muted-foreground text-start mt-1">
-                    {t(`entityTypes.${suggestion.entity_type}`, suggestion.entity_type)}
+                    {t(
+                      `entityTypes.${suggestion.suggested_entity_type}`,
+                      suggestion.suggested_entity_type,
+                    )}
                   </p>
                 </div>
 
                 {/* Confidence score */}
                 <div className="flex items-center gap-2">
-                  <Badge variant={getConfidenceBadgeVariant(suggestion.confidence_score)}>
-                    {formatConfidence(suggestion.confidence_score)}
+                  <Badge variant={getConfidenceBadgeVariant(suggestion.confidence)}>
+                    {formatConfidence(suggestion.confidence)}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
                     {t('entityLinks.aiSuggestions.confidence', 'Confidence')}
@@ -334,10 +326,7 @@ export function AISuggestionPanel({
                       {t('entityLinks.aiSuggestions.accepting', 'Creating...')}
                     </>
                   ) : (
-                    <>
-                      {t('entityLinks.aiSuggestions.accept', 'Create Link')}
-                      {suggestion.rank === 1 && ' (Primary)'}
-                    </>
+                    <>{t('entityLinks.aiSuggestions.accept', 'Create Link')}</>
                   )}
                 </Button>
               </div>

@@ -253,7 +253,7 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
                 showReplies={true}
                 maxDepth={3}
                 defaultVisibility="public"
-                title={null}
+                title={undefined}
               />
             </div>
           )}

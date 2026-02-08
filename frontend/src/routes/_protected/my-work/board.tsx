@@ -27,16 +27,12 @@ import {
 import { UnifiedKanbanBoard } from '@/components/unified-kanban'
 import { Button } from '@/components/ui/button'
 import { List } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import type { KanbanColumnMode, WorkSource, WorkItem } from '@/types/work-item.types'
 
 // URL search params schema
 const boardSearchSchema = z.object({
   mode: z.enum(['status', 'priority', 'tracking_type']).optional().default('status'),
-  sources: z
-    .string()
-    .optional()
-    .transform((val) => (val ? (val.split(',') as WorkSource[]) : undefined)),
+  sources: z.array(z.enum(['commitment', 'task', 'intake'])).optional(),
 })
 
 export type BoardSearchParams = z.infer<typeof boardSearchSchema>
@@ -54,46 +50,20 @@ function MyWorkBoardPage() {
   const { mode, sources } = Route.useSearch()
 
   // Parse sources from URL
-  const sourceFilter = sources as WorkSource[] | undefined
+  const sourceFilter = sources
 
   // Fetch kanban data
-  const { items, columns, totalCount, isLoading, isError, refetch, isRefetching } =
-    useUnifiedKanban({
-      contextType: 'personal',
-      columnMode: mode as KanbanColumnMode,
-      sourceFilter,
-    })
+  const { items, isLoading, isError, refetch, isRefetching } = useUnifiedKanban({
+    contextType: 'personal',
+    columnMode: mode as KanbanColumnMode,
+    sourceFilter,
+  })
 
   // Status update mutation
   const statusMutation = useUnifiedKanbanStatusUpdate()
 
   // Real-time updates
   useUnifiedKanbanRealtime('personal', null, user?.id || '', !!user)
-
-  // Handle column mode change
-  const handleColumnModeChange = useCallback(
-    (newMode: KanbanColumnMode) => {
-      navigate({
-        to: '/my-work/board',
-        search: { mode: newMode, sources: sourceFilter?.join(',') },
-      })
-    },
-    [navigate, sourceFilter],
-  )
-
-  // Handle source filter change
-  const handleSourceFilterChange = useCallback(
-    (newSources: WorkSource[]) => {
-      navigate({
-        to: '/my-work/board',
-        search: {
-          mode: mode as KanbanColumnMode,
-          sources: newSources.length > 0 ? newSources.join(',') : undefined,
-        },
-      })
-    },
-    [navigate, mode],
-  )
 
   // Handle status change from drag and drop
   const handleStatusChange = useCallback(
@@ -128,7 +98,10 @@ function MyWorkBoardPage() {
 
   // Navigate to list view
   const handleSwitchToList = useCallback(() => {
-    navigate({ to: '/my-work' })
+    navigate({
+      to: '/my-work',
+      search: { tab: 'all', sortBy: 'deadline', sortOrder: 'asc' } as any,
+    })
   }, [navigate])
 
   return (

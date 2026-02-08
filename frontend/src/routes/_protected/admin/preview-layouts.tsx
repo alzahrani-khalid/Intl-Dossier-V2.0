@@ -9,7 +9,7 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,7 +19,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -134,7 +133,7 @@ const ENTITY_ICONS: Record<PreviewEntityType, React.ComponentType<{ className?: 
 function PreviewLayoutsPage() {
   const { t, i18n } = useTranslation('preview-layouts')
   const isRTL = i18n.language === 'ar'
-  const queryClient = useQueryClient()
+  const _queryClient = useQueryClient()
   const { toast } = useToast()
 
   // State
@@ -353,7 +352,7 @@ function PreviewLayoutsPage() {
 
     const newIndex = direction === 'up' ? index - 1 : index + 1
     if (newIndex < 0 || newIndex >= fields.length) return // Swap
-    ;[fields[index], fields[newIndex]] = [fields[newIndex], fields[index]]
+    ;[fields[index], fields[newIndex]] = [fields[newIndex]!, fields[index]!]
 
     // Update sort orders
     const fieldOrders = fields.map((f, i) => ({

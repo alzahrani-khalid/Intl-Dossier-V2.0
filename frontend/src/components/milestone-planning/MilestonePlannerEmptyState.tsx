@@ -27,10 +27,8 @@ import {
   AlertCircle,
   TrendingUp,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import { MilestoneCard } from './MilestoneCard'
 import { AddMilestoneDialog } from './AddMilestoneDialog'
@@ -110,7 +108,7 @@ export function MilestonePlannerEmptyState({
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editMilestone, setEditMilestone] = useState<PlannedMilestone | null>(null)
-  const [selectedType, setSelectedType] = useState<MilestoneType | null>(null)
+  const [_selectedType, setSelectedType] = useState<MilestoneType | null>(null)
   const [convertMilestone, setConvertMilestone] = useState<PlannedMilestone | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 

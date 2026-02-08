@@ -6,7 +6,6 @@
  * Supports approve, reject, escalate, and waive actions.
  */
 
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { Check, X, AlertTriangle, ArrowUpRight, FileX, Calendar, Loader2 } from 'lucide-react'
@@ -30,7 +29,7 @@ import type {
   SignoffAction,
   SignoffViolationInput,
 } from '@/types/compliance.types'
-import { SEVERITY_COLORS, SIGNOFF_ACTION_LABELS } from '@/types/compliance.types'
+import { SEVERITY_COLORS } from '@/types/compliance.types'
 import { useSignoffViolation } from '@/hooks/useComplianceRules'
 import { toast } from 'sonner'
 
@@ -158,7 +157,7 @@ export function ComplianceSignoffDialog({
             <Label>{t('signoff.action')}</Label>
             <RadioGroup
               defaultValue="approve"
-              onValueChange={(value) => {
+              onValueChange={(_value) => {
                 // This is handled by react-hook-form
               }}
               className="grid grid-cols-2 gap-3"

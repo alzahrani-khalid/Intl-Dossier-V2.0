@@ -384,6 +384,8 @@ export interface MultiLanguageContentEditorProps {
   entityId: string
   /** Field configurations */
   fields: MultiLangFieldConfig[]
+  /** Default language tab to show */
+  defaultLanguage?: ContentLanguage
   /** Callback when content changes */
   onChange?: (fieldName: string, language: ContentLanguage, content: string) => void
   /** Callback when all changes are saved */

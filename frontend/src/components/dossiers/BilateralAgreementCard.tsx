@@ -11,7 +11,6 @@ import { FileText, Calendar, AlertCircle, CheckCircle, Clock } from 'lucide-reac
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Link } from '@tanstack/react-router'
-import { formatDistanceToNow } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 
 interface BilateralAgreementCardProps {
@@ -43,7 +42,7 @@ export function BilateralAgreementCard({
 }: BilateralAgreementCardProps) {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const _locale = isRTL ? ar : enUS
 
   const title = isRTL ? agreement.title_ar : agreement.title
   const effectiveDate = agreement.effective_date || agreement.dates?.effective
@@ -181,7 +180,7 @@ export function BilateralAgreementCard({
       <div className="mt-4 pt-4 border-t border-border">
         <Link
           to="/mous"
-          search={{ id: agreement.id }}
+          search={{ id: agreement.id } as any}
           className="text-xs sm:text-sm text-primary hover:underline font-medium inline-flex items-center gap-1"
         >
           {t('common.view_details', 'View Details')}

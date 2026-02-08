@@ -11,7 +11,7 @@
  * - Persistent view preferences with saved views support
  */
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, Link } from '@tanstack/react-router'
 import { useDossiers, useDossierCounts } from '@/hooks/useDossier'
@@ -203,7 +203,7 @@ export function DossierListPage() {
   // Handle applying a saved view
   const handleApplyView = useCallback((viewConfig: ViewConfig) => {
     const newFilters = viewConfigToFilters(viewConfig)
-    setFilters((prev) => ({
+    setFilters((_prev) => ({
       ...DEFAULT_FILTERS,
       ...newFilters,
       page: 1,
@@ -239,7 +239,7 @@ export function DossierListPage() {
   } = usePullToRefresh({
     onRefresh: async () => {
       await Promise.all([refetch(), refetchCounts()])
-      updateSyncInfo(data?.total || 0)
+      updateSyncInfo(data?.pagination?.total_count || 0)
     },
     isRefreshing: isLoading,
     enabled: !isLoading,
@@ -350,7 +350,7 @@ export function DossierListPage() {
     }))
   }
 
-  const handleClearType = () => {
+  const _handleClearType = () => {
     setFilters((prev) => ({
       ...prev,
       type: undefined,
@@ -358,7 +358,7 @@ export function DossierListPage() {
     }))
   }
 
-  const handleClearStatus = () => {
+  const _handleClearStatus = () => {
     setFilters((prev) => ({
       ...prev,
       status: undefined,
@@ -404,7 +404,7 @@ export function DossierListPage() {
   }
 
   const handleEditDossier = (id: string) => {
-    navigate({ to: '/dossiers/$id/edit', params: { id } })
+    navigate({ to: '/dossiers/$id/edit', params: { id } as any })
   }
 
   const handleTypeCardClick = (type: DossierType) => {
@@ -416,7 +416,9 @@ export function DossierListPage() {
     }
   }
 
-  const totalPages = data ? Math.ceil(data.total / (filters.page_size || 12)) : 0
+  const totalPages = data
+    ? Math.ceil((data.pagination?.total_count ?? 0) / (filters.page_size || 12))
+    : 0
 
   // Calculate stats for header cards
   const getTypeStats = (type: DossierType) => {
@@ -721,7 +723,7 @@ export function DossierListPage() {
         filters={activeFilterChips}
         onRemoveFilter={handleRemoveFilter}
         onClearAll={handleClearAllFilters}
-        totalResults={data?.total}
+        totalResults={data?.pagination?.total_count}
         unfilteredTotal={totalDossiersUnfiltered}
         showHiddenResultsWarning={true}
         sticky={false}
@@ -733,7 +735,7 @@ export function DossierListPage() {
       {/* Sync Status Bar */}
       <SyncStatusBar
         lastSyncTime={lastSyncTime}
-        itemCount={data?.total}
+        itemCount={data?.pagination?.total_count}
         isSyncing={isLoading}
         className="rounded-xl mb-4"
       />
@@ -773,13 +775,16 @@ export function DossierListPage() {
         {!isLoading && !isError && data && (
           <>
             {/* Results Count */}
-            {data.total > 0 && (
+            {(data.pagination?.total_count ?? 0) > 0 && (
               <div className="flex items-center justify-between mb-6">
                 <p className="text-sm font-medium text-muted-foreground text-start">
                   {t('list.showing', {
                     from: ((filters.page || 1) - 1) * (filters.page_size || 12) + 1,
-                    to: Math.min((filters.page || 1) * (filters.page_size || 12), data.total),
-                    total: data.total,
+                    to: Math.min(
+                      (filters.page || 1) * (filters.page_size || 12),
+                      data.pagination?.total_count ?? 0,
+                    ),
+                    total: data.pagination?.total_count ?? 0,
                   })}
                 </p>
               </div>
@@ -828,7 +833,7 @@ export function DossierListPage() {
                       page: 1,
                     }))
                   }}
-                  onCreateEntity={(suggestion) => {
+                  onCreateEntity={(_suggestion) => {
                     navigate({ to: '/dossiers/create' })
                   }}
                   className="py-8"

@@ -385,8 +385,8 @@ export function Documents({
   className = '',
 }: DocumentsProps) {
   const { t, i18n } = useTranslation('dossier')
-  const { t: tPreview } = useTranslation('document-preview')
-  const { t: tClassification } = useTranslation('document-classification')
+  const { t: _tPreview } = useTranslation('document-preview')
+  const { t: _tClassification } = useTranslation('document-classification')
   const { t: tTemplates } = useTranslation('document-templates')
   const isRTL = i18n.language === 'ar'
   const queryClient = useQueryClient()
@@ -627,7 +627,7 @@ export function Documents({
         {/* Template Selection Dialog for empty state */}
         <TemplateSelectionDialog
           open={templateDialogOpen}
-          onOpenChange={setTemplateDialogOpen}
+          onClose={() => setTemplateDialogOpen(false)}
           entityType={entityType}
           entityId={entityId}
           onDocumentCreated={handleTemplateDocumentCreated}
@@ -735,7 +735,7 @@ export function Documents({
       {/* Template Selection Dialog */}
       <TemplateSelectionDialog
         open={templateDialogOpen}
-        onOpenChange={setTemplateDialogOpen}
+        onClose={() => setTemplateDialogOpen(false)}
         entityType={entityType}
         entityId={entityId}
         onDocumentCreated={handleTemplateDocumentCreated}

@@ -6,7 +6,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useSupabaseClient, useSession } from '@/lib/supabase'
+import { supabase, supabaseUrl } from '@/lib/supabase'
 import type {
   DependencyGraph,
   ImpactAssessment,
@@ -39,7 +39,7 @@ export const entityDependencyKeys = {
 // ============================================================================
 
 async function fetchDependencyGraph(
-  supabase: ReturnType<typeof useSupabaseClient>,
+  _supabaseClient: typeof supabase,
   entityId: string,
   maxDepth: number = 3,
   includeTransitive: boolean = true,
@@ -49,7 +49,7 @@ async function fetchDependencyGraph(
   } = await supabase.auth.getSession()
 
   const response = await fetch(
-    `${supabase.supabaseUrl}${FUNCTION_BASE_URL}/graph/${entityId}?max_depth=${maxDepth}&include_transitive=${includeTransitive}`,
+    `${supabaseUrl}${FUNCTION_BASE_URL}/graph/${entityId}?max_depth=${maxDepth}&include_transitive=${includeTransitive}`,
     {
       headers: {
         Authorization: `Bearer ${session?.access_token}`,
@@ -68,14 +68,14 @@ async function fetchDependencyGraph(
 }
 
 async function fetchImpactSummary(
-  supabase: ReturnType<typeof useSupabaseClient>,
+  _supabaseClient: typeof supabase,
   entityId: string,
 ): Promise<ImpactSummary> {
   const {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const response = await fetch(`${supabase.supabaseUrl}${FUNCTION_BASE_URL}/summary/${entityId}`, {
+  const response = await fetch(`${supabaseUrl}${FUNCTION_BASE_URL}/summary/${entityId}`, {
     headers: {
       Authorization: `Bearer ${session?.access_token}`,
       'Content-Type': 'application/json',
@@ -92,14 +92,14 @@ async function fetchImpactSummary(
 }
 
 async function createAssessment(
-  supabase: ReturnType<typeof useSupabaseClient>,
+  _supabaseClient: typeof supabase,
   request: CreateAssessmentRequest,
 ): Promise<ImpactAssessment> {
   const {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const response = await fetch(`${supabase.supabaseUrl}${FUNCTION_BASE_URL}/assess`, {
+  const response = await fetch(`${supabaseUrl}${FUNCTION_BASE_URL}/assess`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${session?.access_token}`,
@@ -118,7 +118,7 @@ async function createAssessment(
 }
 
 async function fetchAssessments(
-  supabase: ReturnType<typeof useSupabaseClient>,
+  _supabaseClient: typeof supabase,
   params?: AssessmentListParams,
 ): Promise<AssessmentListResponse> {
   const {
@@ -133,7 +133,7 @@ async function fetchAssessments(
   if (params?.offset) queryParams.set('offset', params.offset.toString())
 
   const response = await fetch(
-    `${supabase.supabaseUrl}${FUNCTION_BASE_URL}/assessments?${queryParams.toString()}`,
+    `${supabaseUrl}${FUNCTION_BASE_URL}/assessments?${queryParams.toString()}`,
     {
       headers: {
         Authorization: `Bearer ${session?.access_token}`,
@@ -151,14 +151,14 @@ async function fetchAssessments(
 }
 
 async function fetchAssessment(
-  supabase: ReturnType<typeof useSupabaseClient>,
+  _supabaseClient: typeof supabase,
   id: string,
 ): Promise<ImpactAssessment> {
   const {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const response = await fetch(`${supabase.supabaseUrl}${FUNCTION_BASE_URL}/assessments/${id}`, {
+  const response = await fetch(`${supabaseUrl}${FUNCTION_BASE_URL}/assessments/${id}`, {
     headers: {
       Authorization: `Bearer ${session?.access_token}`,
       'Content-Type': 'application/json',
@@ -175,7 +175,7 @@ async function fetchAssessment(
 }
 
 async function updateAssessment(
-  supabase: ReturnType<typeof useSupabaseClient>,
+  _supabaseClient: typeof supabase,
   id: string,
   request: UpdateAssessmentRequest,
 ): Promise<ImpactAssessment> {
@@ -183,7 +183,7 @@ async function updateAssessment(
     data: { session },
   } = await supabase.auth.getSession()
 
-  const response = await fetch(`${supabase.supabaseUrl}${FUNCTION_BASE_URL}/assessments/${id}`, {
+  const response = await fetch(`${supabaseUrl}${FUNCTION_BASE_URL}/assessments/${id}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${session?.access_token}`,
@@ -201,14 +201,12 @@ async function updateAssessment(
   return result.data
 }
 
-async function fetchDependencyRules(
-  supabase: ReturnType<typeof useSupabaseClient>,
-): Promise<DependencyRule[]> {
+async function fetchDependencyRules(_supabaseClient: typeof supabase): Promise<DependencyRule[]> {
   const {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const response = await fetch(`${supabase.supabaseUrl}${FUNCTION_BASE_URL}/rules`, {
+  const response = await fetch(`${supabaseUrl}${FUNCTION_BASE_URL}/rules`, {
     headers: {
       Authorization: `Bearer ${session?.access_token}`,
       'Content-Type': 'application/json',
@@ -239,9 +237,6 @@ export function useDependencyGraph(
     enabled?: boolean
   },
 ) {
-  const supabase = useSupabaseClient()
-  const session = useSession()
-
   return useQuery({
     queryKey: entityDependencyKeys.graph(entityId || ''),
     queryFn: () =>
@@ -251,7 +246,7 @@ export function useDependencyGraph(
         options?.maxDepth ?? 3,
         options?.includeTransitive ?? true,
       ),
-    enabled: !!entityId && !!session && (options?.enabled ?? true),
+    enabled: !!entityId && (options?.enabled ?? true),
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 }
@@ -260,13 +255,10 @@ export function useDependencyGraph(
  * Hook to fetch impact summary for an entity
  */
 export function useImpactSummary(entityId: string | undefined, enabled: boolean = true) {
-  const supabase = useSupabaseClient()
-  const session = useSession()
-
   return useQuery({
     queryKey: entityDependencyKeys.summary(entityId || ''),
     queryFn: () => fetchImpactSummary(supabase, entityId!),
-    enabled: !!entityId && !!session && enabled,
+    enabled: !!entityId && enabled,
     staleTime: 1000 * 60 * 2, // 2 minutes
   })
 }
@@ -275,13 +267,9 @@ export function useImpactSummary(entityId: string | undefined, enabled: boolean 
  * Hook to list impact assessments
  */
 export function useAssessments(params?: AssessmentListParams) {
-  const supabase = useSupabaseClient()
-  const session = useSession()
-
   return useQuery({
     queryKey: entityDependencyKeys.assessments(params),
     queryFn: () => fetchAssessments(supabase, params),
-    enabled: !!session,
     staleTime: 1000 * 60, // 1 minute
   })
 }
@@ -290,13 +278,10 @@ export function useAssessments(params?: AssessmentListParams) {
  * Hook to fetch a single assessment
  */
 export function useAssessment(id: string | undefined, enabled: boolean = true) {
-  const supabase = useSupabaseClient()
-  const session = useSession()
-
   return useQuery({
     queryKey: entityDependencyKeys.assessment(id || ''),
     queryFn: () => fetchAssessment(supabase, id!),
-    enabled: !!id && !!session && enabled,
+    enabled: !!id && enabled,
     staleTime: 1000 * 60, // 1 minute
   })
 }
@@ -305,7 +290,6 @@ export function useAssessment(id: string | undefined, enabled: boolean = true) {
  * Hook to create an impact assessment
  */
 export function useCreateAssessment() {
-  const supabase = useSupabaseClient()
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -324,7 +308,6 @@ export function useCreateAssessment() {
  * Hook to update an assessment status
  */
 export function useUpdateAssessment() {
-  const supabase = useSupabaseClient()
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -343,13 +326,9 @@ export function useUpdateAssessment() {
  * Hook to fetch dependency rules
  */
 export function useDependencyRules() {
-  const supabase = useSupabaseClient()
-  const session = useSession()
-
   return useQuery({
     queryKey: entityDependencyKeys.rules(),
     queryFn: () => fetchDependencyRules(supabase),
-    enabled: !!session,
     staleTime: 1000 * 60 * 10, // 10 minutes
   })
 }

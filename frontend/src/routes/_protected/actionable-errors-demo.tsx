@@ -134,7 +134,7 @@ function ActionableErrorsDemo() {
   )
 
   // Check if field is highlighted
-  const isFieldHighlighted = useCallback(
+  const _isFieldHighlighted = useCallback(
     (fieldName: string): boolean => {
       return highlightedFields.some((h) => h.fieldName === fieldName)
     },

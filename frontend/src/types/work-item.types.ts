@@ -128,6 +128,7 @@ export interface KanbanData {
   columnOrder: string[]
   totalCount: number
   hasMore: Record<string, boolean>
+  totalCountPerColumn: Record<string, number>
 }
 
 // ============================================
@@ -491,6 +492,7 @@ export interface UnifiedWorkItemFilters {
   isOverdue?: boolean
   dossierId?: string
   searchQuery?: string
+  assigneeId?: string
 }
 
 /** Cursor for pagination */

@@ -7,7 +7,7 @@
 
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, ChevronDown, Globe, Languages } from 'lucide-react'
+import { ChevronDown, Languages } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -233,7 +233,7 @@ export function LanguageDropdownMenu({
           <ChevronDown className="h-3 w-3 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align={isRTL ? 'start' : 'end'} dir={isRTL ? 'rtl' : 'ltr'}>
+      <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
         <DropdownMenuLabel>{t('selectLanguage')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {unselectedLanguages.map((code) => {
@@ -289,5 +289,7 @@ export function LanguageIndicator({
     </span>
   )
 }
+
+export type { ContentLanguageSelectorProps } from '@/types/multilingual-content.types'
 
 export default ContentLanguageSelector

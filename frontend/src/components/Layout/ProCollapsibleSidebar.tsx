@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from '@tanstack/react-router'
-import { LogOut, User, Menu } from 'lucide-react'
+import { LogOut, Menu } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { IconArrowNarrowLeft } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
@@ -26,7 +26,6 @@ import {
   createNavigationSections,
   bottomNavigationItems,
   type NavigationItem,
-  type NavigationSection,
 } from './navigation-config'
 import { QuickNavigationMenu } from './QuickNavigationMenu'
 import { SidebarSearch } from './SidebarSearch'
@@ -56,8 +55,8 @@ export function ProCollapsibleSidebar({
   const effectiveIsOpen = isInSheet ? true : isOpen
 
   // Fetch work queue counts
-  const { data: workQueueCounts, isLoading: isLoadingCounts } = useWorkQueueCounts()
-  const counts = workQueueCounts || { assignments: 0, intake: 0, waiting: 0 }
+  const { data: workQueueCounts } = useWorkQueueCounts()
+  const counts = workQueueCounts || { intake: 0, waiting: 0 }
 
   // Check if user is admin
   const isAdmin = user?.role === 'admin' || user?.role === 'super_admin'

@@ -491,7 +491,9 @@ export type Dossier =
  * }
  * ```
  */
-export function isCountryDossier(dossier: Dossier): dossier is CountryDossier {
+export function isCountryDossier(
+  dossier: Dossier | { type: string; [key: string]: unknown },
+): dossier is CountryDossier {
   return dossier.type === 'country'
 }
 
@@ -501,7 +503,9 @@ export function isCountryDossier(dossier: Dossier): dossier is CountryDossier {
  * @param dossier - Dossier to check
  * @returns True if the dossier is an organization dossier
  */
-export function isOrganizationDossier(dossier: Dossier): dossier is OrganizationDossier {
+export function isOrganizationDossier(
+  dossier: Dossier | { type: string; [key: string]: unknown },
+): dossier is OrganizationDossier {
   return dossier.type === 'organization'
 }
 
@@ -511,7 +515,9 @@ export function isOrganizationDossier(dossier: Dossier): dossier is Organization
  * @param dossier - Dossier to check
  * @returns True if the dossier is a person dossier
  */
-export function isPersonDossier(dossier: Dossier): dossier is PersonDossier {
+export function isPersonDossier(
+  dossier: Dossier | { type: string; [key: string]: unknown },
+): dossier is PersonDossier {
   return dossier.type === 'person'
 }
 
@@ -521,7 +527,9 @@ export function isPersonDossier(dossier: Dossier): dossier is PersonDossier {
  * @param dossier - Dossier to check
  * @returns True if the dossier is an engagement dossier
  */
-export function isEngagementDossier(dossier: Dossier): dossier is EngagementDossier {
+export function isEngagementDossier(
+  dossier: Dossier | { type: string; [key: string]: unknown },
+): dossier is EngagementDossier {
   return dossier.type === 'engagement'
 }
 
@@ -531,7 +539,9 @@ export function isEngagementDossier(dossier: Dossier): dossier is EngagementDoss
  * @param dossier - Dossier to check
  * @returns True if the dossier is a forum dossier
  */
-export function isForumDossier(dossier: Dossier): dossier is ForumDossier {
+export function isForumDossier(
+  dossier: Dossier | { type: string; [key: string]: unknown },
+): dossier is ForumDossier {
   return dossier.type === 'forum'
 }
 
@@ -541,7 +551,9 @@ export function isForumDossier(dossier: Dossier): dossier is ForumDossier {
  * @param dossier - Dossier to check
  * @returns True if the dossier is a working group dossier
  */
-export function isWorkingGroupDossier(dossier: Dossier): dossier is WorkingGroupDossier {
+export function isWorkingGroupDossier(
+  dossier: Dossier | { type: string; [key: string]: unknown },
+): dossier is WorkingGroupDossier {
   return dossier.type === 'working_group'
 }
 
@@ -551,7 +563,9 @@ export function isWorkingGroupDossier(dossier: Dossier): dossier is WorkingGroup
  * @param dossier - Dossier to check
  * @returns True if the dossier is a topic dossier
  */
-export function isTopicDossier(dossier: Dossier): dossier is TopicDossier {
+export function isTopicDossier(
+  dossier: Dossier | { type: string; [key: string]: unknown },
+): dossier is TopicDossier {
   return dossier.type === 'topic'
 }
 

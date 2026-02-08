@@ -6,7 +6,7 @@
  * Task: T053
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   delegatePermissions,
   revokeDelegation,
@@ -19,7 +19,7 @@ import {
   type ValidateDelegationRequest,
   type ValidateDelegationResponse,
   type MyDelegationsResponse,
-} from '@/services/user-management-api';
+} from '@/services/user-management-api'
 
 // ============================================================================
 // Query Keys
@@ -28,13 +28,13 @@ import {
 export const delegationKeys = {
   all: ['delegations'] as const,
   myDelegations: (params?: {
-    type?: 'granted' | 'received' | 'all';
-    active_only?: boolean;
-    expiring_within_days?: number;
+    type?: 'granted' | 'received' | 'all'
+    active_only?: boolean
+    expiring_within_days?: number
   }) => ['delegations', 'my', params] as const,
   validate: (granteeId: string, resourceType?: string, resourceId?: string) =>
     ['delegations', 'validate', granteeId, resourceType, resourceId] as const,
-};
+}
 
 // ============================================================================
 // Hooks
@@ -57,7 +57,7 @@ export const delegationKeys = {
  * ```
  */
 export function useDelegatePermissions() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation<DelegatePermissionsResponse, Error, DelegatePermissionsRequest>({
     mutationFn: delegatePermissions,
@@ -65,9 +65,9 @@ export function useDelegatePermissions() {
       // Invalidate my delegations query to refetch updated list
       queryClient.invalidateQueries({
         queryKey: delegationKeys.all,
-      });
+      })
     },
-  });
+  })
 }
 
 /**
@@ -86,7 +86,7 @@ export function useDelegatePermissions() {
  * ```
  */
 export function useRevokeDelegation() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation<RevokeDelegationResponse, Error, RevokeDelegationRequest>({
     mutationFn: revokeDelegation,
@@ -94,9 +94,9 @@ export function useRevokeDelegation() {
       // Invalidate my delegations query to refetch updated list
       queryClient.invalidateQueries({
         queryKey: delegationKeys.all,
-      });
+      })
     },
-  });
+  })
 }
 
 /**
@@ -124,15 +124,15 @@ export function useRevokeDelegation() {
 export function useValidateDelegation(
   data: ValidateDelegationRequest,
   options?: {
-    enabled?: boolean;
-  }
+    enabled?: boolean
+  },
 ) {
   return useQuery<ValidateDelegationResponse, Error>({
     queryKey: delegationKeys.validate(data.grantee_id, data.resource_type, data.resource_id),
     queryFn: () => validateDelegation(data),
     enabled: options?.enabled ?? !!data.grantee_id,
     staleTime: 30000, // 30 seconds - validation should be relatively fresh
-  });
+  })
 }
 
 /**
@@ -163,14 +163,14 @@ export function useValidateDelegation(
  */
 export function useMyDelegations(
   params?: {
-    type?: 'granted' | 'received' | 'all';
-    active_only?: boolean;
-    expiring_within_days?: number;
+    type?: 'granted' | 'received' | 'all'
+    active_only?: boolean
+    expiring_within_days?: number
   },
   options?: {
-    enabled?: boolean;
-    refetchInterval?: number;
-  }
+    enabled?: boolean
+    refetchInterval?: number
+  },
 ) {
   return useQuery<MyDelegationsResponse, Error>({
     queryKey: delegationKeys.myDelegations(params),
@@ -178,7 +178,7 @@ export function useMyDelegations(
     enabled: options?.enabled ?? true,
     refetchInterval: options?.refetchInterval, // Optional auto-refresh for expiry warnings
     staleTime: 60000, // 1 minute - allow some staleness for better UX
-  });
+  })
 }
 
 /**
@@ -205,6 +205,32 @@ export function useDelegationsExpiringSoon() {
     },
     {
       refetchInterval: 300000, // Refetch every 5 minutes
-    }
-  );
+    },
+  )
+}
+
+/**
+ * Combined delegation hook for convenience
+ *
+ * Wraps individual hooks into a single object for components
+ * that need multiple delegation operations.
+ *
+ * @param _userId - User ID (used for context, filtering handled by hooks)
+ * @returns Combined delegation operations
+ */
+export function useDelegation(_userId?: string) {
+  const createDelegation = useDelegatePermissions()
+  const revokeResult = useRevokeDelegation()
+  const validateMutation = useMutation({
+    mutationFn: (data: { grantorId: string; granteeId: string; permissions: string[] }) =>
+      validateDelegation({ grantee_id: data.granteeId }),
+  })
+  const myDelegations = useMyDelegations({ type: 'all' })
+
+  return {
+    createDelegation,
+    revokeDelegation: revokeResult,
+    validateDelegation: validateMutation,
+    myDelegations,
+  }
 }

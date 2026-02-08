@@ -26,7 +26,7 @@ import {
 import '@xyflow/react/dist/style.css'
 import { hierarchy, tree } from 'd3-hierarchy'
 import { supabase } from '@/lib/supabase-client'
-import type { OrganizationDossier } from '@/lib/dossier-type-guards'
+import type { OrganizationDossier, OrganizationExtension } from '@/lib/dossier-type-guards'
 import { Badge } from '@/components/ui/badge'
 
 interface OrgHierarchyProps {
@@ -77,7 +77,7 @@ const nodeTypes: NodeTypes = {
 export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const extension = dossier.extension ?? {}
+  const extension = dossier.extension ?? ({} as OrganizationExtension)
 
   // Fetch organization hierarchy (parent and children)
   const { data: hierarchyOrgs, isLoading } = useQuery({

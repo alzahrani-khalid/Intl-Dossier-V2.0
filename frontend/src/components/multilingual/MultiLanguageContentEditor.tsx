@@ -28,7 +28,6 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -205,7 +204,7 @@ export function MultiLanguageContentEditor({
     setPrimaryLanguage,
   } = useMultiLangContent({ entityType, entityId })
 
-  const { data: supportedLanguages } = useSupportedLanguages()
+  const { data: _supportedLanguages } = useSupportedLanguages()
 
   // Initialize local content from translations
   useEffect(() => {
@@ -215,7 +214,7 @@ export function MultiLanguageContentEditor({
         if (!content[t.field_name]) {
           content[t.field_name] = {} as Record<ContentLanguage, string>
         }
-        content[t.field_name][t.language] = t.content
+        content[t.field_name]![t.language] = t.content
       })
       setLocalContent(content)
     }
@@ -239,13 +238,16 @@ export function MultiLanguageContentEditor({
   // Handle local content change
   const handleContentChange = useCallback(
     (fieldName: string, language: ContentLanguage, value: string) => {
-      setLocalContent((prev) => ({
-        ...prev,
-        [fieldName]: {
-          ...(prev[fieldName] || {}),
-          [language]: value,
-        },
-      }))
+      setLocalContent((prev) => {
+        const updated: Record<string, Record<ContentLanguage, string>> = {
+          ...prev,
+          [fieldName]: {
+            ...((prev[fieldName] || {}) as Record<ContentLanguage, string>),
+            [language]: value,
+          } as Record<ContentLanguage, string>,
+        }
+        return updated
+      })
       setHasUnsavedChanges(true)
       onChange?.(fieldName, language, value)
     },

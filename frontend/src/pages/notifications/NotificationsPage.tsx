@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Bell, Settings, CheckCheck, Filter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Select,
   SelectContent,
@@ -72,7 +72,7 @@ export function NotificationsPage() {
   } = useNotificationCenter(filters)
 
   // Category preferences
-  const { updatePreferences, isUpdating: isUpdatingPreferences } = useCategoryPreferences()
+  const { updatePreferences, isUpdating: _isUpdatingPreferences } = useCategoryPreferences()
 
   // Real-time updates
   useNotificationRealtime()
@@ -157,7 +157,7 @@ export function NotificationsPage() {
 
   // Get category unread count
   const getCategoryCount = (category: NotificationCategory) => {
-    return countsByCategory[category]?.unread || 0
+    return (countsByCategory as Record<string, { unread?: number }>)[category]?.unread || 0
   }
 
   return (

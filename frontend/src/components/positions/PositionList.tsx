@@ -303,7 +303,7 @@ export const PositionList: React.FC<PositionListProps> = ({
             }}
           >
             {virtualizer.getVirtualItems().map((virtualItem) => {
-              const position = filteredPositions[virtualItem.index]
+              const position = filteredPositions[virtualItem.index]!
               return (
                 <div
                   key={virtualItem.key}

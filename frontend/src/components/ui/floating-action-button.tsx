@@ -95,7 +95,7 @@ export function FloatingActionButton({
 
   // Handle scroll direction detection
   React.useEffect(() => {
-    if (!hideOnScroll) return
+    if (!hideOnScroll) return undefined
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY

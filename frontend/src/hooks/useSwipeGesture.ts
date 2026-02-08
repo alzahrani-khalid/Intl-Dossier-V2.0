@@ -252,7 +252,7 @@ export function useSwipeGesture(config: SwipeGestureConfig = {}): SwipeGestureRe
   // Touch handlers
   const onTouchStart = useCallback(
     (e: React.TouchEvent) => {
-      const touch = e.touches[0]
+      const touch = e.touches[0]!
       handleStart(touch.clientX, touch.clientY)
     },
     [handleStart],
@@ -260,7 +260,7 @@ export function useSwipeGesture(config: SwipeGestureConfig = {}): SwipeGestureRe
 
   const onTouchMove = useCallback(
     (e: React.TouchEvent) => {
-      const touch = e.touches[0]
+      const touch = e.touches[0]!
       handleMove(touch.clientX, touch.clientY)
     },
     [handleMove],

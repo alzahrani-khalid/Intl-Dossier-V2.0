@@ -35,14 +35,14 @@ function ProtectedLayout() {
         navigate({ to: getDossierDetailPath(id, dossierType) })
         break
       case 'commitment':
-        navigate({ to: '/commitments', search: { id } })
+        navigate({ to: '/commitments', search: { id } as any })
         break
       case 'engagement':
-        navigate({ to: '/engagements/$engagementId', params: { engagementId: id } })
+        navigate({ to: '/engagements/$engagementId', params: { engagementId: id } as any })
         break
       default:
         // For other types, try a general search
-        navigate({ to: '/search', search: { q: id, type: undefined, includeArchived: undefined } })
+        navigate({ to: '/search', search: { q: id } as any })
     }
   }
 

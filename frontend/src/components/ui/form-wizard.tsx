@@ -571,7 +571,7 @@ export function useFormDraft<T extends Record<string, unknown>>(
     })
 
     // Don't auto-save if there's no meaningful content
-    if (!hasMeaningfulContent) return
+    if (!hasMeaningfulContent) return undefined
 
     const timer = setTimeout(() => {
       saveDraft()

@@ -5,7 +5,7 @@
  * Feature: 028-type-specific-dossier-pages
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react'
 
 /**
  * Custom hook to persist state in sessionStorage
@@ -25,73 +25,69 @@ import { useState, useCallback, useEffect } from 'react';
  */
 export function useSessionStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (value: T | ((val: T) => T)) => void] {
   // Initialize state from sessionStorage or use initial value
   const [storedValue, setStoredValue] = useState<T>(() => {
     if (typeof window === 'undefined') {
-      return initialValue;
+      return initialValue
     }
 
     try {
-      const item = window.sessionStorage.getItem(key);
-      return item ? (JSON.parse(item) as T) : initialValue;
+      const item = window.sessionStorage.getItem(key)
+      return item ? (JSON.parse(item) as T) : initialValue
     } catch (error) {
-      console.warn(`Error reading sessionStorage key "${key}":`, error);
-      return initialValue;
+      console.warn(`Error reading sessionStorage key "${key}":`, error)
+      return initialValue
     }
-  });
+  })
 
   // Update sessionStorage when value changes
   const setValue = useCallback(
     (value: T | ((val: T) => T)) => {
       try {
         // Allow value to be a function (same API as useState)
-        const valueToStore =
-          value instanceof Function ? value(storedValue) : value;
+        const valueToStore = value instanceof Function ? value(storedValue) : value
 
         // Update React state
-        setStoredValue(valueToStore);
+        setStoredValue(valueToStore)
 
         // Persist to sessionStorage
         if (typeof window !== 'undefined') {
-          window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
+          window.sessionStorage.setItem(key, JSON.stringify(valueToStore))
         }
       } catch (error) {
-        console.warn(`Error setting sessionStorage key "${key}":`, error);
+        console.warn(`Error setting sessionStorage key "${key}":`, error)
       }
     },
-    [key, storedValue]
-  );
+    [key, storedValue],
+  )
 
   // Sync with sessionStorage changes from other tabs/windows
   useEffect(() => {
     if (typeof window === 'undefined') {
-      return;
+      return undefined
     }
 
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === key && e.newValue !== null) {
         try {
-          setStoredValue(JSON.parse(e.newValue) as T);
+          setStoredValue(JSON.parse(e.newValue) as T)
         } catch (error) {
-          console.warn(
-            `Error syncing sessionStorage key "${key}":`,
-            error
-          );
+          console.warn(`Error syncing sessionStorage key "${key}":`, error)
         }
       }
-    };
+    }
 
     // Listen for storage events (cross-tab synchronization)
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('storage', handleStorageChange)
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [key]);
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [key])
 
-  return [storedValue, setValue];
+  return [storedValue, setValue]
 }
 
 /**
@@ -113,27 +109,27 @@ export function useSessionStorage<T>(
 export function useCollapsibleSections(
   dossierId: string,
   dossierType: string,
-  defaultSections: Record<string, boolean>
+  defaultSections: Record<string, boolean>,
 ): [
   Record<string, boolean>,
   (sectionId: string) => void,
-  (sections: Record<string, boolean>) => void
+  (sections: Record<string, boolean>) => void,
 ] {
-  const storageKey = `dossier-sections-${dossierType}-${dossierId}`;
+  const storageKey = `dossier-sections-${dossierType}-${dossierId}`
   const [sections, setSections] = useSessionStorage<Record<string, boolean>>(
     storageKey,
-    defaultSections
-  );
+    defaultSections,
+  )
 
   const toggleSection = useCallback(
     (sectionId: string) => {
       setSections((prev) => ({
         ...prev,
         [sectionId]: !prev[sectionId],
-      }));
+      }))
     },
-    [setSections]
-  );
+    [setSections],
+  )
 
-  return [sections, toggleSection, setSections];
+  return [sections, toggleSection, setSections]
 }

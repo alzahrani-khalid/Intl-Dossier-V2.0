@@ -92,7 +92,7 @@ export function ImportDialog({
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0]
+        const file = acceptedFiles[0]!
         setSelectedFile(file)
         setStep('validate')
 

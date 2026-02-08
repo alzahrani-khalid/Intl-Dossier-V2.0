@@ -239,7 +239,7 @@ export const relationshipRepository = {
   /**
    * Initialize health score for a new relationship
    */
-  async initializeHealthScore(relationshipId: string, userId: string): Promise<void> {
+  async initializeHealthScore(relationshipId: string, _userId: string): Promise<void> {
     const initialScore = 50 // Start at fair
     const { error } = await supabase.from('relationship_health_scores').insert({
       relationship_id: relationshipId,

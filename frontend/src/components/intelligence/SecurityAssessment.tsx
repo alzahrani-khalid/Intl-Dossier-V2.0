@@ -16,57 +16,56 @@
  * - RTL support with logical properties
  */
 
-import React, { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { RefreshButton } from '@/components/intelligence/RefreshButton';
-import { useRefreshIntelligence } from '@/hooks/useIntelligence';
-import { Shield, AlertTriangle, MapPin, Activity, ShieldAlert } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import type { IntelligenceReport } from '@/types/intelligence-reports.types';
+import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { RefreshButton } from '@/components/intelligence/RefreshButton'
+import { useRefreshIntelligence } from '@/hooks/useIntelligence'
+import { Shield, ShieldAlert } from 'lucide-react'
+import { formatDistanceToNow } from 'date-fns'
+import type { IntelligenceReport } from '@/services/intelligence-api'
 
 interface SecurityAssessmentProps {
-  reports: IntelligenceReport[];
-  dossierId: string;
+  reports: IntelligenceReport[]
+  dossierId: string
 }
 
 export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Get latest security report
   const latestReport = useMemo(() => {
-    if (reports.length === 0) return null;
+    if (reports.length === 0) return null
     return reports.sort(
       (a, b) =>
         new Date(b.last_refreshed_at || b.created_at).getTime() -
-        new Date(a.last_refreshed_at || a.created_at).getTime()
-    )[0];
-  }, [reports]);
+        new Date(a.last_refreshed_at || a.created_at).getTime(),
+    )[0]
+  }, [reports])
 
   // Refresh mutation
-  const { mutate: refresh, isPending: isRefreshing } = useRefreshIntelligence();
+  const { mutate: refresh, isPending: isRefreshing } = useRefreshIntelligence()
 
   // Parse data sources (must be called before any returns)
   const dataSources = useMemo(() => {
-    if (!latestReport?.data_sources_metadata) return [];
-    return latestReport.data_sources_metadata.slice(0, 3); // Show top 3 sources
-  }, [latestReport]);
+    if (!latestReport?.data_sources_metadata) return []
+    return latestReport.data_sources_metadata.slice(0, 3) // Show top 3 sources
+  }, [latestReport])
 
   // Determine if report is stale (must be calculated before any returns)
   const isStale = useMemo(() => {
-    return latestReport?.cache_expires_at &&
-      new Date(latestReport.cache_expires_at) < new Date();
-  }, [latestReport]);
+    return latestReport?.cache_expires_at && new Date(latestReport.cache_expires_at) < new Date()
+  }, [latestReport])
 
   const handleRefresh = () => {
     refresh({
       entity_id: dossierId,
       intelligence_types: ['security'],
       priority: 'high', // Security updates are high priority
-    });
-  };
+    })
+  }
 
   // Empty state (after all hooks)
   if (reports.length === 0) {
@@ -98,11 +97,11 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   // Track expand/collapse state
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(false)
 
   return (
     <Card className="h-full flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -147,7 +146,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
             {t('intelligence.updated', 'Updated')}{' '}
             {formatDistanceToNow(
               new Date(latestReport?.last_refreshed_at || latestReport?.created_at || Date.now()),
-              { addSuffix: true }
+              { addSuffix: true },
             )}
           </span>
         </div>
@@ -191,9 +190,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
                       {key.replace(/_/g, ' ')}
                     </span>
                   </div>
-                  <p className="text-sm font-semibold">
-                    {value}
-                  </p>
+                  <p className="text-sm font-semibold">{value}</p>
                 </div>
               ))}
             </div>
@@ -208,11 +205,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
             </h4>
             <div className="flex flex-wrap gap-2">
               {dataSources.map((source, idx) => (
-                <Badge
-                  key={idx}
-                  variant="outline"
-                  className="text-xs bg-background hover:bg-muted"
-                >
+                <Badge key={idx} variant="outline" className="text-xs bg-background hover:bg-muted">
                   {source.source}
                 </Badge>
               ))}
@@ -224,9 +217,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         {latestReport?.anythingllm_workspace_id && (
           <div className="text-xs text-muted-foreground border-t pt-2 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span className="font-medium">
-                {t('intelligence.generatedBy', 'Generated by')}:
-              </span>{' '}
+              <span className="font-medium">{t('intelligence.generatedBy', 'Generated by')}:</span>{' '}
               AnythingLLM{' '}
               {latestReport.anythingllm_response_metadata?.model && (
                 <span>({latestReport.anythingllm_response_metadata.model})</span>
@@ -239,5 +230,5 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -126,7 +126,7 @@ export function useSendInvitation() {
 
   return useMutation<SendInvitationResponse, Error, SendInvitationRequest>({
     mutationFn: sendTeamInvitation,
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate invitations list
       queryClient.invalidateQueries({ queryKey: teamCollaborationKeys.invitations() })
 
@@ -199,7 +199,7 @@ export function useRespondToInvitation() {
 
   return useMutation<TeamInvitation, Error, RespondToInvitationParams>({
     mutationFn: ({ invitationId, status }) => respondToInvitation(invitationId, status),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate invitations list
       queryClient.invalidateQueries({ queryKey: teamCollaborationKeys.invitations() })
 
@@ -243,5 +243,7 @@ export type {
   SendInvitationRequest,
   SendInvitationResponse,
 }
+
+export type { TeamContributor, SuggestedUser } from '@/services/team-collaboration.service'
 
 export { formatTemplateBody, getEntityTypeDisplayName } from '@/services/team-collaboration.service'

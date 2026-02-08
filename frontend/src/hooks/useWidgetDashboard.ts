@@ -301,9 +301,9 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
           completed: 0,
         }
 
-        for (const item of data || []) {
-          if (statusCounts[item.status] !== undefined) {
-            statusCounts[item.status]++
+        for (const item of data ?? []) {
+          if (item.status in statusCounts) {
+            statusCounts[item.status] = (statusCounts[item.status] ?? 0) + 1
           }
         }
 
@@ -315,10 +315,10 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
             {
               label: 'Work Items',
               data: [
-                statusCounts.pending,
-                statusCounts.in_progress,
-                statusCounts.review,
-                statusCounts.completed,
+                statusCounts.pending ?? 0,
+                statusCounts.in_progress ?? 0,
+                statusCounts.review ?? 0,
+                statusCounts.completed ?? 0,
               ],
               backgroundColor: ['#f59e0b', '#3b82f6', '#8b5cf6', '#10b981'],
             },
@@ -335,9 +335,9 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
           intake: 0,
         }
 
-        for (const item of data || []) {
-          if (sourceCounts[item.source] !== undefined) {
-            sourceCounts[item.source]++
+        for (const item of data ?? []) {
+          if (item.source in sourceCounts) {
+            sourceCounts[item.source] = (sourceCounts[item.source] ?? 0) + 1
           }
         }
 
@@ -348,7 +348,11 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
           datasets: [
             {
               label: 'Work Items',
-              data: [sourceCounts.task, sourceCounts.commitment, sourceCounts.intake],
+              data: [
+                sourceCounts.task ?? 0,
+                sourceCounts.commitment ?? 0,
+                sourceCounts.intake ?? 0,
+              ],
               backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6'],
             },
           ],
@@ -364,24 +368,24 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
           .gte('updated_at', weekAgo.toISOString())
 
         // Group by day
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const _days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         const dayCounts = [0, 0, 0, 0, 0, 0, 0]
 
         for (const item of data || []) {
           const day = new Date(item.updated_at).getDay()
-          dayCounts[day]++
+          dayCounts[day]!++
         }
 
         // Reorder to start from Monday
         const reorderedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        const reorderedCounts = [
-          dayCounts[1],
-          dayCounts[2],
-          dayCounts[3],
-          dayCounts[4],
-          dayCounts[5],
-          dayCounts[6],
-          dayCounts[0],
+        const reorderedCounts: number[] = [
+          dayCounts[1]!,
+          dayCounts[2]!,
+          dayCounts[3]!,
+          dayCounts[4]!,
+          dayCounts[5]!,
+          dayCounts[6]!,
+          dayCounts[0]!,
         ]
 
         return {

@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Check, X, Loader2, Activity, FileText, Network, Brain, Zap } from 'lucide-react'
 
-import { getModuleRegistry, getEventBus, generateCorrelationId } from '@/modules/core'
+import { getModuleRegistry, getEventBus, generateCorrelationId, isModuleErr } from '@/modules/core'
 import type {
   IDocumentModule,
   IRelationshipModule,
@@ -111,7 +111,7 @@ export function ModularMonolithDemo() {
 
     if (result.success) {
       console.log('Linked documents:', result.data)
-    } else {
+    } else if (isModuleErr(result)) {
       console.error('Error:', result.error.message)
     }
   }
@@ -128,7 +128,7 @@ export function ModularMonolithDemo() {
 
     if (result.success) {
       console.log('Relationships:', result.data)
-    } else {
+    } else if (isModuleErr(result)) {
       console.error('Error:', result.error.message)
     }
   }
@@ -150,7 +150,7 @@ export function ModularMonolithDemo() {
 
     if (result.success) {
       console.log('Generated brief:', result.data)
-    } else {
+    } else if (isModuleErr(result)) {
       console.error('Error:', result.error.message)
     }
   }
@@ -255,7 +255,7 @@ export function ModularMonolithDemo() {
                         {status.status}
                       </Badge>
                     </div>
-                    <CardDescription>v{status.details?.version || '1.0.0'}</CardDescription>
+                    <CardDescription>v{String(status.details?.version ?? '1.0.0')}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="text-xs text-muted-foreground">

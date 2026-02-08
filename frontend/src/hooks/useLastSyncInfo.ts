@@ -8,7 +8,7 @@
  * const { lastSyncTime, itemsSynced, updateSyncInfo, offlineQueueCount } = useLastSyncInfo('my-work');
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 export interface SyncInfo {
   /** Last sync timestamp (ISO string) */
@@ -173,7 +173,7 @@ export function useOfflineQueue(storageKey: string) {
   // Listen for service worker messages about offline queue
   useEffect(() => {
     if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
-      return
+      return undefined
     }
 
     const handleMessage = (event: MessageEvent) => {

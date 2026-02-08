@@ -173,16 +173,16 @@ export function useTouchGraphControls(
       if (touches.length === 2) {
         // Two-finger gesture start (pinch or pan)
         e.preventDefault()
-        const distance = getTouchDistance(touches[0], touches[1])
+        const distance = getTouchDistance(touches[0]!, touches[1]!)
         initialPinchDistance.current = distance
         initialZoom.current = zoomLevel
-        lastPanPosition.current = getTouchCenter(touches[0], touches[1])
+        lastPanPosition.current = getTouchCenter(touches[0]!, touches[1]!)
         setIsPinching(true)
         haptic.selection()
       } else if (touches.length === 1) {
         // Single tap - check for double-tap
         const now = Date.now()
-        const tapPosition = { x: touches[0].clientX, y: touches[0].clientY }
+        const tapPosition = { x: touches[0]!.clientX, y: touches[0]!.clientY }
 
         // Check if this could be a double-tap
         if (
@@ -234,12 +234,12 @@ export function useTouchGraphControls(
         e.preventDefault()
 
         // Calculate pinch scale
-        const currentDistance = getTouchDistance(touches[0], touches[1])
+        const currentDistance = getTouchDistance(touches[0]!, touches[1]!)
         const scale = currentDistance / initialPinchDistance.current
         const newZoom = initialZoom.current * scale
 
         // Apply pinch zoom
-        const center = getTouchCenter(touches[0], touches[1])
+        const center = getTouchCenter(touches[0]!, touches[1]!)
         applyZoom(newZoom, center)
 
         // Two-finger pan
@@ -285,7 +285,7 @@ export function useTouchGraphControls(
 
       // Handle single tap (after release)
       if (e.changedTouches.length === 1 && touches.length === 0) {
-        const touch = e.changedTouches[0]
+        const touch = e.changedTouches[0]!
         const tapPosition = { x: touch.clientX, y: touch.clientY }
 
         // Set a timeout for single tap action

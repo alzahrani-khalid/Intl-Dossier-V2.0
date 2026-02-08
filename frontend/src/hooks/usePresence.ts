@@ -1,15 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import type { RealtimePresenceState } from '@supabase/supabase-js'
 import { useAuthStore } from '../store/authStore'
-import {
-  realtimeManager,
-  trackUserPresence,
-  updateUserPresence,
-} from '../lib/realtime'
-import type {
-  PresenceUser,
-  RealtimeConfig,
-} from '../lib/realtime'
+import { realtimeManager, trackUserPresence, updateUserPresence } from '../lib/realtime'
+import type { PresenceUser, RealtimeConfig } from '../lib/realtime'
 
 export interface UsePresenceOptions {
   channel: string
@@ -31,8 +24,16 @@ export interface UsePresenceReturn {
 // Generate random user color
 const generateUserColor = () => {
   const colors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
-    '#48C9B0', '#5DADE2', '#AF7AC5', '#F8B739', '#58D68D',
+    '#FF6B6B',
+    '#4ECDC4',
+    '#45B7D1',
+    '#96CEB4',
+    '#FECA57',
+    '#48C9B0',
+    '#5DADE2',
+    '#AF7AC5',
+    '#F8B739',
+    '#58D68D',
   ]
   return colors[Math.floor(Math.random() * colors.length)]
 }
@@ -68,28 +69,37 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
   }, [])
 
   // Handle presence sync
-  const handlePresenceSync = useCallback((state: RealtimePresenceState) => {
-    const usersList = transformPresenceState(state)
-    setUsers(usersList)
-    setIsConnected(true)
-  }, [transformPresenceState])
+  const handlePresenceSync = useCallback(
+    (state: RealtimePresenceState) => {
+      const usersList = transformPresenceState(state)
+      setUsers(usersList)
+      setIsConnected(true)
+    },
+    [transformPresenceState],
+  )
 
   // Handle presence join
-  const handlePresenceJoin = useCallback((state: RealtimePresenceState) => {
-    const newUsers = transformPresenceState(state)
-    setUsers((prev) => {
-      const existingIds = new Set(prev.map((u) => u.id))
-      const uniqueNewUsers = newUsers.filter((u) => !existingIds.has(u.id))
-      return [...prev, ...uniqueNewUsers]
-    })
-  }, [transformPresenceState])
+  const handlePresenceJoin = useCallback(
+    (state: RealtimePresenceState) => {
+      const newUsers = transformPresenceState(state)
+      setUsers((prev) => {
+        const existingIds = new Set(prev.map((u) => u.id))
+        const uniqueNewUsers = newUsers.filter((u) => !existingIds.has(u.id))
+        return [...prev, ...uniqueNewUsers]
+      })
+    },
+    [transformPresenceState],
+  )
 
   // Handle presence leave
-  const handlePresenceLeave = useCallback((state: RealtimePresenceState) => {
-    const leftUsers = transformPresenceState(state)
-    const leftUserIds = new Set(leftUsers.map((u) => u.id))
-    setUsers((prev) => prev.filter((u) => !leftUserIds.has(u.id)))
-  }, [transformPresenceState])
+  const handlePresenceLeave = useCallback(
+    (state: RealtimePresenceState) => {
+      const leftUsers = transformPresenceState(state)
+      const leftUserIds = new Set(leftUsers.map((u) => u.id))
+      setUsers((prev) => prev.filter((u) => !leftUserIds.has(u.id)))
+    },
+    [transformPresenceState],
+  )
 
   // Setup idle detection
   const setupIdleDetection = useCallback(() => {
@@ -104,19 +114,27 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
       // Update status to online if was idle
       const currentState = realtimeManager.getPresenceState(channel)
       const userId = user?.id
-      if (userId && currentState[userId]?.[0] && 'status' in currentState[userId][0] && currentState[userId][0].status === 'idle') {
+      if (
+        userId &&
+        currentState[userId]?.[0] &&
+        'status' in currentState[userId][0] &&
+        currentState[userId][0].status === 'idle'
+      ) {
         updateUserPresence(channel, { status: 'online' })
       }
 
       // Set new idle timer (5 minutes)
-      idleTimerRef.current = setTimeout(() => {
-        updateUserPresence(channel, { status: 'idle' })
-      }, 5 * 60 * 1000)
+      idleTimerRef.current = setTimeout(
+        () => {
+          updateUserPresence(channel, { status: 'idle' })
+        },
+        5 * 60 * 1000,
+      )
     }
 
     // Listen to user activity
     const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
-    events.forEach(event => {
+    events.forEach((event) => {
       document.addEventListener(event, resetIdleTimer, true)
     })
 
@@ -124,7 +142,7 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
     resetIdleTimer()
 
     return () => {
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, resetIdleTimer, true)
       })
       if (idleTimerRef.current) {
@@ -135,7 +153,7 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
 
   // Initialize presence tracking
   useEffect(() => {
-    if (!user || !autoTrack) return
+    if (!user || !autoTrack) return undefined
 
     const config: RealtimeConfig = {
       channel,
@@ -194,7 +212,7 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
         updateUserPresence(channel, { cursor: { x, y } })
       }, throttleMs)
     },
-    [channel, isConnected, user, throttleMs]
+    [channel, isConnected, user, throttleMs],
   )
 
   // Update selection
@@ -203,7 +221,7 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
       if (!isConnected || !user) return
       updateUserPresence(channel, { selection })
     },
-    [channel, isConnected, user]
+    [channel, isConnected, user],
   )
 
   // Update status
@@ -212,7 +230,7 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
       if (!isConnected || !user) return
       updateUserPresence(channel, { status })
     },
-    [channel, isConnected, user]
+    [channel, isConnected, user],
   )
 
   // Track activity
@@ -248,7 +266,9 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
 // Hook for displaying user cursors
 export function useRemoteCursors(channel: string) {
   const { users } = usePresence({ channel, autoTrack: false })
-  const [cursors, setCursors] = useState<Map<string, { x: number; y: number; color: string; name?: string }>>(new Map())
+  const [cursors, setCursors] = useState<
+    Map<string, { x: number; y: number; color: string; name?: string }>
+  >(new Map())
 
   useEffect(() => {
     const newCursors = new Map()
@@ -278,8 +298,8 @@ export function useTypingIndicator(channel: string) {
       channel: `${channel}:typing`,
       onBroadcast: (event, payload) => {
         if (event === 'typing') {
-          const userId = payload.userId
-          if (userId === useAuthStore.getState().user?.id) return
+          const userId = payload.userId as string | undefined
+          if (!userId || userId === useAuthStore.getState().user?.id) return
 
           // Add to typing users
           setTypingUsers((prev) => new Set(prev).add(userId))

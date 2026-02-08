@@ -24,7 +24,6 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   CalendarDays,
@@ -48,9 +47,7 @@ import {
   VIEW_MODE_LABELS,
 } from '@/types/geographic-visualization.types'
 import { RELATIONSHIP_TYPE_LABELS, type DossierRelationshipType } from '@/types/relationship.types'
-import { TIME_RANGE_OPTIONS, type TimeRange } from '@/types/analytics.types'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { type TimeRange } from '@/types/analytics.types'
 
 interface MapFilterControlsProps {
   filters: GeoVisualizationFilters

@@ -56,7 +56,7 @@ export function SampleDataBanner({
     return null
   }
 
-  const primaryInstance = instances[0]
+  const primaryInstance = instances[0]!
   const templateName = isRTL ? primaryInstance.template.name_ar : primaryInstance.template.name_en
   const bannerColor =
     templateBannerColors[primaryInstance.template.color] || templateBannerColors.blue

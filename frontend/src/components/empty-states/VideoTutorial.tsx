@@ -118,7 +118,7 @@ export function VideoTutorial({
   useEffect(() => {
     if (!isPlaying) {
       setShowControls(true)
-      return
+      return undefined
     }
 
     const timer = setTimeout(() => {

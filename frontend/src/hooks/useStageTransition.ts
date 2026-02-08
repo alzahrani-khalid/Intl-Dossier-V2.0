@@ -47,7 +47,7 @@ export function useStageTransition() {
 
       return data
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (_, _variables) => {
       // Invalidate Kanban queries to refresh the board
       queryClient.invalidateQueries({ queryKey: ['engagement-kanban'] })
     },

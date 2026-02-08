@@ -10,10 +10,8 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Building2, Users, Sparkles, UserCircle } from 'lucide-react'
+import { Building2, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
 import { WGMemberSuggestions } from '@/components/working-groups/WGMemberSuggestions'
 import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards'
 

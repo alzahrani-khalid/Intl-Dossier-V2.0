@@ -53,7 +53,7 @@ function useBottomSheetContext() {
 // BottomSheet Root
 // ============================================================================
 
-export interface BottomSheetProps extends React.ComponentProps<typeof DrawerPrimitive.Root> {
+export interface BottomSheetProps {
   /** Preset snap points or custom array */
   snapPreset?: BottomSheetSnapPreset
   /** Custom snap points (overrides preset) */
@@ -64,6 +64,12 @@ export interface BottomSheetProps extends React.ComponentProps<typeof DrawerPrim
   onSnapPointChange?: (point: number | string | null) => void
   /** Whether to scale the background when open */
   shouldScaleBackground?: boolean
+  /** Whether the bottom sheet is open */
+  open?: boolean
+  /** Callback when open state changes */
+  onOpenChange?: (open: boolean) => void
+  /** Children */
+  children?: React.ReactNode
 }
 
 const BottomSheet = ({
@@ -78,7 +84,9 @@ const BottomSheet = ({
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
-  const snapPoints = customSnapPoints ?? BOTTOM_SHEET_SNAP_POINTS[snapPreset]
+  const snapPoints: (number | string)[] = customSnapPoints ?? [
+    ...BOTTOM_SHEET_SNAP_POINTS[snapPreset],
+  ]
   const [activeSnapPoint, setActiveSnapPoint] = React.useState<number | string | null>(
     snapPoints?.[defaultSnapPoint] ?? null,
   )

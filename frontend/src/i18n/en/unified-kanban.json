@@ -31,7 +31,9 @@
     "clearSelection": "Clear Selection",
     "success": "Bulk action completed",
     "partialSuccess": "{{succeeded}} of {{total}} items updated",
-    "failed": "Bulk action failed"
+    "failed": "Bulk action failed",
+    "linkToDossier": "Link to Dossier",
+    "selectDossier": "Select a dossier..."
   },
   "columnModes": {
     "label": "Group by",
@@ -81,7 +83,8 @@
     "priority": "Priority",
     "allPriorities": "All priorities",
     "overdueOnly": "Overdue only",
-    "clear": "Clear filters"
+    "clear": "Clear filters",
+    "searchPlaceholder": "Search work items..."
   },
   "sorting": {
     "label": "Sort by",

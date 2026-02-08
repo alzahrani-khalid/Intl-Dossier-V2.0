@@ -78,11 +78,11 @@ export function CommitmentEditor({
 
   const updateCommitment = (index: number, field: keyof Commitment, value: any) => {
     const updated = [...commitments]
-    updated[index] = { ...updated[index], [field]: value }
+    updated[index] = { ...updated[index]!, [field]: value } as Commitment
 
     // Set tracking mode based on owner type
     if (field === 'owner_type') {
-      updated[index].tracking_mode = value === 'internal' ? 'automatic' : 'manual'
+      updated[index]!.tracking_mode = value === 'internal' ? 'automatic' : 'manual'
     }
 
     onChange(updated)

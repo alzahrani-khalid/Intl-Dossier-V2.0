@@ -51,7 +51,7 @@ interface Forum {
   }
 }
 
-interface ForumParticipant {
+interface _ForumParticipant {
   entity_id: string
   entity_type: string
   participation_type: string

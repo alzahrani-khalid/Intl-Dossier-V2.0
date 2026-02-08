@@ -14,7 +14,6 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Globe,
   Building2,
@@ -353,7 +352,7 @@ interface WorkItemCardProps {
 
 function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
   const { i18n, t } = useTranslation('dossier-search')
-  const navigate = useNavigate()
+  const _navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
 
   const workConfig = relatedWorkTypeConfig[item.type]

@@ -209,7 +209,7 @@ export const PDFPreview = memo(function PDFPreview({
   // Container resize observer
   useEffect(() => {
     const container = document.getElementById('pdf-container')
-    if (!container) return
+    if (!container) return undefined
 
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0]

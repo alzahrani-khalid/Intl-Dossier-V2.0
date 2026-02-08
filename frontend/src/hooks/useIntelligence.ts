@@ -110,7 +110,7 @@ export function useIntelligence(
   >,
 ) {
   const { i18n, t } = useTranslation()
-  const queryClient = useQueryClient()
+  const _queryClient = useQueryClient()
   const { enableBackgroundNotifications = false, ...queryParams } = params
 
   // Auto-detect language from i18next if not provided
@@ -286,16 +286,29 @@ export function useAllIntelligence(
  * @param options - TanStack Query mutation options
  */
 export function useRefreshIntelligence(
-  options?: UseMutationOptions<
-    RefreshIntelligenceResponse,
-    IntelligenceAPIError,
-    RefreshIntelligenceParams
+  options?: Omit<
+    UseMutationOptions<
+      RefreshIntelligenceResponse,
+      IntelligenceAPIError,
+      RefreshIntelligenceParams
+    >,
+    'mutationFn' | 'onMutate' | 'onSuccess' | 'onError'
   >,
 ) {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
-  return useMutation({
+  type RefreshMutationContext = {
+    previousData: GetIntelligenceResponse | undefined
+    toastId: string | number
+  }
+
+  return useMutation<
+    RefreshIntelligenceResponse,
+    IntelligenceAPIError,
+    RefreshIntelligenceParams,
+    RefreshMutationContext
+  >({
     mutationFn: (params: RefreshIntelligenceParams) => refreshIntelligence(params),
 
     onMutate: async (params) => {
@@ -428,7 +441,7 @@ export function useRefreshIntelligenceType(
     }
   >,
 ) {
-  const refreshMutation = useRefreshIntelligence()
+  const _refreshMutation = useRefreshIntelligence()
 
   return useMutation({
     mutationFn: (params) =>

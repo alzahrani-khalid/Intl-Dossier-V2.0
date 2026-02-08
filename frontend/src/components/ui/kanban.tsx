@@ -283,6 +283,9 @@ export type KanbanColumnProps<TData extends { id: UniqueIdentifier }> = {
   className?: string
   headerClassName?: string
   isRTL?: boolean
+  hasMore?: boolean
+  totalCount?: number
+  onLoadMore?: () => void
 }
 
 export const KanbanColumn = <TData extends { id: UniqueIdentifier }>({
@@ -294,6 +297,9 @@ export const KanbanColumn = <TData extends { id: UniqueIdentifier }>({
   className,
   headerClassName,
   isRTL = false,
+  hasMore = false,
+  totalCount,
+  onLoadMore,
 }: KanbanColumnProps<TData>) => {
   const { setNodeRef, isOver } = useSortable({
     id,
@@ -318,7 +324,7 @@ export const KanbanColumn = <TData extends { id: UniqueIdentifier }>({
       <div className={cn('flex items-center justify-between px-4 py-3 border-b', headerClassName)}>
         <h3 className="text-sm sm:text-base font-semibold">{isRTL && titleAr ? titleAr : title}</h3>
         <span className="text-xs sm:text-sm text-muted-foreground px-2 py-1 rounded-md bg-muted">
-          {items.length}
+          {totalCount != null ? `${items.length}/${totalCount}` : items.length}
         </span>
       </div>
       <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-2">
@@ -328,6 +334,20 @@ export const KanbanColumn = <TData extends { id: UniqueIdentifier }>({
         >
           {children}
         </SortableContext>
+        {hasMore && onLoadMore && (
+          <button
+            type="button"
+            onClick={onLoadMore}
+            className={cn(
+              'w-full py-2 text-xs text-muted-foreground',
+              'rounded-md border-2 border-dashed',
+              'hover:bg-muted/50 hover:text-foreground transition-colors',
+              'min-h-11',
+            )}
+          >
+            {totalCount != null ? `Load more (${items.length}/${totalCount})` : 'Load more...'}
+          </button>
+        )}
       </div>
     </div>
   )

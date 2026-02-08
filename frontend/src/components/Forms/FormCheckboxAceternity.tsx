@@ -43,7 +43,7 @@ export function FormCheckboxAceternity({
     // RTL direction
     isRTL && 'flex-row-reverse',
     // Disabled state
-    disabled && 'opacity-50 cursor-not-allowed'
+    disabled && 'opacity-50 cursor-not-allowed',
   )
 
   const labelClasses = cn(
@@ -54,7 +54,7 @@ export function FormCheckboxAceternity({
     // Color
     'text-gray-700 dark:text-gray-300',
     // Disabled state
-    disabled && 'cursor-not-allowed'
+    disabled && 'cursor-not-allowed',
   )
 
   const aceternityCheckboxClasses = cn(
@@ -66,7 +66,7 @@ export function FormCheckboxAceternity({
     'transition-all duration-200',
     // Hover and focus states
     isHovered && 'scale-110',
-    isFocused && 'ring-2 ring-primary-500/30'
+    isFocused && 'ring-2 ring-primary-500/30',
   )
 
   return (
@@ -88,12 +88,10 @@ export function FormCheckboxAceternity({
           disabled={disabled}
           className={variant === 'aceternity' ? aceternityCheckboxClasses : 'h-4 w-4'}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
           aria-invalid={!!error}
-          aria-describedby={
-            error ? `${name}-error` : helpText ? `${name}-help` : undefined
-          }
+          aria-describedby={error ? `${name}-error` : helpText ? `${name}-help` : undefined}
           {...(register ? register(name) : {})}
+          onBlur={() => setIsFocused(false)}
         />
 
         {/* Label */}
@@ -113,7 +111,7 @@ export function FormCheckboxAceternity({
           id={`${name}-help`}
           className={cn(
             'text-sm text-gray-600 dark:text-gray-400 text-start',
-            isRTL ? 'me-8' : 'ms-8' // Indent to align with checkbox
+            isRTL ? 'me-8' : 'ms-8', // Indent to align with checkbox
           )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -130,7 +128,7 @@ export function FormCheckboxAceternity({
             id={`${name}-error`}
             className={cn(
               'text-sm text-red-600 dark:text-red-400 text-start',
-              isRTL ? 'me-8' : 'ms-8' // Indent to align with checkbox
+              isRTL ? 'me-8' : 'ms-8', // Indent to align with checkbox
             )}
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}

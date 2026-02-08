@@ -213,7 +213,7 @@ export function GroupingBuilder({
                 <Select
                   onValueChange={(value) => {
                     const [fieldId, func] = value.split('::')
-                    handleAddAggregation(fieldId, func as AggregationFunction)
+                    handleAddAggregation(fieldId!, func as AggregationFunction)
                   }}
                 >
                   <SelectTrigger className="w-[140px] h-9">

@@ -37,7 +37,7 @@ export function ReportsPage() {
   const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'excel' | 'word'>('pdf')
   const [parameters, setParameters] = useState<Record<string, any>>({})
   const [generatedReports, setGeneratedReports] = useState<any[]>([])
-  const isRTL = i18n.language === 'ar'
+  const _isRTL = i18n.language === 'ar'
 
   const reportTemplates: ReportTemplate[] = [
     {

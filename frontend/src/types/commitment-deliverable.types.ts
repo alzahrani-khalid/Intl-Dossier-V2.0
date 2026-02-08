@@ -415,10 +415,10 @@ export function generateDeliverablesFromTemplateSet(
         description_en: template.description_en,
         description_ar: template.description_ar,
         deliverable_type: template.type,
-        due_date: dueDate.toISOString().split('T')[0],
+        due_date: dueDate.toISOString().split('T')[0]!,
         weight: template.default_weight,
         sort_order: index,
       }
     })
-    .filter((d): d is CreateCommitmentDeliverableInput => d !== null)
+    .filter((d): d is NonNullable<typeof d> => d !== null)
 }

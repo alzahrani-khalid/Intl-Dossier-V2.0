@@ -407,7 +407,7 @@ export function useDeleteTemplatedDocument() {
  */
 export function useDocumentWizard(templateId: string, entityType: string, entityId: string) {
   const { t } = useTranslation('document-templates')
-  const queryClient = useQueryClient()
+  const _queryClient = useQueryClient()
 
   // Get template
   const templateQuery = useDocumentTemplate(templateId)

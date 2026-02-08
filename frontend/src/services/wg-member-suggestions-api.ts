@@ -102,10 +102,10 @@ export async function getWGMemberSuggestions(
     has_no_members: (memberCount || 0) === 0,
     suggestion_types: Object.keys(groupedByType).map((type) => ({
       type: type as WGSuggestionType,
-      count: groupedByType[type].length,
+      count: groupedByType[type]!.length,
       avg_confidence:
-        groupedByType[type].reduce((sum, s) => sum + s.confidence_score, 0) /
-        groupedByType[type].length,
+        groupedByType[type]!.reduce((sum, s) => sum + s.confidence_score, 0) /
+        groupedByType[type]!.length,
     })),
     high_confidence_count: filteredSuggestions.filter((s) => s.confidence_score >= 0.8).length,
     organization_suggestions: orgSuggestions,

@@ -70,12 +70,21 @@ const baseDossierSchema = z.object({
   status: z.enum(['active', 'inactive', 'archived', 'deleted']).default('active'),
   sensitivity_level: z.number().min(1).max(4).default(1), // 1=Public, 2=Internal, 3=Confidential, 4=Secret
   tags: z.array(z.string()).optional(),
+  extensionData: z
+    .object({
+      title_en: z.string().optional(),
+      title_ar: z.string().optional(),
+      biography_en: z.string().optional(),
+      biography_ar: z.string().optional(),
+      photo_url: z.string().url().optional().or(z.literal('')),
+    })
+    .optional(),
 })
 
 /**
  * Type-specific extension schemas
  */
-const countryExtensionSchema = z.object({
+const _countryExtensionSchema = z.object({
   iso_code_2: z.string().length(2).optional(),
   iso_code_3: z.string().length(3).optional(),
   capital_en: z.string().optional(),
@@ -87,7 +96,7 @@ const countryExtensionSchema = z.object({
   flag_url: z.string().url().optional(),
 })
 
-const organizationExtensionSchema = z.object({
+const _organizationExtensionSchema = z.object({
   org_code: z.string().optional(),
   org_type: z.enum(['government', 'ngo', 'private', 'international', 'academic']).optional(),
   website: z.string().url().optional(),
@@ -99,7 +108,7 @@ const organizationExtensionSchema = z.object({
   established_date: z.string().optional(),
 })
 
-const forumExtensionSchema = z.object({
+const _forumExtensionSchema = z.object({
   number_of_sessions: z.number().int().positive().optional(),
   registration_fee: z.number().nonnegative().optional(),
   currency: z.string().length(3).optional(),
@@ -107,7 +116,7 @@ const forumExtensionSchema = z.object({
   live_stream_url: z.string().url().optional(),
 })
 
-const engagementExtensionSchema = z.object({
+const _engagementExtensionSchema = z.object({
   engagement_type: z
     .enum([
       'meeting',
@@ -124,11 +133,11 @@ const engagementExtensionSchema = z.object({
   location_ar: z.string().optional(),
 })
 
-const themeExtensionSchema = z.object({
+const _themeExtensionSchema = z.object({
   theme_category: z.enum(['policy', 'technical', 'strategic', 'operational']).optional(),
 })
 
-const workingGroupExtensionSchema = z.object({
+const _workingGroupExtensionSchema = z.object({
   mandate_en: z.string().optional(),
   mandate_ar: z.string().optional(),
   wg_status: z.enum(['active', 'suspended', 'disbanded']).optional(),
@@ -136,7 +145,7 @@ const workingGroupExtensionSchema = z.object({
   disbandment_date: z.string().optional(),
 })
 
-const personExtensionSchema = z.object({
+const _personExtensionSchema = z.object({
   title_en: z.string().optional(),
   title_ar: z.string().optional(),
   biography_en: z.string().optional(),
@@ -155,7 +164,7 @@ export function DossierForm({
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
   const isEditMode = Boolean(dossier)
-  const dossierType = isEditMode ? dossier.type : initialType
+  const dossierType = isEditMode ? dossier!.type : initialType
 
   const form = useForm<CreateDossierRequest | UpdateDossierRequest>({
     resolver: zodResolver(baseDossierSchema),
@@ -352,13 +361,17 @@ export function DossierForm({
                     {/* Title English */}
                     <FormField
                       control={form.control}
-                      name="extension_data.title_en"
+                      name="extensionData.title_en"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('form.person.titleEn')}</FormLabel>
                           <FormControl>
                             <Input
-                              {...field}
+                              name={field.name}
+                              ref={field.ref}
+                              onBlur={field.onBlur}
+                              onChange={field.onChange}
+                              value={(field.value as string) ?? ''}
                               placeholder={t('form.person.titleEnPlaceholder')}
                               className=""
                             />
@@ -372,13 +385,17 @@ export function DossierForm({
                     {/* Title Arabic */}
                     <FormField
                       control={form.control}
-                      name="extension_data.title_ar"
+                      name="extensionData.title_ar"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('form.person.titleAr')}</FormLabel>
                           <FormControl>
                             <Input
-                              {...field}
+                              name={field.name}
+                              ref={field.ref}
+                              onBlur={field.onBlur}
+                              onChange={field.onChange}
+                              value={(field.value as string) ?? ''}
                               placeholder={t('form.person.titleArPlaceholder')}
                               className=""
                               dir="rtl"
@@ -393,13 +410,17 @@ export function DossierForm({
                   {/* Photo URL */}
                   <FormField
                     control={form.control}
-                    name="extension_data.photo_url"
+                    name="extensionData.photo_url"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t('form.person.photoUrl')}</FormLabel>
                         <FormControl>
                           <Input
-                            {...field}
+                            name={field.name}
+                            ref={field.ref}
+                            onBlur={field.onBlur}
+                            onChange={field.onChange}
+                            value={(field.value as string) ?? ''}
                             type="url"
                             placeholder={t('form.person.photoUrlPlaceholder')}
                             className=""
@@ -415,13 +436,17 @@ export function DossierForm({
                     {/* Biography English */}
                     <FormField
                       control={form.control}
-                      name="extension_data.biography_en"
+                      name="extensionData.biography_en"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('form.person.biographyEn')}</FormLabel>
                           <FormControl>
                             <Textarea
-                              {...field}
+                              name={field.name}
+                              ref={field.ref}
+                              onBlur={field.onBlur}
+                              onChange={field.onChange}
+                              value={(field.value as string) ?? ''}
                               placeholder={t('form.person.biographyEnPlaceholder')}
                               className="min-h-[120px]"
                               rows={5}
@@ -435,13 +460,17 @@ export function DossierForm({
                     {/* Biography Arabic */}
                     <FormField
                       control={form.control}
-                      name="extension_data.biography_ar"
+                      name="extensionData.biography_ar"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('form.person.biographyAr')}</FormLabel>
                           <FormControl>
                             <Textarea
-                              {...field}
+                              name={field.name}
+                              ref={field.ref}
+                              onBlur={field.onBlur}
+                              onChange={field.onChange}
+                              value={(field.value as string) ?? ''}
                               placeholder={t('form.person.biographyArPlaceholder')}
                               className="min-h-[120px]"
                               dir="rtl"

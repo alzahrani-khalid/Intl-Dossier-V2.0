@@ -85,11 +85,11 @@ export function useSideEvents(sessionId: string, filters: Partial<SideEventFilte
             if (!logisticsStats[l.event_id]) {
               logisticsStats[l.event_id] = { total: 0, pending: 0, confirmed: 0 }
             }
-            logisticsStats[l.event_id].total++
+            logisticsStats[l.event_id]!.total++
             if (l.status === 'pending' || l.status === 'requested') {
-              logisticsStats[l.event_id].pending++
+              logisticsStats[l.event_id]!.pending++
             } else if (l.status === 'confirmed' || l.status === 'completed') {
-              logisticsStats[l.event_id].confirmed++
+              logisticsStats[l.event_id]!.confirmed++
             }
           })
         }

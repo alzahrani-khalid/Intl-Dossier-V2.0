@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { useEffect, useCallback } from 'react'
+import { useEffect } from 'react'
 import { RealtimeChannel } from '@supabase/supabase-js'
 
 // Types
@@ -94,7 +94,7 @@ export function useNotifications(filters: NotificationFilters = {}) {
       params.set('limit', '20')
 
       const response = await supabase.functions.invoke('notifications-center', {
-        body: null,
+        body: undefined,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

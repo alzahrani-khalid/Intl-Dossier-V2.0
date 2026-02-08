@@ -19,9 +19,6 @@ if (!supabaseUrl) {
 }
 
 type Task = Database['public']['Tables']['tasks']['Row']
-type TaskInsert = Database['public']['Tables']['tasks']['Insert']
-type TaskUpdate = Database['public']['Tables']['tasks']['Update']
-type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
 
 /**
  * API Request types
@@ -214,18 +211,7 @@ export const tasksAPI = {
         title_en?: string
         title_ar?: string
       }>
-      engagement?: {
-        id: string
-        title: string
-        engagement_type: string
-        engagement_date: string
-        location?: string
-        dossier?: {
-          id: string
-          name_en: string
-          name_ar: string
-        }
-      }
+      engagement?: TaskEngagement
     }
   > {
     // Fetch the task - use maybeSingle() to avoid 406 error when task not found
@@ -410,7 +396,7 @@ export const tasksAPI = {
       console.warn(`Failed to fetch engagement for ${task.engagement_id}:`, engagementResult.error)
     } else if (engagementResult.data) {
       const e = engagementResult.data
-      const dossierData = e.dossiers as {
+      const dossierData = e.dossiers as unknown as {
         id: string
         name_en: string
         name_ar: string
@@ -428,7 +414,7 @@ export const tasksAPI = {
     }
 
     return {
-      ...task,
+      ...(task as Task),
       assignee_name: assigneeName,
       assignee_email: assigneeEmail,
       created_by_name: creatorName,
@@ -508,6 +494,23 @@ export const tasksAPI = {
   },
 
   /**
+   * Undelete a task (for undo functionality)
+   */
+  async undeleteTask(taskId: string): Promise<void> {
+    const { error } = await supabase
+      .from('tasks')
+      .update({
+        is_deleted: false,
+        deleted_at: null,
+      })
+      .eq('id', taskId)
+
+    if (error) {
+      throw new TasksAPIError(error.message, 500, error.code)
+    }
+  },
+
+  /**
    * Get my tasks (assigned to current user)
    */
   async getMyTasks(filters: Omit<TaskFilters, 'filter'> = {}): Promise<TasksListResponse> {
@@ -548,7 +551,7 @@ export const tasksAPI = {
       throw new TasksAPIError(error.message, 500, error.code)
     }
 
-    return data || []
+    return (data as Task[]) || []
   },
 
   /**
@@ -573,7 +576,7 @@ export const tasksAPI = {
       throw new TasksAPIError(error.message, 500, error.code)
     }
 
-    return data || []
+    return (data as Task[]) || []
   },
 
   /**
@@ -602,7 +605,7 @@ export const tasksAPI = {
       throw new TasksAPIError(error.message, 500, error.code)
     }
 
-    return data || []
+    return (data as Task[]) || []
   },
 }
 

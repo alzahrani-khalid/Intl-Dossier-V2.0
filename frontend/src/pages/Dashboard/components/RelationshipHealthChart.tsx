@@ -7,10 +7,10 @@
  * Mobile-first, RTL-compatible, WCAG AA compliant
  */
 
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
-import { useDashboardHealthAggregations } from '@/hooks/useDashboardHealthAggregations';
-import { getHealthScoreColor, getHealthScoreLabel } from '@/services/dossier-stats.service';
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
+import { useDashboardHealthAggregations } from '@/hooks/useDashboardHealthAggregations'
+import { getHealthScoreColor, getHealthScoreLabel } from '@/services/dossier-stats.service'
 
 interface RelationshipHealthChartProps {
   /**
@@ -18,29 +18,29 @@ interface RelationshipHealthChartProps {
    * - 'region': Group countries by region
    * - 'org_type': Group organizations by organization type
    */
-  groupBy?: 'region' | 'org_type';
+  groupBy?: 'region' | 'org_type'
   /**
    * Optional filter to apply to aggregations
    */
   filter?: {
-    dossierType?: 'country' | 'organization' | 'forum';
-    minHealthScore?: number;
-  };
+    dossierType?: 'country' | 'organization' | 'forum'
+    minHealthScore?: number
+  }
 }
 
 export function RelationshipHealthChart({
   groupBy = 'region',
   filter,
 }: RelationshipHealthChartProps) {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
-  const navigate = useNavigate();
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+  const navigate = useNavigate()
 
   // Fetch dashboard aggregations
   const { data, isLoading, isError, error } = useDashboardHealthAggregations({
     groupBy,
     filter,
-  });
+  })
 
   // Loading state
   if (isLoading) {
@@ -57,7 +57,7 @@ export function RelationshipHealthChart({
           </div>
         ))}
       </div>
-    );
+    )
   }
 
   // Error state
@@ -72,7 +72,7 @@ export function RelationshipHealthChart({
         <strong className="font-medium">{t('error.failedToLoadData')}:</strong>{' '}
         {error?.message || t('error.unknownError')}
       </div>
-    );
+    )
   }
 
   // Empty state
@@ -85,18 +85,18 @@ export function RelationshipHealthChart({
         <p className="text-sm sm:text-base">{t('dashboard.noHealthData')}</p>
         <p className="mt-2 text-xs sm:text-sm">{t('dashboard.healthDataHint')}</p>
       </div>
-    );
+    )
   }
 
   /**
    * Get health color class for background/border
    */
   const getHealthBgColor = (score: number): string => {
-    if (score >= 80) return 'bg-green-500 dark:bg-green-600';
-    if (score >= 60) return 'bg-yellow-500 dark:bg-yellow-600';
-    if (score >= 40) return 'bg-orange-500 dark:bg-orange-600';
-    return 'bg-red-500 dark:bg-red-600';
-  };
+    if (score >= 80) return 'bg-green-500 dark:bg-green-600'
+    if (score >= 60) return 'bg-yellow-500 dark:bg-yellow-600'
+    if (score >= 40) return 'bg-orange-500 dark:bg-orange-600'
+    return 'bg-red-500 dark:bg-red-600'
+  }
 
   /**
    * Navigate to dossier list filtered by region and sorted by health (lowest first)
@@ -107,18 +107,18 @@ export function RelationshipHealthChart({
       search: {
         [groupBy]: groupValue,
         sort: 'health:asc', // Show lowest health first for attention
-      },
-    });
-  };
+      } as any,
+    })
+  }
 
   /**
    * Handle keyboard navigation (Enter key)
    */
   const handleKeyDown = (event: React.KeyboardEvent, groupValue: string) => {
     if (event.key === 'Enter') {
-      handleGroupClick(groupValue);
+      handleGroupClick(groupValue)
     }
-  };
+  }
 
   return (
     <div className="space-y-3 sm:space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -141,7 +141,9 @@ export function RelationshipHealthChart({
               <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 {getHealthScoreLabel(aggregation.averageHealthScore)}
               </span>
-              <span className={`text-xs sm:text-sm font-medium ${getHealthScoreColor(aggregation.averageHealthScore)}`}>
+              <span
+                className={`text-xs sm:text-sm font-medium ${getHealthScoreColor(aggregation.averageHealthScore)}`}
+              >
                 {aggregation.averageHealthScore}
               </span>
             </div>
@@ -211,24 +213,18 @@ export function RelationshipHealthChart({
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 dark:bg-yellow-600 rounded-full" />
-            <span className="text-gray-600 dark:text-gray-400">
-              {t('dashboard.good')} (60-79)
-            </span>
+            <span className="text-gray-600 dark:text-gray-400">{t('dashboard.good')} (60-79)</span>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="w-2 h-2 sm:w-3 sm:h-3 bg-orange-500 dark:bg-orange-600 rounded-full" />
-            <span className="text-gray-600 dark:text-gray-400">
-              {t('dashboard.fair')} (40-59)
-            </span>
+            <span className="text-gray-600 dark:text-gray-400">{t('dashboard.fair')} (40-59)</span>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 dark:bg-red-600 rounded-full" />
-            <span className="text-gray-600 dark:text-gray-400">
-              {t('dashboard.poor')} (0-39)
-            </span>
+            <span className="text-gray-600 dark:text-gray-400">{t('dashboard.poor')} (0-39)</span>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

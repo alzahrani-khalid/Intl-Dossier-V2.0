@@ -95,7 +95,7 @@ export function EngagementsListPage() {
   }
 
   const handleEngagementClick = (engagementId: string) => {
-    navigate({ to: '/engagements/$engagementId', params: { engagementId } })
+    navigate({ to: '/engagements/$engagementId', params: { engagementId } as any })
   }
 
   // Get status badge color

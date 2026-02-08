@@ -77,7 +77,7 @@ export function ThemeCard({
 
   // Determine title and summary based on language
   const title = isRTL ? theme.name_ar : theme.name_en
-  const summary = isRTL ? theme.summary_ar : theme.summary_en
+  const summary = isRTL ? theme.description_ar : theme.description_en
 
   // Get parent info if available
   const themeWithContext = theme as ThemeWithContext
@@ -85,7 +85,7 @@ export function ThemeCard({
   const childrenCount = themeWithContext.children_count ?? 0
 
   // Get status colors
-  const statusColors = STATUS_COLORS[theme.status] || STATUS_COLORS.active
+  const statusColors = (STATUS_COLORS[theme.status] || STATUS_COLORS.active)!
 
   // Extension data
   const extension = theme.extension

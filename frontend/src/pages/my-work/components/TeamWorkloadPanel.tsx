@@ -3,25 +3,32 @@
  * Shows team members' workload for managers
  * Mobile-first, RTL-compatible
  */
-import { useTranslation } from 'react-i18next';
-import { Users, AlertTriangle, TrendingUp } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import type { TeamMemberWorkload } from '@/types/unified-work.types';
-import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next'
+import { Users, AlertTriangle, TrendingUp } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import type { TeamMemberWorkload } from '@/types/unified-work.types'
+import { cn } from '@/lib/utils'
 
 interface TeamWorkloadPanelProps {
-  teamMembers: TeamMemberWorkload[];
-  isLoading: boolean;
+  teamMembers: TeamMemberWorkload[]
+  isLoading: boolean
+  onMemberClick?: (memberId: string) => void
+  selectedMemberId?: string
 }
 
-export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelProps) {
-  const { t, i18n } = useTranslation('my-work');
-  const isRTL = i18n.language === 'ar';
+export function TeamWorkloadPanel({
+  teamMembers,
+  isLoading,
+  onMemberClick,
+  selectedMemberId,
+}: TeamWorkloadPanelProps) {
+  const { t, i18n } = useTranslation('my-work')
+  const isRTL = i18n.language === 'ar'
 
   if (isLoading) {
     return (
@@ -39,22 +46,22 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   if (teamMembers.length === 0) {
-    return null;
+    return null
   }
 
   // Get initials from email
   const getInitials = (email: string) => {
-    const name = email.split('@')[0] || 'U';
-    const parts = name.split(/[._-]/);
+    const name = email.split('@')[0] || 'U'
+    const parts = name.split(/[._-]/)
     if (parts.length >= 2 && parts[0] && parts[1]) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
     }
-    return name.slice(0, 2).toUpperCase();
-  };
+    return name.slice(0, 2).toUpperCase()
+  }
 
   return (
     <Card className="mb-4 sm:mb-6" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -71,16 +78,19 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
         <ScrollArea className="w-full">
           <div className="flex gap-3 pb-2">
             {teamMembers.map((member) => {
-              const hasOverdue = member.overdue_count > 0;
-              const workloadPct = Math.min((member.total_active / 20) * 100, 100); // Assume 20 is max capacity
+              const hasOverdue = member.overdue_count > 0
+              const workloadPct = Math.min((member.total_active / 20) * 100, 100) // Assume 20 is max capacity
 
               return (
                 <Card
                   key={member.user_id}
                   className={cn(
                     'w-48 shrink-0 transition-all hover:shadow-md',
-                    hasOverdue && 'border-red-200 dark:border-red-800'
+                    hasOverdue && 'border-red-200 dark:border-red-800',
+                    onMemberClick && 'cursor-pointer',
+                    selectedMemberId === member.user_id && 'ring-2 ring-primary ring-offset-2',
                   )}
+                  onClick={() => onMemberClick?.(member.user_id)}
                 >
                   <CardContent className="p-3">
                     {/* Member Info */}
@@ -97,7 +107,9 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
                         {hasOverdue && (
                           <div className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
                             <AlertTriangle className="h-3 w-3" />
-                            <span>{member.overdue_count} {t('team.overdue', 'overdue')}</span>
+                            <span>
+                              {member.overdue_count} {t('team.overdue', 'overdue')}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -119,7 +131,9 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
                         className={cn(
                           'h-1.5',
                           workloadPct > 80 && 'bg-red-100 [&>div]:bg-red-500',
-                          workloadPct > 60 && workloadPct <= 80 && 'bg-orange-100 [&>div]:bg-orange-500'
+                          workloadPct > 60 &&
+                            workloadPct <= 80 &&
+                            'bg-orange-100 [&>div]:bg-orange-500',
                         )}
                       />
 
@@ -136,7 +150,7 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
                               ? 'text-green-600 dark:text-green-400'
                               : member.on_time_rate_30d >= 60
                                 ? 'text-yellow-600 dark:text-yellow-400'
-                                : 'text-red-600 dark:text-red-400'
+                                : 'text-red-600 dark:text-red-400',
                           )}
                         >
                           {member.on_time_rate_30d}%
@@ -145,12 +159,12 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
                     </div>
                   </CardContent>
                 </Card>
-              );
+              )
             })}
           </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -23,7 +23,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DossierTypeIcon } from '../../DossierTypeIcon'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import type {
@@ -132,7 +131,7 @@ export function RelatedDossiersSection({
   const [viewMode, setViewMode] = useState<'relationship' | 'type'>('relationship')
 
   // Get all relationships
-  const allRelationships = useMemo(() => {
+  const _allRelationships = useMemo(() => {
     if (!data) return []
     return Object.values(data.by_relationship_type).flat()
   }, [data])

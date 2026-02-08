@@ -180,7 +180,7 @@ export function QuickEntryDialog({
           const nextIndex = e.shiftKey
             ? (currentIndex - 1 + TEMPLATE_ENTITY_TYPES.length) % TEMPLATE_ENTITY_TYPES.length
             : (currentIndex + 1) % TEMPLATE_ENTITY_TYPES.length
-          setSelectedEntityType(TEMPLATE_ENTITY_TYPES[nextIndex])
+          setSelectedEntityType(TEMPLATE_ENTITY_TYPES[nextIndex]!)
           setSelectedIndex(0)
           break
       }

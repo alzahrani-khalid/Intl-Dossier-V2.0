@@ -39,7 +39,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -47,11 +46,7 @@ import {
   type EntityType,
   type EntityHistoryEntry,
 } from '@/store/entityHistoryStore'
-import {
-  usePinnedEntitiesStore,
-  type PinnedEntityEntry,
-  getPinnedColorClass,
-} from '@/store/pinnedEntitiesStore'
+import { usePinnedEntitiesStore, type PinnedEntityEntry } from '@/store/pinnedEntitiesStore'
 
 /** Map entity types to icons */
 const entityIcons: Record<EntityType, React.ComponentType<{ className?: string }>> = {
@@ -88,13 +83,14 @@ interface QuickNavItemProps {
   isPinned?: boolean
   onPinToggle?: () => void
   isRTL: boolean
-  t: (key: string, fallback?: string) => string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: (...args: any[]) => any
   compact?: boolean
   onLinkClick?: () => void
 }
 
 function QuickNavItem({
-  id,
+  id: _id,
   type,
   name,
   route,
@@ -216,7 +212,7 @@ export function QuickNavigationMenu({
   const [isRecentOpen, setIsRecentOpen] = useState(true)
 
   // Get pinned and recent entities
-  const { pinned, unpinEntity, isPinned: checkPinned } = usePinnedEntitiesStore()
+  const { pinned, isPinned: checkPinned } = usePinnedEntitiesStore()
   const { history } = useEntityHistoryStore()
 
   // Memoize displayed items

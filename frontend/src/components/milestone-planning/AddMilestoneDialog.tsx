@@ -163,7 +163,7 @@ export function AddMilestoneDialog({
         tomorrow.setDate(tomorrow.getDate() + 1)
         setFormData({
           ...initialFormData,
-          target_date: tomorrow.toISOString().split('T')[0],
+          target_date: tomorrow.toISOString().split('T')[0]!,
         })
       }
     }
@@ -232,7 +232,7 @@ export function AddMilestoneDialog({
 
   const updateReminder = (index: number, updates: Partial<ReminderConfig>) => {
     const newReminders = [...formData.reminders]
-    newReminders[index] = { ...newReminders[index], ...updates }
+    newReminders[index] = { ...newReminders[index]!, ...updates } as ReminderConfig
     setFormData({ ...formData, reminders: newReminders })
   }
 
@@ -242,7 +242,7 @@ export function AddMilestoneDialog({
   }
 
   const toggleReminderChannel = (reminderIndex: number, channel: ReminderChannel) => {
-    const reminder = formData.reminders[reminderIndex]
+    const reminder = formData.reminders[reminderIndex]!
     const hasChannel = reminder.channels.includes(channel)
     const newChannels = hasChannel
       ? reminder.channels.filter((c) => c !== channel)

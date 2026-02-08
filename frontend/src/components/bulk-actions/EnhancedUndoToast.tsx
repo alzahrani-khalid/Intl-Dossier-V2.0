@@ -99,7 +99,7 @@ export function EnhancedUndoToast({
         clearInterval(intervalRef.current)
         intervalRef.current = null
       }
-      return
+      return undefined
     }
 
     intervalRef.current = setInterval(() => {
@@ -136,7 +136,7 @@ export function EnhancedUndoToast({
 
   // Handle keyboard shortcut (Ctrl/Cmd + Z)
   useEffect(() => {
-    if (!visible || isUndoing) return
+    if (!visible || isUndoing) return undefined
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z') {

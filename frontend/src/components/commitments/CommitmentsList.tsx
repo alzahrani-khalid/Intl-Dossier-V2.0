@@ -28,7 +28,6 @@ import { PullToRefreshIndicator, SyncStatusBar } from '@/components/ui/pull-to-r
 import { CommitmentCard } from './CommitmentCard'
 import { CommitmentForm } from './CommitmentForm'
 import { CommitmentFilterDrawer } from './CommitmentFilterDrawer'
-import { CommitmentDetailDrawer } from './CommitmentDetailDrawer'
 import { FilterChips } from './FilterChips'
 import type {
   CommitmentStatus,
@@ -70,7 +69,7 @@ export function CommitmentsList({
   const [editingCommitment, setEditingCommitment] = useState<Commitment | null>(null)
   const [showFilterDrawer, setShowFilterDrawer] = useState(false)
   // T061: State for detail drawer
-  const [selectedCommitmentId, setSelectedCommitmentId] = useState<string | null>(null)
+  const [_selectedCommitmentId, setSelectedCommitmentId] = useState<string | null>(null)
 
   // Build filters from props
   const filters: CommitmentFilters = {
@@ -135,7 +134,7 @@ export function CommitmentsList({
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        if (entry!.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage()
         }
       },
@@ -160,7 +159,7 @@ export function CommitmentsList({
   }
 
   // T061: Handle card click - open detail drawer
-  const handleCardClick = (commitmentId: string) => {
+  const _handleCardClick = (commitmentId: string) => {
     setSelectedCommitmentId(commitmentId)
   }
 

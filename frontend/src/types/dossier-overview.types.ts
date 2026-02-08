@@ -8,7 +8,7 @@
  */
 
 import type { DossierType, DossierStatus } from '@/services/dossier-api'
-import type { UnifiedActivity, UnifiedActivityType } from './unified-dossier-activity.types'
+import type { UnifiedActivity } from './unified-dossier-activity.types'
 
 // =============================================
 // CORE DOSSIER INFO

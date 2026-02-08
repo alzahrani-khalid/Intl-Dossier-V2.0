@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
-import { Plus, FileText, Calendar, AlertCircle, ChevronRight, Clock } from 'lucide-react'
+import { Plus, FileText, AlertCircle, ChevronRight, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -75,7 +75,7 @@ export function MousPage() {
     },
   })
 
-  const transitionMutation = useMutation({
+  const _transitionMutation = useMutation({
     mutationFn: async ({ id, newState }: { id: string; newState: string }) => {
       const { error } = await supabase
         .from('mous')

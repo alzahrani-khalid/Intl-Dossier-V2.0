@@ -264,7 +264,7 @@ function EntityNode({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
     >
-      <div className={cn('p-2 rounded-full', colorClasses.split(' ')[0])}>
+      <div className={cn('p-2 rounded-full', colorClasses?.split(' ')[0])}>
         <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
       </div>
       <span className="text-xs sm:text-sm font-medium text-center line-clamp-2">{name}</span>

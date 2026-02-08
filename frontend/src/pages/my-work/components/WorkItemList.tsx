@@ -4,7 +4,7 @@
  * Mobile-first, RTL-compatible
  */
 import { useTranslation } from 'react-i18next'
-import { useRef, useCallback } from 'react'
+import { useCallback } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -75,12 +75,12 @@ export function WorkItemList({
   // Infinite scroll trigger
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (!node) return
-      if (isLoading || isFetchingMore || !hasMore) return
+      if (!node) return undefined
+      if (isLoading || isFetchingMore || !hasMore) return undefined
 
       const observer = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting) {
+          if (entries[0]?.isIntersecting) {
             onLoadMore()
           }
         },
@@ -180,7 +180,7 @@ export function WorkItemList({
                 }}
                 className="pb-3"
               >
-                {isLoaderRow ? <WorkItemSkeleton /> : <WorkItemCard item={item} />}
+                {isLoaderRow || !item ? <WorkItemSkeleton /> : <WorkItemCard item={item} />}
               </div>
             )
           })}

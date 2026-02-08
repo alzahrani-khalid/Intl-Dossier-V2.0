@@ -117,7 +117,7 @@ export function useAssignmentDetail(assignmentId: string) {
 
   // Setup Supabase Realtime subscriptions
   useEffect(() => {
-    if (!assignmentId) return
+    if (!assignmentId) return undefined
 
     const channel: RealtimeChannel = supabase
       .channel(`assignment:${assignmentId}`)
@@ -174,7 +174,7 @@ export function useAssignmentDetail(assignmentId: string) {
           table: 'assignment_checklist_items',
           filter: `assignment_id=eq.${assignmentId}`,
         },
-        (payload) => {
+        (_payload) => {
           queryClient.invalidateQueries({ queryKey: ['assignment', assignmentId] })
         },
       )

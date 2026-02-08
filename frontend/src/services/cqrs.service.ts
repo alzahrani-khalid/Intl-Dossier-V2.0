@@ -347,13 +347,14 @@ export const queries = {
    * Uses optimized read model for fast queries
    */
   timeline: (query: TimelineQuery): Promise<TimelineResponse> =>
-    executeQuery<TimelineResponse>('timeline', query),
+    executeQuery<TimelineResponse>('timeline', query as unknown as Record<string, unknown>),
 
   /**
    * Get relationship graph for a dossier
    * Uses pre-computed graph for fast traversal
    */
-  graph: (query: GraphQuery): Promise<GraphResponse> => executeQuery<GraphResponse>('graph', query),
+  graph: (query: GraphQuery): Promise<GraphResponse> =>
+    executeQuery<GraphResponse>('graph', query as unknown as Record<string, unknown>),
 
   /**
    * Get pre-computed dossier summary
@@ -366,7 +367,7 @@ export const queries = {
    * Search dossiers using optimized full-text search
    */
   search: (query: SearchQuery): Promise<SearchResponse> =>
-    executeQuery<SearchResponse>('dossier/search', query),
+    executeQuery<SearchResponse>('dossier/search', query as unknown as Record<string, unknown>),
 
   /**
    * Get daily aggregated metrics

@@ -160,7 +160,13 @@
     "tags": "Tags",
     "webhooks": "Webhooks",
     "workflowAutomation": "Workflow Automation",
-    "briefingBooks": "Briefing Books"
+    "briefingBooks": "Briefing Books",
+    "listView": "List View",
+    "boardView": "Board View",
+    "requests": "Requests",
+    "incomingRequests": "Incoming Requests",
+    "awaitingResponse": "Awaiting Response",
+    "main": "Main"
   },
   "search": {
     "title": "Search",

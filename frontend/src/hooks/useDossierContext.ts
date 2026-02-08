@@ -240,7 +240,7 @@ export function useDossierContext(): UseDossierContextReturn {
 export function useDossierStoreState() {
   // Import directly from store to avoid context requirement
   const {
-    useDossierStore,
+    _useDossierStore,
     useActiveDossier,
     useRecentDossiers,
     usePinnedDossiers,

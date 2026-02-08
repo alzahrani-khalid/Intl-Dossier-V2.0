@@ -75,7 +75,7 @@ export function WorkflowRuleCard({
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-semibold text-base truncate">{name}</h3>
               {rule.is_active ? (
-                <Badge variant="default\" className="bg-green-500">
+                <Badge variant="default" className="bg-green-500">
                   {t('filters.active')}
                 </Badge>
               ) : (

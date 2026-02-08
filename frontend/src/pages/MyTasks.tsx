@@ -51,7 +51,8 @@ export function MyTasksPage() {
   } = useContributedTasks()
 
   // Determine which data to use based on view type
-  const tasks = viewType === 'assigned' ? assignedTasks : contributedTasks
+  // TasksListResponse has { tasks: Task[], total_count, page, page_size }
+  const tasks = viewType === 'assigned' ? assignedTasks?.tasks : contributedTasks?.tasks
   const isLoading = viewType === 'assigned' ? isLoadingAssigned : isLoadingContributed
   const error = viewType === 'assigned' ? assignedError : contributedError
 

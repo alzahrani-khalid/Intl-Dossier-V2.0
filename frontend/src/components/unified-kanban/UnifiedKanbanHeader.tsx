@@ -4,9 +4,22 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { LayoutGrid, List, Filter, RefreshCw, Columns3, Signal, AlertTriangle } from 'lucide-react'
+import {
+  LayoutGrid,
+  List,
+  Filter,
+  RefreshCw,
+  Columns3,
+  Signal,
+  AlertTriangle,
+  Search,
+  X,
+} from 'lucide-react'
+import { useState, useCallback } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -32,6 +45,8 @@ interface UnifiedKanbanHeaderProps {
   onRefresh?: () => void
   totalCount?: number
   overdueCount?: number
+  searchQuery?: string
+  onSearchChange?: (query: string) => void
 }
 
 export function UnifiedKanbanHeader({
@@ -48,6 +63,8 @@ export function UnifiedKanbanHeader({
   onRefresh,
   totalCount = 0,
   overdueCount = 0,
+  searchQuery = '',
+  onSearchChange,
 }: UnifiedKanbanHeaderProps) {
   const { t, i18n } = useTranslation('unified-kanban')
   const isRTL = i18n.language === 'ar'
@@ -61,6 +78,25 @@ export function UnifiedKanbanHeader({
       onSourceFilterChange([...sourceFilter, source])
     }
   }
+
+  // Search with 300ms debounce
+  const [localSearch, setLocalSearch] = useState(searchQuery)
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    onSearchChange?.(value)
+  }, 300)
+
+  const handleSearchInput = useCallback(
+    (value: string) => {
+      setLocalSearch(value)
+      debouncedSearch(value)
+    },
+    [debouncedSearch],
+  )
+
+  const clearSearch = useCallback(() => {
+    setLocalSearch('')
+    onSearchChange?.('')
+  }, [onSearchChange])
 
   return (
     <div
@@ -128,8 +164,39 @@ export function UnifiedKanbanHeader({
         </div>
       </div>
 
-      {/* Bottom row: Column mode and filters */}
+      {/* Bottom row: Search, Column mode, and filters */}
       <div className="flex flex-wrap items-center gap-3">
+        {/* Search input */}
+        {onSearchChange && (
+          <div className="relative w-full sm:w-auto sm:min-w-[200px] sm:max-w-[280px]">
+            <Search
+              className={cn(
+                'absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground',
+                isRTL ? 'end-3' : 'start-3',
+              )}
+            />
+            <Input
+              type="text"
+              value={localSearch}
+              onChange={(e) => handleSearchInput(e.target.value)}
+              placeholder={t('filters.searchPlaceholder', 'Search work items...')}
+              className={cn('h-9 text-sm', isRTL ? 'pe-10 ps-8' : 'ps-10 pe-8')}
+            />
+            {localSearch && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className={cn(
+                  'absolute top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-muted',
+                  isRTL ? 'start-1.5' : 'end-1.5',
+                )}
+              >
+                <X className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Column mode selector */}
         {showModeSwitch && (
           <div className="flex items-center gap-2">

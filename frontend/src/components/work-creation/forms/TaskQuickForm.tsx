@@ -200,7 +200,7 @@ export function TaskQuickForm({
       // Context tracking via source JSONB (legacy - for backwards compatibility)
       source: {
         created_from_route: creationContext.route,
-        created_from_entity: creationContext.createdFromEntity,
+        created_from_entity: creationContext.createdFromEntity as any,
         dossier_ids: [effectiveDossierId],
       },
     }

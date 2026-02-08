@@ -47,6 +47,23 @@ import type {
   MultiLangFieldConfig,
   TranslatableEntityType,
 } from '@/types/multilingual-content.types'
+import type { ContentFreshnessStatus } from '@/types/content-expiration.types'
+
+/**
+ * Map dossier freshness_status to ContentFreshnessStatus
+ */
+function mapFreshnessStatus(status: string): ContentFreshnessStatus {
+  switch (status) {
+    case 'fresh':
+      return 'current'
+    case 'stale':
+      return 'review_pending'
+    case 'expired':
+      return 'outdated'
+    default:
+      return status as ContentFreshnessStatus
+  }
+}
 
 // Multi-language field configurations for different dossier types
 const DOSSIER_MULTILANG_FIELDS: MultiLangFieldConfig[] = [
@@ -74,7 +91,7 @@ const DOSSIER_TYPE_ICONS: Record<DossierType, React.ElementType> = {
   organization: Building2,
   forum: Users,
   engagement: Briefcase,
-  theme: Target,
+  topic: Target,
   working_group: UserCog,
   person: User,
 }
@@ -121,7 +138,9 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
   }
 
   const Icon = DOSSIER_TYPE_ICONS[dossier.type]
-  const extension = dossier.extension_data || {}
+  // Cast to any because TypeScript cannot narrow the union type DossierExtensionData
+  // based on dossier.type checks in a separate variable
+  const extension = (dossier.extension || {}) as any
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -156,8 +175,8 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
               </Badge>
               {dossier.freshness_status && (
                 <ExpirationBadge
-                  status={dossier.freshness_status}
-                  expiresAt={dossier.expires_at}
+                  status={mapFreshnessStatus(dossier.freshness_status)}
+                  expiresAt={dossier.expires_at ?? undefined}
                   size="sm"
                 />
               )}
@@ -263,7 +282,7 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
                       {t('organization.type', 'Type')}
                     </dt>
                     <dd className="mt-1 text-sm text-foreground">
-                      {t(`organization.orgType.${extension.org_type}`, extension.org_type)}
+                      {String(t(`organization.orgType.${extension.org_type}`, extension.org_type))}
                     </dd>
                   </div>
                 )}
@@ -306,7 +325,7 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
                       {t('forum.type', 'Forum type')}
                     </dt>
                     <dd className="mt-1 text-sm text-foreground">
-                      {t(`forum.forumType.${extension.forum_type}`, extension.forum_type)}
+                      {String(t(`forum.forumType.${extension.forum_type}`, extension.forum_type))}
                     </dd>
                   </div>
                 )}
@@ -329,8 +348,8 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
               </>
             )}
 
-            {/* Theme-specific fields */}
-            {dossier.type === 'theme' && (
+            {/* Topic-specific fields */}
+            {dossier.type === 'topic' && (
               <>
                 {extension.scope && (
                   <div>
@@ -338,7 +357,7 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
                       {t('theme.scope', 'Scope')}
                     </dt>
                     <dd className="mt-1 text-sm text-foreground">
-                      {t(`theme.scopeType.${extension.scope}`, extension.scope)}
+                      {String(t(`theme.scopeType.${extension.scope}`, extension.scope))}
                     </dd>
                   </div>
                 )}
@@ -357,7 +376,7 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
                               : 'bg-muted text-muted-foreground'
                         }
                       >
-                        {t(`theme.priorityLevel.${extension.priority}`, extension.priority)}
+                        {String(t(`theme.priorityLevel.${extension.priority}`, extension.priority))}
                       </Badge>
                     </dd>
                   </div>
@@ -417,7 +436,7 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
                       {t('person.role', 'Role')}
                     </dt>
                     <dd className="mt-1 text-sm text-foreground">
-                      {t(`person.roleType.${extension.role}`, extension.role)}
+                      {String(t(`person.roleType.${extension.role}`, extension.role))}
                     </dd>
                   </div>
                 )}
@@ -614,7 +633,7 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
                 showReplies={true}
                 maxDepth={3}
                 defaultVisibility="public"
-                title={null}
+                title={undefined}
               />
             </CardContent>
           </Card>

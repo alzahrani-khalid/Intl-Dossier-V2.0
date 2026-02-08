@@ -11,9 +11,9 @@
  * - Navigation to related entities
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import {
   ChevronDown,
   ChevronUp,
@@ -29,19 +29,19 @@ import {
   MapPin,
   ExternalLink,
   Download,
-} from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
-import type { UnifiedTimelineEvent } from '@/types/timeline.types';
+} from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { cn } from '@/lib/utils'
+import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 
 interface TimelineEventCardProps {
-  event: UnifiedTimelineEvent;
-  isFirst?: boolean;
-  isLast?: boolean;
-  className?: string;
+  event: UnifiedTimelineEvent
+  isFirst?: boolean
+  isLast?: boolean
+  className?: string
 }
 
 /**
@@ -58,9 +58,9 @@ const getEventIcon = (eventType: string): React.ElementType => {
     relationship: Users,
     commitment: CheckCircle2,
     decision: AlertCircle,
-  };
-  return iconMap[eventType] || Calendar;
-};
+  }
+  return iconMap[eventType] || Calendar
+}
 
 /**
  * Get priority color classes
@@ -70,9 +70,9 @@ const getPriorityColor = (priority: string): string => {
     high: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
     medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
     low: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  };
-  return colorMap[priority] || colorMap.low;
-};
+  }
+  return colorMap[priority] || colorMap.low!
+}
 
 /**
  * Get status color classes
@@ -84,44 +84,44 @@ const getStatusColor = (status: string): string => {
     completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
     cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
     postponed: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-  };
-  return colorMap[status] || colorMap.planned;
-};
+  }
+  return colorMap[status] || colorMap.planned!
+}
 
 /**
  * Format date for display
  */
 const formatEventDate = (dateString: string, locale: string): string => {
-  const date = new Date(dateString);
+  const date = new Date(dateString)
   return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  }).format(date);
-};
+  }).format(date)
+}
 
 export function TimelineEventCard({ event, isFirst, isLast, className }: TimelineEventCardProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const navigate = useNavigate();
-  const isRTL = i18n.language === 'ar';
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { t, i18n } = useTranslation('dossier')
+  const navigate = useNavigate()
+  const isRTL = i18n.language === 'ar'
+  const [isExpanded, setIsExpanded] = useState(false)
 
-  const EventIcon = getEventIcon(event.event_type);
-  const title = isRTL ? event.title_ar : event.title_en;
-  const description = isRTL ? event.description_ar : event.description_en;
-  const formattedDate = formatEventDate(event.event_date, i18n.language);
+  const EventIcon = getEventIcon(event.event_type)
+  const title = isRTL ? event.title_ar : event.title_en
+  const description = isRTL ? event.description_ar : event.description_en
+  const formattedDate = formatEventDate(event.event_date, i18n.language)
 
   const handleNavigate = () => {
     if (event.metadata.navigation_url) {
-      navigate({ to: event.metadata.navigation_url });
+      navigate({ to: event.metadata.navigation_url })
     }
-  };
+  }
 
   const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
+    setIsExpanded(!isExpanded)
+  }
 
   return (
     <div className={cn('relative flex gap-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -137,7 +137,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
           className={cn(
             'z-10 flex h-11 w-11 items-center justify-center rounded-full border-2 border-background',
             `bg-${event.metadata.color}-500 dark:bg-${event.metadata.color}-600`,
-            'shadow-sm'
+            'shadow-sm',
           )}
         >
           <EventIcon className="h-5 w-5 text-white" />
@@ -157,7 +157,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
         className={cn(
           'flex-1 transition-all duration-200 hover:shadow-md',
           'mb-4 sm:mb-6',
-          isExpanded && 'ring-2 ring-primary'
+          isExpanded && 'ring-2 ring-primary',
         )}
       >
         <CardHeader className="pb-3 sm:pb-4">
@@ -208,7 +208,9 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
               {/* Location */}
               {(event.metadata.location_en || event.metadata.location_ar) && (
                 <div className="flex items-start gap-2">
-                  <MapPin className={cn('h-4 w-4 mt-0.5 text-muted-foreground', isRTL && 'rotate-180')} />
+                  <MapPin
+                    className={cn('h-4 w-4 mt-0.5 text-muted-foreground', isRTL && 'rotate-180')}
+                  />
                   <div className="text-sm text-start">
                     <p className="font-medium">{t('timeline.location')}</p>
                     <p className="text-muted-foreground">
@@ -336,5 +338,5 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

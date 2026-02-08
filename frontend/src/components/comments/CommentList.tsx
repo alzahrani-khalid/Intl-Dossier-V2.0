@@ -9,7 +9,7 @@
  * - Error handling
  */
 
-import React, { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageSquare, Loader2, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -72,11 +72,11 @@ export function CommentList({
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
-    if (!loadMoreRef.current || !hasNextPage) return
+    if (!loadMoreRef.current || !hasNextPage) return undefined
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isFetchingNextPage) {
+        if (entries[0]!.isIntersecting && !isFetchingNextPage) {
           fetchNextPage()
         }
       },

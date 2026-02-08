@@ -11,7 +11,7 @@
  * @rtl-ready - Uses logical properties for Arabic support
  */
 
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { useState, useMemo, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   X,
@@ -26,7 +26,6 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
@@ -160,7 +159,7 @@ export function TagSelector({
   )
 
   // Render assigned tag badge
-  const renderAssignedTag = (assignment: EntityTagAssignment, index: number) => {
+  const renderAssignedTag = (assignment: EntityTagAssignment, _index: number) => {
     const tag = assignment.tag || allTags?.find((t) => t.id === assignment.tag_id)
     if (!tag) return null
 

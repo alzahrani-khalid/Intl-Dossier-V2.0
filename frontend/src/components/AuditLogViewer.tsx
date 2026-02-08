@@ -172,8 +172,8 @@ export const AuditLogViewer: React.FC<AuditLogViewerProps> = ({ ticketId, classN
           className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
         >
           {eventTypes.map((type) => (
-            <option key={type} value={type}>
-              {t(`audit.event_types.${type}`, type)}
+            <option key={String(type)} value={String(type)}>
+              {t(`audit.event_types.${type}` as any, String(type))}
             </option>
           ))}
         </select>
@@ -215,11 +215,9 @@ export const AuditLogViewer: React.FC<AuditLogViewerProps> = ({ ticketId, classN
                         {t(`audit.actions.${log.action}`, log.action)}
                       </h4>
                       {log.mfa_verified && (
-                        <Shield
-                          size={14}
-                          className="text-green-600"
-                          title={t('audit.mfa_verified')}
-                        />
+                        <span title={t('audit.mfa_verified') as string}>
+                          <Shield size={14} className="text-green-600" />
+                        </span>
                       )}
                     </div>
                     <div className="mt-1 flex items-center gap-2 text-sm text-gray-500">

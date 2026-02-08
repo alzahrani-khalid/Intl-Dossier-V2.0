@@ -34,7 +34,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useCommitment } from '@/hooks/useCommitments'
 import { getEvidenceUrl } from '@/services/commitments.service'
-import { type Commitment, PRIORITY_COLORS, STATUS_COLORS } from '@/types/commitment.types'
+import { PRIORITY_COLORS } from '@/types/commitment.types'
 import { isCommitmentOverdue, getDaysUntilDue } from '@/services/commitments.service'
 import { StatusDropdown } from './StatusDropdown'
 import { StatusTimeline } from './StatusTimeline'

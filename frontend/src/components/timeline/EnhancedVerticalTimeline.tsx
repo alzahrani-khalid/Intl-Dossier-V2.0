@@ -11,27 +11,27 @@
  * - Accessibility compliant
  */
 
-import { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { VerticalTimeline } from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
-import '@/styles/vertical-timeline.css';
-import { Loader2, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { cn } from '@/lib/utils';
-import { EnhancedVerticalTimelineCard } from './EnhancedVerticalTimelineCard';
-import type { UnifiedTimelineEvent } from '@/types/timeline.types';
+import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { VerticalTimeline } from 'react-vertical-timeline-component'
+import 'react-vertical-timeline-component/style.min.css'
+import '@/styles/vertical-timeline.css'
+import { Loader2, Calendar } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { cn } from '@/lib/utils'
+import { EnhancedVerticalTimelineCard } from './EnhancedVerticalTimelineCard'
+import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 
 interface EnhancedVerticalTimelineProps {
-  events: UnifiedTimelineEvent[];
-  isLoading?: boolean;
-  isFetchingNextPage?: boolean;
-  hasNextPage?: boolean;
-  onLoadMore?: () => void;
-  error?: Error | null;
-  emptyMessage?: string;
-  className?: string;
+  events: UnifiedTimelineEvent[]
+  isLoading?: boolean
+  isFetchingNextPage?: boolean
+  hasNextPage?: boolean
+  onLoadMore?: () => void
+  error?: Error | null
+  emptyMessage?: string
+  className?: string
 }
 
 /**
@@ -41,10 +41,7 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-8 sm:space-y-12 py-8 sm:py-12">
       {Array.from({ length: count }).map((_, index) => (
-        <div
-          key={index}
-          className="relative flex items-start gap-4 sm:gap-6 animate-pulse"
-        >
+        <div key={index} className="relative flex items-start gap-4 sm:gap-6 animate-pulse">
           {/* Icon skeleton */}
           <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-muted" />
 
@@ -61,14 +58,14 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 /**
  * Empty state component
  */
 function TimelineEmptyState({ message }: { message: string }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
   return (
     <div className="flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 text-center px-4">
       <div className="rounded-full bg-muted p-8 sm:p-10 lg:p-12 mb-6 sm:mb-8">
@@ -81,14 +78,14 @@ function TimelineEmptyState({ message }: { message: string }) {
         {message || t('timeline.empty.description')}
       </p>
     </div>
-  );
+  )
 }
 
 /**
  * Error state component
  */
 function TimelineErrorState({ error }: { error: Error }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
   return (
     <Alert variant="destructive" className="mb-6 mx-4">
       <AlertTitle>{t('timeline.error.title')}</AlertTitle>
@@ -96,7 +93,7 @@ function TimelineErrorState({ error }: { error: Error }) {
         {error.message || t('timeline.error.description')}
       </AlertDescription>
     </Alert>
-  );
+  )
 }
 
 export function EnhancedVerticalTimeline({
@@ -109,27 +106,27 @@ export function EnhancedVerticalTimeline({
   emptyMessage,
   className,
 }: EnhancedVerticalTimelineProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const loadMoreRef = useRef<HTMLDivElement>(null)
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
-    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return undefined
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && onLoadMore) {
-          onLoadMore();
+        if (entries[0]!.isIntersecting && onLoadMore) {
+          onLoadMore()
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
-    );
+      { threshold: 0.1, rootMargin: '100px' },
+    )
 
-    observer.observe(loadMoreRef.current);
+    observer.observe(loadMoreRef.current)
 
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, onLoadMore]);
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, onLoadMore])
 
   // Initial loading state
   if (isLoading) {
@@ -137,7 +134,7 @@ export function EnhancedVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineLoadingSkeleton count={5} />
       </div>
-    );
+    )
   }
 
   // Error state
@@ -146,7 +143,7 @@ export function EnhancedVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineErrorState error={error} />
       </div>
-    );
+    )
   }
 
   // Empty state
@@ -155,14 +152,11 @@ export function EnhancedVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineEmptyState message={emptyMessage || ''} />
       </div>
-    );
+    )
   }
 
   return (
-    <div
-      className={cn('w-full bg-background font-sans', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className={cn('w-full bg-background font-sans', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="max-w-7xl mx-auto">
         {/* Vertical Timeline */}
         <VerticalTimeline
@@ -176,20 +170,13 @@ export function EnhancedVerticalTimeline({
           }
         >
           {events.map((event, index) => (
-            <EnhancedVerticalTimelineCard
-              key={event.id}
-              event={event}
-              index={index}
-            />
+            <EnhancedVerticalTimelineCard key={event.id} event={event} index={index} />
           ))}
         </VerticalTimeline>
 
         {/* Load More Trigger */}
         {hasNextPage && (
-          <div
-            ref={loadMoreRef}
-            className="flex justify-center py-8 sm:py-10 lg:py-12 px-4"
-          >
+          <div ref={loadMoreRef} className="flex justify-center py-8 sm:py-10 lg:py-12 px-4">
             {isFetchingNextPage ? (
               <div className="flex items-center gap-3 text-sm sm:text-base text-muted-foreground">
                 <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin" />
@@ -222,13 +209,5 @@ export function EnhancedVerticalTimeline({
         )}
       </div>
     </div>
-  );
+  )
 }
-
-
-
-
-
-
-
-

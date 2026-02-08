@@ -7,6 +7,9 @@ import type { JsonValue } from './common.types'
 // Position status enum
 export type PositionStatus = 'draft' | 'under_review' | 'approved' | 'published' | 'unpublished'
 
+// Position type enum
+export type PositionType = 'talking_point' | 'policy_position' | 'briefing_note' | 'statement'
+
 // Approval chain configuration
 export interface ApprovalChainConfig {
   stages: Array<{
@@ -98,3 +101,26 @@ export interface UpdatePositionPayload {
   thematic_category?: string
   version: number // Required for optimistic locking
 }
+
+// Consistency check result from AI processing
+export interface ConsistencyCheck {
+  id: string
+  position_id: string
+  consistency_score: number
+  conflicts: Array<{
+    conflict_id: string
+    conflicting_position_id: string
+    conflicting_position_title: string
+    conflict_type: string
+    description: string
+    severity: 'low' | 'medium' | 'high'
+    resolved: boolean
+    resolution_notes?: string
+  }>
+  recommendations: string[]
+  checked_at: string
+}
+
+// Aliases for request/response types used by hooks
+export type CreatePositionRequest = CreatePositionPayload
+export type UpdatePositionRequest = UpdatePositionPayload

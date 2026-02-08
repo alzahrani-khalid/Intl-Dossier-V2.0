@@ -10,7 +10,7 @@
  * Mobile-first, RTL-compatible
  */
 
-import * as React from 'react'
+import * as _React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2, X, Pause, Play, CheckCircle2, AlertCircle, Clock, Info } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
@@ -182,7 +182,7 @@ export function EnhancedProgress({
 
   const statusConfig = STATUS_CONFIG[status]
   const sizeConfig = SIZE_CONFIG[size]
-  const progressColor = color !== 'default' ? COLOR_CONFIG[color] : statusConfig.color
+  const _progressColor = color !== 'default' ? COLOR_CONFIG[color] : statusConfig.color
 
   const eta = calculateETA(progress, startTime, processedItems, totalItems)
   const isActive = status === 'processing' || status === 'pending'
@@ -211,7 +211,7 @@ export function EnhancedProgress({
             className={cn(
               sizeConfig.icon,
               statusConfig.textColor,
-              statusConfig.animate && 'animate-spin',
+              'animate' in statusConfig && statusConfig.animate && 'animate-spin',
             )}
           />
         )}
@@ -243,7 +243,12 @@ export function EnhancedProgress({
         <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
           {StatusIcon && (
             <div className={cn('shrink-0 mt-0.5', statusConfig.textColor)}>
-              <StatusIcon className={cn(sizeConfig.icon, statusConfig.animate && 'animate-spin')} />
+              <StatusIcon
+                className={cn(
+                  sizeConfig.icon,
+                  'animate' in statusConfig && statusConfig.animate && 'animate-spin',
+                )}
+              />
             </div>
           )}
           <div className="min-w-0 flex-1">

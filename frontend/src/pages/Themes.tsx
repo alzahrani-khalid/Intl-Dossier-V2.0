@@ -5,6 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { FileText, Target, Plus, Loader2, ShieldAlert } from 'lucide-react'
 import { useDossiersByType } from '@/hooks/useDossier'
+import type { TopicExtension } from '@/services/dossier-api'
+
+/** Extended topic fields stored in extension JSON beyond the typed TopicExtension */
+interface TopicExtensionWithExtra extends TopicExtension {
+  scope?: string
+  priority?: string
+  related_engagements_count?: number
+}
 
 export default function Themes() {
   const { t, i18n } = useTranslation()
@@ -21,7 +29,7 @@ export default function Themes() {
     if (!data?.data) return []
 
     return data.data.filter((dossier) => {
-      const theme = dossier.extension_data
+      const theme = dossier.extension as TopicExtensionWithExtra | undefined
 
       // Search filter
       const matchesSearch = [dossier.name_en, dossier.name_ar]
@@ -42,7 +50,8 @@ export default function Themes() {
 
   const activeCount = filteredThemes.filter((t) => t.status === 'active').length
   const totalEngagements = filteredThemes.reduce((acc, curr) => {
-    const engagements = curr.extension_data?.related_engagements_count || 0
+    const engagements =
+      (curr.extension as TopicExtensionWithExtra | undefined)?.related_engagements_count || 0
     return acc + engagements
   }, 0)
 
@@ -194,7 +203,7 @@ export default function Themes() {
           </thead>
           <tbody className="divide-y divide-border">
             {filteredThemes.map((dossier) => {
-              const theme = dossier.extension_data
+              const theme = dossier.extension as TopicExtensionWithExtra | undefined
               return (
                 <tr key={dossier.id} className="hover:bg-accent/50">
                   <td className="px-5 py-4">

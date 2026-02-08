@@ -76,31 +76,70 @@ export function useContextAwareFAB(
 
   // Default navigation handlers
   const handleCreateDossier = useCallback(() => {
-    config.onCreateDossier?.() || navigate({ to: '/dossiers/create' })
+    if (config.onCreateDossier) {
+      config.onCreateDossier()
+    } else {
+      navigate({ to: '/dossiers/create' })
+    }
   }, [config.onCreateDossier, navigate])
 
   const handleCreateEngagement = useCallback(() => {
-    config.onCreateEngagement?.() || navigate({ to: '/engagements', search: { create: true } })
+    if (config.onCreateEngagement) {
+      config.onCreateEngagement()
+    } else {
+      void navigate({
+        to: '/engagements',
+        search: () => ({ create: true }),
+      } as unknown as Parameters<typeof navigate>[0])
+    }
   }, [config.onCreateEngagement, navigate])
 
   const handleCreateEvent = useCallback(() => {
-    config.onCreateEvent?.() || navigate({ to: '/calendar', search: { create: true } })
+    if (config.onCreateEvent) {
+      config.onCreateEvent()
+    } else {
+      void navigate({ to: '/calendar', search: () => ({ create: true }) } as unknown as Parameters<
+        typeof navigate
+      >[0])
+    }
   }, [config.onCreateEvent, navigate])
 
   const handleCreateTask = useCallback(() => {
-    config.onCreateTask?.() || navigate({ to: '/kanban', search: { create: true } })
+    if (config.onCreateTask) {
+      config.onCreateTask()
+    } else {
+      void navigate({ to: '/kanban', search: () => ({ create: true }) } as unknown as Parameters<
+        typeof navigate
+      >[0])
+    }
   }, [config.onCreateTask, navigate])
 
   const handleCreatePerson = useCallback(() => {
-    config.onCreatePerson?.() || navigate({ to: '/persons', search: { create: true } })
+    if (config.onCreatePerson) {
+      config.onCreatePerson()
+    } else {
+      void navigate({ to: '/persons', search: () => ({ create: true }) } as unknown as Parameters<
+        typeof navigate
+      >[0])
+    }
   }, [config.onCreatePerson, navigate])
 
   const handleCreateForum = useCallback(() => {
-    config.onCreateForum?.() || navigate({ to: '/forums', search: { create: true } })
+    if (config.onCreateForum) {
+      config.onCreateForum()
+    } else {
+      void navigate({ to: '/forums', search: () => ({ create: true }) } as unknown as Parameters<
+        typeof navigate
+      >[0])
+    }
   }, [config.onCreateForum, navigate])
 
   const handleOpenSearch = useCallback(() => {
-    config.onOpenSearch?.() || navigate({ to: '/search' })
+    if (config.onOpenSearch) {
+      config.onOpenSearch()
+    } else {
+      navigate({ to: '/search' })
+    }
   }, [config.onOpenSearch, navigate])
 
   const handleUploadDocument = useCallback(() => {
@@ -206,14 +245,22 @@ export function useContextAwareFAB(
       '/briefing-books': {
         icon: Plus,
         label: t('speedDialActions.newBrief'),
-        onClick: () => navigate({ to: '/briefing-books', search: { create: true } }),
+        onClick: () =>
+          void navigate({
+            to: '/briefing-books',
+            search: () => ({ create: true }),
+          } as unknown as Parameters<typeof navigate>[0]),
         ariaLabel: t('speedDialActions.newBrief'),
       },
       // Intake Queue
       '/intake': {
         icon: Plus,
         label: t('contextActions.addNew'),
-        onClick: () => navigate({ to: '/intake', search: { create: true } }),
+        onClick: () =>
+          void navigate({
+            to: '/intake',
+            search: () => ({ create: true }),
+          } as unknown as Parameters<typeof navigate>[0]),
         ariaLabel: t('contextActions.addNew'),
       },
     }
@@ -292,7 +339,11 @@ export function useContextAwareFAB(
         {
           icon: CheckSquare,
           label: t('speedDialActions.newCommitment'),
-          onClick: () => navigate({ to: '/commitments', search: { create: true } }),
+          onClick: () =>
+            void navigate({
+              to: '/commitments',
+              search: () => ({ create: true }),
+            } as unknown as Parameters<typeof navigate>[0]),
         },
         {
           icon: Calendar,

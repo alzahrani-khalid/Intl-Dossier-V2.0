@@ -40,13 +40,14 @@ import { cn } from '@/lib/utils'
 import {
   useCommitteeNominations,
   useApproveNomination,
-  useRejectNomination,
+  useUpdateNomination,
 } from '@/hooks/useCommittees'
 import type {
   NominationWithNames,
   NominationStatus,
   NominatorType,
   MemberRole,
+  UpdateNominationRequest,
 } from '@/types/committee.types'
 
 interface NominationWorkflowProps {
@@ -75,9 +76,9 @@ export function NominationWorkflow({
     refetch,
   } = useCommitteeNominations(committeeId, statusFilter ? { status: statusFilter } : undefined)
   const approveNomination = useApproveNomination()
-  const rejectNomination = useRejectNomination()
+  const rejectNomination = useUpdateNomination()
 
-  const nominations = nominationsData?.data || []
+  const nominations = nominationsData || []
 
   // Group by status for summary
   const statusCounts = nominations.reduce(
@@ -92,7 +93,7 @@ export function NominationWorkflow({
   const handleApprove = async (nomination: NominationWithNames) => {
     if (window.confirm(t('actions.approve', 'Approve this nomination?'))) {
       await approveNomination.mutateAsync({
-        nomination_id: nomination.id,
+        data: { nomination_id: nomination.id },
         committeeId,
       })
     }
@@ -103,9 +104,9 @@ export function NominationWorkflow({
     const reason = window.prompt(t('nominations.statusReason', 'Reason for rejection:'))
     if (reason !== null) {
       await rejectNomination.mutateAsync({
-        nominationId: nomination.id,
+        id: nomination.id,
         committeeId,
-        status_reason: reason,
+        data: { status: 'rejected', status_reason: reason } as UpdateNominationRequest,
       })
     }
   }

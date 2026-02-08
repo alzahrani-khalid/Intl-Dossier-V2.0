@@ -18,7 +18,7 @@ import { RealtimeChannel } from '@supabase/supabase-js'
 
 const supabase = createClient()
 
-type Assignment = Database['public']['Tables']['assignments']['Row']
+type _Assignment = Database['public']['Tables']['assignments']['Row']
 
 export interface RelatedAssignment {
   id: string
@@ -66,7 +66,7 @@ export function useRelatedAssignments(assignmentId: string) {
 
   // Setup Supabase Realtime subscription for sibling assignments
   useEffect(() => {
-    if (!assignmentId || !query.data?.context_id) return
+    if (!assignmentId || !query.data?.context_id) return undefined
 
     const contextType = query.data.context_type
     const contextId = query.data.context_id

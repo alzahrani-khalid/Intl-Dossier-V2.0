@@ -103,7 +103,7 @@ export function DossierSearchFilters({
   // Get current type value for select
   const currentTypeValue = Array.isArray(filters.types) ? filters.types[0] : 'all'
 
-  const TypeIcon = typeIcons[currentTypeValue]
+  const TypeIcon = typeIcons[currentTypeValue!]
 
   return (
     <div

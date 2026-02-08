@@ -356,7 +356,7 @@ export async function getLegislationSponsors(legislationId: string): Promise<Leg
     throw new Error(`Failed to fetch sponsors: ${error.message}`)
   }
 
-  return data as LegislationSponsor[]
+  return data as unknown as LegislationSponsor[]
 }
 
 export async function addLegislationSponsor(
@@ -400,7 +400,7 @@ export async function getLegislationAmendments(
     throw new Error(`Failed to fetch amendments: ${error.message}`)
   }
 
-  return data as LegislationAmendment[]
+  return data as unknown as LegislationAmendment[]
 }
 
 export async function createLegislationAmendment(
@@ -469,7 +469,7 @@ export async function getLegislationDeadlines(
     throw new Error(`Failed to fetch deadlines: ${error.message}`)
   }
 
-  return data as LegislationDeadline[]
+  return data as unknown as LegislationDeadline[]
 }
 
 export async function createLegislationDeadline(
@@ -600,7 +600,7 @@ export async function getLegislationStatusHistory(
     throw new Error(`Failed to fetch status history: ${error.message}`)
   }
 
-  return data as LegislationStatusHistory[]
+  return data as unknown as LegislationStatusHistory[]
 }
 
 // =============================================
@@ -707,8 +707,8 @@ export async function getMyWatchedLegislations(): Promise<LegislationWithDetails
   }
 
   return (data || [])
-    .map((item) => item.legislation)
-    .filter((leg): leg is LegislationWithDetails => leg !== null && leg.deleted_at === null)
+    .map((item) => item.legislation as unknown as LegislationWithDetails | null)
+    .filter((leg): leg is LegislationWithDetails => leg !== null && leg.deleted_at == null)
 }
 
 // =============================================

@@ -150,7 +150,7 @@ export function AgendaItemCard({
   }
 
   const handleComplete = async () => {
-    await completeItem.mutateAsync({ agendaId, itemId: item.id, input: {} })
+    await completeItem.mutateAsync({ agendaId, itemId: item.id, data: {} })
   }
 
   const handleSkip = async () => {

@@ -145,7 +145,7 @@ export function LoginPage() {
                   checked={false}
                   onCheckedChange={(checked) => {
                     // Update form value when checkbox changes
-                    const event = { target: { name: 'rememberMe', value: checked } }
+                    const _event = { target: { name: 'rememberMe', value: checked } }
                   }}
                 />
                 <label htmlFor="rememberMe" className="text-sm text-foreground cursor-pointer">

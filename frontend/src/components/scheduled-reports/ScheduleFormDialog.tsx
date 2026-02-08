@@ -136,11 +136,11 @@ export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFor
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const input: CreateScheduleInput = {
+      const input = {
         ...values,
         day_of_week: frequency === 'weekly' ? values.day_of_week : undefined,
         day_of_month: frequency === 'monthly' ? values.day_of_month : undefined,
-      }
+      } as CreateScheduleInput
 
       if (schedule) {
         await updateSchedule.mutateAsync({ id: schedule.id, ...input })

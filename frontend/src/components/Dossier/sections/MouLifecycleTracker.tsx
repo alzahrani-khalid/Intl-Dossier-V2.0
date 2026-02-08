@@ -27,7 +27,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { useMouLifecycle, useGovernmentDecisions } from '@/hooks/useMouLifecycle'
+import { useGovernmentDecisions } from '@/hooks/useMouLifecycle'
 import type { MouLifecycleStage, GovernmentDecision } from '@/types/mou-extended.types'
 
 interface MouLifecycleTrackerProps {
@@ -132,7 +132,7 @@ export function MouLifecycleTracker({
   }
 
   // Get decision type icon
-  const getDecisionIcon = (type: GovernmentDecision['decision_type']) => {
+  const _getDecisionIcon = (type: GovernmentDecision['decision_type']) => {
     switch (type) {
       case 'royal_decree':
       case 'royal_order':
@@ -346,9 +346,9 @@ export function MouLifecycleTracker({
             <span className="text-sm font-medium">
               {t('governmentDecisions.title', 'Government Decisions')}
             </span>
-            {decisions && decisions.data && decisions.data.length > 0 && (
+            {decisions && decisions.length > 0 && (
               <Badge variant="secondary" className="text-xs">
-                {decisions.data.length}
+                {decisions.length}
               </Badge>
             )}
           </div>
@@ -368,9 +368,9 @@ export function MouLifecycleTracker({
               </div>
             )}
 
-            {!decisionsLoading && decisions?.data && decisions.data.length > 0 && (
+            {!decisionsLoading && decisions && decisions.length > 0 && (
               <div className="space-y-3">
-                {decisions.data.map((decision) => (
+                {decisions.map((decision) => (
                   <DecisionCard
                     key={decision.id}
                     decision={decision}
@@ -382,7 +382,7 @@ export function MouLifecycleTracker({
               </div>
             )}
 
-            {!decisionsLoading && (!decisions?.data || decisions.data.length === 0) && (
+            {!decisionsLoading && (!decisions || decisions.length === 0) && (
               <div className="text-center py-4">
                 <p className="text-sm text-muted-foreground">
                   {t('governmentDecisions.empty', 'No government decisions')}

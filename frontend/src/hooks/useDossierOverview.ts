@@ -109,7 +109,7 @@ export function useDossierExport(): UseDossierExportReturn {
       // For PDF/DOCX, use the backend
       return exportDossierProfile(request)
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data, _variables) => {
       // If we have a download URL (from backend), open it
       if (data.download_url) {
         window.open(data.download_url, '_blank')

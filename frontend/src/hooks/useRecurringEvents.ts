@@ -12,7 +12,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseUrl } from '@/lib/supabase'
 import type {
   CreateRecurringEventInput,
   CreateRecurringEventResponse,
@@ -32,7 +32,7 @@ const RECURRING_EVENTS_BASE_URL = '/functions/v1/recurring-events'
  * Get the base URL for API calls
  */
 function getApiUrl(path: string): string {
-  return `${supabase.supabaseUrl}${RECURRING_EVENTS_BASE_URL}${path}`
+  return `${supabaseUrl}${RECURRING_EVENTS_BASE_URL}${path}`
 }
 
 /**

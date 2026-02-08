@@ -228,17 +228,15 @@ export const useApplyTriage = (ticketId: string) => {
     mutationFn: async (data: ApplyTriageRequest): Promise<TicketResponse> => {
       const headers = await getAuthHeaders()
 
-      // Transform decision_type to action as expected by the Edge Function
-      const action = data.decision_type === 'ai_suggestion' ? 'accept' : 'override'
-
+      // Use action directly from the request (already 'accept' | 'override')
       const requestBody = {
-        action,
-        sensitivity: data.suggested_sensitivity,
-        urgency: data.suggested_urgency,
-        assigned_to: data.suggested_assignee,
-        assigned_unit: data.suggested_unit,
-        override_reason: data.override_reason,
-        override_reason_ar: data.override_reason_ar,
+        action: data.action,
+        sensitivity: data.sensitivity,
+        urgency: data.urgency,
+        assigned_to: data.assignedTo,
+        assigned_unit: data.assignedUnit,
+        override_reason: data.overrideReason,
+        override_reason_ar: data.overrideReasonAr,
       }
 
       const response = await fetch(`${API_BASE_URL}/intake-tickets-triage/${ticketId}/triage`, {

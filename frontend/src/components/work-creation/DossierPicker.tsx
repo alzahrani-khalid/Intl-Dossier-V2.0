@@ -148,7 +148,7 @@ export function DossierPicker({
   useEffect(() => {
     if (searchQuery.length < MIN_SEARCH_CHARS) {
       setSearchResults([])
-      return
+      return undefined
     }
 
     const timeoutId = setTimeout(async () => {

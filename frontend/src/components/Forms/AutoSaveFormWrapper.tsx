@@ -317,8 +317,8 @@ export function AutoSaveFormWrapper<T extends Record<string, unknown>>({
     requiredFields,
     debounceMs,
     ttlMs,
-    onDraftRestored,
-    onSaveSuccess,
+    onDraftRestored: onDraftRestored as any,
+    onSaveSuccess: onSaveSuccess as any,
     onSaveError,
   })
 

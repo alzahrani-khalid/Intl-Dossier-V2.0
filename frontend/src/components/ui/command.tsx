@@ -4,7 +4,7 @@ import * as React from 'react'
 import { type DialogProps } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
 import { cn } from '@/lib/utils'
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 
@@ -43,7 +43,7 @@ const CommandDialog = ({
             e.preventDefault()
           }
         }}
-        onEscapeKeyDown={(e) => {
+        onEscapeKeyDown={(_e) => {
           // Allow Escape to close the dialog (standard UX)
         }}
       >

@@ -6,7 +6,7 @@
  * relationship health, commitment fulfillment, and workload distribution.
  */
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   BarChart3,
@@ -129,7 +129,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   }, [showingSampleData, sampleData, summary, engagements, relationships, commitments, workload])
 
   // Check if we have no real data (for determining when to show preview)
-  const hasNoData = !summary && !engagements && !relationships && !commitments && !workload
+  const _hasNoData = !summary && !engagements && !relationships && !commitments && !workload
 
   const handleExport = useCallback(async () => {
     try {

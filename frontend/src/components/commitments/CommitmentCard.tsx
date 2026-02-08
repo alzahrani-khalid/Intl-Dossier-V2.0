@@ -11,18 +11,13 @@
  * Mobile-first, RTL-compatible, accessible (44x44px touch targets)
  */
 
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   Calendar,
   CheckCircle,
@@ -34,14 +29,14 @@ import {
   Upload,
   Download,
   ExternalLink,
-} from 'lucide-react';
+} from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,28 +46,22 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import {
-  type Commitment,
-  PRIORITY_COLORS,
-} from '@/types/commitment.types';
-import {
-  isCommitmentOverdue,
-  getDaysUntilDue,
-} from '@/services/commitments.service';
-import { useCancelCommitment } from '@/hooks/useCommitments';
-import { getEvidenceUrl } from '@/services/commitments.service';
-import { StatusDropdown } from './StatusDropdown';
-import { EvidenceUpload } from './EvidenceUpload';
+} from '@/components/ui/alert-dialog'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { type Commitment, PRIORITY_COLORS } from '@/types/commitment.types'
+import { isCommitmentOverdue, getDaysUntilDue } from '@/services/commitments.service'
+import { useCancelCommitment } from '@/hooks/useCommitments'
+import { getEvidenceUrl } from '@/services/commitments.service'
+import { StatusDropdown } from './StatusDropdown'
+import { EvidenceUpload } from './EvidenceUpload'
 
 export interface CommitmentCardProps {
-  commitment: Commitment;
-  onEdit?: (commitment: Commitment) => void;
-  onStatusChange?: (commitmentId: string, newStatus: string) => void;
-  showDossierContext?: boolean;
-  compact?: boolean;
+  commitment: Commitment
+  onEdit?: (commitment: Commitment) => void
+  onStatusChange?: (commitmentId: string, newStatus: string) => void
+  showDossierContext?: boolean
+  compact?: boolean
 }
 
 export function CommitmentCard({
@@ -82,58 +71,58 @@ export function CommitmentCard({
   showDossierContext = false,
   compact = false,
 }: CommitmentCardProps) {
-  const { t, i18n } = useTranslation('commitments');
-  const navigate = useNavigate();
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('commitments')
+  const navigate = useNavigate()
+  const isRTL = i18n.language === 'ar'
 
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
-  const [cancelReason, setCancelReason] = useState('');
-  const [showUploadDialog, setShowUploadDialog] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false)
+  const [cancelReason, setCancelReason] = useState('')
+  const [showUploadDialog, setShowUploadDialog] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
 
-  const cancelMutation = useCancelCommitment();
+  const cancelMutation = useCancelCommitment()
 
   // T053: Handle evidence download
   const handleDownloadEvidence = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!commitment.proof_url) return;
+    e.stopPropagation()
+    if (!commitment.proof_url) return
 
-    setIsDownloading(true);
+    setIsDownloading(true)
     try {
-      const { signedUrl } = await getEvidenceUrl(commitment.proof_url);
-      window.open(signedUrl, '_blank');
+      const { signedUrl } = await getEvidenceUrl(commitment.proof_url)
+      window.open(signedUrl, '_blank')
     } catch (error) {
-      console.error('Failed to get evidence URL:', error);
+      console.error('Failed to get evidence URL:', error)
     } finally {
-      setIsDownloading(false);
+      setIsDownloading(false)
     }
-  };
+  }
 
   // Calculate overdue status
-  const overdue = isCommitmentOverdue(commitment.due_date, commitment.status);
-  const daysUntilDue = getDaysUntilDue(commitment.due_date);
+  const overdue = isCommitmentOverdue(commitment.due_date, commitment.status)
+  const daysUntilDue = getDaysUntilDue(commitment.due_date)
 
   // Format date
-  const dueDate = new Date(commitment.due_date);
+  const dueDate = new Date(commitment.due_date)
   const formattedDate = dueDate.toLocaleDateString(i18n.language, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  });
+  })
 
   // Get style classes
-  const priorityColors = PRIORITY_COLORS[commitment.priority];
+  const priorityColors = PRIORITY_COLORS[commitment.priority]
 
   // Due date label
   const getDueDateLabel = () => {
     if (overdue) {
-      return t('card.overdueDays', { days: Math.abs(daysUntilDue) });
+      return t('card.overdueDays', { days: Math.abs(daysUntilDue) })
     }
     if (daysUntilDue === 0) {
-      return t('card.dueToday');
+      return t('card.dueToday')
     }
-    return t('card.dueIn', { days: daysUntilDue });
-  };
+    return t('card.dueIn', { days: daysUntilDue })
+  }
 
   // Handle cancel confirmation
   const handleCancelConfirm = () => {
@@ -142,21 +131,21 @@ export function CommitmentCard({
         { id: commitment.id, reason: cancelReason },
         {
           onSuccess: () => {
-            setShowCancelDialog(false);
-            setCancelReason('');
+            setShowCancelDialog(false)
+            setCancelReason('')
           },
-        }
-      );
+        },
+      )
     }
-  };
+  }
 
   // Handle card click - navigate to detail
   const handleCardClick = () => {
     navigate({
       to: '/commitments',
       search: { id: commitment.id },
-    });
-  };
+    } as any)
+  }
 
   return (
     <>
@@ -200,14 +189,11 @@ export function CommitmentCard({
                   <MoreVertical className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align={isRTL ? 'start' : 'end'}
-                className="w-48"
-              >
+              <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-48">
                 <DropdownMenuItem
                   onClick={(e) => {
-                    e.stopPropagation();
-                    handleCardClick();
+                    e.stopPropagation()
+                    handleCardClick()
                   }}
                 >
                   <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -216,53 +202,49 @@ export function CommitmentCard({
 
                 {/* T053: Evidence actions */}
                 {commitment.proof_url && (
-                  <DropdownMenuItem
-                    onClick={handleDownloadEvidence}
-                    disabled={isDownloading}
-                  >
+                  <DropdownMenuItem onClick={handleDownloadEvidence} disabled={isDownloading}>
                     <Download className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('actions.downloadEvidence')}
                   </DropdownMenuItem>
                 )}
 
-                {commitment.status !== 'cancelled' &&
-                  commitment.status !== 'completed' && (
-                    <>
-                      {/* Upload evidence option */}
-                      {commitment.proof_required && !commitment.proof_url && (
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowUploadDialog(true);
-                          }}
-                        >
-                          <Upload className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                          {t('actions.uploadEvidence')}
-                        </DropdownMenuItem>
-                      )}
+                {commitment.status !== 'cancelled' && commitment.status !== 'completed' && (
+                  <>
+                    {/* Upload evidence option */}
+                    {commitment.proof_required && !commitment.proof_url && (
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setShowUploadDialog(true)
+                        }}
+                      >
+                        <Upload className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                        {t('actions.uploadEvidence')}
+                      </DropdownMenuItem>
+                    )}
 
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onEdit?.(commitment);
-                        }}
-                      >
-                        <Edit className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                        {t('actions.edit')}
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="text-red-600 focus:text-red-600"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowCancelDialog(true);
-                        }}
-                      >
-                        <Trash2 className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                        {t('actions.cancel')}
-                      </DropdownMenuItem>
-                    </>
-                  )}
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onEdit?.(commitment)
+                      }}
+                    >
+                      <Edit className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      {t('actions.edit')}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="text-red-600 focus:text-red-600"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setShowCancelDialog(true)
+                      }}
+                    >
+                      <Trash2 className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      {t('actions.cancel')}
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -281,9 +263,7 @@ export function CommitmentCard({
             {/* Due Date with overdue indicator */}
             <div
               className={`flex items-center gap-1.5 text-sm ${
-                overdue
-                  ? 'text-red-600 dark:text-red-400 font-medium'
-                  : 'text-muted-foreground'
+                overdue ? 'text-red-600 dark:text-red-400 font-medium' : 'text-muted-foreground'
               }`}
             >
               {overdue ? (
@@ -291,9 +271,7 @@ export function CommitmentCard({
               ) : (
                 <Calendar className="size-4 shrink-0" />
               )}
-              <span className="truncate">
-                {overdue ? getDueDateLabel() : formattedDate}
-              </span>
+              <span className="truncate">{overdue ? getDueDateLabel() : formattedDate}</span>
             </div>
 
             {/* Priority Badge */}
@@ -337,9 +315,7 @@ export function CommitmentCard({
       <AlertDialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
         <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-start">
-              {t('confirm.cancel')}
-            </AlertDialogTitle>
+            <AlertDialogTitle className="text-start">{t('confirm.cancel')}</AlertDialogTitle>
             <AlertDialogDescription className="text-start">
               {t('confirm.delete')}
             </AlertDialogDescription>
@@ -359,9 +335,7 @@ export function CommitmentCard({
           </div>
 
           <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-            <AlertDialogCancel className="min-h-11">
-              {t('actions.cancel')}
-            </AlertDialogCancel>
+            <AlertDialogCancel className="min-h-11">{t('actions.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleCancelConfirm}
               disabled={!cancelReason.trim() || cancelMutation.isPending}
@@ -381,9 +355,7 @@ export function CommitmentCard({
           onClick={(e) => e.stopPropagation()}
         >
           <DialogHeader>
-            <DialogTitle className="text-start">
-              {t('evidence.title')}
-            </DialogTitle>
+            <DialogTitle className="text-start">{t('evidence.title')}</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground text-start mb-4">
             {t('evidence.description')}
@@ -396,5 +368,5 @@ export function CommitmentCard({
         </DialogContent>
       </Dialog>
     </>
-  );
+  )
 }

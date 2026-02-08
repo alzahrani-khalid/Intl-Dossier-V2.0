@@ -14,7 +14,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { supabase } from '../lib/supabase'
 import {
@@ -67,6 +67,10 @@ interface WorkItemDetails {
   status?: string
   source_type?: 'dossier' | 'position' | 'ticket'
   linked_entities?: LinkedEntity[]
+  engagement?: {
+    title: string
+    dossiers?: { name_en: string; name_ar: string }
+  }
   // Legacy fields (for backward compatibility)
   ticket_number?: string
   type?: string
@@ -110,7 +114,7 @@ function WaitingQueuePageInner() {
   const { sendBulk } = useBulkReminderAction()
 
   // Poll bulk job status
-  const { data: bulkJobStatus, isLoading: isJobLoading } = useBulkReminderJobStatus(
+  const { data: bulkJobStatus, isLoading: _isJobLoading } = useBulkReminderJobStatus(
     bulkJobId,
     !!bulkJobId,
   )
@@ -213,7 +217,7 @@ function WaitingQueuePageInner() {
   const { data: response, isLoading } = useFilteredAssignments(filters)
 
   // Extract items and pagination from response
-  const items = response?.data || []
+  const items: WaitingItem[] = response?.data || []
   const pagination = response?.pagination
 
   // T089: Supabase Realtime subscriptions for assignment status changes
@@ -543,8 +547,7 @@ function WaitingQueuePageInner() {
                               <div className="flex items-start pt-1">
                                 <Checkbox
                                   checked={isSelected(item.id)}
-                                  onCheckedChange={(e) => {
-                                    e.stopPropagation()
+                                  onCheckedChange={(_checked) => {
                                     if (!isSelected(item.id) && maxReached) {
                                       toast({
                                         variant: 'destructive',
@@ -651,7 +654,6 @@ function WaitingQueuePageInner() {
                                       variant="outline"
                                       size="sm"
                                       className="flex-1 sm:flex-none"
-                                      onClick={(e) => e.stopPropagation()}
                                     />
                                   </div>
                                 </div>
@@ -678,7 +680,7 @@ function WaitingQueuePageInner() {
                         }}
                       >
                         {virtualizer.getVirtualItems().map((virtualItem) => {
-                          const item = filteredItems[virtualItem.index]
+                          const item = filteredItems[virtualItem.index]!
                           const agingStatus = getAgingStatus(item.assigned_at)
                           const TypeIcon = getTypeIcon(item.work_item_type)
                           const linkedEntitiesText = getLinkedEntitiesText(item)
@@ -708,8 +710,7 @@ function WaitingQueuePageInner() {
                                   <div className="flex items-start pt-1">
                                     <Checkbox
                                       checked={isSelected(item.id)}
-                                      onCheckedChange={(e) => {
-                                        e.stopPropagation()
+                                      onCheckedChange={(_checked) => {
                                         if (!isSelected(item.id) && maxReached) {
                                           toast({
                                             variant: 'destructive',
@@ -820,7 +821,6 @@ function WaitingQueuePageInner() {
                                           variant="outline"
                                           size="sm"
                                           className="flex-1 sm:flex-none"
-                                          onClick={(e) => e.stopPropagation()}
                                         />
                                       </div>
                                     </div>

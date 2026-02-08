@@ -230,7 +230,7 @@ export function ImportValidationResults({
             <TableRow>
               <TableHead className="w-16">
                 {(t('import.preview.showingRows', { shown: '', total: '' }) || '')
-                  .split(':')[0]
+                  .split(':')[0]!
                   .trim() || 'Row'}
               </TableHead>
               <TableHead className="w-24">

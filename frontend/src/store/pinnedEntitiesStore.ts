@@ -109,7 +109,7 @@ export const usePinnedEntitiesStore = create<PinnedEntitiesState>()(
         set((state) => {
           const newPinned = [...state.pinned]
           const [removed] = newPinned.splice(fromIndex, 1)
-          newPinned.splice(toIndex, 0, removed)
+          newPinned.splice(toIndex, 0, removed!)
           return { pinned: newPinned }
         })
       },

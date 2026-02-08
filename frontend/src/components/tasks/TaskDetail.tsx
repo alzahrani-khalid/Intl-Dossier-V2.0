@@ -11,7 +11,7 @@
  * Integrates WorkItemLinker and LinkedItemsList for multi-work item support
  */
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Badge } from '../ui/badge'
@@ -19,7 +19,6 @@ import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
 import {
   Clock,
-  AlertCircle,
   User,
   Calendar,
   FileText,
@@ -33,13 +32,13 @@ import {
 } from 'lucide-react'
 import type { Database } from '../../../../backend/src/types/database.types'
 import { SLAIndicator } from './SLAIndicator'
-// import { ContributorsList } from './ContributorsList';
-// import { AddContributorDialog } from './AddContributorDialog';
+import { ContributorsList } from './ContributorsList'
+import { AddContributorDialog } from './AddContributorDialog'
 import { WorkItemLinker } from './WorkItemLinker'
 import { LinkedItemsList } from './LinkedItemsList'
 import { useUpdateTask } from '@/hooks/use-tasks'
 import { DossierLinksWidget } from '@/components/Dossier'
-// import { useTaskContributors, useRemoveContributor } from '@/hooks/use-contributors';
+import { useTaskContributors, useRemoveContributor } from '@/hooks/use-contributors'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -56,7 +55,7 @@ export function TaskDetail({
   task,
   onEdit,
   onDelete,
-  onStatusChange,
+  onStatusChange: _onStatusChange,
   showActions = true,
   isTaskOwner = false,
 }: TaskDetailProps) {
@@ -66,11 +65,10 @@ export function TaskDetail({
   // Mutation hook for updating work items
   const updateTask = useUpdateTask()
 
-  // Contributors management - temporarily disabled for migration
-  // const [isAddContributorOpen, setIsAddContributorOpen] = useState(false);
-  // const { data: contributors = [], isLoading: isLoadingContributors } =
-  // useTaskContributors(task.id);
-  // const removeContributor = useRemoveContributor(task.id);
+  // Contributors management
+  const [isAddContributorOpen, setIsAddContributorOpen] = useState(false)
+  const { data: contributors = [], isLoading: isLoadingContributors } = useTaskContributors(task.id)
+  const removeContributor = useRemoveContributor(task.id)
 
   const getPriorityColor = (priority: string): string => {
     const colors = {
@@ -327,49 +325,51 @@ export function TaskDetail({
         </CardContent>
       </Card>
 
-      {/* Contributors Section (US2 - Task T048) - Temporarily disabled for migration */}
-      {/* <Card>
- <CardHeader>
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
- <CardTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
- <Users className="h-5 w-5" />
- {t('contributors', 'Contributors')}
- {contributors.length > 0 && (
- <Badge variant="secondary" className="ms-2">
- {contributors.length}
- </Badge>
- )}
- </CardTitle>
+      {/* Contributors Section (US2 - Task T048) */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <CardTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <Users className="h-5 w-5" />
+              {t('contributors', 'Contributors')}
+              {contributors.length > 0 && (
+                <Badge variant="secondary" className="ms-2">
+                  {contributors.length}
+                </Badge>
+              )}
+            </CardTitle>
 
- {/* Add Contributor Button - Only for task owners *\/}
- {isTaskOwner && (
- <Button
- variant="outline"
- size="sm"
- onClick={() => setIsAddContributorOpen(true)}
- className="h-11 "
- >
- <UserPlus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
- {t('add_contributor', 'Add Contributor')}
- </Button>
- )}
- </div>
- </CardHeader>
- <CardContent>
- {isLoadingContributors ? (
- <p className="text-sm text-muted-foreground text-start">
- {t('loading_contributors', 'Loading contributors...')}
- </p>
- ) : (
- <ContributorsList
- contributors={contributors}
- onRemove={isTaskOwner ? (contributorId) => removeContributor.mutate(contributorId) : undefined}
- showRemoveButton={isTaskOwner}
- maxDisplay={5}
- />
- )}
- </CardContent>
- </Card> */}
+            {/* Add Contributor Button - Only for task owners */}
+            {isTaskOwner && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAddContributorOpen(true)}
+                className="h-11"
+              >
+                <UserPlus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                {t('add_contributor', 'Add Contributor')}
+              </Button>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          {isLoadingContributors ? (
+            <p className="text-sm text-muted-foreground text-start">
+              {t('loading_contributors', 'Loading contributors...')}
+            </p>
+          ) : (
+            <ContributorsList
+              contributors={contributors}
+              onRemove={
+                isTaskOwner ? (contributorId) => removeContributor.mutate(contributorId) : undefined
+              }
+              showRemoveButton={isTaskOwner}
+              maxDisplay={5}
+            />
+          )}
+        </CardContent>
+      </Card>
 
       {/* Linked Work Items Section (US4 - Task T070) */}
       <Card>
@@ -545,8 +545,8 @@ export function TaskDetail({
                     taskId: task.id,
                     data: {
                       work_item_type: primaryItem?.type || 'generic',
-                      work_item_id: primaryItem?.id || null,
-                      source: Object.keys(source).length > 1 ? source : null,
+                      work_item_id: primaryItem?.id || undefined,
+                      source: Object.keys(source).length > 1 ? source : undefined,
                       last_known_updated_at: task.updated_at, // For optimistic locking
                     },
                   })
@@ -558,15 +558,15 @@ export function TaskDetail({
         </CardContent>
       </Card>
 
-      {/* Add Contributor Dialog - Temporarily disabled for migration */}
-      {/* <AddContributorDialog
- open={isAddContributorOpen}
- onOpenChange={setIsAddContributorOpen}
- taskId={task.id}
- onSuccess={() => {
- setIsAddContributorOpen(false);
- }}
- /> */}
+      {/* Add Contributor Dialog */}
+      <AddContributorDialog
+        open={isAddContributorOpen}
+        onOpenChange={setIsAddContributorOpen}
+        taskId={task.id}
+        onSuccess={() => {
+          setIsAddContributorOpen(false)
+        }}
+      />
     </div>
   )
 }
