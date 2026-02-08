@@ -14,7 +14,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft,
   Edit,
@@ -34,7 +33,7 @@ import {
   Loader2,
   ShieldAlert,
   Check,
-  X as CloseIcon,
+  X as _CloseIcon,
   User,
   CheckCircle2,
 } from 'lucide-react'
@@ -84,7 +83,7 @@ export function EngagementDetailPage() {
   const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState('overview')
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+  const [_expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     participants: true,
     agenda: true,
     outcomes: true,
@@ -98,7 +97,7 @@ export function EngagementDetailPage() {
   useEngagementNavigation(engagementId, engagementData?.engagement, { skip: isLoading })
 
   // Toggle section expansion
-  const toggleSection = (section: string) => {
+  const _toggleSection = (section: string) => {
     setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }))
   }
 
@@ -108,7 +107,7 @@ export function EngagementDetailPage() {
   }
 
   const handleEdit = () => {
-    navigate({ to: '/engagements/$engagementId/edit', params: { engagementId } })
+    navigate({ to: '/engagements/$engagementId/edit', params: { engagementId } as any })
   }
 
   const handleArchive = async () => {

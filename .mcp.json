@@ -20,16 +20,6 @@
         "REGISTRY_URL": "https://www.kibo-ui.com/r/registry.json"
       }
     },
-    "supabase": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@supabase/mcp-server-supabase@latest",
-        "--access-token",
-        "sbp_5b308210608d3be8f51d26eca2e0a909ae2eef39"
-      ]
-    },
     "anythingllm": {
       "type": "stdio",
       "command": "npx",

@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react'
+import { Component, ErrorInfo, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/button'
 import { AlertCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react'
@@ -95,7 +95,6 @@ function ApiErrorFallback({
   showOfflineOption = true,
 }: ApiErrorFallbackProps) {
   const { t } = useTranslation()
-  const { isOnline, addToQueue } = useOfflineQueue()
 
   const handleQueueForLater = () => {
     // TODO: Queue the failed action for later retry
@@ -155,7 +154,7 @@ function ApiErrorFallback({
 
 // Hook for handling API errors in functional components
 export function useApiErrorHandler() {
-  const { addToQueue } = useOfflineQueue()
+  const { addAction: addToQueue } = useOfflineQueue()
 
   return (error: Error, action?: { method: string; url: string; data?: any }) => {
     if (error.message.includes('fetch') || error.message.includes('network')) {

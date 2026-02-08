@@ -32,7 +32,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   DropdownMenu,
@@ -54,7 +54,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useEntityCitations, useDeleteCitation, useEntityCitationStats } from '@/hooks/useCitations'
 import { CitationNetworkGraph } from './CitationNetworkGraph'
 import { CitationFormDialog } from './CitationFormDialog'
-import type { CitationSourceType, CitationStatus, EntityCitation } from '@/types/citation.types'
+import type { CitationSourceType, EntityCitation } from '@/types/citation.types'
 import {
   CITATION_SOURCE_TYPE_LABELS,
   CITATION_STATUS_LABELS,

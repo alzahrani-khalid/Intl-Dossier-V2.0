@@ -1,4 +1,7 @@
 /**
+ * @deprecated Use the tasks API instead (services/tasks-api.ts). This hook queries
+ * the legacy assignments table. New code should use the tasks escalation flow.
+ *
  * useEscalateAssignment Hook
  *
  * TanStack Query mutation for escalating assignments to supervisor.
@@ -7,66 +10,63 @@
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#POST /assignments/escalate
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createClient } from '@/lib/supabase-client';
-import { useToast } from '@/hooks/use-toast';
-import { useTranslation } from 'react-i18next';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createClient } from '@/lib/supabase-client'
+import { useToast } from '@/hooks/use-toast'
+import { useTranslation } from 'react-i18next'
 
-const supabase = createClient();
+const supabase = createClient()
 
 export interface EscalateAssignmentRequest {
-  assignment_id: string;
-  reason: string;
+  assignment_id: string
+  reason: string
 }
 
 export interface EscalationResponse {
-  observer_id: string;
-  supervisor_id: string;
-  supervisor_name: string;
-  escalated_at: string;
-  notification_sent: boolean;
+  observer_id: string
+  supervisor_id: string
+  supervisor_name: string
+  escalated_at: string
+  notification_sent: boolean
 }
 
 export function useEscalateAssignment() {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-  const { t } = useTranslation(['assignments', 'common']);
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+  const { t } = useTranslation(['assignments', 'common'])
 
   return useMutation<EscalationResponse, Error, EscalateAssignmentRequest>({
     mutationFn: async (request: EscalateAssignmentRequest) => {
-      const { data, error } = await supabase.functions.invoke(
-        `assignments-escalate`,
-        {
-          body: {
-            assignment_id: request.assignment_id,
-            reason: request.reason,
-          },
-        }
-      );
+      const { data, error } = await supabase.functions.invoke(`assignments-escalate`, {
+        body: {
+          assignment_id: request.assignment_id,
+          reason: request.reason,
+        },
+      })
 
       if (error) {
         // Handle rate limit error (1 escalation/hour)
         if (error.message?.includes('rate limit') || error.message?.includes('429')) {
-          throw new Error(t('assignments:escalate.error.rateLimit'));
+          throw new Error(t('assignments:escalate.error.rateLimit'))
         }
 
-        throw new Error(error.message || 'Failed to escalate assignment');
+        throw new Error(error.message || 'Failed to escalate assignment')
       }
 
-      return data as EscalationResponse;
+      return data as EscalationResponse
     },
 
     onSuccess: (data, variables) => {
       // Invalidate assignment query to refetch observers
       queryClient.invalidateQueries({
         queryKey: ['assignment', variables.assignment_id],
-      });
+      })
 
       // Invalidate my-assignments query
-      queryClient.invalidateQueries({ queryKey: ['my-assignments'] });
+      queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
 
       // Invalidate escalations query
-      queryClient.invalidateQueries({ queryKey: ['escalations'] });
+      queryClient.invalidateQueries({ queryKey: ['escalations'] })
 
       // Show success toast
       toast({
@@ -75,16 +75,16 @@ export function useEscalateAssignment() {
           supervisor: data.supervisor_name,
         }),
         variant: 'default',
-      });
+      })
     },
 
-    onError: (error, variables) => {
+    onError: (error, _variables) => {
       // Show error toast
       toast({
         title: t('assignments:escalate.error.title'),
         description: error.message || t('common:errors.unknown'),
         variant: 'destructive',
-      });
+      })
     },
-  });
+  })
 }

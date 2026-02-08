@@ -1,16 +1,16 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react'
 
-const MAX_SELECTION = 100;
+const MAX_SELECTION = 100
 
 export interface UseBulkSelectionResult {
-  selectedIds: Set<string>;
-  selectedCount: number;
-  isSelected: (id: string) => boolean;
-  toggleSelection: (id: string) => void;
-  selectAll: (ids: string[]) => void;
-  clearSelection: () => void;
-  canSelectMore: boolean;
-  maxReached: boolean;
+  selectedIds: Set<string>
+  selectedCount: number
+  isSelected: (id: string) => boolean
+  toggleSelection: (id: string) => void
+  selectAll: (ids: string[]) => void
+  clearSelection: () => void
+  canSelectMore: boolean
+  maxReached: boolean
 }
 
 /**
@@ -29,70 +29,67 @@ export interface UseBulkSelectionResult {
  * @returns {UseBulkSelectionResult} Selection state and methods
  */
 export function useBulkSelection(): UseBulkSelectionResult {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
-  const selectedCount = selectedIds.size;
-  const canSelectMore = selectedCount < MAX_SELECTION;
-  const maxReached = selectedCount >= MAX_SELECTION;
+  const selectedCount = selectedIds.size
+  const canSelectMore = selectedCount < MAX_SELECTION
+  const maxReached = selectedCount >= MAX_SELECTION
 
   /**
    * Check if an item is currently selected
    */
   const isSelected = useCallback(
     (id: string): boolean => {
-      return selectedIds.has(id);
+      return selectedIds.has(id)
     },
-    [selectedIds]
-  );
+    [selectedIds],
+  )
 
   /**
    * Toggle selection state for a single item
    * Prevents selection if max limit reached
    */
-  const toggleSelection = useCallback(
-    (id: string) => {
-      setSelectedIds((prev) => {
-        const newSet = new Set(prev);
+  const toggleSelection = useCallback((id: string) => {
+    setSelectedIds((prev) => {
+      const newSet = new Set(prev)
 
-        if (newSet.has(id)) {
-          // Remove if already selected
-          newSet.delete(id);
+      if (newSet.has(id)) {
+        // Remove if already selected
+        newSet.delete(id)
+      } else {
+        // Add only if under max limit
+        if (newSet.size < MAX_SELECTION) {
+          newSet.add(id)
         } else {
-          // Add only if under max limit
-          if (newSet.size < MAX_SELECTION) {
-            newSet.add(id);
-          } else {
-            // Show warning toast or notification in component
-            console.warn(
-              `Maximum selection limit (${MAX_SELECTION}) reached. Cannot select more items.`
-            );
-          }
+          // Show warning toast or notification in component
+          console.warn(
+            `Maximum selection limit (${MAX_SELECTION}) reached. Cannot select more items.`,
+          )
         }
+      }
 
-        return newSet;
-      });
-    },
-    []
-  );
+      return newSet
+    })
+  }, [])
 
   /**
    * Select all items from provided list
    * Respects max limit by taking first MAX_SELECTION items
    */
   const selectAll = useCallback((ids: string[]) => {
-    setSelectedIds((prev) => {
+    setSelectedIds((_prev) => {
       // Take first MAX_SELECTION items
-      const itemsToSelect = ids.slice(0, MAX_SELECTION);
-      return new Set(itemsToSelect);
-    });
-  }, []);
+      const itemsToSelect = ids.slice(0, MAX_SELECTION)
+      return new Set(itemsToSelect)
+    })
+  }, [])
 
   /**
    * Clear all selections
    */
   const clearSelection = useCallback(() => {
-    setSelectedIds(new Set());
-  }, []);
+    setSelectedIds(new Set())
+  }, [])
 
   return useMemo(
     () => ({
@@ -114,6 +111,6 @@ export function useBulkSelection(): UseBulkSelectionResult {
       clearSelection,
       canSelectMore,
       maxReached,
-    ]
-  );
+    ],
+  )
 }

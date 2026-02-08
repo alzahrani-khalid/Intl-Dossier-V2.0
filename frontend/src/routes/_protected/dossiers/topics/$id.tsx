@@ -6,25 +6,27 @@
  * Error handling for loading, errors, not found, and wrong types.
  */
 
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { useDossier } from '@/hooks/useDossier';
-import { isTopicDossier } from '@/lib/dossier-type-guards';
-import { TopicDossierPage } from '@/pages/dossiers/TopicDossierPage';
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import { AlertCircle, ArrowLeft } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { useDossier } from '@/hooks/useDossier'
+import { isTopicDossier } from '@/lib/dossier-type-guards'
+import type { DossierWithExtension } from '@/services/dossier-api'
+import { TopicDossierPage } from '@/pages/dossiers/TopicDossierPage'
+import { p } from '@/lib/navigation'
 
 export const Route = createFileRoute('/_protected/dossiers/topics/$id')({
   component: TopicDossierDetailRoute,
-});
+})
 
 function TopicDossierDetailRoute() {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const { id } = Route.useParams();
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const { id } = Route.useParams()
 
-  const { data: dossier, isLoading, error } = useDossier(id, ['stats', 'owners', 'contacts']);
+  const { data: dossier, isLoading, error } = useDossier(id, ['stats', 'owners', 'contacts'])
 
   // Loading state
   if (isLoading) {
@@ -34,11 +36,9 @@ function TopicDossierDetailRoute() {
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        <p className="text-sm sm:text-base text-muted-foreground">
-          {t('detail.loading')}
-        </p>
+        <p className="text-sm sm:text-base text-muted-foreground">{t('detail.loading')}</p>
       </div>
-    );
+    )
   }
 
   // Error state
@@ -64,7 +64,7 @@ function TopicDossierDetailRoute() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
   // Not found state
@@ -77,9 +77,7 @@ function TopicDossierDetailRoute() {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>{t('detail.notFound')}</AlertTitle>
-          <AlertDescription>
-            {t('detail.errorGeneric')}
-          </AlertDescription>
+          <AlertDescription>{t('detail.errorGeneric')}</AlertDescription>
         </Alert>
         <div className="mt-4 sm:mt-6">
           <Link to="/dossiers">
@@ -90,13 +88,13 @@ function TopicDossierDetailRoute() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
   // Wrong type validation
-  if (!isTopicDossier(dossier)) {
-    const actualType = t(`type.${dossier.dossier_type}`);
-    const expectedType = t('type.topic');
+  if (!isTopicDossier(dossier as unknown as Parameters<typeof isTopicDossier>[0])) {
+    const actualType = t(`type.${dossier.type}`)
+    const expectedType = t('type.topic')
 
     return (
       <div
@@ -111,7 +109,7 @@ function TopicDossierDetailRoute() {
           </AlertDescription>
         </Alert>
         <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
-          <Link to={`/dossiers/${dossier.dossier_type}s/$id`} params={{ id: dossier.id }}>
+          <Link to={`/dossiers/${dossier.type}s/$id`} params={p({ id: dossier.id })}>
             <Button className="gap-2 w-full sm:w-auto">
               {t('action.viewCorrectType', { type: actualType })}
             </Button>
@@ -124,8 +122,8 @@ function TopicDossierDetailRoute() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
-  return <TopicDossierPage dossier={dossier} />;
+  return <TopicDossierPage dossier={dossier as DossierWithExtension & { type: 'topic' }} />
 }

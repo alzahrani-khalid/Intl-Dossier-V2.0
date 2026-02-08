@@ -115,7 +115,7 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
     }
   }
 
-  const formatDueDate = () => {
+  const _formatDueDate = () => {
     const date = new Date(deliverable.due_date)
     return date.toLocaleDateString(i18n.language, {
       month: 'short',

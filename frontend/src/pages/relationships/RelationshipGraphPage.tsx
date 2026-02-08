@@ -157,7 +157,7 @@ export function RelationshipGraphPage() {
     // Using type assertion due to dynamic route structure
     navigate({
       to: '/dossiers/$id' as '/dossiers',
-      params: { id: nodeId } as Record<string, string>,
+      params: { id: nodeId } as any,
     })
   }
 

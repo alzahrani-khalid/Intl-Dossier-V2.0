@@ -15,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
-import { CalendarIcon, Loader2, User } from 'lucide-react'
+import { CalendarIcon, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -24,12 +24,12 @@ import { Calendar } from '@/components/ui/calendar'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { UserPicker } from '@/components/Forms/UserPicker'
 import {
   Select,
   SelectContent,
@@ -200,7 +200,7 @@ export function TaskQuickForm({
       // Context tracking via source JSONB (legacy - for backwards compatibility)
       source: {
         created_from_route: creationContext.route,
-        created_from_entity: creationContext.createdFromEntity,
+        created_from_entity: creationContext.createdFromEntity as any,
         dossier_ids: [effectiveDossierId],
       },
     }
@@ -316,7 +316,7 @@ export function TaskQuickForm({
           )}
         />
 
-        {/* Assignee - TODO: Replace with user picker */}
+        {/* Assignee */}
         <FormField
           control={form.control}
           name="assignee_id"
@@ -324,23 +324,13 @@ export function TaskQuickForm({
             <FormItem>
               <FormLabel className="text-start block">{t('form.assignee', 'Assignee')} *</FormLabel>
               <FormControl>
-                <div className="relative">
-                  <User
-                    className={cn(
-                      'absolute top-3 size-4 text-muted-foreground',
-                      isRTL ? 'end-3' : 'start-3',
-                    )}
-                  />
-                  <Input
-                    {...field}
-                    placeholder={t('form.assigneePlaceholder', 'Enter user ID')}
-                    className={cn('min-h-11', isRTL ? 'pe-10' : 'ps-10')}
-                  />
-                </div>
+                <UserPicker
+                  value={field.value}
+                  onChange={(userId) => field.onChange(userId ?? '')}
+                  placeholder={t('form.assigneePlaceholder', 'Select assignee...')}
+                  className="min-h-11"
+                />
               </FormControl>
-              <FormDescription className="text-start">
-                {t('form.assigneeHint', 'Enter the user ID of the assignee')}
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

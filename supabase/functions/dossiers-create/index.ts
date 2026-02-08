@@ -173,12 +173,40 @@ serve(async (req) => {
       );
     }
 
+    // Check for existing dossier with same name+type (pre-check before DB constraint)
+    const { data: existingDossier } = await supabaseClient
+      .from('dossiers')
+      .select('id, name_en, status')
+      .ilike('name_en', body.name_en.trim())
+      .eq('type', body.type)
+      .not('status', 'in', '("deleted","archived")')
+      .limit(1)
+      .maybeSingle();
+
+    if (existingDossier) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: 'DUPLICATE_DOSSIER',
+            message_en: `A ${body.type} dossier with the name "${body.name_en}" already exists.`,
+            message_ar: `ملف ${body.type} بالاسم "${body.name_en}" موجود بالفعل.`,
+            existing_id: existingDossier.id,
+          },
+        }),
+        {
+          status: 409,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     // Insert dossier (RLS policy will check permissions)
+    // The DB unique constraint idx_dossiers_unique_name_type is the final safety net
     const { data: dossier, error: insertError } = await supabaseClient
       .from('dossiers')
       .insert({
-        name_en: body.name_en,
-        name_ar: body.name_ar,
+        name_en: body.name_en.trim(),
+        name_ar: body.name_ar.trim(),
         type: body.type,
         description_en: body.description_en || null,
         description_ar: body.description_ar || null,
@@ -194,6 +222,23 @@ serve(async (req) => {
 
     if (insertError) {
       console.error('Error creating dossier:', insertError);
+
+      // Check for unique constraint violation (race condition safety net)
+      if (insertError.code === '23505') {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: 'DUPLICATE_DOSSIER',
+              message_en: `A ${body.type} dossier with the name "${body.name_en}" already exists.`,
+              message_ar: `ملف ${body.type} بالاسم "${body.name_en}" موجود بالفعل.`,
+            },
+          }),
+          {
+            status: 409,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
 
       // Check if it's a permission error
       if (insertError.code === '42501') {

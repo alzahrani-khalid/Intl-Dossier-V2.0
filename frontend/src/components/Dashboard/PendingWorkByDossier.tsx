@@ -27,6 +27,7 @@ import {
   UserCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { p, s } from '@/lib/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -55,7 +56,6 @@ const dossierTypeIcons: Record<DossierType, typeof Globe2> = {
   country: Globe2,
   organization: Building2,
   forum: Calendar,
-  theme: Folder,
   working_group: Users,
   person: UserCircle,
   engagement: Calendar,
@@ -66,7 +66,6 @@ const dossierTypeColors: Record<DossierType, string> = {
   country: 'text-blue-500 bg-blue-50 dark:bg-blue-950/30',
   organization: 'text-purple-500 bg-purple-50 dark:bg-purple-950/30',
   forum: 'text-orange-500 bg-orange-50 dark:bg-orange-950/30',
-  theme: 'text-teal-500 bg-teal-50 dark:bg-teal-950/30',
   working_group: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/30',
   person: 'text-pink-500 bg-pink-50 dark:bg-pink-950/30',
   engagement: 'text-amber-500 bg-amber-50 dark:bg-amber-950/30',
@@ -84,8 +83,8 @@ export function PendingWorkByDossier({
   className,
 }: PendingWorkByDossierProps) {
   const { t, i18n } = useTranslation('dossier-dashboard')
-  const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
+  const _navigate = useNavigate()
+  const _isRTL = i18n.language === 'ar'
 
   // Fetch pending work
   const { data, isLoading, isError, error, refetch } = usePendingWorkByDossier({
@@ -201,13 +200,13 @@ function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps
   const handleWorkItemClick = (workItem: { id: string; work_item_type: WorkSource }) => {
     switch (workItem.work_item_type) {
       case 'task':
-        navigate({ to: '/tasks/$id', params: { id: workItem.id } })
+        navigate({ to: '/tasks/$id', params: p({ id: workItem.id }) })
         break
       case 'commitment':
-        navigate({ to: '/commitments', search: { id: workItem.id } })
+        navigate({ to: '/commitments', search: s({ id: workItem.id }) })
         break
       case 'intake':
-        navigate({ to: '/intake/tickets/$id', params: { id: workItem.id } })
+        navigate({ to: '/intake/tickets/$id', params: p({ id: workItem.id }) })
         break
     }
   }

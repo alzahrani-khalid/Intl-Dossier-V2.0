@@ -8,14 +8,12 @@
 
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
-import { Users, User, Building2, Briefcase, Loader2, ExternalLink } from 'lucide-react'
+import { Users, User, Building2, Loader2, ExternalLink } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 
 interface Participant {
   id: string
@@ -220,7 +218,7 @@ export function ParticipantsList({ dossierId }: ParticipantsListProps) {
                       {participant.dossierId && (
                         <Link
                           to="/dossiers/person/$dossierId"
-                          params={{ dossierId: participant.dossierId }}
+                          params={{ dossierId: participant.dossierId } as any}
                           className="text-primary hover:text-primary/80"
                         >
                           <ExternalLink className="h-3 w-3" />

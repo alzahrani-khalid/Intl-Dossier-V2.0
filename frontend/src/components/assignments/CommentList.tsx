@@ -42,7 +42,7 @@ export function CommentList({
 
   // Infinite scroll setup
   useEffect(() => {
-    if (!onLoadMore || !hasNextPage || isFetchingNextPage) return
+    if (!onLoadMore || !hasNextPage || isFetchingNextPage) return undefined
 
     observerRef.current = new IntersectionObserver(
       (entries) => {

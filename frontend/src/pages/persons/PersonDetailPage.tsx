@@ -96,7 +96,7 @@ export function PersonDetailPage() {
   }
 
   const handleEdit = () => {
-    navigate({ to: '/persons/$personId/edit', params: { personId } })
+    navigate({ to: '/persons/$personId/edit', params: { personId } as any })
   }
 
   const handleArchive = async () => {
@@ -626,7 +626,7 @@ export function PersonDetailPage() {
                         onClick={() =>
                           navigate({
                             to: '/persons/$personId',
-                            params: { personId: rel.related_person.id },
+                            params: { personId: rel.related_person.id } as any,
                           })
                         }
                       >

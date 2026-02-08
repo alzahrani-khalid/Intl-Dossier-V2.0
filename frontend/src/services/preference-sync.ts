@@ -144,7 +144,7 @@ export function usePreferenceSubscription(userId?: string) {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    if (!userId) return
+    if (!userId) return undefined
 
     const subscription = supabase
       .channel(`preferences:${userId}`)

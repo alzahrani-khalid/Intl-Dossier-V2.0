@@ -68,7 +68,7 @@ export function useUnifiedWorkRealtime({
 
   useEffect(() => {
     if (!enabled) {
-      return
+      return undefined
     }
 
     // Create a unique channel name

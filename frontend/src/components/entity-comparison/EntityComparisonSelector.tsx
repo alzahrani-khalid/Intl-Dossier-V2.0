@@ -183,7 +183,7 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
     enabled: !!selectedType,
   })
 
-  const entities = entitiesData?.dossiers || []
+  const entities = entitiesData?.data || []
 
   // Filter entities by search query
   const filteredEntities = entities.filter((entity) => {

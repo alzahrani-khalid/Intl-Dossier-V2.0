@@ -133,8 +133,8 @@ export interface BriefingBookConfig {
   includeCoverPage: boolean
   /** Include executive summary */
   includeExecutiveSummary: boolean
-  /** Sensitivity level filter */
-  maxSensitivityLevel?: SensitivityLevel
+  /** Sensitivity level filter (numeric 1-4 or string 'low'|'medium'|'high') */
+  maxSensitivityLevel?: SensitivityLevel | 'low' | 'medium' | 'high'
   /** Custom header text */
   headerText?: string
   /** Custom footer text */

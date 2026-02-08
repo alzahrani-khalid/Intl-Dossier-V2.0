@@ -9,7 +9,7 @@ function SettingsLayout() {
   // Check if we're on an exact /settings path or a child route
   const matches = useMatches()
   const isExactSettingsRoute =
-    matches.length > 0 && matches[matches.length - 1].pathname === '/settings'
+    matches.length > 0 && matches[matches.length - 1]!.pathname === '/settings'
 
   // If exact /settings route, show SettingsPage
   // Otherwise, render Outlet for child routes like /settings/webhooks

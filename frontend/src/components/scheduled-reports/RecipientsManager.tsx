@@ -91,7 +91,7 @@ export function RecipientsManager({ scheduleId }: RecipientsManagerProps) {
         schedule_id: scheduleId,
         ...values,
         is_active: true,
-      })
+      } as any)
       toast({ title: t('messages.createSuccess') })
       setAddDialogOpen(false)
       form.reset()

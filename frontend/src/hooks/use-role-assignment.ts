@@ -3,7 +3,7 @@
  * TanStack Query hooks for role assignment and approval operations
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   assignRole,
   approveRoleChange,
@@ -11,8 +11,8 @@ import {
   getUserPermissions,
   type AssignRoleRequest,
   type ApproveRoleChangeRequest,
-} from '@/services/user-management-api';
-import { useToast } from '@/hooks/use-toast';
+} from '@/services/user-management-api'
+import { useToast } from '@/hooks/use-toast'
 
 // ============================================================================
 // Assign Role Hook
@@ -38,15 +38,15 @@ import { useToast } from '@/hooks/use-toast';
  * });
  */
 export function useRoleAssignment() {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
 
   return useMutation({
     mutationFn: assignRole,
     onSuccess: (data) => {
       // Invalidate users and permissions cache
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-      queryClient.invalidateQueries({ queryKey: ['user-permissions'] });
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({ queryKey: ['user-permissions'] })
 
       // Check if it's an immediate change or approval required
       if ('role_changed' in data && data.role_changed) {
@@ -55,48 +55,48 @@ export function useRoleAssignment() {
           title: 'Role changed successfully',
           description: `Role updated to ${data.new_role}. ${data.sessions_terminated} active session(s) terminated.`,
           variant: 'success',
-        });
+        })
 
         // Invalidate pending approvals as this might affect them
-        queryClient.invalidateQueries({ queryKey: ['pending-approvals'] });
+        queryClient.invalidateQueries({ queryKey: ['pending-approvals'] })
       } else if ('requires_approval' in data && data.requires_approval) {
         // Admin role requires approval
         toast({
           title: 'Approval request created',
           description: `Admin role assignment requires ${data.pending_approvals} approval(s). Request ID: ${data.approval_request_id}`,
           variant: 'default',
-        });
+        })
 
         // Invalidate pending approvals to show the new request
-        queryClient.invalidateQueries({ queryKey: ['pending-approvals'] });
+        queryClient.invalidateQueries({ queryKey: ['pending-approvals'] })
       }
     },
     onError: (error: any) => {
       // Show error toast with details
-      const errorMessage = error.error || error.message || 'Failed to assign role';
-      const errorCode = error.code || '';
-      const errorDetails = error.details?.join(', ') || '';
+      const errorMessage = error.error || error.message || 'Failed to assign role'
+      const errorCode = error.code || ''
+      const errorDetails = error.details?.join(', ') || ''
 
-      let description = errorMessage;
+      let description = errorMessage
       if (errorCode === 'SAME_ROLE') {
-        description = 'User already has this role';
+        description = 'User already has this role'
       } else if (errorCode === 'USER_NOT_FOUND') {
-        description = 'User not found';
+        description = 'User not found'
       } else if (errorCode === 'SELF_ASSIGNMENT') {
-        description = 'Cannot change your own role';
+        description = 'Cannot change your own role'
       } else if (errorDetails) {
-        description = `${errorMessage}: ${errorDetails}`;
+        description = `${errorMessage}: ${errorDetails}`
       }
 
       toast({
         title: 'Failed to assign role',
         description,
         variant: 'destructive',
-      });
+      })
 
-      console.error('Assign role error:', error);
+      console.error('Assign role error:', error)
     },
-  });
+  })
 }
 
 // ============================================================================
@@ -122,16 +122,16 @@ export function useRoleAssignment() {
  * });
  */
 export function useRoleApproval() {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
 
   return useMutation({
     mutationFn: approveRoleChange,
     onSuccess: (data) => {
       // Invalidate pending approvals and users cache
-      queryClient.invalidateQueries({ queryKey: ['pending-approvals'] });
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-      queryClient.invalidateQueries({ queryKey: ['user-permissions'] });
+      queryClient.invalidateQueries({ queryKey: ['pending-approvals'] })
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({ queryKey: ['user-permissions'] })
 
       // Handle different approval statuses
       if (data.status === 'first_approved') {
@@ -139,47 +139,47 @@ export function useRoleApproval() {
           title: 'First approval recorded',
           description: `${data.remaining_approvals} more approval(s) needed`,
           variant: 'default',
-        });
+        })
       } else if (data.status === 'approved' && 'role_applied' in data) {
         toast({
           title: 'Role change approved',
           description: `User ${data.user_id} role updated to ${data.new_role}`,
           variant: 'success',
-        });
+        })
       } else if (data.status === 'rejected' && 'rejection_reason' in data) {
         toast({
           title: 'Request rejected',
           description: data.rejection_reason,
           variant: 'default',
-        });
+        })
       }
     },
     onError: (error: any) => {
       // Show error toast with details
-      const errorMessage = error.error || error.message || 'Failed to process approval';
-      const errorCode = error.code || '';
-      const errorDetails = error.details?.join(', ') || '';
+      const errorMessage = error.error || error.message || 'Failed to process approval'
+      const errorCode = error.code || ''
+      const errorDetails = error.details?.join(', ') || ''
 
-      let description = errorMessage;
+      let description = errorMessage
       if (errorCode === 'ALREADY_APPROVED') {
-        description = 'Already approved by this administrator';
+        description = 'Already approved by this administrator'
       } else if (errorCode === 'SELF_APPROVAL') {
-        description = 'Cannot approve your own role change request';
+        description = 'Cannot approve your own role change request'
       } else if (errorCode === 'DUPLICATE_APPROVER') {
-        description = 'Both approvals must be from different administrators';
+        description = 'Both approvals must be from different administrators'
       } else if (errorDetails) {
-        description = `${errorMessage}: ${errorDetails}`;
+        description = `${errorMessage}: ${errorDetails}`
       }
 
       toast({
         title: 'Approval failed',
         description,
         variant: 'destructive',
-      });
+      })
 
-      console.error('Approve role change error:', error);
+      console.error('Approve role change error:', error)
     },
-  });
+  })
 }
 
 // ============================================================================
@@ -203,26 +203,30 @@ export function useRoleApproval() {
  * });
  */
 export function usePendingApprovals(params?: {
-  status?: 'pending' | 'first_approved' | 'approved' | 'rejected';
-  limit?: number;
-  offset?: number;
+  status?: 'pending' | 'first_approved' | 'approved' | 'rejected'
+  limit?: number
+  offset?: number
 }) {
-  const { toast } = useToast();
+  const { toast } = useToast()
 
   return useQuery({
     queryKey: ['pending-approvals', params],
-    queryFn: () => getPendingApprovals(params),
-    refetchInterval: 30000, // Refetch every 30 seconds
-    onError: (error: any) => {
-      const errorMessage = error.error || error.message || 'Failed to fetch pending approvals';
-      toast({
-        title: 'Failed to load approvals',
-        description: errorMessage,
-        variant: 'destructive',
-      });
-      console.error('Pending approvals error:', error);
+    queryFn: async () => {
+      try {
+        return await getPendingApprovals(params)
+      } catch (error: any) {
+        const errorMessage = error.error || error.message || 'Failed to fetch pending approvals'
+        toast({
+          title: 'Failed to load approvals',
+          description: errorMessage,
+          variant: 'destructive',
+        })
+        console.error('Pending approvals error:', error)
+        throw error
+      }
     },
-  });
+    refetchInterval: 30000, // Refetch every 30 seconds
+  })
 }
 
 // ============================================================================
@@ -242,21 +246,12 @@ export function usePendingApprovals(params?: {
  * const { data, isLoading, error } = useUserPermissions('user-uuid');
  */
 export function useUserPermissions(userId: string) {
-  const { toast } = useToast();
+  const { toast } = useToast()
 
   return useQuery({
     queryKey: ['user-permissions', userId],
     queryFn: () => getUserPermissions(userId),
     enabled: !!userId, // Only fetch if userId is provided
     staleTime: 60000, // Consider data fresh for 1 minute
-    onError: (error: any) => {
-      const errorMessage = error.error || error.message || 'Failed to fetch user permissions';
-      toast({
-        title: 'Failed to load permissions',
-        description: errorMessage,
-        variant: 'destructive',
-      });
-      console.error('User permissions error:', error);
-    },
-  });
+  })
 }

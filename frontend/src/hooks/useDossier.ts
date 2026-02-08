@@ -228,7 +228,15 @@ export function useCreateDossier() {
       toast.success(t('dossier.create.success', { name: data.name_en }))
     },
     onError: (error: DossierAPIError) => {
-      toast.error(t('dossier.create.error', { message: error.message }))
+      if (error.status === 409 || error.code === 'DUPLICATE_DOSSIER') {
+        toast.error(
+          t('dossier.create.duplicate', {
+            defaultValue: error.message || 'A dossier with this name already exists.',
+          }),
+        )
+      } else {
+        toast.error(t('dossier.create.error', { message: error.message }))
+      }
     },
   })
 }
@@ -277,7 +285,7 @@ export function useUpdateDossier() {
           ...previousDossier,
           ...request,
           updated_at: new Date().toISOString(),
-        })
+        } as DossierWithExtension)
       }
 
       return { previousDossier }
@@ -340,7 +348,7 @@ export function useDeleteDossier() {
 
       return { previousDossier }
     },
-    onSuccess: (_, id) => {
+    onSuccess: (_, _id) => {
       // Invalidate all lists to refetch without deleted item
       queryClient.invalidateQueries({ queryKey: dossierKeys.lists() })
       queryClient.invalidateQueries({ queryKey: dossierKeys.all })
@@ -725,7 +733,7 @@ export function useDossierCountByType(
     queryFn: async () => {
       try {
         const response = await getDossiersByType(type, 1, 1)
-        return response.total || 0
+        return response.pagination?.total_count || 0
       } catch (error) {
         console.warn(`Failed to fetch count for ${type}:`, error)
         return 0

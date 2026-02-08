@@ -6,21 +6,19 @@
  * Renders TopicDossierDetail component.
  */
 
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout';
-import { TopicDossierDetail } from '@/components/Dossier/TopicDossierDetail';
-import type { DossierWithExtension } from '@/services/dossier-api';
+import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
+import { TopicDossierDetail } from '@/components/Dossier/TopicDossierDetail'
+import type { DossierWithExtension } from '@/services/dossier-api'
+import type { Dossier } from '@/lib/dossier-type-guards'
 
 interface TopicDossierPageProps {
-  dossier: DossierWithExtension & { type: 'topic' };
+  dossier: DossierWithExtension & { type: 'topic' }
 }
 
 export function TopicDossierPage({ dossier }: TopicDossierPageProps) {
   return (
-    <DossierDetailLayout
-      dossier={dossier}
-      gridClassName="grid-cols-1"
-    >
+    <DossierDetailLayout dossier={dossier as unknown as Dossier} gridClassName="grid-cols-1">
       <TopicDossierDetail dossier={dossier} />
     </DossierDetailLayout>
-  );
+  )
 }

@@ -18,7 +18,7 @@ import type { FilterPreset, FilterPresetCategory } from '@/types/enhanced-search
  * These are static presets that cover common query patterns
  */
 function createDefaultPresets(language: string): FilterPreset[] {
-  const isArabic = language === 'ar'
+  const _isArabic = language === 'ar'
 
   return [
     // Dossier-focused presets

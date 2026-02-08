@@ -4,7 +4,7 @@
  * Full RTL support with logical properties
  */
 
-import React, { useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -127,7 +127,7 @@ export function DataTable<TData, TValue>({
   })
 
   // Get visible columns for mobile card view
-  const visibleColumns = useMemo(() => {
+  const _visibleColumns = useMemo(() => {
     return table.getAllColumns().filter((col) => col.getIsVisible())
   }, [table, columnVisibility])
 

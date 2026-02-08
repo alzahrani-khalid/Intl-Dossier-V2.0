@@ -6,7 +6,7 @@
  */
 
 import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react'
-import type { TourState, TourActions, TourContextValue, TourId, TourProgress } from './types'
+import type { TourState, TourContextValue, TourId, TourProgress } from './types'
 import { getTour } from './tour-definitions'
 
 // Storage key for persisting tour progress
@@ -216,7 +216,7 @@ const TourContext = createContext<TourContextValue | undefined>(undefined)
 function loadProgress(): Record<TourId, TourProgress> {
   try {
     const stored = localStorage.getItem(TOUR_STORAGE_KEY)
-    return stored ? JSON.parse(stored) : {}
+    return stored ? JSON.parse(stored) : ({} as Record<TourId, TourProgress>)
   } catch {
     return {} as Record<TourId, TourProgress>
   }

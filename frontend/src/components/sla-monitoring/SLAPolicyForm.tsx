@@ -112,7 +112,7 @@ export function SLAPolicyForm({
     value: string | number,
   ) => {
     const updated = [...escalationLevels]
-    updated[index] = { ...updated[index], [field]: value }
+    updated[index] = { ...updated[index]!, [field]: value } as (typeof updated)[number]
     setEscalationLevels(updated)
   }
 

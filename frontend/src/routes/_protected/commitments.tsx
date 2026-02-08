@@ -83,7 +83,7 @@ function CommitmentsPage() {
   const handleFiltersChange = useCallback(
     (filters: CommitmentFilters) => {
       navigate({
-        search: (prev) => ({
+        search: ((prev: CommitmentsSearchParams) => ({
           ...prev,
           // Convert arrays to comma-separated strings for URL
           status: filters.status?.length ? filters.status.join(',') : undefined,
@@ -94,7 +94,7 @@ function CommitmentsPage() {
           dueDateTo: filters.dueDateTo || undefined,
           // Preserve dossierId from current params
           dossierId: filters.dossierId || prev.dossierId,
-        }),
+        })) as any,
         replace: true, // Replace history entry instead of pushing new
       })
     },
@@ -106,10 +106,10 @@ function CommitmentsPage() {
     (open: boolean) => {
       if (!open) {
         navigate({
-          search: (prev) => ({
+          search: ((prev: CommitmentsSearchParams) => ({
             ...prev,
             id: undefined,
-          }),
+          })) as any,
           replace: true,
         })
       }
@@ -160,7 +160,7 @@ function CommitmentsPage() {
                   {t('detail.dossier')}
                 </Button>
               ) : (
-                <Link to="/commitments" search={{ view: 'dashboard' }}>
+                <Link to="/commitments" search={{ view: 'dashboard' } as any}>
                   <Button variant="ghost" size="sm" className="min-h-11">
                     <Home className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('pageTitle')}

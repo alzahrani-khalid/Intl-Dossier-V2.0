@@ -6,7 +6,7 @@
  * Mobile-first, RTL-aware with zoom/pan controls.
  */
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   ReactFlow,
@@ -29,7 +29,7 @@ import { Building2, User, Loader2 } from 'lucide-react'
 import type { RelationshipResponse } from '@/services/contact-relationship-api'
 import type { Database } from '@/types/contact-directory.types'
 
-type Contact = Database['public']['Tables']['cd_contacts']['Row']
+type Contact = Database['public']['Tables']['contacts']['Row']
 
 /**
  * RelationshipGraph Props
@@ -114,8 +114,8 @@ export function RelationshipGraph({
   const { t, i18n } = useTranslation('contacts')
   const isRTL = i18n.language === 'ar'
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
+  const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
 
   /**
    * Build nodes and edges from relationships
@@ -162,9 +162,11 @@ export function RelationshipGraph({
         type: 'contact',
         position: { x, y },
         data: {
-          label: contact.full_name,
-          position: contact.position,
-          organization: contact.organization?.name,
+          label:
+            (contact as any).full_name ||
+            `${(contact as any).first_name ?? ''} ${(contact as any).last_name ?? ''}`.trim(),
+          position: (contact as any).position,
+          organization: (contact as any).organization_id,
           isCenter,
         },
         sourcePosition: isRTL ? Position.Left : Position.Right,

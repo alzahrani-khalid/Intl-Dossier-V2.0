@@ -1,18 +1,8 @@
-import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, Link } from '@tanstack/react-router';
-import { Toaster } from 'react-hot-toast';
-import {
-  ChevronRight,
-  LogOut,
-  User,
-  Home,
-  FolderOpen,
-  ClipboardList,
-  Calendar,
-  BarChart3,
-  Settings,
-} from 'lucide-react';
+import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, Link } from '@tanstack/react-router'
+import { Toaster } from 'react-hot-toast'
+import { ChevronRight, LogOut, User, Settings } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -24,15 +14,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarProvider,
   SidebarTrigger,
   useSidebar,
-} from '@/components/ui/sidebar';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/sidebar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,13 +26,17 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useAuthStore } from '@/store/authStore';
-import { navigationCategories, type NavigationCategory, type NavigationItem } from '@/components/modern-nav/navigationData';
-import { cn } from '@/lib/utils';
+} from '@/components/ui/dropdown-menu'
+import { useAuthStore } from '@/store/authStore'
+import {
+  navigationCategories,
+  type NavigationCategory,
+  type NavigationItem,
+} from '@/components/modern-nav/navigationData'
+import { cn } from '@/lib/utils'
 
 interface MainLayoutAceternityProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 /**
@@ -62,15 +52,15 @@ interface MainLayoutAceternityProps {
  * - Auto-route detection for active states
  */
 export function MainLayoutAceternity({ children }: MainLayoutAceternityProps) {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
-  const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+  const navigate = useNavigate()
+  const { user, logout } = useAuthStore()
 
   const handleLogout = async () => {
-    await logout();
-    navigate({ to: '/login' });
-  };
+    await logout()
+    navigate({ to: '/login' })
+  }
 
   return (
     <>
@@ -93,9 +83,7 @@ export function MainLayoutAceternity({ children }: MainLayoutAceternityProps) {
             </header>
 
             {/* Page Content */}
-            <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-              {children}
-            </div>
+            <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8">{children}</div>
           </main>
         </div>
       </SidebarProvider>
@@ -112,7 +100,7 @@ export function MainLayoutAceternity({ children }: MainLayoutAceternityProps) {
         }}
       />
     </>
-  );
+  )
 }
 
 /**
@@ -121,16 +109,16 @@ export function MainLayoutAceternity({ children }: MainLayoutAceternityProps) {
  * Mobile-first, RTL-ready sidebar with navigation categories
  */
 interface AppSidebarProps {
-  user: any;
-  onLogout: () => void;
-  navigationCategories: NavigationCategory[];
+  user: any
+  onLogout: () => void
+  navigationCategories: NavigationCategory[]
 }
 
 function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
-  const { state } = useSidebar();
-  const isCollapsed = state === 'collapsed';
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+  const { state } = useSidebar()
+  const isCollapsed = state === 'collapsed'
 
   return (
     <Sidebar collapsible="icon" className="border-e">
@@ -139,9 +127,7 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
         <div className="flex items-center gap-3">
           {!isCollapsed && (
             <div className="flex flex-col">
-              <h1 className="text-lg font-semibold text-start">
-                {t('app.name', 'Intl Dossier')}
-              </h1>
+              <h1 className="text-lg font-semibold text-start">{t('app.name', 'Intl Dossier')}</h1>
               <p className="text-xs text-muted-foreground text-start">
                 {t('app.tagline', 'International Relations Management')}
               </p>
@@ -155,9 +141,7 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
         {navigationCategories.map((category) => (
           <SidebarGroup key={category.id}>
             {!isCollapsed && (
-              <SidebarGroupLabel className="text-start">
-                {t(category.tooltipKey)}
-              </SidebarGroupLabel>
+              <SidebarGroupLabel className="text-start">{t(category.tooltipKey)}</SidebarGroupLabel>
             )}
             <SidebarGroupContent>
               <SidebarMenu>
@@ -181,39 +165,23 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="min-h-11 data-[state=open]:bg-accent"
-                >
+                <SidebarMenuButton size="lg" className="min-h-11 data-[state=open]:bg-accent">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={user?.avatar_url} alt={user?.name} />
-                    <AvatarFallback>
-                      {user?.name?.charAt(0).toUpperCase() || 'U'}
-                    </AvatarFallback>
+                    <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
                   </Avatar>
                   {!isCollapsed && (
                     <div className="flex flex-col text-start ms-3 flex-1">
-                      <span className="text-sm font-medium">
-                        {user?.name || 'User'}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {user?.email || ''}
-                      </span>
+                      <span className="text-sm font-medium">{user?.name || 'User'}</span>
+                      <span className="text-xs text-muted-foreground">{user?.email || ''}</span>
                     </div>
                   )}
                   <ChevronRight
-                    className={cn(
-                      'h-4 w-4 transition-transform',
-                      isRTL && 'rotate-180'
-                    )}
+                    className={cn('h-4 w-4 transition-transform', isRTL && 'rotate-180')}
                   />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                align={isRTL ? 'end' : 'start'}
-                className="w-56"
-              >
+              <DropdownMenuContent side="top" align={isRTL ? 'end' : 'start'} className="w-56">
                 <DropdownMenuLabel className="text-start">
                   {t('navigation.myAccount', 'My Account')}
                 </DropdownMenuLabel>
@@ -244,7 +212,7 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  );
+  )
 }
 
 /**
@@ -257,35 +225,29 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
  * - Smooth transitions
  */
 interface NavigationMenuItemProps {
-  item: NavigationItem;
-  isCollapsed: boolean;
-  isRTL: boolean;
+  item: NavigationItem
+  isCollapsed: boolean
+  isRTL: boolean
 }
 
-function NavigationMenuItem({
-  item,
-  isCollapsed,
-  isRTL,
-}: NavigationMenuItemProps) {
-  const { t } = useTranslation();
-  const { isMobile, setOpenMobile } = useSidebar();
-  const Icon = item.icon;
+function NavigationMenuItem({ item, isCollapsed, isRTL }: NavigationMenuItemProps) {
+  const { t } = useTranslation()
+  const { isMobile, setOpenMobile } = useSidebar()
+  const Icon = item.icon
 
   // Close sidebar on mobile when clicking a navigation item
   const handleClick = () => {
     if (isMobile) {
-      setOpenMobile(false);
+      setOpenMobile(false)
     }
-  };
+  }
 
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild className="min-h-11">
         <Link to={item.path} className="flex items-center gap-3" onClick={handleClick}>
           <Icon className={cn('h-4 w-4', isRTL && 'scale-x-[-1]')} />
-          {!isCollapsed && (
-            <span className="flex-1 text-start">{t(item.labelKey)}</span>
-          )}
+          {!isCollapsed && <span className="flex-1 text-start">{t(item.labelKey)}</span>}
           {!isCollapsed && item.badge && (
             <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
               {item.badge}
@@ -297,5 +259,5 @@ function NavigationMenuItem({
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
-  );
+  )
 }

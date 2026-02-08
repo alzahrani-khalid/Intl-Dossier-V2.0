@@ -363,7 +363,7 @@ export function getTemplateColorClasses(color: string): {
     },
   }
 
-  return colorMap[color] || colorMap.gray
+  return (colorMap[color] || colorMap.gray)!
 }
 
 // Helper: Get icon component name for template

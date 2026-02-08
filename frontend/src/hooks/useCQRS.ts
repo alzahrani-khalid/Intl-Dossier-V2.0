@@ -264,7 +264,7 @@ export function useCreateDossier(
         ...command,
         idempotency_key: command.idempotency_key || generateIdempotencyKey('create-dossier', 'new'),
       }),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       // Invalidate dossier-related queries
       queryClient.invalidateQueries({ queryKey: cqrsKeys.summaries() })
       queryClient.invalidateQueries({ queryKey: cqrsKeys.search() })
@@ -288,7 +288,7 @@ export function useUpdateDossier(
         idempotency_key:
           command.idempotency_key || generateIdempotencyKey('update-dossier', command.id),
       }),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate specific dossier and related queries
       queryClient.invalidateQueries({ queryKey: cqrsKeys.summary(variables.id) })
       queryClient.invalidateQueries({ queryKey: cqrsKeys.timelineForDossier(variables.id) })
@@ -317,7 +317,7 @@ export function useArchiveDossier(
         idempotency_key:
           command.idempotency_key || generateIdempotencyKey('archive-dossier', command.id),
       }),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate dossier and related queries
       queryClient.invalidateQueries({ queryKey: cqrsKeys.summary(variables.id) })
       queryClient.invalidateQueries({ queryKey: cqrsKeys.summaries() })
@@ -351,7 +351,7 @@ export function useCreateRelationship(
             `${command.source_dossier_id}-${command.target_dossier_id}`,
           ),
       }),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate graph queries for both source and target
       queryClient.invalidateQueries({
         queryKey: cqrsKeys.graphForDossier(variables.source_dossier_id),
@@ -386,7 +386,7 @@ export function useDeleteRelationship(
         idempotency_key:
           command.idempotency_key || generateIdempotencyKey('delete-relationship', command.id),
       }),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate graph queries
       queryClient.invalidateQueries({ queryKey: cqrsKeys.graph() })
       // Update summaries if dossier IDs provided
@@ -420,7 +420,7 @@ export function useCreateCalendarEntry(
         idempotency_key:
           command.idempotency_key || generateIdempotencyKey('create-calendar', command.dossier_id),
       }),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate timeline queries for the dossier
       queryClient.invalidateQueries({
         queryKey: cqrsKeys.timelineForDossier(variables.dossier_id),

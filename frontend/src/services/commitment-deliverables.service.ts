@@ -200,7 +200,7 @@ export async function updateCommitmentDeliverable(
   if (input.status === 'completed') {
     updateData.completed_at = new Date().toISOString()
     updateData.progress = 100
-  } else if (input.status && input.status !== 'completed') {
+  } else if (input.status) {
     updateData.completed_at = null
   }
 

@@ -168,8 +168,15 @@ export function useDossierPositionLinks(
         throw new Error(queryError.message)
       }
 
+      // Normalize: Supabase returns joined relations as arrays; extract first element
+      const normalizedLinks = (links || []).map((link) => {
+        const posArray = link.position as unknown
+        const pos = Array.isArray(posArray) ? (posArray[0] ?? null) : posArray
+        return { ...link, position: pos as Record<string, unknown> | null }
+      })
+
       // Filter by position status if provided
-      let filteredLinks = links || []
+      let filteredLinks = normalizedLinks
       if (filters?.status) {
         filteredLinks = filteredLinks.filter((link) => link.position?.status === filters.status)
       }
@@ -180,11 +187,15 @@ export function useDossierPositionLinks(
         filteredLinks = filteredLinks.filter((link) => {
           const position = link.position
           if (!position) return false
+          const titleEn = position.title_en as string | undefined
+          const titleAr = position.title_ar as string | undefined
+          const contentEn = position.content_en as string | undefined
+          const contentAr = position.content_ar as string | undefined
           return (
-            position.title_en?.toLowerCase().includes(searchLower) ||
-            position.title_ar?.toLowerCase().includes(searchLower) ||
-            position.content_en?.toLowerCase().includes(searchLower) ||
-            position.content_ar?.toLowerCase().includes(searchLower)
+            titleEn?.toLowerCase().includes(searchLower) ||
+            titleAr?.toLowerCase().includes(searchLower) ||
+            contentEn?.toLowerCase().includes(searchLower) ||
+            contentAr?.toLowerCase().includes(searchLower)
           )
         })
       }
@@ -195,10 +206,10 @@ export function useDossierPositionLinks(
         .map((link) => ({
           ...link.position,
           link_type: link.link_type, // Add link_type to position object
-        })) as Position[]
+        })) as unknown as Position[]
 
       return {
-        links: filteredLinks as DossierPositionLink[],
+        links: filteredLinks as unknown as DossierPositionLink[],
         positions,
         total_count: count || filteredLinks.length,
       }

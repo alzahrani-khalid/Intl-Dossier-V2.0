@@ -13,7 +13,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { CalendarEntryForm } from '@/components/Calendar/CalendarEntryForm'
-import { useCalendarEvents, type CalendarEvent } from '@/hooks/useCalendar'
+import { useCalendarEvents } from '@/hooks/useCalendar'
+import type { CalendarEvent } from '@/hooks/useCalendarEvents'
 
 export function CalendarPage() {
   const { t, i18n } = useTranslation('calendar')
@@ -36,7 +37,7 @@ export function CalendarPage() {
     refetch() // Refresh calendar events
   }
 
-  const handleUpdateSuccess = () => {
+  const _handleUpdateSuccess = () => {
     setIsViewDialogOpen(false)
     setSelectedEvent(null)
     refetch() // Refresh calendar events
@@ -86,7 +87,7 @@ export function CalendarPage() {
           </DialogHeader>
           {selectedEvent && (
             <div className="space-y-4">
-              <EventCard event={selectedEvent} />
+              <EventCard event={selectedEvent as any} />
               <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <Button
                   variant="outline"

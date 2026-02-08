@@ -78,7 +78,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   bell: Bell,
 }
 
-const categoryIcons: Record<SavedSearchCategory, React.ComponentType<{ className?: string }>> = {
+const _categoryIcons: Record<SavedSearchCategory, React.ComponentType<{ className?: string }>> = {
   personal: User,
   team: Users,
   organization: Building,

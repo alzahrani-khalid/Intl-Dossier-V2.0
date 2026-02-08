@@ -5,14 +5,14 @@
  * Task: T115 [US5]
  */
 
-import { useState, useCallback, useMemo } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { entityLinksApi } from '@/services/entity-links-api';
-import type { EntityLink } from '@/types/database.types';
+import { useState, useCallback, useMemo } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { entityLinksApi } from '@/services/entity-links-api'
+import type { EntityLink } from '@/domains/shared/types/entity-link'
 
 interface ReorderMutationParams {
-  intakeId: string;
-  linkOrders: Array<{ link_id: string; link_order: number }>;
+  intakeId: string
+  linkOrders: Array<{ link_id: string; link_order: number }>
 }
 
 /**
@@ -23,53 +23,53 @@ interface ReorderMutationParams {
  * @returns Reorder state and mutation functions
  */
 export function useLinkReorder(intakeId: string) {
-  const queryClient = useQueryClient();
-  const [isDragging, setIsDragging] = useState(false);
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
+  const queryClient = useQueryClient()
+  const [isDragging, setIsDragging] = useState(false)
+  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null)
 
   // Mutation for reordering links with API call
   const reorderMutation = useMutation({
     mutationFn: async ({ intakeId, linkOrders }: ReorderMutationParams) => {
-      return entityLinksApi.reorderLinks(intakeId, linkOrders);
+      return entityLinksApi.reorderLinks(intakeId, linkOrders)
     },
 
     // Optimistic update: immediately update UI
     onMutate: async ({ linkOrders }) => {
       // Cancel any outgoing refetches to avoid overwriting optimistic update
-      await queryClient.cancelQueries({ queryKey: ['intake-links', intakeId] });
+      await queryClient.cancelQueries({ queryKey: ['intake-links', intakeId] })
 
       // Snapshot current state for rollback
-      const previousLinks = queryClient.getQueryData<EntityLink[]>(['intake-links', intakeId]);
+      const previousLinks = queryClient.getQueryData<EntityLink[]>(['intake-links', intakeId])
 
       // Optimistically update cache with new order
       if (previousLinks) {
-        const linkOrderMap = new Map(linkOrders.map(lo => [lo.link_id, lo.link_order]));
+        const linkOrderMap = new Map(linkOrders.map((lo) => [lo.link_id, lo.link_order]))
 
         const updatedLinks = [...previousLinks].sort((a, b) => {
-          const orderA = linkOrderMap.get(a.id) ?? a.link_order;
-          const orderB = linkOrderMap.get(b.id) ?? b.link_order;
-          return orderA - orderB;
-        });
+          const orderA = linkOrderMap.get(a.id) ?? (a as any).link_order ?? 0
+          const orderB = linkOrderMap.get(b.id) ?? (b as any).link_order ?? 0
+          return orderA - orderB
+        })
 
-        queryClient.setQueryData(['intake-links', intakeId], updatedLinks);
+        queryClient.setQueryData(['intake-links', intakeId], updatedLinks)
       }
 
-      return { previousLinks };
+      return { previousLinks }
     },
 
     // Rollback on error
-    onError: (error, variables, context) => {
+    onError: (error, _variables, context) => {
       if (context?.previousLinks) {
-        queryClient.setQueryData(['intake-links', intakeId], context.previousLinks);
+        queryClient.setQueryData(['intake-links', intakeId], context.previousLinks)
       }
-      console.error('Failed to reorder links:', error);
+      console.error('Failed to reorder links:', error)
     },
 
     // Refetch on success to ensure consistency
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['intake-links', intakeId] });
+      queryClient.invalidateQueries({ queryKey: ['intake-links', intakeId] })
     },
-  });
+  })
 
   /**
    * Debounced reorder function
@@ -80,18 +80,18 @@ export function useLinkReorder(intakeId: string) {
     (linkOrders: Array<{ link_id: string; link_order: number }>) => {
       // Clear existing timer
       if (debounceTimer) {
-        clearTimeout(debounceTimer);
+        clearTimeout(debounceTimer)
       }
 
       // Set new timer for 500ms debounce
       const timer = setTimeout(() => {
-        reorderMutation.mutate({ intakeId, linkOrders });
-      }, 500);
+        reorderMutation.mutate({ intakeId, linkOrders })
+      }, 500)
 
-      setDebounceTimer(timer);
+      setDebounceTimer(timer)
     },
-    [intakeId, reorderMutation, debounceTimer]
-  );
+    [intakeId, reorderMutation, debounceTimer],
+  )
 
   /**
    * Immediate optimistic update without debounce
@@ -99,36 +99,36 @@ export function useLinkReorder(intakeId: string) {
    */
   const optimisticReorder = useCallback(
     (newOrder: EntityLink[]) => {
-      queryClient.setQueryData<EntityLink[]>(['intake-links', intakeId], newOrder);
+      queryClient.setQueryData<EntityLink[]>(['intake-links', intakeId], newOrder)
     },
-    [intakeId, queryClient]
-  );
+    [intakeId, queryClient],
+  )
 
   /**
    * Cancel pending reorder operation
    */
   const cancelReorder = useCallback(() => {
     if (debounceTimer) {
-      clearTimeout(debounceTimer);
-      setDebounceTimer(null);
+      clearTimeout(debounceTimer)
+      setDebounceTimer(null)
     }
-  }, [debounceTimer]);
+  }, [debounceTimer])
 
   /**
    * Set dragging state
    */
   const setDragging = useCallback((dragging: boolean) => {
-    setIsDragging(dragging);
-  }, []);
+    setIsDragging(dragging)
+  }, [])
 
   // Cleanup timer on unmount
   useMemo(() => {
     return () => {
       if (debounceTimer) {
-        clearTimeout(debounceTimer);
+        clearTimeout(debounceTimer)
       }
-    };
-  }, [debounceTimer]);
+    }
+  }, [debounceTimer])
 
   return {
     isDragging,
@@ -140,5 +140,5 @@ export function useLinkReorder(intakeId: string) {
     isPending: reorderMutation.isPending,
     isError: reorderMutation.isError,
     error: reorderMutation.error,
-  };
+  }
 }

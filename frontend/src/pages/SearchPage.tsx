@@ -23,7 +23,7 @@ import { EntityTypeTabs, EntityType } from '@/components/EntityTypeTabs'
 import { SearchResultsList } from '@/components/SearchResultsList'
 import { SearchErrorBoundary } from '@/components/SearchErrorBoundary'
 import { SearchEmptyState } from '@/components/empty-states/SearchEmptyState'
-import { useSearch as useSearchQuery } from '@/hooks/useSearch'
+import { useSearch as useSearchQuery, type EntityType as SearchEntityType } from '@/hooks/useSearch'
 import { useSuggestions } from '@/hooks/useSuggestions'
 import { useSemanticSearch } from '@/hooks/useSemanticSearch'
 import { useSearchKeyboardNavigation } from '@/hooks/useKeyboardNavigation'
@@ -51,23 +51,24 @@ export function SearchPage() {
     isLoading: isSearchLoading,
     error: searchError,
     refetch: refetchSearch,
-  } = useSearchQuery(query, {
-    entityTypes: selectedType === 'all' ? undefined : [selectedType],
+  } = useSearchQuery({
+    query,
+    entityTypes: selectedType === 'all' ? undefined : [selectedType as unknown as SearchEntityType],
     limit: 20,
     includeArchived: searchParams.includeArchived === 'true',
   })
 
-  const { suggestions, isLoading: isSuggestionsLoading } = useSuggestions(query)
+  const { suggestions, isLoading: isSuggestionsLoading } = useSuggestions({ prefix: query })
 
   const {
     data: semanticData,
-    isLoading: isSemanticLoading,
+    isPending: isSemanticLoading,
     mutate: performSemanticSearch,
   } = useSemanticSearch()
 
   // Keyboard navigation
   useSearchKeyboardNavigation({
-    searchInputRef,
+    searchInputRef: searchInputRef as React.RefObject<HTMLInputElement>,
     isOpen: showSuggestions,
     onClose: () => setShowSuggestions(false),
     onSubmit: handleSearchSubmit,
@@ -88,14 +89,14 @@ export function SearchPage() {
   // Update URL params when search changes
   useEffect(() => {
     if (query) {
-      navigate({
+      void navigate({
         to: '/search',
         search: {
           q: query,
           type: selectedType !== 'all' ? selectedType : undefined,
           includeArchived: searchParams.includeArchived,
-        },
-      })
+        } as Record<string, unknown>,
+      } as unknown as Parameters<typeof navigate>[0])
     }
   }, [query, selectedType, navigate, searchParams.includeArchived])
 
@@ -171,17 +172,20 @@ export function SearchPage() {
         {/* Search Input with Suggestions */}
         <div className="relative mb-6">
           <GlobalSearchInput
-            ref={searchInputRef}
             value={query}
             onChange={handleQueryChange}
-            onSubmit={handleSearchSubmit}
+            onSearch={handleSearchSubmit}
             onFocus={() => query && setShowSuggestions(true)}
             placeholder={t('search.placeholder')}
             isLoading={isSuggestionsLoading}
           />
 
           <SearchSuggestions
-            suggestions={suggestions}
+            suggestions={
+              suggestions as unknown as React.ComponentProps<
+                typeof SearchSuggestions
+              >['suggestions']
+            }
             isOpen={showSuggestions}
             activeIndex={activeIndex}
             onSelect={handleSuggestionSelect}
@@ -245,11 +249,14 @@ export function SearchPage() {
               selectedType={selectedType}
               counts={{
                 all: displayData.counts?.total || 0,
-                dossiers: displayData.counts?.dossiers || 0,
-                people: displayData.counts?.people || 0,
-                engagements: displayData.counts?.engagements || 0,
+                country: 0,
+                organization: 0,
+                forum: 0,
+                engagement: displayData.counts?.engagements || 0,
+                theme: 0,
+                working_group: 0,
+                person: displayData.counts?.people || 0,
                 positions: displayData.counts?.positions || 0,
-                mous: displayData.counts?.mous || 0,
                 documents: displayData.counts?.documents || 0,
               }}
               onTypeChange={handleTypeChange}
@@ -276,8 +283,16 @@ export function SearchPage() {
           <SearchEmptyState type="no-query" />
         ) : (
           <SearchResultsList
-            results={displayData?.results || []}
-            exactMatches={displayData?.exactMatches}
+            results={
+              (displayData?.results || []) as unknown as React.ComponentProps<
+                typeof SearchResultsList
+              >['results']
+            }
+            exactMatches={
+              displayData?.exactMatches as unknown as React.ComponentProps<
+                typeof SearchResultsList
+              >['exactMatches']
+            }
             isLoading={isLoading}
             hasMore={displayData?.hasMore}
             onLoadMore={() => {

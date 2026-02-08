@@ -206,7 +206,7 @@ function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProp
       {suggestion.action_route && variant !== 'compact' && (
         <div className="flex-shrink-0">
           <Button variant="ghost" size="sm" className={cn('min-h-9 min-w-9', sizes.button)} asChild>
-            <Link to={suggestion.action_route} search={suggestion.action_params}>
+            <Link to={suggestion.action_route} search={suggestion.action_params as any}>
               <span className="hidden sm:inline me-1">{actionLabel}</span>
               <ChevronRight className={cn('w-4 h-4', isRTL && 'rotate-180')} />
             </Link>
@@ -228,7 +228,7 @@ function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProp
     return suggestion.action_route ? (
       <Link
         to={suggestion.action_route}
-        search={suggestion.action_params}
+        search={suggestion.action_params as any}
         className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors"
       >
         <Icon className={cn(sizes.icon, 'text-muted-foreground')} />

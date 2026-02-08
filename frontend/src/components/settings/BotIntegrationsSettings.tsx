@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -27,7 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Loader2, Slack, MessageSquare, Link2, Unlink, Bell, Clock, Check, X } from 'lucide-react'
+import { Loader2, Slack, MessageSquare, Link2, Unlink, Bell, Clock, Check } from 'lucide-react'
 import { toast } from 'sonner'
 
 // Types
@@ -71,7 +70,7 @@ async function fetchBotLinks(): Promise<BotLink[]> {
 }
 
 // Fetch briefing schedules for a link
-async function fetchBriefingSchedules(linkId: string): Promise<BriefingSchedule[]> {
+async function _fetchBriefingSchedules(linkId: string): Promise<BriefingSchedule[]> {
   const { data, error } = await supabase
     .from('bot_briefing_schedules')
     .select('*')
@@ -149,7 +148,7 @@ async function unlinkBotAccount(linkId: string): Promise<void> {
 }
 
 // Update briefing schedule
-async function updateBriefingSchedule(
+async function _updateBriefingSchedule(
   scheduleId: string,
   updates: Partial<BriefingSchedule>,
 ): Promise<void> {
@@ -162,7 +161,7 @@ async function updateBriefingSchedule(
 }
 
 // Create briefing schedule
-async function createBriefingSchedule(
+async function _createBriefingSchedule(
   linkId: string,
   platform: 'slack' | 'teams',
   targetId: string,
@@ -183,7 +182,7 @@ async function createBriefingSchedule(
 }
 
 // Days of week options
-const DAYS_OF_WEEK = [
+const _DAYS_OF_WEEK = [
   { value: 0, label: 'sunday' },
   { value: 1, label: 'monday' },
   { value: 2, label: 'tuesday' },

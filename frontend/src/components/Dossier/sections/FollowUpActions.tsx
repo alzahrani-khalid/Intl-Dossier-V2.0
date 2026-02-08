@@ -10,11 +10,10 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { arSA, enUS } from 'date-fns/locale'
-import { ListTodo, CheckSquare, Circle, Clock, User, Loader2, ArrowRight } from 'lucide-react'
+import { ListTodo, CheckSquare, Circle, Clock, User, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
 
 interface FollowUpAction {
@@ -203,7 +202,11 @@ export function FollowUpActions({ dossierId }: FollowUpActionsProps) {
                   </p>
                   {action.priority && (
                     <Badge className={cn('text-xs shrink-0', getPriorityBadge(action.priority))}>
-                      {t(`priority.${action.priority}`, action.priority)}
+                      {String(
+                        t(`priority.${action.priority}` as string, {
+                          defaultValue: action.priority,
+                        }),
+                      )}
                     </Badge>
                   )}
                 </div>

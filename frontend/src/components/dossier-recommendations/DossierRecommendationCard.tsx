@@ -8,7 +8,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useNavigate } from '@tanstack/react-router'
 import {
   FileText,
@@ -54,7 +54,7 @@ import {
   REASON_LABELS,
   PRIORITY_LABELS,
 } from '@/types/dossier-recommendation.types'
-import type { DossierType } from '@/types/dossier.types'
+import type { DossierType } from '@/types/dossier'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
 import { cn } from '@/lib/utils'
 
@@ -149,14 +149,14 @@ function PriorityIndicator({ priority }: { priority: number }) {
           'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 border-gray-200',
       )}
     >
-      {isRTL ? label.ar : label.en}
+      {isRTL ? label?.ar : label?.en}
     </Badge>
   )
 }
 
 function DossierTypeBadge({ type }: { type: DossierType }) {
   const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const _isRTL = i18n.language === 'ar'
   const Icon = dossierTypeIcons[type] || FileText
 
   return (

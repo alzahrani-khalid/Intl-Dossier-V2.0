@@ -11,25 +11,25 @@
  * - Dark/light mode theming
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Loader2, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
-import { AceternityTimelineCard } from './AceternityTimelineCard';
-import type { UnifiedTimelineEvent } from '@/types/timeline.types';
+import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Loader2, Calendar } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
+import { AceternityTimelineCard } from './AceternityTimelineCard'
+import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 
 interface AceternityVerticalTimelineProps {
-  events: UnifiedTimelineEvent[];
-  isLoading?: boolean;
-  isFetchingNextPage?: boolean;
-  hasNextPage?: boolean;
-  onLoadMore?: () => void;
-  error?: Error | null;
-  emptyMessage?: string;
-  className?: string;
+  events: UnifiedTimelineEvent[]
+  isLoading?: boolean
+  isFetchingNextPage?: boolean
+  hasNextPage?: boolean
+  onLoadMore?: () => void
+  error?: Error | null
+  emptyMessage?: string
+  className?: string
 }
 
 /**
@@ -44,10 +44,12 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
           <div className="absolute start-3 md:start-8 top-4 h-10 w-10 rounded-full border-4 border-background bg-muted" />
 
           {/* Card skeleton */}
-          <div className={cn(
-            "w-full md:w-[calc(50%-2rem)]",
-            index % 2 === 0 ? "md:ms-auto md:ps-12" : "md:me-auto md:ps-20"
-          )}>
+          <div
+            className={cn(
+              'w-full md:w-[calc(50%-2rem)]',
+              index % 2 === 0 ? 'md:ms-auto md:ps-12' : 'md:me-auto md:ps-20',
+            )}
+          >
             <div className="ps-16 md:ps-4 space-y-3">
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
@@ -57,32 +59,34 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 /**
  * Empty state component
  */
 function TimelineEmptyState({ message }: { message: string }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
   return (
     <div className="flex flex-col items-center justify-center py-12 sm:py-16 lg:py-20 text-center">
       <div className="rounded-full bg-muted p-6 sm:p-8 lg:p-10 mb-4 sm:mb-6">
         <Calendar className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-muted-foreground" />
       </div>
-      <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-2">{t('timeline.empty.title')}</h3>
+      <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-2">
+        {t('timeline.empty.title')}
+      </h3>
       <p className="text-sm sm:text-base text-muted-foreground max-w-md px-4">
         {message || t('timeline.empty.description')}
       </p>
     </div>
-  );
+  )
 }
 
 /**
  * Error state component
  */
 function TimelineErrorState({ error }: { error: Error }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
   return (
     <Alert variant="destructive" className="mb-6">
       <AlertTitle>{t('timeline.error.title')}</AlertTitle>
@@ -90,7 +94,7 @@ function TimelineErrorState({ error }: { error: Error }) {
         {error.message || t('timeline.error.description')}
       </AlertDescription>
     </Alert>
-  );
+  )
 }
 
 export function AceternityVerticalTimeline({
@@ -103,20 +107,20 @@ export function AceternityVerticalTimeline({
   emptyMessage,
   className,
 }: AceternityVerticalTimelineProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const containerRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-  const [lineHeight, setLineHeight] = useState(0);
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const containerRef = useRef<HTMLDivElement>(null)
+  const lineRef = useRef<HTMLDivElement>(null)
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const [lineHeight, setLineHeight] = useState(0)
 
   // Calculate line height based on content
   useEffect(() => {
     if (lineRef.current) {
-      const rect = lineRef.current.getBoundingClientRect();
-      setLineHeight(rect.height);
+      const rect = lineRef.current.getBoundingClientRect()
+      setLineHeight(rect.height)
     }
-  }, [events]);
+  }, [events])
 
   // Disabled scroll-based animations to prevent SSR hydration issues
   // TODO: Re-enable with proper client-side only rendering if needed
@@ -129,21 +133,21 @@ export function AceternityVerticalTimeline({
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
-    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return undefined
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && onLoadMore) {
-          onLoadMore();
+        if (entries[0]!.isIntersecting && onLoadMore) {
+          onLoadMore()
         }
       },
-      { threshold: 0.1 }
-    );
+      { threshold: 0.1 },
+    )
 
-    observer.observe(loadMoreRef.current);
+    observer.observe(loadMoreRef.current)
 
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, onLoadMore]);
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, onLoadMore])
 
   // Initial loading state
   if (isLoading) {
@@ -151,7 +155,7 @@ export function AceternityVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineLoadingSkeleton count={5} />
       </div>
-    );
+    )
   }
 
   // Error state
@@ -160,7 +164,7 @@ export function AceternityVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineErrorState error={error} />
       </div>
-    );
+    )
   }
 
   // Empty state
@@ -169,7 +173,7 @@ export function AceternityVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineEmptyState message={emptyMessage || ''} />
       </div>
-    );
+    )
   }
 
   return (
@@ -182,33 +186,26 @@ export function AceternityVerticalTimeline({
         {/* Timeline Events */}
         <div ref={lineRef} className="relative">
           {events.map((event, index) => {
-            const isEven = index % 2 === 0;
+            const isEven = index % 2 === 0
 
             return (
-              <div
-                key={event.id}
-                className="relative flex justify-start pt-6 md:pt-20"
-              >
+              <div key={event.id} className="relative flex justify-start pt-6 md:pt-20">
                 {/* Render the timeline card with modal */}
-                <AceternityTimelineCard
-                  event={event}
-                  index={index}
-                  isEven={isEven}
-                />
+                <AceternityTimelineCard event={event} index={index} isEven={isEven} />
               </div>
-            );
+            )
           })}
 
           {/* Static Timeline Line (scroll animation disabled to prevent hydration issues) */}
           <div
             style={{ height: `${lineHeight}px` }}
             className={cn(
-              "absolute top-0 w-[2px]",
-              "bg-gradient-to-b from-transparent from-[0%] via-border via-[10%] to-transparent to-[90%]",
+              'absolute top-0 w-[2px]',
+              'bg-gradient-to-b from-transparent from-[0%] via-border via-[10%] to-transparent to-[90%]',
               // Mobile: on the left (with date/time section)
-              "start-[46px]",
+              'start-[46px]',
               // Desktop: centered
-              "md:start-1/2 md:-translate-x-1/2"
+              'md:start-1/2 md:-translate-x-1/2',
             )}
           />
         </div>
@@ -222,11 +219,7 @@ export function AceternityVerticalTimeline({
                 <span>{t('timeline.loading_more')}</span>
               </div>
             ) : (
-              <Button
-                variant="outline"
-                onClick={onLoadMore}
-                className="min-h-11 sm:min-h-10"
-              >
+              <Button variant="outline" onClick={onLoadMore} className="min-h-11 sm:min-h-10">
                 {t('timeline.load_more')}
               </Button>
             )}
@@ -241,5 +234,5 @@ export function AceternityVerticalTimeline({
         )}
       </div>
     </div>
-  );
+  )
 }

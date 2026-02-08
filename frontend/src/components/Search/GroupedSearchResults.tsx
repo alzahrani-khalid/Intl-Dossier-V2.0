@@ -235,9 +235,9 @@ export function GroupedSearchResults({
       .map(([type, typeResults]) => ({
         type,
         results: typeResults,
-        config: entityTypeConfig[type] || entityTypeConfig.document,
+        config: (entityTypeConfig[type] || entityTypeConfig.document)!,
       }))
-      .sort((a, b) => a.config.order - b.config.order)
+      .sort((a, b) => a.config!.order - b.config!.order)
 
     return sortedGroups
   }, [results])

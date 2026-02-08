@@ -17,7 +17,7 @@ import { MapFilterControls } from '@/components/geographic-visualization/MapFilt
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Table,
   TableBody,
@@ -67,7 +67,10 @@ export function GeographicVisualizationPage() {
   const handleCountryClick = useCallback(
     (country: CountryEngagementMetrics) => {
       // Navigate to dossier page with country filter
-      navigate({ to: '/dossiers', search: { type: 'country', countryId: country.countryId } })
+      navigate({
+        to: '/dossiers',
+        search: { type: 'country', countryId: country.countryId } as any,
+      })
     },
     [navigate],
   )

@@ -73,7 +73,7 @@ function getTypeIcon(type: DossierType) {
       return <Users {...iconProps} />
     case 'engagement':
       return <Calendar {...iconProps} />
-    case 'theme':
+    case 'topic':
       return <Target {...iconProps} />
     case 'working_group':
       return <Briefcase {...iconProps} />
@@ -97,7 +97,7 @@ function getTypeColor(type: DossierType): string {
       return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
     case 'engagement':
       return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300'
-    case 'theme':
+    case 'topic':
       return 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300'
     case 'working_group':
       return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300'
@@ -132,9 +132,9 @@ function getStatusColor(status: DossierStatus): string {
 function getInitials(name: string): string {
   const words = name.trim().split(/\s+/)
   if (words.length === 1) {
-    return words[0].slice(0, 2).toUpperCase()
+    return words[0]!.slice(0, 2).toUpperCase()
   }
-  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase()
+  return (words[0]!.charAt(0) + words[words.length - 1]!.charAt(0)).toUpperCase()
 }
 
 export function UniversalDossierCard({

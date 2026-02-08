@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLegislations, useWatchLegislation, useUnwatchLegislation } from '@/hooks/useLegislation'
 import {
@@ -381,7 +381,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
             </div>
 
             {/* Title */}
-            <Link to="/legislation/$id" params={{ id: legislation.id }} className="block">
+            <Link to="/legislation/$id" params={{ id: legislation.id } as any} className="block">
               <h3 className="font-semibold text-start hover:text-primary transition-colors line-clamp-2">
                 {title}
               </h3>
@@ -449,7 +449,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                   <BellOff className="h-4 w-4" />
                 )}
               </Button>
-              <Link to="/legislation/$id" params={{ id: legislation.id }}>
+              <Link to="/legislation/$id" params={{ id: legislation.id } as any}>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
                 </Button>

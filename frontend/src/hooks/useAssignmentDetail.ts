@@ -1,4 +1,7 @@
 /**
+ * @deprecated Use the tasks API instead (services/tasks-api.ts). This hook queries
+ * the legacy assignments table. New code should use useTasks/useMyTasks hooks.
+ *
  * useAssignmentDetail Hook
  *
  * TanStack Query hook with Supabase Realtime subscription for assignment detail.
@@ -114,7 +117,7 @@ export function useAssignmentDetail(assignmentId: string) {
 
   // Setup Supabase Realtime subscriptions
   useEffect(() => {
-    if (!assignmentId) return
+    if (!assignmentId) return undefined
 
     const channel: RealtimeChannel = supabase
       .channel(`assignment:${assignmentId}`)
@@ -171,7 +174,7 @@ export function useAssignmentDetail(assignmentId: string) {
           table: 'assignment_checklist_items',
           filter: `assignment_id=eq.${assignmentId}`,
         },
-        (payload) => {
+        (_payload) => {
           queryClient.invalidateQueries({ queryKey: ['assignment', assignmentId] })
         },
       )

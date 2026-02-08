@@ -104,22 +104,19 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
   const handleFavorite = useCallback(() => {
     if (onFavorite) {
       onFavorite(dossier.id)
-      toast({
-        title: isFavorited
+      toast(
+        isFavorited
           ? t('swipe-gestures:feedback.unfavorited')
           : t('swipe-gestures:feedback.favorited'),
-        duration: 2000,
-      })
+        { duration: 2000 },
+      )
     }
   }, [onFavorite, dossier.id, isFavorited, t])
 
   const handleArchive = useCallback(() => {
     if (onArchive) {
       onArchive(dossier.id)
-      toast({
-        title: t('swipe-gestures:feedback.archived'),
-        duration: 2000,
-      })
+      toast(t('swipe-gestures:feedback.archived'), { duration: 2000 })
     }
   }, [onArchive, dossier.id, t])
 

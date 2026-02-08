@@ -31,7 +31,7 @@ import {
   Activity,
 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
-import type { IntelligenceReport } from '@/types/intelligence-reports.types'
+import type { IntelligenceReport } from '@/services/intelligence-api'
 
 interface EconomicDashboardProps {
   reports: IntelligenceReport[]

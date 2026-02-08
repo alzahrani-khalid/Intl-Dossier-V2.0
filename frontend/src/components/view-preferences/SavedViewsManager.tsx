@@ -116,7 +116,7 @@ export function SavedViewsManager({
   const currentView = savedViews.find(
     (v) => JSON.stringify(v.view_config) === JSON.stringify(currentViewConfig),
   )
-  const defaultView = savedViews.find((v) => v.is_default)
+  const _defaultView = savedViews.find((v) => v.is_default)
   const pinnedViews = savedViews.filter((v) => v.is_pinned)
 
   // Reset form

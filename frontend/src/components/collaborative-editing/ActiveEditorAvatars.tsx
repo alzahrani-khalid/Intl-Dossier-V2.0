@@ -6,7 +6,6 @@
  * Mobile-first with RTL support.
  */
 
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -156,7 +155,7 @@ export function ActiveEditorAvatars({
             <span className="text-sm text-muted-foreground">
               {visibleEditors.length === 1
                 ? t('editors.singleEditing', {
-                    name: visibleEditors[0].name || visibleEditors[0].email,
+                    name: visibleEditors[0]!.name || visibleEditors[0]!.email,
                   })
                 : t('editors.multipleEditing', { count: editors.length })}
             </span>

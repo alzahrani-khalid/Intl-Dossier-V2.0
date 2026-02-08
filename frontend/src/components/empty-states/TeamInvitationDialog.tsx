@@ -30,7 +30,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Loader2, Mail, User, Users, Send, Eye } from 'lucide-react'
+import { Loader2, Mail, Send, Eye } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   useInvitationTemplates,

@@ -60,7 +60,7 @@ export function NotificationCenter({
 
   // Subscribe to real-time notifications
   useEffect(() => {
-    if (!user?.id) return
+    if (!user?.id) return undefined
 
     const channel = `notifications:${user.id}`
 

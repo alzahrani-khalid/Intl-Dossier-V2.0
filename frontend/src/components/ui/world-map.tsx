@@ -80,9 +80,9 @@ export default function WorldMap({
   }, [])
 
   // Get intensity color for heatmap
-  const getIntensityColor = useCallback((intensity: number, baseColor: string): string => {
+  const _getIntensityColor = useCallback((intensity: number, baseColor: string): string => {
     // Intensity 0-100 maps to opacity
-    const alpha = Math.max(0.3, intensity / 100)
+    const _alpha = Math.max(0.3, intensity / 100)
     return baseColor
   }, [])
 

@@ -32,7 +32,6 @@ import {
   List,
   FileText,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
 import { EntitySelector } from './EntitySelector'

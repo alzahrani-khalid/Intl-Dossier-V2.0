@@ -7,7 +7,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { format, differenceInDays } from 'date-fns'
+import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import {
   Calendar,

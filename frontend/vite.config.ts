@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
@@ -31,6 +32,7 @@ export default defineConfig({
       autoCodeSplitting: true,
       generatedRouteTree: './src/routeTree.gen.ts',
     }),
+    tailwindcss(),
     react(),
     // Bundle visualizer - only enabled when ANALYZE=true
     isAnalyze &&

@@ -14,7 +14,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -33,7 +33,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DossierTypeGuide } from './DossierTypeGuide'
-import type { DossierType, DossierStatus } from '@/services/dossier-api'
+import type { DossierType } from '@/services/dossier-api'
 
 interface DossierTypeStatsCardProps {
   type: DossierType

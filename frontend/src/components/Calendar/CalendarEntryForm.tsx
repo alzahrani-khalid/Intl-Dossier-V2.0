@@ -553,9 +553,9 @@ export function CalendarEntryForm({
                 <CommandEmpty>{t('calendar.form.no_participants_found')}</CommandEmpty>
 
                 {/* Person dossiers */}
-                {personDossiers && personDossiers.length > 0 && (
+                {personDossiers?.data && personDossiers.data.length > 0 && (
                   <CommandGroup heading={t('calendar.form.people')}>
-                    {personDossiers.map((person) => {
+                    {personDossiers.data.map((person) => {
                       const displayName = isRTL ? person.name_ar : person.name_en
                       const isSelected = participants.some((p) => p.participant_id === person.id)
 
@@ -612,9 +612,9 @@ export function CalendarEntryForm({
                 )}
 
                 {/* Organization dossiers */}
-                {orgDossiers && orgDossiers.length > 0 && (
+                {orgDossiers?.data && orgDossiers.data.length > 0 && (
                   <CommandGroup heading={t('calendar.form.organizations')}>
-                    {orgDossiers.map((org) => {
+                    {orgDossiers.data.map((org) => {
                       const displayName = isRTL ? org.name_ar : org.name_en
                       const isSelected = participants.some((p) => p.participant_id === org.id)
 

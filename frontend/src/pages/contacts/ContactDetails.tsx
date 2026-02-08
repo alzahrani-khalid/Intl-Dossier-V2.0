@@ -57,15 +57,19 @@ export function ContactDetails() {
   const [showAddNoteDialog, setShowAddNoteDialog] = useState(false)
   const [editingNote, setEditingNote] = useState<InteractionNoteResponse | undefined>(undefined)
 
-  // Fetch contact
-  const { data: contact, isLoading } = useContact(contactId)
+  // Fetch contact - cast to any because ContactDetails uses a flat contact shape
+  // that doesn't match PersonDossier's metadata-nested structure
+  const { data: contact, isLoading } = usePersonDossier(contactId) as {
+    data: any
+    isLoading: boolean
+  }
 
   // Fetch relationships
   const { data: relationships = [], isLoading: isLoadingRelationships } =
     useRelationships(contactId)
 
   // Archive mutation
-  const archiveMutation = useArchiveContact()
+  const archiveMutation = useArchivePersonDossier()
 
   const handleBack = () => {
     navigate({ to: '/contacts' })
@@ -197,7 +201,7 @@ export function ContactDetails() {
                       {t('contactDirectory.labels.email')}
                     </h3>
                     <div className="space-y-2">
-                      {contact.email_addresses.map((email, index) => (
+                      {contact.email_addresses.map((email: string, index: number) => (
                         <div key={index} className="flex items-center gap-2 text-sm">
                           <Mail className="h-4 w-4 text-muted-foreground" />
                           <a
@@ -219,7 +223,7 @@ export function ContactDetails() {
                       {t('contactDirectory.labels.phone')}
                     </h3>
                     <div className="space-y-2">
-                      {contact.phone_numbers.map((phone, index) => (
+                      {contact.phone_numbers.map((phone: string, index: number) => (
                         <div key={index} className="flex items-center gap-2 text-sm">
                           <Phone className="h-4 w-4 text-muted-foreground" />
                           <a
@@ -242,7 +246,7 @@ export function ContactDetails() {
                       {t('contactDirectory.labels.tags')}
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {contact.tags.map((tag) => (
+                      {contact.tags.map((tag: { id: string; name: string }) => (
                         <Badge key={tag.id} variant="outline">
                           <Tag className="h-3 w-3 me-1" />
                           {tag.name}

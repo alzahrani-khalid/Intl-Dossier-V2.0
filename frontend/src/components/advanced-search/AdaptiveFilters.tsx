@@ -20,12 +20,11 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
 import { useFilterCounts } from '@/hooks/useEnhancedSearch'
-import type { FilterCount, FilterType } from '@/types/enhanced-search.types'
+import type { FilterType } from '@/types/enhanced-search.types'
 
 // =============================================================================
 // Types

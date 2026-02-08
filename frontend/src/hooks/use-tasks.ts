@@ -487,9 +487,9 @@ export function useTaskDraftRecovery() {
               ...draft.updates,
               // Include original updated_at for optimistic locking if available
               ...(draft.originalUpdatedAt && {
-                updated_at: draft.originalUpdatedAt,
+                last_known_updated_at: draft.originalUpdatedAt,
               }),
-            },
+            } as UpdateTaskRequest,
           })
 
           // Clear draft on success

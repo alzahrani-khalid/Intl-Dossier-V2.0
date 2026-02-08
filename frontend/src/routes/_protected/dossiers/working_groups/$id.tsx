@@ -29,41 +29,36 @@
  * <Route path="/dossiers/working-groups/:id" />
  */
 
-import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { Loader2, AlertCircle } from 'lucide-react';
-import { useTypedDossier } from '@/hooks/useDossier';
-import { WorkingGroupDossierPage } from '@/pages/dossiers/WorkingGroupDossierPage';
-import { Button } from '@/components/ui/button';
-import { Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import { Loader2, AlertCircle } from 'lucide-react'
+import { useTypedDossier } from '@/hooks/useDossier'
+import { WorkingGroupDossierPage } from '@/pages/dossiers/WorkingGroupDossierPage'
+import { Button } from '@/components/ui/button'
+import { Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/dossiers/working_groups/$id')({
   component: WorkingGroupDossierDetailRoute,
-});
+})
 
 function WorkingGroupDossierDetailRoute() {
-  const { id } = Route.useParams();
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { id } = Route.useParams()
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Fetch working group dossier with type validation
-  const { data: dossier, isLoading, error } = useTypedDossier(id, 'working_group');
+  const { data: dossier, isLoading, error } = useTypedDossier(id, 'working_group')
 
   // Loading State
   if (isLoading) {
     return (
-      <div
-        className="flex min-h-[50vh] items-center justify-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
-      >
+      <div className="flex min-h-[50vh] items-center justify-center" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin text-primary" />
-          <p className="text-sm sm:text-base text-muted-foreground">
-            {t('detail.loading')}
-          </p>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('detail.loading')}</p>
         </div>
       </div>
-    );
+    )
   }
 
   // Error State
@@ -85,16 +80,14 @@ function WorkingGroupDossierDetailRoute() {
                   {error?.message || t('detail.errorGeneric')}
                 </p>
                 <Button asChild variant="outline">
-                  <Link to="/dossiers">
-                    {t('action.backToHub')}
-                  </Link>
+                  <Link to="/dossiers">{t('action.backToHub')}</Link>
                 </Button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Type Mismatch Error
@@ -106,33 +99,29 @@ function WorkingGroupDossierDetailRoute() {
       >
         <div className="max-w-2xl mx-auto">
           <div className="rounded-lg border border-warning/20 bg-warning/10 p-6 sm:p-8">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">
-              {t('detail.wrongType')}
-            </h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-2">{t('detail.wrongType')}</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-4">
               {t('detail.wrongTypeDescription', {
-                actualType: t(`type.${dossier.type}`),
-                expectedType: t('type.working_group'),
+                actualType: t(`type.${dossier.type}` as any),
+                expectedType: t('type.working_group' as any),
               })}
             </p>
             <div className="flex gap-3">
               <Button asChild>
                 <Link to={`/dossiers/${dossier.type}s/${id}`}>
-                  {t('action.viewCorrectType', { type: t(`type.${dossier.type}`) })}
+                  {t('action.viewCorrectType', { type: t(`type.${dossier.type}` as any) })}
                 </Link>
               </Button>
               <Button asChild variant="outline">
-                <Link to="/dossiers">
-                  {t('action.backToHub')}
-                </Link>
+                <Link to="/dossiers">{t('action.backToHub')}</Link>
               </Button>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Success - Render Working Group Dossier Page
-  return <WorkingGroupDossierPage dossier={dossier} />;
+  return <WorkingGroupDossierPage dossier={dossier} />
 }

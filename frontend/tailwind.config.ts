@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import rtl from 'tailwindcss-rtl'
 
 const config: Config = {
   darkMode: ['class'],
@@ -199,8 +198,7 @@ const config: Config = {
     },
   },
   plugins: [
-    rtl,
-    // RTL support plugin
+    // RTL support plugin (Tailwind v4 has built-in logical properties)
     ({ addUtilities }: any) => {
       addUtilities({
         '.rtl': {

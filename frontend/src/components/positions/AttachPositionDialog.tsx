@@ -61,10 +61,9 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
 
   // Fetch positions for this dossier
   const { data: positionsData, isLoading } = usePositions({
-    dossierId,
     status: 'published',
   })
-  const positions = positionsData?.positions || []
+  const positions = positionsData?.pages?.flatMap((page) => page.data) || []
 
   // Filter positions
   const filteredPositions = useMemo(() => {
@@ -313,7 +312,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                       </p>
                     </div>
 
-                    {previewPosition.key_messages && (
+                    {previewPosition.rationale_en && (
                       <>
                         <Separator />
                         <div>
@@ -321,7 +320,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                             {t('positions.attach.keyMessages')}
                           </p>
                           <p className="text-sm text-muted-foreground" dir={isRTL ? 'rtl' : 'ltr'}>
-                            {previewPosition.key_messages}
+                            {isRTL ? previewPosition.rationale_ar : previewPosition.rationale_en}
                           </p>
                         </div>
                       </>

@@ -31,7 +31,7 @@ export function BilingualField({
   showTranslateButtons = true,
 }: BilingualFieldProps) {
   const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const _isRTL = i18n.language === 'ar'
 
   const InputComponent = fieldType === 'textarea' ? Textarea : Input
 

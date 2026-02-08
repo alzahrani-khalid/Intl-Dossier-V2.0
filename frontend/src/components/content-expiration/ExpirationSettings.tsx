@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { Calendar, Clock, RefreshCw, History, Plus, Settings2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -29,7 +28,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/hooks/use-toast'
 import { useEntityExpiration } from '@/hooks/useContentExpiration'
@@ -38,7 +36,7 @@ import type {
   ExpirationEntityType,
   ContentExpirationStatus,
 } from '@/types/content-expiration.types'
-import { EXTENSION_PRESETS, DEFAULT_EXPIRATION_DAYS } from '@/types/content-expiration.types'
+import { EXTENSION_PRESETS } from '@/types/content-expiration.types'
 
 interface ExpirationSettingsProps {
   entityType: ExpirationEntityType

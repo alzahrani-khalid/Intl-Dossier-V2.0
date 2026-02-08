@@ -11,7 +11,7 @@ export function RealtimeStatus() {
   const { connectionStatus, isConnected, reconnect, lastError } = useRealtimeStore()
 
   // Don't show on login page or when not authenticated
-  if (!auth?.session) {
+  if (!(auth as any)?.isAuthenticated) {
     return null
   }
 

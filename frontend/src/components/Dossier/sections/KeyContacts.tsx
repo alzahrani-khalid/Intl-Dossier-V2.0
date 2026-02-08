@@ -6,14 +6,13 @@
  * Includes smart import suggestions for empty state.
  */
 
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { Users, UserCircle, Mail, Phone, ExternalLink } from 'lucide-react'
+import { Users, Mail, Phone, ExternalLink } from 'lucide-react'
 import { SmartImportSuggestion } from '@/components/smart-import'
 import { RelatedEntityCarousel, type CarouselItem } from '@/components/ui/related-entity-carousel'
 import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import type { OrganizationDossier } from '@/lib/dossier-type-guards'
@@ -41,9 +40,9 @@ interface ContactCarouselItem extends CarouselItem {
 function getInitials(name: string): string {
   const words = name.trim().split(/\s+/)
   if (words.length === 1) {
-    return words[0].slice(0, 2).toUpperCase()
+    return words[0]!.slice(0, 2).toUpperCase()
   }
-  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase()
+  return (words[0]!.charAt(0) + words[words.length - 1]!.charAt(0)).toUpperCase()
 }
 
 export function KeyContacts({ dossier }: KeyContactsProps) {

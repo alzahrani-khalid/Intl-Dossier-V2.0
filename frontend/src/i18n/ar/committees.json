@@ -1,0 +1,338 @@
+{
+  "title": "اللجان",
+  "description": "إدارة اللجان والترشيحات والعضويات",
+
+  "list": {
+    "title": "اللجان",
+    "description": "عرض وإدارة جميع اللجان",
+    "empty": "لا توجد لجان",
+    "emptyDescription": "أنشئ أول لجنة للبدء",
+    "create": "إنشاء لجنة"
+  },
+
+  "detail": {
+    "title": "تفاصيل اللجنة",
+    "members": "الأعضاء",
+    "nominations": "الترشيحات",
+    "documents": "المستندات"
+  },
+
+  "form": {
+    "create": "إنشاء لجنة",
+    "edit": "تعديل اللجنة",
+    "name": "اسم اللجنة",
+    "description": "الوصف",
+    "mandate": "التفويض",
+    "forum": "المنتدى الأصلي",
+    "organization": "المنظمة الأصلية",
+    "memberCount": "عدد الأعضاء المتوقع",
+    "minMembers": "الحد الأدنى للأعضاء",
+    "maxMembers": "الحد الأقصى للأعضاء",
+    "termStart": "بداية الفترة",
+    "termEnd": "نهاية الفترة",
+    "termDuration": "مدة الفترة (أشهر)",
+    "isRenewable": "الفترة قابلة للتجديد",
+    "meetingFrequency": "تكرار الاجتماعات",
+    "nextMeetingDate": "تاريخ الاجتماع القادم",
+    "charterUrl": "رابط النظام الأساسي",
+    "secretariatEmail": "بريد الأمانة",
+    "secretariatContact": "جهة اتصال الأمانة",
+    "isStanding": "لجنة دائمة",
+    "isPublic": "لجنة عامة"
+  },
+
+  "types": {
+    "jury": "هيئة تحكيم",
+    "steering": "لجنة توجيهية",
+    "technical": "لجنة فنية",
+    "advisory": "مجلس استشاري",
+    "executive": "لجنة تنفيذية",
+    "working": "مجموعة عمل",
+    "drafting": "لجنة صياغة",
+    "credentials": "لجنة وثائق التفويض",
+    "budget": "لجنة الميزانية",
+    "nominations": "لجنة الترشيحات",
+    "ethics": "لجنة الأخلاقيات",
+    "audit": "لجنة المراجعة",
+    "other": "أخرى"
+  },
+
+  "status": {
+    "forming": "قيد التشكيل",
+    "active": "نشطة",
+    "suspended": "معلقة",
+    "dissolved": "منحلة",
+    "reconstituting": "قيد إعادة التشكيل"
+  },
+
+  "meetingFrequency": {
+    "weekly": "أسبوعياً",
+    "biweekly": "كل أسبوعين",
+    "monthly": "شهرياً",
+    "quarterly": "ربع سنوياً",
+    "biannual": "نصف سنوياً",
+    "annual": "سنوياً",
+    "ad_hoc": "حسب الحاجة"
+  },
+
+  "nominations": {
+    "title": "الترشيحات",
+    "description": "إدارة ترشيحات أعضاء اللجنة",
+    "create": "تقديم ترشيح",
+    "edit": "تعديل الترشيح",
+    "delete": "سحب الترشيح",
+    "empty": "لا توجد ترشيحات",
+    "emptyDescription": "قدم ترشيحاً للبدء",
+    "nominee": "المرشح",
+    "nomineeName": "اسم المرشح",
+    "nomineeTitle": "لقب المرشح",
+    "nomineeBio": "السيرة الذاتية للمرشح",
+    "nomineeEmail": "بريد المرشح",
+    "nomineePhone": "هاتف المرشح",
+    "nominatedBy": "مقدم الترشيح",
+    "nominatedByType": "نوع مقدم الترشيح",
+    "nominationDate": "تاريخ الترشيح",
+    "nominationLetter": "خطاب الترشيح",
+    "justification": "المبررات",
+    "requestedRole": "الدور المطلوب",
+    "requestedTermStart": "بداية الفترة المطلوبة",
+    "requestedTermEnd": "نهاية الفترة المطلوبة",
+    "cvUrl": "رابط السيرة الذاتية",
+    "supportingDocuments": "المستندات الداعمة",
+    "reviewedBy": "راجعه",
+    "reviewedAt": "تاريخ المراجعة",
+    "statusReason": "سبب الحالة"
+  },
+
+  "nominatorTypes": {
+    "organization": "منظمة",
+    "country": "دولة",
+    "person": "شخص",
+    "self": "ترشيح ذاتي"
+  },
+
+  "nominationStatus": {
+    "pending": "قيد الانتظار",
+    "under_review": "قيد المراجعة",
+    "shortlisted": "في القائمة المختصرة",
+    "approved": "موافق عليه",
+    "rejected": "مرفوض",
+    "withdrawn": "مسحوب",
+    "expired": "منتهي الصلاحية"
+  },
+
+  "members": {
+    "title": "الأعضاء",
+    "description": "إدارة أعضاء اللجنة",
+    "create": "إضافة عضو",
+    "edit": "تعديل العضو",
+    "delete": "إزالة العضو",
+    "empty": "لا يوجد أعضاء",
+    "emptyDescription": "أضف أعضاء لهذه اللجنة",
+    "name": "اسم العضو",
+    "title_field": "اللقب",
+    "representing": "يمثل",
+    "representingType": "نوع التمثيل",
+    "role": "الدور",
+    "termStart": "بداية الفترة",
+    "termEnd": "نهاية الفترة",
+    "isCurrent": "عضو حالي",
+    "meetingsAttended": "الاجتماعات التي حضرها",
+    "meetingsTotal": "إجمالي الاجتماعات",
+    "lastAttendance": "آخر حضور",
+    "attendanceRate": "نسبة الحضور",
+    "statusReason": "سبب الحالة",
+    "statusEffectiveDate": "تاريخ سريان الحالة"
+  },
+
+  "memberRoles": {
+    "chair": "رئيس",
+    "vice_chair": "نائب الرئيس",
+    "member": "عضو",
+    "alternate": "عضو احتياطي",
+    "observer": "مراقب",
+    "secretary": "أمين سر",
+    "rapporteur": "مقرر"
+  },
+
+  "memberStatus": {
+    "active": "نشط",
+    "on_leave": "في إجازة",
+    "suspended": "موقوف",
+    "resigned": "مستقيل",
+    "removed": "مفصول",
+    "term_ended": "انتهت الفترة"
+  },
+
+  "representingTypes": {
+    "organization": "منظمة",
+    "country": "دولة",
+    "self": "شخصي"
+  },
+
+  "awards": {
+    "title": "الجوائز والمسابقات",
+    "description": "إدارة برامج الجوائز والمسابقات",
+    "create": "إنشاء جائزة",
+    "edit": "تعديل الجائزة",
+    "delete": "حذف الجائزة",
+    "empty": "لا توجد جوائز",
+    "emptyDescription": "أنشئ أول برنامج جوائز",
+    "name": "اسم الجائزة",
+    "awardDescription": "الوصف",
+    "frequency": "التكرار",
+    "isActive": "نشطة"
+  },
+
+  "awardTypes": {
+    "excellence": "جائزة التميز",
+    "achievement": "جائزة الإنجاز",
+    "innovation": "جائزة الابتكار",
+    "best_practice": "جائزة أفضل الممارسات",
+    "contribution": "جائزة المساهمة",
+    "lifetime": "جائزة الإنجاز مدى الحياة",
+    "recognition": "جائزة التقدير",
+    "competition": "مسابقة",
+    "scholarship": "منحة دراسية",
+    "grant": "منحة",
+    "other": "أخرى"
+  },
+
+  "awardFrequency": {
+    "annual": "سنوية",
+    "biennial": "كل سنتين",
+    "triennial": "كل ثلاث سنوات",
+    "quadrennial": "كل أربع سنوات",
+    "one_time": "مرة واحدة",
+    "ongoing": "مستمرة"
+  },
+
+  "tracks": {
+    "title": "مسارات الجوائز",
+    "description": "إدارة فئات ومسارات الجوائز",
+    "create": "إنشاء مسار",
+    "edit": "تعديل المسار",
+    "delete": "حذف المسار",
+    "name": "اسم المسار",
+    "category": "الفئة",
+    "criteria": "المعايير",
+    "maxSubmissions": "الحد الأقصى للتقديمات",
+    "deadline": "الموعد النهائي للتقديم"
+  },
+
+  "trackCategories": {
+    "individual": "فردي",
+    "organization": "منظمة",
+    "project": "مشروع",
+    "research": "بحث",
+    "team": "فريق",
+    "startup": "شركة ناشئة",
+    "government": "حكومي",
+    "ngo": "منظمة غير ربحية",
+    "private_sector": "قطاع خاص"
+  },
+
+  "submissions": {
+    "title": "التقديمات",
+    "description": "إدارة تقديمات الجوائز",
+    "create": "تقديم مشاركة",
+    "edit": "تعديل التقديم",
+    "delete": "سحب التقديم",
+    "empty": "لا توجد تقديمات",
+    "emptyDescription": "قدم أول مشاركة",
+    "submittingOrg": "المنظمة المقدمة",
+    "submissionTitle": "عنوان التقديم",
+    "submissionDescription": "الوصف",
+    "submittedAt": "تاريخ التقديم",
+    "submittedBy": "مقدم من"
+  },
+
+  "submissionStatus": {
+    "draft": "مسودة",
+    "submitted": "مقدم",
+    "under_review": "قيد المراجعة",
+    "shortlisted": "في القائمة المختصرة",
+    "finalist": "متأهل للنهائيات",
+    "winner": "فائز",
+    "runner_up": "الوصيف",
+    "honorable_mention": "تنويه بالشرف",
+    "rejected": "مرفوض",
+    "withdrawn": "مسحوب",
+    "disqualified": "مستبعد"
+  },
+
+  "reviews": {
+    "title": "المراجعات",
+    "description": "إدارة مراجعات التقديمات",
+    "create": "إضافة مراجعة",
+    "edit": "تعديل المراجعة",
+    "reviewer": "المراجع",
+    "reviewerRole": "دور المراجع",
+    "score": "الدرجة",
+    "maxScore": "الدرجة القصوى",
+    "recommendation": "التوصية",
+    "reviewComments": "التعليقات",
+    "reviewedAt": "تاريخ المراجعة"
+  },
+
+  "reviewerRoles": {
+    "juror": "محكم",
+    "expert": "مراجع خبير",
+    "preliminary": "مراجع أولي",
+    "final": "مراجع نهائي"
+  },
+
+  "recommendations": {
+    "strongly_recommend": "أوصي بشدة",
+    "recommend": "أوصي",
+    "neutral": "محايد",
+    "not_recommend": "لا أوصي",
+    "strongly_not_recommend": "لا أوصي بشدة"
+  },
+
+  "filters": {
+    "forumId": "المنتدى",
+    "organizationId": "المنظمة",
+    "committeeType": "نوع اللجنة",
+    "status": "الحالة",
+    "isPublic": "العامة فقط",
+    "nominationStatus": "حالة الترشيح",
+    "memberRole": "دور العضو",
+    "memberStatus": "حالة العضو",
+    "isCurrent": "الأعضاء الحاليين فقط"
+  },
+
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "shortlist": "إضافة للقائمة المختصرة",
+    "withdraw": "سحب",
+    "submitNomination": "تقديم ترشيح",
+    "reviewNomination": "مراجعة الترشيح",
+    "addMember": "إضافة عضو",
+    "removeMember": "إزالة عضو",
+    "updateStatus": "تحديث الحالة",
+    "viewProfile": "عرض الملف الشخصي",
+    "downloadCV": "تحميل السيرة الذاتية"
+  },
+
+  "validation": {
+    "nameRequired": "اسم اللجنة مطلوب",
+    "nomineeRequired": "معلومات المرشح مطلوبة",
+    "justificationRequired": "المبررات مطلوبة",
+    "termStartRequired": "تاريخ بداية الفترة مطلوب",
+    "invalidTermDates": "يجب أن تكون نهاية الفترة بعد بدايتها"
+  },
+
+  "notifications": {
+    "committeeCreated": "تم إنشاء اللجنة بنجاح",
+    "committeeUpdated": "تم تحديث اللجنة بنجاح",
+    "nominationSubmitted": "تم تقديم الترشيح بنجاح",
+    "nominationApproved": "تمت الموافقة على الترشيح",
+    "nominationRejected": "تم رفض الترشيح",
+    "memberAdded": "تمت إضافة العضو بنجاح",
+    "memberRemoved": "تمت إزالة العضو بنجاح"
+  }
+}

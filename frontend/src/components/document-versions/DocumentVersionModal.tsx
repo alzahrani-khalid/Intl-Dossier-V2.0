@@ -8,7 +8,7 @@
 
 import { memo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { History, X } from 'lucide-react'
+import { History } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'

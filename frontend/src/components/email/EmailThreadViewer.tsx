@@ -111,7 +111,7 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
         .toUpperCase()
         .slice(0, 2)
     }
-    return email.split('@')[0].slice(0, 2).toUpperCase()
+    return email.split('@')[0]!.slice(0, 2).toUpperCase()
   }
 
   const getStatusBadge = (status: string) => {

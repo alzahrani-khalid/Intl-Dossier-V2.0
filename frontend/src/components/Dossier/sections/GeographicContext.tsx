@@ -14,30 +14,30 @@
  * RTL text alignment with logical properties
  */
 
-import { useTranslation } from 'react-i18next';
-import { Badge } from '@/components/ui/badge';
-import { Globe2, MapPin, Users, DollarSign, Languages, Building2, Shield } from 'lucide-react';
-import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsight';
-import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence';
-import { Skeleton } from '@/components/ui/skeleton';
-import type { CountryDossier } from '@/lib/dossier-type-guards';
+import { useTranslation } from 'react-i18next'
+import { Badge } from '@/components/ui/badge'
+import { Globe2, MapPin, Users, DollarSign, Shield } from 'lucide-react'
+import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsight'
+import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
+import { Skeleton } from '@/components/ui/skeleton'
+import type { CountryDossier } from '@/lib/dossier-type-guards'
 
 interface GeographicContextProps {
-  dossier: CountryDossier;
+  dossier: CountryDossier
 }
 
 interface ContextField {
-  icon: typeof Globe2;
-  label: string;
-  value: string | number | null | undefined;
-  format?: 'number' | 'currency' | 'text';
+  icon: typeof Globe2
+  label: string
+  value: string | number | null | undefined
+  format?: 'number' | 'currency' | 'text'
 }
 
 export function GeographicContext({ dossier }: GeographicContextProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
-  const extension = dossier.extension;
+  const extension = dossier.extension
 
   // Guard: Check if extension data exists
   if (!extension) {
@@ -51,25 +51,25 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
           {t('section.geographicContextEmpty')}
         </p>
       </div>
-    );
+    )
   }
 
   // Format number with locale-aware separators
   const formatNumber = (num: number | null | undefined): string => {
-    if (num === null || num === undefined) return t('common.notAvailable');
-    return new Intl.NumberFormat(i18n.language).format(num);
-  };
+    if (num === null || num === undefined) return t('common.notAvailable')
+    return new Intl.NumberFormat(i18n.language).format(num)
+  }
 
   // Format currency (GDP)
   const formatCurrency = (num: number | null | undefined): string => {
-    if (num === null || num === undefined) return t('common.notAvailable');
+    if (num === null || num === undefined) return t('common.notAvailable')
     return new Intl.NumberFormat(i18n.language, {
       style: 'currency',
       currency: 'USD',
       notation: 'compact',
       maximumFractionDigits: 1,
-    }).format(num);
-  };
+    }).format(num)
+  }
 
   // Define all context fields matching database schema
   const fields: ContextField[] = [
@@ -103,27 +103,27 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
       value: extension.area_sq_km,
       format: 'number',
     },
-  ];
+  ]
 
   // Format value based on type
   const formatValue = (field: ContextField): string => {
     if (field.value === null || field.value === undefined) {
-      return t('common.notAvailable');
+      return t('common.notAvailable')
     }
 
     if (field.format === 'number' && typeof field.value === 'number') {
-      return formatNumber(field.value);
+      return formatNumber(field.value)
     }
 
     if (field.format === 'currency' && typeof field.value === 'number') {
-      return formatCurrency(field.value);
+      return formatCurrency(field.value)
     }
 
-    return String(field.value);
-  };
+    return String(field.value)
+  }
 
   // Check if extension has any data
-  const hasData = fields.some((field) => field.value !== null && field.value !== undefined);
+  const hasData = fields.some((field) => field.value !== null && field.value !== undefined)
 
   if (!hasData) {
     return (
@@ -136,7 +136,7 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
           {t('section.geographicContextEmpty')}
         </p>
       </div>
-    );
+    )
   }
 
   // Fetch economic intelligence for inline widget (Feature 029 - User Story 4 - T058)
@@ -147,17 +147,17 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
   } = useIntelligence({
     entity_id: dossier.id,
     intelligence_type: 'economic',
-  });
+  })
 
   // Refresh mutation for economic intelligence
-  const { mutate: refreshEconomic, isPending: isRefreshingEconomic } = useRefreshIntelligence();
+  const { mutate: refreshEconomic, isPending: isRefreshingEconomic } = useRefreshIntelligence()
 
   const handleEconomicRefresh = () => {
     refreshEconomic({
       entity_id: dossier.id,
       intelligence_types: ['economic'],
-    });
-  };
+    })
+  }
 
   // Fetch security intelligence for inline widget (Feature 029 - User Story 4 - T060)
   const {
@@ -167,26 +167,26 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
   } = useIntelligence({
     entity_id: dossier.id,
     intelligence_type: 'security',
-  });
+  })
 
   // Refresh mutation for security intelligence
-  const { mutate: refreshSecurity, isPending: isRefreshingSecurity } = useRefreshIntelligence();
+  const { mutate: refreshSecurity, isPending: isRefreshingSecurity } = useRefreshIntelligence()
 
   const handleSecurityRefresh = () => {
     refreshSecurity({
       entity_id: dossier.id,
       intelligence_types: ['security'],
-    });
-  };
+    })
+  }
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Geographic Context Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {fields.map((field, index) => {
-          const Icon = field.icon;
-          const value = formatValue(field);
-          const hasValue = field.value !== null && field.value !== undefined;
+          const Icon = field.icon
+          const value = formatValue(field)
+          const hasValue = field.value !== null && field.value !== undefined
 
           return (
             <div
@@ -211,7 +211,7 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
                 )}
               </div>
             </div>
-          );
+          )
         })}
       </div>
 
@@ -224,7 +224,7 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
           <Skeleton className="h-48 w-full" />
         ) : economicIntelligence && economicIntelligence.data.length > 0 ? (
           <IntelligenceInsight
-            intelligence={economicIntelligence.data[0]}
+            intelligence={economicIntelligence.data[0]!}
             onRefresh={handleEconomicRefresh}
             isRefreshing={isRefreshingEconomic}
             dossierType="countries"
@@ -251,7 +251,7 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
           <Skeleton className="h-48 w-full" />
         ) : securityIntelligence && securityIntelligence.data.length > 0 ? (
           <IntelligenceInsight
-            intelligence={securityIntelligence.data[0]}
+            intelligence={securityIntelligence.data[0]!}
             onRefresh={handleSecurityRefresh}
             isRefreshing={isRefreshingSecurity}
             dossierType="countries"
@@ -269,5 +269,5 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
         )}
       </div>
     </div>
-  );
+  )
 }

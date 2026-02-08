@@ -70,7 +70,7 @@ export type TenantContextType = TenantContextState & TenantContextActions
 /**
  * Default context state
  */
-const defaultContextState: TenantContextState = {
+const _defaultContextState: TenantContextState = {
   currentTenantId: null,
   currentTenantName: null,
   memberships: [],

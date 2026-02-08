@@ -21,8 +21,8 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Search, Loader2 } from 'lucide-react'
-import { useContributors } from '@/hooks/use-contributors'
-import type { TaskContributorInsert } from '@/types/database.types'
+import { useAddContributor } from '@/hooks/use-contributors'
+import type { AddContributorRequest } from '@/services/contributors-api'
 
 interface AddContributorDialogProps {
   open: boolean
@@ -67,7 +67,7 @@ export function AddContributorDialog({
   const [selectedRole, setSelectedRole] = useState<ContributorRole>('helper')
   const [notes, setNotes] = useState('')
 
-  const { addContributor } = useContributors(taskId)
+  const addContributor = useAddContributor(taskId)
 
   // Placeholder user search results - replace with actual API
   const [searchResults, setSearchResults] = useState<
@@ -99,11 +99,9 @@ export function AddContributorDialog({
       return
     }
 
-    const contributorData: TaskContributorInsert = {
-      task_id: taskId,
+    const contributorData: AddContributorRequest = {
       user_id: selectedUserId,
       role: selectedRole,
-      notes: notes || null,
     }
 
     try {

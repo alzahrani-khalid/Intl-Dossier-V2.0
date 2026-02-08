@@ -52,7 +52,7 @@ export const workingGroupKeys = {
 // HELPER FUNCTIONS
 // ============================================================================
 
-async function getAuthHeaders(): Promise<Record<string, string>> {
+async function _getAuthHeaders(): Promise<Record<string, string>> {
   const {
     data: { session },
   } = await supabase.auth.getSession()
@@ -62,7 +62,7 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
   }
 }
 
-const API_BASE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
+const _API_BASE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
 
 // ============================================================================
 // WORKING GROUP HOOKS
@@ -76,7 +76,7 @@ export function useWorkingGroups(
   options?: Omit<UseQueryOptions<WorkingGroupListResponse, Error>, 'queryKey' | 'queryFn'>,
 ) {
   return useQuery({
-    queryKey: workingGroupKeys.list(filters),
+    queryKey: workingGroupKeys.list(filters as WorkingGroupSearchParams),
     queryFn: async (): Promise<WorkingGroupListResponse> => {
       const {
         search,

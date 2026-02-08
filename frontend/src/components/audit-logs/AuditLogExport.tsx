@@ -6,7 +6,6 @@
  * Mobile-first and RTL-ready
  */
 
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Download, FileJson, FileSpreadsheet, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'

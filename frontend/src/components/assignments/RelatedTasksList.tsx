@@ -101,7 +101,7 @@ export function RelatedTasksList({
             <Link
               key={assignment.id}
               to="/tasks/$id"
-              params={{ id: assignment.id }}
+              params={{ id: assignment.id } as any}
               className="block"
             >
               <div className="p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors">

@@ -13,9 +13,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
-import { ChevronLeft, ChevronRight, X, CheckCircle2, HelpCircle, ArrowRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, CheckCircle2, HelpCircle } from 'lucide-react'
 import { useTour } from './TourContext'
-import type { TourStep, TourStepPlacement } from './types'
+import type { TourStepPlacement } from './types'
 
 interface TargetRect {
   top: number
@@ -48,16 +48,16 @@ function getTooltipPosition(
   const tooltipWidth = tooltipRef.current?.offsetWidth || 400
 
   // Handle RTL by swapping left/right placements
-  let effectivePlacement = placement
+  let effectivePlacement: TourStepPlacement = placement
   if (isRTL) {
     if (placement === 'left' || placement === 'top-start' || placement === 'bottom-start') {
       effectivePlacement = placement
         .replace('left', 'right')
-        .replace('start', 'end') as TourStepPlacement
+        .replace('start', 'end') as any as TourStepPlacement
     } else if (placement === 'right' || placement === 'top-end' || placement === 'bottom-end') {
       effectivePlacement = placement
         .replace('right', 'left')
-        .replace('end', 'start') as TourStepPlacement
+        .replace('end', 'start') as any as TourStepPlacement
     }
   }
 
@@ -198,7 +198,7 @@ export function TourOverlay() {
 
   // Handle keyboard navigation
   useEffect(() => {
-    if (!isActive) return
+    if (!isActive) return undefined
 
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {

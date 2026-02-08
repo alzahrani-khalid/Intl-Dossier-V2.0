@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -29,7 +28,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import { useCreateLegislation, useUpdateLegislation } from '@/hooks/useLegislation'
 import type {
   LegislationType,
@@ -186,7 +184,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
         },
       )
     } else {
-      const input = cleanedValues as LegislationCreateInput
+      const input = cleanedValues as unknown as LegislationCreateInput
 
       createMutation.mutate(input, {
         onSuccess: (data) => {

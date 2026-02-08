@@ -14,7 +14,6 @@ import { RefreshButton } from '@/components/intelligence/RefreshButton'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, Lightbulb } from 'lucide-react'
-import { toast } from 'sonner'
 import type { IntelligenceType } from '@/types/intelligence-reports.types'
 
 interface DossierIntelligenceTabProps {
@@ -27,39 +26,7 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
 
   const { data: intelligenceData, isLoading, isError, error } = useAllIntelligence(dossierId)
 
-  const { mutate: refreshIntelligence, isPending: isRefreshing } = useRefreshIntelligence({
-    onSuccess: (data) => {
-      // Show success toast
-      const typeLabels = data.data
-        .map((r) => t(`intelligence.types.${r.intelligence_type}`))
-        .join(', ')
-      toast.success(
-        isRTL ? `تم تحديث التقارير بنجاح: ${typeLabels}` : `Successfully refreshed: ${typeLabels}`,
-      )
-    },
-    onError: (error) => {
-      // Handle specific error codes
-      if (error.code === 'CONFLICT') {
-        toast.warning(
-          isRTL
-            ? 'تحديث جاري بالفعل. يرجى الانتظار حتى يكتمل.'
-            : 'Refresh already in progress. Please wait until it completes.',
-        )
-      } else if (error.code === 'SERVICE_UNAVAILABLE') {
-        toast.error(
-          isRTL
-            ? 'خدمة AnythingLLM غير متاحة. سيتم عرض البيانات المخزنة مؤقتاً.'
-            : 'AnythingLLM service unavailable. Showing cached data.',
-        )
-      } else {
-        toast.error(
-          isRTL
-            ? `فشل التحديث: ${error.message_ar || error.message_en}`
-            : `Refresh failed: ${error.message_en}`,
-        )
-      }
-    },
-  })
+  const { mutate: refreshIntelligence, isPending: isRefreshing } = useRefreshIntelligence()
 
   const handleRefresh = (types: IntelligenceType[]) => {
     refreshIntelligence({

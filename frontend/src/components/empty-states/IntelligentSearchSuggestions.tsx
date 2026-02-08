@@ -28,7 +28,7 @@ import {
   X,
   Sparkles,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -517,7 +517,7 @@ export function IntelligentSearchSuggestions({
   })
 
   // Get filter presets based on context
-  const { presets: filterPresets, getRecommendedPresets } = useFilterPresets({
+  const { presets: _filterPresets, getRecommendedPresets } = useFilterPresets({
     entityTypes,
     limit: 4,
     activeFiltersCount,

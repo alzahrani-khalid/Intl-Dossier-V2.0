@@ -1,5 +1,5 @@
 // Feature 032: Unified Work Management TanStack Query Hooks
-import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import type {
   WorkItemFilters,
   WorkItemCursor,
@@ -10,13 +10,13 @@ import type {
   WorkItemSortBy,
   SortOrder,
   UnifiedWorkItem,
-} from '@/types/unified-work.types';
+} from '@/types/unified-work.types'
 import {
   fetchWorkItems,
   fetchUserWorkSummary,
   fetchUserProductivityMetrics,
   fetchTeamWorkload,
-} from '@/services/unified-work.service';
+} from '@/services/unified-work.service'
 
 // Query keys factory
 export const unifiedWorkKeys = {
@@ -27,7 +27,7 @@ export const unifiedWorkKeys = {
   summary: () => [...unifiedWorkKeys.all, 'summary'] as const,
   metrics: () => [...unifiedWorkKeys.all, 'metrics'] as const,
   team: () => [...unifiedWorkKeys.all, 'team'] as const,
-};
+}
 
 /**
  * Hook for infinite scrolling work items with filtering
@@ -37,22 +37,22 @@ export function useUnifiedWorkItems(
   sortBy: WorkItemSortBy = 'deadline',
   sortOrder: SortOrder = 'asc',
   pageSize = 50,
-  enabled = true
+  enabled = true,
 ) {
   return useInfiniteQuery({
     queryKey: unifiedWorkKeys.itemsFiltered(filters, sortBy, sortOrder),
     queryFn: async ({ pageParam }) => {
-      const cursor = pageParam as WorkItemCursor | undefined;
-      return fetchWorkItems(filters, cursor, pageSize, sortBy, sortOrder);
+      const cursor = pageParam as WorkItemCursor | undefined
+      return fetchWorkItems(filters, cursor, pageSize, sortBy, sortOrder)
     },
     initialPageParam: undefined as WorkItemCursor | undefined,
     getNextPageParam: (lastPage: PaginatedWorkItems) => {
-      return lastPage.hasMore ? lastPage.nextCursor : undefined;
+      return lastPage.hasMore ? lastPage.nextCursor : undefined
     },
     enabled,
     staleTime: 30 * 1000, // 30 seconds
     gcTime: 5 * 60 * 1000, // 5 minutes (formerly cacheTime)
-  });
+  })
 }
 
 /**
@@ -66,7 +66,7 @@ export function useUserWorkSummary(enabled = true) {
     staleTime: 30 * 1000, // 30 seconds
     gcTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: true,
-  });
+  })
 }
 
 /**
@@ -79,7 +79,7 @@ export function useUserProductivityMetrics(enabled = true) {
     enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes (metrics change less frequently)
     gcTime: 30 * 60 * 1000, // 30 minutes
-  });
+  })
 }
 
 /**
@@ -95,43 +95,43 @@ export function useTeamWorkload(enabled = true) {
     retry: (failureCount, error) => {
       // Don't retry on authorization errors
       if (error instanceof Error && error.message.includes('Forbidden')) {
-        return false;
+        return false
       }
-      return failureCount < 3;
+      return failureCount < 3
     },
-  });
+  })
 }
 
 /**
  * Hook to invalidate all unified work queries
  */
 export function useInvalidateUnifiedWork() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return {
     invalidateAll: () => {
-      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.all });
+      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.all })
     },
     invalidateItems: () => {
-      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.items() });
+      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.items() })
     },
     invalidateSummary: () => {
-      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.summary() });
+      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.summary() })
     },
     invalidateMetrics: () => {
-      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.metrics() });
+      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.metrics() })
     },
     invalidateTeam: () => {
-      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.team() });
+      queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.team() })
     },
-  };
+  }
 }
 
 /**
  * Optimistic update helper for work item status changes
  */
 export function useOptimisticWorkItemUpdate() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return {
     updateItem: (itemId: string, updates: Partial<UnifiedWorkItem>) => {
@@ -139,25 +139,25 @@ export function useOptimisticWorkItemUpdate() {
       queryClient.setQueriesData(
         { queryKey: unifiedWorkKeys.items() },
         (oldData: { pages: PaginatedWorkItems[] } | undefined) => {
-          if (!oldData) return oldData;
+          if (!oldData) return oldData
 
           return {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
               items: page.items.map((item) =>
-                item.id === itemId ? { ...item, ...updates } : item
+                item.id === itemId ? { ...item, ...updates } : item,
               ),
             })),
-          };
-        }
-      );
+          }
+        },
+      )
     },
     removeItem: (itemId: string) => {
       queryClient.setQueriesData(
         { queryKey: unifiedWorkKeys.items() },
         (oldData: { pages: PaginatedWorkItems[] } | undefined) => {
-          if (!oldData) return oldData;
+          if (!oldData) return oldData
 
           return {
             ...oldData,
@@ -165,11 +165,11 @@ export function useOptimisticWorkItemUpdate() {
               ...page,
               items: page.items.filter((item) => item.id !== itemId),
             })),
-          };
-        }
-      );
+          }
+        },
+      )
     },
-  };
+  }
 }
 
 /**
@@ -178,11 +178,11 @@ export function useOptimisticWorkItemUpdate() {
 export function useMyWorkDashboard(
   filters: WorkItemFilters = {},
   sortBy: WorkItemSortBy = 'deadline',
-  sortOrder: SortOrder = 'asc'
+  sortOrder: SortOrder = 'asc',
 ) {
-  const summaryQuery = useUserWorkSummary();
-  const metricsQuery = useUserProductivityMetrics();
-  const itemsQuery = useUnifiedWorkItems(filters, sortBy, sortOrder);
+  const summaryQuery = useUserWorkSummary()
+  const metricsQuery = useUserProductivityMetrics()
+  const itemsQuery = useUnifiedWorkItems(filters, sortBy, sortOrder)
 
   return {
     summary: summaryQuery,
@@ -191,5 +191,5 @@ export function useMyWorkDashboard(
     isLoading: summaryQuery.isLoading || itemsQuery.isLoading,
     isError: summaryQuery.isError || itemsQuery.isError,
     error: summaryQuery.error || itemsQuery.error,
-  };
+  }
 }

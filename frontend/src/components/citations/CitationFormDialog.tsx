@@ -427,7 +427,7 @@ export function CitationFormDialog({
               <div className="flex items-center justify-between">
                 <Label>{t('form.fields.relevance', 'Relevance Score')}</Label>
                 <span className="text-sm text-muted-foreground">
-                  {Math.round(relevanceScore[0] * 100)}%
+                  {Math.round(relevanceScore[0]! * 100)}%
                 </span>
               </div>
               <Slider

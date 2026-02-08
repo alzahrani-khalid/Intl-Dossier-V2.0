@@ -280,7 +280,7 @@ export function TemplateSelector({
                 {t('section.favorites')}
               </h3>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {favorites.map((template, index) => (
+                {favorites.map((template, _index) => (
                   <TemplateCard
                     key={template.id}
                     template={template}

@@ -60,7 +60,7 @@ export function BooleanLogicBuilder({
   const handleAddCondition = () => {
     if (availableFields.length === 0) return
 
-    const firstField = availableFields[0]
+    const firstField = availableFields[0]!
     const operators = getOperatorsForFieldType(firstField.type)
 
     onConditionAdd({
@@ -88,22 +88,22 @@ export function BooleanLogicBuilder({
 
   const handleOperatorChange = (index: number, operator: FilterOperator) => {
     onConditionUpdate(index, {
-      ...conditions[index],
+      ...conditions[index]!,
       operator,
-    })
+    } as FilterCondition)
   }
 
   const handleValueChange = (index: number, value: unknown) => {
     onConditionUpdate(index, {
-      ...conditions[index],
+      ...conditions[index]!,
       value,
-    })
+    } as FilterCondition)
   }
 
   const handleToggleNegate = (index: number) => {
     onConditionUpdate(index, {
-      ...conditions[index],
-      is_negated: !conditions[index].is_negated,
+      ...conditions[index]!,
+      is_negated: !conditions[index]!.is_negated,
     })
   }
 

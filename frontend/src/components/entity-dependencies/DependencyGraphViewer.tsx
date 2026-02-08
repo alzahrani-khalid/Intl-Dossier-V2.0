@@ -128,7 +128,7 @@ interface CustomNodeData {
 function CustomNode({ data }: { data: CustomNodeData }) {
   const { t, i18n } = useTranslation('entity-dependencies')
   const isRTL = i18n.language === 'ar'
-  const config = ENTITY_TYPE_CONFIG[data.type] || ENTITY_TYPE_CONFIG.topic
+  const config = (ENTITY_TYPE_CONFIG[data.type] || ENTITY_TYPE_CONFIG.topic)!
   const Icon = config.icon
 
   return (
@@ -333,7 +333,7 @@ export function DependencyGraphViewer({
   const handleNodeClick = useCallback(
     (_: React.MouseEvent, node: Node) => {
       if (onNodeClick && node.data) {
-        onNodeClick(node.id, node.data.type)
+        onNodeClick(node.id, String(node.data.type))
       }
     },
     [onNodeClick],
@@ -418,7 +418,9 @@ export function DependencyGraphViewer({
             <Controls showInteractive={false} className="!bg-background !border !shadow-md" />
             <MiniMap
               nodeColor={(node) => {
-                const config = ENTITY_TYPE_CONFIG[node.data?.type] || ENTITY_TYPE_CONFIG.topic
+                const config = (ENTITY_TYPE_CONFIG[
+                  node.data?.type as keyof typeof ENTITY_TYPE_CONFIG
+                ] || ENTITY_TYPE_CONFIG.topic)!
                 return config.color.includes('blue')
                   ? '#3b82f6'
                   : config.color.includes('purple')

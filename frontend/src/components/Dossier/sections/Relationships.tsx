@@ -240,11 +240,7 @@ export function Relationships({
   const handleDelete = useCallback(async () => {
     if (!deletingRelationship) return
 
-    await deleteMutation.mutateAsync({
-      id: deletingRelationship.id,
-      sourceDossierId: deletingRelationship.source_dossier_id,
-      targetDossierId: deletingRelationship.target_dossier_id,
-    })
+    await deleteMutation.mutateAsync(deletingRelationship.id)
 
     setDeleteDialogOpen(false)
     setDeletingRelationship(null)
@@ -278,7 +274,7 @@ export function Relationships({
       const { data, error } = await query.order('effective_from', { ascending: false })
 
       if (error) throw error
-      return data as Relationship[]
+      return data as unknown as Relationship[]
     },
   })
 
@@ -889,8 +885,8 @@ function RelationshipsGraphInner({
 }: {
   nodes: Node[]
   edges: Edge[]
-  onNodesChange: OnNodesChange
-  onEdgesChange: OnEdgesChange
+  onNodesChange: OnNodesChange<any>
+  onEdgesChange: OnEdgesChange<any>
   isRTL: boolean
 }) {
   return (
@@ -935,8 +931,8 @@ function RelationshipsGraph({
 }: {
   nodes: Node[]
   edges: Edge[]
-  onNodesChange: OnNodesChange
-  onEdgesChange: OnEdgesChange
+  onNodesChange: OnNodesChange<any>
+  onEdgesChange: OnEdgesChange<any>
   isRTL: boolean
 }) {
   return (

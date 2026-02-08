@@ -17,7 +17,7 @@
  * - RTL support with logical properties
  */
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAllIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
 import { EconomicDashboard } from '@/components/intelligence/EconomicDashboard'
@@ -28,7 +28,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Globe, MapPin, Users, Maximize2, AlertCircle, RefreshCw } from 'lucide-react'
-import type { IntelligenceReport } from '@/types/intelligence-reports.types'
 import type { CountryDossier } from '@/lib/dossier-type-guards'
 
 interface IntelligenceTabContentProps {

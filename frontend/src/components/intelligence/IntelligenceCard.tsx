@@ -1,25 +1,17 @@
-import { useTranslation } from 'react-i18next';
-import { formatDistanceToNow } from 'date-fns';
-import { ar, enUS } from 'date-fns/locale';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ConfidenceBadge } from './ConfidenceBadge';
-import type { IntelligenceReport } from '@/types/intelligence-reports.types';
-import { getConfidenceLevel } from '@/utils/intelligence-helpers';
-import {
-  TrendingUp,
-  Shield,
-  Users,
-  Globe,
-  Clock,
-  AlertTriangle,
-  CheckCircle
-} from 'lucide-react';
+import { useTranslation } from 'react-i18next'
+import { formatDistanceToNow } from 'date-fns'
+import { ar, enUS } from 'date-fns/locale'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { ConfidenceBadge } from './ConfidenceBadge'
+import type { IntelligenceReport } from '@/services/intelligence-api'
+import { getConfidenceLevel } from '@/utils/intelligence-helpers'
+import { TrendingUp, Shield, Users, Globe, Clock, AlertTriangle, CheckCircle } from 'lucide-react'
 
 interface IntelligenceCardProps {
-  intelligence: IntelligenceReport;
-  showFullAnalysis?: boolean;
-  onRefresh?: () => void;
+  intelligence: IntelligenceReport
+  showFullAnalysis?: boolean
+  onRefresh?: () => void
 }
 
 const intelligenceIcons = {
@@ -28,26 +20,26 @@ const intelligenceIcons = {
   security: Shield,
   bilateral: Globe,
   general: Globe,
-} as const;
+} as const
 
 export function IntelligenceCard({
   intelligence,
-  showFullAnalysis = false
+  showFullAnalysis = false,
 }: IntelligenceCardProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const locale = isRTL ? ar : enUS;
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const locale = isRTL ? ar : enUS
 
-  const Icon = intelligenceIcons[intelligence.intelligence_type] || Globe;
+  const Icon = intelligenceIcons[intelligence.intelligence_type] || Globe
 
   // Determine if cache is stale
   const isStale = intelligence.cache_expires_at
     ? new Date(intelligence.cache_expires_at) < new Date()
-    : false;
+    : false
 
   // Get localized content (title and content with fallback)
-  const title = (isRTL && intelligence.title_ar) ? intelligence.title_ar : intelligence.title;
-  const content = (isRTL && intelligence.content_ar) ? intelligence.content_ar : intelligence.content;
+  const title = isRTL && intelligence.title_ar ? intelligence.title_ar : intelligence.title
+  const content = isRTL && intelligence.content_ar ? intelligence.content_ar : intelligence.content
 
   // Format last updated timestamp
   const lastUpdated = intelligence.last_refreshed_at
@@ -55,7 +47,7 @@ export function IntelligenceCard({
         addSuffix: true,
         locale,
       })
-    : t('intelligence.never_updated', 'Never updated');
+    : t('intelligence.never_updated', 'Never updated')
 
   return (
     <Card
@@ -78,11 +70,11 @@ export function IntelligenceCard({
               {title}
             </h3>
             <div className="flex flex-wrap items-center gap-2 mt-2">
-              <Badge
-                variant="outline"
-                className="text-xs"
-              >
-                {t(`intelligence.types.${intelligence.intelligence_type}`, intelligence.intelligence_type)}
+              <Badge variant="outline" className="text-xs">
+                {t(
+                  `intelligence.types.${intelligence.intelligence_type}`,
+                  intelligence.intelligence_type,
+                )}
               </Badge>
               <ConfidenceBadge level={getConfidenceLevel(intelligence.confidence_score)} />
               {isStale && (
@@ -135,5 +127,5 @@ export function IntelligenceCard({
         )}
       </div>
     </Card>
-  );
+  )
 }

@@ -84,7 +84,7 @@ export function EngagementTimeline({ dossierId, className }: EngagementTimelineP
 
   // Handle convert to event
   const handleConvertToEvent = useCallback(
-    async (milestoneId: string, eventType: string) => {
+    async (milestoneId: string, _eventType: string) => {
       const milestone = milestones.find((m) => m.id === milestoneId)
       if (!milestone) return
 

@@ -11,6 +11,7 @@
 
 import { useQuery, useMutation, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { buildTagHierarchy } from '@/types/tag-hierarchy.types'
 import type {
   TagCategory,
   TagCategoryCreate,
@@ -35,7 +36,6 @@ import type {
   EntityTagsResponse,
   TagAnalyticsResponse,
   TagEntityType,
-  buildTagHierarchy,
 } from '@/types/tag-hierarchy.types'
 
 // ============================================================================

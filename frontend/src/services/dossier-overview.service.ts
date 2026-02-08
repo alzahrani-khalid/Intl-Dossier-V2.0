@@ -37,7 +37,7 @@ import type {
   WorkItemStatus,
   WorkItemPriority,
 } from '@/types/dossier-overview.types'
-import type { DossierType } from '@/services/dossier-api'
+import type { DossierType, DossierStatus } from '@/services/dossier-api'
 import { fetchUnifiedDossierActivities } from './unified-dossier-activity.service'
 
 // =============================================================================
@@ -52,7 +52,7 @@ interface RelationshipTargetDossier {
   name_en: string
   name_ar: string
   type: DossierType
-  status: string
+  status: DossierStatus
 }
 
 /**
@@ -63,7 +63,7 @@ interface RelationshipSourceDossier {
   name_en: string
   name_ar: string
   type: DossierType
-  status: string
+  status: DossierStatus
 }
 
 /**
@@ -363,14 +363,19 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
   const allRelated: RelatedDossier[] = []
 
   // Process outgoing
-  ;((outgoing || []) as OutgoingRelationshipRow[]).forEach((rel) => {
-    if (rel.target_dossier) {
+  // Supabase joins may return arrays; normalize to single objects
+  ;((outgoing || []) as unknown as OutgoingRelationshipRow[]).forEach((rel) => {
+    const targetRaw = rel.target_dossier as unknown
+    const target = (
+      Array.isArray(targetRaw) ? targetRaw[0] : targetRaw
+    ) as RelationshipTargetDossier | null
+    if (target) {
       allRelated.push({
-        id: rel.target_dossier.id,
-        name_en: rel.target_dossier.name_en,
-        name_ar: rel.target_dossier.name_ar,
-        type: rel.target_dossier.type,
-        status: rel.target_dossier.status,
+        id: target.id,
+        name_en: target.name_en,
+        name_ar: target.name_ar,
+        type: target.type,
+        status: target.status,
         relationship_type: rel.relationship_type as DossierRelationshipType,
         relationship_id: rel.id,
         is_outgoing: true,
@@ -384,14 +389,19 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
   })
 
   // Process incoming
-  ;((incoming || []) as IncomingRelationshipRow[]).forEach((rel) => {
-    if (rel.source_dossier) {
+  // Supabase joins may return arrays; normalize to single objects
+  ;((incoming || []) as unknown as IncomingRelationshipRow[]).forEach((rel) => {
+    const sourceRaw = rel.source_dossier as unknown
+    const source = (
+      Array.isArray(sourceRaw) ? sourceRaw[0] : sourceRaw
+    ) as RelationshipSourceDossier | null
+    if (source) {
       allRelated.push({
-        id: rel.source_dossier.id,
-        name_en: rel.source_dossier.name_en,
-        name_ar: rel.source_dossier.name_ar,
-        type: rel.source_dossier.type,
-        status: rel.source_dossier.status,
+        id: source.id,
+        name_en: source.name_en,
+        name_ar: source.name_ar,
+        type: source.type,
+        status: source.status,
         relationship_type: rel.relationship_type as DossierRelationshipType,
         relationship_id: rel.id,
         is_outgoing: false,
@@ -459,9 +469,12 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     )
     .eq('dossier_id', dossierId)
 
-  // Extract positions from links
-  const positions = ((positionLinks || []) as PositionLinkRow[])
-    .map((link) => link.position)
+  // Extract positions from links (Supabase joins may return arrays)
+  const positions = ((positionLinks || []) as unknown as PositionLinkRow[])
+    .map((link) => {
+      const posRaw = link.position as unknown
+      return (Array.isArray(posRaw) ? posRaw[0] : posRaw) as PositionLinkRow['position']
+    })
     .filter((p): p is NonNullable<PositionLinkRow['position']> => p !== null)
 
   // Fetch MOUs where this dossier is a signatory
@@ -625,7 +638,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       .in('id', commitmentIds)
       .limit(limit)
 
-    ;((commitments || []) as CommitmentRow[]).forEach((c) => {
+    ;((commitments || []) as unknown as CommitmentRow[]).forEach((c) => {
       const isOverdue =
         c.deadline &&
         new Date(c.deadline) < now &&
@@ -849,7 +862,7 @@ function calculateStats(
     recent_activities_count: activityTimeline.total_count,
     last_activity_date:
       activityTimeline.recent_activities.length > 0
-        ? activityTimeline.recent_activities[0].timestamp
+        ? activityTimeline.recent_activities[0]!.timestamp
         : null,
   }
 }

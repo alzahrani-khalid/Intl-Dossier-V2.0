@@ -38,7 +38,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import {
   useUnifiedSemanticSearch,
@@ -74,24 +74,18 @@ const ENTITY_TYPE_CONFIG: Record<
     category: 'dossier',
   },
   forum: { icon: Users, label_en: 'Forums', label_ar: 'المنتديات', category: 'dossier' },
-  theme: { icon: Tag, label_en: 'Themes', label_ar: 'المواضيع', category: 'dossier' },
+  topic: { icon: Tag, label_en: 'Topics', label_ar: 'المواضيع', category: 'dossier' },
   positions: { icon: FileText, label_en: 'Positions', label_ar: 'المواقف', category: 'content' },
   documents: { icon: FileText, label_en: 'Documents', label_ar: 'المستندات', category: 'content' },
   briefs: { icon: FileText, label_en: 'Briefs', label_ar: 'الموجزات', category: 'content' },
-  engagements: {
+  engagement: {
     icon: Calendar,
     label_en: 'Engagements',
     label_ar: 'الارتباطات',
     category: 'content',
   },
-  persons: { icon: User, label_en: 'People', label_ar: 'الأشخاص', category: 'people' },
-  external_contacts: {
-    icon: User,
-    label_en: 'External Contacts',
-    label_ar: 'جهات الاتصال الخارجية',
-    category: 'people',
-  },
-  working_groups: {
+  person: { icon: User, label_en: 'People', label_ar: 'الأشخاص', category: 'people' },
+  working_group: {
     icon: Users,
     label_en: 'Working Groups',
     label_ar: 'مجموعات العمل',
@@ -118,7 +112,7 @@ export function UnifiedSemanticSearch({
   onSearch,
   onResultSelect,
   initialQuery = '',
-  initialEntityTypes = ['dossiers', 'positions', 'documents', 'engagements', 'persons'],
+  initialEntityTypes = ['dossiers', 'positions', 'documents', 'engagement', 'person'],
   showResultsInline = true,
   className,
 }: UnifiedSemanticSearchProps) {
@@ -209,7 +203,7 @@ export function UnifiedSemanticSearch({
       people: [],
     }
     for (const [type, config] of Object.entries(ENTITY_TYPE_CONFIG)) {
-      groups[config.category].push(type as SemanticEntityType)
+      groups[config.category]!.push(type as SemanticEntityType)
     }
     return groups
   }, [])
@@ -252,7 +246,7 @@ export function UnifiedSemanticSearch({
 
   // Render search result
   const renderSearchResult = useCallback(
-    (result: SemanticSearchResult, index: number) => {
+    (result: SemanticSearchResult, _index: number) => {
       const config = ENTITY_TYPE_CONFIG[result.entity_type as SemanticEntityType] || {
         icon: FileText,
         label_en: result.entity_type,
@@ -386,7 +380,7 @@ export function UnifiedSemanticSearch({
         <div className="space-y-2">
           <span className="text-xs text-muted-foreground">{t('entityTypes.dossierCategory')}</span>
           <div className="flex flex-wrap gap-2">
-            {groupedEntityTypes.dossier.map(renderEntityTypeButton)}
+            {groupedEntityTypes.dossier?.map(renderEntityTypeButton)}
           </div>
         </div>
 
@@ -394,7 +388,7 @@ export function UnifiedSemanticSearch({
         <div className="space-y-2">
           <span className="text-xs text-muted-foreground">{t('entityTypes.contentCategory')}</span>
           <div className="flex flex-wrap gap-2">
-            {groupedEntityTypes.content.map(renderEntityTypeButton)}
+            {groupedEntityTypes.content?.map(renderEntityTypeButton)}
           </div>
         </div>
 
@@ -402,7 +396,7 @@ export function UnifiedSemanticSearch({
         <div className="space-y-2">
           <span className="text-xs text-muted-foreground">{t('entityTypes.peopleCategory')}</span>
           <div className="flex flex-wrap gap-2">
-            {groupedEntityTypes.people.map(renderEntityTypeButton)}
+            {groupedEntityTypes.people?.map(renderEntityTypeButton)}
           </div>
         </div>
       </div>
@@ -464,7 +458,7 @@ export function UnifiedSemanticSearch({
             </div>
             <Slider
               value={[similarityThreshold]}
-              onValueChange={(v) => setSimilarityThreshold(v[0])}
+              onValueChange={(v) => setSimilarityThreshold(v[0]!)}
               min={0.3}
               max={0.95}
               step={0.05}
@@ -481,7 +475,7 @@ export function UnifiedSemanticSearch({
             </div>
             <Slider
               value={[limit]}
-              onValueChange={(v) => setLimit(v[0])}
+              onValueChange={(v) => setLimit(v[0]!)}
               min={10}
               max={100}
               step={10}

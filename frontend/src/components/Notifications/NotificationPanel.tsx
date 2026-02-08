@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Bell, Settings, CheckCheck, X } from 'lucide-react'
@@ -120,7 +120,7 @@ export function NotificationPanel({ className }: NotificationPanelProps) {
 
   // Get category unread count
   const getCategoryCount = (category: NotificationCategory) => {
-    return countsByCategory[category]?.unread || 0
+    return (countsByCategory as Record<string, { unread?: number }>)[category]?.unread || 0
   }
 
   return (

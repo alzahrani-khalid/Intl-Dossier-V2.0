@@ -52,7 +52,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
     const [showMentionList, setShowMentionList] = useState(false)
     const [mentionStartIndex, setMentionStartIndex] = useState<number | null>(null)
     const [selectedIndex, setSelectedIndex] = useState(0)
-    const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 })
+    const [_cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 })
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const mentionListRef = useRef<HTMLDivElement>(null)
@@ -94,7 +94,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
         const atMatch = textBeforeCursor.match(/@([a-zA-Z0-9_.-]*)$/)
 
         if (atMatch) {
-          setMentionQuery(atMatch[1])
+          setMentionQuery(atMatch[1]!)
           setMentionStartIndex(cursorPos - atMatch[0].length)
           setShowMentionList(true)
 
@@ -120,7 +120,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
       (user: MentionUser) => {
         if (mentionStartIndex === null) return
 
-        const username = user.username || user.email.split('@')[0]
+        const username = user.username || user.email.split('@')[0]!
         const beforeMention = value.slice(0, mentionStartIndex)
         const afterMention = value.slice(mentionStartIndex + mentionQuery.length + 1) // +1 for @
 
@@ -159,7 +159,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
               break
             case 'Enter':
               e.preventDefault()
-              insertMention(mentionUsers[selectedIndex])
+              insertMention(mentionUsers[selectedIndex]!)
               break
             case 'Escape':
               e.preventDefault()
@@ -168,7 +168,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
             case 'Tab':
               if (showMentionList) {
                 e.preventDefault()
-                insertMention(mentionUsers[selectedIndex])
+                insertMention(mentionUsers[selectedIndex]!)
               }
               break
           }

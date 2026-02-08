@@ -12,46 +12,47 @@
 
 export type SLAStatusType =
   | 'safe'
+  | 'approaching'
   | 'warning'
   | 'breached'
   | 'completed_on_time'
   | 'completed_late'
-  | 'no_deadline';
+  | 'no_deadline'
 
 export interface SLAStatus {
   /**
    * Current SLA status
    */
-  status: SLAStatusType;
+  status: SLAStatusType
 
   /**
    * Percentage of time elapsed (0-100+)
    * undefined for completed tasks or no deadline
    */
-  percentElapsed?: number;
+  percentElapsed?: number
 
   /**
    * Human-readable time remaining
    * e.g., "2 hours remaining", "3 days overdue"
    */
-  timeRemaining?: string;
+  timeRemaining?: string
 
   /**
    * Absolute time difference in milliseconds
    * Positive = time remaining
    * Negative = time overdue
    */
-  timeDiffMs?: number;
+  timeDiffMs?: number
 
   /**
    * Is the SLA breached?
    */
-  isBreached: boolean;
+  isBreached: boolean
 
   /**
    * Is the task completed?
    */
-  isCompleted: boolean;
+  isCompleted: boolean
 }
 
 /**
@@ -67,7 +68,7 @@ export function calculateSLAStatus(
   deadline: string | null,
   isCompleted: boolean = false,
   completedAt: string | null = null,
-  now: Date = new Date()
+  now: Date = new Date(),
 ): SLAStatus {
   // No deadline = no SLA tracking
   if (!deadline) {
@@ -75,19 +76,19 @@ export function calculateSLAStatus(
       status: 'no_deadline',
       isBreached: false,
       isCompleted,
-    };
+    }
   }
 
-  const deadlineDate = new Date(deadline);
-  const currentTime = now.getTime();
-  const deadlineTime = deadlineDate.getTime();
+  const deadlineDate = new Date(deadline)
+  const currentTime = now.getTime()
+  const deadlineTime = deadlineDate.getTime()
 
   // Task is completed
   if (isCompleted && completedAt) {
-    const completedDate = new Date(completedAt);
-    const completedTime = completedDate.getTime();
+    const completedDate = new Date(completedAt)
+    const completedTime = completedDate.getTime()
 
-    const completedOnTime = completedTime <= deadlineTime;
+    const completedOnTime = completedTime <= deadlineTime
 
     return {
       status: completedOnTime ? 'completed_on_time' : 'completed_late',
@@ -97,29 +98,32 @@ export function calculateSLAStatus(
       timeRemaining: completedOnTime
         ? `Completed ${formatTimeDiff(completedTime - deadlineTime)} early`
         : `Completed ${formatTimeDiff(completedTime - deadlineTime)} late`,
-    };
+    }
   }
 
   // Calculate time difference
-  const timeDiffMs = deadlineTime - currentTime;
-  const isOverdue = timeDiffMs < 0;
+  const timeDiffMs = deadlineTime - currentTime
+  const isOverdue = timeDiffMs < 0
 
   // Calculate start time (assume SLA starts 7 days before deadline by default)
   // This is a heuristic - in a real system, you'd have a separate sla_start_time field
-  const assumedStartTime = deadlineTime - 7 * 24 * 60 * 60 * 1000; // 7 days ago
-  const totalSLATime = deadlineTime - assumedStartTime;
-  const elapsedTime = currentTime - assumedStartTime;
-  const percentElapsed = Math.max(0, Math.min(200, (elapsedTime / totalSLATime) * 100)); // Cap at 200%
+  const assumedStartTime = deadlineTime - 7 * 24 * 60 * 60 * 1000 // 7 days ago
+  const totalSLATime = deadlineTime - assumedStartTime
+  const elapsedTime = currentTime - assumedStartTime
+  const percentElapsed = Math.max(0, Math.min(200, (elapsedTime / totalSLATime) * 100)) // Cap at 200%
 
   // Determine status based on time remaining
-  let status: SLAStatusType;
+  let status: SLAStatusType
+  const hoursRemaining = timeDiffMs / (1000 * 60 * 60)
 
   if (isOverdue) {
-    status = 'breached';
+    status = 'breached'
+  } else if (hoursRemaining <= 24) {
+    status = 'approaching'
   } else if (percentElapsed >= 75) {
-    status = 'warning';
+    status = 'warning'
   } else {
-    status = 'safe';
+    status = 'safe'
   }
 
   return {
@@ -131,7 +135,7 @@ export function calculateSLAStatus(
     timeRemaining: isOverdue
       ? `${formatTimeDiff(Math.abs(timeDiffMs))} overdue`
       : `${formatTimeDiff(timeDiffMs)} remaining`,
-  };
+  }
 }
 
 /**
@@ -141,31 +145,31 @@ export function calculateSLAStatus(
  * @returns Human-readable string (e.g., "2 hours", "3 days")
  */
 export function formatTimeDiff(diffMs: number): string {
-  const absDiff = Math.abs(diffMs);
+  const absDiff = Math.abs(diffMs)
 
-  const seconds = Math.floor(absDiff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  const weeks = Math.floor(days / 7);
-  const months = Math.floor(days / 30);
+  const seconds = Math.floor(absDiff / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
+  const days = Math.floor(hours / 24)
+  const weeks = Math.floor(days / 7)
+  const months = Math.floor(days / 30)
 
   if (months > 0) {
-    return `${months} ${months === 1 ? 'month' : 'months'}`;
+    return `${months} ${months === 1 ? 'month' : 'months'}`
   }
   if (weeks > 0) {
-    return `${weeks} ${weeks === 1 ? 'week' : 'weeks'}`;
+    return `${weeks} ${weeks === 1 ? 'week' : 'weeks'}`
   }
   if (days > 0) {
-    return `${days} ${days === 1 ? 'day' : 'days'}`;
+    return `${days} ${days === 1 ? 'day' : 'days'}`
   }
   if (hours > 0) {
-    return `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+    return `${hours} ${hours === 1 ? 'hour' : 'hours'}`
   }
   if (minutes > 0) {
-    return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
+    return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`
   }
-  return `${seconds} ${seconds === 1 ? 'second' : 'seconds'}`;
+  return `${seconds} ${seconds === 1 ? 'second' : 'seconds'}`
 }
 
 /**
@@ -179,14 +183,14 @@ export function formatTimeDiff(diffMs: number): string {
 export function isSLABreached(
   deadline: string | null,
   isCompleted: boolean = false,
-  completedAt: string | null = null
+  completedAt: string | null = null,
 ): boolean {
   if (!deadline || isCompleted) {
-    return false;
+    return false
   }
 
-  const status = calculateSLAStatus(deadline, isCompleted, completedAt);
-  return status.isBreached;
+  const status = calculateSLAStatus(deadline, isCompleted, completedAt)
+  return status.isBreached
 }
 
 /**
@@ -197,13 +201,15 @@ export function isSLABreached(
  * @returns Timestamp when SLA enters warning zone
  */
 export function getSLAWarningThreshold(deadline: string, startTime?: string): Date {
-  const deadlineDate = new Date(deadline);
-  const startDate = startTime ? new Date(startTime) : new Date(deadlineDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const deadlineDate = new Date(deadline)
+  const startDate = startTime
+    ? new Date(startTime)
+    : new Date(deadlineDate.getTime() - 7 * 24 * 60 * 60 * 1000)
 
-  const totalTime = deadlineDate.getTime() - startDate.getTime();
-  const warningThreshold = startDate.getTime() + totalTime * 0.75;
+  const totalTime = deadlineDate.getTime() - startDate.getTime()
+  const warningThreshold = startDate.getTime() + totalTime * 0.75
 
-  return new Date(warningThreshold);
+  return new Date(warningThreshold)
 }
 
 /**
@@ -218,32 +224,34 @@ export function getSLAWarningThreshold(deadline: string, startTime?: string): Da
  * @param tasks - Array of tasks to sort
  * @returns Sorted array
  */
-export function sortBySLAUrgency<T extends { sla_deadline: string | null; status: string }>(tasks: T[]): T[] {
+export function sortBySLAUrgency<T extends { sla_deadline: string | null; status: string }>(
+  tasks: T[],
+): T[] {
   return [...tasks].sort((a, b) => {
-    const statusA = calculateSLAStatus(a.sla_deadline, a.status === 'completed');
-    const statusB = calculateSLAStatus(b.sla_deadline, b.status === 'completed');
+    const statusA = calculateSLAStatus(a.sla_deadline, a.status === 'completed')
+    const statusB = calculateSLAStatus(b.sla_deadline, b.status === 'completed')
 
     // Breached tasks first
-    if (statusA.isBreached && !statusB.isBreached) return -1;
-    if (!statusA.isBreached && statusB.isBreached) return 1;
+    if (statusA.isBreached && !statusB.isBreached) return -1
+    if (!statusA.isBreached && statusB.isBreached) return 1
 
     // If both breached, sort by most overdue
     if (statusA.isBreached && statusB.isBreached) {
-      return (statusA.timeDiffMs || 0) - (statusB.timeDiffMs || 0);
+      return (statusA.timeDiffMs || 0) - (statusB.timeDiffMs || 0)
     }
 
     // Warning tasks next
-    if (statusA.status === 'warning' && statusB.status !== 'warning') return -1;
-    if (statusA.status !== 'warning' && statusB.status === 'warning') return 1;
+    if (statusA.status === 'warning' && statusB.status !== 'warning') return -1
+    if (statusA.status !== 'warning' && statusB.status === 'warning') return 1
 
     // If both warning or both safe, sort by closest deadline
     if (statusA.timeDiffMs !== undefined && statusB.timeDiffMs !== undefined) {
-      return statusA.timeDiffMs - statusB.timeDiffMs;
+      return statusA.timeDiffMs - statusB.timeDiffMs
     }
 
     // Default: no change
-    return 0;
-  });
+    return 0
+  })
 }
 
 /**
@@ -255,16 +263,18 @@ export function sortBySLAUrgency<T extends { sla_deadline: string | null; status
 export function getSLAColorClass(status: SLAStatusType): string {
   switch (status) {
     case 'safe':
-      return 'text-green-600 dark:text-green-400';
+      return 'text-green-600 dark:text-green-400'
+    case 'approaching':
+      return 'text-amber-600 dark:text-amber-400'
     case 'warning':
-      return 'text-yellow-600 dark:text-yellow-400';
+      return 'text-yellow-600 dark:text-yellow-400'
     case 'breached':
-      return 'text-red-600 dark:text-red-400';
+      return 'text-red-600 dark:text-red-400'
     case 'completed_on_time':
-      return 'text-blue-600 dark:text-blue-400';
+      return 'text-blue-600 dark:text-blue-400'
     case 'completed_late':
-      return 'text-gray-600 dark:text-gray-400';
+      return 'text-gray-600 dark:text-gray-400'
     default:
-      return 'text-gray-600 dark:text-gray-400';
+      return 'text-gray-600 dark:text-gray-400'
   }
 }

@@ -68,6 +68,7 @@ export interface OrganizationExtension {
 }
 
 export interface ForumExtension {
+  organizing_body_id?: string
   number_of_sessions?: number
   keynote_speakers?: Array<{ name: string; title: string; org: string }>
   sponsors?: Array<unknown>
@@ -284,6 +285,7 @@ export interface CreateDossierRequest {
   type: DossierType
   name_en: string
   name_ar: string
+  abbreviation?: string
   description_en?: string
   description_ar?: string
   status?: DossierStatus
@@ -296,6 +298,7 @@ export interface CreateDossierRequest {
 export interface UpdateDossierRequest {
   name_en?: string
   name_ar?: string
+  abbreviation?: string
   description_en?: string
   description_ar?: string
   status?: DossierStatus
@@ -318,15 +321,39 @@ export interface DossierFilters {
   sort_order?: 'asc' | 'desc'
 }
 
-export interface DossierWithExtension extends Dossier {
+export interface DossierWithExtension
+  extends Omit<Dossier, 'type' | 'status' | 'expires_at' | 'freshness_status'> {
+  type: DossierType
+  status: DossierStatus
   extension?: DossierExtensionData
+  /** Runtime-computed freshness indicator from content-expiration system */
+  freshness_status?:
+    | 'fresh'
+    | 'stale'
+    | 'expired'
+    | 'current'
+    | 'review_pending'
+    | 'outdated'
+    | 'refreshing'
+    | 'archived'
+    | null
+  /** Expiration timestamp from content-expiration system */
+  expires_at?: string | null
 }
 
 export interface DossiersListResponse {
-  dossiers: DossierWithExtension[]
-  total_count: number
-  page: number
-  page_size: number
+  data: DossierWithExtension[]
+  pagination: {
+    next_cursor: string | null
+    has_more: boolean
+    total_count: number
+  }
+  /** @deprecated Use pagination.total_count */
+  total?: number
+  /** @deprecated */
+  page?: number
+  /** @deprecated */
+  page_size?: number
 }
 
 /**
@@ -377,7 +404,14 @@ async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     let error: ApiErrorResponse
     try {
-      error = (await response.json()) as ApiErrorResponse
+      const body = await response.json()
+      // Edge Functions wrap errors in { error: { code, message_en, ... } }
+      const err = body?.error ?? body
+      error = {
+        message: err.message_en || err.message || response.statusText,
+        code: err.code,
+        details: err.details,
+      }
     } catch {
       error = { message: response.statusText }
     }

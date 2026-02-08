@@ -3,9 +3,9 @@
  * TanStack Query hooks for user lifecycle operations
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createUser, activateAccount, type CreateUserRequest, type ActivateAccountRequest } from '@/services/user-management-api';
-import { useToast } from '@/hooks/use-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createUser, activateAccount } from '@/services/user-management-api'
+import { useToast } from '@/hooks/use-toast'
 
 // ============================================================================
 // Create User Hook
@@ -31,36 +31,36 @@ import { useToast } from '@/hooks/use-toast';
  * });
  */
 export function useCreateUser() {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
 
   return useMutation({
     mutationFn: createUser,
     onSuccess: (data) => {
       // Invalidate users list cache
-      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['users'] })
 
       // Show success toast
       toast({
         title: 'User created successfully',
         description: `Activation email sent to ${data.user_id}. Expires at ${new Date(data.activation_expires_at).toLocaleString()}`,
         variant: 'success',
-      });
+      })
     },
     onError: (error: any) => {
       // Show error toast with details
-      const errorMessage = error.error || error.message || 'Failed to create user';
-      const errorDetails = error.details?.join(', ') || '';
+      const errorMessage = error.error || error.message || 'Failed to create user'
+      const errorDetails = error.details?.join(', ') || ''
 
       toast({
         title: 'Failed to create user',
         description: errorDetails ? `${errorMessage}: ${errorDetails}` : errorMessage,
         variant: 'destructive',
-      });
+      })
 
-      console.error('Create user error:', error);
+      console.error('Create user error:', error)
     },
-  });
+  })
 }
 
 // ============================================================================
@@ -85,7 +85,7 @@ export function useCreateUser() {
  * });
  */
 export function useActivateAccount() {
-  const { toast } = useToast();
+  const { toast } = useToast()
 
   return useMutation({
     mutationFn: activateAccount,
@@ -95,25 +95,25 @@ export function useActivateAccount() {
         title: 'Account activated',
         description: data.message,
         variant: 'success',
-      });
+      })
 
       // Redirect to login page after 2 seconds
       setTimeout(() => {
-        window.location.href = '/login';
-      }, 2000);
+        window.location.href = '/login'
+      }, 2000)
     },
     onError: (error: any) => {
       // Show error toast with details
-      const errorMessage = error.error || error.message || 'Failed to activate account';
-      const errorDetails = error.details?.join(', ') || '';
+      const errorMessage = error.error || error.message || 'Failed to activate account'
+      const errorDetails = error.details?.join(', ') || ''
 
       toast({
         title: 'Activation failed',
         description: errorDetails ? `${errorMessage}: ${errorDetails}` : errorMessage,
         variant: 'destructive',
-      });
+      })
 
-      console.error('Activate account error:', error);
+      console.error('Activate account error:', error)
     },
-  });
+  })
 }

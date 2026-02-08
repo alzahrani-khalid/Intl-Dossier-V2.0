@@ -19,6 +19,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { p, s } from '@/lib/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import type { TimelineActivity } from '@/hooks/useDossierActivityTimeline'
@@ -136,17 +137,17 @@ export function ActivityTimelineItem({
   const handleClick = () => {
     switch (activity.work_item_type) {
       case 'task':
-        navigate({ to: '/tasks/$id', params: { id: activity.work_item_id } })
+        void navigate({ to: '/tasks/$id', params: p({ id: activity.work_item_id }) })
         break
       case 'commitment':
         // Commitments open in a drawer via query param (id for deep-linking)
-        navigate({
+        void navigate({
           to: '/commitments',
-          search: { id: activity.work_item_id },
+          search: s({ id: activity.work_item_id }),
         })
         break
       case 'intake':
-        navigate({ to: '/intake/tickets/$id', params: { id: activity.work_item_id } })
+        void navigate({ to: '/intake/tickets/$id', params: p({ id: activity.work_item_id }) })
         break
     }
   }

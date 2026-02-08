@@ -6,7 +6,7 @@
  * Features checkbox selection, field editing, confidence badges, and batch operations.
  */
 
-import React, { useState, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,10 +16,33 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckSquare, Square, AlertCircle, Trash2, Users } from 'lucide-react'
-import { getConfidenceColor, getConfidenceLevel } from '@/hooks/useOCR'
-import type { Database } from '@/types/contact-directory.types'
+import { getConfidenceColor } from '@/hooks/useOCR'
 
-type ContactInsert = Database['public']['Tables']['cd_contacts']['Insert']
+/**
+ * ContactInsert fields expected by the contacts table.
+ * Note: The contacts table type is not yet generated in database.types.ts,
+ * so we define the expected fields explicitly here.
+ */
+interface ContactInsert {
+  full_name: string
+  position?: string | null
+  email_addresses?: string[]
+  phone_numbers?: string[]
+  organization_id?: string | null
+  source_type?: string | null
+  ocr_confidence?: number | null
+  first_name?: string | null
+  last_name?: string | null
+  first_name_ar?: string | null
+  last_name_ar?: string | null
+  position_title?: string | null
+  position_title_ar?: string | null
+  department?: string | null
+  department_ar?: string | null
+  tags?: string[]
+  notes?: string | null
+  created_by?: string | null
+}
 
 export interface EditableContact extends Partial<ContactInsert> {
   id: string // Temporary ID for editing

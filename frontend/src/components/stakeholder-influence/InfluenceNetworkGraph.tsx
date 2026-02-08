@@ -7,7 +7,7 @@
  * Mobile-first, RTL-aware with zoom/pan controls.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   ReactFlow,
@@ -25,7 +25,6 @@ import {
 import '@xyflow/react/dist/style.css'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
   Loader2,
   Building2,
@@ -225,8 +224,8 @@ export function InfluenceNetworkGraph({
   const { t, i18n } = useTranslation('stakeholder-influence')
   const isRTL = i18n.language === 'ar'
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
+  const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
   const [selectedNode, setSelectedNode] = useState<string | null>(null)
 
   /**

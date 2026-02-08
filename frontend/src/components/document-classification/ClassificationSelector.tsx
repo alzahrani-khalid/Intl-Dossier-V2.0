@@ -6,7 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { Globe, Building, Lock, ShieldAlert, ChevronDown } from 'lucide-react'
+import { Globe, Building, Lock, ShieldAlert } from 'lucide-react'
 import {
   Select,
   SelectContent,

@@ -69,7 +69,7 @@ export function WorkItemPreview({
       assignment.work_item_linked_entities &&
       assignment.work_item_linked_entities.length > 0
     ) {
-      const firstEntity = assignment.work_item_linked_entities[0]
+      const firstEntity = assignment.work_item_linked_entities[0]!
       if (firstEntity.type === 'dossier') {
         return `/dossiers/${firstEntity.id}`
       } else if (firstEntity.type === 'position') {

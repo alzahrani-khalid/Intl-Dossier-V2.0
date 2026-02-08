@@ -62,7 +62,7 @@ import { AgendaItemForm } from './AgendaItemForm'
 import { AgendaTimingTracker } from './AgendaTimingTracker'
 import { AgendaParticipantsList } from './AgendaParticipantsList'
 import { AgendaDocumentsList } from './AgendaDocumentsList'
-import type { AgendaItem, AgendaFull, AgendaStatus } from '@/types/meeting-agenda.types'
+import type { AgendaItem, AgendaStatus } from '@/types/meeting-agenda.types'
 import {
   AGENDA_STATUS_COLORS,
   formatDuration,
@@ -346,9 +346,11 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
                           canEdit={canEdit}
                           inMeeting={inMeeting}
                           calculatedStart={
-                            'calculated_start' in item ? item.calculated_start : undefined
+                            'calculated_start' in item ? String(item.calculated_start) : undefined
                           }
-                          calculatedEnd={'calculated_end' in item ? item.calculated_end : undefined}
+                          calculatedEnd={
+                            'calculated_end' in item ? String(item.calculated_end) : undefined
+                          }
                           onEdit={() => {
                             setEditingItem(item)
                             setShowItemForm(true)

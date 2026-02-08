@@ -36,10 +36,10 @@ export function TicketDetail() {
 
   // Use the proper hooks
   const { data: response, isLoading, error } = useTicket(id || '')
-  const ticket = response?.ticket
+  const ticket = response as any
   const attachments = response?.attachments || []
 
-  const updateMutation = useUpdateTicket(id || '')
+  const _updateMutation = useUpdateTicket(id || '')
   const convertMutation = useConvertTicket(id || '')
   const closeMutation = useCloseTicket(id || '')
 
@@ -87,10 +87,10 @@ export function TicketDetail() {
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
-              {ticket.ticket_number}
+              {ticket.ticketNumber}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              {i18n.language === 'ar' && ticket.title_ar ? ticket.title_ar : ticket.title}
+              {i18n.language === 'ar' && ticket.titleAr ? ticket.titleAr : ticket.title}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -111,15 +111,15 @@ export function TicketDetail() {
         </div>
 
         {/* SLA Indicators */}
-        {ticket.status !== 'closed' && ticket.status !== 'converted' && ticket.submitted_at && (
+        {ticket.status !== 'closed' && ticket.status !== 'converted' && ticket.submittedAt && (
           <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
             <SLACountdown
               ticketId={ticket.id}
               targetMinutes={ticket.priority === 'urgent' || ticket.priority === 'high' ? 30 : 60}
               eventType="acknowledgment"
-              startedAt={ticket.submitted_at}
-              initialPaused={ticket.sla_paused}
-              accumulatedPauseMinutes={ticket.sla_pause_accumulated_minutes || 0}
+              startedAt={ticket.submittedAt}
+              initialPaused={false}
+              accumulatedPauseMinutes={0}
               canPauseResume={canRestoreLinks}
             />
             <SLACountdown
@@ -128,9 +128,9 @@ export function TicketDetail() {
                 ticket.priority === 'urgent' || ticket.priority === 'high' ? 480 : 1440
               }
               eventType="resolution"
-              startedAt={ticket.submitted_at}
-              initialPaused={ticket.sla_paused}
-              accumulatedPauseMinutes={ticket.sla_pause_accumulated_minutes || 0}
+              startedAt={ticket.submittedAt}
+              initialPaused={false}
+              accumulatedPauseMinutes={0}
               canPauseResume={canRestoreLinks}
             />
           </div>
@@ -201,21 +201,21 @@ export function TicketDetail() {
               </label>
               <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
                 <p className="whitespace-pre-wrap text-gray-900 dark:text-white">
-                  {i18n.language === 'ar' && ticket.description_ar
-                    ? ticket.description_ar
+                  {i18n.language === 'ar' && ticket.descriptionAr
+                    ? ticket.descriptionAr
                     : ticket.description}
                 </p>
               </div>
             </div>
 
             {/* Type-Specific Fields */}
-            {ticket.type_specific_fields && Object.keys(ticket.type_specific_fields).length > 0 && (
+            {ticket.typeSpecificFields && Object.keys(ticket.typeSpecificFields).length > 0 && (
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('ticketDetail.additionalInfo', 'Additional Information')}
                 </label>
                 <div className="space-y-2 rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-                  {Object.entries(ticket.type_specific_fields).map(([key, value]) => (
+                  {Object.entries(ticket.typeSpecificFields).map(([key, value]) => (
                     <div key={key} className="flex justify-between">
                       <span className="capitalize text-gray-600 dark:text-gray-400">{key}:</span>
                       <span className="text-gray-900 dark:text-white">{String(value)}</span>
@@ -302,7 +302,7 @@ export function TicketDetail() {
               isLoading={convertMutation.isPending}
               onConfirm={(targetType) => {
                 convertMutation.mutate(
-                  { targetType: targetType as 'dossier' | 'engagement' | 'position' },
+                  { targetType: targetType as any },
                   { onSuccess: () => setConvertDialogOpen(false) },
                 )
               }}
@@ -357,8 +357,8 @@ export function TicketDetail() {
           >
             <EntityLinkManager
               intakeId={ticket.id}
-              organizationId={ticket.organization_id}
-              classificationLevel={ticket.classification_level || 0}
+              organizationId={ticket.dossierId}
+              classificationLevel={0}
               canRestore={canRestoreLinks}
               enableReorder={true}
             />

@@ -6,7 +6,7 @@
  * Mobile-first, RTL-aware with filters for date range and type.
  */
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { format } from 'date-fns'
@@ -27,7 +27,7 @@ import {
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
   Select,
@@ -203,7 +203,7 @@ export function NotesSearch() {
   const hasActiveFilters = typeFilter !== 'all' || dateFrom || dateTo
 
   const handleNavigateToContact = (contactId: string) => {
-    navigate({ to: '/contacts/$contactId', params: { contactId } })
+    navigate({ to: '/contacts/$contactId', params: { contactId } as any })
   }
 
   return (

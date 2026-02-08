@@ -24,7 +24,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import type { AgendaTiming, AgendaItemTiming } from '@/types/meeting-agenda.types'
+import type { AgendaTiming } from '@/types/meeting-agenda.types'
 import {
   formatDuration,
   TIMING_STATUS_COLORS,
@@ -51,7 +51,7 @@ export function AgendaTimingTracker({
 
   // Update elapsed time every second during meeting
   useEffect(() => {
-    if (!inMeeting || !timing.actual_start_time) return
+    if (!inMeeting || !timing.actual_start_time) return undefined
 
     const updateElapsed = () => {
       const start = new Date(timing.actual_start_time!).getTime()

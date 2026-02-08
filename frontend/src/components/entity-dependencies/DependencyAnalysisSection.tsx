@@ -39,7 +39,7 @@ import {
   useAssessments,
   useCreateAssessment,
 } from '@/hooks/useEntityDependencies'
-import type { ChangeType, ImpactSeverity, ImpactAssessment } from '@/types/entity-dependency.types'
+import type { ChangeType, ImpactAssessment } from '@/types/entity-dependency.types'
 import { SEVERITY_CONFIGS, CHANGE_TYPE_LABELS } from '@/types/entity-dependency.types'
 import { cn } from '@/lib/utils'
 

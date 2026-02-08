@@ -30,7 +30,7 @@
     "low": "Low",
     "medium": "Medium",
     "high": "High",
-    "critical": "Critical"
+    "urgent": "Urgent"
   },
   "ownerType": {
     "label": "Owner Type",

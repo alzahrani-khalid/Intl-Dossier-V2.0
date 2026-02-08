@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Award, Zap, Star, Trophy, PartyPopper, Sparkles, Check, X, LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import type { MilestoneCelebration, MilestonesCelebrationProps } from '@/types/onboarding.types'
+import type { MilestonesCelebrationProps } from '@/types/onboarding.types'
 
 // Icon mapping for badges
 const badgeIcons: Record<string, LucideIcon> = {
@@ -164,7 +164,7 @@ function ConfettiAnimation() {
     id: i,
     delay: Math.random() * 1,
     duration: 2 + Math.random() * 2,
-    color: colors[Math.floor(Math.random() * colors.length)],
+    color: colors[Math.floor(Math.random() * colors.length)]!,
     size: 6 + Math.random() * 8,
     startX: Math.random() * 100,
   }))
@@ -243,6 +243,7 @@ export function MilestonesCelebration({
 
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [autoDismiss, celebration.duration, onComplete])
 
   // Handle manual dismiss

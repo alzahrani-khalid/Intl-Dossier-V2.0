@@ -223,7 +223,7 @@ export function useMilestonePlanning({
   })
 
   // Mark complete mutation
-  const markCompleteMutation = useMutation({
+  const _markCompleteMutation = useMutation({
     mutationFn: async (id: string): Promise<PlannedMilestone> => {
       const { data: result, error } = await supabase
         .from('planned_milestones')
@@ -406,7 +406,7 @@ export function useMarkMilestoneComplete(dossierId: string) {
         throw new Error(error.message)
       }
     },
-    onSuccess: (_, id) => {
+    onSuccess: (_, _id) => {
       queryClient.invalidateQueries({ queryKey })
       toast.success(t('messages.updateSuccess'))
     },

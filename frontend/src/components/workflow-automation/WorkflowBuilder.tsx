@@ -3,7 +3,7 @@
  * Multi-step wizard for creating and editing workflow rules
  */
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Zap,
@@ -123,14 +123,14 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
   const goToNextStep = () => {
     const currentIndex = getCurrentStepIndex()
     if (currentIndex < steps.length - 1) {
-      setCurrentStep(steps[currentIndex + 1])
+      setCurrentStep(steps[currentIndex + 1]!)
     }
   }
 
   const goToPreviousStep = () => {
     const currentIndex = getCurrentStepIndex()
     if (currentIndex > 0) {
-      setCurrentStep(steps[currentIndex - 1])
+      setCurrentStep(steps[currentIndex - 1]!)
     }
   }
 
@@ -400,7 +400,7 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
           const StepIcon = stepIcons[step]
           const isActive = step === currentStep
           const isCompleted = index < getCurrentStepIndex()
-          const isClickable = index <= getCurrentStepIndex() || canProceed(steps[index - 1])
+          const isClickable = index <= getCurrentStepIndex() || canProceed(steps[index - 1]!)
 
           return (
             <div key={step} className="flex items-center">

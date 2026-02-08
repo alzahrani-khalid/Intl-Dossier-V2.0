@@ -252,7 +252,7 @@ export function BulkActionsDemo() {
       {/* Preview Dialog - Shows affected entities with key details */}
       <BulkActionPreviewDialog
         open={previewState.open}
-        action={previewState.action}
+        action={previewState.action as any}
         items={previewState.items}
         entityType="entity"
         onConfirm={handlePreviewConfirm}

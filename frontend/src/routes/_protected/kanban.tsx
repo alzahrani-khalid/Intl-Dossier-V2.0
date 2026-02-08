@@ -21,6 +21,7 @@ import {
   useUnifiedKanbanStatusUpdate,
   useUnifiedKanbanRealtime,
 } from '@/hooks/useUnifiedKanban'
+import { useTeamWorkload } from '@/hooks/useUnifiedWork'
 import { EnhancedKanbanBoard } from '@/components/unified-kanban'
 import { Button } from '@/components/ui/button'
 import { List } from 'lucide-react'
@@ -70,11 +71,31 @@ function KanbanTaskBoardPage() {
   )
 
   // Fetch kanban data
-  const { items, isLoading, isError, refetch, isRefetching } = useUnifiedKanban({
+  const {
+    items,
+    isLoading,
+    isError,
+    refetch,
+    isRefetching,
+    hasMore,
+    totalCountPerColumn,
+    loadMoreForColumn,
+  } = useUnifiedKanban({
     contextType: 'personal',
     columnMode: mode as KanbanColumnMode,
     sourceFilter,
   })
+
+  // Fetch team members for bulk assign
+  const { data: teamMembers } = useTeamWorkload()
+  const availableAssignees = useMemo(
+    () =>
+      (teamMembers || []).map((m) => ({
+        id: m.user_id,
+        name: m.user_email,
+      })),
+    [teamMembers],
+  )
 
   // Status update mutation
   const statusMutation = useUnifiedKanbanStatusUpdate()
@@ -169,6 +190,10 @@ function KanbanTaskBoardPage() {
           wipLimits={wipLimits}
           enableBulkOperations
           enableWipWarnings
+          availableAssignees={availableAssignees}
+          hasMore={hasMore}
+          totalCountPerColumn={totalCountPerColumn}
+          onLoadMore={loadMoreForColumn}
           className="h-full"
         />
       </div>

@@ -216,7 +216,7 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
 
 // Hook for functional components to trigger error boundary
 export function useErrorHandler() {
-  return (error: Error, errorInfo?: ErrorInfo) => {
+  return (error: Error, _errorInfo?: ErrorInfo) => {
     // This will be caught by the nearest ErrorBoundary
     throw error
   }

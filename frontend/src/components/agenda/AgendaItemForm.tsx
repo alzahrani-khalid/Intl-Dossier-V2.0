@@ -9,7 +9,7 @@
  * - Item type selection
  */
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -115,7 +115,7 @@ export function AgendaItemForm({ agendaId, item, onClose }: AgendaItemFormProps)
   })
 
   const watchedDuration = watch('planned_duration_minutes')
-  const watchedType = watch('item_type')
+  const _watchedType = watch('item_type')
   const watchedPresenterType = watch('presenter_type')
 
   // Handle form submission
@@ -125,7 +125,7 @@ export function AgendaItemForm({ agendaId, item, onClose }: AgendaItemFormProps)
         await updateItem.mutateAsync({
           agendaId,
           itemId: item.id,
-          input: {
+          data: {
             title_en: data.title_en,
             title_ar: data.title_ar || undefined,
             description_en: data.description_en || undefined,
@@ -147,27 +147,24 @@ export function AgendaItemForm({ agendaId, item, onClose }: AgendaItemFormProps)
         })
       } else {
         await addItem.mutateAsync({
-          agendaId,
-          input: {
-            agenda_id: agendaId,
-            title_en: data.title_en,
-            title_ar: data.title_ar || undefined,
-            description_en: data.description_en || undefined,
-            description_ar: data.description_ar || undefined,
-            planned_duration_minutes: data.planned_duration_minutes,
-            item_type: data.item_type as AgendaItemType,
-            presenter_type: data.presenter_type as PresenterType | undefined,
-            presenter_user_id: data.presenter_user_id || undefined,
-            presenter_person_id: data.presenter_person_id || undefined,
-            presenter_org_id: data.presenter_org_id || undefined,
-            presenter_name_en: data.presenter_name_en || undefined,
-            presenter_name_ar: data.presenter_name_ar || undefined,
-            presenter_title_en: data.presenter_title_en || undefined,
-            presenter_title_ar: data.presenter_title_ar || undefined,
-            linked_dossier_id: data.linked_dossier_id || undefined,
-            linked_commitment_id: data.linked_commitment_id || undefined,
-            indent_level: data.indent_level,
-          },
+          agenda_id: agendaId,
+          title_en: data.title_en,
+          title_ar: data.title_ar || undefined,
+          description_en: data.description_en || undefined,
+          description_ar: data.description_ar || undefined,
+          planned_duration_minutes: data.planned_duration_minutes,
+          item_type: data.item_type as AgendaItemType,
+          presenter_type: data.presenter_type as PresenterType | undefined,
+          presenter_user_id: data.presenter_user_id || undefined,
+          presenter_person_id: data.presenter_person_id || undefined,
+          presenter_org_id: data.presenter_org_id || undefined,
+          presenter_name_en: data.presenter_name_en || undefined,
+          presenter_name_ar: data.presenter_name_ar || undefined,
+          presenter_title_en: data.presenter_title_en || undefined,
+          presenter_title_ar: data.presenter_title_ar || undefined,
+          linked_dossier_id: data.linked_dossier_id || undefined,
+          linked_commitment_id: data.linked_commitment_id || undefined,
+          indent_level: data.indent_level,
         })
       }
       onClose()

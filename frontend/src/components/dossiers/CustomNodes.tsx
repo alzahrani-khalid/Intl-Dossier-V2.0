@@ -1,6 +1,6 @@
 // Enhanced Card-Style React Flow Nodes for Relationship Graph
 import { memo } from 'react'
-import { Handle, Position, NodeProps } from '@xyflow/react'
+import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import {
   Building2,
   Globe2,
@@ -12,7 +12,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 
-interface CustomNodeData {
+interface CustomNodeData extends Record<string, unknown> {
   label: string
   isCenter?: boolean
   referenceType?: 'country' | 'organization' | 'forum'
@@ -25,8 +25,10 @@ interface CustomNodeData {
   }
 }
 
+type CustomNode = Node<CustomNodeData>
+
 // Center Node Component (Current Dossier) - Large Card Style
-export const CenterNode = memo(({ data }: NodeProps<CustomNodeData>) => {
+export const CenterNode = memo(({ data }: NodeProps<CustomNode>) => {
   return (
     <div className="relative group">
       {/* Animated glow ring */}
@@ -130,7 +132,7 @@ export const CenterNode = memo(({ data }: NodeProps<CustomNodeData>) => {
 CenterNode.displayName = 'CenterNode'
 
 // Related Node Component (Other Dossiers) - Card Style
-export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNodeData>) => {
+export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNode>) => {
   const { referenceType, label, description, stats } = data
 
   // Get colors and icon based on entity type

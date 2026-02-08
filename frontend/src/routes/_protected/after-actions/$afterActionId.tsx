@@ -120,7 +120,7 @@ function AfterActionDetailPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link to={getDossierDetailPath(afterAction.dossier_id, afterAction.dossier_type)}>
+            <Link to={getDossierDetailPath(afterAction.dossier_id, (afterAction as any).type)}>
               <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
             </Link>
           </Button>
@@ -163,7 +163,7 @@ function AfterActionDetailPage() {
         )}
 
         <Button variant="outline" asChild>
-          <Link to="/after-actions/$afterActionId/versions" params={{ afterActionId }}>
+          <Link to="/after-actions/$afterActionId/versions" params={{ afterActionId } as any}>
             <History className="h-4 w-4 me-2" />
             {t('afterActions.versionHistory')}
           </Link>
@@ -176,7 +176,7 @@ function AfterActionDetailPage() {
       </div>
 
       {/* Edit Approval Flow (for supervisors) */}
-      {isEditRequested && canPublish && <EditApprovalFlow afterActionId={afterActionId} />}
+      {isEditRequested && canPublish && <EditApprovalFlow {...({ afterActionId } as any)} />}
 
       {/* Main Content */}
       <div className="grid gap-6">

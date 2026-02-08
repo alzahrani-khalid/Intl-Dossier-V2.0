@@ -23,7 +23,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { SLATrendDataPoint } from '@/types/sla.types'
-import { cn } from '@/lib/utils'
 
 interface SLAComplianceChartProps {
   data?: SLATrendDataPoint[]

@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import type { PermissionDeniedInlineProps, AccessGranter } from '@/types/permission-error.types'
+import type { PermissionDeniedInlineProps } from '@/types/permission-error.types'
 
 // =============================================================================
 // MAIN COMPONENT

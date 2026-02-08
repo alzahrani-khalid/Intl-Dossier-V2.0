@@ -1,0 +1,334 @@
+{
+  "title": "Forum Management",
+  "description": "Manage forum sessions, agenda items, and side events",
+
+  "agendaItems": {
+    "title": "Agenda Items",
+    "description": "Manage forum session agenda",
+    "create": "Create Agenda Item",
+    "edit": "Edit Agenda Item",
+    "delete": "Delete Agenda Item",
+    "empty": "No agenda items found",
+    "emptyDescription": "Create your first agenda item to get started",
+    "itemNumber": "Item Number",
+    "sequenceOrder": "Sequence Order",
+    "timeAllocation": "Time Allocation (minutes)",
+    "scheduledTime": "Scheduled Time",
+    "parentItem": "Parent Item",
+    "level": "Level",
+    "outcome": "Outcome",
+    "resolutionReference": "Resolution Reference",
+    "backgroundNotes": "Background Notes",
+    "speakers": "Speakers",
+    "addSpeaker": "Add Speaker",
+    "removeSpeaker": "Remove Speaker"
+  },
+
+  "agendaItemTypes": {
+    "discussion": "Discussion",
+    "decision": "Decision",
+    "information": "Information",
+    "election": "Election",
+    "procedural": "Procedural",
+    "report": "Report",
+    "adoption": "Adoption"
+  },
+
+  "agendaItemStatus": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "deferred": "Deferred",
+    "withdrawn": "Withdrawn",
+    "adopted": "Adopted",
+    "rejected": "Rejected"
+  },
+
+  "agendaItemPriority": {
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "assignments": {
+    "title": "Assignments",
+    "description": "Manage agenda item assignments",
+    "create": "Create Assignment",
+    "edit": "Edit Assignment",
+    "delete": "Delete Assignment",
+    "assignee": "Assignee",
+    "assigneeType": "Assignee Type",
+    "role": "Role",
+    "instructions": "Instructions",
+    "deadline": "Deadline",
+    "response": "Response",
+    "responseDocuments": "Response Documents"
+  },
+
+  "assigneeTypes": {
+    "department": "Department",
+    "organization": "Organization",
+    "person": "Person",
+    "working_group": "Working Group"
+  },
+
+  "assignmentRoles": {
+    "lead": "Lead",
+    "support": "Support",
+    "observer": "Observer",
+    "presenter": "Presenter",
+    "rapporteur": "Rapporteur",
+    "coordinator": "Coordinator"
+  },
+
+  "assignmentStatus": {
+    "assigned": "Assigned",
+    "acknowledged": "Acknowledged",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "pending_review": "Pending Review",
+    "declined": "Declined"
+  },
+
+  "sideEvents": {
+    "title": "Side Events",
+    "description": "Manage side events and bilateral meetings",
+    "create": "Create Side Event",
+    "edit": "Edit Side Event",
+    "delete": "Delete Side Event",
+    "empty": "No side events found",
+    "emptyDescription": "Create your first side event to get started",
+    "scheduledDate": "Scheduled Date",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "duration": "Duration (minutes)",
+    "allDay": "All Day Event",
+    "venue": "Venue",
+    "venueAddress": "Venue Address",
+    "roomName": "Room Name",
+    "isOffsite": "Offsite Event",
+    "capacity": "Capacity",
+    "expectedAttendance": "Expected Attendance",
+    "registrationRequired": "Registration Required",
+    "invitationOnly": "Invitation Only",
+    "organizer": "Organizer",
+    "organizerType": "Organizer Type",
+    "hostCountry": "Host Country",
+    "participants": "Participants",
+    "agendaUrl": "Agenda URL",
+    "materials": "Materials",
+    "internalNotes": "Internal Notes",
+    "cancellationReason": "Cancellation Reason"
+  },
+
+  "sideEventTypes": {
+    "bilateral_meeting": "Bilateral Meeting",
+    "multilateral_meeting": "Multilateral Meeting",
+    "reception": "Reception",
+    "exhibition": "Exhibition",
+    "workshop": "Workshop",
+    "press_conference": "Press Conference",
+    "signing_ceremony": "Signing Ceremony",
+    "cultural_event": "Cultural Event",
+    "networking": "Networking",
+    "breakfast_meeting": "Breakfast Meeting",
+    "lunch_meeting": "Lunch Meeting",
+    "dinner_meeting": "Dinner Meeting",
+    "other": "Other"
+  },
+
+  "sideEventStatus": {
+    "planned": "Planned",
+    "confirmed": "Confirmed",
+    "tentative": "Tentative",
+    "cancelled": "Cancelled",
+    "postponed": "Postponed",
+    "completed": "Completed"
+  },
+
+  "sideEventPriority": {
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High",
+    "vip": "VIP"
+  },
+
+  "organizerTypes": {
+    "organization": "Organization",
+    "country": "Country",
+    "person": "Person",
+    "delegation": "Delegation"
+  },
+
+  "logistics": {
+    "title": "Event Logistics",
+    "description": "Manage event logistics and requirements",
+    "create": "Create Logistics Request",
+    "edit": "Edit Logistics",
+    "delete": "Delete Logistics",
+    "empty": "No logistics configured",
+    "emptyDescription": "Add logistics requirements for this event",
+    "provider": "Provider",
+    "providerName": "Provider Name",
+    "providerContact": "Contact Person",
+    "providerEmail": "Email",
+    "providerPhone": "Phone",
+    "requirements": "Requirements",
+    "quantity": "Quantity",
+    "specifications": "Specifications",
+    "estimatedCost": "Estimated Cost",
+    "actualCost": "Actual Cost",
+    "currency": "Currency",
+    "budgetCode": "Budget Code",
+    "bookedAt": "Booked At",
+    "confirmedAt": "Confirmed At"
+  },
+
+  "logisticsTypes": {
+    "catering": "Catering",
+    "av_equipment": "AV Equipment",
+    "interpretation": "Interpretation",
+    "security": "Security",
+    "transportation": "Transportation",
+    "accommodation": "Accommodation",
+    "decoration": "Decoration",
+    "photography": "Photography",
+    "printing": "Printing",
+    "registration": "Registration",
+    "signage": "Signage",
+    "gifts": "Gifts",
+    "protocol": "Protocol",
+    "other": "Other"
+  },
+
+  "logisticsStatus": {
+    "pending": "Pending",
+    "requested": "Requested",
+    "quoted": "Quoted",
+    "approved": "Approved",
+    "booked": "Booked",
+    "confirmed": "Confirmed",
+    "cancelled": "Cancelled",
+    "completed": "Completed"
+  },
+
+  "attendees": {
+    "title": "Attendees",
+    "description": "Manage event attendees",
+    "create": "Add Attendee",
+    "edit": "Edit Attendee",
+    "delete": "Remove Attendee",
+    "empty": "No attendees added",
+    "emptyDescription": "Add attendees to this event",
+    "representing": "Representing",
+    "role": "Role",
+    "invitationSent": "Invitation Sent",
+    "invitationSentAt": "Invitation Sent At",
+    "rsvpStatus": "RSVP Status",
+    "rsvpAt": "RSVP At",
+    "attended": "Attended",
+    "attendanceNotes": "Attendance Notes",
+    "dietaryRequirements": "Dietary Requirements",
+    "accessibilityRequirements": "Accessibility Requirements"
+  },
+
+  "attendeeRoles": {
+    "host": "Host",
+    "co_host": "Co-Host",
+    "speaker": "Speaker",
+    "moderator": "Moderator",
+    "panelist": "Panelist",
+    "vip_guest": "VIP Guest",
+    "attendee": "Attendee",
+    "observer": "Observer",
+    "staff": "Staff",
+    "interpreter": "Interpreter"
+  },
+
+  "rsvpStatus": {
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "tentative": "Tentative",
+    "no_response": "No Response"
+  },
+
+  "representingTypes": {
+    "country": "Country",
+    "organization": "Organization",
+    "self": "Self"
+  },
+
+  "dashboard": {
+    "title": "Forum Dashboard",
+    "upcomingEvents": "Upcoming Events",
+    "pendingLogistics": "Pending Logistics",
+    "confirmedLogistics": "Confirmed Logistics",
+    "totalEstimatedCost": "Total Estimated Cost",
+    "totalActualCost": "Total Actual Cost",
+    "responseStatus": "Response Status",
+    "completionPercentage": "Completion"
+  },
+
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "sendInvitation": "Send Invitation",
+    "markAttended": "Mark as Attended",
+    "exportAgenda": "Export Agenda",
+    "printAgenda": "Print Agenda",
+    "viewCalendar": "View Calendar"
+  },
+
+  "validation": {
+    "titleRequired": "Title is required",
+    "dateRequired": "Date is required",
+    "sessionRequired": "Session is required",
+    "itemNumberRequired": "Item number is required",
+    "invalidTimeRange": "End time must be after start time"
+  },
+
+  "common": {
+    "search": "Search...",
+    "filters": "Filters",
+    "all": "All",
+    "type": "Type",
+    "status": "Status",
+    "priority": "Priority",
+    "clearFilters": "Clear Filters",
+    "noResults": "No Results Found",
+    "adjustFilters": "Try adjusting your search or filters",
+    "total": "Total",
+    "showing": "Showing",
+    "error": "Error",
+    "retry": "Try Again",
+    "basicInfo": "Basic Information",
+    "classification": "Classification",
+    "scheduling": "Scheduling",
+    "none": "None (Top-level item)",
+    "titleEn": "Title (English)",
+    "titleAr": "Title (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "organization": "Organization",
+    "role": "Role",
+    "documents": "Documents",
+    "documentTitle": "Document Title",
+    "documentUrl": "URL",
+    "tags": "Tags",
+    "addTag": "Add tag...",
+    "outcomeEn": "Outcome (English)",
+    "outcomeAr": "Outcome (Arabic)",
+    "public": "Public",
+    "private": "Private",
+    "notes": "Notes",
+    "items": "items",
+    "events": "events"
+  }
+}

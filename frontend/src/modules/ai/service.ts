@@ -25,6 +25,67 @@ import { apiPost, apiGet } from '@/domains/shared'
 import type { Brief, Recommendation, ExtractedEntityType } from './types'
 
 // ============================================================================
+// API Response Types
+// ============================================================================
+
+interface EmbeddingResponse {
+  ok: boolean
+  error?: { message: string }
+  data: { embedding: number[] }
+}
+
+interface SearchResponse {
+  ok: boolean
+  error?: { message: string }
+  data: {
+    results: Array<{
+      moduleId: string
+      entityType: string
+      entityId: string
+      score: number
+      snippet: string
+      highlights?: string[]
+    }>
+  }
+}
+
+interface EntityExtractionResponse {
+  ok: boolean
+  error?: { message: string }
+  data: {
+    entities: Array<{
+      type: ExtractedEntityType
+      value: string
+      confidence: number
+      position: { start: number; end: number }
+    }>
+  }
+}
+
+interface SummaryResponse {
+  ok: boolean
+  error?: { message: string }
+  data: { summary: string }
+}
+
+interface BriefResponse {
+  ok: boolean
+  error?: { message: string }
+  data: { brief: Brief }
+}
+
+interface RecommendationsResponse {
+  ok: boolean
+  error?: { message: string }
+  data: { recommendations: Recommendation[] }
+}
+
+interface UpdateEmbeddingsResponse {
+  ok: boolean
+  error?: { message: string }
+}
+
+// ============================================================================
 // DTO Mappers
 // ============================================================================
 
@@ -86,7 +147,7 @@ export const aiService = {
     }
 
     try {
-      const response = await apiPost('ai-embeddings', {
+      const response = await apiPost<EmbeddingResponse>('ai-embeddings', {
         text,
         locale: context.locale,
       })
@@ -119,7 +180,7 @@ export const aiService = {
     }
 
     try {
-      const response = await apiPost('ai-search', {
+      const response = await apiPost<SearchResponse>('ai-search', {
         query: params.query,
         modules: params.modules,
         entityTypes: params.entityTypes,
@@ -132,25 +193,16 @@ export const aiService = {
         throw new Error(response.error?.message || 'Failed to perform semantic search')
       }
 
-      const results: SemanticSearchResult[] = response.data.results.map(
-        (r: {
-          moduleId: string
-          entityType: string
-          entityId: string
-          score: number
-          snippet: string
-          highlights?: string[]
-        }) => ({
-          entityRef: {
-            moduleId: r.moduleId as ModuleId,
-            entityType: r.entityType,
-            entityId: r.entityId,
-          },
-          score: r.score,
-          snippet: r.snippet,
-          highlights: r.highlights,
-        }),
-      )
+      const results: SemanticSearchResult[] = response.data.results.map((r) => ({
+        entityRef: {
+          moduleId: r.moduleId as ModuleId,
+          entityType: r.entityType,
+          entityId: r.entityId,
+        },
+        score: r.score,
+        snippet: r.snippet,
+        highlights: r.highlights,
+      }))
 
       return moduleOk(results)
     } catch (error) {
@@ -178,7 +230,7 @@ export const aiService = {
     }
 
     try {
-      const response = await apiPost('ai-extract-entities', {
+      const response = await apiPost<EntityExtractionResponse>('ai-extract-entities', {
         text,
         locale: context.locale,
       })
@@ -187,19 +239,12 @@ export const aiService = {
         throw new Error(response.error?.message || 'Failed to extract entities')
       }
 
-      const entities: ExtractedEntity[] = response.data.entities.map(
-        (e: {
-          type: ExtractedEntityType
-          value: string
-          confidence: number
-          position: { start: number; end: number }
-        }) => ({
-          type: e.type as ExtractedEntity['type'],
-          value: e.value,
-          confidence: e.confidence,
-          position: e.position,
-        }),
-      )
+      const entities: ExtractedEntity[] = response.data.entities.map((e) => ({
+        type: e.type as ExtractedEntity['type'],
+        value: e.value,
+        confidence: e.confidence,
+        position: e.position,
+      }))
 
       // Publish event
       const eventBus = getEventBus()
@@ -242,7 +287,7 @@ export const aiService = {
     }
 
     try {
-      const response = await apiPost('ai-summarize', {
+      const response = await apiPost<SummaryResponse>('ai-summarize', {
         text,
         maxLength: options.maxLength || 500,
         style: options.style || 'brief',
@@ -280,7 +325,7 @@ export const aiService = {
     }
 
     try {
-      const response = await apiPost('ai-generate-brief', {
+      const response = await apiPost<BriefResponse>('ai-generate-brief', {
         moduleId: entityRef.moduleId,
         entityType: entityRef.entityType,
         entityId: entityRef.entityId,
@@ -331,14 +376,14 @@ export const aiService = {
    */
   async getRecommendations(
     params: RecommendationParams,
-    context: ModuleRequestContext,
+    _context: ModuleRequestContext,
   ): Promise<ModuleResult<RecommendationDTO[], ModuleError>> {
     if (!params.entityRef?.entityId) {
       return moduleErr(createModuleError('VALIDATION_ERROR', 'Entity reference is required', 'ai'))
     }
 
     try {
-      const response = await apiGet('ai-recommendations', {
+      const response = await apiGet<RecommendationsResponse>('ai-recommendations', {
         moduleId: params.entityRef.moduleId,
         entityType: params.entityRef.entityType,
         entityId: params.entityRef.entityId,
@@ -376,7 +421,7 @@ export const aiService = {
     context: ModuleRequestContext,
   ): Promise<ModuleResult<void, ModuleError>> {
     try {
-      const response = await apiPost('ai-update-embeddings', {
+      const response = await apiPost<UpdateEmbeddingsResponse>('ai-update-embeddings', {
         moduleId: entityRef.moduleId,
         entityType: entityRef.entityType,
         entityId: entityRef.entityId,

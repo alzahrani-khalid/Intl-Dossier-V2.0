@@ -1,6 +1,6 @@
 // T066: usePositionDossierLinks hook
 import { useQuery } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseUrl } from '@/lib/supabase'
 
 export interface PositionDossierLink {
   id: string
@@ -53,7 +53,7 @@ export function usePositionDossierLinks(
       }
 
       const response = await fetch(
-        `${supabase.supabaseUrl}/functions/v1/positions-dossiers-get?${params.toString()}`,
+        `${supabaseUrl}/functions/v1/positions-dossiers-get?${params.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${session.access_token}`,

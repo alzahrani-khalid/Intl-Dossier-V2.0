@@ -5,16 +5,15 @@ import { useAuthStore } from '../../store/authStore'
 import { useUIStore } from '../../store/uiStore'
 import { ThemeSelector } from '../theme-selector/theme-selector'
 import { LanguageToggle } from '../LanguageToggle'
-import { NotificationPanel } from '../notifications'
+import { NotificationPanel } from '../Notifications'
 import { useOptionalKeyboardShortcutContext } from '../KeyboardShortcuts'
 
 export function Header() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { user, logout } = useAuthStore()
   const { toggleSidebar } = useUIStore()
   const [userMenuOpen, setUserMenuOpen] = React.useState(false)
   const keyboardContext = useOptionalKeyboardShortcutContext()
-  const isRTL = i18n.language === 'ar'
 
   // Platform-aware keyboard shortcut display
   const isMac = typeof navigator !== 'undefined' && navigator.platform.includes('Mac')
@@ -79,7 +78,7 @@ export function Header() {
               className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent transition-colors"
             >
               <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-                {user?.name ? user.name[0].toUpperCase() : <User className="h-4 w-4" />}
+                {user?.name ? user.name[0]?.toUpperCase() : <User className="h-4 w-4" />}
               </div>
               <span className="hidden md:block text-sm font-medium">
                 {user?.name || user?.email}

@@ -9,7 +9,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { ChevronRight, Folder, Loader2 } from 'lucide-react'
+import { ChevronRight, Folder } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useMyDossiers } from '@/hooks/useDossierDashboard'
 import { DossierQuickStatsCard } from './DossierQuickStatsCard'
-import type { MyDossiersSectionProps, DossierRelationType } from '@/types/dossier-dashboard.types'
+import type { MyDossiersSectionProps } from '@/types/dossier-dashboard.types'
 
 // =============================================================================
 // Component

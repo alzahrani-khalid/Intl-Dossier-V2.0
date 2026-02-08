@@ -69,7 +69,7 @@ async function fetchGeoVisualizationData(
   if (filters.countries?.length) params.set('countries', filters.countries.join(','))
 
   const { data, error } = await supabase.functions.invoke('geographic-visualization', {
-    body: null,
+    body: undefined,
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

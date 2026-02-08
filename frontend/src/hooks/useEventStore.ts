@@ -226,7 +226,7 @@ export function useAppendEvent() {
 
   return useMutation({
     mutationFn: appendEvent,
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate related queries
       queryClient.invalidateQueries({
         queryKey: eventStoreKeys.aggregateEvents(variables.aggregate_type, variables.aggregate_id),
@@ -267,7 +267,7 @@ export function useCreateSnapshot() {
       aggregateId: string
       state: Record<string, unknown>
     }) => createSnapshot(aggregateType, aggregateId, state),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Invalidate state queries since we have a new snapshot
       queryClient.invalidateQueries({
         queryKey: eventStoreKeys.aggregateState(variables.aggregateType, variables.aggregateId),
@@ -313,7 +313,7 @@ export function useAppendEventOptimistic<T extends Record<string, unknown>>(
 
       return { previousState }
     },
-    onError: (err, variables, context) => {
+    onError: (_err, _variables, context) => {
       // Rollback on error
       if (context?.previousState) {
         queryClient.setQueryData(
@@ -341,7 +341,7 @@ export function useAppendEventOptimistic<T extends Record<string, unknown>>(
  * Hook for entity with full event sourcing support
  * Provides state, history, events, and mutation capabilities
  */
-export function useEventSourcedEntity<T = Record<string, unknown>>(
+export function useEventSourcedEntity<T extends Record<string, unknown> = Record<string, unknown>>(
   aggregateType: AggregateType,
   aggregateId: string,
   options?: {
@@ -378,7 +378,10 @@ export function useEventSourcedEntity<T = Record<string, unknown>>(
 
   const statsQuery = useAggregateStats(aggregateType, aggregateId, enableStats && !!aggregateId)
 
-  const appendEventMutation = useAppendEventOptimistic<T>(aggregateType, aggregateId)
+  const appendEventMutation = useAppendEventOptimistic<T & Record<string, unknown>>(
+    aggregateType,
+    aggregateId,
+  )
   const createSnapshotMutation = useCreateSnapshot()
 
   return {

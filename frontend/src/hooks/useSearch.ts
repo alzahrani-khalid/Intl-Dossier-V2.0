@@ -7,79 +7,91 @@
  * Provides caching, automatic retry, and request cancellation
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../lib/supabase';
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '../lib/supabase'
 
-export type EntityType = 'dossiers' | 'people' | 'engagements' | 'positions' | 'documents' | 'all';
+export type EntityType = 'dossiers' | 'people' | 'engagements' | 'positions' | 'documents' | 'all'
 
 export interface SearchOptions {
   /** Search query string */
-  query: string;
+  query: string
   /** Entity types to search (comma-separated or array) */
-  entityTypes?: EntityType | EntityType[];
+  entityTypes?: EntityType | EntityType[]
   /** Number of results per page */
-  limit?: number;
+  limit?: number
   /** Pagination offset */
-  offset?: number;
+  offset?: number
   /** Include archived items */
-  includeArchived?: boolean;
+  includeArchived?: boolean
   /** Language for search (auto-detected if not provided) */
-  language?: 'en' | 'ar';
+  language?: 'en' | 'ar'
 }
 
 export interface SearchResult {
   /** Entity ID */
-  id: string;
+  id: string
   /** Entity type */
-  type: EntityType;
+  type: EntityType
   /** Result title (bilingual) */
-  title_en: string;
-  title_ar: string;
+  title_en: string
+  title_ar: string
   /** Result snippet with highlights */
-  snippet_en?: string;
-  snippet_ar?: string;
+  snippet_en?: string
+  snippet_ar?: string
   /** Relevance score */
-  rank_score: number;
+  rank_score: number
   /** Last updated timestamp */
-  updated_at: string;
+  updated_at: string
   /** Is archived */
-  is_archived?: boolean;
+  is_archived?: boolean
   /** Match type */
-  match_type: 'exact' | 'semantic';
+  match_type: 'exact' | 'semantic'
 }
 
 export interface SearchCounts {
   /** Total results */
-  total: number;
+  total: number
   /** Results per entity type */
-  dossiers: number;
-  people: number;
-  engagements: number;
-  positions: number;
-  documents: number;
+  dossiers: number
+  people: number
+  engagements: number
+  positions: number
+  documents: number
+  /** MoU results */
+  mous: number
   /** Restricted results count */
-  restricted: number;
+  restricted: number
 }
 
 export interface SearchResponse {
   /** Search results */
-  results: SearchResult[];
+  results: SearchResult[]
   /** Result counts */
-  counts: SearchCounts;
+  counts: SearchCounts
   /** Query metadata */
   query: {
-    text: string;
-    normalized: string;
-    language_detected: 'ar' | 'en' | 'mixed';
-    has_boolean_operators: boolean;
-  };
+    text: string
+    normalized: string
+    language_detected: 'ar' | 'en' | 'mixed'
+    has_boolean_operators: boolean
+  }
   /** Performance metrics */
-  took_ms: number;
+  took_ms: number
   /** Metadata */
   metadata?: {
-    restricted_message?: string;
-    warnings?: string[];
-  };
+    restricted_message?: string
+    warnings?: string[]
+  }
+  /** Exact match results (high-confidence matches) */
+  exactMatches?: SearchResult[]
+  /** Whether more results are available */
+  hasMore?: boolean
+  /** Typo correction suggestions */
+  typoSuggestions?: string[]
+  /** Time taken in milliseconds (alias for took_ms) */
+  tookMs?: number
+  /** Whether results came from cache */
+  cacheHit?: boolean
 }
 
 /**
@@ -104,55 +116,57 @@ export function useSearch(options: SearchOptions) {
     limit = 20,
     offset = 0,
     includeArchived = false,
-    language
-  } = options;
+    language,
+  } = options
 
   return useQuery({
     queryKey: ['search', query, entityTypes, limit, offset, includeArchived, language],
 
     queryFn: async ({ signal }) => {
       // Build query parameters
-      const params = new URLSearchParams();
-      params.set('q', query);
+      const params = new URLSearchParams()
+      params.set('q', query)
 
       if (Array.isArray(entityTypes)) {
-        params.set('type', entityTypes.join(','));
+        params.set('type', entityTypes.join(','))
       } else if (entityTypes !== 'all') {
-        params.set('type', entityTypes);
+        params.set('type', entityTypes)
       }
 
-      params.set('limit', limit.toString());
-      params.set('offset', offset.toString());
-      params.set('include_archived', includeArchived.toString());
+      params.set('limit', limit.toString())
+      params.set('offset', offset.toString())
+      params.set('include_archived', includeArchived.toString())
 
       if (language) {
-        params.set('lang', language);
+        params.set('lang', language)
       }
 
       // Get current session token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
 
       if (!session) {
-        throw new Error('Not authenticated');
+        throw new Error('Not authenticated')
       }
 
       // Make API request with AbortController for cancellation
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/search?${params}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
         },
-        signal
-      });
+        signal,
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Search failed');
+        const error = await response.json()
+        throw new Error(error.message || 'Search failed')
       }
 
-      const data: SearchResponse = await response.json();
-      return data;
+      const data: SearchResponse = await response.json()
+      return data
     },
 
     // Only run query if we have a search term
@@ -169,7 +183,7 @@ export function useSearch(options: SearchOptions) {
     // Refetch configuration
     refetchOnWindowFocus: false, // Don't refetch when window regains focus
     refetchOnReconnect: true, // Refetch when internet connection is restored
-  });
+  })
 }
 
 /**
@@ -178,37 +192,39 @@ export function useSearch(options: SearchOptions) {
  * @param queryClient - TanStack Query client
  * @param options - Search options
  */
-export async function prefetchSearch(
-  queryClient: any,
-  options: SearchOptions
-) {
+export async function prefetchSearch(queryClient: any, options: SearchOptions) {
   await queryClient.prefetchQuery({
     queryKey: ['search', options.query, options.entityTypes, options.limit, options.offset],
     queryFn: async () => {
-      const params = new URLSearchParams();
-      params.set('q', options.query);
+      const params = new URLSearchParams()
+      params.set('q', options.query)
 
       if (options.entityTypes && options.entityTypes !== 'all') {
-        params.set('type', Array.isArray(options.entityTypes) ? options.entityTypes.join(',') : options.entityTypes);
+        params.set(
+          'type',
+          Array.isArray(options.entityTypes) ? options.entityTypes.join(',') : options.entityTypes,
+        )
       }
 
-      params.set('limit', (options.limit || 20).toString());
-      params.set('offset', (options.offset || 0).toString());
+      params.set('limit', (options.limit || 20).toString())
+      params.set('offset', (options.offset || 0).toString())
 
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
 
       if (!session) {
-        throw new Error('Not authenticated');
+        throw new Error('Not authenticated')
       }
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/search?${params}`, {
         headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        }
-      });
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      })
 
-      return response.json();
+      return response.json()
     },
-    staleTime: 60 * 1000
-  });
+    staleTime: 60 * 1000,
+  })
 }

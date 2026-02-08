@@ -83,7 +83,7 @@ export function ClassificationChangeDialog({
     }
   }
 
-  const isUpgrade = document
+  const _isUpgrade = document
     ? CLASSIFICATION_LEVELS[newClassification] > CLASSIFICATION_LEVELS[document.classification]
     : false
 

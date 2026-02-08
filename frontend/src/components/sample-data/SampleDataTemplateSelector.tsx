@@ -82,7 +82,7 @@ export function SampleDataTemplateSelector({
             const Icon = iconMap[template.icon] || Package
             const isSelected = selectedTemplate === template.slug
             const colorClasses = templateColors[template.color] || templateColors.blue
-            const iconColorClass = templateIconColors[template.color] || templateIconColors.blue
+            const iconColorClass = (templateIconColors[template.color] || templateIconColors.blue)!
 
             return (
               <button

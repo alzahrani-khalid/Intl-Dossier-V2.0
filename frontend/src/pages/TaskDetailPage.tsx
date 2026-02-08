@@ -4,14 +4,18 @@
  * User Story: US1 - View My Tasks with Clear Titles
  * Task: T036
  *
- * Fetches task with title and displays breadcrumb navigation
+ * Fetches task with title and displays breadcrumb navigation.
+ * Includes Edit and Delete dialogs with undo support.
  */
 
-import React from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { useTask } from '../hooks/use-tasks'
+import { useToast } from '../hooks/use-toast'
 import { TaskDetail } from '../components/tasks/TaskDetail'
+import { TaskEditDialog } from '../components/tasks/TaskEditDialog'
+import { DeleteTaskDialog } from '../components/tasks/DeleteTaskDialog'
 import { Alert, AlertDescription } from '../components/ui/alert'
 import { Button } from '../components/ui/button'
 import { Skeleton } from '../components/ui/skeleton'
@@ -21,23 +25,37 @@ export function TaskDetailPage() {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
   const navigate = useNavigate()
+  const { toast } = useToast()
   const { id } = useParams({ from: '/_protected/tasks/$id' })
 
-  const { data: task, isLoading, error } = useTask(id as string)
+  const { data: task, isLoading, error, refetch } = useTask(id as string)
 
-  const handleEdit = () => {
-    // TODO: Navigate to edit page (to be implemented in future stories)
-  }
+  // Dialog states
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const undoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const handleDelete = async () => {
-    // Soft delete task (to be implemented in future stories)
-    if (confirm(t('confirm_delete_task', 'Are you sure you want to delete this task?'))) {
-      // TODO: Implement delete
-      // After deletion, navigate back to tasks list
-      // await deleteTask(task.id);
-      // navigate({ to: '/tasks' });
-    }
-  }
+  const handleEdit = useCallback(() => {
+    setIsEditOpen(true)
+  }, [])
+
+  const handleDelete = useCallback(() => {
+    setIsDeleteOpen(true)
+  }, [])
+
+  const handleDeleteSuccess = useCallback(() => {
+    // Show delete confirmation toast
+    toast({
+      title: t('tasks.deleted', 'Task Deleted'),
+      description: t('tasks.deletedRedirecting', 'Task deleted. Redirecting...'),
+      duration: 3000,
+    })
+
+    // Redirect after 3s
+    undoTimerRef.current = setTimeout(() => {
+      navigate({ to: '/tasks' })
+    }, 3000)
+  }, [navigate, toast, t])
 
   if (error) {
     return (
@@ -96,6 +114,23 @@ export function TaskDetailPage() {
 
           {/* Task Detail Component */}
           <TaskDetail task={task} onEdit={handleEdit} onDelete={handleDelete} showActions={true} />
+
+          {/* Edit Dialog */}
+          <TaskEditDialog
+            task={task}
+            open={isEditOpen}
+            onOpenChange={setIsEditOpen}
+            onSuccess={() => refetch()}
+          />
+
+          {/* Delete Dialog */}
+          <DeleteTaskDialog
+            taskId={task.id}
+            taskTitle={task.title}
+            open={isDeleteOpen}
+            onOpenChange={setIsDeleteOpen}
+            onSuccess={handleDeleteSuccess}
+          />
         </>
       )}
     </div>

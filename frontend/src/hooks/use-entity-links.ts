@@ -7,15 +7,16 @@
  * with optimistic updates for <50ms perceived latency
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import { intakeEntityLinksAPI, type EntityLinksAPIError } from '@/services/entity-links-api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { intakeEntityLinksAPI, type EntityLinksAPIError } from '@/services/entity-links-api'
 import type {
   EntityLink,
   CreateLinkRequest,
   UpdateLinkRequest,
-} from '../../../backend/src/types/intake-entity-links.types';
-import { useToast } from './use-toast';
+  LinkSource,
+} from '../../../backend/src/types/intake-entity-links.types'
+import { useToast } from './use-toast'
 
 /**
  * Query keys for cache management
@@ -29,13 +30,13 @@ export const entityLinksKeys = {
     [...entityLinksKeys.all, 'detail', intakeId, linkId] as const,
   auditLog: (intakeId: string, linkId: string) =>
     [...entityLinksKeys.all, 'audit', intakeId, linkId] as const,
-};
+}
 
 /**
  * Hook to fetch entity links for an intake
  */
 export function useEntityLinks(intakeId: string, includeDeleted = false) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return useQuery({
     queryKey: entityLinksKeys.list(intakeId, includeDeleted),
@@ -43,7 +44,7 @@ export function useEntityLinks(intakeId: string, includeDeleted = false) {
     enabled: !!intakeId,
     staleTime: 1000 * 60 * 2, // 2 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
-  });
+  })
 }
 
 /**
@@ -51,9 +52,9 @@ export function useEntityLinks(intakeId: string, includeDeleted = false) {
  * Includes optimistic updates for instant UI feedback
  */
 export function useCreateEntityLink(intakeId: string) {
-  const { t } = useTranslation();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { t } = useTranslation()
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (data: Omit<CreateLinkRequest, 'intake_id'>) =>
@@ -64,12 +65,12 @@ export function useCreateEntityLink(intakeId: string) {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
 
       // Snapshot the previous value
       const previousLinks = queryClient.getQueryData<EntityLink[]>(
-        entityLinksKeys.list(intakeId, false)
-      );
+        entityLinksKeys.list(intakeId, false),
+      )
 
       // Optimistically update the cache
       if (previousLinks) {
@@ -79,66 +80,65 @@ export function useCreateEntityLink(intakeId: string) {
           entity_type: newLink.entity_type,
           entity_id: newLink.entity_id,
           link_type: newLink.link_type,
-          notes: newLink.notes,
+          source: 'human' as LinkSource,
+          confidence: null,
+          notes: newLink.notes ?? null,
           link_order: previousLinks.length + 1,
-          created_by: 'current-user', // Will be replaced with actual value
+          suggested_by: null,
+          linked_by: 'current-user',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           deleted_at: null,
-          deleted_by: null,
           _version: 1,
-        };
+        }
 
-        queryClient.setQueryData<EntityLink[]>(
-          entityLinksKeys.list(intakeId, false),
-          [...previousLinks, optimisticLink]
-        );
+        queryClient.setQueryData<EntityLink[]>(entityLinksKeys.list(intakeId, false), [
+          ...previousLinks,
+          optimisticLink,
+        ])
       }
 
       // Return context with snapshot
-      return { previousLinks };
+      return { previousLinks }
     },
 
     // On error, rollback to previous value
-    onError: (error: EntityLinksAPIError, newLink, context) => {
+    onError: (error: EntityLinksAPIError, _newLink, context) => {
       if (context?.previousLinks) {
-        queryClient.setQueryData(
-          entityLinksKeys.list(intakeId, false),
-          context.previousLinks
-        );
+        queryClient.setQueryData(entityLinksKeys.list(intakeId, false), context.previousLinks)
       }
 
       toast({
         variant: 'destructive',
         title: t('entityLinks.createError'),
         description: error.message || t('entityLinks.createErrorDescription'),
-      });
+      })
     },
 
     // Always refetch after error or success
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
     },
 
     // On success, show confirmation
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       toast({
         title: t('entityLinks.createSuccess'),
         description: t('entityLinks.createSuccessDescription'),
-      });
+      })
     },
-  });
+  })
 }
 
 /**
  * Hook to update an existing entity link
  */
 export function useUpdateEntityLink(intakeId: string, linkId: string) {
-  const { t } = useTranslation();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { t } = useTranslation()
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (data: UpdateLinkRequest) =>
@@ -148,11 +148,11 @@ export function useUpdateEntityLink(intakeId: string, linkId: string) {
     onMutate: async (updatedData) => {
       await queryClient.cancelQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
 
       const previousLinks = queryClient.getQueryData<EntityLink[]>(
-        entityLinksKeys.list(intakeId, false)
-      );
+        entityLinksKeys.list(intakeId, false),
+      )
 
       if (previousLinks) {
         queryClient.setQueryData<EntityLink[]>(
@@ -165,20 +165,17 @@ export function useUpdateEntityLink(intakeId: string, linkId: string) {
                   updated_at: new Date().toISOString(),
                   _version: link._version + 1,
                 }
-              : link
-          )
-        );
+              : link,
+          ),
+        )
       }
 
-      return { previousLinks };
+      return { previousLinks }
     },
 
-    onError: (error: EntityLinksAPIError, updatedData, context) => {
+    onError: (error: EntityLinksAPIError, _updatedData, context) => {
       if (context?.previousLinks) {
-        queryClient.setQueryData(
-          entityLinksKeys.list(intakeId, false),
-          context.previousLinks
-        );
+        queryClient.setQueryData(entityLinksKeys.list(intakeId, false), context.previousLinks)
       }
 
       // Handle optimistic locking conflicts
@@ -187,38 +184,38 @@ export function useUpdateEntityLink(intakeId: string, linkId: string) {
           variant: 'destructive',
           title: t('entityLinks.conflictError'),
           description: t('entityLinks.conflictErrorDescription'),
-        });
+        })
       } else {
         toast({
           variant: 'destructive',
           title: t('entityLinks.updateError'),
           description: error.message || t('entityLinks.updateErrorDescription'),
-        });
+        })
       }
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
     },
 
     onSuccess: () => {
       toast({
         title: t('entityLinks.updateSuccess'),
         description: t('entityLinks.updateSuccessDescription'),
-      });
+      })
     },
-  });
+  })
 }
 
 /**
  * Hook to delete an entity link (soft delete)
  */
 export function useDeleteEntityLink(intakeId: string) {
-  const { t } = useTranslation();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { t } = useTranslation()
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (linkId: string) => intakeEntityLinksAPI.deleteLink(intakeId, linkId),
@@ -227,50 +224,47 @@ export function useDeleteEntityLink(intakeId: string) {
     onMutate: async (linkId) => {
       await queryClient.cancelQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
 
       const previousLinks = queryClient.getQueryData<EntityLink[]>(
-        entityLinksKeys.list(intakeId, false)
-      );
+        entityLinksKeys.list(intakeId, false),
+      )
 
       if (previousLinks) {
         queryClient.setQueryData<EntityLink[]>(
           entityLinksKeys.list(intakeId, false),
-          previousLinks.filter((link) => link.id !== linkId)
-        );
+          previousLinks.filter((link) => link.id !== linkId),
+        )
       }
 
-      return { previousLinks };
+      return { previousLinks }
     },
 
-    onError: (error: EntityLinksAPIError, linkId, context) => {
+    onError: (error: EntityLinksAPIError, _linkId, context) => {
       if (context?.previousLinks) {
-        queryClient.setQueryData(
-          entityLinksKeys.list(intakeId, false),
-          context.previousLinks
-        );
+        queryClient.setQueryData(entityLinksKeys.list(intakeId, false), context.previousLinks)
       }
 
       toast({
         variant: 'destructive',
         title: t('entityLinks.deleteError'),
         description: error.message || t('entityLinks.deleteErrorDescription'),
-      });
+      })
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
     },
 
     onSuccess: () => {
       toast({
         title: t('entityLinks.deleteSuccess'),
         description: t('entityLinks.deleteSuccessDescription'),
-      });
+      })
     },
-  });
+  })
 }
 
 /**
@@ -278,9 +272,9 @@ export function useDeleteEntityLink(intakeId: string) {
  * Only available to steward+ roles
  */
 export function useRestoreEntityLink(intakeId: string) {
-  const { t } = useTranslation();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { t } = useTranslation()
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (linkId: string) => intakeEntityLinksAPI.restoreLink(intakeId, linkId),
@@ -288,10 +282,10 @@ export function useRestoreEntityLink(intakeId: string) {
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: entityLinksKeys.list(intakeId, true),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
     },
 
     onError: (error: EntityLinksAPIError) => {
@@ -299,16 +293,16 @@ export function useRestoreEntityLink(intakeId: string) {
         variant: 'destructive',
         title: t('entityLinks.restoreError'),
         description: error.message || t('entityLinks.restoreErrorDescription'),
-      });
+      })
     },
 
     onSuccess: () => {
       toast({
         title: t('entityLinks.restoreSuccess'),
         description: t('entityLinks.restoreSuccessDescription'),
-      });
+      })
     },
-  });
+  })
 }
 
 /**
@@ -316,8 +310,8 @@ export function useRestoreEntityLink(intakeId: string) {
  * Uses debounced mutations for drag-and-drop
  */
 export function useReorderEntityLinks(intakeId: string) {
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (linkOrders: Array<{ link_id: string; link_order: number }>) =>
@@ -327,50 +321,47 @@ export function useReorderEntityLinks(intakeId: string) {
     onMutate: async (linkOrders) => {
       await queryClient.cancelQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
 
       const previousLinks = queryClient.getQueryData<EntityLink[]>(
-        entityLinksKeys.list(intakeId, false)
-      );
+        entityLinksKeys.list(intakeId, false),
+      )
 
       if (previousLinks) {
-        const reorderedLinks = [...previousLinks];
+        const reorderedLinks = [...previousLinks]
         linkOrders.forEach(({ link_id, link_order }) => {
-          const linkIndex = reorderedLinks.findIndex((link) => link.id === link_id);
-          if (linkIndex !== -1) {
+          const linkIndex = reorderedLinks.findIndex((link) => link.id === link_id)
+          if (linkIndex !== -1 && reorderedLinks[linkIndex]) {
             reorderedLinks[linkIndex] = {
-              ...reorderedLinks[linkIndex],
+              ...reorderedLinks[linkIndex]!,
               link_order,
-            };
+            }
           }
-        });
+        })
 
-        reorderedLinks.sort((a, b) => a.link_order - b.link_order);
+        reorderedLinks.sort((a, b) => a.link_order - b.link_order)
 
         queryClient.setQueryData<EntityLink[]>(
           entityLinksKeys.list(intakeId, false),
-          reorderedLinks
-        );
+          reorderedLinks,
+        )
       }
 
-      return { previousLinks };
+      return { previousLinks }
     },
 
-    onError: (error: EntityLinksAPIError, linkOrders, context) => {
+    onError: (_error: EntityLinksAPIError, _linkOrders, context) => {
       if (context?.previousLinks) {
-        queryClient.setQueryData(
-          entityLinksKeys.list(intakeId, false),
-          context.previousLinks
-        );
+        queryClient.setQueryData(entityLinksKeys.list(intakeId, false), context.previousLinks)
       }
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
     },
-  });
+  })
 }
 
 /**
@@ -378,18 +369,18 @@ export function useReorderEntityLinks(intakeId: string) {
  * Includes optimistic updates for instant UI feedback
  */
 export function useCreateBatchEntityLinks(intakeId: string) {
-  const { t } = useTranslation();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { t } = useTranslation()
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (
       links: Array<{
-        entity_type: string;
-        entity_id: string;
-        link_type: string;
-        notes?: string;
-      }>
+        entity_type: string
+        entity_id: string
+        link_type: string
+        notes?: string
+      }>,
     ) =>
       intakeEntityLinksAPI.createBatchLinks(intakeId, {
         links: links.map((link) => ({
@@ -403,63 +394,62 @@ export function useCreateBatchEntityLinks(intakeId: string) {
     onMutate: async (newLinks) => {
       await queryClient.cancelQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
 
       const previousLinks = queryClient.getQueryData<EntityLink[]>(
-        entityLinksKeys.list(intakeId, false)
-      );
+        entityLinksKeys.list(intakeId, false),
+      )
 
       // Optimistically add all new links
       if (previousLinks) {
-        const optimisticLinks: EntityLink[] = newLinks.map((link, index) => ({
+        const optimisticLinks = newLinks.map((link, index) => ({
           id: `temp-${Date.now()}-${index}`,
           intake_id: intakeId,
-          entity_type: link.entity_type as any,
+          entity_type: link.entity_type,
           entity_id: link.entity_id,
-          link_type: link.link_type as any,
+          link_type: link.link_type,
+          source: 'human' as LinkSource,
+          confidence: null,
           notes: link.notes || '',
           link_order: previousLinks.length + index + 1,
-          created_by: 'current-user',
+          suggested_by: null,
+          linked_by: 'current-user',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           deleted_at: null,
-          deleted_by: null,
           _version: 1,
-        }));
+        })) as EntityLink[]
 
-        queryClient.setQueryData<EntityLink[]>(
-          entityLinksKeys.list(intakeId, false),
-          [...previousLinks, ...optimisticLinks]
-        );
+        queryClient.setQueryData<EntityLink[]>(entityLinksKeys.list(intakeId, false), [
+          ...previousLinks,
+          ...optimisticLinks,
+        ])
       }
 
-      return { previousLinks };
+      return { previousLinks }
     },
 
-    onError: (error: EntityLinksAPIError, newLinks, context) => {
+    onError: (error: EntityLinksAPIError, _newLinks, context) => {
       if (context?.previousLinks) {
-        queryClient.setQueryData(
-          entityLinksKeys.list(intakeId, false),
-          context.previousLinks
-        );
+        queryClient.setQueryData(entityLinksKeys.list(intakeId, false), context.previousLinks)
       }
 
       toast({
         variant: 'destructive',
         title: t('entityLinks.createBatchError'),
         description: error.message || t('entityLinks.createBatchErrorDescription'),
-      });
+      })
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: entityLinksKeys.list(intakeId, false),
-      });
+      })
     },
 
     onSuccess: (data) => {
-      const successCount = data.created_links.length;
-      const failCount = data.failed_links.length;
+      const successCount = data.created_links.length
+      const failCount = data.failed_links.length
 
       if (failCount > 0) {
         toast({
@@ -469,17 +459,17 @@ export function useCreateBatchEntityLinks(intakeId: string) {
             success: successCount,
             failed: failCount,
           }),
-        });
+        })
       } else {
         toast({
           title: t('entityLinks.createBatchSuccess'),
           description: t('entityLinks.createBatchSuccessDescription', {
             count: successCount,
           }),
-        });
+        })
       }
     },
-  });
+  })
 }
 
 /**
@@ -491,5 +481,5 @@ export function useEntityLinkAuditLog(intakeId: string, linkId: string) {
     queryFn: () => intakeEntityLinksAPI.getAuditLog(intakeId, linkId),
     enabled: !!intakeId && !!linkId,
     staleTime: 1000 * 60, // 1 minute
-  });
+  })
 }

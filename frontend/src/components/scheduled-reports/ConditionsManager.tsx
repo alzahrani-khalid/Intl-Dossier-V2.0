@@ -109,7 +109,7 @@ export function ConditionsManager({ scheduleId }: ConditionsManagerProps) {
       await addCondition.mutateAsync({
         schedule_id: scheduleId,
         ...values,
-      })
+      } as any)
       toast({ title: t('messages.createSuccess') })
       setAddDialogOpen(false)
       form.reset()

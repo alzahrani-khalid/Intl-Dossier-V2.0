@@ -54,7 +54,7 @@ const commitmentQuickFormSchema = z.object({
   due_date: z.date({
     required_error: 'validation.dueDateRequired',
   }),
-  priority: z.enum(['low', 'medium', 'high', 'critical'] as const),
+  priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   owner_type: z.enum(['internal', 'external'] as const),
 })
 
@@ -373,7 +373,7 @@ export function CommitmentQuickForm({
                     <SelectItem value="low">{t('commitments:priority.low')}</SelectItem>
                     <SelectItem value="medium">{t('commitments:priority.medium')}</SelectItem>
                     <SelectItem value="high">{t('commitments:priority.high')}</SelectItem>
-                    <SelectItem value="critical">{t('commitments:priority.critical')}</SelectItem>
+                    <SelectItem value="urgent">{t('commitments:priority.urgent')}</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

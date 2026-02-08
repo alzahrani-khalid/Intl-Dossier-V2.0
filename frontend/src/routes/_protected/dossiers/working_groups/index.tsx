@@ -208,7 +208,7 @@ function WorkingGroupsListPage() {
           </div>
 
           {/* Pagination */}
-          {data && data.total > pageSize && (
+          {data && data.total! > pageSize && (
             <div className="mt-8 flex items-center justify-between">
               <Button
                 variant="outline"
@@ -220,12 +220,12 @@ function WorkingGroupsListPage() {
               <span className="text-sm text-muted-foreground">
                 {t('list.pageInfo', {
                   current: page,
-                  total: Math.ceil(data.total / pageSize),
+                  total: Math.ceil(data.total! / pageSize),
                 })}
               </span>
               <Button
                 variant="outline"
-                disabled={page * pageSize >= data.total}
+                disabled={page * pageSize >= data.total!}
                 onClick={() => setPage((p) => p + 1)}
               >
                 {t('action.next')}

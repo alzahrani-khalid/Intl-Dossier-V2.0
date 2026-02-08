@@ -1,0 +1,334 @@
+{
+  "title": "إدارة المنتديات",
+  "description": "إدارة جلسات المنتديات وبنود جدول الأعمال والفعاليات الجانبية",
+
+  "agendaItems": {
+    "title": "بنود جدول الأعمال",
+    "description": "إدارة جدول أعمال الجلسة",
+    "create": "إنشاء بند جدول أعمال",
+    "edit": "تعديل بند جدول الأعمال",
+    "delete": "حذف بند جدول الأعمال",
+    "empty": "لا توجد بنود جدول أعمال",
+    "emptyDescription": "أنشئ أول بند جدول أعمال للبدء",
+    "itemNumber": "رقم البند",
+    "sequenceOrder": "ترتيب التسلسل",
+    "timeAllocation": "الوقت المخصص (دقائق)",
+    "scheduledTime": "الوقت المحدد",
+    "parentItem": "البند الرئيسي",
+    "level": "المستوى",
+    "outcome": "النتيجة",
+    "resolutionReference": "مرجع القرار",
+    "backgroundNotes": "ملاحظات خلفية",
+    "speakers": "المتحدثون",
+    "addSpeaker": "إضافة متحدث",
+    "removeSpeaker": "إزالة متحدث"
+  },
+
+  "agendaItemTypes": {
+    "discussion": "نقاش",
+    "decision": "قرار",
+    "information": "إعلام",
+    "election": "انتخاب",
+    "procedural": "إجرائي",
+    "report": "تقرير",
+    "adoption": "اعتماد"
+  },
+
+  "agendaItemStatus": {
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "deferred": "مؤجل",
+    "withdrawn": "مسحوب",
+    "adopted": "معتمد",
+    "rejected": "مرفوض"
+  },
+
+  "agendaItemPriority": {
+    "low": "منخفضة",
+    "normal": "عادية",
+    "high": "عالية",
+    "urgent": "عاجلة"
+  },
+
+  "assignments": {
+    "title": "المهام",
+    "description": "إدارة مهام بنود جدول الأعمال",
+    "create": "إنشاء مهمة",
+    "edit": "تعديل المهمة",
+    "delete": "حذف المهمة",
+    "assignee": "المكلف",
+    "assigneeType": "نوع المكلف",
+    "role": "الدور",
+    "instructions": "التعليمات",
+    "deadline": "الموعد النهائي",
+    "response": "الرد",
+    "responseDocuments": "مستندات الرد"
+  },
+
+  "assigneeTypes": {
+    "department": "إدارة",
+    "organization": "منظمة",
+    "person": "شخص",
+    "working_group": "مجموعة عمل"
+  },
+
+  "assignmentRoles": {
+    "lead": "رئيسي",
+    "support": "دعم",
+    "observer": "مراقب",
+    "presenter": "مقدم",
+    "rapporteur": "مقرر",
+    "coordinator": "منسق"
+  },
+
+  "assignmentStatus": {
+    "assigned": "تم التكليف",
+    "acknowledged": "تم الاستلام",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "pending_review": "قيد المراجعة",
+    "declined": "مرفوض"
+  },
+
+  "sideEvents": {
+    "title": "الفعاليات الجانبية",
+    "description": "إدارة الفعاليات الجانبية والاجتماعات الثنائية",
+    "create": "إنشاء فعالية جانبية",
+    "edit": "تعديل الفعالية الجانبية",
+    "delete": "حذف الفعالية الجانبية",
+    "empty": "لا توجد فعاليات جانبية",
+    "emptyDescription": "أنشئ أول فعالية جانبية للبدء",
+    "scheduledDate": "التاريخ المحدد",
+    "startTime": "وقت البدء",
+    "endTime": "وقت الانتهاء",
+    "duration": "المدة (دقائق)",
+    "allDay": "فعالية اليوم الكامل",
+    "venue": "المكان",
+    "venueAddress": "عنوان المكان",
+    "roomName": "اسم القاعة",
+    "isOffsite": "فعالية خارجية",
+    "capacity": "السعة",
+    "expectedAttendance": "الحضور المتوقع",
+    "registrationRequired": "التسجيل مطلوب",
+    "invitationOnly": "بالدعوة فقط",
+    "organizer": "المنظم",
+    "organizerType": "نوع المنظم",
+    "hostCountry": "البلد المضيف",
+    "participants": "المشاركون",
+    "agendaUrl": "رابط جدول الأعمال",
+    "materials": "المواد",
+    "internalNotes": "ملاحظات داخلية",
+    "cancellationReason": "سبب الإلغاء"
+  },
+
+  "sideEventTypes": {
+    "bilateral_meeting": "اجتماع ثنائي",
+    "multilateral_meeting": "اجتماع متعدد الأطراف",
+    "reception": "حفل استقبال",
+    "exhibition": "معرض",
+    "workshop": "ورشة عمل",
+    "press_conference": "مؤتمر صحفي",
+    "signing_ceremony": "حفل توقيع",
+    "cultural_event": "فعالية ثقافية",
+    "networking": "تواصل",
+    "breakfast_meeting": "اجتماع إفطار",
+    "lunch_meeting": "اجتماع غداء",
+    "dinner_meeting": "اجتماع عشاء",
+    "other": "أخرى"
+  },
+
+  "sideEventStatus": {
+    "planned": "مخطط",
+    "confirmed": "مؤكد",
+    "tentative": "مبدئي",
+    "cancelled": "ملغي",
+    "postponed": "مؤجل",
+    "completed": "مكتمل"
+  },
+
+  "sideEventPriority": {
+    "low": "منخفضة",
+    "normal": "عادية",
+    "high": "عالية",
+    "vip": "كبار الشخصيات"
+  },
+
+  "organizerTypes": {
+    "organization": "منظمة",
+    "country": "دولة",
+    "person": "شخص",
+    "delegation": "وفد"
+  },
+
+  "logistics": {
+    "title": "لوجستيات الفعالية",
+    "description": "إدارة لوجستيات ومتطلبات الفعاليات",
+    "create": "إنشاء طلب لوجستي",
+    "edit": "تعديل اللوجستيات",
+    "delete": "حذف اللوجستيات",
+    "empty": "لا توجد لوجستيات",
+    "emptyDescription": "أضف متطلبات لوجستية لهذه الفعالية",
+    "provider": "المزود",
+    "providerName": "اسم المزود",
+    "providerContact": "شخص الاتصال",
+    "providerEmail": "البريد الإلكتروني",
+    "providerPhone": "الهاتف",
+    "requirements": "المتطلبات",
+    "quantity": "الكمية",
+    "specifications": "المواصفات",
+    "estimatedCost": "التكلفة المقدرة",
+    "actualCost": "التكلفة الفعلية",
+    "currency": "العملة",
+    "budgetCode": "رمز الميزانية",
+    "bookedAt": "تاريخ الحجز",
+    "confirmedAt": "تاريخ التأكيد"
+  },
+
+  "logisticsTypes": {
+    "catering": "ضيافة",
+    "av_equipment": "معدات سمعية بصرية",
+    "interpretation": "ترجمة فورية",
+    "security": "أمن",
+    "transportation": "نقل",
+    "accommodation": "إقامة",
+    "decoration": "ديكور",
+    "photography": "تصوير",
+    "printing": "طباعة",
+    "registration": "تسجيل",
+    "signage": "لافتات",
+    "gifts": "هدايا",
+    "protocol": "بروتوكول",
+    "other": "أخرى"
+  },
+
+  "logisticsStatus": {
+    "pending": "قيد الانتظار",
+    "requested": "مطلوب",
+    "quoted": "تم التسعير",
+    "approved": "موافق عليه",
+    "booked": "محجوز",
+    "confirmed": "مؤكد",
+    "cancelled": "ملغي",
+    "completed": "مكتمل"
+  },
+
+  "attendees": {
+    "title": "الحضور",
+    "description": "إدارة حضور الفعالية",
+    "create": "إضافة حاضر",
+    "edit": "تعديل الحاضر",
+    "delete": "إزالة الحاضر",
+    "empty": "لا يوجد حضور مضافون",
+    "emptyDescription": "أضف حضوراً لهذه الفعالية",
+    "representing": "يمثل",
+    "role": "الدور",
+    "invitationSent": "تم إرسال الدعوة",
+    "invitationSentAt": "تاريخ إرسال الدعوة",
+    "rsvpStatus": "حالة الرد",
+    "rsvpAt": "تاريخ الرد",
+    "attended": "حضر",
+    "attendanceNotes": "ملاحظات الحضور",
+    "dietaryRequirements": "المتطلبات الغذائية",
+    "accessibilityRequirements": "متطلبات إمكانية الوصول"
+  },
+
+  "attendeeRoles": {
+    "host": "مضيف",
+    "co_host": "مضيف مشارك",
+    "speaker": "متحدث",
+    "moderator": "مدير جلسة",
+    "panelist": "عضو لجنة",
+    "vip_guest": "ضيف VIP",
+    "attendee": "حاضر",
+    "observer": "مراقب",
+    "staff": "موظف",
+    "interpreter": "مترجم"
+  },
+
+  "rsvpStatus": {
+    "pending": "قيد الانتظار",
+    "accepted": "مقبول",
+    "declined": "مرفوض",
+    "tentative": "مبدئي",
+    "no_response": "لا يوجد رد"
+  },
+
+  "representingTypes": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "self": "شخصي"
+  },
+
+  "dashboard": {
+    "title": "لوحة تحكم المنتدى",
+    "upcomingEvents": "الفعاليات القادمة",
+    "pendingLogistics": "اللوجستيات المعلقة",
+    "confirmedLogistics": "اللوجستيات المؤكدة",
+    "totalEstimatedCost": "إجمالي التكلفة المقدرة",
+    "totalActualCost": "إجمالي التكلفة الفعلية",
+    "responseStatus": "حالة الردود",
+    "completionPercentage": "نسبة الإنجاز"
+  },
+
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "sendInvitation": "إرسال الدعوة",
+    "markAttended": "تحديد كحاضر",
+    "exportAgenda": "تصدير جدول الأعمال",
+    "printAgenda": "طباعة جدول الأعمال",
+    "viewCalendar": "عرض التقويم"
+  },
+
+  "validation": {
+    "titleRequired": "العنوان مطلوب",
+    "dateRequired": "التاريخ مطلوب",
+    "sessionRequired": "الجلسة مطلوبة",
+    "itemNumberRequired": "رقم البند مطلوب",
+    "invalidTimeRange": "يجب أن يكون وقت الانتهاء بعد وقت البدء"
+  },
+
+  "common": {
+    "search": "بحث...",
+    "filters": "الفلاتر",
+    "all": "الكل",
+    "type": "النوع",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "clearFilters": "مسح الفلاتر",
+    "noResults": "لا توجد نتائج",
+    "adjustFilters": "حاول تعديل البحث أو الفلاتر",
+    "total": "الإجمالي",
+    "showing": "يعرض",
+    "error": "خطأ",
+    "retry": "إعادة المحاولة",
+    "basicInfo": "المعلومات الأساسية",
+    "classification": "التصنيف",
+    "scheduling": "الجدولة",
+    "none": "لا شيء (بند رئيسي)",
+    "titleEn": "العنوان (الإنجليزية)",
+    "titleAr": "العنوان (العربية)",
+    "descriptionEn": "الوصف (الإنجليزية)",
+    "descriptionAr": "الوصف (العربية)",
+    "startTime": "وقت البدء",
+    "endTime": "وقت الانتهاء",
+    "nameEn": "الاسم (الإنجليزية)",
+    "nameAr": "الاسم (العربية)",
+    "organization": "المنظمة",
+    "role": "الدور",
+    "documents": "المستندات",
+    "documentTitle": "عنوان المستند",
+    "documentUrl": "الرابط",
+    "tags": "الوسوم",
+    "addTag": "إضافة وسم...",
+    "outcomeEn": "النتيجة (الإنجليزية)",
+    "outcomeAr": "النتيجة (العربية)",
+    "public": "عام",
+    "private": "خاص",
+    "notes": "ملاحظات",
+    "items": "عناصر",
+    "events": "فعاليات"
+  }
+}

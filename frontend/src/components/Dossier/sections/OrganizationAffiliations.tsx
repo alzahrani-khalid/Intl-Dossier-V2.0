@@ -187,7 +187,7 @@ export function OrganizationAffiliations({ dossierId }: OrganizationAffiliations
                             {affiliation.organization_id ? (
                               <Link
                                 to="/dossiers/organizations/$id"
-                                params={{ id: affiliation.organization_id }}
+                                params={{ id: affiliation.organization_id } as any}
                                 className="hover:underline text-primary"
                               >
                                 {orgName}

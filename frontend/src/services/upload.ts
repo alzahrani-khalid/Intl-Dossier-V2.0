@@ -17,6 +17,8 @@ export interface UploadFile {
   chunks?: UploadChunk[]
   totalChunks?: number
   uploadedChunks?: number
+  /** Stored options for pause/resume/retry */
+  options?: UploadOptions
 }
 
 export interface UploadChunk {
@@ -56,6 +58,8 @@ export interface UploadActions {
   removeUpload: (uploadId: string) => void
   clearCompleted: () => void
   setMaxConcurrentUploads: (max: number) => void
+  /** Internal method to start upload processing */
+  startUpload: (uploadId: string, options: UploadOptions) => Promise<void>
 }
 
 // Chunk size for resumable uploads (1MB)
@@ -76,7 +80,7 @@ const ALLOWED_TYPES = {
   'text/plain': ['.txt'],
   'text/csv': ['.csv'],
   'application/vnd.ms-excel': ['.xls'],
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx']
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
 }
 
 // Zustand store for upload management
@@ -111,7 +115,7 @@ export const useUploadStore = create<UploadState & UploadActions>()(
         status: 'pending',
         chunks: [],
         totalChunks: 0,
-        uploadedChunks: 0
+        uploadedChunks: 0,
       }
 
       // Create chunks for resumable upload
@@ -187,13 +191,13 @@ export const useUploadStore = create<UploadState & UploadActions>()(
     clearCompleted: () => {
       const { uploads } = get()
       const filteredUploads = new Map()
-      
+
       uploads.forEach((upload, id) => {
         if (upload.status !== 'completed') {
           filteredUploads.set(id, upload)
         }
       })
-      
+
       set({ uploads: filteredUploads })
     },
 
@@ -237,8 +241,8 @@ export const useUploadStore = create<UploadState & UploadActions>()(
       } finally {
         set({ activeUploads: Math.max(0, activeUploads - 1) })
       }
-    }
-  }))
+    },
+  })),
 )
 
 // Helper function to create chunks
@@ -250,13 +254,13 @@ function createChunks(file: File, chunkSize: number): UploadChunk[] {
   while (start < file.size) {
     const end = Math.min(start + chunkSize, file.size)
     const data = file.slice(start, end)
-    
+
     chunks.push({
       index,
       start,
       end,
       data,
-      uploaded: false
+      uploaded: false,
     })
 
     start = end
@@ -269,21 +273,21 @@ function createChunks(file: File, chunkSize: number): UploadChunk[] {
 // Upload small files directly
 async function uploadSmallFile(upload: UploadFile, options: UploadOptions): Promise<void> {
   const filePath = options.path ? `${options.path}/${upload.name}` : upload.name
-  
+
   const { data, error } = await supabase.storage
     .from(options.bucket)
     .upload(filePath, upload.file, {
       cacheControl: '3600',
-      upsert: false
+      upsert: false,
     })
 
   if (error) {
     throw new Error(error.message)
   }
 
-  const { data: { publicUrl } } = supabase.storage
-    .from(options.bucket)
-    .getPublicUrl(filePath)
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from(options.bucket).getPublicUrl(filePath)
 
   upload.url = publicUrl
   upload.progress = 100
@@ -296,8 +300,8 @@ async function uploadLargeFile(upload: UploadFile, options: UploadOptions): Prom
   const maxRetries = options.maxRetries || 3
 
   for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i]
-    
+    const chunk = chunks[i]!
+
     if (chunk.uploaded) continue
 
     let retries = 0
@@ -309,10 +313,10 @@ async function uploadLargeFile(upload: UploadFile, options: UploadOptions): Prom
         chunk.uploaded = true
         upload.uploadedChunks = (upload.uploadedChunks || 0) + 1
         upload.progress = Math.round((upload.uploadedChunks! / upload.totalChunks!) * 100)
-        
+
         uploads.set(upload.id, upload)
         useUploadStore.setState({ uploads: new Map(uploads) })
-        
+
         options.onProgress?.(upload.progress)
         success = true
       } catch (error) {
@@ -321,7 +325,7 @@ async function uploadLargeFile(upload: UploadFile, options: UploadOptions): Prom
           throw error
         }
         // Wait before retry
-        await new Promise(resolve => setTimeout(resolve, 1000 * retries))
+        await new Promise((resolve) => setTimeout(resolve, 1000 * retries))
       }
     }
   }
@@ -332,21 +336,19 @@ async function uploadLargeFile(upload: UploadFile, options: UploadOptions): Prom
 
 // Upload individual chunk
 async function uploadChunk(
-  chunk: UploadChunk, 
-  upload: UploadFile, 
-  options: UploadOptions, 
-  chunkIndex: number
+  chunk: UploadChunk,
+  upload: UploadFile,
+  options: UploadOptions,
+  chunkIndex: number,
 ): Promise<void> {
-  const chunkPath = options.path 
+  const chunkPath = options.path
     ? `${options.path}/${upload.name}.chunk.${chunkIndex}`
     : `${upload.name}.chunk.${chunkIndex}`
 
-  const { error } = await supabase.storage
-    .from(options.bucket)
-    .upload(chunkPath, chunk.data, {
-      cacheControl: '3600',
-      upsert: true
-    })
+  const { error } = await supabase.storage.from(options.bucket).upload(chunkPath, chunk.data, {
+    cacheControl: '3600',
+    upsert: true,
+  })
 
   if (error) {
     throw new Error(`Chunk ${chunkIndex} upload failed: ${error.message}`)
@@ -356,36 +358,34 @@ async function uploadChunk(
 // Combine chunks on server
 async function combineChunks(upload: UploadFile, options: UploadOptions): Promise<void> {
   const filePath = options.path ? `${options.path}/${upload.name}` : upload.name
-  
+
   // This would typically be handled by a server endpoint
   // For now, we'll simulate the combination
   const { data, error } = await supabase.storage
     .from(options.bucket)
     .upload(filePath, upload.file, {
       cacheControl: '3600',
-      upsert: false
+      upsert: false,
     })
 
   if (error) {
     throw new Error(error.message)
   }
 
-  const { data: { publicUrl } } = supabase.storage
-    .from(options.bucket)
-    .getPublicUrl(filePath)
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from(options.bucket).getPublicUrl(filePath)
 
   upload.url = publicUrl
 
   // Clean up chunks
   const chunks = upload.chunks!
   for (let i = 0; i < chunks.length; i++) {
-    const chunkPath = options.path 
+    const chunkPath = options.path
       ? `${options.path}/${upload.name}.chunk.${i}`
       : `${upload.name}.chunk.${i}`
-    
-    await supabase.storage
-      .from(options.bucket)
-      .remove([chunkPath])
+
+    await supabase.storage.from(options.bucket).remove([chunkPath])
   }
 }
 
@@ -401,7 +401,7 @@ export function useUpload() {
     clearCompleted,
     uploads,
     isUploading,
-    activeUploads
+    activeUploads,
   } = useUploadStore()
 
   return {
@@ -414,7 +414,7 @@ export function useUpload() {
     clearCompleted,
     uploads: Array.from(uploads.values()),
     isUploading,
-    activeUploads
+    activeUploads,
   }
 }
 
@@ -423,14 +423,14 @@ export const validateFile = (file: File): { valid: boolean; error?: string } => 
   if (file.size > MAX_FILE_SIZE) {
     return {
       valid: false,
-      error: `File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB`
+      error: `File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
     }
   }
 
   if (!ALLOWED_TYPES[file.type as keyof typeof ALLOWED_TYPES]) {
     return {
       valid: false,
-      error: `File type not allowed: ${file.type}`
+      error: `File type not allowed: ${file.type}`,
     }
   }
 
@@ -439,11 +439,11 @@ export const validateFile = (file: File): { valid: boolean; error?: string } => 
 
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes'
-  
+
   const k = 1024
   const sizes = ['Bytes', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  
+
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
@@ -457,4 +457,3 @@ export const getFileIcon = (type: string): string => {
 }
 
 export default useUploadStore
-

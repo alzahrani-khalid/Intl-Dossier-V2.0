@@ -65,7 +65,7 @@ export interface UseGenerateBriefReturn {
 const API_BASE = import.meta.env.VITE_API_URL || '/api'
 
 export function useGenerateBrief(): UseGenerateBriefReturn {
-  const [token, setToken] = useState<string | null>(null)
+  const [_token, setToken] = useState<string | null>(null)
   const [brief, setBrief] = useState<BriefContent | null>(null)
 
   // Get the auth token from Supabase session

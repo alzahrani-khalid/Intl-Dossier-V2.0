@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useTheme, AVAILABLE_THEMES } from '../../hooks/use-theme'
+import { useState } from 'react'
+import { useTheme } from '../../hooks/use-theme'
 import { useLanguage } from '../../hooks/use-language'
 import { ChevronDown, Palette, Sun, Moon, Check } from 'lucide-react'
 
@@ -31,7 +31,7 @@ export function ThemeSelector() {
   const { language } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
 
-  const currentTheme = themes.find((t) => t.id === theme) || themes[0]
+  const currentTheme = (themes.find((t) => t.id === theme) || themes[0])!
 
   const handleThemeSelect = (themeId: 'canvas') => {
     setTheme(themeId)

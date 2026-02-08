@@ -70,7 +70,7 @@ export const documentService = {
    */
   async getDocument(
     id: string,
-    context: ModuleRequestContext,
+    _context: ModuleRequestContext,
   ): Promise<ModuleResult<DocumentDTO, ModuleError>> {
     if (!id) {
       return moduleErr(
@@ -100,7 +100,7 @@ export const documentService = {
    */
   async listDocuments(
     params: DocumentListParams,
-    context: ModuleRequestContext,
+    _context: ModuleRequestContext,
   ): Promise<ModuleResult<ModulePaginatedResponse<DocumentDTO>, ModuleError>> {
     try {
       const searchParams = toSearchParams(params)
@@ -144,7 +144,7 @@ export const documentService = {
    */
   async getLinkedDocuments(
     entityRef: { moduleId: ModuleId; entityType: string; entityId: string },
-    context: ModuleRequestContext,
+    _context: ModuleRequestContext,
   ): Promise<ModuleResult<DocumentDTO[], ModuleError>> {
     try {
       const documents = await documentRepository.getLinkedDocuments(

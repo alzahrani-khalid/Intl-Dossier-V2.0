@@ -5,56 +5,51 @@
  * Enhanced with search-specific keyboard shortcuts
  */
 
-import { useCallback, useEffect, useRef, useState, RefObject } from 'react';
+import { useCallback, useEffect, useRef, useState, RefObject } from 'react'
 
 export type UseKeyboardNavigationOptions = {
-  itemCount: number;
-  loop?: boolean;
-};
+  itemCount: number
+  loop?: boolean
+}
 
-export function useKeyboardNavigation({
-  itemCount,
-  loop = true,
-}: UseKeyboardNavigationOptions) {
-  const [index, setIndex] = useState(0);
-  const containerRef = useRef<HTMLElement | null>(null);
+export function useKeyboardNavigation({ itemCount, loop = true }: UseKeyboardNavigationOptions) {
+  const [index, setIndex] = useState(0)
+  const containerRef = useRef<HTMLElement | null>(null)
 
   const clamp = useCallback(
     (i: number) => {
-      if (loop) return (i + itemCount) % itemCount;
-      return Math.max(0, Math.min(itemCount - 1, i));
+      if (loop) return (i + itemCount) % itemCount
+      return Math.max(0, Math.min(itemCount - 1, i))
     },
-    [itemCount, loop]
-  );
+    [itemCount, loop],
+  )
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown')
-        setIndex((i) => clamp(i + 1));
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
-        setIndex((i) => clamp(i - 1));
-      if (e.key === 'Home') setIndex(0);
-      if (e.key === 'End') setIndex(itemCount - 1);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') setIndex((i) => clamp(i + 1))
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') setIndex((i) => clamp(i - 1))
+      if (e.key === 'Home') setIndex(0)
+      if (e.key === 'End') setIndex(itemCount - 1)
     },
-    [clamp, itemCount]
-  );
+    [clamp, itemCount],
+  )
 
   useEffect(() => {
-    const cur = containerRef.current;
-    if (!cur) return;
-    const handler = (e: KeyboardEvent) => onKeyDown(e);
-    cur.addEventListener('keydown', handler);
-    return () => cur.removeEventListener('keydown', handler);
-  }, [onKeyDown]);
+    const cur = containerRef.current
+    if (!cur) return undefined
+    const handler = (e: KeyboardEvent) => onKeyDown(e)
+    cur.addEventListener('keydown', handler)
+    return () => cur.removeEventListener('keydown', handler)
+  }, [onKeyDown])
 
   useEffect(() => {
-    const cur = containerRef.current;
-    if (!cur) return;
-    const el = cur.querySelector<HTMLElement>(`[data-kbindex="${index}"]`);
-    el?.focus();
-  }, [index]);
+    const cur = containerRef.current
+    if (!cur) return
+    const el = cur.querySelector<HTMLElement>(`[data-kbindex="${index}"]`)
+    el?.focus()
+  }, [index])
 
-  return { index, setIndex, containerRef };
+  return { index, setIndex, containerRef }
 }
 
 /**
@@ -67,13 +62,13 @@ export function useKeyboardNavigation({
  * - `Tab` to cycle through tabs
  */
 interface UseSearchKeyboardNavigationOptions {
-  searchInputRef: RefObject<HTMLInputElement>;
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit?: () => void;
-  onNavigate?: (direction: 'up' | 'down') => void;
-  onSelect?: () => void;
-  disabled?: boolean;
+  searchInputRef: RefObject<HTMLInputElement>
+  isOpen: boolean
+  onClose: () => void
+  onSubmit?: () => void
+  onNavigate?: (direction: 'up' | 'down') => void
+  onSelect?: () => void
+  disabled?: boolean
 }
 
 export function useSearchKeyboardNavigation({
@@ -86,92 +81,90 @@ export function useSearchKeyboardNavigation({
   disabled = false,
 }: UseSearchKeyboardNavigationOptions) {
   const focusSearch = useCallback(() => {
-    searchInputRef.current?.focus();
-  }, [searchInputRef]);
+    searchInputRef.current?.focus()
+  }, [searchInputRef])
 
   const closeDropdown = useCallback(() => {
-    onClose();
-  }, [onClose]);
+    onClose()
+  }, [onClose])
 
   const selectSuggestion = useCallback(() => {
     if (onSelect) {
-      onSelect();
+      onSelect()
     }
-  }, [onSelect]);
+  }, [onSelect])
 
   // Global keyboard event handler
   useEffect(() => {
-    if (disabled) return;
+    if (disabled) return undefined
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement;
+      const target = event.target as HTMLElement
       const isInputFocused =
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable;
+        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable
 
       // `/` key - Focus search input (only when not in input)
       if (event.key === '/' && !isInputFocused) {
-        event.preventDefault();
-        focusSearch();
-        return;
+        event.preventDefault()
+        focusSearch()
+        return
       }
 
       // Handle keys when search input is focused or dropdown is open
       if (isInputFocused || isOpen) {
         switch (event.key) {
           case 'Escape':
-            event.preventDefault();
+            event.preventDefault()
             if (isOpen) {
-              closeDropdown();
+              closeDropdown()
             } else {
               // Blur search input on second Escape
-              searchInputRef.current?.blur();
+              searchInputRef.current?.blur()
             }
-            break;
+            break
 
           case 'Enter':
             if (!event.shiftKey && !event.ctrlKey && !event.metaKey) {
               if (isOpen && onSelect) {
-                event.preventDefault();
-                selectSuggestion();
+                event.preventDefault()
+                selectSuggestion()
               } else if (onSubmit) {
-                event.preventDefault();
-                onSubmit();
+                event.preventDefault()
+                onSubmit()
               }
             }
-            break;
+            break
 
           case 'ArrowDown':
             if (isOpen && onNavigate) {
-              event.preventDefault();
-              onNavigate('down');
+              event.preventDefault()
+              onNavigate('down')
             }
-            break;
+            break
 
           case 'ArrowUp':
             if (isOpen && onNavigate) {
-              event.preventDefault();
-              onNavigate('up');
+              event.preventDefault()
+              onNavigate('up')
             }
-            break;
+            break
 
           case 'Tab':
             // Allow default Tab behavior for accessibility
             // but close suggestions dropdown if open
             if (isOpen) {
-              closeDropdown();
+              closeDropdown()
             }
-            break;
+            break
         }
       }
-    };
+    }
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+      window.removeEventListener('keydown', handleKeyDown)
+    }
   }, [
     disabled,
     isOpen,
@@ -182,14 +175,14 @@ export function useSearchKeyboardNavigation({
     onSubmit,
     onSelect,
     searchInputRef,
-  ]);
+  ])
 
   // Return utility functions
   return {
     focusSearch,
     closeDropdown,
     selectSuggestion,
-  };
+  }
 }
 
 /**
@@ -198,38 +191,37 @@ export function useSearchKeyboardNavigation({
 export function useTabNavigation(containerRef: RefObject<HTMLElement>) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Tab' || !containerRef.current) return;
+      if (event.key !== 'Tab' || !containerRef.current) return
 
       const focusableElements = containerRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )
 
-      const focusableArray = Array.from(focusableElements) as HTMLElement[];
-      const firstElement = focusableArray[0];
-      const lastElement = focusableArray[focusableArray.length - 1];
+      const focusableArray = Array.from(focusableElements) as HTMLElement[]
+      const firstElement = focusableArray[0]
+      const lastElement = focusableArray[focusableArray.length - 1]
 
       // Trap focus within container
       if (event.shiftKey) {
         // Shift + Tab (backward)
         if (document.activeElement === firstElement) {
-          event.preventDefault();
-          lastElement?.focus();
+          event.preventDefault()
+          lastElement?.focus()
         }
       } else {
         // Tab (forward)
         if (document.activeElement === lastElement) {
-          event.preventDefault();
-          firstElement?.focus();
+          event.preventDefault()
+          firstElement?.focus()
         }
       }
-    };
+    }
 
-    const container = containerRef.current;
-    container?.addEventListener('keydown', handleKeyDown);
+    const container = containerRef.current
+    container?.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      container?.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [containerRef]);
+      container?.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [containerRef])
 }
-

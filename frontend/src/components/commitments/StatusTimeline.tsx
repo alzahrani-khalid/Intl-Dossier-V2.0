@@ -10,8 +10,8 @@
  * - Mobile-first, RTL-compatible
  */
 
-import { useTranslation } from 'react-i18next';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslation } from 'react-i18next'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Clock,
   ArrowRight,
@@ -20,15 +20,15 @@ import {
   User,
   FileText,
   AlertTriangle,
-} from 'lucide-react';
-import { useCommitmentStatusHistory } from '@/hooks/useCommitments';
-import type { CommitmentStatus, CommitmentStatusHistory } from '@/types/commitment.types';
-import { STATUS_COLORS } from '@/types/commitment.types';
+} from 'lucide-react'
+import { useCommitmentStatusHistory } from '@/hooks/useCommitments'
+import type { CommitmentStatus, CommitmentStatusHistory } from '@/types/commitment.types'
+import { STATUS_COLORS } from '@/types/commitment.types'
 
 export interface StatusTimelineProps {
-  commitmentId: string;
-  createdAt?: string | null;
-  createdBy?: string | null;
+  commitmentId: string
+  createdAt?: string | null
+  createdBy?: string | null
 }
 
 // Status icons mapping
@@ -38,30 +38,26 @@ const statusIcons: Record<CommitmentStatus, React.ReactNode> = {
   completed: <CheckCircle className="size-4" />,
   cancelled: <XCircle className="size-4" />,
   overdue: <AlertTriangle className="size-4" />,
-};
+}
 
-export function StatusTimeline({
-  commitmentId,
-  createdAt,
-  createdBy,
-}: StatusTimelineProps) {
-  const { t, i18n } = useTranslation('commitments');
-  const isRTL = i18n.language === 'ar';
+export function StatusTimeline({ commitmentId, createdAt, createdBy }: StatusTimelineProps) {
+  const { t, i18n } = useTranslation('commitments')
+  const isRTL = i18n.language === 'ar'
 
   // Fetch status history
-  const { data: history, isLoading, isError } = useCommitmentStatusHistory(commitmentId);
+  const { data: history, isLoading, isError } = useCommitmentStatusHistory(commitmentId)
 
   // Format date/time
   const formatDateTime = (dateStr: string) => {
-    const date = new Date(dateStr);
+    const date = new Date(dateStr)
     return date.toLocaleString(i18n.language, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    });
-  };
+    })
+  }
 
   // Loading state
   if (isLoading) {
@@ -77,25 +73,17 @@ export function StatusTimeline({
           </div>
         ))}
       </div>
-    );
+    )
   }
 
   // Error state
   if (isError) {
-    return (
-      <p className="text-sm text-muted-foreground text-center py-4">
-        {t('detail.noHistory')}
-      </p>
-    );
+    return <p className="text-sm text-muted-foreground text-center py-4">{t('detail.noHistory')}</p>
   }
 
   // Empty state
   if (!history?.length && !createdAt) {
-    return (
-      <p className="text-sm text-muted-foreground text-center py-4">
-        {t('detail.noHistory')}
-      </p>
-    );
+    return <p className="text-sm text-muted-foreground text-center py-4">{t('detail.noHistory')}</p>
   }
 
   return (
@@ -106,7 +94,7 @@ export function StatusTimeline({
           key={entry.id}
           entry={entry}
           isFirst={index === 0}
-          isLast={index === (history.length - 1) && !createdAt}
+          isLast={index === history.length - 1 && !createdAt}
           formatDateTime={formatDateTime}
         />
       ))}
@@ -123,9 +111,7 @@ export function StatusTimeline({
 
           {/* Content */}
           <div className="flex-1 pb-4">
-            <p className="text-sm font-medium text-start">
-              {t('timeline.created')}
-            </p>
+            <p className="text-sm font-medium text-start">{t('timeline.created')}</p>
             <p className="text-xs text-muted-foreground text-start mt-0.5">
               {formatDateTime(createdAt)}
             </p>
@@ -139,30 +125,26 @@ export function StatusTimeline({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // Individual timeline entry component
 interface TimelineEntryProps {
-  entry: CommitmentStatusHistory;
-  isFirst: boolean;
-  isLast: boolean;
-  formatDateTime: (dateStr: string) => string;
+  entry: CommitmentStatusHistory
+  isFirst: boolean
+  isLast: boolean
+  formatDateTime: (dateStr: string) => string
 }
 
-function TimelineEntry({
-  entry,
-  isFirst,
-  isLast,
-  formatDateTime,
-}: TimelineEntryProps) {
-  const { t, i18n } = useTranslation('commitments');
-  const isRTL = i18n.language === 'ar';
+function TimelineEntry({ entry, isFirst, isLast, formatDateTime }: TimelineEntryProps) {
+  const { t, i18n } = useTranslation('commitments')
+  const _isRTL = i18n.language === 'ar'
 
   // Guard against undefined status with fallback colors
-  const newStatusColors = entry.new_status && STATUS_COLORS[entry.new_status]
-    ? STATUS_COLORS[entry.new_status]
-    : { bg: 'bg-gray-100', text: 'text-gray-500', border: 'border-gray-300' };
+  const newStatusColors =
+    entry.new_status && STATUS_COLORS[entry.new_status]
+      ? STATUS_COLORS[entry.new_status]
+      : { bg: 'bg-gray-100', text: 'text-gray-500', border: 'border-gray-300' }
 
   return (
     <div className="flex gap-3">
@@ -171,25 +153,25 @@ function TimelineEntry({
         <div
           className={`size-8 rounded-full flex items-center justify-center shrink-0 ${newStatusColors.bg} ${newStatusColors.text}`}
         >
-          {entry.new_status && statusIcons[entry.new_status] ? statusIcons[entry.new_status] : <Clock className="size-4" />}
+          {entry.new_status && statusIcons[entry.new_status] ? (
+            statusIcons[entry.new_status]
+          ) : (
+            <Clock className="size-4" />
+          )}
         </div>
         {/* Line to next entry */}
-        {!isLast && (
-          <div className="w-0.5 flex-1 bg-muted min-h-4" />
-        )}
+        {!isLast && <div className="w-0.5 flex-1 bg-muted min-h-4" />}
       </div>
 
       {/* Content */}
       <div className={`flex-1 ${!isLast ? 'pb-4' : ''}`}>
         <p className="text-sm font-medium text-start">
-          {entry.old_status ? (
-            t('timeline.statusChanged', {
-              from: t(`status.${entry.old_status}`),
-              to: t(`status.${entry.new_status}`),
-            })
-          ) : (
-            t(`status.${entry.new_status}`)
-          )}
+          {entry.old_status
+            ? t('timeline.statusChanged', {
+                from: t(`status.${entry.old_status}`),
+                to: t(`status.${entry.new_status}`),
+              })
+            : t(`status.${entry.new_status}`)}
         </p>
         <p className="text-xs text-muted-foreground text-start mt-0.5">
           {formatDateTime(entry.changed_at)}
@@ -207,5 +189,5 @@ function TimelineEntry({
         )}
       </div>
     </div>
-  );
+  )
 }

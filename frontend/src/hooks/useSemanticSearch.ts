@@ -19,13 +19,16 @@ export type SemanticEntityType =
   | 'country' // Country dossiers only
   | 'organization' // Organization dossiers only
   | 'forum' // Forum dossiers only
-  | 'theme' // Theme dossiers only
+  | 'topic' // Topic dossiers only
+  | 'engagement' // Engagement dossiers only
+  | 'person' // Person dossiers only
+  | 'working_group' // Working group dossiers only
   | 'positions' // Position documents
   | 'documents' // Attachments
   | 'briefs' // AI-generated briefs
 
 // Dossier subtypes for filtering
-export type DossierSubtype = 'country' | 'organization' | 'forum' | 'theme'
+export type DossierSubtype = 'country' | 'organization' | 'forum' | 'topic'
 
 // Match type indicator
 export type MatchType = 'semantic' | 'fulltext' | 'hybrid'
@@ -109,6 +112,8 @@ export interface SemanticSearchResponse {
 export interface LegacySemanticSearchResponse {
   results: SemanticSearchResult[]
   exact_matches?: SemanticSearchResult[]
+  /** Alias for exact_matches - used by SearchPage */
+  exactMatches?: SemanticSearchResult[]
   performance: {
     embedding_generation_ms: number
     vector_search_ms: number
@@ -120,6 +125,21 @@ export interface LegacySemanticSearchResponse {
     normalized: string
     embedding_model: string
   }
+  /** Optional fields for compatibility with SearchResponse union usage */
+  counts?: {
+    total: number
+    dossiers: number
+    people: number
+    engagements: number
+    positions: number
+    mous: number
+    documents: number
+    restricted?: number
+  }
+  hasMore?: boolean
+  typoSuggestions?: string[]
+  tookMs?: number
+  cacheHit?: boolean
 }
 
 /**
@@ -490,7 +510,7 @@ export function getSemanticEntityTypes(): SemanticEntityType[] {
     'country',
     'organization',
     'forum',
-    'theme',
+    'topic',
     'positions',
     'documents',
     'briefs',
@@ -501,7 +521,7 @@ export function getSemanticEntityTypes(): SemanticEntityType[] {
  * Get dossier-specific entity types
  */
 export function getDossierEntityTypes(): DossierSubtype[] {
-  return ['country', 'organization', 'forum', 'theme']
+  return ['country', 'organization', 'forum', 'topic']
 }
 
 // Legacy export for backwards compatibility

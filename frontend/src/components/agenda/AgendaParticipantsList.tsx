@@ -53,11 +53,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  useAddParticipant,
-  useUpdateParticipantRsvp,
-  useRemoveParticipant,
-} from '@/hooks/useMeetingAgenda'
+import { useAddParticipant, useUpdateRsvp, useRemoveParticipant } from '@/hooks/useMeetingAgenda'
 import type { AgendaParticipant, ParticipantRole, RsvpStatus } from '@/types/meeting-agenda.types'
 import { RSVP_STATUS_COLORS, PARTICIPANT_ROLES } from '@/types/meeting-agenda.types'
 import { cn } from '@/lib/utils'
@@ -107,7 +103,7 @@ export function AgendaParticipantsList({
 
   // Mutations
   const addParticipant = useAddParticipant()
-  const updateRsvp = useUpdateParticipantRsvp()
+  const updateRsvp = useUpdateRsvp()
   const removeParticipant = useRemoveParticipant()
 
   // Group participants by role
@@ -147,17 +143,14 @@ export function AgendaParticipantsList({
   // Handle add participant
   const handleAdd = async () => {
     await addParticipant.mutateAsync({
-      agendaId,
-      input: {
-        agenda_id: agendaId,
-        participant_type: 'external_contact',
-        name_en: newParticipant.name_en,
-        name_ar: newParticipant.name_ar || undefined,
-        email: newParticipant.email || undefined,
-        title_en: newParticipant.title_en || undefined,
-        organization_name_en: newParticipant.organization_name_en || undefined,
-        role: newParticipant.role,
-      },
+      agenda_id: agendaId,
+      participant_type: 'external_contact',
+      name_en: newParticipant.name_en,
+      name_ar: newParticipant.name_ar || undefined,
+      email: newParticipant.email || undefined,
+      title_en: newParticipant.title_en || undefined,
+      organization_name_en: newParticipant.organization_name_en || undefined,
+      role: newParticipant.role,
     })
     setShowAddDialog(false)
     setNewParticipant({
@@ -245,7 +238,7 @@ export function AgendaParticipantsList({
                   updateRsvp.mutateAsync({
                     agendaId,
                     participantId: p.id,
-                    input: { rsvp_status: 'accepted' },
+                    data: { rsvp_status: 'accepted' },
                   })
                 }
               >
@@ -257,7 +250,7 @@ export function AgendaParticipantsList({
                   updateRsvp.mutateAsync({
                     agendaId,
                     participantId: p.id,
-                    input: { rsvp_status: 'declined' },
+                    data: { rsvp_status: 'declined' },
                   })
                 }
               >
@@ -269,7 +262,7 @@ export function AgendaParticipantsList({
                   updateRsvp.mutateAsync({
                     agendaId,
                     participantId: p.id,
-                    input: { rsvp_status: 'tentative' },
+                    data: { rsvp_status: 'tentative' },
                   })
                 }
               >

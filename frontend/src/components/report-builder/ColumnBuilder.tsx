@@ -24,13 +24,11 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { GripVertical, X, Eye, EyeOff, Columns } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { ReportColumn, ReportField } from '@/types/report-builder.types'
+import type { ReportColumn } from '@/types/report-builder.types'
 
 interface ColumnBuilderProps {
   columns: ReportColumn[]

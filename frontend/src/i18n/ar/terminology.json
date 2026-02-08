@@ -1,0 +1,207 @@
+{
+  "title": "قاموس المصطلحات",
+  "description": "إدارة المصطلحات الدبلوماسية والتقنية ثنائية اللغة",
+
+  "list": {
+    "title": "المصطلحات",
+    "description": "عرض وإدارة المصطلحات الدبلوماسية",
+    "empty": "لا توجد مصطلحات",
+    "emptyDescription": "أضف أول مصطلح لبناء القاموس",
+    "create": "إضافة مصطلح",
+    "search": "البحث في المصطلحات..."
+  },
+
+  "detail": {
+    "title": "تفاصيل المصطلح",
+    "translations": "الترجمات",
+    "relatedTerms": "المصطلحات ذات الصلة",
+    "usageHistory": "سجل الاستخدام"
+  },
+
+  "form": {
+    "create": "إضافة مصطلح",
+    "edit": "تعديل المصطلح",
+    "termEn": "المصطلح (إنجليزي)",
+    "termAr": "المصطلح (عربي)",
+    "abbreviationEn": "الاختصار (إنجليزي)",
+    "abbreviationAr": "الاختصار (عربي)",
+    "definitionEn": "التعريف (إنجليزي)",
+    "definitionAr": "التعريف (عربي)",
+    "usageNotesEn": "ملاحظات الاستخدام (إنجليزي)",
+    "usageNotesAr": "ملاحظات الاستخدام (عربي)",
+    "exampleSentenceEn": "جملة مثال (إنجليزي)",
+    "exampleSentenceAr": "جملة مثال (عربي)",
+    "domain": "المجال",
+    "subdomain": "المجال الفرعي",
+    "source": "المصدر",
+    "sourceUrl": "رابط المصدر",
+    "parentTerm": "المصطلح الأصلي",
+    "relatedTerms": "المصطلحات ذات الصلة",
+    "synonymsEn": "المرادفات (إنجليزي)",
+    "synonymsAr": "المرادفات (عربي)",
+    "tags": "الوسوم",
+    "frequencyOfUse": "معدل الاستخدام",
+    "isApproved": "معتمد",
+    "isActive": "نشط"
+  },
+
+  "domains": {
+    "diplomatic": "دبلوماسي",
+    "legal": "قانوني",
+    "technical": "تقني",
+    "organizational": "تنظيمي",
+    "un_system": "منظومة الأمم المتحدة",
+    "oic_system": "منظومة التعاون الإسلامي",
+    "gcc_system": "منظومة الخليج",
+    "government": "حكومي",
+    "correspondence": "مراسلات",
+    "document_type": "نوع المستند",
+    "priority": "أولوية",
+    "role": "دور",
+    "status": "حالة",
+    "process": "إجراء",
+    "general": "عام"
+  },
+
+  "frequency": {
+    "rare": "نادر",
+    "uncommon": "غير شائع",
+    "common": "شائع",
+    "frequent": "متكرر",
+    "very_frequent": "متكرر جداً"
+  },
+
+  "translations": {
+    "title": "ترجمات إضافية",
+    "description": "ترجمات بلغات أخرى",
+    "create": "إضافة ترجمة",
+    "edit": "تعديل الترجمة",
+    "delete": "حذف الترجمة",
+    "empty": "لا توجد ترجمات إضافية",
+    "emptyDescription": "أضف ترجمات بلغات أخرى",
+    "languageCode": "رمز اللغة",
+    "languageName": "اسم اللغة",
+    "term": "المصطلح",
+    "abbreviation": "الاختصار",
+    "definition": "التعريف",
+    "usageNotes": "ملاحظات الاستخدام",
+    "isApproved": "معتمد"
+  },
+
+  "usageLog": {
+    "title": "سجل الاستخدام",
+    "description": "تتبع أماكن استخدام هذا المصطلح",
+    "entityType": "نوع الكيان",
+    "entityId": "الكيان",
+    "contextSnippet": "السياق",
+    "language": "اللغة",
+    "usedAt": "تاريخ الاستخدام"
+  },
+
+  "relatedTerms": {
+    "title": "المصطلحات ذات الصلة",
+    "description": "المصطلحات المرتبطة بهذا الإدخال",
+    "add": "إضافة مصطلح ذو صلة",
+    "remove": "إزالة العلاقة",
+    "relationType": "نوع العلاقة",
+    "relationTypes": {
+      "related": "ذو صلة",
+      "parent": "مصطلح أصلي",
+      "child": "مصطلح فرعي"
+    }
+  },
+
+  "mostUsed": {
+    "title": "أكثر المصطلحات استخداماً",
+    "description": "المصطلحات المستخدمة بشكل متكرر",
+    "usageCount": "عدد الاستخدامات",
+    "viewAll": "عرض الكل"
+  },
+
+  "search": {
+    "title": "البحث في المصطلحات",
+    "placeholder": "ابحث عن مصطلحات بالإنجليزية أو العربية...",
+    "noResults": "لا توجد مصطلحات",
+    "matchScore": "درجة التطابق",
+    "searchInDomain": "البحث في المجال"
+  },
+
+  "approval": {
+    "title": "اعتماد المصطلح",
+    "pending": "بانتظار الاعتماد",
+    "approved": "معتمد",
+    "approvedBy": "اعتمده",
+    "approvedAt": "تاريخ الاعتماد",
+    "approve": "اعتماد المصطلح",
+    "reject": "رفض المصطلح"
+  },
+
+  "filters": {
+    "domain": "المجال",
+    "subdomain": "المجال الفرعي",
+    "isApproved": "المعتمدة فقط",
+    "isActive": "النشطة فقط",
+    "hasAbbreviation": "لها اختصار",
+    "frequencyOfUse": "معدل الاستخدام",
+    "createdAfter": "أُنشئت بعد",
+    "createdBefore": "أُنشئت قبل"
+  },
+
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "approve": "اعتماد",
+    "reject": "رفض",
+    "deactivate": "إلغاء التفعيل",
+    "activate": "تفعيل",
+    "export": "تصدير القاموس",
+    "import": "استيراد المصطلحات",
+    "copyToClipboard": "نسخ إلى الحافظة",
+    "viewUsage": "عرض الاستخدام"
+  },
+
+  "validation": {
+    "termEnRequired": "المصطلح الإنجليزي مطلوب",
+    "termArRequired": "المصطلح العربي مطلوب",
+    "domainRequired": "المجال مطلوب",
+    "duplicateTerm": "يوجد مصطلح بهذا الاسم في هذا المجال"
+  },
+
+  "notifications": {
+    "termCreated": "تمت إضافة المصطلح بنجاح",
+    "termUpdated": "تم تحديث المصطلح بنجاح",
+    "termDeleted": "تم حذف المصطلح بنجاح",
+    "termApproved": "تم اعتماد المصطلح",
+    "termRejected": "تم رفض المصطلح",
+    "translationAdded": "تمت إضافة الترجمة بنجاح",
+    "translationUpdated": "تم تحديث الترجمة بنجاح",
+    "copiedToClipboard": "تم نسخ المصطلح إلى الحافظة"
+  },
+
+  "import": {
+    "title": "استيراد المصطلحات",
+    "description": "استيراد المصطلحات من ملف CSV أو Excel",
+    "selectFile": "اختر الملف",
+    "preview": "معاينة",
+    "confirm": "تأكيد الاستيراد",
+    "duplicateHandling": "معالجة التكرارات",
+    "skipDuplicates": "تخطي التكرارات",
+    "updateDuplicates": "تحديث التكرارات",
+    "importResults": "نتائج الاستيراد",
+    "termsImported": "مصطلحات مستوردة",
+    "termsSkipped": "مصطلحات متخطاة",
+    "errors": "أخطاء"
+  },
+
+  "export": {
+    "title": "تصدير القاموس",
+    "description": "تصدير المصطلحات إلى ملف",
+    "format": "الصيغة",
+    "csv": "CSV",
+    "excel": "Excel",
+    "json": "JSON",
+    "includeDomain": "تضمين فلتر المجال",
+    "includeInactive": "تضمين المصطلحات غير النشطة",
+    "download": "تحميل"
+  }
+}

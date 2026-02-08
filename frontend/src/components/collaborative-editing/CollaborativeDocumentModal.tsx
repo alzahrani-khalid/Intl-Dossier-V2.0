@@ -7,7 +7,7 @@
  * Mobile-first with RTL support.
  */
 
-import React, { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Dialog,
@@ -58,7 +58,7 @@ export function CollaborativeDocumentModal({
   const isRTL = i18n.language === 'ar'
 
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
+  const [_isSaving, setIsSaving] = useState(false)
 
   const { activeEditors, summary, isConnected, leaveSession } = useCollaborativeEditing({
     documentId: document?.id || '',
@@ -117,7 +117,9 @@ export function CollaborativeDocumentModal({
           <div className="flex items-center gap-3 min-w-0">
             <FileText className="h-5 w-5 text-muted-foreground shrink-0" />
             <div className="min-w-0">
-              <DialogTitle className="text-base sm:text-lg truncate">{document.name}</DialogTitle>
+              <DialogTitle className="text-base sm:text-lg truncate">
+                {document.file_name}
+              </DialogTitle>
               <DialogDescription className="text-xs sm:text-sm">
                 {t('description')}
               </DialogDescription>
@@ -198,7 +200,7 @@ export function CollaborativeDocumentModal({
         <div className="flex-1 overflow-hidden">
           <CollaborativeEditor
             documentId={document.id}
-            documentVersionId={document.versionId}
+            documentVersionId={document.id}
             initialContent=""
             readOnly={readOnly}
             onSave={handleSave}

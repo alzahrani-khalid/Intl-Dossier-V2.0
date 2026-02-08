@@ -32,7 +32,7 @@ import { useHapticFeedback } from '@/hooks/useHapticFeedback'
 import {
   ContextMenu,
   ContextMenuContent,
-  ContextMenuItem,
+  ContextMenuItem as ContextMenuItemComponent,
   ContextMenuTrigger,
   ContextMenuSeparator,
 } from '@/components/ui/context-menu'
@@ -339,8 +339,8 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
       <ContextMenu open={contextMenuOpen} onOpenChange={setContextMenuOpen}>
         <ContextMenuTrigger asChild>{cardContent}</ContextMenuTrigger>
         <ContextMenuContent className="w-56" dir={isRTL ? 'rtl' : 'ltr'}>
-          {contextMenuItems.map((item, index) => (
-            <ContextMenuItem
+          {contextMenuItems.map((item, _index) => (
+            <ContextMenuItemComponent
               key={item.key}
               onClick={() => {
                 haptic.selection()
@@ -353,7 +353,7 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
             >
               {item.icon}
               {item.label}
-            </ContextMenuItem>
+            </ContextMenuItemComponent>
           ))}
         </ContextMenuContent>
       </ContextMenu>

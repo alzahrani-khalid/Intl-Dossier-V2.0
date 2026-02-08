@@ -212,8 +212,8 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
       if (cardElements.length === 0 || index >= cardElements.length) return
 
       const targetCard = cardElements[index] as HTMLElement
-      const containerRect = container.getBoundingClientRect()
-      const cardRect = targetCard.getBoundingClientRect()
+      const _containerRect = container.getBoundingClientRect()
+      const _cardRect = targetCard.getBoundingClientRect()
 
       // Calculate scroll position to center the card (or align to start)
       const scrollOffset = isRTL
@@ -270,7 +270,7 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
    */
   useEffect(() => {
     const container = scrollContainerRef.current
-    if (!container) return
+    if (!container) return undefined
 
     // Initial state
     updateScrollState()

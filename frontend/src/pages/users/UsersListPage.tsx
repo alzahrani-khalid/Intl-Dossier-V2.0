@@ -30,7 +30,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { Search, UserPlus, Eye, CheckCircle, Loader2, Users, AlertCircle } from 'lucide-react'
+import { Search, UserPlus, Eye, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 type UserStatus = 'active' | 'inactive' | 'pending' | 'deactivated' | 'suspended'
@@ -342,10 +342,9 @@ export function UsersListPage() {
                   <TableCell className="font-medium">
                     <div className="flex flex-row items-center gap-2">
                       {user.mfa_enabled && (
-                        <CheckCircle
-                          className="h-3 w-3 text-green-600"
-                          title={t('userProfile.mfaEnabled')}
-                        />
+                        <span title={t('userProfile.mfaEnabled')}>
+                          <CheckCircle className="h-3 w-3 text-green-600" />
+                        </span>
                       )}
                       {user.username}
                     </div>
@@ -397,10 +396,9 @@ export function UsersListPage() {
                 <div className="flex-1">
                   <CardTitle className="text-base flex flex-row items-center gap-2">
                     {user.mfa_enabled && (
-                      <CheckCircle
-                        className="h-3 w-3 text-green-600"
-                        title={t('userProfile.mfaEnabled')}
-                      />
+                      <span title={t('userProfile.mfaEnabled')}>
+                        <CheckCircle className="h-3 w-3 text-green-600" />
+                      </span>
                     )}
                     {user.full_name}
                   </CardTitle>

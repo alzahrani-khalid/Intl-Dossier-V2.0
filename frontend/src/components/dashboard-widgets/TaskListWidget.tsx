@@ -243,7 +243,10 @@ export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskLi
   const { settings } = config
 
   // Filter, sort, and group tasks
-  const processedTasks = useMemo(() => {
+  const processedTasks = useMemo((): {
+    items: TaskItem[]
+    groups: Record<string, TaskItem[]> | null
+  } => {
     if (!data) return { items: [], groups: null }
 
     let tasks = [...data]
@@ -329,23 +332,25 @@ export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskLi
       <div className="space-y-1">
         {processedTasks.groups
           ? // Grouped view
-            Object.entries(processedTasks.groups).map(([groupKey, groupTasks]) => (
-              <div key={groupKey} className="mb-3">
-                <GroupHeader
-                  label={t(`${settings.groupBy}.${groupKey}`, groupKey)}
-                  count={groupTasks.length}
-                />
-                {groupTasks.map((task) => (
-                  <TaskItemComponent
-                    key={task.id}
-                    task={task}
-                    locale={locale}
-                    isRTL={isRTL}
-                    onToggle={(completed) => onTaskToggle?.(task.id, completed)}
+            Object.entries(processedTasks.groups).map(
+              ([groupKey, groupTasks]: [string, TaskItem[]]) => (
+                <div key={groupKey} className="mb-3">
+                  <GroupHeader
+                    label={t(`${settings.groupBy}.${groupKey}`, groupKey)}
+                    count={groupTasks.length}
                   />
-                ))}
-              </div>
-            ))
+                  {groupTasks.map((task) => (
+                    <TaskItemComponent
+                      key={task.id}
+                      task={task}
+                      locale={locale}
+                      isRTL={isRTL}
+                      onToggle={(completed) => onTaskToggle?.(task.id, completed)}
+                    />
+                  ))}
+                </div>
+              ),
+            )
           : // Flat list view
             processedTasks.items.map((task) => (
               <TaskItemComponent

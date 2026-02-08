@@ -133,7 +133,7 @@ function groupOptions(options: SelectOption[]): OptionGroup[] {
       if (!grouped[option.group]) {
         grouped[option.group] = []
       }
-      grouped[option.group].push(option)
+      grouped[option.group]!.push(option)
     } else {
       ungrouped.push(option)
     }
@@ -301,7 +301,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
       }
 
       if (renderValue) {
-        return renderValue(multiple ? selectedOptions : selectedOptions[0])
+        return renderValue(multiple ? selectedOptions : selectedOptions[0]!)
       }
 
       if (multiple) {
@@ -325,7 +325,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
         )
       }
 
-      const selected = selectedOptions[0]
+      const selected = selectedOptions[0]!
       return (
         <span className="flex items-center gap-2 truncate">
           {selected.icon}

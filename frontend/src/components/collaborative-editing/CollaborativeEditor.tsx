@@ -52,10 +52,9 @@ import {
   type TrackChangeWithAuthor,
   type InlineCommentWithAuthor,
 } from '@/hooks/useCollaborativeEditing'
-import { ActiveEditorAvatars, ActiveEditorBadge } from './ActiveEditorAvatars'
+import { ActiveEditorAvatars } from './ActiveEditorAvatars'
 import { SuggestionPanel } from './SuggestionPanel'
 import { TrackChangesOverlay } from './TrackChangesOverlay'
-import { InlineCommentMarker, CommentIndicator } from './InlineCommentMarker'
 import type { CollaborativeEditorProps } from '@/types/collaborative-editing.types'
 
 export function CollaborativeEditor({

@@ -83,6 +83,9 @@
     "nameAr": "Name (Arabic)",
     "nameEnPlaceholder": "Enter name in English",
     "nameArPlaceholder": "أدخل الاسم بالعربية",
+    "abbreviation": "Abbreviation",
+    "abbreviationPlaceholder": "e.g., WDF, WHO, SDGs",
+    "abbreviationDescription": "Short code or acronym (max 20 characters)",
     "descriptionEn": "Description (English)",
     "descriptionAr": "Description (Arabic)",
     "descriptionEnPlaceholder": "Enter description in English",
@@ -114,13 +117,27 @@
       "biographyEnPlaceholder": "Enter person's background and qualifications",
       "biographyArPlaceholder": "أدخل السيرة الذاتية والمؤهلات"
     },
+    "organization": {
+      "type": "Organization Type",
+      "typePlaceholder": "Select organization type",
+      "types": {
+        "government": "Government",
+        "ngo": "NGO",
+        "international": "International",
+        "private": "Private Sector",
+        "academic": "Academic"
+      }
+    },
     "forum": {
-      "numberOfSessions": "Number of Sessions",
-      "numberOfSessionsDescription": "Total number of planned sessions",
-      "registrationFee": "Registration Fee",
-      "currency": "Currency",
-      "agendaUrl": "Agenda URL",
-      "liveStreamUrl": "Live Stream URL"
+      "organizingBody": "Organizing Body",
+      "organizingBodyDescription": "The organization responsible for organizing this forum",
+      "selectOrganizingBody": "Select an organization...",
+      "noOrganizingBody": "No organizing body selected",
+      "quickAddOrg": "Quick Add Organization",
+      "quickAddOrgDescription": "Create a new organization dossier. You can add more details later.",
+      "createOrg": "Create Organization",
+      "orgCreated": "Organization \"{{name}}\" created successfully",
+      "orgCreateFailed": "Failed to create organization"
     },
     "topic": {
       "category": "Topic Category",
@@ -150,7 +167,8 @@
     },
     "cancel": "Cancel",
     "create": "Create Dossier",
-    "update": "Update Dossier"
+    "update": "Update Dossier",
+    "creating": "Creating..."
   },
   "field": {
     "isoCode": "ISO Code",

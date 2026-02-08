@@ -30,7 +30,7 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
@@ -822,7 +822,7 @@ function SponsorsTab({ sponsors, isRTL }: { sponsors: LegislationSponsor[]; isRT
       if (!acc[sponsor.sponsor_type]) {
         acc[sponsor.sponsor_type] = []
       }
-      acc[sponsor.sponsor_type].push(sponsor)
+      acc[sponsor.sponsor_type]!.push(sponsor)
       return acc
     },
     {} as Record<string, LegislationSponsor[]>,
@@ -902,7 +902,7 @@ function RelatedTab({
               <Badge variant="outline">{t(`related.type.${rel.relationship_type}`)}</Badge>
               <Link
                 to="/legislation/$id"
-                params={{ id: rel.related_legislation.id }}
+                params={{ id: rel.related_legislation.id } as any}
                 className="flex-1"
               >
                 <div className="flex items-center gap-3 hover:text-primary transition-colors">

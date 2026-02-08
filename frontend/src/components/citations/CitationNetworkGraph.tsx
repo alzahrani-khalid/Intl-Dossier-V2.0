@@ -25,9 +25,7 @@ import {
 import '@xyflow/react/dist/style.css'
 import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Slider } from '@/components/ui/slider'
+import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   FolderOpen,
@@ -48,7 +46,7 @@ import {
 } from 'lucide-react'
 import { useCitationNetwork } from '@/hooks/useCitations'
 import type {
-  CitationNetworkGraph as CitationNetworkGraphType,
+  CitationNetworkGraph as _CitationNetworkGraphType,
   CitationNetworkNode,
   CitationNetworkEdge,
   CitationSourceType,
@@ -226,7 +224,7 @@ export function CitationNetworkGraph({
     }
 
     // Create nodes
-    const nodes: Node[] = networkData.nodes.map((node) => ({
+    const nodes = networkData.nodes.map((node) => ({
       id: node.id,
       type: 'citation',
       position: { x: 0, y: 0 }, // Will be calculated by d3-force
@@ -245,7 +243,7 @@ export function CitationNetworkGraph({
       source: edge.source,
       target: edge.target,
       type: 'default',
-      animated: edge.relevance_score && edge.relevance_score > 0.7,
+      animated: !!(edge.relevance_score && edge.relevance_score > 0.7),
       style: {
         stroke:
           edge.relevance_score && edge.relevance_score > 0.7
@@ -287,23 +285,23 @@ export function CitationNetworkGraph({
       }
     }
 
-    return { initialNodes: nodes, initialEdges: edges }
+    return { initialNodes: nodes as unknown as Node[], initialEdges: edges }
   }, [networkData, entityId, isRTL])
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes as any)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
   // Update nodes/edges when data changes
   useMemo(() => {
-    setNodes(initialNodes)
+    setNodes(initialNodes as any)
     setEdges(initialEdges)
   }, [initialNodes, initialEdges, setNodes, setEdges])
 
   // Handle node click
   const handleNodeClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
+    (_event: React.MouseEvent, node: Node) => {
       if (onNodeClick) {
-        const nodeData = node.data as CitationNodeData
+        const nodeData = node.data as unknown as CitationNodeData
         onNodeClick(node.id, nodeData.type)
       }
     },
@@ -371,7 +369,7 @@ export function CitationNetworkGraph({
         <MiniMap
           position={isRTL ? 'bottom-right' : 'bottom-left'}
           nodeColor={(node) => {
-            const data = node.data as CitationNodeData
+            const data = node.data as unknown as CitationNodeData
             if (data.isStart) return 'hsl(var(--primary))'
             return 'hsl(var(--muted))'
           }}

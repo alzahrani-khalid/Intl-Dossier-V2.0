@@ -7,7 +7,7 @@
  * @module TenantSwitcher
  */
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, ChevronsUpDown, Building2 } from 'lucide-react'
 import { cn } from '@/lib/utils'

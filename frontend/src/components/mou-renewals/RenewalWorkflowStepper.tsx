@@ -122,7 +122,7 @@ export function RenewalWorkflowStepper({
             const stepState = getStepState(step.status, currentStatus)
             const Icon = step.icon
             const isClickable = onStepClick && allowedTransitions.includes(step.status)
-            const colors = RENEWAL_STATUS_COLORS[step.status]
+            const _colors = RENEWAL_STATUS_COLORS[step.status]
 
             return (
               <button

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bell, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -147,7 +146,7 @@ function groupByDate(
     if (!groups[label]) {
       groups[label] = []
     }
-    groups[label].push(notification)
+    groups[label]!.push(notification)
   }
 
   return groups

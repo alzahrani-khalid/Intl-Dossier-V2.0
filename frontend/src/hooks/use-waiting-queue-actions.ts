@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
-import type { Assignment } from '@/components/waiting-queue/AssignmentDetailsModal';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+import type { Assignment } from '@/components/waiting-queue/AssignmentDetailsModal'
 
 /**
  * Waiting Queue Actions Hooks
@@ -29,13 +29,14 @@ export function useAssignmentDetails(assignmentId: string | null) {
     queryKey: ['assignment', assignmentId],
     queryFn: async (): Promise<Assignment> => {
       if (!assignmentId) {
-        throw new Error('Assignment ID is required');
+        throw new Error('Assignment ID is required')
       }
 
       // Fetch assignment first
       const { data, error } = await supabase
         .from('assignments')
-        .select(`
+        .select(
+          `
           id,
           work_item_id,
           work_item_type,
@@ -47,30 +48,34 @@ export function useAssignmentDetails(assignmentId: string | null) {
           last_reminder_sent_at,
           created_at,
           updated_at
-        `)
+        `,
+        )
         .eq('id', assignmentId)
-        .single();
+        .single()
 
       if (error) {
-        console.error('Error fetching assignment details:', error);
-        throw new Error(`Failed to fetch assignment: ${error.message}`);
+        console.error('Error fetching assignment details:', error)
+        throw new Error(`Failed to fetch assignment: ${error.message}`)
       }
 
       if (!data) {
-        throw new Error('Assignment not found');
+        throw new Error('Assignment not found')
       }
 
       // Fetch user email from auth metadata
       // Note: In Supabase, we can get user email from auth.users using admin methods
       // For now, we'll use the session user if it's the same as assignee
-      const { data: { user } } = await supabase.auth.getUser();
-      const assigneeEmail = user?.id === data.assignee_id ? user.email : undefined;
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      const assigneeEmail = user?.id === data.assignee_id ? user?.email : undefined
 
       // Try to get user's full name from user_metadata if available
-      const assigneeName = user?.id === data.assignee_id ? user.user_metadata?.full_name : undefined;
+      const assigneeName =
+        user?.id === data.assignee_id ? user?.user_metadata?.full_name : undefined
 
       // Fetch work item details based on type
-      let workItem = null;
+      let workItem = null
 
       if (data.work_item_type === 'task') {
         // Fetch task details
@@ -78,27 +83,29 @@ export function useAssignmentDetails(assignmentId: string | null) {
           .from('tasks')
           .select('id, title, description, source, status')
           .eq('id', data.work_item_id)
-          .single();
+          .single()
 
         if (task) {
           // Extract linked entity IDs from task source
-          const linkedEntities: any[] = [];
+          const linkedEntities: any[] = []
 
           // Fetch linked dossiers
           if (task.source?.dossier_ids && Array.isArray(task.source.dossier_ids)) {
             const { data: dossiers } = await supabase
               .from('dossiers')
               .select('id, name_en, name_ar, status')
-              .in('id', task.source.dossier_ids);
+              .in('id', task.source.dossier_ids)
 
             if (dossiers) {
-              linkedEntities.push(...dossiers.map((d: any) => ({
-                type: 'dossier',
-                id: d.id,
-                name_en: d.name_en,
-                name_ar: d.name_ar,
-                status: d.status,
-              })));
+              linkedEntities.push(
+                ...dossiers.map((d: any) => ({
+                  type: 'dossier',
+                  id: d.id,
+                  name_en: d.name_en,
+                  name_ar: d.name_ar,
+                  status: d.status,
+                })),
+              )
             }
           }
 
@@ -107,16 +114,18 @@ export function useAssignmentDetails(assignmentId: string | null) {
             const { data: positions } = await supabase
               .from('positions')
               .select('id, title_en, title_ar, status')
-              .in('id', task.source.position_ids);
+              .in('id', task.source.position_ids)
 
             if (positions) {
-              linkedEntities.push(...positions.map((p: any) => ({
-                type: 'position',
-                id: p.id,
-                title_en: p.title_en,
-                title_ar: p.title_ar,
-                status: p.status,
-              })));
+              linkedEntities.push(
+                ...positions.map((p: any) => ({
+                  type: 'position',
+                  id: p.id,
+                  title_en: p.title_en,
+                  title_ar: p.title_ar,
+                  status: p.status,
+                })),
+              )
             }
           }
 
@@ -125,17 +134,19 @@ export function useAssignmentDetails(assignmentId: string | null) {
             const { data: tickets } = await supabase
               .from('intake_tickets')
               .select('id, ticket_number, title, title_ar, status')
-              .in('id', task.source.ticket_ids);
+              .in('id', task.source.ticket_ids)
 
             if (tickets) {
-              linkedEntities.push(...tickets.map((t: any) => ({
-                type: 'ticket',
-                id: t.id,
-                ticket_number: t.ticket_number,
-                title_en: t.title,
-                title_ar: t.title_ar,
-                status: t.status,
-              })));
+              linkedEntities.push(
+                ...tickets.map((t: any) => ({
+                  type: 'ticket',
+                  id: t.id,
+                  ticket_number: t.ticket_number,
+                  title_en: t.title,
+                  title_ar: t.title_ar,
+                  status: t.status,
+                })),
+              )
             }
           }
 
@@ -146,14 +157,14 @@ export function useAssignmentDetails(assignmentId: string | null) {
             status: task.status,
             source_type: task.source?.type,
             linked_entities: linkedEntities,
-          };
+          }
         }
       } else if (data.work_item_type === 'dossier') {
         const { data: dossier } = await supabase
           .from('dossiers')
           .select('id, name_en, name_ar, type, status')
           .eq('id', data.work_item_id)
-          .single();
+          .single()
 
         if (dossier) {
           workItem = {
@@ -161,14 +172,14 @@ export function useAssignmentDetails(assignmentId: string | null) {
             title_ar: dossier.name_ar,
             type: dossier.type,
             status: dossier.status,
-          };
+          }
         }
       } else if (data.work_item_type === 'ticket') {
         const { data: ticket } = await supabase
           .from('intake_tickets')
           .select('id, ticket_number, title, title_ar, status')
           .eq('id', data.work_item_id)
-          .single();
+          .single()
 
         if (ticket) {
           workItem = {
@@ -176,28 +187,28 @@ export function useAssignmentDetails(assignmentId: string | null) {
             title_ar: ticket.title_ar || ticket.ticket_number,
             ticket_number: ticket.ticket_number,
             status: ticket.status,
-          };
+          }
         }
       } else if (data.work_item_type === 'position') {
         const { data: position } = await supabase
           .from('positions')
           .select('id, title_en, title_ar, status')
           .eq('id', data.work_item_id)
-          .single();
+          .single()
 
         if (position) {
           workItem = {
             title_en: position.title_en,
             title_ar: position.title_ar,
             status: position.status,
-          };
+          }
         }
       }
 
       // Calculate days waiting
       const daysWaiting = Math.floor(
-        (Date.now() - new Date(data.assigned_at).getTime()) / (1000 * 60 * 60 * 24)
-      );
+        (Date.now() - new Date(data.assigned_at).getTime()) / (1000 * 60 * 60 * 24),
+      )
 
       // Transform data to match Assignment interface
       return {
@@ -216,12 +227,12 @@ export function useAssignmentDetails(assignmentId: string | null) {
         updated_at: data.updated_at,
         days_waiting: daysWaiting,
         work_item: workItem,
-      };
+      }
     },
     enabled: !!assignmentId, // Only run query if assignmentId is provided
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes (previously cacheTime)
-  });
+  })
 }
 
 // ============================================================================
@@ -232,17 +243,17 @@ export function useAssignmentDetails(assignmentId: string | null) {
  * Type definitions for reminder actions
  */
 export interface ReminderAPIError {
-  error: string;
-  message: string;
+  error: string
+  message: string
   details?: {
-    hours_remaining?: number;
-  };
-  retry_after?: number;
+    hours_remaining?: number
+  }
+  retry_after?: number
 }
 
 export interface SendReminderResponse {
-  success: boolean;
-  message: string;
+  success: boolean
+  message: string
 }
 
 /**
@@ -251,78 +262,84 @@ export interface SendReminderResponse {
  * @returns Mutation result
  */
 export function useReminderAction() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ assignmentId }: { assignmentId: string }): Promise<SendReminderResponse> => {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    mutationFn: async ({
+      assignmentId,
+    }: {
+      assignmentId: string
+    }): Promise<SendReminderResponse> => {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 
       // Get current session token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       if (!session?.access_token) {
-        throw new Error('Unauthorized: No active session');
+        throw new Error('Unauthorized: No active session')
       }
 
       const response = await fetch(`${supabaseUrl}/functions/v1/waiting-queue-reminder/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           assignment_id: assignmentId,
         }),
-      });
+      })
 
       if (!response.ok) {
-        const error: ReminderAPIError = await response.json();
-        throw error;
+        const error: ReminderAPIError = await response.json()
+        throw error
       }
 
-      return response.json();
+      return response.json()
     },
     // T090: Optimistic update - Update cache immediately before server response
     onMutate: async ({ assignmentId }) => {
       // Cancel any outgoing refetches to avoid overwriting optimistic update
-      await queryClient.cancelQueries({ queryKey: ['assignment', assignmentId] });
+      await queryClient.cancelQueries({ queryKey: ['assignment', assignmentId] })
 
       // Snapshot the previous value
-      const previousAssignment = queryClient.getQueryData(['assignment', assignmentId]);
+      const previousAssignment = queryClient.getQueryData(['assignment', assignmentId])
 
       // Optimistically update the cache
       queryClient.setQueryData(['assignment', assignmentId], (old: any) => {
-        if (!old) return old;
+        if (!old) return old
         return {
           ...old,
           last_reminder_sent_at: new Date().toISOString(),
-        };
-      });
+        }
+      })
 
       // Return context with snapshot for rollback
-      return { previousAssignment };
+      return { previousAssignment }
     },
     onSuccess: (_data, variables) => {
       // Invalidate assignment details to get actual server data
       queryClient.invalidateQueries({
         queryKey: ['assignment', variables.assignmentId],
-      });
+      })
 
       // Invalidate assignments list
       queryClient.invalidateQueries({
         queryKey: ['assignments'],
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: ['waiting-queue'],
-      });
+      })
     },
     onError: (error: ReminderAPIError, variables, context: any) => {
       // Rollback optimistic update on error
       if (context?.previousAssignment) {
-        queryClient.setQueryData(['assignment', variables.assignmentId], context.previousAssignment);
+        queryClient.setQueryData(['assignment', variables.assignmentId], context.previousAssignment)
       }
-      console.error('Failed to send reminder:', error.message, error.details);
+      console.error('Failed to send reminder:', error.message, error.details)
     },
-  });
+  })
 }
 
 // ============================================================================
@@ -333,25 +350,25 @@ export function useReminderAction() {
  * Type definitions for bulk reminder actions
  */
 export interface BulkReminderJob {
-  job_id: string;
-  status: 'queued' | 'processing' | 'completed' | 'failed';
-  total_items: number;
-  processed_items: number;
-  successful_items: number;
-  failed_items: number;
+  job_id: string
+  status: 'queued' | 'processing' | 'completed' | 'failed'
+  total_items: number
+  processed_items: number
+  successful_items: number
+  failed_items: number
   results?: Array<{
-    assignment_id: string;
-    success: boolean;
-    error?: string;
-    skipped?: boolean;
-    reason?: string;
-  }>;
+    assignment_id: string
+    success: boolean
+    error?: string
+    skipped?: boolean
+    reason?: string
+  }>
 }
 
 export interface SendBulkRemindersResponse {
-  job_id: string;
-  total_items: number;
-  message: string;
+  job_id: string
+  total_items: number
+  message: string
 }
 
 /**
@@ -359,58 +376,64 @@ export interface SendBulkRemindersResponse {
  * @returns Mutation and query for bulk reminders with job status polling
  */
 export function useBulkReminderAction() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const sendBulkMutation = useMutation({
-    mutationFn: async ({ assignmentIds }: { assignmentIds: string[] }): Promise<SendBulkRemindersResponse> => {
+    mutationFn: async ({
+      assignmentIds,
+    }: {
+      assignmentIds: string[]
+    }): Promise<SendBulkRemindersResponse> => {
       if (assignmentIds.length === 0) {
-        throw new Error('No assignments selected');
+        throw new Error('No assignments selected')
       }
 
       if (assignmentIds.length > 100) {
-        throw new Error('Maximum 100 assignments can be selected for bulk action');
+        throw new Error('Maximum 100 assignments can be selected for bulk action')
       }
 
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 
       // Get current session token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       if (!session?.access_token) {
-        throw new Error('Unauthorized: No active session');
+        throw new Error('Unauthorized: No active session')
       }
 
       const response = await fetch(`${supabaseUrl}/functions/v1/waiting-queue-reminder/send-bulk`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           assignment_ids: assignmentIds,
         }),
-      });
+      })
 
       if (!response.ok) {
-        const error: ReminderAPIError = await response.json();
-        throw error;
+        const error: ReminderAPIError = await response.json()
+        throw error
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
       // Invalidate assignments list after bulk operation
       queryClient.invalidateQueries({
         queryKey: ['assignments'],
-      });
+      })
     },
     onError: (error: ReminderAPIError) => {
-      console.error('Failed to send bulk reminders:', error.message, error.details);
+      console.error('Failed to send bulk reminders:', error.message, error.details)
     },
-  });
+  })
 
   return {
     sendBulk: sendBulkMutation,
-  };
+  }
 }
 
 /**
@@ -424,43 +447,48 @@ export function useBulkReminderJobStatus(jobId: string | null, enabled = true) {
     queryKey: ['bulk-reminder-job', jobId],
     queryFn: async (): Promise<BulkReminderJob> => {
       if (!jobId) {
-        throw new Error('Job ID is required');
+        throw new Error('Job ID is required')
       }
 
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 
       // Get current session token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       if (!session?.access_token) {
-        throw new Error('Unauthorized: No active session');
+        throw new Error('Unauthorized: No active session')
       }
 
-      const response = await fetch(`${supabaseUrl}/functions/v1/waiting-queue-reminder/status/${jobId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/waiting-queue-reminder/status/${jobId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
         },
-      });
+      )
 
       if (!response.ok) {
-        const error: ReminderAPIError = await response.json();
-        throw error;
+        const error: ReminderAPIError = await response.json()
+        throw error
       }
 
-      return response.json();
+      return response.json()
     },
     enabled: !!jobId && enabled,
     refetchInterval: (query) => {
-      const data = query.state.data;
+      const data = query.state.data
       // Stop polling when job is completed or failed
       if (!data || data.status === 'completed' || data.status === 'failed') {
-        return false;
+        return false
       }
       // Poll every 2 seconds while processing
-      return 2000;
+      return 2000
     },
     staleTime: 0, // Always fetch fresh data
-  });
+  })
 }
 
 // ============================================================================
@@ -471,20 +499,20 @@ export function useBulkReminderJobStatus(jobId: string | null, enabled = true) {
  * Type definitions for escalation actions
  */
 export interface EscalateAssignmentRequest {
-  assignmentId: string;
-  reason?: string;
+  assignmentId: string
+  reason?: string
 }
 
 export interface EscalateAssignmentResponse {
-  escalation_id: string;
-  escalated_to_id: string;
-  escalated_to_name: string;
-  message: string;
+  escalation_id: string
+  escalated_to_id: string
+  escalated_to_name: string
+  message: string
 }
 
 export interface EscalationAPIError {
-  error: string;
-  message?: string;
+  error: string
+  message?: string
 }
 
 /**
@@ -492,62 +520,70 @@ export interface EscalationAPIError {
  * @returns Mutation result
  */
 export function useEscalationAction() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ assignmentId, reason }: EscalateAssignmentRequest): Promise<EscalateAssignmentResponse> => {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    mutationFn: async ({
+      assignmentId,
+      reason,
+    }: EscalateAssignmentRequest): Promise<EscalateAssignmentResponse> => {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 
       // Get current session token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       if (!session?.access_token) {
-        throw new Error('Unauthorized: No active session');
+        throw new Error('Unauthorized: No active session')
       }
 
-      const response = await fetch(`${supabaseUrl}/functions/v1/waiting-queue-escalation/escalate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/waiting-queue-escalation/escalate`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            assignment_id: assignmentId,
+            reason,
+          }),
         },
-        body: JSON.stringify({
-          assignment_id: assignmentId,
-          reason,
-        }),
-      });
+      )
 
       if (!response.ok) {
-        const error: EscalationAPIError = await response.json();
+        const error: EscalationAPIError = await response.json()
 
         // Handle special error cases
         if (error.error === 'NO_ESCALATION_PATH') {
-          throw new Error('No escalation path configured for this assignment');
+          throw new Error('No escalation path configured for this assignment')
         }
 
         if (error.error === 'CANNOT_ESCALATE_COMPLETED') {
-          throw new Error('Cannot escalate a completed assignment');
+          throw new Error('Cannot escalate a completed assignment')
         }
 
-        throw new Error(error.message || error.error || 'Failed to escalate assignment');
+        throw new Error(error.message || error.error || 'Failed to escalate assignment')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: (_data, variables) => {
       // Invalidate assignment details to refresh escalation status
       queryClient.invalidateQueries({
         queryKey: ['assignment', variables.assignmentId],
-      });
+      })
 
       // Invalidate assignments list
       queryClient.invalidateQueries({
         queryKey: ['assignments'],
-      });
+      })
     },
     onError: (error: Error) => {
-      console.error('Failed to escalate assignment:', error.message);
+      console.error('Failed to escalate assignment:', error.message)
     },
-  });
+  })
 }
 
 /**
@@ -555,41 +591,46 @@ export function useEscalationAction() {
  * @returns Mutation result
  */
 export function useAcknowledgeEscalation() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async ({ escalationId, notes }: { escalationId: string; notes?: string }) => {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 
       // Get current session token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       if (!session?.access_token) {
-        throw new Error('Unauthorized: No active session');
+        throw new Error('Unauthorized: No active session')
       }
 
-      const response = await fetch(`${supabaseUrl}/functions/v1/waiting-queue-escalation/${escalationId}/acknowledge`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/waiting-queue-escalation/${escalationId}/acknowledge`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ notes }),
         },
-        body: JSON.stringify({ notes }),
-      });
+      )
 
       if (!response.ok) {
-        const error: EscalationAPIError = await response.json();
-        throw new Error(error.message || error.error || 'Failed to acknowledge escalation');
+        const error: EscalationAPIError = await response.json()
+        throw new Error(error.message || error.error || 'Failed to acknowledge escalation')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
       // Invalidate escalations list
       queryClient.invalidateQueries({
         queryKey: ['escalations'],
-      });
+      })
     },
-  });
+  })
 }
 
 /**
@@ -597,41 +638,52 @@ export function useAcknowledgeEscalation() {
  * @returns Mutation result
  */
 export function useResolveEscalation() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ escalationId, resolution }: { escalationId: string; resolution: string }) => {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    mutationFn: async ({
+      escalationId,
+      resolution,
+    }: {
+      escalationId: string
+      resolution: string
+    }) => {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 
       // Get current session token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       if (!session?.access_token) {
-        throw new Error('Unauthorized: No active session');
+        throw new Error('Unauthorized: No active session')
       }
 
-      const response = await fetch(`${supabaseUrl}/functions/v1/waiting-queue-escalation/${escalationId}/resolve`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/waiting-queue-escalation/${escalationId}/resolve`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ resolution }),
         },
-        body: JSON.stringify({ resolution }),
-      });
+      )
 
       if (!response.ok) {
-        const error: EscalationAPIError = await response.json();
-        throw new Error(error.message || error.error || 'Failed to resolve escalation');
+        const error: EscalationAPIError = await response.json()
+        throw new Error(error.message || error.error || 'Failed to resolve escalation')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
       // Invalidate escalations list
       queryClient.invalidateQueries({
         queryKey: ['escalations'],
-      });
+      })
     },
-  });
+  })
 }
 
 // ============================================================================

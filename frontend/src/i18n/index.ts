@@ -228,7 +228,17 @@ import enDossierExport from './en/dossier-export.json'
 import arDossierExport from './ar/dossier-export.json'
 import enSettings from './en/settings.json'
 import arSettings from './ar/settings.json'
-// Force reload - updated 2026-01-25 - v107 - Added settings namespace for Settings page redesign
+import enForumManagement from './en/forum-management.json'
+import arForumManagement from './ar/forum-management.json'
+import enMouLifecycle from './en/mou-lifecycle.json'
+import arMouLifecycle from './ar/mou-lifecycle.json'
+import enCommittees from './en/committees.json'
+import arCommittees from './ar/committees.json'
+import enTerminology from './en/terminology.json'
+import arTerminology from './ar/terminology.json'
+import enContactsExtended from './en/contacts-extended.json'
+import arContactsExtended from './ar/contacts-extended.json'
+// Force reload - updated 2026-02-06 - v108 - Added forum-management, mou-lifecycle, committees, terminology, contacts-extended namespaces
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -348,6 +358,11 @@ const resources = {
     collaboration: enCollaboration,
     'dossier-export': enDossierExport,
     settings: enSettings,
+    'forum-management': enForumManagement,
+    'mou-lifecycle': enMouLifecycle,
+    committees: enCommittees,
+    terminology: enTerminology,
+    'contacts-extended': enContactsExtended,
   },
   ar: {
     translation: arCommon,
@@ -463,6 +478,11 @@ const resources = {
     collaboration: arCollaboration,
     'dossier-export': arDossierExport,
     settings: arSettings,
+    'forum-management': arForumManagement,
+    'mou-lifecycle': arMouLifecycle,
+    committees: arCommittees,
+    terminology: arTerminology,
+    'contacts-extended': arContactsExtended,
   },
 }
 
@@ -490,7 +510,7 @@ i18n
 
     // Add missing keys handling
     saveMissing: false,
-    missingKeyHandler: (lng, ns, key) => {
+    missingKeyHandler: (lng, _ns, key) => {
       if (process.env.NODE_ENV === 'development') {
         console.warn(`Missing translation key: ${key} for language: ${lng}`)
       }

@@ -20,7 +20,12 @@ import { RELATIONSHIP_EVENTS } from '../core/contracts'
 import { moduleOk, moduleErr, createModuleError } from '../core/types'
 import { getEventBus, createModuleEvent } from '../core/event-bus'
 import { relationshipRepository } from './repository'
-import type { Relationship, RelationshipHealth, RelationshipCreateParams } from './types'
+import type {
+  Relationship,
+  RelationshipHealth,
+  RelationshipCreateParams,
+  RelationshipType,
+} from './types'
 
 // ============================================================================
 // DTO Mappers
@@ -46,7 +51,7 @@ function toRelationshipDTO(rel: Relationship): RelationshipDTO {
       displayName: rel.target_display_name_en || rel.target_entity_id,
     },
     strength: rel.strength,
-    status: rel.status,
+    status: rel.status as RelationshipDTO['status'],
     notes: rel.notes,
     createdAt: rel.created_at,
     updatedAt: rel.updated_at,
@@ -98,7 +103,7 @@ export const relationshipService = {
    */
   async getRelationship(
     id: string,
-    context: ModuleRequestContext,
+    _context: ModuleRequestContext,
   ): Promise<ModuleResult<RelationshipDTO, ModuleError>> {
     if (!id) {
       return moduleErr(
@@ -129,7 +134,7 @@ export const relationshipService = {
    */
   async getRelationshipsForEntity(
     entityRef: { moduleId: ModuleId; entityType: string; entityId: string },
-    context: ModuleRequestContext,
+    _context: ModuleRequestContext,
   ): Promise<ModuleResult<RelationshipDTO[], ModuleError>> {
     try {
       const relationships = await relationshipRepository.getForEntity(
@@ -318,7 +323,7 @@ export const relationshipService = {
    */
   async getHealthScore(
     id: string,
-    context: ModuleRequestContext,
+    _context: ModuleRequestContext,
   ): Promise<ModuleResult<RelationshipHealthDTO, ModuleError>> {
     if (!id) {
       return moduleErr(
@@ -356,7 +361,7 @@ export const relationshipService = {
    */
   async getNetworkGraph(
     params: ContractNetworkParams,
-    context: ModuleRequestContext,
+    _context: ModuleRequestContext,
   ): Promise<ModuleResult<NetworkGraphDTO, ModuleError>> {
     if (!params.centerEntityId) {
       return moduleErr(
@@ -374,8 +379,8 @@ export const relationshipService = {
       let actualEntityId = params.centerEntityId
 
       if (parts.length >= 3) {
-        centerModuleId = parts[0]
-        centerEntityType = parts[1]
+        centerModuleId = parts[0]!
+        centerEntityType = parts[1]!
         actualEntityId = parts.slice(2).join(':')
       }
 
@@ -384,8 +389,8 @@ export const relationshipService = {
         centerModuleId,
         centerEntityType,
         depth: params.depth,
-        includeTypes: params.includeTypes as ContractNetworkParams['includeTypes'],
-        excludeTypes: params.excludeTypes as ContractNetworkParams['excludeTypes'],
+        includeTypes: (params.includeTypes || undefined) as RelationshipType[] | undefined,
+        excludeTypes: (params.excludeTypes || undefined) as RelationshipType[] | undefined,
         maxNodes: params.maxNodes,
       })
 

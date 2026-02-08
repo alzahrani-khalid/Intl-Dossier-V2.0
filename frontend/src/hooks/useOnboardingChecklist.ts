@@ -360,7 +360,7 @@ export function useOnboardingChecklist(
   // Mutations
   const completeItemMutation = useMutation({
     mutationFn: (itemId: string) => updateItemProgress(itemId, 'complete'),
-    onSuccess: (_, itemId) => {
+    onSuccess: (_, _itemId) => {
       queryClient.invalidateQueries({ queryKey: ONBOARDING_QUERY_KEY })
       // Calculate new percentage and check milestones
       const newCompletedCount = completedCount + 1

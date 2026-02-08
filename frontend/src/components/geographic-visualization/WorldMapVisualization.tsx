@@ -15,7 +15,6 @@ import WorldMap from '@/components/ui/world-map'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useGeographicVisualization } from '@/hooks/useGeographicVisualization'
 import type {
   CountryEngagementMetrics,

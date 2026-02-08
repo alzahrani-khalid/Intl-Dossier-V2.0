@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bell, Mail, Smartphone, Volume2, Monitor, Trash2, Loader2, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,6 @@ import {
   type NotificationCategory,
 } from '@/hooks/useNotificationCenter'
 import { useEmailPreferences } from '@/hooks/useEmailNotifications'
-import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 
 const CATEGORIES: NotificationCategory[] = [
@@ -50,10 +49,10 @@ export function NotificationPreferences() {
   } = useCategoryPreferences()
 
   const {
-    preferences: emailPrefs,
+    preferences: _emailPrefs,
     isLoading: isEmailLoading,
-    updatePreferences: updateEmailPrefs,
-    isUpdating: isEmailUpdating,
+    updatePreferences: _updateEmailPrefs,
+    isUpdating: _isEmailUpdating,
   } = useEmailPreferences()
 
   const { devices, isLoading: isDevicesLoading, removeDevice, isRemoving } = usePushDevices()

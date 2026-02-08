@@ -68,8 +68,8 @@ import {
   useMergeTags,
   useRenameTag,
 } from '@/hooks/useTagHierarchy'
-import type { TagCategory, TagCategoryCreate, TagCategoryUpdate } from '@/types/tag-hierarchy.types'
-import { TAG_COLOR_PALETTE, TAG_ICON_OPTIONS, getTagName } from '@/types/tag-hierarchy.types'
+import type { TagCategory } from '@/types/tag-hierarchy.types'
+import { TAG_COLOR_PALETTE, getTagName } from '@/types/tag-hierarchy.types'
 
 interface TagHierarchyManagerProps {
   className?: string

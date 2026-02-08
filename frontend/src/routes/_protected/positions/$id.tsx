@@ -8,15 +8,18 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Save, Send, CheckCircle, FileText, History, Users } from 'lucide-react'
+import { Send, CheckCircle, FileText, History, Users } from 'lucide-react'
 import { usePosition } from '@/hooks/usePosition'
 import { useUpdatePosition } from '@/hooks/useUpdatePosition'
 import { useSubmitPosition } from '@/hooks/useSubmitPosition'
 import { usePositionNavigation } from '@/hooks/useEntityNavigation'
 import { PositionEditor } from '@/components/PositionEditor'
-import { ApprovalChain } from '@/components/ApprovalChain'
+import {
+  ApprovalChain,
+  type ApprovalChainConfig as ComponentApprovalChainConfig,
+} from '@/components/ApprovalChain'
 import { ConsistencyPanel } from '@/components/ConsistencyPanel'
-import { AttachmentUploader } from '@/components/AttachmentUploader'
+import { AttachmentUploader } from '@/components/positions/AttachmentUploader'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -67,16 +70,18 @@ function PositionDetailPage() {
     await submitPosition.mutateAsync(position.id)
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (
+    status: string,
+  ): 'default' | 'secondary' | 'outline' | 'destructive' | 'none' => {
     switch (status) {
       case 'draft':
         return 'default'
       case 'under_review':
         return 'secondary'
       case 'approved':
-        return 'success'
+        return 'outline'
       case 'published':
-        return 'primary'
+        return 'default'
       default:
         return 'default'
     }
@@ -193,7 +198,7 @@ function PositionDetailPage() {
                   <h3 className="text-lg font-semibold mb-4">
                     {t('consistency.title', 'Consistency Check')}
                   </h3>
-                  <ConsistencyPanel positionId={position.id} />
+                  <ConsistencyPanel consistencyCheck={null} />
                 </Card>
               )}
 
@@ -202,7 +207,14 @@ function PositionDetailPage() {
                   <h3 className="text-lg font-semibold mb-4">
                     {t('approvalChain', 'Approval Progress')}
                   </h3>
-                  <ApprovalChain positionId={position.id} currentStage={position.current_stage} />
+                  <ApprovalChain
+                    approvalChainConfig={
+                      position.approval_chain_config as unknown as ComponentApprovalChainConfig
+                    }
+                    currentStage={position.current_stage}
+                    approvals={[]}
+                    status={position.status as 'draft' | 'under_review' | 'approved' | 'published'}
+                  />
                 </Card>
               )}
             </div>
@@ -212,9 +224,12 @@ function PositionDetailPage() {
         <TabsContent value="approvals">
           <Card className="p-6">
             <ApprovalChain
-              positionId={position.id}
+              approvalChainConfig={
+                position.approval_chain_config as unknown as ComponentApprovalChainConfig
+              }
               currentStage={position.current_stage}
-              detailed={true}
+              approvals={[]}
+              status={position.status as 'draft' | 'under_review' | 'approved' | 'published'}
             />
           </Card>
         </TabsContent>

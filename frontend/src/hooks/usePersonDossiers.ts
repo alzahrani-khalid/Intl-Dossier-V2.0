@@ -42,7 +42,7 @@ export interface PersonMetadata {
 /**
  * Person dossier type helper
  */
-export interface PersonDossier extends DossierWithExtension {
+export interface PersonDossier extends Omit<DossierWithExtension, 'type' | 'metadata'> {
   type: 'person'
   metadata: PersonMetadata
 }

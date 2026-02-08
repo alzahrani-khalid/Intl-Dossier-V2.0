@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { SmartInput, SearchableSelect, type SelectOption } from '@/components/Forms'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 
 // Sample options for searchable select demo
 const countryOptions: SelectOption[] = [
@@ -201,7 +200,7 @@ export function SmartInputDemo() {
             {/* Single Select */}
             <SearchableSelect
               options={countryOptions}
-              value={selectedCountry}
+              value={selectedCountry ?? undefined}
               onChange={(val) => setSelectedCountry(val as string | null)}
               label={isRTL ? 'اختر دولة' : 'Select Country'}
               placeholder={isRTL ? 'اختر دولة...' : 'Select a country...'}

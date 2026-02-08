@@ -10,26 +10,26 @@
  * - Empty and loading states
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Loader2, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
-import { TimelineEventCard } from './TimelineEventCard';
-import type { UnifiedTimelineEvent } from '@/types/timeline.types';
+import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
+import { Loader2, Calendar } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
+import { TimelineEventCard } from './TimelineEventCard'
+import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 
 interface UnifiedVerticalTimelineProps {
-  events: UnifiedTimelineEvent[];
-  isLoading?: boolean;
-  isFetchingNextPage?: boolean;
-  hasNextPage?: boolean;
-  onLoadMore?: () => void;
-  error?: Error | null;
-  emptyMessage?: string;
-  className?: string;
+  events: UnifiedTimelineEvent[]
+  isLoading?: boolean
+  isFetchingNextPage?: boolean
+  hasNextPage?: boolean
+  onLoadMore?: () => void
+  error?: Error | null
+  emptyMessage?: string
+  className?: string
 }
 
 /**
@@ -54,14 +54,14 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 /**
  * Empty state component
  */
 function TimelineEmptyState({ message }: { message: string }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
   return (
     <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
       <div className="rounded-full bg-muted p-6 sm:p-8 mb-4 sm:mb-6">
@@ -72,14 +72,14 @@ function TimelineEmptyState({ message }: { message: string }) {
         {message || t('timeline.empty.description')}
       </p>
     </div>
-  );
+  )
 }
 
 /**
  * Error state component
  */
 function TimelineErrorState({ error }: { error: Error }) {
-  const { t } = useTranslation('dossier');
+  const { t } = useTranslation('dossier')
   return (
     <Alert variant="destructive" className="mb-6">
       <AlertTitle>{t('timeline.error.title')}</AlertTitle>
@@ -87,7 +87,7 @@ function TimelineErrorState({ error }: { error: Error }) {
         {error.message || t('timeline.error.description')}
       </AlertDescription>
     </Alert>
-  );
+  )
 }
 
 export function UnifiedVerticalTimeline({
@@ -100,10 +100,10 @@ export function UnifiedVerticalTimeline({
   emptyMessage,
   className,
 }: UnifiedVerticalTimelineProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const containerRef = useRef<HTMLDivElement>(null);
-  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const containerRef = useRef<HTMLDivElement>(null)
+  const loadMoreRef = useRef<HTMLDivElement>(null)
   // Disabled scroll-based animations to prevent SSR hydration issues
   // TODO: Re-enable with proper client-side only rendering
   // const { scrollYProgress } = useScroll({
@@ -115,21 +115,21 @@ export function UnifiedVerticalTimeline({
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
-    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return undefined
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && onLoadMore) {
-          onLoadMore();
+        if (entries[0]!.isIntersecting && onLoadMore) {
+          onLoadMore()
         }
       },
-      { threshold: 0.1 }
-    );
+      { threshold: 0.1 },
+    )
 
-    observer.observe(loadMoreRef.current);
+    observer.observe(loadMoreRef.current)
 
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, onLoadMore]);
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, onLoadMore])
 
   // Initial loading state
   if (isLoading) {
@@ -137,7 +137,7 @@ export function UnifiedVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineLoadingSkeleton count={5} />
       </div>
-    );
+    )
   }
 
   // Error state
@@ -146,7 +146,7 @@ export function UnifiedVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineErrorState error={error} />
       </div>
-    );
+    )
   }
 
   // Empty state
@@ -155,7 +155,7 @@ export function UnifiedVerticalTimeline({
       <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <TimelineEmptyState message={emptyMessage || ''} />
       </div>
-    );
+    )
   }
 
   return (
@@ -188,11 +188,7 @@ export function UnifiedVerticalTimeline({
               <span>{t('timeline.loading_more')}</span>
             </div>
           ) : (
-            <Button
-              variant="outline"
-              onClick={onLoadMore}
-              className="min-h-11 sm:min-h-10"
-            >
+            <Button variant="outline" onClick={onLoadMore} className="min-h-11 sm:min-h-10">
               {t('timeline.load_more')}
             </Button>
           )}
@@ -206,5 +202,5 @@ export function UnifiedVerticalTimeline({
         </div>
       )}
     </motion.div>
-  );
+  )
 }

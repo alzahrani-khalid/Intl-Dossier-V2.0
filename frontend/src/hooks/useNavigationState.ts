@@ -35,7 +35,7 @@ export function useNavigationState<T extends Record<string, unknown>>(
 ) {
   const { includeScrollPosition = true } = options
   const navigate = useNavigate()
-  const searchParams = useSearch()
+  const searchParams = useSearch({ strict: false })
   const scrollRestoredRef = useRef(false)
   const stateKey = `nav-state:${contextKey}`
 
@@ -132,10 +132,10 @@ export function useNavigationState<T extends Record<string, unknown>>(
   const updateSearchParams = useCallback(
     (updates: Partial<T>) => {
       void navigate({
-        search: (prev) => ({
-          ...(prev as Record<string, unknown>),
+        search: ((prev: Record<string, unknown>) => ({
+          ...prev,
           ...updates,
-        }),
+        })) as unknown as true,
         replace: true,
       })
     },
@@ -178,7 +178,7 @@ export function useNavigationState<T extends Record<string, unknown>>(
 
   // Auto-save scroll position periodically
   useEffect(() => {
-    if (!includeScrollPosition) return
+    if (!includeScrollPosition) return undefined
 
     const handleScroll = () => {
       saveScrollPosition()
@@ -222,7 +222,7 @@ export function useNavigationState<T extends Record<string, unknown>>(
  */
 export function useFilterState<T extends Record<string, unknown>>(defaultFilters: T) {
   const navigate = useNavigate()
-  const searchParams = useSearch()
+  const searchParams = useSearch({ strict: false })
 
   const filters = useMemo(
     () =>
@@ -238,10 +238,10 @@ export function useFilterState<T extends Record<string, unknown>>(defaultFilters
       const newFilters = typeof updates === 'function' ? updates(filters) : updates
 
       void navigate({
-        search: (prev) => ({
-          ...(prev as Record<string, unknown>),
+        search: ((prev: Record<string, unknown>) => ({
+          ...prev,
           ...newFilters,
-        }),
+        })) as unknown as true,
         replace: true,
       })
     },
@@ -250,7 +250,7 @@ export function useFilterState<T extends Record<string, unknown>>(defaultFilters
 
   const resetFilters = useCallback(() => {
     void navigate({
-      search: defaultFilters,
+      search: defaultFilters as unknown as true,
       replace: true,
     })
   }, [navigate, defaultFilters])

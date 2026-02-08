@@ -441,7 +441,7 @@ export function useDeleteSearchAlert() {
 
   return useMutation({
     mutationFn: deleteAlert,
-    onSuccess: (searchId) => {
+    onSuccess: (_data, searchId: string) => {
       queryClient.invalidateQueries({ queryKey: savedSearchKeys.detail(searchId) })
     },
   })
@@ -544,5 +544,11 @@ export function getSavedSearchColorClasses(color: string): {
     },
   }
 
-  return colorMap[color] || colorMap.gray
+  return (colorMap[color] ?? colorMap.gray) as {
+    bg: string
+    text: string
+    border: string
+    hover: string
+    ring: string
+  }
 }

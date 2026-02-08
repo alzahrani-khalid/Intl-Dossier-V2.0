@@ -22,8 +22,6 @@ import {
   PenTool,
   Shield,
   Wrench,
-  Briefcase,
-  FileCheck,
   Sparkles,
   Sliders,
   Gauge,
@@ -51,7 +49,7 @@ export interface NavigationSection {
 }
 
 export const createNavigationSections = (
-  counts: { assignments: number; intake: number; waiting: number },
+  counts: { intake: number; waiting: number },
   isAdmin: boolean,
 ): NavigationSection[] => {
   const sections: NavigationSection[] = [
@@ -80,41 +78,40 @@ export const createNavigationSections = (
         },
       ],
     },
-    // My Work Section
+    // MY WORK - personal productivity
     {
       id: 'my-work',
       label: 'navigation.myWork',
       items: [
         {
-          id: 'unified-work',
-          label: 'navigation.unifiedWork',
+          id: 'my-work-list',
+          label: 'navigation.listView',
           path: '/my-work',
-          icon: Briefcase,
-          badgeCount: counts.assignments + counts.intake + counts.waiting,
+          icon: LayoutDashboard,
         },
         {
-          id: 'my-assignments',
-          label: 'navigation.myAssignments',
-          path: '/tasks',
+          id: 'my-work-board',
+          label: 'navigation.boardView',
+          path: '/my-work/board',
           icon: CheckSquare,
-          badgeCount: counts.assignments,
         },
+      ],
+    },
+    // REQUESTS - queue management
+    {
+      id: 'requests',
+      label: 'navigation.requests',
+      items: [
         {
-          id: 'commitments',
-          label: 'navigation.commitments',
-          path: '/commitments',
-          icon: FileCheck,
-        },
-        {
-          id: 'intake-queue',
-          label: 'navigation.intakeQueue',
+          id: 'incoming-requests',
+          label: 'navigation.incomingRequests',
           path: '/my-work/intake',
           icon: Inbox,
           badgeCount: counts.intake,
         },
         {
-          id: 'waiting-queue',
-          label: 'navigation.waitingQueue',
+          id: 'awaiting-response',
+          label: 'navigation.awaitingResponse',
           path: '/my-work/waiting',
           icon: Clock,
           badgeCount: counts.waiting,

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useUpload, validateFile, formatFileSize, getFileIcon } from '../services/upload'
+import { useUpload, validateFile, formatFileSize } from '../services/upload'
 import { Button } from './ui/button'
 import { Progress } from './ui/progress'
 import { Badge } from './ui/badge'
@@ -58,7 +58,7 @@ export function FileUpload({
         }
 
         try {
-          const uploadId = await uploadFile(file, {
+          const _uploadId = await uploadFile(file, {
             bucket,
             path,
             onProgress: (_progress) => {

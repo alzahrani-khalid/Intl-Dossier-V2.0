@@ -9,14 +9,14 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Users, User } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Link } from '@tanstack/react-router'
+import { Users } from 'lucide-react'
 import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsight'
 import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
 import { useKeyOfficials } from '@/hooks/useKeyOfficials'
 import { PersonCard } from '@/components/Dossier/PersonCard'
 import { Skeleton } from '@/components/ui/skeleton'
+import type { IntelligenceReport } from '@/services/intelligence-api'
+import type { DossierWithExtension } from '@/services/dossier-api'
 
 interface KeyOfficialsProps {
   dossierId: string
@@ -58,8 +58,8 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
   const aiProfileSummary = useMemo(() => {
     if (!politicalIntelligence?.data?.[0]) return null
     return isRTL
-      ? politicalIntelligence.data[0].analysis_ar || politicalIntelligence.data[0].analysis_en
-      : politicalIntelligence.data[0].analysis_en || politicalIntelligence.data[0].analysis_ar
+      ? politicalIntelligence.data[0].content_ar || politicalIntelligence.data[0].content
+      : politicalIntelligence.data[0].content || politicalIntelligence.data[0].content_ar
   }, [politicalIntelligence?.data, isRTL])
 
   return (
@@ -73,7 +73,7 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
           <Skeleton className="h-48 w-full" />
         ) : politicalIntelligence && politicalIntelligence.data.length > 0 ? (
           <IntelligenceInsight
-            intelligence={politicalIntelligence.data[0]}
+            intelligence={politicalIntelligence.data[0] as IntelligenceReport}
             onRefresh={handlePoliticalRefresh}
             isRefreshing={isRefreshingPolitical}
             dossierType="countries"
@@ -179,12 +179,19 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
               {keyOfficials.map((person) => (
                 <PersonCard
                   key={person.id}
-                  dossier={{
-                    ...person,
-                    type: 'person' as const,
-                    status: (person.status || 'active') as any,
-                    dossier_type: 'person',
-                  }}
+                  dossier={
+                    {
+                      ...person,
+                      type: 'person' as const,
+                      status: person.status || 'active',
+                      extension: {
+                        title: person.title_en,
+                        biography_en: person.description_en,
+                        biography_ar: person.description_ar,
+                        photo_url: person.photo_url,
+                      },
+                    } as unknown as DossierWithExtension & { type: 'person' }
+                  }
                   onView={() => {
                     // Navigate to person detail
                     window.location.href = `/dossiers/persons/${person.id}`

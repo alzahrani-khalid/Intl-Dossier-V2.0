@@ -137,7 +137,7 @@ const AUDIENCE_PLACEHOLDERS: Record<string, { en: string; ar: string }> = {
 }
 
 export function useAIPolicyBriefOutline(): UseAIPolicyBriefOutlineReturn {
-  const [token, setToken] = useState<string | null>(null)
+  const [_token, setToken] = useState<string | null>(null)
   const [outline, setOutline] = useState<GeneratedOutline | null>(null)
   const [streamingContent, setStreamingContent] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
@@ -174,7 +174,7 @@ export function useAIPolicyBriefOutline(): UseAIPolicyBriefOutlineReturn {
       audience: string,
       isArabic: boolean,
     ): string => {
-      const audienceFocus = AUDIENCE_PLACEHOLDERS[audience] || AUDIENCE_PLACEHOLDERS.general
+      const audienceFocus = (AUDIENCE_PLACEHOLDERS[audience] || AUDIENCE_PLACEHOLDERS.general)!
 
       const placeholders: Record<string, { en: string; ar: string }> = {
         'executive-summary': {
@@ -318,7 +318,7 @@ export function useAIPolicyBriefOutline(): UseAIPolicyBriefOutlineReturn {
   // Fallback outline generation (client-side)
   const generateFallbackOutline = useCallback(
     (params: OutlineGenerationParams): GeneratedOutline => {
-      const isArabic = params.language === 'ar'
+      const _isArabic = params.language === 'ar'
 
       // Generate title based on topic
       const titleEn = `Policy Brief: ${params.topic.slice(0, 50)}${params.topic.length > 50 ? '...' : ''}`

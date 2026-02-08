@@ -1,45 +1,29 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 interface ConvertRequest {
+  id: string;
   target_type: 'engagement' | 'position' | 'mou_action' | 'foresight';
   additional_data?: Record<string, any>;
   mfa_token?: string;
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
+  const headers = { ...getCorsHeaders(req), 'Content-Type': 'application/json' };
+
   try {
-    // Extract ticket ID from URL
-    const url = new URL(req.url);
-    const pathParts = url.pathname.split('/');
-    const ticketId = pathParts[pathParts.length - 2]; // /intake/tickets/{id}/convert
-
-    if (!ticketId) {
-      return new Response(
-        JSON.stringify({ error: 'Ticket ID is required' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
     // Get auth token
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
+        status: 401,
+        headers,
+      });
     }
 
     // Create Supabase client
@@ -58,29 +42,37 @@ serve(async (req) => {
     } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
 
     if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Invalid authentication token' }), {
+        status: 401,
+        headers,
+      });
+    }
+
+    // Parse request body - accept both camelCase (frontend) and snake_case
+    const raw = await req.json();
+    const ticketId = raw.id;
+    const targetType = raw.target_type || raw.targetType;
+    const additionalData = raw.additional_data || raw.additionalData || {};
+    const mfaToken = raw.mfa_token || raw.mfaToken;
+
+    if (!ticketId) {
       return new Response(
-        JSON.stringify({ error: 'Invalid authentication token' }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
+        JSON.stringify({ error: 'Ticket ID is required', message: 'Ticket ID is required' }),
+        { status: 400, headers }
       );
     }
 
-    // Parse request body
-    const body: ConvertRequest = await req.json();
-
     // Validate target type
-    const validTypes = ['engagement', 'position', 'mou_action', 'foresight'];
-    if (!body.target_type || !validTypes.includes(body.target_type)) {
+    const validTypes = ['dossier', 'engagement', 'position', 'mou_action', 'foresight'];
+    if (!targetType || !validTypes.includes(targetType)) {
       return new Response(
         JSON.stringify({
           error: 'Invalid target_type',
-          details: 'Must be one of: engagement, position, mou_action, foresight',
+          message: `Must be one of: ${validTypes.join(', ')}. Received: ${targetType}`,
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers,
         }
       );
     }
@@ -93,18 +85,15 @@ serve(async (req) => {
       .single();
 
     if (ticketError || !ticket) {
-      return new Response(
-        JSON.stringify({ error: 'Ticket not found' }),
-        {
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Ticket not found' }), {
+        status: 404,
+        headers,
+      });
     }
 
     // Check MFA requirement for confidential+ tickets
     const requiresMFA = ['confidential', 'secret'].includes(ticket.sensitivity);
-    const mfaVerified = body.mfa_token ? true : false; // Simplified MFA check
+    const mfaVerified = mfaToken ? true : false; // Simplified MFA check
 
     if (requiresMFA && !mfaVerified) {
       return new Response(
@@ -114,23 +103,21 @@ serve(async (req) => {
         }),
         {
           status: 403,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers,
         }
       );
     }
 
     // Generate correlation ID
-    const correlationId = `conv_${Date.now()}_${Math.random()
-      .toString(36)
-      .substr(2, 9)}`;
+    const correlationId = `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     // Call conversion function
     const { data: result, error: conversionError } = await supabase.rpc(
       'convert_ticket_to_artifact',
       {
         p_ticket_id: ticketId,
-        p_target_type: body.target_type,
-        p_additional_data: body.additional_data || {},
+        p_target_type: targetType,
+        p_additional_data: additionalData,
         p_user_id: user.id,
         p_correlation_id: correlationId,
         p_mfa_verified: mfaVerified,
@@ -147,7 +134,7 @@ serve(async (req) => {
         }),
         {
           status: 409,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers,
         }
       );
     }
@@ -155,18 +142,19 @@ serve(async (req) => {
     // Generate artifact URL
     const frontendUrl = Deno.env.get('FRONTEND_URL') || 'http://localhost:5173';
     const paths: Record<string, string> = {
+      dossier: '/dossiers',
       engagement: '/engagements',
       position: '/positions',
       mou_action: '/mou/actions',
       foresight: '/foresight',
     };
-    const artifactUrl = `${frontendUrl}${paths[body.target_type]}/${result.artifact_id}`;
+    const artifactUrl = `${frontendUrl}${paths[targetType]}/${result.artifact_id}`;
 
     // Return success response
     return new Response(
       JSON.stringify({
         success: true,
-        artifact_type: body.target_type,
+        artifact_type: targetType,
         artifact_id: result.artifact_id,
         artifact_url: artifactUrl,
         correlation_id: correlationId,
@@ -174,7 +162,7 @@ serve(async (req) => {
       }),
       {
         status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers,
       }
     );
   } catch (error) {
@@ -187,7 +175,7 @@ serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers,
       }
     );
   }

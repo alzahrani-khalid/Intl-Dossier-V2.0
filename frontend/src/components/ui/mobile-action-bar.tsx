@@ -39,7 +39,7 @@ interface MobileActionBarContextValue {
 
 const MobileActionBarContext = React.createContext<MobileActionBarContextValue | null>(null)
 
-function useMobileActionBarContext() {
+function _useMobileActionBarContext() {
   const context = React.useContext(MobileActionBarContext)
   if (!context) {
     throw new Error('MobileActionBar components must be used within MobileActionBar')

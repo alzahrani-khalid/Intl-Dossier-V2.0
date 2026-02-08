@@ -143,7 +143,7 @@ export function PositionsHeld({ dossierId }: PositionsHeldProps) {
                       {role.organization_id ? (
                         <Link
                           to="/dossiers/organizations/$id"
-                          params={{ id: role.organization_id }}
+                          params={{ id: role.organization_id } as any}
                           className="hover:underline text-primary"
                         >
                           {orgName}

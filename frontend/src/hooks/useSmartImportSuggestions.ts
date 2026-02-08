@@ -251,7 +251,7 @@ export function useSmartImportSuggestions({
   onSuggestionsLoaded,
 }: UseSmartImportSuggestionsOptions): UseSmartImportSuggestionsReturn {
   const queryClient = useQueryClient()
-  const [previewData, setPreviewData] = useState<ImportPreviewResponse | null>(null)
+  const [_previewData, setPreviewData] = useState<ImportPreviewResponse | null>(null)
 
   // Get calendar connections for calendar data sources
   const { data: calendarConnections = [] } = useCalendarConnections()
@@ -264,7 +264,7 @@ export function useSmartImportSuggestions({
     // Calendar sources
     if (relevantTypes.includes('calendar')) {
       calendarConnections.forEach((conn) => {
-        if (conn.status === 'active') {
+        if (conn.sync_status === 'active') {
           sources.push({
             id: `calendar-${conn.id}`,
             type: 'calendar',

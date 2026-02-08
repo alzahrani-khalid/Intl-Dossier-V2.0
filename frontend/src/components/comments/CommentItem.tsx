@@ -135,7 +135,7 @@ export function CommentItem({
       // Add mention as styled span
       const username = match[1]
       const mentionData = comment.mentions.find(
-        (m) => m.username === username || m.name?.toLowerCase().includes(username.toLowerCase()),
+        (m) => m.username === username || m.name?.toLowerCase().includes(username!.toLowerCase()),
       )
 
       parts.push(

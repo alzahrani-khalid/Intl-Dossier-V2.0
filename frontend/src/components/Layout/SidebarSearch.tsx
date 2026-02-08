@@ -47,7 +47,7 @@ export function SidebarSearch({
       // Navigate to search page with query
       navigate({
         to: '/search',
-        search: { q: searchValue.trim() },
+        search: { q: searchValue.trim() } as any,
       })
       setSearchValue('')
     }

@@ -70,7 +70,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [active])
 
-  useOutsideClick(ref, () => setActive(null))
+  useOutsideClick(ref as React.RefObject<HTMLElement>, () => setActive(null))
 
   return (
     <>
@@ -168,7 +168,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
         ) : null}
       </AnimatePresence>
       <ul className="max-w-2xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 items-start gap-4">
-        {cards.map((card, index) => (
+        {cards.map((card, _index) => (
           <motion.div
             layoutId={`card-${card.title}-${id}`}
             key={card.title}

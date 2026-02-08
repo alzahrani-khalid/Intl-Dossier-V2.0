@@ -21,9 +21,11 @@ import {
   CheckCircle2,
   FolderKanban,
   Activity,
+  Plus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   MyDossiersSection,
@@ -32,6 +34,7 @@ import {
 } from '@/components/Dashboard'
 import { useDossierDashboardSummary } from '@/hooks/useDossierDashboard'
 import { RecommendationsPanel } from '@/components/engagement-recommendations'
+import { useWorkCreation } from '@/components/work-creation'
 
 // =============================================================================
 // Component
@@ -41,27 +44,34 @@ export function DashboardPage() {
   const { t, i18n } = useTranslation(['dossier-dashboard', 'dashboard'])
   const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
+  const { openPalette } = useWorkCreation()
 
   // Fetch dashboard summary
   const {
     data: summary,
     isLoading: summaryLoading,
-    isError: summaryError,
+    isError: _summaryError,
   } = useDossierDashboardSummary()
 
   return (
     <div className="w-full space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <section className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-          {t('dossier-dashboard:header.title', 'Dossier Dashboard')}
-        </h1>
-        <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
-          {t(
-            'dossier-dashboard:header.subtitle',
-            'Your dossiers, activities, and pending work at a glance.',
-          )}
-        </p>
+      <section className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+            {t('dossier-dashboard:header.title', 'Dossier Dashboard')}
+          </h1>
+          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
+            {t(
+              'dossier-dashboard:header.subtitle',
+              'Your dossiers, activities, and pending work at a glance.',
+            )}
+          </p>
+        </div>
+        <Button onClick={() => openPalette('task')} className="min-h-11 w-full sm:w-auto">
+          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          {t('dashboard:new_task', 'New Task')}
+        </Button>
       </section>
 
       {/* Quick Stats Summary */}

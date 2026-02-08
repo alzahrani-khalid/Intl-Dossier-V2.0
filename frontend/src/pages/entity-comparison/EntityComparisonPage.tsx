@@ -110,7 +110,7 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
           ids: ids.length > 0 ? ids.join(',') : undefined,
           view: view !== 'table' ? view : undefined,
           diff: diff || undefined,
-        },
+        } as any,
         replace: true,
       })
     },
@@ -155,7 +155,7 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
     setSelectedIds([])
     setSearchQuery('')
     setSelectedType(null)
-    navigate({ to: '/compare', search: {}, replace: true })
+    navigate({ to: '/compare', search: {} as any, replace: true })
   }, [navigate, setSelectedIds, setSearchQuery, setSelectedType])
 
   return (

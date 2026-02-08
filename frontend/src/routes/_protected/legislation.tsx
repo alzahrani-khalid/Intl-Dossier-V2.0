@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { LegislationList } from '@/components/Legislation'
 import { LegislationForm } from '@/components/Legislation'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { cn } from '@/lib/utils'
 import type {
   LegislationType,
   LegislationStatus,
@@ -63,7 +62,7 @@ function LegislationPage() {
       setIsCreateOpen(false)
       navigate({
         to: '/legislation/$id',
-        params: { id },
+        params: { id } as any,
       })
     },
     [navigate],

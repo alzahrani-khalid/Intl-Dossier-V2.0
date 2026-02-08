@@ -290,7 +290,7 @@ export function useAuditLogExport(): UseAuditLogExportReturn {
       if (contentDisposition) {
         const filenameMatch = contentDisposition.match(/filename="(.+)"/)
         if (filenameMatch) {
-          filename = filenameMatch[1]
+          filename = filenameMatch[1] ?? filename
         }
       }
 

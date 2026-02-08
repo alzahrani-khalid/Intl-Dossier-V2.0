@@ -261,7 +261,8 @@ export function unwrapModule<T, E extends ModuleError>(result: ModuleResult<T, E
   if (result.success) {
     return result.data
   }
-  throw new Error(`Module error [${result.error.module}]: ${result.error.message}`)
+  const err = (result as { success: false; error: E }).error
+  throw new Error(`Module error [${err.module}]: ${err.message}`)
 }
 
 /**

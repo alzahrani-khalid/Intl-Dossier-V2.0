@@ -9,7 +9,7 @@
  * - Collaborator management
  */
 
-import { useEffect, useState, useCallback, useRef, useMemo } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
@@ -35,7 +35,7 @@ import {
   AddCollaboratorParams,
 } from '@/types/collaborative-editing.types'
 
-const EDGE_FUNCTION_URL = '/functions/v1/collaborative-editing'
+const _EDGE_FUNCTION_URL = '/functions/v1/collaborative-editing'
 
 // Query key factory
 export const collaborativeEditingKeys = {
@@ -93,7 +93,7 @@ export function useCollaborativeEditing(
     onCommentCreated,
   } = options
 
-  const { user, session: authSession } = useAuthStore()
+  const { user } = useAuthStore()
   const queryClient = useQueryClient()
   const channelRef = useRef<RealtimeChannel | null>(null)
   const [currentSession, setCurrentSession] = useState<EditSession | null>(null)
@@ -101,14 +101,14 @@ export function useCollaborativeEditing(
   const cursorUpdateRef = useRef<ReturnType<typeof debounce> | null>(null)
 
   // ========== API HELPERS ==========
-  const callEdgeFunction = useCallback(
+  const _callEdgeFunction = useCallback(
     async <T>(
-      path: string,
+      _path: string,
       method: 'GET' | 'POST' | 'PATCH' | 'DELETE' = 'GET',
       body?: unknown,
     ): Promise<T> => {
       const response = await supabase.functions.invoke('collaborative-editing', {
-        body: method === 'GET' ? undefined : body,
+        body: method === 'GET' ? undefined : (body as Record<string, any>),
         method,
         headers: {
           'Content-Type': 'application/json',
@@ -713,7 +713,7 @@ export function useCollaborativeEditing(
 
   // ========== REALTIME SUBSCRIPTIONS ==========
   useEffect(() => {
-    if (!documentId || !user) return
+    if (!documentId || !user) return undefined
 
     const channel = supabase
       .channel(`collaborative-editing:${documentId}`)
@@ -845,16 +845,19 @@ export function useCollaborativeEditing(
       if (!currentSession) return
 
       if (!cursorUpdateRef.current) {
-        cursorUpdateRef.current = debounce((pos: CursorPosition, vp?: Viewport) => {
-          supabase.rpc('update_cursor_position', {
-            p_session_id: currentSession.id,
-            p_cursor_position: pos,
-            p_viewport: vp,
-          })
-        }, 50)
+        cursorUpdateRef.current = debounce(
+          ((pos: CursorPosition, vp?: Viewport) => {
+            supabase.rpc('update_cursor_position', {
+              p_session_id: currentSession.id,
+              p_cursor_position: pos,
+              p_viewport: vp,
+            })
+          }) as (...args: unknown[]) => void,
+          50,
+        )
       }
 
-      cursorUpdateRef.current(position, viewport)
+      cursorUpdateRef.current?.(position, viewport)
     },
     [currentSession],
   )
@@ -885,7 +888,7 @@ export function useCollaborativeEditing(
     trackChanges,
     inlineComments,
     collaborators,
-    summary,
+    summary: summary ?? null,
     isConnected,
     isLoading,
     error: error as Error | null,
@@ -903,8 +906,8 @@ export function useCollaborativeEditing(
     // Track change actions
     acceptChange: (changeId) => resolveChangeMutation.mutateAsync({ changeId, accept: true }),
     rejectChange: (changeId) => resolveChangeMutation.mutateAsync({ changeId, accept: false }),
-    acceptAllChanges: () => acceptAllChangesMutation.mutateAsync(),
-    rejectAllChanges: () => rejectAllChangesMutation.mutateAsync(),
+    acceptAllChanges: () => acceptAllChangesMutation.mutateAsync().then(() => {}),
+    rejectAllChanges: () => rejectAllChangesMutation.mutateAsync().then(() => {}),
     acceptChangeGroup: (groupId) =>
       resolveChangeGroupMutation.mutateAsync({ groupId, accept: true }),
     rejectChangeGroup: (groupId) =>

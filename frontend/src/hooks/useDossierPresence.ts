@@ -150,7 +150,7 @@ export function useDossierPresence(
   useEffect(() => {
     if (!dossierId || !user?.id) {
       setState((prev) => ({ ...prev, isConnected: false }))
-      return
+      return undefined
     }
 
     const channelName = `dossier-presence:${dossierId}`
@@ -349,7 +349,7 @@ export function useDossierPresence(
 
   // Listen for user activity events
   useEffect(() => {
-    if (!dossierId || !user?.id) return
+    if (!dossierId || !user?.id) return undefined
 
     const handleActivity = () => {
       resetIdleTimer()

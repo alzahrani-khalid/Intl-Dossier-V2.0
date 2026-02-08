@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDocuments } from '@/hooks/useDocuments'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseUrl } from '@/lib/supabase'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/select'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { Upload, File, X, FileText } from 'lucide-react'
+import { Upload, X, FileText } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 
 interface DocumentUploaderProps {
@@ -77,7 +77,7 @@ export function DocumentUploader({ ownerType, ownerId, onUploadComplete }: Docum
       } = await supabase.auth.getSession()
       if (!session) throw new Error('Not authenticated')
 
-      const response = await fetch(`${supabase.supabaseUrl}/functions/v1/documents-create`, {
+      const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -129,7 +129,7 @@ export function DocumentUploader({ ownerType, ownerId, onUploadComplete }: Docum
     }
   }
 
-  const handleDelete = async (documentId: string, storagePath: string) => {
+  const handleDelete = async (documentId: string, _storagePath: string) => {
     if (!confirm(t('documents.confirm_delete'))) return
 
     try {
@@ -139,7 +139,7 @@ export function DocumentUploader({ ownerType, ownerId, onUploadComplete }: Docum
       if (!session) throw new Error('Not authenticated')
 
       const response = await fetch(
-        `${supabase.supabaseUrl}/functions/v1/documents-delete?documentId=${documentId}`,
+        `${supabaseUrl}/functions/v1/documents-delete?documentId=${documentId}`,
         {
           method: 'DELETE',
           headers: {

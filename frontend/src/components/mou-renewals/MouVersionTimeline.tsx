@@ -15,7 +15,6 @@ import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 import { type MouVersionHistory } from '@/types/mou-renewal.types'
 
@@ -70,8 +69,8 @@ export function MouVersionTimeline({
           <div className="space-y-4">
             {versions.map((version, index) => {
               const isCurrent = version.mou_id === currentMouId || version.is_current
-              const isFirst = index === 0
-              const isLast = index === versions.length - 1
+              const _isFirst = index === 0
+              const _isLast = index === versions.length - 1
               const title = isRTL ? version.title_ar : version.title_en
               const changesSummary = isRTL ? version.changes_summary_ar : version.changes_summary_en
 

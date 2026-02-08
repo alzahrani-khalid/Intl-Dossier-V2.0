@@ -8,11 +8,21 @@
  * - RTL and mobile-first support
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Check, ChevronsUpDown, Search, X, Globe, Building2, Users, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
+  Check,
+  ChevronsUpDown,
+  Search,
+  X,
+  Globe,
+  Building2,
+  Users,
+  FileText,
+  Plus,
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -20,37 +30,39 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { Badge } from '@/components/ui/badge';
-import { autocompleteDossiers, type AutocompleteResult } from '@/services/search-api';
-import type { DossierType } from '@/services/dossier-api';
+} from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Badge } from '@/components/ui/badge'
+import { autocompleteDossiers, type AutocompleteResult } from '@/services/search-api'
+import type { DossierType } from '@/services/dossier-api'
 
-const STORAGE_KEY = 'recent_dossiers_for_work_creation';
-const MAX_RECENT = 5;
-const DEBOUNCE_MS = 300;
-const MIN_SEARCH_CHARS = 2;
+const STORAGE_KEY = 'recent_dossiers_for_work_creation'
+const MAX_RECENT = 5
+const DEBOUNCE_MS = 300
+const MIN_SEARCH_CHARS = 2
 
 export interface DossierOption {
-  id: string;
-  name_en: string;
-  name_ar: string;
-  type: DossierType;
-  status: string;
+  id: string
+  name_en: string
+  name_ar: string
+  type: DossierType
+  status: string
 }
 
 export interface DossierPickerProps {
-  value?: string;
-  onChange: (dossierId: string | null, dossier?: DossierOption) => void;
-  disabled?: boolean;
-  placeholder?: string;
-  className?: string;
+  value?: string
+  onChange: (dossierId: string | null, dossier?: DossierOption) => void
+  disabled?: boolean
+  placeholder?: string
+  className?: string
   /** Pre-selected dossier info (for display when value is set externally) */
-  selectedDossier?: DossierOption;
+  selectedDossier?: DossierOption
+  /** Filter results to a specific dossier type */
+  filterByDossierType?: DossierType
+  /** Allow quick-adding a new dossier if not found */
+  allowQuickAdd?: boolean
+  /** Callback when user wants to quick-add a new dossier */
+  onQuickAdd?: (searchQuery: string) => void
 }
 
 /**
@@ -59,13 +71,13 @@ export interface DossierPickerProps {
 function getDossierTypeIcon(type: DossierType) {
   switch (type) {
     case 'country':
-      return Globe;
+      return Globe
     case 'organization':
-      return Building2;
+      return Building2
     case 'forum':
-      return Users;
+      return Users
     default:
-      return FileText;
+      return FileText
   }
 }
 
@@ -74,14 +86,14 @@ function getDossierTypeIcon(type: DossierType) {
  */
 function getRecentDossiers(): DossierOption[] {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
-      return JSON.parse(stored);
+      return JSON.parse(stored)
     }
   } catch (e) {
-    console.warn('Failed to parse recent dossiers from localStorage:', e);
+    console.warn('Failed to parse recent dossiers from localStorage:', e)
   }
-  return [];
+  return []
 }
 
 /**
@@ -89,11 +101,11 @@ function getRecentDossiers(): DossierOption[] {
  */
 function addRecentDossier(dossier: DossierOption): void {
   try {
-    const recent = getRecentDossiers();
-    const updated = [dossier, ...recent.filter((d) => d.id !== dossier.id)].slice(0, MAX_RECENT);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    const recent = getRecentDossiers()
+    const updated = [dossier, ...recent.filter((d) => d.id !== dossier.id)].slice(0, MAX_RECENT)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
   } catch (e) {
-    console.warn('Failed to save recent dossier to localStorage:', e);
+    console.warn('Failed to save recent dossier to localStorage:', e)
   }
 }
 
@@ -104,88 +116,92 @@ export function DossierPicker({
   placeholder,
   className,
   selectedDossier: externalSelectedDossier,
+  filterByDossierType,
+  allowQuickAdd = false,
+  onQuickAdd,
 }: DossierPickerProps) {
-  const { t, i18n } = useTranslation('work-creation');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('work-creation')
+  const isRTL = i18n.language === 'ar'
 
-  const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<DossierOption[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [recentDossiers, setRecentDossiers] = useState<DossierOption[]>([]);
+  const [open, setOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<DossierOption[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [recentDossiers, setRecentDossiers] = useState<DossierOption[]>([])
   const [selectedDossier, setSelectedDossier] = useState<DossierOption | undefined>(
-    externalSelectedDossier
-  );
+    externalSelectedDossier,
+  )
 
   // Load recent dossiers on mount
   useEffect(() => {
-    setRecentDossiers(getRecentDossiers());
-  }, []);
+    setRecentDossiers(getRecentDossiers())
+  }, [])
 
   // Update selected dossier when external prop changes
   useEffect(() => {
     if (externalSelectedDossier) {
-      setSelectedDossier(externalSelectedDossier);
+      setSelectedDossier(externalSelectedDossier)
     }
-  }, [externalSelectedDossier]);
+  }, [externalSelectedDossier])
 
   // Debounced search
   useEffect(() => {
     if (searchQuery.length < MIN_SEARCH_CHARS) {
-      setSearchResults([]);
-      return;
+      setSearchResults([])
+      return undefined
     }
 
     const timeoutId = setTimeout(async () => {
-      setIsSearching(true);
+      setIsSearching(true)
       try {
         const response = await autocompleteDossiers({
           query: searchQuery,
           limit: 10,
-        });
+          dossierType: filterByDossierType,
+        })
         const results: DossierOption[] = response.suggestions.map((s: AutocompleteResult) => ({
           id: s.id,
           name_en: s.name_en,
           name_ar: s.name_ar,
           type: s.type,
           status: s.status,
-        }));
-        setSearchResults(results);
+        }))
+        setSearchResults(results)
       } catch (error) {
-        console.error('Failed to search dossiers:', error);
-        setSearchResults([]);
+        console.error('Failed to search dossiers:', error)
+        setSearchResults([])
       } finally {
-        setIsSearching(false);
+        setIsSearching(false)
       }
-    }, DEBOUNCE_MS);
+    }, DEBOUNCE_MS)
 
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery]);
+    return () => clearTimeout(timeoutId)
+  }, [searchQuery, filterByDossierType])
 
   const handleSelect = useCallback(
     (dossier: DossierOption) => {
-      setSelectedDossier(dossier);
-      addRecentDossier(dossier);
-      setRecentDossiers(getRecentDossiers());
-      onChange(dossier.id, dossier);
-      setOpen(false);
-      setSearchQuery('');
+      setSelectedDossier(dossier)
+      addRecentDossier(dossier)
+      setRecentDossiers(getRecentDossiers())
+      onChange(dossier.id, dossier)
+      setOpen(false)
+      setSearchQuery('')
     },
-    [onChange]
-  );
+    [onChange],
+  )
 
   const handleClear = useCallback(() => {
-    setSelectedDossier(undefined);
-    onChange(null);
-  }, [onChange]);
+    setSelectedDossier(undefined)
+    onChange(null)
+  }, [onChange])
 
   const displayName = selectedDossier
     ? isRTL
       ? selectedDossier.name_ar || selectedDossier.name_en
       : selectedDossier.name_en
-    : null;
+    : null
 
-  const Icon = selectedDossier ? getDossierTypeIcon(selectedDossier.type) : null;
+  const Icon = selectedDossier ? getDossierTypeIcon(selectedDossier.type) : null
 
   return (
     <div className={cn('w-full', className)}>
@@ -224,7 +240,7 @@ export function DossierPicker({
             aria-expanded={open}
             className={cn(
               'w-full min-h-11 justify-between font-normal',
-              !selectedDossier && 'text-muted-foreground'
+              !selectedDossier && 'text-muted-foreground',
             )}
             disabled={disabled}
           >
@@ -250,19 +266,42 @@ export function DossierPicker({
             />
             <CommandList>
               <CommandEmpty>
-                {isSearching
-                  ? t('form.searching', 'Searching...')
-                  : searchQuery.length < MIN_SEARCH_CHARS
-                    ? t('form.typeToSearch', 'Type at least 2 characters to search')
-                    : t('form.noDossiersFound', 'No dossiers found')}
+                {isSearching ? (
+                  t('form.searching', 'Searching...')
+                ) : searchQuery.length < MIN_SEARCH_CHARS ? (
+                  t('form.typeToSearch', 'Type at least 2 characters to search')
+                ) : (
+                  <div className="flex flex-col items-center gap-2 py-2">
+                    <span className="text-muted-foreground">
+                      {t('form.noDossiersFound', 'No dossiers found')}
+                    </span>
+                    {allowQuickAdd && searchQuery.length >= MIN_SEARCH_CHARS && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="min-h-9 gap-2"
+                        onClick={() => {
+                          if (onQuickAdd) {
+                            onQuickAdd(searchQuery)
+                          }
+                          setOpen(false)
+                        }}
+                      >
+                        <Plus className="size-4" />
+                        {t('form.createNew', 'Create "{{name}}"', { name: searchQuery })}
+                      </Button>
+                    )}
+                  </div>
+                )}
               </CommandEmpty>
 
               {/* Search results */}
               {searchResults.length > 0 && (
                 <CommandGroup heading={t('form.searchResults', 'Search Results')}>
                   {searchResults.map((dossier) => {
-                    const DossierIcon = getDossierTypeIcon(dossier.type);
-                    const name = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en;
+                    const DossierIcon = getDossierTypeIcon(dossier.type)
+                    const name = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en
                     return (
                       <CommandItem
                         key={dossier.id}
@@ -274,52 +313,83 @@ export function DossierPicker({
                           className={cn(
                             'size-4 shrink-0',
                             isRTL ? 'ms-2' : 'me-2',
-                            value === dossier.id ? 'opacity-100' : 'opacity-0'
+                            value === dossier.id ? 'opacity-100' : 'opacity-0',
                           )}
                         />
                         <DossierIcon
-                          className={cn('size-4 shrink-0 text-muted-foreground', isRTL ? 'ms-2' : 'me-2')}
+                          className={cn(
+                            'size-4 shrink-0 text-muted-foreground',
+                            isRTL ? 'ms-2' : 'me-2',
+                          )}
                         />
                         <span className="flex-1 truncate">{name}</span>
                         <Badge variant="outline" className="text-xs ms-2">
                           {dossier.type}
                         </Badge>
                       </CommandItem>
-                    );
+                    )
                   })}
                 </CommandGroup>
               )}
 
+              {/* Quick add option at the bottom of search results */}
+              {allowQuickAdd &&
+                searchQuery.length >= MIN_SEARCH_CHARS &&
+                searchResults.length > 0 && (
+                  <CommandGroup>
+                    <CommandItem
+                      value="__create_new__"
+                      onSelect={() => {
+                        if (onQuickAdd) {
+                          onQuickAdd(searchQuery)
+                        }
+                        setOpen(false)
+                      }}
+                      className="min-h-11 text-primary"
+                    >
+                      <Plus className={cn('size-4 shrink-0', isRTL ? 'ms-2' : 'me-2')} />
+                      <span className="flex-1">
+                        {t('form.createNew', 'Create "{{name}}"', { name: searchQuery })}
+                      </span>
+                    </CommandItem>
+                  </CommandGroup>
+                )}
+
               {/* Recent dossiers (shown when no search query) */}
               {searchQuery.length < MIN_SEARCH_CHARS && recentDossiers.length > 0 && (
                 <CommandGroup heading={t('form.recentDossiers', 'Recent Dossiers')}>
-                  {recentDossiers.map((dossier) => {
-                    const DossierIcon = getDossierTypeIcon(dossier.type);
-                    const name = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en;
-                    return (
-                      <CommandItem
-                        key={dossier.id}
-                        value={dossier.id}
-                        onSelect={() => handleSelect(dossier)}
-                        className="min-h-11"
-                      >
-                        <Check
-                          className={cn(
-                            'size-4 shrink-0',
-                            isRTL ? 'ms-2' : 'me-2',
-                            value === dossier.id ? 'opacity-100' : 'opacity-0'
-                          )}
-                        />
-                        <DossierIcon
-                          className={cn('size-4 shrink-0 text-muted-foreground', isRTL ? 'ms-2' : 'me-2')}
-                        />
-                        <span className="flex-1 truncate">{name}</span>
-                        <Badge variant="outline" className="text-xs ms-2">
-                          {dossier.type}
-                        </Badge>
-                      </CommandItem>
-                    );
-                  })}
+                  {recentDossiers
+                    .filter((d) => !filterByDossierType || d.type === filterByDossierType)
+                    .map((dossier) => {
+                      const DossierIcon = getDossierTypeIcon(dossier.type)
+                      const name = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en
+                      return (
+                        <CommandItem
+                          key={dossier.id}
+                          value={dossier.id}
+                          onSelect={() => handleSelect(dossier)}
+                          className="min-h-11"
+                        >
+                          <Check
+                            className={cn(
+                              'size-4 shrink-0',
+                              isRTL ? 'ms-2' : 'me-2',
+                              value === dossier.id ? 'opacity-100' : 'opacity-0',
+                            )}
+                          />
+                          <DossierIcon
+                            className={cn(
+                              'size-4 shrink-0 text-muted-foreground',
+                              isRTL ? 'ms-2' : 'me-2',
+                            )}
+                          />
+                          <span className="flex-1 truncate">{name}</span>
+                          <Badge variant="outline" className="text-xs ms-2">
+                            {dossier.type}
+                          </Badge>
+                        </CommandItem>
+                      )
+                    })}
                 </CommandGroup>
               )}
             </CommandList>
@@ -327,7 +397,7 @@ export function DossierPicker({
         </PopoverContent>
       </Popover>
     </div>
-  );
+  )
 }
 
-export default DossierPicker;
+export default DossierPicker

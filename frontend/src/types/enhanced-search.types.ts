@@ -300,25 +300,25 @@ export function getSuggestionAtIndex(
 
   // Check titles
   if (index < currentIndex + suggestions.titles.length) {
-    return suggestions.titles[index - currentIndex]
+    return suggestions.titles[index - currentIndex]!
   }
   currentIndex += suggestions.titles.length
 
   // Check tags
   if (index < currentIndex + suggestions.tags.length) {
-    return suggestions.tags[index - currentIndex]
+    return suggestions.tags[index - currentIndex]!
   }
   currentIndex += suggestions.tags.length
 
   // Check popular
   if (index < currentIndex + suggestions.popular.length) {
-    return suggestions.popular[index - currentIndex]
+    return suggestions.popular[index - currentIndex]!
   }
   currentIndex += suggestions.popular.length
 
   // Check history
   if (index < currentIndex + suggestions.history.length) {
-    return suggestions.history[index - currentIndex]
+    return suggestions.history[index - currentIndex]!
   }
 
   return null

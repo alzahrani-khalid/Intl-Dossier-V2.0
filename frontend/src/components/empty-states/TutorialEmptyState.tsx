@@ -493,5 +493,4 @@ export function TutorialEmptyState({
   )
 }
 
-// Export tutorial configuration type for external use
-export type { TutorialVideo }
+// TutorialVideo interface is already exported at the top of the file

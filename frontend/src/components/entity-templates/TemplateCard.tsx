@@ -30,7 +30,7 @@ import {
   Lightbulb,
   Clock,
 } from 'lucide-react'
-import type { EntityTemplate, TemplateCardProps } from '@/types/entity-template.types'
+import type { TemplateCardProps } from '@/types/entity-template.types'
 import { formatKeyboardShortcut, getColorClass } from '@/types/entity-template.types'
 
 // Icon mapping

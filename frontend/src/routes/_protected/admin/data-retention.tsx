@@ -44,7 +44,6 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { Progress } from '@/components/ui/progress'
 import { supabase } from '@/lib/supabase'
 import {
   Shield,

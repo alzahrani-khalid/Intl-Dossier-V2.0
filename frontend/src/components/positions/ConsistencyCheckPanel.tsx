@@ -229,7 +229,7 @@ export function ConsistencyCheckPanel({
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {latestCheck.requires_human_review && (
-                    <Badge variant="outline\" className="text-xs">
+                    <Badge variant="outline" className="text-xs">
                       <AlertTriangle className="h-3 w-3 me-1" />
                       {t('consistency.humanReviewRequired', 'Review Required')}
                     </Badge>

@@ -9,11 +9,11 @@
  * - Touch-friendly interactions (44x44px minimum)
  */
 
-import { useEffect, useId, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
-import { VerticalTimelineElement } from 'react-vertical-timeline-component';
+import { useEffect, useId, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
+import { VerticalTimelineElement } from 'react-vertical-timeline-component'
 import {
   Calendar,
   Users,
@@ -28,17 +28,17 @@ import {
   ExternalLink,
   Download,
   X,
-} from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useOutsideClick } from '@/hooks/use-outside-click';
-import { cn } from '@/lib/utils';
-import type { UnifiedTimelineEvent } from '@/types/timeline.types';
+} from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useOutsideClick } from '@/hooks/use-outside-click'
+import { cn } from '@/lib/utils'
+import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 
 interface EnhancedVerticalTimelineCardProps {
-  event: UnifiedTimelineEvent;
-  index: number;
+  event: UnifiedTimelineEvent
+  index: number
 }
 
 /**
@@ -55,9 +55,9 @@ const getEventIcon = (eventType: string): React.ElementType => {
     relationship: Users,
     commitment: CheckCircle2,
     decision: AlertCircle,
-  };
-  return iconMap[eventType] || Calendar;
-};
+  }
+  return iconMap[eventType] || Calendar
+}
 
 /**
  * Get event type color class
@@ -73,9 +73,9 @@ const getEventColor = (eventType: string): string => {
     relationship: 'timeline-icon-relationship',
     commitment: 'timeline-icon-commitment',
     decision: 'timeline-icon-decision',
-  };
-  return colorMap[eventType] || 'timeline-icon-calendar';
-};
+  }
+  return colorMap[eventType] || 'timeline-icon-calendar'
+}
 
 /**
  * Get priority color classes
@@ -85,9 +85,9 @@ const getPriorityColor = (priority: string): string => {
     high: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
     medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
     low: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  };
-  return colorMap[priority] || colorMap.low;
-};
+  }
+  return colorMap[priority] || colorMap.low!
+}
 
 /**
  * Get status color classes
@@ -99,32 +99,32 @@ const getStatusColor = (status: string): string => {
     completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
     cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
     postponed: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-  };
-  return colorMap[status] || colorMap.planned;
-};
+  }
+  return colorMap[status] || colorMap.planned!
+}
 
 /**
  * Format date for display
  */
 const formatEventDate = (dateString: string, locale: string): string => {
-  const date = new Date(dateString);
+  const date = new Date(dateString)
   return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  }).format(date);
-};
+  }).format(date)
+}
 
 /**
  * Format time for display
  */
 const formatEventTime = (dateString: string, locale: string): string => {
-  const date = new Date(dateString);
+  const date = new Date(dateString)
   return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
     hour: '2-digit',
     minute: '2-digit',
-  }).format(date);
-};
+  }).format(date)
+}
 
 /**
  * Close icon component
@@ -150,57 +150,54 @@ function CloseIcon() {
       <path d="M18 6l-12 12" />
       <path d="M6 6l12 12" />
     </motion.svg>
-  );
+  )
 }
 
-export function EnhancedVerticalTimelineCard({
-  event,
-  index,
-}: EnhancedVerticalTimelineCardProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const navigate = useNavigate();
-  const isRTL = i18n.language === 'ar';
-  const [isActive, setIsActive] = useState(false);
-  const id = useId();
-  const ref = useRef<HTMLDivElement>(null);
+export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalTimelineCardProps) {
+  const { t, i18n } = useTranslation('dossier')
+  const navigate = useNavigate()
+  const isRTL = i18n.language === 'ar'
+  const [isActive, setIsActive] = useState(false)
+  const id = useId()
+  const ref = useRef<HTMLDivElement>(null)
 
-  const EventIcon = getEventIcon(event.event_type);
-  const eventColorClass = getEventColor(event.event_type);
-  const title = isRTL ? event.title_ar : event.title_en;
-  const description = isRTL ? event.description_ar : event.description_en;
-  const formattedDate = formatEventDate(event.event_date, i18n.language);
-  const formattedTime = formatEventTime(event.event_date, i18n.language);
+  const EventIcon = getEventIcon(event.event_type)
+  const eventColorClass = getEventColor(event.event_type)
+  const title = isRTL ? event.title_ar : event.title_en
+  const description = isRTL ? event.description_ar : event.description_en
+  const formattedDate = formatEventDate(event.event_date, i18n.language)
+  const formattedTime = formatEventTime(event.event_date, i18n.language)
 
   // Handle escape key and body overflow
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
-        setIsActive(false);
+        setIsActive(false)
       }
     }
 
     if (isActive) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = 'auto'
     }
 
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isActive]);
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isActive])
 
-  useOutsideClick(ref, () => setIsActive(false));
+  useOutsideClick(ref as React.RefObject<HTMLElement>, () => setIsActive(false))
 
   const handleNavigate = () => {
     if (event.metadata.navigation_url) {
-      setIsActive(false);
-      navigate({ to: event.metadata.navigation_url });
+      setIsActive(false)
+      navigate({ to: event.metadata.navigation_url })
     }
-  };
+  }
 
   const handleCardClick = () => {
-    setIsActive(true);
-  };
+    setIsActive(true)
+  }
 
   return (
     <>
@@ -219,7 +216,10 @@ export function EnhancedVerticalTimelineCard({
       {/* Modal Content */}
       <AnimatePresence>
         {isActive && (
-          <div className="fixed inset-0 grid place-items-center z-[101] p-4" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div
+            className="fixed inset-0 grid place-items-center z-[101] p-4"
+            dir={isRTL ? 'rtl' : 'ltr'}
+          >
             {/* Close Button */}
             <motion.button
               key={`button-${event.id}-${id}`}
@@ -241,11 +241,13 @@ export function EnhancedVerticalTimelineCard({
               className="w-full max-w-3xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden shadow-2xl"
             >
               {/* Event Icon Header */}
-              <div className={cn(
-                "w-full h-32 sm:h-40 flex items-center justify-center",
-                eventColorClass,
-                "sm:rounded-t-3xl relative overflow-hidden"
-              )}>
+              <div
+                className={cn(
+                  'w-full h-32 sm:h-40 flex items-center justify-center',
+                  eventColorClass,
+                  'sm:rounded-t-3xl relative overflow-hidden',
+                )}
+              >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
                 <EventIcon className="h-16 w-16 sm:h-20 sm:w-20 text-white relative z-10" />
               </div>
@@ -274,11 +276,17 @@ export function EnhancedVerticalTimelineCard({
 
                   {/* Badges */}
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className={cn(getPriorityColor(event.priority), "text-xs")}>
+                    <Badge
+                      variant="outline"
+                      className={cn(getPriorityColor(event.priority), 'text-xs')}
+                    >
                       {t(`timeline.priority.${event.priority}`)}
                     </Badge>
                     {event.status && (
-                      <Badge variant="outline" className={cn(getStatusColor(event.status), "text-xs")}>
+                      <Badge
+                        variant="outline"
+                        className={cn(getStatusColor(event.status), 'text-xs')}
+                      >
                         {t(`timeline.status.${event.status}`)}
                       </Badge>
                     )}
@@ -308,7 +316,9 @@ export function EnhancedVerticalTimelineCard({
                   {/* Location */}
                   {(event.metadata.location_en || event.metadata.location_ar) && (
                     <div className="flex items-start gap-3 p-4 rounded-lg bg-muted">
-                      <MapPin className={cn('h-5 w-5 mt-0.5 text-primary', isRTL && 'rotate-180')} />
+                      <MapPin
+                        className={cn('h-5 w-5 mt-0.5 text-primary', isRTL && 'rotate-180')}
+                      />
                       <div className="flex-1 text-start">
                         <p className="font-semibold text-sm mb-1">{t('timeline.location')}</p>
                         <p className="text-sm text-muted-foreground">
@@ -343,7 +353,9 @@ export function EnhancedVerticalTimelineCard({
                             className="flex items-center gap-2 rounded-full bg-muted px-3 py-2 hover:bg-muted/80 transition-colors"
                           >
                             <Avatar className="h-7 w-7">
-                              {participant.avatar_url && <AvatarImage src={participant.avatar_url} />}
+                              {participant.avatar_url && (
+                                <AvatarImage src={participant.avatar_url} />
+                              )}
                               <AvatarFallback className="text-xs">
                                 {(isRTL ? participant.name_ar : participant.name_en)
                                   .split(' ')
@@ -384,7 +396,9 @@ export function EnhancedVerticalTimelineCard({
                             className="flex items-center gap-3 rounded-lg bg-muted px-4 py-3 text-sm hover:bg-muted/80 transition-colors group"
                           >
                             <FileText className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                            <span className="flex-1 text-start truncate font-medium">{attachment.filename}</span>
+                            <span className="flex-1 text-start truncate font-medium">
+                              {attachment.filename}
+                            </span>
                             <Download className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                           </a>
                         ))}
@@ -427,7 +441,7 @@ export function EnhancedVerticalTimelineCard({
       <VerticalTimelineElement
         className={cn(
           'vertical-timeline-element',
-          event.priority === 'high' && 'timeline-priority-high'
+          event.priority === 'high' && 'timeline-priority-high',
         )}
         contentStyle={{
           cursor: 'pointer',
@@ -457,9 +471,7 @@ export function EnhancedVerticalTimelineCard({
           </div>
 
           <div className="flex items-start justify-between gap-3">
-            <h3 className="vertical-timeline-element-title text-start flex-1">
-              {title}
-            </h3>
+            <h3 className="vertical-timeline-element-title text-start flex-1">{title}</h3>
           </div>
 
           {/* Time - Desktop Only (date is shown by library on 2-column layout) */}
@@ -468,18 +480,14 @@ export function EnhancedVerticalTimelineCard({
             {formattedTime}
           </h4>
 
-          {description && (
-            <p className="text-start line-clamp-2">
-              {description}
-            </p>
-          )}
+          {description && <p className="text-start line-clamp-2">{description}</p>}
 
           <div className="flex flex-wrap gap-2 pt-1">
-            <Badge variant="outline" className={cn(getPriorityColor(event.priority), "text-xs")}>
+            <Badge variant="outline" className={cn(getPriorityColor(event.priority), 'text-xs')}>
               {t(`timeline.priority.${event.priority}`)}
             </Badge>
             {event.status && (
-              <Badge variant="outline" className={cn(getStatusColor(event.status), "text-xs")}>
+              <Badge variant="outline" className={cn(getStatusColor(event.status), 'text-xs')}>
                 {t(`timeline.status.${event.status}`)}
               </Badge>
             )}
@@ -509,6 +517,5 @@ export function EnhancedVerticalTimelineCard({
         </div>
       </VerticalTimelineElement>
     </>
-  );
+  )
 }
-

@@ -84,7 +84,7 @@ export function EngagementContextBanner({
             {/* Actions */}
             <div className="flex items-center gap-2">
               <Button asChild variant="outline" size="sm">
-                <Link to="/engagements/$engagementId" params={{ engagementId }}>
+                <Link to="/engagements/$engagementId" params={{ engagementId } as any}>
                   <ExternalLink className="h-4 w-4 me-2" />
                   {t('engagement.viewFull')}
                 </Link>

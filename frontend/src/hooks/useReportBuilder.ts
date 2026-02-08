@@ -15,6 +15,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import {
+  ENTITY_FIELDS,
+  createEmptyReportConfiguration,
+  createEmptyFilterGroup,
+} from '@/types/report-builder.types'
 import type {
   ReportConfiguration,
   SavedReport,
@@ -35,9 +40,6 @@ import type {
   CreateReportRequest,
   UpdateReportRequest,
   CreateScheduleRequest,
-  ENTITY_FIELDS,
-  createEmptyReportConfiguration,
-  createEmptyFilterGroup,
 } from '@/types/report-builder.types'
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
@@ -467,7 +469,7 @@ export function useReportBuilderState(initialReportId?: string) {
     setState((prev) => {
       const columns = [...prev.configuration.columns]
       const [removed] = columns.splice(sourceIndex, 1)
-      columns.splice(destinationIndex, 0, removed)
+      columns.splice(destinationIndex, 0, removed!)
 
       // Update order property
       const reorderedColumns = columns.map((col, index) => ({

@@ -71,6 +71,7 @@ export async function fetchWorkItems(
     isOverdue: filters.isOverdue,
     dossierId: filters.dossierId,
     search: filters.searchQuery,
+    assigneeId: filters.assigneeId,
     cursorDeadline: cursor?.deadline,
     cursorId: cursor?.id,
     limit,

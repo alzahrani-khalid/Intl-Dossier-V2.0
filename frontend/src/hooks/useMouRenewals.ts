@@ -457,7 +457,7 @@ export function useInitiateRenewal() {
     InitiateRenewalInput
   >({
     mutationFn: initiateRenewal,
-    onSuccess: (response, variables) => {
+    onSuccess: (_response, variables) => {
       queryClient.invalidateQueries({ queryKey: renewalKeys.lists() })
       queryClient.invalidateQueries({ queryKey: renewalKeys.byMou(variables.mou_id) })
       queryClient.invalidateQueries({ queryKey: renewalKeys.expiring() })

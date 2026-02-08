@@ -128,7 +128,7 @@ export function UnifiedKanbanBoard({
   const handleDragEnd = useCallback(
     async (
       itemId: UniqueIdentifier,
-      sourceColumnId: UniqueIdentifier,
+      _sourceColumnId: UniqueIdentifier,
       targetColumnId: UniqueIdentifier,
     ) => {
       if (!onStatusChange) return

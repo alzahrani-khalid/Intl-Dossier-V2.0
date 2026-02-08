@@ -62,19 +62,41 @@ export function EngagementKanbanDialog({
     [t],
   )
 
-  // Transform assignments to kibo-ui format
+  // Keep full assignment data for the task cards
+  const assignmentMap = useMemo(() => {
+    if (!columns) return new Map<string, KanbanAssignment>()
+    const map = new Map<string, KanbanAssignment>()
+    for (const col of Object.values(columns)) {
+      for (const a of col || []) {
+        map.set(a.id, a)
+      }
+    }
+    return map
+  }, [columns])
+
+  // Transform assignments to kibo-ui format (with id, name, column for KanbanItemProps)
   const kanbanData = useMemo(() => {
-    if (!columns) return []
+    if (!columns)
+      return [] as Array<{ id: string; name: string; column: string; [key: string]: unknown }>
 
-    const allAssignments: Array<KanbanAssignment & { column: string }> = []
+    const allAssignments: Array<{
+      id: string
+      name: string
+      column: string
+      [key: string]: unknown
+    }> = []
 
-    ;(columns.todo || []).forEach((a) => allAssignments.push({ ...a, column: 'todo' }))
-    ;(columns.in_progress || []).forEach((a) =>
-      allAssignments.push({ ...a, column: 'in_progress' }),
-    )
-    ;(columns.review || []).forEach((a) => allAssignments.push({ ...a, column: 'review' }))
-    ;(columns.done || []).forEach((a) => allAssignments.push({ ...a, column: 'done' }))
-    ;(columns.cancelled || []).forEach((a) => allAssignments.push({ ...a, column: 'cancelled' }))
+    const toItem = (a: KanbanAssignment, col: string) => ({
+      id: a.id,
+      name: a.work_item_id,
+      column: col,
+    })
+
+    ;(columns.todo || []).forEach((a) => allAssignments.push(toItem(a, 'todo')))
+    ;(columns.in_progress || []).forEach((a) => allAssignments.push(toItem(a, 'in_progress')))
+    ;(columns.review || []).forEach((a) => allAssignments.push(toItem(a, 'review')))
+    ;(columns.done || []).forEach((a) => allAssignments.push(toItem(a, 'done')))
+    ;(columns.cancelled || []).forEach((a) => allAssignments.push(toItem(a, 'cancelled')))
 
     return allAssignments
   }, [columns])
@@ -155,17 +177,21 @@ export function EngagementKanbanDialog({
                   </div>
                 </KanbanHeader>
                 <KanbanCards id={column.id} className="p-3 gap-3 min-h-[400px]">
-                  {(assignment) => (
-                    <KanbanCard
-                      key={assignment.id}
-                      id={assignment.id}
-                      name={assignment.work_item_id}
-                      column={assignment.column}
-                      className="bg-background hover:shadow-md transition-shadow border-border"
-                    >
-                      <KanbanTaskCard assignment={assignment} />
-                    </KanbanCard>
-                  )}
+                  {(assignment: any) => {
+                    // assignment here is KanbanItemProps; find the full data for the card
+                    const fullAssignment = assignmentMap.get(assignment.id as string)
+                    return (
+                      <KanbanCard
+                        key={assignment.id}
+                        id={assignment.id}
+                        name={assignment.name}
+                        column={assignment.column}
+                        className="bg-background hover:shadow-md transition-shadow border-border"
+                      >
+                        {fullAssignment && <KanbanTaskCard assignment={fullAssignment} />}
+                      </KanbanCard>
+                    )
+                  }}
                 </KanbanCards>
               </KanbanBoard>
             )}

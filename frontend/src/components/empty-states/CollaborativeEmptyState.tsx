@@ -97,7 +97,7 @@ export function CollaborativeEmptyState({
   const entityDisplayName = getEntityTypeDisplayName(entityType, isRTL ? 'ar' : 'en')
 
   // Get initials for avatar fallback
-  const getInitials = (name: string) => {
+  const _getInitials = (name: string) => {
     return name
       .split(' ')
       .map((n) => n[0])

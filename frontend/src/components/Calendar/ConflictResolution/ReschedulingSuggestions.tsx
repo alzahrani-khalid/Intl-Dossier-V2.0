@@ -149,9 +149,9 @@ export function ReschedulingSuggestions({
               const overallScore =
                 'overall_score' in suggestion
                   ? suggestion.overall_score
-                  : (suggestion.availability_score +
-                      suggestion.priority_score +
-                      suggestion.travel_feasibility_score) /
+                  : ((suggestion as any).availability_score +
+                      (suggestion as any).priority_score +
+                      (suggestion as any).travel_feasibility_score) /
                     3
               const isExpanded = expandedIndex === index
               const isAccepted = 'is_accepted' in suggestion && suggestion.is_accepted

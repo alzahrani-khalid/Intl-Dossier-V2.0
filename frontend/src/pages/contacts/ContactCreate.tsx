@@ -9,6 +9,7 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -22,15 +23,22 @@ import {
 } from '@/components/ui/dialog'
 import { ArrowLeft, AlertTriangle, FileText, Scan, Upload } from 'lucide-react'
 import { useCreatePersonDossier } from '@/hooks/usePersonDossiers'
-import { ContactForm, type OCRFieldConfidence } from '@/components/contacts/ContactForm'
+import {
+  ContactForm,
+  type OCRFieldConfidence,
+  type PersonFormData,
+} from '@/components/contacts/ContactForm'
 import { BusinessCardScanner } from '@/components/contacts/BusinessCardScanner'
 import { DocumentExtractor } from '@/components/contacts/DocumentExtractor'
 import { BatchContactReview, type EditableContact } from '@/components/contacts/BatchContactReview'
-import type { Database } from '@/types/contact-directory.types'
-import type { DuplicateWarning } from '@/services/contact-api'
+import {
+  checkDuplicates,
+  createContact as apiCreateContact,
+  type DuplicateWarning,
+  type ContactCreateInput,
+} from '@/services/contact-api'
 import type { OCRParsedFields } from '@/services/ocr-api'
-
-type ContactInsert = Database['public']['Tables']['cd_contacts']['Insert']
+import { p } from '@/lib/navigation'
 
 export function ContactCreate() {
   const { t, i18n } = useTranslation('contacts')
@@ -38,15 +46,12 @@ export function ContactCreate() {
   const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState<'manual' | 'scan' | 'document'>('manual')
-  const [pendingContact, setPendingContact] = useState<Omit<
-    ContactInsert,
-    'created_by' | 'id' | 'created_at' | 'updated_at'
-  > | null>(null)
+  const [pendingContact, setPendingContact] = useState<PersonFormData | null>(null)
   const [duplicates, setDuplicates] = useState<DuplicateWarning[]>([])
   const [showDuplicateDialog, setShowDuplicateDialog] = useState(false)
 
   // OCR extracted data (business card)
-  const [ocrData, setOcrData] = useState<Partial<ContactInsert> | null>(null)
+  const [ocrData, setOcrData] = useState<Partial<PersonFormData> | null>(null)
   const [ocrConfidence, setOcrConfidence] = useState<OCRFieldConfidence | undefined>()
   const [ocrRawText, setOcrRawText] = useState<string | undefined>()
 
@@ -57,9 +62,24 @@ export function ContactCreate() {
   const [showBatchDuplicateDialog, setShowBatchDuplicateDialog] = useState(false)
   const [pendingBatchContacts, setPendingBatchContacts] = useState<EditableContact[]>([])
 
-  const createMutation = useCreateContact()
-  const checkDuplicatesMutation = useCheckDuplicates()
-  const batchCreateMutation = useBatchCreateContacts()
+  const createMutation = useCreatePersonDossier()
+
+  const checkDuplicatesMutation = useMutation({
+    mutationFn: (input: ContactCreateInput) => checkDuplicates(input),
+  })
+
+  const batchCreateMutation = useMutation({
+    mutationFn: async (contacts: Partial<ContactCreateInput>[]) => {
+      const results = []
+      for (const contact of contacts) {
+        if (contact.first_name && contact.last_name) {
+          const result = await apiCreateContact(contact as ContactCreateInput)
+          results.push(result)
+        }
+      }
+      return results
+    },
+  })
 
   const handleBack = () => {
     navigate({ to: '/contacts' })
@@ -67,14 +87,16 @@ export function ContactCreate() {
 
   // Handle OCR extraction
   const handleOCRExtracted = (fields: OCRParsedFields, confidence: number, rawText: string) => {
-    // Map OCR fields to ContactInsert format
-    const extractedData: Partial<ContactInsert> = {
-      full_name: fields.full_name || '',
-      position: fields.position || '',
-      email_addresses: fields.email_addresses || [],
-      phone_numbers: fields.phone_numbers || [],
-      source_type: 'business_card',
-      ocr_confidence: confidence,
+    // Map OCR fields to PersonFormData format
+    const extractedData: Partial<PersonFormData> = {
+      name_en: fields.full_name || '',
+      name_ar: '',
+      metadata: {
+        title_en: fields.position || '',
+        email: fields.email_addresses || [],
+        phone: fields.phone_numbers || [],
+        source_type: 'business_card',
+      },
     }
 
     // Set confidence scores for individual fields
@@ -95,15 +117,14 @@ export function ContactCreate() {
     setActiveTab('manual')
   }
 
-  const handleSubmit = async (
-    data: Omit<ContactInsert, 'created_by' | 'id' | 'created_at' | 'updated_at'>,
-  ) => {
+  const handleSubmit = async (data: PersonFormData) => {
     // Check for duplicates before creating
     try {
       const duplicateResults = await checkDuplicatesMutation.mutateAsync({
-        full_name: data.full_name,
-        email_addresses: data.email_addresses || [],
-        phone_numbers: data.phone_numbers || [],
+        first_name: data.name_en,
+        last_name: data.name_ar || '',
+        email_addresses: data.metadata?.email || [],
+        phone_numbers: data.metadata?.phone || [],
       })
 
       if (duplicateResults && duplicateResults.length > 0) {
@@ -113,29 +134,27 @@ export function ContactCreate() {
         setShowDuplicateDialog(true)
       } else {
         // No duplicates, proceed with creation
-        createContact(data)
+        performCreate(data)
       }
     } catch (error) {
       // If duplicate check fails, proceed anyway
       console.error('Duplicate check failed:', error)
-      createContact(data)
+      performCreate(data)
     }
   }
 
-  const createContact = (
-    data: Omit<ContactInsert, 'created_by' | 'id' | 'created_at' | 'updated_at'>,
-  ) => {
+  const performCreate = (data: PersonFormData) => {
     createMutation.mutate(data, {
       onSuccess: (newContact) => {
         // Navigate to the newly created contact
-        navigate({ to: `/contacts/$contactId`, params: { contactId: newContact.id } })
+        navigate({ to: '/contacts/$contactId', params: p({ contactId: newContact.id }) })
       },
     })
   }
 
   const handleProceedDespiteDuplicates = () => {
     if (pendingContact) {
-      createContact(pendingContact)
+      performCreate(pendingContact)
       setShowDuplicateDialog(false)
       setPendingContact(null)
       setDuplicates([])
@@ -149,7 +168,7 @@ export function ContactCreate() {
   }
 
   // Handle document extraction complete
-  const handleDocumentExtracted = (contacts: Partial<ContactInsert>[]) => {
+  const handleDocumentExtracted = (contacts: Partial<ContactCreateInput>[]) => {
     // Convert to EditableContact format with temporary IDs and all selected by default
     const editableContacts: EditableContact[] = contacts.map((contact, index) => ({
       ...contact,
@@ -172,7 +191,8 @@ export function ContactCreate() {
 
       try {
         const duplicateResults = await checkDuplicatesMutation.mutateAsync({
-          full_name: contact.full_name,
+          first_name: contact.full_name,
+          last_name: '',
           email_addresses: contact.email_addresses || [],
           phone_numbers: contact.phone_numbers || [],
         })
@@ -204,7 +224,7 @@ export function ContactCreate() {
     const contactsToCreate = selectedContacts.map(({ id, selected, ...contact }) => contact)
 
     try {
-      const result = await batchCreateMutation.mutateAsync(contactsToCreate)
+      await batchCreateMutation.mutateAsync(contactsToCreate as any)
 
       // Navigate to contacts list after successful import
       navigate({ to: '/contacts' })
@@ -302,7 +322,7 @@ export function ContactCreate() {
               {/* Document Extraction Tab */}
               <TabsContent value="document">
                 <DocumentExtractor
-                  onExtracted={handleDocumentExtracted}
+                  onExtracted={handleDocumentExtracted as any}
                   onCancel={() => setActiveTab('manual')}
                 />
               </TabsContent>
@@ -367,8 +387,8 @@ export function ContactCreate() {
                     size="sm"
                     onClick={() =>
                       navigate({
-                        to: `/contacts/$contactId`,
-                        params: { contactId: dup.contact_id },
+                        to: '/contacts/$contactId',
+                        params: p({ contactId: dup.contact_id }),
                       })
                     }
                     className="mt-2"

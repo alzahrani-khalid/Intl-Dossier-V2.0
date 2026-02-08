@@ -4,7 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow, format } from 'date-fns'
+import { formatDistanceToNow, format, type Locale } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import {
   CheckCircle2,

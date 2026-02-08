@@ -73,7 +73,7 @@ export function useTemplateKeyboardShortcuts(
 
   // Keyboard event handler
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) return undefined
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignore if typing in input/textarea

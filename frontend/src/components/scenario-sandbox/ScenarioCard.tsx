@@ -34,7 +34,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { Scenario, ScenarioType, ScenarioStatus } from '@/types/scenario-sandbox.types'
+import type { Scenario, ScenarioType } from '@/types/scenario-sandbox.types'
 import {
   getStatusColor,
   SCENARIO_TYPE_LABELS,

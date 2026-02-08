@@ -10,13 +10,11 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Loader2, Tag, Hash, Palette, Link as LinkIcon, FolderTree } from 'lucide-react'
+import { Loader2, Hash, Palette, Link as LinkIcon, FolderTree } from 'lucide-react'
 
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import {
   Select,
@@ -36,7 +34,7 @@ import {
 } from '@/components/ui/form'
 
 import type { Theme, ThemeCreateRequest, ThemeUpdateRequest } from '@/types/theme.types'
-import type { DossierStatus, SensitivityLevel } from '@/types/dossier'
+import type { DossierStatus } from '@/types/dossier'
 
 // Form validation schema
 const themeFormSchema = z.object({
@@ -104,10 +102,15 @@ export function ThemeForm({
     defaultValues: {
       name_en: theme?.name_en || '',
       name_ar: theme?.name_ar || '',
-      summary_en: theme?.summary_en || '',
-      summary_ar: theme?.summary_ar || '',
-      status: theme?.status || 'active',
-      sensitivity_level: theme?.sensitivity_level || 'low',
+      summary_en: theme?.description_en || '',
+      summary_ar: theme?.description_ar || '',
+      status: (theme?.status as 'active' | 'inactive' | 'archived') || 'active',
+      sensitivity_level:
+        theme?.sensitivity_level === 2
+          ? 'medium'
+          : theme?.sensitivity_level === 3 || theme?.sensitivity_level === 4
+            ? 'high'
+            : 'low',
       tags: theme?.tags || [],
       parent_theme_id: theme?.extension?.parent_theme_id || defaultParentId || null,
       category_code: theme?.extension?.category_code || '',
@@ -121,13 +124,15 @@ export function ThemeForm({
 
   // Handle form submission
   const handleSubmit = async (values: ThemeFormValues) => {
+    // Map sensitivity_level string to numeric value
+    const sensitivityMap: Record<string, number> = { low: 1, medium: 2, high: 3 }
     const payload: ThemeCreateRequest | ThemeUpdateRequest = {
       name_en: values.name_en,
       name_ar: values.name_ar,
-      summary_en: values.summary_en || undefined,
-      summary_ar: values.summary_ar || undefined,
+      description_en: values.summary_en || undefined,
+      description_ar: values.summary_ar || undefined,
       status: values.status as DossierStatus,
-      sensitivity_level: values.sensitivity_level as SensitivityLevel,
+      sensitivity_level: sensitivityMap[values.sensitivity_level] ?? 1,
       tags: values.tags,
       extension: {
         parent_theme_id: values.parent_theme_id || null,

@@ -38,7 +38,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Collapsible, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { DossierTypeIcon } from './DossierTypeIcon'
 import { DossierSelector, type SelectedDossier } from './DossierSelector'
@@ -286,7 +286,7 @@ export function DossierLinksWidget({
 
   // Handlers
   const handleAddDossier = useCallback(
-    (dossierIds: string[], dossiers: SelectedDossier[]) => {
+    (dossierIds: string[], _dossiers: SelectedDossier[]) => {
       if (dossierIds.length === 0) return
 
       createLinks.mutate({
@@ -424,7 +424,7 @@ export function DossierLinksWidget({
               editable={editable}
               compact={compact}
               onRemove={handleRemoveLink}
-              t={t}
+              t={t as any}
             />
           ))}
         </div>

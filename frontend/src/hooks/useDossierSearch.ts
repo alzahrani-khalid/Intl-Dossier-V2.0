@@ -7,10 +7,9 @@
  * Optimized for the DossierSelector component with debouncing.
  */
 
-import { useQuery } from '@tanstack/react-query'
 import { useState, useEffect, useMemo } from 'react'
-import { useDossiers, dossierKeys } from './useDossiers'
-import type { DossierType, Dossier } from '@/types/dossier'
+import { useDossiers } from './useDossiers'
+import type { DossierType } from '@/types/dossier'
 
 // ============================================================================
 // Types
@@ -143,7 +142,7 @@ export function useDossierSearch(options: UseDossierSearchOptions = {}): UseDoss
     isError,
     error: error as Error | null,
     refetch,
-    totalCount: data?.total ?? 0,
+    totalCount: data?.pagination?.total_count ?? 0,
   }
 }
 

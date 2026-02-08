@@ -1,10 +1,10 @@
 # Intl-DossierV2.0 Development Guidelines
 
-Last updated: 2025-10-07
+Last updated: 2026-02-06
 
 ## Core Tech Stack
 
-- **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS, shadcn/ui, i18next, React Flow (network graphs)
+- **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS v4, HeroUI v3 (React Aria), i18next, React Flow (network graphs)
 - **Mobile**: Expo SDK 52+, React Native 0.81+, TypeScript 5.8+, React Native Paper 5.12+ (Material Design 3), WatermelonDB 0.28+ (offline-first), React Navigation 7+, expo-local-authentication (biometrics), expo-notifications (push), i18next (internationalization)
 - **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
 - **Database**: PostgreSQL 15+ with pgvector, pg_trgm, pg_tsvector extensions
@@ -105,105 +105,124 @@ export function ResponsiveRTLComponent() {
 
 ## UI Component Guidelines
 
-### Aceternity UI Component Strategy (MANDATORY - HIGHEST PRIORITY)
+### HeroUI v3 Component Strategy (MANDATORY - HIGHEST PRIORITY)
+
+**⚠️ HeroUI v3 is in BETA** - Expect breaking changes. Migration from v2 to v3 is NOT yet available.
 
 **Component Selection Hierarchy** - **ALWAYS** follow this order (NO EXCEPTIONS):
 
-1. **Aceternity UI (Primary)**: https://ui.aceternity.com/components
-   - **130+ components** in 18 categories
-   - Responsive & mobile-first by default
-   - Built with React 19, Tailwind CSS, Framer Motion
+1. **HeroUI v3 (Primary)**: https://heroui-react-v3.vercel.app/docs/react
+   - Built on **React Aria Components** (accessibility-first)
+   - Requires **Tailwind CSS v4** (NOT v3)
+   - Uses **compound component pattern** (e.g., `Card.Header`, `Modal.Body`)
+   - No Provider component needed (unlike v2)
+   - **Install**: `pnpm add @heroui/react @heroui/styles`
+   - **MCP Available**: Use `heroui-react` MCP tools for docs and component info
+
+2. **Aceternity UI (Secondary)**: https://ui.aceternity.com/components
+   - **130+ components** with advanced animations
+   - Use for animated/decorative components not in HeroUI
    - **Install**: `npx shadcn@latest add https://ui.aceternity.com/registry/[component].json --yes`
-   - **Example**: `npx shadcn@latest add https://ui.aceternity.com/registry/bento-grid.json --yes`
 
-2. **Aceternity UI Pro (Primary+)**: https://pro.aceternity.com/components
-   - **30+ component blocks**, **7+ premium templates**
-   - Advanced animations and interactions
-   - API Key: Stored in `.env.local` (NEVER commit!)
-   - **Install**: Check Aceternity Pro docs for exact command format
-   - **Requires**: `ACETERNITY_PRO_API_KEY` environment variable
-
-3. **Kibo-UI (Secondary Fallback)**: https://www.kibo-ui.com
-   - Use ONLY if Aceternity doesn't have equivalent
+3. **Kibo-UI (Tertiary)**: https://www.kibo-ui.com
+   - Use ONLY if HeroUI AND Aceternity don't have equivalent
    - **Install**: `npx shadcn@latest add @kibo-ui/[component]`
 
 4. **shadcn/ui (Last Resort)**: https://ui.shadcn.com
-   - Use ONLY if Aceternity AND Kibo-UI don't have equivalent
+   - Use ONLY if all above don't have the component
    - **Install**: `npx shadcn@latest add [component]`
 
-### Aceternity Component Categories (130+ components)
+### HeroUI v3 Drop-In Replacement Pattern
 
-| Category                  | Count | Examples                                                |
-| ------------------------- | ----- | ------------------------------------------------------- |
-| **Backgrounds & Effects** | 23    | Sparkles, Aurora, Gradient animations, Spotlight        |
-| **Cards**                 | 14    | 3D card, Hoverable card, Expandable card, Animated card |
-| **Scroll & Parallax**     | 5     | Sticky scroll, Parallax effects, Container scroll       |
-| **Text Components**       | 9     | Typewriter, Flip words, Text generation effects         |
-| **Buttons**               | 4     | Animated buttons, Gradient borders, Moving borders      |
-| **Navigation**            | 7     | Floating navbar, Sidebar, Floating dock, Tabs           |
-| **Inputs & Forms**        | 3     | Signup forms, File upload, Vanish input                 |
-| **Overlays & Modals**     | 3     | Animated modals, Tooltips, Link preview                 |
-| **Carousels & Sliders**   | 4     | Image sliders, Testimonials                             |
-| **Layout & Grid**         | 3     | Bento grid, Layout grid                                 |
-| **Data & Visualization**  | 5     | GitHub globe, World map, Timeline, Charts               |
-| **3D Components**         | 2     | 3D pins, Marquee effects                                |
+We use a **shadcn re-export pattern** for seamless migration:
 
-**Full catalog**: https://ui.aceternity.com/components
+```
+frontend/src/components/ui/
+├── button.tsx          → re-exports from heroui-button.tsx
+├── card.tsx            → re-exports from heroui-card.tsx
+├── badge.tsx           → re-exports from heroui-chip.tsx
+├── skeleton.tsx        → re-exports from heroui-skeleton.tsx
+├── heroui-button.tsx   → HeroUI Button with cva + Slot (asChild support)
+├── heroui-card.tsx     → HeroUI Card as plain divs
+├── heroui-chip.tsx     → HeroUI Chip as Badge (span)
+├── heroui-skeleton.tsx → HeroUI Skeleton with animate-pulse
+├── heroui-modal.tsx    → HeroUI Modal with Dialog-compatible API
+└── heroui-forms.tsx    → TextField, TextArea, Checkbox, Switch wrappers
+```
+
+**Key Design Decisions**:
+
+- Wrappers render as **plain HTML elements** (div/span/button), NOT HeroUI primitives
+- This ensures full `React.HTMLAttributes` compatibility
+- `buttonVariants` exported via `cva` (same API as shadcn)
+- `asChild` supported via `@radix-ui/react-slot`
+
+### HeroUI v3 Compound Component APIs
+
+**Tooltip:**
+
+```tsx
+<Tooltip delay={0}>
+  <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
+  <Tooltip.Content placement="right">{content}</Tooltip.Content>
+</Tooltip>
+```
+
+**Modal:**
+
+```tsx
+<Modal>
+  <Button>Trigger</Button>
+  <Modal.Backdrop>
+    <Modal.Container size="md" placement="center">
+      <Modal.Dialog>
+        <Modal.CloseTrigger />
+        <Modal.Header>
+          <Modal.Heading>Title</Modal.Heading>
+        </Modal.Header>
+        <Modal.Body>{content}</Modal.Body>
+        <Modal.Footer>
+          <Button slot="close">Close</Button>
+        </Modal.Footer>
+      </Modal.Dialog>
+    </Modal.Container>
+  </Modal.Backdrop>
+</Modal>
+```
+
+**TextField:**
+
+```tsx
+<TextField name="email" isRequired isInvalid={hasError}>
+  <Label>Email</Label>
+  <Input placeholder="email@example.com" />
+  <Description>Helper text</Description>
+  <FieldError>Error message</FieldError>
+</TextField>
+```
+
+**Dropdown Placement**: Space-separated (`"bottom start"` NOT `"bottom-start"`)
+
+### HeroUI v3 Theme System
+
+- Supports: `light`, `dark`, `system` modes
+- Default: `system` (respects OS preference)
+- Uses `.dark` class on `<html>`
 
 ### Before Writing ANY Component
 
 **MANDATORY CHECKLIST**:
 
-1. ✅ Search Aceternity UI for component (use MCP tool or website)
-2. ✅ Check Aceternity Pro for premium variants
+1. ✅ Check HeroUI v3 docs (use `heroui-react` MCP or website)
+2. ✅ If not found, check Aceternity UI catalog
 3. ✅ If not found, check Kibo-UI registry
 4. ✅ ONLY THEN consider shadcn/ui or custom build
-5. ✅ Verify component supports mobile-first (all Aceternity components do)
+5. ✅ Verify component supports mobile-first
 6. ✅ Verify RTL compatibility (add logical properties if needed)
-
-### Installation Examples
-
-**Aceternity Free**:
-
-```bash
-# Floating navbar
-npx shadcn@latest add https://ui.aceternity.com/registry/floating-navbar.json --yes
-
-# 3D Card
-npx shadcn@latest add https://ui.aceternity.com/registry/3d-card.json --yes
-
-# Bento Grid (layout)
-npx shadcn@latest add https://ui.aceternity.com/registry/bento-grid.json --yes
-
-# Timeline
-npx shadcn@latest add https://ui.aceternity.com/registry/timeline.json --yes
-```
-
-**Aceternity Pro** (verify command format in Pro docs):
-
-```bash
-# Dashboard template
-npx shadcn@latest add @aceternity-pro/dashboard-template-one
-
-# Advanced card blocks
-npx shadcn@latest add @aceternity-pro/card-blocks
-```
-
-**Kibo-UI Fallback**:
-
-```bash
-npx shadcn@latest add @kibo-ui/kanban
-```
-
-**shadcn/ui (Last Resort)**:
-
-```bash
-npx shadcn@latest add form
-```
 
 ### Mobile-First & RTL Requirements (MANDATORY)
 
-All Aceternity components must be adapted for:
+All components must be adapted for:
 
 ✅ **Mobile-First**: Start with base styles (320-640px), scale up
 ✅ **Logical Properties**: Use `ms-*`, `me-*`, `ps-*`, `pe-*` (NOT `ml-*`, `mr-*`)
@@ -211,22 +230,29 @@ All Aceternity components must be adapted for:
 ✅ **Icon Flipping**: Use `className={isRTL ? 'rotate-180' : ''}` for directional icons
 ✅ **Text Alignment**: Use `text-start`/`text-end` (NOT `text-left`/`text-right`)
 
-### Aceternity Component Template
+### Component Template (HeroUI v3)
 
 ```tsx
 import { useTranslation } from 'react-i18next';
-import { BentoGrid } from '@/components/ui/bento-grid';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
-export function AceternityResponsiveComponent() {
+export function HeroUIResponsiveComponent() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
-      <BentoGrid className="gap-4 sm:gap-6 lg:gap-8">
-        {/* Aceternity components work mobile-first by default */}
-        {/* Add RTL support via logical properties and dir attribute */}
-      </BentoGrid>
+      <Card className="p-4 sm:p-6">
+        <Card.Header>
+          <h2 className="text-lg sm:text-xl text-start">{t('title')}</h2>
+        </Card.Header>
+        <Card.Content>
+          <Button variant="default" size="sm" className="min-h-11">
+            {t('action')}
+          </Button>
+        </Card.Content>
+      </Card>
     </div>
   );
 }
@@ -234,50 +260,51 @@ export function AceternityResponsiveComponent() {
 
 ### Component File Locations
 
-- **Aceternity UI components**: `frontend/src/components/ui/` (installed via shadcn CLI)
+- **HeroUI wrappers**: `frontend/src/components/ui/heroui-*.tsx`
+- **Re-exports (shadcn compat)**: `frontend/src/components/ui/*.tsx`
 - **Configuration**: `frontend/components.json`
-- **Documentation**: `frontend/.aceternity/` (installation notes, guides, examples)
-- **API Key**: `frontend/.env.local` (NEVER commit!)
 
-### Key Dependencies (Already Installed)
+### Key Dependencies
 
-- ✅ `framer-motion` - Required for Aceternity animations
+- ✅ `@heroui/react` - HeroUI v3 components
+- ✅ `@heroui/styles` - HeroUI styling system
+- ✅ `@radix-ui/react-slot` - For `asChild` prop support
+- ✅ `class-variance-authority` (cva) - Variant management
 - ✅ `clsx` - Conditional classnames utility
 - ✅ `tailwind-merge` - Merge Tailwind classes
 
-### MCP Server Integration (Optional)
+### HeroUI Skills & MCP Integration
 
-For AI-assisted component discovery, install Aceternity UI MCP server:
+**Skill (Recommended)**: Use `/heroui-react` skill for guided component implementation:
 
-**Claude Code Config** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "aceternityui": {
-      "command": "npx",
-      "args": ["aceternityui-mcp"]
-    }
-  }
-}
+```bash
+# Invoke the skill for HeroUI v3 guidance
+/heroui-react
 ```
 
-After restart, use MCP tools to search and discover components.
+**MCP Server**: HeroUI MCP tools available for AI-assisted component discovery:
 
-### Component Import Pattern
+```bash
+# Use heroui-react MCP tools:
+# - list_components - List all available v3 components
+# - get_component_docs - Get component documentation
+# - get_component_source_code - View source code
+# - get_docs - Get general documentation
+```
 
-- Always import from `@/components/ui/<component>`
-- Example: `import { BentoGrid } from '@/components/ui/bento-grid'`
-- Check `frontend/src/components/ui/` for installed components
-- Refer to `frontend/.aceternity/INSTALLATION_NOTES.md` for verified installations
+**💡 TIP**: Always invoke `/heroui-react` skill when working with HeroUI components to get the latest v3 Beta APIs and patterns.
 
-### shadcn/ui Fallback Strategy (DEPRECATED AS PRIMARY)
+### Aceternity UI (Secondary - For Animations)
 
-**⚠️ IMPORTANT**: shadcn/ui is now a LAST RESORT fallback only. Use Aceternity UI as the primary component library for all new components. Only use shadcn/ui when:
+Use Aceternity for animated/decorative components:
 
-1. Aceternity doesn't have the component
-2. Kibo-UI doesn't have the component
-3. Building a custom component isn't feasible
+| Category                  | Examples                                         |
+| ------------------------- | ------------------------------------------------ |
+| **Backgrounds & Effects** | Sparkles, Aurora, Gradient animations, Spotlight |
+| **Text Effects**          | Typewriter, Flip words, Text generation          |
+| **3D Components**         | 3D cards, 3D pins, Marquee effects               |
+
+**Install**: `npx shadcn@latest add https://ui.aceternity.com/registry/[component].json --yes`
 
 ## Work Management Terminology (MANDATORY)
 
@@ -439,7 +466,15 @@ For comprehensive details, see:
 
 ## Recent Changes
 
-- 035-dossier-context: Added TypeScript 5.8+ (strict mode), React 19+, Node.js 18+ LTS + TanStack Router v5 (routing + URL state), TanStack Query v5 (server state), Supabase JS v2 (client), i18next (i18n), Tailwind CSS, Aceternity UI
+- 036-heroui-migration: Switched to **HeroUI v3** (React Aria) as primary UI library
+  - ✅ Tailwind CSS v4 migration complete
+  - ✅ shadcn re-export pattern for backwards compatibility (button, card, badge, skeleton)
+  - ✅ Compound component wrappers: Modal, TextField, TextArea, Checkbox, Switch
+  - ✅ `buttonVariants` via cva with `asChild` support (@radix-ui/react-slot)
+  - ✅ Aceternity UI retained as secondary for animations/effects
+  - 📊 Status: Drop-in replacement complete, all 500+ consumers work via re-exports
+
+- 035-dossier-context: Added TypeScript 5.8+ (strict mode), React 19+, Node.js 18+ LTS + TanStack Router v5 (routing + URL state), TanStack Query v5 (server state), Supabase JS v2 (client), i18next (i18n), Tailwind CSS, HeroUI v3
 
 - 034-dossier-ui-polish: Added TypeScript 5.0+ (strict mode), React 19+ + TanStack Router, TanStack Query, Tailwind CSS, i18next, Framer Motion, Aceternity UI
 
@@ -522,18 +557,5 @@ Core workflow:
 
 ## Active Technologies
 
-- TypeScript 5.8+ (strict mode), React 19+, Node.js 18+ LTS + TanStack Router v5 (routing + URL state), TanStack Query v5 (server state), Supabase JS v2 (client), i18next (i18n), Tailwind CSS, Aceternity UI (035-dossier-context)
-- PostgreSQL 15+ (Supabase) with RLS, new junction table for work-item-dossier links (035-dossier-context)
-
-- TypeScript 5.0+ (strict mode), React 19+ + TanStack Router, TanStack Query, Tailwind CSS, i18next, Framer Motion, Aceternity UI (034-dossier-ui-polish)
-- N/A (frontend-only polish, no database changes) (034-dossier-ui-polish)
-
-- TypeScript 5.8+ (strict mode), Node.js 18+ LTS, React 19 + @mastra/core (agents), @xenova/transformers (BGE-M3), TanStack Router/Query v5, Supabase JS v2, i18nex (033-ai-brief-generation)
-- PostgreSQL 15+ (Supabase) with pgvector extension, Redis 7.x for caching (033-ai-brief-generation)
-
-- TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Edge Functions), Vite (030-health-commitment)
-- PostgreSQL 15+ with pgvector extension, materialized views for aggregations, Redis 7.x for caching (030-health-commitment)
-- TypeScript 5.8+ (strict mode) + React 19, TanStack Router v5, TanStack Query v5, Supabase JS v2, i18next, Framer Motion, Aceternity UI (031-commitments-management)
-- PostgreSQL 15+ (Supabase), Supabase Storage (evidence files) (031-commitments-management)
-- TypeScript 5.8+ (strict mode) + React 19, TanStack Router v5, TanStack Query (useInfiniteQuery), Supabase Realtime, i18next (032-unified-work-management)
-- PostgreSQL VIEWs, Materialized VIEWs, RPC functions with cursor pagination, custom enums (tracking_type, work_source) (032-unified-work-management)
+- TypeScript 5.8+ (strict mode), React 19+, Node.js 18+ LTS + TanStack Router v5, TanStack Query v5, Supabase JS v2, i18next, **Tailwind CSS v4**, **HeroUI v3** (React Aria), Aceternity UI (animations)
+- PostgreSQL 15+ (Supabase) with RLS, pgvector, pg_trgm extensions

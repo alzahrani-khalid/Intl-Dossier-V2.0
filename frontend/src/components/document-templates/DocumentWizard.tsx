@@ -88,7 +88,7 @@ export function DocumentWizard({
     isSaving,
     isCompleting,
   } = useDocumentWizard(templateId, entityType, entityId)
-  const validateMutation = useValidateDocument()
+  const _validateMutation = useValidateDocument()
 
   // Initialize with existing document values
   useEffect(() => {

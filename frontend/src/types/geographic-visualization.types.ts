@@ -258,7 +258,7 @@ export interface GeoVisualizationSummary {
 export interface GeoVisualizationResponse {
   success: true
   data: {
-    countries?: CountryGeoData[]
+    countries?: CountryEngagementMetrics[]
     engagementMetrics?: CountryEngagementMetrics[]
     relationships?: RelationshipFlow[]
     summary?: GeoVisualizationSummary

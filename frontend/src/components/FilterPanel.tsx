@@ -66,7 +66,7 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
 
   // Toggle filter value
   const toggleFilter = useCallback(
-    (filterKey: keyof DossierFilters, value: string) => {
+    (filterKey: keyof DossierFilters, value: string | number) => {
       const currentValue = filters[filterKey]
 
       if (filterKey === 'type' || filterKey === 'status' || filterKey === 'sensitivity') {
@@ -78,9 +78,10 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
       } else if (filterKey === 'tags') {
         // Multi-select for tags
         const currentTags = (currentValue as string[]) || []
-        const newTags = currentTags.includes(value)
-          ? currentTags.filter((t) => t !== value)
-          : [...currentTags, value]
+        const tagValue = String(value)
+        const newTags = currentTags.includes(tagValue)
+          ? currentTags.filter((t) => t !== tagValue)
+          : [...currentTags, tagValue]
         onFilterChange({
           ...filters,
           tags: newTags.length > 0 ? newTags : undefined,
@@ -109,10 +110,10 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
   ].filter(Boolean).length
 
   // Check if filter is active
-  const isFilterActive = (filterKey: keyof DossierFilters, value: string): boolean => {
+  const isFilterActive = (filterKey: keyof DossierFilters, value: string | number): boolean => {
     const currentValue = filters[filterKey]
     if (Array.isArray(currentValue)) {
-      return currentValue.includes(value)
+      return currentValue.includes(String(value))
     }
     return currentValue === value
   }

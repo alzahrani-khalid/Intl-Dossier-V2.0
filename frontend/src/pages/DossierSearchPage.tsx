@@ -21,8 +21,8 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
 import { DossierFirstSearchResults } from '@/components/Search/DossierFirstSearchResults'
-import { DossierSearchFilters, DossierTypeChips } from '@/components/Search/DossierSearchFilters'
-import { useDossierFirstSearch, DEFAULT_FILTERS } from '@/hooks/useDossierFirstSearch'
+import { DossierSearchFilters } from '@/components/Search/DossierSearchFilters'
+import { useDossierFirstSearch } from '@/hooks/useDossierFirstSearch'
 import type {
   DossierSearchResult,
   RelatedWorkItem,
@@ -90,7 +90,7 @@ export function DossierSearchPage() {
     ) {
       navigate({
         to: '/search',
-        search: newParams,
+        search: newParams as any,
         replace: true,
       })
     }

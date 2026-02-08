@@ -47,7 +47,7 @@ export function DataPrivacySettingsSection() {
   const [isDeleting, setIsDeleting] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [sessions, setSessions] = useState<Session[]>([])
-  const [isLoadingSessions, setIsLoadingSessions] = useState(true)
+  const [_isLoadingSessions, setIsLoadingSessions] = useState(true)
 
   // Fetch active sessions on mount
   useEffect(() => {

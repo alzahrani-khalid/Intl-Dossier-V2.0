@@ -224,6 +224,7 @@ export function useRoleBasedDashboard(
       }, refreshInterval)
       return () => clearInterval(interval)
     }
+    return undefined
   }, [refresh, refreshInterval])
 
   // Build state object

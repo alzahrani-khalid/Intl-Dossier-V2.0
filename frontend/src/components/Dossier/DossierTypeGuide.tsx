@@ -39,7 +39,7 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { DossierType } from '@/services/dossier-api'
 
-interface DossierTypeGuideProps {
+export interface DossierTypeGuideProps {
   type: DossierType
   /** Render as compact tooltip or full popover */
   variant?: 'tooltip' | 'popover' | 'inline'
@@ -292,7 +292,7 @@ export function DossierTypeGuide({
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
   const [open, setOpen] = useState(false)
-  const colors = getTypeColors(type)
+  const _colors = getTypeColors(type)
 
   // Inline variant - no trigger needed
   if (variant === 'inline') {

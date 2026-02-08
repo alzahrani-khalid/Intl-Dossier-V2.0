@@ -28,7 +28,6 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
@@ -198,7 +197,7 @@ export function NotificationPreviewTimeline({
 
   // Animation effect for cycling through notifications
   React.useEffect(() => {
-    if (!isAnimating || currentStep !== 0) return
+    if (!isAnimating || currentStep !== 0) return undefined
 
     const interval = setInterval(() => {
       setActiveNotificationIndex((prev) => (prev >= SAMPLE_NOTIFICATIONS.length - 1 ? 0 : prev + 1))

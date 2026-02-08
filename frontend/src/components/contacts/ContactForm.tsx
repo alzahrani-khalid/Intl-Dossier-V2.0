@@ -261,7 +261,7 @@ export function ContactForm({
                 <SelectContent>
                   {organizations.map((org) => (
                     <SelectItem key={org.id} value={org.id}>
-                      {org.name}
+                      {isRTL ? org.name_ar : org.name_en}
                     </SelectItem>
                   ))}
                 </SelectContent>

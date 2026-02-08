@@ -60,14 +60,14 @@ export interface PullToRefreshResult {
     isAtTop: boolean
   }
   /** Ref to attach to the scroll container */
-  containerRef: React.RefObject<HTMLDivElement>
+  containerRef: React.RefObject<HTMLDivElement | null>
   /** Reset the pull-to-refresh state */
   reset: () => void
 }
 
 export function usePullToRefresh(config: PullToRefreshConfig): PullToRefreshResult {
   const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const _isRTL = i18n.language === 'ar'
 
   const {
     pullThreshold = 80,
@@ -131,6 +131,7 @@ export function usePullToRefresh(config: PullToRefreshConfig): PullToRefreshResu
 
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [isRefreshing, status, completeDelay, reset, haptic])
 
   // Update status based on pull distance
@@ -161,7 +162,7 @@ export function usePullToRefresh(config: PullToRefreshConfig): PullToRefreshResu
       // Check if we're at the top of the scroll container
       if (!checkIsAtTop()) return
 
-      const touch = e.touches[0]
+      const touch = e.touches[0]!
       startY.current = touch.clientY
       currentY.current = touch.clientY
       isTracking.current = true
@@ -182,7 +183,7 @@ export function usePullToRefresh(config: PullToRefreshConfig): PullToRefreshResu
         return
       }
 
-      const touch = e.touches[0]
+      const touch = e.touches[0]!
       currentY.current = touch.clientY
       const deltaY = currentY.current - startY.current
 

@@ -8,7 +8,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { Filter, RefreshCw, ChevronDown, Loader2, Inbox, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {

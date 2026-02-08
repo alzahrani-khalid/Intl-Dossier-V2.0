@@ -11,7 +11,7 @@
  * - RTL support for Arabic
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UniqueIdentifier } from '@dnd-kit/core'
 import {
@@ -24,6 +24,7 @@ import {
   Signal,
   AlertTriangle,
   Users,
+  Link2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
@@ -68,6 +69,7 @@ import {
   getUpdatePayload,
 } from './utils/status-transitions'
 import { useBulkKanbanOperations } from '@/hooks/useBulkKanbanOperations'
+import { DossierPicker } from '@/components/work-creation/DossierPicker'
 import type {
   WorkItem,
   KanbanColumnMode,
@@ -107,6 +109,10 @@ interface EnhancedBoardProps {
   enableWipWarnings?: boolean
   // Available assignees for bulk assign
   availableAssignees?: Array<{ id: string; name: string; avatar_url?: string }>
+  // Pagination
+  hasMore?: Record<string, boolean>
+  totalCountPerColumn?: Record<string, number>
+  onLoadMore?: (columnKey: string) => void
 }
 
 export function EnhancedKanbanBoard({
@@ -130,6 +136,9 @@ export function EnhancedKanbanBoard({
   enableBulkOperations = true,
   enableWipWarnings = true,
   availableAssignees = [],
+  hasMore: hasMoreMap = {},
+  totalCountPerColumn = {},
+  onLoadMore,
 }: EnhancedBoardProps) {
   const { t, i18n } = useTranslation('unified-kanban')
   const isRTL = i18n.language === 'ar'
@@ -140,6 +149,11 @@ export function EnhancedKanbanBoard({
   const [sourceFilter, setSourceFilter] = useState<WorkSource[]>(initialSourceFilter)
   const [swimlaneMode, setSwimlaneMode] = useState<SwimlaneMode>(initialSwimlaneMode)
   const [collapsedSwimlanes, setCollapsedSwimlanes] = useState<Set<string>>(new Set())
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showDossierPicker, setShowDossierPicker] = useState(false)
+
+  // Track shift key for range selection through KanbanCard (which doesn't forward events)
+  const lastClickEventRef = useRef<MouseEvent | null>(null)
 
   // Bulk operations
   const bulkOps = useBulkKanbanOperations(items)
@@ -148,11 +162,24 @@ export function EnhancedKanbanBoard({
   const columnDefinitions = useMemo(() => getColumnsForMode(columnMode), [columnMode])
   const columnOrder = useMemo(() => getColumnOrder(columnMode, isRTL), [columnMode, isRTL])
 
-  // Filter items by source
+  // Filter items by source and search query
   const filteredItems = useMemo(() => {
-    if (sourceFilter.length === 0) return items
-    return items.filter((item) => sourceFilter.includes(item.source))
-  }, [items, sourceFilter])
+    let result = items
+    if (sourceFilter.length > 0) {
+      result = result.filter((item) => sourceFilter.includes(item.source))
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase()
+      result = result.filter(
+        (item) =>
+          item.title.toLowerCase().includes(q) ||
+          item.title_ar?.toLowerCase().includes(q) ||
+          item.description?.toLowerCase().includes(q) ||
+          item.assignee?.name.toLowerCase().includes(q),
+      )
+    }
+    return result
+  }, [items, sourceFilter, searchQuery])
 
   // Map column_key from database to frontend column key
   const mapColumnKey = (columnKey: string): string => {
@@ -295,17 +322,26 @@ export function EnhancedKanbanBoard({
     [onStatusChange, filteredItems, isRTL, toast, t, kanbanColumns, enableWipWarnings, wipLimits],
   )
 
-  // Handle item click
+  // Handle item click (with shift-click for range selection)
   const handleItemClick = useCallback(
-    (item: WorkItem) => {
+    (item: WorkItem, event?: React.MouseEvent) => {
+      // For shift-click support through KanbanCard (which doesn't forward events),
+      // we capture the last native click event from the board container
+      const shiftKey = event?.shiftKey || lastClickEventRef.current?.shiftKey || false
+      lastClickEventRef.current = null
       if (bulkOps.selectionState.isSelecting) {
-        bulkOps.toggleSelection(item.id)
+        bulkOps.toggleSelection(item.id, shiftKey)
       } else if (onItemClick) {
         onItemClick(item)
       }
     },
     [onItemClick, bulkOps],
   )
+
+  // Capture native click events on the board for shift-key detection
+  const boardClickCapture = useCallback((e: React.MouseEvent) => {
+    lastClickEventRef.current = e.nativeEvent
+  }, [])
 
   // Render overlay for dragging
   const renderOverlay = useCallback((activeItem: WorkItem | null) => {
@@ -448,6 +484,32 @@ export function EnhancedKanbanBoard({
                   </DropdownMenuContent>
                 </DropdownMenu>
 
+                {/* Link to Dossier */}
+                <div className="relative">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowDossierPicker(!showDossierPicker)}
+                    className="gap-2"
+                  >
+                    <Link2 className="h-4 w-4" />
+                    {t('bulkActions.linkToDossier', 'Link to Dossier')}
+                  </Button>
+                  {showDossierPicker && (
+                    <div className="absolute top-full mt-1 start-0 z-50 w-[300px]">
+                      <DossierPicker
+                        onChange={(dossierId) => {
+                          if (dossierId) {
+                            bulkOps.linkSelectedToDossier(dossierId)
+                          }
+                          setShowDossierPicker(false)
+                        }}
+                        placeholder={t('bulkActions.selectDossier', 'Select a dossier...')}
+                      />
+                    </div>
+                  )}
+                </div>
+
                 <Button
                   variant="ghost"
                   size="sm"
@@ -552,7 +614,7 @@ export function EnhancedKanbanBoard({
                         columnItems.map((item) => (
                           <div
                             key={item.id}
-                            onClick={() => handleItemClick(item)}
+                            onClick={(e) => handleItemClick(item, e)}
                             className={cn(
                               'rounded-lg border bg-background p-2 cursor-pointer',
                               'hover:shadow-sm transition-shadow',
@@ -593,7 +655,11 @@ export function EnhancedKanbanBoard({
   }
 
   return (
-    <div className={cn('flex flex-col h-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className={cn('flex flex-col h-full', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+      onClickCapture={boardClickCapture}
+    >
       {/* Header */}
       <UnifiedKanbanHeader
         columnMode={columnMode}
@@ -607,6 +673,8 @@ export function EnhancedKanbanBoard({
         onRefresh={onRefresh}
         totalCount={totalCount}
         overdueCount={overdueCount}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
       {/* Swimlane selector */}
@@ -667,6 +735,9 @@ export function EnhancedKanbanBoard({
                     isRTL={isRTL}
                     className={columnDef?.bgColor}
                     headerClassName={cn(columnDef?.bgColor, columnDef?.color)}
+                    hasMore={hasMoreMap[columnKey] || false}
+                    totalCount={totalCountPerColumn[columnKey]}
+                    onLoadMore={onLoadMore ? () => onLoadMore(columnKey) : undefined}
                   >
                     {/* WIP indicator */}
                     {renderWipIndicator(columnKey, columnItems.length)}

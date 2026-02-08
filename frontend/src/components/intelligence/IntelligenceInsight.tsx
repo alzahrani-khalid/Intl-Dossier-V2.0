@@ -22,7 +22,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ConfidenceBadge } from './ConfidenceBadge'
-import type { IntelligenceReport } from '@/types/intelligence-reports.types'
+import type { IntelligenceReport } from '@/services/intelligence-api'
 import { getConfidenceLevel } from '@/utils/intelligence-helpers'
 import {
   TrendingUp,
@@ -188,7 +188,7 @@ export const IntelligenceInsight = memo(function IntelligenceInsight({
         {/* View Full Report Link */}
         <Link
           to={`/dossiers/${dossierType}/${dossierId}`}
-          search={{ tab: 'intelligence' }}
+          search={{ tab: 'intelligence' } as any}
           className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline group"
         >
           <span>{t('intelligence.view_full_report', 'View Full Report')}</span>

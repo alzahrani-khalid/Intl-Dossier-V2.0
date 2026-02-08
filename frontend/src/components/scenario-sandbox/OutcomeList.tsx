@@ -7,7 +7,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Edit, Trash2, TrendingUp, TrendingDown, AlertCircle, Target } from 'lucide-react'
+import { Plus, Edit, Trash2, TrendingUp, TrendingDown, Target } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -22,7 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import type { ScenarioOutcome, ImpactLevel } from '@/types/scenario-sandbox.types'
+import type { ScenarioOutcome } from '@/types/scenario-sandbox.types'
 import {
   IMPACT_LEVEL_LABELS,
   getImpactLevelColor,

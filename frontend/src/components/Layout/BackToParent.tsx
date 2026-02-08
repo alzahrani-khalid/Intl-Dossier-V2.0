@@ -7,7 +7,7 @@
  */
 
 import { useMemo } from 'react'
-import { Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, ChevronUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -81,7 +81,6 @@ export function BackToParent({
 }: BackToParentProps) {
   const { t, i18n } = useTranslation('common')
   const location = useLocation()
-  const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
 
   // Determine parent route from current location
@@ -105,7 +104,6 @@ export function BackToParent({
     // Generic dossier detail pattern: /dossiers/TYPE/ID
     const dossierMatch = pathname.match(/^\/dossiers\/([^/]+)\/([^/]+)/)
     if (dossierMatch) {
-      const type = dossierMatch[1]
       return {
         path: '/dossiers',
         label: t('navigation.allDossiers', 'All Dossiers'),
@@ -118,10 +116,10 @@ export function BackToParent({
       const baseRoute = `/${segments[0]}`
       const routeInfo = routeHierarchy[baseRoute]
       if (routeInfo) {
-        return { path: routeInfo.path, label: t(routeInfo.labelKey, segments[0]) }
+        return { path: routeInfo.path, label: t(routeInfo.labelKey, segments[0] as string) }
       }
       // Fallback to base route
-      return { path: baseRoute, label: t(`navigation.${segments[0]}`, segments[0]) }
+      return { path: baseRoute, label: t(`navigation.${segments[0]}`, segments[0] as string) }
     }
 
     return null
@@ -257,7 +255,7 @@ export function BreadcrumbBack({ segments, className }: BreadcrumbBackProps) {
       const labelKey = `navigation.${parts[i]}`
       crumbs.push({
         path: currentPath,
-        label: t(labelKey, parts[i].charAt(0).toUpperCase() + parts[i].slice(1)),
+        label: t(labelKey, (parts[i]?.charAt(0).toUpperCase() ?? '') + (parts[i]?.slice(1) ?? '')),
       })
     }
 

@@ -1,12 +1,17 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from '@tanstack/react-router';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link } from '@tanstack/react-router'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 import {
   ArrowLeft,
   CheckCircle2,
@@ -23,7 +28,7 @@ import {
   Edit,
   Trash2,
   ChevronRight,
-} from 'lucide-react';
+} from 'lucide-react'
 
 /**
  * CommitmentsHelpPage Component
@@ -40,9 +45,9 @@ import {
  * - RTL support for Arabic
  */
 export function CommitmentsHelpPage() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
-  const [activeSection, setActiveSection] = useState('overview');
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+  const [activeSection, setActiveSection] = useState('overview')
 
   return (
     <div
@@ -141,7 +146,9 @@ export function CommitmentsHelpPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                 <AttributeCard
                   title={isRTL ? 'العنوان والوصف' : 'Title & Description'}
-                  description={isRTL ? 'اسم قصير ووصف تفصيلي للالتزام' : 'Short name and detailed explanation'}
+                  description={
+                    isRTL ? 'اسم قصير ووصف تفصيلي للالتزام' : 'Short name and detailed explanation'
+                  }
                   icon={FileText}
                   isRTL={isRTL}
                 />
@@ -159,7 +166,11 @@ export function CommitmentsHelpPage() {
                 />
                 <AttributeCard
                   title={isRTL ? 'المالك' : 'Owner'}
-                  description={isRTL ? 'داخلي (فريقك) أو خارجي (شريك)' : 'Internal (your team) or External (partner)'}
+                  description={
+                    isRTL
+                      ? 'داخلي (فريقك) أو خارجي (شريك)'
+                      : 'Internal (your team) or External (partner)'
+                  }
                   icon={Users}
                   isRTL={isRTL}
                 />
@@ -174,9 +185,13 @@ export function CommitmentsHelpPage() {
                 </h3>
                 <div className="flex flex-wrap items-center justify-start gap-2 sm:gap-4">
                   <StatusBadge status="pending" isRTL={isRTL} />
-                  <ChevronRight className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`} />
+                  <ChevronRight
+                    className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
+                  />
                   <StatusBadge status="in_progress" isRTL={isRTL} />
-                  <ChevronRight className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`} />
+                  <ChevronRight
+                    className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
+                  />
                   <StatusBadge status="completed" isRTL={isRTL} />
                 </div>
                 <p className="text-sm text-muted-foreground mt-4 text-start">
@@ -264,16 +279,14 @@ export function CommitmentsHelpPage() {
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4">
-                    <ol className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}>
+                    <ol
+                      className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}
+                    >
                       <li className="text-start">
-                        {isRTL
-                          ? 'افتح ملفًا تم تعيينك عليه'
-                          : 'Open a dossier you are assigned to'}
+                        {isRTL ? 'افتح ملفًا تم تعيينك عليه' : 'Open a dossier you are assigned to'}
                       </li>
                       <li className="text-start">
-                        {isRTL
-                          ? 'انقر على زر "إضافة التزام"'
-                          : 'Click the "Add Commitment" button'}
+                        {isRTL ? 'انقر على زر "إضافة التزام"' : 'Click the "Add Commitment" button'}
                       </li>
                       <li className="text-start">
                         {isRTL
@@ -313,7 +326,9 @@ export function CommitmentsHelpPage() {
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4">
-                    <ol className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}>
+                    <ol
+                      className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}
+                    >
                       <li className="text-start">
                         {isRTL
                           ? 'افتح قائمة الالتزامات أو انتقل إلى الملف'
@@ -325,19 +340,13 @@ export function CommitmentsHelpPage() {
                           : 'Click on the commitment card to open details'}
                       </li>
                       <li className="text-start">
-                        {isRTL
-                          ? 'انقر على زر "تعديل"'
-                          : 'Click the "Edit" button'}
+                        {isRTL ? 'انقر على زر "تعديل"' : 'Click the "Edit" button'}
                       </li>
                       <li className="text-start">
-                        {isRTL
-                          ? 'قم بتعديل الحقول المطلوبة'
-                          : 'Modify the desired fields'}
+                        {isRTL ? 'قم بتعديل الحقول المطلوبة' : 'Modify the desired fields'}
                       </li>
                       <li className="text-start">
-                        {isRTL
-                          ? 'انقر على "حفظ التغييرات"'
-                          : 'Click "Save Changes"'}
+                        {isRTL ? 'انقر على "حفظ التغييرات"' : 'Click "Save Changes"'}
                       </li>
                     </ol>
                   </AccordionContent>
@@ -357,7 +366,9 @@ export function CommitmentsHelpPage() {
                         ? 'يمكنك تحديث الحالة مباشرة من قائمة الالتزامات بدون فتح التفاصيل:'
                         : 'You can update status directly from the commitments list without opening details:'}
                     </p>
-                    <ol className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}>
+                    <ol
+                      className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}
+                    >
                       <li className="text-start">
                         {isRTL
                           ? 'ابحث عن شارة الحالة على بطاقة الالتزام'
@@ -369,14 +380,10 @@ export function CommitmentsHelpPage() {
                           : 'Tap the badge to open the status dropdown'}
                       </li>
                       <li className="text-start">
-                        {isRTL
-                          ? 'اختر الحالة الجديدة'
-                          : 'Select the new status'}
+                        {isRTL ? 'اختر الحالة الجديدة' : 'Select the new status'}
                       </li>
                       <li className="text-start">
-                        {isRTL
-                          ? 'سيتم التحديث فورًا!'
-                          : 'Update happens immediately!'}
+                        {isRTL ? 'سيتم التحديث فورًا!' : 'Update happens immediately!'}
                       </li>
                     </ol>
                     <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
@@ -406,16 +413,14 @@ export function CommitmentsHelpPage() {
                         ? 'بدلاً من الحذف، نوصي بإلغاء الالتزامات للحفاظ على السجل:'
                         : 'Instead of deleting, we recommend cancelling commitments to preserve history:'}
                     </p>
-                    <ol className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}>
+                    <ol
+                      className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}
+                    >
                       <li className="text-start">
-                        {isRTL
-                          ? 'افتح تفاصيل الالتزام'
-                          : 'Open the commitment details'}
+                        {isRTL ? 'افتح تفاصيل الالتزام' : 'Open the commitment details'}
                       </li>
                       <li className="text-start">
-                        {isRTL
-                          ? 'انقر على "إلغاء الالتزام"'
-                          : 'Click "Cancel Commitment"'}
+                        {isRTL ? 'انقر على "إلغاء الالتزام"' : 'Click "Cancel Commitment"'}
                       </li>
                       <li className="text-start">
                         {isRTL
@@ -423,9 +428,7 @@ export function CommitmentsHelpPage() {
                           : 'Add a cancellation reason (optional)'}
                       </li>
                       <li className="text-start">
-                        {isRTL
-                          ? 'أكد الإلغاء'
-                          : 'Confirm cancellation'}
+                        {isRTL ? 'أكد الإلغاء' : 'Confirm cancellation'}
                       </li>
                     </ol>
                   </AccordionContent>
@@ -458,16 +461,20 @@ export function CommitmentsHelpPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FilterOptionCard
                     title={isRTL ? 'الحالة' : 'Status'}
-                    options={isRTL
-                      ? ['معلق', 'قيد التنفيذ', 'مكتمل', 'ملغى', 'متأخر']
-                      : ['Pending', 'In Progress', 'Completed', 'Cancelled', 'Overdue']}
+                    options={
+                      isRTL
+                        ? ['معلق', 'قيد التنفيذ', 'مكتمل', 'ملغى', 'متأخر']
+                        : ['Pending', 'In Progress', 'Completed', 'Cancelled', 'Overdue']
+                    }
                     isRTL={isRTL}
                   />
                   <FilterOptionCard
                     title={isRTL ? 'الأولوية' : 'Priority'}
-                    options={isRTL
-                      ? ['منخفض', 'متوسط', 'عالي', 'حرج']
-                      : ['Low', 'Medium', 'High', 'Critical']}
+                    options={
+                      isRTL
+                        ? ['منخفض', 'متوسط', 'عالي', 'حرج']
+                        : ['Low', 'Medium', 'High', 'Critical']
+                    }
                     isRTL={isRTL}
                   />
                   <FilterOptionCard
@@ -477,9 +484,7 @@ export function CommitmentsHelpPage() {
                   />
                   <FilterOptionCard
                     title={isRTL ? 'نطاق التاريخ' : 'Date Range'}
-                    options={isRTL
-                      ? ['من تاريخ', 'إلى تاريخ']
-                      : ['From Date', 'To Date']}
+                    options={isRTL ? ['من تاريخ', 'إلى تاريخ'] : ['From Date', 'To Date']}
                     isRTL={isRTL}
                   />
                 </div>
@@ -578,9 +583,7 @@ export function CommitmentsHelpPage() {
                   <FormatBadge format="DOCX" color="indigo" />
                 </div>
                 <p className="text-sm text-muted-foreground mt-4 text-start">
-                  {isRTL
-                    ? 'الحد الأقصى لحجم الملف: 10 ميجابايت'
-                    : 'Maximum file size: 10MB'}
+                  {isRTL ? 'الحد الأقصى لحجم الملف: 10 ميجابايت' : 'Maximum file size: 10MB'}
                 </p>
               </div>
 
@@ -591,16 +594,16 @@ export function CommitmentsHelpPage() {
                 <h3 className="text-lg font-semibold mb-4 text-start">
                   {isRTL ? 'خطوات الرفع' : 'Upload Steps'}
                 </h3>
-                <ol className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}>
+                <ol
+                  className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}
+                >
                   <li className="text-start">
                     {isRTL
                       ? 'افتح تفاصيل الالتزام الذي يتطلب إثباتًا'
                       : 'Open the commitment details that requires proof'}
                   </li>
                   <li className="text-start">
-                    {isRTL
-                      ? 'انقر على زر "رفع دليل"'
-                      : 'Click the "Upload Evidence" button'}
+                    {isRTL ? 'انقر على زر "رفع دليل"' : 'Click the "Upload Evidence" button'}
                   </li>
                   <li className="text-start">
                     {isRTL
@@ -669,7 +672,7 @@ export function CommitmentsHelpPage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 // Helper Components
@@ -679,19 +682,16 @@ function QuickNavCard({
   title,
   description,
   onClick,
-  isRTL
+  isRTL,
 }: {
-  icon: React.ElementType;
-  title: string;
-  description: string;
-  onClick: () => void;
-  isRTL: boolean;
+  icon: React.ElementType
+  title: string
+  description: string
+  onClick: () => void
+  isRTL: boolean
 }) {
   return (
-    <Card
-      className="cursor-pointer hover:shadow-md transition-shadow"
-      onClick={onClick}
-    >
+    <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={onClick}>
       <CardContent className="pt-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -704,19 +704,19 @@ function QuickNavCard({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function AttributeCard({
   title,
   description,
   icon: Icon,
-  isRTL
+  isRTL,
 }: {
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  isRTL: boolean;
+  title: string
+  description: string
+  icon: React.ElementType
+  isRTL: boolean
 }) {
   return (
     <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
@@ -726,7 +726,7 @@ function AttributeCard({
         <p className="text-xs text-muted-foreground text-start">{description}</p>
       </div>
     </div>
-  );
+  )
 }
 
 function StatusBadge({ status, isRTL }: { status: string; isRTL: boolean }) {
@@ -734,37 +734,33 @@ function StatusBadge({ status, isRTL }: { status: string; isRTL: boolean }) {
     pending: {
       label: 'Pending',
       arLabel: 'معلق',
-      className: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
+      className: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
     },
     in_progress: {
       label: 'In Progress',
       arLabel: 'قيد التنفيذ',
-      className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+      className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
     },
     completed: {
       label: 'Completed',
       arLabel: 'مكتمل',
-      className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+      className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     },
-  };
+  }
 
-  const config = statusConfig[status] || statusConfig.pending;
+  const config = statusConfig[status] || statusConfig.pending!
 
-  return (
-    <Badge className={config.className}>
-      {isRTL ? config.arLabel : config.label}
-    </Badge>
-  );
+  return <Badge className={config!.className}>{isRTL ? config!.arLabel : config!.label}</Badge>
 }
 
 function FilterOptionCard({
   title,
   options,
-  isRTL
+  isRTL,
 }: {
-  title: string;
-  options: string[];
-  isRTL: boolean;
+  title: string
+  options: string[]
+  isRTL: boolean
 }) {
   return (
     <div className="p-4 rounded-lg border bg-card">
@@ -777,7 +773,7 @@ function FilterOptionCard({
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 function FormatBadge({ format, color }: { format: string; color: string }) {
@@ -786,11 +782,11 @@ function FormatBadge({ format, color }: { format: string; color: string }) {
     green: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     blue: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
     indigo: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
-  };
+  }
 
   return (
     <div className={`flex items-center justify-center p-4 rounded-lg ${colorClasses[color]}`}>
       <span className="font-mono font-bold">{format}</span>
     </div>
-  );
+  )
 }

@@ -81,7 +81,7 @@ export function PersonsListPage() {
   }
 
   const handlePersonClick = (personId: string) => {
-    navigate({ to: '/persons/$personId', params: { personId } })
+    navigate({ to: '/persons/$personId', params: { personId } as any })
   }
 
   // Get initials for avatar

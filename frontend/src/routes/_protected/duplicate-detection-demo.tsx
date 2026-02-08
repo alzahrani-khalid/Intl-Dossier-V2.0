@@ -8,7 +8,6 @@
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { cn } from '@/lib/utils'
 import { DuplicateCandidatesList, MergeDialog } from '@/components/duplicate-detection'
 import type { DuplicateCandidateListItem } from '@/types/duplicate-detection.types'
 

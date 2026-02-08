@@ -4,24 +4,24 @@
  */
 
 export interface StoredPreferences {
-  theme: 'gastat' | 'blue-sky';
-  colorMode: 'light' | 'dark';
-  language: 'en' | 'ar';
-  updatedAt: string;
+  theme: 'gastat' | 'blue-sky'
+  colorMode: 'light' | 'dark'
+  language: 'en' | 'ar'
+  updatedAt: string
 }
 
-const STORAGE_KEY = 'user-preferences';
+const STORAGE_KEY = 'user-preferences'
 
 /**
  * Get preferences from localStorage
  */
 export function getStoredPreferences(): StoredPreferences | null {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return null;
-    
-    const parsed = JSON.parse(stored);
-    
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (!stored) return null
+
+    const parsed = JSON.parse(stored)
+
     // Validate the stored data
     if (
       typeof parsed.theme === 'string' &&
@@ -29,13 +29,13 @@ export function getStoredPreferences(): StoredPreferences | null {
       typeof parsed.language === 'string' &&
       typeof parsed.updatedAt === 'string'
     ) {
-      return parsed as StoredPreferences;
+      return parsed as StoredPreferences
     }
-    
-    return null;
+
+    return null
   } catch (error) {
-    console.error('Failed to read preferences from localStorage:', error);
-    return null;
+    console.error('Failed to read preferences from localStorage:', error)
+    return null
   }
 }
 
@@ -47,14 +47,14 @@ export function setStoredPreferences(preferences: Omit<StoredPreferences, 'updat
     const toStore: StoredPreferences = {
       ...preferences,
       updatedAt: new Date().toISOString(),
-    };
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
-    return true;
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore))
+    return true
   } catch (error) {
     // Handle quota exceeded or security errors
-    console.error('Failed to save preferences to localStorage:', error);
-    return false;
+    console.error('Failed to save preferences to localStorage:', error)
+    return false
   }
 }
 
@@ -63,9 +63,9 @@ export function setStoredPreferences(preferences: Omit<StoredPreferences, 'updat
  */
 export function clearStoredPreferences(): void {
   try {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY)
   } catch (error) {
-    console.error('Failed to clear preferences from localStorage:', error);
+    console.error('Failed to clear preferences from localStorage:', error)
   }
 }
 
@@ -73,40 +73,67 @@ export function clearStoredPreferences(): void {
  * Get system color mode preference
  */
 export function getSystemColorMode(): 'light' | 'dark' {
-  if (typeof window === 'undefined') return 'light';
-  
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light';
+  if (typeof window === 'undefined') return 'light'
+
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
 /**
  * Get system language preference
  */
 export function getSystemLanguage(): 'en' | 'ar' {
-  if (typeof window === 'undefined') return 'en';
-  
-  const browserLang = navigator.language.toLowerCase();
-  return browserLang.startsWith('ar') ? 'ar' : 'en';
+  if (typeof window === 'undefined') return 'en'
+
+  const browserLang = navigator.language.toLowerCase()
+  return browserLang.startsWith('ar') ? 'ar' : 'en'
 }
 
 /**
  * Watch for storage changes from other tabs
  */
 export function watchStorageChanges(
-  callback: (preferences: StoredPreferences | null) => void
+  callback: (preferences: StoredPreferences | null) => void,
 ): () => void {
   const handleStorageChange = (event: StorageEvent) => {
     if (event.key === STORAGE_KEY) {
-      const newValue = event.newValue ? JSON.parse(event.newValue) : null;
-      callback(newValue);
+      const newValue = event.newValue ? JSON.parse(event.newValue) : null
+      callback(newValue)
     }
-  };
-  
-  window.addEventListener('storage', handleStorageChange);
-  
+  }
+
+  window.addEventListener('storage', handleStorageChange)
+
   // Return cleanup function
   return () => {
-    window.removeEventListener('storage', handleStorageChange);
-  };
+    window.removeEventListener('storage', handleStorageChange)
+  }
+}
+
+/**
+ * Convenience object for preference storage operations
+ */
+export const preferenceStorage = {
+  get: getStoredPreferences,
+  save: (preferences: StoredPreferences | Omit<StoredPreferences, 'updatedAt'>) => {
+    if ('updatedAt' in preferences) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences))
+        return true
+      } catch (error) {
+        console.error('Failed to save preferences to localStorage:', error)
+        return false
+      }
+    }
+    return setStoredPreferences(preferences)
+  },
+  clear: clearStoredPreferences,
+  merge: (remote: StoredPreferences): StoredPreferences => {
+    const local = getStoredPreferences()
+    if (!local) return remote
+    // Use whichever is newer
+    if (new Date(remote.updatedAt) > new Date(local.updatedAt)) {
+      return remote
+    }
+    return local
+  },
 }

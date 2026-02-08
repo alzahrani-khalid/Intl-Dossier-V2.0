@@ -3,8 +3,19 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { FileText, Globe2, MapPin, Plus, ShieldAlert, Loader2 } from 'lucide-react'
+import { FileText, Globe2, Plus, ShieldAlert, Loader2 } from 'lucide-react'
 import { useDossiersByType } from '@/hooks/useDossier'
+import type { CountryExtension } from '@/services/dossier-api'
+
+/** Extended country fields stored in extension JSON beyond the typed CountryExtension */
+interface CountryExtensionWithExtra extends CountryExtension {
+  /** Legacy alias for iso_code_2 */
+  iso2?: string
+  /** Legacy alias for iso_code_3 */
+  iso3?: string
+  /** Number of linked agreements */
+  agreements_count?: number
+}
 
 const regions = ['Asia', 'Europe', 'Africa', 'Americas', 'Oceania']
 
@@ -12,9 +23,7 @@ export default function Countries() {
   const { t, i18n } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [regionFilter, setRegionFilter] = useState<string>('all')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'suspended'>(
-    'all',
-  )
+  const [statusFilter, setStatusFilter] = useState<string>('all')
 
   // Query countries from unified dossiers table
   const { data, isLoading, isError, error } = useDossiersByType('country', 1, 1000)
@@ -23,10 +32,15 @@ export default function Countries() {
     if (!data?.data) return []
 
     return data.data.filter((dossier) => {
-      const country = dossier.extension_data
+      const country = dossier.extension as CountryExtensionWithExtra | undefined
 
       // Search filter
-      const matchesSearch = [dossier.name_en, dossier.name_ar, country?.iso2, country?.iso3]
+      const matchesSearch = [
+        dossier.name_en,
+        dossier.name_ar,
+        country?.iso2 || country?.iso_code_2,
+        country?.iso3 || country?.iso_code_3,
+      ]
         .filter(Boolean)
         .join(' ')
         .toLowerCase()
@@ -43,11 +57,14 @@ export default function Countries() {
   }, [data, searchTerm, regionFilter, statusFilter])
 
   const totalAgreements = filteredCountries.reduce((acc, curr) => {
-    const agreements = curr.extension_data?.agreements_count || 0
+    const agreements =
+      (curr.extension as CountryExtensionWithExtra | undefined)?.agreements_count || 0
     return acc + agreements
   }, 0)
   const activeCount = filteredCountries.filter((c) => c.status === 'active').length
-  const suspendedCount = filteredCountries.filter((c) => c.status === 'suspended').length
+  const suspendedCount = filteredCountries.filter(
+    (c) => c.status === ('suspended' as string),
+  ).length
 
   const isRTL = i18n.dir() === 'rtl'
 
@@ -202,7 +219,7 @@ export default function Countries() {
             <select
               id="status-filter"
               value={statusFilter}
-              onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
+              onChange={(event) => setStatusFilter(event.target.value)}
               className="w-44 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               dir={isRTL ? 'rtl' : 'ltr'}
               aria-label={t('countries.filters.status', 'Status')}
@@ -234,7 +251,7 @@ export default function Countries() {
           </thead>
           <tbody className="divide-y divide-border">
             {filteredCountries.map((dossier) => {
-              const country = dossier.extension_data
+              const country = dossier.extension as CountryExtensionWithExtra | undefined
               return (
                 <tr key={dossier.id} className="hover:bg-accent/50">
                   <td className="px-5 py-4">
@@ -244,7 +261,8 @@ export default function Countries() {
                     </div>
                   </td>
                   <td className="px-5 py-4 font-mono text-sm text-foreground">
-                    {country?.iso2 || '—'} · {country?.iso3 || '—'}
+                    {country?.iso2 || country?.iso_code_2 || '—'} ·{' '}
+                    {country?.iso3 || country?.iso_code_3 || '—'}
                   </td>
                   <td className="px-5 py-4 text-muted-foreground">{country?.region || '—'}</td>
                   <td className="px-5 py-4">
@@ -260,7 +278,9 @@ export default function Countries() {
                       {t(`countries.status.${dossier.status}`, dossier.status)}
                     </span>
                   </td>
-                  <td className="px-5 py-4 text-foreground">{country?.agreements_count || 0}</td>
+                  <td className="px-5 py-4 text-foreground">
+                    {(country as CountryExtensionWithExtra | undefined)?.agreements_count || 0}
+                  </td>
                   <td className="px-5 py-4 text-xs text-muted-foreground">
                     {new Date(dossier.updated_at).toLocaleDateString()}
                   </td>

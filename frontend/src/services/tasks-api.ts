@@ -19,9 +19,6 @@ if (!supabaseUrl) {
 }
 
 type Task = Database['public']['Tables']['tasks']['Row']
-type TaskInsert = Database['public']['Tables']['tasks']['Insert']
-type TaskUpdate = Database['public']['Tables']['tasks']['Update']
-type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
 
 /**
  * API Request types
@@ -214,18 +211,7 @@ export const tasksAPI = {
         title_en?: string
         title_ar?: string
       }>
-      engagement?: {
-        id: string
-        title: string
-        engagement_type: string
-        engagement_date: string
-        location?: string
-        dossier?: {
-          id: string
-          name_en: string
-          name_ar: string
-        }
-      }
+      engagement?: TaskEngagement
     }
   > {
     // Fetch the task - use maybeSingle() to avoid 406 error when task not found
@@ -244,96 +230,138 @@ export const tasksAPI = {
       throw new TasksAPIError('Task not found', 404, 'NOT_FOUND')
     }
 
-    // Fetch assignee info if available
+    // Parallel fetch: assignee, creator, engagement (3 queries in parallel)
+    const [assigneeResult, creatorResult, engagementResult] = await Promise.all([
+      task.assignee_id
+        ? supabase
+            .from('users')
+            .select('full_name, username, email')
+            .eq('id', task.assignee_id)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null }),
+      task.created_by
+        ? supabase
+            .from('users')
+            .select('full_name, username, email')
+            .eq('id', task.created_by)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null }),
+      task.engagement_id
+        ? supabase
+            .from('engagements')
+            .select(
+              `id, title, engagement_type, engagement_date, location, dossier_id, dossiers (id, name_en, name_ar)`,
+            )
+            .eq('id', task.engagement_id)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null }),
+    ])
+
+    // Process assignee
     let assigneeName = 'Unassigned'
     let assigneeEmail: string | undefined
-    if (task.assignee_id) {
-      const { data: assignee, error } = await supabase
-        .from('users')
-        .select('full_name, username, email')
-        .eq('id', task.assignee_id)
-        .maybeSingle()
-
-      if (error) {
-        console.warn(`Failed to fetch assignee info for ${task.assignee_id}:`, error)
-      } else if (assignee) {
-        assigneeName = assignee.full_name || assignee.username || assignee.email || 'Unknown'
-        assigneeEmail = assignee.email
-      }
+    if (assigneeResult.error) {
+      console.warn(`Failed to fetch assignee info for ${task.assignee_id}:`, assigneeResult.error)
+    } else if (assigneeResult.data) {
+      const a = assigneeResult.data
+      assigneeName = a.full_name || a.username || a.email || 'Unknown'
+      assigneeEmail = a.email
     }
 
-    // Fetch creator info if available
+    // Process creator
     let creatorName = 'Unknown'
-    if (task.created_by) {
-      const { data: creator, error } = await supabase
-        .from('users')
-        .select('full_name, username, email')
-        .eq('id', task.created_by)
-        .maybeSingle()
+    if (creatorResult.error) {
+      console.warn(`Failed to fetch creator info for ${task.created_by}:`, creatorResult.error)
+    } else if (creatorResult.data) {
+      const c = creatorResult.data
+      creatorName = c.full_name || c.username || c.email || 'Unknown'
+    }
 
-      if (error) {
-        console.warn(`Failed to fetch creator info for ${task.created_by}:`, error)
-      } else if (creator) {
-        creatorName = creator.full_name || creator.username || creator.email || 'Unknown'
+    // Collect all IDs from work_item and source JSONB for batch fetching
+    const dossierIds: string[] = []
+    const positionIds: string[] = []
+    const ticketIds: string[] = []
+
+    // Single work_item_id
+    if (task.work_item_id && task.work_item_type && task.work_item_type !== 'generic') {
+      if (task.work_item_type === 'dossier') dossierIds.push(task.work_item_id)
+      else if (task.work_item_type === 'position') positionIds.push(task.work_item_id)
+      else if (task.work_item_type === 'ticket') ticketIds.push(task.work_item_id)
+    }
+
+    // Source JSONB arrays
+    const source = task.source as any
+    if (source) {
+      if (source.dossier_ids && Array.isArray(source.dossier_ids)) {
+        for (const id of source.dossier_ids) {
+          if (!dossierIds.includes(id)) dossierIds.push(id)
+        }
+      }
+      if (source.position_ids && Array.isArray(source.position_ids)) {
+        for (const id of source.position_ids) {
+          if (!positionIds.includes(id)) positionIds.push(id)
+        }
+      }
+      if (source.ticket_ids && Array.isArray(source.ticket_ids)) {
+        for (const id of source.ticket_ids) {
+          if (!ticketIds.includes(id)) ticketIds.push(id)
+        }
       }
     }
 
-    // Fetch work item title if available
+    // Batch fetch all related entities in parallel
+    const [dossiersResult, positionsResult, ticketsResult] = await Promise.all([
+      dossierIds.length
+        ? supabase.from('dossiers').select('id, name_en, name_ar').in('id', dossierIds)
+        : Promise.resolve({
+            data: [] as { id: string; name_en: string; name_ar: string }[],
+            error: null,
+          }),
+      positionIds.length
+        ? supabase.from('positions').select('id, title_en, title_ar').in('id', positionIds)
+        : Promise.resolve({
+            data: [] as { id: string; title_en: string; title_ar: string }[],
+            error: null,
+          }),
+      ticketIds.length
+        ? supabase.from('intake_tickets').select('id, title, title_ar').in('id', ticketIds)
+        : Promise.resolve({
+            data: [] as { id: string; title: string; title_ar: string }[],
+            error: null,
+          }),
+    ])
+
+    // Build lookup maps
+    const dossierMap = new Map((dossiersResult.data ?? []).map((d) => [d.id, d]))
+    const positionMap = new Map((positionsResult.data ?? []).map((p) => [p.id, p]))
+    const ticketMap = new Map((ticketsResult.data ?? []).map((t) => [t.id, t]))
+
+    // Resolve single work item title
     let workItemTitleEn: string | undefined
     let workItemTitleAr: string | undefined
-
     if (task.work_item_id && task.work_item_type && task.work_item_type !== 'generic') {
-      try {
-        if (task.work_item_type === 'dossier') {
-          const { data: dossier, error } = await supabase
-            .from('dossiers')
-            .select('name_en, name_ar')
-            .eq('id', task.work_item_id)
-            .maybeSingle()
-
-          if (error) {
-            console.warn(`Failed to fetch dossier title for ${task.work_item_id}:`, error)
-          } else if (dossier) {
-            workItemTitleEn = dossier.name_en
-            workItemTitleAr = dossier.name_ar
-          }
-        } else if (task.work_item_type === 'position') {
-          const { data: position, error } = await supabase
-            .from('positions')
-            .select('title_en, title_ar')
-            .eq('id', task.work_item_id)
-            .maybeSingle()
-
-          if (error) {
-            console.warn(`Failed to fetch position title for ${task.work_item_id}:`, error)
-          } else if (position) {
-            workItemTitleEn = position.title_en
-            workItemTitleAr = position.title_ar
-          }
-        } else if (task.work_item_type === 'ticket') {
-          const { data: ticket, error } = await supabase
-            .from('intake_tickets')
-            .select('title, title_ar')
-            .eq('id', task.work_item_id)
-            .maybeSingle()
-
-          if (error) {
-            console.warn(`Failed to fetch ticket title for ${task.work_item_id}:`, error)
-          } else if (ticket) {
-            workItemTitleEn = ticket.title
-            workItemTitleAr = ticket.title_ar
-          }
+      if (task.work_item_type === 'dossier') {
+        const d = dossierMap.get(task.work_item_id)
+        if (d) {
+          workItemTitleEn = d.name_en
+          workItemTitleAr = d.name_ar
         }
-      } catch (error) {
-        // Silently fail if work item not found - it might have been deleted
-        console.warn(
-          `Exception fetching work item title for ${task.work_item_type}:${task.work_item_id}`,
-          error,
-        )
+      } else if (task.work_item_type === 'position') {
+        const p = positionMap.get(task.work_item_id)
+        if (p) {
+          workItemTitleEn = p.title_en
+          workItemTitleAr = p.title_ar
+        }
+      } else if (task.work_item_type === 'ticket') {
+        const t = ticketMap.get(task.work_item_id)
+        if (t) {
+          workItemTitleEn = t.title
+          workItemTitleAr = t.title_ar
+        }
       }
     }
 
-    // Fetch titles for all work items in source JSONB field (US4 - T070)
+    // Build work items array from source JSONB
     const workItems: Array<{
       type: string
       id: string
@@ -341,155 +369,52 @@ export const tasksAPI = {
       title_ar?: string
     }> = []
 
-    if (task.source) {
-      const source = task.source as any
-
-      // Fetch dossier titles
+    if (source) {
       if (source.dossier_ids && Array.isArray(source.dossier_ids)) {
-        for (const dossierId of source.dossier_ids) {
-          try {
-            const { data: dossier, error } = await supabase
-              .from('dossiers')
-              .select('name_en, name_ar')
-              .eq('id', dossierId)
-              .maybeSingle()
-
-            if (error) {
-              console.warn(`Failed to fetch dossier title for ${dossierId}:`, error)
-            }
-
-            workItems.push({
-              type: 'dossier',
-              id: dossierId,
-              title_en: dossier?.name_en,
-              title_ar: dossier?.name_ar,
-            })
-          } catch (error) {
-            // Dossier might not exist or user lacks clearance - add with no title
-            console.warn(`Exception fetching dossier title for ${dossierId}`, error)
-            workItems.push({
-              type: 'dossier',
-              id: dossierId,
-            })
-          }
+        for (const id of source.dossier_ids) {
+          const d = dossierMap.get(id)
+          workItems.push({ type: 'dossier', id, title_en: d?.name_en, title_ar: d?.name_ar })
         }
       }
-
-      // Fetch position titles
       if (source.position_ids && Array.isArray(source.position_ids)) {
-        for (const positionId of source.position_ids) {
-          try {
-            const { data: position, error } = await supabase
-              .from('positions')
-              .select('title_en, title_ar')
-              .eq('id', positionId)
-              .maybeSingle()
-
-            if (error) {
-              console.warn(`Failed to fetch position title for ${positionId}:`, error)
-            }
-
-            workItems.push({
-              type: 'position',
-              id: positionId,
-              title_en: position?.title_en,
-              title_ar: position?.title_ar,
-            })
-          } catch (error) {
-            console.warn(`Exception fetching position title for ${positionId}`, error)
-            workItems.push({
-              type: 'position',
-              id: positionId,
-            })
-          }
+        for (const id of source.position_ids) {
+          const p = positionMap.get(id)
+          workItems.push({ type: 'position', id, title_en: p?.title_en, title_ar: p?.title_ar })
         }
       }
-
-      // Fetch ticket titles
       if (source.ticket_ids && Array.isArray(source.ticket_ids)) {
-        for (const ticketId of source.ticket_ids) {
-          try {
-            const { data: ticket, error } = await supabase
-              .from('intake_tickets')
-              .select('title, title_ar')
-              .eq('id', ticketId)
-              .maybeSingle()
-
-            if (error) {
-              console.warn(`Failed to fetch ticket title for ${ticketId}:`, error)
-            }
-
-            workItems.push({
-              type: 'ticket',
-              id: ticketId,
-              title_en: ticket?.title,
-              title_ar: ticket?.title_ar,
-            })
-          } catch (error) {
-            console.warn(`Exception fetching ticket title for ${ticketId}`, error)
-            workItems.push({
-              type: 'ticket',
-              id: ticketId,
-            })
-          }
+        for (const id of source.ticket_ids) {
+          const t = ticketMap.get(id)
+          workItems.push({ type: 'ticket', id, title_en: t?.title, title_ar: t?.title_ar })
         }
       }
     }
 
-    // Fetch engagement details if available
+    // Process engagement
     let engagement: TaskEngagement | undefined = undefined
-    if (task.engagement_id) {
-      try {
-        const { data: engagementData, error: engagementError } = await supabase
-          .from('engagements')
-          .select(
-            `
-            id,
-            title,
-            engagement_type,
-            engagement_date,
-            location,
-            dossier_id,
-            dossiers (
-              id,
-              name_en,
-              name_ar
-            )
-          `,
-          )
-          .eq('id', task.engagement_id)
-          .maybeSingle()
-
-        if (engagementError) {
-          console.warn(`Failed to fetch engagement for ${task.engagement_id}:`, engagementError)
-        } else if (engagementData) {
-          const dossierData = engagementData.dossiers as {
-            id: string
-            name_en: string
-            name_ar: string
-          } | null
-          engagement = {
-            id: engagementData.id,
-            title: engagementData.title,
-            engagement_type: engagementData.engagement_type,
-            engagement_date: engagementData.engagement_date,
-            location: engagementData.location,
-            dossier: dossierData
-              ? {
-                  id: dossierData.id,
-                  name_en: dossierData.name_en,
-                  name_ar: dossierData.name_ar,
-                }
-              : undefined,
-          }
-        }
-      } catch (error) {
-        console.warn(`Exception fetching engagement for ${task.engagement_id}`, error)
+    if (engagementResult.error) {
+      console.warn(`Failed to fetch engagement for ${task.engagement_id}:`, engagementResult.error)
+    } else if (engagementResult.data) {
+      const e = engagementResult.data
+      const dossierData = e.dossiers as unknown as {
+        id: string
+        name_en: string
+        name_ar: string
+      } | null
+      engagement = {
+        id: e.id,
+        title: e.title,
+        engagement_type: e.engagement_type,
+        engagement_date: e.engagement_date,
+        location: e.location,
+        dossier: dossierData
+          ? { id: dossierData.id, name_en: dossierData.name_en, name_ar: dossierData.name_ar }
+          : undefined,
       }
     }
 
     return {
-      ...task,
+      ...(task as Task),
       assignee_name: assigneeName,
       assignee_email: assigneeEmail,
       created_by_name: creatorName,
@@ -569,6 +494,23 @@ export const tasksAPI = {
   },
 
   /**
+   * Undelete a task (for undo functionality)
+   */
+  async undeleteTask(taskId: string): Promise<void> {
+    const { error } = await supabase
+      .from('tasks')
+      .update({
+        is_deleted: false,
+        deleted_at: null,
+      })
+      .eq('id', taskId)
+
+    if (error) {
+      throw new TasksAPIError(error.message, 500, error.code)
+    }
+  },
+
+  /**
    * Get my tasks (assigned to current user)
    */
   async getMyTasks(filters: Omit<TaskFilters, 'filter'> = {}): Promise<TasksListResponse> {
@@ -609,7 +551,7 @@ export const tasksAPI = {
       throw new TasksAPIError(error.message, 500, error.code)
     }
 
-    return data || []
+    return (data as Task[]) || []
   },
 
   /**
@@ -634,7 +576,7 @@ export const tasksAPI = {
       throw new TasksAPIError(error.message, 500, error.code)
     }
 
-    return data || []
+    return (data as Task[]) || []
   },
 
   /**
@@ -663,7 +605,7 @@ export const tasksAPI = {
       throw new TasksAPIError(error.message, 500, error.code)
     }
 
-    return data || []
+    return (data as Task[]) || []
   },
 }
 

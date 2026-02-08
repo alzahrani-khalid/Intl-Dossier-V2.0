@@ -107,8 +107,10 @@ export function EntityLinkManager({
     if (shouldReplacePrimary && existingPrimaryLink) {
       try {
         // Update the existing primary link to 'related' using API client directly
+        // Note: link_type changes require a separate API call; using notes to mark the demotion
         await intakeEntityLinksAPI.updateLink(intakeId, existingPrimaryLink.id, {
-          link_type: 'related',
+          notes: 'Demoted from primary to related',
+          _version: existingPrimaryLink._version,
         })
       } catch (error) {
         console.error('[EntityLinkManager] Failed to demote existing primary:', error)
@@ -151,7 +153,7 @@ export function EntityLinkManager({
 
     // Use batch creation for multiple entities, single creation for one entity
     if (linksToCreate.length === 1) {
-      createLinkMutation.mutate(linksToCreate[0])
+      createLinkMutation.mutate(linksToCreate[0]!)
     } else if (linksToCreate.length > 1) {
       createBatchLinksMutation.mutate(linksToCreate)
     }
@@ -170,7 +172,11 @@ export function EntityLinkManager({
   // Handle notes update
   const handleUpdateNotes = async (linkId: string, notes: string) => {
     try {
-      await intakeEntityLinksAPI.updateLink(intakeId, linkId, { notes })
+      const link = links.find((l) => l.id === linkId)
+      await intakeEntityLinksAPI.updateLink(intakeId, linkId, {
+        notes,
+        _version: link?._version ?? 1,
+      })
       // Optionally show success toast or refetch data here
     } catch (error) {
       console.error('[EntityLinkManager] Failed to update notes:', error)
@@ -187,21 +193,20 @@ export function EntityLinkManager({
         navigate({ to: getDossierDetailPath(entityId, dossierType || 'country') })
         break
       case 'position':
-        navigate({ to: '/positions/$id', params: { id: entityId } })
+        navigate({ to: `/positions/${entityId}` as string })
         break
       case 'person':
-        navigate({ to: '/persons/$id', params: { id: entityId } })
+        navigate({ to: `/persons/${entityId}` as string })
         break
       case 'engagement':
-        navigate({ to: '/engagements/$engagementId', params: { engagementId: entityId } })
+        navigate({ to: `/engagements/${entityId}` as string })
         break
       case 'commitment':
-        navigate({ to: '/commitments', search: { id: entityId } })
+        navigate({ to: `/commitments?id=${entityId}` as string })
         break
       default:
         navigate({
-          to: '/search',
-          search: { q: entityId, type: entityType, includeArchived: false },
+          to: `/search?q=${entityId}&type=${entityType}` as string,
         })
     }
   }

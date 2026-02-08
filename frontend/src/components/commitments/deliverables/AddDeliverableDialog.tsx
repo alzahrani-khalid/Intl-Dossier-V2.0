@@ -10,7 +10,7 @@
  * Mobile-first responsive design with RTL support.
  */
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -321,7 +321,7 @@ export function AddDeliverableDialog({
             </div>
             <Slider
               value={[currentWeight]}
-              onValueChange={([value]) => form.setValue('weight', value)}
+              onValueChange={([value]) => form.setValue('weight', value!)}
               min={1}
               max={10}
               step={1}

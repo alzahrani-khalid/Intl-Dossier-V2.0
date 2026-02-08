@@ -7,6 +7,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase-client'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 import type {
   Citation,
   CitationCreate,
@@ -65,7 +67,7 @@ async function fetchCitations(params: CitationListParams): Promise<CitationListR
 
   // Since functions.invoke doesn't support query params well, use direct fetch
   const { data: session } = await supabase.auth.getSession()
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}?${searchParams.toString()}`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}?${searchParams.toString()}`
 
   const response = await fetch(url, {
     headers: {
@@ -84,7 +86,7 @@ async function fetchCitations(params: CitationListParams): Promise<CitationListR
 
 async function fetchCitation(id: string): Promise<Citation> {
   const { data: session } = await supabase.auth.getSession()
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}/${id}`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}/${id}`
 
   const response = await fetch(url, {
     headers: {
@@ -110,7 +112,7 @@ async function fetchEntityCitations(params: EntityCitationsParams): Promise<Enti
     searchParams.set('include_external', String(params.include_external))
   if (params.limit) searchParams.set('limit', String(params.limit))
 
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}/entity/${params.entity_type}/${params.entity_id}?${searchParams.toString()}`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}/entity/${params.entity_type}/${params.entity_id}?${searchParams.toString()}`
 
   const response = await fetch(url, {
     headers: {
@@ -135,7 +137,7 @@ async function fetchCitationNetwork(params: CitationNetworkParams): Promise<Cita
   if (params.depth) searchParams.set('depth', String(params.depth))
   if (params.max_nodes) searchParams.set('max_nodes', String(params.max_nodes))
 
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}/network/${params.entity_type}/${params.entity_id}?${searchParams.toString()}`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}/network/${params.entity_type}/${params.entity_id}?${searchParams.toString()}`
 
   const response = await fetch(url, {
     headers: {
@@ -154,7 +156,7 @@ async function fetchCitationNetwork(params: CitationNetworkParams): Promise<Cita
 
 async function createCitation(citation: CitationCreate): Promise<Citation> {
   const { data: session } = await supabase.auth.getSession()
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}`
 
   const response = await fetch(url, {
     method: 'POST',
@@ -175,7 +177,7 @@ async function createCitation(citation: CitationCreate): Promise<Citation> {
 
 async function updateCitation(id: string, updates: CitationUpdate): Promise<Citation> {
   const { data: session } = await supabase.auth.getSession()
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}/${id}`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}/${id}`
 
   const response = await fetch(url, {
     method: 'PATCH',
@@ -196,7 +198,7 @@ async function updateCitation(id: string, updates: CitationUpdate): Promise<Cita
 
 async function deleteCitation(id: string): Promise<{ success: boolean; id: string }> {
   const { data: session } = await supabase.auth.getSession()
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}/${id}`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}/${id}`
 
   const response = await fetch(url, {
     method: 'DELETE',
@@ -216,7 +218,7 @@ async function deleteCitation(id: string): Promise<{ success: boolean; id: strin
 
 async function detectCitations(params: DetectCitationsParams): Promise<CitationDetectionResponse> {
   const { data: session } = await supabase.auth.getSession()
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}/detect`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}/detect`
 
   const response = await fetch(url, {
     method: 'POST',
@@ -247,7 +249,7 @@ async function fetchCitationAlerts(
   if (params.limit) searchParams.set('limit', String(params.limit))
   if (params.offset) searchParams.set('offset', String(params.offset))
 
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}/alerts?${searchParams.toString()}`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}/alerts?${searchParams.toString()}`
 
   const response = await fetch(url, {
     headers: {
@@ -266,7 +268,7 @@ async function fetchCitationAlerts(
 
 async function resolveAlert(alertId: string, resolutionNote?: string): Promise<CitationAlert> {
   const { data: session } = await supabase.auth.getSession()
-  const url = `${supabase.supabaseUrl}${EDGE_FUNCTION_URL}/alerts/${alertId}/resolve`
+  const url = `${supabaseUrl}${EDGE_FUNCTION_URL}/alerts/${alertId}/resolve`
 
   const response = await fetch(url, {
     method: 'POST',

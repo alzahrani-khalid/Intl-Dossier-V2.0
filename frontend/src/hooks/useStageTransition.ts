@@ -1,21 +1,27 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+/**
+ * @deprecated Use the tasks API instead (services/tasks-api.ts). This hook queries
+ * the legacy assignments table. New code should use tasksAPI.updateTask().
+ */
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 
 interface StageTransitionParams {
-  assignmentId: string;
-  newStage: string;
-  userId: string;
+  assignmentId: string
+  newStage: string
+  userId: string
 }
 
 export function useStageTransition() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async ({ assignmentId, newStage, userId }: StageTransitionParams) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
       if (!session) {
-        throw new Error('No active session');
+        throw new Error('No active session')
       }
 
       const response = await fetch(
@@ -30,20 +36,20 @@ export function useStageTransition() {
             workflow_stage: newStage,
             triggered_by_user_id: userId,
           }),
-        }
-      );
+        },
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.validation_error || data.error || 'Failed to update stage');
+        throw new Error(data.validation_error || data.error || 'Failed to update stage')
       }
 
-      return data;
+      return data
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (_, _variables) => {
       // Invalidate Kanban queries to refresh the board
-      queryClient.invalidateQueries({ queryKey: ['engagement-kanban'] });
+      queryClient.invalidateQueries({ queryKey: ['engagement-kanban'] })
     },
-  });
+  })
 }

@@ -25,6 +25,7 @@ import {
   UserCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { p, s } from '@/lib/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -53,7 +54,6 @@ const dossierTypeIcons: Record<DossierType, typeof Globe2> = {
   country: Globe2,
   organization: Building2,
   forum: Calendar,
-  theme: Folder,
   working_group: Users,
   person: UserCircle,
   engagement: Calendar,
@@ -88,8 +88,8 @@ export function RecentDossierActivity({
   className,
 }: RecentDossierActivityProps) {
   const { t, i18n } = useTranslation('dossier-dashboard')
-  const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
+  const _navigate = useNavigate()
+  const _isRTL = i18n.language === 'ar'
 
   // Fetch recent activity
   const { data, isLoading, isError, error, refetch } = useRecentDossierActivitySimple({
@@ -199,13 +199,13 @@ function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: Ac
   const handleClick = () => {
     switch (activity.work_item_type) {
       case 'task':
-        navigate({ to: '/tasks/$id', params: { id: activity.work_item_id } })
+        navigate({ to: '/tasks/$id', params: p({ id: activity.work_item_id }) })
         break
       case 'commitment':
-        navigate({ to: '/commitments', search: { id: activity.work_item_id } })
+        navigate({ to: '/commitments', search: s({ id: activity.work_item_id }) })
         break
       case 'intake':
-        navigate({ to: '/intake/tickets/$id', params: { id: activity.work_item_id } })
+        navigate({ to: '/intake/tickets/$id', params: p({ id: activity.work_item_id }) })
         break
     }
   }

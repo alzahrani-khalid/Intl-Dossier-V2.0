@@ -38,7 +38,7 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       error: null,
 
-      login: async (email: string, password: string, mfaCode?: string) => {
+      login: async (email: string, password: string, _mfaCode?: string) => {
         set({ isLoading: true, error: null })
         try {
           const { data, error } = await supabase.auth.signInWithPassword({
@@ -64,7 +64,7 @@ export const useAuthStore = create<AuthState>()(
               user: {
                 id: data.user.id,
                 email: data.user.email || '',
-                name: profile?.full_name || profile?.username || data.user.email?.split('@')[0],
+                name: profile?.full_name || data.user.email?.split('@')[0],
                 role: userRole,
                 avatar: profile?.avatar_url,
               },
@@ -162,7 +162,7 @@ export const useAuthStore = create<AuthState>()(
 
       handleAuthStateChange: (event: AuthChangeEvent, session: Session | null) => {
         // Handle auth state changes from Supabase (token refresh, sign out, etc.)
-        if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+        if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED') {
           clearSentryUser()
           addBreadcrumb('Auth state changed: signed out', 'auth', 'info')
           set({

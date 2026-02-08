@@ -7,7 +7,7 @@
  * - Action buttons
  */
 
-import * as React from 'react'
+import * as _React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   BottomSheet,

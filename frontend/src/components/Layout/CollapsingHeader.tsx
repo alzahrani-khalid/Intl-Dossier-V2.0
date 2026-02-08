@@ -39,7 +39,8 @@ const routeTitleMap: Record<string, string> = {
 // Get contextual title based on current route
 function getContextualTitle(
   pathname: string,
-  t: (key: string, fallback?: string) => string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: (...args: any[]) => any,
 ): string {
   // Exact match
   if (routeTitleMap[pathname]) {
@@ -65,7 +66,7 @@ export interface CollapsingHeaderProps {
   /** Whether the header is enabled (default: true) */
   enabled?: boolean
   /** Container ref for scroll tracking */
-  containerRef?: React.RefObject<HTMLElement>
+  containerRef?: React.RefObject<HTMLElement | null>
 }
 
 /**
@@ -263,7 +264,7 @@ export function CollapsingHeader({
                   )}
                 >
                   <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground shrink-0">
-                    {user?.name ? user.name[0].toUpperCase() : <User className="h-4 w-4" />}
+                    {user?.name ? user.name[0]?.toUpperCase() : <User className="h-4 w-4" />}
                   </div>
                   {!isCollapsed && (
                     <motion.span

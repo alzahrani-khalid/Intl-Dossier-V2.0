@@ -1,17 +1,16 @@
-/* Modern Navigation Design Tokens - @import must come first */
+/* Google Fonts - MUST be first (before any CSS rules) */
+/* Inter for UI (compact, modern) + Alexandria for Arabic RTL support */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap');
+
+/* Modern Navigation Design Tokens */
 @import './styles/modern-nav-tokens.css';
 
 /* Flag Icons CSS */
 @import 'flag-icons/css/flag-icons.min.css';
 
-/* Google Fonts - Canvas Theme */
-/* Inter for UI (compact, modern) + Alexandria for Arabic RTL support */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config "../tailwind.config.ts";
 
 @layer base {
   /* ============================================

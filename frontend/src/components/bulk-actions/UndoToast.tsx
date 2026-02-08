@@ -56,7 +56,7 @@ export function UndoToast({
   useEffect(() => {
     if (!visible) {
       setRemainingTime(undoTtl)
-      return
+      return undefined
     }
 
     const interval = setInterval(() => {

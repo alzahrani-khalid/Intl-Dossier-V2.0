@@ -47,7 +47,7 @@ export const TASKS_COLUMNS = {
   LIST: 'id, title, description, status, priority, workflow_stage, assignee_id, engagement_id, sla_deadline, work_item_type, work_item_id, source, created_by, created_at, updated_at, completed_at, completed_by, is_deleted',
   /** Detail view with all fields */
   DETAIL:
-    'id, title, title_en, title_ar, description, description_en, description_ar, status, priority, workflow_stage, assignee_id, engagement_id, sla_deadline, work_item_type, work_item_id, source, created_by, created_at, updated_at, completed_at, completed_by, is_deleted, deleted_at',
+    'id, title, description, status, priority, workflow_stage, assignee_id, engagement_id, sla_deadline, work_item_type, work_item_id, source, created_by, created_at, updated_at, completed_at, completed_by, is_deleted, deleted_at',
   /** Kanban board columns */
   KANBAN:
     'id, title, status, priority, workflow_stage, assignee_id, sla_deadline, created_at, updated_at',
@@ -218,7 +218,7 @@ export const COMMITMENT_DELIVERABLES_COLUMNS = {
 // =============================================================================
 export const TASK_CONTRIBUTORS_COLUMNS = {
   /** List view */
-  LIST: 'id, task_id, user_id, role, added_at, added_by, removed_at, removed_by',
+  LIST: 'id, task_id, user_id, role, notes, added_at, removed_at',
 } as const
 
 // =============================================================================

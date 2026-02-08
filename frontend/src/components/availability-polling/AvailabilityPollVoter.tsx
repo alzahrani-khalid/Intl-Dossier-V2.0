@@ -8,15 +8,14 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format, parseISO, isAfter, isBefore } from 'date-fns'
+import { format, parseISO, isAfter } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { Check, X, HelpCircle, Clock, MapPin, Calendar, Send } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
@@ -50,7 +49,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
 
   // Track votes locally
   const [votes, setVotes] = useState<Map<string, SlotVote>>(new Map())
-  const [expandedSlot, setExpandedSlot] = useState<string | null>(null)
+  const [expandedSlot, _setExpandedSlot] = useState<string | null>(null)
 
   // Initialize votes from existing responses
   useMemo(() => {
@@ -269,7 +268,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
       <div className="space-y-3">
         {slots?.map((slot) => {
           const vote = votes.get(slot.id)
-          const isExpanded = expandedSlot === slot.id
+          const _isExpanded = expandedSlot === slot.id
           const startDate = parseISO(slot.slot_start)
           const endDate = parseISO(slot.slot_end)
 

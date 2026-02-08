@@ -130,7 +130,7 @@ export function AgendaDocumentsList({
   // File drop handler
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0]
+      const file = acceptedFiles[0]!
       setUploadFile(file)
       setUploadData((prev) => ({
         ...prev,
@@ -174,20 +174,17 @@ export function AgendaDocumentsList({
     const storagePath = `agendas/${agendaId}/documents/${uploadFile.name}`
 
     await addDocument.mutateAsync({
-      agendaId,
-      input: {
-        agenda_id: agendaId,
-        agenda_item_id: uploadData.agenda_item_id || undefined,
-        title_en: uploadData.title_en,
-        title_ar: uploadData.title_ar || undefined,
-        storage_path: storagePath,
-        file_name: uploadFile.name,
-        file_type: getFileExtension(uploadFile.name),
-        file_size_bytes: uploadFile.size,
-        mime_type: uploadFile.type,
-        document_type: uploadData.document_type,
-        shared_before_meeting: uploadData.shared_before_meeting,
-      },
+      agenda_id: agendaId,
+      agenda_item_id: uploadData.agenda_item_id || undefined,
+      title_en: uploadData.title_en,
+      title_ar: uploadData.title_ar || undefined,
+      storage_path: storagePath,
+      file_name: uploadFile.name,
+      file_type: getFileExtension(uploadFile.name),
+      file_size_bytes: uploadFile.size,
+      mime_type: uploadFile.type,
+      document_type: uploadData.document_type,
+      shared_before_meeting: uploadData.shared_before_meeting,
     })
 
     setShowUploadDialog(false)

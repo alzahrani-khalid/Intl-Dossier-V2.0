@@ -40,7 +40,7 @@ import type {
   WorkflowActionType,
   ActionConfig,
 } from '@/types/workflow-automation.types'
-import { actionTypes, getActionTypeOption, getActionsByCategory } from './workflow-config'
+import { getActionTypeOption, getActionsByCategory } from './workflow-config'
 
 interface ActionBuilderProps {
   actions: WorkflowAction[]
@@ -78,7 +78,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
     onActionsChange([...actions, newAction])
   }
 
-  const updateAction = (index: number, updates: Partial<WorkflowAction>) => {
+  const _updateAction = (index: number, updates: Partial<WorkflowAction>) => {
     const updated = actions.map((a, i) => (i === index ? { ...a, ...updates } : a))
     onActionsChange(updated)
   }
@@ -97,7 +97,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
   const moveAction = (fromIndex: number, toIndex: number) => {
     const updated = [...actions]
     const [moved] = updated.splice(fromIndex, 1)
-    updated.splice(toIndex, 0, moved)
+    updated.splice(toIndex, 0, moved!)
     onActionsChange(updated)
   }
 
