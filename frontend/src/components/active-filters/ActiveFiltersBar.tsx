@@ -88,7 +88,7 @@ function FilterChip({ filter, onRemove }: { filter: FilterChipConfig; onRemove: 
       transition={{ duration: 0.15 }}
     >
       <Badge
-        variant="none"
+        variant="outline"
         className={cn(
           'flex items-center gap-1.5 pe-1 py-1 text-xs sm:text-sm',
           'transition-colors duration-150',

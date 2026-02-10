@@ -2,38 +2,32 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-/**
- * Input component with 48px minimum touch target height
- *
- * Mobile-first design ensures touch-friendly interaction
- * while maintaining clean aesthetics on desktop.
- */
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
-  ({ className, type, ...props }, ref) => {
-    return (
-      <input
-        type={type}
-        className={cn(
-          // Base: 48px height (min-h-12) for touch targets
-          'flex min-h-12 h-12 w-full rounded-md border border-input bg-transparent',
-          'px-4 py-2 text-base shadow-sm transition-colors touch-manipulation',
-          // File input styling
-          'file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground',
-          // Placeholder and focus states
-          'placeholder:text-muted-foreground',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-          // Disabled state
-          'disabled:cursor-not-allowed disabled:opacity-50',
-          // Responsive text size (smaller on desktop)
-          'sm:text-sm',
-          className,
-        )}
-        ref={ref}
-        {...props}
-      />
-    )
-  },
-)
-Input.displayName = 'Input'
+function Input({
+  className,
+  type,
+  ref,
+  ...props
+}: React.ComponentProps<'input'> & { ref?: React.Ref<HTMLInputElement> }) {
+  return (
+    <input
+      type={type}
+      data-slot="input"
+      className={cn(
+        'flex h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow]',
+        'selection:bg-primary selection:text-primary-foreground',
+        'file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground',
+        'placeholder:text-muted-foreground',
+        'outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+        'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
+        'disabled:cursor-not-allowed disabled:opacity-50',
+        'dark:bg-input/30',
+        'md:text-sm',
+        className,
+      )}
+      ref={ref}
+      {...props}
+    />
+  )
+}
 
 export { Input }
