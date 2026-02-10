@@ -68,8 +68,9 @@ export function WorkItemList({
   const rowVirtualizer = useVirtualizer({
     count: items.length + (hasMore ? 1 : 0), // +1 for loading indicator
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 120, // Estimated card height
+    estimateSize: () => 76, // Compact card: ~60px card + 8px gap
     overscan: 5, // Render 5 extra items outside viewport
+    measureElement: (element) => element.getBoundingClientRect().height,
   })
 
   // Infinite scroll trigger
@@ -170,7 +171,13 @@ export function WorkItemList({
             return (
               <div
                 key={virtualRow.key}
-                ref={virtualRow.index === items.length - 1 ? lastItemRef : undefined}
+                data-index={virtualRow.index}
+                ref={(node) => {
+                  rowVirtualizer.measureElement(node)
+                  if (virtualRow.index === items.length - 1 && node) {
+                    lastItemRef(node)
+                  }
+                }}
                 style={{
                   position: 'absolute',
                   top: 0,
@@ -178,7 +185,7 @@ export function WorkItemList({
                   width: '100%',
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
-                className="pb-3"
+                className="pb-1.5"
               >
                 {isLoaderRow || !item ? <WorkItemSkeleton /> : <WorkItemCard item={item} />}
               </div>

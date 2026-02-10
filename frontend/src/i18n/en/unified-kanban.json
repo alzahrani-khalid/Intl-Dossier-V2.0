@@ -2,7 +2,8 @@
   "title": "Work Board",
   "viewModes": {
     "list": "List View",
-    "board": "Board View"
+    "board": "Board View",
+    "table": "Table View"
   },
   "swimlanes": {
     "none": "No Swimlanes",
@@ -84,7 +85,14 @@
     "allPriorities": "All priorities",
     "overdueOnly": "Overdue only",
     "clear": "Clear filters",
+    "clearFilters": "Clear all filters",
     "searchPlaceholder": "Search work items..."
+  },
+  "priority": {
+    "urgent": "Urgent",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
   },
   "sorting": {
     "label": "Sort by",

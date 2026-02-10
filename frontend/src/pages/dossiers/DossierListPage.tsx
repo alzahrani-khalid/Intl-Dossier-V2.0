@@ -512,13 +512,13 @@ export function DossierListPage() {
       {/* Search and Filters Section */}
       <div
         className={cn(
-          'rounded-3xl border border-black/5 p-5 sm:p-7 mb-8 space-y-6',
-          'bg-white/60 backdrop-blur-xl',
-          'shadow-[0_6px_20px_rgba(0,0,0,0.08),0_2px_6px_rgba(0,0,0,0.04)]',
+          'rounded-3xl border border-border p-5 sm:p-7 mb-8 space-y-6',
+          'bg-card/60 backdrop-blur-xl',
+          'shadow-lg',
         )}
       >
         {/* Saved Views Manager */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-black/5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-border">
           <SavedViewsManager
             savedViews={viewPreferences.savedViews}
             currentViewConfig={viewPreferences.currentViewConfig}
@@ -563,12 +563,12 @@ export function DossierListPage() {
                 className={cn(
                   'h-12 w-full',
                   isRTL ? 'pe-11 ps-4' : 'ps-11 pe-4',
-                  'bg-white/40 border border-black/5',
+                  'bg-background/40 border border-border',
                   'rounded-2xl',
                   'text-sm placeholder:text-muted-foreground/40',
-                  'shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]',
-                  'focus-visible:bg-white/60 focus-visible:border-black/10',
-                  'focus-visible:shadow-[inset_0_2px_6px_rgba(0,0,0,0.08)]',
+                  'shadow-sm',
+                  'focus-visible:bg-background/60 focus-visible:border-input',
+                  'focus-visible:shadow-md',
                   'transition-all duration-150',
                 )}
               />
@@ -601,10 +601,10 @@ export function DossierListPage() {
                     aria-expanded={statusFilterOpen}
                     className={cn(
                       'h-12 justify-between w-full',
-                      'bg-white/40 border border-black/5',
+                      'bg-background/40 border border-border',
                       'rounded-xl',
-                      'shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]',
-                      'hover:bg-white/60 hover:border-black/10',
+                      'shadow-sm',
+                      'hover:bg-background/60 hover:border-input',
                       'transition-all duration-150',
                     )}
                   >
@@ -675,10 +675,10 @@ export function DossierListPage() {
               <SelectTrigger
                 className={cn(
                   'h-12',
-                  'bg-white/40 border border-black/5',
+                  'bg-background/40 border border-border',
                   'rounded-xl',
-                  'shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]',
-                  'hover:bg-white/60 hover:border-black/10',
+                  'shadow-sm',
+                  'hover:bg-background/60 hover:border-input',
                   'transition-all duration-150',
                 )}
               >
@@ -700,10 +700,10 @@ export function DossierListPage() {
               <SelectTrigger
                 className={cn(
                   'h-12',
-                  'bg-white/40 border border-black/5',
+                  'bg-background/40 border border-border',
                   'rounded-xl',
-                  'shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]',
-                  'hover:bg-white/60 hover:border-black/10',
+                  'shadow-sm',
+                  'hover:bg-background/60 hover:border-input',
                   'transition-all duration-150',
                 )}
               >
@@ -853,7 +853,7 @@ export function DossierListPage() {
                   className={cn(
                     'text-center py-16 px-4',
                     'rounded-2xl',
-                    'bg-white/40 border border-black/5',
+                    'bg-muted/40 border border-border',
                   )}
                 >
                   <p className="text-muted-foreground text-base">{t('list.noDossiers')}</p>
@@ -882,7 +882,7 @@ export function DossierListPage() {
                 className={cn(
                   'flex flex-col sm:flex-row items-center justify-between gap-4',
                   'pt-6 mt-2',
-                  'border-t border-black/5',
+                  'border-t border-border',
                 )}
               >
                 <p className="text-sm font-medium text-muted-foreground">
@@ -897,8 +897,8 @@ export function DossierListPage() {
                     className={cn(
                       'px-4',
                       'rounded-xl',
-                      'bg-white/40 border border-black/5',
-                      'hover:bg-white/60 hover:border-black/10',
+                      'bg-background/40 border border-border',
+                      'hover:bg-background/60 hover:border-input',
                       'disabled:opacity-40 disabled:cursor-not-allowed',
                       'shadow-sm hover:shadow-md',
                       'transition-all duration-150',
@@ -917,8 +917,8 @@ export function DossierListPage() {
                     className={cn(
                       'px-4',
                       'rounded-xl',
-                      'bg-white/40 border border-black/5',
-                      'hover:bg-white/60 hover:border-black/10',
+                      'bg-background/40 border border-border',
+                      'hover:bg-background/60 hover:border-input',
                       'disabled:opacity-40 disabled:cursor-not-allowed',
                       'shadow-sm hover:shadow-md',
                       'transition-all duration-150',

@@ -399,7 +399,7 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
               y1={fromNode.y}
               x2={toNode.x}
               y2={toNode.y}
-              stroke="hsl(var(--primary))"
+              stroke="var(--heroui-accent)"
               strokeWidth="2"
               strokeOpacity="0.5"
               initial={{ pathLength: 0 }}

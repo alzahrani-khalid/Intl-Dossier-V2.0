@@ -2,7 +2,8 @@
   "title": "لوحة العمل",
   "viewModes": {
     "list": "عرض القائمة",
-    "board": "عرض اللوحة"
+    "board": "عرض اللوحة",
+    "table": "عرض الجدول"
   },
   "swimlanes": {
     "none": "بدون مسارات",
@@ -84,7 +85,14 @@
     "allPriorities": "جميع الأولويات",
     "overdueOnly": "المتأخرة فقط",
     "clear": "مسح التصفية",
+    "clearFilters": "مسح جميع التصفيات",
     "searchPlaceholder": "البحث في عناصر العمل..."
+  },
+  "priority": {
+    "urgent": "عاجل",
+    "high": "عالي",
+    "medium": "متوسط",
+    "low": "منخفض"
   },
   "sorting": {
     "label": "ترتيب حسب",

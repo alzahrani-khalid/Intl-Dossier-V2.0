@@ -1,37 +1,36 @@
 /**
- * UnifiedKanbanCard - Card content for work items
- * Feature: 034-unified-kanban
+ * UnifiedKanbanCard - Clean card content for work items
+ * Feature: 034-unified-kanban (redesigned)
  *
- * Displays a single work item with:
- * - Source badge (task/commitment/intake)
- * - Priority indicator
- * - Title and deadline
- * - Assignee avatar
- * - Overdue indicator
+ * Layout:
+ * [Source badge (outline)] [Priority badge (outline with dot)]
+ * [Title - font-semibold, 2 lines]
+ * <Separator />
+ * [Calendar icon + deadline text]  [Avatar]
  */
 
 import { useTranslation } from 'react-i18next'
-import { Calendar, User, AlertCircle, GripVertical } from 'lucide-react'
+import { Calendar, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 import type { WorkItem } from '@/types/work-item.types'
 import { getSourceBadgeColors, getPriorityColor } from './utils/column-definitions'
 
 interface CardContentProps {
   item: WorkItem
-  showDragHandle?: boolean
 }
 
 /**
- * Card content component - used inside KanbanCard
+ * Card content component — clean design with outline badges and separator
  */
-export function UnifiedKanbanCardContent({ item, showDragHandle = true }: CardContentProps) {
+export function UnifiedKanbanCardContent({ item }: CardContentProps) {
   const { t, i18n } = useTranslation('unified-kanban')
   const isRTL = i18n.language === 'ar'
 
-  const sourceBadge = getSourceBadgeColors(item.source)
-  const priorityColor = getPriorityColor(item.priority)
+  const sourceClasses = getSourceBadgeColors(item.source)
+  const priorityDotColor = getPriorityColor(item.priority)
 
   // Format deadline display
   const getDeadlineDisplay = () => {
@@ -40,21 +39,21 @@ export function UnifiedKanbanCardContent({ item, showDragHandle = true }: CardCo
     if (item.is_overdue) {
       return {
         text: t('card.overdue'),
-        className: 'text-red-600 font-medium',
+        className: 'text-red-600 dark:text-red-400 font-medium',
       }
     }
 
     if (item.days_until_due === 0) {
       return {
         text: t('card.dueToday'),
-        className: 'text-amber-600 font-medium',
+        className: 'text-amber-600 dark:text-amber-400 font-medium',
       }
     }
 
     if (item.days_until_due === 1) {
       return {
         text: t('card.dueTomorrow'),
-        className: 'text-amber-500',
+        className: 'text-amber-500 dark:text-amber-400',
       }
     }
 
@@ -81,76 +80,52 @@ export function UnifiedKanbanCardContent({ item, showDragHandle = true }: CardCo
   }
 
   return (
-    <div className="relative" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Priority indicator bar */}
-      <div
-        className={cn(
-          'absolute -top-3 sm:-top-4 h-1 w-full rounded-t-lg',
-          priorityColor,
-          'left-0 right-0',
+    <div dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Row 1: Source + Priority badges */}
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <Badge variant="outline" className={cn('text-xs font-normal', sourceClasses)}>
+          {t(`sources.${item.source}`)}
+        </Badge>
+
+        <Badge variant="outline" className="text-xs font-normal gap-1.5">
+          <span className={cn('h-1.5 w-1.5 rounded-full shrink-0', priorityDotColor)} />
+          {t(`priority.${item.priority}`)}
+        </Badge>
+      </div>
+
+      {/* Title */}
+      <h4 className="text-sm font-semibold line-clamp-2 text-start mb-3">
+        {isRTL && item.title_ar ? item.title_ar : item.title}
+      </h4>
+
+      <Separator className="mb-3" />
+
+      {/* Footer: Deadline and Assignee */}
+      <div className="flex items-center justify-between gap-2">
+        {/* Deadline */}
+        {deadlineDisplay ? (
+          <div className={cn('flex items-center gap-1 text-xs', deadlineDisplay.className)}>
+            <Calendar className="h-3 w-3 shrink-0" />
+            <span>{deadlineDisplay.text}</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Calendar className="h-3 w-3 opacity-50 shrink-0" />
+            <span>{t('card.noDueDate')}</span>
+          </div>
         )}
-        style={{ left: '-12px', right: '-12px', width: 'calc(100% + 24px)' }}
-      />
 
-      {/* Drag handle - visible on hover */}
-      {showDragHandle && (
-        <div
-          className={cn(
-            'absolute -top-1 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground',
-            isRTL ? 'start-0' : 'end-0',
-          )}
-        >
-          <GripVertical className="h-4 w-4" />
-        </div>
-      )}
-
-      {/* Content */}
-      <div className="space-y-2">
-        {/* Source badge and overdue indicator */}
-        <div className="flex items-center justify-between gap-2">
-          <Badge variant="secondary" className={cn('text-xs', sourceBadge.bg, sourceBadge.text)}>
-            {t(`sources.${item.source}`)}
-          </Badge>
-
-          {item.is_overdue && (
-            <div className="flex items-center gap-1 text-red-600">
-              <AlertCircle className="h-3.5 w-3.5" />
-            </div>
-          )}
-        </div>
-
-        {/* Title */}
-        <h4 className="text-sm font-medium line-clamp-2 text-start">
-          {isRTL && item.title_ar ? item.title_ar : item.title}
-        </h4>
-
-        {/* Footer: Deadline and Assignee */}
-        <div className="flex items-center justify-between gap-2 pt-1">
-          {/* Deadline */}
-          {deadlineDisplay ? (
-            <div className={cn('flex items-center gap-1 text-xs', deadlineDisplay.className)}>
-              <Calendar className="h-3 w-3" />
-              <span>{deadlineDisplay.text}</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Calendar className="h-3 w-3 opacity-50" />
-              <span>{t('card.noDueDate')}</span>
-            </div>
-          )}
-
-          {/* Assignee */}
-          {item.assignee ? (
-            <Avatar className="h-6 w-6">
-              <AvatarImage src={item.assignee.avatar_url || undefined} alt={item.assignee.name} />
-              <AvatarFallback className="text-xs">{getInitials(item.assignee.name)}</AvatarFallback>
-            </Avatar>
-          ) : (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <User className="h-3.5 w-3.5" />
-            </div>
-          )}
-        </div>
+        {/* Assignee */}
+        {item.assignee ? (
+          <Avatar className="h-6 w-6 shrink-0">
+            <AvatarImage src={item.assignee.avatar_url || undefined} alt={item.assignee.name} />
+            <AvatarFallback className="text-xs">{getInitials(item.assignee.name)}</AvatarFallback>
+          </Avatar>
+        ) : (
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <User className="h-3.5 w-3.5 shrink-0" />
+          </div>
+        )}
       </div>
     </div>
   )
@@ -161,51 +136,18 @@ export function UnifiedKanbanCardContent({ item, showDragHandle = true }: CardCo
  */
 export function UnifiedKanbanCardSkeleton() {
   return (
-    <div className="rounded-lg border bg-card p-3 shadow-sm animate-pulse">
-      <div className="space-y-2">
-        <div className="h-5 w-16 bg-muted rounded" />
-        <div className="h-4 w-full bg-muted rounded" />
-        <div className="h-4 w-3/4 bg-muted rounded" />
-        <div className="flex justify-between pt-1">
-          <div className="h-4 w-20 bg-muted rounded" />
-          <div className="h-6 w-6 bg-muted rounded-full" />
-        </div>
+    <div className="rounded-lg bg-card p-3 animate-pulse">
+      <div className="flex gap-2 mb-2">
+        <div className="h-5 w-14 bg-muted rounded" />
+        <div className="h-5 w-16 bg-muted rounded ms-auto" />
       </div>
-    </div>
-  )
-}
-
-/**
- * @deprecated Use UnifiedKanbanCardContent with KanbanCard from ui/kanban instead
- * Legacy card component for backwards compatibility
- */
-export function UnifiedKanbanCard({
-  item,
-  isDragging = false,
-  onClick,
-}: {
-  item: WorkItem
-  isDragging?: boolean
-  onClick?: (item: WorkItem) => void
-}) {
-  const { i18n } = useTranslation('unified-kanban')
-  const isRTL = i18n.language === 'ar'
-
-  return (
-    <div
-      className={cn(
-        'group relative rounded-lg border bg-card p-3 shadow-sm transition-all',
-        'hover:shadow-md hover:border-primary/20',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        'cursor-grab active:cursor-grabbing',
-        'min-h-[88px]',
-        isDragging ? 'opacity-50 shadow-lg scale-105' : '',
-        item.is_overdue ? 'border-red-200 bg-red-50/50' : '',
-      )}
-      onClick={() => onClick?.(item)}
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      <UnifiedKanbanCardContent item={item} />
+      <div className="h-4 w-full bg-muted rounded mb-1" />
+      <div className="h-4 w-3/4 bg-muted rounded mb-3" />
+      <div className="h-px bg-muted mb-3" />
+      <div className="flex justify-between">
+        <div className="h-4 w-20 bg-muted rounded" />
+        <div className="h-6 w-6 bg-muted rounded-full" />
+      </div>
     </div>
   )
 }

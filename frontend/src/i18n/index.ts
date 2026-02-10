@@ -50,6 +50,8 @@ import enMouRenewals from './en/mou-renewals.json'
 import arMouRenewals from './ar/mou-renewals.json'
 import enDashboardWidgets from './en/dashboard-widgets.json'
 import arDashboardWidgets from './ar/dashboard-widgets.json'
+import enDashboard from './en/dashboard.json'
+import arDashboard from './ar/dashboard.json'
 import enDelegation from './en/delegation.json'
 import arDelegation from './ar/delegation.json'
 import enRetentionPolicies from './en/retention-policies.json'
@@ -238,7 +240,9 @@ import enTerminology from './en/terminology.json'
 import arTerminology from './ar/terminology.json'
 import enContactsExtended from './en/contacts-extended.json'
 import arContactsExtended from './ar/contacts-extended.json'
-// Force reload - updated 2026-02-06 - v108 - Added forum-management, mou-lifecycle, committees, terminology, contacts-extended namespaces
+import enMyWork from './en/my-work.json'
+import arMyWork from './ar/my-work.json'
+// Force reload - updated 2026-02-10 - v109 - Added my-work namespace
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -246,6 +250,7 @@ export type SupportedLanguage = (typeof supportedLanguages)[number]
 const resources = {
   en: {
     translation: enCommon,
+    common: enCommon,
     intake: enIntake,
     dossiers: enDossiers,
     dossier: enDossier,
@@ -269,6 +274,7 @@ const resources = {
     'bulk-actions': enBulkActions,
     'mou-renewals': enMouRenewals,
     'dashboard-widgets': enDashboardWidgets,
+    dashboard: enDashboard,
     delegation: enDelegation,
     'retention-policies': enRetentionPolicies,
     'document-ocr': enDocumentOcr,
@@ -363,9 +369,11 @@ const resources = {
     committees: enCommittees,
     terminology: enTerminology,
     'contacts-extended': enContactsExtended,
+    'my-work': enMyWork,
   },
   ar: {
     translation: arCommon,
+    common: arCommon,
     intake: arIntake,
     dossiers: arDossiers,
     dossier: arDossier,
@@ -389,6 +397,7 @@ const resources = {
     'bulk-actions': arBulkActions,
     'mou-renewals': arMouRenewals,
     'dashboard-widgets': arDashboardWidgets,
+    dashboard: arDashboard,
     delegation: arDelegation,
     'retention-policies': arRetentionPolicies,
     'document-ocr': arDocumentOcr,
@@ -483,6 +492,7 @@ const resources = {
     committees: arCommittees,
     terminology: arTerminology,
     'contacts-extended': arContactsExtended,
+    'my-work': arMyWork,
   },
 }
 

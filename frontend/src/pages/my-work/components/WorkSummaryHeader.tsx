@@ -3,18 +3,18 @@
  * Displays key stats: Total Active, Overdue, Due Today, Due This Week
  * Mobile-first, RTL-compatible
  */
-import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Calendar, CalendarDays, ListTodo } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import type { UserWorkSummary } from '@/types/unified-work.types';
-import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next'
+import { AlertTriangle, Calendar, CalendarDays, ListTodo } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import type { UserWorkSummary } from '@/types/unified-work.types'
+import { cn } from '@/lib/utils'
 
 interface WorkSummaryHeaderProps {
-  summary?: UserWorkSummary;
-  isLoading: boolean;
-  onFilterClick: (filter: string | undefined) => void;
-  currentFilter?: string;
+  summary?: UserWorkSummary
+  isLoading: boolean
+  onFilterClick: (filter: string | undefined) => void
+  currentFilter?: string
 }
 
 export function WorkSummaryHeader({
@@ -23,8 +23,8 @@ export function WorkSummaryHeader({
   onFilterClick,
   currentFilter,
 }: WorkSummaryHeaderProps) {
-  const { t, i18n } = useTranslation('my-work');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('my-work')
+  const isRTL = i18n.language === 'ar'
 
   const stats = [
     {
@@ -59,59 +59,59 @@ export function WorkSummaryHeader({
       color: 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30',
       filter: 'due-week',
     },
-  ];
+  ]
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-3 sm:mb-4">
         {[1, 2, 3, 4].map((i) => (
           <Card key={i}>
-            <CardContent className="p-3 sm:p-4">
-              <Skeleton className="h-4 w-20 mb-2" />
-              <Skeleton className="h-8 w-12" />
+            <CardContent className="px-3 py-2">
+              <Skeleton className="h-3 w-16 mb-1" />
+              <Skeleton className="h-5 w-10" />
             </CardContent>
           </Card>
         ))}
       </div>
-    );
+    )
   }
 
   return (
     <div
-      className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6"
+      className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-3 sm:mb-4"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {stats.map((stat) => {
-        const Icon = stat.icon;
-        const isActive = currentFilter === stat.filter || (stat.key === 'active' && !currentFilter);
+        const Icon = stat.icon
+        const isActive = currentFilter === stat.filter || (stat.key === 'active' && !currentFilter)
 
         return (
           <Card
             key={stat.key}
             className={cn(
-              'cursor-pointer transition-all hover:shadow-md',
-              isActive && 'ring-2 ring-primary ring-offset-2'
+              'cursor-pointer transition-colors hover:bg-accent/50',
+              isActive && 'ring-2 ring-primary ring-offset-1',
             )}
             onClick={() => onFilterClick(stat.filter === currentFilter ? undefined : stat.filter)}
           >
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className={cn('p-2 rounded-lg', stat.color)}>
-                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+            <CardContent className="px-3 py-2">
+              <div className="flex items-center gap-2">
+                <div className={cn('p-1.5 rounded-md', stat.color)}>
+                  <Icon className="h-3.5 w-3.5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-muted-foreground truncate text-start">
+                  <p className="text-[11px] text-muted-foreground truncate text-start leading-none mb-0.5">
                     {stat.label}
                   </p>
-                  <p className="text-xl sm:text-2xl font-bold text-start">
+                  <p className="text-base sm:text-lg font-bold text-start leading-tight">
                     {stat.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

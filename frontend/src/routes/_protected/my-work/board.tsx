@@ -25,8 +25,6 @@ import {
   useUnifiedKanbanRealtime,
 } from '@/hooks/useUnifiedKanban'
 import { UnifiedKanbanBoard } from '@/components/unified-kanban'
-import { Button } from '@/components/ui/button'
-import { List } from 'lucide-react'
 import type { KanbanColumnMode, WorkSource, WorkItem } from '@/types/work-item.types'
 
 // URL search params schema
@@ -43,7 +41,7 @@ export const Route = createFileRoute('/_protected/my-work/board')({
 })
 
 function MyWorkBoardPage() {
-  const { t, i18n } = useTranslation('unified-kanban')
+  const { i18n } = useTranslation('unified-kanban')
   const isRTL = i18n.language === 'ar'
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -96,50 +94,23 @@ function MyWorkBoardPage() {
     [navigate],
   )
 
-  // Navigate to list view
-  const handleSwitchToList = useCallback(() => {
-    navigate({
-      to: '/my-work',
-      search: { tab: 'all', sortBy: 'deadline', sortOrder: 'asc' } as any,
-    })
-  }, [navigate])
-
   return (
     <div className="flex flex-col h-full" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Top bar with view toggle */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-2 border-b bg-background">
-        <div className="flex items-center gap-2">
-          <h1 className="text-lg font-semibold">{t('context.personal')}</h1>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleSwitchToList}
-          className="flex items-center gap-2"
-        >
-          <List className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('viewModes.list')}</span>
-        </Button>
-      </div>
-
-      {/* Kanban Board */}
-      <div className="flex-1 overflow-hidden">
-        <UnifiedKanbanBoard
-          contextType="personal"
-          columnMode={mode as KanbanColumnMode}
-          sourceFilter={sourceFilter}
-          items={items}
-          isLoading={isLoading}
-          isError={isError}
-          onStatusChange={handleStatusChange}
-          onItemClick={handleItemClick}
-          onRefresh={() => refetch()}
-          isRefreshing={isRefetching}
-          showFilters
-          showModeSwitch
-          className="h-full"
-        />
-      </div>
+      <UnifiedKanbanBoard
+        contextType="personal"
+        columnMode={mode as KanbanColumnMode}
+        sourceFilter={sourceFilter}
+        items={items}
+        isLoading={isLoading}
+        isError={isError}
+        onStatusChange={handleStatusChange}
+        onItemClick={handleItemClick}
+        onRefresh={() => refetch()}
+        isRefreshing={isRefetching}
+        showFilters
+        showModeSwitch
+        className="h-full"
+      />
     </div>
   )
 }

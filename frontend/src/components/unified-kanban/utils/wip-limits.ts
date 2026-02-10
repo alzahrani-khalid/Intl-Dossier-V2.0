@@ -82,11 +82,11 @@ export function getWipWarningLevel(status: WipStatus): WipWarningLevel {
 export function getWipIndicatorColor(level: WipWarningLevel): string {
   switch (level) {
     case 'over_limit':
-      return 'text-red-600 bg-red-100'
+      return 'text-destructive bg-destructive/10'
     case 'at_limit':
-      return 'text-amber-600 bg-amber-100'
+      return 'text-amber-600 dark:text-amber-400 bg-amber-500/10'
     case 'approaching':
-      return 'text-yellow-600 bg-yellow-100'
+      return 'text-yellow-600 dark:text-yellow-400 bg-yellow-500/10'
     default:
       return 'text-muted-foreground bg-muted'
   }

@@ -1,249 +1,142 @@
 /**
  * DashboardPage Component
- * Feature: Dossier-Centric Dashboard Redesign
  *
- * Redesigned dashboard organized around dossier activity instead of generic metrics.
- * Includes:
- * - My Dossiers section with activity badges
- * - Recent Dossier Activity timeline
- * - Pending Work by Dossier grouping
- * - Quick stats summary
- *
- * Mobile-first design with RTL support.
+ * Redesigned dashboard matching shadcn-ui-kit reference:
+ * - space-y-4 throughout
+ * - Uniform gradient metric cards
+ * - @container responsive charts
+ * - Highlights-based success metrics
  */
 
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import {
-  TrendingUp,
-  Clock,
-  AlertTriangle,
-  CheckCircle2,
-  FolderKanban,
-  Activity,
-  Plus,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Plus, CheckCircle2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   MyDossiersSection,
   RecentDossierActivity,
   PendingWorkByDossier,
 } from '@/components/Dashboard'
-import { useDossierDashboardSummary } from '@/hooks/useDossierDashboard'
+import { useDossierDashboardSummary, useMyDossiers } from '@/hooks/useDossierDashboard'
 import { RecommendationsPanel } from '@/components/engagement-recommendations'
 import { useWorkCreation } from '@/components/work-creation'
-
-// =============================================================================
-// Component
-// =============================================================================
+import {
+  DashboardMetricCards,
+  ChartWorkItemTrends,
+  ChartDossierDistribution,
+  DossierSuccessMetrics,
+  DashboardDateRangePicker,
+  DashboardExportButton,
+  RecentDossiersTable,
+} from './components'
 
 export function DashboardPage() {
-  const { t, i18n } = useTranslation(['dossier-dashboard', 'dashboard'])
+  const { t, i18n } = useTranslation(['dashboard', 'dossiers'])
   const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
   const { openPalette } = useWorkCreation()
 
   // Fetch dashboard summary
-  const {
-    data: summary,
-    isLoading: summaryLoading,
-    isError: _summaryError,
-  } = useDossierDashboardSummary()
+  const { data: summary, isLoading: summaryLoading } = useDossierDashboardSummary()
+
+  // Fetch my dossiers for distribution chart
+  const { data: myDossiersData } = useMyDossiers({ limit: 100 })
 
   return (
-    <div className="w-full space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="w-full space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <section className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-            {t('dossier-dashboard:header.title', 'Dossier Dashboard')}
-          </h1>
-          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
-            {t(
-              'dossier-dashboard:header.subtitle',
-              'Your dossiers, activities, and pending work at a glance.',
-            )}
-          </p>
+      <section className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          {t('dashboard:title')}
+        </h1>
+        <div className="flex items-center gap-2">
+          <DashboardDateRangePicker />
+          <DashboardExportButton />
+          <Button onClick={() => openPalette('task')} className="min-h-9 gap-2">
+            <Plus className="size-4" />
+            <span className="hidden sm:inline">{t('dashboard:new_task')}</span>
+          </Button>
         </div>
-        <Button onClick={() => openPalette('task')} className="min-h-11 w-full sm:w-auto">
-          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-          {t('dashboard:new_task', 'New Task')}
-        </Button>
       </section>
 
-      {/* Quick Stats Summary */}
-      <section className="grid gap-4 grid-cols-2 sm:grid-cols-4">
-        <QuickStatCard
-          icon={FolderKanban}
-          label={t('dossier-dashboard:summary.myDossiers', 'My Dossiers')}
-          value={summary?.total_dossiers ?? 0}
-          subValue={
-            summary?.owned_dossiers
-              ? t('dossier-dashboard:summary.owned', '{{count}} owned', {
-                  count: summary.owned_dossiers,
-                })
-              : undefined
-          }
-          isLoading={summaryLoading}
-          variant="primary"
-        />
-        <QuickStatCard
-          icon={Activity}
-          label={t('dossier-dashboard:summary.activeDossiers', 'Active This Week')}
-          value={summary?.active_dossiers ?? 0}
-          isLoading={summaryLoading}
-          variant="success"
-        />
-        <QuickStatCard
-          icon={Clock}
-          label={t('dossier-dashboard:summary.pendingWork', 'Pending Work')}
-          value={summary?.total_pending_work ?? 0}
-          subValue={
-            summary?.due_today
-              ? t('dossier-dashboard:summary.dueToday', '{{count}} due today', {
-                  count: summary.due_today,
-                })
-              : undefined
-          }
-          isLoading={summaryLoading}
-          variant="warning"
-        />
-        <QuickStatCard
-          icon={AlertTriangle}
-          label={t('dossier-dashboard:summary.needsAttention', 'Needs Attention')}
-          value={summary?.attention_needed ?? 0}
-          subValue={
-            summary?.total_overdue
-              ? t('dossier-dashboard:summary.overdue', '{{count}} overdue', {
-                  count: summary.total_overdue,
-                })
-              : undefined
-          }
-          isLoading={summaryLoading}
-          variant={summary?.attention_needed ? 'danger' : 'muted'}
-        />
-      </section>
+      {/* Tabs */}
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="z-10">
+          <TabsTrigger value="overview">{t('dashboard:tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="activities">{t('dashboard:tabs.activities')}</TabsTrigger>
+        </TabsList>
 
-      {/* My Dossiers Section */}
-      <MyDossiersSection
-        maxItems={6}
-        showViewAll={true}
-        onViewAll={() => navigate({ to: '/dossiers' })}
-      />
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-4">
+          {/* Metric Cards */}
+          <DashboardMetricCards summary={summary} isLoading={summaryLoading} />
 
-      {/* Activity and Pending Work Grid */}
-      <section className="grid gap-6 lg:grid-cols-2">
-        {/* Recent Dossier Activity */}
-        <RecentDossierActivity maxItems={10} maxHeight="450px" showDossierBadges={true} />
+          {/* Charts Row: Trends (2/3) + Success Metrics (1/3) */}
+          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+            <ChartWorkItemTrends className="lg:col-span-2" />
+            <DossierSuccessMetrics isLoading={summaryLoading} />
+          </div>
 
-        {/* Pending Work by Dossier */}
-        <PendingWorkByDossier maxDossiers={5} defaultExpanded={false} />
-      </section>
+          {/* My Dossiers Section */}
+          <MyDossiersSection
+            maxItems={6}
+            showViewAll={true}
+            onViewAll={() => navigate({ to: '/dossiers' })}
+          />
 
-      {/* AI Recommendations Panel */}
-      <section className="grid gap-6 lg:grid-cols-3">
-        <RecommendationsPanel
-          showStats={true}
-          maxItems={3}
-          onViewAll={() => navigate({ to: '/engagements' })}
-          className="lg:col-span-1"
-        />
+          {/* Pending Work + Distribution + Recommendations */}
+          <div className="mt-4 grid gap-4 xl:grid-cols-2 2xl:grid-cols-4">
+            <PendingWorkByDossier
+              maxDossiers={5}
+              defaultExpanded={false}
+              className="xl:col-span-1"
+            />
+            <ChartDossierDistribution
+              summary={summary}
+              countsByType={myDossiersData?.counts_by_type}
+              isLoading={summaryLoading}
+              className="xl:col-span-1"
+            />
+            <RecommendationsPanel
+              showStats={true}
+              maxItems={3}
+              onViewAll={() => navigate({ to: '/engagements' })}
+              className="xl:col-span-2 2xl:col-span-2"
+            />
+          </div>
 
-        {/* Dossiers Needing Review */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <CheckCircle2 className="size-5 text-primary" />
-              {t('dossier-dashboard:review.title', 'Due for Review')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-              <CheckCircle2 className="size-10 mb-3 text-muted-foreground/50" />
-              <p className="text-sm">
-                {t('dossier-dashboard:review.empty', 'No dossiers scheduled for review')}
-              </p>
-              <p className="text-xs mt-1">
-                {t('dossier-dashboard:review.hint', 'Dossiers with review dates will appear here')}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+          {/* Recent Dossiers Table */}
+          <RecentDossiersTable maxItems={5} />
+
+          {/* Due for Review */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <CheckCircle2 className="size-5 text-primary" />
+                {t('dashboard:review.title')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
+                <CheckCircle2 className="size-10 mb-3 text-muted-foreground/50" />
+                <p className="text-sm">{t('dashboard:review.empty')}</p>
+                <p className="text-xs mt-1">{t('dashboard:review.hint')}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Activities Tab */}
+        <TabsContent value="activities" className="space-y-4">
+          <section className="grid gap-4 lg:grid-cols-2">
+            <RecentDossierActivity maxItems={20} maxHeight="600px" showDossierBadges={true} />
+            <PendingWorkByDossier maxDossiers={10} defaultExpanded={true} />
+          </section>
+        </TabsContent>
+      </Tabs>
     </div>
-  )
-}
-
-// =============================================================================
-// QuickStatCard Sub-component
-// =============================================================================
-
-interface QuickStatCardProps {
-  icon: React.ComponentType<{ className?: string }>
-  label: string
-  value: number
-  subValue?: string
-  isLoading?: boolean
-  variant?: 'primary' | 'success' | 'warning' | 'danger' | 'muted'
-}
-
-function QuickStatCard({
-  icon: Icon,
-  label,
-  value,
-  subValue,
-  isLoading,
-  variant = 'primary',
-}: QuickStatCardProps) {
-  const { i18n } = useTranslation()
-
-  const variantStyles = {
-    primary: 'bg-primary/10 text-primary',
-    success: 'bg-green-500/10 text-green-600 dark:text-green-400',
-    warning: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-    danger: 'bg-red-500/10 text-red-600 dark:text-red-400',
-    muted: 'bg-muted text-muted-foreground',
-  }
-
-  if (isLoading) {
-    return (
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
-            <Skeleton className="size-10 rounded-lg" />
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-3 w-1/2" />
-              <Skeleton className="h-6 w-1/3" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex items-center gap-3">
-          <div
-            className={cn(
-              'flex items-center justify-center size-10 rounded-lg shrink-0',
-              variantStyles[variant],
-            )}
-          >
-            <Icon className="size-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs text-muted-foreground truncate">{label}</p>
-            <p className="text-xl font-bold">{value.toLocaleString(i18n.language)}</p>
-            {subValue && <p className="text-xs text-muted-foreground truncate">{subValue}</p>}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
   )
 }
 

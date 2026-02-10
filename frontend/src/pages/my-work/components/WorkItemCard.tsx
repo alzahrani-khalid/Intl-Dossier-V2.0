@@ -141,77 +141,60 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
     <Link to={itemLink} className="block">
       <Card
         className={cn(
-          'transition-all hover:shadow-md hover:border-primary/20 cursor-pointer',
+          'transition-colors hover:bg-accent/50 cursor-pointer border-border/60',
           item.is_overdue && 'border-red-300 dark:border-red-800',
         )}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <CardContent className="p-3 sm:p-4">
-          <div className="flex items-start gap-3">
+        <CardContent className="px-3 py-2 sm:px-4 sm:py-2.5">
+          <div className="flex items-center gap-2.5">
             {/* Source Icon */}
-            <div className={cn('p-2 rounded-lg shrink-0', sourceInfo.color)}>
-              <Icon className="h-5 w-5" />
+            <div className={cn('p-1.5 rounded-md shrink-0', sourceInfo.color)}>
+              <Icon className="h-4 w-4" />
             </div>
 
             {/* Content */}
             <div className="min-w-0 flex-1">
-              {/* Title */}
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <span className="font-medium text-sm sm:text-base hover:text-primary transition-colors line-clamp-2 text-start">
-                  {item.title}
-                </span>
-                <ChevronRight
-                  className={cn(
-                    'h-4 w-4 text-muted-foreground shrink-0 mt-1',
-                    isRTL && 'rotate-180',
-                  )}
-                />
-              </div>
-
-              {/* Description (truncated) */}
-              {item.description && (
-                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 mb-2 text-start">
-                  {item.description}
-                </p>
-              )}
+              {/* Title row */}
+              <span className="font-medium text-sm leading-snug hover:text-primary transition-colors line-clamp-1 text-start block">
+                {item.title}
+              </span>
 
               {/* Badges Row */}
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                {/* Source Badge */}
-                <Badge variant="outline" className="text-xs px-1.5 py-0">
+              <div className="flex flex-wrap items-center gap-1 mt-1">
+                <Badge variant="outline" className="text-[11px] leading-none px-1.5 py-0">
                   {sourceInfo.label}
                 </Badge>
 
-                {/* Tracking Type Badge */}
                 <Badge
-                  className={cn('text-xs px-1.5 py-0', trackingInfo.color)}
+                  className={cn('text-[11px] leading-none px-1.5 py-0', trackingInfo.color)}
                   variant="secondary"
                 >
                   {trackingInfo.label}
                 </Badge>
 
-                {/* Priority Badge */}
                 <Badge
-                  className={cn('text-xs px-1.5 py-0', priorityInfo.color)}
+                  className={cn('text-[11px] leading-none px-1.5 py-0', priorityInfo.color)}
                   variant="secondary"
                 >
                   {priorityInfo.label}
                 </Badge>
 
-                {/* Overdue Indicator */}
                 {item.is_overdue && (
-                  <Badge variant="destructive" className="text-xs px-1.5 py-0 gap-1">
+                  <Badge
+                    variant="destructive"
+                    className="text-[11px] leading-none px-1.5 py-0 gap-0.5"
+                  >
                     <AlertTriangle className="h-3 w-3" />
                     {t('status.overdue', 'Overdue')}
                   </Badge>
                 )}
 
-                {/* Deadline */}
                 {deadlineInfo && (
                   <Badge
                     variant="outline"
                     className={cn(
-                      'text-xs px-1.5 py-0 gap-1',
+                      'text-[11px] leading-none px-1.5 py-0 gap-0.5',
                       deadlineInfo.urgent &&
                         'border-orange-300 text-orange-700 dark:border-orange-700 dark:text-orange-400',
                     )}
@@ -221,9 +204,8 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
                   </Badge>
                 )}
 
-                {/* Days until due (on larger screens) */}
                 {item.days_until_due !== null && !item.is_overdue && (
-                  <span className="hidden sm:inline text-xs text-muted-foreground">
+                  <span className="hidden sm:inline text-[11px] text-muted-foreground">
                     {item.days_until_due === 0
                       ? t('deadline.dueToday', 'Due today')
                       : item.days_until_due === 1
@@ -233,6 +215,11 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
                 )}
               </div>
             </div>
+
+            {/* Chevron */}
+            <ChevronRight
+              className={cn('h-4 w-4 text-muted-foreground shrink-0', isRTL && 'rotate-180')}
+            />
           </div>
         </CardContent>
       </Card>

@@ -6,7 +6,7 @@ import { preferenceStorage, type StoredPreferences } from '../utils/storage/pref
 interface UserPreference {
   id?: string
   user_id: string
-  theme: 'gastat' | 'blue-sky'
+  theme: 'canvas' | 'azure' | 'lavender' | 'bluesky' | 'ocean' | 'sunset'
   color_mode: 'light' | 'dark'
   language: 'en' | 'ar'
   created_at?: string
@@ -67,7 +67,7 @@ export function usePreferenceSync(userId?: string) {
       // Then sync to Supabase
       const upsertData: Partial<UserPreference> = {
         user_id: userId,
-        theme: preferences.theme || 'gastat',
+        theme: preferences.theme || 'canvas',
         color_mode: preferences.colorMode || 'light',
         language: preferences.language || 'en',
       }

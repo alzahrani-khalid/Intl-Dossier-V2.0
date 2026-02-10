@@ -1,0 +1,99 @@
+{
+  "title": "My Work",
+  "subtitle": "Track your commitments, tasks, and intake tickets in one place",
+  "viewBoard": "Board View",
+
+  "stats": {
+    "totalActive": "Total Active",
+    "overdue": "Overdue",
+    "dueToday": "Due Today",
+    "dueThisWeek": "Due This Week"
+  },
+
+  "metrics": {
+    "title": "Your Productivity",
+    "completed30d": "Completed (30d)",
+    "onTimeRate": "On-Time Rate",
+    "avgCompletionTime": "Avg Completion"
+  },
+
+  "tabs": {
+    "all": "All",
+    "commitments": "Commitments",
+    "tasks": "Tasks",
+    "intake": "Intake"
+  },
+
+  "search": {
+    "placeholder": "Search work items..."
+  },
+
+  "filters": {
+    "trackingType": "Tracking Type",
+    "all": "All Types"
+  },
+
+  "trackingType": {
+    "delivery": "Delivery",
+    "followUp": "Follow-up",
+    "sla": "SLA"
+  },
+
+  "sort": {
+    "label": "Sort By",
+    "deadlineAsc": "Deadline (Earliest)",
+    "deadlineDesc": "Deadline (Latest)",
+    "priorityDesc": "Priority (High to Low)",
+    "priorityAsc": "Priority (Low to High)",
+    "createdDesc": "Newest First",
+    "createdAsc": "Oldest First"
+  },
+
+  "source": {
+    "commitment": "Commitment",
+    "task": "Task",
+    "intake": "Intake"
+  },
+
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical",
+    "urgent": "Urgent"
+  },
+
+  "deadline": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "dueToday": "Due today",
+    "dueTomorrow": "Due tomorrow",
+    "dueInDays": "Due in {{count}} days",
+    "dueInDays_one": "Due in {{count}} day",
+    "dueInDays_other": "Due in {{count}} days"
+  },
+
+  "status": {
+    "overdue": "Overdue"
+  },
+
+  "team": {
+    "title": "Team Workload",
+    "members": "members",
+    "overdue": "overdue",
+    "active": "Active",
+    "onTime": "On-time"
+  },
+
+  "error": {
+    "loading": "Failed to load work items",
+    "retry": "Retry"
+  },
+
+  "empty": {
+    "title": "No work items found",
+    "description": "Try adjusting your filters or check back later"
+  },
+
+  "loadMore": "Load More"
+}

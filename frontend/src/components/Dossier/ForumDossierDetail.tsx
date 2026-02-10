@@ -29,14 +29,14 @@
  * Feature: 028-type-specific-dossier-pages (Phase 2)
  */
 
-import { useState, Suspense, useRef, useEffect, useCallback } from 'react'
+import { useState, Suspense } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
 import QueryErrorBoundary from '@/components/QueryErrorBoundary'
 import { Building2, CalendarDays, Target, FileText, Files, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 
 // Section components (existing forum sections)
 import { MemberOrganizations } from './sections/MemberOrganizations'
@@ -75,50 +75,10 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
   const navigate = useNavigate()
-  const tabsRef = useRef<HTMLDivElement>(null)
-
   // Active tab state with URL persistence
   const [activeTab, setActiveTab] = useState<ForumTabType>(
     (initialTab as ForumTabType) || 'overview',
   )
-
-  // Scroll indicators state
-  const [canScrollStart, setCanScrollStart] = useState(false)
-  const [canScrollEnd, setCanScrollEnd] = useState(false)
-
-  // Check scroll position for fade indicators
-  const checkScroll = useCallback(() => {
-    const el = tabsRef.current
-    if (!el) return
-
-    const { scrollLeft, scrollWidth, clientWidth } = el
-    const threshold = 10
-
-    if (isRTL) {
-      // RTL scroll direction is inverted
-      setCanScrollEnd(scrollLeft < -threshold)
-      setCanScrollStart(scrollLeft > -(scrollWidth - clientWidth - threshold))
-    } else {
-      setCanScrollStart(scrollLeft > threshold)
-      setCanScrollEnd(scrollLeft < scrollWidth - clientWidth - threshold)
-    }
-  }, [isRTL])
-
-  // Initialize scroll check
-  useEffect(() => {
-    checkScroll()
-    const el = tabsRef.current
-    if (el) {
-      el.addEventListener('scroll', checkScroll)
-      window.addEventListener('resize', checkScroll)
-    }
-    return () => {
-      if (el) {
-        el.removeEventListener('scroll', checkScroll)
-      }
-      window.removeEventListener('resize', checkScroll)
-    }
-  }, [checkScroll])
 
   // Tab definitions for forum dossier (text-only labels)
   const tabs: Array<{ id: ForumTabType; label: string }> = [
@@ -155,59 +115,26 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Tabs Navigation - Mobile First Responsive */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-        <div className="border-b border-gray-200 dark:border-gray-700 relative">
-          {/* Mobile: Horizontal Scrollable Tabs with Fade Indicators */}
-          <div className="relative">
-            {/* Start fade indicator */}
-            {canScrollStart && (
-              <div
-                className="absolute start-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-e from-white dark:from-gray-800 to-transparent pointer-events-none z-10"
-                aria-hidden="true"
-              />
-            )}
-
-            {/* Tab navigation */}
-            <nav
-              ref={tabsRef}
-              className="-mb-px flex overflow-x-auto scrollbar-hide px-4 sm:px-6"
+      {/* Tabs Navigation - HeroUI v3 Styled */}
+      <div className="bg-card text-card-foreground rounded-lg shadow border border-border">
+        <Tabs value={activeTab} onValueChange={(value) => handleTabChange(value as ForumTabType)}>
+          <div className="px-4 sm:px-6 pt-3">
+            <TabsList
+              className="w-full justify-start overflow-x-auto flex-nowrap h-auto"
               aria-label={t('detail.tabs_label', 'Forum dossier sections')}
-              role="tablist"
             >
               {tabs.map((tab) => (
-                <button
+                <TabsTrigger
                   key={tab.id}
-                  onClick={() => handleTabChange(tab.id)}
-                  role="tab"
-                  id={`${tab.id}-tab`}
-                  aria-selected={activeTab === tab.id}
-                  aria-controls={`${tab.id}-panel`}
-                  tabIndex={activeTab === tab.id ? 0 : -1}
-                  className={cn(
-                    'flex-shrink-0 min-h-11 py-3 px-3 sm:px-4 md:px-6 border-b-2 font-medium text-xs sm:text-sm md:text-base',
-                    'transition-all duration-200 ease-in-out',
-                    'focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-t-md',
-                    'cursor-pointer',
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50',
-                  )}
+                  value={tab.id}
+                  className="flex-shrink-0 text-xs sm:text-sm"
                 >
-                  <span className="whitespace-nowrap">{tab.label}</span>
-                </button>
+                  {tab.label}
+                </TabsTrigger>
               ))}
-            </nav>
-
-            {/* End fade indicator */}
-            {canScrollEnd && (
-              <div
-                className="absolute end-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-s from-white dark:from-gray-800 to-transparent pointer-events-none z-10"
-                aria-hidden="true"
-              />
-            )}
+            </TabsList>
           </div>
-        </div>
+        </Tabs>
 
         {/* Tab Panels - Responsive Padding */}
         <div className="p-4 sm:p-6">
@@ -225,13 +152,13 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                   {t('sections.shared.overview', 'Overview')}
                 </h3>
                 {dossier.description_en || dossier.description_ar ? (
-                  <p className="text-gray-600 dark:text-gray-400 text-start">
+                  <p className="text-muted-foreground text-start">
                     {isRTL
                       ? dossier.description_ar || dossier.description_en
                       : dossier.description_en || dossier.description_ar}
                   </p>
                 ) : (
-                  <p className="text-gray-400 dark:text-gray-500 text-start italic">
+                  <p className="text-muted-foreground text-start italic">
                     {t('sections.collapsible.empty', 'No data available')}
                   </p>
                 )}
@@ -239,39 +166,39 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
 
               {/* Quick Stats Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
+                <div className="bg-muted/50 rounded-lg p-4 text-center">
                   <Building2 className="h-6 w-6 mx-auto mb-2 text-blue-500" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.member_organizations?.length || 0}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-muted-foreground">
                     {t('tabs.forum.members', 'Members')}
                   </p>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
+                <div className="bg-muted/50 rounded-lg p-4 text-center">
                   <CalendarDays className="h-6 w-6 mx-auto mb-2 text-green-500" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.meeting_frequency ? 1 : 0}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-muted-foreground">
                     {t('tabs.forum.schedule', 'Meetings')}
                   </p>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
+                <div className="bg-muted/50 rounded-lg p-4 text-center">
                   <Target className="h-6 w-6 mx-auto mb-2 text-orange-500" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.deliverables?.length || 0}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-muted-foreground">
                     {t('tabs.forum.deliverables', 'Deliverables')}
                   </p>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
+                <div className="bg-muted/50 rounded-lg p-4 text-center">
                   <FileText className="h-6 w-6 mx-auto mb-2 text-purple-500" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.forum_type === 'working_group' ? 1 : 0}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-muted-foreground">
                     {t('tabs.forum.decisions', 'Decisions')}
                   </p>
                 </div>
@@ -349,13 +276,13 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
           {activeTab === 'documents' && (
             <div id="documents-panel" role="tabpanel" aria-labelledby="documents-tab">
               <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
-                <div className="rounded-full bg-gray-100 dark:bg-gray-700 p-4 mb-4">
-                  <Files className="h-8 w-8 sm:h-10 sm:w-10 text-gray-400 dark:text-gray-500" />
+                <div className="rounded-full bg-muted p-4 mb-4">
+                  <Files className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   {t('documents.noDocuments', 'No Documents')}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 max-w-md mb-6">
+                <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6">
                   {t(
                     'documents.forumEmptyDescription',
                     'No documents have been attached to this forum dossier yet.',
@@ -365,7 +292,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                   <Upload className="h-4 w-4" />
                   {t('documents.upload', 'Upload Document')}
                 </Button>
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-muted-foreground mt-2">
                   {t('documents.comingSoon', 'Document uploads coming soon')}
                 </p>
               </div>

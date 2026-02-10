@@ -25,7 +25,6 @@ import {
   Target,
   Briefcase,
   User,
-  UserCheck,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -239,7 +238,7 @@ export function DossierTypeStatsCard({
           {/* Trend Badge - Show below title on larger screens */}
           {trend && trendValue && (
             <Badge
-              variant="secondary"
+              variant={trend === 'up' ? 'success' : trend === 'down' ? 'warning' : 'secondary'}
               className="hidden sm:inline-flex mt-1 bg-white/20 backdrop-blur-sm text-white border-0 text-xs"
             >
               {getTrendIcon(trend)}
@@ -252,7 +251,7 @@ export function DossierTypeStatsCard({
         </div>
 
         {/* Stats Content */}
-        <CardContent className="p-1.5 sm:p-3 flex-1 flex flex-col justify-between bg-white">
+        <CardContent className="p-1.5 sm:p-3 flex-1 flex flex-col justify-between bg-card">
           {/* Percentage Display */}
           <div className="mb-2 sm:mb-3 text-center">
             <div className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-1">
@@ -303,7 +302,7 @@ export function DossierTypeStatsCardSkeleton({ className }: { className?: string
           <Skeleton className="h-4 sm:h-5 w-16 sm:w-20 bg-white/20" />
           <Skeleton className="hidden sm:block h-4 w-12 rounded-full bg-white/20 mt-1" />
         </div>
-        <CardContent className="p-1.5 sm:p-3 flex-1 flex flex-col justify-between bg-white">
+        <CardContent className="p-1.5 sm:p-3 flex-1 flex flex-col justify-between bg-card">
           <div className="mb-2 sm:mb-3 text-center">
             <Skeleton className="h-3 sm:h-4 w-24 sm:w-32 mx-auto mb-1" />
             <Skeleton className="h-4 sm:h-5 w-12 sm:w-16 mx-auto" />

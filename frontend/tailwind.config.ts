@@ -28,27 +28,27 @@ const config: Config = {
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
+        ring: 'var(--heroui-accent)',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: 'var(--heroui-accent)',
+          foreground: 'var(--heroui-accent-foreground)',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
+          DEFAULT: 'var(--heroui-danger)',
           foreground: 'hsl(var(--destructive-foreground))',
         },
         success: {
-          DEFAULT: 'hsl(var(--success))',
+          DEFAULT: 'var(--heroui-success)',
           foreground: 'hsl(var(--success-foreground))',
         },
         warning: {
-          DEFAULT: 'hsl(var(--warning))',
+          DEFAULT: 'var(--heroui-warning)',
           foreground: 'hsl(var(--warning-foreground))',
         },
         info: {
@@ -120,9 +120,14 @@ const config: Config = {
         },
       },
       borderRadius: {
+        '3xl': 'calc(var(--radius) * 3)',
+        '2xl': 'calc(var(--radius) * 2)',
+        xl: 'calc(var(--radius) * 1.5)',
         lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        md: 'calc(var(--radius) * 0.75)',
+        sm: 'calc(var(--radius) * 0.5)',
+        xs: 'calc(var(--radius) * 0.25)',
+        field: 'var(--field-radius)',
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],

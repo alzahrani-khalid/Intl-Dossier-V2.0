@@ -1,6 +1,6 @@
 /**
- * EnhancedKanbanBoard - Full-featured Kanban board
- * Feature: kanban-task-board
+ * EnhancedKanbanBoard - Full-featured Kanban board using shadcn-ui-kit primitives
+ * Feature: kanban-task-board (redesigned)
  *
  * Enhanced features:
  * - Swimlanes (by assignee or priority)
@@ -11,9 +11,9 @@
  * - RTL support for Arabic
  */
 
-import { useState, useCallback, useMemo, useRef } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { UniqueIdentifier } from '@dnd-kit/core'
+import type { UniqueIdentifier, DragEndEvent } from '@dnd-kit/core'
 import {
   ChevronDown,
   ChevronUp,
@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
@@ -45,14 +46,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  KanbanProvider,
-  KanbanBoard,
-  KanbanColumn,
-  KanbanCard,
-  KanbanEmpty,
-  type KanbanColumn as KanbanColumnType,
-} from '@/components/ui/kanban'
+import * as Kanban from '@/components/ui/kanban'
 import { UnifiedKanbanHeader } from './UnifiedKanbanHeader'
 import { UnifiedKanbanCardContent, UnifiedKanbanCardSkeleton } from './UnifiedKanbanCard'
 import { getColumnsForMode, getColumnOrder } from './utils/column-definitions'
@@ -152,7 +146,7 @@ export function EnhancedKanbanBoard({
   const [searchQuery, setSearchQuery] = useState('')
   const [showDossierPicker, setShowDossierPicker] = useState(false)
 
-  // Track shift key for range selection through KanbanCard (which doesn't forward events)
+  // Track shift key for range selection through KanbanItem
   const lastClickEventRef = useRef<MouseEvent | null>(null)
 
   // Bulk operations
@@ -193,30 +187,25 @@ export function EnhancedKanbanBoard({
     return groupIntoSwimlanes(filteredItems, swimlaneMode)
   }, [filteredItems, swimlaneMode])
 
-  // Convert to kanban columns format
-  const kanbanColumns = useMemo((): KanbanColumnType<WorkItem>[] => {
-    return columnOrder.map((columnKey) => {
-      const columnDef = columnDefinitions.find((c) => c.key === columnKey) as ColumnDefinition
-      const columnItems = filteredItems.filter((item) => {
+  // Build Record<string, WorkItem[]> for the Kanban.Root value
+  const columnsRecord = useMemo((): Record<string, WorkItem[]> => {
+    const record: Record<string, WorkItem[]> = {}
+    for (const columnKey of columnOrder) {
+      record[columnKey] = filteredItems.filter((item) => {
         const itemColumnKey = mapColumnKey(item.column_key || 'todo')
         return itemColumnKey === columnKey
       })
-
-      return {
-        id: columnKey,
-        title: columnDef?.title || columnKey,
-        items: columnItems,
-      }
-    })
-  }, [columnOrder, columnDefinitions, filteredItems])
+    }
+    return record
+  }, [columnOrder, filteredItems])
 
   // Track columns state for DnD
-  const [columns, setColumns] = useState(kanbanColumns)
+  const [columns, setColumns] = useState(columnsRecord)
 
-  // Sync columns when kanbanColumns changes
-  useMemo(() => {
-    setColumns(kanbanColumns)
-  }, [kanbanColumns])
+  // Sync columns when columnsRecord changes
+  useEffect(() => {
+    setColumns(columnsRecord)
+  }, [columnsRecord])
 
   // Calculate counts
   const totalCount = filteredItems.length
@@ -246,22 +235,33 @@ export function EnhancedKanbanBoard({
 
   // Handle drag end
   const handleDragEnd = useCallback(
-    async (
-      itemId: UniqueIdentifier,
-      _sourceColumnId: UniqueIdentifier,
-      targetColumnId: UniqueIdentifier,
-    ) => {
+    async (event: DragEndEvent) => {
       if (!onStatusChange) return
 
+      const { active, over } = event
+      if (!over) return
+
+      const itemId = active.id as string
       const item = filteredItems.find((i) => i.id === itemId)
       if (!item) return
 
-      const targetColumnKey = targetColumnId as string
+      // Find what column the item ended up in
+      const findColumn = (id: UniqueIdentifier): string | null => {
+        if (id in columns) return id as string
+        for (const [colKey, colItems] of Object.entries(columns)) {
+          if (colItems.some((i) => i.id === id)) return colKey
+        }
+        return null
+      }
+
+      const sourceColumnKey = mapColumnKey(item.column_key || 'todo')
+      const targetColumnKey = findColumn(over.id)
+      if (!targetColumnKey || sourceColumnKey === targetColumnKey) return
 
       // Check WIP limit
       if (enableWipWarnings) {
-        const targetColumn = kanbanColumns.find((c) => c.id === targetColumnKey)
-        const wipStatus = checkWipLimit(targetColumnKey, targetColumn?.items.length || 0, wipLimits)
+        const targetItems = columns[targetColumnKey] || []
+        const wipStatus = checkWipLimit(targetColumnKey, targetItems.length, wipLimits)
         const warningLevel = getWipWarningLevel(wipStatus)
 
         if (warningLevel === 'at_limit' || warningLevel === 'over_limit') {
@@ -298,7 +298,7 @@ export function EnhancedKanbanBoard({
           variant: 'destructive',
         })
 
-        setColumns(kanbanColumns)
+        setColumns(columnsRecord)
         return
       }
 
@@ -310,23 +310,31 @@ export function EnhancedKanbanBoard({
           title: t('success.statusUpdated'),
           description: t('success.statusUpdatedDescription'),
         })
-      } catch (error) {
+      } catch (_error) {
         toast({
           title: t('errors.updateFailed'),
           description: t('errors.updateFailedDescription'),
           variant: 'destructive',
         })
-        setColumns(kanbanColumns)
+        setColumns(columnsRecord)
       }
     },
-    [onStatusChange, filteredItems, isRTL, toast, t, kanbanColumns, enableWipWarnings, wipLimits],
+    [
+      onStatusChange,
+      filteredItems,
+      columns,
+      isRTL,
+      toast,
+      t,
+      columnsRecord,
+      enableWipWarnings,
+      wipLimits,
+    ],
   )
 
   // Handle item click (with shift-click for range selection)
   const handleItemClick = useCallback(
     (item: WorkItem, event?: React.MouseEvent) => {
-      // For shift-click support through KanbanCard (which doesn't forward events),
-      // we capture the last native click event from the board container
       const shiftKey = event?.shiftKey || lastClickEventRef.current?.shiftKey || false
       lastClickEventRef.current = null
       if (bulkOps.selectionState.isSelecting) {
@@ -343,16 +351,6 @@ export function EnhancedKanbanBoard({
     lastClickEventRef.current = e.nativeEvent
   }, [])
 
-  // Render overlay for dragging
-  const renderOverlay = useCallback((activeItem: WorkItem | null) => {
-    if (!activeItem) return null
-    return (
-      <div className="rounded-lg border bg-card p-3 shadow-lg cursor-grabbing min-w-[280px]">
-        <UnifiedKanbanCardContent item={activeItem} />
-      </div>
-    )
-  }, [])
-
   // Render WIP indicator
   const renderWipIndicator = (columnKey: string, itemCount: number) => {
     if (!enableWipWarnings) return null
@@ -366,7 +364,7 @@ export function EnhancedKanbanBoard({
 
     return (
       <div className="flex items-center gap-2">
-        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden min-w-[40px]">
+        <div className="flex-1 h-1.5 bg-background rounded-full overflow-hidden min-w-[40px]">
           <div
             className={cn('h-full transition-all', progressColor)}
             style={{ width: `${wipStatus.percentage}%` }}
@@ -616,15 +614,16 @@ export function EnhancedKanbanBoard({
                             key={item.id}
                             onClick={(e) => handleItemClick(item, e)}
                             className={cn(
-                              'rounded-lg border bg-background p-2 cursor-pointer',
+                              'rounded-lg bg-background p-2 cursor-pointer',
                               'hover:shadow-sm transition-shadow',
+                              item.is_overdue && 'ring-1 ring-destructive/30',
                               bulkOps.isSelected(item.id) && 'ring-2 ring-primary',
                             )}
                           >
                             {bulkOps.selectionState.isSelecting && (
                               <Checkbox checked={bulkOps.isSelected(item.id)} className="mb-2" />
                             )}
-                            <UnifiedKanbanCardContent item={item} showDragHandle={false} />
+                            <UnifiedKanbanCardContent item={item} />
                           </div>
                         ))
                       )}
@@ -685,96 +684,138 @@ export function EnhancedKanbanBoard({
 
       {/* Board content */}
       <div
-        className={cn('flex-1 overflow-x-auto overflow-y-auto', 'px-4 sm:px-6 py-4', 'bg-muted/20')}
+        className={cn(
+          'flex-1 overflow-x-auto overflow-y-auto',
+          'px-4 sm:px-6 py-4',
+          'bg-background',
+        )}
       >
         {isLoading ? (
-          <KanbanBoard id="loading" data={[]}>
+          <div className="flex gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="flex flex-col rounded-lg border bg-muted/30 w-full sm:w-[300px] sm:min-w-[300px] h-[500px]"
+                className="flex flex-col bg-muted rounded-lg w-full sm:w-[320px] sm:min-w-[320px] h-[500px] p-2.5"
               >
-                <div className="flex items-center justify-between p-3 border-b bg-muted/50">
-                  <div className="h-5 w-20 bg-muted rounded animate-pulse" />
-                  <div className="h-5 w-6 bg-muted rounded-full animate-pulse" />
+                <div className="flex items-center justify-between mb-2 px-1">
+                  <div className="h-5 w-20 bg-background rounded animate-pulse" />
+                  <div className="h-5 w-6 bg-background rounded-full animate-pulse" />
                 </div>
-                <div className="flex-1 p-2 space-y-2">
+                <div className="flex-1 space-y-2">
                   <UnifiedKanbanCardSkeleton />
                   <UnifiedKanbanCardSkeleton />
                   <UnifiedKanbanCardSkeleton />
                 </div>
               </div>
             ))}
-          </KanbanBoard>
+          </div>
         ) : swimlanes && swimlanes.length > 0 ? (
           // Swimlane view
           <div className="space-y-4">{swimlanes.map(renderSwimlane)}</div>
         ) : (
           // Standard board view
-          <KanbanProvider<WorkItem>
-            columns={columns}
-            onColumnsChange={setColumns}
+          <Kanban.Kanban<WorkItem>
+            value={columns}
+            onValueChange={setColumns}
+            getItemValue={(item) => item.id}
             onDragEnd={handleDragEnd}
-            renderOverlay={renderOverlay}
+            flatCursor
           >
-            <KanbanBoard id="enhanced-kanban" data={filteredItems}>
+            <Kanban.Board className="flex w-full gap-4 overflow-x-auto pb-4">
               {columnOrder.map((columnKey) => {
                 const columnDef = columnDefinitions.find(
                   (c) => c.key === columnKey,
                 ) as ColumnDefinition
-                const column = columns.find((c) => c.id === columnKey)
-                const columnItems = column?.items || []
+                const columnItems = columns[columnKey] || []
 
                 return (
-                  <KanbanColumn<WorkItem>
+                  <Kanban.Column
                     key={columnKey}
-                    id={columnKey}
-                    title={columnDef?.title || columnKey}
-                    titleAr={columnDef?.titleAr}
-                    items={columnItems}
-                    isRTL={isRTL}
-                    className={columnDef?.bgColor}
-                    headerClassName={cn(columnDef?.bgColor, columnDef?.color)}
-                    hasMore={hasMoreMap[columnKey] || false}
-                    totalCount={totalCountPerColumn[columnKey]}
-                    onLoadMore={onLoadMore ? () => onLoadMore(columnKey) : undefined}
+                    value={columnKey}
+                    className="w-full sm:w-[320px] sm:min-w-[320px] shrink-0"
                   >
+                    {/* Column header */}
+                    <div className="flex items-center justify-between px-1 mb-1">
+                      <span className="text-sm font-semibold text-start">
+                        {isRTL && columnDef?.titleAr
+                          ? columnDef.titleAr
+                          : columnDef?.title || columnKey}
+                      </span>
+                      <Badge variant="outline" className="text-xs tabular-nums">
+                        {totalCountPerColumn[columnKey] != null
+                          ? `${columnItems.length}/${totalCountPerColumn[columnKey]}`
+                          : columnItems.length}
+                      </Badge>
+                    </div>
+
                     {/* WIP indicator */}
                     {renderWipIndicator(columnKey, columnItems.length)}
 
+                    {/* Column items */}
                     {columnItems.length === 0 ? (
-                      <KanbanEmpty
-                        message={t('empty.noItemsInColumn')}
-                        subMessage={t('empty.dragHere')}
-                      />
+                      <div
+                        className={cn(
+                          'flex flex-col items-center justify-center',
+                          'p-4 text-sm text-muted-foreground text-center',
+                          'rounded-md border-2 border-dashed min-h-[100px]',
+                        )}
+                      >
+                        <p>{t('empty.noItemsInColumn')}</p>
+                        <p className="text-xs mt-1">{t('empty.dragHere')}</p>
+                      </div>
                     ) : (
-                      columnItems.map((item) => (
-                        <KanbanCard
-                          key={item.id}
-                          id={item.id}
-                          onClick={() => handleItemClick(item)}
-                          className={cn(
-                            item.is_overdue ? 'border-red-200 bg-red-50/50' : '',
-                            bulkOps.isSelected(item.id) && 'ring-2 ring-primary',
-                          )}
-                        >
-                          {bulkOps.selectionState.isSelecting && (
-                            <div className="mb-2">
-                              <Checkbox
-                                checked={bulkOps.isSelected(item.id)}
-                                onCheckedChange={() => bulkOps.toggleSelection(item.id)}
-                              />
-                            </div>
-                          )}
-                          <UnifiedKanbanCardContent item={item} />
-                        </KanbanCard>
-                      ))
+                      <>
+                        {columnItems.map((item) => (
+                          <Kanban.Item key={item.id} value={item.id} asHandle asChild>
+                            <Card
+                              className={cn(
+                                'border-0 p-3 cursor-grab active:cursor-grabbing',
+                                item.is_overdue && 'ring-1 ring-destructive/30',
+                                bulkOps.isSelected(item.id) && 'ring-2 ring-primary',
+                              )}
+                              onClick={() => handleItemClick(item)}
+                            >
+                              {bulkOps.selectionState.isSelecting && (
+                                <div className="mb-2">
+                                  <Checkbox
+                                    checked={bulkOps.isSelected(item.id)}
+                                    onCheckedChange={() => bulkOps.toggleSelection(item.id)}
+                                  />
+                                </div>
+                              )}
+                              <UnifiedKanbanCardContent item={item} />
+                            </Card>
+                          </Kanban.Item>
+                        ))}
+
+                        {/* Load more button */}
+                        {hasMoreMap[columnKey] && onLoadMore && (
+                          <button
+                            type="button"
+                            onClick={() => onLoadMore(columnKey)}
+                            className={cn(
+                              'w-full py-2 text-xs text-muted-foreground',
+                              'rounded-md border-2 border-dashed',
+                              'hover:bg-background/50 hover:text-foreground transition-colors',
+                              'min-h-11',
+                            )}
+                          >
+                            {totalCountPerColumn[columnKey] != null
+                              ? `${t('actions.loadMore')} (${columnItems.length}/${totalCountPerColumn[columnKey]})`
+                              : t('actions.loadMore')}
+                          </button>
+                        )}
+                      </>
                     )}
-                  </KanbanColumn>
+                  </Kanban.Column>
                 )
               })}
-            </KanbanBoard>
-          </KanbanProvider>
+            </Kanban.Board>
+
+            <Kanban.Overlay>
+              <div className="bg-primary/10 size-full rounded-md" />
+            </Kanban.Overlay>
+          </Kanban.Kanban>
         )}
       </div>
 

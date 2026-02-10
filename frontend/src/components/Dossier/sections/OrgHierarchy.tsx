@@ -241,7 +241,7 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
         type: 'step',
         animated: false,
         style: {
-          stroke: 'hsl(var(--primary))',
+          stroke: 'var(--heroui-accent)',
           strokeWidth: 2,
         },
       })

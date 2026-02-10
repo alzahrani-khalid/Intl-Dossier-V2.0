@@ -1,0 +1,87 @@
+{
+  "title": "لوحة الملفات",
+  "new_task": "مهمة جديدة",
+  "tabs": {
+    "overview": "نظرة عامة",
+    "reports": "التقارير",
+    "activities": "الأنشطة"
+  },
+  "metrics": {
+    "myDossiers": "ملفاتي",
+    "myDossiers_desc": "إجمالي الملفات المسندة",
+    "activeDossiers": "نشط هذا الأسبوع",
+    "activeDossiers_desc": "ملفات بنشاط حديث",
+    "pendingWork": "أعمال معلقة",
+    "pendingWork_desc": "عناصر تنتظر الإجراء",
+    "needsAttention": "تحتاج اهتمام",
+    "needsAttention_desc": "عناصر تتطلب متابعة",
+    "owned": "{{count}} مملوكة",
+    "dueToday": "{{count}} مستحقة اليوم",
+    "overdue": "{{count}} متأخرة",
+    "trend_up": "+{{value}}% عن الفترة السابقة",
+    "trend_down": "-{{value}}% عن الفترة السابقة",
+    "trend_from_last_month": "من الشهر الماضي"
+  },
+  "charts": {
+    "workItemTrends": "اتجاهات عناصر العمل",
+    "workItemTrends_desc": "العناصر المنشأة مقابل المكتملة عبر الزمن",
+    "workItemTrends_desc_short": "ارتفاع بنسبة {{value}}% هذه الفترة",
+    "created": "تم إنشاؤها",
+    "completed": "مكتملة",
+    "dossierDistribution": "توزيع الملفات",
+    "dossierDistribution_desc": "التوزيع حسب نوع الملف",
+    "ranges": {
+      "7d": "7 أيام",
+      "30d": "30 يوم",
+      "90d": "90 يوم"
+    }
+  },
+  "successMetrics": {
+    "title": "الأداء",
+    "professionals": "المتخصصون",
+    "todaysHeroes": "أبطال اليوم",
+    "highlights": "أبرز النقاط",
+    "completionRate": "معدل الإنجاز",
+    "avgResponseTime": "متوسط وقت الاستجابة",
+    "avgResponseTime_value": "{{hours}} ساعة {{minutes}} دقيقة",
+    "activeContributors": "المساهمون النشطون",
+    "contributors": "المساهمون اليوم",
+    "days": "أيام"
+  },
+  "recentTable": {
+    "title": "الملفات الأخيرة",
+    "columns": {
+      "name": "الاسم",
+      "type": "النوع",
+      "status": "الحالة",
+      "lastActivity": "آخر نشاط",
+      "pending": "معلق",
+      "progress": "التقدم",
+      "actions": "الإجراءات"
+    },
+    "viewDossier": "عرض الملف",
+    "empty": "لم يتم العثور على ملفات حديثة"
+  },
+  "dateRange": {
+    "title": "حدد نطاق التاريخ",
+    "today": "اليوم",
+    "thisWeek": "هذا الأسبوع",
+    "last7": "آخر 7 أيام",
+    "last28": "آخر 28 يوم",
+    "last90": "آخر 90 يوم",
+    "custom": "نطاق مخصص",
+    "apply": "تطبيق",
+    "cancel": "إلغاء"
+  },
+  "export": {
+    "title": "تصدير",
+    "excel": "تصدير كملف Excel",
+    "pdf": "تصدير كملف PDF",
+    "csv": "تصدير كملف CSV"
+  },
+  "review": {
+    "title": "مستحقة للمراجعة",
+    "empty": "لا توجد ملفات مجدولة للمراجعة",
+    "hint": "ستظهر الملفات ذات مواعيد المراجعة هنا"
+  }
+}

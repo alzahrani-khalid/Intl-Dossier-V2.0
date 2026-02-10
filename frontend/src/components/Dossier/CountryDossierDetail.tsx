@@ -19,6 +19,7 @@
 import { useState, lazy, Suspense } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
 import QueryErrorBoundary from '@/components/QueryErrorBoundary'
 
@@ -128,51 +129,32 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Tabs Navigation - Mobile First Responsive */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-        <div className="border-b border-gray-200 dark:border-gray-700 relative">
-          {/* Mobile: Horizontal Scrollable Tabs with Fade Indicators */}
-          <div className="relative">
-            {/* Scroll fade indicators */}
-            <div className="absolute end-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-e from-transparent to-white dark:to-gray-800 pointer-events-none z-10" />
-            <nav
-              className="-mb-px flex overflow-x-auto scrollbar-hide px-4 sm:px-6"
+      {/* Tabs Navigation - HeroUI v3 Styled */}
+      <div className="bg-card text-card-foreground rounded-lg shadow border border-border">
+        <Tabs value={activeTab} onValueChange={(value) => handleTabChange(value as CountryTabType)}>
+          <div className="px-4 sm:px-6 pt-3">
+            <TabsList
+              className="w-full justify-start overflow-x-auto flex-nowrap h-auto"
               aria-label={t('detail.tabs_label', 'Country dossier sections')}
-              role="tablist"
             >
               {tabs.map((tab) => (
-                <button
+                <TabsTrigger
                   key={tab.id}
-                  onClick={() => !tab.disabled && handleTabChange(tab.id)}
+                  value={tab.id}
                   disabled={tab.disabled}
-                  role="tab"
-                  aria-selected={activeTab === tab.id}
-                  aria-controls={`${tab.id}-panel`}
-                  className={`
-                  flex-shrink-0 min-h-11 py-3 px-3 sm:px-4 md:px-6 border-b-2 font-medium text-xs sm:text-sm md:text-base
-                  transition-all duration-200 ease-in-out
-                  ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
-                  }
-                  ${tab.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-t-md
-                `}
+                  className="flex-shrink-0 gap-1.5 text-xs sm:text-sm"
                 >
-                  <span className="whitespace-nowrap flex items-center gap-1.5">
-                    {tab.label}
-                    {tab.id === 'intelligence' && (
-                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-black text-white dark:bg-white dark:text-black">
-                        Beta
-                      </span>
-                    )}
-                  </span>
-                </button>
+                  {tab.label}
+                  {tab.id === 'intelligence' && (
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-foreground text-background">
+                      Beta
+                    </span>
+                  )}
+                </TabsTrigger>
               ))}
-            </nav>
+            </TabsList>
           </div>
-        </div>
+        </Tabs>
 
         {/* Tab Panels - Responsive Padding */}
         <div className="p-4 sm:p-6">

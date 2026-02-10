@@ -3,63 +3,63 @@
  * Displays: Completed (30d), On-Time Rate, Avg Completion Time
  * Mobile-first, RTL-compatible
  */
-import { useTranslation } from 'react-i18next';
-import { CheckCircle2, Clock, TrendingUp, type LucideIcon } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Progress } from '@/components/ui/progress';
-import type { UserProductivityMetrics } from '@/types/unified-work.types';
-import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next'
+import { CheckCircle2, Clock, TrendingUp, type LucideIcon } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Progress } from '@/components/ui/progress'
+import type { UserProductivityMetrics } from '@/types/unified-work.types'
+import { cn } from '@/lib/utils'
 
 interface ProductivityMetricsProps {
-  metrics?: UserProductivityMetrics;
-  isLoading: boolean;
+  metrics?: UserProductivityMetrics
+  isLoading: boolean
 }
 
 export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsProps) {
-  const { t, i18n } = useTranslation('my-work');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('my-work')
+  const isRTL = i18n.language === 'ar'
 
   if (isLoading) {
     return (
-      <Card className="mb-4 sm:mb-6">
-        <CardHeader className="pb-2">
-          <Skeleton className="h-5 w-40" />
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <Card className="mb-3 sm:mb-4">
+        <CardContent className="px-3 py-2 sm:px-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Skeleton className="h-4 w-28" />
+          </div>
+          <div className="grid grid-cols-3 gap-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-3">
-                <Skeleton className="h-10 w-10 rounded-lg" />
+              <div key={i} className="flex items-center gap-2">
+                <Skeleton className="h-7 w-7 rounded-md" />
                 <div className="flex-1">
-                  <Skeleton className="h-3 w-20 mb-1" />
-                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-2.5 w-14 mb-1" />
+                  <Skeleton className="h-4 w-10" />
                 </div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   // Format completion time to hours/days
   const formatCompletionTime = (hours: number): string => {
     if (hours < 24) {
-      return `${Math.round(hours)}h`;
+      return `${Math.round(hours)}h`
     }
-    const days = Math.round(hours / 24);
-    return `${days}d`;
-  };
+    const days = Math.round(hours / 24)
+    return `${days}d`
+  }
 
   const metricItems: {
-    key: string;
-    label: string;
-    value: number;
-    icon: LucideIcon;
-    color: string;
-    format: (v: number) => string;
-    showProgress?: boolean;
+    key: string
+    label: string
+    value: number
+    icon: LucideIcon
+    color: string
+    format: (v: number) => string
+    showProgress?: boolean
   }[] = [
     {
       key: 'completed',
@@ -86,46 +86,41 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
       color: 'text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/30',
       format: formatCompletionTime,
     },
-  ];
+  ]
 
   return (
-    <Card className="mb-4 sm:mb-6" dir={isRTL ? 'rtl' : 'ltr'}>
-      <CardHeader className="pb-2 px-4 sm:px-6">
-        <CardTitle className="text-base sm:text-lg text-start">
+    <Card className="mb-3 sm:mb-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="px-3 py-2 sm:px-4">
+        <p className="text-xs font-medium text-muted-foreground text-start mb-2">
           {t('metrics.title', 'Your Productivity')}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="px-4 sm:px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        </p>
+        <div className="grid grid-cols-3 gap-3">
           {metricItems.map((item) => {
-            const Icon = item.icon;
+            const Icon = item.icon
 
             return (
-              <div key={item.key} className="flex items-center gap-3">
-                <div className={cn('p-2.5 rounded-lg shrink-0', item.color)}>
-                  <Icon className="h-5 w-5" />
+              <div key={item.key} className="flex items-center gap-2">
+                <div className={cn('p-1.5 rounded-md shrink-0', item.color)}>
+                  <Icon className="h-3.5 w-3.5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs text-muted-foreground text-start">
+                  <p className="text-[11px] text-muted-foreground text-start leading-none mb-0.5">
                     {item.label}
                   </p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-lg sm:text-xl font-semibold text-start">
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-sm sm:text-base font-semibold text-start leading-tight">
                       {item.format(item.value)}
                     </p>
                     {item.showProgress && (
-                      <Progress
-                        value={item.value}
-                        className="h-2 flex-1 max-w-20"
-                      />
+                      <Progress value={item.value} className="h-1.5 flex-1 max-w-16" />
                     )}
                   </div>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

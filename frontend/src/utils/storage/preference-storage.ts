@@ -4,7 +4,7 @@
  */
 
 export interface StoredPreferences {
-  theme: 'gastat' | 'blue-sky'
+  theme: 'canvas' | 'azure' | 'lavender' | 'bluesky' | 'ocean' | 'sunset'
   colorMode: 'light' | 'dark'
   language: 'en' | 'ar'
   updatedAt: string

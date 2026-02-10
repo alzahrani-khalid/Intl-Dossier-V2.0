@@ -26,6 +26,7 @@ export interface RealtimeSubscription {
 export interface RealtimeState {
   isConnected: boolean
   isConnecting: boolean
+  isInitialized: boolean
   subscriptions: Map<string, RealtimeSubscription>
   connectionStatus: 'connected' | 'disconnected' | 'reconnecting' | 'error'
   lastError: string | null
@@ -57,6 +58,7 @@ const initializeRealtimeMonitoring = () => {
   if (!isMonitoringSetup && setupConnectionMonitoringFn) {
     setupConnectionMonitoringFn()
     isMonitoringSetup = true
+    useRealtimeStore.setState({ isInitialized: true })
   }
 }
 
@@ -65,6 +67,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
   subscribeWithSelector((set, get) => ({
     isConnected: false,
     isConnecting: false,
+    isInitialized: false,
     subscriptions: new Map(),
     connectionStatus: 'disconnected',
     lastError: null,

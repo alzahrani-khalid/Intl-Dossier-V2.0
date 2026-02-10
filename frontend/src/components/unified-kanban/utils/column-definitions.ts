@@ -6,6 +6,8 @@
  * - Status mode: Groups by workflow status
  * - Priority mode: Groups by priority level
  * - Tracking Type mode: Groups by tracking type
+ *
+ * Columns are neutral (bg-muted) — no per-column color coding.
  */
 
 import type { KanbanColumn, KanbanColumnMode, WorkSource } from '@/types/work-item.types'
@@ -19,24 +21,18 @@ export const STATUS_COLUMNS: KanbanColumn[] = [
     key: 'todo',
     title: 'To Do',
     titleAr: 'للتنفيذ',
-    color: 'text-slate-600',
-    bgColor: 'bg-slate-100',
     sortOrder: 1,
   },
   {
     key: 'in_progress',
     title: 'In Progress',
     titleAr: 'قيد التنفيذ',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
     sortOrder: 2,
   },
   {
     key: 'review',
     title: 'Review',
     titleAr: 'مراجعة',
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
     sortOrder: 3,
     allowedSources: ['task'],
   },
@@ -44,16 +40,12 @@ export const STATUS_COLUMNS: KanbanColumn[] = [
     key: 'done',
     title: 'Done',
     titleAr: 'مكتمل',
-    color: 'text-green-600',
-    bgColor: 'bg-green-50',
     sortOrder: 4,
   },
   {
     key: 'cancelled',
     title: 'Cancelled',
     titleAr: 'ملغى',
-    color: 'text-red-600',
-    bgColor: 'bg-red-50',
     sortOrder: 5,
   },
 ]
@@ -67,32 +59,24 @@ export const PRIORITY_COLUMNS: KanbanColumn[] = [
     key: 'urgent',
     title: 'Urgent',
     titleAr: 'عاجل',
-    color: 'text-red-600',
-    bgColor: 'bg-red-50',
     sortOrder: 1,
   },
   {
     key: 'high',
     title: 'High',
     titleAr: 'عالي',
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-50',
     sortOrder: 2,
   },
   {
     key: 'medium',
     title: 'Medium',
     titleAr: 'متوسط',
-    color: 'text-yellow-600',
-    bgColor: 'bg-yellow-50',
     sortOrder: 3,
   },
   {
     key: 'low',
     title: 'Low',
     titleAr: 'منخفض',
-    color: 'text-slate-600',
-    bgColor: 'bg-slate-50',
     sortOrder: 4,
   },
 ]
@@ -106,24 +90,18 @@ export const TRACKING_TYPE_COLUMNS: KanbanColumn[] = [
     key: 'delivery',
     title: 'Delivery',
     titleAr: 'تسليم',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
     sortOrder: 1,
   },
   {
     key: 'follow_up',
     title: 'Follow-up',
     titleAr: 'متابعة',
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
     sortOrder: 2,
   },
   {
     key: 'sla',
     title: 'SLA',
     titleAr: 'اتفاقية الخدمة',
-    color: 'text-amber-600',
-    bgColor: 'bg-amber-50',
     sortOrder: 3,
   },
 ]
@@ -344,23 +322,23 @@ export function mapColumnKeyToStatus(
 // ============================================
 
 /**
- * Get badge color classes for a source type
+ * Get badge color classes for a source type (border-based outline style)
  */
-export function getSourceBadgeColors(source: WorkSource): { bg: string; text: string } {
+export function getSourceBadgeColors(source: WorkSource): string {
   switch (source) {
     case 'task':
-      return { bg: 'bg-blue-100', text: 'text-blue-700' }
+      return 'border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300'
     case 'commitment':
-      return { bg: 'bg-purple-100', text: 'text-purple-700' }
+      return 'border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300'
     case 'intake':
-      return { bg: 'bg-amber-100', text: 'text-amber-700' }
+      return 'border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300'
     default:
-      return { bg: 'bg-slate-100', text: 'text-slate-700' }
+      return 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
   }
 }
 
 /**
- * Get priority indicator color
+ * Get priority indicator dot color
  */
 export function getPriorityColor(priority: string): string {
   switch (priority) {

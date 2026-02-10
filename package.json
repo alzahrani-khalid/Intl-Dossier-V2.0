@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "GASTAT International Dossier Management System",
   "private": true,
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.29.1+sha512.48dae233635a645768a3028d19545cacc1688639eeb1f3734e42d6d6b971afbf22aa1ac9af52a173d9c3a20c15857cfa400f19994d79a2f626fcc73fccda9bbc",
   "engines": {
     "node": ">=20.19.0",
     "pnpm": ">=10.0.0",
@@ -98,12 +98,26 @@
   "dependencies": {
     "@upstash/redis": "^1.35.5",
     "expo": "^54.0.13",
-    "react": "19.2.0",
+    "react": "^19.2.1",
     "react-native": "0.81.4"
   },
   "pnpm": {
     "overrides": {
       "sharp": "^0.34.5"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "react": "19",
+        "react-dom": "19",
+        "tailwindcss": "4",
+        "dotenv": "17",
+        "openai": "5",
+        "@babel/core": "7",
+        "ai": ">=4"
+      },
+      "ignoreMissing": [
+        "@babel/preset-es2015"
+      ]
     }
   }
 }

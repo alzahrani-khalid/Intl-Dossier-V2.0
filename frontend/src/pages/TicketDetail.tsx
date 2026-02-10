@@ -7,6 +7,12 @@ import { DuplicateComparison } from '../components/DuplicateComparison'
 import { InputDialog } from '../components/InputDialog'
 import { useTicket, useUpdateTicket, useConvertTicket, useCloseTicket } from '../hooks/useIntakeApi'
 import { useAuthStore } from '../store/authStore'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { cn } from '@/lib/utils'
 
 // Lazy load EntityLinkManager for performance (Task T049)
 const EntityLinkManager = lazy(() => import('../components/entity-links/EntityLinkManager'))
@@ -14,8 +20,20 @@ const EntityLinkManager = lazy(() => import('../components/entity-links/EntityLi
 // Roles that have permission to restore deleted links
 const STEWARD_PLUS_ROLES = ['steward', 'admin', 'coordinator', 'system']
 
+const statusVariants: Record<string, string> = {
+  draft: 'bg-muted text-muted-foreground',
+  submitted: 'bg-blue-500/15 text-blue-700 dark:text-blue-400',
+  triaged: 'bg-purple-500/15 text-purple-700 dark:text-purple-400',
+  assigned: 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-400',
+  in_progress: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400',
+  converted: 'bg-green-500/15 text-green-700 dark:text-green-400',
+  closed: 'bg-muted text-muted-foreground',
+  merged: 'bg-orange-500/15 text-orange-700 dark:text-orange-400',
+}
+
 export function TicketDetail() {
   const { t, i18n } = useTranslation('intake')
+  const isRTL = i18n.language === 'ar'
   const { id } = useParams({ strict: false })
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<
@@ -36,35 +54,23 @@ export function TicketDetail() {
 
   // Use the proper hooks
   const { data: response, isLoading, error } = useTicket(id || '')
-  const ticket = response as any
-  const attachments = response?.attachments || []
+  const ticket = (response as any)?.ticket ?? response
+  const attachments = (response as any)?.attachments || []
 
   const _updateMutation = useUpdateTicket(id || '')
   const convertMutation = useConvertTicket(id || '')
   const closeMutation = useCloseTicket(id || '')
 
-  const getStatusBadgeColor = (status: string): string => {
-    const colors: Record<string, string> = {
-      draft: 'bg-gray-200 text-gray-800',
-      submitted: 'bg-blue-100 text-blue-800',
-      triaged: 'bg-purple-100 text-purple-800',
-      assigned: 'bg-yellow-100 text-yellow-800',
-      in_progress: 'bg-indigo-100 text-indigo-800',
-      converted: 'bg-green-100 text-green-800',
-      closed: 'bg-gray-300 text-gray-700',
-      merged: 'bg-orange-100 text-orange-800',
-    }
-    return colors[status] || 'bg-gray-200 text-gray-800'
-  }
-
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="py-12 text-center">
-          <div className="inline-block size-12 animate-spin rounded-full border-b-2 border-gray-900 dark:border-white"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">
-            {t('common.loading', 'Loading...')}
-          </p>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-72" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+          </div>
         </div>
       </div>
     )
@@ -72,41 +78,43 @@ export function TicketDetail() {
 
   if (error || !ticket) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
-          {t('ticketDetail.error', 'Failed to load ticket. Please try again.')}
-        </div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <Card className="border-destructive">
+          <CardContent className="p-4 text-destructive">
+            {t('ticketDetail.error', 'Failed to load ticket. Please try again.')}
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="mb-6">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground text-start">
               {ticket.ticketNumber}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              {i18n.language === 'ar' && ticket.titleAr ? ticket.titleAr : ticket.title}
+            <p className="text-muted-foreground text-sm sm:text-base mt-1 text-start">
+              {isRTL && ticket.titleAr ? ticket.titleAr : ticket.title}
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <span
-              className={`inline-flex rounded-full px-4 py-2 text-sm font-semibold ${getStatusBadgeColor(
-                ticket.status,
-              )}`}
-            >
-              {t(`queue.status.${ticket.status}`)}
-            </span>
-            <button
-              onClick={() => navigate({ to: '/my-work/intake' })}
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            >
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            {ticket.status && (
+              <Badge
+                className={cn(
+                  'text-xs px-3 py-1',
+                  statusVariants[ticket.status] || 'bg-muted text-muted-foreground',
+                )}
+              >
+                {t(`queue.status.${ticket.status}`, ticket.status)}
+              </Badge>
+            )}
+            <Button variant="outline" size="sm" onClick={() => navigate({ to: '/my-work/intake' })}>
               {t('common.back', 'Back to Queue')}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -137,234 +145,235 @@ export function TicketDetail() {
         )}
       </div>
 
-      {/* Tabs */}
-      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex">
-          {['details', 'triage', 'duplicates', 'history', 'links'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab as typeof activeTab)}
-              className={`border-b-2 px-6 py-3 text-sm font-medium transition-colors ${
-                activeTab === tab
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
+      {/* Tabs + Content */}
+      <Card>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)}>
+          <div className="px-4 sm:px-6 pt-3">
+            <TabsList
+              className="w-full justify-start overflow-x-auto flex-nowrap h-auto"
+              aria-label={t('ticketDetail.tabsLabel', 'Ticket sections')}
             >
-              {t(`ticketDetail.tabs.${tab}`, tab.charAt(0).toUpperCase() + tab.slice(1))}
-            </button>
-          ))}
-        </nav>
-      </div>
+              {(['details', 'triage', 'duplicates', 'history', 'links'] as const).map((tab) => (
+                <TabsTrigger key={tab} value={tab} className="flex-shrink-0 text-xs sm:text-sm">
+                  {t(`ticketDetail.tabs.${tab}`, tab.charAt(0).toUpperCase() + tab.slice(1))}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+        </Tabs>
 
-      {/* Tab Content */}
-      <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
-        {activeTab === 'details' && (
-          <div className="space-y-6">
-            {/* Basic Information */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('ticketDetail.requestType', 'Request Type')}
-                </label>
-                <p className="text-gray-900 dark:text-white">
-                  {t(`form.requestType.options.${ticket.requestType}`)}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('ticketDetail.urgency', 'Urgency')}
-                </label>
-                <p className="text-gray-900 dark:text-white">
-                  {t(`queue.urgency.${ticket.urgency}`)}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('ticketDetail.sensitivity', 'Sensitivity')}
-                </label>
-                <p className="capitalize text-gray-900 dark:text-white">{ticket.sensitivity}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('ticketDetail.priority', 'Priority')}
-                </label>
-                <p className="text-gray-900 dark:text-white">
-                  {t(`queue.priority.${ticket.priority}`)}
-                </p>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                {t('ticketDetail.description', 'Description')}
-              </label>
-              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-                <p className="whitespace-pre-wrap text-gray-900 dark:text-white">
-                  {i18n.language === 'ar' && ticket.descriptionAr
-                    ? ticket.descriptionAr
-                    : ticket.description}
-                </p>
-              </div>
-            </div>
-
-            {/* Type-Specific Fields */}
-            {ticket.typeSpecificFields && Object.keys(ticket.typeSpecificFields).length > 0 && (
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('ticketDetail.additionalInfo', 'Additional Information')}
-                </label>
-                <div className="space-y-2 rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-                  {Object.entries(ticket.typeSpecificFields).map(([key, value]) => (
-                    <div key={key} className="flex justify-between">
-                      <span className="capitalize text-gray-600 dark:text-gray-400">{key}:</span>
-                      <span className="text-gray-900 dark:text-white">{String(value)}</span>
-                    </div>
-                  ))}
+        <CardContent className="p-4 sm:p-6">
+          {activeTab === 'details' && (
+            <div className="space-y-6">
+              {/* Basic Information */}
+              <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-muted-foreground">
+                    {t('ticketDetail.requestType', 'Request Type')}
+                  </label>
+                  <p className="text-foreground">
+                    {ticket.requestType
+                      ? t(`form.requestType.options.${ticket.requestType}`, ticket.requestType)
+                      : '—'}
+                  </p>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-muted-foreground">
+                    {t('ticketDetail.urgency', 'Urgency')}
+                  </label>
+                  <p className="text-foreground">
+                    {ticket.urgency ? t(`queue.urgency.${ticket.urgency}`, ticket.urgency) : '—'}
+                  </p>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-muted-foreground">
+                    {t('ticketDetail.sensitivity', 'Sensitivity')}
+                  </label>
+                  <p className="capitalize text-foreground">{ticket.sensitivity || '—'}</p>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-muted-foreground">
+                    {t('ticketDetail.priority', 'Priority')}
+                  </label>
+                  <p className="text-foreground">
+                    {ticket.priority
+                      ? t(`queue.priority.${ticket.priority}`, ticket.priority)
+                      : '—'}
+                  </p>
                 </div>
               </div>
-            )}
 
-            {/* Attachments */}
-            {attachments && attachments.length > 0 && (
+              {/* Description */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('ticketDetail.attachments', 'Attachments')}
+                <label className="mb-2 block text-sm font-medium text-muted-foreground">
+                  {t('ticketDetail.description', 'Description')}
                 </label>
-                <div className="space-y-2">
-                  {attachments.map((attachment: any) => (
-                    <div
-                      key={attachment.id}
-                      className="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-900"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">📎</span>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {attachment.file_name}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {(attachment.file_size / 1024 / 1024).toFixed(2)} MB
-                          </p>
-                        </div>
+                <div className="rounded-lg bg-muted/50 p-4">
+                  <p className="whitespace-pre-wrap text-foreground">
+                    {isRTL && ticket.descriptionAr ? ticket.descriptionAr : ticket.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Type-Specific Fields */}
+              {ticket.typeSpecificFields && Object.keys(ticket.typeSpecificFields).length > 0 && (
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-muted-foreground">
+                    {t('ticketDetail.additionalInfo', 'Additional Information')}
+                  </label>
+                  <div className="space-y-2 rounded-lg bg-muted/50 p-4">
+                    {Object.entries(ticket.typeSpecificFields).map(([key, value]) => (
+                      <div key={key} className="flex justify-between">
+                        <span className="capitalize text-muted-foreground">{key}:</span>
+                        <span className="text-foreground">{String(value)}</span>
                       </div>
-                      <button className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400">
-                        {t('common.download', 'Download')}
-                      </button>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Actions */}
-            {ticket.status !== 'closed' && ticket.status !== 'converted' && (
-              <div className="flex gap-3 border-t border-gray-200 pt-4 dark:border-gray-700">
-                {ticket.status === 'triaged' && (
-                  <button
-                    onClick={() => setConvertDialogOpen(true)}
-                    disabled={convertMutation.isPending}
-                    className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
+              {/* Attachments */}
+              {attachments && attachments.length > 0 && (
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-muted-foreground">
+                    {t('ticketDetail.attachments', 'Attachments')}
+                  </label>
+                  <div className="space-y-2">
+                    {attachments.map((attachment: any) => (
+                      <div
+                        key={attachment.id}
+                        className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">📎</span>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {attachment.file_name}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {(attachment.file_size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                        </div>
+                        <Button variant="link" size="sm" className="text-primary">
+                          {t('common.download', 'Download')}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Actions */}
+              {ticket.status !== 'closed' && ticket.status !== 'converted' && (
+                <div className="flex gap-3 border-t border-border pt-4">
+                  {ticket.status === 'triaged' && (
+                    <Button
+                      onClick={() => setConvertDialogOpen(true)}
+                      disabled={convertMutation.isPending}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {t('ticketDetail.convert', 'Convert to Artifact')}
+                    </Button>
+                  )}
+                  <Button
+                    variant="secondary"
+                    onClick={() => setCloseDialogOpen(true)}
+                    disabled={closeMutation.isPending}
                   >
-                    {t('ticketDetail.convert', 'Convert to Artifact')}
-                  </button>
+                    {t('ticketDetail.close', 'Close Ticket')}
+                  </Button>
+                </div>
+              )}
+
+              {/* Convert Dialog */}
+              <InputDialog
+                open={convertDialogOpen}
+                onOpenChange={setConvertDialogOpen}
+                title={t('ticketDetail.convertTitle', 'Convert Ticket')}
+                description={t(
+                  'ticketDetail.convertDescription',
+                  'Select the artifact type to convert this ticket into',
                 )}
-                <button
-                  onClick={() => setCloseDialogOpen(true)}
-                  disabled={closeMutation.isPending}
-                  className="rounded-md bg-gray-600 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
-                >
-                  {t('ticketDetail.close', 'Close Ticket')}
-                </button>
-              </div>
-            )}
-
-            {/* Convert Dialog */}
-            <InputDialog
-              open={convertDialogOpen}
-              onOpenChange={setConvertDialogOpen}
-              title={t('ticketDetail.convertTitle', 'Convert Ticket')}
-              description={t(
-                'ticketDetail.convertDescription',
-                'Select the artifact type to convert this ticket into',
-              )}
-              placeholder={t('ticketDetail.selectType', 'Select type...')}
-              inputType="select"
-              options={[
-                { value: 'dossier', label: t('ticketDetail.convertOptions.dossier', 'Dossier') },
-                {
-                  value: 'engagement',
-                  label: t('ticketDetail.convertOptions.engagement', 'Engagement'),
-                },
-                { value: 'position', label: t('ticketDetail.convertOptions.position', 'Position') },
-              ]}
-              confirmLabel={t('ticketDetail.convert', 'Convert')}
-              isLoading={convertMutation.isPending}
-              onConfirm={(targetType) => {
-                convertMutation.mutate(
-                  { targetType: targetType as any },
-                  { onSuccess: () => setConvertDialogOpen(false) },
-                )
-              }}
-            />
-
-            {/* Close Dialog */}
-            <InputDialog
-              open={closeDialogOpen}
-              onOpenChange={setCloseDialogOpen}
-              title={t('ticketDetail.closeTitle', 'Close Ticket')}
-              description={t(
-                'ticketDetail.closeDescription',
-                'Provide a resolution summary for closing this ticket',
-              )}
-              placeholder={t('ticketDetail.resolutionPlaceholder', 'Enter resolution summary...')}
-              inputType="textarea"
-              confirmLabel={t('ticketDetail.close', 'Close Ticket')}
-              isLoading={closeMutation.isPending}
-              onConfirm={(resolution) => {
-                closeMutation.mutate(
+                placeholder={t('ticketDetail.selectType', 'Select type...')}
+                inputType="select"
+                options={[
+                  { value: 'dossier', label: t('ticketDetail.convertOptions.dossier', 'Dossier') },
                   {
-                    resolution,
-                    resolutionAr: i18n.language === 'ar' ? resolution : undefined,
+                    value: 'engagement',
+                    label: t('ticketDetail.convertOptions.engagement', 'Engagement'),
                   },
-                  { onSuccess: () => setCloseDialogOpen(false) },
-                )
-              }}
-            />
-          </div>
-        )}
+                  {
+                    value: 'position',
+                    label: t('ticketDetail.convertOptions.position', 'Position'),
+                  },
+                ]}
+                confirmLabel={t('ticketDetail.convert', 'Convert')}
+                isLoading={convertMutation.isPending}
+                onConfirm={(targetType) => {
+                  convertMutation.mutate(
+                    { targetType: targetType as any },
+                    { onSuccess: () => setConvertDialogOpen(false) },
+                  )
+                }}
+              />
 
-        {activeTab === 'triage' && <TriagePanel ticketId={ticket.id} />}
+              {/* Close Dialog */}
+              <InputDialog
+                open={closeDialogOpen}
+                onOpenChange={setCloseDialogOpen}
+                title={t('ticketDetail.closeTitle', 'Close Ticket')}
+                description={t(
+                  'ticketDetail.closeDescription',
+                  'Provide a resolution summary for closing this ticket',
+                )}
+                placeholder={t('ticketDetail.resolutionPlaceholder', 'Enter resolution summary...')}
+                inputType="textarea"
+                confirmLabel={t('ticketDetail.close', 'Close Ticket')}
+                isLoading={closeMutation.isPending}
+                onConfirm={(resolution) => {
+                  closeMutation.mutate(
+                    {
+                      resolution,
+                      resolutionAr: isRTL ? resolution : undefined,
+                    },
+                    { onSuccess: () => setCloseDialogOpen(false) },
+                  )
+                }}
+              />
+            </div>
+          )}
 
-        {activeTab === 'duplicates' && <DuplicateComparison ticketId={ticket.id} />}
+          {activeTab === 'triage' && <TriagePanel ticketId={ticket.id} />}
 
-        {activeTab === 'history' && (
-          <div className="text-gray-600 dark:text-gray-400">
-            {t('ticketDetail.historyPlaceholder', 'Audit history will be displayed here')}
-          </div>
-        )}
+          {activeTab === 'duplicates' && <DuplicateComparison ticketId={ticket.id} />}
 
-        {activeTab === 'links' && (
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center py-12">
-                <div className="inline-block size-12 animate-spin rounded-full border-b-2 border-gray-900 dark:border-white"></div>
-                <p className="ms-4 text-gray-600 dark:text-gray-400">
-                  {t('common.loading', 'Loading...')}
-                </p>
-              </div>
-            }
-          >
-            <EntityLinkManager
-              intakeId={ticket.id}
-              organizationId={ticket.dossierId}
-              classificationLevel={0}
-              canRestore={canRestoreLinks}
-              enableReorder={true}
-            />
-          </Suspense>
-        )}
-      </div>
+          {activeTab === 'history' && (
+            <div className="text-muted-foreground">
+              {t('ticketDetail.historyPlaceholder', 'Audit history will be displayed here')}
+            </div>
+          )}
+
+          {activeTab === 'links' && (
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center py-12">
+                  <div className="inline-block size-8 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+                  <p className="ms-4 text-muted-foreground">{t('common.loading', 'Loading...')}</p>
+                </div>
+              }
+            >
+              <EntityLinkManager
+                intakeId={ticket.id}
+                organizationId={ticket.dossierId}
+                classificationLevel={0}
+                canRestore={canRestoreLinks}
+                enableReorder={true}
+              />
+            </Suspense>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

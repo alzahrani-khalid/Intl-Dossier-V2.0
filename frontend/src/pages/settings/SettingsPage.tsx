@@ -45,7 +45,7 @@ const settingsSchema = z.object({
 
   // Appearance
   color_mode: z.enum(['light', 'dark', 'system']),
-  theme: z.enum(['canvas', 'ocean', 'sunset']),
+  theme: z.enum(['canvas', 'ocean', 'sunset', 'azure', 'lavender']),
   display_density: z.enum(['compact', 'comfortable', 'spacious']),
 
   // Notifications

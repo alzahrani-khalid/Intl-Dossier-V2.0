@@ -1,0 +1,87 @@
+{
+  "title": "Dossier Dashboard",
+  "new_task": "New Task",
+  "tabs": {
+    "overview": "Overview",
+    "reports": "Reports",
+    "activities": "Activities"
+  },
+  "metrics": {
+    "myDossiers": "My Dossiers",
+    "myDossiers_desc": "Total dossiers assigned",
+    "activeDossiers": "Active This Week",
+    "activeDossiers_desc": "Dossiers with recent activity",
+    "pendingWork": "Pending Work",
+    "pendingWork_desc": "Items awaiting action",
+    "needsAttention": "Needs Attention",
+    "needsAttention_desc": "Items requiring follow-up",
+    "owned": "{{count}} owned",
+    "dueToday": "{{count}} due today",
+    "overdue": "{{count}} overdue",
+    "trend_up": "+{{value}}% from last period",
+    "trend_down": "-{{value}}% from last period",
+    "trend_from_last_month": "from last month"
+  },
+  "charts": {
+    "workItemTrends": "Work Item Trends",
+    "workItemTrends_desc": "Created vs completed items over time",
+    "workItemTrends_desc_short": "Trending up by {{value}}% this period",
+    "created": "Created",
+    "completed": "Completed",
+    "dossierDistribution": "Dossier Distribution",
+    "dossierDistribution_desc": "Breakdown by dossier type",
+    "ranges": {
+      "7d": "7 Days",
+      "30d": "30 Days",
+      "90d": "90 Days"
+    }
+  },
+  "successMetrics": {
+    "title": "Performance",
+    "professionals": "Professionals",
+    "todaysHeroes": "Today's Heroes",
+    "highlights": "Highlights",
+    "completionRate": "Completion Rate",
+    "avgResponseTime": "Avg. Response Time",
+    "avgResponseTime_value": "{{hours}}h {{minutes}}m",
+    "activeContributors": "Active Contributors",
+    "contributors": "Today's Contributors",
+    "days": "days"
+  },
+  "recentTable": {
+    "title": "Recent Dossiers",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "lastActivity": "Last Activity",
+      "pending": "Pending",
+      "progress": "Progress",
+      "actions": "Actions"
+    },
+    "viewDossier": "View Dossier",
+    "empty": "No recent dossiers found"
+  },
+  "dateRange": {
+    "title": "Select date range",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "last7": "Last 7 Days",
+    "last28": "Last 28 Days",
+    "last90": "Last 90 Days",
+    "custom": "Custom Range",
+    "apply": "Apply",
+    "cancel": "Cancel"
+  },
+  "export": {
+    "title": "Export",
+    "excel": "Export as Excel",
+    "pdf": "Export as PDF",
+    "csv": "Export as CSV"
+  },
+  "review": {
+    "title": "Due for Review",
+    "empty": "No dossiers scheduled for review",
+    "hint": "Dossiers with review dates will appear here"
+  }
+}

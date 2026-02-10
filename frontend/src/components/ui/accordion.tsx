@@ -1,9 +1,11 @@
 import * as React from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
-import { cn } from '@/lib/utils'
+import { cn, getDocDir } from '@/lib/utils'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
-const Accordion = AccordionPrimitive.Root
+function Accordion({ dir, ...props }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
+  return <AccordionPrimitive.Root data-slot="accordion" dir={dir ?? getDocDir()} {...props} />
+}
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,

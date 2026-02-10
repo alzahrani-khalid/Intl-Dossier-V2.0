@@ -22,7 +22,7 @@ export type ColorMode = 'light' | 'dark' | 'system'
 /**
  * Theme options
  */
-export type ThemeName = 'canvas' | 'ocean' | 'sunset'
+export type ThemeName = 'canvas' | 'ocean' | 'sunset' | 'azure' | 'lavender' | 'bluesky'
 
 /**
  * Display density options
@@ -75,7 +75,7 @@ export type GeneralSettings = z.infer<typeof generalSettingsSchema>
  */
 export const appearanceSettingsSchema = z.object({
   color_mode: z.enum(['light', 'dark', 'system']),
-  theme: z.enum(['canvas', 'ocean', 'sunset']),
+  theme: z.enum(['canvas', 'ocean', 'sunset', 'azure', 'lavender', 'bluesky']),
   display_density: z.enum(['compact', 'comfortable', 'spacious']),
 })
 

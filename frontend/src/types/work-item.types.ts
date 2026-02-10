@@ -114,8 +114,8 @@ export interface KanbanColumn {
   key: string
   title: string
   titleAr: string
-  color: string
-  bgColor: string
+  color?: string
+  bgColor?: string
   sortOrder: number
   allowedSources?: WorkSource[] // Which sources can appear in this column
 }

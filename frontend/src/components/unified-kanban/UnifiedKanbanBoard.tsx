@@ -1,6 +1,6 @@
 /**
- * UnifiedKanbanBoard - Main Kanban board using Kibo UI pattern
- * Feature: 034-unified-kanban
+ * UnifiedKanbanBoard - Main Kanban board using shadcn-ui-kit primitives
+ * Feature: 034-unified-kanban (redesigned)
  *
  * Supports:
  * - Three context types: personal, dossier, engagement
@@ -11,19 +11,14 @@
  * - RTL support for Arabic
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { UniqueIdentifier } from '@dnd-kit/core'
+import type { UniqueIdentifier, DragEndEvent } from '@dnd-kit/core'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
-import {
-  KanbanProvider,
-  KanbanBoard,
-  KanbanColumn,
-  KanbanCard,
-  KanbanEmpty,
-  type KanbanColumn as KanbanColumnType,
-} from '@/components/ui/kanban'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import * as Kanban from '@/components/ui/kanban'
 import { UnifiedKanbanHeader } from './UnifiedKanbanHeader'
 import { UnifiedKanbanCardContent, UnifiedKanbanCardSkeleton } from './UnifiedKanbanCard'
 import { getColumnsForMode, getColumnOrder } from './utils/column-definitions'
@@ -89,36 +84,30 @@ export function UnifiedKanbanBoard({
   }, [items, sourceFilter])
 
   // Map column_key from database to frontend column key
-  // (handles migration from 'pending' to 'todo')
   const mapColumnKey = (columnKey: string): string => {
     if (columnKey === 'pending') return 'todo'
     return columnKey
   }
 
-  // Convert to kanban columns format
-  const kanbanColumns = useMemo((): KanbanColumnType<WorkItem>[] => {
-    return columnOrder.map((columnKey) => {
-      const columnDef = columnDefinitions.find((c) => c.key === columnKey) as ColumnDefinition
-      const columnItems = filteredItems.filter((item) => {
+  // Build Record<string, WorkItem[]> for the Kanban.Root value
+  const columnsRecord = useMemo((): Record<string, WorkItem[]> => {
+    const record: Record<string, WorkItem[]> = {}
+    for (const columnKey of columnOrder) {
+      record[columnKey] = filteredItems.filter((item) => {
         const itemColumnKey = mapColumnKey(item.column_key || 'todo')
         return itemColumnKey === columnKey
       })
-
-      return {
-        id: columnKey,
-        title: columnDef?.title || columnKey,
-        items: columnItems,
-      }
-    })
-  }, [columnOrder, columnDefinitions, filteredItems])
+    }
+    return record
+  }, [columnOrder, filteredItems])
 
   // Track columns state for DnD
-  const [columns, setColumns] = useState(kanbanColumns)
+  const [columns, setColumns] = useState(columnsRecord)
 
-  // Sync columns when kanbanColumns changes (from props)
-  useMemo(() => {
-    setColumns(kanbanColumns)
-  }, [kanbanColumns])
+  // Sync columns when columnsRecord changes (from props)
+  useEffect(() => {
+    setColumns(columnsRecord)
+  }, [columnsRecord])
 
   // Calculate counts
   const totalCount = filteredItems.length
@@ -126,17 +115,29 @@ export function UnifiedKanbanBoard({
 
   // Handle drag end - validate and update status
   const handleDragEnd = useCallback(
-    async (
-      itemId: UniqueIdentifier,
-      _sourceColumnId: UniqueIdentifier,
-      targetColumnId: UniqueIdentifier,
-    ) => {
+    async (event: DragEndEvent) => {
       if (!onStatusChange) return
 
+      const { active, over } = event
+      if (!over) return
+
+      // Find the item that was dragged
+      const itemId = active.id as string
       const item = filteredItems.find((i) => i.id === itemId)
       if (!item) return
 
-      const targetColumnKey = targetColumnId as string
+      // Find what column the item ended up in
+      const findColumn = (id: UniqueIdentifier): string | null => {
+        if (id in columns) return id as string
+        for (const [colKey, colItems] of Object.entries(columns)) {
+          if (colItems.some((i) => i.id === id)) return colKey
+        }
+        return null
+      }
+
+      const sourceColumnKey = mapColumnKey(item.column_key || 'todo')
+      const targetColumnKey = findColumn(over.id)
+      if (!targetColumnKey || sourceColumnKey === targetColumnKey) return
 
       // Validate the transition
       const canDrop = canDropInColumn(
@@ -161,7 +162,7 @@ export function UnifiedKanbanBoard({
         })
 
         // Revert the columns state
-        setColumns(kanbanColumns)
+        setColumns(columnsRecord)
         return
       }
 
@@ -174,17 +175,17 @@ export function UnifiedKanbanBoard({
           title: t('success.statusUpdated'),
           description: t('success.statusUpdatedDescription'),
         })
-      } catch (error) {
+      } catch (_error) {
         toast({
           title: t('errors.updateFailed'),
           description: t('errors.updateFailedDescription'),
           variant: 'destructive',
         })
         // Revert the columns state
-        setColumns(kanbanColumns)
+        setColumns(columnsRecord)
       }
     },
-    [onStatusChange, filteredItems, isRTL, toast, t, kanbanColumns],
+    [onStatusChange, filteredItems, columns, isRTL, toast, t, columnsRecord],
   )
 
   // Handle item click
@@ -196,16 +197,6 @@ export function UnifiedKanbanBoard({
     },
     [onItemClick],
   )
-
-  // Render overlay for dragging
-  const renderOverlay = useCallback((activeItem: WorkItem | null) => {
-    if (!activeItem) return null
-    return (
-      <div className="rounded-lg border bg-card p-3 shadow-lg cursor-grabbing min-w-[280px]">
-        <UnifiedKanbanCardContent item={activeItem} />
-      </div>
-    )
-  }, [])
 
   // Error state
   if (isError) {
@@ -244,77 +235,98 @@ export function UnifiedKanbanBoard({
         className={cn(
           'flex-1 overflow-x-auto overflow-y-hidden',
           'px-4 sm:px-6 py-4',
-          'bg-muted/20',
+          'bg-background',
         )}
       >
         {isLoading ? (
           // Loading skeletons
-          <KanbanBoard id="loading" data={[]}>
+          <div className="flex gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="flex flex-col rounded-lg border bg-muted/30 w-full sm:w-[300px] sm:min-w-[300px] h-[500px]"
+                className="flex flex-col bg-muted rounded-lg w-full sm:w-[320px] sm:min-w-[320px] h-[500px] p-2.5"
               >
-                <div className="flex items-center justify-between p-3 border-b bg-muted/50">
-                  <div className="h-5 w-20 bg-muted rounded animate-pulse" />
-                  <div className="h-5 w-6 bg-muted rounded-full animate-pulse" />
+                <div className="flex items-center justify-between mb-2 px-1">
+                  <div className="h-5 w-20 bg-background rounded animate-pulse" />
+                  <div className="h-5 w-6 bg-background rounded-full animate-pulse" />
                 </div>
-                <div className="flex-1 p-2 space-y-2">
+                <div className="flex-1 space-y-2">
                   <UnifiedKanbanCardSkeleton />
                   <UnifiedKanbanCardSkeleton />
                   <UnifiedKanbanCardSkeleton />
                 </div>
               </div>
             ))}
-          </KanbanBoard>
+          </div>
         ) : (
-          <KanbanProvider<WorkItem>
-            columns={columns}
-            onColumnsChange={setColumns}
+          <Kanban.Kanban<WorkItem>
+            value={columns}
+            onValueChange={setColumns}
+            getItemValue={(item) => item.id}
             onDragEnd={handleDragEnd}
-            renderOverlay={renderOverlay}
+            flatCursor
           >
-            <KanbanBoard id="unified-kanban" data={filteredItems}>
+            <Kanban.Board className="flex w-full gap-4 overflow-x-auto pb-4">
               {columnOrder.map((columnKey) => {
                 const columnDef = columnDefinitions.find(
                   (c) => c.key === columnKey,
                 ) as ColumnDefinition
-                const column = columns.find((c) => c.id === columnKey)
-                const columnItems = column?.items || []
+                const columnItems = columns[columnKey] || []
 
                 return (
-                  <KanbanColumn<WorkItem>
+                  <Kanban.Column
                     key={columnKey}
-                    id={columnKey}
-                    title={columnDef?.title || columnKey}
-                    titleAr={columnDef?.titleAr}
-                    items={columnItems}
-                    isRTL={isRTL}
-                    className={columnDef?.bgColor}
-                    headerClassName={cn(columnDef?.bgColor, columnDef?.color)}
+                    value={columnKey}
+                    className="w-full sm:w-[320px] sm:min-w-[320px] shrink-0"
                   >
+                    {/* Column header */}
+                    <div className="flex items-center justify-between px-1 mb-1">
+                      <span className="text-sm font-semibold text-start">
+                        {isRTL && columnDef?.titleAr
+                          ? columnDef.titleAr
+                          : columnDef?.title || columnKey}
+                      </span>
+                      <Badge variant="outline" className="text-xs tabular-nums">
+                        {columnItems.length}
+                      </Badge>
+                    </div>
+
+                    {/* Column items */}
                     {columnItems.length === 0 ? (
-                      <KanbanEmpty
-                        message={t('empty.noItemsInColumn')}
-                        subMessage={t('empty.dragHere')}
-                      />
+                      <div
+                        className={cn(
+                          'flex flex-col items-center justify-center',
+                          'p-4 text-sm text-muted-foreground text-center',
+                          'rounded-md border-2 border-dashed min-h-[100px]',
+                        )}
+                      >
+                        <p>{t('empty.noItemsInColumn')}</p>
+                        <p className="text-xs mt-1">{t('empty.dragHere')}</p>
+                      </div>
                     ) : (
                       columnItems.map((item) => (
-                        <KanbanCard
-                          key={item.id}
-                          id={item.id}
-                          onClick={() => handleItemClick(item)}
-                          className={item.is_overdue ? 'border-red-200 bg-red-50/50' : ''}
-                        >
-                          <UnifiedKanbanCardContent item={item} />
-                        </KanbanCard>
+                        <Kanban.Item key={item.id} value={item.id} asHandle asChild>
+                          <Card
+                            className={cn(
+                              'border-0 p-3 cursor-grab active:cursor-grabbing',
+                              item.is_overdue && 'ring-1 ring-destructive/30',
+                            )}
+                            onClick={() => handleItemClick(item)}
+                          >
+                            <UnifiedKanbanCardContent item={item} />
+                          </Card>
+                        </Kanban.Item>
                       ))
                     )}
-                  </KanbanColumn>
+                  </Kanban.Column>
                 )
               })}
-            </KanbanBoard>
-          </KanbanProvider>
+            </Kanban.Board>
+
+            <Kanban.Overlay>
+              <div className="bg-primary/10 size-full rounded-md" />
+            </Kanban.Overlay>
+          </Kanban.Kanban>
         )}
       </div>
 

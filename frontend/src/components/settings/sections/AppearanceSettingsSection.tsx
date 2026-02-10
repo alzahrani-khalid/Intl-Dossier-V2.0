@@ -49,19 +49,41 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
       value: 'canvas',
       label: t('appearance.canvas'),
       description: t('appearance.canvasDesc'),
-      colors: ['hsl(155 50.6% 37.3%)', 'hsl(0 0% 89.8%)', 'hsl(155 55.8% 58.4%)'],
+      colors: [
+        'oklch(0.141 0.004 285.83)',
+        'oklch(0.871 0.008 286.29)',
+        'oklch(0.92 0.0053 286.32)',
+      ],
     },
     {
-      value: 'ocean',
-      label: t('appearance.ocean'),
-      description: t('appearance.oceanDesc'),
-      colors: ['hsl(210 70% 40%)', 'hsl(210 20% 90%)', 'hsl(210 60% 55%)'],
+      value: 'azure',
+      label: t('appearance.azure'),
+      description: t('appearance.azureDesc'),
+      colors: [
+        'oklch(0.5315 0.0694 156.19)',
+        'oklch(0.5211 0.0755 338.14)',
+        'oklch(0.929 0.0095 255.53)',
+      ],
     },
     {
-      value: 'sunset',
-      label: t('appearance.sunset'),
-      description: t('appearance.sunsetDesc'),
-      colors: ['hsl(25 85% 45%)', 'hsl(30 30% 90%)', 'hsl(25 75% 60%)'],
+      value: 'lavender',
+      label: t('appearance.lavender'),
+      description: t('appearance.lavenderDesc'),
+      colors: [
+        'oklch(0.5827 0.2418 12.23)',
+        'oklch(0.8938 0.0563 3.77)',
+        'oklch(0.9567 0.0021 34.31)',
+      ],
+    },
+    {
+      value: 'bluesky',
+      label: t('appearance.bluesky'),
+      description: t('appearance.blueskyDesc'),
+      colors: [
+        'oklch(0.59 0.2 277.12)',
+        'oklch(0.9342 0.0187 285.12)',
+        'oklch(0.9112 0.035 281.21)',
+      ],
     },
   ]
 
@@ -126,7 +148,7 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
           <p className="text-sm text-muted-foreground text-start -mt-2 mb-3">
             {t('appearance.themeHint')}
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {themes.map((themeOption) => {
               const isSelected = theme === themeOption.value
 

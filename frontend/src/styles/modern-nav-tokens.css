@@ -20,7 +20,7 @@
     --icon-rail-bg: hsl(220 15% 10%); /* #1A1D26 */
     --icon-rail-hover: hsl(220 15% 15%); /* #23262F */
     --icon-rail-active-bg: hsl(220 15% 13%); /* #1E2129 */
-    --icon-rail-active-indicator: hsl(var(--primary-600)); /* Eucalyptus green from theme */
+    --icon-rail-active-indicator: var(--heroui-accent); /* Theme accent from HeroUI */
     --icon-rail-icon: hsl(220 5% 65%); /* #9CA3AF - Default */
     --icon-rail-icon-active: hsl(0 0% 100%); /* #FFFFFF - Active */
     --icon-rail-border: hsl(220 13% 15%); /* Subtle separator */
@@ -55,9 +55,9 @@
     --badge-text-dark: hsl(220 5% 75%); /* #B8BDC5 */
 
     /* Success/Growth Indicator - Uses theme primary for consistency */
-    --success-indicator: hsl(var(--primary-500)); /* Theme green */
-    --success-bg: hsl(var(--primary-500) / 0.1); /* Theme green 10% */
-    --success-text: hsl(var(--primary-700)); /* Darker theme green */
+    --success-indicator: var(--heroui-success); /* Theme success */
+    --success-bg: color-mix(in oklch, var(--heroui-success) 10%, transparent); /* Success 10% */
+    --success-text: var(--heroui-accent-foreground); /* Dark accent text */
 
     /* Warning/Decline Indicator */
     --warning-indicator: hsl(0 84% 60%); /* #F87171 - Red */
@@ -137,12 +137,16 @@
        BORDER RADIUS
        ============================================ */
 
-    --radius-sm: 0.25rem; /* 4px */
-    --radius-DEFAULT: 0.5rem; /* 8px */
-    --radius-md: 0.375rem; /* 6px */
-    --radius-lg: 0.5rem; /* 8px */
-    --radius-xl: 0.75rem; /* 12px */
-    --radius-2xl: 1rem; /* 16px */
+    /* Derived from --radius (set per-theme in index.css)
+       HeroUI v3 multiplicative scale: all collapse to 0 when --radius: 0 */
+    --radius-xs: calc(var(--radius) * 0.25);
+    --radius-sm: calc(var(--radius) * 0.5);
+    --radius-DEFAULT: var(--radius);
+    --radius-md: calc(var(--radius) * 0.75);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.5);
+    --radius-2xl: calc(var(--radius) * 2);
+    --radius-3xl: calc(var(--radius) * 3);
     --radius-full: 9999px; /* Fully rounded */
 
     /* ============================================
@@ -220,7 +224,7 @@
     width: var(--icon-rail-width);
 
     /* Floating rounded panel effect */
-    border-radius: 12px;
+    border-radius: var(--radius-xl);
     margin: 8px;
     height: calc(100vh - 16px); /* Account for top+bottom margin */
     overflow: hidden;
@@ -260,7 +264,7 @@
 
     /* Transparent - blend with container */
     background: transparent;
-    border-radius: 12px;
+    border-radius: var(--radius-xl);
   }
 
   /* Glass highlight hover effect for icon buttons */
@@ -284,7 +288,7 @@
     transition: opacity var(--transition-fast) var(--ease-out);
     pointer-events: none;
     z-index: 1;
-    border-radius: 12px;
+    border-radius: var(--radius-xl);
   }
 
   .icon-button:hover {
@@ -307,7 +311,7 @@
     );
     color: var(--icon-rail-icon-active);
     position: relative;
-    border-radius: 12px;
+    border-radius: var(--radius-xl);
   }
 
   .icon-button.active::before {
@@ -339,8 +343,8 @@
     /* Lighter grey background */
     background: hsl(220, 10%, 96%);
     /* Left side rounded corners - matches icon rail */
-    border-start-start-radius: 12px;
-    border-end-start-radius: 12px;
+    border-start-start-radius: var(--radius-xl);
+    border-end-start-radius: var(--radius-xl);
     /* Subtle border */
     border: 1px solid rgba(255, 255, 255, 0.1);
     /* Reduced shadows for subtler appearance */

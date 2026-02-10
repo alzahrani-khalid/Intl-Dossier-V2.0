@@ -247,7 +247,7 @@ export function CitationNetworkGraph({
       style: {
         stroke:
           edge.relevance_score && edge.relevance_score > 0.7
-            ? 'hsl(var(--primary))'
+            ? 'var(--heroui-accent)'
             : 'hsl(var(--muted-foreground))',
         strokeWidth: Math.max(1, (edge.relevance_score || 0.5) * 3),
       },
@@ -255,7 +255,7 @@ export function CitationNetworkGraph({
         type: 'arrowclosed' as const,
         color:
           edge.relevance_score && edge.relevance_score > 0.7
-            ? 'hsl(var(--primary))'
+            ? 'var(--heroui-accent)'
             : 'hsl(var(--muted-foreground))',
       },
     }))
@@ -370,7 +370,7 @@ export function CitationNetworkGraph({
           position={isRTL ? 'bottom-right' : 'bottom-left'}
           nodeColor={(node) => {
             const data = node.data as unknown as CitationNodeData
-            if (data.isStart) return 'hsl(var(--primary))'
+            if (data.isStart) return 'var(--heroui-accent)'
             return 'hsl(var(--muted))'
           }}
           maskColor="hsl(var(--background) / 0.7)"

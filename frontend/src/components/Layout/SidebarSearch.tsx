@@ -14,10 +14,11 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useSidebar } from '@/components/ui/sidebar'
 import { useKeyboardShortcutContext } from '@/components/KeyboardShortcuts/KeyboardShortcutProvider'
 
 interface SidebarSearchProps {
-  /** Whether sidebar is expanded */
+  /** Whether sidebar is expanded (overrides useSidebar state) */
   isExpanded?: boolean
   /** Additional className */
   className?: string
@@ -26,10 +27,13 @@ interface SidebarSearchProps {
 }
 
 export function SidebarSearch({
-  isExpanded = true,
+  isExpanded: isExpandedProp,
   className,
   compact = false,
 }: SidebarSearchProps) {
+  // Use sidebar context for expand state, with prop override
+  const sidebarCtx = useSidebar()
+  const isExpanded = isExpandedProp ?? sidebarCtx.state === 'expanded'
   const { t, i18n } = useTranslation('common')
   const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'

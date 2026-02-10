@@ -1,14 +1,31 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 
 // Theme type - extensible for future themes
-type Theme = 'canvas' // Add 'ocean' | 'sunset' etc. when needed
+type Theme = 'canvas' | 'azure' | 'lavender' | 'bluesky'
 type ColorMode = 'light' | 'dark' | 'system'
 
 // Available themes for validation and UI
-export const AVAILABLE_THEMES = ['canvas'] as const
+export const AVAILABLE_THEMES = ['canvas', 'azure', 'lavender', 'bluesky'] as const
 
 // Available color modes for UI toggles
 export const AVAILABLE_COLOR_MODES: ColorMode[] = ['light', 'dark', 'system'] as const
+
+type ThemePreset = 'default' | 'underground' | 'rose-garden' | 'ocean-breeze'
+
+const THEME_TO_PRESET: Record<Theme, ThemePreset> = {
+  canvas: 'default',
+  azure: 'underground',
+  lavender: 'rose-garden',
+  bluesky: 'ocean-breeze',
+}
+
+function isTheme(value: unknown): value is Theme {
+  return value === 'canvas' || value === 'azure' || value === 'lavender' || value === 'bluesky'
+}
+
+function normalizeTheme(value: unknown, fallback: Theme): Theme {
+  return isTheme(value) ? value : fallback
+}
 
 interface ThemeContextValue {
   theme: Theme
@@ -41,9 +58,7 @@ export function ThemeProvider({
     if (stored) {
       try {
         const prefs = JSON.parse(stored)
-        if (prefs.theme && AVAILABLE_THEMES.includes(prefs.theme)) {
-          return prefs.theme
-        }
+        return normalizeTheme(prefs.theme, initialTheme)
       } catch (e) {
         console.warn('Failed to parse user preferences:', e)
       }
@@ -57,7 +72,12 @@ export function ThemeProvider({
     if (stored) {
       try {
         const prefs = JSON.parse(stored)
-        if (prefs.colorMode && (prefs.colorMode === 'light' || prefs.colorMode === 'dark')) {
+        if (
+          prefs.colorMode &&
+          (prefs.colorMode === 'light' ||
+            prefs.colorMode === 'dark' ||
+            prefs.colorMode === 'system')
+        ) {
           return prefs.colorMode
         }
       } catch (e) {
@@ -80,9 +100,14 @@ export function ThemeProvider({
   // Apply theme to document
   useEffect(() => {
     const root = document.documentElement
+    const body = document.body
 
     // Set theme palette via data-theme attribute (scalable architecture)
     root.setAttribute('data-theme', theme)
+    body.setAttribute('data-theme-preset', THEME_TO_PRESET[theme])
+    body.setAttribute('data-theme-radius', 'md')
+    body.setAttribute('data-theme-scale', 'none')
+    body.setAttribute('data-theme-content-layout', 'full')
 
     // Set color mode via .dark class (shadcn pattern)
     if (effectiveColorMode === 'dark') {
@@ -94,7 +119,7 @@ export function ThemeProvider({
 
   const setTheme = useCallback(
     (newTheme: Theme) => {
-      if (!AVAILABLE_THEMES.includes(newTheme)) {
+      if (!isTheme(newTheme)) {
         console.error(`Invalid theme: ${newTheme}`)
         return
       }
@@ -176,10 +201,15 @@ export function ThemeProvider({
       if (e.key === 'user-preferences' && e.newValue) {
         try {
           const prefs = JSON.parse(e.newValue)
-          if (prefs.theme && AVAILABLE_THEMES.includes(prefs.theme)) {
-            setThemeState(prefs.theme)
+          if (prefs.theme) {
+            setThemeState(normalizeTheme(prefs.theme, initialTheme))
           }
-          if (prefs.colorMode && (prefs.colorMode === 'light' || prefs.colorMode === 'dark')) {
+          if (
+            prefs.colorMode &&
+            (prefs.colorMode === 'light' ||
+              prefs.colorMode === 'dark' ||
+              prefs.colorMode === 'system')
+          ) {
             setColorModeState(prefs.colorMode)
           }
         } catch (err) {
@@ -190,7 +220,7 @@ export function ThemeProvider({
 
     window.addEventListener('storage', handleStorageChange)
     return () => window.removeEventListener('storage', handleStorageChange)
-  }, [])
+  }, [initialTheme])
 
   // Resolve 'system' to actual light/dark
   const resolvedColorMode: 'light' | 'dark' =

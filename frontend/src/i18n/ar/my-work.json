@@ -1,0 +1,99 @@
+{
+  "title": "أعمالي",
+  "subtitle": "تتبع التزاماتك ومهامك وتذاكر الاستقبال في مكان واحد",
+  "viewBoard": "عرض اللوحة",
+
+  "stats": {
+    "totalActive": "النشطة",
+    "overdue": "متأخرة",
+    "dueToday": "مستحقة اليوم",
+    "dueThisWeek": "مستحقة هذا الأسبوع"
+  },
+
+  "metrics": {
+    "title": "إنتاجيتك",
+    "completed30d": "مكتملة (٣٠ يوم)",
+    "onTimeRate": "نسبة الالتزام",
+    "avgCompletionTime": "متوسط الإنجاز"
+  },
+
+  "tabs": {
+    "all": "الكل",
+    "commitments": "الالتزامات",
+    "tasks": "المهام",
+    "intake": "الاستقبال"
+  },
+
+  "search": {
+    "placeholder": "البحث في عناصر العمل..."
+  },
+
+  "filters": {
+    "trackingType": "نوع التتبع",
+    "all": "جميع الأنواع"
+  },
+
+  "trackingType": {
+    "delivery": "تسليم",
+    "followUp": "متابعة",
+    "sla": "اتفاقية مستوى الخدمة"
+  },
+
+  "sort": {
+    "label": "ترتيب حسب",
+    "deadlineAsc": "الموعد النهائي (الأقرب)",
+    "deadlineDesc": "الموعد النهائي (الأبعد)",
+    "priorityDesc": "الأولوية (الأعلى أولاً)",
+    "priorityAsc": "الأولوية (الأدنى أولاً)",
+    "createdDesc": "الأحدث أولاً",
+    "createdAsc": "الأقدم أولاً"
+  },
+
+  "source": {
+    "commitment": "التزام",
+    "task": "مهمة",
+    "intake": "استقبال"
+  },
+
+  "priority": {
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية",
+    "critical": "حرجة",
+    "urgent": "عاجلة"
+  },
+
+  "deadline": {
+    "today": "اليوم",
+    "tomorrow": "غداً",
+    "dueToday": "مستحق اليوم",
+    "dueTomorrow": "مستحق غداً",
+    "dueInDays": "مستحق خلال {{count}} أيام",
+    "dueInDays_one": "مستحق خلال يوم واحد",
+    "dueInDays_other": "مستحق خلال {{count}} أيام"
+  },
+
+  "status": {
+    "overdue": "متأخر"
+  },
+
+  "team": {
+    "title": "عبء عمل الفريق",
+    "members": "أعضاء",
+    "overdue": "متأخر",
+    "active": "نشط",
+    "onTime": "في الوقت"
+  },
+
+  "error": {
+    "loading": "فشل تحميل عناصر العمل",
+    "retry": "إعادة المحاولة"
+  },
+
+  "empty": {
+    "title": "لا توجد عناصر عمل",
+    "description": "حاول تعديل الفلاتر أو تحقق لاحقاً"
+  },
+
+  "loadMore": "تحميل المزيد"
+}

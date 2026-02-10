@@ -8,10 +8,15 @@ import { Wifi, WifiOff, RefreshCw, AlertCircle } from 'lucide-react'
 export function RealtimeStatus() {
   const { t } = useTranslation()
   const auth = useAuth()
-  const { connectionStatus, isConnected, reconnect, lastError } = useRealtimeStore()
+  const { connectionStatus, isConnected, isInitialized, reconnect, lastError } = useRealtimeStore()
 
   // Don't show on login page or when not authenticated
   if (!(auth as any)?.isAuthenticated) {
+    return null
+  }
+
+  // Don't show when realtime hasn't been initialized yet (no subscriptions created)
+  if (!isInitialized) {
     return null
   }
 

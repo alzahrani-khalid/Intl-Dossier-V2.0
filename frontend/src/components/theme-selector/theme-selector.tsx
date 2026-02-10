@@ -4,7 +4,7 @@ import { useLanguage } from '../../hooks/use-language'
 import { ChevronDown, Palette, Sun, Moon, Check } from 'lucide-react'
 
 interface ThemeOption {
-  id: 'canvas'
+  id: 'canvas' | 'azure' | 'lavender' | 'bluesky'
   name: { en: string; ar: string }
   preview: {
     primary: string
@@ -13,15 +13,41 @@ interface ThemeOption {
   }
 }
 
-// Canvas theme with Eucalyptus green primary
 const themes: ThemeOption[] = [
   {
     id: 'canvas',
     name: { en: 'Canvas', ar: 'كانفس' },
     preview: {
-      primary: 'hsl(155 50.6% 37.3%)', // Eucalyptus green
-      secondary: 'hsl(0 0% 89.8%)', // Alabaster gray
-      accent: 'hsl(155 55.8% 58.4%)', // Light eucalyptus
+      primary: 'oklch(0.141 0.004 285.83)',
+      secondary: 'oklch(0.871 0.008 286.29)',
+      accent: 'oklch(0.92 0.0053 286.32)',
+    },
+  },
+  {
+    id: 'azure',
+    name: { en: 'Azure', ar: 'أزور' },
+    preview: {
+      primary: 'oklch(0.5315 0.0694 156.19)',
+      secondary: 'oklch(0.5211 0.0755 338.14)',
+      accent: 'oklch(0.929 0.0095 255.53)',
+    },
+  },
+  {
+    id: 'lavender',
+    name: { en: 'Lavender', ar: 'لافندر' },
+    preview: {
+      primary: 'oklch(0.5827 0.2418 12.23)',
+      secondary: 'oklch(0.8938 0.0563 3.77)',
+      accent: 'oklch(0.9567 0.0021 34.31)',
+    },
+  },
+  {
+    id: 'bluesky',
+    name: { en: 'Bluesky', ar: 'بلوسكاي' },
+    preview: {
+      primary: 'oklch(0.59 0.2 277.12)',
+      secondary: 'oklch(0.9342 0.0187 285.12)',
+      accent: 'oklch(0.9112 0.035 281.21)',
     },
   },
 ]
@@ -33,7 +59,7 @@ export function ThemeSelector() {
 
   const currentTheme = (themes.find((t) => t.id === theme) || themes[0])!
 
-  const handleThemeSelect = (themeId: 'canvas') => {
+  const handleThemeSelect = (themeId: ThemeOption['id']) => {
     setTheme(themeId)
     setIsOpen(false)
 
@@ -70,7 +96,7 @@ export function ThemeSelector() {
         {/* Theme Dropdown - shows when multiple themes available */}
         {singleTheme ? (
           // Single theme: just display the name with the primary color indicator
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md border border-border bg-background">
+          <div className="flex items-center gap-1.5 h-[30px] px-2 rounded-md border border-border bg-background">
             <div
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: currentTheme.preview.primary }}
@@ -83,7 +109,7 @@ export function ThemeSelector() {
           <div className="relative">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center gap-1 px-2 py-1 rounded-md border border-border bg-background hover:bg-accent transition-colors"
+              className="flex items-center gap-1 h-[30px] px-2 rounded-md border border-border bg-background hover:bg-accent transition-colors"
               aria-label={language === 'en' ? 'Select theme' : 'اختر السمة'}
               aria-expanded={isOpen}
               aria-haspopup="true"
@@ -155,7 +181,7 @@ export function ThemeSelector() {
         {/* Color Mode Toggle */}
         <button
           onClick={toggleColorMode}
-          className="p-1.5 rounded-md border border-border bg-background hover:bg-accent transition-colors"
+          className="h-[30px] w-[30px] flex items-center justify-center rounded-md border border-border bg-background hover:bg-accent transition-colors"
           aria-label={
             colorMode === 'light'
               ? language === 'en'

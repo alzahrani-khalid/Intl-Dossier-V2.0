@@ -41,6 +41,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useSidebar } from '@/components/ui/sidebar'
 import {
   useEntityHistoryStore,
   type EntityType,
@@ -197,13 +198,16 @@ interface QuickNavigationMenuProps {
 }
 
 export function QuickNavigationMenu({
-  isExpanded = true,
+  isExpanded: isExpandedProp,
   maxRecent = 5,
   maxPinned = 5,
   onLinkClick,
   className,
   compact = false,
 }: QuickNavigationMenuProps) {
+  // Use sidebar context for expand state, with prop override
+  const sidebarCtx = useSidebar()
+  const isExpanded = isExpandedProp ?? sidebarCtx.state === 'expanded'
   const { t, i18n } = useTranslation('common')
   const isRTL = i18n.language === 'ar'
 

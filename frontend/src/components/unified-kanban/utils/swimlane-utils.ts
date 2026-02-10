@@ -154,19 +154,6 @@ export function getSwimlaneColor(swimlaneId: string): string {
 /**
  * Get swimlane background color
  */
-export function getSwimlaneBackground(swimlaneId: string): string {
-  switch (swimlaneId) {
-    case 'urgent':
-      return 'bg-red-50/50'
-    case 'high':
-      return 'bg-orange-50/50'
-    case 'medium':
-      return 'bg-yellow-50/50'
-    case 'low':
-      return 'bg-slate-50/50'
-    case 'unassigned':
-      return 'bg-muted/30'
-    default:
-      return 'bg-background'
-  }
+export function getSwimlaneBackground(_swimlaneId: string): string {
+  return 'bg-muted/30'
 }

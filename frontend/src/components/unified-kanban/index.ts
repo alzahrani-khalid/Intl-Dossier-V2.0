@@ -9,7 +9,7 @@
 export { UnifiedKanbanBoard } from './UnifiedKanbanBoard'
 export { EnhancedKanbanBoard } from './EnhancedKanbanBoard'
 export { UnifiedKanbanColumn, UnifiedKanbanColumnSkeleton } from './UnifiedKanbanColumn'
-export { UnifiedKanbanCard, UnifiedKanbanCardSkeleton } from './UnifiedKanbanCard'
+export { UnifiedKanbanCardContent, UnifiedKanbanCardSkeleton } from './UnifiedKanbanCard'
 export { UnifiedKanbanHeader } from './UnifiedKanbanHeader'
 
 // Column definition utilities

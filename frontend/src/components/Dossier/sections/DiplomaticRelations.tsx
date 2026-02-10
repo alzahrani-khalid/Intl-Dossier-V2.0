@@ -224,7 +224,7 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
         type: 'default' as const,
         animated: isActive,
         style: {
-          stroke: isActive ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+          stroke: isActive ? 'var(--heroui-accent)' : 'hsl(var(--muted-foreground))',
           strokeWidth: 2,
         },
       }
@@ -353,7 +353,7 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
           <Controls position={isRTL ? 'top-left' : 'top-right'} />
           <MiniMap
             position={isRTL ? 'bottom-right' : 'bottom-left'}
-            nodeColor="hsl(var(--primary))"
+            nodeColor="var(--heroui-accent)"
             maskColor="hsl(var(--muted) / 0.5)"
           />
         </ReactFlow>

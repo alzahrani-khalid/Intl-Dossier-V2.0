@@ -29,7 +29,9 @@
 
 /* Icon container */
 .vertical-timeline-element-icon {
-  box-shadow: 0 0 0 4px hsl(var(--background)), inset 0 2px 0 rgba(0, 0, 0, 0.08),
+  box-shadow:
+    0 0 0 4px hsl(var(--background)),
+    inset 0 2px 0 rgba(0, 0, 0, 0.08),
     0 3px 0 4px rgba(0, 0, 0, 0.05) !important;
   width: 44px !important;
   height: 44px !important;
@@ -39,7 +41,9 @@
 
 .vertical-timeline-element-icon:hover {
   transform: scale(1.1) !important;
-  box-shadow: 0 0 0 6px hsl(var(--background)), inset 0 2px 0 rgba(0, 0, 0, 0.08),
+  box-shadow:
+    0 0 0 6px hsl(var(--background)),
+    inset 0 2px 0 rgba(0, 0, 0, 0.08),
     0 6px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
@@ -78,7 +82,7 @@
 
 .vertical-timeline-element-content:hover {
   box-shadow: var(--shadow-lg) !important;
-  border-color: hsl(var(--primary) / 0.5) !important;
+  border-color: color-mix(in oklch, var(--heroui-accent) 50%, transparent) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -238,7 +242,9 @@
 
 /* Dark mode adjustments */
 :root[data-color-mode='dark'] .vertical-timeline-element-icon {
-  box-shadow: 0 0 0 4px hsl(var(--background)), inset 0 2px 0 rgba(255, 255, 255, 0.08),
+  box-shadow:
+    0 0 0 4px hsl(var(--background)),
+    inset 0 2px 0 rgba(255, 255, 255, 0.08),
     0 3px 0 4px rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -319,10 +325,13 @@
 @keyframes pulse-high {
   0%,
   100% {
-    box-shadow: 0 0 0 4px hsl(var(--background)), 0 0 0 8px hsl(0 84% 60% / 0.4);
+    box-shadow:
+      0 0 0 4px hsl(var(--background)),
+      0 0 0 8px hsl(0 84% 60% / 0.4);
   }
   50% {
-    box-shadow: 0 0 0 4px hsl(var(--background)), 0 0 0 12px hsl(0 84% 60% / 0.1);
+    box-shadow:
+      0 0 0 4px hsl(var(--background)),
+      0 0 0 12px hsl(0 84% 60% / 0.1);
   }
 }
-

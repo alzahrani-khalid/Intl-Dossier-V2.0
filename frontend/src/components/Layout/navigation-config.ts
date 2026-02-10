@@ -29,7 +29,6 @@ import {
   Webhook,
   Workflow,
   BookOpen,
-  Network,
   History,
 } from 'lucide-react'
 
@@ -63,12 +62,6 @@ export const createNavigationSections = (
           label: 'navigation.allDossiers',
           path: '/dossiers',
           icon: FolderOpen,
-        },
-        {
-          id: 'relationship-graph',
-          label: 'navigation.relationshipGraph',
-          path: '/relationships',
-          icon: Network,
         },
         {
           id: 'recent-activity',
