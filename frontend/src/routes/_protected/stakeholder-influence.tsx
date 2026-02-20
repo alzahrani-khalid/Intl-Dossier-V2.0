@@ -25,12 +25,6 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -84,7 +78,6 @@ import {
 import {
   NODE_COLORS,
   INFLUENCE_TIER_LABELS,
-  STAKEHOLDER_ROLE_LABELS,
   REPORT_TYPE_LABELS,
 } from '@/types/stakeholder-influence.types'
 import type { InfluenceTier, InfluenceReportType } from '@/types/stakeholder-influence.types'

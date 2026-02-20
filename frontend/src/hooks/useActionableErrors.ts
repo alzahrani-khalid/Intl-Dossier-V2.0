@@ -10,7 +10,6 @@ import type {
   ErrorAction,
   FieldHighlight,
   UseActionableErrorsReturn,
-  ErrorContext,
 } from '@/types/actionable-error.types'
 import type { ValidationResult } from '@/lib/validation-rules'
 import { generateContextualError, validateField } from '@/lib/validation-rules'

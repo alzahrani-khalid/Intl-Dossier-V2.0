@@ -14,10 +14,6 @@ import {
   Calendar,
   History,
   Star,
-  Trash2,
-  Edit,
-  Check,
-  X,
   ChevronRight,
   Users,
   User,
@@ -29,17 +25,7 @@ import {
   Filter,
   Clock,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog'
 import {
   AlertDialog,
   AlertDialogAction,

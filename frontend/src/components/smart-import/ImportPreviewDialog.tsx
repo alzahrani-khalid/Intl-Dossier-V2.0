@@ -9,7 +9,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  X,
   ChevronDown,
   ChevronUp,
   Check,

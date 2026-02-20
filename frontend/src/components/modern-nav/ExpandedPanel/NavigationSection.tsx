@@ -59,7 +59,6 @@ export function NavigationSection({
   title,
   titleKey,
   items,
-  activeId,
   onItemClick,
   className,
   hideHeader = false,

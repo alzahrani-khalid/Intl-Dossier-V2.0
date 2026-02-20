@@ -18,7 +18,6 @@ import {
   BottomSheetDescription,
   BottomSheetBody,
   BottomSheetFooter,
-  BottomSheetClose,
 } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'

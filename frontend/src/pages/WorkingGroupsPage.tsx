@@ -23,7 +23,6 @@ import {
   MoreHorizontal,
   Edit,
   Archive,
-  Eye,
   Building2,
   Clock,
   ChevronRight,

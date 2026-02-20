@@ -33,17 +33,7 @@ import {
   INTENSITY_LABELS,
   REGION_LABELS,
 } from '@/types/geographic-visualization.types'
-import {
-  Globe,
-  Map,
-  List,
-  ArrowRight,
-  ExternalLink,
-  TrendingUp,
-  Activity,
-  Calendar,
-  ChevronRight,
-} from 'lucide-react'
+import { Globe, Map, List, TrendingUp, Activity, Calendar, ChevronRight } from 'lucide-react'
 
 export function GeographicVisualizationPage() {
   const { t, i18n } = useTranslation('geographic-visualization')
@@ -52,16 +42,8 @@ export function GeographicVisualizationPage() {
 
   const [activeTab, setActiveTab] = useState<'map' | 'list'>('map')
 
-  const {
-    countries,
-    allCountries,
-    connections,
-    summary,
-    filters,
-    isLoading,
-    updateFilters,
-    resetFilters,
-  } = useGeographicVisualization()
+  const { allCountries, connections, summary, filters, isLoading, updateFilters, resetFilters } =
+    useGeographicVisualization()
 
   // Handle country click - navigate to country dossier
   const handleCountryClick = useCallback(

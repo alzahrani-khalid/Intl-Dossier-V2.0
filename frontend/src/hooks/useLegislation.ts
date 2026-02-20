@@ -290,7 +290,6 @@ export function useUpdateLegislationAmendment() {
     mutationFn: ({
       id,
       input,
-      legislationId,
     }: {
       id: string
       input: Partial<LegislationAmendmentInput>
@@ -349,7 +348,6 @@ export function useUpdateLegislationDeadline() {
     mutationFn: ({
       id,
       input,
-      legislationId,
     }: {
       id: string
       input: Partial<LegislationDeadlineInput>
@@ -557,15 +555,8 @@ export function useRemoveRelatedLegislation() {
   const { t } = useTranslation('legislation')
 
   return useMutation({
-    mutationFn: ({
-      id,
-      legislationId,
-      relatedLegislationId,
-    }: {
-      id: string
-      legislationId: string
-      relatedLegislationId: string
-    }) => removeRelatedLegislation(id),
+    mutationFn: ({ id }: { id: string; legislationId: string; relatedLegislationId: string }) =>
+      removeRelatedLegislation(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: legislationKeys.relatedLegislations(variables.legislationId),

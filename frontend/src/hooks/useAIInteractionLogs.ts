@@ -14,7 +14,6 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
-  useInfiniteQuery,
   type UseQueryOptions,
   type UseMutationOptions,
 } from '@tanstack/react-query'

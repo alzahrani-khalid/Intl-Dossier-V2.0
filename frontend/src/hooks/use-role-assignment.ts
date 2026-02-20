@@ -9,8 +9,6 @@ import {
   approveRoleChange,
   getPendingApprovals,
   getUserPermissions,
-  type AssignRoleRequest,
-  type ApproveRoleChangeRequest,
 } from '@/services/user-management-api'
 import { useToast } from '@/hooks/use-toast'
 

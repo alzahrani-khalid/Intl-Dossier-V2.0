@@ -12,7 +12,6 @@ import {
   useGlobalKeyboardHandler,
   useNavigationShortcuts,
   useKeyboardShortcuts,
-  shortcutRegistry,
   type KeyboardShortcut,
   type ModifierKey,
   formatShortcut,

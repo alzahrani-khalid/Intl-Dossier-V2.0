@@ -57,7 +57,6 @@ import type {
   FieldHistoryGrouped,
   ChangeType,
   FieldCategory,
-  TrackableEntityType,
 } from '@/types/field-history.types'
 import {
   CHANGE_TYPE_CONFIG,

@@ -17,14 +17,12 @@ import {
   BookTemplate,
   Plus,
   Search,
-  Filter,
   MoreVertical,
   Edit,
   Trash2,
   Eye,
   Loader2,
   CheckCircle,
-  Clock,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -54,19 +52,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import type {
-  ComplianceRule,
-  ComplianceViolation,
-  ComplianceRuleType,
-  ComplianceSeverity,
-} from '@/types/compliance.types'
-import {
-  RULE_TYPE_LABELS,
-  SEVERITY_LABELS,
-  SEVERITY_COLORS,
-  VIOLATION_STATUS_LABELS,
-  VIOLATION_STATUS_COLORS,
-} from '@/types/compliance.types'
+import type { ComplianceRule, ComplianceViolation } from '@/types/compliance.types'
+import { RULE_TYPE_LABELS, SEVERITY_LABELS, SEVERITY_COLORS } from '@/types/compliance.types'
 import {
   useComplianceRules,
   useComplianceViolations,

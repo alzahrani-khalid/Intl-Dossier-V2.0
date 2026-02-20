@@ -34,7 +34,6 @@ import {
   ContextMenuContent,
   ContextMenuItem as ContextMenuItemComponent,
   ContextMenuTrigger,
-  ContextMenuSeparator,
 } from '@/components/ui/context-menu'
 
 export type SwipeAction = 'favorite' | 'pin' | 'archive' | 'delete' | 'custom'

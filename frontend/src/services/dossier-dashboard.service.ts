@@ -17,9 +17,6 @@ import type {
   PendingWorkByDossierResponse,
   PendingWorkFilters,
   DossierDashboardSummary,
-  MyDossier,
-  DossierActivityItem,
-  PendingWorkByDossierItem,
 } from '@/types/dossier-dashboard.types'
 
 // =============================================================================

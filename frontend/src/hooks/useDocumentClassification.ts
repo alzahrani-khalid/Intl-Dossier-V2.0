@@ -12,9 +12,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase-client'
 import type {
   DocumentClassification,
-  ClassifiedDocument,
-  ClassificationChangeRequest,
-  DocumentAccessLog,
   ClassificationApiRequest,
   ClassificationListResponse,
   ClassificationGetResponse,

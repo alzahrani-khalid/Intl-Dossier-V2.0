@@ -51,12 +51,7 @@ import {
   useSkipAgendaItem,
   useDeleteAgendaItem,
 } from '@/hooks/useMeetingAgenda'
-import type {
-  AgendaItem,
-  AgendaItemType,
-  AgendaItemStatus,
-  TimingStatus,
-} from '@/types/meeting-agenda.types'
+import type { AgendaItem, AgendaItemType } from '@/types/meeting-agenda.types'
 import {
   ITEM_STATUS_COLORS,
   TIMING_STATUS_COLORS,

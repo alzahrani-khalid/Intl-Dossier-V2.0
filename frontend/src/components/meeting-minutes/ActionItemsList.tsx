@@ -67,7 +67,6 @@ const statusIcons: Record<ActionItemStatus, React.ComponentType<{ className?: st
 
 export function ActionItemsList({
   items,
-  minutesId,
   dossierId,
   onAddItem,
   onEditItem,
@@ -75,7 +74,6 @@ export function ActionItemsList({
   onUpdateStatus,
   onConvertToCommitment,
   onConvertToTask,
-  isLoading,
   className,
 }: ActionItemsListProps) {
   const { t, i18n } = useTranslation('meeting-minutes')

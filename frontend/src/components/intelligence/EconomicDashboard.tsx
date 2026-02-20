@@ -22,14 +22,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { RefreshButton } from '@/components/intelligence/RefreshButton'
 import { useRefreshIntelligence } from '@/hooks/useIntelligence'
-import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  BarChart3,
-  AlertTriangle,
-  Activity,
-} from 'lucide-react'
+import { DollarSign, BarChart3 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import type { IntelligenceReport } from '@/services/intelligence-api'
 

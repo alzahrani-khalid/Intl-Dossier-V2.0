@@ -16,8 +16,7 @@ import type {
 import afterActionAPI, {
   type AfterActionListFilters,
   type AfterActionListResponse,
-  type PublishResponse,
-  AfterActionAPIError,
+  type AfterActionAPIError,
 } from '../services/after-action-api'
 
 /**

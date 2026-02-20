@@ -138,7 +138,7 @@ export function DossierCard({ dossier }: DossierCardProps) {
           </div>
           <div className="flex flex-col items-end gap-2 shrink-0">
             <Badge
-              variant="none"
+              variant="secondary"
               className={`whitespace-nowrap text-xs font-semibold ${getSensitivityBadgeClass(sensitivityKey)}`}
               aria-label={`${t('fields.sensitivity')}: ${t(`sensitivity.${sensitivityKey}`)}`}
             >

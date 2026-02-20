@@ -10,7 +10,6 @@
  * @module components/Forms/FormErrorDisplay
  */
 
-import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'motion/react'
 import { AlertCircle, AlertTriangle, Info, X, ChevronRight, Lightbulb } from 'lucide-react'

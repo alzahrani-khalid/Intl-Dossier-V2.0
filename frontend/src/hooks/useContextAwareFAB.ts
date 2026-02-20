@@ -18,15 +18,10 @@ import {
   FolderOpen,
   Search,
   ClipboardList,
-  Building2,
-  Globe,
-  LayoutList,
   FileSpreadsheet,
   UserPlus,
   CalendarPlus,
   Upload,
-  BookOpen,
-  Settings,
   CheckSquare,
 } from 'lucide-react'
 import type { FABAction, SpeedDialAction } from '@/components/ui/context-aware-fab'

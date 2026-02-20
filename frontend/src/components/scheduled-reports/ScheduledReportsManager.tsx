@@ -61,7 +61,7 @@ export function ScheduledReportsManager() {
   const locale = isRTL ? ar : enUS
   const { toast } = useToast()
 
-  const { data: schedules, isLoading, isFetching, error, fetchStatus } = useScheduledReports()
+  const { data: schedules, isLoading, error, fetchStatus } = useScheduledReports()
   const deleteSchedule = useDeleteSchedule()
   const toggleStatus = useToggleScheduleStatus()
   const runNow = useRunScheduleNow()

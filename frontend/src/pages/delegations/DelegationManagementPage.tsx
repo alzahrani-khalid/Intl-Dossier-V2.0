@@ -32,15 +32,7 @@ import {
 } from '@/components/delegation'
 import { useMyDelegations, useDelegationsExpiringSoon } from '@/hooks/use-delegation'
 import { supabase } from '@/lib/supabase'
-import {
-  Plus,
-  Users,
-  ArrowDownToLine,
-  ArrowUpFromLine,
-  Clock,
-  Shield,
-  AlertTriangle,
-} from 'lucide-react'
+import { Plus, ArrowDownToLine, ArrowUpFromLine, Clock, Shield, AlertTriangle } from 'lucide-react'
 
 type TabValue = 'granted' | 'received'
 

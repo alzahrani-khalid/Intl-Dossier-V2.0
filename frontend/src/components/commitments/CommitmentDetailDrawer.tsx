@@ -22,8 +22,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import {
   Calendar,
   Edit,
-  ExternalLink,
-  FileText,
   User,
   CheckCircle,
   AlertTriangle,

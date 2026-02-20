@@ -45,7 +45,6 @@ export const DocumentVersionModal = memo(function DocumentVersionModal({
 
   // Version management
   const {
-    versions,
     comparisonState,
     selectVersionA,
     selectVersionB,

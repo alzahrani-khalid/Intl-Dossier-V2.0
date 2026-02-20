@@ -9,17 +9,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
-import {
-  Network,
-  ChevronRight,
-  GitBranch,
-  Building2,
-  Users,
-  Globe,
-  MapPin,
-  Briefcase,
-  UserCircle,
-} from 'lucide-react'
+import { Network, ChevronRight, GitBranch, Users, Briefcase } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

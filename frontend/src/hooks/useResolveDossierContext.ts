@@ -12,11 +12,7 @@ import { useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useDossierContextInternal } from '@/contexts/dossier-context'
 import { useCreationContext } from '@/components/work-creation/hooks/useCreationContext'
-import type {
-  ResolvedDossierContext,
-  DossierContextResponse,
-  ContextEntityType,
-} from '@/types/dossier-context.types'
+import type { ResolvedDossierContext, DossierContextResponse } from '@/types/dossier-context.types'
 
 // ============================================================================
 // API Types

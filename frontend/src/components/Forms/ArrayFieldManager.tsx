@@ -296,7 +296,6 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
   allowReorder = false,
   validation,
   helpText,
-  register,
   watch,
   setValue,
   errors,

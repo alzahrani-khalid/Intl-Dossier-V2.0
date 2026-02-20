@@ -14,7 +14,6 @@ import {
   Calendar,
   AlertCircle,
   ChevronRight,
-  Eye,
   Bell,
   BellOff,
   Loader2,

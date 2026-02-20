@@ -38,8 +38,6 @@ export interface AttachPositionDialogProps {
 }
 
 export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
-  engagementId,
-  dossierId,
   onAttach,
   attachedPositionIds = [],
   trigger,

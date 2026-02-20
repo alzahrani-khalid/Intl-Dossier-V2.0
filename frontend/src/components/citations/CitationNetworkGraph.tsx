@@ -40,17 +40,11 @@ import {
   Building,
   BarChart,
   Link,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
 } from 'lucide-react'
 import { useCitationNetwork } from '@/hooks/useCitations'
 import type {
   CitationNetworkGraph as _CitationNetworkGraphType,
-  CitationNetworkNode,
-  CitationNetworkEdge,
   CitationSourceType,
-  CitationNetworkParams,
 } from '@/types/citation.types'
 import { CITATION_SOURCE_TYPE_LABELS } from '@/types/citation.types'
 

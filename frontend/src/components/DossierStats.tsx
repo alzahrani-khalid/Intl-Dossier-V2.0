@@ -4,17 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Progress } from './ui/progress'
 import { Skeleton } from './ui/skeleton'
 import { Alert, AlertDescription } from './ui/alert'
-import {
-  Calendar,
-  MessageSquare,
-  Handshake,
-  CheckCircle,
-  AlertCircle,
-  FileText,
-  TrendingUp,
-  Activity,
-  Loader2,
-} from 'lucide-react'
+import { Calendar, CheckCircle, AlertCircle, FileText, TrendingUp, Activity } from 'lucide-react'
 import { useDossierStats } from '../hooks/useDossierStats'
 import { getHealthScoreColor, getHealthScoreLabel } from '../services/dossier-stats.service'
 

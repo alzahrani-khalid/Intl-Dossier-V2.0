@@ -36,7 +36,6 @@ export interface PositionListProps {
 export const PositionList: React.FC<PositionListProps> = ({
   positions,
   context = 'all',
-  contextId,
   onPositionClick,
   onAttach,
   onDetach,

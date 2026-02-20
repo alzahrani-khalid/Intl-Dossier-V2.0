@@ -9,7 +9,6 @@ import { supabase } from '@/lib/supabase'
 import type {
   AdvancedSearchRequest,
   AdvancedSearchResponse,
-  SearchResult,
   FilterCondition,
   FilterGroup,
   RelationshipQuery,

@@ -15,10 +15,7 @@ import type {
   GeoVisualizationFilters,
   GeoVisualizationResponse,
   CountryEngagementMetrics,
-  RelationshipFlow,
   MapConnection,
-  GeoVisualizationSummary,
-  DEFAULT_GEO_FILTERS,
 } from '@/types/geographic-visualization.types'
 import { useState, useCallback, useMemo } from 'react'
 

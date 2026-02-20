@@ -36,17 +36,10 @@ import {
   Globe,
   Target,
   RefreshCw,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
 } from 'lucide-react'
 
 import { useDependencyGraph } from '@/hooks/useEntityDependencies'
-import type {
-  DependencyGraph,
-  DependencyNode,
-  DependencyEdge,
-} from '@/types/entity-dependency.types'
+import type { DependencyGraph, DependencyNode } from '@/types/entity-dependency.types'
 import { DEPENDENCY_TYPE_LABELS } from '@/types/entity-dependency.types'
 import { cn } from '@/lib/utils'
 

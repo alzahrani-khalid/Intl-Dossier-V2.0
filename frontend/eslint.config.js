@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import tailwind from 'eslint-plugin-tailwindcss'
+import unusedImports from 'eslint-plugin-unused-imports'
 
 export default tseslint.config(
   {
@@ -29,6 +30,7 @@ export default tseslint.config(
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       tailwindcss: tailwind,
+      'unused-imports': unusedImports,
     },
     rules: {
       // Include Tailwind class ordering and related rules
@@ -36,7 +38,12 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       // Type safety: Enforce no explicit any types
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
       '@typescript-eslint/no-unused-expressions': 'off',
       'no-unused-expressions': 'off',
       'react-refresh/only-export-components': 'warn',

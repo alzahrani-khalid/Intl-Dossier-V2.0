@@ -47,7 +47,7 @@ See [Dossier-Centric Architecture](./docs/DOSSIER_CENTRIC_ARCHITECTURE.md) for c
 
 ### Mobile Application
 
-- **Framework**: React Native 0.81+ + Expo SDK 52+
+- **Framework**: React Native 0.81+ + Expo SDK 53+
 - **UI**: React Native Paper 5.12+ (Material Design 3)
 - **Database**: WatermelonDB 0.28+ (offline-first)
 - **Navigation**: React Navigation 7+
@@ -59,7 +59,7 @@ See [mobile/README.md](./mobile/README.md) for detailed mobile setup instruction
 
 ### Prerequisites
 
-- **Node.js**: 18+ LTS
+- **Node.js**: 20.19+ LTS
 - **pnpm**: 10.x+ (Package manager) - **REQUIRED**
 - **Git**: Latest version
 - **Supabase Account**: For backend services
@@ -97,7 +97,7 @@ pnpm dev
 The web app will be available at:
 
 - Frontend: http://localhost:5173
-- Backend: http://localhost:3000
+- Backend: http://localhost:5000
 
 ### Mobile Application Setup
 

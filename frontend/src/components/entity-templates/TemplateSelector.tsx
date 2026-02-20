@@ -38,7 +38,6 @@ export interface TemplateSelectorProps {
 
 export function TemplateSelector({
   entityType,
-  context,
   onSelect,
   onSkip,
   className,

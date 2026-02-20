@@ -21,7 +21,6 @@ import type {
   WebhookUpdate,
   WebhookSearchParams,
   WebhookListResponse,
-  WebhookDelivery,
   WebhookDeliverySearchParams,
   WebhookDeliveryListResponse,
   WebhookStats,

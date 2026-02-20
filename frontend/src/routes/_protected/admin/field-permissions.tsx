@@ -56,9 +56,7 @@ import {
   Trash2,
   Lock,
   Search,
-  Filter,
   RefreshCw,
-  AlertCircle,
   CheckCircle2,
   User,
   Users,
@@ -79,14 +77,11 @@ import type {
   FieldPermissionScope,
   CreateFieldPermissionRequest,
   UpdateFieldPermissionRequest,
-  FieldPermissionAudit,
-  FieldCategory,
   FieldSensitivityLevel,
 } from '@/types/field-permission.types'
 import {
   ENTITY_TYPE_CONFIG,
   SCOPE_TYPE_CONFIG,
-  FIELD_CATEGORY_CONFIG,
   SENSITIVITY_LEVEL_CONFIG,
 } from '@/types/field-permission.types'
 

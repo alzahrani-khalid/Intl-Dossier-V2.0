@@ -26,8 +26,6 @@ import {
   GitMerge,
   RefreshCw,
   AlertCircle,
-  CheckCircle2,
-  XCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -66,7 +64,6 @@ import {
   useUpdateTag,
   useDeleteTag,
   useMergeTags,
-  useRenameTag,
 } from '@/hooks/useTagHierarchy'
 import type { TagCategory } from '@/types/tag-hierarchy.types'
 import { TAG_COLOR_PALETTE, getTagName } from '@/types/tag-hierarchy.types'

@@ -14,7 +14,6 @@ import React, { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Settings,
-  Users,
   MessageSquare,
   History,
   Lightbulb,
@@ -45,13 +44,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  useCollaborativeEditing,
-  type ActiveEditor,
-  type SuggestionWithAuthor,
-  type TrackChangeWithAuthor,
-  type InlineCommentWithAuthor,
-} from '@/hooks/useCollaborativeEditing'
+import { useCollaborativeEditing } from '@/hooks/useCollaborativeEditing'
 import { ActiveEditorAvatars } from './ActiveEditorAvatars'
 import { SuggestionPanel } from './SuggestionPanel'
 import { TrackChangesOverlay } from './TrackChangesOverlay'
@@ -75,7 +68,6 @@ export function CollaborativeEditor({
   const [isSaving, setIsSaving] = useState(false)
 
   const {
-    session,
     activeEditors,
     suggestions,
     trackChanges,
@@ -83,13 +75,11 @@ export function CollaborativeEditor({
     summary,
     isConnected,
     isLoading,
-    error,
     resolveSuggestion,
     acceptChange,
     rejectChange,
     acceptAllChanges,
     rejectAllChanges,
-    createInlineComment,
     resolveInlineComment,
     toggleTrackChanges,
     toggleSuggestions,

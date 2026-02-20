@@ -26,7 +26,6 @@ import {
   Layers,
   AlertCircle,
   X,
-  Sparkles,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -44,7 +43,6 @@ import type {
   IntelligentSearchSuggestionsProps,
   WorkspaceSearchHistory,
   ActionableSearchTip,
-  FilterPreset,
 } from '@/types/enhanced-search.types'
 
 /**
@@ -110,7 +108,6 @@ function TypoCorrectionsSection({
 function RelatedTermsSection({
   terms,
   onSelect,
-  isRTL,
   language,
 }: {
   terms: RelatedTerm[]
@@ -152,7 +149,6 @@ function RelatedTermsSection({
 function PopularSearchesSection({
   searches,
   onSelect,
-  isRTL,
 }: {
   searches: PopularSearchSuggestion[]
   onSelect: (term: string) => void
@@ -268,7 +264,6 @@ function RecentContentSection({
 function CreateEntitySection({
   suggestion,
   onCreateEntity,
-  isRTL,
   language,
 }: {
   suggestion?: CreateEntitySuggestion
@@ -328,7 +323,6 @@ function CreateEntitySection({
 function WorkspaceHistorySection({
   history,
   onSelect,
-  isRTL,
 }: {
   history: WorkspaceSearchHistory[]
   onSelect: (term: string) => void
@@ -373,7 +367,6 @@ function ActionableTipsSection({
   activeFiltersCount,
   onClearFilters,
   onChangeEntityType,
-  isRTL,
   language,
 }: {
   tips?: ActionableSearchTip[]

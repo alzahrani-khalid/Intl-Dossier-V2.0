@@ -32,7 +32,6 @@ import type {
   CreatePollRequest,
   VotingRule,
   CreatePollSlotRequest,
-  CreatePollParticipantRequest,
 } from '@/types/availability-polling.types'
 import { DEFAULT_DURATION_OPTIONS, DEFAULT_TIMEZONE } from '@/types/availability-polling.types'
 

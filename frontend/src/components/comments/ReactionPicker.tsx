@@ -19,7 +19,6 @@ import type {
   CommentableEntityType,
   CommentReactionEmoji,
   CommentReactions,
-  COMMENT_REACTION_EMOJIS,
 } from '@/types/comment.types'
 
 interface ReactionPickerProps {

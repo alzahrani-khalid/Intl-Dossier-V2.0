@@ -14,12 +14,8 @@ import {
   Info,
   CheckCircle,
   Minus,
-  ChevronDown,
-  ChevronUp,
   FileText,
   Users,
-  Building2,
-  Target,
   Clock,
   ExternalLink,
 } from 'lucide-react'

@@ -9,11 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { LegislationList } from '@/components/Legislation'
 import { LegislationForm } from '@/components/Legislation'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import type {
-  LegislationType,
-  LegislationStatus,
-  LegislationPriority,
-} from '@/types/legislation.types'
 
 // Search params schema for URL filter synchronization
 interface LegislationSearchParams {

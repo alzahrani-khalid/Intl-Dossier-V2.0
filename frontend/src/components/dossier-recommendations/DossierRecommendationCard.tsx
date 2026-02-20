@@ -19,8 +19,6 @@ import {
   MapPin,
   Target,
   ChevronDown,
-  ChevronRight,
-  CheckCircle,
   X,
   Sparkles,
   ExternalLink,
@@ -32,7 +30,6 @@ import {
   Lightbulb,
   Layers,
   User,
-  UserCheck,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'

@@ -6,15 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import {
-  AlertTriangle,
-  CheckCircle,
-  Eye,
-  XCircle,
-  Clock,
-  UserCircle,
-  ArrowRight,
-} from 'lucide-react'
+import { AlertTriangle, CheckCircle, Eye, XCircle, Clock, UserCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'

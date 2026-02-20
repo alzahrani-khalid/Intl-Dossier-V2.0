@@ -17,8 +17,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useMemo, memo } from 'react'
 import {
   ReactFlow,
-  Node,
-  Edge,
   Background,
   Controls,
   MiniMap,

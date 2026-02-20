@@ -19,8 +19,6 @@ import {
   Check,
   Settings,
   Sparkles,
-  FileText,
-  Users,
   Play,
   Pause,
 } from 'lucide-react'

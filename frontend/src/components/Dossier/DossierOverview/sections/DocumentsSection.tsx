@@ -17,7 +17,6 @@ import {
   Download,
   Eye,
   Calendar,
-  ChevronRight,
   Shield,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -169,7 +168,6 @@ function DocumentList({
  */
 export function DocumentsSection({
   data,
-  dossierId,
   isLoading,
   isRTL = false,
   className = '',

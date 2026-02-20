@@ -175,7 +175,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run RTL + Mobile tests
-        run: pnpm exec playwright test frontend/tests/e2e/dossier-rtl-mobile.spec.ts --reporter=html
+        run: pnpm exec playwright test tests/e2e/dossier-rtl-mobile.spec.ts --reporter=html
         working-directory: ./frontend
 
       - name: Upload RTL + Mobile test report
@@ -211,7 +211,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run Accessibility tests
-        run: pnpm exec playwright test frontend/tests/a11y/ --reporter=html
+        run: pnpm exec playwright test tests/a11y/ --reporter=html
         working-directory: ./frontend
 
       - name: Upload Accessibility test report

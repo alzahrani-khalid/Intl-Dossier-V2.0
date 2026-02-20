@@ -12,14 +12,12 @@ import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/authStore'
 import { v4 as uuidv4 } from 'uuid'
 import type {
-  ProgressiveDisclosureState,
   HintInteraction,
   DisclosurePreferences,
   SessionHintTracking,
   HintContextType,
   HintInteractionStatus,
   ShouldShowHintResult,
-  HintDefinition,
   UserExperienceLevel,
 } from '@/types/progressive-disclosure.types'
 

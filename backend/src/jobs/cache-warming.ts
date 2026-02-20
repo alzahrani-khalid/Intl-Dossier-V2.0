@@ -10,49 +10,49 @@
  * calls SuggestionService for each prefix to warm cache.
  */
 
-import { createClient } from '@supabase/supabase-js';
-import { RedisCacheService } from '../services/redis-cache.service';
-import { SuggestionService } from '../services/suggestion.service';
+import { createClient } from '@supabase/supabase-js'
+import { RedisCacheService } from '../services/redis-cache.service'
+import { SuggestionService } from '../services/suggestion.service'
 
 const supabase = createClient(
   process.env.SUPABASE_URL || 'http://localhost:54321',
-  process.env.SUPABASE_SERVICE_KEY || ''
-);
+  process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+)
 
-const cacheService = new RedisCacheService();
-const suggestionService = new SuggestionService();
+const cacheService = new RedisCacheService()
+const suggestionService = new SuggestionService()
 
 interface PopularQuery {
-  query_text_normalized: string;
-  search_count: number;
+  query_text_normalized: string
+  search_count: number
 }
 
 /**
  * Get top N popular search queries from the last 7 days
  */
 async function getPopularQueries(limit: number = 100): Promise<PopularQuery[]> {
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  const sevenDaysAgo = new Date()
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
   const { data, error } = await supabase
     .from('search_queries')
     .select('query_text_normalized')
     .gte('created_at', sevenDaysAgo.toISOString())
     .order('created_at', { ascending: false })
-    .limit(1000); // Get more to analyze
+    .limit(1000) // Get more to analyze
 
   if (error) {
-    console.error('Failed to fetch popular queries:', error);
-    return [];
+    console.error('Failed to fetch popular queries:', error)
+    return []
   }
 
-  if (!data) return [];
+  if (!data) return []
 
   // Count occurrences and get top N
-  const queryCounts: Record<string, number> = {};
+  const queryCounts: Record<string, number> = {}
   for (const row of data) {
-    const normalized = row.query_text_normalized;
-    queryCounts[normalized] = (queryCounts[normalized] || 0) + 1;
+    const normalized = row.query_text_normalized
+    queryCounts[normalized] = (queryCounts[normalized] || 0) + 1
   }
 
   // Sort by count and return top N
@@ -62,7 +62,7 @@ async function getPopularQueries(limit: number = 100): Promise<PopularQuery[]> {
       search_count: count,
     }))
     .sort((a, b) => b.search_count - a.search_count)
-    .slice(0, limit);
+    .slice(0, limit)
 }
 
 /**
@@ -70,31 +70,28 @@ async function getPopularQueries(limit: number = 100): Promise<PopularQuery[]> {
  * e.g., "climate" → ["c", "cl", "cli", "clim", "clima", "climate"]
  */
 function extractPrefixes(query: string): string[] {
-  const prefixes: string[] = [];
-  const minPrefixLength = 2; // Don't warm single-character prefixes
-  const maxPrefixLength = Math.min(query.length, 15); // Don't warm very long prefixes
+  const prefixes: string[] = []
+  const minPrefixLength = 2 // Don't warm single-character prefixes
+  const maxPrefixLength = Math.min(query.length, 15) // Don't warm very long prefixes
 
   for (let i = minPrefixLength; i <= maxPrefixLength; i++) {
-    prefixes.push(query.substring(0, i));
+    prefixes.push(query.substring(0, i))
   }
 
-  return prefixes;
+  return prefixes
 }
 
 /**
  * Warm cache for a single prefix
  */
-async function warmCacheForPrefix(
-  prefix: string,
-  entityType: string = 'all'
-): Promise<boolean> {
+async function warmCacheForPrefix(prefix: string, entityType: string = 'all'): Promise<boolean> {
   try {
     // Call suggestion service which will cache results
-    await suggestionService.getSuggestions(prefix, entityType, 10);
-    return true;
+    await suggestionService.getSuggestions(prefix, entityType, 10)
+    return true
   } catch (error) {
-    console.error(`Failed to warm cache for prefix "${prefix}":`, error);
-    return false;
+    console.error(`Failed to warm cache for prefix "${prefix}":`, error)
+    return false
   }
 }
 
@@ -102,74 +99,74 @@ async function warmCacheForPrefix(
  * Main cache warming function
  */
 export async function warmSearchCache(): Promise<{
-  prefixesWarmed: number;
-  queriesProcessed: number;
-  errors: number;
+  prefixesWarmed: number
+  queriesProcessed: number
+  errors: number
 }> {
-  const startTime = Date.now();
-  console.log('[Cache Warming] Starting cache warming job...');
+  const startTime = Date.now()
+  console.log('[Cache Warming] Starting cache warming job...')
 
-  let prefixesWarmed = 0;
-  let errors = 0;
+  let prefixesWarmed = 0
+  let errors = 0
 
   try {
     // Get popular queries
-    const popularQueries = await getPopularQueries(100);
-    console.log(`[Cache Warming] Found ${popularQueries.length} popular queries`);
+    const popularQueries = await getPopularQueries(100)
+    console.log(`[Cache Warming] Found ${popularQueries.length} popular queries`)
 
     // Extract all prefixes
-    const allPrefixes = new Set<string>();
+    const allPrefixes = new Set<string>()
     for (const { query_text_normalized } of popularQueries) {
-      const prefixes = extractPrefixes(query_text_normalized);
-      prefixes.forEach((p) => allPrefixes.add(p));
+      const prefixes = extractPrefixes(query_text_normalized)
+      prefixes.forEach((p) => allPrefixes.add(p))
     }
 
-    console.log(`[Cache Warming] Warming ${allPrefixes.size} unique prefixes...`);
+    console.log(`[Cache Warming] Warming ${allPrefixes.size} unique prefixes...`)
 
     // Entity types to warm
-    const entityTypes = ['all', 'dossiers', 'positions', 'documents'];
+    const entityTypes = ['all', 'dossiers', 'positions', 'documents']
 
     // Warm cache for each prefix-entityType combination
     // Process in batches to avoid overwhelming the system
-    const batchSize = 10;
-    const prefixArray = Array.from(allPrefixes);
+    const batchSize = 10
+    const prefixArray = Array.from(allPrefixes)
 
     for (let i = 0; i < prefixArray.length; i += batchSize) {
-      const batch = prefixArray.slice(i, i + batchSize);
+      const batch = prefixArray.slice(i, i + batchSize)
 
       await Promise.all(
         batch.flatMap((prefix) =>
           entityTypes.map(async (entityType) => {
-            const success = await warmCacheForPrefix(prefix, entityType);
+            const success = await warmCacheForPrefix(prefix, entityType)
             if (success) {
-              prefixesWarmed++;
+              prefixesWarmed++
             } else {
-              errors++;
+              errors++
             }
-          })
-        )
-      );
+          }),
+        ),
+      )
 
       // Small delay between batches
       if (i + batchSize < prefixArray.length) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100))
       }
     }
 
-    const duration = Date.now() - startTime;
+    const duration = Date.now() - startTime
     console.log(
       `[Cache Warming] Completed in ${duration}ms. ` +
-        `Warmed ${prefixesWarmed} prefixes, ${errors} errors`
-    );
+        `Warmed ${prefixesWarmed} prefixes, ${errors} errors`,
+    )
 
     return {
       prefixesWarmed,
       queriesProcessed: popularQueries.length,
       errors,
-    };
+    }
   } catch (error) {
-    console.error('[Cache Warming] Critical error:', error);
-    throw error;
+    console.error('[Cache Warming] Critical error:', error)
+    throw error
   }
 }
 
@@ -177,23 +174,23 @@ export async function warmSearchCache(): Promise<{
  * Setup cron job (runs every 3 minutes)
  */
 export function setupCacheWarmingJob() {
-  const INTERVAL_MS = 3 * 60 * 1000; // 3 minutes
+  const INTERVAL_MS = 3 * 60 * 1000 // 3 minutes
 
-  console.log(`[Cache Warming] Starting periodic cache warming (every 3 minutes)`);
+  console.log(`[Cache Warming] Starting periodic cache warming (every 3 minutes)`)
 
   // Run immediately on startup
   warmSearchCache().catch((error) => {
-    console.error('[Cache Warming] Initial run failed:', error);
-  });
+    console.error('[Cache Warming] Initial run failed:', error)
+  })
 
   // Then run periodically
   setInterval(async () => {
     try {
-      await warmSearchCache();
+      await warmSearchCache()
     } catch (error) {
-      console.error('[Cache Warming] Scheduled run failed:', error);
+      console.error('[Cache Warming] Scheduled run failed:', error)
     }
-  }, INTERVAL_MS);
+  }, INTERVAL_MS)
 }
 
 /**
@@ -202,11 +199,11 @@ export function setupCacheWarmingJob() {
 if (require.main === module) {
   warmSearchCache()
     .then((result) => {
-      console.log('Cache warming result:', result);
-      process.exit(0);
+      console.log('Cache warming result:', result)
+      process.exit(0)
     })
     .catch((error) => {
-      console.error('Cache warming failed:', error);
-      process.exit(1);
-    });
+      console.error('Cache warming failed:', error)
+      process.exit(1)
+    })
 }

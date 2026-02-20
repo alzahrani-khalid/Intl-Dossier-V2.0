@@ -31,7 +31,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -40,17 +39,12 @@ import {
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
 import {
-  Settings,
   LayoutGrid,
   Plus,
   Trash2,
   Edit,
   Star,
   StarOff,
-  Save,
-  RotateCcw,
-  AlertTriangle,
-  GripVertical,
   Eye,
   EyeOff,
   ChevronUp,
@@ -78,7 +72,6 @@ import {
   useUpdateLayoutField,
   useDeleteLayoutField,
   useReorderLayoutFields,
-  previewLayoutKeys,
 } from '@/hooks/usePreviewLayouts'
 import type {
   PreviewEntityType,

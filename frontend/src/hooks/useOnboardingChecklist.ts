@@ -14,9 +14,7 @@ import type {
   OnboardingChecklistItem,
   RoleChecklist,
   MilestoneCelebration,
-  MilestoneAchievement,
   ChecklistItemProgress,
-  UserRole,
 } from '@/types/onboarding.types'
 
 // Query keys

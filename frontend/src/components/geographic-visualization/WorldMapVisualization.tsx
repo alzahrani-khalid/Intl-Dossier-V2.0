@@ -18,7 +18,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useGeographicVisualization } from '@/hooks/useGeographicVisualization'
 import type {
   CountryEngagementMetrics,
-  MapConnection,
   GeoVisualizationFilters,
   EngagementIntensity,
 } from '@/types/geographic-visualization.types'

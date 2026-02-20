@@ -81,7 +81,6 @@ export function useWorkingGroups(
       const {
         search,
         status,
-        wg_status,
         wg_type,
         parent_forum_id,
         lead_org_id,

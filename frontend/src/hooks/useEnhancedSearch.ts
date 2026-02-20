@@ -11,7 +11,6 @@ import {
   type CategorizedSuggestions,
   type SearchHistoryItem,
   type FilterCount,
-  type EnhancedSearchState,
   type SearchSuggestion,
   type HistorySuggestion,
   enhancedSearchReducer,

@@ -9,7 +9,6 @@ import type {
   WorkflowRule,
   WorkflowRuleCreate,
   WorkflowRuleUpdate,
-  WorkflowExecution,
   WorkflowNotificationTemplate,
   WorkflowRulesListParams,
   WorkflowRulesListResponse,

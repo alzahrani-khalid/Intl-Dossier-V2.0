@@ -25,23 +25,8 @@ import {
 import '@xyflow/react/dist/style.css'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  Loader2,
-  Building2,
-  Users,
-  Globe,
-  User,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-  RefreshCw,
-  Share2,
-  GitBranch,
-  Shield,
-} from 'lucide-react'
+import { Loader2, Building2, Users, Globe, User, Share2, GitBranch, Shield } from 'lucide-react'
 import type {
-  NetworkNode,
-  NetworkEdge,
   NetworkVisualizationData,
   InfluenceTier,
   StakeholderRole,

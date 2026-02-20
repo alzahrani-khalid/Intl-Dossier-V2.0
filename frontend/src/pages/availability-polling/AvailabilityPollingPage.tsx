@@ -10,18 +10,7 @@ import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format, parseISO, isAfter } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
-import {
-  Plus,
-  Calendar,
-  Users,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  LayoutGrid,
-  List,
-  ChevronRight,
-  Vote,
-} from 'lucide-react'
+import { Plus, Calendar, Users, Clock, LayoutGrid, List, ChevronRight, Vote } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

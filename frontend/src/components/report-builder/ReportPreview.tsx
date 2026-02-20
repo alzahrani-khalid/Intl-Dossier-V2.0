@@ -38,11 +38,7 @@ import {
 } from 'recharts'
 import { RefreshCw, AlertCircle, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type {
-  ReportConfiguration,
-  ReportPreviewResponse,
-  ReportField,
-} from '@/types/report-builder.types'
+import type { ReportConfiguration, ReportPreviewResponse } from '@/types/report-builder.types'
 
 interface ReportPreviewProps {
   configuration: ReportConfiguration

@@ -17,8 +17,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   FileText,
   Sparkles,
-  Plus,
-  Link,
   Unlink,
   RefreshCw,
   Clock,
@@ -31,7 +29,6 @@ import {
   Target,
   Calendar,
   MessageSquare,
-  Download,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -70,10 +67,7 @@ interface EngagementBriefsSectionProps {
   engagementName: string
 }
 
-export function EngagementBriefsSection({
-  engagementId,
-  engagementName,
-}: EngagementBriefsSectionProps) {
+export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectionProps) {
   const { t, i18n } = useTranslation('engagement-briefs')
   const isRTL = i18n.language === 'ar'
 

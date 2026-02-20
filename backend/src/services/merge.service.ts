@@ -1,23 +1,23 @@
-import { createClient } from '@supabase/supabase-js';
-import logger from '../utils/logger';
+import { createClient } from '@supabase/supabase-js'
+import logger from '../utils/logger'
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const supabaseUrl = process.env.SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 interface MergeOptions {
-  sourceTicketId: string; // Primary ticket (kept)
-  targetTicketIds: string[]; // Tickets to merge into primary
-  mergeReason?: string;
-  userId: string;
+  sourceTicketId: string // Primary ticket (kept)
+  targetTicketIds: string[] // Tickets to merge into primary
+  mergeReason?: string
+  userId: string
 }
 
 interface MergeResult {
-  success: boolean;
-  primaryTicketId: string;
-  mergedTicketIds: string[];
-  historyPreserved: boolean;
-  error?: string;
+  success: boolean
+  primaryTicketId: string
+  mergedTicketIds: string[]
+  historyPreserved: boolean
+  error?: string
 }
 
 /**
@@ -30,43 +30,40 @@ export class MergeService {
    * Preserves all history and relationships
    */
   async mergeTickets(options: MergeOptions): Promise<MergeResult> {
-    const correlationId = this.generateCorrelationId();
+    const correlationId = this.generateCorrelationId()
 
     logger.info('Starting ticket merge operation', {
       sourceTicketId: options.sourceTicketId,
       targetTicketIds: options.targetTicketIds,
       userId: options.userId,
       correlationId,
-    });
+    })
 
     try {
       // Validate all tickets exist and can be merged
-      await this.validateTicketsForMerge(
-        options.sourceTicketId,
-        options.targetTicketIds
-      );
+      await this.validateTicketsForMerge(options.sourceTicketId, options.targetTicketIds)
 
       // Perform merge transaction
-      const result = await this.performMergeTransaction(options, correlationId);
+      const result = await this.performMergeTransaction(options, correlationId)
 
       logger.info('Ticket merge completed successfully', {
         primaryTicketId: options.sourceTicketId,
         mergedCount: options.targetTicketIds.length,
         correlationId,
-      });
+      })
 
       return {
         success: true,
         primaryTicketId: options.sourceTicketId,
         mergedTicketIds: options.targetTicketIds,
         historyPreserved: true,
-      };
+      }
     } catch (error) {
       logger.error('Ticket merge failed', {
         sourceTicketId: options.sourceTicketId,
         error: error instanceof Error ? error.message : 'Unknown error',
         correlationId,
-      });
+      })
 
       return {
         success: false,
@@ -74,30 +71,27 @@ export class MergeService {
         mergedTicketIds: [],
         historyPreserved: false,
         error: error instanceof Error ? error.message : 'Merge failed',
-      };
+      }
     }
   }
 
   /**
    * Validate tickets can be merged
    */
-  private async validateTicketsForMerge(
-    sourceId: string,
-    targetIds: string[]
-  ): Promise<void> {
+  private async validateTicketsForMerge(sourceId: string, targetIds: string[]): Promise<void> {
     // Check source ticket
     const { data: sourceTicket, error: sourceError } = await supabase
       .from('intake_tickets')
       .select('id, status')
       .eq('id', sourceId)
-      .single();
+      .single()
 
     if (sourceError || !sourceTicket) {
-      throw new Error(`Source ticket not found: ${sourceId}`);
+      throw new Error(`Source ticket not found: ${sourceId}`)
     }
 
     if (sourceTicket.status === 'merged') {
-      throw new Error('Source ticket is already merged');
+      throw new Error('Source ticket is already merged')
     }
 
     // Check all target tickets
@@ -106,18 +100,18 @@ export class MergeService {
         .from('intake_tickets')
         .select('id, status')
         .eq('id', targetId)
-        .single();
+        .single()
 
       if (targetError || !targetTicket) {
-        throw new Error(`Target ticket not found: ${targetId}`);
+        throw new Error(`Target ticket not found: ${targetId}`)
       }
 
       if (targetTicket.status === 'merged') {
-        throw new Error(`Target ticket ${targetId} is already merged`);
+        throw new Error(`Target ticket ${targetId} is already merged`)
       }
 
       if (targetId === sourceId) {
-        throw new Error('Cannot merge ticket with itself');
+        throw new Error('Cannot merge ticket with itself')
       }
     }
   }
@@ -127,7 +121,7 @@ export class MergeService {
    */
   private async performMergeTransaction(
     options: MergeOptions,
-    correlationId: string
+    correlationId: string,
   ): Promise<void> {
     // Call merge RPC function
     const { error } = await supabase.rpc('merge_tickets', {
@@ -136,23 +130,20 @@ export class MergeService {
       p_merge_reason: options.mergeReason || 'Duplicate tickets',
       p_user_id: options.userId,
       p_correlation_id: correlationId,
-    });
+    })
 
     if (error) {
-      throw new Error(`Merge transaction failed: ${error.message}`);
+      throw new Error(`Merge transaction failed: ${error.message}`)
     }
 
     // Create audit logs for the merge
-    await this.createMergeAuditLogs(options, correlationId);
+    await this.createMergeAuditLogs(options, correlationId)
   }
 
   /**
    * Create audit logs for merge operation
    */
-  private async createMergeAuditLogs(
-    options: MergeOptions,
-    correlationId: string
-  ): Promise<void> {
+  private async createMergeAuditLogs(options: MergeOptions, correlationId: string): Promise<void> {
     const auditEntries = [
       // Primary ticket audit
       {
@@ -182,9 +173,9 @@ export class MergeService {
         correlation_id: correlationId,
         created_at: new Date().toISOString(),
       })),
-    ];
+    ]
 
-    await supabase.from('audit_logs').insert(auditEntries);
+    await supabase.from('audit_logs').insert(auditEntries)
   }
 
   /**
@@ -198,19 +189,19 @@ export class MergeService {
         .eq('entity_type', 'intake_ticket')
         .eq('entity_id', ticketId)
         .in('action', ['merge_primary', 'merge_secondary'])
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
 
       if (error) {
-        throw error;
+        throw error
       }
 
-      return data || [];
+      return data || []
     } catch (error) {
       logger.error('Failed to get merge history', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return [];
+      })
+      return []
     }
   }
 
@@ -223,19 +214,19 @@ export class MergeService {
         .from('intake_tickets')
         .select('id, ticket_number, title, status, parent_ticket_id')
         .eq('parent_ticket_id', primaryTicketId)
-        .eq('status', 'merged');
+        .eq('status', 'merged')
 
       if (error) {
-        throw error;
+        throw error
       }
 
-      return data || [];
+      return data || []
     } catch (error) {
       logger.error('Failed to get merged tickets', {
         primaryTicketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return [];
+      })
+      return []
     }
   }
 
@@ -245,16 +236,16 @@ export class MergeService {
   async unmergeTickets(
     primaryTicketId: string,
     ticketIdsToUnmerge: string[],
-    userId: string
+    userId: string,
   ): Promise<boolean> {
-    const correlationId = this.generateCorrelationId();
+    const correlationId = this.generateCorrelationId()
 
     logger.warn('Unmerging tickets', {
       primaryTicketId,
       ticketIdsToUnmerge,
       userId,
       correlationId,
-    });
+    })
 
     try {
       // Update merged tickets back to their previous status
@@ -267,10 +258,10 @@ export class MergeService {
           updated_by: userId,
         })
         .in('id', ticketIdsToUnmerge)
-        .eq('parent_ticket_id', primaryTicketId);
+        .eq('parent_ticket_id', primaryTicketId)
 
       if (error) {
-        throw error;
+        throw error
       }
 
       // Create audit logs
@@ -290,25 +281,25 @@ export class MergeService {
         user_role: 'system',
         correlation_id: correlationId,
         created_at: new Date().toISOString(),
-      }));
+      }))
 
-      await supabase.from('audit_logs').insert(auditEntries);
+      await supabase.from('audit_logs').insert(auditEntries)
 
       logger.info('Tickets unmerged successfully', {
         primaryTicketId,
         unmergedCount: ticketIdsToUnmerge.length,
         correlationId,
-      });
+      })
 
-      return true;
+      return true
     } catch (error) {
       logger.error('Unmerge failed', {
         primaryTicketId,
         ticketIdsToUnmerge,
         error: error instanceof Error ? error.message : 'Unknown error',
         correlationId,
-      });
-      return false;
+      })
+      return false
     }
   }
 
@@ -316,8 +307,8 @@ export class MergeService {
    * Generate unique correlation ID
    */
   private generateCorrelationId(): string {
-    return `merge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `merge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   }
 }
 
-export const mergeService = new MergeService();
+export const mergeService = new MergeService()

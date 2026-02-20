@@ -32,7 +32,6 @@ import {
   Link as LinkIcon,
   Edit,
   Archive,
-  TrendingUp,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'

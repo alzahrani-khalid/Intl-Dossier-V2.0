@@ -270,7 +270,6 @@ function WorkItemList({
  */
 export function WorkItemsSection({
   data,
-  dossierId,
   isLoading,
   isRTL = false,
   className = '',

@@ -15,7 +15,6 @@ import {
   Flag,
   Mail,
   Phone,
-  ExternalLink,
   CheckCircle2,
   XCircle,
   Clock,
@@ -24,8 +23,6 @@ import {
   ChevronDown,
   ChevronUp,
   Plus,
-  Search,
-  Filter,
   X,
   Download,
   Eye,
@@ -46,7 +43,6 @@ import type {
   NominationWithNames,
   NominationStatus,
   NominatorType,
-  MemberRole,
   UpdateNominationRequest,
 } from '@/types/committee.types'
 

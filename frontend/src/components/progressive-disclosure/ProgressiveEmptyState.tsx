@@ -14,7 +14,6 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import {
-  Plus,
   HelpCircle,
   ChevronDown,
   ChevronUp,
@@ -26,13 +25,7 @@ import {
 } from 'lucide-react'
 import { useProgressiveDisclosure } from '@/hooks/useProgressiveDisclosure'
 import { ProgressiveHint } from './ProgressiveHint'
-import type {
-  ProgressiveEmptyStateProps,
-  ProgressiveHintSet,
-  HintTier,
-  HintDefinition,
-  UserExperienceLevel,
-} from '@/types/progressive-disclosure.types'
+import type { ProgressiveEmptyStateProps, HintTier } from '@/types/progressive-disclosure.types'
 
 // Size configurations
 const sizeConfig = {
@@ -96,14 +89,7 @@ interface HintTierSectionProps {
   isRTL: boolean
 }
 
-function HintTierSection({
-  tier,
-  isExpanded,
-  isLocked,
-  onToggle,
-  size,
-  isRTL,
-}: HintTierSectionProps) {
+function HintTierSection({ tier, isExpanded, isLocked, onToggle, size }: HintTierSectionProps) {
   const { t } = useTranslation('progressive-disclosure')
   const config = tierConfig[tier.level]
   const TierIcon = config.icon
@@ -190,7 +176,6 @@ function HintTierSection({
  */
 export function ProgressiveEmptyState({
   pageContext,
-  entityType,
   title,
   description,
   icon: Icon,

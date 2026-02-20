@@ -239,12 +239,7 @@ export function useDossierContext(): UseDossierContextReturn {
  */
 export function useDossierStoreState() {
   // Import directly from store to avoid context requirement
-  const {
-    _useDossierStore,
-    useActiveDossier,
-    useRecentDossiers,
-    usePinnedDossiers,
-  } = require('@/store/dossierStore')
+  const { useActiveDossier, useRecentDossiers, usePinnedDossiers } = require('@/store/dossierStore')
 
   const active = useActiveDossier()
   const recent = useRecentDossiers()

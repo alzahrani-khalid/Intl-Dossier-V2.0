@@ -47,13 +47,13 @@ jobs:
           chmod 600 deploy_key
           rsync -avz --delete \
             -e "ssh -i deploy_key -o StrictHostKeyChecking=no" \
-            ./dist/ ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/staging/
+            ./frontend/dist/ ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/staging/
 
       - name: Run migrations
         run: |
           ssh -i deploy_key -o StrictHostKeyChecking=no \
             ${DEPLOY_USER}@${DEPLOY_HOST} \
-            "cd /var/www/staging && pnpm run migrate:up"
+            "cd /var/www/staging && pnpm run db:migrate"
 
   deploy-production:
     name: Deploy to Production
@@ -78,18 +78,14 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prod
+        run: pnpm install --frozen-lockfile
 
       - name: Build application
         run: pnpm run build
         env:
           NODE_ENV: production
 
-      - name: Run database backup
-        env:
-          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
-        run: |
-          pnpm run db:backup
+      # Database backups are handled by Supabase managed backups
 
       - name: Deploy with Docker
         env:

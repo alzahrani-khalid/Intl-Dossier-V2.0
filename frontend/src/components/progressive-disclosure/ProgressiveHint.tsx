@@ -90,7 +90,6 @@ function InlineHint({
   size,
   showDismiss,
   onDismiss,
-  onExpand,
   onAction,
   className,
   isRTL,

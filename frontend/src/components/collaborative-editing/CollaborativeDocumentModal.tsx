@@ -20,17 +20,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import {
-  X,
-  Maximize2,
-  Minimize2,
-  Users,
-  MessageSquare,
-  History,
-  Save,
-  FileText,
-  Download,
-} from 'lucide-react'
+import { X, Maximize2, Minimize2, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CollaborativeEditor } from './CollaborativeEditor'
 import { ActiveEditorAvatars } from './ActiveEditorAvatars'

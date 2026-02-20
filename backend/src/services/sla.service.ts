@@ -3,7 +3,7 @@ import logger from '../utils/logger'
 import { COLUMNS } from '../lib/query-columns'
 
 const supabaseUrl = process.env.SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 interface SLAStatus {

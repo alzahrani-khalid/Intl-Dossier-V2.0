@@ -42,7 +42,6 @@ import {
   useLatestConsistencyCheck,
   useSubmitReviewDecision,
   consistencyCheckUtils,
-  type ConsistencyCheckResult,
   type ConflictResult,
   type SimilarPosition,
   type Recommendation,
@@ -58,7 +57,6 @@ interface ConsistencyCheckPanelProps {
 
 export function ConsistencyCheckPanel({
   positionId,
-  positionStatus,
   onApprovalStatusChange,
   className,
 }: ConsistencyCheckPanelProps) {
@@ -70,11 +68,7 @@ export function ConsistencyCheckPanel({
   const [isRecommendationsOpen, setIsRecommendationsOpen] = useState(true)
   const [reviewNotes, setReviewNotes] = useState('')
 
-  const {
-    data: latestCheck,
-    isLoading: isLoadingCheck,
-    refetch,
-  } = useLatestConsistencyCheck(positionId)
+  const { data: latestCheck, isLoading: isLoadingCheck } = useLatestConsistencyCheck(positionId)
 
   const runCheck = useRunConsistencyCheck()
   const submitReview = useSubmitReviewDecision()

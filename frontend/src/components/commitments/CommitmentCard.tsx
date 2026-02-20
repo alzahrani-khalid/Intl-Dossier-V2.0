@@ -28,7 +28,6 @@ import {
   AlertTriangle,
   Upload,
   Download,
-  ExternalLink,
 } from 'lucide-react'
 import {
   DropdownMenu,
@@ -67,7 +66,6 @@ export interface CommitmentCardProps {
 export function CommitmentCard({
   commitment,
   onEdit,
-  onStatusChange,
   showDossierContext = false,
   compact = false,
 }: CommitmentCardProps) {

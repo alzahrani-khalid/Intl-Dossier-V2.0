@@ -247,7 +247,6 @@ export function RelationshipGraph({
     zoomIn,
     zoomOut,
     fitView,
-    focusNode,
   } = useTouchGraphControls({
     reactFlowInstance,
     onNodeFocus: (nodeId) => {

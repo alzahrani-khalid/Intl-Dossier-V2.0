@@ -201,7 +201,7 @@ serve(async (req) => {
         if (commentId && subPath === 'thread') {
           const maxDepth = Math.min(parseInt(url.searchParams.get('max_depth') || '5'), 5);
 
-          const { data: thread, error } = await supabase.rpc('get_comment_thread', {
+          const { data: thread, error } = await supabase.rpc('get_entity_comment_thread', {
             p_thread_root_id: commentId,
             p_max_depth: maxDepth,
           });
@@ -355,18 +355,20 @@ serve(async (req) => {
               .single();
 
             if (comment && comment.author_id !== user.id) {
-              await adminClient
-                .from('entity_comment_notifications')
-                .insert({
+              await adminClient.from('entity_comment_notifications').upsert(
+                {
                   user_id: comment.author_id,
                   comment_id: commentId,
                   notification_type: 'reaction',
                   actor_id: user.id,
                   entity_type: comment.entity_type,
                   entity_id: comment.entity_id,
-                })
-                .onConflict('user_id,comment_id,notification_type,actor_id')
-                .ignore();
+                },
+                {
+                  onConflict: 'user_id,comment_id,notification_type,actor_id',
+                  ignoreDuplicates: true,
+                }
+              );
             }
 
             return new Response(JSON.stringify({ action: 'added', emoji, reaction }), {
@@ -467,9 +469,8 @@ serve(async (req) => {
           if (!mentionedUser) continue;
 
           // Create mention record
-          await adminClient
-            .from('entity_comment_mentions')
-            .insert({
+          await adminClient.from('entity_comment_mentions').upsert(
+            {
               comment_id: comment.id,
               mentioned_user_id: mentionedUser.id,
               start_position: mention.start,
@@ -477,23 +478,22 @@ serve(async (req) => {
               mention_text: `@${mention.username}`,
               notification_sent: true,
               notification_sent_at: new Date().toISOString(),
-            })
-            .onConflict('comment_id,mentioned_user_id')
-            .ignore();
+            },
+            { onConflict: 'comment_id,mentioned_user_id', ignoreDuplicates: true }
+          );
 
           // Create notification
-          await adminClient
-            .from('entity_comment_notifications')
-            .insert({
+          await adminClient.from('entity_comment_notifications').upsert(
+            {
               user_id: mentionedUser.id,
               comment_id: comment.id,
               notification_type: 'mention',
               actor_id: user.id,
               entity_type,
               entity_id,
-            })
-            .onConflict('user_id,comment_id,notification_type,actor_id')
-            .ignore();
+            },
+            { onConflict: 'user_id,comment_id,notification_type,actor_id', ignoreDuplicates: true }
+          );
 
           processedMentions.push({
             username: mention.username,
@@ -512,18 +512,20 @@ serve(async (req) => {
             .single();
 
           if (parentComment && parentComment.author_id !== user.id) {
-            await adminClient
-              .from('entity_comment_notifications')
-              .insert({
+            await adminClient.from('entity_comment_notifications').upsert(
+              {
                 user_id: parentComment.author_id,
                 comment_id: comment.id,
                 notification_type: 'reply',
                 actor_id: user.id,
                 entity_type: parentComment.entity_type,
                 entity_id: parentComment.entity_id,
-              })
-              .onConflict('user_id,comment_id,notification_type,actor_id')
-              .ignore();
+              },
+              {
+                onConflict: 'user_id,comment_id,notification_type,actor_id',
+                ignoreDuplicates: true,
+              }
+            );
           }
         }
 

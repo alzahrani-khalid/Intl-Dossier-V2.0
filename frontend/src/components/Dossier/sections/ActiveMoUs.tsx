@@ -7,20 +7,20 @@
  * Future: Will fetch actual MoUs from API (Polish Phase).
  */
 
-import { useTranslation } from 'react-i18next';
-import { FileText, Calendar } from 'lucide-react';
-import type { OrganizationDossier } from '@/lib/dossier-type-guards';
+import { useTranslation } from 'react-i18next'
+import { FileText, Calendar } from 'lucide-react'
+import type { OrganizationDossier } from '@/lib/dossier-type-guards'
 
 interface ActiveMoUsProps {
-  dossier: OrganizationDossier;
+  dossier: OrganizationDossier
 }
 
 export function ActiveMoUs({ dossier }: ActiveMoUsProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Placeholder - will fetch from mous table in future
-  const mous: any[] = [];
+  const mous: any[] = []
 
   if (mous.length === 0) {
     return (
@@ -38,7 +38,7 @@ export function ActiveMoUs({ dossier }: ActiveMoUsProps) {
           MoUs table integration pending. Active memorandums will appear here.
         </p>
       </div>
-    );
+    )
   }
 
   return (
@@ -61,5 +61,5 @@ export function ActiveMoUs({ dossier }: ActiveMoUsProps) {
         </div>
       ))}
     </div>
-  );
+  )
 }

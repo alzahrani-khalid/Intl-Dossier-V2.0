@@ -698,6 +698,9 @@ importers:
       eslint-plugin-tailwindcss:
         specifier: ^3.18.2
         version: 3.18.2(tailwindcss@4.1.18)
+      eslint-plugin-unused-imports:
+        specifier: ^4.4.1
+        version: 4.4.1(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)
       globals:
         specifier: ^16.4.0
         version: 16.4.0
@@ -8604,6 +8607,15 @@ packages:
     engines: {node: '>=18.12.0'}
     peerDependencies:
       tailwindcss: ^3.4.0
+
+  eslint-plugin-unused-imports@4.4.1:
+    resolution: {integrity: sha512-oZGYUz1X3sRMGUB+0cZyK2VcvRX5lm/vB56PgNNcU+7ficUCKm66oZWKUubXWnOuPjQ8PvmXtCViXBMONPe7tQ==}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^8.0.0-0 || ^7.0.0 || ^6.0.0 || ^5.0.0
+      eslint: ^10.0.0 || ^9.0.0 || ^8.0.0
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
 
   eslint-scope@7.2.2:
     resolution: {integrity: sha512-dOt21O7lTMhDM+X9mB4GX+DZrZtCUJPL/wlcTqxyrx5IvO0IYtILdtrQGQp+8n5S0gwSVmOf9NQrjMOgfQZlIg==}
@@ -23441,6 +23453,12 @@ snapshots:
       postcss: 8.5.6
       tailwindcss: 4.1.18
 
+  eslint-plugin-unused-imports@4.4.1(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1):
+    dependencies:
+      eslint: 8.57.1
+    optionalDependencies:
+      '@typescript-eslint/eslint-plugin': 7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
+
   eslint-scope@7.2.2:
     dependencies:
       esrecurse: 4.3.0
@@ -26209,7 +26227,7 @@ snapshots:
   metro-transform-plugins@0.83.3:
     dependencies:
       '@babel/core': 7.28.4
-      '@babel/generator': 7.28.3
+      '@babel/generator': 7.28.5
       '@babel/template': 7.27.2
       '@babel/traverse': 7.28.4
       flow-enums-runtime: 0.0.6
@@ -26260,9 +26278,9 @@ snapshots:
   metro-transform-worker@0.83.3:
     dependencies:
       '@babel/core': 7.28.4
-      '@babel/generator': 7.28.3
-      '@babel/parser': 7.28.4
-      '@babel/types': 7.28.4
+      '@babel/generator': 7.28.5
+      '@babel/parser': 7.28.5
+      '@babel/types': 7.28.5
       flow-enums-runtime: 0.0.6
       metro: 0.83.3
       metro-babel-transformer: 0.83.3

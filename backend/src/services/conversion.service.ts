@@ -1,25 +1,25 @@
-import { createClient } from '@supabase/supabase-js';
-import logger from '../utils/logger';
+import { createClient } from '@supabase/supabase-js'
+import logger from '../utils/logger'
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const supabaseUrl = process.env.SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 interface ConversionOptions {
-  ticketId: string;
-  targetType: 'engagement' | 'position' | 'mou_action' | 'foresight';
-  additionalData?: Record<string, any>;
-  userId: string;
-  mfaVerified?: boolean;
+  ticketId: string
+  targetType: 'engagement' | 'position' | 'mou_action' | 'foresight'
+  additionalData?: Record<string, any>
+  userId: string
+  mfaVerified?: boolean
 }
 
 interface ConversionResult {
-  success: boolean;
-  artifactType: string;
-  artifactId: string;
-  artifactUrl: string;
-  correlationId: string;
-  error?: string;
+  success: boolean
+  artifactType: string
+  artifactId: string
+  artifactUrl: string
+  correlationId: string
+  error?: string
 }
 
 /**
@@ -32,39 +32,35 @@ export class ConversionService {
    * Uses database transactions to ensure atomicity
    */
   async convertTicket(options: ConversionOptions): Promise<ConversionResult> {
-    const correlationId = this.generateCorrelationId();
+    const correlationId = this.generateCorrelationId()
 
     logger.info('Starting ticket conversion', {
       ticketId: options.ticketId,
       targetType: options.targetType,
       userId: options.userId,
       correlationId,
-    });
+    })
 
     try {
       // Step 1: Validate ticket exists and can be converted
-      const ticket = await this.validateTicket(options.ticketId);
+      const ticket = await this.validateTicket(options.ticketId)
 
       // Step 2: Check MFA requirement for confidential+ tickets
       if (this.requiresMFA(ticket.sensitivity) && !options.mfaVerified) {
-        throw new Error('MFA verification required for confidential tickets');
+        throw new Error('MFA verification required for confidential tickets')
       }
 
       // Step 3: Start transaction and create artifact
-      const artifactId = await this.createArtifactTransaction(
-        ticket,
-        options,
-        correlationId
-      );
+      const artifactId = await this.createArtifactTransaction(ticket, options, correlationId)
 
       // Step 4: Generate artifact URL
-      const artifactUrl = this.generateArtifactUrl(options.targetType, artifactId);
+      const artifactUrl = this.generateArtifactUrl(options.targetType, artifactId)
 
       logger.info('Ticket conversion completed successfully', {
         ticketId: options.ticketId,
         artifactId,
         correlationId,
-      });
+      })
 
       return {
         success: true,
@@ -72,13 +68,13 @@ export class ConversionService {
         artifactId,
         artifactUrl,
         correlationId,
-      };
+      }
     } catch (error) {
       logger.error('Ticket conversion failed', {
         ticketId: options.ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
         correlationId,
-      });
+      })
 
       return {
         success: false,
@@ -87,7 +83,7 @@ export class ConversionService {
         artifactUrl: '',
         correlationId,
         error: error instanceof Error ? error.message : 'Conversion failed',
-      };
+      }
     }
   }
 
@@ -99,34 +95,32 @@ export class ConversionService {
       .from('intake_tickets')
       .select('*')
       .eq('id', ticketId)
-      .single();
+      .single()
 
     if (error || !ticket) {
-      throw new Error(`Ticket not found: ${ticketId}`);
+      throw new Error(`Ticket not found: ${ticketId}`)
     }
 
     // Check if ticket is in a valid state for conversion
-    const validStatuses = ['triaged', 'assigned', 'in_progress'];
+    const validStatuses = ['triaged', 'assigned', 'in_progress']
     if (!validStatuses.includes(ticket.status)) {
-      throw new Error(
-        `Ticket cannot be converted from status: ${ticket.status}`
-      );
+      throw new Error(`Ticket cannot be converted from status: ${ticket.status}`)
     }
 
     // Check if already converted
     if (ticket.converted_to_id) {
-      throw new Error('Ticket has already been converted');
+      throw new Error('Ticket has already been converted')
     }
 
-    return ticket;
+    return ticket
   }
 
   /**
    * Check if MFA is required based on sensitivity level
    */
   private requiresMFA(sensitivity: string): boolean {
-    const mfaRequired = ['confidential', 'secret'];
-    return mfaRequired.includes(sensitivity);
+    const mfaRequired = ['confidential', 'secret']
+    return mfaRequired.includes(sensitivity)
   }
 
   /**
@@ -135,7 +129,7 @@ export class ConversionService {
   private async createArtifactTransaction(
     ticket: any,
     options: ConversionOptions,
-    correlationId: string
+    correlationId: string,
   ): Promise<string> {
     // Use Postgres transaction via RPC function for atomicity
     const { data, error } = await supabase.rpc('convert_ticket_to_artifact', {
@@ -145,19 +139,19 @@ export class ConversionService {
       p_user_id: options.userId,
       p_correlation_id: correlationId,
       p_mfa_verified: options.mfaVerified || false,
-    });
+    })
 
     if (error) {
       logger.error('Transaction failed during conversion', {
         ticketId: options.ticketId,
         error: error.message,
         correlationId,
-      });
-      throw new Error(`Conversion transaction failed: ${error.message}`);
+      })
+      throw new Error(`Conversion transaction failed: ${error.message}`)
     }
 
     if (!data || !data.artifact_id) {
-      throw new Error('No artifact ID returned from transaction');
+      throw new Error('No artifact ID returned from transaction')
     }
 
     // Create audit log entry
@@ -168,21 +162,21 @@ export class ConversionService {
       userId: options.userId,
       mfaVerified: options.mfaVerified || false,
       correlationId,
-    });
+    })
 
-    return data.artifact_id;
+    return data.artifact_id
   }
 
   /**
    * Create audit log for conversion
    */
   private async createAuditLog(params: {
-    ticketId: string;
-    artifactId: string;
-    artifactType: string;
-    userId: string;
-    mfaVerified: boolean;
-    correlationId: string;
+    ticketId: string
+    artifactId: string
+    artifactType: string
+    userId: string
+    mfaVerified: boolean
+    correlationId: string
   }) {
     await supabase.from('audit_logs').insert({
       entity_type: 'intake_ticket',
@@ -198,42 +192,42 @@ export class ConversionService {
       mfa_verified: params.mfaVerified,
       correlation_id: params.correlationId,
       created_at: new Date().toISOString(),
-    });
+    })
   }
 
   /**
    * Generate artifact URL based on type
    */
   private generateArtifactUrl(type: string, artifactId: string): string {
-    const baseUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const baseUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
     const paths: Record<string, string> = {
       engagement: '/engagements',
       position: '/positions',
       mou_action: '/mou/actions',
       foresight: '/foresight',
-    };
+    }
 
-    return `${baseUrl}${paths[type]}/${artifactId}`;
+    return `${baseUrl}${paths[type]}/${artifactId}`
   }
 
   /**
    * Generate unique correlation ID for tracking
    */
   private generateCorrelationId(): string {
-    return `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   }
 
   /**
    * Rollback conversion (manual intervention)
    */
   async rollbackConversion(ticketId: string, userId: string): Promise<boolean> {
-    const correlationId = this.generateCorrelationId();
+    const correlationId = this.generateCorrelationId()
 
     logger.warn('Initiating conversion rollback', {
       ticketId,
       userId,
       correlationId,
-    });
+    })
 
     try {
       // Call rollback RPC function
@@ -241,10 +235,10 @@ export class ConversionService {
         p_ticket_id: ticketId,
         p_user_id: userId,
         p_correlation_id: correlationId,
-      });
+      })
 
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message)
       }
 
       // Create audit log for rollback
@@ -256,23 +250,23 @@ export class ConversionService {
         user_role: 'system',
         correlation_id: correlationId,
         created_at: new Date().toISOString(),
-      });
+      })
 
       logger.info('Conversion rollback successful', {
         ticketId,
         correlationId,
-      });
+      })
 
-      return true;
+      return true
     } catch (error) {
       logger.error('Rollback failed', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
         correlationId,
-      });
-      return false;
+      })
+      return false
     }
   }
 }
 
-export const conversionService = new ConversionService();
+export const conversionService = new ConversionService()

@@ -30,7 +30,7 @@ import { aiModule } from '@/modules/ai'
 // ============================================================================
 
 export function ModularMonolithDemo() {
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
   const [modulesInitialized, setModulesInitialized] = useState(false)

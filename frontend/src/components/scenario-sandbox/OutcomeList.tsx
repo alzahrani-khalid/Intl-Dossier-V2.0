@@ -26,7 +26,6 @@ import type { ScenarioOutcome } from '@/types/scenario-sandbox.types'
 import {
   IMPACT_LEVEL_LABELS,
   getImpactLevelColor,
-  getImpactLevelBgColor,
   formatProbability,
   getProbabilityColor,
 } from '@/types/scenario-sandbox.types'

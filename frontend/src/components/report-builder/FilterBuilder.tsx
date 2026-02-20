@@ -28,7 +28,6 @@ import type {
   FilterGroup,
   FilterOperator,
   ReportField,
-  FILTER_OPERATORS,
 } from '@/types/report-builder.types'
 
 interface FilterBuilderProps {

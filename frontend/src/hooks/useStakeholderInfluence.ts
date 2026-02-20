@@ -23,7 +23,6 @@ import type {
   CreateReportParams,
   PaginatedResponse,
   CalculationResult,
-  InfluenceTier,
 } from '@/types/stakeholder-influence.types'
 
 // ============================================================================

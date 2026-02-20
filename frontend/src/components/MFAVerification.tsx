@@ -5,7 +5,7 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Shield, ArrowLeft, RefreshCw, AlertCircle, CheckCircle, Clock } from 'lucide-react'
+import { Shield, ArrowLeft, RefreshCw, AlertCircle, Clock } from 'lucide-react'
 
 interface MFAVerificationProps {
   onSuccess: () => void
@@ -14,12 +14,7 @@ interface MFAVerificationProps {
   email: string
 }
 
-export function MFAVerification({
-  onSuccess,
-  onBack,
-  onUseBackupCode,
-  email,
-}: MFAVerificationProps) {
+export function MFAVerification({ onSuccess, onBack }: MFAVerificationProps) {
   const { t } = useTranslation()
   const { verifyMFA, verifyBackupCode, isLoading, error, clearError } = useAuthStore()
 

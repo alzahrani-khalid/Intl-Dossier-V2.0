@@ -50,7 +50,6 @@ export function ReschedulingSuggestions({
   isLoading,
   onAccept,
   onRefresh,
-  eventId,
   className,
 }: ReschedulingSuggestionsProps) {
   const { t, i18n } = useTranslation('calendar')

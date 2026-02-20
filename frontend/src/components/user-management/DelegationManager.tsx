@@ -53,7 +53,6 @@ import {
   ArrowRight,
   CheckCircle,
   XCircle,
-  ChevronRight,
 } from 'lucide-react'
 
 // Delegation form schema

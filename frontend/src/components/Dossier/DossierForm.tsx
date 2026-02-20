@@ -45,9 +45,7 @@ import type {
   CreateDossierRequest,
   UpdateDossierRequest,
   DossierType,
-  DossierStatus,
   DossierWithExtension,
-  DossierExtensionData,
 } from '@/services/dossier-api'
 
 interface DossierFormProps {

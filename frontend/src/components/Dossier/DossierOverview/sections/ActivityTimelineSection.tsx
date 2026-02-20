@@ -17,9 +17,6 @@ import {
   Link as LinkIcon,
   File,
   MessageSquare,
-  Clock,
-  User,
-  ChevronRight,
   ChevronDown,
   Plus,
   Pencil,
@@ -285,7 +282,6 @@ function EmptyState({ isRTL }: { isRTL: boolean }) {
  */
 export function ActivityTimelineSection({
   data,
-  dossierId,
   isLoading,
   isRTL = false,
   className = '',

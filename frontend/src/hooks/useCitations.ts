@@ -61,7 +61,7 @@ async function fetchCitations(params: CitationListParams): Promise<CitationListR
 
   const { data, error } = await supabase.functions.invoke(EDGE_FUNCTION_URL, {
     method: 'GET',
-    body: null,
+    body: undefined,
     headers: {},
   })
 

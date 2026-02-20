@@ -1,12 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  RequestType,
-  EngagementFields,
-  PositionFields,
-  MouActionFields,
-  ForesightFields,
-} from '../types/intake'
+import { RequestType } from '../types/intake'
 
 interface TypeSpecificFieldsProps {
   requestType: RequestType

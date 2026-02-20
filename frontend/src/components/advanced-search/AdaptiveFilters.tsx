@@ -16,7 +16,6 @@ import {
   Tag,
   Shield,
   ChevronDown,
-  ChevronUp,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -145,7 +144,6 @@ function FilterOption({ option, isSelected, onClick, isRTL, isLoading }: FilterO
 // =============================================================================
 
 function FilterSection({
-  type,
   title,
   icon,
   options,

@@ -14,11 +14,7 @@ import {
   Folder,
   FolderOpen,
   FolderTree,
-  Plus,
-  Loader2,
   AlertCircle,
-  Hash,
-  ExternalLink,
   MoreVertical,
 } from 'lucide-react'
 

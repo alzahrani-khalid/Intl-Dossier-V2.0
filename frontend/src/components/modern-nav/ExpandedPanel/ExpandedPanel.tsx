@@ -51,7 +51,6 @@ export interface ExpandedPanelProps {
  */
 export function ExpandedPanel({
   isOpen = true,
-  onClose,
   userName,
   userEmail,
   userAvatar,

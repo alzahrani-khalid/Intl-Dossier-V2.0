@@ -16,7 +16,6 @@ import {
   TrendingUp,
   Hash,
   AlertTriangle,
-  CheckCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -45,12 +44,7 @@ import {
   useDeleteSearchAlert,
   useSavedSearch,
 } from '@/hooks/useSavedSearches'
-import type {
-  SavedSearch,
-  AlertFrequency,
-  AlertTrigger,
-  SavedSearchAlert,
-} from '@/types/saved-search.types'
+import type { SavedSearch, AlertFrequency, AlertTrigger } from '@/types/saved-search.types'
 import { ALERT_FREQUENCY_OPTIONS, ALERT_TRIGGER_OPTIONS } from '@/types/saved-search.types'
 
 interface AlertConfigDialogProps {

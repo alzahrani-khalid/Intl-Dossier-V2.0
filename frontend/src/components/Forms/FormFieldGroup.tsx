@@ -216,7 +216,6 @@ function GroupHeader({
 // =============================================================================
 
 export function FormFieldGroup({
-  id,
   title,
   description,
   icon,

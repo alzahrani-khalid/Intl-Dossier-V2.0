@@ -14,15 +14,11 @@ import {
   Target,
   Percent,
   CheckCircle2,
-  XCircle,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import type {
-  ScenarioComparisonData,
-  ScenarioComparisonSummary,
-} from '@/types/scenario-sandbox.types'
+import type { ScenarioComparisonData } from '@/types/scenario-sandbox.types'
 import {
   SCENARIO_TYPE_LABELS,
   SCENARIO_STATUS_LABELS,

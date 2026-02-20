@@ -1,65 +1,62 @@
-import { Request, Response } from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { Request, Response } from 'express'
+import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 export interface UserPreferenceUpdate {
   viewportPreference?: {
-    preferredView?: 'mobile' | 'tablet' | 'desktop' | 'auto';
-    forceViewport?: boolean;
-    zoomLevel?: number;
-    scrollBehavior?: 'smooth' | 'instant';
-  };
-  themeId?: string;
-  textSize?: 'small' | 'medium' | 'large' | 'extra-large';
-  reducedMotion?: boolean;
-  highContrast?: boolean;
-  language?: 'ar' | 'en';
-  direction?: 'rtl' | 'ltr' | 'auto';
-  componentDensity?: 'compact' | 'normal' | 'comfortable';
+    preferredView?: 'mobile' | 'tablet' | 'desktop' | 'auto'
+    forceViewport?: boolean
+    zoomLevel?: number
+    scrollBehavior?: 'smooth' | 'instant'
+  }
+  themeId?: string
+  textSize?: 'small' | 'medium' | 'large' | 'extra-large'
+  reducedMotion?: boolean
+  highContrast?: boolean
+  language?: 'ar' | 'en'
+  direction?: 'rtl' | 'ltr' | 'auto'
+  componentDensity?: 'compact' | 'normal' | 'comfortable'
 }
 
 export async function updateResponsivePreferences(req: Request, res: Response) {
   try {
-    const userId = (req as any).user?.id;
-    
+    const userId = (req as any).user?.id
+
     if (!userId) {
       return res.status(401).json({
-        error: 'Authentication required'
-      });
+        error: 'Authentication required',
+      })
     }
-    
-    const updates: UserPreferenceUpdate = req.body;
-    
+
+    const updates: UserPreferenceUpdate = req.body
+
     // Validate zoom level if provided
     if (updates.viewportPreference?.zoomLevel !== undefined) {
-      const zoom = updates.viewportPreference.zoomLevel;
+      const zoom = updates.viewportPreference.zoomLevel
       if (zoom < 50 || zoom > 200) {
         return res.status(400).json({
-          error: 'Zoom level must be between 50 and 200'
-        });
+          error: 'Zoom level must be between 50 and 200',
+        })
       }
     }
-    
+
     // Validate text size
-    const validTextSizes = ['small', 'medium', 'large', 'extra-large'];
+    const validTextSizes = ['small', 'medium', 'large', 'extra-large']
     if (updates.textSize && !validTextSizes.includes(updates.textSize)) {
       return res.status(400).json({
-        error: `Invalid text size. Must be one of: ${validTextSizes.join(', ')}`
-      });
+        error: `Invalid text size. Must be one of: ${validTextSizes.join(', ')}`,
+      })
     }
-    
+
     // Validate component density
-    const validDensities = ['compact', 'normal', 'comfortable'];
+    const validDensities = ['compact', 'normal', 'comfortable']
     if (updates.componentDensity && !validDensities.includes(updates.componentDensity)) {
       return res.status(400).json({
-        error: `Invalid component density. Must be one of: ${validDensities.join(', ')}`
-      });
+        error: `Invalid component density. Must be one of: ${validDensities.join(', ')}`,
+      })
     }
-    
+
     // Prepare database update
     const dbUpdate = {
       user_id: userId,
@@ -72,16 +69,16 @@ export async function updateResponsivePreferences(req: Request, res: Response) {
       direction: updates.direction,
       component_density: updates.componentDensity,
       updated_at: new Date().toISOString(),
-    };
-    
+    }
+
     // Check if preferences exist
     const { data: existing } = await supabase
       .from('user_preferences')
       .select('user_id')
       .eq('user_id', userId)
-      .single();
-    
-    let result;
+      .single()
+
+    let result
     if (existing) {
       // Update existing preferences
       result = await supabase
@@ -89,20 +86,16 @@ export async function updateResponsivePreferences(req: Request, res: Response) {
         .update(dbUpdate)
         .eq('user_id', userId)
         .select()
-        .single();
+        .single()
     } else {
       // Insert new preferences
-      result = await supabase
-        .from('user_preferences')
-        .insert(dbUpdate)
-        .select()
-        .single();
+      result = await supabase.from('user_preferences').insert(dbUpdate).select().single()
     }
-    
+
     if (result.error) {
-      throw result.error;
+      throw result.error
     }
-    
+
     // Format response
     const updatedPreferences = {
       userId: result.data.user_id,
@@ -115,16 +108,16 @@ export async function updateResponsivePreferences(req: Request, res: Response) {
       direction: result.data.direction,
       componentDensity: result.data.component_density,
       updatedAt: new Date(result.data.updated_at),
-    };
-    
+    }
+
     return res.json({
       message: 'Preferences updated successfully',
       preferences: updatedPreferences,
-    });
+    })
   } catch (error) {
-    console.error('Error updating responsive preferences:', error);
+    console.error('Error updating responsive preferences:', error)
     return res.status(500).json({
-      error: 'Failed to update preferences'
-    });
+      error: 'Failed to update preferences',
+    })
   }
 }

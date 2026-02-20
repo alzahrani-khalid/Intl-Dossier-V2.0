@@ -15,8 +15,6 @@ import type {
   VersionComparisonResult,
   DiffViewMode,
   VersionComparisonState,
-  DiffHunk,
-  DiffStats,
 } from '@/types/document-version.types'
 
 // Get Supabase URL from environment

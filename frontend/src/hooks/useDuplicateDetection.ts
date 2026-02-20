@@ -8,8 +8,6 @@
 import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type {
-  DuplicateCandidate,
-  DuplicateCandidateListItem,
   DuplicateCandidatesListParams,
   DuplicateCandidatesListResponse,
   DuplicateDetectionSettings,
@@ -56,7 +54,7 @@ export function useDuplicateCandidates(params: DuplicateCandidatesListParams = {
       const { data, error } = await supabase.functions.invoke('entity-duplicates', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: null,
+        body: undefined,
       })
 
       // Since functions.invoke doesn't support query params well, use RPC directly
@@ -406,8 +404,6 @@ export function useCheckDuplicatesOnCreate(entityType: DuplicateEntityType) {
     mutationFn: async ({
       name_en,
       name_ar,
-      email,
-      phone,
     }: {
       name_en: string
       name_ar?: string

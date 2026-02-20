@@ -392,14 +392,7 @@ export function EnhancedActivityFeed({
     clearFilters,
   } = useActivityFeed(initialFilters)
 
-  const {
-    following,
-    followEntity,
-    unfollowEntity,
-    isFollowing,
-    isFollowPending,
-    isUnfollowPending,
-  } = useEntityFollow()
+  const { following, followEntity, unfollowEntity, isFollowing } = useEntityFollow()
 
   // Load more when scrolling to bottom
   useEffect(() => {

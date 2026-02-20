@@ -450,7 +450,6 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
  * Main RelationshipWizard Component
  */
 export function RelationshipWizard({
-  dossierId,
   dossierName,
   dossierType,
   onCreateRelationship,

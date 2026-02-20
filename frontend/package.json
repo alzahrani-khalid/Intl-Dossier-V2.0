@@ -146,6 +146,7 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.24",
     "eslint-plugin-tailwindcss": "^3.18.2",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^16.4.0",
     "jest-axe": "^10.0.0",
     "postcss": "^8.4.0",

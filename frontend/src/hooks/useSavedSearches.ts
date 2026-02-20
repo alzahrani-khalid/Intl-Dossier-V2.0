@@ -7,7 +7,6 @@
 import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type {
-  SavedSearch,
   SavedSearchListResponse,
   SavedSearchResponse,
   SavedSearchListParams,

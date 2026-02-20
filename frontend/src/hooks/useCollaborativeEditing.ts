@@ -29,7 +29,6 @@ import {
   InlineCommentStatus,
   UseCollaborativeEditingReturn,
   CreateSuggestionParams,
-  CreateTrackChangeParams,
   CreateInlineCommentParams,
   UpdateCollaboratorParams,
   AddCollaboratorParams,
@@ -82,16 +81,7 @@ function debounce<T extends (...args: Parameters<T>) => void>(
 export function useCollaborativeEditing(
   options: UseCollaborativeEditingOptions,
 ): UseCollaborativeEditingReturn {
-  const {
-    documentId,
-    documentVersionId,
-    autoJoin = true,
-    onEditorJoined,
-    onEditorLeft,
-    onSuggestionCreated,
-    onChangeCreated,
-    onCommentCreated,
-  } = options
+  const { documentId, documentVersionId, autoJoin = true, onEditorJoined, onEditorLeft } = options
 
   const { user } = useAuthStore()
   const queryClient = useQueryClient()

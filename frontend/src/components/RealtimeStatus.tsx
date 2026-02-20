@@ -8,7 +8,7 @@ import { Wifi, WifiOff, RefreshCw, AlertCircle } from 'lucide-react'
 export function RealtimeStatus() {
   const { t } = useTranslation()
   const auth = useAuth()
-  const { connectionStatus, isConnected, isInitialized, reconnect, lastError } = useRealtimeStore()
+  const { connectionStatus, isInitialized, reconnect } = useRealtimeStore()
 
   // Don't show on login page or when not authenticated
   if (!(auth as any)?.isAuthenticated) {

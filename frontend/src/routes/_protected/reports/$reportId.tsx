@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_protected/reports/$reportId')({
 
 function ReportDetailPage() {
   const { reportId } = Route.useParams()
-  const { t, i18n } = useTranslation('report-builder')
+  const { i18n } = useTranslation('report-builder')
   const isRTL = i18n.language === 'ar'
 
   return (

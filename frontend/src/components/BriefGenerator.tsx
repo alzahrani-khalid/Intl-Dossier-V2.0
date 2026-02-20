@@ -23,7 +23,6 @@ interface BriefGeneratorProps {
 type GenerationState = 'idle' | 'generating' | 'success' | 'error' | 'fallback' | 'timeout'
 
 export function BriefGenerator({
-  dossierId,
   isGenerating = false,
   progress = 0,
   brief,

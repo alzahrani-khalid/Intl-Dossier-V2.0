@@ -109,7 +109,7 @@ export function TicketDetail() {
                   statusVariants[ticket.status] || 'bg-muted text-muted-foreground',
                 )}
               >
-                {t(`queue.status.${ticket.status}`, ticket.status)}
+                {String(t(`queue.status.${ticket.status}`, ticket.status))}
               </Badge>
             )}
             <Button variant="outline" size="sm" onClick={() => navigate({ to: '/my-work/intake' })}>
@@ -173,7 +173,9 @@ export function TicketDetail() {
                   </label>
                   <p className="text-foreground">
                     {ticket.requestType
-                      ? t(`form.requestType.options.${ticket.requestType}`, ticket.requestType)
+                      ? String(
+                          t(`form.requestType.options.${ticket.requestType}`, ticket.requestType),
+                        )
                       : '—'}
                   </p>
                 </div>
@@ -182,7 +184,9 @@ export function TicketDetail() {
                     {t('ticketDetail.urgency', 'Urgency')}
                   </label>
                   <p className="text-foreground">
-                    {ticket.urgency ? t(`queue.urgency.${ticket.urgency}`, ticket.urgency) : '—'}
+                    {ticket.urgency
+                      ? String(t(`queue.urgency.${ticket.urgency}`, ticket.urgency))
+                      : '—'}
                   </p>
                 </div>
                 <div>
@@ -197,7 +201,7 @@ export function TicketDetail() {
                   </label>
                   <p className="text-foreground">
                     {ticket.priority
-                      ? t(`queue.priority.${ticket.priority}`, ticket.priority)
+                      ? String(t(`queue.priority.${ticket.priority}`, ticket.priority))
                       : '—'}
                   </p>
                 </div>

@@ -27,7 +27,6 @@ import {
   Users,
   Activity,
   AlertCircle,
-  CheckCircle,
   Clock,
 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'

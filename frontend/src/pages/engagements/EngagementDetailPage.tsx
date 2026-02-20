@@ -27,12 +27,9 @@ import {
   Building2,
   Target,
   FileText,
-  ChevronDown,
-  ChevronUp,
   Plus,
   Loader2,
   ShieldAlert,
-  Check,
   X as _CloseIcon,
   User,
   CheckCircle2,
@@ -57,15 +54,7 @@ import { useEngagement, useArchiveEngagement } from '@/hooks/useEngagements'
 import { useEngagementNavigation } from '@/hooks/useEntityNavigation'
 import { EngagementBriefsSection } from '@/components/engagements/EngagementBriefsSection'
 import { InteractiveTimeline } from '@/components/timeline'
-import type {
-  EngagementStatus,
-  EngagementType,
-  EngagementCategory,
-  DelegationLevel,
-  ParticipantRole,
-  AttendanceStatus,
-  AgendaItemStatus,
-} from '@/types/engagement.types'
+import type { EngagementStatus, AttendanceStatus, AgendaItemStatus } from '@/types/engagement.types'
 import {
   ENGAGEMENT_TYPE_LABELS,
   ENGAGEMENT_CATEGORY_LABELS,

@@ -11,16 +11,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Clock,
-  Timer,
-  AlertTriangle,
-  CheckCircle,
-  TrendingUp,
-  TrendingDown,
-  Pause,
-  Play,
-} from 'lucide-react'
+import { Clock, Timer, AlertTriangle, CheckCircle, TrendingDown, Pause, Play } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'

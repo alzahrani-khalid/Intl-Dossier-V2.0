@@ -2,7 +2,7 @@
 
 **Last Updated**: 2025-01-23
 **Feature Branch**: `026-unified-dossier-architecture`
-**Status**: Production-Ready
+**Status**: Active Development
 
 ## Table of Contents
 
@@ -74,6 +74,7 @@ The Intl-Dossier system implements a unified dossier architecture using the **Cl
 All entities (countries, organizations, forums, engagements, themes, working groups, persons) share a unified ID space via the `dossiers` base table. This eliminates table-switching confusion and enables consistent polymorphic references.
 
 **Benefits:**
+
 - ✅ One ID that works across all queries
 - ✅ Simplified API contracts (single entity endpoint)
 - ✅ Consistent foreign key patterns
@@ -103,6 +104,7 @@ CREATE TABLE countries (
 ```
 
 **Benefits:**
+
 - ✅ Type safety enforced at database level
 - ✅ Cascade deletes prevent orphaned records
 - ✅ Single source of truth for shared attributes
@@ -123,6 +125,7 @@ CREATE TABLE dossier_relationships (
 ```
 
 **Supported Relationship Types:**
+
 - `bilateral_relation` - Country to country
 - `membership` - Country/organization to forum
 - `engagement_participation` - Entity to engagement
@@ -136,6 +139,7 @@ CREATE TABLE dossier_relationships (
 Calendar events are separated from entity identity via the `calendar_events` table, enabling multiple temporal instances per dossier.
 
 **Example:** G20 Summit (single dossier) can have multiple events:
+
 - Opening ceremony
 - 3 working sessions
 - Closing ceremony
@@ -189,6 +193,7 @@ Positions, MOUs, intelligence briefs, and other documents can be linked to any d
 ### Indexes & Performance
 
 **Critical Indexes:**
+
 ```sql
 -- Dossiers table
 CREATE INDEX idx_dossiers_type ON dossiers(type);
@@ -217,6 +222,7 @@ CREATE INDEX idx_organizations_parent ON organizations(parent_organization_id);
 ### RLS (Row Level Security) Policies
 
 **Clearance-Based Filtering:**
+
 ```sql
 -- Dossiers RLS policy
 CREATE POLICY dossier_clearance_policy ON dossiers
@@ -254,97 +260,108 @@ CREATE POLICY relationship_clearance_policy ON dossier_relationships
 #### 1. DossierService (`backend/src/services/dossier-service.ts`)
 
 **Responsibilities:**
+
 - CRUD operations for all 7 dossier types
 - Type-specific validation
 - Extension data JOIN logic
 - Cache management (Redis)
 
 **Key Methods:**
+
 ```typescript
 class DossierService {
-  async createCountryDossier(data: CountryInput): Promise<Dossier>
-  async createOrganizationDossier(data: OrganizationInput): Promise<Dossier>
+  async createCountryDossier(data: CountryInput): Promise<Dossier>;
+  async createOrganizationDossier(data: OrganizationInput): Promise<Dossier>;
   // ... 5 more type-specific create methods
 
-  async getDossierWithExtension(id: UUID): Promise<DossierWithExtension>
-  async updateDossier(id: UUID, data: Partial<DossierInput>): Promise<Dossier>
-  async deleteDossier(id: UUID): Promise<void>
-  async listDossiers(filters: DossierFilters): Promise<Dossier[]>
+  async getDossierWithExtension(id: UUID): Promise<DossierWithExtension>;
+  async updateDossier(id: UUID, data: Partial<DossierInput>): Promise<Dossier>;
+  async deleteDossier(id: UUID): Promise<void>;
+  async listDossiers(filters: DossierFilters): Promise<Dossier[]>;
 }
 ```
 
 #### 2. RelationshipService (`backend/src/services/relationship-service.ts`)
 
 **Responsibilities:**
+
 - Relationship CRUD operations
 - Bidirectional queries
 - Circular dependency validation
 - Self-reference prevention
 
 **Key Methods:**
+
 ```typescript
 class RelationshipService {
-  async createRelationship(data: RelationshipInput): Promise<Relationship>
-  async getRelationshipsForDossier(dossierId: UUID): Promise<Relationship[]>
-  async getBidirectionalRelationships(dossierId: UUID): Promise<Relationship[]>
-  async deleteRelationship(id: UUID): Promise<void>
+  async createRelationship(data: RelationshipInput): Promise<Relationship>;
+  async getRelationshipsForDossier(dossierId: UUID): Promise<Relationship[]>;
+  async getBidirectionalRelationships(dossierId: UUID): Promise<Relationship[]>;
+  async deleteRelationship(id: UUID): Promise<void>;
 }
 ```
 
 #### 3. GraphService (`backend/src/services/graph-service.ts`)
 
 **Responsibilities:**
+
 - Recursive graph traversal
 - Degree limit enforcement (max 10)
 - Query complexity budgeting
 - Path discovery
 
 **Key Methods:**
+
 ```typescript
 class GraphService {
-  async traverseGraph(startId: UUID, depth: number): Promise<GraphResult>
-  async findShortestPath(sourceId: UUID, targetId: UUID): Promise<Path>
-  async getConnectedComponents(dossierId: UUID): Promise<Dossier[]>
+  async traverseGraph(startId: UUID, depth: number): Promise<GraphResult>;
+  async findShortestPath(sourceId: UUID, targetId: UUID): Promise<Path>;
+  async getConnectedComponents(dossierId: UUID): Promise<Dossier[]>;
 }
 ```
 
 #### 4. SearchService (`backend/src/services/unified-search-service.ts`)
 
 **Responsibilities:**
+
 - Full-text search across all types
 - Weighted ranking algorithm
 - Type filtering
 - Clearance integration
 
 **Key Methods:**
+
 ```typescript
 class SearchService {
-  async unifiedSearch(query: string, filters: SearchFilters): Promise<SearchResult[]>
-  async searchByType(query: string, type: DossierType): Promise<SearchResult[]>
+  async unifiedSearch(query: string, filters: SearchFilters): Promise<SearchResult[]>;
+  async searchByType(query: string, type: DossierType): Promise<SearchResult[]>;
 }
 ```
 
 #### 5. CalendarService (`backend/src/services/calendar-service.ts`)
 
 **Responsibilities:**
+
 - Calendar event CRUD
 - Date range queries
 - Participant management
 - Status tracking
 
 **Key Methods:**
+
 ```typescript
 class CalendarService {
-  async createCalendarEvent(data: EventInput): Promise<CalendarEvent>
-  async getEventsForDossier(dossierId: UUID): Promise<CalendarEvent[]>
-  async getEventsInDateRange(start: Date, end: Date): Promise<CalendarEvent[]>
-  async addEventParticipant(eventId: UUID, participantId: UUID): Promise<void>
+  async createCalendarEvent(data: EventInput): Promise<CalendarEvent>;
+  async getEventsForDossier(dossierId: UUID): Promise<CalendarEvent[]>;
+  async getEventsInDateRange(start: Date, end: Date): Promise<CalendarEvent[]>;
+  async addEventParticipant(eventId: UUID, participantId: UUID): Promise<void>;
 }
 ```
 
 ### Edge Functions (Supabase)
 
 **Deployed Functions:**
+
 - `dossiers` - Dossier CRUD operations
 - `relationships` - Relationship management
 - `graph-traversal` - Graph queries
@@ -352,26 +369,27 @@ class CalendarService {
 - `calendar` - Calendar operations
 
 **Example Edge Function Structure:**
+
 ```typescript
 // supabase/functions/dossiers/index.ts
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { DossierService } from "@services/dossier-service.ts"
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { DossierService } from '@services/dossier-service.ts';
 
 serve(async (req) => {
-  const { method } = req
-  const service = new DossierService()
+  const { method } = req;
+  const service = new DossierService();
 
   switch (method) {
-    case "GET":
-      return await service.getDossier(id)
-    case "POST":
-      return await service.createDossier(data)
-    case "PUT":
-      return await service.updateDossier(id, data)
-    case "DELETE":
-      return await service.deleteDossier(id)
+    case 'GET':
+      return await service.getDossier(id);
+    case 'POST':
+      return await service.createDossier(data);
+    case 'PUT':
+      return await service.updateDossier(id, data);
+    case 'DELETE':
+      return await service.deleteDossier(id);
   }
-})
+});
 ```
 
 ---
@@ -423,12 +441,14 @@ frontend/src/
 ### State Management
 
 **TanStack Query (React Query v5):**
+
 - Server state management
 - Automatic caching and invalidation
 - Optimistic updates
 - Background refetching
 
 **Example Hook:**
+
 ```typescript
 // frontend/src/hooks/useDossier.ts
 export function useDossier(id: string) {
@@ -436,29 +456,30 @@ export function useDossier(id: string) {
     queryKey: ['dossier', id],
     queryFn: () => dossierApi.getDossier(id),
     staleTime: 5 * 60 * 1000, // 5 minutes
-  })
+  });
 }
 
 export function useCreateDossier() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: dossierApi.createDossier,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dossiers'] })
+      queryClient.invalidateQueries({ queryKey: ['dossiers'] });
     },
-  })
+  });
 }
 ```
 
 ### Responsive & RTL Design
 
 **Mobile-First Approach:**
+
 ```tsx
 // Example component with mobile-first responsive design
 export function UniversalDossierCard({ dossier }: Props) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
 
   return (
     <div
@@ -470,15 +491,11 @@ export function UniversalDossierCard({ dossier }: Props) {
       "
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <h2 className="text-xl sm:text-2xl md:text-3xl text-start">
-        {dossier.name}
-      </h2>
-      <button className="min-h-11 min-w-11 px-4 sm:px-6 ms-4">
-        {t('view')}
-      </button>
+      <h2 className="text-xl sm:text-2xl md:text-3xl text-start">{dossier.name}</h2>
+      <button className="min-h-11 min-w-11 px-4 sm:px-6 ms-4">{t('view')}</button>
       <ChevronRight className={isRTL ? 'rotate-180' : ''} />
     </div>
-  )
+  );
 }
 ```
 
@@ -489,6 +506,7 @@ export function UniversalDossierCard({ dossier }: Props) {
 ### REST Endpoints
 
 #### Dossier Operations
+
 - `GET /api/dossiers` - List dossiers (with filters)
 - `GET /api/dossiers/:id` - Get dossier with extension data
 - `POST /api/dossiers` - Create dossier (type-specific)
@@ -496,18 +514,22 @@ export function UniversalDossierCard({ dossier }: Props) {
 - `DELETE /api/dossiers/:id` - Delete dossier (cascade)
 
 #### Relationship Operations
+
 - `GET /api/relationships?dossierId=:id` - Get relationships for dossier
 - `POST /api/relationships` - Create relationship
 - `DELETE /api/relationships/:id` - Delete relationship
 
 #### Graph Operations
+
 - `POST /api/graph/traverse` - Traverse relationship graph
 - `POST /api/graph/shortest-path` - Find shortest path
 
 #### Search Operations
+
 - `GET /api/search?q=:query&type=:type` - Unified search
 
 #### Calendar Operations
+
 - `GET /api/calendar/events?dossierId=:id` - Get events for dossier
 - `GET /api/calendar/events?start=:date&end=:date` - Get events in range
 - `POST /api/calendar/events` - Create calendar event
@@ -544,11 +566,13 @@ type Query {
 ### Caching Strategy
 
 **Redis Caching:**
+
 - Frequently accessed dossiers (TTL: 5 minutes)
 - Search results (TTL: 1 minute)
 - Graph traversal results (TTL: 2 minutes)
 
 **Cache Invalidation:**
+
 - On dossier update/delete
 - On relationship creation/deletion
 - On calendar event changes
@@ -556,37 +580,37 @@ type Query {
 ### Query Optimization
 
 **N+1 Query Prevention:**
+
 ```typescript
 // ❌ Bad: N+1 queries
 async function getDossiersWithRelationships(ids: UUID[]) {
-  const dossiers = await getDossiers(ids)
+  const dossiers = await getDossiers(ids);
 
   for (const dossier of dossiers) {
-    dossier.relationships = await getRelationships(dossier.id) // N queries!
+    dossier.relationships = await getRelationships(dossier.id); // N queries!
   }
 
-  return dossiers
+  return dossiers;
 }
 
 // ✅ Good: Single JOIN query
 async function getDossiersWithRelationships(ids: UUID[]) {
-  return await db
-    .from('dossiers')
-    .select('*, relationships(*)')
-    .in('id', ids)
+  return await db.from('dossiers').select('*, relationships(*)').in('id', ids);
 }
 ```
 
 ### Frontend Optimization
 
 **Code Splitting:**
+
 ```typescript
 // Lazy load route components
-const DossierDetailPage = lazy(() => import('./pages/dossiers/DossierDetailPage'))
-const RelationshipGraphPage = lazy(() => import('./pages/relationships/RelationshipGraphPage'))
+const DossierDetailPage = lazy(() => import('./pages/dossiers/DossierDetailPage'));
+const RelationshipGraphPage = lazy(() => import('./pages/relationships/RelationshipGraphPage'));
 ```
 
 **Virtualization:**
+
 ```typescript
 // Use react-window for large lists
 import { FixedSizeList } from 'react-window'
@@ -622,6 +646,7 @@ export function DossierList({ dossiers }: Props) {
 ### Authentication
 
 **Supabase Auth:**
+
 - JWT-based authentication
 - Row Level Security (RLS) enforcement
 - Clearance level integration
@@ -629,6 +654,7 @@ export function DossierList({ dossiers }: Props) {
 ### Authorization
 
 **Clearance-Based Access:**
+
 ```typescript
 // User clearance levels
 enum ClearanceLevel {
@@ -648,11 +674,13 @@ CREATE POLICY clearance_policy ON dossiers
 ### Data Protection
 
 **Encryption:**
+
 - At rest: PostgreSQL encryption
 - In transit: TLS 1.3
 - Secrets: Environment variables (never in git)
 
 **Rate Limiting:**
+
 - API endpoints: 100 req/min per user
 - Search queries: 20 req/min per user
 - Graph queries: 10 req/min per user
@@ -664,12 +692,14 @@ CREATE POLICY clearance_policy ON dossiers
 ### Infrastructure
 
 **Production Stack:**
+
 - Frontend: Vercel / Cloudflare Pages
 - Backend: Supabase (PostgreSQL 15+, Edge Functions)
 - Cache: Redis Cloud / Upstash
 - CDN: Cloudflare
 
 **Staging Environment:**
+
 - Project ID: `zkrcjzdemdmwhearhfgg`
 - Region: `eu-west-2`
 - Database: PostgreSQL 17.6.1.008
@@ -677,6 +707,7 @@ CREATE POLICY clearance_policy ON dossiers
 ### CI/CD Pipeline
 
 **GitHub Actions:**
+
 ```yaml
 name: Deploy
 on: [push]
@@ -698,12 +729,14 @@ jobs:
 ## Migration Strategy
 
 ### Phase 1: Schema Creation
+
 1. Create unified `dossiers` base table
 2. Create 7 extension tables
 3. Create `dossier_relationships` table
 4. Create `calendar_events` tables
 
 ### Phase 2: Data Migration
+
 1. Migrate existing countries → dossiers + countries
 2. Migrate existing organizations → dossiers + organizations
 3. Migrate existing forums → dossiers + forums
@@ -711,12 +744,14 @@ jobs:
 5. Update all foreign key references
 
 ### Phase 3: Validation
+
 1. Verify 100% data preservation
 2. Validate referential integrity
 3. Test RLS policies
 4. Performance benchmarking
 
 ### Phase 4: Cutover
+
 1. Deploy new schema
 2. Update application code
 3. Decommission legacy tables (after 30-day grace period)

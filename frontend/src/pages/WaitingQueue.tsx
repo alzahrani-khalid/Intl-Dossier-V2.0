@@ -17,16 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { supabase } from '../lib/supabase'
-import {
-  Clock,
-  AlertTriangle,
-  Mail,
-  UserCheck,
-  Zap,
-  Loader2,
-  SlidersHorizontal,
-  ArrowUpDown,
-} from 'lucide-react'
+import { Clock, AlertTriangle, Mail, UserCheck, Zap, Loader2, ArrowUpDown } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Card } from '../components/ui/card'

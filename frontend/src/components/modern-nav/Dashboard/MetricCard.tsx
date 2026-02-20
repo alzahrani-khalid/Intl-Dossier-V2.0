@@ -59,7 +59,6 @@ export function MetricCard({
   value,
   trend,
   linkText,
-  linkHref,
   animationDuration = 1500,
   className,
   onLinkClick,

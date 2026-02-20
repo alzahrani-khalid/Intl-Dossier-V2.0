@@ -21,7 +21,6 @@ import type {
   PersonUpdate,
   PersonSearchParams,
   PersonListResponse,
-  PersonListItem,
   PersonRole,
   PersonRoleCreate,
   PersonAffiliation,

@@ -16,8 +16,6 @@ import type {
   UseGraphExportReturn,
   GraphExportFormat,
   RDFSerializationFormat,
-  GRAPH_EXPORT_EXTENSIONS,
-  RDF_SERIALIZATION_EXTENSIONS,
 } from '@/types/graph-export.types'
 
 /**

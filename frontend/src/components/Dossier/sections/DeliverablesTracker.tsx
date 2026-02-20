@@ -17,8 +17,8 @@ interface DeliverablesTrackerProps {
 
 type DeliverableStatus = 'pending' | 'in_progress' | 'completed'
 
-export function DeliverablesTracker({ dossier, isWorkingGroup = false }: DeliverablesTrackerProps) {
-  const { t, i18n } = useTranslation('dossier')
+export function DeliverablesTracker({ dossier }: DeliverablesTrackerProps) {
+  const { i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
   // Extract deliverables (only forums have this in extension)

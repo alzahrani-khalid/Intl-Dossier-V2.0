@@ -92,7 +92,6 @@ function calculateStats(milestones: PlannedMilestone[]): MilestoneStats {
  */
 export function useMilestonePlanning({
   dossierId,
-  dossierType,
   enabled = true,
 }: UseMilestonePlanningOptions): UseMilestonePlanningReturn {
   const { t } = useTranslation('milestone-planning')

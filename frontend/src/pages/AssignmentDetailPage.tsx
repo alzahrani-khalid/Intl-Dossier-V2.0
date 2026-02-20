@@ -219,16 +219,7 @@ export function AssignmentDetailPage() {
     return null
   }
 
-  const {
-    assignment,
-    engagement,
-    sla,
-    comments,
-    checklist_items,
-    observers,
-    timeline,
-    checklist_progress,
-  } = data
+  const { assignment, engagement, sla, comments, checklist_items, observers, timeline } = data
 
   // Wrap content with error boundary (T073)
   const content = (

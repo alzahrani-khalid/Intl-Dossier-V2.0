@@ -5,16 +5,7 @@ import { Button } from './ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
 import { Switch } from './ui/switch'
-import {
-  Shield,
-  Settings,
-  Trash2,
-  RefreshCw,
-  Download,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-} from 'lucide-react'
+import { Shield, Trash2, RefreshCw, Download, AlertTriangle, CheckCircle } from 'lucide-react'
 import { MFASetup } from './MFASetup'
 
 interface MFAManagementProps {

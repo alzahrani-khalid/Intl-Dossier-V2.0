@@ -14,7 +14,6 @@ import type {
   GetBenchmarksParams,
   GetBenchmarksResponse,
   CurrentOrganizationStats,
-  OrganizationType,
 } from '@/types/organization-benchmark.types'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL

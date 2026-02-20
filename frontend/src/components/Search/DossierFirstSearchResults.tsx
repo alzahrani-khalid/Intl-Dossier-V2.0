@@ -30,7 +30,6 @@ import {
   Folder,
   ListTodo,
   TrendingUp,
-  Vote,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
@@ -40,7 +39,6 @@ import type {
   RelatedWorkItem,
   DossierFirstSearchResultsProps,
   RelatedWorkType,
-  RELATED_WORK_TYPE_CONFIG,
 } from '@/types/dossier-search.types'
 
 // Dossier type configuration with icons and colors

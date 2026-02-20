@@ -70,7 +70,6 @@ const PositionIndicator = memo(function PositionIndicator({
   isActive,
   onClick,
   index,
-  isRTL,
 }: {
   isActive: boolean
   onClick: () => void

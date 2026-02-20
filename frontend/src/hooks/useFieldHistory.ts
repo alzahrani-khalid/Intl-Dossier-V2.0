@@ -48,7 +48,7 @@ async function fetchFieldHistory(
     headers: {
       'Content-Type': 'application/json',
     },
-    body: null,
+    body: undefined,
   })
 
   // Use direct RPC call as a fallback since invoke with GET doesn't work well

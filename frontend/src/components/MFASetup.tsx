@@ -5,7 +5,7 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Shield, QrCode, Copy, Check, Eye, EyeOff, Download, AlertCircle } from 'lucide-react'
+import { Shield, Copy, Check, Eye, EyeOff, Download, AlertCircle } from 'lucide-react'
 
 interface MFASetupProps {
   onComplete?: () => void
@@ -14,7 +14,7 @@ interface MFASetupProps {
 
 export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
   const { t } = useTranslation()
-  const { enableMFA, verifyMFA, generateBackupCodes, mfaConfig, isLoading, error } = useAuthStore()
+  const { enableMFA, verifyMFA, generateBackupCodes, isLoading, error } = useAuthStore()
 
   const [step, setStep] = useState<'setup' | 'verify' | 'backup' | 'complete'>('setup')
   const [verificationCode, setVerificationCode] = useState('')

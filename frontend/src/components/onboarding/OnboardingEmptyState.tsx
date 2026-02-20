@@ -19,7 +19,6 @@ import {
   FileText,
   Users,
   Building2,
-  Globe,
   MessageSquare,
   Briefcase,
   FileSignature,

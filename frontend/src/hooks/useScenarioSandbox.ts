@@ -322,15 +322,7 @@ export function useUpdateVariable() {
   const { t, i18n } = useTranslation('scenario-sandbox')
 
   return useMutation({
-    mutationFn: ({
-      id,
-      scenarioId,
-      data,
-    }: {
-      id: string
-      scenarioId: string
-      data: UpdateVariableRequest
-    }) =>
+    mutationFn: ({ id, data }: { id: string; scenarioId: string; data: UpdateVariableRequest }) =>
       fetchScenarioAPI<ScenarioVariable>(`/variables/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -421,15 +413,7 @@ export function useUpdateOutcome() {
   const { t, i18n } = useTranslation('scenario-sandbox')
 
   return useMutation({
-    mutationFn: ({
-      id,
-      scenarioId,
-      data,
-    }: {
-      id: string
-      scenarioId: string
-      data: UpdateOutcomeRequest
-    }) =>
+    mutationFn: ({ id, data }: { id: string; scenarioId: string; data: UpdateOutcomeRequest }) =>
       fetchScenarioAPI<ScenarioOutcome>(`/outcomes/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),

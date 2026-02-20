@@ -22,7 +22,6 @@ import {
   MoreHorizontal,
   Network,
   List,
-  AlertTriangle,
   CheckCircle,
   Clock,
   ArrowUpRight,
@@ -355,7 +354,6 @@ export function CitationsSection({
   entityType,
   entityId,
   entityName = '',
-  entityNameAr,
   visualizationMode = 'both',
   editable = true,
   className = '',
@@ -373,11 +371,10 @@ export function CitationsSection({
   const [deletingCitationId, setDeletingCitationId] = useState<string | null>(null)
 
   // Fetch citations
-  const {
-    data: citations,
-    isLoading,
-    error,
-  } = useEntityCitations({ entity_type: entityType, entity_id: entityId, direction: 'both' }, true)
+  const { data: citations, isLoading } = useEntityCitations(
+    { entity_type: entityType, entity_id: entityId, direction: 'both' },
+    true,
+  )
 
   // Get stats
   const stats = useEntityCitationStats(entityType, entityId)

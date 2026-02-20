@@ -62,7 +62,6 @@ import {
   MessageSquare,
   Tag,
   UsersRound,
-  Vote,
   FileCheck,
   ClipboardList,
   Inbox,

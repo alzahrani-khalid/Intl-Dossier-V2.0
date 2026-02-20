@@ -49,12 +49,9 @@ import {
   Shield,
   Database,
   Clock,
-  Archive,
-  Trash2,
   AlertTriangle,
   CheckCircle2,
   Play,
-  Pause,
   FileText,
   Lock,
   Unlock,
@@ -62,7 +59,6 @@ import {
   Settings,
   BarChart3,
   History,
-  Calendar,
   RefreshCw,
 } from 'lucide-react'
 import {
@@ -81,7 +77,6 @@ import {
 import type {
   RetentionPolicy,
   RetentionPolicyInput,
-  LegalHold,
   LegalHoldInput,
   RetentionEntityType,
   DocumentClass,

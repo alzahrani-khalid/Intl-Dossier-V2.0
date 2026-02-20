@@ -70,9 +70,7 @@ function PositionDetailPage() {
     await submitPosition.mutateAsync(position.id)
   }
 
-  const getStatusColor = (
-    status: string,
-  ): 'default' | 'secondary' | 'outline' | 'destructive' | 'none' => {
+  const getStatusColor = (status: string): 'default' | 'secondary' | 'outline' | 'destructive' => {
     switch (status) {
       case 'draft':
         return 'default'

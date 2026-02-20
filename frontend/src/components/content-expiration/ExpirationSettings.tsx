@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -77,7 +76,6 @@ export function ExpirationSettings({
   const {
     expirationStatus,
     expirationRules,
-    expirationHistory,
     setExpiration,
     extendExpiration,
     markAsReviewed,

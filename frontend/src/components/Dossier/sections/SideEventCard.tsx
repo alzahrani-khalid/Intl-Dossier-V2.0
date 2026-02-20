@@ -10,7 +10,6 @@ import {
   Clock,
   MapPin,
   Users,
-  CalendarDays,
   Globe,
   Lock,
   MoreHorizontal,

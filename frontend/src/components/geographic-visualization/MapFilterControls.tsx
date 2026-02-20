@@ -33,19 +33,13 @@ import {
   Thermometer,
   RotateCcw,
   ChevronDown,
-  Map,
 } from 'lucide-react'
 import type {
   GeoVisualizationFilters,
   CountryRegion,
   EngagementIntensity,
-  MapViewMode,
 } from '@/types/geographic-visualization.types'
-import {
-  REGION_LABELS,
-  INTENSITY_LABELS,
-  VIEW_MODE_LABELS,
-} from '@/types/geographic-visualization.types'
+import { REGION_LABELS, INTENSITY_LABELS } from '@/types/geographic-visualization.types'
 import { RELATIONSHIP_TYPE_LABELS, type DossierRelationshipType } from '@/types/relationship.types'
 import { type TimeRange } from '@/types/analytics.types'
 

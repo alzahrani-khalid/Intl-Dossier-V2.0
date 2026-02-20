@@ -24,7 +24,6 @@ import {
   ArrowRight,
   ListChecks,
   Target,
-  Eye,
   Edit,
   Trash2,
   ChevronRight,
@@ -682,7 +681,6 @@ function QuickNavCard({
   title,
   description,
   onClick,
-  isRTL,
 }: {
   icon: React.ElementType
   title: string
@@ -711,7 +709,6 @@ function AttributeCard({
   title,
   description,
   icon: Icon,
-  isRTL,
 }: {
   title: string
   description: string
@@ -756,7 +753,6 @@ function StatusBadge({ status, isRTL }: { status: string; isRTL: boolean }) {
 function FilterOptionCard({
   title,
   options,
-  isRTL,
 }: {
   title: string
   options: string[]

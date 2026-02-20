@@ -20,7 +20,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -102,7 +101,6 @@ const TIMEZONES = [
 export function ScheduleReportDialog({
   open,
   onOpenChange,
-  reportId,
   existingSchedule,
   onSave,
   isSaving,

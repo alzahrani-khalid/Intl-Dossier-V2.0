@@ -49,7 +49,6 @@ import { useCreateDeliverable, useUpdateDeliverable } from '@/hooks/useCommitmen
 import type {
   CommitmentDeliverable,
   CommitmentDeliverableType,
-  CreateCommitmentDeliverableInput,
 } from '@/types/commitment-deliverable.types'
 
 // Form validation schema

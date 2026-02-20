@@ -19,7 +19,6 @@ import type {
   ThemeWithContext,
   ThemeAncestor,
   ThemeDescendant,
-  themeKeys,
 } from '@/types/theme.types'
 
 const THEMES_QUERY_KEY = 'themes'

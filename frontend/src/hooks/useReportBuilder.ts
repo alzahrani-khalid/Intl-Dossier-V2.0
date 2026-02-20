@@ -15,11 +15,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
-import {
-  ENTITY_FIELDS,
-  createEmptyReportConfiguration,
-  createEmptyFilterGroup,
-} from '@/types/report-builder.types'
+import { ENTITY_FIELDS, createEmptyReportConfiguration } from '@/types/report-builder.types'
 import type {
   ReportConfiguration,
   SavedReport,
@@ -32,7 +28,6 @@ import type {
   ReportGrouping,
   ReportAggregation,
   ReportSort,
-  FilterGroup,
   VisualizationType,
   ReportAccessLevel,
   ListReportsParams,

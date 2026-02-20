@@ -214,7 +214,6 @@ function FilterContent({
   setSortBy,
   sortOrder,
   setSortOrder,
-  _isRTL,
   t,
 }: any) {
   return (

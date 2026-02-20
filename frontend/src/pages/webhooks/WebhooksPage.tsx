@@ -17,8 +17,6 @@ import {
   Search,
   Settings,
   Trash2,
-  Play,
-  Pause,
   History,
   TestTube,
   Copy,
@@ -354,7 +352,6 @@ interface WebhookCardProps {
 
 function WebhookCard({
   webhook,
-  isRTL,
   onToggleActive,
   onEdit,
   onDelete,

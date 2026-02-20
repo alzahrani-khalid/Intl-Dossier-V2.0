@@ -10,26 +10,26 @@
  * - User anonymization after 90 days
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
   process.env.SUPABASE_URL || 'http://localhost:54321',
-  process.env.SUPABASE_SERVICE_KEY || ''
-);
+  process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+)
 
 export interface SearchQueryData {
-  userId?: string;
-  queryText: string;
-  languageDetected?: 'en' | 'ar' | 'mixed';
-  filters?: Record<string, any>;
-  resultsCount: number;
+  userId?: string
+  queryText: string
+  languageDetected?: 'en' | 'ar' | 'mixed'
+  filters?: Record<string, any>
+  resultsCount: number
 }
 
 export interface SearchClickData {
-  queryText: string;
-  clickedResultId: string;
-  clickedResultType: string;
-  clickedRank: number;
+  queryText: string
+  clickedResultId: string
+  clickedResultType: string
+  clickedRank: number
 }
 
 export class SearchAnalyticsService {
@@ -40,7 +40,7 @@ export class SearchAnalyticsService {
    */
   async trackSearchQuery(data: SearchQueryData): Promise<void> {
     try {
-      const normalized = this.normalizeQueryText(data.queryText);
+      const normalized = this.normalizeQueryText(data.queryText)
 
       const { error } = await this.supabaseClient.from('search_queries').insert({
         user_id: data.userId || null,
@@ -50,14 +50,14 @@ export class SearchAnalyticsService {
         filters: data.filters || null,
         results_count: data.resultsCount,
         created_at: new Date().toISOString(),
-      });
+      })
 
       if (error) {
-        console.error('Failed to track search query:', error);
+        console.error('Failed to track search query:', error)
         // Don't throw - analytics failures shouldn't break search
       }
     } catch (error) {
-      console.error('Error tracking search query:', error);
+      console.error('Error tracking search query:', error)
     }
   }
 
@@ -66,7 +66,7 @@ export class SearchAnalyticsService {
    */
   async trackSearchClick(data: SearchClickData): Promise<void> {
     try {
-      const normalized = this.normalizeQueryText(data.queryText);
+      const normalized = this.normalizeQueryText(data.queryText)
 
       // Find the most recent query matching this text
       const { data: queries, error: queryError } = await this.supabaseClient
@@ -74,11 +74,11 @@ export class SearchAnalyticsService {
         .select('id')
         .eq('query_text_normalized', normalized)
         .order('created_at', { ascending: false })
-        .limit(1);
+        .limit(1)
 
       if (queryError || !queries || queries.length === 0) {
-        console.warn('Could not find query to track click:', queryError);
-        return;
+        console.warn('Could not find query to track click:', queryError)
+        return
       }
 
       // Update the query with click data
@@ -89,13 +89,13 @@ export class SearchAnalyticsService {
           clicked_result_type: data.clickedResultType,
           clicked_rank: data.clickedRank,
         })
-        .eq('id', queries[0].id);
+        .eq('id', queries[0].id)
 
       if (updateError) {
-        console.error('Failed to track search click:', updateError);
+        console.error('Failed to track search click:', updateError)
       }
     } catch (error) {
-      console.error('Error tracking search click:', error);
+      console.error('Error tracking search click:', error)
     }
   }
 
@@ -107,25 +107,25 @@ export class SearchAnalyticsService {
       .toLowerCase()
       .trim()
       .replace(/\s+/g, ' ') // Normalize whitespace
-      .replace(/[\u064B-\u065F]/g, ''); // Remove Arabic diacritics
+      .replace(/[\u064B-\u065F]/g, '') // Remove Arabic diacritics
   }
 
   /**
    * Detect language of query text
    */
   private detectLanguage(text: string): 'en' | 'ar' | 'mixed' {
-    const arabicChars = (text.match(/[\u0600-\u06FF]/g) || []).length;
-    const englishChars = (text.match(/[a-zA-Z]/g) || []).length;
+    const arabicChars = (text.match(/[\u0600-\u06FF]/g) || []).length
+    const englishChars = (text.match(/[a-zA-Z]/g) || []).length
 
     if (arabicChars > 0 && englishChars > 0) {
-      return 'mixed';
+      return 'mixed'
     }
 
     if (arabicChars > 0) {
-      return 'ar';
+      return 'ar'
     }
 
-    return 'en';
+    return 'en'
   }
 
   /**
@@ -133,43 +133,41 @@ export class SearchAnalyticsService {
    */
   async getPopularQueries(limit: number = 100): Promise<
     Array<{
-      query: string;
-      count: number;
-      language: string;
-      avgResultsCount: number;
+      query: string
+      count: number
+      language: string
+      avgResultsCount: number
     }>
   > {
     try {
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const sevenDaysAgo = new Date()
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
       const { data, error } = await this.supabaseClient
         .from('search_queries')
         .select('query_text_normalized, language_detected, results_count')
-        .gte('created_at', sevenDaysAgo.toISOString());
+        .gte('created_at', sevenDaysAgo.toISOString())
 
       if (error || !data) {
-        console.error('Failed to get popular queries:', error);
-        return [];
+        console.error('Failed to get popular queries:', error)
+        return []
       }
 
       // Aggregate data
-      const queryStats: Record<
-        string,
-        { count: number; language: string; totalResults: number }
-      > = {};
+      const queryStats: Record<string, { count: number; language: string; totalResults: number }> =
+        {}
 
       for (const row of data) {
-        const query = row.query_text_normalized;
+        const query = row.query_text_normalized
         if (!queryStats[query]) {
           queryStats[query] = {
             count: 0,
             language: row.language_detected || 'en',
             totalResults: 0,
-          };
+          }
         }
-        queryStats[query].count++;
-        queryStats[query].totalResults += row.results_count || 0;
+        queryStats[query].count++
+        queryStats[query].totalResults += row.results_count || 0
       }
 
       // Convert to array and sort
@@ -181,10 +179,10 @@ export class SearchAnalyticsService {
           avgResultsCount: Math.round(stats.totalResults / stats.count),
         }))
         .sort((a, b) => b.count - a.count)
-        .slice(0, limit);
+        .slice(0, limit)
     } catch (error) {
-      console.error('Error getting popular queries:', error);
-      return [];
+      console.error('Error getting popular queries:', error)
+      return []
     }
   }
 
@@ -194,27 +192,27 @@ export class SearchAnalyticsService {
    */
   async anonymizeOldQueries(): Promise<number> {
     try {
-      const ninetyDaysAgo = new Date();
-      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      const ninetyDaysAgo = new Date()
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
 
       const { data, error } = await this.supabaseClient
         .from('search_queries')
         .update({ user_id: null })
         .lt('created_at', ninetyDaysAgo.toISOString())
         .not('user_id', 'is', null)
-        .select('id');
+        .select('id')
 
       if (error) {
-        console.error('Failed to anonymize queries:', error);
-        return 0;
+        console.error('Failed to anonymize queries:', error)
+        return 0
       }
 
-      const anonymizedCount = data?.length || 0;
-      console.log(`[Search Analytics] Anonymized ${anonymizedCount} queries older than 90 days`);
-      return anonymizedCount;
+      const anonymizedCount = data?.length || 0
+      console.log(`[Search Analytics] Anonymized ${anonymizedCount} queries older than 90 days`)
+      return anonymizedCount
     } catch (error) {
-      console.error('Error anonymizing queries:', error);
-      return 0;
+      console.error('Error anonymizing queries:', error)
+      return 0
     }
   }
 }
@@ -223,22 +221,22 @@ export class SearchAnalyticsService {
  * Setup anonymization cron job (runs daily)
  */
 export function setupAnonymizationJob() {
-  const analyticsService = new SearchAnalyticsService();
-  const INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
+  const analyticsService = new SearchAnalyticsService()
+  const INTERVAL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
-  console.log('[Search Analytics] Starting daily anonymization job');
+  console.log('[Search Analytics] Starting daily anonymization job')
 
   // Run immediately on startup
   analyticsService.anonymizeOldQueries().catch((error) => {
-    console.error('[Search Analytics] Initial anonymization failed:', error);
-  });
+    console.error('[Search Analytics] Initial anonymization failed:', error)
+  })
 
   // Then run daily
   setInterval(async () => {
     try {
-      await analyticsService.anonymizeOldQueries();
+      await analyticsService.anonymizeOldQueries()
     } catch (error) {
-      console.error('[Search Analytics] Scheduled anonymization failed:', error);
+      console.error('[Search Analytics] Scheduled anonymization failed:', error)
     }
-  }, INTERVAL_MS);
+  }, INTERVAL_MS)
 }

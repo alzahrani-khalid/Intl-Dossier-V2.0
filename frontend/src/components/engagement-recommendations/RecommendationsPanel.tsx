@@ -31,7 +31,6 @@ import {
   useGenerateRecommendations,
 } from '@/hooks/useEngagementRecommendations'
 import {
-  getUrgencyColor,
   formatConfidence,
   RECOMMENDATION_TYPE_LABELS,
 } from '@/types/engagement-recommendation.types'

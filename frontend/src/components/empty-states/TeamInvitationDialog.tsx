@@ -37,7 +37,6 @@ import {
   useSendInvitation,
   formatTemplateBody,
   getEntityTypeDisplayName,
-  type InvitationTemplate,
   type SuggestedUser,
 } from '@/hooks/useTeamCollaboration'
 

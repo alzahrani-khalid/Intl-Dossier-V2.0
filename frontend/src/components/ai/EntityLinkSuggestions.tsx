@@ -347,7 +347,6 @@ interface ProposalCardProps {
 
 function ProposalCard({
   proposal,
-  isRTL,
   onApprove,
   onReject,
   isApproving,

@@ -14,7 +14,6 @@ import {
   Clock,
   Mail,
   User,
-  Calendar,
   Globe,
   Lock,
   Activity,

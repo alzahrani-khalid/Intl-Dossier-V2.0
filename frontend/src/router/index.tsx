@@ -14,7 +14,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-// @ts-expect-error TanStack Router v5 requires strictNullChecks enabled in tsconfig
 export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',

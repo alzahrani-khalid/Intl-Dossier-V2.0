@@ -20,7 +20,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -74,7 +73,6 @@ type FormValues = z.infer<typeof formSchema>
 export function SaveReportDialog({
   open,
   onOpenChange,
-  configuration,
   existingReport,
   onSave,
   isSaving,

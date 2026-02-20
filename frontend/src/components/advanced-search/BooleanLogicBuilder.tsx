@@ -23,11 +23,7 @@ import type {
   SearchableEntityType,
   LogicOperator,
 } from '@/types/advanced-search.types'
-import {
-  SEARCHABLE_FIELDS,
-  getFieldsForEntityTypes,
-  getOperatorsForFieldType,
-} from '@/types/advanced-search.types'
+import { getFieldsForEntityTypes, getOperatorsForFieldType } from '@/types/advanced-search.types'
 
 interface BooleanLogicBuilderProps {
   conditions: FilterCondition[]

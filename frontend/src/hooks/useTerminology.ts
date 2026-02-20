@@ -19,7 +19,6 @@ import type {
   MostUsedTermsParams,
   TermTranslation,
   CreateTranslationRequest,
-  UpdateTranslationRequest,
   LogUsageRequest,
   RelatedTerm,
 } from '@/types/terminology.types'

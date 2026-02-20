@@ -69,12 +69,10 @@ const roleOrder: AttendeeRole[] = [
 
 export function AttendeesList({
   attendees,
-  minutesId,
   onAddAttendee,
   onEditAttendee,
   onRemoveAttendee,
   onUpdateAttendance,
-  isLoading,
   className,
 }: AttendeesListProps) {
   const { t, i18n } = useTranslation('meeting-minutes')

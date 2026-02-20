@@ -15,7 +15,6 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import type {
   CommentableEntityType,
-  CommentWithDetails,
   CommentReactionEmoji,
   CommentVisibility,
   GetCommentsParams,
@@ -27,8 +26,6 @@ import type {
   DeleteCommentResponse,
   ToggleReactionResponse,
   SearchUsersResponse,
-  MentionUser,
-  commentKeys,
 } from '@/types/comment.types'
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL || ''

@@ -8,16 +8,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
-import {
-  Users,
-  Mail,
-  Phone,
-  Building2,
-  Calendar,
-  ExternalLink,
-  UserCircle,
-  ChevronRight,
-} from 'lucide-react'
+import { Users, Mail, Phone, Building2, Calendar, ExternalLink, UserCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

@@ -12,7 +12,6 @@ import { Separator } from '@/components/ui/separator'
 import { PDFGeneratorButton } from '@/components/PDFGeneratorButton'
 import { EditApprovalFlow } from '@/components/EditApprovalFlow'
 import {
-  Calendar,
   FileText,
   Users,
   ArrowLeft,

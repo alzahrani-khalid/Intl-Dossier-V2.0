@@ -115,7 +115,6 @@ export function useUpdateNote() {
   return useMutation({
     mutationFn: ({
       id,
-      contactId,
       updates,
     }: {
       id: string

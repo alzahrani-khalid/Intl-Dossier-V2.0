@@ -47,7 +47,6 @@ import {
   isDeliverableOverdue,
   type CommitmentDeliverable,
   type CommitmentDeliverableType,
-  type CommitmentDeliverableStatus,
 } from '@/types/commitment-deliverable.types'
 import { useUpdateDeliverableStatus, useDeleteDeliverable } from '@/hooks/useCommitmentDeliverables'
 

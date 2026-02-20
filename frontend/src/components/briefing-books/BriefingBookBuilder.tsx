@@ -19,13 +19,11 @@ import {
   Check,
   Loader2,
   GripVertical,
-  Plus,
   Trash2,
   Building2,
   Globe,
   Users,
   Palette,
-  Calendar,
   Search,
 } from 'lucide-react'
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core'
@@ -63,8 +61,6 @@ import type {
   BriefingBookFormat,
   BriefingBookSection,
   BriefingBookTopic,
-  DEFAULT_SECTIONS,
-  BRIEFING_TOPICS,
 } from '@/types/briefing-book.types'
 import type { DossierType, SensitivityLevel } from '@/types/dossier'
 

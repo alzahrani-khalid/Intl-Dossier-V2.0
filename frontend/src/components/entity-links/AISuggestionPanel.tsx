@@ -58,7 +58,6 @@ export function AISuggestionPanel({
     data: suggestionsResponse,
     isLoading,
     error,
-    refetch,
   } = useAISuggestions(intakeId, {
     enabled: suggestionsEnabled,
   })

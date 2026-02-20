@@ -71,7 +71,7 @@ async function fetchTimelineEvents(
   const { data, error } = await supabase.functions.invoke<StakeholderTimelineResponse>(
     'stakeholder-timeline',
     {
-      body: null,
+      body: undefined,
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

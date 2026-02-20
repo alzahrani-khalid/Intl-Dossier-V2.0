@@ -42,9 +42,7 @@ import {
   type AIInteractionLog,
   type AIGovernanceAudit,
   type AIUserEdit,
-  type AIApprovalDecision,
   type AIInteractionType,
-  type AIContentType,
   type AIRunStatus,
   type ListInteractionsParams,
 } from '@/hooks/useAIInteractionLogs'
@@ -106,8 +104,6 @@ const DECISION_STYLES: Record<string, string> = {
 export const AIInteractionLogViewer: React.FC<AIInteractionLogViewerProps> = ({
   organizationId,
   userId,
-  targetEntityType,
-  targetEntityId,
   className = '',
 }) => {
   const { t, i18n } = useTranslation('ai-interactions')

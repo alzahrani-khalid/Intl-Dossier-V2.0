@@ -13,7 +13,6 @@ import {
   useMutation,
   useInfiniteQuery,
   useQueryClient,
-  type UseQueryOptions,
   type UseMutationOptions,
 } from '@tanstack/react-query'
 import {
@@ -22,8 +21,6 @@ import {
   generateIdempotencyKey,
   generateCorrelationId,
   type TimelineQuery,
-  type TimelineResponse,
-  type TimelineEvent,
   type GraphQuery,
   type GraphResponse,
   type DossierSummary,

@@ -8,10 +8,6 @@ import {
   completeAccessReview,
   getInactiveUsers,
   scheduleAccessReview,
-  type GenerateAccessReviewRequest,
-  type CertifyUserAccessRequest,
-  type CompleteAccessReviewRequest,
-  type ScheduleAccessReviewRequest,
 } from '@/services/user-management-api'
 
 /**

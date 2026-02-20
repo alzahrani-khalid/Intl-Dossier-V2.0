@@ -83,7 +83,6 @@ export function BulkActionsDemo() {
     selectRange,
     clearSelection,
     actionState,
-    executeActionWithItems,
     resetActionState,
     previewState,
     requestPreview,

@@ -20,7 +20,6 @@ import type {
   UpdateActionItemInput,
   MeetingAttendee,
   MeetingActionItem,
-  meetingMinutesKeys,
 } from '@/types/meeting-minutes.types'
 
 const EDGE_FUNCTION_URL = 'meeting-minutes'
@@ -50,7 +49,7 @@ export function useMeetingMinutesList(filters?: MeetingMinutesFilters) {
       const { data, error } = await supabase.functions.invoke(EDGE_FUNCTION_URL, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: null,
+        body: undefined,
       })
 
       // Workaround: Edge functions don't support GET with query params well
@@ -256,7 +255,6 @@ export function useUpdateAttendee() {
   return useMutation({
     mutationFn: async ({
       id,
-      meetingMinutesId,
       updates,
     }: {
       id: string
@@ -288,13 +286,7 @@ export function useRemoveAttendee() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      meetingMinutesId,
-    }: {
-      id: string
-      meetingMinutesId: string
-    }): Promise<void> => {
+    mutationFn: async ({ id }: { id: string; meetingMinutesId: string }): Promise<void> => {
       const { error } = await supabase.from('meeting_attendees').delete().eq('id', id)
 
       if (error) throw error
@@ -348,7 +340,6 @@ export function useUpdateActionItem() {
   return useMutation({
     mutationFn: async ({
       id,
-      meetingMinutesId,
       updates,
     }: {
       id: string
@@ -383,13 +374,7 @@ export function useRemoveActionItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      meetingMinutesId,
-    }: {
-      id: string
-      meetingMinutesId: string
-    }): Promise<void> => {
+    mutationFn: async ({ id }: { id: string; meetingMinutesId: string }): Promise<void> => {
       const { error } = await supabase.from('meeting_action_items').delete().eq('id', id)
 
       if (error) throw error
@@ -412,7 +397,6 @@ export function useConvertActionItemToCommitment() {
     mutationFn: async ({
       actionItemId,
       dossierId,
-      meetingMinutesId,
     }: {
       actionItemId: string
       dossierId: string
@@ -530,7 +514,7 @@ export function useExtractActionItems() {
         let match
         while ((match = pattern.exec(text)) !== null) {
           extractedItems.push({
-            title_en: (match[2] || match[1]).trim(),
+            title_en: (match[2] || match[1] || '').trim(),
             assignee_name_en: match[1]?.includes('will') ? undefined : match[1]?.trim(),
             ai_confidence: 0.7,
           })

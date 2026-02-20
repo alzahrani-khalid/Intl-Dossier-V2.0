@@ -5,7 +5,6 @@
 
 import { useTranslation } from 'react-i18next'
 import {
-  Plus,
   Trash2,
   GripVertical,
   Bell,

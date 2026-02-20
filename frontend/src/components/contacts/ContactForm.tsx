@@ -91,7 +91,6 @@ export function ContactForm({
   isSubmitting = false,
   mode = 'create',
   ocrConfidence,
-  ocrRawText,
 }: ContactFormProps) {
   const { t, i18n } = useTranslation('contacts')
   const isRTL = i18n.language === 'ar'

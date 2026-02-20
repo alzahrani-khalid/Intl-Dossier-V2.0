@@ -332,7 +332,6 @@ export function UniversalDossierCard({
  */
 export function UniversalDossierCardCompact({
   dossier,
-  onView,
   className,
 }: Omit<UniversalDossierCardProps, 'onEdit' | 'onDelete'>) {
   const { t, i18n } = useTranslation('dossier')

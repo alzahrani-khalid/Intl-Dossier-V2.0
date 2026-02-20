@@ -19,8 +19,6 @@ import {
   Calendar,
   Clock,
   AlertCircle,
-  FileText,
-  Target,
   Sparkles,
   ChevronRight,
   CalendarDays,

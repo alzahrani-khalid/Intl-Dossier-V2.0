@@ -7,12 +7,9 @@
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import type {
-  DomainEvent,
   AggregateType,
-  AppendEventRequest,
   GetEventsResponse,
   GetHistoryResponse,
-  HistoryEntry,
   AggregateStats,
   EventTypeStats,
 } from '@/types/event-sourcing.types'

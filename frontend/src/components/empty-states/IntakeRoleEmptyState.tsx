@@ -19,7 +19,6 @@ import {
   Send,
   Search,
   Plus,
-  ArrowRight,
   LucideIcon,
   Sparkles,
   Clock,
@@ -221,7 +220,6 @@ export function IntakeRoleEmptyState({
 function RequesterContent({
   exampleRequests,
   onCreateRequest,
-  isRTL,
   t,
 }: {
   exampleRequests: ExampleRequest[]
@@ -272,8 +270,6 @@ function RequesterContent({
  * Content component for reviewers showing evaluation criteria
  */
 function ReviewerContent({
-  onAccessReviewQueue,
-  isRTL,
   t,
 }: {
   onAccessReviewQueue?: () => void
@@ -341,8 +337,6 @@ function ReviewerContent({
  * Content component for assignees showing task expectations
  */
 function AssigneeContent({
-  onViewAssignments,
-  isRTL,
   t,
 }: {
   onViewAssignments?: () => void
@@ -410,8 +404,6 @@ function AssigneeContent({
  * Content component for general viewers
  */
 function ViewerContent({
-  onBrowseTickets,
-  isRTL,
   t,
 }: {
   onBrowseTickets?: () => void

@@ -21,7 +21,7 @@ interface MemberOrganizationsProps {
 }
 
 export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberOrganizationsProps) {
-  const { t, i18n } = useTranslation(['dossier', 'working-groups'])
+  const { i18n } = useTranslation(['dossier', 'working-groups'])
   const isRTL = i18n.language === 'ar'
   const [showSuggestions, setShowSuggestions] = useState(true)
 

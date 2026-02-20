@@ -25,10 +25,7 @@ import {
   BarChart3,
   Calendar,
 } from 'lucide-react'
-import type {
-  InfluenceReport,
-  NetworkOverviewStatistics,
-} from '@/types/stakeholder-influence.types'
+import type { InfluenceReport } from '@/types/stakeholder-influence.types'
 import { NODE_COLORS, REPORT_TYPE_LABELS } from '@/types/stakeholder-influence.types'
 import { cn } from '@/lib/utils'
 

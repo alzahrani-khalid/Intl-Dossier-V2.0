@@ -15,11 +15,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import type {
-  AILinkSuggestion,
   GenerateSuggestionsRequest,
-  GenerateSuggestionsResponse,
   AcceptSuggestionRequest,
-  AcceptSuggestionResponse,
 } from '../types/ai-suggestions.types'
 import { intakeEntityLinksAPI } from '../services/entity-links-api'
 

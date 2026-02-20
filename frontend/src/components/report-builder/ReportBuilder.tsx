@@ -20,18 +20,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  Save,
-  Share2,
-  Calendar,
-  Download,
-  RotateCcw,
-  Play,
-  Settings2,
-  LayoutDashboard,
-  List,
-  FileText,
-} from 'lucide-react'
+import { Save, Calendar, RotateCcw, Play, Settings2, LayoutDashboard, FileText } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { EntitySelector } from './EntitySelector'

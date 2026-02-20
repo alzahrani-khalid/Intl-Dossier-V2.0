@@ -310,7 +310,6 @@ export function useUpdateAgendaItem() {
   return useMutation({
     mutationFn: async ({
       itemId,
-      agendaId,
       data,
     }: {
       itemId: string
@@ -401,7 +400,6 @@ export function useCompleteAgendaItem() {
   return useMutation({
     mutationFn: async ({
       itemId,
-      agendaId,
       data,
     }: {
       itemId: string
@@ -430,7 +428,6 @@ export function useSkipAgendaItem() {
   return useMutation({
     mutationFn: async ({
       itemId,
-      agendaId,
       reason,
     }: {
       itemId: string
@@ -484,7 +481,6 @@ export function useUpdateRsvp() {
   return useMutation({
     mutationFn: async ({
       participantId,
-      agendaId,
       data,
     }: {
       participantId: string
@@ -509,13 +505,7 @@ export function useRemoveParticipant() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({
-      participantId,
-      agendaId,
-    }: {
-      participantId: string
-      agendaId: string
-    }) => {
+    mutationFn: async ({ participantId }: { participantId: string; agendaId: string }) => {
       const result = await callAgendaFunction<{ success: boolean }>('remove_participant', {
         data: { participant_id: participantId },
       })

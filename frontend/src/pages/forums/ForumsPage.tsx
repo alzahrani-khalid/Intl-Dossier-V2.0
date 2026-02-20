@@ -5,7 +5,6 @@ import {
   Plus,
   Calendar,
   Users,
-  MapPin,
   Filter,
   Loader2,
   Search,

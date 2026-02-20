@@ -19,7 +19,6 @@ import {
   ChevronDown,
   ChevronUp,
   Download,
-  ExternalLink,
   Paperclip,
   MoreVertical,
   Trash2,

@@ -24,18 +24,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import type {
-  ComplianceViolation,
-  ComplianceSeverity,
-  ViolationStatus,
-} from '@/types/compliance.types'
-import {
-  SEVERITY_COLORS,
-  VIOLATION_STATUS_COLORS,
-  SEVERITY_LABELS,
-  VIOLATION_STATUS_LABELS,
-  canSignOff,
-} from '@/types/compliance.types'
+import type { ComplianceViolation, ComplianceSeverity } from '@/types/compliance.types'
+import { SEVERITY_COLORS, VIOLATION_STATUS_COLORS, canSignOff } from '@/types/compliance.types'
 
 interface ComplianceViolationAlertProps {
   violation: ComplianceViolation

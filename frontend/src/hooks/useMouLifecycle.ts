@@ -16,7 +16,6 @@ import type {
   CreateGovernmentDecisionRequest,
   UpdateGovernmentDecisionRequest,
   UpdateMouLifecycleRequest,
-  MouLifecycleStage,
   GovernmentDecisionFilters,
 } from '@/types/mou-extended.types'
 

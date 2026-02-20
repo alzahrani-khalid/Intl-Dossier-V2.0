@@ -10,16 +10,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatDistanceToNow } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
-import {
-  MessageSquare,
-  Check,
-  X,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  Reply,
-  CheckCircle,
-} from 'lucide-react'
+import { MessageSquare, MoreHorizontal, Edit, Trash2, Reply, CheckCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'

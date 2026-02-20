@@ -13,7 +13,6 @@ import type {
   EntityViewType,
   ViewConfig,
   DefaultViewPreferences,
-  UserViewPreference,
   SavedView,
   CreateSavedViewInput,
   UpdateSavedViewInput,

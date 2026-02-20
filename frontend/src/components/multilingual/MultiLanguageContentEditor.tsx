@@ -7,19 +7,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Globe,
-  Languages,
-  Check,
-  X,
-  RefreshCw,
-  AlertCircle,
-  Loader2,
-  Star,
-  Sparkles,
-  Trash2,
-  Plus,
-} from 'lucide-react'
+import { Globe, Languages, Check, AlertCircle, Loader2, Star, Sparkles, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -40,17 +28,12 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Progress } from '@/components/ui/progress'
-import {
-  ContentLanguageTabs,
-  LanguageDropdownMenu,
-  LanguageIndicator,
-} from './ContentLanguageSelector'
+import { ContentLanguageTabs, LanguageDropdownMenu } from './ContentLanguageSelector'
 import { useMultiLangContent, useSupportedLanguages } from '@/hooks/useMultiLangContent'
 import type {
   ContentLanguage,
   MultiLanguageContentEditorProps,
   MultiLangFieldConfig,
-  EntityAvailableLanguage,
   TranslationCompleteness,
 } from '@/types/multilingual-content.types'
 import {

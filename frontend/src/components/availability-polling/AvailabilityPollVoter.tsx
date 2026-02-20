@@ -20,12 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils'
 
 import { usePollDetails, useSubmitVotes } from '@/hooks/useAvailabilityPolling'
-import type {
-  PollSlot,
-  PollResponse,
-  PollResponseType,
-  SubmitVoteRequest,
-} from '@/types/availability-polling.types'
+import type { PollResponseType, SubmitVoteRequest } from '@/types/availability-polling.types'
 import { RESPONSE_COLORS, POLL_STATUS_COLORS } from '@/types/availability-polling.types'
 
 interface AvailabilityPollVoterProps {

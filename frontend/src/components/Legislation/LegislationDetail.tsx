@@ -22,7 +22,6 @@ import {
   CheckCircle2,
   ChevronRight,
   Loader2,
-  Plus,
   GitBranch,
   History,
   MessageSquare,
@@ -629,9 +628,7 @@ function OverviewTab({
 
 function DeadlinesTab({
   deadlines,
-  legislationId,
   onComplete,
-  isRTL,
 }: {
   deadlines: LegislationDeadline[]
   legislationId: string
@@ -743,13 +740,7 @@ function DeadlinesTab({
   )
 }
 
-function AmendmentsTab({
-  amendments,
-  isRTL,
-}: {
-  amendments: LegislationAmendment[]
-  isRTL: boolean
-}) {
+function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[]; isRTL: boolean }) {
   const { t, i18n } = useTranslation('legislation')
 
   if (amendments.length === 0) {

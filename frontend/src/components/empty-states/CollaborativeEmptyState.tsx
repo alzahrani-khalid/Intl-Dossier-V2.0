@@ -20,7 +20,6 @@ import { cn } from '@/lib/utils'
 import {
   useTeamStats,
   getEntityTypeDisplayName,
-  type TeamStats,
   type TeamContributor,
 } from '@/hooks/useTeamCollaboration'
 import { TeamInvitationDialog } from './TeamInvitationDialog'

@@ -13,17 +13,7 @@
 
 import { useState, useMemo, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  X,
-  Plus,
-  Search,
-  Tag,
-  Sparkles,
-  ChevronDown,
-  Check,
-  AlertCircle,
-  Loader2,
-} from 'lucide-react'
+import { X, Plus, Tag, Sparkles, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -41,12 +31,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useToast } from '@/hooks/use-toast'
 import { useTagSearch, useEntityTagging, useTagsFlat } from '@/hooks/useTagHierarchy'
-import type {
-  TagCategory,
-  TagEntityType,
-  EntityTagAssignment,
-  TagSuggestion,
-} from '@/types/tag-hierarchy.types'
+import type { TagEntityType, EntityTagAssignment, TagSuggestion } from '@/types/tag-hierarchy.types'
 import { getTagName, TAG_SUGGESTION_REASON_LABELS } from '@/types/tag-hierarchy.types'
 
 interface TagSelectorProps {
@@ -82,7 +67,6 @@ export function TagSelector({
     tags: assignedTags,
     suggestions,
     isLoadingTags,
-    isLoadingSuggestions,
     assignTag,
     unassignTag,
     isAssigning,

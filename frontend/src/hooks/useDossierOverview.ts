@@ -18,7 +18,6 @@ import type {
   DossierExportRequest,
   DossierExportResponse,
   DossierOverviewSection,
-  ExportFormat,
   UseDossierOverviewReturn,
   UseDossierExportReturn,
 } from '@/types/dossier-overview.types'

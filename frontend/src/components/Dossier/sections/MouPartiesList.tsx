@@ -12,7 +12,6 @@ import {
   Flag,
   User,
   PenTool,
-  CheckCircle2,
   Clock,
   XCircle,
   Shield,

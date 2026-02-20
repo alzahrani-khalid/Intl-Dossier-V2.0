@@ -22,7 +22,6 @@ import {
   Star,
   StarOff,
   Trash2,
-  X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -94,7 +93,6 @@ export function SavedViewsManager({
   onDeleteView,
   onSetDefault,
   onTogglePinned,
-  onSaveCurrentAsDefault,
 }: SavedViewsManagerProps) {
   const { t, i18n } = useTranslation('view-preferences')
   const isRTL = i18n.language === 'ar'

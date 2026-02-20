@@ -15,7 +15,6 @@ import {
   ArrowLeft,
   Save,
   User,
-  Building2,
   Mail,
   Phone,
   Globe,

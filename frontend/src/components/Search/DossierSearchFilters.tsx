@@ -21,18 +21,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
-import {
-  Globe,
-  Building2,
-  Users,
-  Briefcase,
-  Target,
-  BookOpen,
-  User,
-  Vote,
-  Filter,
-  X,
-} from 'lucide-react'
+import { Globe, Building2, Users, Briefcase, Target, BookOpen, User, Filter, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { DossierType } from '@/lib/dossier-type-guards'
 import type { DossierSearchFilters as FilterState } from '@/types/dossier-search.types'

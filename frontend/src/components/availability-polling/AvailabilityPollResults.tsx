@@ -15,7 +15,6 @@ import {
   X,
   HelpCircle,
   Calendar,
-  Clock,
   MapPin,
   Trophy,
   Users,

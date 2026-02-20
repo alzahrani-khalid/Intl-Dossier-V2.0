@@ -22,7 +22,6 @@ import {
   HelpCircle,
   Lightbulb,
   AlertCircle,
-  CheckCircle2,
   Target,
   ChevronRight,
   Users,
@@ -468,7 +467,6 @@ function ResourceCard({
   icon: Icon,
   title,
   description,
-  isRTL,
 }: {
   icon: React.ElementType
   title: string

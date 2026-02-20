@@ -12,7 +12,6 @@ import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  CalendarDays,
   Target,
   Plus,
   Lightbulb,
@@ -22,7 +21,6 @@ import {
   FileCheck,
   ArrowRight,
   RotateCcw,
-  Flag,
   Calendar,
   AlertCircle,
   TrendingUp,
@@ -36,8 +34,6 @@ import { ConvertMilestoneDialog } from './ConvertMilestoneDialog'
 import type {
   PlannedMilestone,
   MilestoneType,
-  MilestoneTemplate,
-  MILESTONE_TEMPLATES,
   CreateMilestoneRequest,
   UpdateMilestoneRequest,
 } from '@/types/milestone-planning.types'

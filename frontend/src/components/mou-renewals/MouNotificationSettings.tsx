@@ -42,7 +42,6 @@ import {
   Mail,
   Smartphone,
   Clock,
-  Calendar,
   AlertTriangle,
   CheckCircle2,
   RefreshCw,

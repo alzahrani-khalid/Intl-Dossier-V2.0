@@ -20,7 +20,6 @@ import {
   Edit2,
   Trash2,
   Eye,
-  EyeOff,
   Users,
   Lock,
   ChevronDown,
@@ -42,11 +41,7 @@ import { ReactionPicker } from './ReactionPicker'
 import { useCommentThread, useDeleteComment } from '@/hooks/useComments'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
-import type {
-  CommentWithDetails,
-  CommentReactionEmoji,
-  CommentVisibility,
-} from '@/types/comment.types'
+import type { CommentWithDetails, CommentVisibility } from '@/types/comment.types'
 
 interface CommentItemProps {
   comment: CommentWithDetails

@@ -31,11 +31,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import {
-  MetricsGridSkeleton,
-  ChartSkeleton,
-  DetailHeaderSkeleton,
-} from '@/components/ui/content-skeletons'
+import { MetricsGridSkeleton, ChartSkeleton } from '@/components/ui/content-skeletons'
 import { cn } from '@/lib/utils'
 import {
   SummaryCard,

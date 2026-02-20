@@ -232,11 +232,7 @@ interface PendingRequestIndicatorProps {
   className?: string
 }
 
-export function PendingRequestIndicator({
-  requestId,
-  granterName,
-  className,
-}: PendingRequestIndicatorProps) {
+export function PendingRequestIndicator({ granterName, className }: PendingRequestIndicatorProps) {
   const { t, i18n } = useTranslation('permission-errors')
   const isRTL = i18n.language === 'ar'
 

@@ -23,8 +23,6 @@ import {
   Trash2,
   X,
   Languages,
-  Tag,
-  ExternalLink,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -396,15 +394,7 @@ interface ContactCardProps {
   i18n: { language: string }
 }
 
-function ContactCard({
-  contact,
-  isRTL,
-  onEdit,
-  onDelete,
-  onSetPrimary,
-  t,
-  i18n,
-}: ContactCardProps) {
+function ContactCard({ contact, isRTL, onEdit, onDelete, onSetPrimary, t }: ContactCardProps) {
   const [showActions, setShowActions] = useState(false)
 
   const name = isRTL ? contact.name_ar || contact.name_en : contact.name_en || contact.name_ar

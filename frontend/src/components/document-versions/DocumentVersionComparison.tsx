@@ -20,8 +20,6 @@ import {
   Plus,
   X,
   Download,
-  ToggleLeft,
-  ToggleRight,
   Columns,
   Rows,
 } from 'lucide-react'
@@ -33,7 +31,6 @@ import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import type {
-  DocumentVersionComparisonProps,
   VersionComparisonResult,
   DiffHunk,
   DiffLine,

@@ -40,12 +40,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { useCommittees } from '@/hooks/useCommittees'
-import type {
-  CommitteeWithStats,
-  CommitteeType,
-  CommitteeStatus,
-  MeetingFrequency,
-} from '@/types/committee.types'
+import type { CommitteeWithStats, CommitteeType, CommitteeStatus } from '@/types/committee.types'
 
 interface CommitteesListProps {
   forumId?: string

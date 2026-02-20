@@ -9,7 +9,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Plus,
-  Trash2,
   CheckCircle2,
   Clock,
   AlertCircle,
@@ -489,7 +488,6 @@ interface AddLogisticsFormProps {
 
 function AddLogisticsForm({
   eventId,
-  isRTL,
   onClose,
   onCreate,
   logisticsTypes,

@@ -305,7 +305,6 @@ function CreateAssessmentDialog({ entityId, entityName, onCreated }: CreateAsses
 export function DependencyAnalysisSection({
   entityId,
   entityName,
-  entityType,
   onEntityNavigate,
   className,
 }: DependencyAnalysisSectionProps) {

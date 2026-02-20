@@ -254,7 +254,6 @@ export function SampleDataBanner({
 function StatCard({
   icon: Icon,
   label,
-  isRTL,
 }: {
   icon: React.ElementType
   label: string

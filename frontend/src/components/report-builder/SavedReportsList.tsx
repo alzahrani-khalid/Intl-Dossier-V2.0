@@ -41,7 +41,6 @@ import {
   Calendar,
   Download,
   Trash2,
-  Edit,
   Eye,
   Lock,
   Users,

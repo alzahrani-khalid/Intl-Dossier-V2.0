@@ -8,7 +8,6 @@
 
 import { useTranslation } from 'react-i18next'
 import {
-  User,
   Building2,
   MapPin,
   Flag,

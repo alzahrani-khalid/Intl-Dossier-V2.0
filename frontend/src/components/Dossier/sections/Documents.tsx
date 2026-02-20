@@ -53,10 +53,7 @@ import {
 } from '@/components/document-classification'
 import { TemplateSelectionDialog } from '@/components/document-templates'
 import { SmartImportSuggestion } from '@/components/smart-import'
-import {
-  useDocumentClassificationManager,
-  useUserClearance,
-} from '@/hooks/useDocumentClassification'
+import { useUserClearance } from '@/hooks/useDocumentClassification'
 import { isPreviewable, getFileTypeFromMime } from '@/types/document-preview.types'
 import type { PreviewDocument } from '@/types/document-preview.types'
 import type {

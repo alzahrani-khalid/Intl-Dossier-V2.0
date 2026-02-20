@@ -27,23 +27,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import {
-  ChevronLeft,
-  ChevronRight,
-  Check,
-  Save,
-  Loader2,
-  AlertCircle,
-  CheckCircle,
-  Circle,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight, Check, Save, Loader2, AlertCircle } from 'lucide-react'
 import { WizardStep } from './WizardStep'
 import { useDocumentWizard, useValidateDocument } from '@/hooks/useDocumentTemplates'
-import type {
-  DocumentTemplateWithSections,
-  TemplatedDocument,
-  TemplateValidationError,
-} from '@/types/document-template.types'
+import type { TemplatedDocument, TemplateValidationError } from '@/types/document-template.types'
 import { toast } from 'sonner'
 
 interface DocumentWizardProps {

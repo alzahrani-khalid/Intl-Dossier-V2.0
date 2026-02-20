@@ -35,11 +35,9 @@ import { SavedSearchTemplates } from './SavedSearchTemplates'
 import {
   searchReducer,
   defaultSearchState,
-  buildSearchRequest,
   hasActiveFilters,
   countActiveFilters,
   type SearchState,
-  type SearchAction,
 } from '@/hooks/useAdvancedSearch'
 import type { SearchableEntityType, TemplateDefinition } from '@/types/advanced-search.types'
 import { ENTITY_TYPE_LABELS } from '@/types/advanced-search.types'

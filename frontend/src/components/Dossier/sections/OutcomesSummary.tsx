@@ -10,16 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { arSA, enUS } from 'date-fns/locale'
-import {
-  CheckCircle2,
-  FileCheck,
-  Loader2,
-  Gavel,
-  AlertTriangle,
-  Target,
-  User,
-  Calendar,
-} from 'lucide-react'
+import { CheckCircle2, Loader2, Gavel, AlertTriangle, Target, User, Calendar } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'

@@ -12,14 +12,11 @@ import type {
   PreviewEntityType,
   PreviewContext,
   PreviewLayout,
-  PreviewLayoutSummary,
   PreviewLayoutConfig,
-  PreviewLayoutField,
   PreviewLayoutFormValues,
   PreviewLayoutFieldFormValues,
   GetPreviewLayoutResponse,
   GetEntityLayoutsResponse,
-  DEFAULT_LAYOUT_CONFIG,
 } from '@/types/preview-layout.types'
 
 // =============================================================================

@@ -102,7 +102,7 @@ export function loadACLConfiguration(): ACLConfiguration {
     ai: {
       provider: 'anythingllm',
       config: {
-        baseUrl: process.env.ANYTHINGLLM_URL || 'http://localhost:3001',
+        baseUrl: process.env.ANYTHINGLLM_API_URL || 'http://localhost:3001',
         apiKey: process.env.ANYTHINGLLM_API_KEY,
         timeout: 30000,
         defaultModel: process.env.AI_DEFAULT_MODEL || 'gpt-3.5-turbo',

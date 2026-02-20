@@ -12,7 +12,6 @@ import {
   User,
   Mail,
   Send,
-  X,
   ChevronRight,
   AlertTriangle,
   Clock,

@@ -18,7 +18,6 @@ import type {
   PermissionAction,
   PermissionType,
   ResourceType,
-  PermissionDeniedReason,
   UsePermissionErrorReturn,
 } from '@/types/permission-error.types'
 

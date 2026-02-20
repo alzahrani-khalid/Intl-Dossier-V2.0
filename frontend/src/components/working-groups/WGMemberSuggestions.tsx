@@ -59,7 +59,6 @@ import {
   type WGMemberSuggestion,
   type WGSuggestionType,
   type MemberRole,
-  type SuggestedEntityType,
 } from '@/types/wg-member-suggestion.types'
 
 // Icon mapping for suggestion types

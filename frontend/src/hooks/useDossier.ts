@@ -566,12 +566,6 @@ export function useUnlinkDocument() {
 import {
   type Dossier,
   type DossierType as TypeGuardDossierType,
-  type CountryDossier,
-  type OrganizationDossier,
-  type PersonDossier,
-  type EngagementDossier,
-  type ForumDossier,
-  type WorkingGroupDossier,
   getTypeGuard,
   validateDossierType,
 } from '@/lib/dossier-type-guards'

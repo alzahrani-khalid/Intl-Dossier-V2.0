@@ -14,7 +14,6 @@ import {
   Building2,
   Flag,
   Mail,
-  ExternalLink,
   CheckCircle2,
   XCircle,
   Clock,

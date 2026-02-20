@@ -15,7 +15,6 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,

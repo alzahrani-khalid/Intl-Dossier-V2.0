@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next'
 import type {
   BriefingBook,
   BriefingBookProgress,
-  BriefingBookStatus,
   BriefingBookTemplate,
   CreateBriefingBookRequest,
   CreateBriefingBookResponse,

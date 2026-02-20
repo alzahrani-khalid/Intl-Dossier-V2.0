@@ -42,7 +42,7 @@ export async function getRelationshipSuggestions(
     headers: {
       'Content-Type': 'application/json',
     },
-    body: null,
+    body: undefined,
   })
 
   // Due to Edge Function limitations, we use RPC directly

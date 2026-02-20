@@ -13,7 +13,6 @@ import type {
   BulkPermissionCheck,
   FieldPermissionAudit,
   FieldPermissionEntityType,
-  FieldPermissionScope,
   CreateFieldPermissionRequest,
   UpdateFieldPermissionRequest,
   ListFieldPermissionsParams,

@@ -181,7 +181,6 @@ export function ProgressiveFormDemoPage() {
     completionState,
     showOptional,
     toggleOptionalFields,
-    getFieldConfig,
     getFieldStatus,
     isFieldVisible,
     getFieldsByGroup,

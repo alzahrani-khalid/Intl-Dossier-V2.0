@@ -27,7 +27,6 @@ import {
 } from 'lucide-react'
 import type {
   StakeholderInfluenceDetail,
-  InfluenceTier,
   StakeholderRole,
 } from '@/types/stakeholder-influence.types'
 import {

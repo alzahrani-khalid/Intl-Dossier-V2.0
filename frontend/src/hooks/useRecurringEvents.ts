@@ -23,7 +23,6 @@ import type {
   CreateExceptionInput,
   SeriesException,
   EventNotification,
-  SeriesEditScope,
 } from '@/types/recurrence.types'
 
 const RECURRING_EVENTS_BASE_URL = '/functions/v1/recurring-events'

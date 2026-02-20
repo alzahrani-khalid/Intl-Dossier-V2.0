@@ -50,7 +50,6 @@ const TOOL_LABELS: Record<string, { en: string; ar: string }> = {
 
 export function ToolResultCard({
   toolName,
-  input,
   result,
   isLoading = false,
   className,
