@@ -211,12 +211,19 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
   const description = isRTL ? dossier.description_ar : dossier.description_en
 
   // Highlight search query in text
-  const highlightText = (text: string, query?: string) => {
+  const highlightText = (text: string, query?: string): React.ReactNode => {
     if (!query || !text) return text
     const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-    return text.replace(
-      regex,
-      '<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">$1</mark>',
+    const parts = text.split(regex)
+    if (parts.length === 1) return text
+    return parts.map((part, i) =>
+      i % 2 === 1 ? (
+        <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
+          {part}
+        </mark>
+      ) : (
+        part
+      ),
     )
   }
 
@@ -274,12 +281,9 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
           </div>
 
           {/* Name */}
-          <h3
-            className="mb-1 text-lg font-semibold text-gray-900 dark:text-gray-100"
-            dangerouslySetInnerHTML={{
-              __html: highlightText(name, searchQuery),
-            }}
-          />
+          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            {highlightText(name, searchQuery)}
+          </h3>
 
           {/* Description */}
           {description && (
@@ -362,12 +366,19 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
   const dossierName = isRTL ? item.dossier_context.name_ar : item.dossier_context.name_en
 
   // Highlight search query
-  const highlightText = (text: string, query?: string) => {
+  const highlightText = (text: string, query?: string): React.ReactNode => {
     if (!query || !text) return text
     const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-    return text.replace(
-      regex,
-      '<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">$1</mark>',
+    const parts = text.split(regex)
+    if (parts.length === 1) return text
+    return parts.map((part, i) =>
+      i % 2 === 1 ? (
+        <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
+          {part}
+        </mark>
+      ) : (
+        part
+      ),
     )
   }
 
@@ -434,12 +445,9 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
           </div>
 
           {/* Title */}
-          <h4
-            className="mb-1 font-medium text-gray-900 dark:text-gray-100"
-            dangerouslySetInnerHTML={{
-              __html: highlightText(title, searchQuery),
-            }}
-          />
+          <h4 className="mb-1 font-medium text-gray-900 dark:text-gray-100">
+            {highlightText(title, searchQuery)}
+          </h4>
 
           {/* Metadata row */}
           <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">

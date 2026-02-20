@@ -13,6 +13,7 @@
 import React, { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatDistanceToNow } from 'date-fns'
+import DOMPurify from 'dompurify'
 import { ar, enUS } from 'date-fns/locale'
 import {
   MessageSquare,
@@ -108,7 +109,7 @@ export function CommentItem({
       return (
         <div
           className="prose prose-sm max-w-none dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: comment.content_html }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.content_html) }}
         />
       )
     }
