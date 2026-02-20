@@ -558,6 +558,11 @@ export function Documents({
     setTemplateDialogOpen(false)
   }, [queryClient, entityType, entityId])
 
+  // Handle smart import complete
+  const handleSmartImportComplete = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['documents', entityType, entityId] })
+  }, [queryClient, entityType, entityId])
+
   // Loading state
   if (isLoading) {
     return (
@@ -572,11 +577,6 @@ export function Documents({
       </div>
     )
   }
-
-  // Handle smart import complete
-  const handleSmartImportComplete = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ['documents', entityType, entityId] })
-  }, [queryClient, entityType, entityId])
 
   // Empty state
   if (!documents || documents.length === 0) {

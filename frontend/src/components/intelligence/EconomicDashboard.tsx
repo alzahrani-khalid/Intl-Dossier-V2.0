@@ -61,6 +61,9 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
     return latestReport?.cache_expires_at && new Date(latestReport.cache_expires_at) < new Date()
   }, [latestReport])
 
+  // Track expand/collapse state (must be before any early returns)
+  const [isExpanded, setIsExpanded] = React.useState(false)
+
   const handleRefresh = () => {
     refresh({
       entity_id: dossierId,
@@ -101,9 +104,6 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
       </Card>
     )
   }
-
-  // Track expand/collapse state
-  const [isExpanded, setIsExpanded] = React.useState(false)
 
   return (
     <Card className="h-full flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>

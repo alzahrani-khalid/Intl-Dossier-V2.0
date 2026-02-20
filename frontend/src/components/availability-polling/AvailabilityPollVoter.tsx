@@ -6,7 +6,7 @@
  * Mobile-first, RTL-compatible
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format, parseISO, isAfter } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
@@ -47,7 +47,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
   const [expandedSlot, _setExpandedSlot] = useState<string | null>(null)
 
   // Initialize votes from existing responses
-  useMemo(() => {
+  useEffect(() => {
     if (pollData?.my_responses && votes.size === 0) {
       const initialVotes = new Map<string, SlotVote>()
       pollData.my_responses.forEach((response) => {
@@ -130,28 +130,13 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
     setVotes(newVotes)
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-      </div>
-    )
-  }
-
-  if (error || !pollData?.poll) {
-    return (
-      <Card className="p-6">
-        <p className="text-center text-destructive">{t('errors.loadFailed')}</p>
-      </Card>
-    )
-  }
-
-  const { poll, slots } = pollData
-  const isPollActive = poll.status === 'active'
-  const deadlinePassed = isAfter(new Date(), parseISO(poll.deadline))
+  const poll = pollData?.poll
+  const slots = pollData?.slots
+  const isPollActive = poll?.status === 'active'
+  const deadlinePassed = poll ? isAfter(new Date(), parseISO(poll.deadline)) : false
   const canVote = isPollActive && !deadlinePassed
 
-  // Count votes by status
+  // Count votes by status (must be before early returns)
   const voteCounts = useMemo(() => {
     let available = 0
     let unavailable = 0
@@ -165,6 +150,22 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
 
     return { available, unavailable, maybe, total: slots?.length || 0 }
   }, [votes, slots])
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    )
+  }
+
+  if (error || !poll) {
+    return (
+      <Card className="p-6">
+        <p className="text-center text-destructive">{t('errors.loadFailed')}</p>
+      </Card>
+    )
+  }
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>

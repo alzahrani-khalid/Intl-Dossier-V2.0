@@ -240,30 +240,31 @@ export function ReportPreview({
     )
   }
 
+  // Transform data for pie chart (must be at component level, not inside render function)
+  const { colorFieldId, yAxisFieldId } = configuration.visualization
+  const pieData = useMemo(() => {
+    if (!chartData.length) return []
+
+    // Group by colorField and sum yAxisField
+    const grouped: Record<string, number> = {}
+    const colorField = colorFieldId ? colorFieldId.split('.')[1]! : Object.keys(chartData[0]!)[0]!
+    const valueField = yAxisFieldId ? yAxisFieldId.split('.')[1]! : Object.keys(chartData[0]!)[1]!
+
+    chartData.forEach((item) => {
+      const key = String(item[colorField] || 'Unknown')
+      const value = Number(item[valueField]) || 1
+      grouped[key] = (grouped[key] || 0) + value
+    })
+
+    return Object.entries(grouped).map(([name, value]) => ({
+      name,
+      value,
+    }))
+  }, [chartData, colorFieldId, yAxisFieldId])
+
   // Render pie chart
   const renderPieChart = () => {
-    const { colorFieldId, yAxisFieldId, showLegend, showLabels } = configuration.visualization
-
-    // Transform data for pie chart
-    const pieData = useMemo(() => {
-      if (!chartData.length) return []
-
-      // Group by colorField and sum yAxisField
-      const grouped: Record<string, number> = {}
-      const colorField = colorFieldId ? colorFieldId.split('.')[1]! : Object.keys(chartData[0]!)[0]!
-      const valueField = yAxisFieldId ? yAxisFieldId.split('.')[1]! : Object.keys(chartData[0]!)[1]!
-
-      chartData.forEach((item) => {
-        const key = String(item[colorField] || 'Unknown')
-        const value = Number(item[valueField]) || 1
-        grouped[key] = (grouped[key] || 0) + value
-      })
-
-      return Object.entries(grouped).map(([name, value]) => ({
-        name,
-        value,
-      }))
-    }, [chartData, colorFieldId, yAxisFieldId])
+    const { showLegend, showLabels } = configuration.visualization
 
     return (
       <ResponsiveContainer width="100%" height={300}>

@@ -311,11 +311,6 @@ export function CommandPalette({ className }: CommandPaletteProps) {
     getDisplayTitle,
   } = useQuickSwitcherSearch({ enabled: isCommandPaletteOpen, debounceMs: 200 })
 
-  // Sync search query with dossier query
-  useEffect(() => {
-    setDossierQuery(searchQuery)
-  }, [searchQuery, setDossierQuery])
-
   // Group shortcuts by category
   const groupedShortcuts = useMemo(() => {
     const shortcuts = getAllShortcuts()
@@ -713,7 +708,10 @@ export function CommandPalette({ className }: CommandPaletteProps) {
           ref={inputRef}
           placeholder={t('searchPlaceholder', 'Type a command or search...')}
           value={searchQuery}
-          onValueChange={setSearchQuery}
+          onValueChange={(value) => {
+            setSearchQuery(value)
+            setDossierQuery(value)
+          }}
           className="border-0"
         />
         <CommandList className="max-h-[60vh] overflow-y-auto sm:max-h-[400px]">

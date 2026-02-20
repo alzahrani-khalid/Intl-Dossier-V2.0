@@ -155,11 +155,6 @@ export function TemplateSelector({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [filteredTemplates, selectedIndex, searchQuery, handleSelect, onSkip])
 
-  // Reset selection when search changes
-  useEffect(() => {
-    setSelectedIndex(0)
-  }, [searchQuery])
-
   if (error) {
     return <div className="p-4 text-center text-destructive">{t('error.loadFailed')}</div>
   }
@@ -229,7 +224,10 @@ export function TemplateSelector({
           type="text"
           placeholder={t('placeholder.search')}
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            setSearchQuery(e.target.value)
+            setSelectedIndex(0)
+          }}
           className={cn('h-10', isRTL ? 'pe-3 ps-10' : 'pe-10 ps-10')}
         />
         {searchQuery && (

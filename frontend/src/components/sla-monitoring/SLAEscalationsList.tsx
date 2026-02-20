@@ -35,6 +35,27 @@ import { SLA_STATUS_CONFIG } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 
+function StatusBadge({ status, isRTL }: { status: SLAEscalationStatus; isRTL: boolean }) {
+  const config = SLA_STATUS_CONFIG[status]
+  const StatusIcon =
+    status === 'resolved'
+      ? CheckCircle
+      : status === 'triggered'
+        ? AlertTriangle
+        : status === 'acknowledged'
+          ? Eye
+          : status === 'dismissed'
+            ? XCircle
+            : Clock
+
+  return (
+    <Badge variant="outline" className={cn(config.color, config.bgColor)}>
+      <StatusIcon className={cn('h-3 w-3', isRTL ? 'ms-1' : 'me-1')} />
+      {isRTL ? config.labelAr : config.label}
+    </Badge>
+  )
+}
+
 interface SLAEscalationsListProps {
   data?: SLAEscalation[]
   isLoading?: boolean
@@ -92,27 +113,6 @@ export function SLAEscalationsList({
     )
   }
 
-  const StatusBadge = ({ status }: { status: SLAEscalationStatus }) => {
-    const config = SLA_STATUS_CONFIG[status]
-    const StatusIcon =
-      status === 'resolved'
-        ? CheckCircle
-        : status === 'triggered'
-          ? AlertTriangle
-          : status === 'acknowledged'
-            ? Eye
-            : status === 'dismissed'
-              ? XCircle
-              : Clock
-
-    return (
-      <Badge variant="outline" className={cn(config.color, config.bgColor)}>
-        <StatusIcon className={cn('h-3 w-3', isRTL ? 'ms-1' : 'me-1')} />
-        {isRTL ? config.labelAr : config.label}
-      </Badge>
-    )
-  }
-
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp)
     return date.toLocaleString(isRTL ? 'ar-SA' : 'en-US', {
@@ -162,7 +162,7 @@ export function SLAEscalationsList({
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <StatusBadge status={escalation.status} />
+                        <StatusBadge status={escalation.status} isRTL={isRTL} />
                         <Badge variant="secondary">
                           {t(`escalations.level`)} {escalation.escalation_level}
                         </Badge>
