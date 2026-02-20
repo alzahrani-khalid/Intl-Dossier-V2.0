@@ -6,7 +6,7 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import {
   ShieldX,
   User,
@@ -72,7 +72,7 @@ function GranterCard({ granter, isSelected, onSelect, isRTL }: GranterCardProps)
   const { t } = useTranslation('permission-errors')
 
   return (
-    <motion.button
+    <m.button
       type="button"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
@@ -119,7 +119,7 @@ function GranterCard({ granter, isSelected, onSelect, isRTL }: GranterCardProps)
           )}
         />
       </div>
-    </motion.button>
+    </m.button>
   )
 }
 
@@ -168,7 +168,7 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
 
   if (isSuccess) {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center py-6"
@@ -180,12 +180,12 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
         <p className="text-muted-foreground text-sm">
           {t('requestAccess.success.message', { name: granter.name })}
         </p>
-      </motion.div>
+      </m.div>
     )
   }
 
   return (
-    <motion.form
+    <m.form
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       onSubmit={handleSubmit}
@@ -293,12 +293,12 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
         <Button type="submit" className="flex-1 gap-2" disabled={!reason.trim() || isSubmitting}>
           {isSubmitting ? (
             <>
-              <motion.div
+              <m.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
               >
                 <Clock className="h-4 w-4" />
-              </motion.div>
+              </m.div>
               {t('requestAccess.submitting')}
             </>
           ) : (
@@ -309,7 +309,7 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
           )}
         </Button>
       </div>
-    </motion.form>
+    </m.form>
   )
 }
 
@@ -406,7 +406,7 @@ export function PermissionDeniedDialog({
 
         <AnimatePresence mode="wait">
           {showForm && selectedGranter ? (
-            <motion.div
+            <m.div
               key="form"
               initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -420,9 +420,9 @@ export function PermissionDeniedDialog({
                 onCancel={handleFormCancel}
                 isRTL={isRTL}
               />
-            </motion.div>
+            </m.div>
           ) : (
-            <motion.div
+            <m.div
               key="main"
               initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -498,7 +498,7 @@ export function PermissionDeniedDialog({
                   </a>
                 </Button>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 

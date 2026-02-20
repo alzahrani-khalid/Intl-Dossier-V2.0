@@ -8,7 +8,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useNavigate } from '@tanstack/react-router'
 import {
   FileText,
@@ -237,7 +237,7 @@ function WhyRecommendedSection({
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-4 pb-4 pt-2">
+        <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-4 pb-4 pt-2">
           {/* Explanation text */}
           <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
             {isRTL ? explanationAr : explanationEn}
@@ -252,7 +252,7 @@ function WhyRecommendedSection({
               <ReasonBreakdownItem key={index} reason={reason} />
             ))}
           </div>
-        </motion.div>
+        </m.div>
       </CollapsibleContent>
     </Collapsible>
   )
@@ -314,7 +314,7 @@ export function DossierRecommendationCard({
   const Icon = dossierType ? dossierTypeIcons[dossierType] : FileText
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -443,7 +443,7 @@ export function DossierRecommendationCard({
           )}
         </CardContent>
       </Card>
-    </motion.div>
+    </m.div>
   )
 }
 

@@ -11,7 +11,7 @@
 import * as React from 'react'
 import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Sparkles,
   Users,
@@ -272,7 +272,7 @@ export function WGMemberSuggestions({
     <div className={className} dir={isRTL ? 'rtl' : 'ltr'}>
       <AnimatePresence mode="wait">
         {currentStep === 'select' && (
-          <motion.div
+          <m.div
             key="select"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -296,11 +296,11 @@ export function WGMemberSuggestions({
               orgCount={data.summary.organization_suggestions}
               personCount={data.summary.person_suggestions}
             />
-          </motion.div>
+          </m.div>
         )}
 
         {currentStep === 'assign-roles' && (
-          <motion.div
+          <m.div
             key="assign-roles"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -315,11 +315,11 @@ export function WGMemberSuggestions({
               isRTL={isRTL}
               workingGroupName={workingGroupName}
             />
-          </motion.div>
+          </m.div>
         )}
 
         {currentStep === 'review' && (
-          <motion.div
+          <m.div
             key="review"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -333,7 +333,7 @@ export function WGMemberSuggestions({
               isRTL={isRTL}
               workingGroupName={workingGroupName}
             />
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>
@@ -524,7 +524,7 @@ function SuggestionCard({
   const isOrg = suggestion.suggested_entity_type === 'organization'
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.03 }}
@@ -614,7 +614,7 @@ function SuggestionCard({
           </p>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -667,7 +667,7 @@ function RoleAssignmentStep({
           {items.map(([key, item], index) => {
             const isOrg = item.suggestion.suggested_entity_type === 'organization'
             return (
-              <motion.div
+              <m.div
                 key={key}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -731,7 +731,7 @@ function RoleAssignmentStep({
                     />
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             )
           })}
         </div>
@@ -826,7 +826,7 @@ function ReviewStep({
             const roleLabel = MEMBER_ROLE_LABELS[item.role]
 
             return (
-              <motion.div
+              <m.div
                 key={index}
                 initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -849,7 +849,7 @@ function ReviewStep({
                 <Badge className={cn('text-xs', getRoleBadgeColor(item.role))}>
                   {isRTL ? roleLabel.ar : roleLabel.en}
                 </Badge>
-              </motion.div>
+              </m.div>
             )
           })}
         </div>

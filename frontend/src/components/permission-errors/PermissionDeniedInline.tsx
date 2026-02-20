@@ -5,7 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { ShieldX, ChevronRight, Mail, X, Send, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -31,7 +31,7 @@ export function PermissionDeniedInline({
   const primaryGranter = error.accessGranters.find((g) => g.isPrimary) || error.accessGranters[0]
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
@@ -180,7 +180,7 @@ export function PermissionDeniedInline({
           </div>
         </div>
       )}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -202,7 +202,7 @@ export function PermissionDeniedBadge({ error, onClick, className }: PermissionB
   const isRTL = i18n.language === 'ar'
 
   return (
-    <motion.button
+    <m.button
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
@@ -218,7 +218,7 @@ export function PermissionDeniedBadge({ error, onClick, className }: PermissionB
       <ShieldX className="h-3 w-3" />
       {t('badge.noAccess')}
       {onClick && <ChevronRight className={cn('h-3 w-3', isRTL && 'rotate-180')} />}
-    </motion.button>
+    </m.button>
   )
 }
 

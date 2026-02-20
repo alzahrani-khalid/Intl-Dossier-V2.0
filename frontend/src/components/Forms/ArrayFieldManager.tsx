@@ -17,7 +17,7 @@
 
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence, Reorder } from 'motion/react'
+import { m, AnimatePresence, Reorder } from 'motion/react'
 import { Plus, X, GripVertical, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -182,7 +182,7 @@ function ArrayFieldItemRow({
   const displayError = error || (touched && localError ? t(localError) : null)
 
   return (
-    <motion.div
+    <m.div
       layout
       initial={{ opacity: 0, y: -10, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -244,14 +244,14 @@ function ArrayFieldItemRow({
           {/* Error message */}
           <AnimatePresence>
             {displayError && (
-              <motion.p
+              <m.p
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-1 text-sm text-red-600 dark:text-red-400"
               >
                 {displayError}
-              </motion.p>
+              </m.p>
             )}
           </AnimatePresence>
         </div>
@@ -278,7 +278,7 @@ function ArrayFieldItemRow({
           </Button>
         )}
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -460,7 +460,7 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
 
       {/* Add button */}
       {canAddMore && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+        <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
           <Button
             type="button"
             variant="outline"
@@ -477,7 +477,7 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
             <Plus className="h-4 w-4" />
             {addButtonText || t('common:forms.add_item')}
           </Button>
-        </motion.div>
+        </m.div>
       )}
 
       {/* Help text */}

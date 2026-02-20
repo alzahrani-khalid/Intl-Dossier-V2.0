@@ -11,7 +11,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import {
   Target,
   FileText,
@@ -141,7 +141,7 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
   }
 
   return (
-    <motion.div
+    <m.div
       layout
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -266,6 +266,6 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </m.div>
   )
 }

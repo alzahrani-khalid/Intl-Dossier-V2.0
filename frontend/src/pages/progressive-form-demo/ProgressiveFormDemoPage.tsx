@@ -6,7 +6,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useState, useCallback } from 'react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { useProgressiveForm } from '@/hooks/useProgressiveForm'
 import { ProgressiveFormField } from '@/components/Forms/ProgressiveFormField'
@@ -354,15 +354,15 @@ export function ProgressiveFormDemoPage() {
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+      <m.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
           {t('demo.title')}
         </h1>
         <p className="text-muted-foreground text-start">{t('demo.description')}</p>
-      </motion.div>
+      </m.div>
 
       {/* Feature Badges */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
@@ -374,7 +374,7 @@ export function ProgressiveFormDemoPage() {
         <Badge variant="secondary">{isRTL ? 'تجميع الحقول' : 'Field Grouping'}</Badge>
         <Badge variant="secondary">{isRTL ? 'تتبع الإكمال' : 'Completion Tracking'}</Badge>
         <Badge variant="secondary">{isRTL ? 'الكشف التدريجي' : 'Progressive Disclosure'}</Badge>
-      </motion.div>
+      </m.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Form Column */}

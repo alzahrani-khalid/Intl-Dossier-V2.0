@@ -24,7 +24,7 @@
 
 import { forwardRef, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { Star, Archive, Trash2, Pin, MoreVertical } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSwipeGesture, type SwipeGestureConfig } from '@/hooks/useSwipeGesture'
@@ -238,7 +238,7 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
           <>
             {/* Right action background (visible when swiping right in LTR) */}
             {state.offsetX > 0 && normalizedRightAction && (
-              <motion.div
+              <m.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: actionOpacity }}
                 exit={{ opacity: 0 }}
@@ -249,28 +249,28 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
                 )}
                 aria-hidden="true"
               >
-                <motion.div
+                <m.div
                   initial={{ scale: 0.5 }}
                   animate={{ scale: state.isActive ? 1.2 : 1 }}
                   className="text-white"
                 >
                   {getActionIcon(normalizedRightAction)}
-                </motion.div>
+                </m.div>
                 {state.isActive && (
-                  <motion.span
+                  <m.span
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="ms-2 text-sm font-medium text-white"
                   >
                     {normalizedRightAction.label}
-                  </motion.span>
+                  </m.span>
                 )}
-              </motion.div>
+              </m.div>
             )}
 
             {/* Left action background (visible when swiping left in LTR) */}
             {state.offsetX < 0 && normalizedLeftAction && (
-              <motion.div
+              <m.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: actionOpacity }}
                 exit={{ opacity: 0 }}
@@ -282,29 +282,29 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
                 aria-hidden="true"
               >
                 {state.isActive && (
-                  <motion.span
+                  <m.span
                     initial={{ opacity: 0, x: 10 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="me-2 text-sm font-medium text-white"
                   >
                     {normalizedLeftAction.label}
-                  </motion.span>
+                  </m.span>
                 )}
-                <motion.div
+                <m.div
                   initial={{ scale: 0.5 }}
                   animate={{ scale: state.isActive ? 1.2 : 1 }}
                   className="text-white"
                 >
                   {getActionIcon(normalizedLeftAction)}
-                </motion.div>
-              </motion.div>
+                </m.div>
+              </m.div>
             )}
           </>
         )}
       </AnimatePresence>
 
       {/* Card content with swipe transform */}
-      <motion.div
+      <m.div
         ref={ref}
         className="relative z-10 bg-card"
         variants={cardVariants}
@@ -328,7 +328,7 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
         {...handlers}
       >
         {children}
-      </motion.div>
+      </m.div>
     </div>
   )
 

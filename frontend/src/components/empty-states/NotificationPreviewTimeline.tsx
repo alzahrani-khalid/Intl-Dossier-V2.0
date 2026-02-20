@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Bell,
   ClipboardList,
@@ -263,7 +263,7 @@ export function NotificationPreviewTimeline({
     const isActive = index === activeNotificationIndex
 
     return (
-      <motion.div
+      <m.div
         key={notification.id}
         initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
         animate={{
@@ -315,7 +315,7 @@ export function NotificationPreviewTimeline({
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     )
   }
 
@@ -628,7 +628,7 @@ export function NotificationPreviewTimeline({
       data-testid="notification-preview-timeline"
     >
       <AnimatePresence mode="wait">
-        <motion.div
+        <m.div
           key={currentStep}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -636,7 +636,7 @@ export function NotificationPreviewTimeline({
           transition={{ duration: 0.3 }}
         >
           {currentStep === 0 ? renderTimelinePreview() : renderPreferencesSetup()}
-        </motion.div>
+        </m.div>
       </AnimatePresence>
     </div>
   )

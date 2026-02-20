@@ -6,7 +6,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { type ReactNode } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { ChevronDown, CheckCircle2, AlertCircle, Folder } from 'lucide-react'
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
@@ -92,7 +92,7 @@ function CompletionRing({
           className="text-gray-200 dark:text-gray-700"
         />
         {/* Progress circle */}
-        <motion.circle
+        <m.circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -172,24 +172,24 @@ function GroupHeader({
 
         {/* Error indicator */}
         {hasErrors && (
-          <motion.div
+          <m.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             className="flex items-center text-red-500"
           >
             <AlertCircle className="w-5 h-5" />
-          </motion.div>
+          </m.div>
         )}
 
         {/* Completion ring */}
         {completionPercentage !== undefined && !hasErrors && completionPercentage === 100 && (
-          <motion.div
+          <m.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             className="flex items-center text-emerald-500"
           >
             <CheckCircle2 className="w-5 h-5" />
-          </motion.div>
+          </m.div>
         )}
 
         {completionPercentage !== undefined && !hasErrors && completionPercentage < 100 && (
@@ -198,13 +198,13 @@ function GroupHeader({
 
         {/* Collapse indicator */}
         {collapsible && (
-          <motion.div
+          <m.div
             animate={{ rotate: isCollapsed ? (isRTL ? 90 : -90) : 0 }}
             transition={{ duration: 0.2 }}
             className="flex-shrink-0"
           >
             <ChevronDown className="w-5 h-5 text-gray-400" />
-          </motion.div>
+          </m.div>
         )}
       </div>
     </div>
@@ -287,7 +287,7 @@ export function FormFieldGroup({
         <AnimatePresence initial={false}>
           {!isCollapsed && (
             <CollapsiblePrimitive.Content forceMount asChild>
-              <motion.div
+              <m.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
@@ -295,7 +295,7 @@ export function FormFieldGroup({
                 className="overflow-hidden"
               >
                 <div className={contentClasses}>{children}</div>
-              </motion.div>
+              </m.div>
             </CollapsiblePrimitive.Content>
           )}
         </AnimatePresence>

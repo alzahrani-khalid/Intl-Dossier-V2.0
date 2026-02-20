@@ -10,7 +10,7 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Target,
   Plus,
@@ -183,7 +183,7 @@ export function MilestonePlannerEmptyState({
     <div className="w-full space-y-6" dir={isRTL ? 'rtl' : 'ltr'} data-testid="milestone-planner">
       {isEmpty ? (
         // Empty State - Planning Canvas Introduction
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center justify-center py-8 sm:py-12 text-center px-4"
@@ -253,7 +253,7 @@ export function MilestonePlannerEmptyState({
             <Plus className={cn('h-5 w-5', isRTL ? 'ms-2' : 'me-2')} />
             {t('emptyState.cta')}
           </Button>
-        </motion.div>
+        </m.div>
       ) : (
         // Planning Canvas with Milestones
         <>

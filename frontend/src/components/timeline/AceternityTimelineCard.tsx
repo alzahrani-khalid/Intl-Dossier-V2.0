@@ -12,7 +12,7 @@
  */
 
 import { useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, m } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import {
@@ -128,7 +128,7 @@ const formatEventDate = (dateString: string, locale: string): string => {
  */
 function CloseIcon() {
   return (
-    <motion.svg
+    <m.svg
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.05 } }}
@@ -146,7 +146,7 @@ function CloseIcon() {
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M18 6l-12 12" />
       <path d="M6 6l12 12" />
-    </motion.svg>
+    </m.svg>
   )
 }
 
@@ -196,7 +196,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
       {/* Modal Overlay */}
       <AnimatePresence>
         {isActive && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -213,7 +213,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             {/* Close Button */}
-            <motion.button
+            <m.button
               key={`button-${event.id}-${id}`}
               layout
               initial={{ opacity: 0 }}
@@ -224,10 +224,10 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
               aria-label={t('common.close')}
             >
               <CloseIcon />
-            </motion.button>
+            </m.button>
 
             {/* Modal Card */}
-            <motion.div
+            <m.div
               layoutId={`card-${event.id}-${id}`}
               ref={ref}
               className="w-full max-w-2xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden shadow-2xl"
@@ -247,12 +247,12 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
               <div className="flex-1 overflow-auto">
                 {/* Title & Metadata */}
                 <div className="p-4 sm:p-6 border-b border-border">
-                  <motion.h3
+                  <m.h3
                     layoutId={`title-${event.id}-${id}`}
                     className="font-bold text-neutral-700 dark:text-neutral-200 text-lg sm:text-xl mb-2 text-start"
                   >
                     {title}
-                  </motion.h3>
+                  </m.h3>
 
                   <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mb-3">
                     <Clock className="h-4 w-4" />
@@ -281,7 +281,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                 <div className="p-4 sm:p-6 space-y-6">
                   {/* Description */}
                   {description && (
-                    <motion.div
+                    <m.div
                       layout
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -289,7 +289,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                       className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base text-start whitespace-pre-wrap"
                     >
                       {description}
-                    </motion.div>
+                    </m.div>
                   )}
 
                   {/* Location */}
@@ -407,7 +407,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                   </div>
                 )}
               </div>
-            </motion.div>
+            </m.div>
           </div>
         )}
       </AnimatePresence>
@@ -457,18 +457,18 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
           </div>
 
           {/* Card */}
-          <motion.div
+          <m.div
             layoutId={`card-${event.id}-${id}`}
             onClick={() => setIsActive(true)}
             className="cursor-pointer rounded-lg border border-border bg-card p-4 shadow-sm flex-1 hover:shadow-md hover:border-primary/50 transition-all duration-200"
           >
             <div className="space-y-2">
-              <motion.h4
+              <m.h4
                 layoutId={`title-${event.id}-${id}`}
                 className="font-semibold text-base text-card-foreground text-start"
               >
                 {title}
-              </motion.h4>
+              </m.h4>
 
               {description && (
                 <p className="text-sm text-muted-foreground line-clamp-2 text-start">
@@ -487,7 +487,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                 )}
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* DESKTOP LAYOUT: Alternating Cards with Centered Timeline */}
@@ -499,13 +499,13 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
           )}
         >
           {/* Card Section */}
-          <motion.div
+          <m.div
             layoutId={`card-${event.id}-${id}`}
             onClick={() => setIsActive(true)}
             className="cursor-pointer rounded-lg border border-border bg-card p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200 w-[calc(50%-5rem)]"
           >
             <div className="space-y-3">
-              <motion.h4
+              <m.h4
                 layoutId={`title-${event.id}-${id}`}
                 className={cn(
                   'font-semibold text-lg text-card-foreground',
@@ -513,7 +513,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                 )}
               >
                 {title}
-              </motion.h4>
+              </m.h4>
 
               {description && (
                 <p
@@ -542,7 +542,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                 )}
               </div>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Date/Time Section (between card and dot) */}
           <div
@@ -551,18 +551,18 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
               isEven ? 'text-start' : 'text-end',
             )}
           >
-            <motion.time className="font-bold text-xl lg:text-2xl text-foreground whitespace-nowrap">
+            <m.time className="font-bold text-xl lg:text-2xl text-foreground whitespace-nowrap">
               {new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
                 month: 'short',
                 day: 'numeric',
               }).format(new Date(event.event_date))}
-            </motion.time>
-            <motion.time className="text-base text-muted-foreground whitespace-nowrap">
+            </m.time>
+            <m.time className="text-base text-muted-foreground whitespace-nowrap">
               {new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
                 hour: '2-digit',
                 minute: '2-digit',
               }).format(new Date(event.event_date))}
-            </motion.time>
+            </m.time>
           </div>
 
           {/* Timeline Dot (centered) */}

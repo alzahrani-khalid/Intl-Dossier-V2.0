@@ -10,7 +10,7 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   FileText,
   FileDown,
@@ -1032,7 +1032,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
 
       {/* Step content */}
       <AnimatePresence mode="wait">
-        <motion.div
+        <m.div
           key={currentStep}
           initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -1040,7 +1040,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
           transition={{ duration: 0.2 }}
         >
           {renderStepContent()}
-        </motion.div>
+        </m.div>
       </AnimatePresence>
 
       {/* Navigation buttons */}

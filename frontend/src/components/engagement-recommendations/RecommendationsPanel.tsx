@@ -7,7 +7,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import {
   Sparkles,
   AlertTriangle,
@@ -123,7 +123,7 @@ function TypeDistribution({ data }: TypeDistributionProps) {
               <span className="text-muted-foreground">{count}</span>
             </div>
             <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-              <motion.div
+              <m.div
                 initial={{ width: 0 }}
                 animate={{ width: `${percentage}%` }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}

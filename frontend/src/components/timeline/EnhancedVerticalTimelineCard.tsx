@@ -10,7 +10,7 @@
  */
 
 import { useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, m } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { VerticalTimelineElement } from 'react-vertical-timeline-component'
@@ -130,7 +130,7 @@ const formatEventTime = (dateString: string, locale: string): string => {
  */
 function CloseIcon() {
   return (
-    <motion.svg
+    <m.svg
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.05 } }}
@@ -148,7 +148,7 @@ function CloseIcon() {
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M18 6l-12 12" />
       <path d="M6 6l12 12" />
-    </motion.svg>
+    </m.svg>
   )
 }
 
@@ -203,7 +203,7 @@ export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalT
       {/* Modal Overlay */}
       <AnimatePresence>
         {isActive && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -220,7 +220,7 @@ export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalT
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             {/* Close Button */}
-            <motion.button
+            <m.button
               key={`button-${event.id}-${id}`}
               layout
               initial={{ opacity: 0 }}
@@ -231,10 +231,10 @@ export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalT
               aria-label={t('common.close')}
             >
               <CloseIcon />
-            </motion.button>
+            </m.button>
 
             {/* Modal Card */}
-            <motion.div
+            <m.div
               layoutId={`card-${event.id}-${id}`}
               ref={ref}
               className="w-full max-w-3xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden shadow-2xl"
@@ -255,12 +255,12 @@ export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalT
               <div className="flex-1 overflow-auto">
                 {/* Title & Metadata */}
                 <div className="p-4 sm:p-6 border-b border-border">
-                  <motion.h3
+                  <m.h3
                     layoutId={`title-${event.id}-${id}`}
                     className="font-bold text-neutral-700 dark:text-neutral-200 text-xl sm:text-2xl mb-3 text-start"
                   >
                     {title}
-                  </motion.h3>
+                  </m.h3>
 
                   <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
                     <div className="flex items-center gap-2">
@@ -301,7 +301,7 @@ export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalT
                 <div className="p-4 sm:p-6 space-y-6">
                   {/* Description */}
                   {description && (
-                    <motion.div
+                    <m.div
                       layout
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -309,7 +309,7 @@ export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalT
                       className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base text-start whitespace-pre-wrap leading-relaxed"
                     >
                       {description}
-                    </motion.div>
+                    </m.div>
                   )}
 
                   {/* Location */}
@@ -431,7 +431,7 @@ export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalT
                   </div>
                 )}
               </div>
-            </motion.div>
+            </m.div>
           </div>
         )}
       </AnimatePresence>

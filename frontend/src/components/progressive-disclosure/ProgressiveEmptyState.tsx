@@ -7,7 +7,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -132,7 +132,7 @@ function HintTierSection({ tier, isExpanded, isLocked, onToggle, size }: HintTie
       {/* Content */}
       <AnimatePresence>
         {isExpanded && !isLocked && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -148,7 +148,7 @@ function HintTierSection({ tier, isExpanded, isLocked, onToggle, size }: HintTie
                 />
               ))}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>
@@ -277,7 +277,7 @@ export function ProgressiveEmptyState({
       data-testid="progressive-empty-state"
     >
       {/* Main empty state */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
@@ -308,11 +308,11 @@ export function ProgressiveEmptyState({
             {primaryAction.label}
           </Button>
         )}
-      </motion.div>
+      </m.div>
 
       {/* Progressive hints section */}
       {hintsEnabled && visibleHints && visibleHints.tiers.length > 0 && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
@@ -351,12 +351,12 @@ export function ProgressiveEmptyState({
               </p>
             )}
           </div>
-        </motion.div>
+        </m.div>
       )}
 
       {/* Keyboard shortcuts hint for experienced users */}
       {experienceLevel !== 'beginner' && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.4 }}
@@ -366,7 +366,7 @@ export function ProgressiveEmptyState({
             <Keyboard className="w-3 h-3 me-1.5" />
             {t('hints.keyboard.available')}
           </Badge>
-        </motion.div>
+        </m.div>
       )}
     </div>
   )

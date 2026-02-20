@@ -7,7 +7,7 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Rocket,
   ChevronDown,
@@ -223,7 +223,7 @@ export function OnboardingEmptyState({
               {/* Collapsible checklist */}
               <AnimatePresence>
                 {showChecklistExpanded && (
-                  <motion.div
+                  <m.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -252,7 +252,7 @@ export function OnboardingEmptyState({
                         {t('emptyState.laterButton')}
                       </Button>
                     </div>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </CardContent>

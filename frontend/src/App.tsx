@@ -1,4 +1,5 @@
 import { RouterProvider } from '@tanstack/react-router'
+import { LazyMotion, domAnimation } from 'framer-motion'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'react-hot-toast'
@@ -31,13 +32,15 @@ function App() {
           >
             <ThemeProvider initialTheme="canvas" initialColorMode="light">
               <LanguageProvider initialLanguage="en">
-                <RTLWrapper>
-                  <AppRouter />
-                  <ReactQueryDevtools initialIsOpen={false} />
-                  <OfflineIndicator />
-                  <RealtimeStatus />
-                  <Toaster position="top-right" />
-                </RTLWrapper>
+                <LazyMotion features={domAnimation} strict>
+                  <RTLWrapper>
+                    <AppRouter />
+                    <ReactQueryDevtools initialIsOpen={false} />
+                    <OfflineIndicator />
+                    <RealtimeStatus />
+                    <Toaster position="top-right" />
+                  </RTLWrapper>
+                </LazyMotion>
               </LanguageProvider>
             </ThemeProvider>
           </ThemeErrorBoundary>

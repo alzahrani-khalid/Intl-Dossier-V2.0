@@ -11,7 +11,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { AlertCircle, AlertTriangle, Info, X, ChevronRight, Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -131,7 +131,7 @@ export function InlineError({
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, height: 0, y: -5 }}
         animate={{ opacity: 1, height: 'auto', y: 0 }}
         exit={{ opacity: 0, height: 0, y: -5 }}
@@ -144,7 +144,7 @@ export function InlineError({
           {showIcon && <IconComponent className={cn('h-4 w-4 mt-0.5 shrink-0', styles.icon)} />}
           <span className="text-sm">{message}</span>
         </div>
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 }
@@ -184,7 +184,7 @@ export function ErrorWithSuggestion({
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, height: 0 }}
         animate={{ opacity: 1, height: 'auto' }}
         exit={{ opacity: 0, height: 0 }}
@@ -225,7 +225,7 @@ export function ErrorWithSuggestion({
             </div>
           )}
         </div>
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 }
@@ -255,7 +255,7 @@ export function ErrorSummary({
 
   return (
     <AnimatePresence>
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -10, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10, scale: 0.98 }}
@@ -298,7 +298,7 @@ export function ErrorSummary({
             const IconComponent = styles.IconComponent
 
             return (
-              <motion.li
+              <m.li
                 key={index}
                 initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -328,7 +328,7 @@ export function ErrorSummary({
                     <ChevronRight className={cn('h-4 w-4 text-red-400', isRTL && 'rotate-180')} />
                   )}
                 </div>
-              </motion.li>
+              </m.li>
             )
           })}
         </ul>
@@ -341,7 +341,7 @@ export function ErrorSummary({
             {warningCount > 0 && t('warning_count', { count: warningCount })}
           </div>
         )}
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 }
@@ -433,7 +433,7 @@ export function ToastError({
   return (
     <AnimatePresence>
       {visible && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 50, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -460,7 +460,7 @@ export function ToastError({
               <X className="h-4 w-4" />
             </Button>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

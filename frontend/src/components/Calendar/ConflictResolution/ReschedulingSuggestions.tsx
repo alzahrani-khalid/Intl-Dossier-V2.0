@@ -8,7 +8,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Sparkles,
   Calendar,
@@ -156,7 +156,7 @@ export function ReschedulingSuggestions({
               const isAccepted = 'is_accepted' in suggestion && suggestion.is_accepted
 
               return (
-                <motion.div
+                <m.div
                   key={'id' in suggestion ? suggestion.id : index}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -247,7 +247,7 @@ export function ReschedulingSuggestions({
                       </CollapsibleTrigger>
 
                       <CollapsibleContent>
-                        <motion.div
+                        <m.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
@@ -321,11 +321,11 @@ export function ReschedulingSuggestions({
                               {t('suggestions.accept')}
                             </Button>
                           )}
-                        </motion.div>
+                        </m.div>
                       </CollapsibleContent>
                     </div>
                   </Collapsible>
-                </motion.div>
+                </m.div>
               )
             })}
           </AnimatePresence>

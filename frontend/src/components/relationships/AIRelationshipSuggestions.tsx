@@ -11,7 +11,7 @@
 import * as React from 'react'
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Sparkles,
   Users,
@@ -249,7 +249,7 @@ export function AIRelationshipSuggestions({
     <div className={className} dir={isRTL ? 'rtl' : 'ltr'}>
       <AnimatePresence mode="wait">
         {currentStep === 'select' ? (
-          <motion.div
+          <m.div
             key="select"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -269,9 +269,9 @@ export function AIRelationshipSuggestions({
               personName={personName}
               isRejecting={rejectMutation.isPending}
             />
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div
+          <m.div
             key="review"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -287,7 +287,7 @@ export function AIRelationshipSuggestions({
               isRTL={isRTL}
               personName={personName}
             />
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>
@@ -445,7 +445,7 @@ function SuggestionCard({
   const typeLabel = SUGGESTION_TYPE_LABELS[suggestion.suggestion_type]
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
@@ -534,7 +534,7 @@ function SuggestionCard({
           </p>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -645,7 +645,7 @@ function ReviewCard({
   const relationshipTypes = Object.keys(RELATIONSHIP_TYPE_LABELS) as RelationshipType[]
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
@@ -707,7 +707,7 @@ function ReviewCard({
           />
         </div>
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 

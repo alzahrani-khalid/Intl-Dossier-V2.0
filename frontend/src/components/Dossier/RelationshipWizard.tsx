@@ -17,7 +17,7 @@
 import * as React from 'react'
 import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Globe,
   Building2,
@@ -202,7 +202,7 @@ function AnimatedConnection({ isRTL }: { isRTL: boolean }) {
   return (
     <div className="relative flex-1 h-12 flex items-center justify-center mx-2">
       {/* Connection line */}
-      <motion.div
+      <m.div
         className="absolute inset-y-5 start-0 end-0 h-0.5 bg-gradient-to-r from-primary/50 via-primary to-primary/50"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
@@ -210,7 +210,7 @@ function AnimatedConnection({ isRTL }: { isRTL: boolean }) {
         style={{ transformOrigin: isRTL ? 'right' : 'left' }}
       />
       {/* Animated dot */}
-      <motion.div
+      <m.div
         className="absolute w-2 h-2 bg-primary rounded-full"
         initial={{ x: isRTL ? 50 : -50, opacity: 0 }}
         animate={{
@@ -224,14 +224,14 @@ function AnimatedConnection({ isRTL }: { isRTL: boolean }) {
         }}
       />
       {/* Arrow indicator */}
-      <motion.div
+      <m.div
         className="absolute end-0 text-primary"
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5 }}
       >
         {isRTL ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-      </motion.div>
+      </m.div>
     </div>
   )
 }
@@ -254,7 +254,7 @@ function EntityNode({
   const colorClasses = TYPE_COLORS[type] || TYPE_COLORS.country
 
   return (
-    <motion.div
+    <m.div
       className={cn(
         'flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl border-2 min-w-[100px] sm:min-w-[120px]',
         colorClasses,
@@ -271,7 +271,7 @@ function EntityNode({
       <Badge variant="outline" className="text-xs capitalize">
         {type.replace('_', ' ')}
       </Badge>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -294,7 +294,7 @@ function RelationshipExampleCard({
   const relationshipLabel = t(`types.${example.relationshipType}`, example.relationshipType)
 
   return (
-    <motion.button
+    <m.button
       type="button"
       onClick={onClick}
       className={cn(
@@ -337,16 +337,16 @@ function RelationshipExampleCard({
 
       {/* Selection indicator */}
       {isSelected && (
-        <motion.div
+        <m.div
           className="flex items-center justify-center mt-3 text-primary"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <Check className="h-5 w-5 me-1" />
           <span className="text-sm font-medium">{t('wizard.selected')}</span>
-        </motion.div>
+        </m.div>
       )}
-    </motion.button>
+    </m.button>
   )
 }
 
@@ -393,7 +393,7 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
           const fromNode = previewNodes.find((n) => n.id === edge.from)!
           const toNode = previewNodes.find((n) => n.id === edge.to)!
           return (
-            <motion.line
+            <m.line
               key={idx}
               x1={fromNode.x}
               y1={fromNode.y}
@@ -415,7 +415,7 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
         const Icon = TYPE_ICONS[node.type] || Globe
         const colors = TYPE_COLORS[node.type] || TYPE_COLORS.country
         return (
-          <motion.div
+          <m.div
             key={node.id}
             className={cn(
               'absolute flex flex-col items-center gap-1 p-2 rounded-lg border shadow-sm',
@@ -428,12 +428,12 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
           >
             <Icon className="h-4 w-4" />
             <span className="text-[10px] font-medium whitespace-nowrap">{node.label}</span>
-          </motion.div>
+          </m.div>
         )
       })}
 
       {/* Label */}
-      <motion.div
+      <m.div
         className="absolute bottom-3 start-3 flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-lg border"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -441,7 +441,7 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
       >
         <Network className="h-4 w-4 text-primary" />
         <span className="text-xs font-medium">{t('wizard.networkPreviewLabel')}</span>
-      </motion.div>
+      </m.div>
     </div>
   )
 }
@@ -513,7 +513,7 @@ export function RelationshipWizard({
           )}
 
           {/* Sparkle icon */}
-          <motion.div
+          <m.div
             className="mx-auto mb-4"
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -521,7 +521,7 @@ export function RelationshipWizard({
             <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
               <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
             </div>
-          </motion.div>
+          </m.div>
 
           <CardTitle className="text-lg sm:text-xl md:text-2xl">{t('wizard.title')}</CardTitle>
           <CardDescription className="text-sm sm:text-base max-w-md mx-auto">
@@ -531,7 +531,7 @@ export function RelationshipWizard({
           {/* Progress indicator */}
           <div className="flex items-center justify-center gap-2 mt-4">
             {WIZARD_STEPS.map((step, idx) => (
-              <motion.div
+              <m.div
                 key={step.id}
                 className={cn(
                   'h-2 rounded-full transition-all',
@@ -548,7 +548,7 @@ export function RelationshipWizard({
           <AnimatePresence mode="wait">
             {/* Step 1: Welcome */}
             {currentStep === 0 && (
-              <motion.div
+              <m.div
                 key="welcome"
                 initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -583,7 +583,7 @@ export function RelationshipWizard({
                       descKey: 'wizard.benefits.connectDesc',
                     },
                   ].map((benefit, idx) => (
-                    <motion.div
+                    <m.div
                       key={idx}
                       className="flex flex-col items-center text-center p-4 rounded-lg bg-muted/50"
                       initial={{ opacity: 0, y: 20 }}
@@ -595,7 +595,7 @@ export function RelationshipWizard({
                       </div>
                       <h4 className="text-sm font-medium mb-1">{t(benefit.titleKey)}</h4>
                       <p className="text-xs text-muted-foreground">{t(benefit.descKey)}</p>
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
 
@@ -609,12 +609,12 @@ export function RelationshipWizard({
                     {dossierName}
                   </Badge>
                 </div>
-              </motion.div>
+              </m.div>
             )}
 
             {/* Step 2: Examples */}
             {currentStep === 1 && (
-              <motion.div
+              <m.div
                 key="examples"
                 initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -641,12 +641,12 @@ export function RelationshipWizard({
                     />
                   ))}
                 </div>
-              </motion.div>
+              </m.div>
             )}
 
             {/* Step 3: Network Preview */}
             {currentStep === 2 && (
-              <motion.div
+              <m.div
                 key="preview"
                 initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -674,7 +674,7 @@ export function RelationshipWizard({
                     {t('wizard.readyToStartDesc', { name: dossierName })}
                   </p>
                 </div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
 
