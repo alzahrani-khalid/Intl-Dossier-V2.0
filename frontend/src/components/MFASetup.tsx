@@ -226,7 +226,7 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
             <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
               <div className="grid grid-cols-2 gap-2 font-mono text-sm">
                 {backupCodes.map((code, index) => (
-                  <div key={index} className="flex items-center justify-between">
+                  <div key={code} className="flex items-center justify-between">
                     <span>{index + 1}.</span>
                     <span>{showBackupCodes ? code : '••••••••'}</span>
                   </div>

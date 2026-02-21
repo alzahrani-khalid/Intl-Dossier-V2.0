@@ -827,7 +827,11 @@ function ReviewStep({
 
             return (
               <m.div
-                key={index}
+                key={
+                  item.suggestion.suggested_organization_id ||
+                  item.suggestion.suggested_person_id ||
+                  `member-${index}`
+                }
                 initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.03 }}

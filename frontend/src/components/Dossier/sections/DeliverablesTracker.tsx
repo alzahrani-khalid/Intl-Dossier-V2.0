@@ -87,9 +87,9 @@ export function DeliverablesTracker({ dossier }: DeliverablesTrackerProps) {
 
             {/* Deliverables Cards */}
             <div className="space-y-2">
-              {statusDeliverables.map((deliverable, index) => (
+              {statusDeliverables.map((deliverable) => (
                 <div
-                  key={index}
+                  key={deliverable.name}
                   className={cn(
                     'p-3 rounded-lg border',
                     config.className.split(' ').slice(1).join(' '),

@@ -188,7 +188,7 @@ export function DocumentsSection({
         <CardContent className="p-6">
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-20 bg-muted animate-pulse rounded-lg" />
+              <div key={`skeleton-${i}`} className="h-20 bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
         </CardContent>

@@ -283,7 +283,7 @@ export function ContactDirectory({
       {isLoading && (
         <div className="space-y-3">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-24 w-full rounded-lg" />
+            <Skeleton key={`skeleton-contact-${i}`} className="h-24 w-full rounded-lg" />
           ))}
         </div>
       )}
@@ -479,8 +479,8 @@ function ContactCard({ contact, isRTL, onEdit, onDelete, onSetPrimary, t }: Cont
           {/* Expertise Areas */}
           {contact.expertise_areas && contact.expertise_areas.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {contact.expertise_areas.slice(0, 2).map((area, index) => (
-                <Badge key={index} variant="secondary" className="text-xs px-1.5 py-0">
+              {contact.expertise_areas.slice(0, 2).map((area) => (
+                <Badge key={area} variant="secondary" className="text-xs px-1.5 py-0">
                   {area}
                 </Badge>
               ))}

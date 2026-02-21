@@ -201,8 +201,12 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
               {t('intelligence.sources', 'Data Sources')}
             </h4>
             <div className="flex flex-wrap gap-2">
-              {dataSources.map((source, idx) => (
-                <Badge key={idx} variant="outline" className="text-xs bg-background hover:bg-muted">
+              {dataSources.map((source) => (
+                <Badge
+                  key={source.source}
+                  variant="outline"
+                  className="text-xs bg-background hover:bg-muted"
+                >
                   {source.source}
                 </Badge>
               ))}

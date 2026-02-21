@@ -280,9 +280,9 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
       {/* Alerts */}
       {alerts.length > 0 && (
         <div className="space-y-2 mb-6">
-          {alerts.map((alert, index) => (
+          {alerts.map((alert) => (
             <Alert
-              key={index}
+              key={alert.type}
               variant={alert.type === 'critical' ? 'destructive' : 'default'}
               className={cn(
                 alert.type === 'warning' && 'border-amber-500/50 bg-amber-50 dark:bg-amber-900/20',

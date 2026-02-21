@@ -483,7 +483,7 @@ function WaitingQueuePageInner() {
               {isLoading && (
                 <div className="space-y-4" data-testid="loading-skeletons">
                   {[1, 2, 3].map((i) => (
-                    <SkeletonCard key={i} />
+                    <SkeletonCard key={`skeleton-queue-${i}`} />
                   ))}
                 </div>
               )}

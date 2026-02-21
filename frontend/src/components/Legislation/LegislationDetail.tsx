@@ -1010,7 +1010,7 @@ function LegislationDetailSkeleton() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
-          <Skeleton key={i} className="h-20" />
+          <Skeleton key={`skeleton-${i}`} className="h-20" />
         ))}
       </div>
       <Skeleton className="h-12" />

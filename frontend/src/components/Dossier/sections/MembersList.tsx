@@ -275,7 +275,7 @@ export function MembersList({ committeeId, onAddMember, onEditMember }: MembersL
       {isLoading && (
         <div className="space-y-3">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-24 w-full rounded-lg" />
+            <Skeleton key={`skeleton-member-${i}`} className="h-24 w-full rounded-lg" />
           ))}
         </div>
       )}

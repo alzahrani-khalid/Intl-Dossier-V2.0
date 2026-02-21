@@ -110,7 +110,7 @@ function OverviewSkeleton() {
       {/* Stats skeleton */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {[...Array(6)].map((_, i) => (
-          <Skeleton key={i} className="h-20" />
+          <Skeleton key={`skeleton-stat-${i}`} className="h-20" />
         ))}
       </div>
 

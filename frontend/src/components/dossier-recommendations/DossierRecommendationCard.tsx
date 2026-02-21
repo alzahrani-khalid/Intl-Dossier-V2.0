@@ -248,8 +248,8 @@ function WhyRecommendedSection({
             <p className="text-xs font-medium text-muted-foreground mb-2">
               {t('contributingFactors')}
             </p>
-            {reasonBreakdown.map((reason, index) => (
-              <ReasonBreakdownItem key={index} reason={reason} />
+            {reasonBreakdown.map((reason) => (
+              <ReasonBreakdownItem key={reason.reason} reason={reason} />
             ))}
           </div>
         </m.div>

@@ -260,8 +260,8 @@ export function UniversalDossierCard({
       {dossier.tags && dossier.tags.length > 0 && (
         <CardContent className="px-4 sm:px-6 py-0">
           <div className="flex flex-wrap gap-2">
-            {dossier.tags.slice(0, 3).map((tag, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
+            {dossier.tags.slice(0, 3).map((tag) => (
+              <Badge key={tag} variant="secondary" className="text-xs">
                 {tag}
               </Badge>
             ))}

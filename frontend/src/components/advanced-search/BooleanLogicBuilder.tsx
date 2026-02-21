@@ -264,7 +264,7 @@ export function BooleanLogicBuilder({
 
           return (
             <div
-              key={index}
+              key={condition.id ?? `condition-${condition.field_name}-${index}`}
               className={cn(
                 'flex flex-col sm:flex-row items-start sm:items-center gap-2 p-3 rounded-lg border',
                 condition.is_negated
@@ -371,7 +371,7 @@ export function BooleanLogicBuilder({
 
             return (
               <Badge
-                key={index}
+                key={condition.id ?? `summary-${condition.field_name}-${index}`}
                 variant={condition.is_negated ? 'destructive' : 'secondary'}
                 className="text-xs"
               >

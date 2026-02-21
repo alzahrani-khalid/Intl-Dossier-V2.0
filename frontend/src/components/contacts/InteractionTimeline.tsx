@@ -205,11 +205,11 @@ function InteractionNoteItem({
               </span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {note.attachments!.map((path, index) => {
+              {note.attachments!.map((path) => {
                 const filename = getFilename(path)
                 return (
                   <Button
-                    key={index}
+                    key={path}
                     variant="outline"
                     size="sm"
                     className="h-8 text-xs gap-2"

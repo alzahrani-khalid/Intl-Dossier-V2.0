@@ -179,9 +179,9 @@ export function AnalyticsPreviewOverlay({
             {t('preview.insightsYouWillGain')}
           </h4>
           <ul className="space-y-1.5 sm:space-y-2">
-            {config.insights.map((insightKey, index) => (
+            {config.insights.map((insightKey) => (
               <li
-                key={index}
+                key={insightKey}
                 className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground"
               >
                 <span
@@ -269,9 +269,9 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
               [150, 30],
               [170, 28],
               [190, 25],
-            ].map(([x, y], i) => (
+            ].map(([x, y]) => (
               <circle
-                key={i}
+                key={`${x}-${y}`}
                 cx={x}
                 cy={y}
                 r="3"
@@ -346,14 +346,14 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
                 colors: ['bg-emerald-400/50', 'bg-amber-400/50', 'bg-red-400/50', 'bg-gray-400/50'],
               },
               { height: '65%', colors: ['bg-emerald-400/50', 'bg-amber-400/50'] },
-            ].map((bar, i) => (
+            ].map((bar) => (
               <div
-                key={i}
+                key={bar.height}
                 className="flex-1 max-w-12 flex flex-col gap-0.5 rounded-t"
                 style={{ height: bar.height }}
               >
-                {bar.colors.map((color, j) => (
-                  <div key={j} className={cn('flex-1 rounded-sm', color)} />
+                {bar.colors.map((color) => (
+                  <div key={color} className={cn('flex-1 rounded-sm', color)} />
                 ))}
               </div>
             ))}
@@ -364,8 +364,8 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
         // Horizontal bar chart placeholder
         return (
           <div className="space-y-2 sm:space-y-3 px-4">
-            {[90, 75, 60, 45, 30].map((width, i) => (
-              <div key={i} className="flex items-center gap-2 sm:gap-3">
+            {[90, 75, 60, 45, 30].map((width) => (
+              <div key={width} className="flex items-center gap-2 sm:gap-3">
                 <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
                 <div
                   className="h-3 sm:h-4 rounded bg-purple-400/50"
@@ -399,9 +399,9 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
             </div>
             {/* Mini bars */}
             <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-900/20 dark:to-amber-800/10 flex items-end justify-center gap-1 pb-2">
-              {[40, 60, 35, 80, 55].map((h, i) => (
+              {[40, 60, 35, 80, 55].map((h) => (
                 <div
-                  key={i}
+                  key={h}
                   className="w-2 rounded-t bg-amber-400/50"
                   style={{ height: `${h}%` }}
                 />

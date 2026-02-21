@@ -137,7 +137,7 @@ const DiffHunkComponent = memo(function DiffHunkComponent({
       </div>
       <div className="divide-y divide-border">
         {hunk.lines.map((line, lineIndex) => (
-          <DiffLineComponent key={`${index}-${lineIndex}`} line={line} />
+          <DiffLineComponent key={`hunk-${hunk.oldStart}-line-${lineIndex}`} line={line} />
         ))}
       </div>
     </div>
@@ -174,12 +174,12 @@ const SideBySideDiff = memo(function SideBySideDiff({
         </div>
         <ScrollArea className="h-[400px] border rounded-md">
           <div className="p-2">
-            {hunks.map((hunk, index) => (
-              <div key={index} className="mb-2">
+            {hunks.map((hunk) => (
+              <div key={`old-hunk-${hunk.oldStart}`} className="mb-2">
                 {hunk.lines
                   .filter((line) => line.type === 'removed' || line.type === 'unchanged')
                   .map((line, lineIndex) => (
-                    <DiffLineComponent key={`a-${index}-${lineIndex}`} line={line} />
+                    <DiffLineComponent key={`a-${hunk.oldStart}-${lineIndex}`} line={line} />
                   ))}
               </div>
             ))}
@@ -200,12 +200,12 @@ const SideBySideDiff = memo(function SideBySideDiff({
         </div>
         <ScrollArea className="h-[400px] border rounded-md">
           <div className="p-2">
-            {hunks.map((hunk, index) => (
-              <div key={index} className="mb-2">
+            {hunks.map((hunk) => (
+              <div key={`new-hunk-${hunk.newStart}`} className="mb-2">
                 {hunk.lines
                   .filter((line) => line.type === 'added' || line.type === 'unchanged')
                   .map((line, lineIndex) => (
-                    <DiffLineComponent key={`b-${index}-${lineIndex}`} line={line} />
+                    <DiffLineComponent key={`b-${hunk.newStart}-${lineIndex}`} line={line} />
                   ))}
               </div>
             ))}
@@ -224,7 +224,7 @@ const InlineDiff = memo(function InlineDiff({ hunks }: { hunks: DiffHunk[] }) {
     <ScrollArea className="h-[500px] border rounded-md">
       <div className="p-2">
         {hunks.map((hunk, index) => (
-          <DiffHunkComponent key={index} hunk={hunk} index={index} />
+          <DiffHunkComponent key={`inline-hunk-${hunk.oldStart}`} hunk={hunk} index={index} />
         ))}
         {hunks.length === 0 && (
           <div className="text-center text-muted-foreground py-8">No text differences found</div>

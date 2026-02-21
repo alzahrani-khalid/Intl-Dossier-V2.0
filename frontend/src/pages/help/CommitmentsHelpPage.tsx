@@ -762,8 +762,8 @@ function FilterOptionCard({
     <div className="p-4 rounded-lg border bg-card">
       <h4 className="font-medium text-sm mb-2 text-start">{title}</h4>
       <div className="flex flex-wrap gap-1">
-        {options.map((option, index) => (
-          <Badge key={index} variant="outline" className="text-xs">
+        {options.map((option) => (
+          <Badge key={option} variant="outline" className="text-xs">
             {option}
           </Badge>
         ))}

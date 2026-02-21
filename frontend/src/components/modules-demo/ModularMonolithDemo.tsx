@@ -357,7 +357,7 @@ export function ModularMonolithDemo() {
                   <div className="space-y-2" data-testid="event-log">
                     {events.map((event, index) => (
                       <div
-                        key={index}
+                        key={`${event.source}-${event.type}-${event.timestamp}`}
                         className="flex items-center justify-between p-2 bg-muted rounded-md text-sm"
                       >
                         <div className="flex items-center gap-2">

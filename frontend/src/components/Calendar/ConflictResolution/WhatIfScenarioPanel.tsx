@@ -333,9 +333,9 @@ export function WhatIfScenarioPanel({
                             {t('scenarios.proposedChanges')}
                           </p>
                           <div className="space-y-2 max-h-32 overflow-y-auto">
-                            {scenario.proposed_changes.slice(0, 3).map((change, idx) => (
+                            {scenario.proposed_changes.slice(0, 3).map((change) => (
                               <div
-                                key={idx}
+                                key={change.event_id}
                                 className="flex items-center gap-2 text-xs p-2 bg-muted/30 rounded"
                               >
                                 <Calendar className="h-3 w-3 text-muted-foreground" />

@@ -104,11 +104,11 @@ function PasswordStrength({ password, isRTL }: PasswordStrengthProps) {
       <p className="text-xs sm:text-sm font-medium text-muted-foreground">
         {t('auth.password_requirements', 'Password requirements:')}
       </p>
-      {passwordRequirements.map((req, index) => {
+      {passwordRequirements.map((req) => {
         const met = req.test(password)
         return (
           <div
-            key={index}
+            key={req.label}
             className={`flex items-center gap-2 text-xs sm:text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
           >
             {met ? (

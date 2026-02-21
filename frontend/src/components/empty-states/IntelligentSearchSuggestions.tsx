@@ -85,9 +85,9 @@ function TypoCorrectionsSection({
         <span>{t('noResults.didYouMean')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {corrections.map((correction, index) => (
+        {corrections.map((correction) => (
           <Button
-            key={index}
+            key={correction.corrected}
             variant="outline"
             size="sm"
             onClick={() => onSelect(correction.corrected)}
@@ -126,9 +126,9 @@ function RelatedTermsSection({
         <span>{t('noResults.relatedTerms')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {terms.map((term, index) => (
+        {terms.map((term) => (
           <Button
-            key={index}
+            key={term.term}
             variant="ghost"
             size="sm"
             onClick={() => onSelect(language === 'ar' && term.term_ar ? term.term_ar : term.term)}
@@ -165,9 +165,9 @@ function PopularSearchesSection({
         <span>{t('noResults.popularSearches')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {searches.map((search, index) => (
+        {searches.map((search) => (
           <Button
-            key={index}
+            key={search.query}
             variant="secondary"
             size="sm"
             onClick={() => onSelect(search.query)}
@@ -339,9 +339,9 @@ function WorkspaceHistorySection({
         <span>{t('noResults.workspaceHistory')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {history.map((item, index) => (
+        {history.map((item) => (
           <Button
-            key={index}
+            key={`${item.query}-${item.searched_at}`}
             variant="outline"
             size="sm"
             onClick={() => onSelect(item.query)}
@@ -434,10 +434,13 @@ function ActionableTipsSection({
 
       {/* Render actionable tips */}
       <div className="space-y-2">
-        {actionTips.map((tip, index) => {
+        {actionTips.map((tip) => {
           const Icon = getCategoryIcon(tip.category)
           return (
-            <div key={index} className="flex items-start gap-3 p-3 rounded-lg border bg-muted/50">
+            <div
+              key={`${tip.category}-${tip.tip}`}
+              className="flex items-start gap-3 p-3 rounded-lg border bg-muted/50"
+            >
               <Icon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
               <p className="text-sm text-muted-foreground">
                 {language === 'ar' ? tip.tip_ar : tip.tip}
@@ -472,8 +475,8 @@ function SearchTipsSection({ tips, isRTL }: { tips: string[]; isRTL: boolean }) 
     <div className="space-y-2 pt-4 border-t">
       <p className="text-sm font-medium text-muted-foreground">{t('noResults.searchTips')}</p>
       <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ps-2">
-        {tips.map((tip, index) => (
-          <li key={index}>{tip}</li>
+        {tips.map((tip) => (
+          <li key={tip}>{tip}</li>
         ))}
       </ul>
     </div>

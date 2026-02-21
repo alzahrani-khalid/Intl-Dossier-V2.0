@@ -358,8 +358,8 @@ export function UserDetailPage() {
                 ) : (
                   <div className="space-y-3">
                     {permissions?.active_delegations?.length ? (
-                      permissions.active_delegations.map((delegation, index: number) => (
-                        <div key={index} className="border rounded-lg p-3">
+                      permissions.active_delegations.map((delegation) => (
+                        <div key={delegation.id} className="border rounded-lg p-3">
                           <div className="font-medium text-sm mb-1">{delegation.grantor_email}</div>
                           <div className="flex flex-wrap gap-1 mb-2">
                             <Badge variant="secondary" className="text-xs">

@@ -276,8 +276,8 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
               {t('sections.electedOfficial.policyPriorities')}
             </h3>
             <div className="flex flex-wrap gap-2">
-              {extension.policy_priorities.map((priority, index) => (
-                <Badge key={index} variant="secondary">
+              {extension.policy_priorities.map((priority) => (
+                <Badge key={priority} variant="secondary">
                   {priority}
                 </Badge>
               ))}

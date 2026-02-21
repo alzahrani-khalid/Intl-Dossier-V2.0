@@ -408,7 +408,7 @@ function StakeholderInfluencePage() {
                   {loadingTop ? (
                     <div className="space-y-2">
                       {[...Array(5)].map((_, i) => (
-                        <Skeleton key={i} className="h-8 w-full" />
+                        <Skeleton key={`skeleton-influencer-${i}`} className="h-8 w-full" />
                       ))}
                     </div>
                   ) : (
@@ -454,7 +454,7 @@ function StakeholderInfluencePage() {
                   {loadingConnectors ? (
                     <div className="space-y-2">
                       {[...Array(5)].map((_, i) => (
-                        <Skeleton key={i} className="h-8 w-full" />
+                        <Skeleton key={`skeleton-connector-${i}`} className="h-8 w-full" />
                       ))}
                     </div>
                   ) : (
@@ -521,7 +521,7 @@ function StakeholderInfluencePage() {
               {loadingList ? (
                 <div className="space-y-2">
                   {[...Array(10)].map((_, i) => (
-                    <Skeleton key={i} className="h-16 w-full" />
+                    <Skeleton key={`skeleton-list-${i}`} className="h-16 w-full" />
                   ))}
                 </div>
               ) : (
@@ -586,7 +586,7 @@ function StakeholderInfluencePage() {
                   {loadingReports ? (
                     <div className="space-y-2">
                       {[...Array(5)].map((_, i) => (
-                        <Skeleton key={i} className="h-16 w-full" />
+                        <Skeleton key={`skeleton-report-${i}`} className="h-16 w-full" />
                       ))}
                     </div>
                   ) : reports?.data?.length ? (

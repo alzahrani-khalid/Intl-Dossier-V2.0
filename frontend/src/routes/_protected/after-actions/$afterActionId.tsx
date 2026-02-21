@@ -190,8 +190,8 @@ function AfterActionDetailPage() {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {afterAction.attendees && afterAction.attendees.length > 0 ? (
-                afterAction.attendees.map((attendee, index) => (
-                  <Badge key={index} variant="outline">
+                afterAction.attendees.map((attendee) => (
+                  <Badge key={attendee} variant="outline">
                     {attendee}
                   </Badge>
                 ))

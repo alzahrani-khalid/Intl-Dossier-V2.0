@@ -360,7 +360,7 @@ function DataRetentionPage() {
                 {statsLoading ? (
                   <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="h-12 w-full" />
+                      <Skeleton key={`stats-skeleton-${i}`} className="h-12 w-full" />
                     ))}
                   </div>
                 ) : statistics.length === 0 ? (
@@ -420,7 +420,7 @@ function DataRetentionPage() {
                 {logLoading ? (
                   <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="h-12 w-full" />
+                      <Skeleton key={`execlog-skeleton-${i}`} className="h-12 w-full" />
                     ))}
                   </div>
                 ) : executionLog.length === 0 ? (
@@ -503,7 +503,7 @@ function DataRetentionPage() {
               {policiesLoading ? (
                 <div className="space-y-3">
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <Skeleton key={i} className="h-16 w-full" />
+                    <Skeleton key={`policy-skeleton-${i}`} className="h-16 w-full" />
                   ))}
                 </div>
               ) : policies.length === 0 ? (
@@ -606,7 +606,7 @@ function DataRetentionPage() {
               {holdsLoading ? (
                 <div className="space-y-3">
                   {[1, 2, 3].map((i) => (
-                    <Skeleton key={i} className="h-16 w-full" />
+                    <Skeleton key={`hold-skeleton-${i}`} className="h-16 w-full" />
                   ))}
                 </div>
               ) : legalHolds.length === 0 ? (
@@ -695,7 +695,7 @@ function DataRetentionPage() {
                 {pendingLoading ? (
                   <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="h-12 w-full" />
+                      <Skeleton key={`pending-skeleton-${i}`} className="h-12 w-full" />
                     ))}
                   </div>
                 ) : pendingActions.length === 0 ? (
@@ -742,7 +742,7 @@ function DataRetentionPage() {
                 {expiringLoading ? (
                   <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="h-12 w-full" />
+                      <Skeleton key={`expiring-skeleton-${i}`} className="h-12 w-full" />
                     ))}
                   </div>
                 ) : expiringEntities.length === 0 ? (
@@ -795,7 +795,7 @@ function DataRetentionPage() {
               {logLoading ? (
                 <div className="space-y-3">
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <Skeleton key={i} className="h-16 w-full" />
+                    <Skeleton key={`history-skeleton-${i}`} className="h-16 w-full" />
                   ))}
                 </div>
               ) : executionLog.length === 0 ? (

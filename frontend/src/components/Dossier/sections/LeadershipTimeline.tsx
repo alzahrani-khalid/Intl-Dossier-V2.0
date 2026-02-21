@@ -105,7 +105,7 @@ export function LeadershipTimeline({
       {isLoading && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-lg" />
+            <Skeleton key={`skeleton-${i}`} className="h-32 w-full rounded-lg" />
           ))}
         </div>
       )}
@@ -387,7 +387,11 @@ function LeaderCard({
           {leader.achievements && leader.achievements.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
               {leader.achievements.slice(0, 3).map((achievement, index) => (
-                <Badge key={index} variant="secondary" className="text-xs gap-1">
+                <Badge
+                  key={`${achievement}-${index}`}
+                  variant="secondary"
+                  className="text-xs gap-1"
+                >
                   <Award className="h-3 w-3" />
                   <span className="truncate max-w-[150px]">{achievement}</span>
                 </Badge>

@@ -196,9 +196,9 @@ export function IntakeRoleEmptyState({
       {/* Quick Actions */}
       {quickActions.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mt-6 sm:mt-8">
-          {quickActions.map((action, index) => (
+          {quickActions.map((action) => (
             <Button
-              key={index}
+              key={action.label}
               variant={action.variant}
               onClick={action.onClick}
               className="min-h-11 min-w-11 px-4 sm:px-6 w-full sm:w-auto"
@@ -239,9 +239,9 @@ function RequesterContent({
 
       {/* Example Request Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-        {exampleRequests.map((example, index) => (
+        {exampleRequests.map((example) => (
           <Card
-            key={index}
+            key={example.title}
             className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50"
             onClick={onCreateRequest}
           >
@@ -310,8 +310,11 @@ function ReviewerContent({
         </CardHeader>
         <CardContent className="pt-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            {criteria.map((item, index) => (
-              <div key={index} className="flex items-start gap-3 p-2 sm:p-3 rounded-lg bg-muted/50">
+            {criteria.map((item) => (
+              <div
+                key={item.title}
+                className="flex items-start gap-3 p-2 sm:p-3 rounded-lg bg-muted/50"
+              >
                 <div className="flex items-center justify-center w-8 h-8 rounded-md bg-background flex-shrink-0">
                   <item.icon className="w-4 h-4 text-primary" />
                 </div>
@@ -377,8 +380,8 @@ function AssigneeContent({
         </CardHeader>
         <CardContent className="pt-0">
           <div className="space-y-3 sm:space-y-4">
-            {taskSteps.map((item, index) => (
-              <div key={index} className="flex items-start gap-3">
+            {taskSteps.map((item) => (
+              <div key={item.step} className="flex items-start gap-3">
                 <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary text-primary-foreground text-xs sm:text-sm font-semibold flex-shrink-0">
                   {item.step}
                 </div>

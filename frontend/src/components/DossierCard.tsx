@@ -168,9 +168,9 @@ export function DossierCard({ dossier }: DossierCardProps) {
         {dossier.tags && dossier.tags.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5 w-full">
             <Tag className="size-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
-            {dossier.tags.slice(0, 3).map((tag, index) => (
+            {dossier.tags.slice(0, 3).map((tag) => (
               <Badge
-                key={index}
+                key={tag}
                 variant="outline"
                 className="text-xs"
                 aria-label={`${t('fields.tags')}: ${tag}`}

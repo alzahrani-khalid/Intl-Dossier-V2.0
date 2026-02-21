@@ -394,7 +394,7 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
           const toNode = previewNodes.find((n) => n.id === edge.to)!
           return (
             <m.line
-              key={idx}
+              key={`${edge.from}-${edge.to}`}
               x1={fromNode.x}
               y1={fromNode.y}
               x2={toNode.x}
@@ -584,7 +584,7 @@ export function RelationshipWizard({
                     },
                   ].map((benefit, idx) => (
                     <m.div
-                      key={idx}
+                      key={benefit.titleKey}
                       className="flex flex-col items-center text-center p-4 rounded-lg bg-muted/50"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}

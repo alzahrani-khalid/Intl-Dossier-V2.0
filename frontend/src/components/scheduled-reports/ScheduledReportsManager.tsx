@@ -177,7 +177,7 @@ export function ScheduledReportsManager() {
         </div>
         <div className="grid gap-4 sm:gap-6">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-32" />
+            <Skeleton key={`skeleton-${i}`} className="h-32" />
           ))}
         </div>
       </div>

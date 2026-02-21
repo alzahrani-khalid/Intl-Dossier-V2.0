@@ -346,8 +346,12 @@ export function ConsistencyCheckPanel({
                   </p>
                 </div>
                 <div className="space-y-2">
-                  {latestCheck.recommendations.items.map((rec, index) => (
-                    <RecommendationCard key={index} recommendation={rec} isRTL={isRTL} />
+                  {latestCheck.recommendations.items.map((rec) => (
+                    <RecommendationCard
+                      key={`${rec.type}-${rec.priority}-${rec.description_en.slice(0, 50)}`}
+                      recommendation={rec}
+                      isRTL={isRTL}
+                    />
                   ))}
                 </div>
               </CollapsibleContent>
@@ -564,8 +568,8 @@ function RecommendationCard({
             (!isRTL && recommendation.action_items_en?.length)) && (
             <ul className="mt-2 list-disc list-inside text-xs text-muted-foreground">
               {(isRTL ? recommendation.action_items_ar : recommendation.action_items_en)?.map(
-                (item, idx) => (
-                  <li key={idx}>{item}</li>
+                (item) => (
+                  <li key={item}>{item}</li>
                 ),
               )}
             </ul>

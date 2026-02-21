@@ -299,7 +299,7 @@ export function ErrorSummary({
 
             return (
               <m.li
-                key={index}
+                key={error.field ? `${error.field}-${error.message}` : `error-${index}`}
                 initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}

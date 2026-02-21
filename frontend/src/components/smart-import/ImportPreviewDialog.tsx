@@ -402,8 +402,8 @@ export function ImportPreviewDialog({
                   <AlertTitle>{t('preview.warnings', 'Warnings')}</AlertTitle>
                   <AlertDescription>
                     <ul className="list-disc list-inside text-xs mt-1">
-                      {previewData.warnings.map((warning, i) => (
-                        <li key={i}>{warning}</li>
+                      {previewData.warnings.map((warning) => (
+                        <li key={warning}>{warning}</li>
                       ))}
                     </ul>
                   </AlertDescription>
@@ -501,8 +501,8 @@ function ImportItemRow({ item, selected, onToggle, isRTL }: ImportItemRowProps) 
         )}
         {hasErrors && (
           <div className="mt-2 space-y-1">
-            {item.validationErrors?.map((error, i) => (
-              <p key={i} className="text-xs text-destructive flex items-center gap-1">
+            {item.validationErrors?.map((error) => (
+              <p key={error} className="text-xs text-destructive flex items-center gap-1">
                 <XCircle className="h-3 w-3 flex-shrink-0" />
                 {error}
               </p>

@@ -183,7 +183,7 @@ export function InfluenceReportView({
         <Skeleton className="h-10 w-48" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-20" />
+            <Skeleton key={`skeleton-${i}`} className="h-20" />
           ))}
         </div>
         <Skeleton className="h-32" />
@@ -295,7 +295,11 @@ export function InfluenceReportView({
           </h2>
           <div className="space-y-3">
             {report.key_findings.map((finding, index) => (
-              <FindingCard key={index} finding={finding} type={index === 0 ? 'success' : 'info'} />
+              <FindingCard
+                key={finding.en}
+                finding={finding}
+                type={index === 0 ? 'success' : 'info'}
+              />
             ))}
           </div>
         </section>
@@ -310,7 +314,7 @@ export function InfluenceReportView({
           </h2>
           <div className="space-y-3">
             {report.recommendations.map((rec, index) => (
-              <RecommendationCard key={index} recommendation={rec} index={index} />
+              <RecommendationCard key={rec.en} recommendation={rec} index={index} />
             ))}
           </div>
         </section>

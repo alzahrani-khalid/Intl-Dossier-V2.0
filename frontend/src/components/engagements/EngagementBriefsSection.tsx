@@ -269,7 +269,7 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
             {briefsLoading ? (
               <div className="space-y-3">
                 {[1, 2].map((i) => (
-                  <Skeleton key={i} className="h-24 w-full" />
+                  <Skeleton key={`brief-skeleton-${i}`} className="h-24 w-full" />
                 ))}
               </div>
             ) : briefs.length === 0 ? (
@@ -316,7 +316,7 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
             {contextLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="h-20 w-full" />
+                  <Skeleton key={`context-skeleton-${i}`} className="h-20 w-full" />
                 ))}
               </div>
             ) : contextData ? (
@@ -494,8 +494,8 @@ function ContextCard({ icon: Icon, title, count, items, isRTL }: ContextCardProp
       </div>
       {items && items.length > 0 ? (
         <ul className="space-y-2">
-          {items.map((item, idx) => (
-            <li key={idx} className="text-sm">
+          {items.map((item) => (
+            <li key={item.label} className="text-sm">
               <span className="font-medium">{item.label}</span>
               {item.sublabel && (
                 <span className="text-muted-foreground text-xs ms-2">({item.sublabel})</span>

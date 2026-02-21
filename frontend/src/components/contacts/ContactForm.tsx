@@ -307,7 +307,7 @@ export function ContactForm({
             {renderConfidenceBadge('email_addresses')}
           </div>
           {form.watch('email_addresses').map((_, index) => (
-            <div key={index} className="flex gap-2">
+            <div key={`email-${index}`} className="flex gap-2">
               <FormField
                 control={form.control}
                 name={`email_addresses.${index}`}
@@ -365,7 +365,7 @@ export function ContactForm({
             {renderConfidenceBadge('phone_numbers')}
           </div>
           {form.watch('phone_numbers').map((_, index) => (
-            <div key={index} className="flex gap-2">
+            <div key={`phone-${index}`} className="flex gap-2">
               <FormField
                 control={form.control}
                 name={`phone_numbers.${index}`}

@@ -274,7 +274,7 @@ export function ConsistencyPanel({
 
                 return (
                   <div
-                    key={`${conflict.conflict_position_id}-${index}`}
+                    key={`${conflict.conflict_position_id}-${conflict.conflict_type}-${conflict.description}`}
                     className="overflow-hidden rounded-lg border"
                   >
                     {/* Conflict Header */}
@@ -311,8 +311,8 @@ export function ConsistencyPanel({
                               {t('consistency.conflict.affectedSections')}
                             </p>
                             <div className="flex flex-wrap gap-1">
-                              {conflict.affected_sections.map((section, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs">
+                              {conflict.affected_sections.map((section) => (
+                                <Badge key={section} variant="outline" className="text-xs">
                                   {section}
                                 </Badge>
                               ))}

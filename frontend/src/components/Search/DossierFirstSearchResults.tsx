@@ -218,7 +218,10 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
     if (parts.length === 1) return text
     return parts.map((part, i) =>
       i % 2 === 1 ? (
-        <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
+        <mark
+          key={`highlight-${i}-${part}`}
+          className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5"
+        >
           {part}
         </mark>
       ) : (
@@ -329,8 +332,8 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
           {/* Tags */}
           {dossier.tags && dossier.tags.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {dossier.tags.slice(0, 3).map((tag, idx) => (
-                <Badge key={idx} variant="outline" className="text-xs">
+              {dossier.tags.slice(0, 3).map((tag) => (
+                <Badge key={tag} variant="outline" className="text-xs">
                   {tag}
                 </Badge>
               ))}
@@ -373,7 +376,10 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
     if (parts.length === 1) return text
     return parts.map((part, i) =>
       i % 2 === 1 ? (
-        <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
+        <mark
+          key={`highlight-${i}-${part}`}
+          className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5"
+        >
           {part}
         </mark>
       ) : (

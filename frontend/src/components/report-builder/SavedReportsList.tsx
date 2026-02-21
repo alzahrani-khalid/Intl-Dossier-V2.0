@@ -165,7 +165,7 @@ export function SavedReportsList({
           {isLoading ? (
             <div className="space-y-3">
               {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-20 w-full" />
+                <Skeleton key={`skeleton-${i}`} className="h-20 w-full" />
               ))}
             </div>
           ) : filteredReports.length === 0 ? (

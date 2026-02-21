@@ -96,7 +96,7 @@ export function MouPartiesList({ mouId, onAddParty, onEditParty }: MouPartiesLis
       {isLoading && (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-24 w-full rounded-lg" />
+            <Skeleton key={`skeleton-party-${i}`} className="h-24 w-full rounded-lg" />
           ))}
         </div>
       )}

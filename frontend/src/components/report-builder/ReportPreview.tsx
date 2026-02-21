@@ -116,7 +116,7 @@ export function ReportPreview({
           </TableHeader>
           <TableBody>
             {previewData.data.map((row, index) => (
-              <TableRow key={index}>
+              <TableRow key={(row['id'] as string) ?? `row-${index}`}>
                 {visibleColumns.map((column) => {
                   const [, field] = column.fieldId.split('.')
                   const value = row[field!]
@@ -283,8 +283,8 @@ export function ReportPreview({
                 : false
             }
           >
-            {pieData.map((_entry, index) => (
-              <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+            {pieData.map((entry, index) => (
+              <Cell key={`cell-${entry.name}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
             ))}
           </Pie>
           <Tooltip />

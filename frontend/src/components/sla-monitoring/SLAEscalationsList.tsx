@@ -105,7 +105,7 @@ export function SLAEscalationsList({
         <CardContent>
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <Skeleton key={i} className="h-24 w-full" />
+              <Skeleton key={`skeleton-escalation-${i}`} className="h-24 w-full" />
             ))}
           </div>
         </CardContent>

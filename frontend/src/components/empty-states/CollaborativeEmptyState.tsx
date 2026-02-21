@@ -139,9 +139,9 @@ export function CollaborativeEmptyState({
       {/* Secondary Actions */}
       {secondaryActions.length > 0 && (
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          {secondaryActions.map((action, index) => (
+          {secondaryActions.map((action) => (
             <Button
-              key={index}
+              key={action.label}
               variant="outline"
               onClick={action.onClick}
               className="min-h-10 gap-2"
