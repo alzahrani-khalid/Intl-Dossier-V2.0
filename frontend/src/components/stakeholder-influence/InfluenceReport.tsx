@@ -182,8 +182,8 @@ export function InfluenceReportView({
       <div className={cn('space-y-4', className)}>
         <Skeleton className="h-10 w-48" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={`skeleton-${i}`} className="h-20" />
+          {['metrics-1', 'metrics-2', 'metrics-3', 'metrics-4'].map((id) => (
+            <Skeleton key={id} className="h-20" />
           ))}
         </div>
         <Skeleton className="h-32" />

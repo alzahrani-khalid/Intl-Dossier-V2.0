@@ -63,8 +63,8 @@ export function StatusTimeline({ commitmentId, createdAt, createdBy }: StatusTim
   if (isLoading) {
     return (
       <div className="space-y-4">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="flex gap-3">
+        {[0, 1, 2].map((n) => (
+          <div key={n} className="flex gap-3">
             <Skeleton className="size-8 rounded-full shrink-0" />
             <div className="flex-1 space-y-2">
               <Skeleton className="h-4 w-3/4" />

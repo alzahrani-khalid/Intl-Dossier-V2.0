@@ -142,8 +142,8 @@ export function AuditLogTable({
   if (isLoading) {
     return (
       <div className={cn('space-y-2', className)}>
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-4 p-4 border rounded-lg">
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+          <div key={n} className="flex items-center gap-4 p-4 border rounded-lg">
             <Skeleton className="h-8 w-8 rounded-full" />
             <div className="flex-1 space-y-2">
               <Skeleton className="h-4 w-1/4" />

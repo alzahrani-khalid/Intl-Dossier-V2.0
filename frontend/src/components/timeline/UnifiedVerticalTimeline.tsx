@@ -38,12 +38,12 @@ interface UnifiedVerticalTimelineProps {
 function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-6">
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="flex gap-4">
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <div key={n} className="flex gap-4">
           {/* Timeline dot skeleton */}
           <div className="flex flex-col items-center">
             <Skeleton className="h-11 w-11 rounded-full" />
-            {index < count - 1 && <Skeleton className="h-20 w-0.5 mt-2" />}
+            {n < count - 1 && <Skeleton className="h-20 w-0.5 mt-2" />}
           </div>
           {/* Card skeleton */}
           <div className="flex-1 space-y-3">

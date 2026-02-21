@@ -347,9 +347,9 @@ export function TutorialEmptyState({
                   )}
                 </Button>
                 <div className="flex gap-1">
-                  {relevantTutorials.map((_, idx) => (
+                  {relevantTutorials.map((tutorial, idx) => (
                     <button
-                      key={idx}
+                      key={tutorial.id}
                       className={cn(
                         'w-1.5 h-1.5 rounded-full transition-colors',
                         idx === activeTutorialIndex

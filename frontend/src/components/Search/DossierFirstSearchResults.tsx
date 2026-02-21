@@ -216,18 +216,21 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
     const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
     const parts = text.split(regex)
     if (parts.length === 1) return text
-    return parts.map((part, i) =>
-      i % 2 === 1 ? (
-        <mark
-          key={`highlight-${i}-${part}`}
-          className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5"
-        >
+    let offset = 0
+    let isMatch = false
+    return parts.map((part) => {
+      const key = `highlight-${offset}`
+      offset += part.length
+      const wasMatch = isMatch
+      isMatch = !isMatch
+      return wasMatch ? (
+        <mark key={key} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
           {part}
         </mark>
       ) : (
         part
-      ),
-    )
+      )
+    })
   }
 
   const handleClick = () => {
@@ -374,18 +377,21 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
     const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
     const parts = text.split(regex)
     if (parts.length === 1) return text
-    return parts.map((part, i) =>
-      i % 2 === 1 ? (
-        <mark
-          key={`highlight-${i}-${part}`}
-          className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5"
-        >
+    let offset = 0
+    let isMatch = false
+    return parts.map((part) => {
+      const key = `highlight-${offset}`
+      offset += part.length
+      const wasMatch = isMatch
+      isMatch = !isMatch
+      return wasMatch ? (
+        <mark key={key} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
           {part}
         </mark>
       ) : (
         part
-      ),
-    )
+      )
+    })
   }
 
   const handleClick = () => {

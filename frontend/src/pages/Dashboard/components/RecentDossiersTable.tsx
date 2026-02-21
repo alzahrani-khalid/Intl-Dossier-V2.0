@@ -105,8 +105,8 @@ export function RecentDossiersTable({ className, maxItems = 5 }: RecentDossiersT
       <CardContent>
         {isLoading ? (
           <div className="space-y-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex items-center gap-4">
+            {[0, 1, 2].map((n) => (
+              <div key={n} className="flex items-center gap-4">
                 <Skeleton className="size-8 rounded-lg" />
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-4 w-1/3" />

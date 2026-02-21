@@ -294,8 +294,8 @@ export function ActivityTimelineSection({
       <Card className={className}>
         <CardContent className="p-6">
           <div className="space-y-6">
-            {[...Array(3)].map((_, i) => (
-              <div key={`skeleton-${i}`} className="flex gap-4">
+            {[0, 1, 2].map((n) => (
+              <div key={n} className="flex gap-4">
                 <div className="h-12 w-12 bg-muted animate-pulse rounded-full shrink-0" />
                 <div className="flex-1 space-y-2">
                   <div className="h-4 bg-muted animate-pulse rounded w-3/4" />

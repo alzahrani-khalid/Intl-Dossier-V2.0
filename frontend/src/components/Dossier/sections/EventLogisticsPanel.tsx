@@ -163,8 +163,8 @@ export function EventLogisticsPanel({ eventId, eventTitle }: EventLogisticsPanel
       {/* Loading State */}
       {isLoading && (
         <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={`skeleton-logistics-${i}`} className="h-24 w-full rounded-lg" />
+          {[1, 2, 3].map((n) => (
+            <Skeleton key={n} className="h-24 w-full rounded-lg" />
           ))}
         </div>
       )}

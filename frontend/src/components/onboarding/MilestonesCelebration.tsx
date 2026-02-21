@@ -109,14 +109,14 @@ function FireworkBurst({ x, y, delay }: { x: number; y: number; delay: number })
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay, duration: 0.1 }}
     >
-      {[...Array(12)].map((_, i) => {
-        const angle = (i / 12) * Math.PI * 2
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => {
+        const angle = (n / 12) * Math.PI * 2
         const distance = 40 + Math.random() * 30
         return (
           <motion.div
-            key={i}
+            key={n}
             className="absolute w-2 h-2 rounded-full"
-            style={{ backgroundColor: colors[i % colors.length] }}
+            style={{ backgroundColor: colors[n % colors.length] }}
             initial={{ x: 0, y: 0, opacity: 1 }}
             animate={{
               x: Math.cos(angle) * distance,
@@ -160,8 +160,8 @@ function CheckmarkAnimation() {
  */
 function ConfettiAnimation() {
   const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#FF9FF3']
-  const particles = [...Array(50)].map((_, i) => ({
-    id: i,
+  const particles = Array.from({ length: 50 }, (_, n) => ({
+    id: n,
     delay: Math.random() * 1,
     duration: 2 + Math.random() * 2,
     color: colors[Math.floor(Math.random() * colors.length)]!,
@@ -182,8 +182,8 @@ function ConfettiAnimation() {
  * Generate sparkle particles
  */
 function SparkleAnimation() {
-  const sparkles = [...Array(15)].map((_, i) => ({
-    id: i,
+  const sparkles = Array.from({ length: 15 }, (_, n) => ({
+    id: n,
     x: 10 + Math.random() * 80,
     y: 10 + Math.random() * 80,
     delay: Math.random() * 1,
@@ -203,11 +203,11 @@ function SparkleAnimation() {
  * Generate firework bursts
  */
 function FireworksAnimation() {
-  const fireworks = [...Array(5)].map((_, i) => ({
-    id: i,
+  const fireworks = Array.from({ length: 5 }, (_, n) => ({
+    id: n,
     x: 20 + Math.random() * 60,
     y: 20 + Math.random() * 40,
-    delay: i * 0.4,
+    delay: n * 0.4,
   }))
 
   return (

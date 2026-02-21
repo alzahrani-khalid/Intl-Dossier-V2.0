@@ -63,8 +63,8 @@ export function WorkflowExecutionsList({ ruleId }: WorkflowExecutionsListProps) 
   if (isLoading) {
     return (
       <div className="space-y-4">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-20 rounded-lg" />
+        {[0, 1, 2, 3, 4].map((n) => (
+          <Skeleton key={n} className="h-20 rounded-lg" />
         ))}
       </div>
     )

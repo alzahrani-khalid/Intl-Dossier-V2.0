@@ -359,8 +359,8 @@ function DataRetentionPage() {
               <CardContent>
                 {statsLoading ? (
                   <div className="space-y-3">
-                    {[1, 2, 3].map((i) => (
-                      <Skeleton key={`stats-skeleton-${i}`} className="h-12 w-full" />
+                    {[0, 1, 2].map((n) => (
+                      <Skeleton key={n} className="h-12 w-full" />
                     ))}
                   </div>
                 ) : statistics.length === 0 ? (
@@ -419,8 +419,8 @@ function DataRetentionPage() {
               <CardContent>
                 {logLoading ? (
                   <div className="space-y-3">
-                    {[1, 2, 3].map((i) => (
-                      <Skeleton key={`execlog-skeleton-${i}`} className="h-12 w-full" />
+                    {[0, 1, 2].map((n) => (
+                      <Skeleton key={n} className="h-12 w-full" />
                     ))}
                   </div>
                 ) : executionLog.length === 0 ? (
@@ -502,8 +502,8 @@ function DataRetentionPage() {
             <CardContent>
               {policiesLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Skeleton key={`policy-skeleton-${i}`} className="h-16 w-full" />
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <Skeleton key={n} className="h-16 w-full" />
                   ))}
                 </div>
               ) : policies.length === 0 ? (
@@ -605,8 +605,8 @@ function DataRetentionPage() {
             <CardContent>
               {holdsLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3].map((i) => (
-                    <Skeleton key={`hold-skeleton-${i}`} className="h-16 w-full" />
+                  {[0, 1, 2].map((n) => (
+                    <Skeleton key={n} className="h-16 w-full" />
                   ))}
                 </div>
               ) : legalHolds.length === 0 ? (
@@ -694,8 +694,8 @@ function DataRetentionPage() {
               <CardContent>
                 {pendingLoading ? (
                   <div className="space-y-3">
-                    {[1, 2, 3].map((i) => (
-                      <Skeleton key={`pending-skeleton-${i}`} className="h-12 w-full" />
+                    {[0, 1, 2].map((n) => (
+                      <Skeleton key={n} className="h-12 w-full" />
                     ))}
                   </div>
                 ) : pendingActions.length === 0 ? (
@@ -741,8 +741,8 @@ function DataRetentionPage() {
               <CardContent>
                 {expiringLoading ? (
                   <div className="space-y-3">
-                    {[1, 2, 3].map((i) => (
-                      <Skeleton key={`expiring-skeleton-${i}`} className="h-12 w-full" />
+                    {[0, 1, 2].map((n) => (
+                      <Skeleton key={n} className="h-12 w-full" />
                     ))}
                   </div>
                 ) : expiringEntities.length === 0 ? (
@@ -794,8 +794,8 @@ function DataRetentionPage() {
             <CardContent>
               {logLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Skeleton key={`history-skeleton-${i}`} className="h-16 w-full" />
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <Skeleton key={n} className="h-16 w-full" />
                   ))}
                 </div>
               ) : executionLog.length === 0 ? (

@@ -392,8 +392,8 @@ function FieldPermissionsPage() {
             <CardContent>
               {permissionsLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Skeleton key={`perm-skeleton-${i}`} className="h-16 w-full" />
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <Skeleton key={n} className="h-16 w-full" />
                   ))}
                 </div>
               ) : filteredPermissions.length === 0 ? (
@@ -507,8 +507,8 @@ function FieldPermissionsPage() {
             <CardContent>
               {definitionsLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3].map((i) => (
-                    <Skeleton key={`def-skeleton-${i}`} className="h-20 w-full" />
+                  {[0, 1, 2].map((n) => (
+                    <Skeleton key={n} className="h-20 w-full" />
                   ))}
                 </div>
               ) : Object.keys(definitionsByEntity).length === 0 ? (
@@ -602,8 +602,8 @@ function FieldPermissionsPage() {
             <CardContent>
               {auditLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Skeleton key={`audit-skeleton-${i}`} className="h-16 w-full" />
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <Skeleton key={n} className="h-16 w-full" />
                   ))}
                 </div>
               ) : auditLogs.length === 0 ? (

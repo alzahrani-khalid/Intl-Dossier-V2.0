@@ -473,8 +473,8 @@ const RollbackConfirmDialog = memo(function RollbackConfirmDialog({
 const TimelineSkeleton = memo(function TimelineSkeleton() {
   return (
     <div className="space-y-4">
-      {[1, 2, 3].map((i) => (
-        <div key={`skeleton-${i}`} className="relative border-s-4 border-gray-200 ps-4 pb-4">
+      {[0, 1, 2].map((n) => (
+        <div key={n} className="relative border-s-4 border-gray-200 ps-4 pb-4">
           <div className="absolute -start-2.5 top-0 h-5 w-5 rounded-full bg-gray-200" />
           <Card className="ms-2">
             <CardHeader className="pb-2">
@@ -661,8 +661,8 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
             // Grouped view
             isLoadingGrouped ? (
               <div className="space-y-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={`skeleton-grouped-${i}`} className="h-20" />
+                {[0, 1, 2, 3].map((n) => (
+                  <Skeleton key={n} className="h-20" />
                 ))}
               </div>
             ) : groupedError ? (

@@ -442,8 +442,8 @@ export function TagHierarchyManager({
   if (isLoading) {
     return (
       <div className={cn('space-y-2', className)}>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-10 w-full" />
+        {[0, 1, 2, 3, 4].map((n) => (
+          <Skeleton key={n} className="h-10 w-full" />
         ))}
       </div>
     )

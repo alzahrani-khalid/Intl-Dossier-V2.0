@@ -138,8 +138,8 @@ export function SettingsSectionSkeleton() {
           <div className="h-6 bg-muted rounded w-1/3" />
           <div className="h-4 bg-muted rounded w-2/3" />
           <div className="space-y-3 pt-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
+            {[0, 1, 2, 3].map((n) => (
+              <div key={n} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="space-y-2 flex-1">
                   <div className="h-4 bg-muted rounded w-1/4" />
                   <div className="h-3 bg-muted rounded w-1/2" />

@@ -435,7 +435,7 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
           aria-label={t('carousel.pagination', 'Carousel pagination')}
           data-testid={`${testId}-indicators`}
         >
-          {Array.from({ length: totalPages }).map((_, pageIndex) => (
+          {Array.from({ length: totalPages }, (_, n) => n).map((pageIndex) => (
             <PositionIndicator
               key={pageIndex}
               isActive={pageIndex === currentPage}

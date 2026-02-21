@@ -301,7 +301,7 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
               <div className="p-2 sm:p-3 space-y-2">
                 {isLoading ? (
                   // Loading state
-                  Array.from({ length: 5 }).map((_, i) => <EntityCardSkeleton key={i} />)
+                  [0, 1, 2, 3, 4].map((n) => <EntityCardSkeleton key={n} />)
                 ) : filteredEntities.length === 0 ? (
                   // Empty state
                   <div className="text-center py-8 sm:py-12">

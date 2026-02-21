@@ -49,8 +49,8 @@ interface DossierRecommendationsPanelProps {
 function LoadingSkeleton() {
   return (
     <div className="space-y-3">
-      {[1, 2, 3].map((i) => (
-        <Card key={`skeleton-${i}`} className="overflow-hidden">
+      {[1, 2, 3].map((n) => (
+        <Card key={n} className="overflow-hidden">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
               <Skeleton className="h-10 w-10 rounded-lg" />

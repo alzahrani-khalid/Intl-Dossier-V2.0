@@ -277,8 +277,8 @@ function SuggestionSkeleton({
 
   return (
     <div className={cn('space-y-3', sizes.container)}>
-      {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="flex items-start gap-3">
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <div key={n} className="flex items-start gap-3">
           <Skeleton
             className={cn(
               'rounded-full flex-shrink-0',

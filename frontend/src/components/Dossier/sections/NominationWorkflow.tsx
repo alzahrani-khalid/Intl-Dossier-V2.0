@@ -230,8 +230,8 @@ export function NominationWorkflow({
       {/* Loading State */}
       {isLoading && (
         <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={`skeleton-nomination-${i}`} className="h-32 w-full rounded-lg" />
+          {[0, 1, 2].map((n) => (
+            <Skeleton key={n} className="h-32 w-full rounded-lg" />
           ))}
         </div>
       )}

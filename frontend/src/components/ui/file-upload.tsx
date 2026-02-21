@@ -164,8 +164,8 @@ export function GridPattern() {
   const rows = 11
   return (
     <div className="flex bg-gray-100 dark:bg-neutral-900 shrink-0 flex-wrap justify-center items-center gap-x-px gap-y-px  scale-105">
-      {Array.from({ length: rows }).map((_, row) =>
-        Array.from({ length: columns }).map((_, col) => {
+      {Array.from({ length: rows }, (_, r) => r).map((row) =>
+        Array.from({ length: columns }, (_, c) => c).map((col) => {
           const index = row * columns + col
           return (
             <div

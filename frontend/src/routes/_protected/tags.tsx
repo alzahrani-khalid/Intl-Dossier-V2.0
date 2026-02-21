@@ -106,8 +106,8 @@ function MergeHistoryCard({ isRTL }: { isRTL: boolean }) {
         <ScrollArea className="h-64">
           {isLoading ? (
             <div className="space-y-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-16 bg-muted animate-pulse rounded-md" />
+              {[0, 1, 2].map((n) => (
+                <div key={n} className="h-16 bg-muted animate-pulse rounded-md" />
               ))}
             </div>
           ) : !mergeHistory || mergeHistory.length === 0 ? (
@@ -165,8 +165,8 @@ function RenameHistoryCard({ isRTL }: { isRTL: boolean }) {
         <ScrollArea className="h-64">
           {isLoading ? (
             <div className="space-y-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-16 bg-muted animate-pulse rounded-md" />
+              {[0, 1, 2].map((n) => (
+                <div key={n} className="h-16 bg-muted animate-pulse rounded-md" />
               ))}
             </div>
           ) : !renameHistory || renameHistory.length === 0 ? (

@@ -124,18 +124,18 @@ export function FormProgressIndicator({
 
           {/* Step dots */}
           <div className="flex items-center gap-1.5" role="group" aria-label={t('progress.steps')}>
-            {Array.from({ length: totalSteps! }).map((_, index) => (
+            {Array.from({ length: totalSteps! }, (_, n) => n).map((n) => (
               <div
-                key={index}
+                key={n}
                 className={cn(
                   'size-2 rounded-full transition-colors',
-                  index < currentStep!
+                  n < currentStep!
                     ? 'bg-primary'
-                    : index === currentStep
+                    : n === currentStep
                       ? 'bg-primary ring-2 ring-primary/30'
                       : 'bg-muted',
                 )}
-                aria-current={index === currentStep ? 'step' : undefined}
+                aria-current={n === currentStep ? 'step' : undefined}
               />
             ))}
           </div>

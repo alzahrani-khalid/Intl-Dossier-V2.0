@@ -230,8 +230,8 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
         <div className="p-4 space-y-2">
           {isLoading ? (
             // Loading skeleton
-            Array.from({ length: 5 }).map((_, i) => (
-              <Card key={i} className="p-3">
+            [0, 1, 2, 3, 4].map((n) => (
+              <Card key={n} className="p-3">
                 <div className="flex items-start gap-3">
                   <Skeleton className="h-10 w-10 rounded-lg" />
                   <div className="flex-1 space-y-2">

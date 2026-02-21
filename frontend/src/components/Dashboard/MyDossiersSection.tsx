@@ -76,8 +76,8 @@ export function MyDossiersSection({
         {/* Loading State */}
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(maxItems)].map((_, i) => (
-              <DossierCardSkeleton key={i} />
+            {Array.from({ length: maxItems }, (_, n) => n).map((n) => (
+              <DossierCardSkeleton key={n} />
             ))}
           </div>
         )}

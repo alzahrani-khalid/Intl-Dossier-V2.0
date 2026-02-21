@@ -29,8 +29,8 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
         className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4', className)}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        {[...Array(4)].map((_, i) => (
-          <Card key={i}>
+        {[0, 1, 2, 3].map((n) => (
+          <Card key={n}>
             <CardHeader className="pb-2">
               <Skeleton className="h-4 w-24" />
             </CardHeader>

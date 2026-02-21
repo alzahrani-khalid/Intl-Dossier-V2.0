@@ -384,8 +384,8 @@ export function SavedSearchesManager({
   // Render loading skeletons
   const renderSkeletons = (count: number) => (
     <>
-      {Array.from({ length: count }).map((_, i) => (
-        <Skeleton key={i} className="h-20 w-full rounded-lg" />
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <Skeleton key={n} className="h-20 w-full rounded-lg" />
       ))}
     </>
   )

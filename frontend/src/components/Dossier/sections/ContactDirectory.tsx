@@ -282,8 +282,8 @@ export function ContactDirectory({
       {/* Loading State */}
       {isLoading && (
         <div className="space-y-3">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={`skeleton-contact-${i}`} className="h-24 w-full rounded-lg" />
+          {[1, 2, 3, 4].map((n) => (
+            <Skeleton key={n} className="h-24 w-full rounded-lg" />
           ))}
         </div>
       )}

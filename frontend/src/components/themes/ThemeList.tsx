@@ -186,8 +186,8 @@ export function ThemeList({
       {/* Loading State */}
       {isLoading && (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-48 rounded-lg" />
+          {[0, 1, 2, 3, 4, 5].map((n) => (
+            <Skeleton key={n} className="h-48 rounded-lg" />
           ))}
         </div>
       )}

@@ -87,8 +87,8 @@ export function DashboardMetricCards({ summary, isLoading, className }: Dashboar
           className,
         )}
       >
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i}>
+        {[0, 1, 2, 3].map((n) => (
+          <Card key={n}>
             <CardHeader>
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-3 w-32" />

@@ -127,8 +127,8 @@ export function RecentDossierActivity({
         {/* Loading State */}
         {isLoading && (
           <div className="space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <ActivityItemSkeleton key={i} />
+            {[0, 1, 2, 3, 4].map((n) => (
+              <ActivityItemSkeleton key={n} />
             ))}
           </div>
         )}

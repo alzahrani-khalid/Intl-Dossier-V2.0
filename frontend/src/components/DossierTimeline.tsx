@@ -193,8 +193,8 @@ export function DossierTimeline({
   if (isLoading) {
     return (
       <div className="space-y-4" role="status" aria-label={t('loading')}>
-        {[...Array(5)].map((_, index) => (
-          <div key={index} className="flex gap-4">
+        {[0, 1, 2, 3, 4].map((n) => (
+          <div key={n} className="flex gap-4">
             <Skeleton className="size-10 shrink-0 rounded-full" />
             <div className="flex-1 space-y-2">
               <Skeleton className="h-4 w-1/4" />

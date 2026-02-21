@@ -210,8 +210,8 @@ export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
   if (isLoading) {
     return (
       <div className="h-full space-y-2 animate-pulse">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex items-start gap-3 p-2">
+        {[0, 1, 2].map((n) => (
+          <div key={n} className="flex items-start gap-3 p-2">
             <div className="w-8 h-8 bg-muted rounded-lg" />
             <div className="flex-1">
               <div className="h-4 w-3/4 bg-muted rounded mb-1" />

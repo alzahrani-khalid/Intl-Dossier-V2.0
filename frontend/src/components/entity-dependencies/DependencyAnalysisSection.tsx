@@ -71,8 +71,8 @@ function ImpactSummaryWidget({ entityId }: ImpactSummaryWidgetProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 gap-2 sm:gap-4">
-        {[1, 2, 3, 4].map((i) => (
-          <Skeleton key={`skeleton-${i}`} className="h-20" />
+        {[0, 1, 2, 3].map((n) => (
+          <Skeleton key={n} className="h-20" />
         ))}
       </div>
     )
@@ -152,8 +152,8 @@ function RecentAssessmentsList({ entityId, onSelect }: RecentAssessmentsListProp
   if (isLoading) {
     return (
       <div className="space-y-2">
-        {[1, 2, 3].map((i) => (
-          <Skeleton key={`skeleton-${i}`} className="h-16" />
+        {[0, 1, 2].map((n) => (
+          <Skeleton key={n} className="h-16" />
         ))}
       </div>
     )

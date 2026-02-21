@@ -90,8 +90,8 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
   // Loading skeleton
   const LoadingSkeleton = () => (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <Card key={i}>
+      {[0, 1, 2, 3, 4, 5].map((n) => (
+        <Card key={n}>
           <CardContent className="space-y-3 p-6">
             <Skeleton className="h-6 w-3/4" />
             <Skeleton className="h-4 w-full" />

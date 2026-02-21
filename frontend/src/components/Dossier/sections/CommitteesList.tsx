@@ -270,8 +270,8 @@ export function CommitteesList({
       {/* Loading State */}
       {isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Skeleton key={`skeleton-${i}`} className="h-48 rounded-lg" />
+          {[0, 1, 2, 3, 4, 5].map((n) => (
+            <Skeleton key={n} className="h-48 rounded-lg" />
           ))}
         </div>
       )}

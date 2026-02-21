@@ -302,8 +302,8 @@ export function ThemeHierarchy({
       {/* Loading State */}
       {isLoading && (
         <div className="space-y-2">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-10 rounded-md" />
+          {[0, 1, 2, 3, 4].map((n) => (
+            <Skeleton key={n} className="h-10 rounded-md" />
           ))}
         </div>
       )}

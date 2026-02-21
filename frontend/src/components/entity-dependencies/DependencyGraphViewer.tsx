@@ -340,8 +340,8 @@ export function DependencyGraphViewer({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={`skeleton-${i}`} className="h-16 sm:h-20" />
+            {[1, 2, 3, 4].map((n) => (
+              <Skeleton key={n} className="h-16 sm:h-20" />
             ))}
           </div>
           <Skeleton className="h-[400px] sm:h-[500px] w-full" />

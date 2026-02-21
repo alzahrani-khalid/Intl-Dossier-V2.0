@@ -54,8 +54,8 @@ export function SLAAtRiskList({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <Skeleton key={i} className="h-24 w-full" />
+            {[0, 1, 2].map((n) => (
+              <Skeleton key={n} className="h-24 w-full" />
             ))}
           </div>
         </CardContent>

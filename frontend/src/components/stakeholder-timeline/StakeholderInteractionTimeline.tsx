@@ -62,11 +62,11 @@ import type {
 function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-6">
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="flex gap-4">
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <div key={n} className="flex gap-4">
           <div className="flex flex-col items-center">
             <Skeleton className="h-11 w-11 rounded-full" />
-            {index < count - 1 && <Skeleton className="h-20 w-0.5 mt-2" />}
+            {n < count - 1 && <Skeleton className="h-20 w-0.5 mt-2" />}
           </div>
           <div className="flex-1 space-y-3">
             <Skeleton className="h-6 w-3/4" />
@@ -138,8 +138,8 @@ function StatsOverviewCard({
       <Card className={className}>
         <CardContent className="pt-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-16" />
+            {[0, 1, 2, 3].map((n) => (
+              <Skeleton key={n} className="h-16" />
             ))}
           </div>
         </CardContent>

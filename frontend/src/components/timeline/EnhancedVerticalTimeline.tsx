@@ -40,8 +40,8 @@ interface EnhancedVerticalTimelineProps {
 function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-8 sm:space-y-12 py-8 sm:py-12">
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="relative flex items-start gap-4 sm:gap-6 animate-pulse">
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <div key={n} className="relative flex items-start gap-4 sm:gap-6 animate-pulse">
           {/* Icon skeleton */}
           <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-muted" />
 

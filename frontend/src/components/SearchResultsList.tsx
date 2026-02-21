@@ -406,8 +406,8 @@ export function SearchResultsList({
         {/* Loading skeletons */}
         {isLoading && (
           <div className="space-y-3">
-            {[...Array(3)].map((_, idx) => (
-              <LoadingSkeleton key={idx} />
+            {[0, 1, 2].map((n) => (
+              <LoadingSkeleton key={n} />
             ))}
           </div>
         )}

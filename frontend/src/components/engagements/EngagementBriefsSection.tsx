@@ -268,8 +268,8 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
           <TabsContent value="briefs" className="space-y-4">
             {briefsLoading ? (
               <div className="space-y-3">
-                {[1, 2].map((i) => (
-                  <Skeleton key={`brief-skeleton-${i}`} className="h-24 w-full" />
+                {[1, 2].map((n) => (
+                  <Skeleton key={n} className="h-24 w-full" />
                 ))}
               </div>
             ) : briefs.length === 0 ? (
@@ -315,8 +315,8 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
 
             {contextLoading ? (
               <div className="space-y-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={`context-skeleton-${i}`} className="h-20 w-full" />
+                {[1, 2, 3, 4].map((n) => (
+                  <Skeleton key={n} className="h-20 w-full" />
                 ))}
               </div>
             ) : contextData ? (

@@ -208,8 +208,8 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
       {/* Loading State */}
       {isLoading && (
         <div className="grid gap-4 md:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-[300px] rounded-lg" />
+          {[0, 1, 2, 3].map((n) => (
+            <Skeleton key={n} className="h-[300px] rounded-lg" />
           ))}
         </div>
       )}

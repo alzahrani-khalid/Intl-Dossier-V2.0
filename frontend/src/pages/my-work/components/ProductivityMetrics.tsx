@@ -28,8 +28,8 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
             <Skeleton className="h-4 w-28" />
           </div>
           <div className="grid grid-cols-3 gap-3">
-            {[1, 2, 3].map((i) => (
-              <div key={`skeleton-metric-${i}`} className="flex items-center gap-2">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="flex items-center gap-2">
                 <Skeleton className="h-7 w-7 rounded-md" />
                 <div className="flex-1">
                   <Skeleton className="h-2.5 w-14 mb-1" />

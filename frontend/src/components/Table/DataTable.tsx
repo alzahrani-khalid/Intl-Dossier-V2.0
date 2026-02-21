@@ -204,8 +204,8 @@ export function DataTable<TData, TValue>({
       <div className="space-y-4">
         <Skeleton className="h-10 w-full max-w-sm" />
         <div className="space-y-3">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full" />
+          {[0, 1, 2, 3, 4].map((n) => (
+            <Skeleton key={n} className="h-16 w-full" />
           ))}
         </div>
       </div>

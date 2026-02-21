@@ -219,8 +219,8 @@ export function NotificationsWidget({
   if (isLoading) {
     return (
       <div className="h-full space-y-2 animate-pulse">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="flex items-start gap-3 p-2">
+        {[0, 1, 2, 3].map((n) => (
+          <div key={n} className="flex items-start gap-3 p-2">
             <div className="w-2 h-2 bg-muted rounded-full mt-2" />
             <div className="w-6 h-6 bg-muted rounded" />
             <div className="flex-1">

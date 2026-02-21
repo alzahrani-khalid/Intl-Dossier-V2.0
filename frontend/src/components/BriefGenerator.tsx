@@ -210,14 +210,12 @@ export function BriefGenerator({
                   </p>
                 </div>
 
-                {(isRTL ? brief.content_ar.sections : brief.content_en.sections).map(
-                  (section, index) => (
-                    <div key={`${section.title}-${index}`}>
-                      <h4 className="mb-2 font-medium">{section.title}</h4>
-                      <p className="whitespace-pre-wrap text-sm">{section.content}</p>
-                    </div>
-                  ),
-                )}
+                {(isRTL ? brief.content_ar.sections : brief.content_en.sections).map((section) => (
+                  <div key={section.title}>
+                    <h4 className="mb-2 font-medium">{section.title}</h4>
+                    <p className="whitespace-pre-wrap text-sm">{section.content}</p>
+                  </div>
+                ))}
               </div>
             </div>
 

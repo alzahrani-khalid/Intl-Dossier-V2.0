@@ -6,7 +6,7 @@
  * Supports manual entry with all contact fields.
  */
 
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import {
@@ -75,8 +75,8 @@ interface FormValues {
   full_name: string
   organization_id: string
   position: string
-  email_addresses: string[]
-  phone_numbers: string[]
+  email_addresses: { value: string }[]
+  phone_numbers: { value: string }[]
   notes: string
   tags: string[]
   source_type: 'manual' | 'business_card' | 'document'
@@ -132,8 +132,8 @@ export function ContactForm({
       full_name: defaultValues?.name_en || '',
       organization_id: defaultValues?.metadata?.organization_id || '',
       position: defaultValues?.metadata?.title_en || '',
-      email_addresses: defaultValues?.metadata?.email || [''],
-      phone_numbers: defaultValues?.metadata?.phone || [''],
+      email_addresses: (defaultValues?.metadata?.email || ['']).map((v) => ({ value: v })),
+      phone_numbers: (defaultValues?.metadata?.phone || ['']).map((v) => ({ value: v })),
       notes: defaultValues?.metadata?.notes || '',
       tags: defaultValues?.tags || [],
       source_type:
@@ -142,10 +142,22 @@ export function ContactForm({
     },
   })
 
+  const {
+    fields: emailFields,
+    append: appendEmail,
+    remove: removeEmail,
+  } = useFieldArray({ control: form.control, name: 'email_addresses' })
+
+  const {
+    fields: phoneFields,
+    append: appendPhone,
+    remove: removePhone,
+  } = useFieldArray({ control: form.control, name: 'phone_numbers' })
+
   const handleSubmit = (data: FormValues) => {
     // Filter out empty email/phone entries
-    const emails = data.email_addresses.filter((e) => e.trim() !== '')
-    const phones = data.phone_numbers.filter((p) => p.trim() !== '')
+    const emails = data.email_addresses.map((e) => e.value).filter((e) => e.trim() !== '')
+    const phones = data.phone_numbers.map((p) => p.value).filter((p) => p.trim() !== '')
 
     // Find organization name for metadata
     const org = organizations.find((o) => o.id === data.organization_id)
@@ -168,32 +180,6 @@ export function ContactForm({
     }
 
     onSubmit(personData)
-  }
-
-  const addEmailField = () => {
-    const current = form.getValues('email_addresses')
-    form.setValue('email_addresses', [...current, ''])
-  }
-
-  const removeEmailField = (index: number) => {
-    const current = form.getValues('email_addresses')
-    form.setValue(
-      'email_addresses',
-      current.filter((_, i) => i !== index),
-    )
-  }
-
-  const addPhoneField = () => {
-    const current = form.getValues('phone_numbers')
-    form.setValue('phone_numbers', [...current, ''])
-  }
-
-  const removePhoneField = (index: number) => {
-    const current = form.getValues('phone_numbers')
-    form.setValue(
-      'phone_numbers',
-      current.filter((_, i) => i !== index),
-    )
   }
 
   const toggleTag = (tagId: string) => {
@@ -306,22 +292,22 @@ export function ContactForm({
             </FormLabel>
             {renderConfidenceBadge('email_addresses')}
           </div>
-          {form.watch('email_addresses').map((_, index) => (
-            <div key={`email-${index}`} className="flex gap-2">
+          {emailFields.map((field, index) => (
+            <div key={field.id} className="flex gap-2">
               <FormField
                 control={form.control}
-                name={`email_addresses.${index}`}
+                name={`email_addresses.${index}.value`}
                 rules={{
                   pattern: {
                     value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     message: t('contactDirectory.form.email_invalid'),
                   },
                 }}
-                render={({ field }) => (
+                render={({ field: inputField }) => (
                   <FormItem className="flex-1">
                     <FormControl>
                       <Input
-                        {...field}
+                        {...inputField}
                         type="email"
                         placeholder={t('contactDirectory.form.email_placeholder')}
                         className="h-11 px-4 text-base sm:h-10"
@@ -331,12 +317,12 @@ export function ContactForm({
                   </FormItem>
                 )}
               />
-              {form.watch('email_addresses').length > 1 && (
+              {emailFields.length > 1 && (
                 <Button
                   type="button"
                   variant="outline"
                   size="icon"
-                  onClick={() => removeEmailField(index)}
+                  onClick={() => removeEmail(index)}
                   className=" sm:h-10 sm:w-10"
                 >
                   <X className="h-4 w-4" />
@@ -348,7 +334,7 @@ export function ContactForm({
             type="button"
             variant="outline"
             size="sm"
-            onClick={addEmailField}
+            onClick={() => appendEmail({ value: '' })}
             className="h-9 gap-2"
           >
             <Plus className="h-4 w-4" />
@@ -364,16 +350,16 @@ export function ContactForm({
             </FormLabel>
             {renderConfidenceBadge('phone_numbers')}
           </div>
-          {form.watch('phone_numbers').map((_, index) => (
-            <div key={`phone-${index}`} className="flex gap-2">
+          {phoneFields.map((field, index) => (
+            <div key={field.id} className="flex gap-2">
               <FormField
                 control={form.control}
-                name={`phone_numbers.${index}`}
-                render={({ field }) => (
+                name={`phone_numbers.${index}.value`}
+                render={({ field: inputField }) => (
                   <FormItem className="flex-1">
                     <FormControl>
                       <Input
-                        {...field}
+                        {...inputField}
                         type="tel"
                         placeholder={t('contactDirectory.form.phone_placeholder')}
                         className="h-11 px-4 text-base sm:h-10"
@@ -383,12 +369,12 @@ export function ContactForm({
                   </FormItem>
                 )}
               />
-              {form.watch('phone_numbers').length > 1 && (
+              {phoneFields.length > 1 && (
                 <Button
                   type="button"
                   variant="outline"
                   size="icon"
-                  onClick={() => removePhoneField(index)}
+                  onClick={() => removePhone(index)}
                   className=" sm:h-10 sm:w-10"
                 >
                   <X className="h-4 w-4" />
@@ -400,7 +386,7 @@ export function ContactForm({
             type="button"
             variant="outline"
             size="sm"
-            onClick={addPhoneField}
+            onClick={() => appendPhone({ value: '' })}
             className="h-9 gap-2"
           >
             <Plus className="h-4 w-4" />

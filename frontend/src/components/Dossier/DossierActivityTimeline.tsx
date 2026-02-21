@@ -157,8 +157,8 @@ export function DossierActivityTimeline({
       {/* Loading State */}
       {isLoading && (
         <div className="space-y-3">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="flex gap-3 p-3 border rounded-lg">
+          {[0, 1, 2, 3, 4].map((n) => (
+            <div key={n} className="flex gap-3 p-3 border rounded-lg">
               <Skeleton className="size-10 rounded-full shrink-0" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />

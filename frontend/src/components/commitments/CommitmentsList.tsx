@@ -221,8 +221,8 @@ export function CommitmentsList({
   if (isLoading) {
     return (
       <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
-        {[...Array(3)].map((_, i) => (
-          <Skeleton key={i} className="h-32 w-full rounded-lg" />
+        {[0, 1, 2].map((n) => (
+          <Skeleton key={n} className="h-32 w-full rounded-lg" />
         ))}
       </div>
     )

@@ -484,8 +484,8 @@ export function DossierListPage() {
         </h2>
         {countsLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
-            {Array.from({ length: 7 }).map((_, i) => (
-              <DossierTypeStatsCardSkeleton key={i} />
+            {[0, 1, 2, 3, 4, 5, 6].map((n) => (
+              <DossierTypeStatsCardSkeleton key={n} />
             ))}
           </div>
         ) : (
@@ -753,8 +753,8 @@ export function DossierListPage() {
       <div ref={containerRef} className="overflow-auto overscroll-contain" {...pullHandlers}>
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-72 sm:h-80 rounded-2xl" />
+            {[0, 1, 2, 3, 4, 5].map((n) => (
+              <Skeleton key={n} className="h-72 sm:h-80 rounded-2xl" />
             ))}
           </div>
         )}

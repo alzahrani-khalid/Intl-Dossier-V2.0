@@ -169,8 +169,8 @@ function EmptyState({ onAddWidget, t }: { onAddWidget: () => void; t: (key: stri
 function LoadingSkeleton() {
   return (
     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <Skeleton key={i} className="h-[150px] rounded-lg" />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((n) => (
+        <Skeleton key={n} className="h-[150px] rounded-lg" />
       ))}
     </div>
   )

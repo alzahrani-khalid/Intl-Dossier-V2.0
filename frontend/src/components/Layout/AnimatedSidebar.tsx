@@ -380,8 +380,8 @@ export function AnimatedSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {isLoadingCounts
-                ? Array.from({ length: 2 }).map((_, index) => (
-                    <SidebarMenuItem key={`skeleton-${index}`}>
+                ? [0, 1].map((n) => (
+                    <SidebarMenuItem key={n}>
                       <SidebarMenuSkeleton showIcon />
                     </SidebarMenuItem>
                   ))

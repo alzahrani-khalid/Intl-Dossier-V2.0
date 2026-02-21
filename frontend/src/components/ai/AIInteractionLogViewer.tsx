@@ -166,8 +166,8 @@ export const AIInteractionLogViewer: React.FC<AIInteractionLogViewerProps> = ({
   if (isLoading) {
     return (
       <div className={cn('animate-pulse space-y-3', className)}>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div key={`skeleton-${i}`} className="h-16 rounded-lg bg-gray-200" />
+        {[0, 1, 2, 3, 4].map((n) => (
+          <div key={n} className="h-16 rounded-lg bg-gray-200" />
         ))}
       </div>
     )
@@ -572,8 +572,8 @@ const InteractionDetailView: React.FC<InteractionDetailViewProps> = ({
 
         {isLoading ? (
           <div className="animate-pulse space-y-4 p-6">
-            {[1, 2, 3].map((i) => (
-              <div key={`skeleton-detail-${i}`} className="h-24 rounded-lg bg-gray-200" />
+            {[0, 1, 2].map((n) => (
+              <div key={n} className="h-24 rounded-lg bg-gray-200" />
             ))}
           </div>
         ) : interaction ? (

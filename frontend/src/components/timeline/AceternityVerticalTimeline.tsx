@@ -38,8 +38,8 @@ interface AceternityVerticalTimelineProps {
 function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-10 md:space-y-20">
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="relative flex justify-start md:gap-10">
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <div key={n} className="relative flex justify-start md:gap-10">
           {/* Timeline dot skeleton */}
           <div className="absolute start-3 md:start-8 top-4 h-10 w-10 rounded-full border-4 border-background bg-muted" />
 
@@ -47,7 +47,7 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
           <div
             className={cn(
               'w-full md:w-[calc(50%-2rem)]',
-              index % 2 === 0 ? 'md:ms-auto md:ps-12' : 'md:me-auto md:ps-20',
+              n % 2 === 0 ? 'md:ms-auto md:ps-12' : 'md:me-auto md:ps-20',
             )}
           >
             <div className="ps-16 md:ps-4 space-y-3">

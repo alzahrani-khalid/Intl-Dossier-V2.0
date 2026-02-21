@@ -164,8 +164,8 @@ export function SavedReportsList({
         <ScrollArea className="flex-1 -mx-2 px-2">
           {isLoading ? (
             <div className="space-y-3">
-              {[...Array(5)].map((_, i) => (
-                <Skeleton key={`skeleton-${i}`} className="h-20 w-full" />
+              {[0, 1, 2, 3, 4].map((n) => (
+                <Skeleton key={n} className="h-20 w-full" />
               ))}
             </div>
           ) : filteredReports.length === 0 ? (

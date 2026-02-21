@@ -197,8 +197,8 @@ export function AdvancedSearchPage() {
 
   const renderSkeletons = () => (
     <>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Card key={i}>
+      {[0, 1, 2, 3, 4].map((n) => (
+        <Card key={n}>
           <CardHeader className="pb-3">
             <div className="flex items-start gap-3">
               <Skeleton className="h-10 w-10 rounded-lg" />

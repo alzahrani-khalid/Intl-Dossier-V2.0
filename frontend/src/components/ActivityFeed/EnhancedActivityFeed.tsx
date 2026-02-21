@@ -479,8 +479,8 @@ export function EnhancedActivityFeed({
           {/* Loading State */}
           {isLoading && (
             <div>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <ActivitySkeleton key={i} />
+              {[0, 1, 2, 3, 4].map((n) => (
+                <ActivitySkeleton key={n} />
               ))}
             </div>
           )}

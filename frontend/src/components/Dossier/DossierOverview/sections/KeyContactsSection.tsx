@@ -199,11 +199,8 @@ export function KeyContactsSection({
       <Card className={className}>
         <CardContent className="p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={`skeleton-contact-${i}`}
-                className="h-48 bg-muted animate-pulse rounded-lg"
-              />
+            {[0, 1, 2].map((n) => (
+              <div key={n} className="h-48 bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
         </CardContent>

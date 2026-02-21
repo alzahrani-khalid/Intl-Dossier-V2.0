@@ -38,8 +38,8 @@ function SkeletonCard() {
 function SkeletonText({ lines = 3 }: { lines?: number }) {
   return (
     <div className="space-y-2">
-      {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton key={i} className={cn('h-4', i === lines - 1 ? 'w-2/3' : 'w-full')} />
+      {Array.from({ length: lines }, (_, n) => n).map((n) => (
+        <Skeleton key={n} className={cn('h-4', n === lines - 1 ? 'w-2/3' : 'w-full')} />
       ))}
     </div>
   )
@@ -54,15 +54,15 @@ function SkeletonTable({ rows = 5, columns = 4 }: { rows?: number; columns?: num
     <div className="space-y-3">
       {/* Header */}
       <div className="flex gap-4 pb-3 border-b">
-        {Array.from({ length: columns }).map((_, i) => (
-          <Skeleton key={i} className="h-5 flex-1" />
+        {Array.from({ length: columns }, (_, n) => n).map((n) => (
+          <Skeleton key={n} className="h-5 flex-1" />
         ))}
       </div>
       {/* Rows */}
-      {Array.from({ length: rows }).map((_, rowIdx) => (
-        <div key={rowIdx} className="flex gap-4">
-          {Array.from({ length: columns }).map((_, colIdx) => (
-            <Skeleton key={colIdx} className="h-9 flex-1" />
+      {Array.from({ length: rows }, (_, n) => n).map((n) => (
+        <div key={n} className="flex gap-4">
+          {Array.from({ length: columns }, (_, c) => c).map((c) => (
+            <Skeleton key={c} className="h-9 flex-1" />
           ))}
         </div>
       ))}

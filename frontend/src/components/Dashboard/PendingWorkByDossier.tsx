@@ -122,8 +122,8 @@ export function PendingWorkByDossier({
         {/* Loading State */}
         {isLoading && (
           <div className="space-y-3">
-            {[...Array(3)].map((_, i) => (
-              <DossierWorkItemSkeleton key={i} />
+            {[0, 1, 2].map((n) => (
+              <DossierWorkItemSkeleton key={n} />
             ))}
           </div>
         )}

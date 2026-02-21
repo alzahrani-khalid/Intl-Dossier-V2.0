@@ -71,8 +71,8 @@ export function WorkItemListSkeleton({ count = 5, className }: BaseSkeletonProps
 
   return (
     <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
-      {Array.from({ length: count }).map((_, i) => (
-        <WorkItemSkeleton key={i} />
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <WorkItemSkeleton key={n} />
       ))}
     </div>
   )
@@ -117,10 +117,10 @@ export function TableRowSkeleton({
       {/* Checkbox */}
       <Skeleton className="h-4 w-4 rounded shrink-0" />
       {/* Columns */}
-      {Array.from({ length: columns }).map((_, i) => (
+      {Array.from({ length: columns }, (_, n) => n).map((n) => (
         <Skeleton
-          key={i}
-          className={cn('h-4 flex-1', i === 0 && 'w-1/4', i === columns - 1 && 'w-1/6')}
+          key={n}
+          className={cn('h-4 flex-1', n === 0 && 'w-1/4', n === columns - 1 && 'w-1/6')}
         />
       ))}
     </div>
@@ -145,15 +145,15 @@ export function TableSkeleton({
       {showHeader && (
         <div className="flex items-center gap-4 px-4 py-3 bg-muted/50 border-b">
           <Skeleton className="h-4 w-4 rounded shrink-0" />
-          {Array.from({ length: columns }).map((_, i) => (
-            <Skeleton key={i} className="h-4 flex-1" />
+          {Array.from({ length: columns }, (_, n) => n).map((n) => (
+            <Skeleton key={n} className="h-4 flex-1" />
           ))}
         </div>
       )}
       {/* Rows */}
       <div className="px-4 divide-y">
-        {Array.from({ length: rows }).map((_, i) => (
-          <TableRowSkeleton key={i} columns={columns} />
+        {Array.from({ length: rows }, (_, n) => n).map((n) => (
+          <TableRowSkeleton key={n} columns={columns} />
         ))}
       </div>
     </div>
@@ -210,8 +210,8 @@ export function MetricsGridSkeleton({
 
   return (
     <div className={cn('grid gap-4', gridCols, className)} dir={isRTL ? 'rtl' : 'ltr'}>
-      {Array.from({ length: count }).map((_, i) => (
-        <MetricCardSkeleton key={i} />
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <MetricCardSkeleton key={n} />
       ))}
     </div>
   )
@@ -298,8 +298,8 @@ export function TimelineSkeleton({ count = 5, className }: BaseSkeletonProps) {
 
   return (
     <div className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
-      {Array.from({ length: count }).map((_, i) => (
-        <TimelineItemSkeleton key={i} />
+      {Array.from({ length: count }, (_, n) => n).map((n) => (
+        <TimelineItemSkeleton key={n} />
       ))}
     </div>
   )
@@ -343,8 +343,8 @@ export function FormSkeleton({
   return (
     <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className={cn('grid gap-4', gridCols)}>
-        {Array.from({ length: fields }).map((_, i) => (
-          <FormFieldSkeleton key={i} />
+        {Array.from({ length: fields }, (_, n) => n).map((n) => (
+          <FormFieldSkeleton key={n} />
         ))}
       </div>
       {showSubmit && (
@@ -408,10 +408,10 @@ export function TabbedContentSkeleton({
     <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Tab list */}
       <div className="flex items-center gap-1 border-b pb-1 overflow-x-auto">
-        {Array.from({ length: tabs }).map((_, i) => (
+        {Array.from({ length: tabs }, (_, n) => n).map((n) => (
           <Skeleton
-            key={i}
-            className={cn('h-9 rounded-md', i === 0 ? 'w-24 bg-primary/20' : 'w-20')}
+            key={n}
+            className={cn('h-9 rounded-md', n === 0 ? 'w-24 bg-primary/20' : 'w-20')}
           />
         ))}
       </div>
@@ -464,8 +464,8 @@ export function KanbanColumnSkeleton({
       </div>
       {/* Cards */}
       <div className="space-y-2">
-        {Array.from({ length: cards }).map((_, i) => (
-          <KanbanCardSkeleton key={i} />
+        {Array.from({ length: cards }, (_, n) => n).map((n) => (
+          <KanbanCardSkeleton key={n} />
         ))}
       </div>
     </div>
@@ -485,8 +485,8 @@ export function KanbanBoardSkeleton({
 
   return (
     <div className={cn('flex gap-4 overflow-x-auto pb-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
-      {Array.from({ length: columns }).map((_, i) => (
-        <KanbanColumnSkeleton key={i} cards={cardsPerColumn} />
+      {Array.from({ length: columns }, (_, n) => n).map((n) => (
+        <KanbanColumnSkeleton key={n} cards={cardsPerColumn} />
       ))}
     </div>
   )
@@ -517,14 +517,14 @@ export function CalendarSkeleton({ className }: BaseSkeletonProps) {
       <CardContent>
         {/* Day headers */}
         <div className="grid grid-cols-7 gap-1 mb-2">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <Skeleton key={i} className="h-8 rounded" />
+          {[0, 1, 2, 3, 4, 5, 6].map((n) => (
+            <Skeleton key={n} className="h-8 rounded" />
           ))}
         </div>
         {/* Calendar grid */}
         <div className="grid grid-cols-7 gap-1">
-          {Array.from({ length: 35 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 sm:h-20 rounded" />
+          {Array.from({ length: 35 }, (_, n) => n).map((n) => (
+            <Skeleton key={n} className="h-16 sm:h-20 rounded" />
           ))}
         </div>
       </CardContent>

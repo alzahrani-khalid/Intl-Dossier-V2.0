@@ -269,8 +269,8 @@ export function CalendarEventsSection({
       <Card className={className}>
         <CardContent className="p-6">
           <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-24 bg-muted animate-pulse rounded-lg" />
+            {[0, 1, 2].map((n) => (
+              <div key={n} className="h-24 bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
         </CardContent>

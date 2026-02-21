@@ -416,11 +416,8 @@ export function ImpactAssessmentPanel({
             </h3>
             <ul className="space-y-1.5 sm:space-y-2">
               {(isRTL ? assessment.recommendations_ar : assessment.recommendations_en).map(
-                (rec, idx) => (
-                  <li
-                    key={`rec-${idx}-${rec.slice(0, 20)}`}
-                    className="flex items-start gap-2 text-xs sm:text-sm"
-                  >
+                (rec) => (
+                  <li key={rec} className="flex items-start gap-2 text-xs sm:text-sm">
                     <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
                     {rec}
                   </li>

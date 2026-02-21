@@ -407,8 +407,8 @@ function StakeholderInfluencePage() {
                 <CardContent className="p-3">
                   {loadingTop ? (
                     <div className="space-y-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Skeleton key={`skeleton-influencer-${i}`} className="h-8 w-full" />
+                      {[0, 1, 2, 3, 4].map((n) => (
+                        <Skeleton key={n} className="h-8 w-full" />
                       ))}
                     </div>
                   ) : (
@@ -453,8 +453,8 @@ function StakeholderInfluencePage() {
                 <CardContent className="p-3">
                   {loadingConnectors ? (
                     <div className="space-y-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Skeleton key={`skeleton-connector-${i}`} className="h-8 w-full" />
+                      {[0, 1, 2, 3, 4].map((n) => (
+                        <Skeleton key={n} className="h-8 w-full" />
                       ))}
                     </div>
                   ) : (
@@ -520,8 +520,8 @@ function StakeholderInfluencePage() {
             <CardContent>
               {loadingList ? (
                 <div className="space-y-2">
-                  {[...Array(10)].map((_, i) => (
-                    <Skeleton key={`skeleton-list-${i}`} className="h-16 w-full" />
+                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+                    <Skeleton key={n} className="h-16 w-full" />
                   ))}
                 </div>
               ) : (
@@ -585,8 +585,8 @@ function StakeholderInfluencePage() {
                 <CardContent>
                   {loadingReports ? (
                     <div className="space-y-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Skeleton key={`skeleton-report-${i}`} className="h-16 w-full" />
+                      {[0, 1, 2, 3, 4].map((n) => (
+                        <Skeleton key={n} className="h-16 w-full" />
                       ))}
                     </div>
                   ) : reports?.data?.length ? (

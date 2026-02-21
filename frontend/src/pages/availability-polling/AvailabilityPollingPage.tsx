@@ -284,8 +284,8 @@ export function AvailabilityPollingPage() {
               : 'flex flex-col',
           )}
         >
-          {[1, 2, 3].map((i) => (
-            <Card key={`skeleton-${i}`}>
+          {[1, 2, 3].map((n) => (
+            <Card key={n}>
               <CardHeader>
                 <Skeleton className="h-6 w-3/4" />
                 <Skeleton className="h-4 w-1/2 mt-2" />
