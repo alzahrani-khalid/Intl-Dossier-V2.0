@@ -599,6 +599,7 @@ export function DossierListPage() {
                     variant="outline"
                     role="combobox"
                     aria-expanded={statusFilterOpen}
+                    aria-controls="status-filter-options"
                     className={cn(
                       'h-12 justify-between w-full',
                       'bg-background/40 border border-border',
@@ -617,7 +618,7 @@ export function DossierListPage() {
                     <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-[250px] p-0" align="start">
+                <PopoverContent className="w-[250px] p-0" align="start" id="status-filter-options">
                   <Command>
                     <CommandInput placeholder={t('filter.search_status', 'Search statuses...')} />
                     <CommandList>

@@ -121,24 +121,6 @@ export function AuditLogTable({
     })
   }
 
-  const SortableHeader = ({
-    column,
-    children,
-  }: {
-    column: 'timestamp' | 'table_name' | 'operation' | 'user_email'
-    children: React.ReactNode
-  }) => (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="h-auto p-0 font-medium hover:bg-transparent"
-      onClick={() => handleSort(column)}
-    >
-      {children}
-      <ArrowUpDown className={cn('ms-2 h-4 w-4', filters.sort_by === column && 'text-primary')} />
-    </Button>
-  )
-
   if (isLoading) {
     return (
       <div className={cn('space-y-2', className)}>
@@ -172,16 +154,56 @@ export function AuditLogTable({
         <TableHeader>
           <TableRow>
             <TableHead className="w-[180px]">
-              <SortableHeader column="timestamp">{t('columns.timestamp')}</SortableHeader>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0 font-medium hover:bg-transparent"
+                onClick={() => handleSort('timestamp')}
+              >
+                {t('columns.timestamp')}
+                <ArrowUpDown
+                  className={cn('ms-2 h-4 w-4', filters.sort_by === 'timestamp' && 'text-primary')}
+                />
+              </Button>
             </TableHead>
             <TableHead className="w-[150px]">
-              <SortableHeader column="table_name">{t('columns.table')}</SortableHeader>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0 font-medium hover:bg-transparent"
+                onClick={() => handleSort('table_name')}
+              >
+                {t('columns.table')}
+                <ArrowUpDown
+                  className={cn('ms-2 h-4 w-4', filters.sort_by === 'table_name' && 'text-primary')}
+                />
+              </Button>
             </TableHead>
             <TableHead className="w-[100px]">
-              <SortableHeader column="operation">{t('columns.operation')}</SortableHeader>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0 font-medium hover:bg-transparent"
+                onClick={() => handleSort('operation')}
+              >
+                {t('columns.operation')}
+                <ArrowUpDown
+                  className={cn('ms-2 h-4 w-4', filters.sort_by === 'operation' && 'text-primary')}
+                />
+              </Button>
             </TableHead>
             <TableHead className="w-[200px]">
-              <SortableHeader column="user_email">{t('columns.user')}</SortableHeader>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0 font-medium hover:bg-transparent"
+                onClick={() => handleSort('user_email')}
+              >
+                {t('columns.user')}
+                <ArrowUpDown
+                  className={cn('ms-2 h-4 w-4', filters.sort_by === 'user_email' && 'text-primary')}
+                />
+              </Button>
             </TableHead>
             <TableHead className="hidden lg:table-cell w-[120px]">
               {t('columns.ip_address')}

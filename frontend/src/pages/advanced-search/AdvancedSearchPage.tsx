@@ -307,8 +307,8 @@ export function AdvancedSearchPage() {
                   <div className="flex items-start gap-2">
                     <AlertCircle className="h-4 w-4 text-yellow-600 shrink-0 mt-0.5" />
                     <div className="text-sm text-yellow-800 dark:text-yellow-200">
-                      {searchMutation.data.warnings.map((warning, i) => (
-                        <p key={i}>{warning}</p>
+                      {searchMutation.data.warnings.map((warning) => (
+                        <p key={warning}>{warning}</p>
                       ))}
                     </div>
                   </div>

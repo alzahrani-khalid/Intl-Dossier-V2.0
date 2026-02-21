@@ -238,9 +238,9 @@ function ExecutionCard({
                 <div className="space-y-2">
                   <h5 className="text-sm font-medium">{t('test.actionsToExecute')}</h5>
                   <div className="space-y-2">
-                    {execution.execution_log.map((entry, index) => (
+                    {execution.execution_log.map((entry) => (
                       <div
-                        key={index}
+                        key={`${entry.type}-${entry.executed_at}`}
                         className="flex items-center justify-between p-2 bg-muted/50 rounded text-xs"
                       >
                         <div className="flex items-center gap-2">

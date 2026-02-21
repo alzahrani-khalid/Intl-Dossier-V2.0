@@ -307,14 +307,14 @@ export function DossierTimeline({
         </div>
       )}
 
-      {events.map((event, index) => {
+      {events.map((event) => {
         const title = isRTL ? event.event_title_ar : event.event_title_en
         const description = isRTL ? event.event_description_ar : event.event_description_en
         const eventDate = new Date(event.event_date)
 
         return (
           <article
-            key={`${event.event_type}-${event.source_id}-${index}`}
+            key={`${event.event_type}-${event.source_id}-${event.event_date}`}
             className="group flex gap-4"
             role="article"
             aria-label={`${t(`timeline.types.${event.event_type}`)}: ${title}`}
@@ -327,9 +327,7 @@ export function DossierTimeline({
               >
                 {getEventIcon(event.event_type)}
               </div>
-              {index < events.length - 1 && (
-                <div className="mt-2 h-full w-px bg-border" aria-hidden="true" />
-              )}
+              <div className="mt-2 h-full w-px bg-border" aria-hidden="true" />
             </div>
 
             {/* Event content */}

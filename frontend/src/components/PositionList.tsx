@@ -87,54 +87,6 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
     localFilters.search,
   ].filter(Boolean).length
 
-  // Loading skeleton
-  const LoadingSkeleton = () => (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-      {[0, 1, 2, 3, 4, 5].map((n) => (
-        <Card key={n}>
-          <CardContent className="space-y-3 p-6">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-            <div className="flex gap-2 pt-2">
-              <Skeleton className="h-6 w-20" />
-              <Skeleton className="h-6 w-24" />
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  )
-
-  // Empty state
-  const EmptyState = () => (
-    <Card>
-      <CardContent className="flex flex-col items-center justify-center py-12">
-        <FileText className="mb-4 size-16 text-muted-foreground" />
-        <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
-        <p className="max-w-md text-center text-sm text-muted-foreground">
-          {t('list.emptyDescription')}
-        </p>
-      </CardContent>
-    </Card>
-  )
-
-  // Error state
-  const ErrorState = () => (
-    <Card>
-      <CardContent className="flex flex-col items-center justify-center py-12">
-        <AlertCircle className="mb-4 size-16 text-destructive" />
-        <h3 className="mb-2 text-lg font-semibold">{t('list.error')}</h3>
-        <p className="mb-4 max-w-md text-center text-sm text-muted-foreground">
-          {t('list.errorDescription')}
-        </p>
-        <Button onClick={() => window.location.reload()} variant="outline">
-          {t('actions.retry', { ns: 'common' }) || 'Retry'}
-        </Button>
-      </CardContent>
-    </Card>
-  )
-
   return (
     <div className="space-y-4">
       {/* Results Count */}
@@ -148,13 +100,52 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
       )}
 
       {/* Loading State */}
-      {isLoading && <LoadingSkeleton />}
+      {isLoading && (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          {[0, 1, 2, 3, 4, 5].map((n) => (
+            <Card key={n}>
+              <CardContent className="space-y-3 p-6">
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+                <div className="flex gap-2 pt-2">
+                  <Skeleton className="h-6 w-20" />
+                  <Skeleton className="h-6 w-24" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Error State */}
-      {isError && <ErrorState />}
+      {isError && (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <AlertCircle className="mb-4 size-16 text-destructive" />
+            <h3 className="mb-2 text-lg font-semibold">{t('list.error')}</h3>
+            <p className="mb-4 max-w-md text-center text-sm text-muted-foreground">
+              {t('list.errorDescription')}
+            </p>
+            <Button onClick={() => window.location.reload()} variant="outline">
+              {t('actions.retry', { ns: 'common' }) || 'Retry'}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
-      {/* Positions Grid */}
-      {!isLoading && !isError && positions.length === 0 && <EmptyState />}
+      {/* Empty State */}
+      {!isLoading && !isError && positions.length === 0 && (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <FileText className="mb-4 size-16 text-muted-foreground" />
+            <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
+            <p className="max-w-md text-center text-sm text-muted-foreground">
+              {t('list.emptyDescription')}
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {!isLoading && !isError && positions.length > 0 && (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">

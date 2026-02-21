@@ -337,9 +337,9 @@ export function SearchResultsList({
               {t('search.noResults.didYouMean')}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
-              {typoSuggestions.map((suggestion, idx) => (
+              {typoSuggestions.map((suggestion) => (
                 <button
-                  key={idx}
+                  key={suggestion}
                   className="rounded-md bg-blue-50 px-3 py-1 text-sm text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30"
                   onClick={() => {
                     // This would trigger a new search
@@ -360,8 +360,8 @@ export function SearchResultsList({
               {t('search.noResults.tips')}
             </p>
             <ul className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-gray-400">
-              {searchTips.map((tip, idx) => (
-                <li key={idx}>{tip}</li>
+              {searchTips.map((tip) => (
+                <li key={tip}>{tip}</li>
               ))}
             </ul>
           </div>

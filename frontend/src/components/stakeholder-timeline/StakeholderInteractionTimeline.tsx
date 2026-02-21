@@ -186,11 +186,11 @@ function StatsOverviewCard({
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {statItems.map((item, index) => {
+          {statItems.map((item) => {
             const Icon = item.icon
             return (
               <div
-                key={index}
+                key={item.label}
                 className="flex flex-col items-center sm:items-start gap-1 p-3 rounded-lg bg-muted/50"
               >
                 <div className="flex items-center gap-2">
