@@ -353,10 +353,12 @@ export function ErrorSummary({
 /**
  * Convert react-hook-form errors to FormError array
  */
+const EMPTY_FIELD_LABELS: Record<string, string> = {}
+
 export function FieldErrorList({
   errors,
   fields,
-  fieldLabels = {},
+  fieldLabels = EMPTY_FIELD_LABELS,
   onFieldClick,
   className,
 }: FieldErrorListProps) {

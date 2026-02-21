@@ -165,7 +165,7 @@ export function CommitmentCard({
                   {commitment.title || t('card.noTitle')}
                 </h3>
                 {/* T032: Inline StatusDropdown for quick status updates */}
-                <div onClick={(e) => e.stopPropagation()}>
+                <div role="presentation" onClick={(e) => e.stopPropagation()}>
                   <StatusDropdown
                     commitmentId={commitment.id}
                     currentStatus={commitment.status}

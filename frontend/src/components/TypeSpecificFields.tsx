@@ -8,9 +8,11 @@ interface TypeSpecificFieldsProps {
   onChange: (fields: Record<string, any>) => void
 }
 
+const EMPTY_VALUE: Record<string, any> = {}
+
 export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
   requestType,
-  value = {},
+  value = EMPTY_VALUE,
   onChange,
 }) => {
   const { t, i18n } = useTranslation('intake')

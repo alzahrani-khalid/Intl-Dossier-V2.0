@@ -458,12 +458,20 @@ function CommitteeCard({ committee, isRTL, onSelect, t, i18n }: CommitteeCardPro
 
   return (
     <div
+      role={onSelect ? 'button' : undefined}
+      tabIndex={onSelect ? 0 : undefined}
       className={cn(
         'group rounded-lg border bg-card p-4 transition-all duration-200',
         'hover:border-primary/30 hover:shadow-sm',
         onSelect && 'cursor-pointer',
       )}
       onClick={() => onSelect?.(committee)}
+      onKeyDown={(e) => {
+        if (onSelect && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault()
+          onSelect(committee)
+        }
+      }}
     >
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">

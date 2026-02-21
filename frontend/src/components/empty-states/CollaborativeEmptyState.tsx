@@ -63,6 +63,8 @@ export interface CollaborativeEmptyStateProps {
  * - Mobile-first responsive design
  * - Full RTL support with logical properties
  */
+const EMPTY_ACTIONS: Array<{ label: string; onClick: () => void; icon?: LucideIcon }> = []
+
 export function CollaborativeEmptyState({
   entityType,
   icon: Icon,
@@ -70,7 +72,7 @@ export function CollaborativeEmptyState({
   description,
   onPrimaryAction,
   primaryActionLabel,
-  secondaryActions = [],
+  secondaryActions = EMPTY_ACTIONS,
   currentUserName = 'Team Member',
   showCollaboration = true,
   className,

@@ -334,7 +334,15 @@ export function TagHierarchyManager({
             isSelected && 'bg-primary/10 hover:bg-primary/15',
           )}
           style={{ paddingInlineStart: `${depth * 16 + 8}px` }}
+          role="button"
+          tabIndex={0}
           onClick={() => onTagSelect?.(tag)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              onTagSelect?.(tag)
+            }
+          }}
         >
           {/* Expand/collapse toggle */}
           <button

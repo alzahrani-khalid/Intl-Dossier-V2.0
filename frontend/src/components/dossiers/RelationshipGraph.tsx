@@ -217,10 +217,7 @@ export function RelationshipGraph({
   }, [reactFlowInstance, initialNodes.length]) // Only re-fit when instance is ready or node count changes
 
   // Create a stable key for ReactFlow to force remount on data changes
-  const graphKey = useMemo(
-    () => `${dossierId}-${relationships.length}-${relationshipTypeFilter || 'all'}-${isRTL}`,
-    [dossierId, relationships.length, relationshipTypeFilter, isRTL],
-  )
+  const graphKey = `${dossierId}-${relationships.length}-${relationshipTypeFilter || 'all'}-${isRTL}`
 
   // Handle node click - navigate to related dossier
   const onNodeClick = useCallback(

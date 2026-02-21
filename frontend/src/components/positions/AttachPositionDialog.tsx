@@ -37,9 +37,11 @@ export interface AttachPositionDialogProps {
   maxSelections?: number
 }
 
+const EMPTY_POSITION_IDS: string[] = []
+
 export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
   onAttach,
-  attachedPositionIds = [],
+  attachedPositionIds = EMPTY_POSITION_IDS,
   trigger,
   maxSelections = 100,
 }) => {

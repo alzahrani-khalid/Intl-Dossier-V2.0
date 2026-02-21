@@ -12,7 +12,7 @@
  * Feature: mou-notification-hooks
  */
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import {
@@ -98,10 +98,15 @@ export function MouNotificationSettings({
   const { data: preferences, isLoading, error } = useMouNotificationPreferences()
   const updatePreferences = useUpdateMouNotificationPreferences()
 
-  const [hasChanges, setHasChanges] = useState(false)
-
   // Form setup
-  const { control, watch, setValue, handleSubmit, reset } = useForm<PreferencesUpdateInput>({
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = useForm<PreferencesUpdateInput>({
     defaultValues: {
       mou_notifications_enabled: true,
       deliverable_due_soon_enabled: true,
@@ -163,52 +168,13 @@ export function MouNotificationSettings({
         quiet_hours_start: preferences.quiet_hours_start?.slice(0, 5) || '22:00',
         quiet_hours_end: preferences.quiet_hours_end?.slice(0, 5) || '07:00',
       })
-      setHasChanges(false)
     }
   }, [preferences, reset])
-
-  // Track changes
-  const formValues = watch()
-  useEffect(() => {
-    if (preferences) {
-      const changed =
-        JSON.stringify(formValues) !==
-        JSON.stringify({
-          mou_notifications_enabled: preferences.mou_notifications_enabled,
-          deliverable_due_soon_enabled: preferences.deliverable_due_soon_enabled,
-          deliverable_due_soon_days: preferences.deliverable_due_soon_days,
-          deliverable_overdue_enabled: preferences.deliverable_overdue_enabled,
-          deliverable_completed_enabled: preferences.deliverable_completed_enabled,
-          milestone_completed_enabled: preferences.milestone_completed_enabled,
-          expiration_warning_enabled: preferences.expiration_warning_enabled,
-          expiration_warning_days: preferences.expiration_warning_days,
-          mou_expired_enabled: preferences.mou_expired_enabled,
-          renewal_initiated_enabled: preferences.renewal_initiated_enabled,
-          renewal_approved_enabled: preferences.renewal_approved_enabled,
-          renewal_completed_enabled: preferences.renewal_completed_enabled,
-          workflow_state_change_enabled: preferences.workflow_state_change_enabled,
-          health_score_drop_enabled: preferences.health_score_drop_enabled,
-          health_score_drop_threshold: preferences.health_score_drop_threshold,
-          assignment_change_enabled: preferences.assignment_change_enabled,
-          email_enabled: preferences.email_enabled,
-          push_enabled: preferences.push_enabled,
-          in_app_enabled: preferences.in_app_enabled,
-          batch_notifications: preferences.batch_notifications,
-          batch_frequency: preferences.batch_frequency,
-          batch_delivery_time: preferences.batch_delivery_time?.slice(0, 5) || '09:00',
-          batch_delivery_day: preferences.batch_delivery_day,
-          quiet_hours_enabled: preferences.quiet_hours_enabled,
-          quiet_hours_start: preferences.quiet_hours_start?.slice(0, 5) || '22:00',
-          quiet_hours_end: preferences.quiet_hours_end?.slice(0, 5) || '07:00',
-        })
-      setHasChanges(changed)
-    }
-  }, [formValues, preferences])
 
   const onSubmit = async (data: PreferencesUpdateInput) => {
     try {
       await updatePreferences.mutateAsync(data)
-      setHasChanges(false)
+      reset(data)
     } catch (err) {
       console.error('Failed to update preferences:', err)
     }
@@ -808,7 +774,7 @@ export function MouNotificationSettings({
         <Button
           type="submit"
           className="w-full sm:w-auto min-h-11"
-          disabled={!hasChanges || updatePreferences.isPending}
+          disabled={!isDirty || updatePreferences.isPending}
         >
           {updatePreferences.isPending ? (
             <>
@@ -822,7 +788,7 @@ export function MouNotificationSettings({
       </div>
 
       {/* Success message */}
-      {updatePreferences.isSuccess && !hasChanges && (
+      {updatePreferences.isSuccess && !isDirty && (
         <Alert className="border-green-500/50 bg-green-500/10">
           <CheckCircle2 className="h-4 w-4 text-green-500" />
           <AlertDescription className="text-green-700 dark:text-green-300">

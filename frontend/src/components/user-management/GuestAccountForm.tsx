@@ -46,7 +46,12 @@ interface GuestAccountFormProps {
  * @param availableResources - List of resources guest can be granted access to
  * @param onSuccess - Callback when guest account is successfully created
  */
-export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAccountFormProps) {
+const EMPTY_RESOURCES: Resource[] = []
+
+export function GuestAccountForm({
+  availableResources = EMPTY_RESOURCES,
+  onSuccess,
+}: GuestAccountFormProps) {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 

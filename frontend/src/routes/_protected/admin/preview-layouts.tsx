@@ -729,7 +729,15 @@ function LayoutCard({
 }: LayoutCardProps) {
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onSelect()
+        }
+      }}
       className={cn(
         'flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors',
         isSelected ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50',

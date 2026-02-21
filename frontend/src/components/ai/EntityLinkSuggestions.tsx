@@ -435,7 +435,18 @@ function LinkCard({ link, onDelete, onClick, isDeleting }: LinkCardProps) {
 
   return (
     <div className="border rounded-lg p-3 flex items-center justify-between gap-2 hover:bg-muted/30 transition-colors">
-      <div className="flex items-center gap-2 flex-1 cursor-pointer" onClick={onClick}>
+      <div
+        className="flex items-center gap-2 flex-1 cursor-pointer"
+        role="button"
+        tabIndex={0}
+        onClick={onClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onClick?.()
+          }
+        }}
+      >
         <div className="p-1.5 rounded bg-primary/10">
           <Icon className="h-4 w-4 text-primary" />
         </div>

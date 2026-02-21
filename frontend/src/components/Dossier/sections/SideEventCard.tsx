@@ -95,11 +95,19 @@ export function SideEventCard({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       className={cn(
         'group rounded-lg border bg-card transition-all duration-200',
         'hover:border-primary/30 hover:shadow-sm cursor-pointer',
       )}
       onClick={() => onViewDetails?.(event)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onViewDetails?.(event)
+        }
+      }}
     >
       <div className="p-4">
         {/* Header Row */}
@@ -205,7 +213,11 @@ export function SideEventCard({
           </div>
 
           {/* Actions Menu */}
-          <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative shrink-0"
+            role="presentation"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Button
               variant="ghost"
               size="sm"
@@ -218,7 +230,11 @@ export function SideEventCard({
 
             {showActions && (
               <>
-                <div className="fixed inset-0 z-10" onClick={() => setShowActions(false)} />
+                <div
+                  className="fixed inset-0 z-10"
+                  role="presentation"
+                  onClick={() => setShowActions(false)}
+                />
                 <div
                   className={cn(
                     'absolute z-20 mt-1 w-36 rounded-md border bg-popover p-1 shadow-md',

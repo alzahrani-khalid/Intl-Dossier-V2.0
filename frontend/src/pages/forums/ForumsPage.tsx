@@ -87,9 +87,7 @@ export function ForumsPage() {
   const pagination = data?.pagination
 
   // Compute active forums count
-  const activeForumsCount = useMemo(() => {
-    return forums.filter((f) => f.status === 'active').length
-  }, [forums])
+  const activeForumsCount = forums.filter((f) => f.status === 'active').length
 
   // Handlers
   const handleCreateForum = async () => {

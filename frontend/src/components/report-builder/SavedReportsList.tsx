@@ -183,12 +183,20 @@ export function SavedReportsList({
                 return (
                   <div
                     key={report.id}
+                    role="button"
+                    tabIndex={0}
                     className={cn(
                       'p-3 rounded-lg border cursor-pointer transition-colors',
                       'hover:border-primary/30 hover:bg-accent/30',
                       isSelected && 'border-primary bg-primary/5',
                     )}
                     onClick={() => onSelectReport(report)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        onSelectReport(report)
+                      }
+                    }}
                   >
                     <div className="flex items-start gap-3">
                       <div className="flex-1 min-w-0">

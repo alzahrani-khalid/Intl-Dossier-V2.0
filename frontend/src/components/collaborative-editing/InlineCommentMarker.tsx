@@ -43,9 +43,11 @@ export interface InlineCommentMarkerProps {
   className?: string
 }
 
+const EMPTY_REPLIES: InlineCommentWithAuthor[] = []
+
 export function InlineCommentMarker({
   comment,
-  replies = [],
+  replies = EMPTY_REPLIES,
   onReply,
   onResolve,
   onReopen,

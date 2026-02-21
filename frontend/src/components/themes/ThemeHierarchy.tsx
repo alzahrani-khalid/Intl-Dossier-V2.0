@@ -89,7 +89,15 @@ function ThemeTreeItem({
           paddingInlineStart: `${depth * 24 + 8}px`,
           borderInlineStartColor: node.color || undefined,
         }}
+        role="button"
+        tabIndex={0}
         onClick={() => onSelect?.(node.id)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onSelect?.(node.id)
+          }
+        }}
       >
         {/* Expand/Collapse Button */}
         {hasChildren ? (

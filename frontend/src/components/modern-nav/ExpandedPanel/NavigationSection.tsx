@@ -89,7 +89,7 @@ export function NavigationSection({
       {!hideHeader && sectionTitle && <h3 className="section-header px-4 py-2">{sectionTitle}</h3>}
 
       {/* Navigation Items */}
-      <nav className="flex flex-col px-2" role="navigation" aria-label={sectionTitle}>
+      <nav className="flex flex-col px-2" aria-label={sectionTitle}>
         {items.map((item) => {
           const isActive = isPathActive(item.path)
 

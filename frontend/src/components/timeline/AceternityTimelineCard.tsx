@@ -443,7 +443,15 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
             </div>
 
             <div
+              role="button"
+              tabIndex={0}
               onClick={() => setIsActive(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setIsActive(true)
+                }
+              }}
               className={cn(
                 'h-10 w-10 rounded-full flex items-center justify-center cursor-pointer flex-shrink-0',
                 'shadow-lg hover:shadow-xl transition-all duration-200',
@@ -568,7 +576,15 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
           {/* Timeline Dot (centered) */}
           <div className="sticky top-40 flex items-center justify-center z-40 flex-shrink-0">
             <div
+              role="button"
+              tabIndex={0}
               onClick={() => setIsActive(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setIsActive(true)
+                }
+              }}
               className={cn(
                 'h-10 w-10 rounded-full flex items-center justify-center cursor-pointer',
                 'shadow-lg hover:shadow-xl transition-all duration-200',

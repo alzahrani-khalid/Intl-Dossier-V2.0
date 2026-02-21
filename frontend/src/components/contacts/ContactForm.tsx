@@ -82,10 +82,13 @@ interface FormValues {
   source_type: 'manual' | 'business_card' | 'document'
 }
 
+const EMPTY_ORGANIZATIONS: Organization[] = []
+const EMPTY_TAGS: Array<{ id: string; name: string; color?: string }> = []
+
 export function ContactForm({
   defaultValues,
-  organizations = [],
-  tags = [],
+  organizations = EMPTY_ORGANIZATIONS,
+  tags = EMPTY_TAGS,
   onSubmit,
   onCancel,
   isSubmitting = false,

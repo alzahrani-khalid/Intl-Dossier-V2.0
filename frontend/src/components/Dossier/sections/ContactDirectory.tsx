@@ -514,7 +514,11 @@ function ContactCard({ contact, isRTL, onEdit, onDelete, onSetPrimary, t }: Cont
 
           {showActions && (
             <>
-              <div className="fixed inset-0 z-10" onClick={() => setShowActions(false)} />
+              <div
+                className="fixed inset-0 z-10"
+                role="presentation"
+                onClick={() => setShowActions(false)}
+              />
               <div
                 className={cn(
                   'absolute z-20 mt-1 w-40 rounded-md border bg-popover p-1 shadow-md',

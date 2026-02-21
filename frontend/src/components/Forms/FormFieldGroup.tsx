@@ -173,8 +173,8 @@ function GroupHeader({
         {/* Error indicator */}
         {hasErrors && (
           <m.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
             className="flex items-center text-red-500"
           >
             <AlertCircle className="w-5 h-5" />
@@ -184,8 +184,8 @@ function GroupHeader({
         {/* Completion ring */}
         {completionPercentage !== undefined && !hasErrors && completionPercentage === 100 && (
           <m.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
             className="flex items-center text-emerald-500"
           >
             <CheckCircle2 className="w-5 h-5" />

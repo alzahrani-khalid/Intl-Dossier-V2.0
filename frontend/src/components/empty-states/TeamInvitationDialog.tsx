@@ -65,12 +65,14 @@ export interface TeamInvitationDialogProps {
  * - Suggested users list
  * - Custom message support
  */
+const EMPTY_SUGGESTED_USERS: SuggestedUser[] = []
+
 export function TeamInvitationDialog({
   open,
   onOpenChange,
   entityType,
   entityId,
-  suggestedUsers = [],
+  suggestedUsers = EMPTY_SUGGESTED_USERS,
   inviterName = 'Team Member',
 }: TeamInvitationDialogProps) {
   const { t, i18n } = useTranslation('empty-states')

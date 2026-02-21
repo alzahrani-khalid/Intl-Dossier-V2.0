@@ -231,11 +231,19 @@ function ActivityItemComponent({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       className={cn(
         'flex gap-3 p-4 hover:bg-muted/50 transition-colors cursor-pointer border-b last:border-b-0',
         activity.isNew && 'bg-yellow-50 dark:bg-yellow-900/10 animate-pulse',
       )}
       onClick={handleEntityClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          handleEntityClick()
+        }
+      }}
     >
       {/* Action Icon */}
       <div

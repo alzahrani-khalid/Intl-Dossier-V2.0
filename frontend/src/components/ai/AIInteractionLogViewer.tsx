@@ -260,7 +260,18 @@ export const AIInteractionLogViewer: React.FC<AIInteractionLogViewerProps> = ({
               className="rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
             >
               {/* Main Row */}
-              <div className="cursor-pointer p-4" onClick={() => toggleRow(interaction.id)}>
+              <div
+                className="cursor-pointer p-4"
+                role="button"
+                tabIndex={0}
+                onClick={() => toggleRow(interaction.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    toggleRow(interaction.id)
+                  }
+                }}
+              >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   {/* Left: Type and Content */}
                   <div className="flex items-start gap-3">

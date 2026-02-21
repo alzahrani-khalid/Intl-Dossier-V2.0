@@ -60,12 +60,14 @@ const EMOJI_LABELS: Record<CommentReactionEmoji, string> = {
   '🔥': 'fire',
 }
 
+const EMPTY_USER_REACTIONS: CommentReactionEmoji[] = []
+
 export function ReactionPicker({
   commentId,
   entityType,
   entityId,
   reactions,
-  userReactions = [],
+  userReactions = EMPTY_USER_REACTIONS,
   compact = false,
 }: ReactionPickerProps) {
   const { t, i18n } = useTranslation('comments')

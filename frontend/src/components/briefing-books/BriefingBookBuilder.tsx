@@ -507,6 +507,8 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                   return (
                     <div
                       key={dossier.id}
+                      role="button"
+                      tabIndex={0}
                       className={`
                         flex items-center gap-3 p-3 rounded-lg border cursor-pointer
                         transition-colors min-h-[44px]
@@ -520,6 +522,17 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                           type: dossier.type,
                         })
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          toggleEntity({
+                            id: dossier.id,
+                            name_en: dossier.name_en,
+                            name_ar: dossier.name_ar,
+                            type: dossier.type,
+                          })
+                        }
+                      }}
                     >
                       <Checkbox checked={isSelected} />
                       <Icon className="h-5 w-5 text-muted-foreground shrink-0" />
