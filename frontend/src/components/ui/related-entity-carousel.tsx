@@ -406,15 +406,19 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
             >
               <div
                 className={cn('h-full', onItemClick && 'cursor-pointer')}
-                onClick={() => onItemClick?.(item)}
+                onClick={onItemClick ? () => onItemClick(item) : undefined}
                 role={onItemClick ? 'button' : undefined}
                 tabIndex={onItemClick ? 0 : undefined}
-                onKeyDown={(e) => {
-                  if (onItemClick && (e.key === 'Enter' || e.key === ' ')) {
-                    e.preventDefault()
-                    onItemClick(item)
-                  }
-                }}
+                onKeyDown={
+                  onItemClick
+                    ? (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          onItemClick(item)
+                        }
+                      }
+                    : undefined
+                }
               >
                 {renderItem(item, index)}
               </div>

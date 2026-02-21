@@ -263,11 +263,9 @@ export function RelationshipGraph({
     maxZoom: 2,
   })
 
-  // Determine if we're on a touch device
-  const [isTouchDevice, setIsTouchDevice] = useState(false)
-  useEffect(() => {
-    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0)
-  }, [])
+  // Determine if we're on a touch device (check once, no flash)
+  const isTouchDevice =
+    typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
   if (isLoading) {
     return (

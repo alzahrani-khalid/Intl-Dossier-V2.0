@@ -465,13 +465,17 @@ function CommitteeCard({ committee, isRTL, onSelect, t, i18n }: CommitteeCardPro
         'hover:border-primary/30 hover:shadow-sm',
         onSelect && 'cursor-pointer',
       )}
-      onClick={() => onSelect?.(committee)}
-      onKeyDown={(e) => {
-        if (onSelect && (e.key === 'Enter' || e.key === ' ')) {
-          e.preventDefault()
-          onSelect(committee)
-        }
-      }}
+      onClick={onSelect ? () => onSelect(committee) : undefined}
+      onKeyDown={
+        onSelect
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onSelect(committee)
+              }
+            }
+          : undefined
+      }
     >
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
