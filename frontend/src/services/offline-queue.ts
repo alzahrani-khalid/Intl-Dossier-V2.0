@@ -222,12 +222,9 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
           // Call standalone executeAction function (not a store method)
           await executeAction(action)
         } catch (error) {
+          // executeAction already calls updateActionStatus on failure,
+          // so we only log here to avoid a duplicate IndexedDB write.
           console.error(`Failed to execute action ${action.id}:`, error)
-          await get().updateActionStatus(
-            action.id,
-            'failed',
-            error instanceof Error ? error.message : 'Unknown error',
-          )
         }
       }
 

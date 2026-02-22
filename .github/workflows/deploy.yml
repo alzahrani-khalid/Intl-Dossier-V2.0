@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   workflow_dispatch:
 
 env:
@@ -11,57 +11,11 @@ env:
   PNPM_VERSION: '10.18.3'
 
 jobs:
-  deploy-staging:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    environment: staging
-    if: github.ref == 'refs/heads/develop'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build application
-        run: pnpm run build
-
-      - name: Deploy to staging server
-        env:
-          DEPLOY_KEY: ${{ secrets.STAGING_DEPLOY_KEY }}
-          DEPLOY_HOST: ${{ secrets.STAGING_HOST }}
-          DEPLOY_USER: ${{ secrets.STAGING_USER }}
-        run: |
-          echo "$DEPLOY_KEY" > deploy_key
-          chmod 600 deploy_key
-          rsync -avz --delete \
-            -e "ssh -i deploy_key -o StrictHostKeyChecking=no" \
-            ./frontend/dist/ ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/staging/
-
-      - name: Run migrations
-        run: |
-          ssh -i deploy_key -o StrictHostKeyChecking=no \
-            ${DEPLOY_USER}@${DEPLOY_HOST} \
-            "cd /var/www/staging && pnpm run db:migrate"
-
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
     environment: production
-    # Run on main branch, allow skipped staging (staging only runs on develop)
-    if: github.ref == 'refs/heads/main' && (needs.deploy-staging.result == 'success' || needs.deploy-staging.result == 'skipped')
-    needs: [deploy-staging]
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4

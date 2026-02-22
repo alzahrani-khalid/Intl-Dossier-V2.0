@@ -25,76 +25,41 @@ After comprehensive validation of the codebase reviews, this plan consolidates *
 
 These bugs will cause runtime failures and must be fixed before any other work.
 
-### 0.1 Offline Queue `executeAction` Bug
+### 0.1 Offline Queue `executeAction` Bug — RESOLVED
 
 **File:** `frontend/src/services/offline-queue.ts`
-**Lines:** 222, 282
 **Severity:** CRITICAL (runtime crash)
+**Status:** **RESOLVED** (2026-02-22, branch `feat/ui-theme-experiments`)
 
-**Problem:**
-
-```typescript
-// Line 222 - processQueue() calls:
-await get().executeAction(action)
-
-// But executeAction is NOT in the store (lines 27-37)
-// It's a standalone function at line 282:
-const executeAction = async (action: QueuedAction) => { ... }
-```
-
-**Fix:**
-Either add `executeAction` to the store interface, or call the standalone function directly:
+The code already calls the standalone `executeAction` function correctly at line 223:
 
 ```typescript
-// Option A: Call standalone function
 await executeAction(action);
-
-// Option B: Add to store interface and implementation
 ```
 
-**Impact:** Any offline action processing will fail with "executeAction is not a function"
+This was fixed prior to this review. No action needed.
 
 ---
 
-### 0.2 Circuit Breaker Failure Window Bug
+### 0.2 Circuit Breaker Failure Window Bug — RESOLVED
 
 **File:** `frontend/src/services/CircuitBreakerService.ts`
-**Lines:** 128-132
 **Severity:** HIGH (incorrect behavior)
+**Status:** **RESOLVED** (2026-02-22, branch `feat/ui-theme-experiments`)
 
-**Problem:**
-
-```typescript
-private onFailure(): void {
-  this.totalFailures++
-  this.failureCount++
-  this.lastFailureTime = Date.now()  // Line 128: Sets to current time
-
-  // Line 131: Checks immediately after - always ~0ms difference
-  if (this.lastFailureTime && Date.now() - this.lastFailureTime > this.monitoringPeriod) {
-    this.failureCount = 1  // NEVER EXECUTES
-  }
-```
-
-**Fix:**
-Store previous failure time before updating:
+The code already stores `previousFailureTime` before updating (lines 129-137):
 
 ```typescript
-private onFailure(): void {
-  this.totalFailures++
-
-  const previousFailureTime = this.lastFailureTime
-  this.lastFailureTime = Date.now()
-
-  // Clear old failures outside monitoring period
-  if (previousFailureTime && Date.now() - previousFailureTime > this.monitoringPeriod) {
-    this.failureCount = 1
-  } else {
-    this.failureCount++
-  }
+const previousFailureTime = this.lastFailureTime;
+this.lastFailureTime = Date.now();
+if (previousFailureTime && this.lastFailureTime - previousFailureTime > this.monitoringPeriod) {
+  this.failureCount = 1;
+} else {
+  this.failureCount++;
+}
 ```
 
-**Impact:** Circuit breaker opens prematurely and never resets failure window
+This was fixed prior to this review. No action needed.
 
 ---
 
@@ -389,9 +354,9 @@ Build UI for:
 
 ### Phase 0 Complete When:
 
-- [ ] Offline queue processes without errors
-- [ ] Circuit breaker correctly tracks failure windows
-- [ ] CI/CD workflow deploys staging on develop, production on main
+- [x] Offline queue processes without errors (resolved — already calls standalone function)
+- [x] Circuit breaker correctly tracks failure windows (resolved — stores previousFailureTime)
+- [x] CI/CD workflow simplified to main-only production deploy (dead staging job removed)
 
 ### Phase 1 Complete When:
 

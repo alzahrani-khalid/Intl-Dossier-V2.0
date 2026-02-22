@@ -201,11 +201,3 @@ export class CircuitBreakerService {
     this.lastStateChange = Date.now()
   }
 }
-
-// Singleton instance for AI service calls
-export const aiServiceCircuitBreaker = new CircuitBreakerService({
-  failureThreshold: 3,
-  successThreshold: 2,
-  timeout: 30000, // 30 seconds
-  monitoringPeriod: 30000, // 30 seconds
-})
