@@ -7,13 +7,19 @@
  */
 
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { useDossier } from '@/hooks/useDossier'
 import { isPersonDossier } from '@/lib/dossier-type-guards'
-import { PersonDossierPage } from '@/pages/dossiers/PersonDossierPage'
+
+const PersonDossierPage = lazy(() =>
+  import('@/pages/dossiers/PersonDossierPage').then((m) => ({
+    default: m.PersonDossierPage,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/persons/$id')({
   component: PersonDossierDetailRoute,
@@ -123,5 +129,15 @@ function PersonDossierDetailRoute() {
     )
   }
 
-  return <PersonDossierPage dossier={dossier as any} />
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <PersonDossierPage dossier={dossier as any} />
+    </Suspense>
+  )
 }

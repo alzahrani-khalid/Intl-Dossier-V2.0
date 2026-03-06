@@ -18,8 +18,8 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -90,21 +90,18 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
     it('should return 200 and reschedule engagement successfully', async () => {
       const newDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'engagement',
-            event_id: testEngagementId,
-            event_date: newDate,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'engagement',
+          event_id: testEngagementId,
+          event_date: newDate,
+        }),
+      });
 
       expect(response.status).toBe(200);
 
@@ -116,20 +113,17 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
     it('should return 401 when unauthorized', async () => {
       const newDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'engagement',
-            event_id: testEngagementId,
-            event_date: newDate,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'engagement',
+          event_id: testEngagementId,
+          event_date: newDate,
+        }),
+      });
 
       expect(response.status).toBe(401);
     });
@@ -138,41 +132,35 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
       const invalidId = '00000000-0000-0000-0000-000000000000';
       const newDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'engagement',
-            event_id: invalidId,
-            event_date: newDate,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'engagement',
+          event_id: invalidId,
+          event_date: newDate,
+        }),
+      });
 
       expect(response.status).toBe(404);
     });
 
     it('should return 400 for invalid date format', async () => {
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'engagement',
-            event_id: testEngagementId,
-            event_date: 'invalid-date',
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'engagement',
+          event_id: testEngagementId,
+          event_date: 'invalid-date',
+        }),
+      });
 
       expect(response.status).toBe(400);
     });
@@ -183,22 +171,19 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
       const newDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       const newTime = '14:30:00';
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'calendar_entry',
-            event_id: testCalendarEntryId,
-            event_date: newDate,
-            event_time: newTime,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'calendar_entry',
+          event_id: testCalendarEntryId,
+          event_date: newDate,
+          event_time: newTime,
+        }),
+      });
 
       expect(response.status).toBe(200);
 
@@ -211,22 +196,19 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
     it('should allow rescheduling date only (time unchanged)', async () => {
       const newDate = new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'calendar_entry',
-            event_id: testCalendarEntryId,
-            event_date: newDate,
-            // event_time not provided - should keep existing time
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'calendar_entry',
+          event_id: testCalendarEntryId,
+          event_date: newDate,
+          // event_time not provided - should keep existing time
+        }),
+      });
 
       expect(response.status).toBe(200);
 
@@ -249,28 +231,25 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
 
       const newDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${otherUser.session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'calendar_entry',
-            event_id: testCalendarEntryId,
-            event_date: newDate,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${otherUser.session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'calendar_entry',
+          event_id: testCalendarEntryId,
+          event_date: newDate,
+        }),
+      });
 
       expect(response.status).toBe(403);
 
       // Sign back in as original test user
       await supabase.auth.signInWithPassword({
-        email: 'kazahrani@stats.gov.sa',
-        password: 'itisme',
+        email: process.env.TEST_USER_EMAIL!,
+        password: process.env.TEST_USER_PASSWORD!,
       });
     });
 
@@ -278,21 +257,18 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
       const invalidId = '00000000-0000-0000-0000-000000000000';
       const newDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'calendar_entry',
-            event_id: invalidId,
-            event_date: newDate,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'calendar_entry',
+          event_id: invalidId,
+          event_date: newDate,
+        }),
+      });
 
       expect(response.status).toBe(404);
     });
@@ -302,41 +278,35 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
     it('should return 400 for invalid event_type', async () => {
       const newDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'invalid_type',
-            event_id: testEngagementId,
-            event_date: newDate,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'invalid_type',
+          event_id: testEngagementId,
+          event_date: newDate,
+        }),
+      });
 
       expect(response.status).toBe(400);
     });
 
     it('should return 400 when event_date is missing', async () => {
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'engagement',
-            event_id: testEngagementId,
-            // event_date missing
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'engagement',
+          event_id: testEngagementId,
+          // event_date missing
+        }),
+      });
 
       expect(response.status).toBe(400);
     });
@@ -344,22 +314,19 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
     it('should validate time format for calendar entries', async () => {
       const newDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'calendar_entry',
-            event_id: testCalendarEntryId,
-            event_date: newDate,
-            event_time: '25:00:00', // Invalid hour
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'calendar_entry',
+          event_id: testCalendarEntryId,
+          event_date: newDate,
+          event_time: '25:00:00', // Invalid hour
+        }),
+      });
 
       expect(response.status).toBe(400);
     });
@@ -376,23 +343,20 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
         .eq('id', testCalendarEntryId)
         .single();
 
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'calendar_entry',
-            event_id: testCalendarEntryId,
-            event_date: newDate,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'calendar_entry',
+          event_id: testCalendarEntryId,
+          event_date: newDate,
+        }),
+      });
 
       expect(response.status).toBe(200);
 
@@ -412,21 +376,18 @@ describe('PATCH /calendar/{eventType}/{eventId}', () => {
         .eq('id', testCalendarEntryId)
         .single();
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-update`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: 'calendar_entry',
-            event_id: testCalendarEntryId,
-            event_date: newDate,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-update`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_type: 'calendar_entry',
+          event_id: testCalendarEntryId,
+          event_date: newDate,
+        }),
+      });
 
       const data = await response.json();
 

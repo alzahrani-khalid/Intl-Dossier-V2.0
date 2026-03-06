@@ -17,8 +17,8 @@ describe('GET /calendar (unified)', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -87,7 +87,7 @@ describe('GET /calendar (unified)', () => {
       .select();
 
     if (entries) {
-      calendarEntryIds = entries.map(e => e.id);
+      calendarEntryIds = entries.map((e) => e.id);
     }
   });
 
@@ -107,7 +107,7 @@ describe('GET /calendar (unified)', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -132,7 +132,7 @@ describe('GET /calendar (unified)', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -155,7 +155,7 @@ describe('GET /calendar (unified)', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}&entry_type=deadline`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -178,7 +178,7 @@ describe('GET /calendar (unified)', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}&dossier_id=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -201,7 +201,7 @@ describe('GET /calendar (unified)', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -235,15 +235,12 @@ describe('GET /calendar (unified)', () => {
   });
 
   it('should return 400 for missing date range', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-get`,
-      {
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-get`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
     expect(response.status).toBe(400);
   });
@@ -258,7 +255,7 @@ describe('GET /calendar (unified)', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}&limit=2&offset=0`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -280,7 +277,7 @@ describe('GET /calendar (unified)', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -319,7 +316,7 @@ describe('GET /calendar (unified)', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }

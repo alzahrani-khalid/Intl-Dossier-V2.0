@@ -15,8 +15,8 @@ describe('Timeline Query Performance (100 Events)', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     authToken = authData?.session?.access_token || '';
@@ -46,12 +46,9 @@ describe('Timeline Query Performance (100 Events)', () => {
       status: 'scheduled',
     }));
 
-    const { data: created } = await supabase
-      .from('engagements')
-      .insert(engagements)
-      .select('id');
+    const { data: created } = await supabase.from('engagements').insert(engagements).select('id');
 
-    engagementIds = created?.map(e => e.id) || [];
+    engagementIds = created?.map((e) => e.id) || [];
   });
 
   afterAll(async () => {
@@ -97,7 +94,7 @@ describe('Timeline Query Performance (100 Events)', () => {
     const queryTime = Date.now() - startTime;
 
     // All queries should succeed
-    results.forEach(result => {
+    results.forEach((result) => {
       expect(result.data).toBeDefined();
       expect(result.data?.length).toBe(100);
     });

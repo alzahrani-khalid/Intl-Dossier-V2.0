@@ -1,8 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { DossierSearchPage } from '../../pages/DossierSearchPage'
+import { lazy, Suspense } from 'react'
+
+const DossierSearchPage = lazy(() =>
+  import('../../pages/DossierSearchPage').then((m) => ({
+    default: m.DossierSearchPage,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/search')({
-  component: DossierSearchPage,
+  component: SearchRoute,
   validateSearch: (search: Record<string, unknown>) => {
     return {
       q: (search.q as string) || '',
@@ -12,3 +18,17 @@ export const Route = createFileRoute('/_protected/search')({
     }
   },
 })
+
+function SearchRoute() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <DossierSearchPage />
+    </Suspense>
+  )
+}

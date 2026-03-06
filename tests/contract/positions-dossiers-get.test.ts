@@ -18,8 +18,8 @@ describe('GET /positions/{positionId}/dossiers', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -108,12 +108,12 @@ describe('GET /positions/{positionId}/dossiers', () => {
 
   afterAll(async () => {
     // Cleanup
-    await supabase
-      .from('position_dossier_links')
-      .delete()
-      .eq('position_id', testPositionId);
+    await supabase.from('position_dossier_links').delete().eq('position_id', testPositionId);
     await supabase.from('positions').delete().eq('id', testPositionId);
-    await supabase.from('dossiers').delete().in('id', [testDossier1Id, testDossier2Id, testDossier3Id]);
+    await supabase
+      .from('dossiers')
+      .delete()
+      .in('id', [testDossier1Id, testDossier2Id, testDossier3Id]);
   });
 
   it('should return 200 with array of linked dossiers', async () => {
@@ -121,7 +121,7 @@ describe('GET /positions/{positionId}/dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?positionId=${testPositionId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -141,7 +141,7 @@ describe('GET /positions/{positionId}/dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?positionId=${testPositionId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -166,7 +166,7 @@ describe('GET /positions/{positionId}/dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?positionId=${testPositionId}&link_type=primary`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -185,7 +185,7 @@ describe('GET /positions/{positionId}/dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?positionId=${testPositionId}&limit=2&offset=0`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -217,7 +217,7 @@ describe('GET /positions/{positionId}/dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?positionId=${invalidId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -244,7 +244,7 @@ describe('GET /positions/{positionId}/dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?positionId=${position.id}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -265,7 +265,7 @@ describe('GET /positions/{positionId}/dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?positionId=${testPositionId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }

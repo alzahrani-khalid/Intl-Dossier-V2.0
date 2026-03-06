@@ -17,8 +17,8 @@ describe('DELETE /positions/{positionId}/dossiers/{dossierId}', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -83,20 +83,17 @@ describe('DELETE /positions/{positionId}/dossiers/{dossierId}', () => {
     });
 
     // Delete the link
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: testPositionId,
-          dossierId: testDossierId,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: testPositionId,
+        dossierId: testDossierId,
+      }),
+    });
 
     expect(response.status).toBe(204);
 
@@ -113,20 +110,17 @@ describe('DELETE /positions/{positionId}/dossiers/{dossierId}', () => {
   it('should return 404 when link does not exist', async () => {
     const nonExistentDossierId = '00000000-0000-0000-0000-000000000000';
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: testPositionId,
-          dossierId: nonExistentDossierId,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: testPositionId,
+        dossierId: nonExistentDossierId,
+      }),
+    });
 
     expect(response.status).toBe(404);
   });
@@ -139,19 +133,16 @@ describe('DELETE /positions/{positionId}/dossiers/{dossierId}', () => {
       link_type: 'related',
     });
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: testPositionId,
-          dossierId: testDossierId,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-delete`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: testPositionId,
+        dossierId: testDossierId,
+      }),
+    });
 
     expect(response.status).toBe(401);
 
@@ -190,28 +181,22 @@ describe('DELETE /positions/{positionId}/dossiers/{dossierId}', () => {
       link_type: 'related',
     });
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: otherPosition.id,
-          dossierId: testDossierId,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: otherPosition.id,
+        dossierId: testDossierId,
+      }),
+    });
 
     expect(response.status).toBe(403);
 
     // Cleanup
-    await supabase
-      .from('position_dossier_links')
-      .delete()
-      .eq('position_id', otherPosition.id);
+    await supabase.from('position_dossier_links').delete().eq('position_id', otherPosition.id);
     await supabase.from('positions').delete().eq('id', otherPosition.id);
   });
 
@@ -223,20 +208,17 @@ describe('DELETE /positions/{positionId}/dossiers/{dossierId}', () => {
       link_type: 'primary',
     });
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: testPositionId,
-          dossierId: testDossierId,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: testPositionId,
+        dossierId: testDossierId,
+      }),
+    });
 
     expect(response.status).toBe(204);
 
@@ -259,57 +241,48 @@ describe('DELETE /positions/{positionId}/dossiers/{dossierId}', () => {
     });
 
     // First delete
-    const response1 = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: testPositionId,
-          dossierId: testDossierId,
-        }),
-      }
-    );
+    const response1 = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: testPositionId,
+        dossierId: testDossierId,
+      }),
+    });
 
     expect(response1.status).toBe(204);
 
     // Second delete (idempotent - should return 404)
-    const response2 = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: testPositionId,
-          dossierId: testDossierId,
-        }),
-      }
-    );
+    const response2 = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: testPositionId,
+        dossierId: testDossierId,
+      }),
+    });
 
     expect(response2.status).toBe(404);
   });
 
   it('should return 400 for invalid UUID format', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: 'invalid-uuid',
-          dossierId: testDossierId,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: 'invalid-uuid',
+        dossierId: testDossierId,
+      }),
+    });
 
     expect(response.status).toBe(400);
   });

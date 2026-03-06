@@ -53,8 +53,8 @@ const SUPABASE_URL = __ENV.SUPABASE_URL || 'http://localhost:54321'
 const SUPABASE_KEY = __ENV.SUPABASE_ANON_KEY || ''
 
 // Test user credentials
-const TEST_EMAIL = __ENV.TEST_EMAIL || 'kazahrani@stats.gov.sa'
-const TEST_PASSWORD = __ENV.TEST_PASSWORD || 'itisme'
+const TEST_EMAIL = __ENV.TEST_EMAIL || process.env.TEST_USER_EMAIL!
+const TEST_PASSWORD = __ENV.TEST_PASSWORD || process.env.TEST_USER_PASSWORD!
 
 export function setup() {
   // Login and get auth token
@@ -344,8 +344,8 @@ export function teardown(data: { token: string }) {
  *   -e BASE_URL=http://localhost:4000 \
  *   -e SUPABASE_URL=http://localhost:54321 \
  *   -e SUPABASE_ANON_KEY=your_anon_key \
- *   -e TEST_EMAIL=kazahrani@stats.gov.sa \
- *   -e TEST_PASSWORD=itisme
+ *   -e TEST_EMAIL=$TEST_USER_EMAIL \
+ *   -e TEST_PASSWORD=$TEST_USER_PASSWORD
  *
  * # Run against staging
  * k6 run frontend/tests/performance/ai-load-test.ts \

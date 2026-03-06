@@ -52,12 +52,18 @@ const forumSearchSchema = z.object({
     .optional()
     .default('overview'),
 })
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { useTypedDossier } from '@/hooks/useDossier'
-import { ForumDossierPage } from '@/pages/dossiers/ForumDossierPage'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
+
+const ForumDossierPage = lazy(() =>
+  import('@/pages/dossiers/ForumDossierPage').then((m) => ({
+    default: m.ForumDossierPage,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/forums/$id')({
   component: ForumDossierDetailRoute,
@@ -147,5 +153,15 @@ function ForumDossierDetailRoute() {
   }
 
   // Success - Render Forum Dossier Page with tab from URL
-  return <ForumDossierPage dossier={dossier} initialTab={tab} />
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <ForumDossierPage dossier={dossier} initialTab={tab} />
+    </Suspense>
+  )
 }

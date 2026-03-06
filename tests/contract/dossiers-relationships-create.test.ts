@@ -17,8 +17,8 @@ describe('POST /dossiers/{dossierId}/relationships', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -77,23 +77,20 @@ describe('POST /dossiers/{dossierId}/relationships', () => {
   });
 
   it('should create relationship and return 201', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/dossiers-relationships-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dossierId: parentDossierId,
-          child_dossier_id: childDossierId,
-          relationship_type: 'member_of',
-          relationship_strength: 'primary',
-          notes: 'Test relationship',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-relationships-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dossierId: parentDossierId,
+        child_dossier_id: childDossierId,
+        relationship_type: 'member_of',
+        relationship_strength: 'primary',
+        notes: 'Test relationship',
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -114,31 +111,22 @@ describe('POST /dossiers/{dossierId}/relationships', () => {
   });
 
   it('should support all relationship types', async () => {
-    const types = [
-      'participates_in',
-      'collaborates_with',
-      'monitors',
-      'is_member',
-      'hosts',
-    ];
+    const types = ['participates_in', 'collaborates_with', 'monitors', 'is_member', 'hosts'];
 
     for (const type of types) {
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/dossiers-relationships-create`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            dossierId: parentDossierId,
-            child_dossier_id: childDossierId,
-            relationship_type: type,
-            relationship_strength: 'secondary',
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-relationships-create`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dossierId: parentDossierId,
+          child_dossier_id: childDossierId,
+          relationship_type: type,
+          relationship_strength: 'secondary',
+        }),
+      });
 
       expect(response.status).toBe(201);
       const data = await response.json();
@@ -170,22 +158,19 @@ describe('POST /dossiers/{dossierId}/relationships', () => {
         .select()
         .single();
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/dossiers-relationships-create`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            dossierId: parentDossierId,
-            child_dossier_id: childDossier.id,
-            relationship_type: 'member_of',
-            relationship_strength: strength,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-relationships-create`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dossierId: parentDossierId,
+          child_dossier_id: childDossier.id,
+          relationship_type: 'member_of',
+          relationship_strength: strength,
+        }),
+      });
 
       expect(response.status).toBe(201);
       const data = await response.json();
@@ -206,7 +191,7 @@ describe('POST /dossiers/{dossierId}/relationships', () => {
     await fetch(`${supabaseUrl}/functions/v1/dossiers-relationships-create`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -218,22 +203,19 @@ describe('POST /dossiers/{dossierId}/relationships', () => {
     });
 
     // Try to create duplicate
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/dossiers-relationships-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dossierId: parentDossierId,
-          child_dossier_id: childDossierId,
-          relationship_type: 'monitors',
-          relationship_strength: 'primary',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-relationships-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dossierId: parentDossierId,
+        child_dossier_id: childDossierId,
+        relationship_type: 'monitors',
+        relationship_strength: 'primary',
+      }),
+    });
 
     expect(response.status).toBe(409);
 
@@ -246,63 +228,54 @@ describe('POST /dossiers/{dossierId}/relationships', () => {
   });
 
   it('should return 400 for self-referencing relationship', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/dossiers-relationships-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dossierId: parentDossierId,
-          child_dossier_id: parentDossierId, // Same as parent
-          relationship_type: 'member_of',
-          relationship_strength: 'primary',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-relationships-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dossierId: parentDossierId,
+        child_dossier_id: parentDossierId, // Same as parent
+        relationship_type: 'member_of',
+        relationship_strength: 'primary',
+      }),
+    });
 
     expect(response.status).toBe(400);
   });
 
   it('should return 401 when unauthorized', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/dossiers-relationships-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dossierId: parentDossierId,
-          child_dossier_id: childDossierId,
-          relationship_type: 'member_of',
-          relationship_strength: 'primary',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-relationships-create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dossierId: parentDossierId,
+        child_dossier_id: childDossierId,
+        relationship_type: 'member_of',
+        relationship_strength: 'primary',
+      }),
+    });
 
     expect(response.status).toBe(401);
   });
 
   it('should include audit fields in response', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/dossiers-relationships-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dossierId: parentDossierId,
-          child_dossier_id: childDossierId,
-          relationship_type: 'is_member',
-          relationship_strength: 'secondary',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-relationships-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dossierId: parentDossierId,
+        child_dossier_id: childDossierId,
+        relationship_type: 'is_member',
+        relationship_strength: 'secondary',
+      }),
+    });
 
     const data = await response.json();
     expect(data).toHaveProperty('created_at');

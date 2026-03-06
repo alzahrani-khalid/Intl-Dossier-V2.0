@@ -1,11 +1,10 @@
 # Intl-DossierV2.0 Development Guidelines
 
-Last updated: 2026-02-06
+Last updated: 2026-03-07
 
 ## Core Tech Stack
 
 - **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS v4, HeroUI v3 (React Aria), i18next, React Flow (network graphs)
-- **Mobile**: Expo SDK 52+, React Native 0.81+, TypeScript 5.8+, React Native Paper 5.12+ (Material Design 3), WatermelonDB 0.28+ (offline-first), React Navigation 7+, expo-local-authentication (biometrics), expo-notifications (push), i18next (internationalization)
 - **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
 - **Database**: PostgreSQL 15+ with pgvector, pg_trgm, pg_tsvector extensions
 - **AI/ML**: AnythingLLM (self-hosted), vector embeddings (1536 dimensions)
@@ -16,7 +15,6 @@ Last updated: 2026-02-06
 ```
 backend/          # Express + TypeScript API
 frontend/         # React 19 + Vite app
-mobile/           # Expo + React Native mobile app (iOS/Android)
 tests/            # Unit, integration, E2E tests
 supabase/         # Migrations, seed data, Edge Functions
 ```
@@ -484,12 +482,6 @@ For comprehensive details, see:
   - ✅ Frontend: 8 components, 5 hooks, i18n (EN/AR), real-time with 300ms debounce
   - ✅ Features: Cursor pagination, URL state sync, manager team workload view
   - 📊 Status: Implemented and documented
-  - ✅ Feature spec: Expo-based mobile app with offline-first architecture
-  - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
-  - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy
-  - ✅ API contracts: Sync API (incremental sync), Auth API (Supabase Auth + biometrics), Notifications API (Expo Push)
-  - ✅ Quickstart: Setup guide for Expo development, testing, and deployment
-  - 📊 Status: Planning complete - ready for `/speckit.tasks` to generate actionable tasks
   - ✅ Contract Tests: 12 tests covering all API endpoints (GET/POST/DELETE for relationships, positions, documents, calendar)
   - ✅ Integration Tests: 7 tests for network graph performance (<3s for 50 nodes), timeline aggregation (<1s for 100 events), realtime updates
   - ✅ E2E Tests: 5 Playwright tests covering user journeys (country analyst, policy officer, intake officer, staff assignments, calendar)
@@ -537,10 +529,12 @@ git push && ssh root@138.197.195.242 "cd /opt/intl-dossier && git pull && cd dep
 
 ### Test Credentials for Browser/Chrome MCP
 
-When testing the application using browser automation tools (Chrome MCP, Playwright, etc.), use these credentials:
+When testing the application using browser automation tools (Chrome MCP, Playwright, etc.), use credentials from environment variables:
 
-- **Email**: kazahrani@stats.gov.sa
-- **Password**: itisme
+- **Email**: `$TEST_USER_EMAIL` (see `.env.test.example`)
+- **Password**: `$TEST_USER_PASSWORD` (see `.env.test.example`)
+
+For local development, set these in `.env.test` (not committed to git).
 
 ## Browser Automation
 

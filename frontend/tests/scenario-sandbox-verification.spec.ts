@@ -18,8 +18,8 @@ test.describe('Scenario Sandbox Feature', () => {
     await page.waitForSelector('input[type="email"]', { timeout: 10000 })
 
     // Login with test credentials
-    await page.fill('input[type="email"]', 'kazahrani@stats.gov.sa')
-    await page.fill('input[type="password"]', 'itisme')
+    await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL!)
+    await page.fill('input[type="password"]', process.env.TEST_USER_PASSWORD!)
 
     // Click login button
     await page.click('button[type="submit"]')

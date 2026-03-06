@@ -16,8 +16,8 @@ describe('POST /positions/{positionId}/dossiers', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -84,10 +84,7 @@ describe('POST /positions/{positionId}/dossiers', () => {
 
   afterAll(async () => {
     // Cleanup links
-    await supabase
-      .from('position_dossier_links')
-      .delete()
-      .eq('position_id', positionId);
+    await supabase.from('position_dossier_links').delete().eq('position_id', positionId);
 
     // Cleanup test data
     await supabase.from('positions').delete().eq('id', positionId);
@@ -97,22 +94,19 @@ describe('POST /positions/{positionId}/dossiers', () => {
   });
 
   it('should create bulk links and return 201', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId,
-          dossier_ids: dossierIds,
-          link_type: 'related',
-          notes: 'Test bulk linking',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId,
+        dossier_ids: dossierIds,
+        link_type: 'related',
+        notes: 'Test bulk linking',
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -134,41 +128,35 @@ describe('POST /positions/{positionId}/dossiers', () => {
 
   it('should validate dossier_ids array length (1-100)', async () => {
     // Test empty array
-    const emptyResponse = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId,
-          dossier_ids: [],
-          link_type: 'primary',
-        }),
-      }
-    );
+    const emptyResponse = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId,
+        dossier_ids: [],
+        link_type: 'primary',
+      }),
+    });
 
     expect(emptyResponse.status).toBe(400);
 
     // Test array exceeding 100 items (mock with 101 IDs)
     const tooManyIds = Array(101).fill('00000000-0000-0000-0000-000000000000');
-    const tooManyResponse = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId,
-          dossier_ids: tooManyIds,
-          link_type: 'primary',
-        }),
-      }
-    );
+    const tooManyResponse = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId,
+        dossier_ids: tooManyIds,
+        link_type: 'primary',
+      }),
+    });
 
     expect(tooManyResponse.status).toBe(400);
   });
@@ -187,21 +175,18 @@ describe('POST /positions/{positionId}/dossiers', () => {
       .select()
       .single();
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId: testPosition.id,
-          dossier_ids: [dossierIds[0]],
-          // No link_type specified
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId: testPosition.id,
+        dossier_ids: [dossierIds[0]],
+        // No link_type specified
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -209,10 +194,7 @@ describe('POST /positions/{positionId}/dossiers', () => {
     expect(data.links[0].link_type).toBe('related');
 
     // Cleanup
-    await supabase
-      .from('position_dossier_links')
-      .delete()
-      .eq('position_id', testPosition.id);
+    await supabase.from('position_dossier_links').delete().eq('position_id', testPosition.id);
     await supabase.from('positions').delete().eq('id', testPosition.id);
   });
 
@@ -233,21 +215,18 @@ describe('POST /positions/{positionId}/dossiers', () => {
         .select()
         .single();
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            positionId: testPosition.id,
-            dossier_ids: [dossierIds[0]],
-            link_type: linkType,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          positionId: testPosition.id,
+          dossier_ids: [dossierIds[0]],
+          link_type: linkType,
+        }),
+      });
 
       expect(response.status).toBe(201);
 
@@ -255,29 +234,23 @@ describe('POST /positions/{positionId}/dossiers', () => {
       expect(data.links[0].link_type).toBe(linkType);
 
       // Cleanup
-      await supabase
-        .from('position_dossier_links')
-        .delete()
-        .eq('position_id', testPosition.id);
+      await supabase.from('position_dossier_links').delete().eq('position_id', testPosition.id);
       await supabase.from('positions').delete().eq('id', testPosition.id);
     }
   });
 
   it('should return 401 when unauthorized', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId,
-          dossier_ids: dossierIds,
-          link_type: 'related',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId,
+        dossier_ids: dossierIds,
+        link_type: 'related',
+      }),
+    });
 
     expect(response.status).toBe(401);
   });
@@ -286,21 +259,18 @@ describe('POST /positions/{positionId}/dossiers', () => {
     const invalidDossierId = '00000000-0000-0000-0000-000000000000';
     const mixedIds = [...dossierIds, invalidDossierId];
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId,
-          dossier_ids: mixedIds,
-          link_type: 'reference',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId,
+        dossier_ids: mixedIds,
+        link_type: 'reference',
+      }),
+    });
 
     // Should succeed for valid IDs
     expect(response.status).toBe(201);
@@ -310,10 +280,7 @@ describe('POST /positions/{positionId}/dossiers', () => {
     expect(data.links.length).toBe(dossierIds.length); // Only valid links created
 
     // Cleanup
-    await supabase
-      .from('position_dossier_links')
-      .delete()
-      .eq('position_id', positionId);
+    await supabase.from('position_dossier_links').delete().eq('position_id', positionId);
   });
 
   it('should prevent duplicate links', async () => {
@@ -321,7 +288,7 @@ describe('POST /positions/{positionId}/dossiers', () => {
     await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -332,48 +299,39 @@ describe('POST /positions/{positionId}/dossiers', () => {
     });
 
     // Try to create duplicate
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId,
-          dossier_ids: [dossierIds[0]],
-          link_type: 'primary',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId,
+        dossier_ids: [dossierIds[0]],
+        link_type: 'primary',
+      }),
+    });
 
     // Should either skip duplicate or return appropriate status
     expect([201, 409]).toContain(response.status);
 
     // Cleanup
-    await supabase
-      .from('position_dossier_links')
-      .delete()
-      .eq('position_id', positionId);
+    await supabase.from('position_dossier_links').delete().eq('position_id', positionId);
   });
 
   it('should include audit fields in response', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          positionId,
-          dossier_ids: [dossierIds[1]],
-          link_type: 'related',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        positionId,
+        dossier_ids: [dossierIds[1]],
+        link_type: 'related',
+      }),
+    });
 
     const data = await response.json();
     const link = data.links[0];
@@ -383,9 +341,6 @@ describe('POST /positions/{positionId}/dossiers', () => {
     expect(link.added_at).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/); // ISO timestamp
 
     // Cleanup
-    await supabase
-      .from('position_dossier_links')
-      .delete()
-      .eq('position_id', positionId);
+    await supabase.from('position_dossier_links').delete().eq('position_id', positionId);
   });
 });

@@ -16,8 +16,8 @@ describe('DELETE /dossiers/{parentId}/relationships/{childId}', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -80,7 +80,7 @@ describe('DELETE /dossiers/{parentId}/relationships/{childId}', () => {
       {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -114,7 +114,7 @@ describe('DELETE /dossiers/{parentId}/relationships/{childId}', () => {
       {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -165,7 +165,7 @@ describe('DELETE /dossiers/{parentId}/relationships/{childId}', () => {
       {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -197,7 +197,7 @@ describe('DELETE /dossiers/{parentId}/relationships/{childId}', () => {
       {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -230,7 +230,7 @@ describe('DELETE /dossiers/{parentId}/relationships/{childId}', () => {
       {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }

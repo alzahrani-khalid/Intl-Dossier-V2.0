@@ -17,8 +17,8 @@ describe('Cross-Dossier Engagement Queries', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     authToken = authData?.session?.access_token || '';
@@ -98,8 +98,14 @@ describe('Cross-Dossier Engagement Queries', () => {
   });
 
   afterAll(async () => {
-    await supabase.from('engagement_dossier_links').delete().in('engagement_id', sharedEngagementIds);
-    await supabase.from('engagements').delete().in('id', [...sharedEngagementIds, dossierAOnlyEngagementId]);
+    await supabase
+      .from('engagement_dossier_links')
+      .delete()
+      .in('engagement_id', sharedEngagementIds);
+    await supabase
+      .from('engagements')
+      .delete()
+      .in('id', [...sharedEngagementIds, dossierAOnlyEngagementId]);
     await supabase.from('dossiers').delete().in('id', [dossierAId, dossierBId]);
   });
 
@@ -109,12 +115,14 @@ describe('Cross-Dossier Engagement Queries', () => {
     // Query engagements for dossierA
     const { data: engagements } = await supabase
       .from('engagements')
-      .select(`
+      .select(
+        `
         *,
         engagement_dossier_links (
           dossier_id
         )
-      `)
+      `
+      )
       .eq('dossier_id', dossierAId);
 
     const queryTime = Date.now() - startTime;
@@ -129,12 +137,14 @@ describe('Cross-Dossier Engagement Queries', () => {
   it('should identify multi-dossier engagements', async () => {
     const { data: engagements } = await supabase
       .from('engagements')
-      .select(`
+      .select(
+        `
         *,
         engagement_dossier_links (
           dossier_id
         )
-      `)
+      `
+      )
       .eq('dossier_id', dossierAId);
 
     const multiDossierEngagements = engagements?.filter(
@@ -149,7 +159,8 @@ describe('Cross-Dossier Engagement Queries', () => {
   it('should show World Bank in related dossiers for shared engagements', async () => {
     const { data: engagements } = await supabase
       .from('engagements')
-      .select(`
+      .select(
+        `
         *,
         engagement_dossier_links (
           dossier_id,
@@ -159,14 +170,17 @@ describe('Cross-Dossier Engagement Queries', () => {
             name_ar
           )
         )
-      `)
+      `
+      )
       .eq('id', sharedEngagementIds[0])
       .single();
 
     expect(engagements?.engagement_dossier_links).toBeDefined();
     expect(engagements?.engagement_dossier_links.length).toBeGreaterThan(0);
 
-    const relatedDossiers = engagements?.engagement_dossier_links.map((link: any) => link.dossier_id);
+    const relatedDossiers = engagements?.engagement_dossier_links.map(
+      (link: any) => link.dossier_id
+    );
     expect(relatedDossiers).toContain(dossierBId);
 
     console.log('✓ Related dossiers correctly linked to engagements');
@@ -175,11 +189,13 @@ describe('Cross-Dossier Engagement Queries', () => {
   it('should query shared engagements from dossierB perspective', async () => {
     const { data: engagements } = await supabase
       .from('engagement_dossier_links')
-      .select(`
+      .select(
+        `
         engagement:engagements (
           *
         )
-      `)
+      `
+      )
       .eq('dossier_id', dossierBId);
 
     expect(engagements?.length).toBeGreaterThanOrEqual(2);

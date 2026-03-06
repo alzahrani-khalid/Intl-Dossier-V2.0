@@ -4,8 +4,8 @@ import { test, expect } from '@playwright/test';
 test.describe('RTL Layout Validation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5173');
-    await page.fill('[name="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('[name="password"]', 'itisme');
+    await page.fill('[name="email"]', process.env.TEST_USER_EMAIL!);
+    await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD!);
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/dashboard/, { timeout: 5000 });
   });
@@ -21,7 +21,7 @@ test.describe('RTL Layout Validation', () => {
 
     // Verify content direction
     const container = page.locator('[data-testid="main-container"]');
-    const direction = await container.evaluate(el => window.getComputedStyle(el).direction);
+    const direction = await container.evaluate((el) => window.getComputedStyle(el).direction);
     expect(direction).toBe('rtl');
 
     console.log('✓ RTL layout activated');
@@ -34,7 +34,7 @@ test.describe('RTL Layout Validation', () => {
 
     // Check that margins/paddings use logical properties
     const button = page.locator('button').first();
-    const marginInlineStart = await button.evaluate(el =>
+    const marginInlineStart = await button.evaluate((el) =>
       window.getComputedStyle(el).getPropertyValue('margin-inline-start')
     );
 
@@ -54,9 +54,7 @@ test.describe('RTL Layout Validation', () => {
 
     // Check chevron icons are rotated
     const chevronIcon = page.locator('[data-testid="breadcrumb-chevron"]').first();
-    const transform = await chevronIcon.evaluate(el =>
-      window.getComputedStyle(el).transform
-    );
+    const transform = await chevronIcon.evaluate((el) => window.getComputedStyle(el).transform);
 
     // Should have rotation applied
     expect(transform).not.toBe('none');
@@ -74,9 +72,7 @@ test.describe('RTL Layout Validation', () => {
 
     // Check text alignment
     const heading = page.locator('h1').first();
-    const textAlign = await heading.evaluate(el =>
-      window.getComputedStyle(el).textAlign
-    );
+    const textAlign = await heading.evaluate((el) => window.getComputedStyle(el).textAlign);
 
     // Should use 'start' (logical property) not 'right'
     expect(['start', 'right']).toContain(textAlign);
@@ -97,9 +93,7 @@ test.describe('RTL Layout Validation', () => {
 
     // Check graph container direction
     const graphContainer = page.locator('.react-flow');
-    const direction = await graphContainer.evaluate(el =>
-      window.getComputedStyle(el).direction
-    );
+    const direction = await graphContainer.evaluate((el) => window.getComputedStyle(el).direction);
 
     expect(direction).toBe('rtl');
 
@@ -122,15 +116,13 @@ test.describe('RTL Layout Validation', () => {
 
     // Check calendar grid direction
     const calendarGrid = page.locator('[data-testid="calendar-grid"]');
-    const direction = await calendarGrid.evaluate(el =>
-      window.getComputedStyle(el).direction
-    );
+    const direction = await calendarGrid.evaluate((el) => window.getComputedStyle(el).direction);
 
     expect(direction).toBe('rtl');
 
     // Check that events align correctly
     const event = page.locator('[data-testid="calendar-event"]').first();
-    const inlineStart = await event.evaluate(el =>
+    const inlineStart = await event.evaluate((el) =>
       window.getComputedStyle(el).getPropertyValue('inset-inline-start')
     );
 

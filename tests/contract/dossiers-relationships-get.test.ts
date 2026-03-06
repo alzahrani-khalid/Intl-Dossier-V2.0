@@ -16,8 +16,8 @@ describe('GET /dossiers/{dossierId}/relationships', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -79,7 +79,7 @@ describe('GET /dossiers/{dossierId}/relationships', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -99,7 +99,7 @@ describe('GET /dossiers/{dossierId}/relationships', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}&relationship_type=member_of`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -116,7 +116,7 @@ describe('GET /dossiers/{dossierId}/relationships', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}&direction=parent`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -147,7 +147,7 @@ describe('GET /dossiers/{dossierId}/relationships', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${invalidId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -161,7 +161,7 @@ describe('GET /dossiers/{dossierId}/relationships', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }

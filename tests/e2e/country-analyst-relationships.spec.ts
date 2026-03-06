@@ -5,8 +5,8 @@ test.describe('Country Analyst Managing Relationships', () => {
   test.beforeEach(async ({ page }) => {
     // Login
     await page.goto('http://localhost:5173');
-    await page.fill('[name="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('[name="password"]', 'itisme');
+    await page.fill('[name="email"]', process.env.TEST_USER_EMAIL!);
+    await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD!);
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/dashboard/, { timeout: 5000 });
   });

@@ -20,11 +20,11 @@ test.describe('Analytics Dashboard', () => {
     await page.goto('/login')
     await page.fill(
       '[data-testid="email-input"], input[name="email"], input[type="email"]',
-      'kazahrani@stats.gov.sa',
+      process.env.TEST_USER_EMAIL!,
     )
     await page.fill(
       '[data-testid="password-input"], input[name="password"], input[type="password"]',
-      'itisme',
+      process.env.TEST_USER_PASSWORD!,
     )
     await page.click('[data-testid="login-button"], button[type="submit"]')
     await expect(page).toHaveURL(/\/(dashboard|my-work|dossiers)/, { timeout: 15000 })

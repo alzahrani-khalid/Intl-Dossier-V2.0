@@ -8,8 +8,8 @@
 
 // Test user credentials (from CLAUDE.md)
 export const testCredentials = {
-  email: 'kazahrani@stats.gov.sa',
-  password: 'itisme',
+  email: process.env.TEST_USER_EMAIL!,
+  password: process.env.TEST_USER_PASSWORD!,
 } as const
 
 // Dossier type definitions

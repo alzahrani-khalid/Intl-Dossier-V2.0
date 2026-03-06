@@ -26,8 +26,8 @@ describe('Escalation API Contract Tests', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.user) {
@@ -71,14 +71,17 @@ describe('Escalation API Contract Tests', () => {
 
   describe('POST /escalate', () => {
     it('should validate request schema - required fields', async () => {
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/waiting-queue-escalation/escalate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({}),
-      });
+      const response = await fetch(
+        `${SUPABASE_URL}/functions/v1/waiting-queue-escalation/escalate`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({}),
+        }
+      );
 
       expect(response.status).toBe(400);
       const data = await response.json();
@@ -87,17 +90,20 @@ describe('Escalation API Contract Tests', () => {
     });
 
     it('should return 200 with valid escalation record structure', async () => {
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/waiting-queue-escalation/escalate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          assignment_id: testAssignmentId,
-          escalation_reason: 'Assignment overdue by 10 days',
-        }),
-      });
+      const response = await fetch(
+        `${SUPABASE_URL}/functions/v1/waiting-queue-escalation/escalate`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            assignment_id: testAssignmentId,
+            escalation_reason: 'Assignment overdue by 10 days',
+          }),
+        }
+      );
 
       expect(response.status).toBe(200);
       const data = await response.json();
@@ -117,17 +123,20 @@ describe('Escalation API Contract Tests', () => {
 
   describe('POST /escalate-bulk', () => {
     it('should return 202 with job_id for bulk escalation', async () => {
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/waiting-queue-escalation/escalate-bulk`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          assignment_ids: [testAssignmentId],
-          escalation_reason: 'Bulk escalation test',
-        }),
-      });
+      const response = await fetch(
+        `${SUPABASE_URL}/functions/v1/waiting-queue-escalation/escalate-bulk`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            assignment_ids: [testAssignmentId],
+            escalation_reason: 'Bulk escalation test',
+          }),
+        }
+      );
 
       expect(response.status).toBe(202);
       const data = await response.json();

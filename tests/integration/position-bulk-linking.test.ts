@@ -15,8 +15,8 @@ describe('Position Bulk Linking to Dossiers', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     authToken = authData?.session?.access_token || '';
@@ -45,12 +45,9 @@ describe('Position Bulk Linking to Dossiers', () => {
       reference_type: 'country',
     }));
 
-    const { data: createdDossiers } = await supabase
-      .from('dossiers')
-      .insert(dossiers)
-      .select('id');
+    const { data: createdDossiers } = await supabase.from('dossiers').insert(dossiers).select('id');
 
-    dossierIds = createdDossiers?.map(d => d.id) || [];
+    dossierIds = createdDossiers?.map((d) => d.id) || [];
   });
 
   afterAll(async () => {
@@ -60,21 +57,18 @@ describe('Position Bulk Linking to Dossiers', () => {
   });
 
   it('should bulk link position to 10 dossiers', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          position_id: positionId,
-          dossier_ids: dossierIds,
-          link_type: 'related',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        position_id: positionId,
+        dossier_ids: dossierIds,
+        link_type: 'related',
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -92,7 +86,7 @@ describe('Position Bulk Linking to Dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?position_id=${positionId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -115,21 +109,18 @@ describe('Position Bulk Linking to Dossiers', () => {
     const invalidId = '00000000-0000-0000-0000-000000000000';
     const mixedIds = [dossierIds[0], invalidId, dossierIds[1]];
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/positions-dossiers-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          position_id: positionId,
-          dossier_ids: mixedIds,
-          link_type: 'reference',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/positions-dossiers-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        position_id: positionId,
+        dossier_ids: mixedIds,
+        link_type: 'reference',
+      }),
+    });
 
     // Should succeed for valid IDs
     expect(response.status).toBe(201);
@@ -153,7 +144,7 @@ describe('Position Bulk Linking to Dossiers', () => {
       `${supabaseUrl}/functions/v1/positions-dossiers-get?position_id=${positionId}&link_type=primary`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -175,7 +166,7 @@ describe('Position Bulk Linking to Dossiers', () => {
       {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }

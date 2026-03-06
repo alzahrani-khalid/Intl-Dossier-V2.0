@@ -19,8 +19,8 @@ describe('Calendar Event Aggregation with Filters', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     authToken = authData?.session?.access_token || '';
@@ -98,7 +98,9 @@ describe('Calendar Event Aggregation with Filters', () => {
         content_en: 'Test content',
         content_ar: 'محتوى تجريبي',
         status: 'review',
-        approval_deadline: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        approval_deadline: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split('T')[0],
       })
       .select()
       .single();
@@ -119,7 +121,7 @@ describe('Calendar Event Aggregation with Filters', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${new Date().toISOString().split('T')[0]}&end=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -135,7 +137,9 @@ describe('Calendar Event Aggregation with Filters', () => {
     // Verify color codes
     const engagement = data.events.find((e: any) => e.event_source === 'engagement');
     const calendarEntry = data.events.find((e: any) => e.event_source === 'calendar_entry');
-    const assignmentDeadline = data.events.find((e: any) => e.event_source === 'assignment_deadline');
+    const assignmentDeadline = data.events.find(
+      (e: any) => e.event_source === 'assignment_deadline'
+    );
     const approvalDeadline = data.events.find((e: any) => e.event_source === 'approval_deadline');
 
     expect(engagement?.color_code).toBe('#0066CC'); // Blue
@@ -151,7 +155,7 @@ describe('Calendar Event Aggregation with Filters', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${new Date().toISOString().split('T')[0]}&end=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}&filters=engagements`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -170,14 +174,16 @@ describe('Calendar Event Aggregation with Filters', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${new Date().toISOString().split('T')[0]}&end=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}&dossier_id=${dossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
     );
 
     const data = await response.json();
-    const allFromDossier = data.events.every((e: any) => e.dossier_id === dossierId || e.event_source.includes('deadline'));
+    const allFromDossier = data.events.every(
+      (e: any) => e.dossier_id === dossierId || e.event_source.includes('deadline')
+    );
 
     expect(allFromDossier).toBe(true);
 
@@ -189,7 +195,7 @@ describe('Calendar Event Aggregation with Filters', () => {
       `${supabaseUrl}/functions/v1/calendar-get?start=${new Date().toISOString().split('T')[0]}&end=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}&assignee_id=${userId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }

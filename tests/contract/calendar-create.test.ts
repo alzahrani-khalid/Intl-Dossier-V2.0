@@ -17,8 +17,8 @@ describe('POST /calendar/entries', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -54,28 +54,25 @@ describe('POST /calendar/entries', () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dossier_id: testDossierId,
-          title_en: 'Test Meeting',
-          title_ar: 'اجتماع تجريبي',
-          description_en: 'A test meeting for contract testing',
-          description_ar: 'اجتماع تجريبي لاختبار العقد',
-          entry_type: 'internal_meeting',
-          event_date: tomorrow.toISOString().split('T')[0],
-          event_time: '10:00:00',
-          duration_minutes: 60,
-          location: 'Conference Room A',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dossier_id: testDossierId,
+        title_en: 'Test Meeting',
+        title_ar: 'اجتماع تجريبي',
+        description_en: 'A test meeting for contract testing',
+        description_ar: 'اجتماع تجريبي لاختبار العقد',
+        entry_type: 'internal_meeting',
+        event_date: tomorrow.toISOString().split('T')[0],
+        event_time: '10:00:00',
+        duration_minutes: 60,
+        location: 'Conference Room A',
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -106,23 +103,20 @@ describe('POST /calendar/entries', () => {
       const eventDate = new Date();
       eventDate.setDate(eventDate.getDate() + Math.floor(Math.random() * 30) + 1);
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/calendar-create`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title_en: `Test ${type}`,
-            title_ar: `اختبار ${type}`,
-            entry_type: type,
-            event_date: eventDate.toISOString().split('T')[0],
-            all_day: type === 'holiday' || type === 'deadline',
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title_en: `Test ${type}`,
+          title_ar: `اختبار ${type}`,
+          entry_type: type,
+          event_date: eventDate.toISOString().split('T')[0],
+          all_day: type === 'holiday' || type === 'deadline',
+        }),
+      });
 
       expect(response.status).toBe(201);
 
@@ -137,23 +131,20 @@ describe('POST /calendar/entries', () => {
     const eventDate = new Date();
     eventDate.setDate(eventDate.getDate() + 5);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'All Day Event',
-          title_ar: 'حدث طوال اليوم',
-          entry_type: 'deadline',
-          event_date: eventDate.toISOString().split('T')[0],
-          all_day: true,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'All Day Event',
+        title_ar: 'حدث طوال اليوم',
+        entry_type: 'deadline',
+        event_date: eventDate.toISOString().split('T')[0],
+        all_day: true,
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -168,26 +159,23 @@ describe('POST /calendar/entries', () => {
     const eventDate = new Date();
     eventDate.setDate(eventDate.getDate() + 3);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'Virtual Team Meeting',
-          title_ar: 'اجتماع افتراضي للفريق',
-          entry_type: 'internal_meeting',
-          event_date: eventDate.toISOString().split('T')[0],
-          event_time: '14:00:00',
-          duration_minutes: 90,
-          is_virtual: true,
-          meeting_link: 'https://zoom.us/j/123456789',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'Virtual Team Meeting',
+        title_ar: 'اجتماع افتراضي للفريق',
+        entry_type: 'internal_meeting',
+        event_date: eventDate.toISOString().split('T')[0],
+        event_time: '14:00:00',
+        duration_minutes: 90,
+        is_virtual: true,
+        meeting_link: 'https://zoom.us/j/123456789',
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -204,27 +192,24 @@ describe('POST /calendar/entries', () => {
     const endDate = new Date(startDate);
     endDate.setMonth(endDate.getMonth() + 3);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'Weekly Team Standup',
-          title_ar: 'اجتماع الفريق الأسبوعي',
-          entry_type: 'internal_meeting',
-          event_date: startDate.toISOString().split('T')[0],
-          event_time: '09:00:00',
-          duration_minutes: 15,
-          is_recurring: true,
-          recurrence_pattern: 'FREQ=WEEKLY;BYDAY=MO',
-          recurrence_end_date: endDate.toISOString().split('T')[0],
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'Weekly Team Standup',
+        title_ar: 'اجتماع الفريق الأسبوعي',
+        entry_type: 'internal_meeting',
+        event_date: startDate.toISOString().split('T')[0],
+        event_time: '09:00:00',
+        duration_minutes: 15,
+        is_recurring: true,
+        recurrence_pattern: 'FREQ=WEEKLY;BYDAY=MO',
+        recurrence_end_date: endDate.toISOString().split('T')[0],
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -239,24 +224,21 @@ describe('POST /calendar/entries', () => {
     const eventDate = new Date();
     eventDate.setDate(eventDate.getDate() + 7);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dossier_id: testDossierId,
-          title_en: 'Dossier Review Meeting',
-          title_ar: 'اجتماع مراجعة الملف',
-          entry_type: 'review',
-          event_date: eventDate.toISOString().split('T')[0],
-          event_time: '11:00:00',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dossier_id: testDossierId,
+        title_en: 'Dossier Review Meeting',
+        title_ar: 'اجتماع مراجعة الملف',
+        entry_type: 'review',
+        event_date: eventDate.toISOString().split('T')[0],
+        event_time: '11:00:00',
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -271,24 +253,21 @@ describe('POST /calendar/entries', () => {
     eventDate.setDate(eventDate.getDate() + 2);
 
     // Create with attendees (using test user ID)
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'Team Planning Session',
-          title_ar: 'جلسة تخطيط الفريق',
-          entry_type: 'internal_meeting',
-          event_date: eventDate.toISOString().split('T')[0],
-          event_time: '13:00:00',
-          attendee_ids: [testUserId],
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'Team Planning Session',
+        title_ar: 'جلسة تخطيط الفريق',
+        entry_type: 'internal_meeting',
+        event_date: eventDate.toISOString().split('T')[0],
+        event_time: '13:00:00',
+        attendee_ids: [testUserId],
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -302,39 +281,33 @@ describe('POST /calendar/entries', () => {
     const eventDate = new Date();
     eventDate.setDate(eventDate.getDate() + 1);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'Unauthorized Event',
-          entry_type: 'internal_meeting',
-          event_date: eventDate.toISOString().split('T')[0],
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'Unauthorized Event',
+        entry_type: 'internal_meeting',
+        event_date: eventDate.toISOString().split('T')[0],
+      }),
+    });
 
     expect(response.status).toBe(401);
   });
 
   it('should return 400 for missing required fields', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          // Missing title_en, entry_type, event_date
-          description_en: 'Missing required fields',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // Missing title_en, entry_type, event_date
+        description_en: 'Missing required fields',
+      }),
+    });
 
     expect(response.status).toBe(400);
   });
@@ -343,21 +316,18 @@ describe('POST /calendar/entries', () => {
     const eventDate = new Date();
     eventDate.setDate(eventDate.getDate() + 1);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'Invalid Type Event',
-          entry_type: 'invalid_type',
-          event_date: eventDate.toISOString().split('T')[0],
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'Invalid Type Event',
+        entry_type: 'invalid_type',
+        event_date: eventDate.toISOString().split('T')[0],
+      }),
+    });
 
     expect(response.status).toBe(400);
   });
@@ -366,21 +336,18 @@ describe('POST /calendar/entries', () => {
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - 7);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'Past Event',
-          entry_type: 'internal_meeting',
-          event_date: pastDate.toISOString().split('T')[0],
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'Past Event',
+        entry_type: 'internal_meeting',
+        event_date: pastDate.toISOString().split('T')[0],
+      }),
+    });
 
     // Depending on business rules, might allow or reject past dates
     // Adjust expectation based on actual implementation
@@ -396,22 +363,19 @@ describe('POST /calendar/entries', () => {
     const eventDate = new Date();
     eventDate.setDate(eventDate.getDate() + 4);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'Organizer Test',
-          title_ar: 'اختبار المنظم',
-          entry_type: 'internal_meeting',
-          event_date: eventDate.toISOString().split('T')[0],
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'Organizer Test',
+        title_ar: 'اختبار المنظم',
+        entry_type: 'internal_meeting',
+        event_date: eventDate.toISOString().split('T')[0],
+      }),
+    });
 
     const data = await response.json();
     expect(data.organizer_id).toBe(testUserId);
@@ -423,22 +387,19 @@ describe('POST /calendar/entries', () => {
     const eventDate = new Date();
     eventDate.setDate(eventDate.getDate() + 1);
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/calendar-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title_en: 'Invalid Time Format',
-          entry_type: 'internal_meeting',
-          event_date: eventDate.toISOString().split('T')[0],
-          event_time: '25:00:00', // Invalid hour
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/calendar-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_en: 'Invalid Time Format',
+        entry_type: 'internal_meeting',
+        event_date: eventDate.toISOString().split('T')[0],
+        event_time: '25:00:00', // Invalid hour
+      }),
+    });
 
     expect(response.status).toBe(400);
   });

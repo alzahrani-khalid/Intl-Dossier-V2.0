@@ -15,8 +15,8 @@ describe('Network Graph Performance (50 Nodes)', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     authToken = authData?.session?.access_token || '';
@@ -45,15 +45,12 @@ describe('Network Graph Performance (50 Nodes)', () => {
       reference_type: i % 2 === 0 ? 'organization' : 'forum',
     }));
 
-    const { data: created } = await supabase
-      .from('dossiers')
-      .insert(relatedDossiers)
-      .select('id');
+    const { data: created } = await supabase.from('dossiers').insert(relatedDossiers).select('id');
 
-    relatedDossierIds = created?.map(d => d.id) || [];
+    relatedDossierIds = created?.map((d) => d.id) || [];
 
     // Create relationships
-    const relationships = relatedDossierIds.map(id => ({
+    const relationships = relatedDossierIds.map((id) => ({
       parent_dossier_id: mainDossierId,
       child_dossier_id: id,
       relationship_type: 'member_of',
@@ -76,7 +73,7 @@ describe('Network Graph Performance (50 Nodes)', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${mainDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -116,7 +113,7 @@ describe('Network Graph Performance (50 Nodes)', () => {
       })),
     ];
 
-    const edges = relationships!.map(rel => ({
+    const edges = relationships!.map((rel) => ({
       id: `${rel.parent_dossier_id}-${rel.child_dossier_id}`,
       source: rel.parent_dossier_id,
       target: rel.child_dossier_id,

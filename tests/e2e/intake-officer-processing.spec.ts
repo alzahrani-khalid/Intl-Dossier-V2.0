@@ -4,8 +4,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Intake Officer Processing Requests', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5173');
-    await page.fill('[name="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('[name="password"]', 'itisme');
+    await page.fill('[name="email"]', process.env.TEST_USER_EMAIL!);
+    await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD!);
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/dashboard/, { timeout: 5000 });
   });
@@ -23,7 +23,9 @@ test.describe('Intake Officer Processing Requests', () => {
 
     // Step 3: Check dossier context banner
     await expect(page.locator('[data-testid="dossier-context-banner"]')).toBeVisible();
-    await expect(page.locator('[data-testid="dossier-context-banner"]')).toContainText(/🇸🇦|Saudi Arabia/);
+    await expect(page.locator('[data-testid="dossier-context-banner"]')).toContainText(
+      /🇸🇦|Saudi Arabia/
+    );
 
     // Step 4: View related dossier
     await page.click('[data-testid="view-dossier-button"]');

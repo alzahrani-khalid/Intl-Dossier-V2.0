@@ -3,7 +3,13 @@ import helmet from 'helmet'
 import cors from 'cors'
 import { logSecurityEvent, logWarn } from '../utils/logger'
 // Import consolidated rate limiters from single source of truth
-import { apiLimiter, authLimiter, uploadLimiter, aiLimiter, dynamicLimiter } from './rateLimiter'
+import {
+  apiLimiter,
+  authLimiter,
+  uploadLimiter,
+  aiLimiter,
+  dynamicLimiter,
+} from './rate-limit.middleware'
 
 // Environment variables with defaults
 const NODE_ENV = process.env.NODE_ENV || 'development'
@@ -148,7 +154,7 @@ export const helmetConfig = helmet({
   },
 })
 
-// Rate limiting - consolidated in rateLimiter.ts
+// Rate limiting - consolidated in rate-limit.middleware.ts
 // Re-export for backward compatibility
 export const generalRateLimit = apiLimiter
 export const authRateLimit = authLimiter

@@ -19,8 +19,8 @@ describe('Timeline Aggregation with Relationships', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     authToken = authData?.session?.access_token || '';
@@ -139,22 +139,13 @@ describe('Timeline Aggregation with Relationships', () => {
 
     // Query all timeline events
     const [relationships, engagements, positions, intelligence] = await Promise.all([
-      supabase
-        .from('dossier_relationships')
-        .select('*')
-        .eq('parent_dossier_id', testDossierId),
-      supabase
-        .from('engagements')
-        .select('*')
-        .eq('dossier_id', testDossierId),
+      supabase.from('dossier_relationships').select('*').eq('parent_dossier_id', testDossierId),
+      supabase.from('engagements').select('*').eq('dossier_id', testDossierId),
       supabase
         .from('position_dossier_links')
         .select('*, position:positions(*)')
         .eq('dossier_id', testDossierId),
-      supabase
-        .from('intelligence_signals')
-        .select('*')
-        .eq('dossier_id', testDossierId),
+      supabase.from('intelligence_signals').select('*').eq('dossier_id', testDossierId),
     ]);
 
     const queryTime = Date.now() - startTime;
@@ -188,7 +179,9 @@ describe('Timeline Aggregation with Relationships', () => {
       title_en: `Bulk Engagement ${i}`,
       title_ar: `مشاركة جماعية ${i}`,
       engagement_type: 'bilateral_meeting',
-      engagement_date: new Date(Date.now() + (i + 1) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      engagement_date: new Date(Date.now() + (i + 1) * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0],
       status: 'scheduled',
     }));
 

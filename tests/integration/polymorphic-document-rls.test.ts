@@ -18,8 +18,8 @@ describe('Polymorphic Document RLS Enforcement', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     authToken = authData?.session?.access_token || '';
@@ -100,12 +100,9 @@ describe('Polymorphic Document RLS Enforcement', () => {
       },
     ];
 
-    const { data: createdDocs } = await supabase
-      .from('documents')
-      .insert(documents)
-      .select();
+    const { data: createdDocs } = await supabase.from('documents').insert(documents).select();
 
-    documentIds = createdDocs?.map(d => d.id) || [];
+    documentIds = createdDocs?.map((d) => d.id) || [];
   });
 
   afterAll(async () => {

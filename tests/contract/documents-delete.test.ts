@@ -17,8 +17,8 @@ describe('DELETE /documents/{documentId}', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -73,19 +73,16 @@ describe('DELETE /documents/{documentId}', () => {
     testDocumentId = doc?.id || '';
 
     // Delete the document
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: testDocumentId,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: testDocumentId,
+      }),
+    });
 
     expect(response.status).toBe(204);
 
@@ -119,19 +116,16 @@ describe('DELETE /documents/{documentId}', () => {
       .select()
       .single();
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: doc?.id,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: doc?.id,
+      }),
+    });
 
     expect(response.status).toBe(204);
 
@@ -159,18 +153,15 @@ describe('DELETE /documents/{documentId}', () => {
       .select()
       .single();
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: doc?.id,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: doc?.id,
+      }),
+    });
 
     expect(response.status).toBe(401);
 
@@ -181,19 +172,16 @@ describe('DELETE /documents/{documentId}', () => {
   it('should return 404 for non-existent document', async () => {
     const nonExistentId = '00000000-0000-0000-0000-000000000000';
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: nonExistentId,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: nonExistentId,
+      }),
+    });
 
     expect(response.status).toBe(404);
   });
@@ -223,19 +211,16 @@ describe('DELETE /documents/{documentId}', () => {
       return;
     }
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: doc.id,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: doc.id,
+      }),
+    });
 
     expect(response.status).toBe(403);
 
@@ -264,55 +249,46 @@ describe('DELETE /documents/{documentId}', () => {
       .single();
 
     // First delete
-    const response1 = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: doc?.id,
-        }),
-      }
-    );
+    const response1 = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: doc?.id,
+      }),
+    });
 
     expect(response1.status).toBe(204);
 
     // Second delete (already deleted)
-    const response2 = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: doc?.id,
-        }),
-      }
-    );
+    const response2 = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: doc?.id,
+      }),
+    });
 
     // Should return 404 (already deleted) or 204 (idempotent)
     expect([204, 404]).toContain(response2.status);
   });
 
   it('should return 400 for invalid UUID format', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: 'invalid-uuid',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: 'invalid-uuid',
+      }),
+    });
 
     expect(response.status).toBe(400);
   });
@@ -362,19 +338,16 @@ describe('DELETE /documents/{documentId}', () => {
       .single();
 
     // Delete latest version
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-delete`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          documentId: doc2?.id,
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-delete`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        documentId: doc2?.id,
+      }),
+    });
 
     expect(response.status).toBe(204);
 

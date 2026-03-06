@@ -7,13 +7,19 @@
  */
 
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { useDossier } from '@/hooks/useDossier'
 import { isEngagementDossier } from '@/lib/dossier-type-guards'
-import { EngagementDossierPage } from '@/pages/dossiers/EngagementDossierPage'
+
+const EngagementDossierPage = lazy(() =>
+  import('@/pages/dossiers/EngagementDossierPage').then((m) => ({
+    default: m.EngagementDossierPage,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/engagements/$id')({
   component: EngagementDossierDetailRoute,
@@ -123,5 +129,15 @@ function EngagementDossierDetailRoute() {
     )
   }
 
-  return <EngagementDossierPage dossier={dossier as any} />
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <EngagementDossierPage dossier={dossier as any} />
+    </Suspense>
+  )
 }

@@ -17,7 +17,7 @@ import {
   validateSearchRequest,
   validateSemanticSearchRequest,
 } from '../middleware/search-validation'
-import { searchRateLimit } from '../middleware/search-rate-limit'
+import { searchRateLimit } from '../middleware/rate-limit.middleware'
 
 const router = Router()
 

@@ -16,8 +16,8 @@ describe('Network Graph Query Performance', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -55,13 +55,14 @@ describe('Network Graph Query Performance', () => {
       .insert(relatedDossiers)
       .select('id');
 
-    relatedDossierIds = createdDossiers?.map(d => d.id) || [];
+    relatedDossierIds = createdDossiers?.map((d) => d.id) || [];
 
     // Create relationships between main dossier and all related dossiers
     const relationships = relatedDossierIds.map((relatedId, i) => ({
       parent_dossier_id: testDossierId,
       child_dossier_id: relatedId,
-      relationship_type: i % 3 === 0 ? 'member_of' : i % 3 === 1 ? 'participates_in' : 'collaborates_with',
+      relationship_type:
+        i % 3 === 0 ? 'member_of' : i % 3 === 1 ? 'participates_in' : 'collaborates_with',
       relationship_strength: i % 3 === 0 ? 'primary' : i % 3 === 1 ? 'secondary' : 'observer',
     }));
 
@@ -82,7 +83,7 @@ describe('Network Graph Query Performance', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -126,7 +127,7 @@ describe('Network Graph Query Performance', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}&direction=both`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -152,7 +153,7 @@ describe('Network Graph Query Performance', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}&relationship_type=member_of`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -177,7 +178,7 @@ describe('Network Graph Query Performance', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -209,7 +210,7 @@ describe('Network Graph Query Performance', () => {
       `${supabaseUrl}/functions/v1/dossiers-relationships-get?dossierId=${testDossierId}&limit=10`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }

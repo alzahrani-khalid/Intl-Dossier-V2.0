@@ -30,12 +30,18 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { useTypedDossier } from '@/hooks/useDossier'
-import { WorkingGroupDossierPage } from '@/pages/dossiers/WorkingGroupDossierPage'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
+
+const WorkingGroupDossierPage = lazy(() =>
+  import('@/pages/dossiers/WorkingGroupDossierPage').then((m) => ({
+    default: m.WorkingGroupDossierPage,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/working_groups/$id')({
   component: WorkingGroupDossierDetailRoute,
@@ -123,5 +129,15 @@ function WorkingGroupDossierDetailRoute() {
   }
 
   // Success - Render Working Group Dossier Page
-  return <WorkingGroupDossierPage dossier={dossier} />
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <WorkingGroupDossierPage dossier={dossier} />
+    </Suspense>
+  )
 }

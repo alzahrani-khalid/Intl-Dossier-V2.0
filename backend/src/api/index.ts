@@ -25,7 +25,7 @@ import intakeEntityLinksRouter from './intake-entity-links'
 import entitySearchRouter from './entity-search'
 import cacheMetricsRouter from './cache-metrics'
 import { authenticateToken } from '../middleware/auth'
-import { apiLimiter } from '../middleware/rateLimiter'
+import { apiLimiter } from '../middleware/rate-limit.middleware'
 import { logApiRequest, logError } from '../utils/logger'
 
 const apiRouter = Router()

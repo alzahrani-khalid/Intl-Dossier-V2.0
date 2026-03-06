@@ -17,8 +17,8 @@ describe('POST /documents', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -54,27 +54,24 @@ describe('POST /documents', () => {
     // Create a small test file (base64 encoded)
     const testFileContent = Buffer.from('Test document content').toString('base64');
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          owner_type: 'dossier',
-          owner_id: testDossierId,
-          file_name: 'test-document.pdf',
-          file_content: testFileContent,
-          mime_type: 'application/pdf',
-          document_type: 'memo',
-          language: 'en',
-          sensitivity_level: 'public',
-          tags: ['test', 'contract'],
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        owner_type: 'dossier',
+        owner_id: testDossierId,
+        file_name: 'test-document.pdf',
+        file_content: testFileContent,
+        mime_type: 'application/pdf',
+        document_type: 'memo',
+        language: 'en',
+        sensitivity_level: 'public',
+        tags: ['test', 'contract'],
+      }),
+    });
 
     expect(response.status).toBe(201);
 
@@ -97,26 +94,23 @@ describe('POST /documents', () => {
     for (const ownerType of ownerTypes) {
       const testFileContent = Buffer.from(`Test ${ownerType} document`).toString('base64');
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/documents-create`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            owner_type: ownerType,
-            owner_id: testDossierId, // Using dossier ID for simplicity
-            file_name: `test-${ownerType}.pdf`,
-            file_content: testFileContent,
-            mime_type: 'application/pdf',
-            document_type: 'report',
-            language: 'en',
-            sensitivity_level: 'public',
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          owner_type: ownerType,
+          owner_id: testDossierId, // Using dossier ID for simplicity
+          file_name: `test-${ownerType}.pdf`,
+          file_content: testFileContent,
+          mime_type: 'application/pdf',
+          document_type: 'report',
+          language: 'en',
+          sensitivity_level: 'public',
+        }),
+      });
 
       expect(response.status).toBe(201);
 
@@ -133,26 +127,23 @@ describe('POST /documents', () => {
     for (const level of levels) {
       const testFileContent = Buffer.from(`Test ${level} document`).toString('base64');
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/documents-create`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            owner_type: 'dossier',
-            owner_id: testDossierId,
-            file_name: `test-${level}.pdf`,
-            file_content: testFileContent,
-            mime_type: 'application/pdf',
-            document_type: 'memo',
-            language: 'en',
-            sensitivity_level: level,
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          owner_type: 'dossier',
+          owner_id: testDossierId,
+          file_name: `test-${level}.pdf`,
+          file_content: testFileContent,
+          mime_type: 'application/pdf',
+          document_type: 'memo',
+          language: 'en',
+          sensitivity_level: level,
+        }),
+      });
 
       expect(response.status).toBe(201);
 
@@ -169,26 +160,23 @@ describe('POST /documents', () => {
     for (const lang of languages) {
       const testFileContent = Buffer.from(`Test ${lang} document`).toString('base64');
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/documents-create`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            owner_type: 'dossier',
-            owner_id: testDossierId,
-            file_name: `test-${lang}.pdf`,
-            file_content: testFileContent,
-            mime_type: 'application/pdf',
-            document_type: 'report',
-            language: lang,
-            sensitivity_level: 'public',
-          }),
-        }
-      );
+      const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          owner_type: 'dossier',
+          owner_id: testDossierId,
+          file_name: `test-${lang}.pdf`,
+          file_content: testFileContent,
+          mime_type: 'application/pdf',
+          document_type: 'report',
+          language: lang,
+          sensitivity_level: 'public',
+        }),
+      });
 
       expect(response.status).toBe(201);
 
@@ -200,27 +188,24 @@ describe('POST /documents', () => {
   });
 
   it('should reject file exceeding 100MB limit', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          owner_type: 'dossier',
-          owner_id: testDossierId,
-          file_name: 'huge-file.pdf',
-          file_content: 'base64content',
-          mime_type: 'application/pdf',
-          file_size: 104857601, // 100MB + 1 byte
-          document_type: 'report',
-          language: 'en',
-          sensitivity_level: 'public',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        owner_type: 'dossier',
+        owner_id: testDossierId,
+        file_name: 'huge-file.pdf',
+        file_content: 'base64content',
+        mime_type: 'application/pdf',
+        file_size: 104857601, // 100MB + 1 byte
+        document_type: 'report',
+        language: 'en',
+        sensitivity_level: 'public',
+      }),
+    });
 
     expect(response.status).toBe(400);
   });
@@ -228,44 +213,38 @@ describe('POST /documents', () => {
   it('should return 401 when unauthorized', async () => {
     const testFileContent = Buffer.from('Test document').toString('base64');
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          owner_type: 'dossier',
-          owner_id: testDossierId,
-          file_name: 'test.pdf',
-          file_content: testFileContent,
-          mime_type: 'application/pdf',
-          document_type: 'memo',
-          language: 'en',
-          sensitivity_level: 'public',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        owner_type: 'dossier',
+        owner_id: testDossierId,
+        file_name: 'test.pdf',
+        file_content: testFileContent,
+        mime_type: 'application/pdf',
+        document_type: 'memo',
+        language: 'en',
+        sensitivity_level: 'public',
+      }),
+    });
 
     expect(response.status).toBe(401);
   });
 
   it('should validate required fields', async () => {
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          owner_type: 'dossier',
-          // Missing owner_id, file_name, etc.
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        owner_type: 'dossier',
+        // Missing owner_id, file_name, etc.
+      }),
+    });
 
     expect(response.status).toBe(400);
   });
@@ -273,26 +252,23 @@ describe('POST /documents', () => {
   it('should set scan_status to pending on upload', async () => {
     const testFileContent = Buffer.from('Test scan pending').toString('base64');
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          owner_type: 'dossier',
-          owner_id: testDossierId,
-          file_name: 'scan-test.pdf',
-          file_content: testFileContent,
-          mime_type: 'application/pdf',
-          document_type: 'memo',
-          language: 'en',
-          sensitivity_level: 'public',
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        owner_type: 'dossier',
+        owner_id: testDossierId,
+        file_name: 'scan-test.pdf',
+        file_content: testFileContent,
+        mime_type: 'application/pdf',
+        document_type: 'memo',
+        language: 'en',
+        sensitivity_level: 'public',
+      }),
+    });
 
     const data = await response.json();
     expect(data.scan_status).toBe('pending');
@@ -305,27 +281,24 @@ describe('POST /documents', () => {
   it('should support tags array', async () => {
     const testFileContent = Buffer.from('Test tags').toString('base64');
 
-    const response = await fetch(
-      `${supabaseUrl}/functions/v1/documents-create`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          owner_type: 'dossier',
-          owner_id: testDossierId,
-          file_name: 'tagged-document.pdf',
-          file_content: testFileContent,
-          mime_type: 'application/pdf',
-          document_type: 'report',
-          language: 'en',
-          sensitivity_level: 'public',
-          tags: ['important', 'q1-2025', 'finance'],
-        }),
-      }
-    );
+    const response = await fetch(`${supabaseUrl}/functions/v1/documents-create`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        owner_type: 'dossier',
+        owner_id: testDossierId,
+        file_name: 'tagged-document.pdf',
+        file_content: testFileContent,
+        mime_type: 'application/pdf',
+        document_type: 'report',
+        language: 'en',
+        sensitivity_level: 'public',
+        tags: ['important', 'q1-2025', 'finance'],
+      }),
+    });
 
     expect(response.status).toBe(201);
 

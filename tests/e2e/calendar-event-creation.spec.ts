@@ -4,8 +4,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Calendar Event Creation Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5173');
-    await page.fill('[name="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('[name="password"]', 'itisme');
+    await page.fill('[name="email"]', process.env.TEST_USER_EMAIL!);
+    await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD!);
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/dashboard/, { timeout: 5000 });
   });
@@ -50,7 +50,9 @@ test.describe('Calendar Event Creation Flow', () => {
     await expect(page.locator('text=Monthly Review Meeting')).toBeVisible();
 
     // Verify color coding (green for calendar entries)
-    const eventElement = page.locator('[data-testid="calendar-event"]:has-text("Monthly Review Meeting")');
+    const eventElement = page.locator(
+      '[data-testid="calendar-event"]:has-text("Monthly Review Meeting")'
+    );
     await expect(eventElement).toHaveCSS('background-color', /008800|rgb\(0, 136, 0\)/);
 
     console.log('✓ Calendar event creation completed successfully');
@@ -111,7 +113,9 @@ test.describe('Calendar Event Creation Flow', () => {
     const originalDate = await event.getAttribute('data-date');
 
     // Drag event to new date (3 days later)
-    const targetCell = page.locator(`[data-testid="calendar-cell"][data-date="${new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}"]`);
+    const targetCell = page.locator(
+      `[data-testid="calendar-cell"][data-date="${new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}"]`
+    );
     await event.dragTo(targetCell);
 
     // Verify event moved

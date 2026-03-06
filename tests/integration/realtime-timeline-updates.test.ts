@@ -14,8 +14,8 @@ describe('Realtime Timeline Updates', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     authToken = authData?.session?.access_token || '';
@@ -63,7 +63,7 @@ describe('Realtime Timeline Updates', () => {
       .subscribe();
 
     // Wait for subscription to be ready
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Create new engagement in another "session"
     const { data: engagement } = await supabase
@@ -80,7 +80,7 @@ describe('Realtime Timeline Updates', () => {
       .single();
 
     // Wait up to 3 seconds for realtime update
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     expect(updateReceived).toHaveBeenCalled();
 
@@ -127,7 +127,7 @@ describe('Realtime Timeline Updates', () => {
       )
       .subscribe();
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Trigger update
     const { data: related } = await supabase
@@ -149,7 +149,7 @@ describe('Realtime Timeline Updates', () => {
       relationship_strength: 'primary',
     });
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     expect(updates1).toHaveBeenCalled();
     expect(updates2).toHaveBeenCalled();

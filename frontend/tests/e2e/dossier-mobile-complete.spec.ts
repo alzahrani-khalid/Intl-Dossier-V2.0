@@ -33,7 +33,7 @@ async function authBypass(page: Page) {
       state: {
         user: {
           id: 'test-user-001',
-          email: 'kazahrani@stats.gov.sa',
+          email: process.env.TEST_USER_EMAIL!,
           name: 'Test User',
         },
         isAuthenticated: true,

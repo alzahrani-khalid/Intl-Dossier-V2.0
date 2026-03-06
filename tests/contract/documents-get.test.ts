@@ -18,8 +18,8 @@ describe('GET /documents (polymorphic)', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL!,
+      password: process.env.TEST_USER_PASSWORD!,
     });
 
     if (authError || !authData.session) {
@@ -93,7 +93,7 @@ describe('GET /documents (polymorphic)', () => {
       .select();
 
     if (dossierDocs) {
-      documentIds.push(...dossierDocs.map(d => d.id));
+      documentIds.push(...dossierDocs.map((d) => d.id));
     }
 
     // Create test document for position
@@ -132,7 +132,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=dossier&owner_id=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -152,7 +152,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=dossier&owner_id=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -181,7 +181,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=dossier&owner_id=${testDossierId}&document_type=memo`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -198,7 +198,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=dossier&owner_id=${testDossierId}&language=ar`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -215,7 +215,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=dossier&owner_id=${testDossierId}&limit=1&offset=0`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -233,7 +233,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=position&owner_id=${testPositionId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -264,7 +264,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_id=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -278,7 +278,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=invalid&owner_id=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -298,7 +298,7 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=dossier&owner_id=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
@@ -308,10 +308,7 @@ describe('GET /documents (polymorphic)', () => {
     expect(data.documents.every((d: any) => !d.deleted_at)).toBe(true);
 
     // Restore document
-    await supabase
-      .from('documents')
-      .update({ deleted_at: null })
-      .eq('id', documentIds[0]);
+    await supabase.from('documents').update({ deleted_at: null }).eq('id', documentIds[0]);
   });
 
   it('should order by uploaded_at DESC (newest first)', async () => {
@@ -319,14 +316,14 @@ describe('GET /documents (polymorphic)', () => {
       `${supabaseUrl}/functions/v1/documents-get?owner_type=dossier&owner_id=${testDossierId}`,
       {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       }
     );
 
     const data = await response.json();
-    
+
     if (data.documents.length > 1) {
       const dates = data.documents.map((d: any) => new Date(d.uploaded_at).getTime());
       for (let i = 0; i < dates.length - 1; i++) {

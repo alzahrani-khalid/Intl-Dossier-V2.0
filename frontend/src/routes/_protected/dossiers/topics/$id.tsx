@@ -7,6 +7,7 @@
  */
 
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -14,8 +15,13 @@ import { Button } from '@/components/ui/button'
 import { useDossier } from '@/hooks/useDossier'
 import { isTopicDossier } from '@/lib/dossier-type-guards'
 import type { DossierWithExtension } from '@/services/dossier-api'
-import { TopicDossierPage } from '@/pages/dossiers/TopicDossierPage'
 import { p } from '@/lib/navigation'
+
+const TopicDossierPage = lazy(() =>
+  import('@/pages/dossiers/TopicDossierPage').then((m) => ({
+    default: m.TopicDossierPage,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/topics/$id')({
   component: TopicDossierDetailRoute,
@@ -125,5 +131,15 @@ function TopicDossierDetailRoute() {
     )
   }
 
-  return <TopicDossierPage dossier={dossier as DossierWithExtension & { type: 'topic' }} />
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <TopicDossierPage dossier={dossier as DossierWithExtension & { type: 'topic' }} />
+    </Suspense>
+  )
 }

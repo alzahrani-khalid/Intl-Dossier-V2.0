@@ -21,8 +21,8 @@ test.describe('Engagements Entity Management', () => {
     await page.goto('/login')
 
     // Use test credentials
-    await page.fill('input[type="email"]', 'kazahrani@stats.gov.sa')
-    await page.fill('input[type="password"]', 'itisme')
+    await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL!)
+    await page.fill('input[type="password"]', process.env.TEST_USER_PASSWORD!)
     await page.click('button[type="submit"]')
 
     // Wait for successful login - dashboard or redirect

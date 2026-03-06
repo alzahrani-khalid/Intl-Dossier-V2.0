@@ -1,11 +1,19 @@
 /**
  * Analytics Dashboard Route
  * Feature: analytics-dashboard
+ *
+ * Performance: Lazy-loaded for code splitting.
  */
 
 import { createFileRoute } from '@tanstack/react-router'
-import { AnalyticsDashboardPage } from '@/pages/analytics'
+import { lazy, Suspense } from 'react'
 import type { TimeRange, AnalyticsUrlState } from '@/types/analytics.types'
+
+const AnalyticsDashboardPage = lazy(() =>
+  import('@/pages/analytics').then((m) => ({
+    default: m.AnalyticsDashboardPage,
+  })),
+)
 
 // Search params schema
 interface AnalyticsSearchParams {
@@ -40,5 +48,15 @@ function AnalyticsRoute() {
     tab: tab || 'overview',
   }
 
-  return <AnalyticsDashboardPage initialState={initialState} />
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <AnalyticsDashboardPage initialState={initialState} />
+    </Suspense>
+  )
 }

@@ -13,7 +13,6 @@
   "workspaces": [
     "backend",
     "frontend",
-    "mobile",
     "shared"
   ],
   "scripts": {
@@ -37,13 +36,8 @@
     "docker:logs": "docker-compose logs -f",
     "docker:build": "docker-compose build",
     "monitor": "docker-compose up -d prometheus grafana",
-    "mobile:start": "cd mobile && pnpm start",
-    "mobile:ios": "cd mobile && pnpm run ios",
-    "mobile:android": "cd mobile && pnpm run android",
     "clean": "turbo run clean && rm -rf node_modules */node_modules",
-    "fresh": "pnpm run clean && pnpm install && pnpm run build",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "fresh": "pnpm run clean && pnpm install && pnpm run build"
   },
   "repository": {
     "type": "git",
@@ -97,9 +91,7 @@
   },
   "dependencies": {
     "@upstash/redis": "^1.35.5",
-    "expo": "^54.0.13",
-    "react": "^19.2.1",
-    "react-native": "0.81.4"
+    "react": "^19.2.1"
   },
   "pnpm": {
     "overrides": {
