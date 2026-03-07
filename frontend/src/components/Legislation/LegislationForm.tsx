@@ -4,7 +4,7 @@
  */
 
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Loader2 } from 'lucide-react'
@@ -122,7 +122,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
   const createMutation = useCreateLegislation()
   const updateMutation = useUpdateLegislation()
 
-  const form = useForm<LegislationFormValues>({
+  const form = useForm<LegislationFormValues, unknown, LegislationFormValues>({
     resolver: zodResolver(legislationFormSchema),
     defaultValues: {
       title_en: legislation?.title_en ?? '',

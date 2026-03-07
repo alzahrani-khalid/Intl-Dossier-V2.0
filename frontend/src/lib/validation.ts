@@ -20,13 +20,13 @@ export const JsonPrimitiveSchema = z.union([z.string(), z.number(), z.boolean(),
  * Schema for JSON-compatible values (recursive)
  */
 export const JsonValueSchema: z.ZodType<unknown> = z.lazy(() =>
-  z.union([JsonPrimitiveSchema, z.array(JsonValueSchema), z.record(JsonValueSchema)]),
+  z.union([JsonPrimitiveSchema, z.array(JsonValueSchema), z.record(z.string(), JsonValueSchema)]),
 )
 
 /**
  * Schema for JSON objects
  */
-export const JsonObjectSchema = z.record(JsonValueSchema)
+export const JsonObjectSchema = z.record(z.string(), JsonValueSchema)
 
 // ============================================================================
 // API Error Response Schemas
@@ -163,7 +163,7 @@ export const UrgencySchema = z.enum(['low', 'medium', 'high', 'critical'])
 /**
  * Schema for type-specific fields (dynamic fields)
  */
-export const TypeSpecificFieldsSchema = z.record(JsonValueSchema)
+export const TypeSpecificFieldsSchema = z.record(z.string(), JsonValueSchema)
 
 // ============================================================================
 // Relationship Schemas

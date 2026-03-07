@@ -7,7 +7,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -76,7 +76,7 @@ export function ScenarioForm({
   const { t, i18n } = useTranslation('scenario-sandbox')
   const isRTL = i18n.language === 'ar'
 
-  const form = useForm<ScenarioFormValues>({
+  const form = useForm<ScenarioFormValues, unknown, ScenarioFormValues>({
     resolver: zodResolver(scenarioSchema),
     defaultValues: {
       title_en: scenario?.title_en || '',

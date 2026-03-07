@@ -16,7 +16,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import {
@@ -77,78 +77,6 @@ const baseDossierSchema = z.object({
       photo_url: z.string().url().optional().or(z.literal('')),
     })
     .optional(),
-})
-
-/**
- * Type-specific extension schemas
- */
-const _countryExtensionSchema = z.object({
-  iso_code_2: z.string().length(2).optional(),
-  iso_code_3: z.string().length(3).optional(),
-  capital_en: z.string().optional(),
-  capital_ar: z.string().optional(),
-  region: z.string().optional(),
-  subregion: z.string().optional(),
-  population: z.number().positive().optional(),
-  area_sq_km: z.number().positive().optional(),
-  flag_url: z.string().url().optional(),
-})
-
-const _organizationExtensionSchema = z.object({
-  org_code: z.string().optional(),
-  org_type: z.enum(['government', 'ngo', 'private', 'international', 'academic']).optional(),
-  website: z.string().url().optional(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  address_en: z.string().optional(),
-  address_ar: z.string().optional(),
-  logo_url: z.string().url().optional(),
-  established_date: z.string().optional(),
-})
-
-const _forumExtensionSchema = z.object({
-  number_of_sessions: z.number().int().positive().optional(),
-  registration_fee: z.number().nonnegative().optional(),
-  currency: z.string().length(3).optional(),
-  agenda_url: z.string().url().optional(),
-  live_stream_url: z.string().url().optional(),
-})
-
-const _engagementExtensionSchema = z.object({
-  engagement_type: z
-    .enum([
-      'meeting',
-      'consultation',
-      'coordination',
-      'workshop',
-      'conference',
-      'site_visit',
-      'ceremony',
-    ])
-    .optional(),
-  engagement_category: z.enum(['bilateral', 'multilateral', 'regional', 'internal']).optional(),
-  location_en: z.string().optional(),
-  location_ar: z.string().optional(),
-})
-
-const _themeExtensionSchema = z.object({
-  theme_category: z.enum(['policy', 'technical', 'strategic', 'operational']).optional(),
-})
-
-const _workingGroupExtensionSchema = z.object({
-  mandate_en: z.string().optional(),
-  mandate_ar: z.string().optional(),
-  wg_status: z.enum(['active', 'suspended', 'disbanded']).optional(),
-  established_date: z.string().optional(),
-  disbandment_date: z.string().optional(),
-})
-
-const _personExtensionSchema = z.object({
-  title_en: z.string().optional(),
-  title_ar: z.string().optional(),
-  biography_en: z.string().optional(),
-  biography_ar: z.string().optional(),
-  photo_url: z.string().url().optional(),
 })
 
 export function DossierForm({

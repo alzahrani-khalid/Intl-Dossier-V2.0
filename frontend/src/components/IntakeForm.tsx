@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
@@ -28,7 +28,7 @@ import {
 const createIntakeSchema = (t: any, tDossier: any) =>
   z.object({
     requestType: z.enum(['engagement', 'position', 'mou_action', 'foresight'], {
-      required_error: t('form.requestType.required'),
+      error: t('form.requestType.required'),
     }),
     title: z.string().min(3, t('form.title.minLength')).max(200, t('form.title.maxLength')),
     titleAr: z.string().max(200, t('form.title.maxLength')).optional(),
@@ -38,11 +38,11 @@ const createIntakeSchema = (t: any, tDossier: any) =>
       .max(5000, t('form.description.maxLength')),
     descriptionAr: z.string().max(5000, t('form.description.maxLength')).optional(),
     urgency: z.enum(['low', 'medium', 'high', 'critical'], {
-      required_error: t('form.urgency.required'),
+      error: t('form.urgency.required'),
     }),
     // US4: dossierId is now required
     dossierId: z.string().uuid({ message: tDossier('validation.dossier_required') }),
-    typeSpecificFields: z.record(z.any()).optional(),
+    typeSpecificFields: z.record(z.string(), z.any()).optional(),
     attachmentIds: z.array(z.string().uuid()).optional(),
   })
 
@@ -94,7 +94,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     formState: { errors, isSubmitting },
     reset,
     // @ts-expect-error Type instantiation too deep
-  } = useForm<IntakeFormData>({
+  } = useForm<IntakeFormData, unknown, IntakeFormData>({
     resolver: zodResolver(createIntakeSchema(t, tDossier)),
     defaultValues: initialData || {
       requestType: 'engagement',

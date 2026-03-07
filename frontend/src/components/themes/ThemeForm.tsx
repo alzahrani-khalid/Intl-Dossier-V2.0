@@ -8,7 +8,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import * as z from 'zod'
 import { Loader2, Hash, Palette, Link as LinkIcon, FolderTree } from 'lucide-react'
 
@@ -75,6 +75,13 @@ const themeFormSchema = z.object({
 
 type ThemeFormValues = z.infer<typeof themeFormSchema>
 
+const EMPTY_PARENT_THEMES: Array<{
+  id: string
+  name_en: string
+  name_ar: string
+  category_code: string
+}> = []
+
 interface ThemeFormProps {
   theme?: Theme | null
   parentThemes?: Array<{ id: string; name_en: string; name_ar: string; category_code: string }>
@@ -86,7 +93,7 @@ interface ThemeFormProps {
 
 export function ThemeForm({
   theme,
-  parentThemes = [],
+  parentThemes = EMPTY_PARENT_THEMES,
   onSubmit,
   onCancel,
   isSubmitting = false,
@@ -97,7 +104,7 @@ export function ThemeForm({
   const isEditing = !!theme
 
   // Initialize form with defaults or existing theme data
-  const form = useForm<ThemeFormValues>({
+  const form = useForm<ThemeFormValues, unknown, ThemeFormValues>({
     resolver: zodResolver(themeFormSchema),
     defaultValues: {
       name_en: theme?.name_en || '',

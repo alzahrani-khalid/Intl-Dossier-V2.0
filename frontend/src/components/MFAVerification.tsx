@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../services/auth'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
@@ -15,7 +14,6 @@ interface MFAVerificationProps {
 }
 
 export function MFAVerification({ onSuccess, onBack }: MFAVerificationProps) {
-  const { t } = useTranslation()
   const { verifyMFA, verifyBackupCode, isLoading, error, clearError } = useAuthStore()
 
   const [code, setCode] = useState('')
@@ -36,14 +34,10 @@ export function MFAVerification({ onSuccess, onBack }: MFAVerificationProps) {
 
     if (timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            setCanResend(true)
-            return 0
-          }
-          return prev - 1
-        })
+        setTimeLeft((prev) => prev - 1)
       }, 1000)
+    } else {
+      setCanResend(true)
     }
 
     return () => {

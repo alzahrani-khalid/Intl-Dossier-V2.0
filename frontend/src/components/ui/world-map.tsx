@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useMemo, useCallback } from 'react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import DottedMap from 'dotted-map'
 
 interface MapProps {
@@ -26,11 +26,14 @@ interface MapProps {
   animateConnections?: boolean
 }
 
+const EMPTY_DOTS: NonNullable<MapProps['dots']> = []
+const EMPTY_MARKERS: NonNullable<MapProps['markers']> = []
+
 export default function WorldMap({
-  dots = [],
+  dots = EMPTY_DOTS,
   lineColor = '#0ea5e9',
   theme = 'light',
-  markers = [],
+  markers = EMPTY_MARKERS,
   onMarkerClick,
   className = '',
   showLabels = false,
@@ -79,13 +82,6 @@ export default function WorldMap({
     }
   }, [])
 
-  // Get intensity color for heatmap
-  const _getIntensityColor = useCallback((intensity: number, baseColor: string): string => {
-    // Intensity 0-100 maps to opacity
-    const _alpha = Math.max(0.3, intensity / 100)
-    return baseColor
-  }, [])
-
   return (
     <div
       className={`w-full aspect-[2/1] rounded-lg relative font-sans ${theme === 'dark' ? 'bg-black' : 'bg-white'} ${className}`}
@@ -109,7 +105,7 @@ export default function WorldMap({
           return (
             <g key={`path-group-${i}`}>
               {animateConnections ? (
-                <motion.path
+                <m.path
                   d={createCurvedPath(startPoint, endPoint)}
                   fill="none"
                   stroke="url(#path-gradient)"

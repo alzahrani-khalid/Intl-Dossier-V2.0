@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -88,7 +88,7 @@ export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFor
   const createSchedule = useCreateSchedule()
   const updateSchedule = useUpdateSchedule()
 
-  const form = useForm<FormValues>({
+  const form = useForm<FormValues, unknown, FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',

@@ -45,14 +45,6 @@ interface CreateDelegationDialogProps {
   users?: Array<{ id: string; email: string; full_name: string }>
 }
 
-interface _FormData {
-  grantee_id: string
-  valid_until: Date | undefined
-  reason: string
-  resource_type: string
-  resource_id: string
-}
-
 const RESOURCE_TYPES = [
   'dossier',
   'country',
@@ -64,23 +56,44 @@ const RESOURCE_TYPES = [
   'data_library_item',
 ]
 
+const EMPTY_USERS: Array<{ id: string; email: string; full_name: string }> = []
+
 export function CreateDelegationDialog({
   open,
   onOpenChange,
   onSuccess,
-  users = [],
+  users = EMPTY_USERS,
 }: CreateDelegationDialogProps) {
   const { t, i18n } = useTranslation('delegation')
   const { toast } = useToast()
   const isRTL = i18n.language === 'ar'
   const dateLocale = isRTL ? ar : enUS
 
-  const [selectedGranteeId, setSelectedGranteeId] = useState<string>('')
+  type FormState = {
+    selectedGranteeId: string
+    endDate: Date | undefined
+    reason: string
+    resourceType: string
+    resourceId: string
+  }
+
+  const initialFormState: FormState = {
+    selectedGranteeId: '',
+    endDate: undefined,
+    reason: '',
+    resourceType: '',
+    resourceId: '',
+  }
+
+  const [formState, setFormState] = useState<FormState>(initialFormState)
+  const { selectedGranteeId, endDate, reason, resourceType, resourceId } = formState
   const [startDate] = useState<Date>(new Date())
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined)
-  const [reason, setReason] = useState('')
-  const [resourceType, setResourceType] = useState<string>('')
-  const [resourceId, setResourceId] = useState('')
+
+  const setSelectedGranteeId = (v: string) => setFormState((s) => ({ ...s, selectedGranteeId: v }))
+  const setEndDate = (v: Date | undefined) => setFormState((s) => ({ ...s, endDate: v }))
+  const setReason = (v: string) => setFormState((s) => ({ ...s, reason: v }))
+  const setResourceType = (v: string) => setFormState((s) => ({ ...s, resourceType: v }))
+  const setResourceId = (v: string) => setFormState((s) => ({ ...s, resourceId: v }))
 
   // Mutations and queries
   const delegateMutation = useDelegatePermissions()
@@ -97,11 +110,7 @@ export function CreateDelegationDialog({
   // Reset form when dialog closes
   useEffect(() => {
     if (!open) {
-      setSelectedGranteeId('')
-      setEndDate(undefined)
-      setReason('')
-      setResourceType('')
-      setResourceId('')
+      setFormState(initialFormState)
     }
   }, [open])
 
@@ -216,8 +225,8 @@ export function CreateDelegationDialog({
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
                       {t('validation.invalid')}
-                      {validation.issues?.map((issue, i) => (
-                        <div key={i} className="mt-1 text-xs">
+                      {validation.issues?.map((issue) => (
+                        <div key={issue.code} className="mt-1 text-xs">
                           {t(`validation.issues.${issue.code}`, issue.message)}
                         </div>
                       ))}

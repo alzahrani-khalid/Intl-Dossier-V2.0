@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, Trash2, Filter } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -87,7 +87,7 @@ export function ConditionsManager({ scheduleId }: ConditionsManagerProps) {
   const addCondition = useAddCondition()
   const removeCondition = useRemoveCondition()
 
-  const form = useForm<ConditionForm>({
+  const form = useForm<ConditionForm, unknown, ConditionForm>({
     resolver: zodResolver(conditionSchema),
     defaultValues: {
       field_path: '',

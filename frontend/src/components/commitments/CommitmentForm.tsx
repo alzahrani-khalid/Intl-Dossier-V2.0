@@ -55,7 +55,7 @@ const commitmentFormSchema = z.object({
   title: z.string().min(1, 'validation.titleRequired').max(200, 'validation.titleMaxLength'),
   description: z.string().min(1, 'validation.descriptionRequired'),
   due_date: z.date({
-    required_error: 'validation.dueDateRequired',
+    error: 'validation.dueDateRequired',
   }),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   owner_type: z.enum(['internal', 'external'] as const),
@@ -103,7 +103,7 @@ export function CommitmentForm({
     proof_required: commitment?.proof_required ?? false,
   }
 
-  const form = useForm<CommitmentFormValues>({
+  const form = useForm<CommitmentFormValues, unknown, CommitmentFormValues>({
     resolver: zodResolver(commitmentFormSchema),
     defaultValues,
   })

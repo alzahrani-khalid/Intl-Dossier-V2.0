@@ -61,10 +61,10 @@ interface InteractionNoteFormProps {
  */
 const formSchema = z.object({
   date: z.date({
-    required_error: 'Date is required',
+    error: 'Date is required',
   }),
   type: z.enum(['meeting', 'email', 'call', 'conference', 'other'], {
-    required_error: 'Type is required',
+    error: 'Type is required',
   }),
   details: z
     .string()
@@ -101,7 +101,7 @@ export function InteractionNoteForm({
     limit: 10,
   })
 
-  const form = useForm<FormValues>({
+  const form = useForm<FormValues, unknown, FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       date: note ? new Date(note.date) : new Date(),
@@ -388,7 +388,7 @@ export function InteractionNoteForm({
                 <div className="space-y-2">
                   {selectedFiles.map((file, index) => (
                     <div
-                      key={index}
+                      key={`${file.name}-${file.size}-${file.lastModified}`}
                       className="flex items-center justify-between p-2 border rounded-md text-sm"
                     >
                       <span className="truncate flex-1">{file.name}</span>

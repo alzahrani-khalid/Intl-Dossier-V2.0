@@ -9,7 +9,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import { z } from 'zod'
 import {
   ArrowLeft,
@@ -74,7 +74,7 @@ export function PersonCreatePage() {
 
   const createPerson = useCreatePerson()
 
-  const form = useForm<PersonFormValues>({
+  const form = useForm<PersonFormValues, unknown, PersonFormValues>({
     resolver: zodResolver(personFormSchema),
     defaultValues: {
       name_en: '',

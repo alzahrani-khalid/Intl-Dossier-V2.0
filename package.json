@@ -73,8 +73,8 @@
     "@types/node": "^20.19.17",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
-    "@vitejs/plugin-react": "^5.0.3",
-    "@vitest/ui": "^3.2.4",
+    "@vitejs/plugin-react": "^5.1.4",
+    "@vitest/ui": "^4.0.18",
     "axe-playwright": "^2.2.2",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
@@ -87,11 +87,11 @@
     "shadcn": "^3.4.0",
     "turbo": "^2.6.0",
     "typescript": "~5.9.2",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@upstash/redis": "^1.35.5",
-    "react": "^19.2.1"
+    "react": "^19.2.4"
   },
   "pnpm": {
     "overrides": {

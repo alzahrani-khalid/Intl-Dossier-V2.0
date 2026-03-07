@@ -57,7 +57,7 @@ const deliverableFormSchema = z.object({
   description_en: z.string().optional().nullable(),
   description_ar: z.string().optional().nullable(),
   due_date: z.date({
-    required_error: 'validation.dueDateRequired',
+    error: 'validation.dueDateRequired',
   }),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   status: z.enum([
@@ -112,7 +112,7 @@ export function DeliverableForm({ mouId, deliverable, onSuccess, onCancel }: Del
     notes: deliverable?.notes ?? '',
   }
 
-  const form = useForm<DeliverableFormValues>({
+  const form = useForm<DeliverableFormValues, unknown, DeliverableFormValues>({
     resolver: zodResolver(deliverableFormSchema),
     defaultValues,
   })

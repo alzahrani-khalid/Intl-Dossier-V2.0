@@ -217,21 +217,30 @@ export function SearchResultCard({
   showRelationships = true,
   compact = false,
 }: SearchResultCardProps) {
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
   const [showRelationshipPath, setShowRelationshipPath] = useState(false)
 
   const config = (entityTypeConfig[result.entityType] || entityTypeConfig.document)!
   const Icon = config.icon
 
-  // Highlight search query in text
-  const highlightText = (text: string, query?: string) => {
+  // Highlight search query in text (returns React elements, safe from XSS)
+  const highlightText = (text: string, query?: string): React.ReactNode => {
     if (!query || !text) return text
     const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-    return text.replace(
-      regex,
-      '<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">$1</mark>',
-    )
+    const parts = text.split(regex)
+    let offset = 0
+    return parts.map((part) => {
+      const key = `hl-${offset}`
+      offset += part.length
+      return regex.test(part) ? (
+        <mark key={key} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    })
   }
 
   const title = isRTL ? result.title_ar : result.title_en
@@ -330,10 +339,9 @@ export function SearchResultCard({
               'font-semibold text-gray-900 dark:text-gray-100',
               compact ? 'text-base' : 'text-lg',
             )}
-            dangerouslySetInnerHTML={{
-              __html: highlightText(title, searchQuery),
-            }}
-          />
+          >
+            {highlightText(title, searchQuery)}
+          </h3>
 
           {/* Secondary title */}
           {secondaryTitle && title !== secondaryTitle && !compact && (
@@ -342,23 +350,20 @@ export function SearchResultCard({
 
           {/* Snippet with highlights */}
           {snippet && !compact && (
-            <div
-              className="mb-2 line-clamp-2 text-sm text-gray-700 dark:text-gray-300"
-              dangerouslySetInnerHTML={{
-                __html: snippet,
-              }}
-            />
+            <p className="mb-2 line-clamp-2 text-sm text-gray-700 dark:text-gray-300">
+              {highlightText(snippet, searchQuery)}
+            </p>
           )}
 
           {/* Match Reasons */}
           {showMatchReasons && result.matchReasons && result.matchReasons.length > 0 && (
             <div className="mb-2 flex flex-wrap gap-1.5">
-              {result.matchReasons.slice(0, 3).map((reason, idx) => {
+              {result.matchReasons.slice(0, 3).map((reason) => {
                 const fieldConfig = matchFieldConfig[reason.field]
                 const FieldIcon = fieldConfig.icon
                 return (
                   <span
-                    key={idx}
+                    key={reason.field}
                     className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                     title={reason.highlight || reason.value}
                   >
@@ -383,8 +388,8 @@ export function SearchResultCard({
           {/* Tags */}
           {result.tags && result.tags.length > 0 && !compact && (
             <div className="mb-2 flex flex-wrap gap-1">
-              {result.tags.slice(0, 3).map((tag, idx) => (
-                <Badge key={idx} variant="outline" className="text-xs">
+              {result.tags.slice(0, 3).map((tag) => (
+                <Badge key={tag} variant="outline" className="text-xs">
                   {tag}
                 </Badge>
               ))}

@@ -15,7 +15,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Globe,
   Building2,
@@ -178,7 +178,7 @@ function GuideContent({
 
   // Popover and inline variants - full content
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 5 }}
@@ -222,8 +222,8 @@ function GuideContent({
             <span>{isRTL ? 'أمثلة' : 'Examples'}</span>
           </div>
           <div className="flex flex-wrap gap-1.5 ps-6">
-            {examples.slice(0, 5).map((example, idx) => (
-              <Badge key={idx} variant="secondary" className="text-xs font-normal">
+            {examples.slice(0, 5).map((example) => (
+              <Badge key={example} variant="secondary" className="text-xs font-normal">
                 {example}
               </Badge>
             ))}
@@ -239,8 +239,8 @@ function GuideContent({
             <span>{isRTL ? 'روابط شائعة' : 'Common Links'}</span>
           </div>
           <ul className="text-sm text-muted-foreground ps-6 space-y-0.5">
-            {commonLinks.slice(0, 4).map((link, idx) => (
-              <li key={idx} className="flex items-center gap-1.5">
+            {commonLinks.slice(0, 4).map((link) => (
+              <li key={link} className="flex items-center gap-1.5">
                 <ArrowRight className={cn('h-3 w-3 shrink-0', isRTL && 'rotate-180')} />
                 <span>{link}</span>
               </li>
@@ -272,7 +272,7 @@ function GuideContent({
           </Button>
         </>
       )}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -292,7 +292,6 @@ export function DossierTypeGuide({
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
   const [open, setOpen] = useState(false)
-  const _colors = getTypeColors(type)
 
   // Inline variant - no trigger needed
   if (variant === 'inline') {
@@ -396,7 +395,7 @@ export function DossierTypeGuideGrid({
         const isSelected = selectedType === type
 
         return (
-          <motion.button
+          <m.button
             key={type}
             onClick={() => onSelect(type)}
             className={cn(
@@ -423,7 +422,7 @@ export function DossierTypeGuideGrid({
             </div>
 
             {/* Expandable hint on hover/focus */}
-            <motion.div
+            <m.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: isSelected ? 'auto' : 0, opacity: isSelected ? 1 : 0 }}
               transition={{ duration: 0.2 }}
@@ -433,8 +432,8 @@ export function DossierTypeGuideGrid({
                 <Lightbulb className="inline h-3 w-3 me-1" />
                 {t(`typeGuide.${type}.whenToUse`, '')}
               </p>
-            </motion.div>
-          </motion.button>
+            </m.div>
+          </m.button>
         )
       })}
     </div>

@@ -24,7 +24,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { useForm, FormProvider } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import * as z from 'zod'
 import {
   Globe,
@@ -331,7 +331,7 @@ export function DossierCreateWizard({
     })
 
   // Form state
-  const form = useForm<DossierFormData>({
+  const form = useForm<DossierFormData, unknown, DossierFormData>({
     resolver: zodResolver(dossierSchema),
     defaultValues: {
       ...draft,

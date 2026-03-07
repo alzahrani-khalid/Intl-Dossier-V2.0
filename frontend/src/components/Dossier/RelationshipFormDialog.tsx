@@ -13,7 +13,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@/lib/form-resolver'
 import { z } from 'zod'
 import { Link2, Loader2 } from 'lucide-react'
 
@@ -116,7 +116,7 @@ export function RelationshipFormDialog({
   const isLoading = createMutation.isPending || updateMutation.isPending
 
   // Form setup
-  const form = useForm<RelationshipFormValues>({
+  const form = useForm<RelationshipFormValues, unknown, RelationshipFormValues>({
     resolver: zodResolver(relationshipFormSchema),
     defaultValues: {
       target_dossier_id: relationship?.target_dossier_id || '',
