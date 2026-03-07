@@ -9,6 +9,16 @@ import type Redis from 'ioredis'
 // Rate limit configuration
 const RATE_LIMIT_WINDOW_MS = 60 * 1000 // 1 minute
 const DEFAULT_RATE_LIMIT_MAX_REQUESTS = 300 // 300 requests per minute as per requirements
+const SEARCH_RATE_LIMIT_MAX_REQUESTS = 60 // 60 requests per minute for search
+
+// Normalize resetTime from express-rate-limit (can be number, Date, or undefined)
+function normalizeResetMs(reset: number | Date | undefined, fallbackWindowMs: number): number {
+  return typeof reset === 'number'
+    ? reset
+    : reset instanceof Date
+      ? reset.getTime()
+      : Date.now() + fallbackWindowMs
+}
 
 // Interface for rate limit policy from database
 interface RateLimitPolicy {
@@ -24,7 +34,7 @@ interface RateLimitPolicy {
 }
 
 // Cache for rate limit policies (5 minute TTL)
-const policyCache: Map<string, RateLimitPolicy[]> = new Map()
+let cachedPolicies: RateLimitPolicy[] | null = null
 let cacheExpiry = 0
 
 // Function to get rate limit policies from database
@@ -32,8 +42,8 @@ async function getRateLimitPolicies(): Promise<RateLimitPolicy[]> {
   const now = Date.now()
 
   // Return cached policies if still valid
-  if (now < cacheExpiry && policyCache.has('policies')) {
-    return policyCache.get('policies')!
+  if (now < cacheExpiry && cachedPolicies) {
+    return cachedPolicies
   }
 
   try {
@@ -48,10 +58,10 @@ async function getRateLimitPolicies(): Promise<RateLimitPolicy[]> {
     }
 
     // Cache policies for 5 minutes
-    policyCache.set('policies', policies || [])
+    cachedPolicies = policies || []
     cacheExpiry = now + 5 * 60 * 1000
 
-    return policies || []
+    return cachedPolicies
   } catch (error) {
     logError('Error fetching rate limit policies:', error instanceof Error ? error : undefined)
     return []
@@ -100,6 +110,30 @@ async function getApplicablePolicy(req: Request): Promise<RateLimitPolicy | null
   return null
 }
 
+// Lua script for atomic token bucket rate limiting (hoisted to avoid per-call allocation)
+const TOKEN_BUCKET_LUA = [
+  'local key = KEYS[1]',
+  'local limit = tonumber(ARGV[1])',
+  'local windowMs = tonumber(ARGV[2])',
+  'local burstCapacity = tonumber(ARGV[3])',
+  'local now = tonumber(ARGV[4])',
+  'local windowStart = now - windowMs',
+  'local bucket = redis.call("HMGET", key, "tokens", "lastRefill")',
+  'local tokens = tonumber(bucket[1]) or burstCapacity',
+  'local lastRefill = tonumber(bucket[2]) or now',
+  'local timePassed = now - lastRefill',
+  'local tokensToAdd = math.floor(timePassed / 1000)',
+  'tokens = math.min(burstCapacity, tokens + tokensToAdd)',
+  'local allowed = tokens >= 1',
+  'local remaining = 0',
+  'local retryAfter = nil',
+  'if allowed then tokens = tokens - 1; remaining = tokens',
+  'else local tokensNeeded = 1 - tokens; retryAfter = tokensNeeded * 1000 end',
+  'redis.call("HMSET", key, "tokens", tokens, "lastRefill", now)',
+  'redis.call("EXPIRE", key, math.ceil(windowMs / 1000))',
+  'return {allowed, remaining, now + windowMs, retryAfter}',
+].join('\n')
+
 // Redis-based rate limiter using token bucket algorithm
 class TokenBucketRateLimiter {
   private redis: Redis
@@ -120,51 +154,10 @@ class TokenBucketRateLimiter {
     retryAfter?: number
   }> {
     const now = Date.now()
-    const windowStart = now - windowMs
-
-    // Use Lua script for atomic operations
-    const luaScript = `
-      local key = KEYS[1]
-      local limit = tonumber(ARGV[1])
-      local windowMs = tonumber(ARGV[2])
-      local burstCapacity = tonumber(ARGV[3])
-      local now = tonumber(ARGV[4])
-      local windowStart = now - windowMs
-      
-      -- Get current bucket state
-      local bucket = redis.call('HMGET', key, 'tokens', 'lastRefill')
-      local tokens = tonumber(bucket[1]) or burstCapacity
-      local lastRefill = tonumber(bucket[2]) or now
-      
-      -- Calculate tokens to add based on time passed
-      local timePassed = now - lastRefill
-      local tokensToAdd = math.floor(timePassed / 1000) -- 1 token per second
-      tokens = math.min(burstCapacity, tokens + tokensToAdd)
-      
-      -- Check if request is allowed
-      local allowed = tokens >= 1
-      local remaining = 0
-      local retryAfter = nil
-      
-      if allowed then
-        tokens = tokens - 1
-        remaining = tokens
-      else
-        -- Calculate retry after
-        local tokensNeeded = 1 - tokens
-        retryAfter = tokensNeeded * 1000 -- milliseconds
-      end
-      
-      -- Update bucket state
-      redis.call('HMSET', key, 'tokens', tokens, 'lastRefill', now)
-      redis.call('EXPIRE', key, math.ceil(windowMs / 1000))
-      
-      return {allowed, remaining, now + windowMs, retryAfter}
-    `
 
     try {
       const result = (await this.redis.eval(
-        luaScript,
+        TOKEN_BUCKET_LUA,
         1,
         key,
         limit.toString(),
@@ -278,13 +271,7 @@ export const rateLimitMiddleware = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req: Request, res: Response) => {
-    const reset = req.rateLimit?.resetTime
-    const resetMs =
-      typeof reset === 'number'
-        ? reset
-        : reset instanceof Date
-          ? reset.getTime()
-          : Date.now() + RATE_LIMIT_WINDOW_MS
+    const resetMs = normalizeResetMs(req.rateLimit?.resetTime, RATE_LIMIT_WINDOW_MS)
     const retryAfter = Math.max(0, Math.ceil((resetMs - Date.now()) / 1000))
 
     logWarn(
@@ -326,13 +313,7 @@ export const authRateLimitMiddleware = rateLimit({
     retryAfter: 900,
   },
   handler: (req: Request, res: Response) => {
-    const reset = req.rateLimit?.resetTime
-    const resetMs =
-      typeof reset === 'number'
-        ? reset
-        : reset instanceof Date
-          ? reset.getTime()
-          : Date.now() + 15 * 60 * 1000
+    const resetMs = normalizeResetMs(req.rateLimit?.resetTime, 15 * 60 * 1000)
     const retryAfter = Math.max(0, Math.ceil((resetMs - Date.now()) / 1000))
 
     logWarn(`Auth rate limit exceeded for IP: ${req.ip}, Path: ${req.path}`)
@@ -355,13 +336,7 @@ export const uploadRateLimitMiddleware = rateLimit({
     retryAfter: 3600,
   },
   handler: (req: Request, res: Response) => {
-    const reset = req.rateLimit?.resetTime
-    const resetMs =
-      typeof reset === 'number'
-        ? reset
-        : reset instanceof Date
-          ? reset.getTime()
-          : Date.now() + 60 * 60 * 1000
+    const resetMs = normalizeResetMs(req.rateLimit?.resetTime, 60 * 60 * 1000)
     const retryAfter = Math.max(0, Math.ceil((resetMs - Date.now()) / 1000))
 
     logWarn(`Upload rate limit exceeded for IP: ${req.ip}, Path: ${req.path}`)
@@ -384,13 +359,7 @@ export const aiRateLimitMiddleware = rateLimit({
     retryAfter: 3600,
   },
   handler: (req: Request, res: Response) => {
-    const reset = req.rateLimit?.resetTime
-    const resetMs =
-      typeof reset === 'number'
-        ? reset
-        : reset instanceof Date
-          ? reset.getTime()
-          : Date.now() + 60 * 60 * 1000
+    const resetMs = normalizeResetMs(req.rateLimit?.resetTime, 60 * 60 * 1000)
     const retryAfter = Math.max(0, Math.ceil((resetMs - Date.now()) / 1000))
 
     logWarn(`AI rate limit exceeded for IP: ${req.ip}, Path: ${req.path}`)
@@ -428,13 +397,7 @@ export const createRoleBasedRateLimit = (role: string) => {
       return userId ? `user:${userId}:${role}` : `ip:${ip}:${role}`
     },
     handler: (req: Request, res: Response) => {
-      const reset = req.rateLimit?.resetTime
-      const resetMs =
-        typeof reset === 'number'
-          ? reset
-          : reset instanceof Date
-            ? reset.getTime()
-            : Date.now() + RATE_LIMIT_WINDOW_MS
+      const resetMs = normalizeResetMs(req.rateLimit?.resetTime, RATE_LIMIT_WINDOW_MS)
       const retryAfter = Math.max(0, Math.ceil((resetMs - Date.now()) / 1000))
 
       logWarn(`Role-based rate limit exceeded for role: ${role}, IP: ${req.ip}, Path: ${req.path}`)
@@ -450,13 +413,20 @@ export const createRoleBasedRateLimit = (role: string) => {
   })
 }
 
+// Cache role-based limiters so the same express-rate-limit store is reused per role
+const roleLimiters = new Map<string, ReturnType<typeof rateLimit>>()
+
 // Middleware to apply rate limiting based on user role
 export const roleBasedRateLimit = (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = (req as any).user
     const role = user?.role || 'guest'
 
-    const limiter = createRoleBasedRateLimit(role)
+    let limiter = roleLimiters.get(role)
+    if (!limiter) {
+      limiter = createRoleBasedRateLimit(role)
+      roleLimiters.set(role, limiter)
+    }
     limiter(req, res, next)
   } catch (error) {
     logError('Error in role-based rate limiting:', error instanceof Error ? error : undefined)
@@ -471,20 +441,33 @@ export const uploadLimiter = uploadRateLimitMiddleware
 export const aiLimiter = aiRateLimitMiddleware
 export const dynamicLimiter = (role: string) => createRoleBasedRateLimit(role)
 
-// Search rate limiting (replaces search-rate-limit.ts)
-export const searchRateLimit = rateLimitMiddleware
+// Search rate limiting — 60 req/min (matching original search-rate-limit.ts)
+export const searchRateLimit = rateLimit({
+  windowMs: RATE_LIMIT_WINDOW_MS,
+  max: SEARCH_RATE_LIMIT_MAX_REQUESTS,
+  message: {
+    error: 'Too many search requests',
+    message: 'Search rate limit exceeded. Maximum 60 requests per minute.',
+    retryAfter: 60,
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req: Request, res: Response) => {
+    const resetMs = normalizeResetMs(req.rateLimit?.resetTime, RATE_LIMIT_WINDOW_MS)
+    const retryAfter = Math.max(0, Math.ceil((resetMs - Date.now()) / 1000))
 
-// Export all rate limiters
-export default {
-  dynamicRateLimitMiddleware,
-  rateLimitMiddleware,
-  authRateLimitMiddleware,
-  uploadRateLimitMiddleware,
-  aiRateLimitMiddleware,
-  createRoleBasedRateLimit,
-  roleBasedRateLimit,
-  apiLimiter: rateLimitMiddleware,
-  authLimiter: authRateLimitMiddleware,
-  uploadLimiter: uploadRateLimitMiddleware,
-  aiLimiter: aiRateLimitMiddleware,
-}
+    logWarn(`Search rate limit exceeded for IP: ${req.ip}, Path: ${req.path}`)
+
+    res.status(429).json({
+      error: 'Too many search requests',
+      message: 'Search rate limit exceeded. Maximum 60 requests per minute.',
+      retryAfter,
+      limit: SEARCH_RATE_LIMIT_MAX_REQUESTS,
+    })
+  },
+  keyGenerator: (req: Request) => {
+    const userId = (req as any).user?.id
+    const ip = req.ip || req.connection.remoteAddress || 'unknown'
+    return userId ? `search:user:${userId}` : `search:ip:${ip}`
+  },
+})

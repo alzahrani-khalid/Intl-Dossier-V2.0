@@ -32,7 +32,7 @@ function App() {
           >
             <ThemeProvider initialTheme="canvas" initialColorMode="light">
               <LanguageProvider initialLanguage="en">
-                <LazyMotion features={domAnimation} strict>
+                <LazyMotion features={domAnimation}>
                   <RTLWrapper>
                     <AppRouter />
                     <ReactQueryDevtools initialIsOpen={false} />
