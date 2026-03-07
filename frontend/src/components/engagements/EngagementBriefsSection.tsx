@@ -330,7 +330,6 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
                     label: p.name_en || p.name_ar || 'Unknown',
                     sublabel: p.role,
                   }))}
-                  isRTL={isRTL}
                 />
 
                 {/* Positions */}
@@ -342,7 +341,6 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
                     label: p.title_en || p.title_ar || 'Position',
                     sublabel: p.stance,
                   }))}
-                  isRTL={isRTL}
                 />
 
                 {/* Commitments */}
@@ -354,7 +352,6 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
                     label: c.title_en || c.title_ar || 'Commitment',
                     sublabel: c.status,
                   }))}
-                  isRTL={isRTL}
                 />
 
                 {/* Recent Interactions */}
@@ -366,7 +363,6 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
                     label: r.event_title_en || 'Event',
                     sublabel: new Date(r.event_date).toLocaleDateString(),
                   }))}
-                  isRTL={isRTL}
                 />
               </div>
             ) : (
@@ -479,10 +475,9 @@ interface ContextCardProps {
   title: string
   count: number
   items?: Array<{ label: string; sublabel?: string }>
-  isRTL: boolean
 }
 
-function ContextCard({ icon: Icon, title, count, items, isRTL }: ContextCardProps) {
+function ContextCard({ icon: Icon, title, count, items }: ContextCardProps) {
   return (
     <div className="border rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">

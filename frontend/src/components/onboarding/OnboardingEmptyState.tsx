@@ -123,7 +123,6 @@ export function OnboardingEmptyState({
   const isRTL = i18n.language === 'ar'
 
   const {
-    checklist,
     isLoading,
     isDismissed,
     isFullyCompleted,
@@ -145,10 +144,6 @@ export function OnboardingEmptyState({
       await markCelebrationShown(activeCelebration.percentage)
     }
   }, [activeCelebration, markCelebrationShown])
-
-  // Get relevant checklist items for this entity type
-  const relevantItems = checklist?.items.filter((item) => item.entityType === entityType)
-  const _hasRelevantItems = relevantItems && relevantItems.length > 0
 
   // Should we show the onboarding section?
   const shouldShowOnboarding = showChecklist && !isFullyCompleted && !isDismissed && !isLoading

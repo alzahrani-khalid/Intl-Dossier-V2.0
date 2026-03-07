@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../services/auth'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
@@ -13,7 +12,6 @@ interface MFASetupProps {
 }
 
 export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
-  const { t } = useTranslation()
   const { enableMFA, verifyMFA, generateBackupCodes, isLoading, error } = useAuthStore()
 
   const [step, setStep] = useState<'setup' | 'verify' | 'backup' | 'complete'>('setup')

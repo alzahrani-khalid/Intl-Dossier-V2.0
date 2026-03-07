@@ -160,8 +160,7 @@ export function PositionEditor({
   autoSaveInterval = 30000,
   className,
 }: PositionEditorProps) {
-  const { t, i18n } = useTranslation('positions')
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('positions')
 
   // Form state
   const [formData, setFormData] = useState<PositionEditorData>({

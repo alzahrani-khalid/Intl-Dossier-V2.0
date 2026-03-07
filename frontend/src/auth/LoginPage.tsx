@@ -143,17 +143,16 @@ export function LoginPage() {
                 <Checkbox
                   id="rememberMe"
                   checked={false}
-                  onCheckedChange={(checked) => {
+                  onCheckedChange={() => {
                     // Update form value when checkbox changes
-                    const _event = { target: { name: 'rememberMe', value: checked } }
                   }}
                 />
                 <label htmlFor="rememberMe" className="text-sm text-foreground cursor-pointer">
                   {t('auth.rememberMe')}
                 </label>
               </div>
-              <Button variant="link" asChild className="px-0">
-                <a href="#">{t('auth.forgotPassword')}</a>
+              <Button variant="link" className="px-0" type="button">
+                {t('auth.forgotPassword')}
               </Button>
             </div>
 
@@ -180,16 +179,13 @@ export function LoginPage() {
           {/* Sign up link */}
           <div className="mt-4 text-center text-sm text-muted-foreground">
             {t('auth.dontHaveAccount')}{' '}
-            <a
-              href="/register"
+            <button
+              type="button"
               className="text-primary hover:text-primary/80 hover:underline"
-              onClick={(e) => {
-                e.preventDefault()
-                navigate({ to: '/register' })
-              }}
+              onClick={() => navigate({ to: '/register' })}
             >
               {t('auth.signUp')}
-            </a>
+            </button>
           </div>
         </div>
 

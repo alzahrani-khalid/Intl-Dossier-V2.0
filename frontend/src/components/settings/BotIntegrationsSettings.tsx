@@ -34,19 +34,6 @@ interface BotLink {
   created_at: string
 }
 
-interface BriefingSchedule {
-  id: string
-  is_active: boolean
-  schedule_time: string
-  days_of_week: number[]
-  include_assignments: boolean
-  include_deadlines: boolean
-  include_calendar: boolean
-  include_commitments: boolean
-  max_items_per_section: number
-  deadline_lookahead_days: number
-}
-
 // Fetch user's bot links
 async function fetchBotLinks(): Promise<BotLink[]> {
   const {
@@ -57,18 +44,6 @@ async function fetchBotLinks(): Promise<BotLink[]> {
   const { data, error } = await supabase.rpc('get_user_bot_links', {
     p_user_id: user.id,
   })
-
-  if (error) throw error
-  return data || []
-}
-
-// Fetch briefing schedules for a link
-async function _fetchBriefingSchedules(linkId: string): Promise<BriefingSchedule[]> {
-  const { data, error } = await supabase
-    .from('bot_briefing_schedules')
-    .select('*')
-    .eq('user_link_id', linkId)
-    .order('created_at', { ascending: false })
 
   if (error) throw error
   return data || []
@@ -139,51 +114,6 @@ async function unlinkBotAccount(linkId: string): Promise<void> {
 
   if (error) throw error
 }
-
-// Update briefing schedule
-async function _updateBriefingSchedule(
-  scheduleId: string,
-  updates: Partial<BriefingSchedule>,
-): Promise<void> {
-  const { error } = await supabase
-    .from('bot_briefing_schedules')
-    .update(updates)
-    .eq('id', scheduleId)
-
-  if (error) throw error
-}
-
-// Create briefing schedule
-async function _createBriefingSchedule(
-  linkId: string,
-  platform: 'slack' | 'teams',
-  targetId: string,
-  workspaceId: string,
-): Promise<void> {
-  const { error } = await supabase.from('bot_briefing_schedules').insert({
-    user_link_id: linkId,
-    workspace_id: workspaceId,
-    platform,
-    target_type: 'dm',
-    target_id: targetId,
-    is_active: true,
-    schedule_time: '08:00',
-    days_of_week: [1, 2, 3, 4, 5],
-  })
-
-  if (error) throw error
-}
-
-// Days of week options
-const _DAYS_OF_WEEK = [
-  { value: 0, label: 'sunday' },
-  { value: 1, label: 'monday' },
-  { value: 2, label: 'tuesday' },
-  { value: 3, label: 'wednesday' },
-  { value: 4, label: 'thursday' },
-  { value: 5, label: 'friday' },
-  { value: 6, label: 'saturday' },
-]
 
 export function BotIntegrationsSettings() {
   const { t, i18n } = useTranslation('integrations')

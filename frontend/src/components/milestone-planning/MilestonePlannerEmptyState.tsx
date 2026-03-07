@@ -92,7 +92,7 @@ export function MilestonePlannerEmptyState({
   dossierId,
   dossierType,
   milestones,
-  isLoading = false,
+  isLoading: _isLoading = false,
   onCreateMilestone,
   onUpdateMilestone,
   onDeleteMilestone,

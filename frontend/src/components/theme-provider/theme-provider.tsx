@@ -44,13 +44,13 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 interface ThemeProviderProps {
   children: React.ReactNode
   initialTheme?: Theme
-  initialColorMode?: ColorMode
+  initialColorMode?: string
 }
 
 export function ThemeProvider({
   children,
   initialTheme = 'canvas',
-  initialColorMode = 'light',
+  initialColorMode: _initialColorMode = 'light',
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(() => {
     // Initialize theme from localStorage if available

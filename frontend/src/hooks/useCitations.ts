@@ -59,7 +59,7 @@ async function fetchCitations(params: CitationListParams): Promise<CitationListR
   if (params.limit) searchParams.set('limit', String(params.limit))
   if (params.offset) searchParams.set('offset', String(params.offset))
 
-  const { data, error } = await supabase.functions.invoke(EDGE_FUNCTION_URL, {
+  await supabase.functions.invoke(EDGE_FUNCTION_URL, {
     method: 'GET',
     body: undefined,
     headers: {},
@@ -403,7 +403,7 @@ export function useDeleteCitation() {
 
   return useMutation({
     mutationFn: deleteCitation,
-    onSuccess: (_, deletedId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: citationKeys.lists() })
       // Also invalidate entity queries (we don't know which ones, so invalidate all)
       queryClient.invalidateQueries({ queryKey: citationKeys.all })

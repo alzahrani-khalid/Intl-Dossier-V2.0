@@ -115,7 +115,6 @@ export function AgendaItemForm({ agendaId, item, onClose }: AgendaItemFormProps)
   })
 
   const watchedDuration = watch('planned_duration_minutes')
-  const _watchedType = watch('item_type')
   const watchedPresenterType = watch('presenter_type')
 
   // Handle form submission

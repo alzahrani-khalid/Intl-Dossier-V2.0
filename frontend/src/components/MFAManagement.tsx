@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../services/auth'
 import { Button } from './ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
@@ -13,10 +12,8 @@ interface MFAManagementProps {
 }
 
 export function MFAManagement({ className }: MFAManagementProps) {
-  const { t } = useTranslation()
   const { isLoading, error, checkAuth } = useAuthStore() as any
   const mfaConfig = (useAuthStore() as any).mfaConfig as { enabled: boolean } | undefined
-  const _enableMFA = (useAuthStore() as any).enableMFA as (() => Promise<void>) | undefined
   const disableMFA = (useAuthStore() as any).disableMFA as
     | ((password: string) => Promise<void>)
     | undefined

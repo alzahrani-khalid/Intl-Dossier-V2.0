@@ -119,7 +119,7 @@ export const AIInteractionLogViewer: React.FC<AIInteractionLogViewerProps> = ({
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
 
   // Fetch interactions
-  const { data, isLoading, error, refetch } = useAIInteractions(filters)
+  const { data, isLoading, error } = useAIInteractions(filters)
 
   const interactions = data?.data || []
   const totalCount = data?.metadata?.total || 0

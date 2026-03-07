@@ -77,8 +77,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
   const { t, i18n } = useTranslation('briefing-books')
   const isRTL = i18n.language === 'ar'
 
-  const { briefingBooks, isLoading, error, deleteBriefingBook, downloadBriefingBook, refresh } =
-    useBriefingBooks()
+  const { briefingBooks, isLoading, error, deleteBriefingBook, refresh } = useBriefingBooks()
 
   const [statusFilter, setStatusFilter] = useState<BriefingBookStatus | 'all'>('all')
   const [deleteDialogId, setDeleteDialogId] = useState<string | null>(null)

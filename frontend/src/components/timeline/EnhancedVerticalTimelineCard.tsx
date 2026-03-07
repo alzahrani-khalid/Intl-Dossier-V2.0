@@ -152,7 +152,10 @@ function CloseIcon() {
   )
 }
 
-export function EnhancedVerticalTimelineCard({ event, index }: EnhancedVerticalTimelineCardProps) {
+export function EnhancedVerticalTimelineCard({
+  event,
+  index: _index,
+}: EnhancedVerticalTimelineCardProps) {
   const { t, i18n } = useTranslation('dossier')
   const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'

@@ -95,7 +95,7 @@ export function AIRelationshipSuggestions({
   onRelationshipsCreated,
   className,
 }: AIRelationshipSuggestionsProps) {
-  const { t, i18n } = useTranslation('relationships')
+  const { i18n } = useTranslation('relationships')
   const isRTL = i18n.language === 'ar'
 
   // State
@@ -324,8 +324,6 @@ function SelectionStep({
   personName: string
   isRejecting: boolean
 }) {
-  const { t } = useTranslation('relationships')
-
   return (
     <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
       <CardHeader className="pb-4">

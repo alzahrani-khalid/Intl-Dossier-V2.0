@@ -97,16 +97,6 @@ export function CollaborativeEmptyState({
   // Entity type display name
   const entityDisplayName = getEntityTypeDisplayName(entityType, isRTL ? 'ar' : 'en')
 
-  // Get initials for avatar fallback
-  const _getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
-
   // Determine if team has activity
   const hasTeamActivity = teamStats?.hasTeamActivity && teamStats.stats.totalCount > 0
 
@@ -231,12 +221,7 @@ export function CollaborativeEmptyState({
                     </h5>
                     <div className="flex flex-col gap-2">
                       {teamStats.topContributors.slice(0, 3).map((contributor) => (
-                        <ContributorRow
-                          key={contributor.user_id}
-                          contributor={contributor}
-                          isRTL={isRTL}
-                          t={t}
-                        />
+                        <ContributorRow key={contributor.user_id} contributor={contributor} t={t} />
                       ))}
                     </div>
                   </div>
@@ -308,11 +293,10 @@ export function CollaborativeEmptyState({
 // Contributor Row Component
 interface ContributorRowProps {
   contributor: TeamContributor
-  isRTL: boolean
   t: (key: string, options?: Record<string, unknown>) => string
 }
 
-function ContributorRow({ contributor, isRTL, t }: ContributorRowProps) {
+function ContributorRow({ contributor, t }: ContributorRowProps) {
   const getInitials = (name: string) => {
     return name
       .split(' ')

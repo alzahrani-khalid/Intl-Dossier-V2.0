@@ -37,7 +37,7 @@ export function AuditLogExport({ filters, disabled = false, className }: AuditLo
   const { t, i18n } = useTranslation('audit-logs')
   const isRTL = i18n.language === 'ar'
 
-  const { exportLogs, isExporting, error } = useAuditLogExport()
+  const { exportLogs, isExporting } = useAuditLogExport()
 
   const handleExport = async (format: ExportFormat) => {
     await exportLogs({ format, filters })

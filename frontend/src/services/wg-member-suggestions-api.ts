@@ -181,7 +181,7 @@ export async function rejectWGMemberSuggestion(
     throw new Error('User not authenticated')
   }
 
-  const { data, error } = await supabase.rpc('reject_wg_member_suggestion', {
+  const { error } = await supabase.rpc('reject_wg_member_suggestion', {
     p_working_group_id: request.working_group_id,
     p_entity_type: request.entity_type,
     p_organization_id: request.organization_id || null,

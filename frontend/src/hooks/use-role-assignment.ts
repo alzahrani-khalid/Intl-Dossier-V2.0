@@ -244,8 +244,6 @@ export function usePendingApprovals(params?: {
  * const { data, isLoading, error } = useUserPermissions('user-uuid');
  */
 export function useUserPermissions(userId: string) {
-  const { toast } = useToast()
-
   return useQuery({
     queryKey: ['user-permissions', userId],
     queryFn: () => getUserPermissions(userId),

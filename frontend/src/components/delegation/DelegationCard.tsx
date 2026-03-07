@@ -6,7 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { format, differenceInDays, isPast, isFuture } from 'date-fns'
+import { format, differenceInDays, isPast } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -38,7 +38,6 @@ export function DelegationCard({
   const startsAt = new Date(delegation.valid_from)
   const daysUntilExpiry = differenceInDays(expiresAt, now)
   const isExpired = isPast(expiresAt)
-  const _isNotStarted = isFuture(startsAt)
   const isRevoked = !!delegation.revoked_at
   const isExpiringSoon = !isExpired && !isRevoked && daysUntilExpiry <= 7
 

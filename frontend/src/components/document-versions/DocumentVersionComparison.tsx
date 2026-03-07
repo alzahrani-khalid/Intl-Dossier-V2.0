@@ -118,13 +118,7 @@ const DiffLineComponent = memo(function DiffLineComponent({
 /**
  * Diff hunk component
  */
-const DiffHunkComponent = memo(function DiffHunkComponent({
-  hunk,
-  index,
-}: {
-  hunk: DiffHunk
-  index: number
-}) {
+const DiffHunkComponent = memo(function DiffHunkComponent({ hunk }: { hunk: DiffHunk }) {
   const { t } = useTranslation('document-versions')
 
   return (
@@ -156,8 +150,7 @@ const SideBySideDiff = memo(function SideBySideDiff({
   versionA: DocumentVersion
   versionB: DocumentVersion
 }) {
-  const { t, i18n } = useTranslation('document-versions')
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('document-versions')
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -223,8 +216,8 @@ const InlineDiff = memo(function InlineDiff({ hunks }: { hunks: DiffHunk[] }) {
   return (
     <ScrollArea className="h-[500px] border rounded-md">
       <div className="p-2">
-        {hunks.map((hunk, index) => (
-          <DiffHunkComponent key={`inline-hunk-${hunk.oldStart}`} hunk={hunk} index={index} />
+        {hunks.map((hunk) => (
+          <DiffHunkComponent key={`inline-hunk-${hunk.oldStart}`} hunk={hunk} />
         ))}
         {hunks.length === 0 && (
           <div className="text-center text-muted-foreground py-8">No text differences found</div>

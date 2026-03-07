@@ -53,7 +53,6 @@ export function ResponsiveNav({
   const visibleItems = items.filter((item) => !item.hideOnMobile || !isMobile)
 
   const highPriorityItems = visibleItems.filter((item) => item.priority === 'high')
-  const _regularItems = visibleItems.filter((item) => item.priority !== 'high')
 
   if (showMobileNav) {
     return (

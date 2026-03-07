@@ -34,8 +34,6 @@ import {
   AddCollaboratorParams,
 } from '@/types/collaborative-editing.types'
 
-const _EDGE_FUNCTION_URL = '/functions/v1/collaborative-editing'
-
 // Query key factory
 export const collaborativeEditingKeys = {
   all: ['collaborative-editing'] as const,
@@ -89,30 +87,6 @@ export function useCollaborativeEditing(
   const [currentSession, setCurrentSession] = useState<EditSession | null>(null)
   const [isConnected, setIsConnected] = useState(false)
   const cursorUpdateRef = useRef<ReturnType<typeof debounce> | null>(null)
-
-  // ========== API HELPERS ==========
-  const _callEdgeFunction = useCallback(
-    async <T>(
-      _path: string,
-      method: 'GET' | 'POST' | 'PATCH' | 'DELETE' = 'GET',
-      body?: unknown,
-    ): Promise<T> => {
-      const response = await supabase.functions.invoke('collaborative-editing', {
-        body: method === 'GET' ? undefined : (body as Record<string, any>),
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      if (response.error) {
-        throw new Error(response.error.message)
-      }
-
-      return response.data as T
-    },
-    [],
-  )
 
   // ========== QUERIES ==========
 

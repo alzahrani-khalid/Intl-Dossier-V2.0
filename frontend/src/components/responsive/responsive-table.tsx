@@ -34,7 +34,7 @@ export function ResponsiveTable<T extends { id?: string | number }>({
   hoverable = true,
   emptyMessage = 'No data available',
 }: ResponsiveTableProps<T>) {
-  const { viewport, isMobile } = useResponsive()
+  const { isMobile } = useResponsive()
   const { isRTL } = useDirection()
 
   const visibleColumns = isMobile ? columns.filter((col) => !col.hideOnMobile) : columns

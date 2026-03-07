@@ -8,7 +8,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Play, X, HelpCircle, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -109,8 +109,6 @@ export function OnboardingTourTrigger({
   // Check if user has completed or skipped onboarding
   const onboardingProgress = progress['onboarding']
   const hasCompletedTour = onboardingProgress?.isCompleted || hasCompletedOnboarding()
-  const _hasSkippedTour = onboardingProgress?.wasSkipped
-
   // Start tour handler
   const handleStartTour = useCallback(() => {
     setShowWelcomePrompt(false)
@@ -163,14 +161,14 @@ export function OnboardingTourTrigger({
       {/* Welcome Prompt Modal for New Users */}
       <AnimatePresence>
         {showWelcomePrompt && !isActive && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[9998] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
             onClick={handleSkip}
           >
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -233,8 +231,8 @@ export function OnboardingTourTrigger({
                   {t('tours.onboarding.welcome.startButton', 'Start Tour')}
                 </Button>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -243,7 +241,7 @@ export function OnboardingTourTrigger({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <motion.button
+              <m.button
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 }}
@@ -268,7 +266,7 @@ export function OnboardingTourTrigger({
                 aria-label={t('tours.onboarding.replay', 'Replay onboarding tour')}
               >
                 <RefreshCw className="h-5 w-5" />
-              </motion.button>
+              </m.button>
             </TooltipTrigger>
             <TooltipContent
               side={

@@ -46,9 +46,6 @@ export const PositionCard: React.FC<PositionCardProps> = ({
   // Get status from approval object or direct field
   const positionStatus = (position as any).approval?.status || position.status || 'draft'
 
-  // Get category for display
-  const _category = (position as any).category || position.thematic_category
-
   // Truncate content for preview (200 characters)
   const contentPreview = content
     ? content.length > 200
@@ -110,6 +107,18 @@ export const PositionCard: React.FC<PositionCardProps> = ({
             <h3
               className="line-clamp-2 text-lg font-semibold leading-tight"
               onClick={onClick}
+              role={onClick ? 'button' : undefined}
+              tabIndex={onClick ? 0 : undefined}
+              onKeyDown={
+                onClick
+                  ? (e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        onClick()
+                      }
+                    }
+                  : undefined
+              }
               style={{ cursor: onClick ? 'pointer' : 'default' }}
             >
               {title}

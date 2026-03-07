@@ -21,7 +21,7 @@
 
 import { useCallback, useState, useId } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { useDropzone, type FileRejection } from 'react-dropzone'
 import {
   Upload,
@@ -164,16 +164,15 @@ function createPreviewUrl(file: File): string | undefined {
 interface FileItemProps {
   uploadedFile: UploadedFile
   onRemove: (file: UploadedFile) => void
-  isRTL: boolean
   disabled?: boolean
 }
 
-function FileItem({ uploadedFile, onRemove, isRTL, disabled }: FileItemProps) {
+function FileItem({ uploadedFile, onRemove, disabled }: FileItemProps) {
   const { t } = useTranslation('common')
   const IconComponent = getFileIcon(uploadedFile.file)
 
   return (
-    <motion.div
+    <m.div
       layout
       initial={{ opacity: 0, scale: 0.95, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -255,7 +254,7 @@ function FileItem({ uploadedFile, onRemove, isRTL, disabled }: FileItemProps) {
       >
         <X className="h-4 w-4" />
       </Button>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -263,8 +262,10 @@ function FileItem({ uploadedFile, onRemove, isRTL, disabled }: FileItemProps) {
 // MAIN COMPONENT
 // =============================================================================
 
+const EMPTY_CONFIG: FileUploadConfig = {}
+
 export function UnifiedFileUpload({
-  config = {},
+  config = EMPTY_CONFIG,
   onFilesAdded,
   onFileRemoved,
   onClear,
@@ -491,7 +492,7 @@ export function UnifiedFileUpload({
 
         <div className="flex flex-col items-center justify-center text-center">
           {/* Icon */}
-          <motion.div
+          <m.div
             animate={{
               y: isDragActive ? -5 : 0,
               scale: isDragActive ? 1.1 : 1,
@@ -512,7 +513,7 @@ export function UnifiedFileUpload({
                 !isDragActive && 'text-gray-500 dark:text-gray-400',
               )}
             />
-          </motion.div>
+          </m.div>
 
           {/* Text */}
           <p className="text-sm font-medium text-gray-700 dark:text-gray-300 sm:text-base">
@@ -555,7 +556,7 @@ export function UnifiedFileUpload({
       {/* Error message */}
       <AnimatePresence>
         {displayError && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -563,7 +564,7 @@ export function UnifiedFileUpload({
           >
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{displayError}</span>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -594,7 +595,6 @@ export function UnifiedFileUpload({
                 key={uploadedFile.id}
                 uploadedFile={uploadedFile}
                 onRemove={handleRemove}
-                isRTL={isRTL}
                 disabled={disabled}
               />
             ))}

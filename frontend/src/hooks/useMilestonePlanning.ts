@@ -221,38 +221,6 @@ export function useMilestonePlanning({
     },
   })
 
-  // Mark complete mutation
-  const _markCompleteMutation = useMutation({
-    mutationFn: async (id: string): Promise<PlannedMilestone> => {
-      const { data: result, error } = await supabase
-        .from('planned_milestones')
-        .update({
-          status: 'completed' as MilestoneStatus,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-        .select()
-        .single()
-
-      if (error) {
-        throw new Error(error.message)
-      }
-
-      return result
-    },
-    onSuccess: (updatedMilestone) => {
-      queryClient.setQueryData<PlannedMilestone[]>(queryKey, (old = []) =>
-        old.map((m) => (m.id === updatedMilestone.id ? updatedMilestone : m)),
-      )
-      toast.success(t('messages.updateSuccess'))
-    },
-    onError: (error: Error) => {
-      toast.error(t('messages.updateError'), {
-        description: error.message,
-      })
-    },
-  })
-
   // Convert to event mutation
   const convertMutation = useMutation({
     mutationFn: async ({

@@ -336,8 +336,6 @@ export function CommentIndicator({
   status?: InlineCommentStatus
   className?: string
 }) {
-  const { t } = useTranslation('collaborative-editing')
-
   if (count === 0) return null
 
   return (

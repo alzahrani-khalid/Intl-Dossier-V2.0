@@ -26,7 +26,7 @@ import type {
   DocumentClassification,
   ClassifiedDocument,
 } from '@/types/document-classification.types'
-import { requiresApproval, CLASSIFICATION_LEVELS } from '@/types/document-classification.types'
+import { requiresApproval } from '@/types/document-classification.types'
 
 interface ClassificationChangeDialogProps {
   document: ClassifiedDocument | null
@@ -82,10 +82,6 @@ export function ClassificationChangeDialog({
       setError(err instanceof Error ? err.message : 'Failed to change classification')
     }
   }
-
-  const _isUpgrade = document
-    ? CLASSIFICATION_LEVELS[newClassification] > CLASSIFICATION_LEVELS[document.classification]
-    : false
 
   const needsApproval = document
     ? requiresApproval(document.classification, newClassification)

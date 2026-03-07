@@ -5,7 +5,7 @@ import { SLACountdown } from '../components/SLACountdown'
 import { TriagePanel } from '../components/TriagePanel'
 import { DuplicateComparison } from '../components/DuplicateComparison'
 import { InputDialog } from '../components/InputDialog'
-import { useTicket, useUpdateTicket, useConvertTicket, useCloseTicket } from '../hooks/useIntakeApi'
+import { useTicket, useConvertTicket, useCloseTicket } from '../hooks/useIntakeApi'
 import { useAuthStore } from '../store/authStore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -57,7 +57,6 @@ export function TicketDetail() {
   const ticket = (response as any)?.ticket ?? response
   const attachments = (response as any)?.attachments || []
 
-  const _updateMutation = useUpdateTicket(id || '')
   const convertMutation = useConvertTicket(id || '')
   const closeMutation = useCloseTicket(id || '')
 

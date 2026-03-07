@@ -68,9 +68,6 @@ export function CommitmentsList({
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [editingCommitment, setEditingCommitment] = useState<Commitment | null>(null)
   const [showFilterDrawer, setShowFilterDrawer] = useState(false)
-  // T061: State for detail drawer
-  const [_selectedCommitmentId, setSelectedCommitmentId] = useState<string | null>(null)
-
   // Build filters from props
   const filters: CommitmentFilters = {
     dossierId,
@@ -156,11 +153,6 @@ export function CommitmentsList({
   // Handle edit commitment
   const handleEdit = (commitment: Commitment) => {
     setEditingCommitment(commitment)
-  }
-
-  // T061: Handle card click - open detail drawer
-  const _handleCardClick = (commitmentId: string) => {
-    setSelectedCommitmentId(commitmentId)
   }
 
   // Handle form success

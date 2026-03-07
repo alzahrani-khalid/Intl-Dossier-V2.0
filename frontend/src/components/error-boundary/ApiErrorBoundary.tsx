@@ -1,5 +1,4 @@
 import { Component, ErrorInfo, ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/button'
 import { AlertCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react'
 import { useOfflineQueue } from '../../services/offline-queue'
@@ -94,8 +93,6 @@ function ApiErrorFallback({
   onRetry,
   showOfflineOption = true,
 }: ApiErrorFallbackProps) {
-  const { t } = useTranslation()
-
   const handleQueueForLater = () => {
     // TODO: Queue the failed action for later retry
   }

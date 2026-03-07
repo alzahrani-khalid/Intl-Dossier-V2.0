@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Plus, FileText, AlertCircle, ChevronRight, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -40,17 +40,48 @@ const WORKFLOW_STATES = {
   expired: { color: 'red', next: 'renewed' },
 }
 
+function WorkflowIndicator({ state }: { state: string }) {
+  const { t } = useTranslation()
+  const stateConfig = WORKFLOW_STATES[state as keyof typeof WORKFLOW_STATES]
+  return (
+    <div className="flex items-center gap-2">
+      <span
+        className={`
+ inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+ ${stateConfig.color === 'gray' ? 'bg-muted text-muted-foreground' : ''}
+ ${stateConfig.color === 'yellow' ? 'bg-warning/10 text-warning' : ''}
+ ${stateConfig.color === 'orange' ? 'bg-warning/20 text-warning' : ''}
+ ${stateConfig.color === 'blue' ? 'bg-primary/10 text-primary' : ''}
+ ${stateConfig.color === 'green' ? 'bg-primary/10 text-primary' : ''}
+ ${stateConfig.color === 'red' ? 'bg-destructive/10 text-destructive' : ''}
+ `}
+      >
+        {t(`mous.statuses.${state}`)}
+      </span>
+      {stateConfig.next && (
+        <Button
+          size="sm"
+          variant="ghost"
+          className="h-6 px-2"
+          onClick={() => {
+            /* handle transition */
+          }}
+        >
+          <ChevronRight className="h-3 w-3" />
+          {t(`mous.statuses.${stateConfig.next}`)}
+        </Button>
+      )}
+    </div>
+  )
+}
+
 export function MousPage() {
   const { t, i18n } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterState, setFilterState] = useState<string>('all')
   const isRTL = i18n.language === 'ar'
 
-  const {
-    data: mous,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: mous, isLoading } = useQuery({
     queryKey: ['mous', searchTerm, filterState],
     queryFn: async () => {
       let query = supabase
@@ -74,54 +105,6 @@ export function MousPage() {
       return data as MoU[]
     },
   })
-
-  const _transitionMutation = useMutation({
-    mutationFn: async ({ id, newState }: { id: string; newState: string }) => {
-      const { error } = await supabase
-        .from('mous')
-        .update({ lifecycle_state: newState })
-        .eq('id', id)
-
-      if (error) throw error
-    },
-    onSuccess: () => {
-      refetch()
-    },
-  })
-
-  const WorkflowIndicator = ({ state }: { state: string }) => {
-    const stateConfig = WORKFLOW_STATES[state as keyof typeof WORKFLOW_STATES]
-    return (
-      <div className="flex items-center gap-2">
-        <span
-          className={`
- inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
- ${stateConfig.color === 'gray' ? 'bg-muted text-muted-foreground' : ''}
- ${stateConfig.color === 'yellow' ? 'bg-warning/10 text-warning' : ''}
- ${stateConfig.color === 'orange' ? 'bg-warning/20 text-warning' : ''}
- ${stateConfig.color === 'blue' ? 'bg-primary/10 text-primary' : ''}
- ${stateConfig.color === 'green' ? 'bg-primary/10 text-primary' : ''}
- ${stateConfig.color === 'red' ? 'bg-destructive/10 text-destructive' : ''}
- `}
-        >
-          {t(`mous.statuses.${state}`)}
-        </span>
-        {stateConfig.next && (
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-6 px-2"
-            onClick={() => {
-              /* handle transition */
-            }}
-          >
-            <ChevronRight className="h-3 w-3" />
-            {t(`mous.statuses.${stateConfig.next}`)}
-          </Button>
-        )}
-      </div>
-    )
-  }
 
   const columns = useMemo<ColumnDef<MoU>[]>(
     () => [

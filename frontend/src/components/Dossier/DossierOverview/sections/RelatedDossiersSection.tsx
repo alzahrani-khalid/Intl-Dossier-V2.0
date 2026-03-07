@@ -120,12 +120,6 @@ export function RelatedDossiersSection({
   const { t } = useTranslation('dossier-overview')
   const [viewMode, setViewMode] = useState<'relationship' | 'type'>('relationship')
 
-  // Get all relationships
-  const _allRelationships = useMemo(() => {
-    if (!data) return []
-    return Object.values(data.by_relationship_type).flat()
-  }, [data])
-
   // Filter out empty relationship types
   const activeRelationshipTypes = useMemo(() => {
     if (!data) return []

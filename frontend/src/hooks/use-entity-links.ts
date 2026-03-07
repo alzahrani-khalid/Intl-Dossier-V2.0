@@ -36,8 +36,6 @@ export const entityLinksKeys = {
  * Hook to fetch entity links for an intake
  */
 export function useEntityLinks(intakeId: string, includeDeleted = false) {
-  const { t } = useTranslation()
-
   return useQuery({
     queryKey: entityLinksKeys.list(intakeId, includeDeleted),
     queryFn: () => intakeEntityLinksAPI.getLinks(intakeId, includeDeleted),
@@ -310,7 +308,6 @@ export function useRestoreEntityLink(intakeId: string) {
  * Uses debounced mutations for drag-and-drop
  */
 export function useReorderEntityLinks(intakeId: string) {
-  const { toast } = useToast()
   const queryClient = useQueryClient()
 
   return useMutation({

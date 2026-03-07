@@ -133,7 +133,6 @@ interface CompletenessIndicatorProps {
 }
 
 function CompletenessIndicator({ completeness, className }: CompletenessIndicatorProps) {
-  const { t } = useTranslation('multilingual')
   const meta = LANGUAGE_METADATA[completeness.language]
 
   return (

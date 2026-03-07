@@ -6,7 +6,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,25 +39,18 @@ function ActionableErrorsDemo() {
   })
 
   // Actionable errors hook
-  const {
-    errors,
-    highlightedFields,
-    removeError,
-    clearErrors,
-    executeAction,
-    focusField,
-    fromValidation,
-  } = useActionableErrors({
-    onErrorAdded: (error) => {
-      console.log('Error added:', error.code)
-    },
-    onActionExecuted: (errorCode, action) => {
-      console.log('Action executed:', action.type, 'for error:', errorCode)
-      if (action.type === 'auto_fix') {
-        toast.success(t('toast.errorFixed'))
-      }
-    },
-  })
+  const { errors, removeError, clearErrors, executeAction, focusField, fromValidation } =
+    useActionableErrors({
+      onErrorAdded: (error) => {
+        console.log('Error added:', error.code)
+      },
+      onActionExecuted: (errorCode, action) => {
+        console.log('Action executed:', action.type, 'for error:', errorCode)
+        if (action.type === 'auto_fix') {
+          toast.success(t('toast.errorFixed'))
+        }
+      },
+    })
 
   // Handle field change with validation
   const handleFieldChange = useCallback(
@@ -131,14 +124,6 @@ function ActionableErrorsDemo() {
       return errors.find((e) => e.fieldName === fieldName)
     },
     [errors],
-  )
-
-  // Check if field is highlighted
-  const _isFieldHighlighted = useCallback(
-    (fieldName: string): boolean => {
-      return highlightedFields.some((h) => h.fieldName === fieldName)
-    },
-    [highlightedFields],
   )
 
   return (
@@ -293,7 +278,7 @@ function ActionableErrorsDemo() {
             <CardTitle className="text-start">Feature Highlights</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <motion.ul
+            <m.ul
               className="space-y-3 text-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -309,8 +294,8 @@ function ActionableErrorsDemo() {
                 'Mobile-first responsive design',
                 'Keyboard accessible actions',
               ].map((feature, index) => (
-                <motion.li
-                  key={index}
+                <m.li
+                  key={feature}
                   initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
@@ -318,9 +303,9 @@ function ActionableErrorsDemo() {
                 >
                   <span className="text-emerald-500 mt-1">✓</span>
                   {feature}
-                </motion.li>
+                </m.li>
               ))}
-            </motion.ul>
+            </m.ul>
 
             <div className="pt-4 border-t">
               <h4 className="font-medium mb-2 text-start">Try these scenarios:</h4>

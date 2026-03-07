@@ -335,7 +335,7 @@ export function useDeleteAgendaItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ itemId, agendaId }: { itemId: string; agendaId: string }) => {
+    mutationFn: async ({ itemId }: { itemId: string; agendaId: string }) => {
       const result = await callAgendaFunction<{ success: boolean }>('delete_item', {
         item_id: itemId,
       })
@@ -380,7 +380,7 @@ export function useStartAgendaItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ itemId, agendaId }: { itemId: string; agendaId: string }) => {
+    mutationFn: async ({ itemId }: { itemId: string; agendaId: string }) => {
       const result = await callAgendaFunction<AgendaItem>('start_item', { item_id: itemId })
       return result
     },
@@ -549,7 +549,7 @@ export function useRemoveAgendaDocument() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ documentId, agendaId }: { documentId: string; agendaId: string }) => {
+    mutationFn: async ({ documentId }: { documentId: string; agendaId: string }) => {
       const result = await callAgendaFunction<{ success: boolean }>('remove_document', {
         data: { document_id: documentId },
       })

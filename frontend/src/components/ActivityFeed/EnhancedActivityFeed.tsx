@@ -375,13 +375,12 @@ export function EnhancedActivityFeed({
   filters: initialFilters,
   showFilters = true,
   showSearch = true,
-  showFollowedOnly = true,
   maxHeight = '600px',
   className,
   emptyMessage,
   onActivityClick,
 }: ActivityFeedProps) {
-  const { t, i18n } = useTranslation('activity-feed')
+  const { i18n } = useTranslation('activity-feed')
   const isRTL = i18n.language === 'ar'
 
   const loadMoreRef = useRef<HTMLDivElement>(null)

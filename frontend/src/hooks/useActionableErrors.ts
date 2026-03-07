@@ -3,7 +3,7 @@
  * Manages actionable errors with auto-fix capabilities and field highlighting
  */
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import type {
   ActionableError,
@@ -142,7 +142,6 @@ function generateActionsForError(
 
   // Min length action
   if (result.messageKey === 'validation.minLength') {
-    const _remaining = result.details?.remaining as number
     actions.unshift({
       id: `info_${fieldName}_minlength`,
       type: 'focus_field',
@@ -193,9 +192,6 @@ export function useActionableErrors(
 
   const [errors, setErrors] = useState<ActionableError[]>([])
   const [highlightedFields, setHighlightedFields] = useState<FieldHighlight[]>([])
-
-  // Refs for field elements
-  const _fieldRefsMap = useRef<Map<string, HTMLElement | null>>(new Map())
 
   // Add an error
   const addError = useCallback(
@@ -397,22 +393,6 @@ export function useActionableErrors(
       return debouncedFromValidation(fieldName, fieldType, value) || null
     },
     [debouncedFromValidation],
-  )
-
-  // Get highlight for a specific field
-  const _getFieldHighlight = useCallback(
-    (fieldName: string): FieldHighlight | undefined => {
-      return highlightedFields.find((h) => h.fieldName === fieldName)
-    },
-    [highlightedFields],
-  )
-
-  // Get error for a specific field
-  const _getFieldError = useCallback(
-    (fieldName: string): ActionableError | undefined => {
-      return errors.find((e) => e.fieldName === fieldName)
-    },
-    [errors],
   )
 
   return {

@@ -5,7 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { cn } from '@/lib/utils'
 import {
   CheckCircle2,
@@ -72,7 +72,7 @@ function ProgressBar({ percentage, variant = 'overall', className }: ProgressBar
         className,
       )}
     >
-      <motion.div
+      <m.div
         className={cn('absolute inset-y-0 start-0 rounded-full', getBarColor())}
         initial={{ width: 0 }}
         animate={{ width: `${percentage}%` }}
@@ -91,7 +91,6 @@ interface StatItemProps {
 }
 
 function StatItem({ icon, label, completed, total, colorClass }: StatItemProps) {
-  const { t } = useTranslation('progressive-form')
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 100
 
   return (
@@ -105,7 +104,7 @@ function StatItem({ icon, label, completed, total, colorClass }: StatItemProps) 
           </span>
         </div>
         <div className="mt-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-          <motion.div
+          <m.div
             className={cn('h-full rounded-full', colorClass.replace('text-', 'bg-'))}
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
@@ -209,7 +208,7 @@ export function FormCompletionProgress({
 
   // Default variant
   return (
-    <motion.div
+    <m.div
       className={cn(
         'rounded-xl',
         'bg-white dark:bg-gray-800',
@@ -285,14 +284,14 @@ export function FormCompletionProgress({
             )}
           >
             <span>{t('progress.viewDetails')}</span>
-            <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
+            <m.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
               <ChevronDown className="w-4 h-4" />
-            </motion.div>
+            </m.div>
           </button>
 
           {/* Details Content */}
           {isExpanded && (
-            <motion.div
+            <m.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
@@ -331,7 +330,7 @@ export function FormCompletionProgress({
                   colorClass="text-gray-500"
                 />
               )}
-            </motion.div>
+            </m.div>
           )}
         </>
       )}
@@ -366,7 +365,7 @@ export function FormCompletionProgress({
           </div>
         </div>
       )}
-    </motion.div>
+    </m.div>
   )
 }
 

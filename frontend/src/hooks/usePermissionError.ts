@@ -64,7 +64,6 @@ function generateSuggestedActions(
 
   // Primary action: Request access if there are granters
   if (error.accessGranters.length > 0) {
-    const _primaryGranter = error.accessGranters.find((g) => g.isPrimary) || error.accessGranters[0]
     actions.push({
       id: 'request-access',
       type: 'open_modal',
@@ -131,7 +130,7 @@ export function isPermissionDeniedError(error: unknown): error is PermissionDeni
 // =============================================================================
 
 export function usePermissionError(): UsePermissionErrorReturn {
-  const { t, i18n } = useTranslation('permission-errors')
+  const { t } = useTranslation('permission-errors')
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const user = useAuthStore((state) => state.user)

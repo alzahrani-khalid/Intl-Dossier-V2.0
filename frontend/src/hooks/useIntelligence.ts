@@ -110,7 +110,6 @@ export function useIntelligence(
   >,
 ) {
   const { i18n, t } = useTranslation()
-  const _queryClient = useQueryClient()
   const { enableBackgroundNotifications = false, ...queryParams } = params
 
   // Auto-detect language from i18next if not provided
@@ -441,8 +440,6 @@ export function useRefreshIntelligenceType(
     }
   >,
 ) {
-  const _refreshMutation = useRefreshIntelligence()
-
   return useMutation({
     mutationFn: (params) =>
       refreshIntelligence({

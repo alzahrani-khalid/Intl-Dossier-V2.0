@@ -360,7 +360,6 @@ interface WorkItemCardProps {
 
 function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
   const { i18n, t } = useTranslation('dossier-search')
-  const _navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
 
   const workConfig = relatedWorkTypeConfig[item.type]

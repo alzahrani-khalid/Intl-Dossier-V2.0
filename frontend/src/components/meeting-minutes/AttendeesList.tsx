@@ -85,18 +85,6 @@ export function AttendeesList({
     return aIndex - bIndex
   })
 
-  // Group by role for desktop view
-  const _attendeesByRole = sortedAttendees.reduce(
-    (acc, attendee) => {
-      if (!acc[attendee.role]) {
-        acc[attendee.role] = []
-      }
-      acc[attendee.role].push(attendee)
-      return acc
-    },
-    {} as Record<AttendeeRole, MeetingAttendee[]>,
-  )
-
   const getAttendanceColor = (status: AttendanceStatus) => {
     return ATTENDANCE_STATUS_COLORS[status] || ATTENDANCE_STATUS_COLORS.present
   }

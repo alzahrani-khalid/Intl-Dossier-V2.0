@@ -70,7 +70,7 @@ export const IntelligenceInsight = memo(function IntelligenceInsight({
   const Icon = intelligenceIcons[intelligence.intelligence_type] || Globe
 
   // Memoized derived values for performance (T055)
-  const { isStale, title, content, lastUpdated, truncatedContent } = useMemo(() => {
+  const { isStale, title, lastUpdated, truncatedContent } = useMemo(() => {
     // Determine if cache is stale
     const stale = intelligence.cache_expires_at
       ? new Date(intelligence.cache_expires_at) < new Date()

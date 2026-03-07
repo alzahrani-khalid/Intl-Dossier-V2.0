@@ -404,9 +404,6 @@ export function useDeleteTemplatedDocument() {
  * Custom hook for wizard state management
  */
 export function useDocumentWizard(templateId: string, entityType: string, entityId: string) {
-  const { t } = useTranslation('document-templates')
-  const _queryClient = useQueryClient()
-
   // Get template
   const templateQuery = useDocumentTemplate(templateId)
 

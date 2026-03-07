@@ -45,15 +45,6 @@ type UserDetail = {
   }
 }
 
-type _Permission = {
-  resource: string
-  actions: string[]
-  source: 'role' | 'delegation'
-  granted_by?: string
-  valid_from?: string
-  valid_until?: string
-}
-
 type Session = {
   id: string
   created_at: string

@@ -339,8 +339,8 @@ function StatusCard({
   )
 }
 
-function CommentPeriodCard({ endDate, isRTL }: { endDate: string; isRTL: boolean }) {
-  const { t, i18n } = useTranslation('legislation')
+function CommentPeriodCard({ endDate }: { endDate: string; isRTL: boolean }) {
+  const { t } = useTranslation('legislation')
   const daysRemaining = Math.ceil(
     (new Date(endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
   )
@@ -794,7 +794,7 @@ function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[]; isR
   )
 }
 
-function SponsorsTab({ sponsors, isRTL }: { sponsors: LegislationSponsor[]; isRTL: boolean }) {
+function SponsorsTab({ sponsors }: { sponsors: LegislationSponsor[]; isRTL: boolean }) {
   const { t, i18n } = useTranslation('legislation')
 
   if (sponsors.length === 0) {

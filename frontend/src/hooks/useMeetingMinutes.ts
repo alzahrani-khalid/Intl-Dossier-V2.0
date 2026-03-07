@@ -22,8 +22,6 @@ import type {
   MeetingActionItem,
 } from '@/types/meeting-minutes.types'
 
-const EDGE_FUNCTION_URL = 'meeting-minutes'
-
 // ============================================
 // Query Hooks
 // ============================================
@@ -46,14 +44,7 @@ export function useMeetingMinutesList(filters?: MeetingMinutesFilters) {
       if (filters?.to_date) params.append('to_date', filters.to_date)
       if (filters?.created_by) params.append('created_by', filters.created_by)
 
-      const { data, error } = await supabase.functions.invoke(EDGE_FUNCTION_URL, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        body: undefined,
-      })
-
-      // Workaround: Edge functions don't support GET with query params well
-      // So we'll use direct RPC call
+      // Use RPC directly (Edge functions don't support GET with query params well)
       const { data: rpcData, error: rpcError } = await supabase.rpc('search_meeting_minutes', {
         p_search_term: filters?.search || null,
         p_status: filters?.status || null,

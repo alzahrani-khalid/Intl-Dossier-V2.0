@@ -41,14 +41,7 @@ export function EngagementPositionsSection({ engagementId }: EngagementPositions
   })
 
   // Fetch AI suggestions
-  const {
-    suggestions,
-    meta: suggestionsMeta,
-    isLoading: _isLoadingSuggestions,
-    error: suggestionsError,
-  } = usePositionSuggestions({ engagementId })
-
-  const _isFallbackMode = suggestionsMeta?.fallback_mode || false
+  const { suggestions, error: suggestionsError } = usePositionSuggestions({ engagementId })
   const suggestionsCount = suggestions.length
 
   return (

@@ -68,18 +68,6 @@ export interface TenantContextActions {
 export type TenantContextType = TenantContextState & TenantContextActions
 
 /**
- * Default context state
- */
-const _defaultContextState: TenantContextState = {
-  currentTenantId: null,
-  currentTenantName: null,
-  memberships: [],
-  isLoading: true,
-  error: null,
-  hasMultipleTenants: false,
-}
-
-/**
  * Tenant context
  */
 const TenantContext = createContext<TenantContextType | null>(null)

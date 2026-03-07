@@ -44,8 +44,15 @@ interface ContactCardProps {
   className?: string
 }
 
-export function ContactCard({ contact, tags = [], onClick, className = '' }: ContactCardProps) {
-  const { t, i18n } = useTranslation('contacts')
+const EMPTY_TAGS: Array<{ id: string; name: string; color?: string }> = []
+
+export function ContactCard({
+  contact,
+  tags = EMPTY_TAGS,
+  onClick,
+  className = '',
+}: ContactCardProps) {
+  const { i18n } = useTranslation('contacts')
   const isRTL = i18n.language === 'ar'
 
   // Get relationship stats

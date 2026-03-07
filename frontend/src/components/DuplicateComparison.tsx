@@ -70,18 +70,6 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
     },
   })
 
-  const _getSimilarityColor = (score: number): string => {
-    if (score >= 0.8) return 'text-red-600 bg-red-100 dark:bg-red-900/20'
-    if (score >= 0.65) return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20'
-    return 'text-green-600 bg-green-100 dark:bg-green-900/20'
-  }
-
-  const _getSimilarityLabel = (score: number): string => {
-    if (score >= 0.8) return t('duplicates.similarity.high', 'High Similarity')
-    if (score >= 0.65) return t('duplicates.similarity.medium', 'Medium Similarity')
-    return t('duplicates.similarity.low', 'Low Similarity')
-  }
-
   const handleMerge = (primaryId: string) => {
     if (!selectedCandidate || !mergeReason.trim()) {
       alert(t('duplicates.mergeReasonRequired', 'Please provide a reason for merging'))

@@ -50,10 +50,8 @@ export function ConsistencyPanel({
   consistencyCheck,
   onResolveConflict,
   onViewConflictingPosition,
-  loading = false,
 }: ConsistencyPanelProps) {
   const { t, i18n } = useTranslation('positions')
-  const _isRTL = i18n.language === 'ar'
   const [expandedConflicts, setExpandedConflicts] = useState<Set<number>>(new Set())
 
   // Toggle conflict expansion

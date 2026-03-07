@@ -197,7 +197,7 @@ interface PermissionBadgeProps {
   className?: string
 }
 
-export function PermissionDeniedBadge({ error, onClick, className }: PermissionBadgeProps) {
+export function PermissionDeniedBadge({ onClick, className }: PermissionBadgeProps) {
   const { t, i18n } = useTranslation('permission-errors')
   const isRTL = i18n.language === 'ar'
 

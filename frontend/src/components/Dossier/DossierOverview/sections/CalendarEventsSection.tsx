@@ -111,7 +111,7 @@ function EventCard({
   isRTL: boolean
   variant?: 'default' | 'today' | 'past'
 }) {
-  const { t, i18n } = useTranslation('dossier-overview')
+  const { t } = useTranslation('dossier-overview')
   const Icon = getEventTypeIcon(event.event_type)
   const locale = isRTL ? 'ar-SA' : 'en-US'
 

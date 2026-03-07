@@ -68,18 +68,7 @@ async function fetchTimelineEvents(
     params.set('cursor', cursor)
   }
 
-  const { data, error } = await supabase.functions.invoke<StakeholderTimelineResponse>(
-    'stakeholder-timeline',
-    {
-      body: undefined,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  )
-
-  // Fallback to direct fetch if invoke doesn't support GET with params
+  // Direct fetch (supabase.functions.invoke doesn't support GET with query params)
   const response = await fetch(
     `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stakeholder-timeline?${params.toString()}`,
     {
@@ -366,7 +355,7 @@ export function getDefaultInteractionTypes(stakeholderType: string): string[] {
 /**
  * Get available event types for stakeholder type
  */
-export function getAvailableInteractionTypes(stakeholderType: string): string[] {
+export function getAvailableInteractionTypes(_stakeholderType: string): string[] {
   return [
     'email',
     'meeting',

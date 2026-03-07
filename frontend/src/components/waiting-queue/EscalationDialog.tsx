@@ -13,7 +13,7 @@
  * - Error handling (NO_ESCALATION_PATH, INVALID_STATUS, etc.)
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, ArrowUp, Loader2, User } from 'lucide-react'
 import {
@@ -78,6 +78,13 @@ export interface EscalationDialogProps {
   isLoading?: boolean
 }
 
+const EMPTY_ESCALATION_PATH: Array<{
+  user_id: string
+  full_name: string
+  position_title: string
+  department: string | null
+}> = []
+
 export function EscalationDialog({
   assignmentId,
   assigneeName,
@@ -86,7 +93,7 @@ export function EscalationDialog({
   onClose,
   onSuccess,
   assignment,
-  escalationPath = [],
+  escalationPath = EMPTY_ESCALATION_PATH,
   onEscalate,
   isLoading: externalLoading = false,
 }: EscalationDialogProps) {
@@ -101,17 +108,16 @@ export function EscalationDialog({
   const escalate = useEscalationAction()
   const isLoading = escalate.isPending || externalLoading
 
-  // Reset state when dialog opens
-  useEffect(() => {
-    if (isOpen) {
-      // Default to first recipient in escalation path (immediate manager)
-      if (escalationPath.length > 0 && escalationPath[0]) {
-        setSelectedRecipientId(escalationPath[0].user_id)
-      }
-      setReason('')
-      setLocalError('')
-    }
-  }, [isOpen, escalationPath])
+  // Reset state when dialog opens (using ref to detect open transition)
+  const prevOpenRef = useRef(isOpen)
+  if (isOpen && !prevOpenRef.current) {
+    // Dialog just opened — reset state during render
+    const defaultRecipient = escalationPath.length > 0 ? (escalationPath[0]?.user_id ?? '') : ''
+    if (selectedRecipientId !== defaultRecipient) setSelectedRecipientId(defaultRecipient)
+    if (reason !== '') setReason('')
+    if (localError !== '') setLocalError('')
+  }
+  prevOpenRef.current = isOpen
 
   const handleEscalate = async () => {
     setLocalError('')
@@ -153,7 +159,6 @@ export function EscalationDialog({
       onSuccess?.()
       onClose()
     } catch (error: any) {
-      const _errorCode = error?.error?.code || error?.code
       const errorMessage =
         error?.error?.message || error?.message || 'Failed to escalate assignment'
 

@@ -23,8 +23,6 @@ import type {
 
 // Query keys
 const DISCLOSURE_QUERY_KEY = ['progressive-disclosure']
-const _INTERACTIONS_QUERY_KEY = ['hint-interactions']
-
 // Local storage keys
 const LOCAL_STORAGE_KEY = 'intl-dossier-disclosure-prefs'
 const SESSION_STORAGE_KEY = 'intl-dossier-session-hints'

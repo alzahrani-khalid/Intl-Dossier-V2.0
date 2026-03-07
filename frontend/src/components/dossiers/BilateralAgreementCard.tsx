@@ -11,7 +11,6 @@ import { FileText, Calendar, AlertCircle, CheckCircle, Clock } from 'lucide-reac
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Link } from '@tanstack/react-router'
-import { ar, enUS } from 'date-fns/locale'
 
 interface BilateralAgreementCardProps {
   agreement: {
@@ -42,7 +41,6 @@ export function BilateralAgreementCard({
 }: BilateralAgreementCardProps) {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const _locale = isRTL ? ar : enUS
 
   const title = isRTL ? agreement.title_ar : agreement.title
   const effectiveDate = agreement.effective_date || agreement.dates?.effective

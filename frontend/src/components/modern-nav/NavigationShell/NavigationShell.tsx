@@ -127,7 +127,6 @@ export function NavigationShell({
     }
   }, [location.pathname])
 
-  const _togglePanel = () => setIsPanelOpen((prev) => !prev)
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev)
 
   // Handle category change from IconRail

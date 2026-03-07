@@ -77,11 +77,6 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
     onActionsChange([...actions, newAction])
   }
 
-  const _updateAction = (index: number, updates: Partial<WorkflowAction>) => {
-    const updated = actions.map((a, i) => (i === index ? { ...a, ...updates } : a))
-    onActionsChange(updated)
-  }
-
   const updateActionConfig = (index: number, configUpdates: Partial<ActionConfig>) => {
     const updated = actions.map((a, i) =>
       i === index ? { ...a, config: { ...a.config, ...configUpdates } } : a,

@@ -209,7 +209,7 @@ export function useOnboardingChecklist(
 ): UseOnboardingChecklistReturn {
   const { autoFetch = true, persistLocal = true } = options
   const queryClient = useQueryClient()
-  const { user, isAuthenticated } = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
 
   // State for active celebration
   const [activeCelebration, setActiveCelebration] = useState<MilestoneCelebration | null>(null)

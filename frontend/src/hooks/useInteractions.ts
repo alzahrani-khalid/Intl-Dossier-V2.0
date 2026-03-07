@@ -176,7 +176,7 @@ export function useDeleteNote() {
   const { t } = useTranslation('contacts')
 
   return useMutation({
-    mutationFn: ({ id, contactId }: { id: string; contactId: string }) => deleteNote(id),
+    mutationFn: ({ id }: { id: string; contactId: string }) => deleteNote(id),
     onMutate: async ({ id, contactId }) => {
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: interactionKeys.list(contactId) })

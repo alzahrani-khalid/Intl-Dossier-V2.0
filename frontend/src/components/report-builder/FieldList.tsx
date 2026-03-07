@@ -110,7 +110,7 @@ function DraggableField({ field, isRTL, onAddColumn }: DraggableFieldProps) {
   )
 }
 
-export function FieldList({ fields, onAddColumn, onAddFilter, onAddGrouping }: FieldListProps) {
+export function FieldList({ fields, onAddColumn }: FieldListProps) {
   const { t, i18n } = useTranslation('report-builder')
   const isRTL = i18n.language === 'ar'
   const [search, setSearch] = useState('')

@@ -236,8 +236,7 @@ export function useRemoveLegislationSponsor() {
   const { t } = useTranslation('legislation')
 
   return useMutation({
-    mutationFn: ({ id, legislationId }: { id: string; legislationId: string }) =>
-      removeLegislationSponsor(id),
+    mutationFn: ({ id }: { id: string; legislationId: string }) => removeLegislationSponsor(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: legislationKeys.sponsors(variables.legislationId),
@@ -374,8 +373,7 @@ export function useCompleteLegislationDeadline() {
   const { t } = useTranslation('legislation')
 
   return useMutation({
-    mutationFn: ({ id, legislationId }: { id: string; legislationId: string }) =>
-      completeLegislationDeadline(id),
+    mutationFn: ({ id }: { id: string; legislationId: string }) => completeLegislationDeadline(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: legislationKeys.deadlines(variables.legislationId),
@@ -397,8 +395,7 @@ export function useDeleteLegislationDeadline() {
   const { t } = useTranslation('legislation')
 
   return useMutation({
-    mutationFn: ({ id, legislationId }: { id: string; legislationId: string }) =>
-      deleteLegislationDeadline(id),
+    mutationFn: ({ id }: { id: string; legislationId: string }) => deleteLegislationDeadline(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: legislationKeys.deadlines(variables.legislationId),

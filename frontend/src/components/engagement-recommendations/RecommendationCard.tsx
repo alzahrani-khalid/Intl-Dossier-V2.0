@@ -7,7 +7,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import {
   Send,
   Reply,
@@ -166,7 +166,7 @@ function ConfidenceIndicator({ score }: { score: number }) {
 }
 
 function OptimalTimingBadge({ startDate, endDate }: { startDate?: string; endDate?: string }) {
-  const { t, i18n } = useTranslation('engagement-recommendations')
+  const { i18n } = useTranslation('engagement-recommendations')
   const isRTL = i18n.language === 'ar'
 
   if (!startDate && !endDate) return null
@@ -247,7 +247,7 @@ export function RecommendationCard({
   }
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -376,7 +376,7 @@ export function RecommendationCard({
           )}
         </CardContent>
       </Card>
-    </motion.div>
+    </m.div>
   )
 }
 

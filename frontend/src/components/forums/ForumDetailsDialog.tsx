@@ -51,12 +51,6 @@ interface Forum {
   }
 }
 
-interface _ForumParticipant {
-  entity_id: string
-  entity_type: string
-  participation_type: string
-}
-
 interface Country {
   id: string
   name_en: string
@@ -385,9 +379,9 @@ export function ForumDetailsDialog({
               <CardContent>
                 {countries.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {countries.map((country, idx) => (
+                    {countries.map((country) => (
                       <div
-                        key={idx}
+                        key={country.id}
                         className="flex items-center justify-between p-2 rounded-lg border"
                       >
                         <span className="text-sm">{isRTL ? country.name_ar : country.name_en}</span>
@@ -416,9 +410,9 @@ export function ForumDetailsDialog({
               <CardContent>
                 {organizations.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {organizations.map((org, idx) => (
+                    {organizations.map((org) => (
                       <div
-                        key={idx}
+                        key={org.id}
                         className="flex items-center justify-between p-2 rounded-lg border"
                       >
                         <span className="text-sm">{isRTL ? org.name_ar : org.name_en}</span>

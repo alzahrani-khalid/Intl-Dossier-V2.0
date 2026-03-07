@@ -37,12 +37,6 @@ export function CalendarPage() {
     refetch() // Refresh calendar events
   }
 
-  const _handleUpdateSuccess = () => {
-    setIsViewDialogOpen(false)
-    setSelectedEvent(null)
-    refetch() // Refresh calendar events
-  }
-
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"

@@ -73,9 +73,9 @@ function HighlightedText({ text, query }: { text: string; query: string }) {
 
   return (
     <span>
-      {parts.map((part, index) => (
+      {parts.map((part) => (
         <span
-          key={index}
+          key={`${part.text}-${part.isMatch}`}
           className={cn(
             part.isMatch && 'bg-yellow-200 dark:bg-yellow-800 font-medium rounded px-0.5',
           )}
@@ -338,7 +338,6 @@ export const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInpu
       autoFocus = false,
       debounceMs = 300,
       className,
-      initialValue = '',
     },
     ref,
   ) {
@@ -404,6 +403,7 @@ export const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInpu
             )}
             aria-label={t('a11y.searchInput')}
             aria-expanded={showSuggestions}
+            aria-controls="enhanced-search-suggestions-listbox"
             aria-haspopup="listbox"
             aria-autocomplete="list"
             role="combobox"
@@ -444,6 +444,7 @@ export const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInpu
               'bg-background border border-border rounded-lg shadow-lg',
               'overflow-hidden',
             )}
+            id="enhanced-search-suggestions-listbox"
             role="listbox"
             aria-label={t('a11y.suggestionsList')}
           >

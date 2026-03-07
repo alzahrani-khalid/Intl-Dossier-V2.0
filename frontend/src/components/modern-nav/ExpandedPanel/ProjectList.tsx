@@ -45,8 +45,7 @@ export interface ProjectListProps {
  * ```
  */
 export function ProjectList({ projects, activeId, onProjectClick, className }: ProjectListProps) {
-  const { t, i18n } = useTranslation()
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
 
   // Default projects from reference design
   const defaultProjects: ProjectItem[] = [
@@ -85,11 +84,7 @@ export function ProjectList({ projects, activeId, onProjectClick, className }: P
       <h3 className="section-header px-4 py-2">{t('navigation.projects', 'Projects')}</h3>
 
       {/* Project Items */}
-      <nav
-        className="flex flex-col px-2"
-        role="navigation"
-        aria-label={t('navigation.projects', 'Projects')}
-      >
+      <nav className="flex flex-col px-2" aria-label={t('navigation.projects', 'Projects')}>
         {items.map((project) => {
           const isActive = activeId === project.id
 

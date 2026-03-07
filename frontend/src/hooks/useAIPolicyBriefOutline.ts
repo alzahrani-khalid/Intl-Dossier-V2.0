@@ -318,8 +318,6 @@ export function useAIPolicyBriefOutline(): UseAIPolicyBriefOutlineReturn {
   // Fallback outline generation (client-side)
   const generateFallbackOutline = useCallback(
     (params: OutlineGenerationParams): GeneratedOutline => {
-      const _isArabic = params.language === 'ar'
-
       // Generate title based on topic
       const titleEn = `Policy Brief: ${params.topic.slice(0, 50)}${params.topic.length > 50 ? '...' : ''}`
       const titleAr = `موجز سياسي: ${params.topic.slice(0, 50)}${params.topic.length > 50 ? '...' : ''}`

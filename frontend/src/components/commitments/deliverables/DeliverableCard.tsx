@@ -114,14 +114,6 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
     }
   }
 
-  const _formatDueDate = () => {
-    const date = new Date(deliverable.due_date)
-    return date.toLocaleDateString(i18n.language, {
-      month: 'short',
-      day: 'numeric',
-    })
-  }
-
   const getDueDateLabel = () => {
     if (isCompleted) {
       return t('timeline.completed', {

@@ -74,7 +74,7 @@ interface AgendaBuilderProps {
   onClose?: () => void
 }
 
-export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
+export function AgendaBuilder({ agendaId }: AgendaBuilderProps) {
   const { t, i18n } = useTranslation('agenda')
   const isRTL = i18n.language === 'ar'
 

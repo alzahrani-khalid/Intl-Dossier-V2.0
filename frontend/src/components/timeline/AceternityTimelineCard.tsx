@@ -150,7 +150,11 @@ function CloseIcon() {
   )
 }
 
-export function AceternityTimelineCard({ event, index, isEven }: AceternityTimelineCardProps) {
+export function AceternityTimelineCard({
+  event,
+  index: _index,
+  isEven,
+}: AceternityTimelineCardProps) {
   const { t, i18n } = useTranslation('dossier')
   const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'

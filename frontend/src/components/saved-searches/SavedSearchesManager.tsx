@@ -61,7 +61,7 @@ import {
   useExecuteSavedSearch,
   getSavedSearchColorClasses,
 } from '@/hooks/useSavedSearches'
-import type { SavedSearch, SmartFilter, SavedSearchCategory } from '@/types/saved-search.types'
+import type { SavedSearch, SmartFilter } from '@/types/saved-search.types'
 import type { TemplateDefinition } from '@/types/advanced-search.types'
 
 // Icon mapping
@@ -76,14 +76,6 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   filter: Filter,
   star: Star,
   bell: Bell,
-}
-
-const _categoryIcons: Record<SavedSearchCategory, React.ComponentType<{ className?: string }>> = {
-  personal: User,
-  team: Users,
-  organization: Building,
-  smart: Sparkles,
-  recent: Clock,
 }
 
 interface SavedSearchesManagerProps {

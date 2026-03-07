@@ -11,7 +11,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -126,7 +125,6 @@ const ENTITY_ICONS: Record<PreviewEntityType, React.ComponentType<{ className?: 
 function PreviewLayoutsPage() {
   const { t, i18n } = useTranslation('preview-layouts')
   const isRTL = i18n.language === 'ar'
-  const _queryClient = useQueryClient()
   const { toast } = useToast()
 
   // State
@@ -607,7 +605,7 @@ function PreviewLayoutsPage() {
                 </TabsList>
 
                 <TabsContent value="settings" className="space-y-4 mt-4">
-                  <LayoutConfigDisplay config={layoutDetails.layout_config} isRTL={isRTL} t={t} />
+                  <LayoutConfigDisplay config={layoutDetails.layout_config} t={t} />
                 </TabsContent>
 
                 <TabsContent value="fields" className="space-y-4 mt-4">
@@ -936,11 +934,10 @@ function LayoutForm({ values, onChange, isRTL, t }: LayoutFormProps) {
 
 interface LayoutConfigDisplayProps {
   config: PreviewLayoutConfig
-  isRTL: boolean
   t: (key: string) => string
 }
 
-function LayoutConfigDisplay({ config, isRTL, t }: LayoutConfigDisplayProps) {
+function LayoutConfigDisplay({ config, t }: LayoutConfigDisplayProps) {
   const configItems = [
     { key: 'showAvatar', value: config.showAvatar },
     { key: 'showStatus', value: config.showStatus },

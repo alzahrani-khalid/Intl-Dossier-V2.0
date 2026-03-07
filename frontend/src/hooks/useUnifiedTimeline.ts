@@ -75,7 +75,7 @@ export function useUnifiedTimeline({
   dossierType,
   initialFilters = {},
   itemsPerPage = 20,
-  enableRealtime = false,
+  enableRealtime: _enableRealtime = false,
 }: UseUnifiedTimelineOptions): UseUnifiedTimelineReturn {
   const [filters, setFilters] = useState<TimelineFilters>(initialFilters)
 

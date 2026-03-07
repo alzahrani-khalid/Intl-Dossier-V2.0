@@ -72,11 +72,6 @@ export function EngagementDetailPage() {
   const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState('overview')
-  const [_expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    participants: true,
-    agenda: true,
-    outcomes: true,
-  })
 
   // Fetch engagement data
   const { data: engagementData, isLoading, isError, error } = useEngagement(engagementId)
@@ -84,11 +79,6 @@ export function EngagementDetailPage() {
 
   // Track this engagement in navigation history
   useEngagementNavigation(engagementId, engagementData?.engagement, { skip: isLoading })
-
-  // Toggle section expansion
-  const _toggleSection = (section: string) => {
-    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }))
-  }
 
   // Navigation handlers
   const handleBack = () => {

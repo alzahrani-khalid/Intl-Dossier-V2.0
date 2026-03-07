@@ -58,7 +58,7 @@ export function FileUpload({
         }
 
         try {
-          const _uploadId = await uploadFile(file, {
+          await uploadFile(file, {
             bucket,
             path,
             onProgress: (_progress) => {

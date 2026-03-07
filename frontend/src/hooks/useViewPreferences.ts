@@ -21,7 +21,6 @@ import type {
 
 // Constants
 const STORAGE_KEY_PREFIX = 'view-preferences-'
-const _DEBOUNCE_DELAY = 1000 // 1 second debounce for saving preferences
 
 /**
  * Fetch view preferences from Edge Function

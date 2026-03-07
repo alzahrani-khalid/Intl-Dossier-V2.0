@@ -16,7 +16,7 @@ import { Loader2, X, Pause, Play, CheckCircle2, AlertCircle, Clock, Info } from 
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 
 export type ProgressStatus =
   | 'idle'
@@ -82,14 +82,6 @@ const STATUS_CONFIG = {
   },
   error: { icon: AlertCircle, color: 'bg-red-500', textColor: 'text-red-600 dark:text-red-400' },
   cancelled: { icon: X, color: 'bg-gray-500', textColor: 'text-gray-600 dark:text-gray-400' },
-} as const
-
-const COLOR_CONFIG = {
-  default: 'bg-primary',
-  success: 'bg-green-500',
-  warning: 'bg-amber-500',
-  error: 'bg-red-500',
-  info: 'bg-blue-500',
 } as const
 
 const SIZE_CONFIG = {
@@ -175,14 +167,13 @@ export function EnhancedProgress({
   className,
   size = 'md',
   compact = false,
-  color = 'default',
+  color: _color = 'default',
 }: EnhancedProgressProps) {
   const { t, i18n } = useTranslation('loading')
   const isRTL = i18n.language === 'ar'
 
   const statusConfig = STATUS_CONFIG[status]
   const sizeConfig = SIZE_CONFIG[size]
-  const _progressColor = color !== 'default' ? COLOR_CONFIG[color] : statusConfig.color
 
   const eta = calculateETA(progress, startTime, processedItems, totalItems)
   const isActive = status === 'processing' || status === 'pending'
@@ -226,7 +217,7 @@ export function EnhancedProgress({
   }
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -257,7 +248,7 @@ export function EnhancedProgress({
             </h4>
             <AnimatePresence mode="wait">
               {currentStep && (
-                <motion.p
+                <m.p
                   key={currentStep}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -265,7 +256,7 @@ export function EnhancedProgress({
                   className={cn('text-muted-foreground truncate mt-0.5', sizeConfig.description)}
                 >
                   {currentStep}
-                </motion.p>
+                </m.p>
               )}
             </AnimatePresence>
           </div>
@@ -364,7 +355,7 @@ export function EnhancedProgress({
 
       {/* Status message for completed/error states */}
       {(status === 'completed' || status === 'error' || status === 'cancelled') && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           className={cn(
@@ -375,9 +366,9 @@ export function EnhancedProgress({
         >
           <Info className="h-3 w-3 shrink-0" />
           <span>{t(`statusMessage.${status}`)}</span>
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+    </m.div>
   )
 }
 

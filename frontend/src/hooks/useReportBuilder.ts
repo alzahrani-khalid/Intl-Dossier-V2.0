@@ -357,7 +357,7 @@ export interface ReportBuilderState {
 }
 
 export function useReportBuilderState(initialReportId?: string) {
-  const { t, i18n } = useTranslation('report-builder')
+  const { i18n } = useTranslation('report-builder')
   const isRTL = i18n.language === 'ar'
 
   // Load existing report if ID provided

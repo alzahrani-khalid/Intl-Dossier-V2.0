@@ -434,11 +434,6 @@ export function useCreateTheme() {
 
   return useMutation({
     mutationFn: async (data: ThemeCreateRequest) => {
-      // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
       // Create base dossier
       const { data: dossier, error: dossierError } = await supabase
         .from('dossiers')
@@ -510,11 +505,6 @@ export function useUpdateTheme() {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: ThemeUpdateRequest }) => {
-      // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
       // Update base dossier fields
       const dossierUpdate: Record<string, unknown> = {}
       if (data.name_en !== undefined) dossierUpdate.name_en = data.name_en

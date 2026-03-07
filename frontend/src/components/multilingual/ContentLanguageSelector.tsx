@@ -64,7 +64,7 @@ export function ContentLanguageSelector({
   className,
   size = 'default',
 }: ContentLanguageSelectorProps) {
-  const { t, i18n } = useTranslation('multilingual')
+  const { i18n } = useTranslation('multilingual')
   const isRTL = i18n.language === 'ar'
 
   // Determine which languages to show

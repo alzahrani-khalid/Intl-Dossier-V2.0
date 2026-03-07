@@ -42,11 +42,6 @@ export interface ContactRelationship {
 }
 
 /**
- * Input type for creating a contact relationship
- */
-type _ContactRelationshipInsert = Omit<ContactRelationship, 'id' | 'created_at' | 'updated_at'>
-
-/**
  * Relationship Response with expanded contact information
  */
 export interface RelationshipResponse extends ContactRelationship {

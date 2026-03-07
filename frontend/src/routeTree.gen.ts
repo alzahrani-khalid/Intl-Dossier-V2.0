@@ -922,17 +922,17 @@ export interface FileRoutesByFullPath {
   '/tasks/$id': typeof ProtectedTasksIdRoute
   '/tasks/escalations': typeof ProtectedTasksEscalationsRoute
   '/tasks/queue': typeof ProtectedTasksQueueRoute
-  '/after-actions': typeof ProtectedAfterActionsIndexRoute
-  '/approvals': typeof ProtectedApprovalsIndexRoute
-  '/dossiers': typeof ProtectedDossiersIndexRoute
+  '/after-actions/': typeof ProtectedAfterActionsIndexRoute
+  '/approvals/': typeof ProtectedApprovalsIndexRoute
+  '/dossiers/': typeof ProtectedDossiersIndexRoute
   '/engagements/': typeof ProtectedEngagementsIndexRoute
-  '/help': typeof ProtectedHelpIndexRoute
+  '/help/': typeof ProtectedHelpIndexRoute
   '/intake/': typeof ProtectedIntakeIndexRoute
   '/my-work/': typeof ProtectedMyWorkIndexRoute
   '/persons/': typeof ProtectedPersonsIndexRoute
   '/positions/': typeof ProtectedPositionsIndexRoute
   '/reports/': typeof ProtectedReportsIndexRoute
-  '/tasks': typeof ProtectedTasksIndexRoute
+  '/tasks/': typeof ProtectedTasksIndexRoute
   '/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
   '/dossiers/$id/overview': typeof ProtectedDossiersIdOverviewRoute
   '/dossiers/countries/$id': typeof ProtectedDossiersCountriesIdRoute
@@ -947,13 +947,13 @@ export interface FileRoutesByFullPath {
   '/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
   '/positions/$id/versions': typeof ProtectedPositionsIdVersionsRoute
   '/settings/calendar/callback': typeof ProtectedSettingsCalendarCallbackRoute
-  '/dossiers/countries': typeof ProtectedDossiersCountriesIndexRoute
-  '/dossiers/engagements': typeof ProtectedDossiersEngagementsIndexRoute
-  '/dossiers/forums': typeof ProtectedDossiersForumsIndexRoute
-  '/dossiers/organizations': typeof ProtectedDossiersOrganizationsIndexRoute
-  '/dossiers/persons': typeof ProtectedDossiersPersonsIndexRoute
-  '/dossiers/topics': typeof ProtectedDossiersTopicsIndexRoute
-  '/dossiers/working_groups': typeof ProtectedDossiersWorking_groupsIndexRoute
+  '/dossiers/countries/': typeof ProtectedDossiersCountriesIndexRoute
+  '/dossiers/engagements/': typeof ProtectedDossiersEngagementsIndexRoute
+  '/dossiers/forums/': typeof ProtectedDossiersForumsIndexRoute
+  '/dossiers/organizations/': typeof ProtectedDossiersOrganizationsIndexRoute
+  '/dossiers/persons/': typeof ProtectedDossiersPersonsIndexRoute
+  '/dossiers/topics/': typeof ProtectedDossiersTopicsIndexRoute
+  '/dossiers/working_groups/': typeof ProtectedDossiersWorking_groupsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1325,17 +1325,17 @@ export interface FileRouteTypes {
     | '/tasks/$id'
     | '/tasks/escalations'
     | '/tasks/queue'
-    | '/after-actions'
-    | '/approvals'
-    | '/dossiers'
+    | '/after-actions/'
+    | '/approvals/'
+    | '/dossiers/'
     | '/engagements/'
-    | '/help'
+    | '/help/'
     | '/intake/'
     | '/my-work/'
     | '/persons/'
     | '/positions/'
     | '/reports/'
-    | '/tasks'
+    | '/tasks/'
     | '/after-actions/$afterActionId/versions'
     | '/dossiers/$id/overview'
     | '/dossiers/countries/$id'
@@ -1350,13 +1350,13 @@ export interface FileRouteTypes {
     | '/positions/$id/approvals'
     | '/positions/$id/versions'
     | '/settings/calendar/callback'
-    | '/dossiers/countries'
-    | '/dossiers/engagements'
-    | '/dossiers/forums'
-    | '/dossiers/organizations'
-    | '/dossiers/persons'
-    | '/dossiers/topics'
-    | '/dossiers/working_groups'
+    | '/dossiers/countries/'
+    | '/dossiers/engagements/'
+    | '/dossiers/forums/'
+    | '/dossiers/organizations/'
+    | '/dossiers/persons/'
+    | '/dossiers/topics/'
+    | '/dossiers/working_groups/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1658,7 +1658,7 @@ declare module '@tanstack/react-router' {
     '/_protected': {
       id: '/_protected'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -2085,7 +2085,7 @@ declare module '@tanstack/react-router' {
     '/_protected/tasks/': {
       id: '/_protected/tasks/'
       path: '/tasks'
-      fullPath: '/tasks'
+      fullPath: '/tasks/'
       preLoaderRoute: typeof ProtectedTasksIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
@@ -2127,7 +2127,7 @@ declare module '@tanstack/react-router' {
     '/_protected/help/': {
       id: '/_protected/help/'
       path: '/help'
-      fullPath: '/help'
+      fullPath: '/help/'
       preLoaderRoute: typeof ProtectedHelpIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
@@ -2141,21 +2141,21 @@ declare module '@tanstack/react-router' {
     '/_protected/dossiers/': {
       id: '/_protected/dossiers/'
       path: '/dossiers'
-      fullPath: '/dossiers'
+      fullPath: '/dossiers/'
       preLoaderRoute: typeof ProtectedDossiersIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/approvals/': {
       id: '/_protected/approvals/'
       path: '/approvals'
-      fullPath: '/approvals'
+      fullPath: '/approvals/'
       preLoaderRoute: typeof ProtectedApprovalsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/after-actions/': {
       id: '/_protected/after-actions/'
       path: '/after-actions'
-      fullPath: '/after-actions'
+      fullPath: '/after-actions/'
       preLoaderRoute: typeof ProtectedAfterActionsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
@@ -2428,49 +2428,49 @@ declare module '@tanstack/react-router' {
     '/_protected/dossiers/working_groups/': {
       id: '/_protected/dossiers/working_groups/'
       path: '/dossiers/working_groups'
-      fullPath: '/dossiers/working_groups'
+      fullPath: '/dossiers/working_groups/'
       preLoaderRoute: typeof ProtectedDossiersWorking_groupsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/topics/': {
       id: '/_protected/dossiers/topics/'
       path: '/dossiers/topics'
-      fullPath: '/dossiers/topics'
+      fullPath: '/dossiers/topics/'
       preLoaderRoute: typeof ProtectedDossiersTopicsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/persons/': {
       id: '/_protected/dossiers/persons/'
       path: '/dossiers/persons'
-      fullPath: '/dossiers/persons'
+      fullPath: '/dossiers/persons/'
       preLoaderRoute: typeof ProtectedDossiersPersonsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/organizations/': {
       id: '/_protected/dossiers/organizations/'
       path: '/dossiers/organizations'
-      fullPath: '/dossiers/organizations'
+      fullPath: '/dossiers/organizations/'
       preLoaderRoute: typeof ProtectedDossiersOrganizationsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/forums/': {
       id: '/_protected/dossiers/forums/'
       path: '/dossiers/forums'
-      fullPath: '/dossiers/forums'
+      fullPath: '/dossiers/forums/'
       preLoaderRoute: typeof ProtectedDossiersForumsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/engagements/': {
       id: '/_protected/dossiers/engagements/'
       path: '/dossiers/engagements'
-      fullPath: '/dossiers/engagements'
+      fullPath: '/dossiers/engagements/'
       preLoaderRoute: typeof ProtectedDossiersEngagementsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/countries/': {
       id: '/_protected/dossiers/countries/'
       path: '/dossiers/countries'
-      fullPath: '/dossiers/countries'
+      fullPath: '/dossiers/countries/'
       preLoaderRoute: typeof ProtectedDossiersCountriesIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }

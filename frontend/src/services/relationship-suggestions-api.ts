@@ -14,8 +14,6 @@ import type {
   SuggestionType,
 } from '@/types/relationship-suggestion.types'
 
-const EDGE_FUNCTION_URL = 'relationship-suggestions'
-
 /**
  * Get relationship suggestions for a person
  */
@@ -37,17 +35,7 @@ export async function getRelationshipSuggestions(
     params.append('include_rejected', 'true')
   }
 
-  const { data, error } = await supabase.functions.invoke(EDGE_FUNCTION_URL, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: undefined,
-  })
-
-  // Due to Edge Function limitations, we use RPC directly
-  // The Edge Function approach above may not work for GET with query params
-  // Fallback to direct RPC call
+  // Use RPC directly (Edge Function approach doesn't work for GET with query params)
   const { data: suggestions, error: rpcError } = await supabase.rpc(
     'generate_all_relationship_suggestions',
     { p_person_id: personId },

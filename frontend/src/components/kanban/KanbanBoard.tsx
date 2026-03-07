@@ -43,12 +43,7 @@ interface KanbanBoardProps {
 
 const WORKFLOW_STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done']
 
-export function KanbanBoard({
-  tasks,
-  onTaskClick,
-  onTaskMove,
-  isLoading = false,
-}: KanbanBoardProps) {
+export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps) {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
   const { toast } = useToast()
@@ -319,7 +314,7 @@ interface KanbanCardProps {
   getSLAStatus: (task: Task) => 'safe' | 'warning' | 'breached'
 }
 
-function KanbanCard({ task, onClick, isRTL, getPriorityColor, getSLAStatus }: KanbanCardProps) {
+function KanbanCard({ task, onClick, isRTL, getPriorityColor }: KanbanCardProps) {
   const { t } = useTranslation()
   const isCompleted = task.status === 'completed' || task.status === 'cancelled'
 
@@ -455,7 +450,6 @@ function DraggableKanbanCard({
   getPriorityColor,
   getSLAStatus,
   isRetrying = false,
-  isDragging = false,
 }: DraggableKanbanCardProps) {
   const {
     attributes,

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from './ui/button'
 import { Card, CardContent } from './ui/card'
@@ -7,27 +7,25 @@ import { AlertCircle, FileText, Loader2 } from 'lucide-react'
 import { PositionCard } from './PositionCard'
 import { usePositions } from '../hooks/usePositions'
 import { useInView } from '../hooks/useInView'
-import type { PositionFilters, PositionStatus } from '../types/position'
+import type { PositionFilters } from '../types/position'
 
 interface PositionListProps {
   filters?: PositionFilters
   onFilterChange?: (filters: PositionFilters) => void
 }
 
-export function PositionList({ filters = {}, onFilterChange }: PositionListProps) {
-  const { t, i18n } = useTranslation('positions')
-  const _isRTL = i18n.language === 'ar'
+const EMPTY_FILTERS: PositionFilters = {}
 
-  // Local filter state
-  const [localFilters, setLocalFilters] = useState<PositionFilters>(filters)
+export function PositionList({ filters = EMPTY_FILTERS }: PositionListProps) {
+  const { t } = useTranslation('positions')
 
   // Infinite scroll observer target
   const observerTarget = useRef<HTMLDivElement>(null)
   const isInView = useInView(observerTarget as React.RefObject<HTMLElement>, { threshold: 0.1 })
 
   // Fetch positions with infinite scroll
-  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
-    usePositions(localFilters)
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
+    usePositions(filters)
 
   // Trigger next page fetch when observer target comes into view
   useEffect(() => {
@@ -39,53 +37,6 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
   // Flatten paginated results
   const positions = data?.pages.flatMap((page) => page.data) || []
   const totalCount = data?.pages[0]?.total || 0
-
-  // Handle filter changes
-  const handleFilterChange = (newFilters: PositionFilters) => {
-    setLocalFilters(newFilters)
-    if (onFilterChange) {
-      onFilterChange(newFilters)
-    }
-  }
-
-  // Status filter options
-  const _statusOptions: PositionStatus[] = ['draft', 'under_review', 'approved', 'published']
-
-  // Thematic category options (from spec)
-  const _categoryOptions = [
-    'trade',
-    'climate',
-    'security',
-    'technology',
-    'health',
-    'education',
-    'other',
-  ]
-
-  // Toggle filter
-  const _toggleFilter = (key: keyof PositionFilters, value: string) => {
-    const newFilters = { ...localFilters }
-    if (newFilters[key] === value) {
-      // Remove filter if already selected
-      delete newFilters[key]
-    } else {
-      // Set new filter
-      ;(newFilters as any)[key] = value
-    }
-    handleFilterChange(newFilters)
-  }
-
-  // Reset filters
-  const _resetFilters = () => {
-    handleFilterChange({ limit: localFilters.limit })
-  }
-
-  // Count active filters
-  const _activeFilterCount = [
-    localFilters.status,
-    localFilters.thematic_category,
-    localFilters.search,
-  ].filter(Boolean).length
 
   return (
     <div className="space-y-4">

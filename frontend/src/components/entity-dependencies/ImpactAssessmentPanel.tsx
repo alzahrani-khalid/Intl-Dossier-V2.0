@@ -203,14 +203,6 @@ function SummaryStats({ assessment }: SummaryStatsProps) {
   const { t, i18n } = useTranslation('entity-dependencies')
   const isRTL = i18n.language === 'ar'
 
-  const _affectedByCategory = assessment.affected_entities?.reduce(
-    (acc, entity) => {
-      acc[entity.impact_category] = (acc[entity.impact_category] || 0) + 1
-      return acc
-    },
-    {} as Record<string, number>,
-  )
-
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
       <Card className="p-3 sm:p-4">

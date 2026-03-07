@@ -20,8 +20,7 @@ interface ConflictDialogProps {
 }
 
 export function ConflictDialog({ open, currentData, remoteData, onResolve }: ConflictDialogProps) {
-  const { t, i18n } = useTranslation('dossiers')
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossiers')
 
   // Find conflicting fields
   const getConflictingFields = (): Array<{

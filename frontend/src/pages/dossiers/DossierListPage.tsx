@@ -158,8 +158,22 @@ export function DossierListPage() {
   } = useSampleData()
 
   // Filter state - initialize from view preferences or defaults
-  const [filters, setFilters] = useState<DossierFilters>(DEFAULT_FILTERS)
+  const [filters, setFiltersRaw] = useState<DossierFilters>(DEFAULT_FILTERS)
   const [initialized, setInitialized] = useState(false)
+
+  // Wrapper that syncs filters to view preferences
+  const setFilters: typeof setFiltersRaw = useCallback(
+    (action) => {
+      setFiltersRaw((prev) => {
+        const next = typeof action === 'function' ? action(prev) : action
+        if (initialized) {
+          viewPreferences.setCurrentViewConfig(filtersToViewConfig(next))
+        }
+        return next
+      })
+    },
+    [initialized, viewPreferences],
+  )
 
   // Local state for search input (debounced)
   const [searchInput, setSearchInput] = useState('')
@@ -191,14 +205,6 @@ export function DossierListPage() {
     viewPreferences.defaultView,
     viewPreferences.preferences,
   ])
-
-  // Update view preferences when filters change
-  useEffect(() => {
-    if (initialized) {
-      const viewConfig = filtersToViewConfig(filters)
-      viewPreferences.setCurrentViewConfig(viewConfig)
-    }
-  }, [filters, initialized])
 
   // Handle applying a saved view
   const handleApplyView = useCallback((viewConfig: ViewConfig) => {
@@ -346,22 +352,6 @@ export function DossierListPage() {
     setFilters((prev) => ({
       ...prev,
       search: searchInput || undefined,
-      page: 1,
-    }))
-  }
-
-  const _handleClearType = () => {
-    setFilters((prev) => ({
-      ...prev,
-      type: undefined,
-      page: 1,
-    }))
-  }
-
-  const _handleClearStatus = () => {
-    setFilters((prev) => ({
-      ...prev,
-      status: undefined,
       page: 1,
     }))
   }

@@ -52,18 +52,6 @@ export const workingGroupKeys = {
 // HELPER FUNCTIONS
 // ============================================================================
 
-async function _getAuthHeaders(): Promise<Record<string, string>> {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${session?.access_token || ''}`,
-  }
-}
-
-const _API_BASE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
-
 // ============================================================================
 // WORKING GROUP HOOKS
 // ============================================================================

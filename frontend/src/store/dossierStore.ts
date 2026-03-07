@@ -419,9 +419,7 @@ export const useDossierStore = create<DossierStore>()(
           }
         },
 
-        inheritContextFromParent: async (_parentType, _parentId) => {
-          const _state = get()
-
+        inheritContextFromParent: async () => {
           // Set loading state
           set({ isResolving: true, resolutionError: null })
 

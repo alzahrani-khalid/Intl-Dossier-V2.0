@@ -119,7 +119,7 @@ interface CustomNodeData {
 }
 
 function CustomNode({ data }: { data: CustomNodeData }) {
-  const { t, i18n } = useTranslation('entity-dependencies')
+  const { i18n } = useTranslation('entity-dependencies')
   const isRTL = i18n.language === 'ar'
   const config = (ENTITY_TYPE_CONFIG[data.type] || ENTITY_TYPE_CONFIG.topic)!
   const Icon = config.icon

@@ -37,7 +37,7 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
   const debouncedSearch = useDebouncedValue(searchQuery, 300)
 
   // Fetch positions linked to this dossier with link_type information
-  const { positions, totalCount, isLoading, error, refetch } = useDossierPositionLinks(dossierId, {
+  const { positions, totalCount, isLoading, error } = useDossierPositionLinks(dossierId, {
     link_type: linkTypeFilter === 'all' ? undefined : linkTypeFilter,
     status: statusFilter === 'all' ? undefined : statusFilter,
     search: debouncedSearch,

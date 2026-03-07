@@ -13,12 +13,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { createClient } from '@/lib/supabase-client'
-import { Database } from '@/types/database'
 import { RealtimeChannel } from '@supabase/supabase-js'
 
 const supabase = createClient()
-
-type _Assignment = Database['public']['Tables']['assignments']['Row']
 
 export interface RelatedAssignment {
   id: string

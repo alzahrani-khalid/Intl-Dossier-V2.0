@@ -68,7 +68,6 @@ const RELATIONSHIP_COLORS = {
  * Custom node component for contacts
  */
 function ContactNode({ data }: { data: any }) {
-  const { t } = useTranslation('contacts')
   const isCenter = data.isCenter
 
   return (

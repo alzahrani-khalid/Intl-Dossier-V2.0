@@ -66,7 +66,6 @@ export function useAddComment() {
         (old) => {
           if (!old) return old
 
-          const _user = supabase.auth.getUser()
           const tempComment = {
             id: 'temp-' + Date.now(),
             assignment_id: newComment.assignment_id,

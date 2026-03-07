@@ -43,15 +43,7 @@ async function fetchFieldHistory(
     params.append('field_name', filters.field_name)
   }
 
-  const { data, error } = await supabase.functions.invoke('field-history', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: undefined,
-  })
-
-  // Use direct RPC call as a fallback since invoke with GET doesn't work well
+  // Use direct RPC call (supabase invoke with GET doesn't work well)
   const { data: rpcData, error: rpcError } = await supabase.rpc('get_field_history', {
     p_entity_type: filters.entity_type,
     p_entity_id: filters.entity_id,

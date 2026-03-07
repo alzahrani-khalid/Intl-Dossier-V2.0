@@ -282,7 +282,7 @@ export function ActivityFeedFilters({
   showSearch = true,
   className,
 }: ActivityFiltersProps) {
-  const { t, i18n } = useTranslation('activity-feed')
+  const { i18n } = useTranslation('activity-feed')
   const isRTL = i18n.language === 'ar'
 
   const [searchValue, setSearchValue] = useState(filters.search || '')

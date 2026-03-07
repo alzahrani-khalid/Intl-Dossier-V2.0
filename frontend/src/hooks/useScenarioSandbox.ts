@@ -347,7 +347,7 @@ export function useDeleteVariable() {
   const { t, i18n } = useTranslation('scenario-sandbox')
 
   return useMutation({
-    mutationFn: ({ id, scenarioId }: { id: string; scenarioId: string }) =>
+    mutationFn: ({ id }: { id: string; scenarioId: string }) =>
       fetchScenarioAPI<SuccessResponse>(`/variables/${id}`, { method: 'DELETE' }),
     onSuccess: (_, { scenarioId }) => {
       queryClient.invalidateQueries({ queryKey: scenarioKeys.variables(scenarioId) })
@@ -438,7 +438,7 @@ export function useDeleteOutcome() {
   const { t, i18n } = useTranslation('scenario-sandbox')
 
   return useMutation({
-    mutationFn: ({ id, scenarioId }: { id: string; scenarioId: string }) =>
+    mutationFn: ({ id }: { id: string; scenarioId: string }) =>
       fetchScenarioAPI<SuccessResponse>(`/outcomes/${id}`, { method: 'DELETE' }),
     onSuccess: (_, { scenarioId }) => {
       queryClient.invalidateQueries({ queryKey: scenarioKeys.outcomes(scenarioId) })

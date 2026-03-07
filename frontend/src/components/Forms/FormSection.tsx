@@ -16,7 +16,7 @@
 
 import { useState, useCallback, createContext, useContext, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { ChevronDown, ChevronRight, CheckCircle2, AlertCircle, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -126,7 +126,6 @@ interface ProgressBadgeProps {
 }
 
 function ProgressBadge({ completed, total }: ProgressBadgeProps) {
-  const _percentage = total > 0 ? Math.round((completed / total) * 100) : 0
   const isComplete = completed === total
 
   return (
@@ -205,101 +204,110 @@ export function FormSection({
         aria-labelledby={id ? `${id}-heading` : undefined}
       >
         {/* Header */}
-        <div
-          className={cn(
-            'flex items-center gap-3 px-4 py-3 sm:px-6 sm:py-4',
-            collapsible && 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50',
-            !isExpanded && 'border-b-0',
-            isExpanded && 'border-b border-gray-200 dark:border-gray-700',
-          )}
-          onClick={collapsible ? toggleExpanded : undefined}
-          role={collapsible ? 'button' : undefined}
-          aria-expanded={collapsible ? isExpanded : undefined}
-          tabIndex={collapsible ? 0 : undefined}
-          onKeyDown={
-            collapsible
-              ? (e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    toggleExpanded()
-                  }
-                }
-              : undefined
-          }
-        >
-          {/* Collapse indicator */}
-          {collapsible && (
-            <motion.div
+        {collapsible ? (
+          <button
+            type="button"
+            className={cn(
+              'flex items-center gap-3 px-4 py-3 sm:px-6 sm:py-4 w-full text-start',
+              'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50',
+              !isExpanded && 'border-b-0',
+              isExpanded && 'border-b border-gray-200 dark:border-gray-700',
+            )}
+            onClick={toggleExpanded}
+            aria-expanded={isExpanded}
+          >
+            <m.div
               animate={{ rotate: isExpanded ? 90 : 0 }}
               transition={{ duration: 0.2 }}
               className="shrink-0 text-gray-400"
             >
               <ChevronRight className="h-5 w-5" />
-            </motion.div>
-          )}
+            </m.div>
 
-          {/* Status indicator */}
-          {effectiveStatus && <StatusIndicator status={effectiveStatus} />}
+            {effectiveStatus && <StatusIndicator status={effectiveStatus} />}
+            {icon && <div className="shrink-0 text-gray-500 dark:text-gray-400">{icon}</div>}
 
-          {/* Icon */}
-          {icon && <div className="shrink-0 text-gray-500 dark:text-gray-400">{icon}</div>}
-
-          {/* Title and description */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <HeadingTag
-                id={id ? `${id}-heading` : undefined}
-                className="text-base font-semibold text-gray-900 dark:text-gray-100 sm:text-lg"
-              >
-                {title}
-              </HeadingTag>
-
-              {required && (
-                <span className="text-red-500 text-sm" aria-label={t('validation.required')}>
-                  *
-                </span>
-              )}
-
-              {helpText && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-5 w-5 p-0">
-                        <Info className="h-4 w-4 text-gray-400" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="max-w-xs">{helpText}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <HeadingTag
+                  id={id ? `${id}-heading` : undefined}
+                  className="text-base font-semibold text-gray-900 dark:text-gray-100 sm:text-lg"
+                >
+                  {title}
+                </HeadingTag>
+                {required && (
+                  <span className="text-red-500 text-sm" aria-label={t('validation.required')}>
+                    *
+                  </span>
+                )}
+              </div>
+              {description && (
+                <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{description}</p>
               )}
             </div>
 
-            {description && (
-              <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{description}</p>
-            )}
-          </div>
+            {progress && <ProgressBadge completed={progress.completed} total={progress.total} />}
 
-          {/* Progress badge */}
-          {progress && <ProgressBadge completed={progress.completed} total={progress.total} />}
-
-          {/* Collapse chevron (alternative position) */}
-          {collapsible && (
-            <motion.div
+            <m.div
               animate={{ rotate: isExpanded ? 180 : 0 }}
               transition={{ duration: 0.2 }}
               className="shrink-0 text-gray-400 hidden sm:block"
             >
               <ChevronDown className="h-5 w-5" />
-            </motion.div>
-          )}
-        </div>
+            </m.div>
+          </button>
+        ) : (
+          <div
+            className={cn(
+              'flex items-center gap-3 px-4 py-3 sm:px-6 sm:py-4',
+              !isExpanded && 'border-b-0',
+              isExpanded && 'border-b border-gray-200 dark:border-gray-700',
+            )}
+          >
+            {effectiveStatus && <StatusIndicator status={effectiveStatus} />}
+            {icon && <div className="shrink-0 text-gray-500 dark:text-gray-400">{icon}</div>}
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <HeadingTag
+                  id={id ? `${id}-heading` : undefined}
+                  className="text-base font-semibold text-gray-900 dark:text-gray-100 sm:text-lg"
+                >
+                  {title}
+                </HeadingTag>
+                {required && (
+                  <span className="text-red-500 text-sm" aria-label={t('validation.required')}>
+                    *
+                  </span>
+                )}
+                {helpText && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-5 w-5 p-0">
+                          <Info className="h-4 w-4 text-gray-400" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">{helpText}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+              {description && (
+                <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{description}</p>
+              )}
+            </div>
+
+            {progress && <ProgressBadge completed={progress.completed} total={progress.total} />}
+          </div>
+        )}
 
         {/* Content */}
         <AnimatePresence initial={false}>
           {isExpanded && (
-            <motion.div
+            <m.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
@@ -307,14 +315,14 @@ export function FormSection({
               className="overflow-hidden"
             >
               <div className="px-4 py-4 sm:px-6 sm:py-5 space-y-4">{children}</div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
         {/* Error message */}
         <AnimatePresence>
           {error && (
-            <motion.div
+            <m.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
@@ -324,7 +332,7 @@ export function FormSection({
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </section>

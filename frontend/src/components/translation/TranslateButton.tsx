@@ -36,8 +36,7 @@ export function TranslateButton({
   const [showSuccess, setShowSuccess] = useState(false)
   const [lastConfidence, setLastConfidence] = useState<number | null>(null)
 
-  const { translate, isTranslating, error, confidence, sourceLanguage, targetLanguage, reset } =
-    useTranslateContent()
+  const { translate, isTranslating, error, reset } = useTranslateContent()
 
   // Determine direction based on detected language or explicit setting
   const getTranslationInfo = useCallback(() => {

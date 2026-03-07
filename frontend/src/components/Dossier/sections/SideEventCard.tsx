@@ -72,19 +72,6 @@ export function SideEventCard({
     }
   }
 
-  // Format date
-  const _formatDate = (dateStr: string) => {
-    try {
-      return new Date(dateStr).toLocaleDateString(i18n.language, {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      })
-    } catch {
-      return dateStr
-    }
-  }
-
   const startTime = formatTime(event.start_time)
   const endTime = formatTime(event.end_time)
   const timeRange = startTime && endTime ? `${startTime} - ${endTime}` : startTime

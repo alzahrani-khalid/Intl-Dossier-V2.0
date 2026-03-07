@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { Play, Users, CheckCircle, FileSignature, Flag, XCircle, Clock } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { type RenewalStatus, RENEWAL_STATUS_COLORS } from '@/types/mou-renewal.types'
+import { type RenewalStatus } from '@/types/mou-renewal.types'
 
 interface RenewalWorkflowStepperProps {
   currentStatus: RenewalStatus
@@ -55,10 +55,12 @@ function getStepState(
   return 'pending'
 }
 
+const EMPTY_ALLOWED_TRANSITIONS: RenewalStatus[] = []
+
 export function RenewalWorkflowStepper({
   currentStatus,
   onStepClick,
-  allowedTransitions = [],
+  allowedTransitions = EMPTY_ALLOWED_TRANSITIONS,
   compact = false,
 }: RenewalWorkflowStepperProps) {
   const { t, i18n } = useTranslation('mou-renewals')
@@ -122,7 +124,6 @@ export function RenewalWorkflowStepper({
             const stepState = getStepState(step.status, currentStatus)
             const Icon = step.icon
             const isClickable = onStepClick && allowedTransitions.includes(step.status)
-            const _colors = RENEWAL_STATUS_COLORS[step.status]
 
             return (
               <button

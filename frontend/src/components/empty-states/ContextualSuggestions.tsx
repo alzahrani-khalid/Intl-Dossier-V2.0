@@ -131,7 +131,6 @@ interface SuggestionItemProps {
 }
 
 function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProps) {
-  const { i18n } = useTranslation()
   const sizes = sizeClasses[size]
   const Icon = categoryIcons[suggestion.category] || Sparkles
 

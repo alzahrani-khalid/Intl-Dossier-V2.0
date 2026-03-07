@@ -67,8 +67,7 @@ export function StepUpMFA({
   onCancel,
   reason,
 }: StepUpMFAProps) {
-  const { t, i18n } = useTranslation('positions')
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('positions')
 
   // State
   const [challengeData, setChallengeData] = useState<ChallengeData | null>(null)

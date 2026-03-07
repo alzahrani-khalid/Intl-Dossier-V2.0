@@ -274,12 +274,10 @@ function createChunks(file: File, chunkSize: number): UploadChunk[] {
 async function uploadSmallFile(upload: UploadFile, options: UploadOptions): Promise<void> {
   const filePath = options.path ? `${options.path}/${upload.name}` : upload.name
 
-  const { data, error } = await supabase.storage
-    .from(options.bucket)
-    .upload(filePath, upload.file, {
-      cacheControl: '3600',
-      upsert: false,
-    })
+  const { error } = await supabase.storage.from(options.bucket).upload(filePath, upload.file, {
+    cacheControl: '3600',
+    upsert: false,
+  })
 
   if (error) {
     throw new Error(error.message)
@@ -361,12 +359,10 @@ async function combineChunks(upload: UploadFile, options: UploadOptions): Promis
 
   // This would typically be handled by a server endpoint
   // For now, we'll simulate the combination
-  const { data, error } = await supabase.storage
-    .from(options.bucket)
-    .upload(filePath, upload.file, {
-      cacheControl: '3600',
-      upsert: false,
-    })
+  const { error } = await supabase.storage.from(options.bucket).upload(filePath, upload.file, {
+    cacheControl: '3600',
+    upsert: false,
+  })
 
   if (error) {
     throw new Error(error.message)

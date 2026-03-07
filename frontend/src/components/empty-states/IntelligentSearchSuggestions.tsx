@@ -466,7 +466,7 @@ function ActionableTipsSection({
 /**
  * Search Tips Section
  */
-function SearchTipsSection({ tips, isRTL }: { tips: string[]; isRTL: boolean }) {
+function SearchTipsSection({ tips }: { tips: string[]; isRTL: boolean }) {
   const { t } = useTranslation('enhanced-search')
 
   if (tips.length === 0) return null

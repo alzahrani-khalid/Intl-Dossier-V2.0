@@ -152,8 +152,7 @@ function PriorityIndicator({ priority }: { priority: number }) {
 }
 
 function DossierTypeBadge({ type }: { type: DossierType }) {
-  const { t, i18n } = useTranslation('dossier')
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
   const Icon = dossierTypeIcons[type] || FileText
 
   return (

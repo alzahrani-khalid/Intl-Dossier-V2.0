@@ -32,13 +32,11 @@ interface ReportTemplate {
 }
 
 export function ReportsPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'excel' | 'word'>('pdf')
   const [parameters, setParameters] = useState<Record<string, any>>({})
   const [generatedReports, setGeneratedReports] = useState<any[]>([])
-  const _isRTL = i18n.language === 'ar'
-
   const reportTemplates: ReportTemplate[] = [
     {
       id: 'country-overview',

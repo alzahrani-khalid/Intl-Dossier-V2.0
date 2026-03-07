@@ -100,7 +100,7 @@ export function WGMemberSuggestions({
   onMembersAdded,
   className,
 }: WGMemberSuggestionsProps) {
-  const { t, i18n } = useTranslation('working-groups')
+  const { i18n } = useTranslation('working-groups')
   const isRTL = i18n.language === 'ar'
 
   // State

@@ -44,7 +44,7 @@ import {
  * - RTL support for Arabic
  */
 export function CommitmentsHelpPage() {
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
   const [activeSection, setActiveSection] = useState('overview')
 

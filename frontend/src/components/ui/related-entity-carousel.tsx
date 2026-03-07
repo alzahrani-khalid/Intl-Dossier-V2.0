@@ -68,24 +68,29 @@ interface RelatedEntityCarouselProps<T extends CarouselItem> {
  */
 const PositionIndicator = memo(function PositionIndicator({
   isActive,
-  onClick,
-  index,
+  pageIndex,
+  visibleCount,
+  onScrollToIndex,
 }: {
   isActive: boolean
-  onClick: () => void
-  index: number
-  isRTL: boolean
+  pageIndex: number
+  visibleCount: number
+  onScrollToIndex: (index: number) => void
 }) {
+  const handleClick = useCallback(() => {
+    onScrollToIndex(pageIndex * visibleCount)
+  }, [onScrollToIndex, pageIndex, visibleCount])
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       className={cn(
         'h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full transition-all duration-300',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
         isActive ? 'bg-primary scale-110' : 'bg-muted-foreground/30 hover:bg-muted-foreground/50',
       )}
-      aria-label={`Go to slide ${index + 1}`}
+      aria-label={`Go to slide ${pageIndex + 1}`}
       aria-current={isActive ? 'true' : undefined}
     />
   )
@@ -211,9 +216,6 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
       if (cardElements.length === 0 || index >= cardElements.length) return
 
       const targetCard = cardElements[index] as HTMLElement
-      const _containerRect = container.getBoundingClientRect()
-      const _cardRect = targetCard.getBoundingClientRect()
-
       // Calculate scroll position to center the card (or align to start)
       const scrollOffset = isRTL
         ? -(targetCard.offsetLeft - container.offsetLeft)
@@ -404,24 +406,17 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
               data-carousel-item
               data-testid={`${testId}-item-${index}`}
             >
-              <div
-                className={cn('h-full', onItemClick && 'cursor-pointer')}
-                onClick={onItemClick ? () => onItemClick(item) : undefined}
-                role={onItemClick ? 'button' : undefined}
-                tabIndex={onItemClick ? 0 : undefined}
-                onKeyDown={
-                  onItemClick
-                    ? (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault()
-                          onItemClick(item)
-                        }
-                      }
-                    : undefined
-                }
-              >
-                {renderItem(item, index)}
-              </div>
+              {onItemClick ? (
+                <button
+                  type="button"
+                  className="h-full w-full cursor-pointer text-start"
+                  onClick={() => onItemClick(item)}
+                >
+                  {renderItem(item, index)}
+                </button>
+              ) : (
+                <div className="h-full">{renderItem(item, index)}</div>
+              )}
             </div>
           ))}
         </div>
@@ -439,9 +434,9 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
             <PositionIndicator
               key={pageIndex}
               isActive={pageIndex === currentPage}
-              onClick={() => scrollToIndex(pageIndex * visibleCount)}
-              index={pageIndex}
-              isRTL={isRTL}
+              pageIndex={pageIndex}
+              visibleCount={visibleCount}
+              onScrollToIndex={scrollToIndex}
             />
           ))}
         </div>

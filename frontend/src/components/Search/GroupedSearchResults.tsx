@@ -212,7 +212,7 @@ export function GroupedSearchResults({
   showMatchReasons = true,
   showRelationships = true,
 }: GroupedSearchResultsProps) {
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
   const [viewMode, setViewMode] = useState<ViewMode>(defaultViewMode)

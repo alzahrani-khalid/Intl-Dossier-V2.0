@@ -63,8 +63,7 @@ export function LinkList({
   onUpdateNotes,
   className,
 }: LinkListProps) {
-  const { t, i18n } = useTranslation()
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
 
   const reorderMutation = useReorderEntityLinks(intakeId)
 

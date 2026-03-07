@@ -26,9 +26,11 @@ interface ContactListProps {
   className?: string
 }
 
+const EMPTY_TAGS: Array<{ id: string; name: string; color?: string }> = []
+
 export function ContactList({
   contacts,
-  tags = [],
+  tags = EMPTY_TAGS,
   onContactClick,
   isLoading = false,
   isEmpty = false,
@@ -126,7 +128,7 @@ export function ContactList({
  */
 export function ContactListGrid({
   contacts,
-  tags = [],
+  tags = EMPTY_TAGS,
   onContactClick,
   isLoading = false,
   isEmpty = false,
@@ -189,7 +191,7 @@ export function ContactListGrid({
  */
 export function ContactListGrouped({
   contacts,
-  tags = [],
+  tags = EMPTY_TAGS,
   onContactClick,
   isLoading = false,
   isEmpty = false,
@@ -205,8 +207,6 @@ export function ContactListGrouped({
 
     contacts.forEach((contact) => {
       const orgId = contact.organization?.id || 'no-organization'
-      const _orgName =
-        contact.organization?.name || t('contactDirectory.organizations.no_organization')
 
       if (!groups.has(orgId)) {
         groups.set(orgId, [])

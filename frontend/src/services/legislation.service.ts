@@ -284,7 +284,7 @@ export async function updateLegislationStatus(
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  const { id, status, change_reason, change_notes_en, change_notes_ar } = input
+  const { id, status } = input
 
   // Get current version for optimistic locking
   const { data: current, error: fetchError } = await supabase

@@ -122,8 +122,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
   }, [extractedContacts, documentSourceId, onExtracted])
 
   // Get file icon based on extension
-  const getFileIcon = (fileName: string) => {
-    const _ext = fileName.toLowerCase().split('.').pop()
+  const getFileIcon = (_fileName: string) => {
     return <FileText className="h-8 w-8 text-muted-foreground" />
   }
 
@@ -176,7 +175,15 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
             {!selectedFile && (
               <div
                 className="border-2 border-dashed rounded-lg p-8 sm:p-12 text-center cursor-pointer hover:border-primary transition-colors"
+                role="button"
+                tabIndex={0}
                 onClick={() => fileInputRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileInputRef.current?.click()
+                  }
+                }}
               >
                 <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <p className="text-sm font-medium mb-2">
@@ -273,9 +280,9 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
           <CardContent className="space-y-3">
             {/* Contact Preview List */}
             <div className="space-y-2 max-h-[400px] overflow-y-auto">
-              {extractedContacts.map((contact, index) => (
+              {extractedContacts.map((contact) => (
                 <div
-                  key={index}
+                  key={contact.full_name}
                   className="border rounded-lg p-3 sm:p-4 hover:bg-accent transition-colors"
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -299,13 +306,13 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
                         </p>
                       )}
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {contact.email_addresses?.map((email, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
+                        {contact.email_addresses?.map((email) => (
+                          <Badge key={email} variant="outline" className="text-xs">
                             {email}
                           </Badge>
                         ))}
-                        {contact.phone_numbers?.map((phone, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
+                        {contact.phone_numbers?.map((phone) => (
+                          <Badge key={phone} variant="outline" className="text-xs">
                             {phone}
                           </Badge>
                         ))}

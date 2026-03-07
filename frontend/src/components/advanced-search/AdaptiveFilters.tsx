@@ -211,7 +211,6 @@ export function AdaptiveFilters({
   selectedFilters,
   onFilterChange,
   className,
-  defaultExpanded = true,
 }: AdaptiveFiltersProps) {
   const { t, i18n } = useTranslation('enhanced-search')
   const isRTL = i18n.language === 'ar'

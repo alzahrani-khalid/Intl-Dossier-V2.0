@@ -47,8 +47,7 @@ export interface StatusListProps {
  * ```
  */
 export function StatusList({ items, activeId, onStatusClick, className }: StatusListProps) {
-  const { t, i18n } = useTranslation()
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
 
   // Default status items from reference design
   const defaultItems: StatusItem[] = [
@@ -88,11 +87,7 @@ export function StatusList({ items, activeId, onStatusClick, className }: Status
       <h3 className="section-header px-4 py-2">{t('navigation.status', 'Status')}</h3>
 
       {/* Status Items */}
-      <nav
-        className="flex flex-col px-2"
-        role="navigation"
-        aria-label={t('navigation.status', 'Status')}
-      >
+      <nav className="flex flex-col px-2" aria-label={t('navigation.status', 'Status')}>
         {statusItems.map((status) => {
           const isActive = activeId === status.id
 

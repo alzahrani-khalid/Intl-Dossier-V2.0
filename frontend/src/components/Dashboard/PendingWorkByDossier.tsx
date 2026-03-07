@@ -82,9 +82,7 @@ export function PendingWorkByDossier({
   filters,
   className,
 }: PendingWorkByDossierProps) {
-  const { t, i18n } = useTranslation('dossier-dashboard')
-  const _navigate = useNavigate()
-  const _isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier-dashboard')
 
   // Fetch pending work
   const { data, isLoading, isError, error, refetch } = usePendingWorkByDossier({

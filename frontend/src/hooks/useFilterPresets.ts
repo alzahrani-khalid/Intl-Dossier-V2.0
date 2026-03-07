@@ -17,9 +17,7 @@ import type { FilterPreset, FilterPresetCategory } from '@/types/enhanced-search
  * Create default presets with translations
  * These are static presets that cover common query patterns
  */
-function createDefaultPresets(language: string): FilterPreset[] {
-  const _isArabic = language === 'ar'
-
+function createDefaultPresets(_language: string): FilterPreset[] {
   return [
     // Dossier-focused presets
     {
@@ -212,7 +210,7 @@ export function useFilterPresets(options?: UseFilterPresetsOptions) {
   const { i18n } = useTranslation()
   const language = i18n.language
 
-  const { category, entityTypes, limit, activeFiltersCount = 0 } = options || {}
+  const { category, entityTypes, limit } = options || {}
 
   // Get all available presets
   const allPresets = useMemo(() => {

@@ -254,7 +254,6 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
                 <WebhookCard
                   key={webhook.id}
                   webhook={webhook}
-                  isRTL={isRTL}
                   onToggleActive={() => handleToggleActive(webhook)}
                   onEdit={() => handleEdit(webhook)}
                   onDelete={() => handleDelete(webhook)}
@@ -277,7 +276,6 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
               <TemplateCard
                 key={template.id}
                 template={template}
-                isRTL={isRTL}
                 onUse={() => handleUseTemplate(template)}
               />
             ))}
@@ -340,7 +338,6 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
 
 interface WebhookCardProps {
   webhook: Webhook
-  isRTL: boolean
   onToggleActive: () => void
   onEdit: () => void
   onDelete: () => void
@@ -488,11 +485,10 @@ function WebhookCard({
 
 interface TemplateCardProps {
   template: WebhookTemplate
-  isRTL: boolean
   onUse: () => void
 }
 
-function TemplateCard({ template, isRTL, onUse }: TemplateCardProps) {
+function TemplateCard({ template, onUse }: TemplateCardProps) {
   const { t, i18n } = useTranslation('webhooks')
   const name = i18n.language === 'ar' ? template.name_ar : template.name_en
   const description = i18n.language === 'ar' ? template.description_ar : template.description_en

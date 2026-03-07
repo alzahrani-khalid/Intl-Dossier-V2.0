@@ -22,10 +22,7 @@ const intelligenceIcons = {
   general: Globe,
 } as const
 
-export function IntelligenceCard({
-  intelligence,
-  showFullAnalysis = false,
-}: IntelligenceCardProps) {
+export function IntelligenceCard({ intelligence }: IntelligenceCardProps) {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
   const locale = isRTL ? ar : enUS

@@ -131,19 +131,6 @@ export function MouLifecycleTracker({
     })
   }
 
-  // Get decision type icon
-  const _getDecisionIcon = (type: GovernmentDecision['decision_type']) => {
-    switch (type) {
-      case 'royal_decree':
-      case 'royal_order':
-        return <Crown className="h-4 w-4 text-amber-600" />
-      case 'cabinet_resolution':
-        return <Building2 className="h-4 w-4 text-blue-600" />
-      default:
-        return <FileText className="h-4 w-4 text-muted-foreground" />
-    }
-  }
-
   // Check if stage is terminal
   const isTerminal = TERMINAL_STAGES.includes(currentStage)
 

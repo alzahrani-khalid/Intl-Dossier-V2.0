@@ -239,10 +239,9 @@ interface SaveStatusIndicatorProps {
     lastSavedAt: string | null
     error: Error | null
   }
-  isRTL: boolean
 }
 
-function SaveStatusIndicator({ status, isRTL }: SaveStatusIndicatorProps) {
+function SaveStatusIndicator({ status }: SaveStatusIndicatorProps) {
   const { t } = useTranslation('common')
 
   if (status.error) {
@@ -408,7 +407,7 @@ export function AutoSaveFormWrapper<T extends Record<string, unknown>>({
               </div>
             )}
 
-            {showSaveStatus && <SaveStatusIndicator status={autoSave.status} isRTL={isRTL} />}
+            {showSaveStatus && <SaveStatusIndicator status={autoSave.status} />}
           </div>
         )}
 

@@ -25,7 +25,7 @@ export function FollowButton({
   variant = 'outline',
   className,
 }: FollowButtonProps) {
-  const { t, i18n } = useTranslation('activity-feed')
+  const { i18n } = useTranslation('activity-feed')
   const isRTL = i18n.language === 'ar'
 
   const { followEntity, unfollowEntity, isFollowing, isFollowPending, isUnfollowPending } =

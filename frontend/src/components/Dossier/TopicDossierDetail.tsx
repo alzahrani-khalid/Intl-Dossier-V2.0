@@ -87,7 +87,7 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
  * Related Dossiers Section
  * Shows countries, organizations, and engagements related to this topic
  */
-function RelatedDossiers({ dossierId }: { dossierId: string }) {
+function RelatedDossiers({}: { dossierId: string }) {
   const { t } = useTranslation('dossier')
 
   return (
@@ -119,7 +119,7 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
  * Key Documents Section
  * Policy papers, reports, and guidelines related to this topic
  */
-function KeyDocuments({ dossierId }: { dossierId: string }) {
+function KeyDocuments({}: { dossierId: string }) {
   const { t } = useTranslation('dossier')
 
   return (
@@ -151,7 +151,7 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
  * Subtopics Section
  * Child topics under this policy area
  */
-function Subtopics({ dossierId }: { dossierId: string }) {
+function Subtopics({}: { dossierId: string }) {
   const { t } = useTranslation('dossier')
 
   return (

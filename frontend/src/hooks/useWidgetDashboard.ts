@@ -367,8 +367,6 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
           .eq('status', 'completed')
           .gte('updated_at', weekAgo.toISOString())
 
-        // Group by day
-        const _days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         const dayCounts = [0, 0, 0, 0, 0, 0, 0]
 
         for (const item of data || []) {

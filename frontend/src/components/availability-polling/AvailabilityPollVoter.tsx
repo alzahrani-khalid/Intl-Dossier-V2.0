@@ -44,7 +44,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
 
   // Track votes locally
   const [votes, setVotes] = useState<Map<string, SlotVote>>(new Map())
-  const [expandedSlot, _setExpandedSlot] = useState<string | null>(null)
+  const [, _setExpandedSlot] = useState<string | null>(null)
 
   // Initialize votes from existing responses
   useEffect(() => {
@@ -264,7 +264,6 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
       <div className="space-y-3">
         {slots?.map((slot) => {
           const vote = votes.get(slot.id)
-          const _isExpanded = expandedSlot === slot.id
           const startDate = parseISO(slot.slot_start)
           const endDate = parseISO(slot.slot_end)
 

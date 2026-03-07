@@ -154,7 +154,7 @@ export function EntityTypeFilterChips({
   isLoading = false,
   showZeroCounts = false,
 }: EntityTypeFilterChipsProps) {
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
   // Filter to only show types with counts (unless showZeroCounts is true)

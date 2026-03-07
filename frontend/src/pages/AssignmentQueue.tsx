@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useAssignmentQueue } from '../hooks/useAssignmentQueue'
 import { Alert, AlertDescription } from '../components/ui/alert'
 import { Badge } from '../components/ui/badge'
@@ -15,7 +14,6 @@ import {
 import { AlertCircle, Clock, UserPlus } from 'lucide-react'
 
 export function AssignmentQueuePage() {
-  const { t } = useTranslation()
   const [priorityFilter, setPriorityFilter] = useState<string | undefined>()
   const [typeFilter, setTypeFilter] = useState<string | undefined>()
 

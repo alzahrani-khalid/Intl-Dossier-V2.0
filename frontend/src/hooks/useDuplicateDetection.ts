@@ -34,9 +34,6 @@ export const duplicateKeys = {
   settings: () => [...duplicateKeys.all, 'settings'] as const,
 }
 
-// API base URL
-const API_BASE = '/functions/v1/entity-duplicates'
-
 /**
  * Hook to list pending duplicate candidates
  */
@@ -51,13 +48,7 @@ export function useDuplicateCandidates(params: DuplicateCandidatesListParams = {
       if (params.limit) searchParams.append('limit', params.limit.toString())
       if (params.offset) searchParams.append('offset', params.offset.toString())
 
-      const { data, error } = await supabase.functions.invoke('entity-duplicates', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        body: undefined,
-      })
-
-      // Since functions.invoke doesn't support query params well, use RPC directly
+      // Use RPC directly (functions.invoke doesn't support query params well)
       const { data: rpcData, error: rpcError } = await supabase.rpc('get_pending_duplicates', {
         p_entity_type: params.entity_type || null,
         p_confidence_level: params.confidence_level || null,

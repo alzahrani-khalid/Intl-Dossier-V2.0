@@ -121,7 +121,7 @@ export function useInvitationTemplates(options: UseInvitationTemplatesOptions) {
 export function useSendInvitation() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
-  const { t, i18n } = useTranslation('empty-states')
+  const { i18n } = useTranslation('empty-states')
   const isRTL = i18n.language === 'ar'
 
   return useMutation<SendInvitationResponse, Error, SendInvitationRequest>({

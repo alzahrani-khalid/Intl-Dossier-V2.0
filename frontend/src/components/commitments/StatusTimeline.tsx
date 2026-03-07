@@ -136,9 +136,8 @@ interface TimelineEntryProps {
   formatDateTime: (dateStr: string) => string
 }
 
-function TimelineEntry({ entry, isFirst, isLast, formatDateTime }: TimelineEntryProps) {
-  const { t, i18n } = useTranslation('commitments')
-  const _isRTL = i18n.language === 'ar'
+function TimelineEntry({ entry, isLast, formatDateTime }: TimelineEntryProps) {
+  const { t } = useTranslation('commitments')
 
   // Guard against undefined status with fallback colors
   const newStatusColors =

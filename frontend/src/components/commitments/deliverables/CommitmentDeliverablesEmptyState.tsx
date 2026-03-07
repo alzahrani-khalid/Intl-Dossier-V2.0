@@ -10,7 +10,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import {
   Target,
   Plus,
@@ -32,7 +32,7 @@ import {
   generateDeliverablesFromTemplateSet,
   type CommitmentDeliverableType,
 } from '@/types/commitment-deliverable.types'
-import { useBulkCreateDeliverables, useCreateDeliverable } from '@/hooks/useCommitmentDeliverables'
+import { useBulkCreateDeliverables } from '@/hooks/useCommitmentDeliverables'
 import { AddDeliverableDialog } from './AddDeliverableDialog'
 
 // Icon mapping for deliverable types
@@ -74,7 +74,6 @@ export function CommitmentDeliverablesEmptyState({
   const [isApplyingTemplate, setIsApplyingTemplate] = useState<string | null>(null)
 
   const bulkCreateMutation = useBulkCreateDeliverables()
-  const _createMutation = useCreateDeliverable()
 
   // Quick add templates (subset for display)
   const quickAddTypes: CommitmentDeliverableType[] = [
@@ -118,7 +117,7 @@ export function CommitmentDeliverablesEmptyState({
       data-testid="deliverables-empty-state"
     >
       {/* Empty State Hero */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col items-center justify-center py-6 sm:py-8 text-center px-4"
@@ -182,7 +181,7 @@ export function CommitmentDeliverablesEmptyState({
           <Plus className={cn('h-5 w-5', isRTL ? 'ms-2' : 'me-2')} />
           {t('emptyState.cta')}
         </Button>
-      </motion.div>
+      </m.div>
 
       {/* Template Sets Section */}
       <div className="space-y-3">

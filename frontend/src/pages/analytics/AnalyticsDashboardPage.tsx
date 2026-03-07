@@ -124,9 +124,6 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
     }
   }, [showingSampleData, sampleData, summary, engagements, relationships, commitments, workload])
 
-  // Check if we have no real data (for determining when to show preview)
-  const _hasNoData = !summary && !engagements && !relationships && !commitments && !workload
-
   const handleExport = useCallback(async () => {
     try {
       const data = await exportData(timeRange, undefined, 'json')

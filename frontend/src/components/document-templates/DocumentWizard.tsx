@@ -4,7 +4,7 @@
  * Mobile-first responsive design with RTL support
  */
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { ChevronLeft, ChevronRight, Check, Save, Loader2, AlertCircle } from 'lucide-react'
 import { WizardStep } from './WizardStep'
-import { useDocumentWizard, useValidateDocument } from '@/hooks/useDocumentTemplates'
+import { useDocumentWizard } from '@/hooks/useDocumentTemplates'
 import type { TemplatedDocument, TemplateValidationError } from '@/types/document-template.types'
 import { toast } from 'sonner'
 
@@ -55,9 +55,13 @@ export function DocumentWizard({
   const { t, i18n } = useTranslation('document-templates')
   const isRTL = i18n.language === 'ar'
 
-  // Wizard state
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0)
-  const [fieldValues, setFieldValues] = useState<Record<string, unknown>>({})
+  // Wizard state - initialize from initialDocument if provided
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(() =>
+    initialDocument ? Math.max(0, (initialDocument.current_section_order || 1) - 1) : 0,
+  )
+  const [fieldValues, setFieldValues] = useState<Record<string, unknown>>(
+    () => initialDocument?.field_values || {},
+  )
   const [validationErrors, setValidationErrors] = useState<TemplateValidationError[]>([])
   const [isDirty, setIsDirty] = useState(false)
   const [showExitConfirm, setShowExitConfirm] = useState(false)
@@ -75,16 +79,6 @@ export function DocumentWizard({
     isSaving,
     isCompleting,
   } = useDocumentWizard(templateId, entityType, entityId)
-  const _validateMutation = useValidateDocument()
-
-  // Initialize with existing document values
-  useEffect(() => {
-    if (initialDocument) {
-      setDocument(initialDocument)
-      setFieldValues(initialDocument.field_values || {})
-      setCurrentSectionIndex(Math.max(0, (initialDocument.current_section_order || 1) - 1))
-    }
-  }, [initialDocument])
 
   // Get sections from template
   const sections = template?.sections || []

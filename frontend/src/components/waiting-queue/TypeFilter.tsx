@@ -30,7 +30,9 @@ const workItemTypes: WorkItemType[] = [
   { value: 'task', label: 'Task', Icon: CheckSquare, color: 'text-orange-600' },
 ]
 
-export function TypeFilter({ value = [], onChange, disabled = false }: TypeFilterProps) {
+const EMPTY_VALUE: ('dossier' | 'ticket' | 'position' | 'task')[] = []
+
+export function TypeFilter({ value = EMPTY_VALUE, onChange, disabled = false }: TypeFilterProps) {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
@@ -44,7 +46,6 @@ export function TypeFilter({ value = [], onChange, disabled = false }: TypeFilte
   return (
     <div className="space-y-1.5" role="group" aria-labelledby="type-filter-label">
       {workItemTypes.map((type) => {
-        const _Icon = type.Icon
         return (
           <div
             key={type.value}
