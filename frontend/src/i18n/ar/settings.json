@@ -40,7 +40,10 @@
     "phonePlaceholder": "+966 5XX XXX XXXX",
     "bio": "نبذة",
     "bioPlaceholder": "وصف موجز عن نفسك",
-    "bioHint": "الحد الأقصى 200 حرف"
+    "bioHint": "الحد الأقصى 200 حرف",
+    "invalidFileType": "نوع الملف غير صالح. يُدعم فقط JPG و PNG و GIF و WebP.",
+    "fileTooLarge": "حجم الملف كبير جداً. الحد الأقصى 5 ميجابايت.",
+    "avatarUploaded": "تم تحميل الصورة الشخصية بنجاح"
   },
 
   "general": {
@@ -155,7 +158,11 @@
     "deleteButton": "حذف حسابي",
     "deleteConfirmTitle": "حذف الحساب؟",
     "deleteConfirmDesc": "سيؤدي هذا إلى حذف حسابك نهائياً، بما في ذلك جميع بياناتك وإعداداتك وسجلك. لا يمكن التراجع عن هذا الإجراء.",
-    "typeToConfirm": "اكتب DELETE للتأكيد"
+    "typeToConfirm": "اكتب DELETE للتأكيد",
+    "exportSuccess": "تم تصدير البيانات بنجاح",
+    "signedOutAll": "تم تسجيل الخروج من جميع الجلسات",
+    "accountDeleted": "تم حذف الحساب بنجاح",
+    "deleting": "جاري حذف الحساب..."
   },
 
   "security": {
@@ -181,7 +188,10 @@
     "passwordRequirements": "يجب أن تكون كلمة المرور 8 أحرف على الأقل مع مزيج من الحروف والأرقام والرموز",
     "changePasswordButton": "تحديث كلمة المرور",
     "passwordChanged": "تم تحديث كلمة المرور بنجاح",
-    "passwordError": "فشل تحديث كلمة المرور"
+    "passwordError": "فشل تحديث كلمة المرور",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "currentPasswordIncorrect": "كلمة المرور الحالية غير صحيحة"
   },
 
   "timezones": {

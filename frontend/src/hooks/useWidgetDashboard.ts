@@ -397,6 +397,142 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
           ],
         }
       }
+      case 'intake-volume-trend': {
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+        const { data } = await supabase
+          .from('intake_tickets')
+          .select('created_at')
+          .gte('created_at', weekAgo.toISOString())
+
+        const dayMap: Record<string, number> = {}
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
+          dayMap[d.toISOString().slice(0, 10)] = 0
+        }
+
+        for (const item of data || []) {
+          const day = new Date(item.created_at).toISOString().slice(0, 10)
+          if (day in dayMap) {
+            dayMap[day]!++
+          }
+        }
+
+        return {
+          labels: Object.keys(dayMap),
+          datasets: [
+            {
+              label: 'Intake Tickets',
+              data: Object.values(dayMap),
+              borderColor: '#8b5cf6',
+            },
+          ],
+        }
+      }
+      case 'engagement-distribution': {
+        const { data } = await supabase.from('dossiers').select('type').eq('status', 'active')
+
+        const typeCounts: Record<string, number> = {}
+        for (const item of data || []) {
+          typeCounts[item.type] = (typeCounts[item.type] || 0) + 1
+        }
+
+        const labels = Object.keys(typeCounts)
+        const values = Object.values(typeCounts)
+        const colors = [
+          '#3b82f6',
+          '#10b981',
+          '#f59e0b',
+          '#ef4444',
+          '#8b5cf6',
+          '#ec4899',
+          '#06b6d4',
+          '#84cc16',
+        ]
+
+        return {
+          labels,
+          datasets: [
+            {
+              label: 'Dossiers',
+              data: values,
+              backgroundColor: colors.slice(0, labels.length),
+            },
+          ],
+          total: values.reduce((a, b) => a + b, 0),
+        }
+      }
+      case 'priority-breakdown': {
+        const { data } = await supabase
+          .from('work_items')
+          .select('priority')
+          .neq('status', 'completed')
+
+        const priorityCounts: Record<string, number> = {
+          low: 0,
+          medium: 0,
+          high: 0,
+          urgent: 0,
+        }
+
+        for (const item of data || []) {
+          if (item.priority in priorityCounts) {
+            priorityCounts[item.priority]!++
+          }
+        }
+
+        const total = Object.values(priorityCounts).reduce((a, b) => a + b, 0)
+
+        return {
+          labels: ['Low', 'Medium', 'High', 'Urgent'],
+          datasets: [
+            {
+              label: 'Work Items',
+              data: [
+                priorityCounts.low!,
+                priorityCounts.medium!,
+                priorityCounts.high!,
+                priorityCounts.urgent!,
+              ],
+              backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#dc2626'],
+            },
+          ],
+          total,
+        }
+      }
+      case 'team-workload': {
+        const { data } = await supabase
+          .from('work_items')
+          .select('assignee_id, profiles!inner(display_name)')
+          .neq('status', 'completed')
+
+        const assigneeCounts: Record<string, { name: string; count: number }> = {}
+
+        for (const item of data || []) {
+          const id = item.assignee_id as string
+          const profile = item.profiles as unknown as { display_name: string }
+          if (id && profile?.display_name) {
+            if (!assigneeCounts[id]) {
+              assigneeCounts[id] = { name: profile.display_name, count: 0 }
+            }
+            assigneeCounts[id]!.count++
+          }
+        }
+
+        const sorted = Object.values(assigneeCounts)
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 10)
+
+        return {
+          labels: sorted.map((a) => a.name),
+          datasets: [
+            {
+              label: 'Open Items',
+              data: sorted.map((a) => a.count),
+              backgroundColor: '#3b82f6',
+            },
+          ],
+        }
+      }
       default:
         return {
           labels: [],
@@ -499,6 +635,74 @@ async function fetchNotifications(): Promise<NotificationData[]> {
   }
 }
 
+async function fetchActivityFeed(maxItems = 15) {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return []
+
+    const { data } = await supabase
+      .from('activity_log')
+      .select('id, action, entity_type, entity_id, created_at, metadata')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(maxItems)
+
+    return (data || []).map((entry) => ({
+      id: entry.id,
+      action: entry.action,
+      entityType: entry.entity_type,
+      entityId: entry.entity_id,
+      createdAt: entry.created_at,
+      metadata: entry.metadata,
+    }))
+  } catch (error) {
+    console.error('Failed to fetch activity feed:', error)
+    return []
+  }
+}
+
+async function fetchStatsSummary() {
+  try {
+    const now = new Date()
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+
+    const [activeDossiers, openWorkItems, completedThisMonth, overdueItems] = await Promise.all([
+      supabase.from('dossiers').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+      supabase
+        .from('work_items')
+        .select('id', { count: 'exact', head: true })
+        .neq('status', 'completed'),
+      supabase
+        .from('work_items')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'completed')
+        .gte('updated_at', monthStart.toISOString()),
+      supabase
+        .from('work_items')
+        .select('id', { count: 'exact', head: true })
+        .lt('deadline', now.toISOString())
+        .neq('status', 'completed'),
+    ])
+
+    return {
+      activeDossiers: activeDossiers.count || 0,
+      openWorkItems: openWorkItems.count || 0,
+      completedThisMonth: completedThisMonth.count || 0,
+      overdueItems: overdueItems.count || 0,
+    }
+  } catch (error) {
+    console.error('Failed to fetch stats summary:', error)
+    return {
+      activeDossiers: 0,
+      openWorkItems: 0,
+      completedThisMonth: 0,
+      overdueItems: 0,
+    }
+  }
+}
+
 // ============================================================================
 // Widget Data Fetching Function (for use with useQueries)
 // ============================================================================
@@ -525,6 +729,12 @@ function fetchWidgetData(widget: WidgetConfig) {
       }
       case 'notifications':
         return fetchNotifications()
+      case 'activity-feed': {
+        const settings = widget.settings as { maxItems?: number }
+        return fetchActivityFeed(settings.maxItems || 15)
+      }
+      case 'stats-summary':
+        return fetchStatsSummary()
       case 'quick-actions':
         return null // Quick actions don't need data
       default:

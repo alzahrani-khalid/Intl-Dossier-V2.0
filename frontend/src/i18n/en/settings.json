@@ -40,7 +40,10 @@
     "phonePlaceholder": "+966 5XX XXX XXXX",
     "bio": "Bio",
     "bioPlaceholder": "A brief description about yourself",
-    "bioHint": "Maximum 200 characters"
+    "bioHint": "Maximum 200 characters",
+    "invalidFileType": "Invalid file type. Only JPG, PNG, GIF, and WebP are supported.",
+    "fileTooLarge": "File is too large. Maximum size is 5MB.",
+    "avatarUploaded": "Avatar uploaded successfully"
   },
 
   "general": {
@@ -155,7 +158,11 @@
     "deleteButton": "Delete My Account",
     "deleteConfirmTitle": "Delete Account?",
     "deleteConfirmDesc": "This will permanently delete your account, including all your data, settings, and history. This action cannot be undone.",
-    "typeToConfirm": "Type DELETE to confirm"
+    "typeToConfirm": "Type DELETE to confirm",
+    "exportSuccess": "Data exported successfully",
+    "signedOutAll": "Signed out from all sessions",
+    "accountDeleted": "Account deleted successfully",
+    "deleting": "Deleting account..."
   },
 
   "security": {
@@ -181,7 +188,10 @@
     "passwordRequirements": "Password must be at least 8 characters with a mix of letters, numbers, and symbols",
     "changePasswordButton": "Update Password",
     "passwordChanged": "Password updated successfully",
-    "passwordError": "Failed to update password"
+    "passwordError": "Failed to update password",
+    "passwordMismatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "currentPasswordIncorrect": "Current password is incorrect"
   },
 
   "timezones": {
