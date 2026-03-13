@@ -5,6 +5,8 @@
  * CardHeader: Title → Description (with inline trend span) → CardAction (bare icon)
  * CardContent: Large value number
  * Uniform gradient applied via parent grid.
+ *
+ * Trends are computed dynamically by comparing current vs previous period summary.
  */
 
 import { useTranslation } from 'react-i18next'
@@ -23,6 +25,7 @@ import type { DossierDashboardSummary } from '@/types/dossier-dashboard.types'
 
 interface DashboardMetricCardsProps {
   summary: DossierDashboardSummary | undefined
+  previousSummary?: DossierDashboardSummary | undefined
   isLoading: boolean
   className?: string
 }
@@ -33,11 +36,27 @@ interface MetricCardConfig {
   descKey: string
   icon: React.ComponentType<{ className?: string }>
   getValue: (s: DossierDashboardSummary) => number
-  trendValue?: number
-  trendDirection?: 'up' | 'down'
 }
 
-export function DashboardMetricCards({ summary, isLoading, className }: DashboardMetricCardsProps) {
+function computeTrend(
+  current: number,
+  previous: number | undefined,
+): { value: number; direction: 'up' | 'down' } | null {
+  if (previous == null || previous === 0) return null
+  const change = ((current - previous) / previous) * 100
+  if (change === 0) return null
+  return {
+    value: Math.abs(Math.round(change * 10) / 10),
+    direction: change > 0 ? 'up' : 'down',
+  }
+}
+
+export function DashboardMetricCards({
+  summary,
+  previousSummary,
+  isLoading,
+  className,
+}: DashboardMetricCardsProps) {
   const { t, i18n } = useTranslation('dashboard')
 
   const cards: MetricCardConfig[] = [
@@ -47,8 +66,6 @@ export function DashboardMetricCards({ summary, isLoading, className }: Dashboar
       descKey: 'metrics.myDossiers_desc',
       icon: FolderKanban,
       getValue: (s) => s.total_dossiers,
-      trendValue: 20.1,
-      trendDirection: 'up',
     },
     {
       key: 'activeDossiers',
@@ -56,8 +73,6 @@ export function DashboardMetricCards({ summary, isLoading, className }: Dashboar
       descKey: 'metrics.activeDossiers_desc',
       icon: Activity,
       getValue: (s) => s.active_dossiers,
-      trendValue: 8,
-      trendDirection: 'up',
     },
     {
       key: 'pendingWork',
@@ -65,8 +80,6 @@ export function DashboardMetricCards({ summary, isLoading, className }: Dashboar
       descKey: 'metrics.pendingWork_desc',
       icon: Clock,
       getValue: (s) => s.total_pending_work,
-      trendValue: 3,
-      trendDirection: 'down',
     },
     {
       key: 'needsAttention',
@@ -74,8 +87,6 @@ export function DashboardMetricCards({ summary, isLoading, className }: Dashboar
       descKey: 'metrics.needsAttention_desc',
       icon: AlertTriangle,
       getValue: (s) => s.attention_needed,
-      trendValue: 5,
-      trendDirection: 'up',
     },
   ]
 
@@ -115,22 +126,22 @@ export function DashboardMetricCards({ summary, isLoading, className }: Dashboar
       {cards.map((card) => {
         const Icon = card.icon
         const value = summary ? card.getValue(summary) : 0
+        const prevValue = previousSummary ? card.getValue(previousSummary) : undefined
+        const trend = computeTrend(value, prevValue)
 
         return (
           <Card key={card.key}>
             <CardHeader>
               <CardTitle>{t(card.titleKey)}</CardTitle>
               <CardDescription>
-                {card.trendValue != null && card.trendDirection && (
+                {trend != null ? (
                   <>
-                    <span
-                      className={card.trendDirection === 'up' ? 'text-green-600' : 'text-red-600'}
-                    >
-                      {card.trendDirection === 'up' ? '+' : '-'}
-                      {card.trendValue}%
+                    <span className={trend.direction === 'up' ? 'text-green-600' : 'text-red-600'}>
+                      {trend.direction === 'up' ? '+' : '-'}
+                      {trend.value}%
                     </span>{' '}
                   </>
-                )}
+                ) : null}
                 {t('metrics.trend_from_last_month')}
               </CardDescription>
               <CardAction>

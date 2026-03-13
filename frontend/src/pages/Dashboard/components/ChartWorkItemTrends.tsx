@@ -33,7 +33,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useDashboardTrends } from '@/hooks/useDashboardTrends'
+import { useDashboardTrends, type TrendRange } from '@/hooks/useDashboardTrends'
 
 const chartConfig = {
   created: {
@@ -46,16 +46,28 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-type TrendRange = '7d' | '30d' | '90d'
-
 interface ChartWorkItemTrendsProps {
   className?: string
+  range?: TrendRange
+  onRangeChange?: (range: TrendRange) => void
 }
 
-export function ChartWorkItemTrends({ className }: ChartWorkItemTrendsProps) {
-  const { t } = useTranslation('dashboard')
-  const [range, setRange] = useState<TrendRange>('30d')
+export function ChartWorkItemTrends({
+  className,
+  range: controlledRange,
+  onRangeChange,
+}: ChartWorkItemTrendsProps) {
+  const { t, i18n } = useTranslation('dashboard')
+  const [internalRange, setInternalRange] = useState<TrendRange>('30d')
+
+  const range = controlledRange ?? internalRange
+  const setRange = (v: TrendRange) => {
+    setInternalRange(v)
+    onRangeChange?.(v)
+  }
+
   const { data, isLoading } = useDashboardTrends(range)
+  const locale = i18n.language === 'ar' ? 'ar-SA' : i18n.language
 
   return (
     <Card className={`@container/card ${className ?? ''}`}>
@@ -121,7 +133,7 @@ export function ChartWorkItemTrends({ className }: ChartWorkItemTrendsProps) {
                 minTickGap={32}
                 tickFormatter={(value) => {
                   const date = new Date(value)
-                  return date.toLocaleDateString('en-US', {
+                  return date.toLocaleDateString(locale, {
                     month: 'short',
                     day: 'numeric',
                   })
@@ -132,7 +144,7 @@ export function ChartWorkItemTrends({ className }: ChartWorkItemTrendsProps) {
                 content={
                   <ChartTooltipContent
                     labelFormatter={(value) => {
-                      return new Date(String(value)).toLocaleDateString('en-US', {
+                      return new Date(String(value)).toLocaleDateString(locale, {
                         month: 'short',
                         day: 'numeric',
                         year: 'numeric',

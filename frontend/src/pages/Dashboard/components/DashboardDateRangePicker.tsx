@@ -2,6 +2,7 @@
  * Dashboard Date Range Picker
  *
  * Popover with preset date ranges and i18n-aware formatting.
+ * Supports both controlled and uncontrolled modes.
  */
 
 import { useState } from 'react'
@@ -11,21 +12,61 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-type DateRangePreset = 'today' | 'thisWeek' | 'last7' | 'last28' | 'last90'
+export type DateRangePreset = 'today' | 'thisWeek' | 'last7' | 'last28' | 'last90'
 
 interface DashboardDateRangePickerProps {
   className?: string
-  onRangeChange?: (preset: DateRangePreset) => void
+  value?: DateRangePreset
+  onChange?: (preset: DateRangePreset) => void
+}
+
+/** Convert a preset to a start date ISO string */
+export function presetToStartDate(preset: DateRangePreset): string {
+  const d = new Date()
+  switch (preset) {
+    case 'today':
+      break
+    case 'thisWeek':
+      d.setDate(d.getDate() - d.getDay())
+      break
+    case 'last7':
+      d.setDate(d.getDate() - 7)
+      break
+    case 'last28':
+      d.setDate(d.getDate() - 28)
+      break
+    case 'last90':
+      d.setDate(d.getDate() - 90)
+      break
+  }
+  return d.toISOString().slice(0, 10)
+}
+
+/** Map a date range preset to the closest TrendRange */
+export function presetToTrendRange(preset: DateRangePreset): '7d' | '30d' | '90d' {
+  switch (preset) {
+    case 'today':
+    case 'thisWeek':
+    case 'last7':
+      return '7d'
+    case 'last28':
+      return '30d'
+    case 'last90':
+      return '90d'
+  }
 }
 
 export function DashboardDateRangePicker({
   className,
-  onRangeChange,
+  value: controlledValue,
+  onChange,
 }: DashboardDateRangePickerProps) {
   const { t, i18n } = useTranslation('dashboard')
   const isRTL = i18n.language === 'ar'
-  const [selected, setSelected] = useState<DateRangePreset>('last7')
+  const [internalValue, setInternalValue] = useState<DateRangePreset>('last7')
   const [open, setOpen] = useState(false)
+
+  const selected = controlledValue ?? internalValue
 
   const presets: { key: DateRangePreset; label: string }[] = [
     { key: 'today', label: t('dateRange.today') },
@@ -36,8 +77,8 @@ export function DashboardDateRangePicker({
   ]
 
   const handleSelect = (preset: DateRangePreset) => {
-    setSelected(preset)
-    onRangeChange?.(preset)
+    setInternalValue(preset)
+    onChange?.(preset)
     setOpen(false)
   }
 

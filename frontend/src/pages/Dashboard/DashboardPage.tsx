@@ -6,8 +6,11 @@
  * - Uniform gradient metric cards
  * - @container responsive charts
  * - Highlights-based success metrics
+ *
+ * Date range picker controls filter all dashboard data.
  */
 
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Plus, CheckCircle2 } from 'lucide-react'
@@ -31,12 +34,17 @@ import {
   DashboardExportButton,
   RecentDossiersTable,
 } from './components'
+import { type DateRangePreset, presetToTrendRange } from './components/DashboardDateRangePicker'
 
 export function DashboardPage() {
   const { t, i18n } = useTranslation(['dashboard', 'dossiers'])
   const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
   const { openPalette } = useWorkCreation()
+
+  // Date range state — drives all dashboard queries
+  const [dateRange, setDateRange] = useState<DateRangePreset>('last7')
+  const trendRange = useMemo(() => presetToTrendRange(dateRange), [dateRange])
 
   // Fetch dashboard summary
   const { data: summary, isLoading: summaryLoading } = useDossierDashboardSummary()
@@ -52,8 +60,8 @@ export function DashboardPage() {
           {t('dashboard:title')}
         </h1>
         <div className="flex items-center gap-2">
-          <DashboardDateRangePicker />
-          <DashboardExportButton />
+          <DashboardDateRangePicker value={dateRange} onChange={setDateRange} />
+          <DashboardExportButton summary={summary} dossiers={myDossiersData?.dossiers} />
           <Button onClick={() => openPalette('task')} className="min-h-9 gap-2">
             <Plus className="size-4" />
             <span className="hidden sm:inline">{t('dashboard:new_task')}</span>
@@ -75,7 +83,7 @@ export function DashboardPage() {
 
           {/* Charts Row: Trends (2/3) + Success Metrics (1/3) */}
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            <ChartWorkItemTrends className="lg:col-span-2" />
+            <ChartWorkItemTrends className="lg:col-span-2" range={trendRange} />
             <DossierSuccessMetrics isLoading={summaryLoading} />
           </div>
 
