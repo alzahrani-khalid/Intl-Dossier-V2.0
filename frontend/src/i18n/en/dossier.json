@@ -841,6 +841,62 @@
       "inheritanceSource": "Inheritance",
       "direct": "Direct"
     },
+    "form": {
+      "priority": "Priority",
+      "priorityLevels": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      },
+      "dueDate": "Due Date",
+      "ownerType": "Owner Type",
+      "ownerTypes": {
+        "internal": "Internal",
+        "external": "External"
+      },
+      "requestType": "Request Type",
+      "requestTypes": {
+        "engagement": "Engagement",
+        "position": "Position",
+        "mou_action": "MOU Action",
+        "foresight": "Foresight"
+      },
+      "urgency": "Urgency",
+      "urgencyLevels": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "entryType": "Event Type",
+      "entryTypes": {
+        "internal_meeting": "Internal Meeting",
+        "deadline": "Deadline",
+        "reminder": "Reminder",
+        "training": "Training",
+        "review": "Review",
+        "other": "Other"
+      },
+      "documentType": "Document Type",
+      "documentTypes": {
+        "report": "Report",
+        "memo": "Memo",
+        "briefing": "Briefing",
+        "correspondence": "Correspondence",
+        "other": "Other"
+      },
+      "targetDossier": "Target Dossier ID",
+      "targetDossierPlaceholder": "Enter target dossier ID",
+      "relationshipType": "Relationship Type",
+      "relationshipTypes": {
+        "member_of": "Member Of",
+        "participates_in": "Participates In",
+        "collaborates_with": "Collaborates With",
+        "monitors": "Monitors",
+        "hosts": "Hosts"
+      }
+    },
     "success": {
       "intake": "Intake request created successfully",
       "task": "Task created successfully",

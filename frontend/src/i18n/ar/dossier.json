@@ -841,6 +841,62 @@
       "inheritanceSource": "مصدر الوراثة",
       "direct": "مباشر"
     },
+    "form": {
+      "priority": "الأولوية",
+      "priorityLevels": {
+        "low": "منخفضة",
+        "medium": "متوسطة",
+        "high": "عالية",
+        "urgent": "عاجلة"
+      },
+      "dueDate": "تاريخ الاستحقاق",
+      "ownerType": "نوع المالك",
+      "ownerTypes": {
+        "internal": "داخلي",
+        "external": "خارجي"
+      },
+      "requestType": "نوع الطلب",
+      "requestTypes": {
+        "engagement": "ارتباط",
+        "position": "موقف",
+        "mou_action": "إجراء مذكرة تفاهم",
+        "foresight": "استشراف"
+      },
+      "urgency": "الاستعجال",
+      "urgencyLevels": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "عالي",
+        "critical": "حرج"
+      },
+      "entryType": "نوع الحدث",
+      "entryTypes": {
+        "internal_meeting": "اجتماع داخلي",
+        "deadline": "موعد نهائي",
+        "reminder": "تذكير",
+        "training": "تدريب",
+        "review": "مراجعة",
+        "other": "أخرى"
+      },
+      "documentType": "نوع المستند",
+      "documentTypes": {
+        "report": "تقرير",
+        "memo": "مذكرة",
+        "briefing": "إحاطة",
+        "correspondence": "مراسلة",
+        "other": "أخرى"
+      },
+      "targetDossier": "معرف الملف المستهدف",
+      "targetDossierPlaceholder": "أدخل معرف الملف المستهدف",
+      "relationshipType": "نوع العلاقة",
+      "relationshipTypes": {
+        "member_of": "عضو في",
+        "participates_in": "يشارك في",
+        "collaborates_with": "يتعاون مع",
+        "monitors": "يراقب",
+        "hosts": "يستضيف"
+      }
+    },
     "success": {
       "intake": "تم إنشاء الطلب بنجاح",
       "task": "تم إنشاء المهمة بنجاح",
