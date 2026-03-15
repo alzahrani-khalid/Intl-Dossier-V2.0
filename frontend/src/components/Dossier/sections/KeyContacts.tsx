@@ -4,6 +4,8 @@
  * Displays person dossiers related to organization via dossier_relationships table.
  * Horizontal carousel layout with person details, mobile-first responsive, RTL support.
  * Includes smart import suggestions for empty state.
+ *
+ * Wired to real data via useRelationshipsForDossier, filtering for person relationships.
  */
 
 import { useCallback } from 'react'
@@ -15,7 +17,10 @@ import { RelatedEntityCarousel, type CarouselItem } from '@/components/ui/relate
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useRelationshipsForDossier } from '@/hooks/useRelationships'
 import type { OrganizationDossier } from '@/lib/dossier-type-guards'
+import type { RelationshipWithDossiers } from '@/services/relationship-api'
 
 interface KeyContactsProps {
   dossier: OrganizationDossier
@@ -50,8 +55,23 @@ export function KeyContacts({ dossier }: KeyContactsProps) {
   const isRTL = i18n.language === 'ar'
   const queryClient = useQueryClient()
 
-  // Placeholder - will fetch from dossier_relationships table in future
-  const contacts: ContactCarouselItem[] = []
+  const { data, isLoading } = useRelationshipsForDossier(dossier.id)
+  const allRelationships = data?.data || []
+
+  // Filter for person-type related dossiers and map to ContactCarouselItem
+  const contacts: ContactCarouselItem[] = allRelationships
+    .filter((rel: RelationshipWithDossiers) => {
+      const related = rel.source_dossier_id === dossier.id ? rel.target_dossier : rel.source_dossier
+      return related?.type === 'person'
+    })
+    .map((rel: RelationshipWithDossiers) => {
+      const person = rel.source_dossier_id === dossier.id ? rel.target_dossier : rel.source_dossier
+      return {
+        id: person!.id,
+        name: person!.name_en,
+        name_ar: person!.name_ar,
+      }
+    })
 
   // Handle smart import complete
   const handleSmartImportComplete = useCallback(() => {
@@ -117,6 +137,18 @@ export function KeyContacts({ dossier }: KeyContactsProps) {
     },
     [isRTL, t],
   )
+
+  if (isLoading) {
+    return (
+      <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="flex gap-4 overflow-hidden">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-48 w-64 rounded-lg shrink-0" />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   if (contacts.length === 0) {
     return (

@@ -497,6 +497,12 @@
       "decisionLogs": "Decision Logs",
       "decisionLogsDescription": "Formal decisions and resolutions"
     },
+    "decisionLogs": {
+      "title": "Decision Logs",
+      "empty": "No Decision Logs",
+      "emptyDescription": "Formal decisions and resolutions from linked engagements will appear here.",
+      "fromEngagement": "From engagement"
+    },
     "workingGroup": {
       "memberOrganizations": "Member Organizations",
       "memberOrganizationsDescription": "Participating entities",
@@ -515,12 +521,16 @@
       "relatedDossiers": "Related Dossiers",
       "relatedDossiersDescription": "Countries, organizations, and engagements",
       "relatedDossiersPlaceholder": "Related dossiers will appear here as relationships are established",
+      "noRelatedDossiers": "No related dossiers found",
       "keyDocuments": "Key Documents",
       "keyDocumentsDescription": "Policy papers, reports, and guidelines",
       "keyDocumentsPlaceholder": "Documents related to this topic will appear here",
+      "noDocuments": "No documents found",
       "subtopics": "Subtopics",
       "subtopicsDescription": "Child topics under this policy area",
-      "subtopicsPlaceholder": "Subtopics will appear here as they are created"
+      "subtopicsPlaceholder": "Subtopics will appear here as they are created",
+      "noSubtopics": "No subtopics found",
+      "viewSubtopic": "View Subtopic"
     },
     "shared": {
       "relationships": "Relationships",

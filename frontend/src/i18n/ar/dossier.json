@@ -497,6 +497,12 @@
       "decisionLogs": "سجلات القرارات",
       "decisionLogsDescription": "القرارات الرسمية والقرارات"
     },
+    "decisionLogs": {
+      "title": "سجلات القرارات",
+      "empty": "لا توجد سجلات قرارات",
+      "emptyDescription": "ستظهر القرارات الرسمية والقرارات من الارتباطات المرتبطة هنا.",
+      "fromEngagement": "من الارتباط"
+    },
     "workingGroup": {
       "memberOrganizations": "المنظمات الأعضاء",
       "memberOrganizationsDescription": "الكيانات المشاركة",
@@ -515,12 +521,16 @@
       "relatedDossiers": "الدوسيهات ذات الصلة",
       "relatedDossiersDescription": "الدول والمنظمات والارتباطات",
       "relatedDossiersPlaceholder": "ستظهر الدوسيهات ذات الصلة هنا عند إنشاء العلاقات",
+      "noRelatedDossiers": "لم يتم العثور على دوسيهات ذات صلة",
       "keyDocuments": "الوثائق الرئيسية",
       "keyDocumentsDescription": "أوراق السياسات والتقارير والإرشادات",
       "keyDocumentsPlaceholder": "ستظهر الوثائق المتعلقة بهذا الموضوع هنا",
+      "noDocuments": "لم يتم العثور على وثائق",
       "subtopics": "المواضيع الفرعية",
       "subtopicsDescription": "المواضيع الفرعية ضمن هذا المجال السياسي",
-      "subtopicsPlaceholder": "ستظهر المواضيع الفرعية هنا عند إنشائها"
+      "subtopicsPlaceholder": "ستظهر المواضيع الفرعية هنا عند إنشائها",
+      "noSubtopics": "لم يتم العثور على مواضيع فرعية",
+      "viewSubtopic": "عرض الموضوع الفرعي"
     },
     "shared": {
       "relationships": "العلاقات",
