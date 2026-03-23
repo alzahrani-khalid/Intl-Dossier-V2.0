@@ -35,12 +35,13 @@ Decimal phases appear between their surrounding integers in numeric order.
 3. Every git commit automatically runs lint and format checks via husky + lint-staged
 4. `pnpm build` succeeds with no unused dependency warnings after cleanup
 5. All stack dependencies are at latest stable versions compatible with the toolchain
-   **Plans**: TBD
+   **Plans**: 3 plans
 
 Plans:
 
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Consolidate ESLint/Prettier/Knip configs, delete 13 legacy files, fix ESLint violations
+- [ ] 01-02-PLAN.md — Run Knip cleanup, remove unused deps/files/exports, audit AI/ML tree, clean i18n keys
+- [ ] 01-03-PLAN.md — Wire pre-commit hooks (4 checks), update all deps to latest stable, verify build
 
 ### Phase 2: Naming & File Structure
 
@@ -163,7 +164,7 @@ Note: Phase 3 (Security) depends only on Phase 1 and can run in parallel with Ph
 
 | Phase                         | Plans Complete | Status      | Completed |
 | ----------------------------- | -------------- | ----------- | --------- |
-| 1. Dead Code & Toolchain      | 0/2            | Not started | -         |
+| 1. Dead Code & Toolchain      | 0/3            | Planning    | -         |
 | 2. Naming & File Structure    | 0/1            | Not started | -         |
 | 3. Security Hardening         | 0/3            | Not started | -         |
 | 4. RTL/LTR Consistency        | 0/2            | Not started | -         |
