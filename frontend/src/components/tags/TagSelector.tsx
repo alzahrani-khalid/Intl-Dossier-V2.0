@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/command'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 import { useTagSearch, useEntityTagging, useTagsFlat } from '@/hooks/useTagHierarchy'
 import type { TagEntityType, EntityTagAssignment, TagSuggestion } from '@/types/tag-hierarchy.types'
 import { getTagName, TAG_SUGGESTION_REASON_LABELS } from '@/types/tag-hierarchy.types'

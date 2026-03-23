@@ -13,7 +13,7 @@ import {
   type NotificationCategory,
 } from '@/hooks/useNotificationCenter'
 import { useEmailPreferences } from '@/hooks/useEmailNotifications'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 
 const CATEGORIES: NotificationCategory[] = [
   'assignments',

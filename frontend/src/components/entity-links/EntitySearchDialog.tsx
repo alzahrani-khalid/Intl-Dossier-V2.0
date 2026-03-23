@@ -23,8 +23,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
-import { useEntitySearchState, formatEntityType } from '@/hooks/use-entity-search'
-import { useEntityLinks } from '@/hooks/use-entity-links'
+import { useEntitySearchState, formatEntityType } from '@/hooks/useEntitySearch'
+import { useEntityLinks } from '@/hooks/useEntityLinks'
 import type {
   EntitySearchResult,
   EntityType,

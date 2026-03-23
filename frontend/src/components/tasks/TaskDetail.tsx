@@ -36,9 +36,9 @@ import { ContributorsList } from './ContributorsList'
 import { AddContributorDialog } from './AddContributorDialog'
 import { WorkItemLinker } from './WorkItemLinker'
 import { LinkedItemsList } from './LinkedItemsList'
-import { useUpdateTask } from '@/hooks/use-tasks'
+import { useUpdateTask } from '@/hooks/useTasks'
 import { DossierLinksWidget } from '@/components/Dossier'
-import { useTaskContributors, useRemoveContributor } from '@/hooks/use-contributors'
+import { useTaskContributors, useRemoveContributor } from '@/hooks/useContributors'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 

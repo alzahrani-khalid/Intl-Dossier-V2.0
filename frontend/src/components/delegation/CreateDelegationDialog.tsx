@@ -34,8 +34,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { CalendarIcon, Loader2, AlertCircle, CheckCircle2, UserPlus } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useDelegatePermissions, useValidateDelegation } from '@/hooks/use-delegation'
-import { useToast } from '@/hooks/use-toast'
+import { useDelegatePermissions, useValidateDelegation } from '@/hooks/useDelegation'
+import { useToast } from '@/hooks/useToast'
 import type { DelegatePermissionsRequest } from '@/services/user-management-api'
 
 interface CreateDelegationDialogProps {

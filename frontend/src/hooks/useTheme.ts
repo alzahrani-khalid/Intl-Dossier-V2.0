@@ -3,7 +3,7 @@ import {
   useTheme as useThemeFromProvider,
   AVAILABLE_THEMES,
 } from '../components/theme-provider/theme-provider'
-import { useLanguage } from './use-language'
+import { useLanguage } from './useLanguage'
 
 /**
  * Re-export the ThemeProvider hook so feature code can keep importing from hooks/

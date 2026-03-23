@@ -14,7 +14,7 @@ import { useState, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OptimisticLockConflictError } from '@/services/tasks-api'
 import type { Database } from '../../../backend/src/types/database.types'
-import { useToast } from './use-toast'
+import { useToast } from './useToast'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 

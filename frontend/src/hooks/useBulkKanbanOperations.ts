@@ -12,7 +12,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 import { kanbanKeys } from '@/hooks/useUnifiedKanban'
 import type { WorkItem, WorkSource, SelectionState, Priority } from '@/types/work-item.types'
 

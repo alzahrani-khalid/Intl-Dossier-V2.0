@@ -21,7 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Search, Loader2 } from 'lucide-react'
-import { useAddContributor } from '@/hooks/use-contributors'
+import { useAddContributor } from '@/hooks/useContributors'
 import type { AddContributorRequest } from '@/services/contributors-api'
 
 interface AddContributorDialogProps {

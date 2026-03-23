@@ -45,7 +45,7 @@ import {
 } from '@/components/ui/select'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { UserPicker } from '@/components/Forms/UserPicker'
-import { useUpdateTask } from '@/hooks/use-tasks'
+import { useUpdateTask } from '@/hooks/useTasks'
 import type { Database } from '../../../../backend/src/types/database.types'
 
 type Task = Database['public']['Tables']['tasks']['Row']

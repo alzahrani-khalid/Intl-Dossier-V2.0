@@ -26,7 +26,7 @@ import { format } from 'date-fns'
 import { BriefGenerationPanel } from '@/components/ai/BriefGenerationPanel'
 import { BriefViewer } from '@/components/ai/BriefViewer'
 import type { BriefContent } from '@/hooks/useGenerateBrief'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 
 interface Brief {
   id: string

@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 
-import { useIsMobile } from '@/hooks/use-mobile'
+import { useIsMobile } from '@/hooks/useMobile'
 import { useContextAwareFAB } from '@/hooks/useContextAwareFAB'
 import { useEntityHistoryStore } from '@/store/entityHistoryStore'
 import { useDossierContextSafe } from '@/contexts/dossier-context'

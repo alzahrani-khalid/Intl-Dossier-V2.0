@@ -23,7 +23,7 @@ import {
   type SendInvitationRequest,
   type SendInvitationResponse,
 } from '@/services/team-collaboration.service'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 import { useTranslation } from 'react-i18next'
 
 // ============================================================================

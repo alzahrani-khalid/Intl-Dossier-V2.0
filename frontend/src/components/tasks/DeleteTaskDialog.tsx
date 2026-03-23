@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useDeleteTask } from '@/hooks/use-tasks'
+import { useDeleteTask } from '@/hooks/useTasks'
 
 interface DeleteTaskDialogProps {
   taskId: string

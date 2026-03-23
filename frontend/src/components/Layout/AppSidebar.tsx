@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 import { useAuth } from '@/hooks/useAuth'
-import { useIsTablet } from '@/hooks/use-mobile'
+import { useIsTablet } from '@/hooks/useMobile'
 import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
 import { LanguageToggle } from '@/components/LanguageToggle'

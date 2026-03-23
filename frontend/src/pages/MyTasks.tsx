@@ -12,7 +12,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { useMyTasks, useContributedTasks } from '../hooks/use-tasks'
+import { useMyTasks, useContributedTasks } from '../hooks/useTasks'
 import { TaskCard } from '../components/tasks/TaskCard'
 import { Alert, AlertDescription } from '../components/ui/alert'
 import { Button } from '../components/ui/button'

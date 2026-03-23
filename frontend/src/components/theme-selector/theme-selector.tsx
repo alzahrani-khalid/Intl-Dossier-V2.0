@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useTheme } from '../../hooks/use-theme'
-import { useLanguage } from '../../hooks/use-language'
+import { useTheme } from '../../hooks/useTheme'
+import { useLanguage } from '../../hooks/useLanguage'
 import { ChevronDown, Palette, Sun, Moon, Check } from 'lucide-react'
 
 interface ThemeOption {

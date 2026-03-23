@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/authStore'
 import { switchLanguage } from '@/i18n'
-import { useTheme } from '@/hooks/use-theme'
+import { useTheme } from '@/hooks/useTheme'
 import {
   SettingsLayout,
   SettingsSectionWrapper,

@@ -23,7 +23,7 @@ import { PriorityFilter } from './PriorityFilter'
 import { AgingFilter } from './AgingFilter'
 import { TypeFilter } from './TypeFilter'
 import { AssigneeFilter } from './AssigneeFilter'
-import type { FilterCriteria } from '@/hooks/use-queue-filters'
+import type { FilterCriteria } from '@/hooks/useQueueFilters'
 
 interface FilterPanelProps {
   filters: FilterCriteria

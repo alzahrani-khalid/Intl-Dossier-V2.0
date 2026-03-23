@@ -25,7 +25,7 @@ import {
   type PersonMetadata,
 } from '@/hooks/usePersonDossiers'
 import { exportAllContacts, exportSelectedContacts } from '@/services/export-api'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 import type { ContactResponse, ContactSearchParams } from '@/services/contact-api'
 import { p } from '@/lib/navigation'
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
-import { useResponsive } from '../../hooks/use-responsive'
-import { useDirection } from '../../hooks/use-theme'
+import { useResponsive } from '../../hooks/useResponsive'
+import { useDirection } from '../../hooks/useTheme'
 import { cn } from '../../lib/utils'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 

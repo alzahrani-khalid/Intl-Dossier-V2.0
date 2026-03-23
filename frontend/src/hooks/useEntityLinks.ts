@@ -16,7 +16,7 @@ import type {
   UpdateLinkRequest,
   LinkSource,
 } from '../../../backend/src/types/intake-entity-links.types'
-import { useToast } from './use-toast'
+import { useToast } from './useToast'
 
 /**
  * Query keys for cache management

@@ -14,7 +14,7 @@ import {
   type NotificationCategory,
 } from '@/hooks/useNotificationCenter'
 import { cn } from '@/lib/utils'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 
 interface NotificationPanelProps {
   className?: string

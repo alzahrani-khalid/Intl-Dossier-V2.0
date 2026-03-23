@@ -31,7 +31,7 @@ import {
   useAISuggestions,
   useAcceptAISuggestion,
   useAISuggestionAnalytics,
-} from '../../hooks/use-ai-suggestions'
+} from '../../hooks/useAiSuggestions'
 import type { AILinkSuggestion as BackendAILinkSuggestion } from '../../../../backend/src/types/ai-suggestions.types'
 
 interface AISuggestionPanelProps {

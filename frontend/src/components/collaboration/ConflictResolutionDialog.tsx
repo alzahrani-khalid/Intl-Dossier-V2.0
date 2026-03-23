@@ -25,12 +25,12 @@ import { cn } from '@/lib/utils'
 import type {
   OptimisticLockConflict,
   ConflictResolutionStrategy,
-} from '@/hooks/use-optimistic-locking'
+} from '@/hooks/useOptimisticLocking'
 import {
   getConflictSummary,
   formatFieldName,
   formatFieldValue,
-} from '@/hooks/use-optimistic-locking'
+} from '@/hooks/useOptimisticLocking'
 import { AlertTriangle, Server, User, Combine, ArrowRight, Clock, FileWarning } from 'lucide-react'
 import type { JsonValue } from '@/types/common.types'
 

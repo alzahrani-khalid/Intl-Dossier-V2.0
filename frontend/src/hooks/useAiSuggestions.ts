@@ -9,7 +9,7 @@
  * - Loading states: Show 2-3 second loading indicator
  * - Timeout: 3 seconds before showing fallback UI
  *
- * @module frontend/src/hooks/use-ai-suggestions
+ * @module frontend/src/hooks/useAiSuggestions
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'

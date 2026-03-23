@@ -1,6 +1,6 @@
 import React from 'react'
 import { Badge } from '../ui/badge'
-import { useCompliance } from '../../hooks/use-compliance'
+import { useCompliance } from '../../hooks/useCompliance'
 import { cn } from '../../lib/utils'
 import { CheckCircle2, AlertCircle, AlertTriangle, Info } from 'lucide-react'
 

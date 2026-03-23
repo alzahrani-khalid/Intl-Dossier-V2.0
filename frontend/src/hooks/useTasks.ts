@@ -22,8 +22,8 @@ import {
   OptimisticLockConflictError,
 } from '@/services/tasks-api'
 import type { Database } from '../../../backend/src/types/database.types'
-import { useToast } from './use-toast'
-import { useOfflineState } from './use-offline-state'
+import { useToast } from './useToast'
+import { useOfflineState } from './useOfflineState'
 import {
   saveTaskDraft,
   getTaskDraft,
