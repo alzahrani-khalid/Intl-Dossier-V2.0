@@ -42,10 +42,7 @@ import {
   Link,
 } from 'lucide-react'
 import { useCitationNetwork } from '@/hooks/useCitations'
-import type {
-  CitationNetworkGraph as _CitationNetworkGraphType,
-  CitationSourceType,
-} from '@/types/citation.types'
+import type { CitationSourceType } from '@/types/citation.types'
 import { CITATION_SOURCE_TYPE_LABELS } from '@/types/citation.types'
 
 // ============================================================================

@@ -1,15 +1,15 @@
-import { Request, Response } from 'express';
+import { Request, Response } from 'express'
 
 export interface BreakpointConfig {
-  id: string;
-  name: string;
-  minWidth: number;
-  maxWidth?: number;
-  alias: string;
-  deviceType: 'mobile' | 'tablet' | 'desktop' | 'wide';
-  orientation?: 'portrait' | 'landscape' | 'any';
-  containerQueries?: boolean;
-  priority: number;
+  id: string
+  name: string
+  minWidth: number
+  maxWidth?: number
+  alias: string
+  deviceType: 'mobile' | 'tablet' | 'desktop' | 'wide'
+  orientation?: 'portrait' | 'landscape' | 'any'
+  containerQueries?: boolean
+  priority: number
 }
 
 const SYSTEM_BREAKPOINTS: BreakpointConfig[] = [
@@ -55,8 +55,8 @@ const SYSTEM_BREAKPOINTS: BreakpointConfig[] = [
     orientation: 'landscape',
     containerQueries: true,
     priority: 4,
-  }
-];
+  },
+]
 
 export async function getBreakpoints(req: Request, res: Response) {
   try {
@@ -68,12 +68,12 @@ export async function getBreakpoints(req: Request, res: Response) {
         '--breakpoint-sm': '768px',
         '--breakpoint-md': '1024px',
         '--breakpoint-lg': '1440px',
-      }
-    });
+      },
+    })
   } catch (error) {
-    console.error('Error fetching breakpoints:', error);
+    console.error('Error fetching breakpoints:', error)
     return res.status(500).json({
-      error: 'Failed to fetch breakpoints'
-    });
+      error: 'Failed to fetch breakpoints',
+    })
   }
 }

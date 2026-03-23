@@ -10,13 +10,13 @@
  * and strict input sanitization.
  */
 
-import { normalizeSearchText } from '../utils/arabic-normalize';
+import { normalizeSearchText } from '../utils/arabic-normalize'
 
 export interface ParsedQuery {
-  tsquery: string;
-  hasBooleanOperators: boolean;
-  tokens: string[];
-  language: 'english' | 'arabic';
+  tsquery: string
+  hasBooleanOperators: boolean
+  tokens: string[]
+  language: 'english' | 'arabic'
 }
 
 /**
@@ -33,36 +33,33 @@ export interface ParsedQuery {
  * parseQueryToTsquery('"sustainable development"', 'en')
  * // Returns: { tsquery: 'sustainable <-> development', hasBooleanOperators: false, ... }
  */
-export function parseQueryToTsquery(
-  userQuery: string,
-  language: 'en' | 'ar' = 'en'
-): ParsedQuery {
+export function parseQueryToTsquery(userQuery: string, language: 'en' | 'ar' = 'en'): ParsedQuery {
   if (!userQuery || userQuery.trim().length === 0) {
-    throw new Error('Query cannot be empty');
+    throw new Error('Query cannot be empty')
   }
 
-  const tsLanguage = language === 'ar' ? 'arabic' : 'english';
+  const tsLanguage = language === 'ar' ? 'arabic' : 'english'
 
   // Sanitize input: remove unsafe characters except quotes, parentheses, and operators
   const sanitized = userQuery
     .replace(/[^\w\s"'AND|OR|NOT|(|)\u0600-\u06FF]/gi, '') // Allow alphanumeric, space, quotes, operators, Arabic
-    .trim();
+    .trim()
 
   // Tokenize query while preserving quoted phrases
-  const tokens = tokenizeQuery(sanitized);
+  const tokens = tokenizeQuery(sanitized)
 
   // Check for Boolean operators
-  const hasBooleanOperators = /\b(AND|OR|NOT)\b/i.test(sanitized);
+  const hasBooleanOperators = /\b(AND|OR|NOT)\b/i.test(sanitized)
 
   // Convert to tsquery syntax
-  const tsquery = convertToTsquery(tokens, tsLanguage);
+  const tsquery = convertToTsquery(tokens, tsLanguage)
 
   return {
     tsquery,
     hasBooleanOperators,
-    tokens: tokens.filter(t => !['AND', 'OR', 'NOT'].includes(t.toUpperCase())),
-    language: tsLanguage
-  };
+    tokens: tokens.filter((t) => !['AND', 'OR', 'NOT'].includes(t.toUpperCase())),
+    language: tsLanguage,
+  }
 }
 
 /**
@@ -72,21 +69,21 @@ export function parseQueryToTsquery(
  * @returns Array of tokens
  */
 function tokenizeQuery(query: string): string[] {
-  const tokens: string[] = [];
-  const regex = /"([^"]+)"|'([^']+)'|(\S+)/g;
-  let match;
+  const tokens: string[] = []
+  const regex = /"([^"]+)"|'([^']+)'|(\S+)/g
+  let match
 
   while ((match = regex.exec(query)) !== null) {
     // Quoted phrase (double or single quotes)
     if (match[1] || match[2]) {
-      tokens.push(`"${match[1] || match[2]}"`);
+      tokens.push(`"${match[1] || match[2]}"`)
     } else {
       // Single word or operator
-      tokens.push(match[3]);
+      tokens.push(match[3])
     }
   }
 
-  return tokens;
+  return tokens
 }
 
 /**
@@ -97,64 +94,64 @@ function tokenizeQuery(query: string): string[] {
  * @returns tsquery string
  */
 function convertToTsquery(tokens: string[], language: string): string {
-  const tsqueryParts: string[] = [];
+  const tsqueryParts: string[] = []
 
   for (let i = 0; i < tokens.length; i++) {
-    const token = tokens[i];
-    const upperToken = token.toUpperCase();
+    const token = tokens[i]
+    const upperToken = token.toUpperCase()
 
     // Handle Boolean operators
     if (upperToken === 'AND') {
-      tsqueryParts.push('&');
-      continue;
+      tsqueryParts.push('&')
+      continue
     }
 
     if (upperToken === 'OR') {
-      tsqueryParts.push('|');
-      continue;
+      tsqueryParts.push('|')
+      continue
     }
 
     if (upperToken === 'NOT') {
-      tsqueryParts.push('!');
-      continue;
+      tsqueryParts.push('!')
+      continue
     }
 
     // Handle parentheses
     if (token === '(' || token === ')') {
-      tsqueryParts.push(token);
-      continue;
+      tsqueryParts.push(token)
+      continue
     }
 
     // Handle quoted phrases
     if (token.startsWith('"') && token.endsWith('"')) {
-      const phrase = token.slice(1, -1);
+      const phrase = token.slice(1, -1)
       // Split phrase into words for phraseto_tsquery
-      const words = phrase.split(/\s+/);
+      const words = phrase.split(/\s+/)
 
       // Use <-> operator for adjacent words (phrase match)
-      const phraseQuery = words.map(w => normalizeSearchText(w)).join(' <-> ');
-      tsqueryParts.push(`(${phraseQuery})`);
-      continue;
+      const phraseQuery = words.map((w) => normalizeSearchText(w)).join(' <-> ')
+      tsqueryParts.push(`(${phraseQuery})`)
+      continue
     }
 
     // Regular word - normalize and add
-    const normalized = normalizeSearchText(token);
+    const normalized = normalizeSearchText(token)
     if (normalized) {
-      tsqueryParts.push(normalized);
+      tsqueryParts.push(normalized)
     }
   }
 
   // Join parts with implicit AND if no operator specified
-  let result = tsqueryParts.join(' ');
+  let result = tsqueryParts.join(' ')
 
   // Clean up: ensure operators have operands
   result = result
     .replace(/\s+/g, ' ') // Normalize whitespace
     .replace(/([&|!])\s+([&|!])/g, '$2') // Remove consecutive operators
     .replace(/^\s*[&|]\s*/, '') // Remove leading operators
-    .replace(/\s*[&|]\s*$/g, ''); // Remove trailing operators
+    .replace(/\s*[&|]\s*$/g, '') // Remove trailing operators
 
-  return result || '';
+  return result || ''
 }
 
 /**
@@ -165,15 +162,15 @@ function convertToTsquery(tokens: string[], language: string): string {
  * @returns tsquery string ready for PostgreSQL
  */
 export function buildTsquery(userQuery: string, language: 'en' | 'ar' = 'en'): string {
-  const parsed = parseQueryToTsquery(userQuery, language);
+  const parsed = parseQueryToTsquery(userQuery, language)
 
   // If no Boolean operators, use plainto_tsquery for simpler matching
   if (!parsed.hasBooleanOperators && parsed.tokens.length === 1) {
-    return `plainto_tsquery('${parsed.language}', '${parsed.tokens[0]}')`;
+    return `plainto_tsquery('${parsed.language}', '${parsed.tokens[0]}')`
   }
 
   // Use to_tsquery for Boolean operator support
-  return `to_tsquery('${parsed.language}', '${parsed.tsquery}')`;
+  return `to_tsquery('${parsed.language}', '${parsed.tsquery}')`
 }
 
 /**
@@ -184,38 +181,38 @@ export function buildTsquery(userQuery: string, language: 'en' | 'ar' = 'en'): s
  */
 export function validateQuerySyntax(query: string): boolean {
   if (!query || query.trim().length === 0) {
-    throw new Error('Query cannot be empty');
+    throw new Error('Query cannot be empty')
   }
 
   if (query.length > 500) {
-    throw new Error('Query exceeds maximum length of 500 characters');
+    throw new Error('Query exceeds maximum length of 500 characters')
   }
 
   // Check for balanced parentheses
-  let parenCount = 0;
+  let parenCount = 0
   for (const char of query) {
-    if (char === '(') parenCount++;
-    if (char === ')') parenCount--;
+    if (char === '(') parenCount++
+    if (char === ')') parenCount--
     if (parenCount < 0) {
-      throw new Error('Unbalanced parentheses in query');
+      throw new Error('Unbalanced parentheses in query')
     }
   }
 
   if (parenCount !== 0) {
-    throw new Error('Unbalanced parentheses in query');
+    throw new Error('Unbalanced parentheses in query')
   }
 
   // Check for balanced quotes
-  const doubleQuotes = (query.match(/"/g) || []).length;
-  const singleQuotes = (query.match(/'/g) || []).length;
+  const doubleQuotes = (query.match(/"/g) || []).length
+  const singleQuotes = (query.match(/'/g) || []).length
 
   if (doubleQuotes % 2 !== 0) {
-    throw new Error('Unbalanced double quotes in query');
+    throw new Error('Unbalanced double quotes in query')
   }
 
   if (singleQuotes % 2 !== 0) {
-    throw new Error('Unbalanced single quotes in query');
+    throw new Error('Unbalanced single quotes in query')
   }
 
-  return true;
+  return true
 }

@@ -8,17 +8,16 @@ export type DesignTokenCategory =
   | 'typography'
   | 'border'
   | 'shadow'
-  | 'animation';
+  | 'animation'
 
 export interface DesignToken {
-  id?: string;
-  category: DesignTokenCategory;
-  name: string;
-  value: string;
+  id?: string
+  category: DesignTokenCategory
+  name: string
+  value: string
   /** CSS custom property name, e.g. --color-primary */
-  cssVariable: string;
-  fallback?: string;
-  description?: string;
-  deprecated?: boolean;
+  cssVariable: string
+  fallback?: string
+  description?: string
+  deprecated?: boolean
 }
-

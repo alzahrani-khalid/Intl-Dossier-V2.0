@@ -357,7 +357,7 @@ export const ImagePreview = memo(function ImagePreview({
 
       {/* Touch hint for mobile */}
       {mergedOptions.enable_pan && zoom <= 1 && (
-        <div className="sm:hidden absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-white/60 bg-black/50 px-3 py-1.5 rounded-full">
+        <div className="sm:hidden absolute bottom-4 start-1/2 -translate-x-1/2 text-xs text-white/60 bg-black/50 px-3 py-1.5 rounded-full">
           {t('hints.pinchToZoom', 'Pinch to zoom, drag to pan')}
         </div>
       )}

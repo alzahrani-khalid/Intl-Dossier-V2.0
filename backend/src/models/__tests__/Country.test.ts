@@ -17,7 +17,7 @@ describe('Country Model', () => {
         type: 'centralized',
         nso_name: 'Test National Statistics Office',
         website: 'https://test-nso.example.com',
-        established_year: 2000
+        established_year: 2000,
       },
       cooperation_areas: ['Statistics', 'Data Exchange'],
       expertise_domains: ['Economic Statistics', 'Social Statistics'],
@@ -31,7 +31,7 @@ describe('Country Model', () => {
       last_modified_by: '00000000-0000-0000-0000-000000000000',
       tenant_id: '00000000-0000-0000-0000-000000000000',
       version: 1,
-      is_deleted: false
+      is_deleted: false,
     }
   })
 
@@ -44,11 +44,7 @@ describe('Country Model', () => {
 
   describe('CRUD Operations', () => {
     it('should create a new country', async () => {
-      const { data, error } = await supabase
-        .from('countries')
-        .insert(testCountry)
-        .select()
-        .single()
+      const { data, error } = await supabase.from('countries').insert(testCountry).select().single()
 
       expect(error).toBeNull()
       expect(data).toBeDefined()
@@ -67,11 +63,7 @@ describe('Country Model', () => {
       testCountry.id = created.id
 
       // Then read
-      const { data, error } = await supabase
-        .from('countries')
-        .select('*')
-        .eq('code', 'TS')
-        .single()
+      const { data, error } = await supabase.from('countries').select('*').eq('code', 'TS').single()
 
       expect(error).toBeNull()
       expect(data).toBeDefined()
@@ -109,10 +101,7 @@ describe('Country Model', () => {
       testCountry.id = created.id
 
       // Then delete
-      const { error } = await supabase
-        .from('countries')
-        .delete()
-        .eq('id', testCountry.id)
+      const { error } = await supabase.from('countries').delete().eq('id', testCountry.id)
 
       expect(error).toBeNull()
 
@@ -132,9 +121,7 @@ describe('Country Model', () => {
       const invalidCountry = { ...testCountry }
       delete invalidCountry.code
 
-      const { error } = await supabase
-        .from('countries')
-        .insert(invalidCountry)
+      const { error } = await supabase.from('countries').insert(invalidCountry)
 
       expect(error).toBeDefined()
     })
@@ -152,9 +139,7 @@ describe('Country Model', () => {
       const duplicateCountry = { ...testCountry }
       delete duplicateCountry.id
 
-      const { error } = await supabase
-        .from('countries')
-        .insert(duplicateCountry)
+      const { error } = await supabase.from('countries').insert(duplicateCountry)
 
       expect(error).toBeDefined()
     })
@@ -162,9 +147,7 @@ describe('Country Model', () => {
     it('should validate cooperation level enum', async () => {
       const invalidCountry = { ...testCountry, cooperation_level: 'invalid' }
 
-      const { error } = await supabase
-        .from('countries')
-        .insert(invalidCountry)
+      const { error } = await supabase.from('countries').insert(invalidCountry)
 
       expect(error).toBeDefined()
     })
@@ -182,13 +165,15 @@ describe('Country Model', () => {
 
       const { data, error } = await supabase
         .from('countries')
-        .select(`
+        .select(
+          `
           *,
           country_organization_relations (
             organization_id,
             relationship_type
           )
-        `)
+        `,
+        )
         .eq('id', testCountry.id)
         .single()
 
@@ -214,7 +199,7 @@ describe('Country Model', () => {
 
       expect(error).toBeNull()
       expect(data.length).toBeGreaterThan(0)
-      expect(data.some(c => c.code === 'TS')).toBe(true)
+      expect(data.some((c) => c.code === 'TS')).toBe(true)
     })
 
     it('should filter by region', async () => {
@@ -259,7 +244,7 @@ describe('Country Model', () => {
       const healthScore = country.calculateRelationshipHealthScore({
         engagementFrequency: 80,
         commitmentFulfillment: 90,
-        responseTime: 5
+        responseTime: 5,
       })
 
       expect(healthScore).toBeGreaterThanOrEqual(0)
@@ -284,7 +269,7 @@ describe('Country Model', () => {
         .select('*')
         .eq('relationship_status', 'dormant')
 
-      expect(data.some(c => c.code === 'LW')).toBe(true)
+      expect(data.some((c) => c.code === 'LW')).toBe(true)
 
       // Clean up
       await supabase.from('countries').delete().eq('id', created.id)

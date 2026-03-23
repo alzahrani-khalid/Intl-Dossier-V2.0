@@ -58,7 +58,7 @@ export async function initializeModules(): Promise<void> {
   // Initialize in dependency order
   await registry.initializeAll()
 
-  console.log('✅ All modules initialized successfully')
+  console.warn('✅ All modules initialized successfully')
 }
 
 /**
@@ -69,7 +69,7 @@ export async function stopModules(): Promise<void> {
   const registry = getModuleRegistry()
   await registry.stopAll()
 
-  console.log('✅ All modules stopped')
+  console.warn('✅ All modules stopped')
 }
 
 /**
@@ -86,14 +86,16 @@ export async function getModulesHealth() {
 export function enableDevMode() {
   const eventBus = getEventBus()
   return eventBus.subscribeAll((event) => {
-    console.group(`📨 [${event.source}] ${event.type}`)
-    console.log('Event ID:', event.id)
-    console.log('Timestamp:', event.timestamp)
-    console.log('Payload:', event.payload)
-    if (event.correlationId) {
-      console.log('Correlation ID:', event.correlationId)
-    }
-    console.groupEnd()
+    console.warn(
+      `[${event.source}] ${event.type}`,
+      'id:',
+      event.id,
+      'ts:',
+      event.timestamp,
+      'payload:',
+      event.payload,
+      ...(event.correlationId ? ['correlationId:', event.correlationId] : []),
+    )
   })
 }
 

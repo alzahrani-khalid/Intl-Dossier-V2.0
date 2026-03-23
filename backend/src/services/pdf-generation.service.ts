@@ -9,7 +9,6 @@
 import PDFDocument from 'pdfkit'
 import { createClient } from '@supabase/supabase-js'
 import logger from '../utils/logger'
-import * as fs from 'fs'
 import * as path from 'path'
 
 const FONT_PATH_REGULAR = path.join(__dirname, '../../assets/fonts/NotoSans-Regular.ttf')

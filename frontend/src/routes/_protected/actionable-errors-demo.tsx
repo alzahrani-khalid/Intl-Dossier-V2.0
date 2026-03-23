@@ -42,10 +42,10 @@ function ActionableErrorsDemo() {
   const { errors, removeError, clearErrors, executeAction, focusField, fromValidation } =
     useActionableErrors({
       onErrorAdded: (error) => {
-        console.log('Error added:', error.code)
+        console.warn('Error added:', error.code)
       },
       onActionExecuted: (errorCode, action) => {
-        console.log('Action executed:', action.type, 'for error:', errorCode)
+        console.warn('Action executed:', action.type, 'for error:', errorCode)
         if (action.type === 'auto_fix') {
           toast.success(t('toast.errorFixed'))
         }

@@ -7,9 +7,9 @@
  * - Mobile-first, RTL-compatible, WCAG AA compliant
  */
 
-import { createFileRoute } from '@tanstack/react-router';
-import { DossierListPage } from '@/pages/dossiers/DossierListPage';
+import { createFileRoute } from '@tanstack/react-router'
+import { DossierListPage } from '@/pages/dossiers/DossierListPage'
 
 export const Route = createFileRoute('/_protected/dossiers/')({
   component: DossierListPage,
-});
+})

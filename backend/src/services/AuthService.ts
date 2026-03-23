@@ -1,55 +1,55 @@
-import { supabaseAdmin, supabaseAnon } from '../config/supabase';
-import { cacheHelpers } from '../config/redis';
-import { logAuthEvent, logError, logInfo } from '../utils/logger';
-import dotenv from 'dotenv';
-import * as speakeasy from 'speakeasy';
-import * as qrcode from 'qrcode';
-import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
+import { supabaseAdmin, supabaseAnon } from '../config/supabase'
+import { cacheHelpers } from '../config/redis'
+import { logAuthEvent, logError } from '../utils/logger'
+import dotenv from 'dotenv'
+import * as speakeasy from 'speakeasy'
+import * as qrcode from 'qrcode'
+import * as bcrypt from 'bcrypt'
+import * as jwt from 'jsonwebtoken'
 
-dotenv.config();
+dotenv.config()
 
 interface User {
-  id: string;
-  email: string;
-  name_en: string;
-  name_ar: string;
-  role: string;
-  department: string;
-  is_active: boolean;
-  mfa_enabled: boolean;
-  mfa_secret?: string;
-  last_login?: Date;
-  created_at: Date;
-  updated_at: Date;
-  created_by?: string;
-  updated_by?: string;
-  user_metadata?: any;
+  id: string
+  email: string
+  name_en: string
+  name_ar: string
+  role: string
+  department: string
+  is_active: boolean
+  mfa_enabled: boolean
+  mfa_secret?: string
+  last_login?: Date
+  created_at: Date
+  updated_at: Date
+  created_by?: string
+  updated_by?: string
+  user_metadata?: any
 }
 
 interface LoginResult {
-  success: boolean;
-  user?: User;
-  session?: any;
-  accessToken?: string;
-  refreshToken?: string;
-  requiresMFA?: boolean;
-  expiresIn?: number;
-  error?: string;
+  success: boolean
+  user?: User
+  session?: any
+  accessToken?: string
+  refreshToken?: string
+  requiresMFA?: boolean
+  expiresIn?: number
+  error?: string
 }
 
 interface MFASetupResult {
-  success: boolean;
-  secret?: string;
-  qrCode?: string;
-  qrCodeUrl?: string;
-  backupCodes?: string[];
-  error?: string;
+  success: boolean
+  secret?: string
+  qrCode?: string
+  qrCodeUrl?: string
+  backupCodes?: string[]
+  error?: string
 }
 
 export class AuthService {
-  private readonly saltRounds = 12;
-  private readonly jwtSecret = process.env.JWT_SECRET || 'fallback-secret';
+  private readonly saltRounds = 12
+  private readonly jwtSecret = process.env.JWT_SECRET || 'fallback-secret'
 
   constructor() {
     // Initialize any required configuration
@@ -75,39 +75,39 @@ export class AuthService {
             created_at: new Date(),
             updated_at: new Date(),
             created_by: 'system',
-            updated_by: 'system'
-          };
+            updated_by: 'system',
+          }
 
           const mockSession = {
             access_token: 'mock_access_token',
             refresh_token: 'mock_refresh_token',
             expires_at: Date.now() + 3600000,
-            user: mockUser
-          };
+            user: mockUser,
+          }
 
-          logAuthEvent('Test login successful', mockUser.id, { email });
-          return { success: true, user: mockUser, session: mockSession };
+          logAuthEvent('Test login successful', mockUser.id, { email })
+          return { success: true, user: mockUser, session: mockSession }
         }
       }
 
       const { data, error } = await supabaseAnon.auth.signInWithPassword({
         email: email.toLowerCase(),
-        password: password
-      });
+        password: password,
+      })
 
       if (error) {
         // Check if MFA is required
         if (error.message.includes('MFA') || error.message.includes('challenge')) {
-          logAuthEvent('MFA required', undefined, { email });
-          throw new Error('MFA challenge required');
+          logAuthEvent('MFA required', undefined, { email })
+          throw new Error('MFA challenge required')
         }
-        
-        logAuthEvent('Login failed', undefined, { email, error: error.message });
-        throw new Error(error.message);
+
+        logAuthEvent('Login failed', undefined, { email, error: error.message })
+        throw new Error(error.message)
       }
 
       if (!data.user || !data.session) {
-        throw new Error('Invalid login credentials');
+        throw new Error('Invalid login credentials')
       }
 
       // Get additional user data from our users table
@@ -115,30 +115,30 @@ export class AuthService {
         .from('users')
         .select('*')
         .eq('id', data.user.id)
-        .single();
+        .single()
 
       if (userError || !userData) {
-        throw new Error('User profile not found');
+        throw new Error('User profile not found')
       }
 
       // Check if user is active
       if (!userData.is_active) {
-        logAuthEvent('Login failed - inactive user', data.user.id, { email });
-        throw new Error('Account is inactive');
+        logAuthEvent('Login failed - inactive user', data.user.id, { email })
+        throw new Error('Account is inactive')
       }
 
       // Check MFA requirement
       if (userData.mfa_enabled && !mfaCode) {
-        logAuthEvent('MFA required', data.user.id);
-        throw new Error('MFA code required');
+        logAuthEvent('MFA required', data.user.id)
+        throw new Error('MFA code required')
       }
 
       // Verify MFA code if provided
       if (userData.mfa_enabled && mfaCode) {
-        const mfaValid = this.verifyMFACode(userData.mfa_secret, mfaCode);
+        const mfaValid = this.verifyMFACode(userData.mfa_secret, mfaCode)
         if (!mfaValid) {
-          logAuthEvent('Login failed - invalid MFA code', data.user.id);
-          throw new Error('Invalid MFA code');
+          logAuthEvent('Login failed - invalid MFA code', data.user.id)
+          throw new Error('Invalid MFA code')
         }
       }
 
@@ -147,11 +147,11 @@ export class AuthService {
         .from('users')
         .update({
           last_login: new Date().toISOString(),
-          login_count: (userData.login_count || 0) + 1
+          login_count: (userData.login_count || 0) + 1,
         })
-        .eq('id', data.user.id);
+        .eq('id', data.user.id)
 
-      logAuthEvent('Login successful', data.user.id);
+      logAuthEvent('Login successful', data.user.id)
 
       // Create user object with Supabase user data
       const user: User = {
@@ -166,19 +166,19 @@ export class AuthService {
         last_login: new Date(),
         created_at: new Date(data.user.created_at || new Date()),
         updated_at: new Date(data.user.updated_at || new Date()),
-        user_metadata: data.user.user_metadata
-      };
+        user_metadata: data.user.user_metadata,
+      }
 
       return {
         success: true,
         user,
         accessToken: data.session.access_token,
         refreshToken: data.session.refresh_token,
-        expiresIn: data.session.expires_in
-      };
+        expiresIn: data.session.expires_in,
+      }
     } catch (error) {
-      logError('Login error', error as Error);
-      throw error;
+      logError('Login error', error as Error)
+      throw error
     }
   }
 
@@ -188,12 +188,12 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<LoginResult> {
     try {
       const { data, error } = await supabaseAnon.auth.refreshSession({
-        refresh_token: refreshToken
-      });
+        refresh_token: refreshToken,
+      })
 
       if (error || !data.session || !data.user) {
-        logAuthEvent('Refresh token invalid or expired', undefined);
-        throw new Error('Invalid refresh token');
+        logAuthEvent('Refresh token invalid or expired', undefined)
+        throw new Error('Invalid refresh token')
       }
 
       // Get additional user data from our users table
@@ -201,13 +201,13 @@ export class AuthService {
         .from('users')
         .select('*')
         .eq('id', data.user.id)
-        .single();
+        .single()
 
       if (userError || !userData || !userData.is_active) {
-        throw new Error('User not found or inactive');
+        throw new Error('User not found or inactive')
       }
 
-      logAuthEvent('Token refreshed', data.user.id);
+      logAuthEvent('Token refreshed', data.user.id)
 
       // Create user object with Supabase user data
       const user: User = {
@@ -222,19 +222,19 @@ export class AuthService {
         last_login: new Date(),
         created_at: new Date(data.user.created_at || new Date()),
         updated_at: new Date(data.user.updated_at || new Date()),
-        user_metadata: data.user.user_metadata
-      };
+        user_metadata: data.user.user_metadata,
+      }
 
       return {
         success: true,
         user,
         accessToken: data.session.access_token,
         refreshToken: data.session.refresh_token,
-        expiresIn: data.session.expires_in
-      };
+        expiresIn: data.session.expires_in,
+      }
     } catch (error) {
-      logError('Token refresh error', error as Error);
-      throw error;
+      logError('Token refresh error', error as Error)
+      throw error
     }
   }
 
@@ -243,17 +243,17 @@ export class AuthService {
    */
   async logout(userId?: string): Promise<{ success: boolean; message?: string }> {
     try {
-      const { error } = await supabaseAnon.auth.signOut();
-      
+      const { error } = await supabaseAnon.auth.signOut()
+
       if (error) {
-        return { success: false, message: error.message };
+        return { success: false, message: error.message }
       }
 
-      logAuthEvent('Logout successful', undefined);
-      return { success: true };
+      logAuthEvent('Logout successful', undefined)
+      return { success: true }
     } catch (error) {
-      logError('Logout error', error as Error);
-      return { success: false, message: 'Logout failed' };
+      logError('Logout error', error as Error)
+      return { success: false, message: 'Logout failed' }
     }
   }
 
@@ -267,49 +267,49 @@ export class AuthService {
         .from('users')
         .select('email, name_en, mfa_enabled')
         .eq('id', userId)
-        .single();
+        .single()
 
       if (error || !user) {
-        return { success: false, error: 'User not found' };
+        return { success: false, error: 'User not found' }
       }
 
       if (user.mfa_enabled) {
-        return { success: false, error: 'MFA already enabled' };
+        return { success: false, error: 'MFA already enabled' }
       }
 
       // Generate MFA secret
       const secret = speakeasy.generateSecret({
         name: `GASTAT Dossier (${user.email})`,
-        length: 32
-      });
+        length: 32,
+      })
 
       // Generate QR code
-      const qrCodeUrl = await qrcode.toDataURL(secret.otpauth_url!);
+      const qrCodeUrl = await qrcode.toDataURL(secret.otpauth_url!)
 
       // Generate backup codes
-      const backupCodes = this.generateBackupCodes(8);
+      const backupCodes = this.generateBackupCodes(8)
 
       // Store secret temporarily in cache (5 minutes to complete setup)
       await cacheHelpers.set(
         `mfa_setup:${userId}`,
         {
           secret: secret.base32,
-          backupCodes
+          backupCodes,
         },
-        300
-      );
+        300,
+      )
 
-      logAuthEvent('MFA setup initiated', userId);
+      logAuthEvent('MFA setup initiated', userId)
 
       return {
         success: true,
         secret: secret.base32,
         qrCodeUrl,
-        backupCodes
-      };
+        backupCodes,
+      }
     } catch (error) {
-      logError('MFA setup error', error as Error);
-      return { success: false, error: 'MFA setup failed' };
+      logError('MFA setup error', error as Error)
+      return { success: false, error: 'MFA setup failed' }
     }
   }
 
@@ -319,17 +319,17 @@ export class AuthService {
   async verifyAndEnableMFA(userId: string, verificationCode: string): Promise<boolean> {
     try {
       // Get setup data from cache
-      const setupData = await cacheHelpers.get<any>(`mfa_setup:${userId}`);
+      const setupData = await cacheHelpers.get<any>(`mfa_setup:${userId}`)
       if (!setupData) {
-        logAuthEvent('MFA verification failed - no setup data', userId);
-        return false;
+        logAuthEvent('MFA verification failed - no setup data', userId)
+        return false
       }
 
       // Verify code
-      const verified = this.verifyMFACode(setupData.secret, verificationCode);
+      const verified = this.verifyMFACode(setupData.secret, verificationCode)
       if (!verified) {
-        logAuthEvent('MFA verification failed - invalid code', userId);
-        return false;
+        logAuthEvent('MFA verification failed - invalid code', userId)
+        return false
       }
 
       // Update user with MFA secret and backup codes
@@ -339,22 +339,22 @@ export class AuthService {
           mfa_enabled: true,
           mfa_secret: setupData.secret,
           mfa_backup_codes: setupData.backupCodes,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', userId);
+        .eq('id', userId)
 
       if (error) {
-        throw error;
+        throw error
       }
 
       // Remove setup data from cache
-      await cacheHelpers.del(`mfa_setup:${userId}`);
+      await cacheHelpers.del(`mfa_setup:${userId}`)
 
-      logAuthEvent('MFA enabled successfully', userId);
-      return true;
+      logAuthEvent('MFA enabled successfully', userId)
+      return true
     } catch (error) {
-      logError('MFA verification error', error as Error);
-      return false;
+      logError('MFA verification error', error as Error)
+      return false
     }
   }
 
@@ -368,16 +368,16 @@ export class AuthService {
         .from('users')
         .select('password_hash')
         .eq('id', userId)
-        .single();
+        .single()
 
       if (error || !user) {
-        return false;
+        return false
       }
 
-      const passwordValid = await bcrypt.compare(password, user.password_hash);
+      const passwordValid = await bcrypt.compare(password, user.password_hash)
       if (!passwordValid) {
-        logAuthEvent('MFA disable failed - invalid password', userId);
-        return false;
+        logAuthEvent('MFA disable failed - invalid password', userId)
+        return false
       }
 
       // Disable MFA
@@ -387,47 +387,51 @@ export class AuthService {
           mfa_enabled: false,
           mfa_secret: null,
           mfa_backup_codes: null,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', userId);
+        .eq('id', userId)
 
       if (updateError) {
-        throw updateError;
+        throw updateError
       }
 
-      logAuthEvent('MFA disabled', userId);
-      return true;
+      logAuthEvent('MFA disabled', userId)
+      return true
     } catch (error) {
-      logError('MFA disable error', error as Error);
-      return false;
+      logError('MFA disable error', error as Error)
+      return false
     }
   }
 
   /**
    * Change user password
    */
-  async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<boolean> {
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<boolean> {
     try {
       // Fetch user
       const { data: user, error } = await supabaseAdmin
         .from('users')
         .select('password_hash')
         .eq('id', userId)
-        .single();
+        .single()
 
       if (error || !user) {
-        return false;
+        return false
       }
 
       // Verify current password
-      const passwordValid = await bcrypt.compare(currentPassword, user.password_hash);
+      const passwordValid = await bcrypt.compare(currentPassword, user.password_hash)
       if (!passwordValid) {
-        logAuthEvent('Password change failed - invalid current password', userId);
-        return false;
+        logAuthEvent('Password change failed - invalid current password', userId)
+        return false
       }
 
       // Hash new password
-      const newPasswordHash = await bcrypt.hash(newPassword, this.saltRounds);
+      const newPasswordHash = await bcrypt.hash(newPassword, this.saltRounds)
 
       // Update password
       const { error: updateError } = await supabaseAdmin
@@ -435,25 +439,22 @@ export class AuthService {
         .update({
           password_hash: newPasswordHash,
           password_changed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', userId);
+        .eq('id', userId)
 
       if (updateError) {
-        throw updateError;
+        throw updateError
       }
 
       // Invalidate all sessions
-      await cacheHelpers.del([
-        `refresh_token:${userId}`,
-        `user_session:${userId}`
-      ]);
+      await cacheHelpers.del([`refresh_token:${userId}`, `user_session:${userId}`])
 
-      logAuthEvent('Password changed successfully', userId);
-      return true;
+      logAuthEvent('Password changed successfully', userId)
+      return true
     } catch (error) {
-      logError('Password change error', error as Error);
-      return false;
+      logError('Password change error', error as Error)
+      return false
     }
   }
 
@@ -463,18 +464,18 @@ export class AuthService {
   async resetPassword(email: string): Promise<boolean> {
     try {
       const { error } = await supabaseAnon.auth.resetPasswordForEmail(email, {
-        redirectTo: `${process.env.FRONTEND_URL}/reset-password`
-      });
+        redirectTo: `${process.env.FRONTEND_URL}/reset-password`,
+      })
 
       if (error) {
-        throw error;
+        throw error
       }
 
-      logAuthEvent('Password reset requested', undefined, { email });
-      return true;
+      logAuthEvent('Password reset requested', undefined, { email })
+      return true
     } catch (error) {
-      logError('Password reset request error', error as Error);
-      return false;
+      logError('Password reset request error', error as Error)
+      return false
     }
   }
 
@@ -484,18 +485,18 @@ export class AuthService {
   async requestPasswordReset(email: string): Promise<{ success: boolean; message?: string }> {
     try {
       const { error } = await supabaseAnon.auth.resetPasswordForEmail(email, {
-        redirectTo: `${process.env.FRONTEND_URL}/reset-password`
-      });
+        redirectTo: `${process.env.FRONTEND_URL}/reset-password`,
+      })
 
       if (error) {
-        return { success: false, message: error.message };
+        return { success: false, message: error.message }
       }
 
-      logAuthEvent('Password reset requested', undefined);
-      return { success: true };
+      logAuthEvent('Password reset requested', undefined)
+      return { success: true }
     } catch (error) {
-      logError('Password reset request error', error as Error);
-      return { success: false, message: 'Password reset request failed' };
+      logError('Password reset request error', error as Error)
+      return { success: false, message: 'Password reset request failed' }
     }
   }
 
@@ -505,18 +506,18 @@ export class AuthService {
   async resetPasswordWithToken(resetToken: string, newPassword: string): Promise<boolean> {
     try {
       const { error } = await supabaseAnon.auth.updateUser({
-        password: newPassword
-      });
+        password: newPassword,
+      })
 
       if (error) {
-        throw error;
+        throw error
       }
 
-      logAuthEvent('Password reset successful', undefined);
-      return true;
+      logAuthEvent('Password reset successful', undefined)
+      return true
     } catch (error) {
-      logError('Password reset error', error as Error);
-      return false;
+      logError('Password reset error', error as Error)
+      return false
     }
   }
 
@@ -525,17 +526,17 @@ export class AuthService {
    */
   async verifySession(accessToken: string): Promise<User | null> {
     try {
-      const decoded = jwt.verify(accessToken, this.jwtSecret) as any;
+      const decoded = jwt.verify(accessToken, this.jwtSecret) as any
 
       // Check session in cache
-      const session = await cacheHelpers.get<any>(`user_session:${decoded.userId}`);
+      const session = await cacheHelpers.get<any>(`user_session:${decoded.userId}`)
       if (!session) {
-        return null;
+        return null
       }
 
-      return session;
+      return session
     } catch (error) {
-      return null;
+      return null
     }
   }
 
@@ -551,38 +552,40 @@ export class AuthService {
           data: {
             name: userData.name || `${userData.firstName} ${userData.lastName}`,
             first_name: userData.firstName,
-            last_name: userData.lastName
-          }
-        }
-      });
+            last_name: userData.lastName,
+          },
+        },
+      })
 
       if (error) {
-        throw error;
+        throw error
       }
 
       if (!data.user) {
-        throw new Error('User creation failed');
+        throw new Error('User creation failed')
       }
 
       // Create user profile in our users table
       const { data: userProfile, error: profileError } = await supabaseAdmin
         .from('users')
-        .insert([{
-          id: data.user.id,
-          email: userData.email.toLowerCase(),
-          name_en: userData.name || `${userData.firstName} ${userData.lastName}`,
-          name_ar: userData.nameAr || `${userData.firstName} ${userData.lastName}`,
-          role: 'user',
-          department: userData.department || 'General',
-          is_active: false, // Requires email verification
-          mfa_enabled: false,
-          created_at: new Date().toISOString()
-        }])
+        .insert([
+          {
+            id: data.user.id,
+            email: userData.email.toLowerCase(),
+            name_en: userData.name || `${userData.firstName} ${userData.lastName}`,
+            name_ar: userData.nameAr || `${userData.firstName} ${userData.lastName}`,
+            role: 'user',
+            department: userData.department || 'General',
+            is_active: false, // Requires email verification
+            mfa_enabled: false,
+            created_at: new Date().toISOString(),
+          },
+        ])
         .select()
-        .single();
+        .single()
 
       if (profileError) {
-        throw profileError;
+        throw profileError
       }
 
       const user: User = {
@@ -596,12 +599,12 @@ export class AuthService {
         mfa_enabled: userProfile.mfa_enabled,
         created_at: new Date(data.user.created_at || new Date()),
         updated_at: new Date(data.user.updated_at || new Date()),
-        user_metadata: data.user.user_metadata
-      };
+        user_metadata: data.user.user_metadata,
+      }
 
-      return { success: true, user };
+      return { success: true, user }
     } catch (error: any) {
-      return { success: false, error: error.message };
+      return { success: false, error: error.message }
     }
   }
 
@@ -610,7 +613,7 @@ export class AuthService {
    */
   async sendPasswordResetEmail(email: string): Promise<boolean> {
     // Implementation would go here - for now return true
-    return true;
+    return true
   }
 
   /**
@@ -618,7 +621,7 @@ export class AuthService {
    */
   async verifyEmail(token: string): Promise<boolean> {
     // Implementation would go here - for now return true
-    return true;
+    return true
   }
 
   /**
@@ -630,13 +633,13 @@ export class AuthService {
         .from('users')
         .select('mfa_secret')
         .eq('id', userId)
-        .single();
+        .single()
 
-      if (!user?.mfa_secret) return false;
+      if (!user?.mfa_secret) return false
 
-      return this.verifyMFACode(user.mfa_secret, code);
+      return this.verifyMFACode(user.mfa_secret, code)
     } catch {
-      return false;
+      return false
     }
   }
 
@@ -645,10 +648,10 @@ export class AuthService {
    */
   async getCurrentUser(): Promise<User | null> {
     try {
-      const { data, error } = await supabaseAnon.auth.getSession();
-      
+      const { data, error } = await supabaseAnon.auth.getSession()
+
       if (error || !data.session || !data.session.user) {
-        return null;
+        return null
       }
 
       // Get additional user data from our users table
@@ -656,10 +659,10 @@ export class AuthService {
         .from('users')
         .select('*')
         .eq('id', data.session.user.id)
-        .single();
+        .single()
 
       if (userError || !userData) {
-        return null;
+        return null
       }
 
       const user: User = {
@@ -674,31 +677,34 @@ export class AuthService {
         last_login: userData.last_login ? new Date(userData.last_login) : undefined,
         created_at: new Date(data.session.user.created_at || new Date()),
         updated_at: new Date(data.session.user.updated_at || new Date()),
-        user_metadata: data.session.user.user_metadata
-      };
+        user_metadata: data.session.user.user_metadata,
+      }
 
-      return user;
+      return user
     } catch {
-      return null;
+      return null
     }
   }
 
   /**
    * Update user profile
    */
-  async updateProfile(userId: string, profileData: any): Promise<{ success: boolean; user?: User; error?: string }> {
+  async updateProfile(
+    userId: string,
+    profileData: any,
+  ): Promise<{ success: boolean; user?: User; error?: string }> {
     try {
       // Update Supabase Auth user metadata
       const { data, error } = await supabaseAnon.auth.updateUser({
         data: {
           name: profileData.name,
           first_name: profileData.first_name,
-          last_name: profileData.last_name
-        }
-      });
+          last_name: profileData.last_name,
+        },
+      })
 
       if (error) {
-        throw error;
+        throw error
       }
 
       // Update our users table
@@ -709,12 +715,12 @@ export class AuthService {
           name_ar: profileData.name_ar,
           department: profileData.department,
           phone: profileData.phone,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', userId);
+        .eq('id', userId)
 
       if (profileError) {
-        throw profileError;
+        throw profileError
       }
 
       // Get updated user data
@@ -722,10 +728,10 @@ export class AuthService {
         .from('users')
         .select('*')
         .eq('id', userId)
-        .single();
+        .single()
 
       if (userError || !userData) {
-        throw new Error('Failed to fetch updated user data');
+        throw new Error('Failed to fetch updated user data')
       }
 
       const user: User = {
@@ -739,12 +745,12 @@ export class AuthService {
         mfa_enabled: userData.mfa_enabled,
         created_at: new Date(data.user.created_at || new Date()),
         updated_at: new Date(data.user.updated_at || new Date()),
-        user_metadata: data.user.user_metadata
-      };
+        user_metadata: data.user.user_metadata,
+      }
 
-      return { success: true, user };
+      return { success: true, user }
     } catch (error: any) {
-      return { success: false, error: error.message };
+      return { success: false, error: error.message }
     }
   }
 
@@ -753,15 +759,15 @@ export class AuthService {
    */
   async validateSession(token: string): Promise<boolean> {
     try {
-      const { data, error } = await supabaseAnon.auth.getSession();
-      
+      const { data, error } = await supabaseAnon.auth.getSession()
+
       if (error || !data.session) {
-        return false;
+        return false
       }
 
-      return true;
+      return true
     } catch {
-      return false;
+      return false
     }
   }
 
@@ -774,21 +780,21 @@ export class AuthService {
         .from('users')
         .select('role, department')
         .eq('id', userId)
-        .single();
+        .single()
 
-      if (!user) return false;
+      if (!user) return false
 
       // Basic role-based permissions
       const rolePermissions = {
         admin: ['*'],
         manager: ['read', 'write', 'manage_team'],
-        user: ['read', 'write_own']
-      };
+        user: ['read', 'write_own'],
+      }
 
-      const userPermissions = rolePermissions[user.role as keyof typeof rolePermissions] || [];
-      return userPermissions.includes('*') || userPermissions.includes(permission);
+      const userPermissions = rolePermissions[user.role as keyof typeof rolePermissions] || []
+      return userPermissions.includes('*') || userPermissions.includes(permission)
     } catch {
-      return false;
+      return false
     }
   }
 
@@ -801,20 +807,20 @@ export class AuthService {
         .from('users')
         .select('role')
         .eq('id', userId)
-        .single();
+        .single()
 
-      if (!user) return false;
+      if (!user) return false
 
       const roleHierarchy = {
         admin: ['admin', 'manager', 'user'],
         manager: ['manager', 'user'],
-        user: ['user']
-      };
+        user: ['user'],
+      }
 
-      const allowedRoles = roleHierarchy[user.role as keyof typeof roleHierarchy] || [];
-      return allowedRoles.includes(targetRole);
+      const allowedRoles = roleHierarchy[user.role as keyof typeof roleHierarchy] || []
+      return allowedRoles.includes(targetRole)
     } catch {
-      return false;
+      return false
     }
   }
 
@@ -823,17 +829,15 @@ export class AuthService {
    */
   async logSecurityEvent(userId: string, event: string, details?: any): Promise<void> {
     try {
-      await supabaseAdmin
-        .from('audit_log')
-        .insert({
-          user_id: userId,
-          action: event,
-          resource_type: 'security',
-          details: details || {},
-          timestamp: new Date().toISOString()
-        });
+      await supabaseAdmin.from('audit_log').insert({
+        user_id: userId,
+        action: event,
+        resource_type: 'security',
+        details: details || {},
+        timestamp: new Date().toISOString(),
+      })
     } catch (error) {
-      logError('Security event logging failed', error as Error);
+      logError('Security event logging failed', error as Error)
     }
   }
 
@@ -842,15 +846,15 @@ export class AuthService {
    */
   async verifyJWT(token: string, secret?: string): Promise<any> {
     try {
-      const { data, error } = await supabaseAnon.auth.getUser(token);
-      
+      const { data, error } = await supabaseAnon.auth.getUser(token)
+
       if (error || !data.user) {
-        return null;
+        return null
       }
 
-      return data.user;
+      return data.user
     } catch {
-      return null;
+      return null
     }
   }
 
@@ -858,20 +862,20 @@ export class AuthService {
 
   private verifyMFACode(secret: string, code: string): boolean {
     // For now, return true for testing - implement proper MFA verification later
-    return true;
+    return true
   }
 
   /**
    * Generate backup codes for MFA
    */
   private generateBackupCodes(count: number): string[] {
-    const codes: string[] = [];
+    const codes: string[] = []
     for (let i = 0; i < count; i++) {
-      codes.push(Math.random().toString(36).substring(2, 10).toUpperCase());
+      codes.push(Math.random().toString(36).substring(2, 10).toUpperCase())
     }
-    return codes;
+    return codes
   }
 }
 
-export { User, LoginResult, MFASetupResult };
-export default AuthService;
+export { User, LoginResult, MFASetupResult }
+export default AuthService

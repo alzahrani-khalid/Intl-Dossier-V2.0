@@ -69,7 +69,7 @@ export function BulkActionsDemo() {
 
   // Handle undo callback
   const handleUndo = useCallback(async (undoData: BulkActionUndoData): Promise<boolean> => {
-    console.log('Undo requested:', undoData)
+    console.warn('Undo requested:', undoData)
     // Simulate undo operation
     await new Promise((resolve) => setTimeout(resolve, 1000))
     return true
@@ -94,7 +94,7 @@ export function BulkActionsDemo() {
     entityType: 'entity',
     undoTtl: DEFAULT_UNDO_TTL,
     onActionComplete: (result) => {
-      console.log('Action completed:', result)
+      console.warn('Action completed:', result)
       if (result.success) {
         setLastAction({
           action: actionState.currentAction || 'action',

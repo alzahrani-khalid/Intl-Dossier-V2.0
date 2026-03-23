@@ -77,7 +77,7 @@ export function useStaffDirectory(filters: Partial<StaffFilters> = {}) {
 
       // Get department names
       const deptIds = [...new Set((data || []).map((s) => s.department_id))]
-      let deptNames: Record<string, { name_en?: string; name_ar?: string }> = {}
+      const deptNames: Record<string, { name_en?: string; name_ar?: string }> = {}
 
       if (deptIds.length > 0) {
         const { data: depts } = await supabase
@@ -94,7 +94,7 @@ export function useStaffDirectory(filters: Partial<StaffFilters> = {}) {
 
       // Check for active delegations
       const staffIds = (data || []).map((s) => s.id)
-      let delegations: Record<string, string> = {}
+      const delegations: Record<string, string> = {}
 
       if (staffIds.length > 0) {
         const now = new Date().toISOString()

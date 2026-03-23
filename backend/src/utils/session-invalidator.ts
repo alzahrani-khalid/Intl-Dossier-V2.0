@@ -1,4 +1,4 @@
-import { Redis } from '@upstash/redis';
+import { Redis } from '@upstash/redis'
 
 /**
  * Session Invalidation Utility
@@ -13,27 +13,27 @@ import { Redis } from '@upstash/redis';
  */
 
 // Redis client from config
-let redisClient: Redis | null = null;
+let redisClient: Redis | null = null
 
 /**
  * Initialize Redis client
  */
 export function initializeRedis(client: Redis) {
-  redisClient = client;
+  redisClient = client
 }
 
 /**
  * Get Redis session key for a user
  */
 function getUserSessionKey(userId: string): string {
-  return `user:${userId}:sessions`;
+  return `user:${userId}:sessions`
 }
 
 /**
  * Get Redis session whitelist key for a specific session
  */
 function getSessionWhitelistKey(sessionId: string): string {
-  return `session:${sessionId}:whitelisted`;
+  return `session:${sessionId}:whitelisted`
 }
 
 /**
@@ -46,23 +46,23 @@ function getSessionWhitelistKey(sessionId: string): string {
 export async function whitelistSession(
   userId: string,
   sessionId: string,
-  expiresIn: number = 86400
+  expiresIn: number = 86400,
 ): Promise<void> {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    throw new Error('Redis client not initialized')
   }
 
-  const userSessionsKey = getUserSessionKey(userId);
-  const sessionWhitelistKey = getSessionWhitelistKey(sessionId);
+  const userSessionsKey = getUserSessionKey(userId)
+  const sessionWhitelistKey = getSessionWhitelistKey(sessionId)
 
   // Add session to user's session set
-  await redisClient.sadd(userSessionsKey, sessionId);
+  await redisClient.sadd(userSessionsKey, sessionId)
 
   // Set session whitelist flag with expiration
-  await redisClient.setex(sessionWhitelistKey, expiresIn, '1');
+  await redisClient.setex(sessionWhitelistKey, expiresIn, '1')
 
   // Set expiration on user sessions set (will be refreshed on each session addition)
-  await redisClient.expire(userSessionsKey, expiresIn);
+  await redisClient.expire(userSessionsKey, expiresIn)
 }
 
 /**
@@ -73,13 +73,13 @@ export async function whitelistSession(
  */
 export async function isSessionWhitelisted(sessionId: string): Promise<boolean> {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    throw new Error('Redis client not initialized')
   }
 
-  const sessionWhitelistKey = getSessionWhitelistKey(sessionId);
-  const result = await redisClient.get(sessionWhitelistKey);
+  const sessionWhitelistKey = getSessionWhitelistKey(sessionId)
+  const result = await redisClient.get(sessionWhitelistKey)
 
-  return result === '1';
+  return result === '1'
 }
 
 /**
@@ -93,30 +93,30 @@ export async function isSessionWhitelisted(sessionId: string): Promise<boolean> 
  */
 export async function invalidateUserSessions(userId: string): Promise<number> {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    throw new Error('Redis client not initialized')
   }
 
-  const userSessionsKey = getUserSessionKey(userId);
+  const userSessionsKey = getUserSessionKey(userId)
 
   // Get all session IDs for the user
-  const sessionIds = await redisClient.smembers(userSessionsKey);
+  const sessionIds = await redisClient.smembers(userSessionsKey)
 
   if (!sessionIds || sessionIds.length === 0) {
-    return 0;
+    return 0
   }
 
   // Delete all session whitelist entries
   const deletePromises = sessionIds.map((sessionId) => {
-    const sessionWhitelistKey = getSessionWhitelistKey(sessionId);
-    return redisClient!.del(sessionWhitelistKey);
-  });
+    const sessionWhitelistKey = getSessionWhitelistKey(sessionId)
+    return redisClient!.del(sessionWhitelistKey)
+  })
 
-  await Promise.all(deletePromises);
+  await Promise.all(deletePromises)
 
   // Delete the user sessions set
-  await redisClient.del(userSessionsKey);
+  await redisClient.del(userSessionsKey)
 
-  return sessionIds.length;
+  return sessionIds.length
 }
 
 /**
@@ -127,17 +127,17 @@ export async function invalidateUserSessions(userId: string): Promise<number> {
  */
 export async function invalidateSession(userId: string, sessionId: string): Promise<void> {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    throw new Error('Redis client not initialized')
   }
 
-  const userSessionsKey = getUserSessionKey(userId);
-  const sessionWhitelistKey = getSessionWhitelistKey(sessionId);
+  const userSessionsKey = getUserSessionKey(userId)
+  const sessionWhitelistKey = getSessionWhitelistKey(sessionId)
 
   // Remove session from user's session set
-  await redisClient.srem(userSessionsKey, sessionId);
+  await redisClient.srem(userSessionsKey, sessionId)
 
   // Delete session whitelist entry
-  await redisClient.del(sessionWhitelistKey);
+  await redisClient.del(sessionWhitelistKey)
 }
 
 /**
@@ -148,30 +148,30 @@ export async function invalidateSession(userId: string, sessionId: string): Prom
  */
 export async function getUserActiveSessions(userId: string): Promise<string[]> {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    throw new Error('Redis client not initialized')
   }
 
-  const userSessionsKey = getUserSessionKey(userId);
-  const sessionIds = await redisClient.smembers(userSessionsKey);
+  const userSessionsKey = getUserSessionKey(userId)
+  const sessionIds = await redisClient.smembers(userSessionsKey)
 
   if (!sessionIds || sessionIds.length === 0) {
-    return [];
+    return []
   }
 
   // Filter out expired sessions
-  const validSessions: string[] = [];
+  const validSessions: string[] = []
 
   for (const sessionId of sessionIds) {
-    const isValid = await isSessionWhitelisted(sessionId);
+    const isValid = await isSessionWhitelisted(sessionId)
     if (isValid) {
-      validSessions.push(sessionId);
+      validSessions.push(sessionId)
     } else {
       // Clean up invalid session from set
-      await redisClient.srem(userSessionsKey, sessionId);
+      await redisClient.srem(userSessionsKey, sessionId)
     }
   }
 
-  return validSessions;
+  return validSessions
 }
 
 /**
@@ -182,16 +182,16 @@ export async function getUserActiveSessions(userId: string): Promise<string[]> {
  */
 export async function refreshSession(sessionId: string, expiresIn: number = 86400): Promise<void> {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    throw new Error('Redis client not initialized')
   }
 
-  const sessionWhitelistKey = getSessionWhitelistKey(sessionId);
+  const sessionWhitelistKey = getSessionWhitelistKey(sessionId)
 
   // Check if session exists before refreshing
-  const exists = await redisClient.exists(sessionWhitelistKey);
+  const exists = await redisClient.exists(sessionWhitelistKey)
 
   if (exists) {
-    await redisClient.expire(sessionWhitelistKey, expiresIn);
+    await redisClient.expire(sessionWhitelistKey, expiresIn)
   }
 }
 
@@ -206,27 +206,27 @@ export async function refreshSession(sessionId: string, expiresIn: number = 8640
  */
 export async function cleanupExpiredSessions(userId: string): Promise<number> {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    throw new Error('Redis client not initialized')
   }
 
-  const userSessionsKey = getUserSessionKey(userId);
-  const sessionIds = await redisClient.smembers(userSessionsKey);
+  const userSessionsKey = getUserSessionKey(userId)
+  const sessionIds = await redisClient.smembers(userSessionsKey)
 
   if (!sessionIds || sessionIds.length === 0) {
-    return 0;
+    return 0
   }
 
-  let cleanedCount = 0;
+  let cleanedCount = 0
 
   for (const sessionId of sessionIds) {
-    const isValid = await isSessionWhitelisted(sessionId);
+    const isValid = await isSessionWhitelisted(sessionId)
     if (!isValid) {
-      await redisClient.srem(userSessionsKey, sessionId);
-      cleanedCount++;
+      await redisClient.srem(userSessionsKey, sessionId)
+      cleanedCount++
     }
   }
 
-  return cleanedCount;
+  return cleanedCount
 }
 
 /**
@@ -236,27 +236,27 @@ export async function cleanupExpiredSessions(userId: string): Promise<number> {
  * @returns Session statistics (total, active, expired)
  */
 export async function getUserSessionStats(userId: string): Promise<{
-  total: number;
-  active: number;
-  expired: number;
+  total: number
+  active: number
+  expired: number
 }> {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    throw new Error('Redis client not initialized')
   }
 
-  const userSessionsKey = getUserSessionKey(userId);
-  const sessionIds = await redisClient.smembers(userSessionsKey);
+  const userSessionsKey = getUserSessionKey(userId)
+  const sessionIds = await redisClient.smembers(userSessionsKey)
 
   if (!sessionIds || sessionIds.length === 0) {
-    return { total: 0, active: 0, expired: 0 };
+    return { total: 0, active: 0, expired: 0 }
   }
 
-  let activeCount = 0;
+  let activeCount = 0
 
   for (const sessionId of sessionIds) {
-    const isValid = await isSessionWhitelisted(sessionId);
+    const isValid = await isSessionWhitelisted(sessionId)
     if (isValid) {
-      activeCount++;
+      activeCount++
     }
   }
 
@@ -264,5 +264,5 @@ export async function getUserSessionStats(userId: string): Promise<{
     total: sessionIds.length,
     active: activeCount,
     expired: sessionIds.length - activeCount,
-  };
+  }
 }

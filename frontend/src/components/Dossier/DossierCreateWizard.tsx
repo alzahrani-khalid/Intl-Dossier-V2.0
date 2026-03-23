@@ -356,7 +356,6 @@ export function DossierCreateWizard({
       })
     }
     // Only run when hasDraft changes (on initial load with draft)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasDraft])
 
   // Wizard step state - skip type selection if initialType is provided

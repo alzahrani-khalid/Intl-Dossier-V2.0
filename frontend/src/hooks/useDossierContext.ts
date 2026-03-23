@@ -239,6 +239,7 @@ export function useDossierContext(): UseDossierContextReturn {
  */
 export function useDossierStoreState() {
   // Import directly from store to avoid context requirement
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { useActiveDossier, useRecentDossiers, usePinnedDossiers } = require('@/store/dossierStore')
 
   const active = useActiveDossier()

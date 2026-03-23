@@ -5,12 +5,12 @@
  * TanStack Query hook for fetching dashboard health aggregations grouped by region, bloc, or classification
  */
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query'
 import {
   getDashboardAggregations,
   type DashboardAggregationsResponse,
   type DashboardAggregationsFilter,
-} from '@/services/dossier-stats.service';
+} from '@/services/dossier-stats.service'
 
 export interface UseDashboardHealthAggregationsOptions {
   /**
@@ -18,15 +18,15 @@ export interface UseDashboardHealthAggregationsOptions {
    * - 'region': Group countries by region
    * - 'org_type': Group organizations by organization type
    */
-  groupBy: 'region' | 'org_type';
+  groupBy: 'region' | 'org_type'
   /**
    * Optional filter criteria
    */
-  filter?: DashboardAggregationsFilter;
+  filter?: DashboardAggregationsFilter
   /**
    * Enable or disable the query (default: true)
    */
-  enabled?: boolean;
+  enabled?: boolean
 }
 
 /**
@@ -42,10 +42,8 @@ export interface UseDashboardHealthAggregationsOptions {
  * @param options - Hook options
  * @returns TanStack Query result
  */
-export function useDashboardHealthAggregations(
-  options: UseDashboardHealthAggregationsOptions
-) {
-  const { groupBy, filter, enabled = true } = options;
+export function useDashboardHealthAggregations(options: UseDashboardHealthAggregationsOptions) {
+  const { groupBy, filter, enabled = true } = options
 
   return useQuery<DashboardAggregationsResponse, Error>({
     queryKey: ['dashboardHealthAggregations', groupBy, filter],
@@ -55,5 +53,5 @@ export function useDashboardHealthAggregations(
     refetchInterval: 5 * 60 * 1000, // Background refetch every 5 minutes (live dashboard)
     refetchOnWindowFocus: true, // Refetch when user returns to tab
     enabled: enabled && !!groupBy, // Only fetch if enabled and groupBy is specified
-  });
+  })
 }

@@ -7,19 +7,18 @@ export type MetricType =
   | 'layout_shift'
   | 'resize_performance'
   | 'theme_switch'
-  | 'component_render';
+  | 'component_render'
 
-export type MetricUnit = 'ms' | 'px' | 'count' | 'percentage';
+export type MetricUnit = 'ms' | 'px' | 'count' | 'percentage'
 
 export interface PerformanceMetric {
-  metricType: MetricType;
-  value: number;
-  unit: MetricUnit;
+  metricType: MetricType
+  value: number
+  unit: MetricUnit
   /** Current viewport width (px) when the metric was captured */
-  viewport: number;
-  componentName?: string;
-  pageUrl?: string;
-  sessionId?: string;
-  metadata?: Record<string, unknown>;
+  viewport: number
+  componentName?: string
+  pageUrl?: string
+  sessionId?: string
+  metadata?: Record<string, unknown>
 }
-

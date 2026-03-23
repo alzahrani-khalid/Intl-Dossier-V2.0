@@ -9,48 +9,48 @@
  * - FR-011b: Normal/low items flagged for manual review
  */
 
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js'
 
 export interface AvailabilityUpdateRequest {
-  status: 'available' | 'on_leave' | 'unavailable';
-  unavailable_until?: string | null;
-  reason?: string | null;
+  status: 'available' | 'on_leave' | 'unavailable'
+  unavailable_until?: string | null
+  reason?: string | null
 }
 
 export interface AvailabilityUpdateResponse {
-  updated: true;
-  status: 'available' | 'on_leave' | 'unavailable';
-  reassigned_items: ReassignedItem[];
-  flagged_for_review: FlaggedItem[];
+  updated: true
+  status: 'available' | 'on_leave' | 'unavailable'
+  reassigned_items: ReassignedItem[]
+  flagged_for_review: FlaggedItem[]
 }
 
 export interface ReassignedItem {
-  assignment_id: string;
-  work_item_id: string;
-  work_item_type: string;
-  priority: string;
-  old_assignee_id: string;
-  new_assignee_id: string;
-  new_assignee_name_ar?: string;
-  new_assignee_name_en?: string;
+  assignment_id: string
+  work_item_id: string
+  work_item_type: string
+  priority: string
+  old_assignee_id: string
+  new_assignee_id: string
+  new_assignee_name_ar?: string
+  new_assignee_name_en?: string
 }
 
 export interface FlaggedItem {
-  assignment_id: string;
-  work_item_id: string;
-  work_item_type: string;
-  priority: string;
-  reason: string;
+  assignment_id: string
+  work_item_id: string
+  work_item_type: string
+  priority: string
+  reason: string
 }
 
 export interface Assignment {
-  id: string;
-  work_item_id: string;
-  work_item_type: string;
-  assignee_id: string;
-  priority: 'urgent' | 'high' | 'normal' | 'low';
-  status: string;
-  required_skills?: string[];
+  id: string
+  work_item_id: string
+  work_item_type: string
+  assignee_id: string
+  priority: 'urgent' | 'high' | 'normal' | 'low'
+  status: string
+  required_skills?: string[]
 }
 
 export class AvailabilityService {
@@ -62,13 +62,13 @@ export class AvailabilityService {
    */
   async updateAvailability(
     staffId: string,
-    request: AvailabilityUpdateRequest
+    request: AvailabilityUpdateRequest,
   ): Promise<AvailabilityUpdateResponse> {
     // Validate unavailable_until is in future if status is on_leave
     if (request.status === 'on_leave' && request.unavailable_until) {
-      const until = new Date(request.unavailable_until);
+      const until = new Date(request.unavailable_until)
       if (until < new Date()) {
-        throw new Error('unavailable_until must be in the future');
+        throw new Error('unavailable_until must be in the future')
       }
     }
 
@@ -81,26 +81,26 @@ export class AvailabilityService {
         unavailable_reason: request.reason || null,
         availability_source: 'manual',
       })
-      .eq('user_id', staffId);
+      .eq('user_id', staffId)
 
     if (updateError) {
-      throw new Error(`Failed to update availability: ${updateError.message}`);
+      throw new Error(`Failed to update availability: ${updateError.message}`)
     }
 
-    let reassigned_items: ReassignedItem[] = [];
-    let flagged_for_review: FlaggedItem[] = [];
+    let reassigned_items: ReassignedItem[] = []
+    let flagged_for_review: FlaggedItem[] = []
 
     // If going on leave or unavailable, handle existing assignments
     if (request.status === 'on_leave' || request.status === 'unavailable') {
-      const reassignResult = await this.reassignUrgentHighItems(staffId);
-      reassigned_items = reassignResult;
+      const reassignResult = await this.reassignUrgentHighItems(staffId)
+      reassigned_items = reassignResult
 
-      const flaggedResult = await this.flagNormalLowItems(staffId);
-      flagged_for_review = flaggedResult;
+      const flaggedResult = await this.flagNormalLowItems(staffId)
+      flagged_for_review = flaggedResult
 
       // Send notification to supervisor about flagged items
       if (flagged_for_review.length > 0) {
-        await this.notifySupervisorOfFlaggedItems(staffId, flagged_for_review);
+        await this.notifySupervisorOfFlaggedItems(staffId, flagged_for_review)
       }
     }
 
@@ -109,7 +109,7 @@ export class AvailabilityService {
       status: request.status,
       reassigned_items,
       flagged_for_review,
-    };
+    }
   }
 
   /**
@@ -123,27 +123,27 @@ export class AvailabilityService {
       .select('id, work_item_id, work_item_type, assignee_id, priority')
       .eq('assignee_id', staffId)
       .in('status', ['assigned', 'in_progress'])
-      .in('priority', ['urgent', 'high']);
+      .in('priority', ['urgent', 'high'])
 
     if (error) {
-      throw new Error(`Failed to get assignments: ${error.message}`);
+      throw new Error(`Failed to get assignments: ${error.message}`)
     }
 
     if (!assignments || assignments.length === 0) {
-      return [];
+      return []
     }
 
-    const reassignedItems: ReassignedItem[] = [];
+    const reassignedItems: ReassignedItem[] = []
 
     // Get staff's skills and unit for finding replacement
     const { data: staffProfile, error: staffError } = await this.supabase
       .from('staff_profiles')
       .select('unit_id, skills')
       .eq('user_id', staffId)
-      .single();
+      .single()
 
     if (staffError || !staffProfile) {
-      throw new Error(`Failed to get staff profile: ${staffError?.message}`);
+      throw new Error(`Failed to get staff profile: ${staffError?.message}`)
     }
 
     // Try to reassign each item
@@ -152,32 +152,34 @@ export class AvailabilityService {
         // Find best available staff in same unit with matching skills
         const { data: candidates, error: candidateError } = await this.supabase
           .from('staff_profiles')
-          .select('user_id, full_name_ar, full_name_en, individual_wip_limit, current_assignment_count, skills')
+          .select(
+            'user_id, full_name_ar, full_name_en, individual_wip_limit, current_assignment_count, skills',
+          )
           .eq('unit_id', staffProfile.unit_id)
           .eq('availability_status', 'available')
-          .lt('current_assignment_count', this.supabase.raw('individual_wip_limit'));
+          .lt('current_assignment_count', this.supabase.raw('individual_wip_limit'))
 
         if (candidateError || !candidates || candidates.length === 0) {
-          console.warn(`No available candidates for reassignment of ${assignment.id}`);
-          continue;
+          console.warn(`No available candidates for reassignment of ${assignment.id}`)
+          continue
         }
 
         // Filter candidates with matching skills
-        const skillsRequired = staffProfile.skills || [];
+        const skillsRequired = staffProfile.skills || []
         const eligibleCandidates = candidates.filter((candidate) => {
-          const candidateSkills = candidate.skills || [];
-          return skillsRequired.every((skill: string) => candidateSkills.includes(skill));
-        });
+          const candidateSkills = candidate.skills || []
+          return skillsRequired.every((skill: string) => candidateSkills.includes(skill))
+        })
 
         if (eligibleCandidates.length === 0) {
-          console.warn(`No eligible candidates with required skills for ${assignment.id}`);
-          continue;
+          console.warn(`No eligible candidates with required skills for ${assignment.id}`)
+          continue
         }
 
         // Pick candidate with most available capacity
         const bestCandidate = eligibleCandidates.sort(
-          (a, b) => a.current_assignment_count - b.current_assignment_count
-        )[0];
+          (a, b) => a.current_assignment_count - b.current_assignment_count,
+        )[0]
 
         // Reassign to best candidate
         const { error: reassignError } = await this.supabase
@@ -188,11 +190,11 @@ export class AvailabilityService {
             reassigned_from: staffId,
             reassignment_reason: 'Staff unavailable',
           })
-          .eq('id', assignment.id);
+          .eq('id', assignment.id)
 
         if (reassignError) {
-          console.error(`Failed to reassign ${assignment.id}:`, reassignError);
-          continue;
+          console.error(`Failed to reassign ${assignment.id}:`, reassignError)
+          continue
         }
 
         reassignedItems.push({
@@ -204,13 +206,13 @@ export class AvailabilityService {
           new_assignee_id: bestCandidate.user_id,
           new_assignee_name_ar: bestCandidate.full_name_ar,
           new_assignee_name_en: bestCandidate.full_name_en,
-        });
+        })
       } catch (err) {
-        console.error(`Error reassigning assignment ${assignment.id}:`, err);
+        console.error(`Error reassigning assignment ${assignment.id}:`, err)
       }
     }
 
-    return reassignedItems;
+    return reassignedItems
   }
 
   /**
@@ -224,17 +226,17 @@ export class AvailabilityService {
       .select('id, work_item_id, work_item_type, assignee_id, priority')
       .eq('assignee_id', staffId)
       .in('status', ['assigned', 'in_progress'])
-      .in('priority', ['normal', 'low']);
+      .in('priority', ['normal', 'low'])
 
     if (error) {
-      throw new Error(`Failed to get assignments: ${error.message}`);
+      throw new Error(`Failed to get assignments: ${error.message}`)
     }
 
     if (!assignments || assignments.length === 0) {
-      return [];
+      return []
     }
 
-    const flaggedItems: FlaggedItem[] = [];
+    const flaggedItems: FlaggedItem[] = []
 
     // Flag each item for review
     for (const assignment of assignments) {
@@ -245,11 +247,11 @@ export class AvailabilityService {
           review_reason: 'Staff unavailable',
           flagged_at: new Date().toISOString(),
         })
-        .eq('id', assignment.id);
+        .eq('id', assignment.id)
 
       if (flagError) {
-        console.error(`Failed to flag ${assignment.id}:`, flagError);
-        continue;
+        console.error(`Failed to flag ${assignment.id}:`, flagError)
+        continue
       }
 
       flaggedItems.push({
@@ -258,10 +260,10 @@ export class AvailabilityService {
         work_item_type: assignment.work_item_type,
         priority: assignment.priority,
         reason: 'Staff unavailable',
-      });
+      })
     }
 
-    return flaggedItems;
+    return flaggedItems
   }
 
   /**
@@ -269,18 +271,18 @@ export class AvailabilityService {
    */
   private async notifySupervisorOfFlaggedItems(
     staffId: string,
-    flaggedItems: FlaggedItem[]
+    flaggedItems: FlaggedItem[],
   ): Promise<void> {
     // Get staff's unit supervisor
     const { data: staffProfile, error: staffError } = await this.supabase
       .from('staff_profiles')
       .select('unit_id, full_name_ar, full_name_en')
       .eq('user_id', staffId)
-      .single();
+      .single()
 
     if (staffError || !staffProfile) {
-      console.error('Failed to get staff profile for notification');
-      return;
+      console.error('Failed to get staff profile for notification')
+      return
     }
 
     const { data: supervisor, error: supervisorError } = await this.supabase
@@ -288,17 +290,17 @@ export class AvailabilityService {
       .select('user_id')
       .eq('unit_id', staffProfile.unit_id)
       .eq('role', 'supervisor')
-      .single();
+      .single()
 
     if (supervisorError || !supervisor) {
-      console.error('Failed to find unit supervisor for notification');
-      return;
+      console.error('Failed to find unit supervisor for notification')
+      return
     }
 
     // Create notification for supervisor
-    const itemCount = flaggedItems.length;
-    const staffNameAr = staffProfile.full_name_ar || 'موظف';
-    const staffNameEn = staffProfile.full_name_en || 'Staff member';
+    const itemCount = flaggedItems.length
+    const staffNameAr = staffProfile.full_name_ar || 'موظف'
+    const staffNameEn = staffProfile.full_name_en || 'Staff member'
 
     const notification = {
       user_id: supervisor.user_id,
@@ -313,12 +315,12 @@ export class AvailabilityService {
       },
       read_at: null,
       created_at: new Date().toISOString(),
-    };
+    }
 
-    const { error: notifError } = await this.supabase.from('notifications').insert(notification);
+    const { error: notifError } = await this.supabase.from('notifications').insert(notification)
 
     if (notifError) {
-      console.error('Failed to create supervisor notification:', notifError);
+      console.error('Failed to create supervisor notification:', notifError)
     }
   }
 
@@ -335,10 +337,10 @@ export class AvailabilityService {
         unavailable_reason: null,
         availability_source: 'manual',
       })
-      .eq('user_id', staffId);
+      .eq('user_id', staffId)
 
     if (error) {
-      throw new Error(`Failed to set availability: ${error.message}`);
+      throw new Error(`Failed to set availability: ${error.message}`)
     }
 
     // Clear review flags on previously flagged items (optional - may want supervisor to manually clear)
@@ -361,14 +363,11 @@ export class AvailabilityService {
       .eq('needs_review', true)
       .in(
         'assignee_id',
-        this.supabase
-          .from('staff_profiles')
-          .select('user_id')
-          .eq('unit_id', unitId)
-      );
+        this.supabase.from('staff_profiles').select('user_id').eq('unit_id', unitId),
+      )
 
     if (error) {
-      throw new Error(`Failed to get flagged items: ${error.message}`);
+      throw new Error(`Failed to get flagged items: ${error.message}`)
     }
 
     return (assignments || []).map((assignment) => ({
@@ -377,6 +376,6 @@ export class AvailabilityService {
       work_item_type: assignment.work_item_type,
       priority: assignment.priority,
       reason: assignment.review_reason || 'Unknown',
-    }));
+    }))
   }
 }

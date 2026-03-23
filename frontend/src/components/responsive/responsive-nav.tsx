@@ -59,7 +59,7 @@ export function ResponsiveNav({
       <nav
         className={cn(
           'flex items-center justify-between p-4',
-          position === 'bottom' && 'fixed bottom-0 left-0 right-0 bg-background border-t',
+          position === 'bottom' && 'fixed bottom-0 start-0 end-0 bg-background border-t',
           position === 'top' &&
             'sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b',
           className,

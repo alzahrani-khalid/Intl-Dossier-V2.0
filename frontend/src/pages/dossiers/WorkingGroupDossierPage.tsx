@@ -21,12 +21,12 @@
  * - Will be lazy-loaded via React.lazy in polish phase (T064)
  */
 
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout';
-import { WorkingGroupDossierDetail } from '@/components/Dossier/WorkingGroupDossierDetail';
-import type { WorkingGroupDossier } from '@/lib/dossier-type-guards';
+import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
+import { WorkingGroupDossierDetail } from '@/components/Dossier/WorkingGroupDossierDetail'
+import type { WorkingGroupDossier } from '@/lib/dossier-type-guards'
 
 interface WorkingGroupDossierPageProps {
-  dossier: WorkingGroupDossier;
+  dossier: WorkingGroupDossier
 }
 
 export function WorkingGroupDossierPage({ dossier }: WorkingGroupDossierPageProps) {
@@ -37,5 +37,5 @@ export function WorkingGroupDossierPage({ dossier }: WorkingGroupDossierPageProp
     >
       <WorkingGroupDossierDetail dossier={dossier} />
     </DossierDetailLayout>
-  );
+  )
 }

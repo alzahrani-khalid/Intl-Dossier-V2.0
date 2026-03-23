@@ -104,7 +104,7 @@ export async function warmSearchCache(): Promise<{
   errors: number
 }> {
   const startTime = Date.now()
-  console.log('[Cache Warming] Starting cache warming job...')
+  console.warn('[Cache Warming] Starting cache warming job...')
 
   let prefixesWarmed = 0
   let errors = 0
@@ -112,7 +112,7 @@ export async function warmSearchCache(): Promise<{
   try {
     // Get popular queries
     const popularQueries = await getPopularQueries(100)
-    console.log(`[Cache Warming] Found ${popularQueries.length} popular queries`)
+    console.warn(`[Cache Warming] Found ${popularQueries.length} popular queries`)
 
     // Extract all prefixes
     const allPrefixes = new Set<string>()
@@ -121,7 +121,7 @@ export async function warmSearchCache(): Promise<{
       prefixes.forEach((p) => allPrefixes.add(p))
     }
 
-    console.log(`[Cache Warming] Warming ${allPrefixes.size} unique prefixes...`)
+    console.warn(`[Cache Warming] Warming ${allPrefixes.size} unique prefixes...`)
 
     // Entity types to warm
     const entityTypes = ['all', 'dossiers', 'positions', 'documents']
@@ -154,7 +154,7 @@ export async function warmSearchCache(): Promise<{
     }
 
     const duration = Date.now() - startTime
-    console.log(
+    console.warn(
       `[Cache Warming] Completed in ${duration}ms. ` +
         `Warmed ${prefixesWarmed} prefixes, ${errors} errors`,
     )
@@ -176,7 +176,7 @@ export async function warmSearchCache(): Promise<{
 export function setupCacheWarmingJob() {
   const INTERVAL_MS = 3 * 60 * 1000 // 3 minutes
 
-  console.log(`[Cache Warming] Starting periodic cache warming (every 3 minutes)`)
+  console.warn(`[Cache Warming] Starting periodic cache warming (every 3 minutes)`)
 
   // Run immediately on startup
   warmSearchCache().catch((error) => {
@@ -199,7 +199,7 @@ export function setupCacheWarmingJob() {
 if (require.main === module) {
   warmSearchCache()
     .then((result) => {
-      console.log('Cache warming result:', result)
+      console.warn('Cache warming result:', result)
       process.exit(0)
     })
     .catch((error) => {

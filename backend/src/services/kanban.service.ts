@@ -3,7 +3,7 @@
  * Feature: 016-implement-kanban
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '../types/database.types'
 
 export type SortOption = 'created_at' | 'sla_deadline' | 'priority'

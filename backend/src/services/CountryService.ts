@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '../config/supabase'
-import { logInfo, logError } from '../utils/logger'
+import { logError } from '../utils/logger'
 import { COLUMNS } from '../lib/query-columns'
 
 export class CountryService {

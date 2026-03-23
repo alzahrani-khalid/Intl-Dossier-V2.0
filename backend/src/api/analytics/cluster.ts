@@ -1,3 +1,2 @@
-import router from '../contract/analytics';
-export default router;
-
+import router from '../contract/analytics'
+export default router

@@ -142,7 +142,6 @@ export function Cacheable(options: CacheableOptions) {
       throw new Error(`@Cacheable can only be applied to methods`)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor.value = async function (this: any, ...args: unknown[]): Promise<unknown> {
       const startTime = Date.now()
 
@@ -271,7 +270,6 @@ export function CacheInvalidate(options: CacheInvalidateOptions) {
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor.value = async function (this: any, ...args: unknown[]): Promise<unknown> {
       const timing = options.timing ?? 'after'
 
@@ -313,7 +311,6 @@ export function CachePut(options: CachePutOptions) {
       throw new Error(`@CachePut can only be applied to methods`)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor.value = async function (this: any, ...args: unknown[]): Promise<unknown> {
       // Always execute the method
       const result = await originalMethod.apply(this, args)

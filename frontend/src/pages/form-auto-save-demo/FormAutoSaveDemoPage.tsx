@@ -168,7 +168,7 @@ export function FormAutoSaveDemoPage() {
       try {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1500))
-        console.log('Form submitted:', values)
+        console.warn('Form submitted:', values)
 
         // Clear draft on successful submission
         await clearDraft()

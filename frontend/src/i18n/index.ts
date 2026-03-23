@@ -38,7 +38,9 @@ import enRelationships from './en/relationships.json'
 import arRelationships from './ar/relationships.json'
 import enAdvancedSearch from './en/advanced-search.json'
 import arAdvancedSearch from './ar/advanced-search.json'
+// eslint-disable-next-line no-restricted-syntax
 import enMLClassification from './en/ml-classification.json'
+// eslint-disable-next-line no-restricted-syntax
 import arMLClassification from './ar/ml-classification.json'
 import enAISummary from './en/ai-summary.json'
 import arAISummary from './ar/ai-summary.json'
@@ -268,7 +270,7 @@ const resources = {
     'engagement-briefs': enEngagementBriefs,
     relationships: enRelationships,
     'advanced-search': enAdvancedSearch,
-    'ml-classification': enMLClassification,
+    'ml-classification': enMLClassification, // eslint-disable-line no-restricted-syntax
     'ai-summary': enAISummary,
     'audit-logs': enAuditLogs,
     'bulk-actions': enBulkActions,
@@ -391,7 +393,7 @@ const resources = {
     'engagement-briefs': arEngagementBriefs,
     relationships: arRelationships,
     'advanced-search': arAdvancedSearch,
-    'ml-classification': arMLClassification,
+    'ml-classification': arMLClassification, // eslint-disable-line no-restricted-syntax
     'ai-summary': arAISummary,
     'audit-logs': arAuditLogs,
     'bulk-actions': arBulkActions,

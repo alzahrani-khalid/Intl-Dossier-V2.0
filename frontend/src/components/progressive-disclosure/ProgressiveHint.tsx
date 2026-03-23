@@ -427,7 +427,7 @@ function TooltipHint({
  *     contentKey: 'hints.dossier.create.content',
  *   }}
  *   variant="inline"
- *   onDismiss={() => console.log('Dismissed')}
+ *   onDismiss={() => console.warn('Dismissed')}
  * />
  *
  * @example

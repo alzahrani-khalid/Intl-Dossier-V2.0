@@ -289,7 +289,6 @@ export function useSettingsForm(): UseSettingsFormReturn {
   // Update single field
   const updateField = useCallback(
     <K extends keyof FormValues>(field: K, value: FormValues[K]) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       form.setValue(field, value as any, { shouldDirty: true })
     },
     [form],

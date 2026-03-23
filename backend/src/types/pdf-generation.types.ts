@@ -6,8 +6,8 @@
  * Supports professional distribution packages with organization branding and confidentiality markings.
  */
 
-import { z } from 'zod';
-import { ConfidentialityLevel } from './after-action.types';
+import { z } from 'zod'
+import { ConfidentialityLevel } from './after-action.types'
 
 /**
  * PDF generation status
@@ -39,56 +39,56 @@ export enum LayoutDirection {
  * PDF generation request
  */
 export interface PDFGenerationRequest {
-  after_action_id: string;
-  include_confidential_sections?: boolean;
-  include_attachments_list?: boolean;
-  include_version_history?: boolean;
-  watermark_text?: string;
+  after_action_id: string
+  include_confidential_sections?: boolean
+  include_attachments_list?: boolean
+  include_version_history?: boolean
+  watermark_text?: string
 }
 
 /**
  * PDF file metadata
  */
 export interface PDFFile {
-  language: PDFLanguage;
-  file_name: string;
-  file_size: number;
-  storage_path: string;
-  storage_url?: string; // 24h signed URL
-  page_count: number;
-  generated_at: string;
+  language: PDFLanguage
+  file_name: string
+  file_size: number
+  storage_path: string
+  storage_url?: string // 24h signed URL
+  page_count: number
+  generated_at: string
 }
 
 /**
  * Bilingual PDF response
  */
 export interface BilingualPDFResponse {
-  after_action_id: string;
-  english_pdf: PDFFile;
-  arabic_pdf: PDFFile;
+  after_action_id: string
+  english_pdf: PDFFile
+  arabic_pdf: PDFFile
   generation_metadata: {
-    total_generation_time_ms: number;
-    english_generation_time_ms: number;
-    arabic_generation_time_ms: number;
-    total_size_bytes: number;
-    generated_by: string;
-    generated_at: string;
-  };
+    total_generation_time_ms: number
+    english_generation_time_ms: number
+    arabic_generation_time_ms: number
+    total_size_bytes: number
+    generated_by: string
+    generated_at: string
+  }
 }
 
 /**
  * PDF generation job (for async generation)
  */
 export interface PDFGenerationJob {
-  job_id: string;
-  after_action_id: string;
-  status: PDFGenerationStatus;
-  requested_by: string;
-  created_at: string;
-  started_at?: string;
-  completed_at?: string;
-  error_message?: string;
-  result?: BilingualPDFResponse;
+  job_id: string
+  after_action_id: string
+  status: PDFGenerationStatus
+  requested_by: string
+  created_at: string
+  started_at?: string
+  completed_at?: string
+  error_message?: string
+  result?: BilingualPDFResponse
 }
 
 /**
@@ -96,28 +96,28 @@ export interface PDFGenerationJob {
  */
 export interface PDFDocumentStructure {
   // Header
-  organization_logo?: string; // Base64 or URL
-  confidentiality_marking: ConfidentialityLevel;
-  document_title: string;
-  document_subtitle?: string;
-  generation_date: string;
+  organization_logo?: string // Base64 or URL
+  confidentiality_marking: ConfidentialityLevel
+  document_title: string
+  document_subtitle?: string
+  generation_date: string
 
   // Content sections
-  sections: PDFSection[];
+  sections: PDFSection[]
 
   // Footer
-  page_numbers: boolean;
-  footer_text?: string;
-  watermark?: string;
+  page_numbers: boolean
+  footer_text?: string
+  watermark?: string
 }
 
 /**
  * PDF section
  */
 export interface PDFSection {
-  title: string;
-  content: PDFContent[];
-  page_break_after?: boolean;
+  title: string
+  content: PDFContent[]
+  page_break_after?: boolean
 }
 
 /**
@@ -128,71 +128,71 @@ export type PDFContent =
   | PDFListContent
   | PDFTableContent
   | PDFImageContent
-  | PDFSpacerContent;
+  | PDFSpacerContent
 
 export interface PDFTextContent {
-  type: 'text';
-  text: string;
-  style?: 'heading1' | 'heading2' | 'heading3' | 'body' | 'caption' | 'emphasis';
-  align?: 'start' | 'center' | 'end';
-  color?: string;
+  type: 'text'
+  text: string
+  style?: 'heading1' | 'heading2' | 'heading3' | 'body' | 'caption' | 'emphasis'
+  align?: 'start' | 'center' | 'end'
+  color?: string
 }
 
 export interface PDFListContent {
-  type: 'list';
-  items: string[];
-  ordered?: boolean;
-  start_number?: number;
+  type: 'list'
+  items: string[]
+  ordered?: boolean
+  start_number?: number
 }
 
 export interface PDFTableContent {
-  type: 'table';
-  headers: string[];
-  rows: string[][];
-  column_widths?: number[];
+  type: 'table'
+  headers: string[]
+  rows: string[][]
+  column_widths?: number[]
 }
 
 export interface PDFImageContent {
-  type: 'image';
-  source: string; // Base64 or URL
-  width?: number;
-  height?: number;
-  align?: 'start' | 'center' | 'end';
-  caption?: string;
+  type: 'image'
+  source: string // Base64 or URL
+  width?: number
+  height?: number
+  align?: 'start' | 'center' | 'end'
+  caption?: string
 }
 
 export interface PDFSpacerContent {
-  type: 'spacer';
-  height: number;
+  type: 'spacer'
+  height: number
 }
 
 /**
  * PDF styling configuration
  */
 export interface PDFStyleConfig {
-  language: PDFLanguage;
-  direction: LayoutDirection;
-  font_family: string;
-  font_size_body: number;
-  font_size_heading1: number;
-  font_size_heading2: number;
-  font_size_heading3: number;
-  font_size_caption: number;
-  line_height: number;
-  margin_top: number;
-  margin_bottom: number;
-  margin_left: number;
-  margin_right: number;
-  page_size: 'A4' | 'Letter';
+  language: PDFLanguage
+  direction: LayoutDirection
+  font_family: string
+  font_size_body: number
+  font_size_heading1: number
+  font_size_heading2: number
+  font_size_heading3: number
+  font_size_caption: number
+  line_height: number
+  margin_top: number
+  margin_bottom: number
+  margin_left: number
+  margin_right: number
+  page_size: 'A4' | 'Letter'
   colors: {
-    primary: string;
-    secondary: string;
-    text: string;
-    text_light: string;
-    border: string;
-    background: string;
-    confidential: string;
-  };
+    primary: string
+    secondary: string
+    text: string
+    text_light: string
+    border: string
+    background: string
+    confidential: string
+  }
 }
 
 /**
@@ -200,14 +200,14 @@ export interface PDFStyleConfig {
  */
 export interface FontConfig {
   english: {
-    regular: string; // Path to Noto Sans Regular
-    bold: string; // Path to Noto Sans Bold
-    italic: string; // Path to Noto Sans Italic
-  };
+    regular: string // Path to Noto Sans Regular
+    bold: string // Path to Noto Sans Bold
+    italic: string // Path to Noto Sans Italic
+  }
   arabic: {
-    regular: string; // Path to Noto Sans Arabic Regular
-    bold: string; // Path to Noto Sans Arabic Bold
-  };
+    regular: string // Path to Noto Sans Arabic Regular
+    bold: string // Path to Noto Sans Arabic Bold
+  }
 }
 
 /**
@@ -224,9 +224,9 @@ export enum PDFErrorCode {
 }
 
 export interface PDFGenerationError {
-  code: PDFErrorCode;
-  message: string;
-  details?: Record<string, unknown>;
+  code: PDFErrorCode
+  message: string
+  details?: Record<string, unknown>
 }
 
 /**
@@ -240,7 +240,7 @@ export const pdfGenerationRequestSchema = z.object({
   include_attachments_list: z.boolean().default(true),
   include_version_history: z.boolean().default(false),
   watermark_text: z.string().max(50, 'Watermark text must be at most 50 characters').optional(),
-});
+})
 
 // PDF file metadata schema
 export const pdfFileSchema = z.object({
@@ -251,7 +251,7 @@ export const pdfFileSchema = z.object({
   storage_url: z.string().url().optional(),
   page_count: z.number().int().positive(),
   generated_at: z.string().datetime(),
-});
+})
 
 // Bilingual PDF response schema
 export const bilingualPDFResponseSchema = z.object({
@@ -266,12 +266,12 @@ export const bilingualPDFResponseSchema = z.object({
     generated_by: z.string().uuid(),
     generated_at: z.string().datetime(),
   }),
-});
+})
 
 // Export types inferred from schemas
-export type PDFGenerationRequestInput = z.infer<typeof pdfGenerationRequestSchema>;
-export type PDFFileOutput = z.infer<typeof pdfFileSchema>;
-export type BilingualPDFResponseOutput = z.infer<typeof bilingualPDFResponseSchema>;
+export type PDFGenerationRequestInput = z.infer<typeof pdfGenerationRequestSchema>
+export type PDFFileOutput = z.infer<typeof pdfFileSchema>
+export type BilingualPDFResponseOutput = z.infer<typeof bilingualPDFResponseSchema>
 
 /**
  * Default PDF styling configurations
@@ -301,7 +301,7 @@ export const DEFAULT_ENGLISH_STYLE: PDFStyleConfig = {
     background: '#ffffff',
     confidential: '#dc2626',
   },
-};
+}
 
 export const DEFAULT_ARABIC_STYLE: PDFStyleConfig = {
   language: PDFLanguage.ARABIC,
@@ -327,7 +327,7 @@ export const DEFAULT_ARABIC_STYLE: PDFStyleConfig = {
     background: '#ffffff',
     confidential: '#dc2626',
   },
-};
+}
 
 /**
  * Helper functions
@@ -337,16 +337,16 @@ export const DEFAULT_ARABIC_STYLE: PDFStyleConfig = {
  * Get style configuration for language
  */
 export function getStyleForLanguage(language: PDFLanguage): PDFStyleConfig {
-  return language === PDFLanguage.ARABIC ? DEFAULT_ARABIC_STYLE : DEFAULT_ENGLISH_STYLE;
+  return language === PDFLanguage.ARABIC ? DEFAULT_ARABIC_STYLE : DEFAULT_ENGLISH_STYLE
 }
 
 /**
  * Format file size for display
  */
 export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
 }
 
 /**
@@ -357,10 +357,10 @@ export function estimateGenerationTime(
   commitmentsCount: number,
   risksCount: number,
   followUpsCount: number,
-  attachmentsCount: number
+  attachmentsCount: number,
 ): number {
-  const baseTime = 2000; // 2 seconds base
-  const entityTime = (decisionsCount + commitmentsCount + risksCount + followUpsCount) * 100; // 100ms per entity
-  const attachmentTime = attachmentsCount * 200; // 200ms per attachment metadata
-  return baseTime + entityTime + attachmentTime;
+  const baseTime = 2000 // 2 seconds base
+  const entityTime = (decisionsCount + commitmentsCount + risksCount + followUpsCount) * 100 // 100ms per entity
+  const attachmentTime = attachmentsCount * 200 // 200ms per attachment metadata
+  return baseTime + entityTime + attachmentTime
 }

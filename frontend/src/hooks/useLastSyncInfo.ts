@@ -74,7 +74,7 @@ export function useLastSyncInfo(
           }
         }
       } catch (e) {
-        console.debug('Failed to load sync info from localStorage:', e)
+        console.warn('Failed to load sync info from localStorage:', e)
       }
     }
     return {
@@ -97,7 +97,7 @@ export function useLastSyncInfo(
           }),
         )
       } catch (e) {
-        console.debug('Failed to save sync info to localStorage:', e)
+        console.warn('Failed to save sync info to localStorage:', e)
       }
     }
   }, [fullStorageKey, syncInfo.lastSyncTime, syncInfo.itemsSynced])
@@ -146,7 +146,7 @@ export function useLastSyncInfo(
       try {
         localStorage.removeItem(fullStorageKey)
       } catch (e) {
-        console.debug('Failed to remove sync info from localStorage:', e)
+        console.warn('Failed to remove sync info from localStorage:', e)
       }
     }
   }, [fullStorageKey])

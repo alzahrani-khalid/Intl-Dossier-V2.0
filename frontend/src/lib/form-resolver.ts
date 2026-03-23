@@ -8,7 +8,6 @@
 import { zodResolver as baseZodResolver } from '@hookform/resolvers/zod'
 import type { Resolver } from 'react-hook-form'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function zodResolver(schema: any, ...args: any[]): Resolver<any> {
   return baseZodResolver(schema, ...args) as Resolver<any>
 }

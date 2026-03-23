@@ -6,10 +6,10 @@
  * link suggestions and entity embeddings generation.
  */
 
-import dotenv from 'dotenv';
-import { AIConfig } from '../types/ai-suggestions.types';
+import dotenv from 'dotenv'
+import { AIConfig } from '../types/ai-suggestions.types'
 
-dotenv.config();
+dotenv.config()
 
 /**
  * AnythingLLM API Configuration
@@ -33,42 +33,45 @@ export const anythingLLMConfig: AIConfig = {
 
   // Timeout (3 seconds)
   timeout_ms: parseInt(process.env.AI_TIMEOUT_MS || '3000', 10),
-};
+}
 
 /**
  * Validate AnythingLLM configuration
  */
 export function validateAnythingLLMConfig(): { valid: boolean; errors: string[] } {
-  const errors: string[] = [];
+  const errors: string[] = []
 
   if (!anythingLLMConfig.api_url) {
-    errors.push('ANYTHINGLLM_API_URL environment variable is required');
+    errors.push('ANYTHINGLLM_API_URL environment variable is required')
   }
 
   if (!anythingLLMConfig.api_key) {
-    errors.push('ANYTHINGLLM_API_KEY environment variable is required');
+    errors.push('ANYTHINGLLM_API_KEY environment variable is required')
   }
 
   if (!anythingLLMConfig.workspace_slug) {
-    errors.push('ANYTHINGLLM_WORKSPACE environment variable is required');
+    errors.push('ANYTHINGLLM_WORKSPACE environment variable is required')
   }
 
   if (anythingLLMConfig.embedding_dimensions <= 0) {
-    errors.push('Invalid embedding dimensions');
+    errors.push('Invalid embedding dimensions')
   }
 
   if (anythingLLMConfig.max_suggestions <= 0 || anythingLLMConfig.max_suggestions > 10) {
-    errors.push('max_suggestions must be between 1 and 10');
+    errors.push('max_suggestions must be between 1 and 10')
   }
 
-  if (anythingLLMConfig.min_confidence_threshold < 0 || anythingLLMConfig.min_confidence_threshold > 1) {
-    errors.push('min_confidence_threshold must be between 0 and 1');
+  if (
+    anythingLLMConfig.min_confidence_threshold < 0 ||
+    anythingLLMConfig.min_confidence_threshold > 1
+  ) {
+    errors.push('min_confidence_threshold must be between 0 and 1')
   }
 
   return {
     valid: errors.length === 0,
-    errors
-  };
+    errors,
+  }
 }
 
 /**
@@ -79,15 +82,15 @@ export async function checkAnythingLLMAvailability(): Promise<boolean> {
     const response = await fetch(`${anythingLLMConfig.api_url}/health`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${anythingLLMConfig.api_key}`,
+        Authorization: `Bearer ${anythingLLMConfig.api_key}`,
       },
       signal: AbortSignal.timeout(anythingLLMConfig.timeout_ms),
-    });
+    })
 
-    return response.ok;
+    return response.ok
   } catch (error) {
-    console.error('AnythingLLM availability check failed:', error);
-    return false;
+    console.error('AnythingLLM availability check failed:', error)
+    return false
   }
 }
 
@@ -100,24 +103,24 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${anythingLLMConfig.api_key}`,
+        Authorization: `Bearer ${anythingLLMConfig.api_key}`,
       },
       body: JSON.stringify({
         text,
-        model: anythingLLMConfig.embedding_model
+        model: anythingLLMConfig.embedding_model,
       }),
       signal: AbortSignal.timeout(anythingLLMConfig.timeout_ms),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error(`AnythingLLM API error: ${response.statusText}`);
+      throw new Error(`AnythingLLM API error: ${response.statusText}`)
     }
 
-    const data = await response.json();
-    return data.embedding || null;
+    const data = await response.json()
+    return data.embedding || null
   } catch (error) {
-    console.error('Embedding generation failed:', error);
-    return null;
+    console.error('Embedding generation failed:', error)
+    return null
   }
 }
 
@@ -127,7 +130,7 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
 export async function generateLinkReasoning(
   intakeText: string,
   entityName: string,
-  entityDescription: string
+  entityDescription: string,
 ): Promise<string> {
   try {
     const prompt = `Explain why this intake ticket should be linked to this entity:
@@ -137,31 +140,31 @@ Intake: ${intakeText}
 Entity: ${entityName}
 Description: ${entityDescription}
 
-Provide a brief 1-2 sentence explanation of the relationship.`;
+Provide a brief 1-2 sentence explanation of the relationship.`
 
     const response = await fetch(`${anythingLLMConfig.api_url}/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${anythingLLMConfig.api_key}`,
+        Authorization: `Bearer ${anythingLLMConfig.api_key}`,
       },
       body: JSON.stringify({
         message: prompt,
         mode: 'query',
-        workspace_slug: anythingLLMConfig.workspace_slug
+        workspace_slug: anythingLLMConfig.workspace_slug,
       }),
       signal: AbortSignal.timeout(anythingLLMConfig.timeout_ms),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error(`AnythingLLM API error: ${response.statusText}`);
+      throw new Error(`AnythingLLM API error: ${response.statusText}`)
     }
 
-    const data = await response.json();
-    return data.response || 'AI reasoning unavailable';
+    const data = await response.json()
+    return data.response || 'AI reasoning unavailable'
   } catch (error) {
-    console.error('Reasoning generation failed:', error);
-    return 'AI reasoning unavailable';
+    console.error('Reasoning generation failed:', error)
+    return 'AI reasoning unavailable'
   }
 }
 
@@ -169,18 +172,19 @@ Provide a brief 1-2 sentence explanation of the relationship.`;
  * Entity linking cache key prefixes
  */
 export const ENTITY_LINKING_CACHE_KEYS = {
-  ENTITY_METADATA: (entityType: string, entityId: string) => `entity:metadata:${entityType}:${entityId}`,
+  ENTITY_METADATA: (entityType: string, entityId: string) =>
+    `entity:metadata:${entityType}:${entityId}`,
   AI_SUGGESTIONS: (intakeId: string) => `ai:suggestions:${intakeId}`,
   EMBEDDING: (type: 'intake' | 'entity', id: string) => `embedding:${type}:${id}`,
-} as const;
+} as const
 
 /**
  * Cache TTL values (in seconds)
  */
 export const ENTITY_LINKING_CACHE_TTL = {
   ENTITY_METADATA: 300, // 5 minutes
-  AI_SUGGESTIONS: 60,   // 1 minute
-  EMBEDDING: 3600,      // 1 hour
-} as const;
+  AI_SUGGESTIONS: 60, // 1 minute
+  EMBEDDING: 3600, // 1 hour
+} as const
 
-export default anythingLLMConfig;
+export default anythingLLMConfig

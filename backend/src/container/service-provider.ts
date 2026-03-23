@@ -15,7 +15,6 @@ import {
   ScopeLevel,
   ScopeEvents,
   ServiceFactory,
-  ScopeMetadata,
   isDisposable,
   isAsyncDisposable,
 } from './interfaces'

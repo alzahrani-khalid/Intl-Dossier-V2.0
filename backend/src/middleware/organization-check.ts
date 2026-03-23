@@ -6,8 +6,8 @@
  * for intake tickets and entities within their organization.
  */
 
-import { Request, Response, NextFunction } from 'express';
-import { supabase } from '../config/supabase';
+import { Request, Response, NextFunction } from 'express'
+import { supabase } from '../config/supabase'
 
 /**
  * Middleware to verify intake ticket belongs to user's organization
@@ -15,51 +15,51 @@ import { supabase } from '../config/supabase';
 export async function checkIntakeOrganization(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   try {
-    const { intake_id } = req.body || req.params;
-    const userId = req.user?.id;
+    const { intake_id } = req.body || req.params
+    const userId = req.user?.id
 
     if (!userId) {
       res.status(401).json({
         error: 'Unauthorized',
-        message: 'User authentication required'
-      });
-      return;
+        message: 'User authentication required',
+      })
+      return
     }
 
     if (!intake_id) {
       res.status(400).json({
         error: 'Bad Request',
-        message: 'intake_id is required'
-      });
-      return;
+        message: 'intake_id is required',
+      })
+      return
     }
 
     // Get user's organizations
     const { data: userOrgs, error: orgError } = await supabase
       .from('organization_members')
       .select('organization_id')
-      .eq('user_id', userId);
+      .eq('user_id', userId)
 
     if (orgError) {
-      console.error('Organization fetch error:', orgError);
+      console.error('Organization fetch error:', orgError)
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to fetch user organizations'
-      });
-      return;
+        message: 'Failed to fetch user organizations',
+      })
+      return
     }
 
-    const orgIds = userOrgs?.map(org => org.organization_id) || [];
+    const orgIds = userOrgs?.map((org) => org.organization_id) || []
 
     if (orgIds.length === 0) {
       res.status(403).json({
         error: 'Forbidden',
-        message: 'User is not a member of any organization'
-      });
-      return;
+        message: 'User is not a member of any organization',
+      })
+      return
     }
 
     // Check if intake was created by a user in the same organization
@@ -67,14 +67,14 @@ export async function checkIntakeOrganization(
       .from('intake_tickets')
       .select('created_by')
       .eq('id', intake_id)
-      .single();
+      .single()
 
     if (intakeError || !intake) {
       res.status(404).json({
         error: 'Not Found',
-        message: 'Intake ticket not found'
-      });
-      return;
+        message: 'Intake ticket not found',
+      })
+      return
     }
 
     // Check if intake creator is in user's organization
@@ -82,33 +82,33 @@ export async function checkIntakeOrganization(
       .from('organization_members')
       .select('organization_id')
       .eq('user_id', intake.created_by)
-      .in('organization_id', orgIds);
+      .in('organization_id', orgIds)
 
     if (creatorOrgError) {
-      console.error('Creator org fetch error:', creatorOrgError);
+      console.error('Creator org fetch error:', creatorOrgError)
       res.status(500).json({
         error: 'Internal Server Error',
-        message: 'Failed to validate organization'
-      });
-      return;
+        message: 'Failed to validate organization',
+      })
+      return
     }
 
     if (!intakeCreatorOrg || intakeCreatorOrg.length === 0) {
       res.status(403).json({
         error: 'Forbidden',
-        message: 'Intake ticket does not belong to your organization'
-      });
-      return;
+        message: 'Intake ticket does not belong to your organization',
+      })
+      return
     }
 
     // Organization check passed
-    next();
+    next()
   } catch (error) {
-    console.error('Organization check error:', error);
+    console.error('Organization check error:', error)
     res.status(500).json({
       error: 'Internal Server Error',
-      message: 'Organization validation failed'
-    });
+      message: 'Organization validation failed',
+    })
   }
 }
 
@@ -121,38 +121,38 @@ export async function checkIntakeOrganization(
 export async function checkEntityOrganization(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   try {
-    const { entity_type, entity_id } = req.body;
-    const userId = req.user?.id;
+    const { entity_type, entity_id } = req.body
+    const userId = req.user?.id
 
     if (!userId) {
       res.status(401).json({
         error: 'Unauthorized',
-        message: 'User authentication required'
-      });
-      return;
+        message: 'User authentication required',
+      })
+      return
     }
 
     if (!entity_type || !entity_id) {
       res.status(400).json({
         error: 'Bad Request',
-        message: 'entity_type and entity_id are required'
-      });
-      return;
+        message: 'entity_type and entity_id are required',
+      })
+      return
     }
 
     // TODO: Implement entity organization check by querying entity table
     // For now, assume organization check is handled by RLS policies
 
     // Entity organization check passed
-    next();
+    next()
   } catch (error) {
-    console.error('Entity organization check error:', error);
+    console.error('Entity organization check error:', error)
     res.status(500).json({
       error: 'Internal Server Error',
-      message: 'Entity organization validation failed'
-    });
+      message: 'Entity organization validation failed',
+    })
   }
 }

@@ -59,14 +59,18 @@ export class ThemeErrorBoundary extends Component<Props, State> {
     // Clear corrupted localStorage
     try {
       localStorage.removeItem('theme-preference')
-    } catch {}
+    } catch (_e) {
+      /* localStorage unavailable */
+    }
   }
 
   handleReset = (): void => {
     // Clear corrupted state
     try {
       localStorage.removeItem('theme-preference')
-    } catch {}
+    } catch (_e) {
+      /* localStorage unavailable */
+    }
 
     // Reset error state
     this.setState({ hasError: false, error: null })

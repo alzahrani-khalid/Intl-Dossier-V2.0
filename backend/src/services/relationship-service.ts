@@ -1,28 +1,28 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '../types/database.types';
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { Database } from '../types/database.types'
 
-type RelationshipStatus = 'active' | 'historical' | 'terminated';
+type RelationshipStatus = 'active' | 'historical' | 'terminated'
 
 interface CreateRelationshipInput {
-  source_dossier_id: string;
-  target_dossier_id: string;
-  relationship_type: string;
-  relationship_metadata?: Record<string, unknown>;
-  notes_en?: string;
-  notes_ar?: string;
-  effective_from?: string;
-  effective_to?: string;
-  status?: RelationshipStatus;
+  source_dossier_id: string
+  target_dossier_id: string
+  relationship_type: string
+  relationship_metadata?: Record<string, unknown>
+  notes_en?: string
+  notes_ar?: string
+  effective_from?: string
+  effective_to?: string
+  status?: RelationshipStatus
 }
 
 interface UpdateRelationshipInput {
-  relationship_type?: string;
-  relationship_metadata?: Record<string, unknown>;
-  notes_en?: string;
-  notes_ar?: string;
-  effective_from?: string;
-  effective_to?: string;
-  status?: RelationshipStatus;
+  relationship_type?: string
+  relationship_metadata?: Record<string, unknown>
+  notes_en?: string
+  notes_ar?: string
+  effective_from?: string
+  effective_to?: string
+  status?: RelationshipStatus
 }
 
 /**
@@ -50,13 +50,13 @@ interface UpdateRelationshipInput {
  * // Returns both outgoing (source) and incoming (target) relationships
  */
 export class RelationshipService {
-  private supabase: SupabaseClient<Database>;
+  private supabase: SupabaseClient<Database>
 
   constructor(supabaseUrl?: string, supabaseKey?: string) {
     this.supabase = createClient<Database>(
       supabaseUrl || process.env.SUPABASE_URL!,
-      supabaseKey || process.env.SUPABASE_ANON_KEY!
-    );
+      supabaseKey || process.env.SUPABASE_ANON_KEY!,
+    )
   }
 
   /**
@@ -68,15 +68,15 @@ export class RelationshipService {
   async createRelationship(input: CreateRelationshipInput) {
     // Validate no self-reference
     if (input.source_dossier_id === input.target_dossier_id) {
-      throw new Error('Cannot create relationship: source and target cannot be the same dossier');
+      throw new Error('Cannot create relationship: source and target cannot be the same dossier')
     }
 
     // Validate temporal range
     if (input.effective_from && input.effective_to) {
-      const from = new Date(input.effective_from);
-      const to = new Date(input.effective_to);
+      const from = new Date(input.effective_from)
+      const to = new Date(input.effective_to)
       if (to < from) {
-        throw new Error('Cannot create relationship: effective_to must be >= effective_from');
+        throw new Error('Cannot create relationship: effective_to must be >= effective_from')
       }
     }
 
@@ -88,10 +88,10 @@ export class RelationshipService {
         status: input.status || 'active',
       })
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
-    return data;
+    if (error) throw error
+    return data
   }
 
   /**
@@ -104,45 +104,47 @@ export class RelationshipService {
   async getRelationshipsForDossier(
     dossierId: string,
     options: {
-      relationship_type?: string;
-      status?: RelationshipStatus;
-      includeHistorical?: boolean;
-    } = {}
+      relationship_type?: string
+      status?: RelationshipStatus
+      includeHistorical?: boolean
+    } = {},
   ) {
-    const { relationship_type, status, includeHistorical = false } = options;
+    const { relationship_type, status, includeHistorical = false } = options
 
     // Build query for both source and target
     let query = this.supabase
       .from('dossier_relationships')
-      .select(`
+      .select(
+        `
         *,
         source:source_dossier_id(id, type, name_en, name_ar, status),
         target:target_dossier_id(id, type, name_en, name_ar, status)
-      `)
-      .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`);
+      `,
+      )
+      .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`)
 
     // Apply filters
     if (relationship_type) {
-      query = query.eq('relationship_type', relationship_type);
+      query = query.eq('relationship_type', relationship_type)
     }
 
     if (status) {
-      query = query.eq('status', status);
+      query = query.eq('status', status)
     } else if (!includeHistorical) {
       // Default: only show active relationships
-      query = query.eq('status', 'active');
+      query = query.eq('status', 'active')
     }
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
-    if (error) throw error;
+    if (error) throw error
 
     // Transform data to indicate direction
     return (data || []).map((rel) => ({
       ...rel,
       direction: rel.source_dossier_id === dossierId ? 'outgoing' : 'incoming',
       related_dossier: rel.source_dossier_id === dossierId ? rel.target : rel.source,
-    }));
+    }))
   }
 
   /**
@@ -154,26 +156,26 @@ export class RelationshipService {
   async getBidirectionalRelationships(
     dossierId: string,
     options: {
-      relationship_type?: string;
-      status?: RelationshipStatus;
-    } = {}
+      relationship_type?: string
+      status?: RelationshipStatus
+    } = {},
   ) {
-    const { relationship_type, status = 'active' } = options;
+    const { relationship_type, status = 'active' } = options
 
     let query = this.supabase
       .from('dossier_relationships')
       .select('*')
       .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`)
-      .eq('status', status);
+      .eq('status', status)
 
     if (relationship_type) {
-      query = query.eq('relationship_type', relationship_type);
+      query = query.eq('relationship_type', relationship_type)
     }
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
-    if (error) throw error;
-    return data || [];
+    if (error) throw error
+    return data || []
   }
 
   /**
@@ -185,10 +187,10 @@ export class RelationshipService {
   async updateRelationship(relationshipId: string, input: UpdateRelationshipInput) {
     // Validate temporal range if both provided
     if (input.effective_from && input.effective_to) {
-      const from = new Date(input.effective_from);
-      const to = new Date(input.effective_to);
+      const from = new Date(input.effective_from)
+      const to = new Date(input.effective_to)
       if (to < from) {
-        throw new Error('Cannot update relationship: effective_to must be >= effective_from');
+        throw new Error('Cannot update relationship: effective_to must be >= effective_from')
       }
     }
 
@@ -197,10 +199,10 @@ export class RelationshipService {
       .update(input)
       .eq('id', relationshipId)
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
-    return data;
+    if (error) throw error
+    return data
   }
 
   /**
@@ -212,10 +214,10 @@ export class RelationshipService {
     const { error } = await this.supabase
       .from('dossier_relationships')
       .delete()
-      .eq('id', relationshipId);
+      .eq('id', relationshipId)
 
-    if (error) throw error;
-    return { success: true };
+    if (error) throw error
+    return { success: true }
   }
 
   /**
@@ -227,7 +229,7 @@ export class RelationshipService {
     return this.updateRelationship(relationshipId, {
       status: 'terminated',
       effective_to: new Date().toISOString(),
-    });
+    })
   }
 
   /**
@@ -239,32 +241,35 @@ export class RelationshipService {
   async getRelationshipsByType(
     relationshipType: string,
     options: {
-      status?: RelationshipStatus;
-      limit?: number;
-      offset?: number;
-    } = {}
+      status?: RelationshipStatus
+      limit?: number
+      offset?: number
+    } = {},
   ) {
-    const { status = 'active', limit = 50, offset = 0 } = options;
+    const { status = 'active', limit = 50, offset = 0 } = options
 
     const { data, error, count } = await this.supabase
       .from('dossier_relationships')
-      .select(`
+      .select(
+        `
         *,
         source:source_dossier_id(id, type, name_en, name_ar),
         target:target_dossier_id(id, type, name_en, name_ar)
-      `, { count: 'exact' })
+      `,
+        { count: 'exact' },
+      )
       .eq('relationship_type', relationshipType)
       .eq('status', status)
-      .range(offset, offset + limit - 1);
+      .range(offset, offset + limit - 1)
 
-    if (error) throw error;
+    if (error) throw error
 
     return {
       data: data || [],
       count,
       limit,
       offset,
-    };
+    }
   }
 
   /**
@@ -276,13 +281,13 @@ export class RelationshipService {
    */
   async validateHierarchy(parentId: string, childId: string): Promise<boolean> {
     // Check if childId is already an ancestor of parentId
-    const ancestors = await this.getAncestors(parentId);
+    const ancestors = await this.getAncestors(parentId)
 
-    if (ancestors.some(ancestor => ancestor.id === childId)) {
-      throw new Error('Cannot create relationship: circular hierarchy detected');
+    if (ancestors.some((ancestor) => ancestor.id === childId)) {
+      throw new Error('Cannot create relationship: circular hierarchy detected')
     }
 
-    return true;
+    return true
   }
 
   /**
@@ -291,10 +296,13 @@ export class RelationshipService {
    * @param maxDepth - Maximum depth to traverse (default 10)
    * @returns Array of ancestor dossiers
    */
-  private async getAncestors(dossierId: string, maxDepth: number = 10): Promise<Array<{ id: string }>> {
-    const ancestors: Array<{ id: string }> = [];
-    let currentId = dossierId;
-    let depth = 0;
+  private async getAncestors(
+    dossierId: string,
+    maxDepth: number = 10,
+  ): Promise<Array<{ id: string }>> {
+    const ancestors: Array<{ id: string }> = []
+    let currentId = dossierId
+    let depth = 0
 
     while (depth < maxDepth) {
       // Find parent relationship
@@ -305,16 +313,16 @@ export class RelationshipService {
         .in('relationship_type', ['parent_of', 'subsidiary_of'])
         .eq('status', 'active')
         .limit(1)
-        .single();
+        .single()
 
-      if (error || !data) break;
+      if (error || !data) break
 
-      ancestors.push({ id: data.source_dossier_id });
-      currentId = data.source_dossier_id;
-      depth++;
+      ancestors.push({ id: data.source_dossier_id })
+      currentId = data.source_dossier_id
+      depth++
     }
 
-    return ancestors;
+    return ancestors
   }
 
   /**
@@ -327,28 +335,28 @@ export class RelationshipService {
       .from('dossier_relationships')
       .select('relationship_type, source_dossier_id, target_dossier_id')
       .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`)
-      .eq('status', 'active');
+      .eq('status', 'active')
 
-    if (error) throw error;
+    if (error) throw error
 
     const stats = {
       total: data?.length || 0,
       outgoing: 0,
       incoming: 0,
       by_type: {} as Record<string, number>,
-    };
+    }
 
     data?.forEach((rel) => {
       if (rel.source_dossier_id === dossierId) {
-        stats.outgoing++;
+        stats.outgoing++
       } else {
-        stats.incoming++;
+        stats.incoming++
       }
 
-      stats.by_type[rel.relationship_type] = (stats.by_type[rel.relationship_type] || 0) + 1;
-    });
+      stats.by_type[rel.relationship_type] = (stats.by_type[rel.relationship_type] || 0) + 1
+    })
 
-    return stats;
+    return stats
   }
 
   /**
@@ -356,37 +364,42 @@ export class RelationshipService {
    * @param options - Filter and pagination options
    * @returns Paginated list of relationships
    */
-  async listRelationships(options: {
-    status?: RelationshipStatus;
-    relationship_type?: string;
-    limit?: number;
-    offset?: number;
-  } = {}) {
-    const { status, relationship_type, limit = 50, offset = 0 } = options;
+  async listRelationships(
+    options: {
+      status?: RelationshipStatus
+      relationship_type?: string
+      limit?: number
+      offset?: number
+    } = {},
+  ) {
+    const { status, relationship_type, limit = 50, offset = 0 } = options
 
     let query = this.supabase
       .from('dossier_relationships')
-      .select(`
+      .select(
+        `
         *,
         source:source_dossier_id(id, type, name_en, name_ar),
         target:target_dossier_id(id, type, name_en, name_ar)
-      `, { count: 'exact' })
-      .range(offset, offset + limit - 1);
+      `,
+        { count: 'exact' },
+      )
+      .range(offset, offset + limit - 1)
 
-    if (status) query = query.eq('status', status);
-    if (relationship_type) query = query.eq('relationship_type', relationship_type);
+    if (status) query = query.eq('status', status)
+    if (relationship_type) query = query.eq('relationship_type', relationship_type)
 
-    const { data, error, count } = await query;
+    const { data, error, count } = await query
 
-    if (error) throw error;
+    if (error) throw error
 
     return {
       data: data || [],
       count,
       limit,
       offset,
-    };
+    }
   }
 }
 
-export default RelationshipService;
+export default RelationshipService

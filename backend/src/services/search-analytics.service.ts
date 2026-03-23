@@ -208,7 +208,7 @@ export class SearchAnalyticsService {
       }
 
       const anonymizedCount = data?.length || 0
-      console.log(`[Search Analytics] Anonymized ${anonymizedCount} queries older than 90 days`)
+      console.warn(`[Search Analytics] Anonymized ${anonymizedCount} queries older than 90 days`)
       return anonymizedCount
     } catch (error) {
       console.error('Error anonymizing queries:', error)
@@ -224,7 +224,7 @@ export function setupAnonymizationJob() {
   const analyticsService = new SearchAnalyticsService()
   const INTERVAL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
-  console.log('[Search Analytics] Starting daily anonymization job')
+  console.warn('[Search Analytics] Starting daily anonymization job')
 
   // Run immediately on startup
   analyticsService.anonymizeOldQueries().catch((error) => {

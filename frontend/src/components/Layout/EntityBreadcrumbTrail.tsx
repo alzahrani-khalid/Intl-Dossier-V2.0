@@ -72,7 +72,7 @@ interface EntityBreadcrumbItemProps {
   isRTL: boolean
   isActive: boolean
   onRemove: (id: string) => void
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   t: (...args: any[]) => any
 }
 

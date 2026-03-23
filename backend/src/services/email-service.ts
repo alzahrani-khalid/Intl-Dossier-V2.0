@@ -10,18 +10,18 @@
  * @module services/email-service
  */
 
-import { createClient } from '@supabase/supabase-js';
-import { logInfo, logError, logWarn } from '../utils/logger';
+import { createClient } from '@supabase/supabase-js'
+import { logInfo, logError, logWarn } from '../utils/logger'
 
 // Initialize Supabase client for email sending
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = process.env.SUPABASE_URL || ''
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 // Email configuration
-const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@stats.gov.sa';
-const APP_URL = process.env.APP_URL || 'https://intl-dossier.stats.gov.sa';
-const APP_NAME = 'GASTAT International Dossier';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@stats.gov.sa'
+const APP_URL = process.env.APP_URL || 'https://intl-dossier.stats.gov.sa'
+const APP_NAME = 'GASTAT International Dossier'
 
 /**
  * Email template types
@@ -42,12 +42,12 @@ export enum EmailTemplate {
  * Email sending options
  */
 export interface EmailOptions {
-  to: string;
-  subject: string;
-  html: string;
-  text?: string;
-  template?: EmailTemplate;
-  templateData?: Record<string, unknown>;
+  to: string
+  subject: string
+  html: string
+  text?: string
+  template?: EmailTemplate
+  templateData?: Record<string, unknown>
 }
 
 /**
@@ -66,18 +66,18 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
         to: options.to,
         subject: options.subject,
         template: options.template,
-      });
+      })
 
       // Log email content for debugging
-      console.log('\n=== EMAIL CONTENT ===');
-      console.log(`To: ${options.to}`);
-      console.log(`Subject: ${options.subject}`);
-      console.log(`Template: ${options.template || 'custom'}`);
-      console.log('---');
-      console.log(options.text || options.html);
-      console.log('=====================\n');
+      console.warn('\n=== EMAIL CONTENT ===')
+      console.warn(`To: ${options.to}`)
+      console.warn(`Subject: ${options.subject}`)
+      console.warn(`Template: ${options.template || 'custom'}`)
+      console.warn('---')
+      console.warn(options.text || options.html)
+      console.warn('=====================\n')
 
-      return true;
+      return true
     }
 
     // Production email sending would go here
@@ -91,11 +91,11 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
     // };
     // await sgMail.send(msg);
 
-    logWarn('Email sending not configured for production', { to: options.to });
-    return false;
+    logWarn('Email sending not configured for production', { to: options.to })
+    return false
   } catch (error) {
-    logError('Email sending failed', error);
-    return false;
+    logError('Email sending failed', error)
+    return false
   }
 }
 
@@ -112,16 +112,16 @@ export async function sendActivationEmail(
   email: string,
   fullName: string,
   activationToken: string,
-  language: 'ar' | 'en' = 'en'
+  language: 'ar' | 'en' = 'en',
 ): Promise<boolean> {
-  const activationLink = `${APP_URL}/activate?token=${activationToken}`;
+  const activationLink = `${APP_URL}/activate?token=${activationToken}`
 
-  const subject = language === 'ar'
-    ? 'تفعيل حساب نظام الملف الدولي'
-    : `Activate Your ${APP_NAME} Account`;
+  const subject =
+    language === 'ar' ? 'تفعيل حساب نظام الملف الدولي' : `Activate Your ${APP_NAME} Account`
 
-  const html = language === 'ar'
-    ? `
+  const html =
+    language === 'ar'
+      ? `
       <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>مرحباً ${fullName}،</h2>
         <p>تم إنشاء حساب لك في نظام الملف الدولي - الهيئة العامة للإحصاء.</p>
@@ -142,7 +142,7 @@ export async function sendActivationEmail(
         </p>
       </div>
     `
-    : `
+      : `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Welcome ${fullName},</h2>
         <p>An account has been created for you in the ${APP_NAME} system.</p>
@@ -162,7 +162,7 @@ export async function sendActivationEmail(
           International Dossier System
         </p>
       </div>
-    `;
+    `
 
   return sendEmail({
     to: email,
@@ -170,7 +170,7 @@ export async function sendActivationEmail(
     html,
     template: EmailTemplate.ACCOUNT_ACTIVATION,
     templateData: { fullName, activationLink, language },
-  });
+  })
 }
 
 /**
@@ -186,16 +186,15 @@ export async function sendPasswordResetEmail(
   email: string,
   fullName: string,
   resetToken: string,
-  language: 'ar' | 'en' = 'en'
+  language: 'ar' | 'en' = 'en',
 ): Promise<boolean> {
-  const resetLink = `${APP_URL}/reset-password?token=${resetToken}`;
+  const resetLink = `${APP_URL}/reset-password?token=${resetToken}`
 
-  const subject = language === 'ar'
-    ? 'إعادة تعيين كلمة المرور'
-    : 'Reset Your Password';
+  const subject = language === 'ar' ? 'إعادة تعيين كلمة المرور' : 'Reset Your Password'
 
-  const html = language === 'ar'
-    ? `
+  const html =
+    language === 'ar'
+      ? `
       <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>مرحباً ${fullName}،</h2>
         <p>تلقينا طلباً لإعادة تعيين كلمة المرور لحسابك.</p>
@@ -217,7 +216,7 @@ export async function sendPasswordResetEmail(
         </p>
       </div>
     `
-    : `
+      : `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Hello ${fullName},</h2>
         <p>We received a request to reset the password for your account.</p>
@@ -238,7 +237,7 @@ export async function sendPasswordResetEmail(
           International Dossier System
         </p>
       </div>
-    `;
+    `
 
   return sendEmail({
     to: email,
@@ -246,7 +245,7 @@ export async function sendPasswordResetEmail(
     html,
     template: EmailTemplate.PASSWORD_RESET,
     templateData: { fullName, resetLink, language },
-  });
+  })
 }
 
 /**
@@ -264,7 +263,7 @@ export async function sendRoleChangeEmail(
   fullName: string,
   oldRole: string,
   newRole: string,
-  language: 'ar' | 'en' = 'en'
+  language: 'ar' | 'en' = 'en',
 ): Promise<boolean> {
   const roleNames = {
     super_admin: language === 'ar' ? 'مدير النظام' : 'Super Admin',
@@ -272,14 +271,14 @@ export async function sendRoleChangeEmail(
     manager: language === 'ar' ? 'مدير' : 'Manager',
     analyst: language === 'ar' ? 'محلل' : 'Analyst',
     viewer: language === 'ar' ? 'مشاهد' : 'Viewer',
-  };
+  }
 
-  const subject = language === 'ar'
-    ? 'تم تحديث صلاحيات حسابك'
-    : 'Your Account Permissions Have Been Updated';
+  const subject =
+    language === 'ar' ? 'تم تحديث صلاحيات حسابك' : 'Your Account Permissions Have Been Updated'
 
-  const html = language === 'ar'
-    ? `
+  const html =
+    language === 'ar'
+      ? `
       <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>مرحباً ${fullName}،</h2>
         <p>تم تحديث صلاحيات حسابك في نظام الملف الدولي.</p>
@@ -299,7 +298,7 @@ export async function sendRoleChangeEmail(
         </p>
       </div>
     `
-    : `
+      : `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Hello ${fullName},</h2>
         <p>Your account permissions in the ${APP_NAME} system have been updated.</p>
@@ -318,7 +317,7 @@ export async function sendRoleChangeEmail(
           International Dossier System
         </p>
       </div>
-    `;
+    `
 
   return sendEmail({
     to: email,
@@ -326,7 +325,7 @@ export async function sendRoleChangeEmail(
     html,
     template: EmailTemplate.ROLE_CHANGED,
     templateData: { fullName, oldRole, newRole, language },
-  });
+  })
 }
 
 /**
@@ -346,27 +345,27 @@ export async function sendDelegationExpiringEmail(
   otherUserName: string,
   expiresAt: string,
   isGrantor: boolean = true,
-  language: 'ar' | 'en' = 'en'
+  language: 'ar' | 'en' = 'en',
 ): Promise<boolean> {
   const expiryDate = new Date(expiresAt).toLocaleString(language === 'ar' ? 'ar-SA' : 'en-US', {
     dateStyle: 'long',
     timeStyle: 'short',
-  });
+  })
 
-  const subject = language === 'ar'
-    ? 'تنبيه: انتهاء صلاحية التفويض قريباً'
-    : 'Alert: Delegation Expiring Soon';
+  const subject =
+    language === 'ar' ? 'تنبيه: انتهاء صلاحية التفويض قريباً' : 'Alert: Delegation Expiring Soon'
 
   const message = isGrantor
-    ? (language === 'ar'
+    ? language === 'ar'
       ? `التفويض الممنوح لـ ${otherUserName} سينتهي في ${expiryDate}`
-      : `Your delegation to ${otherUserName} will expire on ${expiryDate}`)
-    : (language === 'ar'
+      : `Your delegation to ${otherUserName} will expire on ${expiryDate}`
+    : language === 'ar'
       ? `التفويض الممنوح من ${otherUserName} سينتهي في ${expiryDate}`
-      : `Your delegated access from ${otherUserName} will expire on ${expiryDate}`);
+      : `Your delegated access from ${otherUserName} will expire on ${expiryDate}`
 
-  const html = language === 'ar'
-    ? `
+  const html =
+    language === 'ar'
+      ? `
       <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>مرحباً ${fullName}،</h2>
         <p>${message}</p>
@@ -384,7 +383,7 @@ export async function sendDelegationExpiringEmail(
         </p>
       </div>
     `
-    : `
+      : `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Hello ${fullName},</h2>
         <p>${message}</p>
@@ -401,7 +400,7 @@ export async function sendDelegationExpiringEmail(
           International Dossier System
         </p>
       </div>
-    `;
+    `
 
   return sendEmail({
     to: email,
@@ -409,5 +408,5 @@ export async function sendDelegationExpiringEmail(
     html,
     template: EmailTemplate.DELEGATION_EXPIRING,
     templateData: { fullName, otherUserName, expiresAt, isGrantor, language },
-  });
+  })
 }

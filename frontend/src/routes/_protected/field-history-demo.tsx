@@ -125,7 +125,7 @@ function FieldHistoryDemoPage() {
           showFilters={true}
           showGroupedView={true}
           onRollback={(entry) => {
-            console.log('Rolled back:', entry)
+            console.warn('Rolled back:', entry)
           }}
         />
       )}

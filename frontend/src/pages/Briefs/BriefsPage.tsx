@@ -578,7 +578,7 @@ export function BriefsPage() {
               brief={generatedBrief}
               onCitationClick={(type, id) => {
                 // Handle citation navigation
-                console.log('Citation clicked:', type, id)
+                console.warn('Citation clicked:', type, id)
               }}
             />
           )}

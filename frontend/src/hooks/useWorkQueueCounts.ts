@@ -8,5 +8,5 @@ export function useWorkQueueCounts() {
       waiting: 0,
     },
     isLoading: false,
-  };
+  }
 }

@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { getPoolMetrics } from '../config/database';
+import { Request, Response, NextFunction } from 'express'
+import { getPoolMetrics } from '../config/database'
 
 /**
  * Degradation levels and their thresholds
@@ -16,30 +16,30 @@ enum DegradationLevel {
  * Feature flags for degradation
  */
 interface FeatureFlags {
-  realTimeUpdates: boolean;
-  exportLargeDatasets: boolean;
-  clusteringAnalysis: boolean;
-  anomalyDetection: boolean;
-  advancedSearch: boolean;
-  fileUploads: boolean;
-  backgroundJobs: boolean;
-  emailNotifications: boolean;
-  webhooks: boolean;
-  aiFeatures: boolean;
+  realTimeUpdates: boolean
+  exportLargeDatasets: boolean
+  clusteringAnalysis: boolean
+  anomalyDetection: boolean
+  advancedSearch: boolean
+  fileUploads: boolean
+  backgroundJobs: boolean
+  emailNotifications: boolean
+  webhooks: boolean
+  aiFeatures: boolean
 }
 
 /**
  * System metrics for degradation decisions
  */
 interface SystemMetrics {
-  cpuUsage: number;
-  memoryUsage: number;
-  activeConnections: number;
-  requestQueueLength: number;
-  responseTime: number;
-  errorRate: number;
-  replicas: number;
-  maxReplicas: number;
+  cpuUsage: number
+  memoryUsage: number
+  activeConnections: number
+  requestQueueLength: number
+  responseTime: number
+  errorRate: number
+  replicas: number
+  maxReplicas: number
 }
 
 /**
@@ -92,7 +92,7 @@ const DEGRADATION_THRESHOLDS = {
     errorRate: 0.1,
     replicaUsage: 0.95,
   },
-};
+}
 
 /**
  * Feature availability based on degradation level
@@ -158,7 +158,7 @@ const FEATURE_AVAILABILITY: Record<DegradationLevel, FeatureFlags> = {
     webhooks: false,
     aiFeatures: false,
   },
-};
+}
 
 /**
  * Request priority mapping
@@ -169,28 +169,28 @@ const REQUEST_PRIORITY_MAP: Record<string, RequestPriority> = {
   '/auth/logout': RequestPriority.CRITICAL,
   '/auth/mfa/verify': RequestPriority.CRITICAL,
   '/monitoring/health': RequestPriority.CRITICAL,
-  
+
   // High priority operations
   '/api/dossiers': RequestPriority.HIGH,
   '/api/users': RequestPriority.HIGH,
   '/api/security': RequestPriority.HIGH,
-  
+
   // Medium priority operations
   '/api/export': RequestPriority.MEDIUM,
   '/api/search': RequestPriority.MEDIUM,
   '/api/notifications': RequestPriority.MEDIUM,
-  
+
   // Low priority operations
   '/api/analytics': RequestPriority.LOW,
   '/api/clustering': RequestPriority.LOW,
   '/api/ai': RequestPriority.LOW,
-};
+}
 
 /**
  * Graceful degradation manager
  */
 class GracefulDegradationManager {
-  private currentLevel: DegradationLevel = DegradationLevel.NONE;
+  private currentLevel: DegradationLevel = DegradationLevel.NONE
   private metrics: SystemMetrics = {
     cpuUsage: 0,
     memoryUsage: 0,
@@ -200,19 +200,19 @@ class GracefulDegradationManager {
     errorRate: 0,
     replicas: 2,
     maxReplicas: 20,
-  };
-  private requestQueue: Map<RequestPriority, Request[]> = new Map();
-  private lastEvaluation: number = Date.now();
-  private evaluationInterval: number = 30000; // 30 seconds
+  }
+  private requestQueue: Map<RequestPriority, Request[]> = new Map()
+  private lastEvaluation: number = Date.now()
+  private evaluationInterval: number = 30000 // 30 seconds
 
   constructor() {
     // Initialize request queues
-    Object.values(RequestPriority).forEach(priority => {
-      this.requestQueue.set(priority, []);
-    });
+    Object.values(RequestPriority).forEach((priority) => {
+      this.requestQueue.set(priority, [])
+    })
 
     // Start monitoring
-    this.startMonitoring();
+    this.startMonitoring()
   }
 
   /**
@@ -220,9 +220,9 @@ class GracefulDegradationManager {
    */
   private startMonitoring(): void {
     setInterval(() => {
-      this.updateMetrics();
-      this.evaluateDegradationLevel();
-    }, this.evaluationInterval);
+      this.updateMetrics()
+      this.evaluateDegradationLevel()
+    }, this.evaluationInterval)
   }
 
   /**
@@ -231,27 +231,28 @@ class GracefulDegradationManager {
   private async updateMetrics(): Promise<void> {
     try {
       // Get CPU and memory usage
-      const usage = process.cpuUsage();
-      const memUsage = process.memoryUsage();
-      
-      this.metrics.cpuUsage = (usage.user + usage.system) / 1000000 / process.uptime() * 100;
-      this.metrics.memoryUsage = (memUsage.heapUsed / memUsage.heapTotal) * 100;
-      
+      const usage = process.cpuUsage()
+      const memUsage = process.memoryUsage()
+
+      this.metrics.cpuUsage = ((usage.user + usage.system) / 1000000 / process.uptime()) * 100
+      this.metrics.memoryUsage = (memUsage.heapUsed / memUsage.heapTotal) * 100
+
       // Get database pool metrics
-      const poolMetrics = getPoolMetrics();
-      this.metrics.activeConnections = poolMetrics.totalConnections;
-      this.metrics.responseTime = poolMetrics.averageQueryTime;
-      this.metrics.errorRate = poolMetrics.connectionErrors / Math.max(poolMetrics.totalQueries, 1);
-      
+      const poolMetrics = getPoolMetrics()
+      this.metrics.activeConnections = poolMetrics.totalConnections
+      this.metrics.responseTime = poolMetrics.averageQueryTime
+      this.metrics.errorRate = poolMetrics.connectionErrors / Math.max(poolMetrics.totalQueries, 1)
+
       // Get replica count from environment or config
-      this.metrics.replicas = parseInt(process.env.REPLICA_COUNT || '2');
-      
+      this.metrics.replicas = parseInt(process.env.REPLICA_COUNT || '2')
+
       // Calculate request queue length
-      this.metrics.requestQueueLength = Array.from(this.requestQueue.values())
-        .reduce((total, queue) => total + queue.length, 0);
-      
+      this.metrics.requestQueueLength = Array.from(this.requestQueue.values()).reduce(
+        (total, queue) => total + queue.length,
+        0,
+      )
     } catch (error) {
-      console.error('Failed to update metrics:', error);
+      console.error('Failed to update metrics:', error)
     }
   }
 
@@ -259,25 +260,25 @@ class GracefulDegradationManager {
    * Evaluate and set degradation level based on metrics
    */
   private evaluateDegradationLevel(): void {
-    const previousLevel = this.currentLevel;
-    
+    const previousLevel = this.currentLevel
+
     // Check thresholds from critical to low
     if (this.checkThreshold(DEGRADATION_THRESHOLDS.critical)) {
-      this.currentLevel = DegradationLevel.CRITICAL;
+      this.currentLevel = DegradationLevel.CRITICAL
     } else if (this.checkThreshold(DEGRADATION_THRESHOLDS.high)) {
-      this.currentLevel = DegradationLevel.HIGH;
+      this.currentLevel = DegradationLevel.HIGH
     } else if (this.checkThreshold(DEGRADATION_THRESHOLDS.medium)) {
-      this.currentLevel = DegradationLevel.MEDIUM;
+      this.currentLevel = DegradationLevel.MEDIUM
     } else if (this.checkThreshold(DEGRADATION_THRESHOLDS.low)) {
-      this.currentLevel = DegradationLevel.LOW;
+      this.currentLevel = DegradationLevel.LOW
     } else {
-      this.currentLevel = DegradationLevel.NONE;
+      this.currentLevel = DegradationLevel.NONE
     }
-    
+
     // Log level changes
     if (previousLevel !== this.currentLevel) {
-      console.log(`Degradation level changed: ${previousLevel} -> ${this.currentLevel}`);
-      this.onDegradationLevelChange(previousLevel, this.currentLevel);
+      console.warn(`Degradation level changed: ${previousLevel} -> ${this.currentLevel}`)
+      this.onDegradationLevelChange(previousLevel, this.currentLevel)
     }
   }
 
@@ -285,8 +286,8 @@ class GracefulDegradationManager {
    * Check if metrics exceed threshold
    */
   private checkThreshold(threshold: any): boolean {
-    const replicaUsage = this.metrics.replicas / this.metrics.maxReplicas;
-    
+    const replicaUsage = this.metrics.replicas / this.metrics.maxReplicas
+
     return (
       this.metrics.cpuUsage >= threshold.cpuUsage ||
       this.metrics.memoryUsage >= threshold.memoryUsage ||
@@ -295,7 +296,7 @@ class GracefulDegradationManager {
       this.metrics.responseTime >= threshold.responseTime ||
       this.metrics.errorRate >= threshold.errorRate ||
       replicaUsage >= threshold.replicaUsage
-    );
+    )
   }
 
   /**
@@ -303,20 +304,20 @@ class GracefulDegradationManager {
    */
   private async onDegradationLevelChange(
     previousLevel: DegradationLevel,
-    newLevel: DegradationLevel
+    newLevel: DegradationLevel,
   ): Promise<void> {
     // Log to audit
-    console.log(`System degradation level changed from ${previousLevel} to ${newLevel}`);
-    
+    console.warn(`System degradation level changed from ${previousLevel} to ${newLevel}`)
+
     // Notify monitoring systems
-    await this.notifyMonitoring(newLevel);
-    
+    await this.notifyMonitoring(newLevel)
+
     // Apply feature adjustments
-    this.applyFeatureAdjustments(newLevel);
-    
+    this.applyFeatureAdjustments(newLevel)
+
     // Process queued requests if improving
     if (this.isImprovement(previousLevel, newLevel)) {
-      this.processQueuedRequests();
+      this.processQueuedRequests()
     }
   }
 
@@ -330,21 +331,21 @@ class GracefulDegradationManager {
       DegradationLevel.MEDIUM,
       DegradationLevel.HIGH,
       DegradationLevel.CRITICAL,
-    ];
-    
-    return levels.indexOf(current) < levels.indexOf(previous);
+    ]
+
+    return levels.indexOf(current) < levels.indexOf(previous)
   }
 
   /**
    * Apply feature adjustments based on degradation level
    */
   private applyFeatureAdjustments(level: DegradationLevel): void {
-    const features = FEATURE_AVAILABILITY[level];
-    
+    const features = FEATURE_AVAILABILITY[level]
+
     // Store feature flags in environment or cache
-    process.env.FEATURE_FLAGS = JSON.stringify(features);
-    
-    console.log(`Features adjusted for ${level} degradation:`, features);
+    process.env.FEATURE_FLAGS = JSON.stringify(features)
+
+    console.warn(`Features adjusted for ${level} degradation:`, features)
   }
 
   /**
@@ -353,7 +354,7 @@ class GracefulDegradationManager {
   private async notifyMonitoring(level: DegradationLevel): Promise<void> {
     // Implementation would send alerts to monitoring systems
     // This is a placeholder for the actual implementation
-    console.log(`Monitoring notified of degradation level: ${level}`);
+    console.warn(`Monitoring notified of degradation level: ${level}`)
   }
 
   /**
@@ -365,16 +366,16 @@ class GracefulDegradationManager {
       RequestPriority.HIGH,
       RequestPriority.MEDIUM,
       RequestPriority.LOW,
-    ];
-    
+    ]
+
     for (const priority of priorities) {
-      const queue = this.requestQueue.get(priority) || [];
-      
+      const queue = this.requestQueue.get(priority) || []
+
       while (queue.length > 0 && this.canProcessRequest(priority)) {
-        const request = queue.shift();
+        const request = queue.shift()
         if (request) {
           // Process the request
-          console.log(`Processing queued ${priority} priority request`);
+          console.warn(`Processing queued ${priority} priority request`)
         }
       }
     }
@@ -387,19 +388,19 @@ class GracefulDegradationManager {
     switch (this.currentLevel) {
       case DegradationLevel.NONE:
       case DegradationLevel.LOW:
-        return true;
-        
+        return true
+
       case DegradationLevel.MEDIUM:
-        return priority !== RequestPriority.LOW;
-        
+        return priority !== RequestPriority.LOW
+
       case DegradationLevel.HIGH:
-        return priority === RequestPriority.CRITICAL || priority === RequestPriority.HIGH;
-        
+        return priority === RequestPriority.CRITICAL || priority === RequestPriority.HIGH
+
       case DegradationLevel.CRITICAL:
-        return priority === RequestPriority.CRITICAL;
-        
+        return priority === RequestPriority.CRITICAL
+
       default:
-        return true;
+        return true
     }
   }
 
@@ -407,28 +408,28 @@ class GracefulDegradationManager {
    * Get current degradation level
    */
   getCurrentLevel(): DegradationLevel {
-    return this.currentLevel;
+    return this.currentLevel
   }
 
   /**
    * Get current feature flags
    */
   getFeatureFlags(): FeatureFlags {
-    return FEATURE_AVAILABILITY[this.currentLevel];
+    return FEATURE_AVAILABILITY[this.currentLevel]
   }
 
   /**
    * Get current metrics
    */
   getMetrics(): SystemMetrics {
-    return { ...this.metrics };
+    return { ...this.metrics }
   }
 
   /**
    * Check if a specific feature is available
    */
   isFeatureAvailable(feature: keyof FeatureFlags): boolean {
-    return FEATURE_AVAILABILITY[this.currentLevel][feature];
+    return FEATURE_AVAILABILITY[this.currentLevel][feature]
   }
 
   /**
@@ -437,18 +438,18 @@ class GracefulDegradationManager {
   getRequestPriority(path: string): RequestPriority {
     // Check exact matches
     if (REQUEST_PRIORITY_MAP[path]) {
-      return REQUEST_PRIORITY_MAP[path];
+      return REQUEST_PRIORITY_MAP[path]
     }
-    
+
     // Check path prefixes
     for (const [pattern, priority] of Object.entries(REQUEST_PRIORITY_MAP)) {
       if (path.startsWith(pattern)) {
-        return priority;
+        return priority
       }
     }
-    
+
     // Default to medium priority
-    return RequestPriority.MEDIUM;
+    return RequestPriority.MEDIUM
   }
 
   /**
@@ -456,22 +457,22 @@ class GracefulDegradationManager {
    */
   queueRequest(req: Request, priority: RequestPriority): boolean {
     if (!this.canProcessRequest(priority)) {
-      const queue = this.requestQueue.get(priority) || [];
-      
+      const queue = this.requestQueue.get(priority) || []
+
       // Limit queue size
-      const maxQueueSize = 100;
+      const maxQueueSize = 100
       if (queue.length < maxQueueSize) {
-        queue.push(req);
-        return true;
+        queue.push(req)
+        return true
       }
     }
-    
-    return false;
+
+    return false
   }
 }
 
 // Create singleton instance
-const degradationManager = new GracefulDegradationManager();
+const degradationManager = new GracefulDegradationManager()
 
 /**
  * Middleware for graceful degradation
@@ -479,42 +480,43 @@ const degradationManager = new GracefulDegradationManager();
 export const gracefulDegradationMiddleware = () => {
   return (req: Request, res: Response, next: NextFunction) => {
     // Get request priority
-    const priority = degradationManager.getRequestPriority(req.path);
-    
+    const priority = degradationManager.getRequestPriority(req.path)
+
     // Check if request should be queued or rejected
     if (!degradationManager.canProcessRequest(priority)) {
       // Try to queue the request
       if (degradationManager.queueRequest(req, priority)) {
         return res.status(503).json({
           error: 'Service temporarily unavailable',
-          message: 'Your request has been queued and will be processed when resources are available',
+          message:
+            'Your request has been queued and will be processed when resources are available',
           message_ar: 'تم وضع طلبك في قائمة الانتظار وسيتم معالجته عند توفر الموارد',
           retryAfter: 60,
-        });
+        })
       } else {
         return res.status(503).json({
           error: 'Service overloaded',
           message: 'The service is currently overloaded. Please try again later.',
           message_ar: 'الخدمة محملة حالياً. يرجى المحاولة مرة أخرى لاحقاً',
           retryAfter: 300,
-        });
+        })
       }
     }
-    
+
     // Add degradation info to request
-    (req as any).degradation = {
+    ;(req as any).degradation = {
       level: degradationManager.getCurrentLevel(),
       features: degradationManager.getFeatureFlags(),
       priority,
-    };
-    
+    }
+
     // Add response headers
-    res.setHeader('X-Degradation-Level', degradationManager.getCurrentLevel());
-    res.setHeader('X-Request-Priority', priority);
-    
-    next();
-  };
-};
+    res.setHeader('X-Degradation-Level', degradationManager.getCurrentLevel())
+    res.setHeader('X-Request-Priority', priority)
+
+    next()
+  }
+}
 
 /**
  * Feature flag middleware
@@ -527,93 +529,89 @@ export const featureGateMiddleware = (feature: keyof FeatureFlags) => {
         message: `The ${feature} feature is temporarily disabled due to high system load`,
         message_ar: `ميزة ${feature} معطلة مؤقتاً بسبب الحمل العالي على النظام`,
         retryAfter: 300,
-      });
+      })
     }
-    
-    next();
-  };
-};
+
+    next()
+  }
+}
 
 /**
  * Circuit breaker for external services
  */
 export class CircuitBreaker {
-  private failures: number = 0;
-  private lastFailureTime: number = 0;
-  private state: 'closed' | 'open' | 'half-open' = 'closed';
-  private readonly threshold: number;
-  private readonly timeout: number;
-  private readonly resetTimeout: number;
+  private failures: number = 0
+  private lastFailureTime: number = 0
+  private state: 'closed' | 'open' | 'half-open' = 'closed'
+  private readonly threshold: number
+  private readonly timeout: number
+  private readonly resetTimeout: number
 
-  constructor(
-    threshold: number = 5,
-    timeout: number = 60000,
-    resetTimeout: number = 30000
-  ) {
-    this.threshold = threshold;
-    this.timeout = timeout;
-    this.resetTimeout = resetTimeout;
+  constructor(threshold: number = 5, timeout: number = 60000, resetTimeout: number = 30000) {
+    this.threshold = threshold
+    this.timeout = timeout
+    this.resetTimeout = resetTimeout
   }
 
   async execute<T>(fn: () => Promise<T>): Promise<T> {
     if (this.state === 'open') {
       if (Date.now() - this.lastFailureTime > this.resetTimeout) {
-        this.state = 'half-open';
+        this.state = 'half-open'
       } else {
-        throw new Error('Circuit breaker is open');
+        throw new Error('Circuit breaker is open')
       }
     }
 
     try {
-      const result = await fn();
-      
+      const result = await fn()
+
       if (this.state === 'half-open') {
-        this.reset();
+        this.reset()
       }
-      
-      return result;
+
+      return result
     } catch (error) {
-      this.recordFailure();
-      throw error;
+      this.recordFailure()
+      throw error
     }
   }
 
   private recordFailure(): void {
-    this.failures++;
-    this.lastFailureTime = Date.now();
-    
+    this.failures++
+    this.lastFailureTime = Date.now()
+
     if (this.failures >= this.threshold) {
-      this.state = 'open';
-      console.log('Circuit breaker opened due to failures');
+      this.state = 'open'
+      console.warn('Circuit breaker opened due to failures')
     }
   }
 
   private reset(): void {
-    this.failures = 0;
-    this.state = 'closed';
-    console.log('Circuit breaker reset');
+    this.failures = 0
+    this.state = 'closed'
+    console.warn('Circuit breaker reset')
   }
 
   getState(): string {
-    return this.state;
+    return this.state
   }
 }
 
 // Export utilities
-export default degradationManager;
+export default degradationManager
 
 export const getDegradationLevel = (): DegradationLevel => {
-  return degradationManager.getCurrentLevel();
-};
+  return degradationManager.getCurrentLevel()
+}
 
 export const getFeatureFlags = (): FeatureFlags => {
-  return degradationManager.getFeatureFlags();
-};
+  return degradationManager.getFeatureFlags()
+}
 
 export const isFeatureAvailable = (feature: keyof FeatureFlags): boolean => {
-  return degradationManager.isFeatureAvailable(feature);
-};
+  return degradationManager.isFeatureAvailable(feature)
+}
 
 export const getSystemMetrics = (): SystemMetrics => {
-  return degradationManager.getMetrics();
-};
+  return degradationManager.getMetrics()
+}

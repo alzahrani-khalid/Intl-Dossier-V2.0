@@ -1,7 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { AuthService } from '../AuthService'
 import { supabaseAdmin, supabaseAnon } from '../../config/supabase'
-import jwt from 'jsonwebtoken'
 
 // Mock supabase
 vi.mock('../../config/supabase', () => ({
@@ -123,9 +122,9 @@ describe('AuthService', () => {
         },
       })
 
-      await expect(
-        authService.login('test@example.com', 'password123')
-      ).rejects.toThrow('MFA challenge required')
+      await expect(authService.login('test@example.com', 'password123')).rejects.toThrow(
+        'MFA challenge required',
+      )
     })
 
     it('should handle invalid credentials', async () => {
@@ -139,9 +138,9 @@ describe('AuthService', () => {
         },
       })
 
-      await expect(
-        authService.login('test@example.com', 'wrongpassword')
-      ).rejects.toThrow('Invalid login credentials')
+      await expect(authService.login('test@example.com', 'wrongpassword')).rejects.toThrow(
+        'Invalid login credentials',
+      )
     })
 
     it('should logout user', async () => {
@@ -334,7 +333,7 @@ describe('AuthService', () => {
 
       expect(supabaseAnon.auth.resetPasswordForEmail).toHaveBeenCalledWith(
         'test@example.com',
-        expect.any(Object)
+        expect.any(Object),
       )
     })
   })
@@ -435,11 +434,7 @@ describe('AuthService', () => {
         }),
       } as any)
 
-      const hasPermission = await authService.checkPermission(
-        'user-123',
-        'delete',
-        'resource-123'
-      )
+      const hasPermission = await authService.checkPermission('user-123', 'delete', 'resource-123')
 
       expect(hasPermission).toBeDefined()
     })
@@ -458,7 +453,8 @@ describe('AuthService', () => {
       vi.mocked(supabaseAdmin.from).mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
-            single: vi.fn()
+            single: vi
+              .fn()
               .mockResolvedValueOnce({ data: mockAdminData, error: null })
               .mockResolvedValueOnce({ data: mockUserData, error: null }),
           }),
@@ -498,7 +494,7 @@ describe('AuthService', () => {
 
       // Next attempt should be rate limited
       await expect(authService.login(email, 'password')).rejects.toThrow(
-        'Invalid login credentials'
+        'Invalid login credentials',
       )
     })
 

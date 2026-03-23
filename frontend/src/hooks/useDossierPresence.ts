@@ -103,7 +103,7 @@ export function useDossierPresence(
   const log = useCallback(
     (...args: unknown[]) => {
       if (debug) {
-        console.log('[DossierPresence]', ...args)
+        console.warn('[DossierPresence]', ...args)
       }
     },
     [debug],

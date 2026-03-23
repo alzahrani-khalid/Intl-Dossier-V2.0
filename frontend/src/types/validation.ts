@@ -8,18 +8,18 @@ export type RuleType =
   | 'rtl'
   | 'performance'
   | 'registry'
-  | 'typography';
+  | 'typography'
 
-export type Severity = 'error' | 'warning' | 'info';
+export type Severity = 'error' | 'warning' | 'info'
 
 export interface ValidationRule {
-  id: string;
-  componentName?: string;
-  ruleType: RuleType;
-  severity: Severity;
-  message: string;
-  messageAr?: string;
-  autoFix?: boolean;
+  id: string
+  componentName?: string
+  ruleType: RuleType
+  severity: Severity
+  message: string
+  messageAr?: string
+  autoFix?: boolean
 }
 
 /**
@@ -27,15 +27,14 @@ export interface ValidationRule {
  * Mirrors ValidationResult schema from the spec.
  */
 export interface ValidationResult {
-  id: string;
-  componentName?: string;
-  ruleId: string;
-  passed: boolean;
-  severity: Severity;
-  message: string;
+  id: string
+  componentName?: string
+  ruleId: string
+  passed: boolean
+  severity: Severity
+  message: string
   /** Arbitrary context to help debugging (e.g., DOM path, props) */
-  context?: Record<string, unknown>;
-  suggestion?: string;
-  autoFixed?: boolean;
+  context?: Record<string, unknown>
+  suggestion?: string
+  autoFixed?: boolean
 }
-

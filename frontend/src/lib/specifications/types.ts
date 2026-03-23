@@ -88,7 +88,7 @@ export interface ExtendedSpecification<T> extends Specification<T> {
  * Generic type for Supabase query builders
  * This allows specifications to work with any table's query builder
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export type SupabaseQueryBuilder = PostgrestFilterBuilder<any, any, any, any, any>
 
 /**

@@ -52,4 +52,3 @@ export function useDesignTokens(options: UseDesignTokensOptions = {}) {
     getVar,
   }
 }
-

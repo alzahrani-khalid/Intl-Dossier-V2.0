@@ -6,72 +6,72 @@
  * Connects to Supabase Edge Functions: dossier-stats, calculate-health-score
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase'
 
 /**
  * Dossier statistics response
  */
 export interface DossierStats {
-  dossierId: string;
+  dossierId: string
   commitments?: {
-    total: number;
-    active: number;
-    overdue: number;
-    fulfilled: number;
-    upcoming: number;
-    fulfillmentRate: number;
-  };
+    total: number
+    active: number
+    overdue: number
+    fulfilled: number
+    upcoming: number
+    fulfillmentRate: number
+  }
   engagements?: {
-    total365d: number;
-    recent90d: number;
-    latestDate: string | null;
-    frequencyScore: number;
-  };
+    total365d: number
+    recent90d: number
+    latestDate: string | null
+    frequencyScore: number
+  }
   documents?: {
-    total: number;
-  };
+    total: number
+  }
   health?: {
-    overallScore: number | null;
+    overallScore: number | null
     components: {
-      engagementFrequency: number;
-      commitmentFulfillment: number;
-      recencyScore: number;
-    } | null;
-    sufficientData: boolean;
-    reason: string | null;
-    calculatedAt: string | null;
-  };
+      engagementFrequency: number
+      commitmentFulfillment: number
+      recencyScore: number
+    } | null
+    sufficientData: boolean
+    reason: string | null
+    calculatedAt: string | null
+  }
   dataFreshness?: {
-    isCurrent: boolean;
-    calculatedAt: string | null;
-    ageMinutes: number | null;
-  };
+    isCurrent: boolean
+    calculatedAt: string | null
+    ageMinutes: number | null
+  }
 }
 
 /**
  * Bulk dossier stats response
  */
 export interface BulkDossierStatsResponse {
-  stats: DossierStats[];
-  totalCount: number;
+  stats: DossierStats[]
+  totalCount: number
 }
 
 /**
  * Health score response
  */
 export interface HealthScoreResponse {
-  dossierId: string;
-  overallScore: number | null;
+  dossierId: string
+  overallScore: number | null
   components: {
-    engagementFrequency: number;
-    commitmentFulfillment: number;
-    recencyScore: number;
-  };
-  sufficientData: boolean;
-  reason: string | null;
-  calculatedAt: string;
-  calculationTimeMs: number;
-  cached: boolean;
+    engagementFrequency: number
+    commitmentFulfillment: number
+    recencyScore: number
+  }
+  sufficientData: boolean
+  reason: string | null
+  calculatedAt: string
+  calculationTimeMs: number
+  cached: boolean
 }
 
 /**
@@ -83,20 +83,18 @@ export interface HealthScoreResponse {
  */
 export async function getStats(
   dossierId: string,
-  include?: Array<'commitments' | 'engagements' | 'documents' | 'health'>
+  include?: Array<'commitments' | 'engagements' | 'documents' | 'health'>,
 ): Promise<DossierStats> {
-  const { data: session } = await supabase.auth.getSession();
+  const { data: session } = await supabase.auth.getSession()
 
   if (!session.session) {
-    throw new Error('User not authenticated');
+    throw new Error('User not authenticated')
   }
 
-  const url = new URL(
-    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dossier-stats`
-  );
-  url.searchParams.append('dossierId', dossierId);
+  const url = new URL(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dossier-stats`)
+  url.searchParams.append('dossierId', dossierId)
   if (include && include.length > 0) {
-    url.searchParams.append('include', include.join(','));
+    url.searchParams.append('include', include.join(','))
   }
 
   const response = await fetch(url.toString(), {
@@ -105,14 +103,14 @@ export async function getStats(
       Authorization: `Bearer ${session.session.access_token}`,
       'Content-Type': 'application/json',
     },
-  });
+  })
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error?.message_en || 'Failed to fetch dossier stats');
+    const error = await response.json()
+    throw new Error(error.error?.message_en || 'Failed to fetch dossier stats')
   }
 
-  return response.json();
+  return response.json()
 }
 
 /**
@@ -124,43 +122,40 @@ export async function getStats(
  */
 export async function getBulkStats(
   dossierIds: string[],
-  include?: Array<'commitments' | 'engagements' | 'documents' | 'health'>
+  include?: Array<'commitments' | 'engagements' | 'documents' | 'health'>,
 ): Promise<BulkDossierStatsResponse> {
-  const { data: session } = await supabase.auth.getSession();
+  const { data: session } = await supabase.auth.getSession()
 
   if (!session.session) {
-    throw new Error('User not authenticated');
+    throw new Error('User not authenticated')
   }
 
   if (dossierIds.length === 0) {
-    return { stats: [], totalCount: 0 };
+    return { stats: [], totalCount: 0 }
   }
 
   if (dossierIds.length > 100) {
-    throw new Error('Cannot fetch more than 100 dossiers at once');
+    throw new Error('Cannot fetch more than 100 dossiers at once')
   }
 
-  const response = await fetch(
-    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dossier-stats`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${session.session.access_token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        dossierIds,
-        include,
-      }),
-    }
-  );
+  const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dossier-stats`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${session.session.access_token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      dossierIds,
+      include,
+    }),
+  })
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error?.message_en || 'Failed to fetch bulk dossier stats');
+    const error = await response.json()
+    throw new Error(error.error?.message_en || 'Failed to fetch bulk dossier stats')
   }
 
-  return response.json();
+  return response.json()
 }
 
 /**
@@ -172,12 +167,12 @@ export async function getBulkStats(
  */
 export async function calculateHealthScore(
   dossierId: string,
-  forceRecalculation = false
+  forceRecalculation = false,
 ): Promise<HealthScoreResponse> {
-  const { data: session } = await supabase.auth.getSession();
+  const { data: session } = await supabase.auth.getSession()
 
   if (!session.session) {
-    throw new Error('User not authenticated');
+    throw new Error('User not authenticated')
   }
 
   const response = await fetch(
@@ -192,15 +187,15 @@ export async function calculateHealthScore(
         dossierId,
         forceRecalculation,
       }),
-    }
-  );
+    },
+  )
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error?.message_en || 'Failed to calculate health score');
+    const error = await response.json()
+    throw new Error(error.error?.message_en || 'Failed to calculate health score')
   }
 
-  return response.json();
+  return response.json()
 }
 
 /**
@@ -210,11 +205,11 @@ export async function calculateHealthScore(
  * @returns Tailwind CSS color class
  */
 export function getHealthScoreColor(score: number | null): string {
-  if (score === null) return 'text-gray-400';
-  if (score >= 80) return 'text-green-600 dark:text-green-400';
-  if (score >= 60) return 'text-yellow-600 dark:text-yellow-400';
-  if (score >= 40) return 'text-orange-600 dark:text-orange-400';
-  return 'text-red-600 dark:text-red-400';
+  if (score === null) return 'text-gray-400'
+  if (score >= 80) return 'text-green-600 dark:text-green-400'
+  if (score >= 60) return 'text-yellow-600 dark:text-yellow-400'
+  if (score >= 40) return 'text-orange-600 dark:text-orange-400'
+  return 'text-red-600 dark:text-red-400'
 }
 
 /**
@@ -224,48 +219,48 @@ export function getHealthScoreColor(score: number | null): string {
  * @returns Human-readable label
  */
 export function getHealthScoreLabel(score: number | null): string {
-  if (score === null) return 'Insufficient Data';
-  if (score >= 80) return 'Excellent';
-  if (score >= 60) return 'Good';
-  if (score >= 40) return 'Fair';
-  return 'Poor';
+  if (score === null) return 'Insufficient Data'
+  if (score >= 80) return 'Excellent'
+  if (score >= 60) return 'Good'
+  if (score >= 40) return 'Fair'
+  return 'Poor'
 }
 
 /**
  * Health distribution breakdown by tier
  */
 export interface HealthDistribution {
-  excellent: number; // 80-100
-  good: number; // 60-79
-  fair: number; // 40-59
-  poor: number; // 0-39
+  excellent: number // 80-100
+  good: number // 60-79
+  fair: number // 40-59
+  poor: number // 0-39
 }
 
 /**
  * Health aggregation for a group (region, bloc, or classification)
  */
 export interface HealthAggregation {
-  groupValue: string;
-  averageHealthScore: number;
-  dossierCount: number;
-  healthDistribution: HealthDistribution;
+  groupValue: string
+  averageHealthScore: number
+  dossierCount: number
+  healthDistribution: HealthDistribution
 }
 
 /**
  * Dashboard aggregations response
  */
 export interface DashboardAggregationsResponse {
-  aggregations: HealthAggregation[];
-  totalDossiers: number;
-  groupBy: string;
+  aggregations: HealthAggregation[]
+  totalDossiers: number
+  groupBy: string
 }
 
 /**
  * Dashboard aggregations request filter
  */
 export interface DashboardAggregationsFilter {
-  dossierType?: 'country' | 'organization' | 'forum';
-  minHealthScore?: number;
+  dossierType?: 'country' | 'organization' | 'forum'
+  minHealthScore?: number
 }
 
 /**
@@ -277,12 +272,12 @@ export interface DashboardAggregationsFilter {
  */
 export async function getDashboardAggregations(
   groupBy: 'region' | 'org_type',
-  filter?: DashboardAggregationsFilter
+  filter?: DashboardAggregationsFilter,
 ): Promise<DashboardAggregationsResponse> {
-  const { data: session } = await supabase.auth.getSession();
+  const { data: session } = await supabase.auth.getSession()
 
   if (!session.session) {
-    throw new Error('User not authenticated');
+    throw new Error('User not authenticated')
   }
 
   const response = await fetch(
@@ -297,15 +292,13 @@ export async function getDashboardAggregations(
         groupBy,
         filter,
       }),
-    }
-  );
+    },
+  )
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(
-      error.error?.message_en || 'Failed to fetch dashboard aggregations'
-    );
+    const error = await response.json()
+    throw new Error(error.error?.message_en || 'Failed to fetch dashboard aggregations')
   }
 
-  return response.json();
+  return response.json()
 }

@@ -89,11 +89,11 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
         <Card
           key={index}
           className={cn(
-            'border-l-4',
-            risk.severity === 'low' && 'border-l-green-500',
-            risk.severity === 'medium' && 'border-l-amber-500',
-            risk.severity === 'high' && 'border-l-orange-600',
-            risk.severity === 'critical' && 'border-l-red-600',
+            'border-s-4',
+            risk.severity === 'low' && 'border-s-green-500',
+            risk.severity === 'medium' && 'border-s-amber-500',
+            risk.severity === 'high' && 'border-s-orange-600',
+            risk.severity === 'critical' && 'border-s-red-600',
           )}
         >
           <CardHeader>

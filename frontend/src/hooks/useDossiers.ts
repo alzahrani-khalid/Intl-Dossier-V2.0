@@ -155,7 +155,7 @@ const getAuthHeaders = async () => {
  * @example
  * // Access pagination info
  * const { data } = useDossiers({ page: 2 });
- * console.log(`Showing ${data?.data.length} of ${data?.total}`);
+ * console.warn(`Showing ${data?.data.length} of ${data?.total}`);
  */
 export const useDossiers = (filters?: DossierFilters) => {
   return useQuery({

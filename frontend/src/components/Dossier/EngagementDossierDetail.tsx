@@ -7,61 +7,58 @@
  * Mobile-first design with RTL support.
  */
 
-import { useTranslation } from 'react-i18next';
-import { useSessionStorage } from '@/hooks/useSessionStorage';
-import { CollapsibleSection } from '@/components/Dossier/CollapsibleSection';
-import { EngagementInformation } from '@/components/Dossier/sections/EngagementInformation';
-import { EngagementTimeline } from '@/components/timeline/EngagementTimeline';
-import { ParticipantsList } from '@/components/Dossier/sections/ParticipantsList';
-import { OutcomesSummary } from '@/components/Dossier/sections/OutcomesSummary';
-import { FollowUpActions } from '@/components/Dossier/sections/FollowUpActions';
-import { EngagementPositionsSection } from '@/components/positions/EngagementPositionsSection';
-import type { EngagementDossier } from '@/lib/dossier-type-guards';
+import { useTranslation } from 'react-i18next'
+import { useSessionStorage } from '@/hooks/useSessionStorage'
+import { CollapsibleSection } from '@/components/Dossier/CollapsibleSection'
+import { EngagementInformation } from '@/components/Dossier/sections/EngagementInformation'
+import { EngagementTimeline } from '@/components/timeline/EngagementTimeline'
+import { ParticipantsList } from '@/components/Dossier/sections/ParticipantsList'
+import { OutcomesSummary } from '@/components/Dossier/sections/OutcomesSummary'
+import { FollowUpActions } from '@/components/Dossier/sections/FollowUpActions'
+import { EngagementPositionsSection } from '@/components/positions/EngagementPositionsSection'
+import type { EngagementDossier } from '@/lib/dossier-type-guards'
 
 interface EngagementDossierDetailProps {
-  dossier: EngagementDossier;
+  dossier: EngagementDossier
 }
 
 export function EngagementDossierDetail({ dossier }: EngagementDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Session storage for section collapse state
   const [informationOpen, setInformationOpen] = useSessionStorage(
     `engagement-${dossier.id}-information-open`,
-    true
-  );
+    true,
+  )
 
   const [positionsOpen, setPositionsOpen] = useSessionStorage(
     `engagement-${dossier.id}-positions-open`,
-    true
-  );
+    true,
+  )
 
   const [timelineOpen, setTimelineOpen] = useSessionStorage(
     `engagement-${dossier.id}-timeline-open`,
-    true
-  );
+    true,
+  )
 
   const [participantsOpen, setParticipantsOpen] = useSessionStorage(
     `engagement-${dossier.id}-participants-open`,
-    true
-  );
+    true,
+  )
 
   const [outcomesOpen, setOutcomesOpen] = useSessionStorage(
     `engagement-${dossier.id}-outcomes-open`,
-    true
-  );
+    true,
+  )
 
   const [followUpOpen, setFollowUpOpen] = useSessionStorage(
     `engagement-${dossier.id}-followup-open`,
-    true
-  );
+    true,
+  )
 
   return (
-    <div
-      className="space-y-4 sm:space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Information Section */}
       <CollapsibleSection
         id="information"
@@ -128,5 +125,5 @@ export function EngagementDossierDetail({ dossier }: EngagementDossierDetailProp
         <FollowUpActions dossierId={dossier.id} />
       </CollapsibleSection>
     </div>
-  );
+  )
 }

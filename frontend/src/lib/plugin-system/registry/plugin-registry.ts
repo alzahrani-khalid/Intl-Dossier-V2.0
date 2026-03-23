@@ -80,7 +80,7 @@ class PluginRegistry {
     // Emit event
     this.emit({ type: 'PLUGIN_REGISTERED', pluginId: id })
 
-    console.info(`Plugin "${id}" registered successfully for entity type "${entityType}"`)
+    console.warn(`Plugin "${id}" registered successfully for entity type "${entityType}"`)
   }
 
   /**
@@ -114,7 +114,7 @@ class PluginRegistry {
     // Emit event
     this.emit({ type: 'PLUGIN_UNREGISTERED', pluginId })
 
-    console.info(`Plugin "${pluginId}" unregistered`)
+    console.warn(`Plugin "${pluginId}" unregistered`)
   }
 
   /**
@@ -292,7 +292,7 @@ class PluginRegistry {
 
     this.state.initialized = true
     this.emit({ type: 'REGISTRY_INITIALIZED' })
-    console.info('Plugin registry initialized')
+    console.warn('Plugin registry initialized')
   }
 
   /**

@@ -5,24 +5,31 @@
  * Uses unified dossier architecture with JOIN
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 
 export interface Engagement {
-  id: string;
-  name_en: string;
-  name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  engagement_type: 'meeting' | 'consultation' | 'coordination' | 'workshop' | 'conference' | 'site_visit' | 'ceremony';
-  engagement_category: 'bilateral' | 'multilateral' | 'regional' | 'internal';
-  location_en?: string;
-  location_ar?: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  created_by?: string;
-  updated_by?: string;
+  id: string
+  name_en: string
+  name_ar: string
+  description_en?: string
+  description_ar?: string
+  engagement_type:
+    | 'meeting'
+    | 'consultation'
+    | 'coordination'
+    | 'workshop'
+    | 'conference'
+    | 'site_visit'
+    | 'ceremony'
+  engagement_category: 'bilateral' | 'multilateral' | 'regional' | 'internal'
+  location_en?: string
+  location_ar?: string
+  status: string
+  created_at: string
+  updated_at: string
+  created_by?: string
+  updated_by?: string
 }
 
 export function useEngagement(engagementId: string) {
@@ -32,7 +39,8 @@ export function useEngagement(engagementId: string) {
       // Query with JOIN to get dossier data
       const { data, error } = await supabase
         .from('dossiers')
-        .select(`
+        .select(
+          `
           id,
           name_en,
           name_ar,
@@ -49,12 +57,13 @@ export function useEngagement(engagementId: string) {
             location_en,
             location_ar
           )
-        `)
+        `,
+        )
         .eq('id', engagementId)
         .eq('type', 'engagement')
-        .single();
+        .single()
 
-      if (error) throw error;
+      if (error) throw error
 
       // Flatten the joined data structure
       const flattenedData: Engagement = {
@@ -72,10 +81,10 @@ export function useEngagement(engagementId: string) {
         updated_at: data.updated_at,
         created_by: data.created_by,
         updated_by: data.updated_by,
-      };
+      }
 
-      return flattenedData;
+      return flattenedData
     },
     enabled: !!engagementId,
-  });
+  })
 }

@@ -1,4 +1,4 @@
-import { buildSchema } from 'graphql';
+import { buildSchema } from 'graphql'
 
 export const schema = buildSchema(`
   # Enums
@@ -409,6 +409,6 @@ export const schema = buildSchema(`
     intelligenceReceived(categories: [String!]): Intelligence!
     sourceScanned(source_id: ID!): IntelligenceSource!
   }
-`);
+`)
 
-export default schema;
+export default schema

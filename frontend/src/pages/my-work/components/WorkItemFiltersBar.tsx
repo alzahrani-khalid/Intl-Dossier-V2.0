@@ -3,10 +3,10 @@
  * Search, Tracking Type filter, Sort options
  * Mobile-first, RTL-compatible
  */
-import { useTranslation } from 'react-i18next';
-import { Search, SlidersHorizontal, ArrowUpDown, ChevronDown } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next'
+import { Search, SlidersHorizontal, ArrowUpDown, ChevronDown } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,21 +14,21 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
   DropdownMenuLabel,
-} from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import type { TrackingType, WorkItemSortBy, SortOrder } from '@/types/unified-work.types';
-import { cn } from '@/lib/utils';
-import { useState, useCallback } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
+} from '@/components/ui/dropdown-menu'
+import { Badge } from '@/components/ui/badge'
+import type { TrackingType, WorkItemSortBy, SortOrder } from '@/types/unified-work.types'
+import { cn } from '@/lib/utils'
+import { useState, useCallback } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 interface WorkItemFiltersBarProps {
-  trackingType?: TrackingType;
-  onTrackingTypeChange: (type: TrackingType | undefined) => void;
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  sortBy: WorkItemSortBy;
-  sortOrder: SortOrder;
-  onSortChange: (sortBy: WorkItemSortBy, sortOrder: SortOrder) => void;
+  trackingType?: TrackingType
+  onTrackingTypeChange: (type: TrackingType | undefined) => void
+  searchQuery: string
+  onSearchChange: (query: string) => void
+  sortBy: WorkItemSortBy
+  sortOrder: SortOrder
+  onSortChange: (sortBy: WorkItemSortBy, sortOrder: SortOrder) => void
 }
 
 export function WorkItemFiltersBar({
@@ -40,23 +40,23 @@ export function WorkItemFiltersBar({
   sortOrder,
   onSortChange,
 }: WorkItemFiltersBarProps) {
-  const { t, i18n } = useTranslation('my-work');
-  const isRTL = i18n.language === 'ar';
-  const [localSearch, setLocalSearch] = useState(searchQuery);
+  const { t, i18n } = useTranslation('my-work')
+  const isRTL = i18n.language === 'ar'
+  const [localSearch, setLocalSearch] = useState(searchQuery)
 
   // Debounce search to avoid excessive API calls
   const debouncedSearch = useDebouncedCallback((value: string) => {
-    onSearchChange(value);
-  }, 300);
+    onSearchChange(value)
+  }, 300)
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setLocalSearch(value);
-      debouncedSearch(value);
+      const value = e.target.value
+      setLocalSearch(value)
+      debouncedSearch(value)
     },
-    [debouncedSearch]
-  );
+    [debouncedSearch],
+  )
 
   const trackingTypes: { id: TrackingType; label: string; color: string }[] = [
     {
@@ -74,32 +74,39 @@ export function WorkItemFiltersBar({
       label: t('trackingType.sla', 'SLA'),
       color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
     },
-  ];
+  ]
 
   const sortOptions: { sortBy: WorkItemSortBy; sortOrder: SortOrder; label: string }[] = [
     { sortBy: 'deadline', sortOrder: 'asc', label: t('sort.deadlineAsc', 'Deadline (Earliest)') },
     { sortBy: 'deadline', sortOrder: 'desc', label: t('sort.deadlineDesc', 'Deadline (Latest)') },
-    { sortBy: 'priority', sortOrder: 'desc', label: t('sort.priorityDesc', 'Priority (High to Low)') },
-    { sortBy: 'priority', sortOrder: 'asc', label: t('sort.priorityAsc', 'Priority (Low to High)') },
+    {
+      sortBy: 'priority',
+      sortOrder: 'desc',
+      label: t('sort.priorityDesc', 'Priority (High to Low)'),
+    },
+    {
+      sortBy: 'priority',
+      sortOrder: 'asc',
+      label: t('sort.priorityAsc', 'Priority (Low to High)'),
+    },
     { sortBy: 'created_at', sortOrder: 'desc', label: t('sort.createdDesc', 'Newest First') },
     { sortBy: 'created_at', sortOrder: 'asc', label: t('sort.createdAsc', 'Oldest First') },
-  ];
+  ]
 
   const currentSort = sortOptions.find(
-    (opt) => opt.sortBy === sortBy && opt.sortOrder === sortOrder
-  );
+    (opt) => opt.sortBy === sortBy && opt.sortOrder === sortOrder,
+  )
 
   return (
-    <div
-      className="flex flex-col sm:flex-row gap-3 mb-4"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className="flex flex-col sm:flex-row gap-3 mb-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Search Input */}
       <div className="relative flex-1">
-        <Search className={cn(
-          'absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground',
-          isRTL ? 'end-3' : 'start-3'
-        )} />
+        <Search
+          className={cn(
+            'absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground',
+            isRTL ? 'end-3' : 'start-3',
+          )}
+        />
         <Input
           placeholder={t('search.placeholder', 'Search work items...')}
           value={localSearch}
@@ -161,7 +168,7 @@ export function WorkItemFiltersBar({
               className={cn(
                 currentSort?.sortBy === opt.sortBy &&
                   currentSort?.sortOrder === opt.sortOrder &&
-                  'bg-accent'
+                  'bg-accent',
               )}
             >
               {opt.label}
@@ -170,5 +177,5 @@ export function WorkItemFiltersBar({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }

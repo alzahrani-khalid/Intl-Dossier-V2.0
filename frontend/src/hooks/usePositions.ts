@@ -6,12 +6,12 @@
  * Cache: staleTime 30s, gcTime 5min
  */
 
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { supabase } from '../lib/supabase';
-import type { PositionFilters, PositionListResponse } from '../types/position';
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { supabase } from '../lib/supabase'
+import type { PositionFilters, PositionListResponse } from '../types/position'
 
 // API base URL
-const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1';
+const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
 
 // Query keys
 export const positionKeys = {
@@ -22,63 +22,64 @@ export const positionKeys = {
   detail: (id: string) => [...positionKeys.details(), id] as const,
   versions: (id: string) => [...positionKeys.all, 'versions', id] as const,
   attachments: (id: string) => [...positionKeys.all, 'attachments', id] as const,
-};
+}
 
 // Helper to get auth headers
 const getAuthHeaders = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
   return {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${session?.access_token}`,
-  };
-};
+    Authorization: `Bearer ${session?.access_token}`,
+  }
+}
 
 /**
  * Hook to list positions with infinite scroll
  */
 export const usePositions = (filters?: Omit<PositionFilters, 'offset'>) => {
-  const pageSize = filters?.limit || 20;
+  const pageSize = filters?.limit || 20
 
   return useInfiniteQuery({
     queryKey: positionKeys.list(filters),
     queryFn: async ({ pageParam = 0 }): Promise<PositionListResponse> => {
-      const headers = await getAuthHeaders();
-      const params = new URLSearchParams();
+      const headers = await getAuthHeaders()
+      const params = new URLSearchParams()
 
       // Add filters to params
       if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
           if (value !== undefined && value !== null && key !== 'limit') {
-            params.append(key, String(value));
+            params.append(key, String(value))
           }
-        });
+        })
       }
 
       // Add pagination
-      params.append('limit', String(pageSize));
-      params.append('offset', String(pageParam));
+      params.append('limit', String(pageSize))
+      params.append('offset', String(pageParam))
 
-      const response = await fetch(
-        `${API_BASE_URL}/positions-list?${params.toString()}`,
-        { headers }
-      );
+      const response = await fetch(`${API_BASE_URL}/positions-list?${params.toString()}`, {
+        headers,
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to fetch positions');
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to fetch positions')
       }
 
-      return response.json();
+      return response.json()
     },
     getNextPageParam: (lastPage) => {
       // Return next offset if there are more items
       if (lastPage.has_more) {
-        return lastPage.offset + lastPage.limit;
+        return lastPage.offset + lastPage.limit
       }
-      return undefined;
+      return undefined
     },
     initialPageParam: 0,
     staleTime: 30_000, // 30 seconds
     gcTime: 5 * 60_000, // 5 minutes
-  });
-};
+  })
+}

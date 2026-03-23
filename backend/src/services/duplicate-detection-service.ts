@@ -6,15 +6,15 @@
  * @module duplicate-detection-service
  */
 
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '../types/database.types.js';
+import { SupabaseClient } from '@supabase/supabase-js'
+import { Database } from '../types/database.types.js'
 
-type Contact = Database['public']['Tables']['contacts']['Row'];
+type Contact = Database['public']['Tables']['contacts']['Row']
 
 export interface DuplicateCandidate {
-  contact: Contact;
-  similarity_score: number;
-  matching_fields: string[];
+  contact: Contact
+  similarity_score: number
+  matching_fields: string[]
 }
 
 export class DuplicateDetectionService {
@@ -27,16 +27,16 @@ export class DuplicateDetectionService {
    * @returns Array of potential duplicates with similarity scores
    */
   async findDuplicates(candidateContact: {
-    full_name?: string;
-    email_addresses?: string[];
-    phone_numbers?: string[];
+    full_name?: string
+    email_addresses?: string[]
+    phone_numbers?: string[]
   }): Promise<DuplicateCandidate[]> {
     // TODO: Implement fuzzy matching logic
     // Check for:
     // - Exact email match (high confidence)
     // - Exact phone match (high confidence)
     // - Similar names (Levenshtein distance or pg_trgm)
-    throw new Error('Not implemented');
+    throw new Error('Not implemented')
   }
 
   /**
@@ -48,6 +48,6 @@ export class DuplicateDetectionService {
    */
   calculateSimilarity(contact1: Partial<Contact>, contact2: Partial<Contact>): number {
     // TODO: Implement similarity scoring algorithm
-    throw new Error('Not implemented');
+    throw new Error('Not implemented')
   }
 }

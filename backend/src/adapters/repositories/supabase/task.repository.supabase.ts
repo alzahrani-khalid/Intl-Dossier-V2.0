@@ -491,7 +491,7 @@ export class SupabaseTaskRepository implements ITaskRepository {
    * Apply filters to query
    * Uses any type to avoid complex Supabase generics - filters are applied dynamically
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   private applyFilters(query: any, params: TaskFilterParams): any {
     if (params.assigned_to) {
       query = query.eq('assigned_to', params.assigned_to)

@@ -6,21 +6,17 @@
  * Base application error class
  */
 export class AppError extends Error {
-  public readonly isOperational: boolean;
-  public readonly statusCode: number;
+  public readonly isOperational: boolean
+  public readonly statusCode: number
 
-  constructor(
-    message: string,
-    statusCode: number = 500,
-    isOperational: boolean = true
-  ) {
-    super(message);
-    this.name = this.constructor.name;
-    this.statusCode = statusCode;
-    this.isOperational = isOperational;
+  constructor(message: string, statusCode: number = 500, isOperational: boolean = true) {
+    super(message)
+    this.name = this.constructor.name
+    this.statusCode = statusCode
+    this.isOperational = isOperational
 
     // Capture stack trace
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor)
   }
 }
 
@@ -29,7 +25,7 @@ export class AppError extends Error {
  */
 export class ValidationError extends AppError {
   constructor(message: string) {
-    super(message, 400, true);
+    super(message, 400, true)
   }
 }
 
@@ -38,7 +34,7 @@ export class ValidationError extends AppError {
  */
 export class NotFoundError extends AppError {
   constructor(resource: string) {
-    super(`${resource} not found`, 404, true);
+    super(`${resource} not found`, 404, true)
   }
 }
 
@@ -47,7 +43,7 @@ export class NotFoundError extends AppError {
  */
 export class AuthenticationError extends AppError {
   constructor(message: string = 'Authentication failed') {
-    super(message, 401, true);
+    super(message, 401, true)
   }
 }
 
@@ -56,7 +52,7 @@ export class AuthenticationError extends AppError {
  */
 export class AuthorizationError extends AppError {
   constructor(message: string = 'Access denied') {
-    super(message, 403, true);
+    super(message, 403, true)
   }
 }
 
@@ -65,7 +61,7 @@ export class AuthorizationError extends AppError {
  */
 export class ConflictError extends AppError {
   constructor(message: string) {
-    super(message, 409, true);
+    super(message, 409, true)
   }
 }
 
@@ -74,7 +70,7 @@ export class ConflictError extends AppError {
  */
 export class RateLimitError extends AppError {
   constructor(message: string = 'Too many requests') {
-    super(message, 429, true);
+    super(message, 429, true)
   }
 }
 
@@ -83,7 +79,7 @@ export class RateLimitError extends AppError {
  */
 export class DatabaseError extends AppError {
   constructor(message: string) {
-    super(message, 500, false);
+    super(message, 500, false)
   }
 }
 
@@ -92,9 +88,9 @@ export class DatabaseError extends AppError {
  */
 export class ExternalServiceError extends AppError {
   constructor(service: string, message: string) {
-    super(`${service} error: ${message}`, 502, false);
+    super(`${service} error: ${message}`, 502, false)
   }
 }
 
 // Re-export AppError as default
-export default AppError;
+export default AppError

@@ -233,7 +233,7 @@ export function ProgressiveFormDemoPage() {
       setErrors(newErrors)
 
       if (Object.keys(newErrors).length === 0) {
-        console.log('Form submitted:', formValues)
+        console.warn('Form submitted:', formValues)
         alert(isRTL ? 'تم إرسال النموذج بنجاح!' : 'Form submitted successfully!')
       }
     },

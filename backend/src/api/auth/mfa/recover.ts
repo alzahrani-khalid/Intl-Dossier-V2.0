@@ -1,3 +1,2 @@
-import router from '../../contract/mfa';
-export default router;
-
+import router from '../../contract/mfa'
+export default router

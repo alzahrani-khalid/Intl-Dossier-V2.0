@@ -102,7 +102,7 @@ export function ChecklistTemplateSelector({
                         )}
 
                       {/* Preview Items */}
-                      <div className="space-y-1 ps-4 border-l-2 border-muted">
+                      <div className="space-y-1 ps-4 border-s-2 border-muted">
                         {itemText.slice(0, 5).map((item, index) => (
                           <div key={index} className="flex items-start gap-2 text-sm">
                             <CheckCircle2 className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />

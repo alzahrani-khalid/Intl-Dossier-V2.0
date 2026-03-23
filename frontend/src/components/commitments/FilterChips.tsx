@@ -9,25 +9,21 @@
  * - Mobile-first, RTL-compatible, 44x44px touch targets
  */
 
-import { useTranslation } from 'react-i18next';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
-import type { CommitmentFilters } from '@/types/commitment.types';
+import { useTranslation } from 'react-i18next'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { X } from 'lucide-react'
+import type { CommitmentFilters } from '@/types/commitment.types'
 
 export interface FilterChipsProps {
-  filters: CommitmentFilters;
-  onRemoveFilter: (key: keyof CommitmentFilters, value?: string) => void;
-  onClearAll: () => void;
+  filters: CommitmentFilters
+  onRemoveFilter: (key: keyof CommitmentFilters, value?: string) => void
+  onClearAll: () => void
 }
 
-export function FilterChips({
-  filters,
-  onRemoveFilter,
-  onClearAll,
-}: FilterChipsProps) {
-  const { t, i18n } = useTranslation('commitments');
-  const isRTL = i18n.language === 'ar';
+export function FilterChips({ filters, onRemoveFilter, onClearAll }: FilterChipsProps) {
+  const { t, i18n } = useTranslation('commitments')
+  const isRTL = i18n.language === 'ar'
 
   // Count active filters
   const activeFilterCount =
@@ -36,28 +32,25 @@ export function FilterChips({
     (filters.ownerType ? 1 : 0) +
     (filters.overdue ? 1 : 0) +
     (filters.dueDateFrom ? 1 : 0) +
-    (filters.dueDateTo ? 1 : 0);
+    (filters.dueDateTo ? 1 : 0)
 
   // Don't render if no active filters
   if (activeFilterCount === 0) {
-    return null;
+    return null
   }
 
   // Format date for display
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
+    const date = new Date(dateStr)
     return date.toLocaleDateString(i18n.language, {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
-    });
-  };
+    })
+  }
 
   return (
-    <div
-      className="flex flex-wrap items-center gap-2 py-2"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className="flex flex-wrap items-center gap-2 py-2" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Status chips */}
       {filters.status?.map((status) => (
         <Badge
@@ -98,10 +91,7 @@ export function FilterChips({
 
       {/* Owner type chip */}
       {filters.ownerType && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 pe-1 text-xs"
-        >
+        <Badge variant="secondary" className="flex items-center gap-1 pe-1 text-xs">
           <span>{t(`ownerType.${filters.ownerType}`)}</span>
           <button
             type="button"
@@ -134,10 +124,7 @@ export function FilterChips({
 
       {/* Date from chip */}
       {filters.dueDateFrom && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 pe-1 text-xs"
-        >
+        <Badge variant="secondary" className="flex items-center gap-1 pe-1 text-xs">
           <span>
             {t('filters.dueDateFrom')}: {formatDate(filters.dueDateFrom)}
           </span>
@@ -154,10 +141,7 @@ export function FilterChips({
 
       {/* Date to chip */}
       {filters.dueDateTo && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 pe-1 text-xs"
-        >
+        <Badge variant="secondary" className="flex items-center gap-1 pe-1 text-xs">
           <span>
             {t('filters.dueDateTo')}: {formatDate(filters.dueDateTo)}
           </span>
@@ -185,5 +169,5 @@ export function FilterChips({
         </Button>
       )}
     </div>
-  );
+  )
 }

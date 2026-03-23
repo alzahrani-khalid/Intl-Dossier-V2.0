@@ -11,15 +11,15 @@
  * - Toast notifications
  */
 
-import { useTranslation } from 'react-i18next';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu'
 import {
   Clock,
   ArrowRight,
@@ -28,20 +28,20 @@ import {
   ChevronDown,
   Loader2,
   AlertTriangle,
-} from 'lucide-react';
+} from 'lucide-react'
 import {
   type CommitmentStatus,
   STATUS_COLORS,
   VALID_STATUS_TRANSITIONS,
   isValidStatusTransition,
-} from '@/types/commitment.types';
-import { useUpdateCommitmentStatus } from '@/hooks/useCommitments';
+} from '@/types/commitment.types'
+import { useUpdateCommitmentStatus } from '@/hooks/useCommitments'
 
 export interface StatusDropdownProps {
-  commitmentId: string;
-  currentStatus: CommitmentStatus;
-  disabled?: boolean;
-  compact?: boolean;
+  commitmentId: string
+  currentStatus: CommitmentStatus
+  disabled?: boolean
+  compact?: boolean
 }
 
 // Status icons mapping
@@ -51,7 +51,7 @@ const statusIcons: Record<CommitmentStatus, React.ReactNode> = {
   completed: <CheckCircle className="size-3.5" />,
   cancelled: <XCircle className="size-3.5" />,
   overdue: <AlertTriangle className="size-3.5" />,
-};
+}
 
 export function StatusDropdown({
   commitmentId,
@@ -59,49 +59,49 @@ export function StatusDropdown({
   disabled = false,
   compact = false,
 }: StatusDropdownProps) {
-  const { t, i18n } = useTranslation('commitments');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('commitments')
+  const isRTL = i18n.language === 'ar'
 
-  const updateStatusMutation = useUpdateCommitmentStatus();
+  const updateStatusMutation = useUpdateCommitmentStatus()
 
   // Early return with loading state if currentStatus is not yet available or invalid
   if (!currentStatus || !STATUS_COLORS[currentStatus]) {
     return (
-      <Badge variant="secondary" className="bg-gray-100 text-gray-500 border flex items-center gap-1 text-xs">
+      <Badge
+        variant="secondary"
+        className="bg-gray-100 text-gray-500 border flex items-center gap-1 text-xs"
+      >
         <Clock className="size-3.5" />
         <span>{t('status.loading', 'Loading...')}</span>
       </Badge>
-    );
+    )
   }
 
   // Current status colors - safe after the guard above
-  const statusColors = STATUS_COLORS[currentStatus];
+  const statusColors = STATUS_COLORS[currentStatus]
 
   // T034: Get valid transitions (hide 'overdue' as it's auto-applied)
-  const validTransitions = VALID_STATUS_TRANSITIONS[currentStatus] || [];
+  const validTransitions = VALID_STATUS_TRANSITIONS[currentStatus] || []
   const availableTransitions = validTransitions.filter(
-    (status) => status !== 'overdue'
-  ) as CommitmentStatus[];
+    (status) => status !== 'overdue',
+  ) as CommitmentStatus[]
 
   // Check if dropdown should be disabled
-  const isDisabled =
-    disabled ||
-    updateStatusMutation.isPending ||
-    availableTransitions.length === 0;
+  const isDisabled = disabled || updateStatusMutation.isPending || availableTransitions.length === 0
 
   // Handle status change
   const handleStatusChange = (newStatus: CommitmentStatus) => {
     // T034: Validate transition before updating
     if (!isValidStatusTransition(currentStatus, newStatus)) {
-      return;
+      return
     }
 
     // T033: Optimistic update is handled by the hook
     updateStatusMutation.mutate({
       id: commitmentId,
       status: newStatus,
-    });
-  };
+    })
+  }
 
   // Render just a badge if no transitions available
   if (availableTransitions.length === 0) {
@@ -113,7 +113,7 @@ export function StatusDropdown({
         {statusIcons[currentStatus]}
         <span>{t(`status.${currentStatus}`)}</span>
       </Badge>
-    );
+    )
   }
 
   return (
@@ -136,9 +136,7 @@ export function StatusDropdown({
           ) : (
             statusIcons[currentStatus]
           )}
-          <span className="text-xs font-medium">
-            {t(`status.${currentStatus}`)}
-          </span>
+          <span className="text-xs font-medium">{t(`status.${currentStatus}`)}</span>
           <ChevronDown className={`size-3 opacity-70 ${isRTL ? 'rotate-180' : ''}`} />
         </Button>
       </DropdownMenuTrigger>
@@ -149,7 +147,7 @@ export function StatusDropdown({
         onClick={(e) => e.stopPropagation()}
       >
         {availableTransitions.map((status) => {
-          const colors = STATUS_COLORS[status];
+          const colors = STATUS_COLORS[status]
           return (
             <DropdownMenuItem
               key={status}
@@ -159,11 +157,11 @@ export function StatusDropdown({
               {statusIcons[status]}
               <span>{t(`status.${status}`)}</span>
             </DropdownMenuItem>
-          );
+          )
         })}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
 
 /**
@@ -175,23 +173,26 @@ export function StatusBadge({
   showIcon = true,
   className = '',
 }: {
-  status: CommitmentStatus;
-  showIcon?: boolean;
-  className?: string;
+  status: CommitmentStatus
+  showIcon?: boolean
+  className?: string
 }) {
-  const { t } = useTranslation('commitments');
+  const { t } = useTranslation('commitments')
 
   // Guard against undefined status
   if (!status) {
     return (
-      <Badge variant="secondary" className="bg-gray-100 text-gray-500 border flex items-center gap-1 text-xs">
+      <Badge
+        variant="secondary"
+        className="bg-gray-100 text-gray-500 border flex items-center gap-1 text-xs"
+      >
         <Clock className="size-3.5" />
         <span>{t('status.loading', 'Loading...')}</span>
       </Badge>
-    );
+    )
   }
 
-  const statusColors = STATUS_COLORS[status];
+  const statusColors = STATUS_COLORS[status]
 
   return (
     <Badge
@@ -201,5 +202,5 @@ export function StatusBadge({
       {showIcon && statusIcons[status]}
       <span>{t(`status.${status}`)}</span>
     </Badge>
-  );
+  )
 }

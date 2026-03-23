@@ -1,12 +1,18 @@
-import { Router } from 'express';
-import { z } from 'zod';
-import { CountryService } from '../services/CountryService';
-import { validate, paginationSchema, idParamSchema, createBilingualError, getRequestLanguage } from '../utils/validation';
-import { requireRole, requirePermission } from '../middleware/auth';
-import { logInfo, logError } from '../utils/logger';
+import { Router } from 'express'
+import { z } from 'zod'
+import { CountryService } from '../services/CountryService'
+import {
+  validate,
+  paginationSchema,
+  idParamSchema,
+  createBilingualError,
+  getRequestLanguage,
+} from '../utils/validation'
+import { requireRole, requirePermission } from '../middleware/auth'
+import { logInfo, logError } from '../utils/logger'
 
-const router = Router();
-const countryService = new CountryService();
+const router = Router()
+const countryService = new CountryService()
 
 // Validation schemas
 const createCountrySchema = z.object({
@@ -14,33 +20,43 @@ const createCountrySchema = z.object({
   code3: z.string().length(3),
   name_en: z.string().min(2).max(100),
   name_ar: z.string().min(2).max(100),
-  region: z.enum(['Africa', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Middle East']),
+  region: z.enum([
+    'Africa',
+    'Asia',
+    'Europe',
+    'North America',
+    'South America',
+    'Oceania',
+    'Middle East',
+  ]),
   capital: z.string().optional(),
   currency: z.string().optional(),
   languages: z.array(z.string()).optional(),
   timezone: z.string().optional(),
   flag_url: z.string().url().optional(),
-  map_coordinates: z.object({
-    lat: z.number().min(-90).max(90),
-    lng: z.number().min(-180).max(180)
-  }).optional(),
-  metadata: z.record(z.string(), z.any()).optional()
-});
+  map_coordinates: z
+    .object({
+      lat: z.number().min(-90).max(90),
+      lng: z.number().min(-180).max(180),
+    })
+    .optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
+})
 
-const updateCountrySchema = createCountrySchema.partial();
+const updateCountrySchema = createCountrySchema.partial()
 
 const countryFiltersSchema = z.object({
   region: z.string().optional(),
   hasActiveMoUs: z.coerce.boolean().optional(),
   search: z.string().optional(),
   tags: z.array(z.string()).or(z.string()).optional(),
-  ...paginationSchema.shape
-});
+  ...paginationSchema.shape,
+})
 
 const relationshipUpdateSchema = z.object({
   status: z.enum(['active', 'developing', 'dormant']),
-  notes: z.string().optional()
-});
+  notes: z.string().optional(),
+})
 
 /**
  * @route GET /api/countries
@@ -49,27 +65,27 @@ const relationshipUpdateSchema = z.object({
  */
 router.get('/', validate({ query: countryFiltersSchema }), async (req, res, next) => {
   try {
-    const filters = req.query;
-    const userId = req.user?.id;
+    const filters = req.query
+    const userId = req.user?.id
 
-    logInfo('Fetching countries', { filters, userId });
+    logInfo('Fetching countries', { filters, userId })
 
-    const result = await countryService.getCountries(filters as any);
+    const result = await countryService.getCountries(filters as any)
 
     res.json({
       data: result.data,
       pagination: {
         page: result.page,
         pages: result.pages,
-        total: result.total
+        total: result.total,
       },
-      total: result.total
-    });
+      total: result.total,
+    })
   } catch (error) {
-    logError('Failed to fetch countries', error as Error);
-    next(error);
+    logError('Failed to fetch countries', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/countries/stats
@@ -78,18 +94,18 @@ router.get('/', validate({ query: countryFiltersSchema }), async (req, res, next
  */
 router.get('/stats', async (req, res, next) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.id
 
-    logInfo('Fetching country statistics', { userId });
+    logInfo('Fetching country statistics', { userId })
 
-    const stats = await countryService.getStatistics();
+    const stats = await countryService.getStatistics()
 
-    res.json(stats);
+    res.json(stats)
   } catch (error) {
-    logError('Failed to fetch country statistics', error as Error);
-    next(error);
+    logError('Failed to fetch country statistics', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/countries/:id
@@ -98,30 +114,26 @@ router.get('/stats', async (req, res, next) => {
  */
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const userId = req.user?.id;
+    const { id } = req.params
+    const userId = req.user?.id
 
-    logInfo('Fetching country details', { countryId: id, userId });
+    logInfo('Fetching country details', { countryId: id, userId })
 
-    const country = await countryService.getCountryById(id);
+    const country = await countryService.getCountryById(id)
 
     if (!country) {
-      const lang = getRequestLanguage(req);
+      const lang = getRequestLanguage(req)
       return res.status(404).json({
-        error: createBilingualError(
-          'Country not found',
-          'الدولة غير موجودة',
-          lang
-        )
-      });
+        error: createBilingualError('Country not found', 'الدولة غير موجودة', lang),
+      })
     }
 
-    res.json(country);
+    res.json(country)
   } catch (error) {
-    logError('Failed to fetch country', error as Error);
-    next(error);
+    logError('Failed to fetch country', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route POST /api/countries
@@ -134,11 +146,11 @@ router.post(
   validate({ body: createCountrySchema }),
   async (req, res, next) => {
     try {
-      const countryData = req.body;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const countryData = req.body
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      logInfo('Creating new country', { countryData, userId });
+      logInfo('Creating new country', { countryData, userId })
 
       const country = await countryService.createCountry({
         ...countryData,
@@ -147,24 +159,24 @@ router.post(
         created_at: new Date(),
         updated_at: new Date(),
         created_by: userId,
-      });
+      })
 
-      logInfo('Country created successfully', { countryId: country.id });
+      logInfo('Country created successfully', { countryId: country.id })
 
       res.status(201).json({
         data: country,
         message: createBilingualError(
           'Country created successfully',
           'تم إنشاء الدولة بنجاح',
-          lang
-        )
-      });
+          lang,
+        ),
+      })
     } catch (error) {
-      logError('Failed to create country', error as Error);
-      next(error);
+      logError('Failed to create country', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route PUT /api/countries/:id
@@ -176,48 +188,44 @@ router.put(
   requireRole(['admin']),
   validate({
     params: idParamSchema,
-    body: updateCountrySchema
+    body: updateCountrySchema,
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const updates = req.body;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const { id } = req.params
+      const updates = req.body
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      logInfo('Updating country', { countryId: id, updates, userId });
+      logInfo('Updating country', { countryId: id, updates, userId })
 
       const country = await countryService.updateCountry(id, {
         ...updates,
-        updated_by: userId
-      });
+        updated_by: userId,
+      })
 
       if (!country) {
         return res.status(404).json({
-          error: createBilingualError(
-            'Country not found',
-            'الدولة غير موجودة',
-            lang
-          )
-        });
+          error: createBilingualError('Country not found', 'الدولة غير موجودة', lang),
+        })
       }
 
-      logInfo('Country updated successfully', { countryId: id });
+      logInfo('Country updated successfully', { countryId: id })
 
       res.json({
         data: country,
         message: createBilingualError(
           'Country updated successfully',
           'تم تحديث الدولة بنجاح',
-          lang
-        )
-      });
+          lang,
+        ),
+      })
     } catch (error) {
-      logError('Failed to update country', error as Error);
-      next(error);
+      logError('Failed to update country', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route DELETE /api/countries/:id
@@ -230,39 +238,31 @@ router.delete(
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const { id } = req.params
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      logInfo('Deleting country', { countryId: id, userId });
+      logInfo('Deleting country', { countryId: id, userId })
 
-      const success = await countryService.deleteCountry(id);
+      const success = await countryService.deleteCountry(id)
 
       if (!success) {
         return res.status(404).json({
-          error: createBilingualError(
-            'Country not found',
-            'الدولة غير موجودة',
-            lang
-          )
-        });
+          error: createBilingualError('Country not found', 'الدولة غير موجودة', lang),
+        })
       }
 
-      logInfo('Country deleted successfully', { countryId: id });
+      logInfo('Country deleted successfully', { countryId: id })
 
       res.json({
-        message: createBilingualError(
-          'Country deleted successfully',
-          'تم حذف الدولة بنجاح',
-          lang
-        )
-      });
+        message: createBilingualError('Country deleted successfully', 'تم حذف الدولة بنجاح', lang),
+      })
     } catch (error) {
-      logError('Failed to delete country', error as Error);
-      next(error);
+      logError('Failed to delete country', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route GET /api/countries/:id/relationships
@@ -271,18 +271,18 @@ router.delete(
  */
 router.get('/:id/relationships', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
-    logInfo('Fetching country relationships', { countryId: id });
+    logInfo('Fetching country relationships', { countryId: id })
 
-    const relationships = await countryService.getCountryRelationships(id);
+    const relationships = await countryService.getCountryRelationships(id)
 
-    res.json(relationships);
+    res.json(relationships)
   } catch (error) {
-    logError('Failed to fetch country relationships', error as Error);
-    next(error);
+    logError('Failed to fetch country relationships', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route PUT /api/countries/:id/relationship
@@ -294,33 +294,37 @@ router.put(
   requirePermission(['manage_relationships']),
   validate({
     params: idParamSchema,
-    body: relationshipUpdateSchema
+    body: relationshipUpdateSchema,
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const updates = req.body;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const { id } = req.params
+      const updates = req.body
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      logInfo('Updating country relationship', { countryId: id, updates, userId });
+      logInfo('Updating country relationship', { countryId: id, updates, userId })
 
-      const relationship = await countryService.updateRelationshipStatus(id, updates.relationshipId, updates.status);
+      const relationship = await countryService.updateRelationshipStatus(
+        id,
+        updates.relationshipId,
+        updates.status,
+      )
 
       res.json({
         data: relationship,
         message: createBilingualError(
           'Relationship updated successfully',
           'تم تحديث العلاقة بنجاح',
-          lang
-        )
-      });
+          lang,
+        ),
+      })
     } catch (error) {
-      logError('Failed to update country relationship', error as Error);
-      next(error);
+      logError('Failed to update country relationship', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route GET /api/countries/:id/mous
@@ -329,21 +333,21 @@ router.put(
  */
 router.get('/:id/mous', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
-    logInfo('Fetching country MoUs', { countryId: id });
+    logInfo('Fetching country MoUs', { countryId: id })
 
-    const mous = await countryService.getMoUs(id);
+    const mous = await countryService.getMoUs(id)
 
     res.json({
       data: mous,
-      total: mous.length
-    });
+      total: mous.length,
+    })
   } catch (error) {
-    logError('Failed to fetch country MoUs', error as Error);
-    next(error);
+    logError('Failed to fetch country MoUs', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/countries/:id/events
@@ -352,21 +356,21 @@ router.get('/:id/mous', validate({ params: idParamSchema }), async (req, res, ne
  */
 router.get('/:id/events', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
-    logInfo('Fetching country events', { countryId: id });
+    logInfo('Fetching country events', { countryId: id })
 
-    const events = await countryService.getEvents(id);
+    const events = await countryService.getEvents(id)
 
     res.json({
       data: events,
-      total: events.length
-    });
+      total: events.length,
+    })
   } catch (error) {
-    logError('Failed to fetch country events', error as Error);
-    next(error);
+    logError('Failed to fetch country events', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/countries/:id/contacts
@@ -375,21 +379,21 @@ router.get('/:id/events', validate({ params: idParamSchema }), async (req, res, 
  */
 router.get('/:id/contacts', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
-    logInfo('Fetching country contacts', { countryId: id });
+    logInfo('Fetching country contacts', { countryId: id })
 
-    const contacts = await countryService.getContacts(id);
+    const contacts = await countryService.getContacts(id)
 
     res.json({
       data: contacts,
-      total: contacts.length
-    });
+      total: contacts.length,
+    })
   } catch (error) {
-    logError('Failed to fetch country contacts', error as Error);
-    next(error);
+    logError('Failed to fetch country contacts', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/countries/:id/timeline
@@ -398,21 +402,21 @@ router.get('/:id/contacts', validate({ params: idParamSchema }), async (req, res
  */
 router.get('/:id/timeline', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
-    logInfo('Fetching country timeline', { countryId: id });
+    logInfo('Fetching country timeline', { countryId: id })
 
-    const timeline = await countryService.getTimeline(id);
+    const timeline = await countryService.getTimeline(id)
 
     res.json({
       data: timeline,
-      total: timeline.length
-    });
+      total: timeline.length,
+    })
   } catch (error) {
-    logError('Failed to fetch country timeline', error as Error);
-    next(error);
+    logError('Failed to fetch country timeline', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route POST /api/countries/:id/tags
@@ -425,33 +429,29 @@ router.post(
   validate({
     params: idParamSchema,
     body: z.object({
-      tags: z.array(z.string())
-    })
+      tags: z.array(z.string()),
+    }),
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const { tags } = req.body;
-      const lang = getRequestLanguage(req);
+      const { id } = req.params
+      const { tags } = req.body
+      const lang = getRequestLanguage(req)
 
-      logInfo('Adding tags to country', { countryId: id, tags });
+      logInfo('Adding tags to country', { countryId: id, tags })
 
-      const country = await countryService.addTags(id, tags);
+      const country = await countryService.addTags(id, tags)
 
       res.json({
         data: country,
-        message: createBilingualError(
-          'Tags added successfully',
-          'تمت إضافة العلامات بنجاح',
-          lang
-        )
-      });
+        message: createBilingualError('Tags added successfully', 'تمت إضافة العلامات بنجاح', lang),
+      })
     } catch (error) {
-      logError('Failed to add tags to country', error as Error);
-      next(error);
+      logError('Failed to add tags to country', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route DELETE /api/countries/:id/tags
@@ -464,32 +464,32 @@ router.delete(
   validate({
     params: idParamSchema,
     body: z.object({
-      tags: z.array(z.string())
-    })
+      tags: z.array(z.string()),
+    }),
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const { tags } = req.body;
-      const lang = getRequestLanguage(req);
+      const { id } = req.params
+      const { tags } = req.body
+      const lang = getRequestLanguage(req)
 
-      logInfo('Removing tags from country', { countryId: id, tags });
+      logInfo('Removing tags from country', { countryId: id, tags })
 
-      const country = await countryService.removeTags(id, tags);
+      const country = await countryService.removeTags(id, tags)
 
       res.json({
         data: country,
         message: createBilingualError(
           'Tags removed successfully',
           'تمت إزالة العلامات بنجاح',
-          lang
-        )
-      });
+          lang,
+        ),
+      })
     } catch (error) {
-      logError('Failed to remove tags from country', error as Error);
-      next(error);
+      logError('Failed to remove tags from country', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
-export default router;
+export default router

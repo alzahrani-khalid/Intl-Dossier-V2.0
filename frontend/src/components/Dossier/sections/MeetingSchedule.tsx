@@ -19,7 +19,6 @@ import { cn } from '@/lib/utils'
 import { useForumSessions, getSessionStatus, type ForumSession } from '@/hooks/useForumSessions'
 import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TranslationFunc = ReturnType<typeof useTranslation<'dossier'>>['t']
 
 interface MeetingScheduleProps {

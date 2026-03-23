@@ -248,7 +248,7 @@ export function RelationshipGraph({
     reactFlowInstance,
     onNodeFocus: (nodeId) => {
       // Highlight focused node
-      console.log('Focused on node:', nodeId)
+      console.warn('Focused on node:', nodeId)
     },
     onNodeExpand: (nodeId) => {
       // Navigate to dossier on double-tap

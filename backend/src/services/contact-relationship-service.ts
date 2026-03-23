@@ -6,12 +6,12 @@
  * @module contact-relationship-service
  */
 
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '../types/contact-directory.types.js';
+import { SupabaseClient } from '@supabase/supabase-js'
+import { Database } from '../types/contact-directory.types.js'
 
-type ContactRelationship = Database['public']['Tables']['cd_contact_relationships']['Row'];
-type ContactRelationshipInsert = Database['public']['Tables']['cd_contact_relationships']['Insert'];
-type ContactRelationshipUpdate = Database['public']['Tables']['cd_contact_relationships']['Update'];
+type ContactRelationship = Database['public']['Tables']['cd_contact_relationships']['Row']
+type ContactRelationshipInsert = Database['public']['Tables']['cd_contact_relationships']['Insert']
+type ContactRelationshipUpdate = Database['public']['Tables']['cd_contact_relationships']['Update']
 
 export class ContactRelationshipService {
   constructor(private supabase: SupabaseClient<Database>) {}
@@ -25,20 +25,20 @@ export class ContactRelationshipService {
   async create(relationship: ContactRelationshipInsert): Promise<ContactRelationship> {
     // Validate required fields
     if (!relationship.from_contact_id) {
-      throw new Error('from_contact_id is required');
+      throw new Error('from_contact_id is required')
     }
 
     if (!relationship.to_contact_id) {
-      throw new Error('to_contact_id is required');
+      throw new Error('to_contact_id is required')
     }
 
     if (!relationship.relationship_type) {
-      throw new Error('relationship_type is required');
+      throw new Error('relationship_type is required')
     }
 
     // Prevent self-relationships
     if (relationship.from_contact_id === relationship.to_contact_id) {
-      throw new Error('Cannot create a relationship from a contact to itself');
+      throw new Error('Cannot create a relationship from a contact to itself')
     }
 
     // Validate relationship type
@@ -53,11 +53,11 @@ export class ContactRelationshipService {
       'board_member',
       'family',
       'friend',
-      'other'
-    ];
+      'other',
+    ]
 
     if (!allowedTypes.includes(relationship.relationship_type)) {
-      throw new Error(`relationship_type must be one of: ${allowedTypes.join(', ')}`);
+      throw new Error(`relationship_type must be one of: ${allowedTypes.join(', ')}`)
     }
 
     // Check if the relationship already exists (prevent duplicates)
@@ -67,24 +67,24 @@ export class ContactRelationshipService {
       .eq('from_contact_id', relationship.from_contact_id)
       .eq('to_contact_id', relationship.to_contact_id)
       .eq('relationship_type', relationship.relationship_type)
-      .maybeSingle();
+      .maybeSingle()
 
     if (existing) {
-      throw new Error('This relationship already exists');
+      throw new Error('This relationship already exists')
     }
 
     // Validate dates if provided
     if (relationship.start_date && relationship.end_date) {
-      const startDate = new Date(relationship.start_date);
-      const endDate = new Date(relationship.end_date);
+      const startDate = new Date(relationship.start_date)
+      const endDate = new Date(relationship.end_date)
       if (endDate < startDate) {
-        throw new Error('end_date cannot be before start_date');
+        throw new Error('end_date cannot be before start_date')
       }
     }
 
     // Validate notes length
     if (relationship.notes && relationship.notes.length > 1000) {
-      throw new Error('notes cannot exceed 1000 characters');
+      throw new Error('notes cannot exceed 1000 characters')
     }
 
     // Verify both contacts exist
@@ -92,20 +92,20 @@ export class ContactRelationshipService {
       .from('cd_contacts')
       .select('id')
       .eq('id', relationship.from_contact_id)
-      .single();
+      .single()
 
     if (!fromContact) {
-      throw new Error('from_contact_id does not exist');
+      throw new Error('from_contact_id does not exist')
     }
 
     const { data: toContact } = await this.supabase
       .from('cd_contacts')
       .select('id')
       .eq('id', relationship.to_contact_id)
-      .single();
+      .single()
 
     if (!toContact) {
-      throw new Error('to_contact_id does not exist');
+      throw new Error('to_contact_id does not exist')
     }
 
     // Insert relationship
@@ -113,12 +113,12 @@ export class ContactRelationshipService {
       .from('cd_contact_relationships')
       .insert(relationship)
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
-    if (!data) throw new Error('Failed to create relationship');
+    if (error) throw error
+    if (!data) throw new Error('Failed to create relationship')
 
-    return data;
+    return data
   }
 
   /**
@@ -128,31 +128,31 @@ export class ContactRelationshipService {
    * @returns Object containing incoming and outgoing relationships
    */
   async getForContact(contactId: string): Promise<{
-    incoming: ContactRelationship[];
-    outgoing: ContactRelationship[];
+    incoming: ContactRelationship[]
+    outgoing: ContactRelationship[]
   }> {
     // Get outgoing relationships (where contact is from_contact_id)
     const { data: outgoing, error: outgoingError } = await this.supabase
       .from('cd_contact_relationships')
       .select('*')
       .eq('from_contact_id', contactId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
 
-    if (outgoingError) throw outgoingError;
+    if (outgoingError) throw outgoingError
 
     // Get incoming relationships (where contact is to_contact_id)
     const { data: incoming, error: incomingError } = await this.supabase
       .from('cd_contact_relationships')
       .select('*')
       .eq('to_contact_id', contactId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
 
-    if (incomingError) throw incomingError;
+    if (incomingError) throw incomingError
 
     return {
       incoming: incoming || [],
-      outgoing: outgoing || []
-    };
+      outgoing: outgoing || [],
+    }
   }
 
   /**
@@ -161,40 +161,40 @@ export class ContactRelationshipService {
    * @param query - Query parameters
    * @returns Array of relationships
    */
-  async getAll(query: {
-    relationship_type?: string;
-    active_only?: boolean;
-    limit?: number;
-    offset?: number;
-  } = {}): Promise<ContactRelationship[]> {
-    let queryBuilder = this.supabase
-      .from('cd_contact_relationships')
-      .select('*');
+  async getAll(
+    query: {
+      relationship_type?: string
+      active_only?: boolean
+      limit?: number
+      offset?: number
+    } = {},
+  ): Promise<ContactRelationship[]> {
+    let queryBuilder = this.supabase.from('cd_contact_relationships').select('*')
 
     // Filter by relationship type
     if (query.relationship_type) {
-      queryBuilder = queryBuilder.eq('relationship_type', query.relationship_type);
+      queryBuilder = queryBuilder.eq('relationship_type', query.relationship_type)
     }
 
     // Filter for active relationships only (no end_date or end_date in future)
     if (query.active_only) {
-      const now = new Date().toISOString();
-      queryBuilder = queryBuilder.or(`end_date.is.null,end_date.gt.${now}`);
+      const now = new Date().toISOString()
+      queryBuilder = queryBuilder.or(`end_date.is.null,end_date.gt.${now}`)
     }
 
     // Order by creation date
-    queryBuilder = queryBuilder.order('created_at', { ascending: false });
+    queryBuilder = queryBuilder.order('created_at', { ascending: false })
 
     // Pagination
-    const limit = query.limit || 50;
-    const offset = query.offset || 0;
-    queryBuilder = queryBuilder.range(offset, offset + limit - 1);
+    const limit = query.limit || 50
+    const offset = query.offset || 0
+    queryBuilder = queryBuilder.range(offset, offset + limit - 1)
 
-    const { data, error } = await queryBuilder;
+    const { data, error } = await queryBuilder
 
-    if (error) throw error;
+    if (error) throw error
 
-    return data || [];
+    return data || []
   }
 
   /**
@@ -218,33 +218,35 @@ export class ContactRelationshipService {
         'board_member',
         'family',
         'friend',
-        'other'
-      ];
+        'other',
+      ]
 
       if (!allowedTypes.includes(updates.relationship_type)) {
-        throw new Error(`relationship_type must be one of: ${allowedTypes.join(', ')}`);
+        throw new Error(`relationship_type must be one of: ${allowedTypes.join(', ')}`)
       }
     }
 
     // Validate dates if provided
     if (updates.start_date !== undefined && updates.end_date !== undefined) {
       if (updates.start_date && updates.end_date) {
-        const startDate = new Date(updates.start_date);
-        const endDate = new Date(updates.end_date);
+        const startDate = new Date(updates.start_date)
+        const endDate = new Date(updates.end_date)
         if (endDate < startDate) {
-          throw new Error('end_date cannot be before start_date');
+          throw new Error('end_date cannot be before start_date')
         }
       }
     }
 
     // Validate notes length
     if (updates.notes !== undefined && updates.notes && updates.notes.length > 1000) {
-      throw new Error('notes cannot exceed 1000 characters');
+      throw new Error('notes cannot exceed 1000 characters')
     }
 
     // Prevent updating from/to contact IDs
     if ('from_contact_id' in updates || 'to_contact_id' in updates) {
-      throw new Error('Cannot update from_contact_id or to_contact_id. Delete and recreate the relationship instead.');
+      throw new Error(
+        'Cannot update from_contact_id or to_contact_id. Delete and recreate the relationship instead.',
+      )
     }
 
     const { data, error } = await this.supabase
@@ -252,12 +254,12 @@ export class ContactRelationshipService {
       .update(updates)
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
-    if (!data) throw new Error('Relationship not found');
+    if (error) throw error
+    if (!data) throw new Error('Relationship not found')
 
-    return data;
+    return data
   }
 
   /**
@@ -272,12 +274,12 @@ export class ContactRelationshipService {
       .delete()
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
-    if (!data) throw new Error('Relationship not found');
+    if (error) throw error
+    if (!data) throw new Error('Relationship not found')
 
-    return data;
+    return data
   }
 
   /**
@@ -291,7 +293,7 @@ export class ContactRelationshipService {
   async exists(
     from_contact_id: string,
     to_contact_id: string,
-    relationship_type: string
+    relationship_type: string,
   ): Promise<boolean> {
     const { data, error } = await this.supabase
       .from('cd_contact_relationships')
@@ -299,10 +301,10 @@ export class ContactRelationshipService {
       .eq('from_contact_id', from_contact_id)
       .eq('to_contact_id', to_contact_id)
       .eq('relationship_type', relationship_type)
-      .maybeSingle();
+      .maybeSingle()
 
-    if (error) throw error;
+    if (error) throw error
 
-    return !!data;
+    return !!data
   }
 }

@@ -6,16 +6,16 @@
  * @module interaction-note-service
  */
 
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '../types/contact-directory.types.js';
+import { SupabaseClient } from '@supabase/supabase-js'
+import { Database } from '../types/contact-directory.types.js'
 
-type InteractionNote = Database['public']['Tables']['cd_interaction_notes']['Row'];
-type InteractionNoteInsert = Database['public']['Tables']['cd_interaction_notes']['Insert'];
-type InteractionNoteUpdate = Database['public']['Tables']['cd_interaction_notes']['Update'];
+type InteractionNote = Database['public']['Tables']['cd_interaction_notes']['Row']
+type InteractionNoteInsert = Database['public']['Tables']['cd_interaction_notes']['Insert']
+type InteractionNoteUpdate = Database['public']['Tables']['cd_interaction_notes']['Update']
 
 // Valid interaction types
-const INTERACTION_TYPES = ['meeting', 'email', 'call', 'conference', 'other'] as const;
-type InteractionType = typeof INTERACTION_TYPES[number];
+const INTERACTION_TYPES = ['meeting', 'email', 'call', 'conference', 'other'] as const
+type InteractionType = (typeof INTERACTION_TYPES)[number]
 
 export class InteractionNoteService {
   constructor(private supabase: SupabaseClient<Database>) {}
@@ -29,47 +29,47 @@ export class InteractionNoteService {
   async create(note: InteractionNoteInsert): Promise<InteractionNote> {
     // Validate required fields
     if (!note.contact_id) {
-      throw new Error('contact_id is required');
+      throw new Error('contact_id is required')
     }
 
     if (!note.date) {
-      throw new Error('date is required');
+      throw new Error('date is required')
     }
 
     // Validate date is not in future
-    const noteDate = new Date(note.date);
-    const today = new Date();
-    today.setHours(23, 59, 59, 999); // End of today
+    const noteDate = new Date(note.date)
+    const today = new Date()
+    today.setHours(23, 59, 59, 999) // End of today
     if (noteDate > today) {
-      throw new Error('Interaction date cannot be in the future');
+      throw new Error('Interaction date cannot be in the future')
     }
 
     // Validate details
     if (!note.details || note.details.trim().length < 10) {
-      throw new Error('details is required and must be at least 10 characters');
+      throw new Error('details is required and must be at least 10 characters')
     }
 
     if (note.details.length > 10000) {
-      throw new Error('details cannot exceed 10,000 characters');
+      throw new Error('details cannot exceed 10,000 characters')
     }
 
     // Validate interaction type
     if (!note.type || !INTERACTION_TYPES.includes(note.type as InteractionType)) {
-      throw new Error(`type must be one of: ${INTERACTION_TYPES.join(', ')}`);
+      throw new Error(`type must be one of: ${INTERACTION_TYPES.join(', ')}`)
     }
 
     // Validate attachments if provided (ensure they are file paths/keys)
     if (note.attachments) {
       if (!Array.isArray(note.attachments)) {
-        throw new Error('attachments must be an array of file paths');
+        throw new Error('attachments must be an array of file paths')
       }
       for (const attachment of note.attachments) {
         if (typeof attachment !== 'string' || attachment.trim().length === 0) {
-          throw new Error('Each attachment must be a non-empty string (file path)');
+          throw new Error('Each attachment must be a non-empty string (file path)')
         }
         // Validate that attachment paths don't contain dangerous characters
         if (attachment.includes('..') || attachment.includes('~')) {
-          throw new Error('Invalid attachment path detected');
+          throw new Error('Invalid attachment path detected')
         }
       }
     }
@@ -77,11 +77,11 @@ export class InteractionNoteService {
     // Validate attendees if provided (should be contact IDs or names)
     if (note.attendees) {
       if (!Array.isArray(note.attendees)) {
-        throw new Error('attendees must be an array');
+        throw new Error('attendees must be an array')
       }
       for (const attendee of note.attendees) {
         if (typeof attendee !== 'string' || attendee.trim().length === 0) {
-          throw new Error('Each attendee must be a non-empty string');
+          throw new Error('Each attendee must be a non-empty string')
         }
       }
     }
@@ -92,10 +92,10 @@ export class InteractionNoteService {
       .select('id')
       .eq('id', note.contact_id)
       .eq('is_archived', false)
-      .single();
+      .single()
 
     if (contactError || !contact) {
-      throw new Error('Contact not found or is archived');
+      throw new Error('Contact not found or is archived')
     }
 
     // Insert interaction note
@@ -103,12 +103,12 @@ export class InteractionNoteService {
       .from('cd_interaction_notes')
       .insert(note)
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
-    if (!data) throw new Error('Failed to create interaction note');
+    if (error) throw error
+    if (!data) throw new Error('Failed to create interaction note')
 
-    return data;
+    return data
   }
 
   /**
@@ -121,44 +121,46 @@ export class InteractionNoteService {
   async getForContact(
     contactId: string,
     options: {
-      limit?: number;
-      offset?: number;
-      dateFrom?: string;
-      dateTo?: string;
-      type?: InteractionType;
-    } = {}
+      limit?: number
+      offset?: number
+      dateFrom?: string
+      dateTo?: string
+      type?: InteractionType
+    } = {},
   ): Promise<InteractionNote[]> {
     let query = this.supabase
       .from('cd_interaction_notes')
       .select('*')
       .eq('contact_id', contactId)
-      .order('date', { ascending: false });
+      .order('date', { ascending: false })
 
     // Apply date filters if provided
     if (options.dateFrom) {
-      query = query.gte('date', options.dateFrom);
+      query = query.gte('date', options.dateFrom)
     }
     if (options.dateTo) {
-      query = query.lte('date', options.dateTo);
+      query = query.lte('date', options.dateTo)
     }
 
     // Filter by type if provided
     if (options.type) {
       if (!INTERACTION_TYPES.includes(options.type)) {
-        throw new Error(`Invalid type: ${options.type}. Must be one of: ${INTERACTION_TYPES.join(', ')}`);
+        throw new Error(
+          `Invalid type: ${options.type}. Must be one of: ${INTERACTION_TYPES.join(', ')}`,
+        )
       }
-      query = query.eq('type', options.type);
+      query = query.eq('type', options.type)
     }
 
     // Apply pagination
-    const limit = options.limit || 50;
-    const offset = options.offset || 0;
-    query = query.range(offset, offset + limit - 1);
+    const limit = options.limit || 50
+    const offset = options.offset || 0
+    query = query.range(offset, offset + limit - 1)
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
-    if (error) throw error;
-    return data || [];
+    if (error) throw error
+    return data || []
   }
 
   /**
@@ -168,35 +170,33 @@ export class InteractionNoteService {
    * @returns Array of matching interaction notes
    */
   async search(searchParams: {
-    query?: string;
-    dateFrom?: string;
-    dateTo?: string;
-    types?: InteractionType[];
-    contactIds?: string[];
-    limit?: number;
-    offset?: number;
-    sortBy?: 'date' | 'created_at';
-    sortOrder?: 'asc' | 'desc';
+    query?: string
+    dateFrom?: string
+    dateTo?: string
+    types?: InteractionType[]
+    contactIds?: string[]
+    limit?: number
+    offset?: number
+    sortBy?: 'date' | 'created_at'
+    sortOrder?: 'asc' | 'desc'
   }): Promise<InteractionNote[]> {
-    let queryBuilder = this.supabase
-      .from('cd_interaction_notes')
-      .select('*');
+    let queryBuilder = this.supabase.from('cd_interaction_notes').select('*')
 
     // Full-text search on details field
     if (searchParams.query && searchParams.query.trim().length > 0) {
       // Use textSearch for full-text search on details
       queryBuilder = queryBuilder.textSearch('details', searchParams.query, {
         type: 'websearch',
-        config: 'simple'
-      });
+        config: 'simple',
+      })
     }
 
     // Filter by date range
     if (searchParams.dateFrom) {
-      queryBuilder = queryBuilder.gte('date', searchParams.dateFrom);
+      queryBuilder = queryBuilder.gte('date', searchParams.dateFrom)
     }
     if (searchParams.dateTo) {
-      queryBuilder = queryBuilder.lte('date', searchParams.dateTo);
+      queryBuilder = queryBuilder.lte('date', searchParams.dateTo)
     }
 
     // Filter by types (multiple)
@@ -204,31 +204,31 @@ export class InteractionNoteService {
       // Validate all types
       for (const type of searchParams.types) {
         if (!INTERACTION_TYPES.includes(type)) {
-          throw new Error(`Invalid type: ${type}. Must be one of: ${INTERACTION_TYPES.join(', ')}`);
+          throw new Error(`Invalid type: ${type}. Must be one of: ${INTERACTION_TYPES.join(', ')}`)
         }
       }
-      queryBuilder = queryBuilder.in('type', searchParams.types);
+      queryBuilder = queryBuilder.in('type', searchParams.types)
     }
 
     // Filter by contact IDs if provided
     if (searchParams.contactIds && searchParams.contactIds.length > 0) {
-      queryBuilder = queryBuilder.in('contact_id', searchParams.contactIds);
+      queryBuilder = queryBuilder.in('contact_id', searchParams.contactIds)
     }
 
     // Sorting
-    const sortBy = searchParams.sortBy || 'date';
-    const sortOrder = searchParams.sortOrder || 'desc';
-    queryBuilder = queryBuilder.order(sortBy, { ascending: sortOrder === 'asc' });
+    const sortBy = searchParams.sortBy || 'date'
+    const sortOrder = searchParams.sortOrder || 'desc'
+    queryBuilder = queryBuilder.order(sortBy, { ascending: sortOrder === 'asc' })
 
     // Pagination
-    const limit = searchParams.limit || 50;
-    const offset = searchParams.offset || 0;
-    queryBuilder = queryBuilder.range(offset, offset + limit - 1);
+    const limit = searchParams.limit || 50
+    const offset = searchParams.offset || 0
+    queryBuilder = queryBuilder.range(offset, offset + limit - 1)
 
-    const { data, error } = await queryBuilder;
+    const { data, error } = await queryBuilder
 
-    if (error) throw error;
-    return data || [];
+    if (error) throw error
+    return data || []
   }
 
   /**
@@ -241,39 +241,39 @@ export class InteractionNoteService {
   async update(id: string, updates: InteractionNoteUpdate): Promise<InteractionNote> {
     // Validate updates if provided
     if (updates.date !== undefined) {
-      const noteDate = new Date(updates.date);
-      const today = new Date();
-      today.setHours(23, 59, 59, 999);
+      const noteDate = new Date(updates.date)
+      const today = new Date()
+      today.setHours(23, 59, 59, 999)
       if (noteDate > today) {
-        throw new Error('Interaction date cannot be in the future');
+        throw new Error('Interaction date cannot be in the future')
       }
     }
 
     if (updates.details !== undefined) {
       if (!updates.details || updates.details.trim().length < 10) {
-        throw new Error('details must be at least 10 characters');
+        throw new Error('details must be at least 10 characters')
       }
       if (updates.details.length > 10000) {
-        throw new Error('details cannot exceed 10,000 characters');
+        throw new Error('details cannot exceed 10,000 characters')
       }
     }
 
     if (updates.type !== undefined) {
       if (!INTERACTION_TYPES.includes(updates.type as InteractionType)) {
-        throw new Error(`type must be one of: ${INTERACTION_TYPES.join(', ')}`);
+        throw new Error(`type must be one of: ${INTERACTION_TYPES.join(', ')}`)
       }
     }
 
     if (updates.attachments !== undefined && updates.attachments !== null) {
       if (!Array.isArray(updates.attachments)) {
-        throw new Error('attachments must be an array of file paths');
+        throw new Error('attachments must be an array of file paths')
       }
       for (const attachment of updates.attachments) {
         if (typeof attachment !== 'string' || attachment.trim().length === 0) {
-          throw new Error('Each attachment must be a non-empty string (file path)');
+          throw new Error('Each attachment must be a non-empty string (file path)')
         }
         if (attachment.includes('..') || attachment.includes('~')) {
-          throw new Error('Invalid attachment path detected');
+          throw new Error('Invalid attachment path detected')
         }
       }
     }
@@ -282,19 +282,19 @@ export class InteractionNoteService {
     const updateData = {
       ...updates,
       updated_at: new Date().toISOString(),
-    };
+    }
 
     const { data, error } = await this.supabase
       .from('cd_interaction_notes')
       .update(updateData)
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
-    if (!data) throw new Error('Interaction note not found');
+    if (error) throw error
+    if (!data) throw new Error('Interaction note not found')
 
-    return data;
+    return data
   }
 
   /**
@@ -309,12 +309,12 @@ export class InteractionNoteService {
       .delete()
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
-    if (!data) throw new Error('Interaction note not found');
+    if (error) throw error
+    if (!data) throw new Error('Interaction note not found')
 
-    return data;
+    return data
   }
 
   /**
@@ -328,34 +328,32 @@ export class InteractionNoteService {
   async getStatistics(
     contactId?: string,
     dateFrom?: string,
-    dateTo?: string
+    dateTo?: string,
   ): Promise<{
-    totalNotes: number;
-    byType: Record<InteractionType, number>;
-    mostRecentDate: string | null;
-    averageNotesPerMonth: number;
+    totalNotes: number
+    byType: Record<InteractionType, number>
+    mostRecentDate: string | null
+    averageNotesPerMonth: number
   }> {
-    let query = this.supabase
-      .from('cd_interaction_notes')
-      .select('id, type, date');
+    let query = this.supabase.from('cd_interaction_notes').select('id, type, date')
 
     if (contactId) {
-      query = query.eq('contact_id', contactId);
+      query = query.eq('contact_id', contactId)
     }
 
     if (dateFrom) {
-      query = query.gte('date', dateFrom);
+      query = query.gte('date', dateFrom)
     }
 
     if (dateTo) {
-      query = query.lte('date', dateTo);
+      query = query.lte('date', dateTo)
     }
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
-    if (error) throw error;
+    if (error) throw error
 
-    const notes = data || [];
+    const notes = data || []
 
     // Calculate statistics
     const byType: Record<InteractionType, number> = {
@@ -364,25 +362,27 @@ export class InteractionNoteService {
       call: 0,
       conference: 0,
       other: 0,
-    };
+    }
 
-    let mostRecentDate: string | null = null;
+    let mostRecentDate: string | null = null
 
     for (const note of notes) {
-      byType[note.type as InteractionType]++;
+      byType[note.type as InteractionType]++
       if (!mostRecentDate || note.date > mostRecentDate) {
-        mostRecentDate = note.date;
+        mostRecentDate = note.date
       }
     }
 
     // Calculate average notes per month
-    let averageNotesPerMonth = 0;
+    let averageNotesPerMonth = 0
     if (notes.length > 0 && dateFrom) {
-      const startDate = new Date(dateFrom);
-      const endDate = dateTo ? new Date(dateTo) : new Date();
-      const monthsDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-                         (endDate.getMonth() - startDate.getMonth()) + 1;
-      averageNotesPerMonth = notes.length / Math.max(monthsDiff, 1);
+      const startDate = new Date(dateFrom)
+      const endDate = dateTo ? new Date(dateTo) : new Date()
+      const monthsDiff =
+        (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+        (endDate.getMonth() - startDate.getMonth()) +
+        1
+      averageNotesPerMonth = notes.length / Math.max(monthsDiff, 1)
     }
 
     return {
@@ -390,7 +390,7 @@ export class InteractionNoteService {
       byType,
       mostRecentDate,
       averageNotesPerMonth: Math.round(averageNotesPerMonth * 10) / 10,
-    };
+    }
   }
 
   /**
@@ -404,19 +404,19 @@ export class InteractionNoteService {
   async uploadAttachment(
     noteId: string,
     file: ArrayBuffer | Blob,
-    fileName: string
+    fileName: string,
   ): Promise<string> {
     // Validate file name
     if (!fileName || fileName.trim().length === 0) {
-      throw new Error('File name is required');
+      throw new Error('File name is required')
     }
 
     // Sanitize file name
-    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_')
 
     // Generate unique file path
-    const timestamp = Date.now();
-    const storagePath = `interaction-notes/${noteId}/${timestamp}_${sanitizedFileName}`;
+    const timestamp = Date.now()
+    const storagePath = `interaction-notes/${noteId}/${timestamp}_${sanitizedFileName}`
 
     // Upload to Supabase Storage
     const { data, error } = await this.supabase.storage
@@ -424,15 +424,15 @@ export class InteractionNoteService {
       .upload(storagePath, file, {
         upsert: false,
         contentType: this.getContentType(fileName),
-      });
+      })
 
     if (error) {
-      console.error('Failed to upload attachment:', error);
-      throw new Error(`Failed to upload attachment: ${error.message}`);
+      console.error('Failed to upload attachment:', error)
+      throw new Error(`Failed to upload attachment: ${error.message}`)
     }
 
     if (!data) {
-      throw new Error('Failed to upload attachment - no data returned');
+      throw new Error('Failed to upload attachment - no data returned')
     }
 
     // Update interaction note with new attachment
@@ -440,27 +440,27 @@ export class InteractionNoteService {
       .from('cd_interaction_notes')
       .select('attachments')
       .eq('id', noteId)
-      .single();
+      .single()
 
     if (note) {
-      const currentAttachments = note.attachments || [];
+      const currentAttachments = note.attachments || []
       await this.supabase
         .from('cd_interaction_notes')
         .update({
           attachments: [...currentAttachments, storagePath],
           updated_at: new Date().toISOString(),
         })
-        .eq('id', noteId);
+        .eq('id', noteId)
     }
 
-    return storagePath;
+    return storagePath
   }
 
   /**
    * Get content type based on file extension
    */
   private getContentType(fileName: string): string {
-    const ext = fileName.split('.').pop()?.toLowerCase();
+    const ext = fileName.split('.').pop()?.toLowerCase()
     const contentTypes: Record<string, string> = {
       pdf: 'application/pdf',
       doc: 'application/msword',
@@ -473,7 +473,7 @@ export class InteractionNoteService {
       gif: 'image/gif',
       txt: 'text/plain',
       csv: 'text/csv',
-    };
-    return contentTypes[ext || ''] || 'application/octet-stream';
+    }
+    return contentTypes[ext || ''] || 'application/octet-stream'
   }
 }

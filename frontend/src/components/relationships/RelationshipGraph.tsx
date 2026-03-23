@@ -149,7 +149,7 @@ export function RelationshipGraph({
 
       // Center contact in the middle
       let x = isCenter ? 0 : radius * Math.cos(index * angleStep)
-      let y = isCenter ? 0 : radius * Math.sin(index * angleStep)
+      const y = isCenter ? 0 : radius * Math.sin(index * angleStep)
 
       // For RTL, flip x coordinates
       if (isRTL) {

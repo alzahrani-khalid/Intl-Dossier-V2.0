@@ -60,7 +60,7 @@ export async function sendInAppNotification(
     throw new Error(`Failed to send notification: ${error.message}`)
   }
 
-  console.log(`[NOTIFICATION-SERVICE] Sent notification to user ${userId}: "${title}"`)
+  console.warn(`[NOTIFICATION-SERVICE] Sent notification to user ${userId}: "${title}"`)
   return data as Notification
 }
 
@@ -112,7 +112,7 @@ export async function markNotificationAsRead(notificationId: string): Promise<No
     throw new Error(`Failed to mark notification as read: ${error.message}`)
   }
 
-  console.log(`[NOTIFICATION-SERVICE] Marked notification ${notificationId} as read`)
+  console.warn(`[NOTIFICATION-SERVICE] Marked notification ${notificationId} as read`)
   return data as Notification
 }
 
@@ -151,7 +151,9 @@ export async function sendHealthScoreDropNotification(
   })
 
   // T187: Log notification sending
-  console.log(`[HEALTH-NOTIFICATION] Sent notification to user ${ownerId} for dossier ${dossierId}`)
+  console.warn(
+    `[HEALTH-NOTIFICATION] Sent notification to user ${ownerId} for dossier ${dossierId}`,
+  )
 }
 
 /**
@@ -188,7 +190,7 @@ export async function sendOverdueNotification(
     await sendInAppNotification(dossierOwnerId, title, message, metadata)
   }
 
-  console.log(`[OVERDUE-NOTIFICATION] Sent notification for commitment ${commitment.id}`)
+  console.warn(`[OVERDUE-NOTIFICATION] Sent notification for commitment ${commitment.id}`)
 }
 
 export default {

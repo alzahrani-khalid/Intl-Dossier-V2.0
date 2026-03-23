@@ -117,7 +117,7 @@ export function BriefGenerationPanel({
   const handleManualSubmit = () => {
     // TODO: Implement manual brief submission
     // For now, just show success message
-    console.log('Manual brief submitted:', manualContent)
+    console.warn('Manual brief submitted:', manualContent)
     // In a real implementation, this would call an API to save the manual brief
   }
 

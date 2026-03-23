@@ -68,7 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     if (isTablet) {
       setOpen(false)
     }
-  }, [isTablet]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isTablet])
 
   const pathname = location.pathname
   const isExpanded = isMobile ? openMobile : open

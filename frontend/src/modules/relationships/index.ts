@@ -52,7 +52,7 @@ export type { RelationshipEventType } from '../core/contracts'
  * )
  *
  * if (result.success) {
- *   console.log('Relationships:', result.data)
+ *   console.warn('Relationships:', result.data)
  * }
  *
  * @example
@@ -63,7 +63,7 @@ export type { RelationshipEventType } from '../core/contracts'
  * const eventBus = getEventBus()
  *
  * eventBus.subscribe(RELATIONSHIP_EVENTS.CREATED, (event) => {
- *   console.log('Relationship created:', event.payload)
+ *   console.warn('Relationship created:', event.payload)
  * })
  *
  * @example

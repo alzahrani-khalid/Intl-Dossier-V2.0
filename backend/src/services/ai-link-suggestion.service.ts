@@ -11,18 +11,18 @@
  * @module backend/src/services/ai-link-suggestion.service
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import Redis from 'ioredis';
-import axios from 'axios';
+import { SupabaseClient } from '@supabase/supabase-js'
+import Redis from 'ioredis'
+import axios from 'axios'
 import type {
   AILinkSuggestion,
   AIConfig,
   EmbeddingResponse,
   VectorSearchResult,
   RankedSuggestion,
-  SuggestionStatus
-} from '../types/ai-suggestions.types';
-import type { LinkType } from '../types/intake-entity-links.types';
+  SuggestionStatus,
+} from '../types/ai-suggestions.types'
+import type { LinkType } from '../types/intake-entity-links.types'
 
 /**
  * Generate text embedding using AnythingLLM API
@@ -32,31 +32,28 @@ import type { LinkType } from '../types/intake-entity-links.types';
  * @returns 1536-dimensional embedding vector
  * @throws Error if AnythingLLM API fails (graceful degradation)
  */
-export async function generateEmbedding(
-  text: string,
-  config: AIConfig
-): Promise<number[]> {
+export async function generateEmbedding(text: string, config: AIConfig): Promise<number[]> {
   try {
     const response = await axios.post<EmbeddingResponse>(
       `${config.api_url}/v1/embeddings`,
       {
         model: config.embedding_model || 'text-embedding-ada-002',
-        input: text
+        input: text,
       },
       {
         headers: {
-          'Authorization': `Bearer ${config.api_key}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${config.api_key}`,
+          'Content-Type': 'application/json',
         },
-        timeout: config.timeout_ms || 3000 // 3 second timeout for AI suggestions (SC-002)
-      }
-    );
+        timeout: config.timeout_ms || 3000, // 3 second timeout for AI suggestions (SC-002)
+      },
+    )
 
-    return response.data.data?.[0]?.embedding || response.data.embedding;
+    return response.data.data?.[0]?.embedding || response.data.embedding
   } catch (error) {
     // Graceful degradation: Log error and throw for upstream handling
-    console.error('[AI Link Suggestion] Embedding generation failed:', error);
-    throw new Error('AnythingLLM API unavailable - falling back to manual search');
+    console.error('[AI Link Suggestion] Embedding generation failed:', error)
+    throw new Error('AnythingLLM API unavailable - falling back to manual search')
   }
 }
 
@@ -80,24 +77,24 @@ export async function vectorSimilaritySearch(
   entityTypes: string[],
   limit: number = 5,
   userClearanceLevel: number,
-  orgId: string
+  orgId: string,
 ): Promise<VectorSearchResult[]> {
   // pgvector cosine similarity search with RLS enforcement
   const { data: results, error } = await supabase.rpc('vector_similarity_search', {
     query_embedding: embedding,
     entity_types: entityTypes,
-    match_threshold: 0.70, // Minimum 70% similarity (FR-001a)
+    match_threshold: 0.7, // Minimum 70% similarity (FR-001a)
     match_count: limit,
     user_clearance: userClearanceLevel,
-    organization_id: orgId
-  });
+    organization_id: orgId,
+  })
 
   if (error) {
-    console.error('[AI Link Suggestion] Vector search failed:', error);
-    throw new Error('Vector similarity search failed');
+    console.error('[AI Link Suggestion] Vector search failed:', error)
+    throw new Error('Vector similarity search failed')
   }
 
-  return results || [];
+  return results || []
 }
 
 /**
@@ -113,30 +110,31 @@ export async function vectorSimilaritySearch(
  * @returns Sorted list with final scores (0.70-0.99 range expected)
  */
 export function rankSuggestions(results: VectorSearchResult[]): RankedSuggestion[] {
-  const now = Date.now();
-  const maxAgeDays = 365;
+  const now = Date.now()
+  const maxAgeDays = 365
 
   // Calculate min/max entity names for alphabetical scoring
-  const sortedNames = results.map(r => r.entity_name).sort();
-  const minName = sortedNames[0];
-  const maxName = sortedNames[sortedNames.length - 1];
+  const sortedNames = results.map((r) => r.entity_name).sort()
+  const minName = sortedNames[0]
+  const maxName = sortedNames[sortedNames.length - 1]
 
   const ranked = results.map((result) => {
     // AI Confidence (50%)
-    const aiScore = result.similarity_score; // Already 0.70-1.00 from pgvector
+    const aiScore = result.similarity_score // Already 0.70-1.00 from pgvector
 
     // Recency Score (30%)
     const entityAgeDays = result.entity_updated_at
       ? (now - new Date(result.entity_updated_at).getTime()) / (1000 * 60 * 60 * 24)
-      : maxAgeDays; // Default to max age if no date
-    const recencyScore = Math.max(0, 1.0 - (entityAgeDays / maxAgeDays));
+      : maxAgeDays // Default to max age if no date
+    const recencyScore = Math.max(0, 1.0 - entityAgeDays / maxAgeDays)
 
     // Alphabetical Score (20%)
-    const alphabeticalPosition = sortedNames.indexOf(result.entity_name) / Math.max(1, sortedNames.length - 1);
-    const alphabeticalScore = 1.0 - alphabeticalPosition; // A=1.0, Z=0.0
+    const alphabeticalPosition =
+      sortedNames.indexOf(result.entity_name) / Math.max(1, sortedNames.length - 1)
+    const alphabeticalScore = 1.0 - alphabeticalPosition // A=1.0, Z=0.0
 
     // Combined Score (FR-001a formula)
-    const combinedScore = (aiScore * 0.5) + (recencyScore * 0.3) + (alphabeticalScore * 0.2);
+    const combinedScore = aiScore * 0.5 + recencyScore * 0.3 + alphabeticalScore * 0.2
 
     return {
       entity_type: result.entity_type,
@@ -150,23 +148,23 @@ export function rankSuggestions(results: VectorSearchResult[]): RankedSuggestion
       alphabetical_score: alphabeticalScore,
       combined_score: combinedScore,
       rank: 0, // Populated after sorting
-      reasoning: '' // Populated by generateReasoning()
-    };
-  });
+      reasoning: '', // Populated by generateReasoning()
+    }
+  })
 
   // Sort by combined score descending
-  ranked.sort((a, b) => b.combined_score - a.combined_score);
+  ranked.sort((a, b) => b.combined_score - a.combined_score)
 
   // Assign ranks and update link type for top result
   ranked.forEach((item, index) => {
-    item.rank = index + 1;
+    item.rank = index + 1
     if (index === 0) {
       // Top result suggests primary link
-      item.suggested_link_type = 'primary' as LinkType;
+      item.suggested_link_type = 'primary' as LinkType
     }
-  });
+  })
 
-  return ranked;
+  return ranked
 }
 
 /**
@@ -184,10 +182,10 @@ export async function generateReasoning(
   intakeContent: string,
   entityName: string,
   entityType: string,
-  config: AIConfig
+  config: AIConfig,
 ): Promise<string> {
   try {
-    const prompt = `Explain in 1-2 sentences why the ${entityType} "${entityName}" is relevant to this intake ticket: "${intakeContent.substring(0, 500)}"`;
+    const prompt = `Explain in 1-2 sentences why the ${entityType} "${entityName}" is relevant to this intake ticket: "${intakeContent.substring(0, 500)}"`
 
     const response = await axios.post(
       `${config.api_url}/v1/chat/completions`,
@@ -196,30 +194,31 @@ export async function generateReasoning(
         messages: [
           {
             role: 'system',
-            content: 'You are an assistant helping analysts understand entity relationships. Provide concise, factual explanations.'
+            content:
+              'You are an assistant helping analysts understand entity relationships. Provide concise, factual explanations.',
           },
           {
             role: 'user',
-            content: prompt
-          }
+            content: prompt,
+          },
         ],
         max_tokens: 100,
-        temperature: 0.3
+        temperature: 0.3,
       },
       {
         headers: {
-          'Authorization': `Bearer ${config.api_key}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${config.api_key}`,
+          'Content-Type': 'application/json',
         },
-        timeout: config.timeout_ms || 3000
-      }
-    );
+        timeout: config.timeout_ms || 3000,
+      },
+    )
 
-    return response.data.choices[0].message.content.trim();
+    return response.data.choices[0].message.content.trim()
   } catch (error) {
-    console.error('[AI Link Suggestion] Reasoning generation failed:', error);
+    console.error('[AI Link Suggestion] Reasoning generation failed:', error)
     // Fallback to generic reasoning
-    return `This ${entityType} matches key terms in the intake content.`;
+    return `This ${entityType} matches key terms in the intake content.`
   }
 }
 
@@ -254,22 +253,22 @@ export async function generateSuggestions(
   entityTypes: string[] = ['dossier', 'position', 'organization', 'country'],
   userClearanceLevel: number,
   orgId: string,
-  config: AIConfig
+  config: AIConfig,
 ): Promise<AILinkSuggestion[]> {
-  const cacheKey = `ai:suggestions:${intakeId}`;
+  const cacheKey = `ai:suggestions:${intakeId}`
 
   // Check Redis cache (1-minute TTL to reduce AI API costs)
-  const cached = await redis.get(cacheKey);
+  const cached = await redis.get(cacheKey)
   if (cached) {
-    console.log(`[AI Link Suggestion] Cache hit for intake ${intakeId}`);
-    return JSON.parse(cached);
+    console.warn(`[AI Link Suggestion] Cache hit for intake ${intakeId}`)
+    return JSON.parse(cached)
   }
 
-  console.log(`[AI Link Suggestion] Generating suggestions for intake ${intakeId}`);
+  console.warn(`[AI Link Suggestion] Generating suggestions for intake ${intakeId}`)
 
   try {
     // Step 1: Generate embedding (uses AnythingLLM API)
-    const embedding = await generateEmbedding(intakeContent, config);
+    const embedding = await generateEmbedding(intakeContent, config)
 
     // Step 2: Vector similarity search (pgvector HNSW index)
     const searchResults = await vectorSimilaritySearch(
@@ -278,16 +277,16 @@ export async function generateSuggestions(
       entityTypes,
       5, // Return top 5 matches for SC-002
       userClearanceLevel,
-      orgId
-    );
+      orgId,
+    )
 
     if (searchResults.length === 0) {
-      console.warn(`[AI Link Suggestion] No matches found for intake ${intakeId}`);
-      return [];
+      console.warn(`[AI Link Suggestion] No matches found for intake ${intakeId}`)
+      return []
     }
 
     // Step 3: Rank using FR-001a formula
-    const rankedResults = rankSuggestions(searchResults);
+    const rankedResults = rankSuggestions(searchResults)
 
     // Step 4: Generate reasoning for top 3-5 results
     const suggestionsWithReasoning = await Promise.all(
@@ -296,8 +295,8 @@ export async function generateSuggestions(
           intakeContent,
           result.entity_name,
           result.entity_type,
-          config
-        );
+          config,
+        )
 
         return {
           id: `${intakeId}-${result.entity_id}-${Date.now()}`,
@@ -310,21 +309,22 @@ export async function generateSuggestions(
           status: 'pending' as SuggestionStatus,
           created_at: new Date().toISOString(),
           reviewed_at: null,
-          reviewed_by: null
-        } as AILinkSuggestion;
-      })
-    );
+          reviewed_by: null,
+        } as AILinkSuggestion
+      }),
+    )
 
     // Step 5: Cache for 1 minute (T069)
-    await redis.setex(cacheKey, 60, JSON.stringify(suggestionsWithReasoning));
+    await redis.setex(cacheKey, 60, JSON.stringify(suggestionsWithReasoning))
 
-    console.log(`[AI Link Suggestion] Generated ${suggestionsWithReasoning.length} suggestions for intake ${intakeId}`);
-    return suggestionsWithReasoning;
-
+    console.warn(
+      `[AI Link Suggestion] Generated ${suggestionsWithReasoning.length} suggestions for intake ${intakeId}`,
+    )
+    return suggestionsWithReasoning
   } catch (error) {
-    console.error('[AI Link Suggestion] Generation failed:', error);
+    console.error('[AI Link Suggestion] Generation failed:', error)
     // Graceful degradation: Return empty array, caller shows fallback UI
-    throw error; // Re-throw for caller to handle gracefully
+    throw error // Re-throw for caller to handle gracefully
   }
 }
 
@@ -340,12 +340,12 @@ export async function generateSuggestions(
  */
 export function filterByClearanceLevel(
   suggestions: AILinkSuggestion[],
-  userClearanceLevel: number
+  userClearanceLevel: number,
 ): AILinkSuggestion[] {
-  return suggestions.filter(s => {
+  return suggestions.filter((s) => {
     // Clearance check already done in DB query, this is belt-and-suspenders
-    return true; // Placeholder - actual check would query entity classification_level
-  });
+    return true // Placeholder - actual check would query entity classification_level
+  })
 }
 
 /**
@@ -357,11 +357,9 @@ export function filterByClearanceLevel(
  * @param suggestions - AI suggestions
  * @returns Filtered suggestions (non-archived only)
  */
-export function filterByArchivedStatus(
-  suggestions: AILinkSuggestion[]
-): AILinkSuggestion[] {
-  return suggestions.filter(s => {
+export function filterByArchivedStatus(suggestions: AILinkSuggestion[]): AILinkSuggestion[] {
+  return suggestions.filter((s) => {
     // Archived check already done in DB query, this is belt-and-suspenders
-    return true; // Placeholder - actual check would query entity archived_at
-  });
+    return true // Placeholder - actual check would query entity archived_at
+  })
 }

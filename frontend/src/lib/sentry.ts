@@ -32,7 +32,7 @@ export function initSentry(): void {
   // Don't initialize if no DSN configured
   if (!dsn) {
     if (import.meta.env.DEV) {
-      console.log('[Sentry] No DSN configured, error tracking disabled')
+      console.warn('[Sentry] No DSN configured, error tracking disabled')
     }
     return
   }
@@ -84,7 +84,7 @@ export function initSentry(): void {
 
       // In development, log instead of sending
       if (import.meta.env.DEV) {
-        console.log('[Sentry] Would send event:', event)
+        console.warn('[Sentry] Would send event:', event)
         return null // Don't send in development
       }
 
@@ -110,7 +110,7 @@ export function initSentry(): void {
     debug: import.meta.env.DEV,
   })
 
-  console.log(`[Sentry] Initialized for ${environment} environment`)
+  console.warn(`[Sentry] Initialized for ${environment} environment`)
 }
 
 /**

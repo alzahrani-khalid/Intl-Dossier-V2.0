@@ -20,18 +20,18 @@
  */
 export function calculateRecencyScore(latestEngagementDate: string | null): number {
   if (!latestEngagementDate) {
-    return 10; // No engagement = oldest bucket
+    return 10 // No engagement = oldest bucket
   }
 
   const daysSinceLastEngagement = Math.floor(
-    (Date.now() - new Date(latestEngagementDate).getTime()) / (1000 * 60 * 60 * 24)
-  );
+    (Date.now() - new Date(latestEngagementDate).getTime()) / (1000 * 60 * 60 * 24),
+  )
 
   // Spec 009 recency thresholds
-  if (daysSinceLastEngagement <= 30) return 100;
-  if (daysSinceLastEngagement <= 90) return 70;
-  if (daysSinceLastEngagement <= 180) return 40;
-  return 10;
+  if (daysSinceLastEngagement <= 30) return 100
+  if (daysSinceLastEngagement <= 90) return 70
+  if (daysSinceLastEngagement <= 180) return 40
+  return 10
 }
 
 /**
@@ -45,15 +45,12 @@ export function calculateRecencyScore(latestEngagementDate: string | null): numb
 export function calculateHealthScore(
   engagementFrequency: number,
   commitmentFulfillment: number,
-  recencyScore: number
+  recencyScore: number,
 ): number {
   // Spec 009 formula with weighted components
-  const overallScore =
-    (engagementFrequency * 0.30) +
-    (commitmentFulfillment * 0.40) +
-    (recencyScore * 0.30);
+  const overallScore = engagementFrequency * 0.3 + commitmentFulfillment * 0.4 + recencyScore * 0.3
 
-  return Math.round(overallScore);
+  return Math.round(overallScore)
 }
 
 /**
@@ -63,11 +60,8 @@ export function calculateHealthScore(
  * @param totalCommitments - Total non-cancelled commitments
  * @returns true if sufficient data (≥3 engagements AND ≥1 commitment), false otherwise
  */
-export function hasSufficientData(
-  totalEngagements365d: number,
-  totalCommitments: number
-): boolean {
-  return totalEngagements365d >= 3 && totalCommitments > 0;
+export function hasSufficientData(totalEngagements365d: number, totalCommitments: number): boolean {
+  return totalEngagements365d >= 3 && totalCommitments > 0
 }
 
 /**
@@ -79,19 +73,19 @@ export function hasSufficientData(
  */
 export function getInsufficientDataReason(
   totalEngagements365d: number,
-  totalCommitments: number
+  totalCommitments: number,
 ): string | null {
   if (totalEngagements365d < 3 && totalCommitments === 0) {
-    return `Insufficient data: requires at least 3 engagements (currently ${totalEngagements365d}) and 1 commitment (currently 0)`;
+    return `Insufficient data: requires at least 3 engagements (currently ${totalEngagements365d}) and 1 commitment (currently 0)`
   }
 
   if (totalEngagements365d < 3) {
-    return `Insufficient data: requires at least 3 engagements in the last 365 days (currently ${totalEngagements365d})`;
+    return `Insufficient data: requires at least 3 engagements in the last 365 days (currently ${totalEngagements365d})`
   }
 
   if (totalCommitments === 0) {
-    return "Insufficient data: requires at least 1 non-cancelled commitment";
+    return 'Insufficient data: requires at least 1 non-cancelled commitment'
   }
 
-  return null;
+  return null
 }

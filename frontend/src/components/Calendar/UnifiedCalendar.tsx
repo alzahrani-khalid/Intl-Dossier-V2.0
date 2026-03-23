@@ -45,7 +45,7 @@ export function UnifiedCalendar({
   events: propEvents,
   onEventClick,
   isLoading: propIsLoading,
-  viewMode: _viewMode = 'month', // eslint-disable-line @typescript-eslint/no-unused-vars
+  viewMode: _viewMode = 'month',
 }: UnifiedCalendarProps) {
   const { t, i18n } = useTranslation('calendar')
   const isRTL = i18n.language === 'ar'

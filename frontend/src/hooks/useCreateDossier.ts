@@ -4,13 +4,13 @@
  * Mutation hook for creating new dossiers with optimistic updates
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
-import type { DossierCreate } from '@/types/dossier';
-import { toast } from 'sonner';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+import type { DossierCreate } from '@/types/dossier'
+import { toast } from 'sonner'
 
 export function useCreateDossier() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (dossierData: DossierCreate) => {
@@ -27,24 +27,22 @@ export function useCreateDossier() {
           status: 'active',
         })
         .select()
-        .single();
+        .single()
 
-      if (error) throw error;
-      return data;
+      if (error) throw error
+      return data
     },
     onSuccess: (newDossier) => {
       // Invalidate dossiers list query to refetch
-      queryClient.invalidateQueries({ queryKey: ['dossiers'] });
+      queryClient.invalidateQueries({ queryKey: ['dossiers'] })
 
       // Optionally add to cache optimistically
-      queryClient.setQueryData(['dossier', newDossier.id], newDossier);
+      queryClient.setQueryData(['dossier', newDossier.id], newDossier)
 
-      toast.success('Dossier created successfully');
+      toast.success('Dossier created successfully')
     },
     onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to create dossier'
-      );
+      toast.error(error instanceof Error ? error.message : 'Failed to create dossier')
     },
-  });
+  })
 }

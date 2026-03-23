@@ -14,7 +14,7 @@
  *
  * // Using type guard in conditional
  * if (isCountryDossier(dossier)) {
- *   console.log(dossier.extension.iso_code_2); // TypeScript knows this is safe
+ *   console.warn(dossier.extension.iso_code_2); // TypeScript knows this is safe
  * }
  *
  * // Using assertion in route loader
@@ -456,11 +456,11 @@ export interface TopicDossier extends BaseDossier {
  * function processDossier(dossier: Dossier) {
  *   if (isCountryDossier(dossier)) {
  *     // TypeScript knows dossier.extension is CountryExtension
- *     console.log(dossier.extension.iso_code_2);
+ *     console.warn(dossier.extension.iso_code_2);
  *   }
  *   if (isPersonDossier(dossier) && isElectedOfficial(dossier.extension)) {
  *     // TypeScript knows this is a person with elected official data
- *     console.log(dossier.extension.office_name_en);
+ *     console.warn(dossier.extension.office_name_en);
  *   }
  * }
  * ```
@@ -487,7 +487,7 @@ export type Dossier =
  * @example
  * ```typescript
  * if (isCountryDossier(dossier)) {
- *   console.log(dossier.extension.iso_code_2); // TypeScript knows this is safe
+ *   console.warn(dossier.extension.iso_code_2); // TypeScript knows this is safe
  * }
  * ```
  */
@@ -578,7 +578,7 @@ export function isTopicDossier(
  * @example
  * ```typescript
  * if (isPersonDossier(dossier) && isElectedOfficial(dossier.extension)) {
- *   console.log(dossier.extension.office_name_en); // TypeScript knows this exists
+ *   console.warn(dossier.extension.office_name_en); // TypeScript knows this exists
  * }
  * ```
  */
@@ -596,7 +596,7 @@ export function isElectedOfficial(extension: PersonExtension): boolean {
  * ```typescript
  * if (isElectedOfficialPerson(dossier)) {
  *   // dossier is a PersonDossier with elected official data
- *   console.log(dossier.extension.office_name_en);
+ *   console.warn(dossier.extension.office_name_en);
  * }
  * ```
  */

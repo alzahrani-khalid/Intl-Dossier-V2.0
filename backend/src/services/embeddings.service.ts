@@ -20,14 +20,17 @@ export class EmbeddingService {
 
     try {
       // Lazy import to keep startup lean
-      const { pipeline } = await import('@xenova/transformers') as any
-      const pipe = await pipeline('feature-extraction', this.options.model || 'Xenova/all-MiniLM-L6-v2')
+      const { pipeline } = (await import('@xenova/transformers')) as any
+      const pipe = await pipeline(
+        'feature-extraction',
+        this.options.model || 'Xenova/all-MiniLM-L6-v2',
+      )
       const out = await Promise.all(
         texts.map(async (t) => {
           const output = await pipe(t, { pooling: 'mean', normalize: true })
           // output.data is a TypedArray
           return Array.from(output.data as Float32Array)
-        })
+        }),
       )
       await cacheHelpers.set(cacheKey, out, 60 * 30)
       return out
@@ -46,4 +49,3 @@ function hash(input: string): string {
 }
 
 export default EmbeddingService
-

@@ -11,8 +11,8 @@
  * - RTL support
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Filter,
   Search,
@@ -21,44 +21,40 @@ import {
   ChevronUp,
   RotateCcw,
   Calendar as CalendarIcon,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+} from '@/components/ui/select'
+import { Calendar } from '@/components/ui/calendar'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { cn } from '@/lib/utils'
 import type {
   TimelineFilters as ITimelineFilters,
   TimelineEventType,
   TimelinePriority,
   TimelineEventStatus,
   DateRangePreset,
-} from '@/types/timeline.types';
+} from '@/types/timeline.types'
 
 interface TimelineFiltersProps {
-  filters: ITimelineFilters;
-  onFiltersChange: (filters: ITimelineFilters) => void;
-  availableEventTypes: TimelineEventType[];
-  defaultEventTypes: TimelineEventType[];
-  showFilters: boolean;
-  onToggleFilters: () => void;
-  onRefresh: () => void;
-  className?: string;
+  filters: ITimelineFilters
+  onFiltersChange: (filters: ITimelineFilters) => void
+  availableEventTypes: TimelineEventType[]
+  defaultEventTypes: TimelineEventType[]
+  showFilters: boolean
+  onToggleFilters: () => void
+  onRefresh: () => void
+  className?: string
 }
 
 export function TimelineFilters({
@@ -71,13 +67,13 @@ export function TimelineFilters({
   onRefresh,
   className,
 }: TimelineFiltersProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
-  const [searchInput, setSearchInput] = useState(filters.search_query || '');
-  const [dateRangePreset, setDateRangePreset] = useState<DateRangePreset>('all_time');
-  const [customDateFrom, setCustomDateFrom] = useState<Date | undefined>();
-  const [customDateTo, setCustomDateTo] = useState<Date | undefined>();
+  const [searchInput, setSearchInput] = useState(filters.search_query || '')
+  const [dateRangePreset, setDateRangePreset] = useState<DateRangePreset>('all_time')
+  const [customDateFrom, setCustomDateFrom] = useState<Date | undefined>()
+  const [customDateTo, setCustomDateTo] = useState<Date | undefined>()
 
   // Event type labels
   const eventTypeLabels: Record<TimelineEventType, { en: string; ar: string }> = {
@@ -90,65 +86,65 @@ export function TimelineFilters({
     relationship: { en: 'Relationships', ar: 'العلاقات' },
     commitment: { en: 'Commitments', ar: 'الالتزامات' },
     decision: { en: 'Decisions', ar: 'القرارات' },
-  };
+  }
 
   // Handle event type toggle
   const handleEventTypeToggle = (eventType: TimelineEventType) => {
-    const currentTypes = filters.event_types || defaultEventTypes;
+    const currentTypes = filters.event_types || defaultEventTypes
     const newTypes = currentTypes.includes(eventType)
       ? currentTypes.filter((t) => t !== eventType)
-      : [...currentTypes, eventType];
+      : [...currentTypes, eventType]
 
     onFiltersChange({
       ...filters,
       event_types: newTypes.length > 0 ? newTypes : defaultEventTypes,
-    });
-  };
+    })
+  }
 
   // Handle priority filter
   const handlePriorityChange = (priority: TimelinePriority | 'all') => {
     onFiltersChange({
       ...filters,
       priority: priority === 'all' ? undefined : [priority],
-    });
-  };
+    })
+  }
 
   // Handle status filter
   const handleStatusChange = (status: TimelineEventStatus | 'all') => {
     onFiltersChange({
       ...filters,
       status: status === 'all' ? undefined : [status],
-    });
-  };
+    })
+  }
 
   // Handle date range preset
   const handleDateRangePreset = (preset: DateRangePreset) => {
-    setDateRangePreset(preset);
+    setDateRangePreset(preset)
 
-    const now = new Date();
-    let dateFrom: string | undefined;
-    let dateTo: string | undefined;
+    const now = new Date()
+    let dateFrom: string | undefined
+    let dateTo: string | undefined
 
     switch (preset) {
       case 'last_7_days':
-        dateFrom = new Date(now.setDate(now.getDate() - 7)).toISOString();
-        break;
+        dateFrom = new Date(now.setDate(now.getDate() - 7)).toISOString()
+        break
       case 'last_30_days':
-        dateFrom = new Date(now.setDate(now.getDate() - 30)).toISOString();
-        break;
+        dateFrom = new Date(now.setDate(now.getDate() - 30)).toISOString()
+        break
       case 'last_90_days':
-        dateFrom = new Date(now.setDate(now.getDate() - 90)).toISOString();
-        break;
+        dateFrom = new Date(now.setDate(now.getDate() - 90)).toISOString()
+        break
       case 'last_year':
-        dateFrom = new Date(now.setFullYear(now.getFullYear() - 1)).toISOString();
-        break;
+        dateFrom = new Date(now.setFullYear(now.getFullYear() - 1)).toISOString()
+        break
       case 'all_time':
-        dateFrom = undefined;
-        dateTo = undefined;
-        break;
+        dateFrom = undefined
+        dateTo = undefined
+        break
       case 'custom':
         // User will set custom dates
-        break;
+        break
     }
 
     if (preset !== 'custom') {
@@ -156,9 +152,9 @@ export function TimelineFilters({
         ...filters,
         date_from: dateFrom,
         date_to: dateTo,
-      });
+      })
     }
-  };
+  }
 
   // Handle custom date range
   const handleCustomDateRange = () => {
@@ -166,28 +162,28 @@ export function TimelineFilters({
       ...filters,
       date_from: customDateFrom?.toISOString(),
       date_to: customDateTo?.toISOString(),
-    });
-  };
+    })
+  }
 
   // Handle search
   const handleSearch = (query: string) => {
-    setSearchInput(query);
+    setSearchInput(query)
     onFiltersChange({
       ...filters,
       search_query: query || undefined,
-    });
-  };
+    })
+  }
 
   // Reset all filters
   const handleResetFilters = () => {
-    setSearchInput('');
-    setDateRangePreset('all_time');
-    setCustomDateFrom(undefined);
-    setCustomDateTo(undefined);
+    setSearchInput('')
+    setDateRangePreset('all_time')
+    setCustomDateFrom(undefined)
+    setCustomDateTo(undefined)
     onFiltersChange({
       event_types: defaultEventTypes,
-    });
-  };
+    })
+  }
 
   // Count active filters
   const activeFiltersCount =
@@ -195,7 +191,7 @@ export function TimelineFilters({
     (filters.priority ? 1 : 0) +
     (filters.status ? 1 : 0) +
     (filters.date_from || filters.date_to ? 1 : 0) +
-    (filters.search_query ? 1 : 0);
+    (filters.search_query ? 1 : 0)
 
   return (
     <div className={cn('space-y-4 mb-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -203,7 +199,12 @@ export function TimelineFilters({
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
         {/* Search Input */}
         <div className="relative flex-1">
-          <Search className={cn('absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground', isRTL ? 'end-3' : 'start-3')} />
+          <Search
+            className={cn(
+              'absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground',
+              isRTL ? 'end-3' : 'start-3',
+            )}
+          />
           <Input
             type="text"
             placeholder={t('timeline.search_placeholder')}
@@ -216,7 +217,10 @@ export function TimelineFilters({
               variant="ghost"
               size="sm"
               onClick={() => handleSearch('')}
-              className={cn('absolute top-1/2 -translate-y-1/2 h-7 w-7 p-0', isRTL ? 'start-1' : 'end-1')}
+              className={cn(
+                'absolute top-1/2 -translate-y-1/2 h-7 w-7 p-0',
+                isRTL ? 'start-1' : 'end-1',
+              )}
             >
               <X className="h-4 w-4" />
             </Button>
@@ -376,16 +380,12 @@ export function TimelineFilters({
                     </div>
                     <div className="space-y-2">
                       <Label>{t('timeline.to_date')}</Label>
-                      <Calendar
-                        mode="single"
-                        selected={customDateTo}
-                        onSelect={setCustomDateTo}
-                      />
+                      <Calendar mode="single" selected={customDateTo} onSelect={setCustomDateTo} />
                     </div>
                     <Button
                       onClick={() => {
-                        setDateRangePreset('custom');
-                        handleCustomDateRange();
+                        setDateRangePreset('custom')
+                        handleCustomDateRange()
                       }}
                       className="w-full"
                     >
@@ -414,5 +414,5 @@ export function TimelineFilters({
         </div>
       )}
     </div>
-  );
+  )
 }

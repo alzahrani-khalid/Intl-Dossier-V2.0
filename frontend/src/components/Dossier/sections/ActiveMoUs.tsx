@@ -15,7 +15,7 @@ interface ActiveMoUsProps {
   dossier: OrganizationDossier
 }
 
-export function ActiveMoUs({}: ActiveMoUsProps) {
+export function ActiveMoUs(_props: ActiveMoUsProps) {
   const { i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 

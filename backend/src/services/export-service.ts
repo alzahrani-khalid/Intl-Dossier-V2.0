@@ -7,30 +7,30 @@
  * @module export-service
  */
 
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js'
 
 // Contact type from cd_contacts table
 interface Contact {
-  id: string;
-  full_name: string;
-  organization_id?: string | null;
-  position?: string | null;
-  email_addresses?: string[] | null;
-  phone_numbers?: string[] | null;
-  tags?: string[] | null;
-  created_at?: string | null;
-  notes?: string | null;
+  id: string
+  full_name: string
+  organization_id?: string | null
+  position?: string | null
+  email_addresses?: string[] | null
+  phone_numbers?: string[] | null
+  tags?: string[] | null
+  created_at?: string | null
+  notes?: string | null
 }
 
 // Organization type for lookups
 interface Organization {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 export class ExportService {
-  private readonly MAX_EXPORT_SIZE = 1000;
-  private readonly UTF8_BOM = '\ufeff'; // UTF-8 BOM for Excel Arabic support
+  private readonly MAX_EXPORT_SIZE = 1000
+  private readonly UTF8_BOM = '\ufeff' // UTF-8 BOM for Excel Arabic support
 
   constructor(private supabase: SupabaseClient) {}
 
@@ -42,12 +42,9 @@ export class ExportService {
    * @param organizations - Optional map of organization IDs to names
    * @returns CSV string with headers and UTF-8 BOM
    */
-  generateCSV(
-    contacts: Contact[],
-    organizations?: Map<string, string>
-  ): string {
+  generateCSV(contacts: Contact[], organizations?: Map<string, string>): string {
     // Limit export size
-    const limitedContacts = contacts.slice(0, this.MAX_EXPORT_SIZE);
+    const limitedContacts = contacts.slice(0, this.MAX_EXPORT_SIZE)
 
     // CSV headers
     const headers = [
@@ -57,21 +54,19 @@ export class ExportService {
       'Email',
       'Phone',
       'Tags',
-      'Created At'
-    ];
+      'Created At',
+    ]
 
     // Build CSV rows
-    const rows = limitedContacts.map(contact => {
+    const rows = limitedContacts.map((contact) => {
       const organizationName = contact.organization_id
         ? organizations?.get(contact.organization_id) || ''
-        : '';
+        : ''
 
-      const emails = (contact.email_addresses || []).join('; ');
-      const phones = (contact.phone_numbers || []).join('; ');
-      const tags = (contact.tags || []).join('; ');
-      const createdAt = contact.created_at
-        ? new Date(contact.created_at).toLocaleString()
-        : '';
+      const emails = (contact.email_addresses || []).join('; ')
+      const phones = (contact.phone_numbers || []).join('; ')
+      const tags = (contact.tags || []).join('; ')
+      const createdAt = contact.created_at ? new Date(contact.created_at).toLocaleString() : ''
 
       return [
         this.escapeCsvValue(contact.full_name),
@@ -80,18 +75,18 @@ export class ExportService {
         this.escapeCsvValue(emails),
         this.escapeCsvValue(phones),
         this.escapeCsvValue(tags),
-        this.escapeCsvValue(createdAt)
-      ];
-    });
+        this.escapeCsvValue(createdAt),
+      ]
+    })
 
     // Combine headers and rows
     const csvContent = [
-      headers.map(h => this.escapeCsvValue(h)).join(','),
-      ...rows.map(row => row.join(','))
-    ].join('\n');
+      headers.map((h) => this.escapeCsvValue(h)).join(','),
+      ...rows.map((row) => row.join(',')),
+    ].join('\n')
 
     // Add UTF-8 BOM for Arabic support in Excel
-    return this.UTF8_BOM + csvContent;
+    return this.UTF8_BOM + csvContent
   }
 
   /**
@@ -102,80 +97,80 @@ export class ExportService {
    * @param organizations - Optional map of organization IDs to names
    * @returns vCard 3.0 formatted string
    */
-  generateVCard(
-    contacts: Contact[],
-    organizations?: Map<string, string>
-  ): string {
+  generateVCard(contacts: Contact[], organizations?: Map<string, string>): string {
     // Limit export size
-    const limitedContacts = contacts.slice(0, this.MAX_EXPORT_SIZE);
+    const limitedContacts = contacts.slice(0, this.MAX_EXPORT_SIZE)
 
-    const vcards = limitedContacts.map(contact => {
-      const lines: string[] = [];
+    const vcards = limitedContacts.map((contact) => {
+      const lines: string[] = []
 
       // vCard 3.0 header
-      lines.push('BEGIN:VCARD');
-      lines.push('VERSION:3.0');
+      lines.push('BEGIN:VCARD')
+      lines.push('VERSION:3.0')
 
       // Full name (FN) - Required field
-      lines.push(`FN:${this.escapeVCardValue(contact.full_name)}`);
+      lines.push(`FN:${this.escapeVCardValue(contact.full_name)}`)
 
       // Name components (N) - Last;First;Middle;Prefix;Suffix
       // Since we only have full_name, we'll put it all in the family name field
-      lines.push(`N:${this.escapeVCardValue(contact.full_name)};;;;`);
+      lines.push(`N:${this.escapeVCardValue(contact.full_name)};;;;`)
 
       // Organization (ORG) and Title (TITLE)
       if (contact.organization_id && organizations?.has(contact.organization_id)) {
-        const orgName = organizations.get(contact.organization_id)!;
-        lines.push(`ORG:${this.escapeVCardValue(orgName)}`);
+        const orgName = organizations.get(contact.organization_id)!
+        lines.push(`ORG:${this.escapeVCardValue(orgName)}`)
       }
 
       if (contact.position) {
-        lines.push(`TITLE:${this.escapeVCardValue(contact.position)}`);
+        lines.push(`TITLE:${this.escapeVCardValue(contact.position)}`)
       }
 
       // Email addresses (EMAIL)
       if (contact.email_addresses?.length) {
         contact.email_addresses.forEach((email, index) => {
-          const type = index === 0 ? 'PREF' : 'WORK';
-          lines.push(`EMAIL;TYPE=${type}:${email}`);
-        });
+          const type = index === 0 ? 'PREF' : 'WORK'
+          lines.push(`EMAIL;TYPE=${type}:${email}`)
+        })
       }
 
       // Phone numbers (TEL)
       if (contact.phone_numbers?.length) {
         contact.phone_numbers.forEach((phone, index) => {
-          const type = index === 0 ? 'PREF' : 'WORK';
-          lines.push(`TEL;TYPE=${type}:${phone}`);
-        });
+          const type = index === 0 ? 'PREF' : 'WORK'
+          lines.push(`TEL;TYPE=${type}:${phone}`)
+        })
       }
 
       // Notes (NOTE)
       if (contact.notes) {
-        lines.push(`NOTE:${this.escapeVCardValue(contact.notes)}`);
+        lines.push(`NOTE:${this.escapeVCardValue(contact.notes)}`)
       }
 
       // Categories (CATEGORIES) from tags
       if (contact.tags?.length) {
-        lines.push(`CATEGORIES:${contact.tags.join(',')}`);
+        lines.push(`CATEGORIES:${contact.tags.join(',')}`)
       }
 
       // Unique identifier (UID)
-      lines.push(`UID:${contact.id}`);
+      lines.push(`UID:${contact.id}`)
 
       // Revision date (REV)
       if (contact.created_at) {
-        const date = new Date(contact.created_at);
-        const rev = date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-        lines.push(`REV:${rev}`);
+        const date = new Date(contact.created_at)
+        const rev = date
+          .toISOString()
+          .replace(/[-:]/g, '')
+          .replace(/\.\d{3}/, '')
+        lines.push(`REV:${rev}`)
       }
 
       // vCard footer
-      lines.push('END:VCARD');
+      lines.push('END:VCARD')
 
-      return lines.join('\r\n');
-    });
+      return lines.join('\r\n')
+    })
 
-    return vcards.join('\r\n\r\n');
+    return vcards.join('\r\n\r\n')
   }
 
   /**
@@ -189,40 +184,38 @@ export class ExportService {
   async *generateChunkedExport(
     contacts: Contact[],
     format: 'csv' | 'vcard',
-    chunkSize: number = 100
+    chunkSize: number = 100,
   ): AsyncGenerator<string, void, unknown> {
     // Fetch organizations if needed
-    const organizationIds = [...new Set(
-      contacts
-        .map(c => c.organization_id)
-        .filter((id): id is string => id !== null)
-    )];
+    const organizationIds = [
+      ...new Set(contacts.map((c) => c.organization_id).filter((id): id is string => id !== null)),
+    ]
 
-    let organizations: Map<string, string> | undefined;
+    let organizations: Map<string, string> | undefined
 
     if (organizationIds.length > 0) {
       const { data: orgs } = await this.supabase
         .from('cd_organizations')
         .select('id, name')
-        .in('id', organizationIds);
+        .in('id', organizationIds)
 
       if (orgs) {
-        organizations = new Map(orgs.map(org => [org.id, org.name]));
+        organizations = new Map(orgs.map((org) => [org.id, org.name]))
       }
     }
 
     // Generate export in chunks
     for (let i = 0; i < contacts.length; i += chunkSize) {
-      const chunk = contacts.slice(i, Math.min(i + chunkSize, contacts.length));
+      const chunk = contacts.slice(i, Math.min(i + chunkSize, contacts.length))
 
       if (format === 'csv') {
         // For CSV, only include headers in the first chunk
-        const includeHeaders = i === 0;
-        const csvChunk = this.generateCSVChunk(chunk, organizations, includeHeaders);
-        yield csvChunk;
+        const includeHeaders = i === 0
+        const csvChunk = this.generateCSVChunk(chunk, organizations, includeHeaders)
+        yield csvChunk
       } else {
         // vCard format
-        yield this.generateVCard(chunk, organizations);
+        yield this.generateVCard(chunk, organizations)
       }
     }
   }
@@ -233,19 +226,17 @@ export class ExportService {
   private generateCSVChunk(
     contacts: Contact[],
     organizations?: Map<string, string>,
-    includeHeaders: boolean = false
+    includeHeaders: boolean = false,
   ): string {
-    const rows = contacts.map(contact => {
+    const rows = contacts.map((contact) => {
       const organizationName = contact.organization_id
         ? organizations?.get(contact.organization_id) || ''
-        : '';
+        : ''
 
-      const emails = (contact.email_addresses || []).join('; ');
-      const phones = (contact.phone_numbers || []).join('; ');
-      const tags = (contact.tags || []).join('; ');
-      const createdAt = contact.created_at
-        ? new Date(contact.created_at).toLocaleString()
-        : '';
+      const emails = (contact.email_addresses || []).join('; ')
+      const phones = (contact.phone_numbers || []).join('; ')
+      const tags = (contact.tags || []).join('; ')
+      const createdAt = contact.created_at ? new Date(contact.created_at).toLocaleString() : ''
 
       return [
         this.escapeCsvValue(contact.full_name),
@@ -254,9 +245,9 @@ export class ExportService {
         this.escapeCsvValue(emails),
         this.escapeCsvValue(phones),
         this.escapeCsvValue(tags),
-        this.escapeCsvValue(createdAt)
-      ].join(',');
-    });
+        this.escapeCsvValue(createdAt),
+      ].join(',')
+    })
 
     if (includeHeaders) {
       const headers = [
@@ -266,36 +257,38 @@ export class ExportService {
         'Email',
         'Phone',
         'Tags',
-        'Created At'
-      ].map(h => this.escapeCsvValue(h)).join(',');
+        'Created At',
+      ]
+        .map((h) => this.escapeCsvValue(h))
+        .join(',')
 
-      return this.UTF8_BOM + headers + '\n' + rows.join('\n');
+      return this.UTF8_BOM + headers + '\n' + rows.join('\n')
     }
 
-    return rows.join('\n');
+    return rows.join('\n')
   }
 
   /**
    * Escape CSV value according to RFC 4180
    */
   private escapeCsvValue(value: string): string {
-    if (!value) return '';
+    if (!value) return ''
 
     // Check if value needs escaping
     if (value.includes(',') || value.includes('"') || value.includes('\n')) {
       // Escape double quotes by doubling them
-      const escaped = value.replace(/"/g, '""');
-      return `"${escaped}"`;
+      const escaped = value.replace(/"/g, '""')
+      return `"${escaped}"`
     }
 
-    return value;
+    return value
   }
 
   /**
    * Escape vCard value according to vCard 3.0 specification
    */
   private escapeVCardValue(value: string): string {
-    if (!value) return '';
+    if (!value) return ''
 
     // Escape special characters: backslash, semicolon, comma, newline
     return value
@@ -303,6 +296,6 @@ export class ExportService {
       .replace(/;/g, '\\;')
       .replace(/,/g, '\\,')
       .replace(/\n/g, '\\n')
-      .replace(/\r/g, '');
+      .replace(/\r/g, '')
   }
 }

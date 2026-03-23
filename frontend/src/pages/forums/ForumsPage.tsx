@@ -188,7 +188,7 @@ export function ForumsPage() {
               <Eye className="size-4 me-2" />
               {t('viewDetails')}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log('Edit:', row.original.id)}>
+            <DropdownMenuItem onClick={() => console.warn('Edit:', row.original.id)}>
               <Pencil className="size-4 me-2" />
               {t('editForum')}
             </DropdownMenuItem>

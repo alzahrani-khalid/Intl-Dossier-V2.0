@@ -251,13 +251,15 @@ export function enableEventLogging(): ModuleEventSubscription {
   const eventBus = getEventBus()
 
   return eventBus.subscribeAll((event) => {
-    console.group(`📨 [${event.source}] ${event.type}`)
-    console.log('Event ID:', event.id)
-    console.log('Timestamp:', event.timestamp)
-    console.log('Payload:', event.payload)
-    if (event.correlationId) {
-      console.log('Correlation ID:', event.correlationId)
-    }
-    console.groupEnd()
+    console.warn(
+      `[${event.source}] ${event.type}`,
+      'id:',
+      event.id,
+      'ts:',
+      event.timestamp,
+      'payload:',
+      event.payload,
+      ...(event.correlationId ? ['correlationId:', event.correlationId] : []),
+    )
   })
 }

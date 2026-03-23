@@ -716,7 +716,7 @@ export function useDossierCounts(
  *
  * @example
  * const { data: countryCount } = useDossierCountByType('country');
- * console.log(`Total countries: ${countryCount}`);
+ * console.warn(`Total countries: ${countryCount}`);
  */
 export function useDossierCountByType(
   type: TypeGuardDossierType,

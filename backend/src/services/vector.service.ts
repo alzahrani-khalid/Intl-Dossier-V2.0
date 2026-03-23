@@ -6,7 +6,6 @@ import {
 } from '../models/vector-embedding.model'
 import { IntelligenceReport } from '../models/intelligence-report.model'
 import { embeddingsService } from '../ai/embeddings-service.js'
-import { aiConfig } from '../ai/config.js'
 
 interface VectorSearchOptions {
   query_embedding: number[]

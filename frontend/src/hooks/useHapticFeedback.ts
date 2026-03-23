@@ -79,7 +79,7 @@ export function useHapticFeedback(options: HapticFeedbackOptions = {}): HapticFe
         navigator.vibrate(pattern)
       } catch (e) {
         // Silently fail if vibration is not available
-        console.debug('Haptic feedback not available:', e)
+        console.warn('Haptic feedback not available:', e)
       }
     },
     [enabled, isSupported],

@@ -183,7 +183,7 @@ export function VersionHistoryViewer({
               </Alert>
             ) : (
               changes.map((change, index) => (
-                <Card key={index} className={cn('border-l-4', getDiffColor(change.kind))}>
+                <Card key={index} className={cn('border-s-4', getDiffColor(change.kind))}>
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <Badge className={getDiffColor(change.kind)}>

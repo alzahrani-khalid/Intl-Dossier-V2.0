@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { TicketDetail } from '../../../pages/TicketDetail';
+import { createFileRoute } from '@tanstack/react-router'
+import { TicketDetail } from '../../../pages/TicketDetail'
 
 export const Route = createFileRoute('/_protected/intake/tickets/$id')({
- component: TicketDetailPage,
-});
+  component: TicketDetailPage,
+})
 
 function TicketDetailPage() {
- return <TicketDetail />;
+  return <TicketDetail />
 }

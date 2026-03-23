@@ -7,5 +7,5 @@
  * - Content Area (flexible)
  */
 
-export { NavigationShell } from './NavigationShell';
-export type { NavigationShellProps } from './NavigationShell';
+export { NavigationShell } from './NavigationShell'
+export type { NavigationShellProps } from './NavigationShell'

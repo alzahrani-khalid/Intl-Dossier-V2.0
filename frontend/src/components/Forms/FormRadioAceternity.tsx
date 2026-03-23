@@ -50,7 +50,7 @@ export function FormRadioAceternity({
     layout === 'vertical' ? 'flex flex-col' : 'flex flex-wrap',
     layout === 'vertical' ? 'gap-3 sm:gap-4' : 'gap-4 sm:gap-6',
     // RTL support
-    isRTL && layout === 'horizontal' && 'flex-row-reverse'
+    isRTL && layout === 'horizontal' && 'flex-row-reverse',
   )
 
   const radioItemContainerClasses = cn(
@@ -63,17 +63,18 @@ export function FormRadioAceternity({
     // RTL direction
     isRTL && 'flex-row-reverse',
     // Disabled state
-    disabled && 'opacity-50 cursor-not-allowed'
+    disabled && 'opacity-50 cursor-not-allowed',
   )
 
-  const aceternityRadioItemClasses = (optionValue: string) => cn(
-    radioItemContainerClasses,
-    // Aceternity enhancements
-    'border border-gray-200 dark:border-gray-700',
-    'hover:bg-gray-50 dark:hover:bg-zinc-800',
-    hoveredOption === optionValue && 'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1)]',
-    value === optionValue && 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/10'
-  )
+  const aceternityRadioItemClasses = (optionValue: string) =>
+    cn(
+      radioItemContainerClasses,
+      // Aceternity enhancements
+      'border border-gray-200 dark:border-gray-700',
+      'hover:bg-gray-50 dark:hover:bg-zinc-800',
+      hoveredOption === optionValue && 'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1)]',
+      value === optionValue && 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/10',
+    )
 
   return (
     <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -82,7 +83,7 @@ export function FormRadioAceternity({
         className={cn(
           'block font-medium text-start',
           'text-sm sm:text-base',
-          'text-gray-700 dark:text-gray-300'
+          'text-gray-700 dark:text-gray-300',
         )}
         initial={{ opacity: 0, y: -5 }}
         animate={{ opacity: 1, y: 0 }}
@@ -103,9 +104,7 @@ export function FormRadioAceternity({
         disabled={disabled}
         className={radioGroupClasses}
         aria-invalid={!!error}
-        aria-describedby={
-          error ? `${name}-error` : helpText ? `${name}-help` : undefined
-        }
+        aria-describedby={error ? `${name}-error` : helpText ? `${name}-help` : undefined}
         {...(register ? register(name) : {})}
       >
         {options.map((option, index) => (
@@ -126,10 +125,7 @@ export function FormRadioAceternity({
             <RadioGroupItem
               value={option.value}
               id={`${name}-${option.value}`}
-              className={cn(
-                'mt-0.5',
-                variant === 'aceternity' && 'h-5 w-5 sm:h-4 sm:w-4'
-              )}
+              className={cn('mt-0.5', variant === 'aceternity' && 'h-5 w-5 sm:h-4 sm:w-4')}
             />
 
             {/* Label and description */}
@@ -140,7 +136,7 @@ export function FormRadioAceternity({
                   'cursor-pointer text-start',
                   'text-sm sm:text-base',
                   'text-gray-700 dark:text-gray-300',
-                  disabled && 'cursor-not-allowed'
+                  disabled && 'cursor-not-allowed',
                 )}
               >
                 {option.label}

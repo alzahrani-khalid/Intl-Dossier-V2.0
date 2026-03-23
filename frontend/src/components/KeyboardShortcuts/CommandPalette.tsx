@@ -356,7 +356,6 @@ export function CommandPalette({ className }: CommandPaletteProps) {
   // Helper to navigate - uses type assertion for routes that may not be in the router yet
   const navigateTo = useCallback(
     (path: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       navigate({ to: path as any })
       closeCommandPalette()
     },
@@ -782,7 +781,6 @@ export function CommandPalette({ className }: CommandPaletteProps) {
                       key={`recent-${item.id}`}
                       value={`recent-${item.id}`}
                       onSelect={() => {
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         navigate({ to: item.url as any })
                         closeCommandPalette()
                         setSearchQuery('')

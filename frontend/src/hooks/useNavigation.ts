@@ -9,7 +9,7 @@ export function useNavigation() {
     (to: string, options?: { replace?: boolean; state?: any }) => {
       navigate({ to, replace: options?.replace })
     },
-    [navigate]
+    [navigate],
   )
 
   const goBack = useCallback(() => {
@@ -30,4 +30,3 @@ export function useNavigation() {
     currentPath: router.state.location.pathname,
   }
 }
-

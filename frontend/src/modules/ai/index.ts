@@ -54,7 +54,7 @@ export type { AIEventType } from '../core/contracts'
  * )
  *
  * if (searchResult.success) {
- *   console.log('Search results:', searchResult.data)
+ *   console.warn('Search results:', searchResult.data)
  * }
  *
  * @example
@@ -64,7 +64,7 @@ export type { AIEventType } from '../core/contracts'
  *
  * if (result.success) {
  *   result.data.forEach(entity => {
- *     console.log(`${entity.type}: ${entity.value} (${entity.confidence}%)`)
+ *     console.warn(`${entity.type}: ${entity.value} (${entity.confidence}%)`)
  *   })
  * }
  *
@@ -84,6 +84,6 @@ export type { AIEventType } from '../core/contracts'
  * const eventBus = getEventBus()
  *
  * eventBus.subscribe(AI_EVENTS.BRIEF_GENERATED, (event) => {
- *   console.log('Brief generated:', event.payload)
+ *   console.warn('Brief generated:', event.payload)
  * })
  */

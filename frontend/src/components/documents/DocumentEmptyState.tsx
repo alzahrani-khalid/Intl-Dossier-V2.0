@@ -187,7 +187,6 @@ export function DocumentEmptyState({
   )
 
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onDrop: onDrop as any,
     accept,
     maxSize: maxFileSizeMB * 1024 * 1024,

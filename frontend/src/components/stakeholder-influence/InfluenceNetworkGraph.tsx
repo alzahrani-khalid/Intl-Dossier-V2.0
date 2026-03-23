@@ -128,7 +128,7 @@ function InfluenceNode({ data }: { data: Record<string, unknown> }) {
 
       {/* Tooltip with name */}
       <div
-        className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-background border rounded shadow-sm whitespace-nowrap text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+        className="absolute -bottom-8 start-1/2 -translate-x-1/2 px-2 py-1 bg-background border rounded shadow-sm whitespace-nowrap text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {name}

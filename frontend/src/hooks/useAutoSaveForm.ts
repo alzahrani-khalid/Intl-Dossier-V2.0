@@ -165,21 +165,17 @@ export function useAutoSaveForm<T extends Record<string, unknown>>(
   const saveDraftToStorage = useCallback(async (draftData: FormDraft<T>): Promise<void> => {
     if (!isIndexedDBAvailable()) return
 
-    try {
-      const db = await openDB()
-      const transaction = db.transaction([STORE_NAME], 'readwrite')
-      const store = transaction.objectStore(STORE_NAME)
+    const db = await openDB()
+    const transaction = db.transaction([STORE_NAME], 'readwrite')
+    const store = transaction.objectStore(STORE_NAME)
 
-      await new Promise<void>((resolve, reject) => {
-        const request = store.put(draftData)
-        request.onsuccess = () => resolve()
-        request.onerror = () => reject(new Error('Failed to save draft'))
-      })
+    await new Promise<void>((resolve, reject) => {
+      const request = store.put(draftData)
+      request.onsuccess = () => resolve()
+      request.onerror = () => reject(new Error('Failed to save draft'))
+    })
 
-      db.close()
-    } catch (error) {
-      throw error
-    }
+    db.close()
   }, [])
 
   /**

@@ -10,36 +10,36 @@
  * - RLS-aware queries (only task owners can manage contributors)
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '../types/database.types';
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '../types/database.types'
 
-type TaskContributor = Database['public']['Tables']['task_contributors']['Row'];
-type TaskContributorInsert = Database['public']['Tables']['task_contributors']['Insert'];
-type TaskContributorUpdate = Database['public']['Tables']['task_contributors']['Update'];
+type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
+type TaskContributorInsert = Database['public']['Tables']['task_contributors']['Insert']
+type TaskContributorUpdate = Database['public']['Tables']['task_contributors']['Update']
 
 const supabase = createClient<Database>(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+)
 
 export interface AddContributorInput {
-  task_id: string;
-  user_id: string;
-  added_by: string;
-  role?: string;
+  task_id: string
+  user_id: string
+  added_by: string
+  role?: string
 }
 
 export interface RemoveContributorInput {
-  task_id: string;
-  user_id: string;
-  removed_by: string;
+  task_id: string
+  user_id: string
+  removed_by: string
 }
 
 export class TaskContributorsService {
-  private supabase: SupabaseClient<Database>;
+  private supabase: SupabaseClient<Database>
 
   constructor(supabaseClient?: SupabaseClient<Database>) {
-    this.supabase = supabaseClient || supabase;
+    this.supabase = supabaseClient || supabase
   }
 
   /**
@@ -53,7 +53,7 @@ export class TaskContributorsService {
       .select('*')
       .eq('task_id', input.task_id)
       .eq('user_id', input.user_id)
-      .maybeSingle();
+      .maybeSingle()
 
     // If contributor was previously removed, restore them
     if (existing && existing.removed_at) {
@@ -66,18 +66,18 @@ export class TaskContributorsService {
         })
         .eq('id', existing.id)
         .select()
-        .single();
+        .single()
 
       if (error) {
-        throw new Error(`Failed to restore contributor: ${error.message}`);
+        throw new Error(`Failed to restore contributor: ${error.message}`)
       }
 
-      return data;
+      return data
     }
 
     // If contributor is already active, return existing record
     if (existing && !existing.removed_at) {
-      return existing;
+      return existing
     }
 
     // Add new contributor
@@ -85,19 +85,19 @@ export class TaskContributorsService {
       task_id: input.task_id,
       user_id: input.user_id,
       role: input.role || 'helper',
-    };
+    }
 
     const { data, error } = await this.supabase
       .from('task_contributors')
       .insert(contributorData)
       .select()
-      .single();
+      .single()
 
     if (error) {
-      throw new Error(`Failed to add contributor: ${error.message}`);
+      throw new Error(`Failed to add contributor: ${error.message}`)
     }
 
-    return data;
+    return data
   }
 
   /**
@@ -113,10 +113,10 @@ export class TaskContributorsService {
       })
       .eq('task_id', input.task_id)
       .eq('user_id', input.user_id)
-      .is('removed_at', null);
+      .is('removed_at', null)
 
     if (error) {
-      throw new Error(`Failed to remove contributor: ${error.message}`);
+      throw new Error(`Failed to remove contributor: ${error.message}`)
     }
   }
 
@@ -129,13 +129,13 @@ export class TaskContributorsService {
       .select('*')
       .eq('task_id', taskId)
       .is('removed_at', null)
-      .order('added_at', { ascending: false });
+      .order('added_at', { ascending: false })
 
     if (error) {
-      throw new Error(`Failed to fetch task contributors: ${error.message}`);
+      throw new Error(`Failed to fetch task contributors: ${error.message}`)
     }
 
-    return data || [];
+    return data || []
   }
 
   /**
@@ -147,13 +147,13 @@ export class TaskContributorsService {
       .select('*')
       .eq('user_id', userId)
       .is('removed_at', null)
-      .order('added_at', { ascending: false });
+      .order('added_at', { ascending: false })
 
     if (error) {
-      throw new Error(`Failed to fetch contributor tasks: ${error.message}`);
+      throw new Error(`Failed to fetch contributor tasks: ${error.message}`)
     }
 
-    return data || [];
+    return data || []
   }
 
   /**
@@ -166,9 +166,9 @@ export class TaskContributorsService {
       .eq('task_id', taskId)
       .eq('user_id', userId)
       .is('removed_at', null)
-      .maybeSingle();
+      .maybeSingle()
 
-    return !!data;
+    return !!data
   }
 
   /**
@@ -179,13 +179,13 @@ export class TaskContributorsService {
       .from('task_contributors')
       .select('*')
       .eq('task_id', taskId)
-      .order('added_at', { ascending: false });
+      .order('added_at', { ascending: false })
 
     if (error) {
-      throw new Error(`Failed to fetch contributor history: ${error.message}`);
+      throw new Error(`Failed to fetch contributor history: ${error.message}`)
     }
 
-    return data || [];
+    return data || []
   }
 
   /**
@@ -195,25 +195,25 @@ export class TaskContributorsService {
     taskId: string,
     userIds: string[],
     addedBy: string,
-    role?: string
+    role?: string,
   ): Promise<TaskContributor[]> {
     const contributors: TaskContributorInsert[] = userIds.map((userId) => ({
       task_id: taskId,
       user_id: userId,
       added_by: addedBy,
       role: role || 'contributor',
-    }));
+    }))
 
     const { data, error } = await this.supabase
       .from('task_contributors')
       .insert(contributors)
-      .select();
+      .select()
 
     if (error) {
-      throw new Error(`Failed to add multiple contributors: ${error.message}`);
+      throw new Error(`Failed to add multiple contributors: ${error.message}`)
     }
 
-    return data || [];
+    return data || []
   }
 
   /**
@@ -222,7 +222,7 @@ export class TaskContributorsService {
   async removeMultipleContributors(
     taskId: string,
     userIds: string[],
-    removedBy: string
+    removedBy: string,
   ): Promise<void> {
     const { error } = await this.supabase
       .from('task_contributors')
@@ -232,10 +232,10 @@ export class TaskContributorsService {
       })
       .eq('task_id', taskId)
       .in('user_id', userIds)
-      .is('removed_at', null);
+      .is('removed_at', null)
 
     if (error) {
-      throw new Error(`Failed to remove multiple contributors: ${error.message}`);
+      throw new Error(`Failed to remove multiple contributors: ${error.message}`)
     }
   }
 
@@ -247,13 +247,13 @@ export class TaskContributorsService {
       .from('task_contributors')
       .select('*', { count: 'exact', head: true })
       .eq('task_id', taskId)
-      .is('removed_at', null);
+      .is('removed_at', null)
 
     if (error) {
-      throw new Error(`Failed to count contributors: ${error.message}`);
+      throw new Error(`Failed to count contributors: ${error.message}`)
     }
 
-    return count || 0;
+    return count || 0
   }
 
   /**
@@ -264,7 +264,7 @@ export class TaskContributorsService {
     taskId: string,
     newUserIds: string[],
     updatedBy: string,
-    role?: string
+    role?: string,
   ): Promise<TaskContributor[]> {
     // Remove all existing contributors
     await this.supabase
@@ -274,15 +274,15 @@ export class TaskContributorsService {
         removed_by: updatedBy,
       })
       .eq('task_id', taskId)
-      .is('removed_at', null);
+      .is('removed_at', null)
 
     // Add new contributors
     if (newUserIds.length === 0) {
-      return [];
+      return []
     }
 
-    return this.addMultipleContributors(taskId, newUserIds, updatedBy, role);
+    return this.addMultipleContributors(taskId, newUserIds, updatedBy, role)
   }
 }
 
-export const taskContributorsService = new TaskContributorsService();
+export const taskContributorsService = new TaskContributorsService()

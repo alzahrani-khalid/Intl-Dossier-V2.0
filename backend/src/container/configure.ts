@@ -68,15 +68,15 @@ export class RequestContextImpl implements RequestContext, IDisposable {
 
   constructor(scope: IServiceScope) {
     this.requestId = scope.metadata.requestId ?? 'unknown'
-    this.userId = scope.metadata.userId as string | undefined
-    this.tenantId = scope.metadata.tenantId as string | undefined
+    this.userId = scope.metadata.userId
+    this.tenantId = scope.metadata.tenantId
     this.startTime = Date.now()
   }
 
   dispose(): void {
     // Log request duration on disposal
     const duration = Date.now() - this.startTime
-    console.log(`[Request ${this.requestId}] Completed in ${duration}ms`)
+    console.warn(`[Request ${this.requestId}] Completed in ${duration}ms`)
   }
 }
 
@@ -159,25 +159,25 @@ export function configureServiceProvider(config: ContainerConfig): ServiceProvid
   const scopeEvents: ScopeEvents = {
     onScopeCreated: (scope) => {
       if (debug) {
-        console.log(`[DI] Scope created: ${scope.level} (${scope.id})`)
+        console.warn(`[DI] Scope created: ${scope.level} (${scope.id})`)
       }
       events?.onScopeCreated?.(scope)
     },
     onScopeDisposing: (scope) => {
       if (debug) {
-        console.log(`[DI] Scope disposing: ${scope.level} (${scope.id})`)
+        console.warn(`[DI] Scope disposing: ${scope.level} (${scope.id})`)
       }
       events?.onScopeDisposing?.(scope)
     },
     onScopeDisposed: (scope) => {
       if (debug) {
-        console.log(`[DI] Scope disposed: ${scope.level} (${scope.id})`)
+        console.warn(`[DI] Scope disposed: ${scope.level} (${scope.id})`)
       }
       events?.onScopeDisposed?.(scope)
     },
     onServiceResolved: (token, scope) => {
       if (debug) {
-        console.log(`[DI] Resolved: ${token.toString()} from ${scope.level} scope`)
+        console.warn(`[DI] Resolved: ${token.toString()} from ${scope.level} scope`)
       }
       events?.onServiceResolved?.(token, scope)
     },
@@ -252,7 +252,7 @@ export function configureServiceProvider(config: ContainerConfig): ServiceProvid
     (scope) => {
       const factory = scope.resolve<ILoggerFactory>(TYPES.LoggerFactory)
       const requestId = scope.metadata.requestId as string
-      const tenantId = scope.metadata.tenantId as string | undefined
+      const tenantId = scope.metadata.tenantId
       return new RequestLogger(factory, requestId, tenantId)
     },
     ScopeLevel.Request,

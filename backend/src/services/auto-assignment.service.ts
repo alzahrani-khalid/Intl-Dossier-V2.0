@@ -109,7 +109,7 @@ export async function findBestAssignee(workItem: WorkItem): Promise<StaffProfile
     }
 
     if (!eligibleStaff || eligibleStaff.length === 0) {
-      console.log('No eligible staff found with required skills and capacity')
+      console.warn('No eligible staff found with required skills and capacity')
       return null
     }
 
@@ -129,13 +129,13 @@ export async function findBestAssignee(workItem: WorkItem): Promise<StaffProfile
       .sort((a, b) => b.scoreResult.score - a.scoreResult.score) // Sort by score DESC
 
     if (scoredStaff.length === 0) {
-      console.log('All staff disqualified after scoring')
+      console.warn('All staff disqualified after scoring')
       return null
     }
 
     // Return staff with highest score
     const bestMatch = scoredStaff[0]
-    console.log(
+    console.warn(
       `Best assignee: ${bestMatch.staff.user_id} (score: ${bestMatch.scoreResult.score}, query: ${queryDuration}ms)`,
       bestMatch.scoreResult.breakdown,
     )
@@ -209,7 +209,7 @@ export async function attemptAssignment(
       ) {
         if (attempt < maxRetries - 1) {
           // Retry with different staff
-          console.log(`Staff ${assignee.user_id} at capacity, retrying...`)
+          console.warn(`Staff ${assignee.user_id} at capacity, retrying...`)
           await new Promise((resolve) => setTimeout(resolve, 100 * Math.pow(2, attempt)))
           continue
         }
@@ -235,7 +235,7 @@ export async function attemptAssignment(
         throw assignmentError
       }
 
-      console.log(`✓ Assignment created: ${assignment.id} → ${assignee.user_id}`)
+      console.warn(`✓ Assignment created: ${assignment.id} → ${assignee.user_id}`)
       return { success: true, assignmentId: assignment.id }
     } catch (err) {
       if (attempt < maxRetries - 1) {

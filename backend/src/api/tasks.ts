@@ -10,17 +10,17 @@
  * - SLA monitoring and warnings
  */
 
-import { Router, Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
-import { validate, idParamSchema } from '../utils/validation';
-import { authenticateToken } from '../middleware/auth';
-import { optimisticLockingMiddleware } from '../middleware/optimistic-locking';
-import { tasksService } from '../services/tasks.service';
+import { Router, Request, Response, NextFunction } from 'express'
+import { z } from 'zod'
+import { validate, idParamSchema } from '../utils/validation'
+import { authenticateToken } from '../middleware/auth'
+import { optimisticLockingMiddleware } from '../middleware/optimistic-locking'
+import { tasksService } from '../services/tasks.service'
 
-const router = Router();
+const router = Router()
 
 // Apply authentication to all routes
-router.use(authenticateToken);
+router.use(authenticateToken)
 
 // ============================================================================
 // VALIDATION SCHEMAS
@@ -37,7 +37,7 @@ const createTaskSchema = z.object({
   work_item_type: z.enum(['dossier', 'position', 'ticket', 'generic']).optional(),
   work_item_id: z.string().uuid().optional(),
   source: z.record(z.any()).optional(),
-});
+})
 
 const updateTaskSchema = z.object({
   title: z.string().min(1).max(500).optional(),
@@ -54,7 +54,7 @@ const updateTaskSchema = z.object({
   completed_by: z.string().uuid().optional(),
   completed_at: z.string().datetime().optional(),
   last_known_updated_at: z.string().datetime().optional(), // For optimistic locking
-});
+})
 
 const taskFiltersSchema = z.object({
   assignee_id: z.string().uuid().optional(),
@@ -69,7 +69,7 @@ const taskFiltersSchema = z.object({
   page_size: z.number().min(1).max(100).default(50),
   sort_by: z.enum(['created_at', 'updated_at', 'sla_deadline', 'priority']).default('created_at'),
   sort_order: z.enum(['asc', 'desc']).default('desc'),
-});
+})
 
 // ============================================================================
 // CRUD ENDPOINTS
@@ -84,23 +84,23 @@ router.post(
   validate({ body: createTaskSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.id
       if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       const task = await tasksService.createTask({
         ...req.body,
         created_by: userId,
         tenant_id: req.user.tenantId,
-      });
+      })
 
-      res.status(201).json(task);
+      res.status(201).json(task)
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /tasks/:id
@@ -111,23 +111,23 @@ router.get(
   validate({ params: idParamSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.id
       if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
-      const task = await tasksService.getTaskById(req.params.id, userId);
+      const task = await tasksService.getTaskById(req.params.id, userId)
 
       if (!task) {
-        return res.status(404).json({ error: 'Task not found' });
+        return res.status(404).json({ error: 'Task not found' })
       }
 
-      res.json(task);
+      res.json(task)
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /tasks
@@ -153,14 +153,14 @@ router.get(
         page_size: parseInt(req.query.page_size as string) || 50,
         sort_by: (req.query.sort_by as any) || 'created_at',
         sort_order: (req.query.sort_order as any) || 'desc',
-      });
+      })
 
-      res.json(result);
+      res.json(result)
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * PUT /tasks/:id
@@ -172,22 +172,22 @@ router.put(
   optimisticLockingMiddleware('tasks'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.id
       if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       const task = await tasksService.updateTask(req.params.id, {
         ...req.body,
         updated_by: userId,
-      });
+      })
 
-      res.json(task);
+      res.json(task)
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * DELETE /tasks/:id
@@ -198,19 +198,19 @@ router.delete(
   validate({ params: idParamSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.id
       if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
-      await tasksService.deleteTask(req.params.id, userId);
+      await tasksService.deleteTask(req.params.id, userId)
 
-      res.json({ success: true, message: 'Task deleted successfully' });
+      res.json({ success: true, message: 'Task deleted successfully' })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 // ============================================================================
 // SPECIALIZED ENDPOINTS
@@ -220,26 +220,23 @@ router.delete(
  * GET /tasks/my-tasks
  * Get tasks assigned to the current user
  */
-router.get(
-  '/my-tasks',
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
-      }
-
-      const result = await tasksService.getMyTasks(userId, {
-        page: parseInt(req.query.page as string) || 1,
-        page_size: parseInt(req.query.page_size as string) || 50,
-      });
-
-      res.json(result);
-    } catch (error: any) {
-      next(error);
+router.get('/my-tasks', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' })
     }
+
+    const result = await tasksService.getMyTasks(userId, {
+      page: parseInt(req.query.page as string) || 1,
+      page_size: parseInt(req.query.page_size as string) || 50,
+    })
+
+    res.json(result)
+  } catch (error: any) {
+    next(error)
   }
-);
+})
 
 /**
  * GET /tasks/engagement/:engagementId
@@ -250,14 +247,14 @@ router.get(
   validate({ params: z.object({ engagementId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await tasksService.getEngagementTasks(req.params.engagementId);
+      const result = await tasksService.getEngagementTasks(req.params.engagementId)
 
-      res.json(result);
+      res.json(result)
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /tasks/work-item/:workItemType/:workItemId
@@ -275,33 +272,30 @@ router.get(
     try {
       const tasks = await tasksService.getWorkItemTasks(
         req.params.workItemType as any,
-        req.params.workItemId
-      );
+        req.params.workItemId,
+      )
 
-      res.json({ tasks, total_count: tasks.length });
+      res.json({ tasks, total_count: tasks.length })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /tasks/overdue
  * Get overdue tasks (SLA breach detection)
  */
-router.get(
-  '/overdue',
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const assigneeId = req.query.assignee_id as string | undefined;
-      const tasks = await tasksService.getOverdueTasks(assigneeId);
+router.get('/overdue', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const assigneeId = req.query.assignee_id as string | undefined
+    const tasks = await tasksService.getOverdueTasks(assigneeId)
 
-      res.json({ tasks, total_count: tasks.length });
-    } catch (error: any) {
-      next(error);
-    }
+    res.json({ tasks, total_count: tasks.length })
+  } catch (error: any) {
+    next(error)
   }
-);
+})
 
 /**
  * GET /tasks/approaching-deadline
@@ -317,17 +311,17 @@ router.get(
   }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const hours = parseInt(req.query.hours as string) || 4;
-      const assigneeId = req.query.assignee_id as string | undefined;
+      const hours = parseInt(req.query.hours as string) || 4
+      const assigneeId = req.query.assignee_id as string | undefined
 
-      const tasks = await tasksService.getTasksApproachingDeadline(hours, assigneeId);
+      const tasks = await tasksService.getTasksApproachingDeadline(hours, assigneeId)
 
-      res.json({ tasks, total_count: tasks.length });
+      res.json({ tasks, total_count: tasks.length })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * PATCH /tasks/:id/workflow-stage
@@ -345,22 +339,22 @@ router.patch(
   optimisticLockingMiddleware('tasks'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.id
       if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       const task = await tasksService.updateTask(req.params.id, {
         workflow_stage: req.body.workflow_stage,
         updated_by: userId,
-      });
+      })
 
-      res.json(task);
+      res.json(task)
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * PATCH /tasks/:id/complete
@@ -377,9 +371,9 @@ router.patch(
   optimisticLockingMiddleware('tasks'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.id
       if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       const task = await tasksService.updateTask(req.params.id, {
@@ -388,13 +382,13 @@ router.patch(
         completed_by: userId,
         completed_at: new Date().toISOString(),
         updated_by: userId,
-      });
+      })
 
-      res.json(task);
+      res.json(task)
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
-export default router;
+export default router

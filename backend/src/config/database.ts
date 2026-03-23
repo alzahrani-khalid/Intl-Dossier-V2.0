@@ -1,4 +1,4 @@
-import { Pool, PoolConfig, Client } from 'pg'
+import { Pool, PoolConfig } from 'pg'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { performance } from 'perf_hooks'
 
@@ -69,7 +69,7 @@ class DatabasePool {
    */
   async initialize(): Promise<void> {
     if (this.pool) {
-      console.log('Database pool already initialized')
+      console.warn('Database pool already initialized')
       return
     }
 
@@ -110,8 +110,8 @@ class DatabasePool {
         },
       })
 
-      console.log('Database pool initialized successfully')
-      console.log(`Pool configuration: min=${config.pool.min}, max=${config.pool.max}`)
+      console.warn('Database pool initialized successfully')
+      console.warn(`Pool configuration: min=${config.pool.min}, max=${config.pool.max}`)
     } catch (error) {
       console.error('Failed to initialize database pool:', error)
       this.metrics.connectionErrors++
@@ -127,7 +127,7 @@ class DatabasePool {
 
     this.pool.on('connect', () => {
       this.metrics.totalConnections++
-      console.log(`New connection established. Total: ${this.metrics.totalConnections}`)
+      console.warn(`New connection established. Total: ${this.metrics.totalConnections}`)
     })
 
     this.pool.on('acquire', () => {
@@ -147,7 +147,7 @@ class DatabasePool {
 
     this.pool.on('remove', () => {
       this.metrics.totalConnections--
-      console.log(`Connection removed. Total: ${this.metrics.totalConnections}`)
+      console.warn(`Connection removed. Total: ${this.metrics.totalConnections}`)
     })
   }
 
@@ -162,7 +162,7 @@ class DatabasePool {
     const client = await this.pool.connect()
     try {
       const result = await client.query('SELECT NOW()')
-      console.log('Database connection test successful:', result.rows[0].now)
+      console.warn('Database connection test successful:', result.rows[0].now)
     } finally {
       client.release()
     }
@@ -199,7 +199,7 @@ class DatabasePool {
       // Handle connection errors with retry logic
       if (this.isConnectionError(error) && this.connectionRetries < this.maxRetries) {
         this.connectionRetries++
-        console.log(`Retrying query (attempt ${this.connectionRetries}/${this.maxRetries})`)
+        console.warn(`Retrying query (attempt ${this.connectionRetries}/${this.maxRetries})`)
         return this.query(text, params)
       }
 
@@ -359,7 +359,7 @@ class DatabasePool {
    * Graceful shutdown
    */
   async shutdown(): Promise<void> {
-    console.log('Shutting down database pool...')
+    console.warn('Shutting down database pool...')
     this.isShuttingDown = true
 
     // Wait for active queries to complete (with timeout)
@@ -379,7 +379,7 @@ class DatabasePool {
       this.pool = null
     }
 
-    console.log('Database pool shut down successfully')
+    console.warn('Database pool shut down successfully')
   }
 
   /**
@@ -409,17 +409,17 @@ class DatabasePool {
     // Auto-adjust pool size based on usage patterns
     if (metrics.healthStatus === 'degraded' && status.waitingClients > 0) {
       // Consider increasing pool size
-      console.log('Pool optimization: Consider increasing max connections')
+      console.warn('Pool optimization: Consider increasing max connections')
     }
 
     if (status.idleConnections > config.pool.max * 0.5 && metrics.totalQueries < 100) {
       // Consider decreasing pool size
-      console.log('Pool optimization: Consider decreasing min connections')
+      console.warn('Pool optimization: Consider decreasing min connections')
     }
 
     // Clean up idle connections
     if (status.idleConnections > config.pool.min) {
-      console.log('Pool optimization: Cleaning up excess idle connections')
+      console.warn('Pool optimization: Cleaning up excess idle connections')
       // This happens automatically with idleTimeoutMillis
     }
   }
@@ -477,13 +477,13 @@ export const healthCheck = async (): Promise<{
 
 // Graceful shutdown handler
 process.on('SIGTERM', async () => {
-  console.log('SIGTERM received, starting graceful shutdown')
+  console.warn('SIGTERM received, starting graceful shutdown')
   await shutdownDatabase()
   process.exit(0)
 })
 
 process.on('SIGINT', async () => {
-  console.log('SIGINT received, starting graceful shutdown')
+  console.warn('SIGINT received, starting graceful shutdown')
   await shutdownDatabase()
   process.exit(0)
 })

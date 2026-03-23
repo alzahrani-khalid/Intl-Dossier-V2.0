@@ -1,57 +1,57 @@
-import { SignatureRequest, Signatory, SignatureStatus } from '../models/SignatureRequest';
-import { DocuSignClient, DocuSignConfig } from '../integrations/DocuSignClient';
-import { PKIClient, PKIConfig, PKISignature } from '../integrations/PKIClient';
-import { createClient } from '@supabase/supabase-js';
+import { SignatureRequest, Signatory, SignatureStatus } from '../models/SignatureRequest'
+import { DocuSignClient, DocuSignConfig } from '../integrations/DocuSignClient'
+import { PKIClient, PKIConfig, PKISignature } from '../integrations/PKIClient'
+import { createClient } from '@supabase/supabase-js'
 
 export interface SignatureProviderConfig {
-  docusign?: DocuSignConfig;
-  pki?: PKIConfig;
-  defaultProvider: 'docusign' | 'pki';
-  fallbackProvider?: 'docusign' | 'pki';
-  retryAttempts: number;
-  retryDelay: number;
+  docusign?: DocuSignConfig
+  pki?: PKIConfig
+  defaultProvider: 'docusign' | 'pki'
+  fallbackProvider?: 'docusign' | 'pki'
+  retryAttempts: number
+  retryDelay: number
 }
 
 export interface SignatureSession {
-  sessionId: string;
-  signatureRequestId: string;
-  provider: 'docusign' | 'pki';
-  status: SignatureStatus;
-  participants: Signatory[];
-  createdAt: Date;
-  expiresAt: Date;
-  metadata: Record<string, any>;
+  sessionId: string
+  signatureRequestId: string
+  provider: 'docusign' | 'pki'
+  status: SignatureStatus
+  participants: Signatory[]
+  createdAt: Date
+  expiresAt: Date
+  metadata: Record<string, any>
 }
 
 export interface SignatureResult {
-  success: boolean;
-  signatureId?: string;
-  provider: 'docusign' | 'pki';
-  status: SignatureStatus;
-  error?: string;
-  metadata?: Record<string, any>;
+  success: boolean
+  signatureId?: string
+  provider: 'docusign' | 'pki'
+  status: SignatureStatus
+  error?: string
+  metadata?: Record<string, any>
 }
 
 export interface ProviderStatus {
-  provider: 'docusign' | 'pki';
-  isAvailable: boolean;
-  lastChecked: Date;
-  error?: string;
+  provider: 'docusign' | 'pki'
+  isAvailable: boolean
+  lastChecked: Date
+  error?: string
 }
 
 export class SignatureOrchestrator {
-  private supabase;
-  private docusignClient?: DocuSignClient;
-  private pkiClient?: PKIClient;
-  private config: SignatureProviderConfig;
-  private providerStatus: Map<string, ProviderStatus> = new Map();
+  private supabase
+  private docusignClient?: DocuSignClient
+  private pkiClient?: PKIClient
+  private config: SignatureProviderConfig
+  private providerStatus: Map<string, ProviderStatus> = new Map()
 
   constructor(config: SignatureProviderConfig, supabaseUrl: string, supabaseKey: string) {
-    this.config = config;
-    this.supabase = createClient(supabaseUrl, supabaseKey);
-    
-    this.initializeProviders();
-    this.startHealthChecks();
+    this.config = config
+    this.supabase = createClient(supabaseUrl, supabaseKey)
+
+    this.initializeProviders()
+    this.startHealthChecks()
   }
 
   /**
@@ -61,30 +61,29 @@ export class SignatureOrchestrator {
     try {
       // Initialize DocuSign client
       if (this.config.docusign) {
-        this.docusignClient = new DocuSignClient(this.config.docusign);
-        const docusignAvailable = await this.docusignClient.testConnection();
+        this.docusignClient = new DocuSignClient(this.config.docusign)
+        const docusignAvailable = await this.docusignClient.testConnection()
         this.providerStatus.set('docusign', {
           provider: 'docusign',
           isAvailable: docusignAvailable,
           lastChecked: new Date(),
-          error: docusignAvailable ? undefined : 'Connection test failed'
-        });
+          error: docusignAvailable ? undefined : 'Connection test failed',
+        })
       }
 
       // Initialize PKI client
       if (this.config.pki) {
-        this.pkiClient = new PKIClient(this.config.pki);
-        const pkiAvailable = await this.pkiClient.testConnection();
+        this.pkiClient = new PKIClient(this.config.pki)
+        const pkiAvailable = await this.pkiClient.testConnection()
         this.providerStatus.set('pki', {
           provider: 'pki',
           isAvailable: pkiAvailable,
           lastChecked: new Date(),
-          error: pkiAvailable ? undefined : 'Connection test failed'
-        });
+          error: pkiAvailable ? undefined : 'Connection test failed',
+        })
       }
-
     } catch (error) {
-      console.error('Failed to initialize signature providers:', error);
+      console.error('Failed to initialize signature providers:', error)
     }
   }
 
@@ -93,8 +92,8 @@ export class SignatureOrchestrator {
    */
   private startHealthChecks(): void {
     setInterval(async () => {
-      await this.checkProviderHealth();
-    }, 60000); // Check every minute
+      await this.checkProviderHealth()
+    }, 60000) // Check every minute
   }
 
   /**
@@ -104,40 +103,40 @@ export class SignatureOrchestrator {
     // Check DocuSign
     if (this.docusignClient) {
       try {
-        const isAvailable = await this.docusignClient.testConnection();
+        const isAvailable = await this.docusignClient.testConnection()
         this.providerStatus.set('docusign', {
           provider: 'docusign',
           isAvailable,
           lastChecked: new Date(),
-          error: isAvailable ? undefined : 'Health check failed'
-        });
+          error: isAvailable ? undefined : 'Health check failed',
+        })
       } catch (error) {
         this.providerStatus.set('docusign', {
           provider: 'docusign',
           isAvailable: false,
           lastChecked: new Date(),
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
+          error: error instanceof Error ? error.message : 'Unknown error',
+        })
       }
     }
 
     // Check PKI
     if (this.pkiClient) {
       try {
-        const isAvailable = await this.pkiClient.testConnection();
+        const isAvailable = await this.pkiClient.testConnection()
         this.providerStatus.set('pki', {
           provider: 'pki',
           isAvailable,
           lastChecked: new Date(),
-          error: isAvailable ? undefined : 'Health check failed'
-        });
+          error: isAvailable ? undefined : 'Health check failed',
+        })
       } catch (error) {
         this.providerStatus.set('pki', {
           provider: 'pki',
           isAvailable: false,
           lastChecked: new Date(),
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
+          error: error instanceof Error ? error.message : 'Unknown error',
+        })
       }
     }
   }
@@ -149,54 +148,63 @@ export class SignatureOrchestrator {
     signatureRequest: SignatureRequest,
     documentContent: Buffer,
     documentName: string,
-    preferredProvider?: 'docusign' | 'pki'
+    preferredProvider?: 'docusign' | 'pki',
   ): Promise<SignatureResult> {
     try {
       // Determine which provider to use
-      const provider = this.selectProvider(preferredProvider);
-      
+      const provider = this.selectProvider(preferredProvider)
+
       if (!provider) {
         return {
           success: false,
           provider: 'docusign', // Default fallback
           status: 'draft',
-          error: 'No signature providers available'
-        };
+          error: 'No signature providers available',
+        }
       }
 
       // Create signature session
-      const session = await this.createSignatureSession(signatureRequest, provider);
-      
+      const session = await this.createSignatureSession(signatureRequest, provider)
+
       // Route to appropriate provider
-      let result: SignatureResult;
-      
+      let result: SignatureResult
+
       if (provider === 'docusign' && this.docusignClient) {
-        result = await this.handleDocuSignSignature(signatureRequest, documentContent, documentName, session);
+        result = await this.handleDocuSignSignature(
+          signatureRequest,
+          documentContent,
+          documentName,
+          session,
+        )
       } else if (provider === 'pki' && this.pkiClient) {
-        result = await this.handlePKISignature(signatureRequest, documentContent, documentName, session);
+        result = await this.handlePKISignature(
+          signatureRequest,
+          documentContent,
+          documentName,
+          session,
+        )
       } else {
-        throw new Error(`Provider ${provider} not available`);
+        throw new Error(`Provider ${provider} not available`)
       }
 
       // Update signature request status
-      await this.updateSignatureRequestStatus(signatureRequest.id, result.status);
+      await this.updateSignatureRequestStatus(signatureRequest.id, result.status)
 
-      return result;
-
+      return result
     } catch (error) {
-      console.error('Signature initiation failed:', error);
-      
+      console.error('Signature initiation failed:', error)
+
       // Try fallback provider if available
       if (this.config.fallbackProvider && this.config.fallbackProvider !== preferredProvider) {
-        return this.initiateSignatureWithFallback(signatureRequest, documentContent, documentName);
+        return this.initiateSignatureWithFallback(signatureRequest, documentContent, documentName)
       }
 
       return {
         success: false,
         provider: preferredProvider || 'docusign',
         status: 'draft',
-        error: error instanceof Error ? error.message : 'Unknown error'
-      };
+        error: error instanceof Error ? error.message : 'Unknown error',
+      }
     }
   }
 
@@ -207,27 +215,27 @@ export class SignatureOrchestrator {
     signatureRequest: SignatureRequest,
     documentContent: Buffer,
     documentName: string,
-    session: SignatureSession
+    session: SignatureSession,
   ): Promise<SignatureResult> {
     try {
       if (!this.docusignClient) {
-        throw new Error('DocuSign client not available');
+        throw new Error('DocuSign client not available')
       }
 
       // Create envelope
       const envelopeId = await this.docusignClient.createEnvelope(
         signatureRequest,
         documentContent,
-        documentName
-      );
+        documentName,
+      )
 
       // Update session with envelope ID
       await this.updateSignatureSession(session.sessionId, {
         metadata: {
           ...session.metadata,
-          envelopeId
-        }
-      });
+          envelopeId,
+        },
+      })
 
       return {
         success: true,
@@ -236,12 +244,11 @@ export class SignatureOrchestrator {
         status: 'sent',
         metadata: {
           envelopeId,
-          sessionId: session.sessionId
-        }
-      };
-
+          sessionId: session.sessionId,
+        },
+      }
     } catch (error) {
-      throw new Error(`DocuSign signature failed: ${error}`);
+      throw new Error(`DocuSign signature failed: ${error}`)
     }
   }
 
@@ -252,36 +259,36 @@ export class SignatureOrchestrator {
     signatureRequest: SignatureRequest,
     documentContent: Buffer,
     documentName: string,
-    session: SignatureSession
+    session: SignatureSession,
   ): Promise<SignatureResult> {
     try {
       if (!this.pkiClient) {
-        throw new Error('PKI client not available');
+        throw new Error('PKI client not available')
       }
 
       // Create PKI signature for each signatory
-      const signatures: PKISignature[] = [];
-      
+      const signatures: PKISignature[] = []
+
       for (const signatory of signatureRequest.signatories) {
         const signature = await this.pkiClient.createSignature(
           documentContent,
           signatureRequest,
-          signatory
-        );
-        signatures.push(signature);
+          signatory,
+        )
+        signatures.push(signature)
       }
 
       // Update session with signature data
       await this.updateSignatureSession(session.sessionId, {
         metadata: {
           ...session.metadata,
-          signatures: signatures.map(s => ({
+          signatures: signatures.map((s) => ({
             signatureId: s.signatureId,
             documentHash: s.documentHash,
-            timestamp: s.timestamp
-          }))
-        }
-      });
+            timestamp: s.timestamp,
+          })),
+        },
+      })
 
       return {
         success: true,
@@ -290,12 +297,11 @@ export class SignatureOrchestrator {
         status: 'completed',
         metadata: {
           signatures: signatures.length,
-          sessionId: session.sessionId
-        }
-      };
-
+          sessionId: session.sessionId,
+        },
+      }
     } catch (error) {
-      throw new Error(`PKI signature failed: ${error}`);
+      throw new Error(`PKI signature failed: ${error}`)
     }
   }
 
@@ -305,34 +311,34 @@ export class SignatureOrchestrator {
   private selectProvider(preferredProvider?: 'docusign' | 'pki'): 'docusign' | 'pki' | null {
     // Check preferred provider first
     if (preferredProvider) {
-      const status = this.providerStatus.get(preferredProvider);
+      const status = this.providerStatus.get(preferredProvider)
       if (status?.isAvailable) {
-        return preferredProvider;
+        return preferredProvider
       }
     }
 
     // Check default provider
-    const defaultStatus = this.providerStatus.get(this.config.defaultProvider);
+    const defaultStatus = this.providerStatus.get(this.config.defaultProvider)
     if (defaultStatus?.isAvailable) {
-      return this.config.defaultProvider;
+      return this.config.defaultProvider
     }
 
     // Check fallback provider
     if (this.config.fallbackProvider) {
-      const fallbackStatus = this.providerStatus.get(this.config.fallbackProvider);
+      const fallbackStatus = this.providerStatus.get(this.config.fallbackProvider)
       if (fallbackStatus?.isAvailable) {
-        return this.config.fallbackProvider;
+        return this.config.fallbackProvider
       }
     }
 
     // Check any available provider
     for (const [provider, status] of this.providerStatus) {
       if (status.isAvailable) {
-        return provider as 'docusign' | 'pki';
+        return provider as 'docusign' | 'pki'
       }
     }
 
-    return null;
+    return null
   }
 
   /**
@@ -341,20 +347,20 @@ export class SignatureOrchestrator {
   private async initiateSignatureWithFallback(
     signatureRequest: SignatureRequest,
     documentContent: Buffer,
-    documentName: string
+    documentName: string,
   ): Promise<SignatureResult> {
     if (!this.config.fallbackProvider) {
-      throw new Error('No fallback provider configured');
+      throw new Error('No fallback provider configured')
     }
 
-    console.log(`Retrying with fallback provider: ${this.config.fallbackProvider}`);
-    
+    console.warn(`Retrying with fallback provider: ${this.config.fallbackProvider}`)
+
     return this.initiateSignature(
       signatureRequest,
       documentContent,
       documentName,
-      this.config.fallbackProvider
-    );
+      this.config.fallbackProvider,
+    )
   }
 
   /**
@@ -362,10 +368,10 @@ export class SignatureOrchestrator {
    */
   private async createSignatureSession(
     signatureRequest: SignatureRequest,
-    provider: 'docusign' | 'pki'
+    provider: 'docusign' | 'pki',
   ): Promise<SignatureSession> {
-    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+
     const session: SignatureSession = {
       sessionId,
       signatureRequestId: signatureRequest.id,
@@ -376,29 +382,27 @@ export class SignatureOrchestrator {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
       metadata: {
         provider,
-        requestId: signatureRequest.id
-      }
-    };
-
-    // Store session in database
-    const { error } = await this.supabase
-      .from('signature_sessions')
-      .insert({
-        id: sessionId,
-        signature_request_id: signatureRequest.id,
-        provider,
-        status: 'draft',
-        participants: signatureRequest.signatories,
-        created_at: session.createdAt.toISOString(),
-        expires_at: session.expiresAt.toISOString(),
-        metadata: session.metadata
-      });
-
-    if (error) {
-      throw new Error(`Failed to create signature session: ${error.message}`);
+        requestId: signatureRequest.id,
+      },
     }
 
-    return session;
+    // Store session in database
+    const { error } = await this.supabase.from('signature_sessions').insert({
+      id: sessionId,
+      signature_request_id: signatureRequest.id,
+      provider,
+      status: 'draft',
+      participants: signatureRequest.signatories,
+      created_at: session.createdAt.toISOString(),
+      expires_at: session.expiresAt.toISOString(),
+      metadata: session.metadata,
+    })
+
+    if (error) {
+      throw new Error(`Failed to create signature session: ${error.message}`)
+    }
+
+    return session
   }
 
   /**
@@ -406,19 +410,19 @@ export class SignatureOrchestrator {
    */
   private async updateSignatureSession(
     sessionId: string,
-    updates: Partial<SignatureSession>
+    updates: Partial<SignatureSession>,
   ): Promise<void> {
     const { error } = await this.supabase
       .from('signature_sessions')
       .update({
         status: updates.status,
         metadata: updates.metadata,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', sessionId);
+      .eq('id', sessionId)
 
     if (error) {
-      throw new Error(`Failed to update signature session: ${error.message}`);
+      throw new Error(`Failed to update signature session: ${error.message}`)
     }
   }
 
@@ -427,39 +431,41 @@ export class SignatureOrchestrator {
    */
   private async updateSignatureRequestStatus(
     requestId: string,
-    status: SignatureStatus
+    status: SignatureStatus,
   ): Promise<void> {
     const { error } = await this.supabase
       .from('signature_requests')
       .update({
         status,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', requestId);
+      .eq('id', requestId)
 
     if (error) {
-      throw new Error(`Failed to update signature request status: ${error.message}`);
+      throw new Error(`Failed to update signature request status: ${error.message}`)
     }
   }
 
   /**
    * Get signature status
    */
-  async getSignatureStatus(signatureId: string, provider: 'docusign' | 'pki'): Promise<SignatureStatus> {
+  async getSignatureStatus(
+    signatureId: string,
+    provider: 'docusign' | 'pki',
+  ): Promise<SignatureStatus> {
     try {
       if (provider === 'docusign' && this.docusignClient) {
-        const envelope = await this.docusignClient.getEnvelopeStatus(signatureId);
-        return this.mapDocuSignStatusToInternal(envelope.status);
+        const envelope = await this.docusignClient.getEnvelopeStatus(signatureId)
+        return this.mapDocuSignStatusToInternal(envelope.status)
       } else if (provider === 'pki' && this.pkiClient) {
         // For PKI, signatures are typically completed immediately
-        return 'completed';
+        return 'completed'
       }
 
-      throw new Error(`Provider ${provider} not available`);
-
+      throw new Error(`Provider ${provider} not available`)
     } catch (error) {
-      console.error('Failed to get signature status:', error);
-      return 'draft';
+      console.error('Failed to get signature status:', error)
+      return 'draft'
     }
   }
 
@@ -469,24 +475,23 @@ export class SignatureOrchestrator {
   async verifySignature(
     signatureId: string,
     provider: 'docusign' | 'pki',
-    documentContent: Buffer
+    documentContent: Buffer,
   ): Promise<boolean> {
     try {
       if (provider === 'docusign' && this.docusignClient) {
         // For DocuSign, we need to get the recipient ID
         // This is a simplified implementation
-        return await this.docusignClient.verifySignature(signatureId, 'default');
+        return await this.docusignClient.verifySignature(signatureId, 'default')
       } else if (provider === 'pki' && this.pkiClient) {
         // For PKI, we would need the signature object
         // This is a placeholder implementation
-        return true;
+        return true
       }
 
-      return false;
-
+      return false
     } catch (error) {
-      console.error('Signature verification failed:', error);
-      return false;
+      console.error('Signature verification failed:', error)
+      return false
     }
   }
 
@@ -495,13 +500,13 @@ export class SignatureOrchestrator {
    */
   async handleMixedSigningWorkflow(
     signatureRequests: Array<{
-      request: SignatureRequest;
-      provider: 'docusign' | 'pki';
-      documentContent: Buffer;
-      documentName: string;
-    }>
+      request: SignatureRequest
+      provider: 'docusign' | 'pki'
+      documentContent: Buffer
+      documentName: string
+    }>,
   ): Promise<SignatureResult[]> {
-    const results: SignatureResult[] = [];
+    const results: SignatureResult[] = []
 
     for (const { request, provider, documentContent, documentName } of signatureRequests) {
       try {
@@ -509,20 +514,20 @@ export class SignatureOrchestrator {
           request,
           documentContent,
           documentName,
-          provider
-        );
-        results.push(result);
+          provider,
+        )
+        results.push(result)
       } catch (error) {
         results.push({
           success: false,
           provider,
           status: 'draft',
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
+          error: error instanceof Error ? error.message : 'Unknown error',
+        })
       }
     }
 
-    return results;
+    return results
   }
 
   /**
@@ -534,30 +539,29 @@ export class SignatureOrchestrator {
       const { data: sessions, error } = await this.supabase
         .from('signature_sessions')
         .select('*')
-        .in('status', ['sent', 'viewed', 'signed']);
+        .in('status', ['sent', 'viewed', 'signed'])
 
       if (error) {
-        throw new Error(`Failed to fetch signature sessions: ${error.message}`);
+        throw new Error(`Failed to fetch signature sessions: ${error.message}`)
       }
 
       for (const session of sessions || []) {
         try {
           const currentStatus = await this.getSignatureStatus(
             session.metadata?.signatureId || session.metadata?.envelopeId,
-            session.provider
-          );
+            session.provider,
+          )
 
           if (currentStatus !== session.status) {
-            await this.updateSignatureSession(session.id, { status: currentStatus });
-            await this.updateSignatureRequestStatus(session.signature_request_id, currentStatus);
+            await this.updateSignatureSession(session.id, { status: currentStatus })
+            await this.updateSignatureRequestStatus(session.signature_request_id, currentStatus)
           }
         } catch (error) {
-          console.error(`Failed to synchronize session ${session.id}:`, error);
+          console.error(`Failed to synchronize session ${session.id}:`, error)
         }
       }
-
     } catch (error) {
-      console.error('Status synchronization failed:', error);
+      console.error('Status synchronization failed:', error)
     }
   }
 
@@ -565,7 +569,7 @@ export class SignatureOrchestrator {
    * Get provider status
    */
   getProviderStatus(): ProviderStatus[] {
-    return Array.from(this.providerStatus.values());
+    return Array.from(this.providerStatus.values())
   }
 
   /**
@@ -573,32 +577,32 @@ export class SignatureOrchestrator {
    */
   private mapDocuSignStatusToInternal(docuSignStatus: string): SignatureStatus {
     const statusMap: Record<string, SignatureStatus> = {
-      'sent': 'sent',
-      'delivered': 'viewed',
-      'completed': 'completed',
-      'declined': 'declined',
-      'voided': 'expired'
-    };
+      sent: 'sent',
+      delivered: 'viewed',
+      completed: 'completed',
+      declined: 'declined',
+      voided: 'expired',
+    }
 
-    return statusMap[docuSignStatus] || 'draft';
+    return statusMap[docuSignStatus] || 'draft'
   }
 
   /**
    * Handle provider failures
    */
   async handleProviderFailure(provider: 'docusign' | 'pki', error: Error): Promise<void> {
-    console.error(`Provider ${provider} failed:`, error);
-    
+    console.error(`Provider ${provider} failed:`, error)
+
     // Update provider status
     this.providerStatus.set(provider, {
       provider,
       isAvailable: false,
       lastChecked: new Date(),
-      error: error.message
-    });
+      error: error.message,
+    })
 
     // Notify administrators
-    await this.notifyProviderFailure(provider, error);
+    await this.notifyProviderFailure(provider, error)
   }
 
   /**
@@ -606,6 +610,6 @@ export class SignatureOrchestrator {
    */
   private async notifyProviderFailure(provider: 'docusign' | 'pki', error: Error): Promise<void> {
     // This would typically send notifications to administrators
-    console.log(`Provider ${provider} failure notification: ${error.message}`);
+    console.warn(`Provider ${provider} failure notification: ${error.message}`)
   }
 }

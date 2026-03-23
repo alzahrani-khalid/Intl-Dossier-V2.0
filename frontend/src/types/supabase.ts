@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
   public: {
@@ -28,7 +22,7 @@ export type Database = {
           participants: Json | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["activity_type"]
+          type: Database['public']['Enums']['activity_type']
           updated_at: string
           version: number
         }
@@ -50,7 +44,7 @@ export type Database = {
           participants?: Json | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["activity_type"]
+          type: Database['public']['Enums']['activity_type']
           updated_at?: string
           version?: number
         }
@@ -72,7 +66,7 @@ export type Database = {
           participants?: Json | null
           tenant_id?: string
           title?: string
-          type?: Database["public"]["Enums"]["activity_type"]
+          type?: Database['public']['Enums']['activity_type']
           updated_at?: string
           version?: number
         }
@@ -174,18 +168,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "signature_requests_document_id_fkey"
-            columns: ["document_id"]
+            foreignKeyName: 'signature_requests_document_id_fkey'
+            columns: ['document_id']
             isOneToOne: false
-            referencedRelation: "documents"
-            referencedColumns: ["id"]
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "signature_requests_mou_id_fkey"
-            columns: ["mou_id"]
+            foreignKeyName: 'signature_requests_mou_id_fkey'
+            columns: ['mou_id']
             isOneToOne: false
-            referencedRelation: "mous"
-            referencedColumns: ["id"]
+            referencedRelation: 'mous'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -228,18 +222,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "signature_signatories_contact_id_fkey"
-            columns: ["contact_id"]
+            foreignKeyName: 'signature_signatories_contact_id_fkey'
+            columns: ['contact_id']
             isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
+            referencedRelation: 'contacts'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "signature_signatories_request_id_fkey"
-            columns: ["request_id"]
+            foreignKeyName: 'signature_signatories_request_id_fkey'
+            columns: ['request_id']
             isOneToOne: false
-            referencedRelation: "signature_requests"
-            referencedColumns: ["id"]
+            referencedRelation: 'signature_requests'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -363,11 +357,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intelligence_items_source_id_fkey"
-            columns: ["source_id"]
+            foreignKeyName: 'intelligence_items_source_id_fkey'
+            columns: ['source_id']
             isOneToOne: false
-            referencedRelation: "intelligence_sources"
-            referencedColumns: ["id"]
+            referencedRelation: 'intelligence_sources'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -410,11 +404,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "position_consistency_thematic_area_id_fkey"
-            columns: ["thematic_area_id"]
+            foreignKeyName: 'position_consistency_thematic_area_id_fkey'
+            columns: ['thematic_area_id']
             isOneToOne: false
-            referencedRelation: "thematic_areas"
-            referencedColumns: ["id"]
+            referencedRelation: 'thematic_areas'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -466,25 +460,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "position_conflicts_consistency_id_fkey"
-            columns: ["consistency_id"]
+            foreignKeyName: 'position_conflicts_consistency_id_fkey'
+            columns: ['consistency_id']
             isOneToOne: false
-            referencedRelation: "position_consistency"
-            referencedColumns: ["id"]
+            referencedRelation: 'position_consistency'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "position_conflicts_position1_id_fkey"
-            columns: ["position1_id"]
+            foreignKeyName: 'position_conflicts_position1_id_fkey'
+            columns: ['position1_id']
             isOneToOne: false
-            referencedRelation: "positions"
-            referencedColumns: ["id"]
+            referencedRelation: 'positions'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "position_conflicts_position2_id_fkey"
-            columns: ["position2_id"]
+            foreignKeyName: 'position_conflicts_position2_id_fkey'
+            columns: ['position2_id']
             isOneToOne: false
-            referencedRelation: "positions"
-            referencedColumns: ["id"]
+            referencedRelation: 'positions'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -508,7 +502,7 @@ export type Database = {
           name_ar: string
           name_en: string
           region: string
-          relationship_status: Database["public"]["Enums"]["relationship_status"] | null
+          relationship_status: Database['public']['Enums']['relationship_status'] | null
           statistical_system: Json
           strategic_importance: number | null
           tenant_id: string
@@ -533,7 +527,7 @@ export type Database = {
           name_ar: string
           name_en: string
           region: string
-          relationship_status?: Database["public"]["Enums"]["relationship_status"] | null
+          relationship_status?: Database['public']['Enums']['relationship_status'] | null
           statistical_system?: Json
           strategic_importance?: number | null
           tenant_id: string
@@ -558,7 +552,7 @@ export type Database = {
           name_ar?: string
           name_en?: string
           region?: string
-          relationship_status?: Database["public"]["Enums"]["relationship_status"] | null
+          relationship_status?: Database['public']['Enums']['relationship_status'] | null
           statistical_system?: Json
           strategic_importance?: number | null
           tenant_id?: string
@@ -584,7 +578,7 @@ export type Database = {
           parent_org_id: string | null
           reporting_requirements: Json | null
           tenant_id: string
-          type: Database["public"]["Enums"]["organization_type"]
+          type: Database['public']['Enums']['organization_type']
           updated_at: string
           version: number
           website: string | null
@@ -605,7 +599,7 @@ export type Database = {
           parent_org_id?: string | null
           reporting_requirements?: Json | null
           tenant_id: string
-          type: Database["public"]["Enums"]["organization_type"]
+          type: Database['public']['Enums']['organization_type']
           updated_at?: string
           version?: number
           website?: string | null
@@ -626,18 +620,18 @@ export type Database = {
           parent_org_id?: string | null
           reporting_requirements?: Json | null
           tenant_id?: string
-          type?: Database["public"]["Enums"]["organization_type"]
+          type?: Database['public']['Enums']['organization_type']
           updated_at?: string
           version?: number
           website?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "organizations_parent_org_id_fkey"
-            columns: ["parent_org_id"]
+            foreignKeyName: 'organizations_parent_org_id_fkey'
+            columns: ['parent_org_id']
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -654,15 +648,15 @@ export type Database = {
           id: string
           is_deleted: boolean
           last_modified_by: string
-          lifecycle_state: Database["public"]["Enums"]["mou_state"]
-          mou_category: Database["public"]["Enums"]["mou_category"]
+          lifecycle_state: Database['public']['Enums']['mou_state']
+          mou_category: Database['public']['Enums']['mou_category']
           parties: Json | null
           performance_metrics: Json | null
           reference_number: string
           tenant_id: string
           title_ar: string
           title_en: string
-          type: Database["public"]["Enums"]["mou_type"]
+          type: Database['public']['Enums']['mou_type']
           updated_at: string
           version: number
         }
@@ -678,15 +672,15 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           last_modified_by: string
-          lifecycle_state?: Database["public"]["Enums"]["mou_state"]
-          mou_category: Database["public"]["Enums"]["mou_category"]
+          lifecycle_state?: Database['public']['Enums']['mou_state']
+          mou_category: Database['public']['Enums']['mou_category']
           parties?: Json | null
           performance_metrics?: Json | null
           reference_number: string
           tenant_id: string
           title_ar: string
           title_en: string
-          type: Database["public"]["Enums"]["mou_type"]
+          type: Database['public']['Enums']['mou_type']
           updated_at?: string
           version?: number
         }
@@ -702,15 +696,15 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           last_modified_by?: string
-          lifecycle_state?: Database["public"]["Enums"]["mou_state"]
-          mou_category?: Database["public"]["Enums"]["mou_category"]
+          lifecycle_state?: Database['public']['Enums']['mou_state']
+          mou_category?: Database['public']['Enums']['mou_category']
           parties?: Json | null
           performance_metrics?: Json | null
           reference_number?: string
           tenant_id?: string
           title_ar?: string
           title_en?: string
-          type?: Database["public"]["Enums"]["mou_type"]
+          type?: Database['public']['Enums']['mou_type']
           updated_at?: string
           version?: number
         }
@@ -719,60 +713,60 @@ export type Database = {
       documents: {
         Row: {
           access_control: Json
-          classification: Database["public"]["Enums"]["classification_level"]
+          classification: Database['public']['Enums']['classification_level']
           created_at: string
           created_by: string
           deleted_at: string | null
           file_info: Json
           id: string
           is_deleted: boolean
-          language: Database["public"]["Enums"]["document_language"]
+          language: Database['public']['Enums']['document_language']
           last_modified_by: string
           related_entities: Json | null
           retention: Json | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["document_type"]
+          type: Database['public']['Enums']['document_type']
           updated_at: string
           version: Json
           version_number: number
         }
         Insert: {
           access_control?: Json
-          classification?: Database["public"]["Enums"]["classification_level"]
+          classification?: Database['public']['Enums']['classification_level']
           created_at?: string
           created_by: string
           deleted_at?: string | null
           file_info?: Json
           id?: string
           is_deleted?: boolean
-          language?: Database["public"]["Enums"]["document_language"]
+          language?: Database['public']['Enums']['document_language']
           last_modified_by: string
           related_entities?: Json | null
           retention?: Json | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["document_type"]
+          type: Database['public']['Enums']['document_type']
           updated_at?: string
           version?: Json
           version_number?: number
         }
         Update: {
           access_control?: Json
-          classification?: Database["public"]["Enums"]["classification_level"]
+          classification?: Database['public']['Enums']['classification_level']
           created_at?: string
           created_by?: string
           deleted_at?: string | null
           file_info?: Json
           id?: string
           is_deleted?: boolean
-          language?: Database["public"]["Enums"]["document_language"]
+          language?: Database['public']['Enums']['document_language']
           last_modified_by?: string
           related_entities?: Json | null
           retention?: Json | null
           tenant_id?: string
           title?: string
-          type?: Database["public"]["Enums"]["document_type"]
+          type?: Database['public']['Enums']['document_type']
           updated_at?: string
           version?: Json
           version_number?: number
@@ -854,25 +848,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "contacts_country_id_fkey"
-            columns: ["country_id"]
+            foreignKeyName: 'contacts_country_id_fkey'
+            columns: ['country_id']
             isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
+            referencedRelation: 'countries'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "contacts_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: 'contacts_organization_id_fkey'
+            columns: ['organization_id']
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
           },
         ]
       }
       thematic_areas: {
         Row: {
           best_practices: Json | null
-          category: Database["public"]["Enums"]["thematic_category"]
+          category: Database['public']['Enums']['thematic_category']
           code: string
           created_at: string
           created_by: string
@@ -893,7 +887,7 @@ export type Database = {
         }
         Insert: {
           best_practices?: Json | null
-          category: Database["public"]["Enums"]["thematic_category"]
+          category: Database['public']['Enums']['thematic_category']
           code: string
           created_at?: string
           created_by: string
@@ -914,7 +908,7 @@ export type Database = {
         }
         Update: {
           best_practices?: Json | null
-          category?: Database["public"]["Enums"]["thematic_category"]
+          category?: Database['public']['Enums']['thematic_category']
           code?: string
           created_at?: string
           created_by?: string
@@ -935,11 +929,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "thematic_areas_parent_area_id_fkey"
-            columns: ["parent_area_id"]
+            foreignKeyName: 'thematic_areas_parent_area_id_fkey'
+            columns: ['parent_area_id']
             isOneToOne: false
-            referencedRelation: "thematic_areas"
-            referencedColumns: ["id"]
+            referencedRelation: 'thematic_areas'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1041,19 +1035,47 @@ export type Database = {
       }
     }
     Enums: {
-      activity_type: "meeting" | "mission" | "conference" | "workshop" | "phone_call" | "email_exchange"
-      classification_level: "public" | "internal" | "confidential" | "secret"
-      commitment_status: "pending" | "in_progress" | "completed" | "overdue" | "cancelled"
-      commitment_type: "deliverable" | "payment" | "report" | "participation" | "data_submission"
-      document_language: "ar" | "en" | "bilingual"
-      document_type: "agreement" | "report" | "presentation" | "correspondence" | "position_paper" | "minutes" | "brief" | "other"
-      mou_category: "data_exchange" | "capacity_building" | "strategic" | "technical"
-      mou_state: "draft" | "negotiation" | "pending_approval" | "signed" | "active" | "suspended" | "expired" | "terminated"
-      mou_type: "bilateral" | "multilateral" | "framework" | "technical"
-      organization_type: "government" | "international" | "ngo" | "private" | "academic" | "research"
-      priority_level: "critical" | "high" | "medium" | "low"
-      relationship_status: "active" | "developing" | "dormant"
-      thematic_category: "sdg" | "methodology" | "technology" | "governance" | "capacity"
+      activity_type:
+        | 'meeting'
+        | 'mission'
+        | 'conference'
+        | 'workshop'
+        | 'phone_call'
+        | 'email_exchange'
+      classification_level: 'public' | 'internal' | 'confidential' | 'secret'
+      commitment_status: 'pending' | 'in_progress' | 'completed' | 'overdue' | 'cancelled'
+      commitment_type: 'deliverable' | 'payment' | 'report' | 'participation' | 'data_submission'
+      document_language: 'ar' | 'en' | 'bilingual'
+      document_type:
+        | 'agreement'
+        | 'report'
+        | 'presentation'
+        | 'correspondence'
+        | 'position_paper'
+        | 'minutes'
+        | 'brief'
+        | 'other'
+      mou_category: 'data_exchange' | 'capacity_building' | 'strategic' | 'technical'
+      mou_state:
+        | 'draft'
+        | 'negotiation'
+        | 'pending_approval'
+        | 'signed'
+        | 'active'
+        | 'suspended'
+        | 'expired'
+        | 'terminated'
+      mou_type: 'bilateral' | 'multilateral' | 'framework' | 'technical'
+      organization_type:
+        | 'government'
+        | 'international'
+        | 'ngo'
+        | 'private'
+        | 'academic'
+        | 'research'
+      priority_level: 'critical' | 'high' | 'medium' | 'low'
+      relationship_status: 'active' | 'developing' | 'dormant'
+      thematic_category: 'sdg' | 'methodology' | 'technology' | 'governance' | 'capacity'
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1063,80 +1085,74 @@ export type Database = {
 
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | keyof (Database['public']['Tables'] & Database['public']['Views'])
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never
+    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+        Database[PublicTableNameOrOptions['schema']]['Views'])
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+      Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
-      Database["public"]["Views"])
-  ? (Database["public"]["Tables"] &
-      Database["public"]["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
+  : PublicTableNameOrOptions extends keyof (Database['public']['Tables'] &
+        Database['public']['Views'])
+    ? (Database['public']['Tables'] &
+        Database['public']['Views'])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
     : never
-  : never
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof Database['public']['Tables'] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I
-    }
-    ? I
+  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
+    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
     : never
-  : never
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof Database['public']['Tables'] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U
-    }
-    ? U
+  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
+    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
     : never
-  : never
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof Database["public"]["Enums"]
-    | { schema: keyof Database },
+  PublicEnumNameOrOptions extends keyof Database['public']['Enums'] | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never
+    ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
+    : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
-  ? Database["public"]["Enums"][PublicEnumNameOrOptions]
-  : never
+  ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database['public']['Enums']
+    ? Database['public']['Enums'][PublicEnumNameOrOptions]
+    : never

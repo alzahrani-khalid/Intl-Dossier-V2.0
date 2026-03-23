@@ -14,9 +14,9 @@ import {
   useInfiniteQuery,
   useQueryClient,
   type InfiniteData,
-} from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
+} from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import {
   getCommitments,
   getCommitment,
@@ -32,26 +32,26 @@ import {
   type CreateCommitmentInput,
   type UpdateCommitmentInput,
   type PaginationCursor,
-} from '@/services/commitments.service';
+} from '@/services/commitments.service'
 import {
   commitmentKeys,
   type CommitmentStatusHistory,
   type CommitmentStatus,
-} from '@/types/commitment.types';
+} from '@/types/commitment.types'
 
 // Re-export for convenience
-export { commitmentKeys };
+export { commitmentKeys }
 
 // ============================================================================
 // Query Options
 // ============================================================================
 
 export interface UseCommitmentsOptions extends CommitmentFilters {
-  enabled?: boolean;
+  enabled?: boolean
 }
 
 export interface UseCommitmentOptions {
-  enabled?: boolean;
+  enabled?: boolean
 }
 
 // ============================================================================
@@ -65,7 +65,7 @@ export interface UseCommitmentOptions {
  * @returns TanStack Query result
  */
 export function useCommitments(options?: UseCommitmentsOptions) {
-  const { enabled = true, ...filters } = options ?? {};
+  const { enabled = true, ...filters } = options ?? {}
 
   return useQuery<CommitmentsListResponse, Error>({
     queryKey: commitmentKeys.list(filters),
@@ -75,7 +75,7 @@ export function useCommitments(options?: UseCommitmentsOptions) {
     refetchOnWindowFocus: true,
     refetchInterval: 2 * 60 * 1000,
     enabled,
-  });
+  })
 }
 
 // ============================================================================
@@ -89,7 +89,7 @@ export function useCommitments(options?: UseCommitmentsOptions) {
  * @returns TanStack Infinite Query result
  */
 export function useInfiniteCommitments(options?: UseCommitmentsOptions) {
-  const { enabled = true, ...filters } = options ?? {};
+  const { enabled = true, ...filters } = options ?? {}
 
   return useInfiniteQuery<
     CommitmentsListResponse,
@@ -106,7 +106,7 @@ export function useInfiniteCommitments(options?: UseCommitmentsOptions) {
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: true,
     enabled,
-  });
+  })
 }
 
 // ============================================================================
@@ -121,7 +121,7 @@ export function useInfiniteCommitments(options?: UseCommitmentsOptions) {
  * @returns TanStack Query result
  */
 export function useCommitment(commitmentId: string, options?: UseCommitmentOptions) {
-  const { enabled = true } = options ?? {};
+  const { enabled = true } = options ?? {}
 
   return useQuery<Commitment, Error>({
     queryKey: commitmentKeys.detail(commitmentId),
@@ -129,7 +129,7 @@ export function useCommitment(commitmentId: string, options?: UseCommitmentOptio
     staleTime: 2 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     enabled: enabled && !!commitmentId,
-  });
+  })
 }
 
 // ============================================================================
@@ -149,7 +149,7 @@ export function useCommitmentStatusHistory(commitmentId: string) {
     staleTime: 30 * 1000, // 30 seconds - history may update frequently
     gcTime: 5 * 60 * 1000,
     enabled: !!commitmentId,
-  });
+  })
 }
 
 // ============================================================================
@@ -162,21 +162,21 @@ export function useCommitmentStatusHistory(commitmentId: string) {
  * @returns TanStack Mutation result
  */
 export function useCreateCommitment() {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation('commitments');
+  const queryClient = useQueryClient()
+  const { t } = useTranslation('commitments')
 
   return useMutation<Commitment, Error, CreateCommitmentInput>({
     mutationFn: createCommitment,
     onSuccess: () => {
       // Invalidate list queries to refetch with new item
-      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() });
-      toast.success(t('success.created'));
+      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() })
+      toast.success(t('success.created'))
     },
     onError: (error) => {
-      toast.error(t('errors.createFailed'));
-      console.error('Create commitment error:', error);
+      toast.error(t('errors.createFailed'))
+      console.error('Create commitment error:', error)
     },
-  });
+  })
 }
 
 // ============================================================================
@@ -189,27 +189,23 @@ export function useCreateCommitment() {
  * @returns TanStack Mutation result
  */
 export function useUpdateCommitment() {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation('commitments');
+  const queryClient = useQueryClient()
+  const { t } = useTranslation('commitments')
 
-  return useMutation<
-    Commitment,
-    Error,
-    { commitmentId: string; input: UpdateCommitmentInput }
-  >({
+  return useMutation<Commitment, Error, { commitmentId: string; input: UpdateCommitmentInput }>({
     mutationFn: ({ commitmentId, input }) => updateCommitment(commitmentId, input),
     onSuccess: (data) => {
       // Update the specific commitment in cache
-      queryClient.setQueryData(commitmentKeys.detail(data.id), data);
+      queryClient.setQueryData(commitmentKeys.detail(data.id), data)
       // Invalidate list queries
-      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() });
-      toast.success(t('success.updated'));
+      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() })
+      toast.success(t('success.updated'))
     },
     onError: (error) => {
-      toast.error(t('errors.updateFailed'));
-      console.error('Update commitment error:', error);
+      toast.error(t('errors.updateFailed'))
+      console.error('Update commitment error:', error)
     },
-  });
+  })
 }
 
 // ============================================================================
@@ -217,9 +213,9 @@ export function useUpdateCommitment() {
 // ============================================================================
 
 interface UpdateStatusInput {
-  id: string;
-  status: CommitmentStatus;
-  notes?: string;
+  id: string
+  status: CommitmentStatus
+  notes?: string
 }
 
 /**
@@ -233,40 +229,40 @@ interface UpdateStatusInput {
  * @returns TanStack Mutation result
  */
 export function useUpdateCommitmentStatus() {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation('commitments');
+  const queryClient = useQueryClient()
+  const { t } = useTranslation('commitments')
 
   return useMutation<Commitment, Error, UpdateStatusInput, { previous: unknown }>({
     mutationFn: (input) => updateCommitmentStatus(input),
 
     onMutate: async (input) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: commitmentKeys.lists() });
+      await queryClient.cancelQueries({ queryKey: commitmentKeys.lists() })
 
       // Snapshot the previous value
-      const previous = queryClient.getQueryData(commitmentKeys.lists());
+      const previous = queryClient.getQueryData(commitmentKeys.lists())
 
       // Optimistically update the list cache
       queryClient.setQueriesData<CommitmentsListResponse>(
         { queryKey: commitmentKeys.lists() },
         (old) => {
-          if (!old) return old;
+          if (!old) return old
           return {
             ...old,
             commitments: old.commitments.map((c) =>
               c.id === input.id
                 ? { ...c, status: input.status, status_changed_at: new Date().toISOString() }
-                : c
+                : c,
             ),
-          };
-        }
-      );
+          }
+        },
+      )
 
       // Also update infinite query data if present
       queryClient.setQueriesData<InfiniteData<CommitmentsListResponse>>(
         { queryKey: commitmentKeys.lists() },
         (old) => {
-          if (!old) return old;
+          if (!old) return old
           return {
             ...old,
             pages: old.pages.map((page) => ({
@@ -274,44 +270,44 @@ export function useUpdateCommitmentStatus() {
               commitments: page.commitments.map((c) =>
                 c.id === input.id
                   ? { ...c, status: input.status, status_changed_at: new Date().toISOString() }
-                  : c
+                  : c,
               ),
             })),
-          };
-        }
-      );
+          }
+        },
+      )
 
-      return { previous };
+      return { previous }
     },
 
     onError: (error, _input, context) => {
       // Rollback to previous value on error
       if (context?.previous) {
-        queryClient.setQueryData(commitmentKeys.lists(), context.previous);
+        queryClient.setQueryData(commitmentKeys.lists(), context.previous)
       }
 
       // Show appropriate error message
       if (error.message.includes('INVALID_STATUS_TRANSITION')) {
-        toast.error(t('errors.invalidTransition'));
+        toast.error(t('errors.invalidTransition'))
       } else {
-        toast.error(t('errors.statusUpdateFailed'));
+        toast.error(t('errors.statusUpdateFailed'))
       }
-      console.error('Status update error:', error);
+      console.error('Status update error:', error)
     },
 
     onSuccess: (data) => {
       // Update the specific commitment detail
-      queryClient.setQueryData(commitmentKeys.detail(data.id), data);
+      queryClient.setQueryData(commitmentKeys.detail(data.id), data)
       // Invalidate history to refresh
-      queryClient.invalidateQueries({ queryKey: commitmentKeys.history(data.id) });
-      toast.success(t('status.updated'));
+      queryClient.invalidateQueries({ queryKey: commitmentKeys.history(data.id) })
+      toast.success(t('status.updated'))
     },
 
     onSettled: () => {
       // Always refetch after mutation settles
-      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() })
     },
-  });
+  })
 }
 
 // ============================================================================
@@ -319,8 +315,8 @@ export function useUpdateCommitmentStatus() {
 // ============================================================================
 
 interface CancelInput {
-  id: string;
-  reason: string;
+  id: string
+  reason: string
 }
 
 /**
@@ -329,22 +325,22 @@ interface CancelInput {
  * @returns TanStack Mutation result
  */
 export function useCancelCommitment() {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation('commitments');
+  const queryClient = useQueryClient()
+  const { t } = useTranslation('commitments')
 
   return useMutation<Commitment, Error, CancelInput>({
     mutationFn: (input) => cancelCommitment(input),
     onSuccess: (data) => {
-      queryClient.setQueryData(commitmentKeys.detail(data.id), data);
-      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: commitmentKeys.history(data.id) });
-      toast.success(t('success.deleted'));
+      queryClient.setQueryData(commitmentKeys.detail(data.id), data)
+      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: commitmentKeys.history(data.id) })
+      toast.success(t('success.deleted'))
     },
     onError: (error) => {
-      toast.error(t('errors.deleteFailed'));
-      console.error('Cancel commitment error:', error);
+      toast.error(t('errors.deleteFailed'))
+      console.error('Cancel commitment error:', error)
     },
-  });
+  })
 }
 
 // ============================================================================
@@ -352,8 +348,8 @@ export function useCancelCommitment() {
 // ============================================================================
 
 interface UploadEvidenceInput {
-  commitmentId: string;
-  file: File;
+  commitmentId: string
+  file: File
 }
 
 /**
@@ -362,8 +358,8 @@ interface UploadEvidenceInput {
  * @returns TanStack Mutation result
  */
 export function useUploadEvidence() {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation('commitments');
+  const queryClient = useQueryClient()
+  const { t } = useTranslation('commitments')
 
   return useMutation<
     { proof_url: string; evidence_submitted_at: string },
@@ -375,13 +371,13 @@ export function useUploadEvidence() {
       // Invalidate the specific commitment to refresh
       queryClient.invalidateQueries({
         queryKey: commitmentKeys.detail(variables.commitmentId),
-      });
-      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() });
-      toast.success(t('evidence.uploadSuccess'));
+      })
+      queryClient.invalidateQueries({ queryKey: commitmentKeys.lists() })
+      toast.success(t('evidence.uploadSuccess'))
     },
     onError: (error) => {
-      toast.error(t('evidence.uploadFailed'));
-      console.error('Evidence upload error:', error);
+      toast.error(t('evidence.uploadFailed'))
+      console.error('Evidence upload error:', error)
     },
-  });
+  })
 }

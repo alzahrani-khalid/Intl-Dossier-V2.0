@@ -30,7 +30,6 @@ import {
   Plus,
   Loader2,
   ShieldAlert,
-  X as _CloseIcon,
   User,
   CheckCircle2,
 } from 'lucide-react'

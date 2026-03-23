@@ -10,7 +10,6 @@
  * Mobile-first, RTL-compatible
  */
 
-import * as _React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2, X, Pause, Play, CheckCircle2, AlertCircle, Clock, Info } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'

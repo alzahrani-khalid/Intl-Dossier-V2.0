@@ -391,7 +391,7 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
     // Handle value change
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        let newValue = e.target.value
+        const newValue = e.target.value
         let rawValue = newValue
 
         // Apply mask if configured

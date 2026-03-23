@@ -178,7 +178,7 @@ export class AttachmentService {
     const suspicious = [
       /\.\./, // Path traversal
       /<script/i, // XSS
-      /\x00/, // Null byte
+      /\0/, // Null byte
       /[<>:"|?*]/, // Invalid filename chars
     ]
 

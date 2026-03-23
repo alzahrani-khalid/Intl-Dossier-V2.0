@@ -1,5 +1,5 @@
-import { Pool } from 'pg';
-import { logInfo, logError } from '../utils/logger';
+import { Pool } from 'pg'
+import { logInfo, logError } from '../utils/logger'
 
 /**
  * Database seeding utility for GASTAT International Dossier System
@@ -13,18 +13,18 @@ const databaseConfig = {
   database: process.env.DB_NAME || 'intl_dossier',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || process.env.POSTGRES_PASSWORD || 'password',
-};
+}
 
 /**
  * Seed the database with demo data
  */
 export async function seedDatabase(): Promise<void> {
-  const pool = new Pool(databaseConfig);
+  const pool = new Pool(databaseConfig)
 
   try {
-    logInfo('Starting database seeding...');
+    logInfo('Starting database seeding...')
 
-    const client = await pool.connect();
+    const client = await pool.connect()
 
     // Add more countries
     await client.query(`
@@ -40,7 +40,7 @@ export async function seedDatabase(): Promise<void> {
       ('AUS', 'Australia', 'أستراليا', 'Oceania', 'Canberra', 'كانبرا', 25700000, 1330900000000),
       ('TUR', 'Turkey', 'تركيا', 'Western Asia', 'Ankara', 'أنقرة', 84300000, 754420000000)
       ON CONFLICT (code) DO NOTHING;
-    `);
+    `)
 
     // Backfill optional relationship flags and importance where present
     await client.query(`
@@ -50,7 +50,7 @@ export async function seedDatabase(): Promise<void> {
         is_islamic_org = COALESCE(is_islamic_org, TRUE),
         strategic_importance = COALESCE(strategic_importance, 50),
         relationship_status = COALESCE(relationship_status, 'developing')::relationship_status
-    `);
+    `)
 
     // Add sample organizations
     await client.query(`
@@ -63,7 +63,7 @@ export async function seedDatabase(): Promise<void> {
       ('European Statistical Office', 'مكتب الإحصاءات الأوروبي', 'international', 'Statistical office of the European Union', 'المكتب الإحصائي للاتحاد الأوروبي', (SELECT id FROM countries WHERE code = 'DEU')),
       ('Japan Statistics Bureau', 'مكتب الإحصاءات الياباني', 'government', 'Japan\'s central statistical organization', 'المنظمة الإحصائية المركزية في اليابان', (SELECT id FROM countries WHERE code = 'JPN'))
       ON CONFLICT DO NOTHING;
-    `);
+    `)
 
     // Add sample MoUs
     await client.query(`
@@ -73,7 +73,7 @@ export async function seedDatabase(): Promise<void> {
       ('Joint Research Initiative with OECD', 'مبادرة البحث المشترك مع منظمة التعاون الاقتصادي والتنمية', 'Collaborative research on sustainable development indicators', 'بحث تعاوني حول مؤشرات التنمية المستدامة', 'negotiation', NULL, NULL, NULL, 'confidential'),
       ('Capacity Building Program with Eurostat', 'برنامج بناء القدرات مع يوروستات', 'Training and knowledge transfer program for statistical methods', 'برنامج تدريب ونقل المعرفة للطرق الإحصائية', 'draft', NULL, NULL, NULL, 'internal')
       ON CONFLICT DO NOTHING;
-    `);
+    `)
 
     // Insert a sample event with attendees
     const { rows: eventRows } = await client.query(
@@ -81,26 +81,28 @@ export async function seedDatabase(): Promise<void> {
        VALUES ($1,$2,'meeting', NOW() + INTERVAL '7 days', NOW() + INTERVAL '7 days 2 hours', $3, 'internal')
        ON CONFLICT DO NOTHING
        RETURNING id`,
-      ['GASTAT – UNSD Coordination Meeting', 'Coordination on statistical data exchange', 'Riyadh']
-    );
+      ['GASTAT – UNSD Coordination Meeting', 'Coordination on statistical data exchange', 'Riyadh'],
+    )
 
-    const eventId = eventRows?.[0]?.id;
+    const eventId = eventRows?.[0]?.id
     if (eventId) {
       // Try to look up an organization and a country
       const {
-        rows: [unsd]
-      } = await client.query("SELECT id FROM organizations WHERE name_en = 'United Nations Statistics Division' LIMIT 1");
+        rows: [unsd],
+      } = await client.query(
+        "SELECT id FROM organizations WHERE name_en = 'United Nations Statistics Division' LIMIT 1",
+      )
       const {
-        rows: [jpn]
-      } = await client.query("SELECT id FROM countries WHERE code = 'JPN' LIMIT 1");
+        rows: [jpn],
+      } = await client.query("SELECT id FROM countries WHERE code = 'JPN' LIMIT 1")
 
       if (unsd?.id) {
         await client.query(
           `INSERT INTO attendees (event_id, type, entity_id, role, confirmed)
            VALUES ($1,'organization',$2,'host', TRUE)
            ON CONFLICT DO NOTHING`,
-          [eventId, unsd.id]
-        );
+          [eventId, unsd.id],
+        )
       }
 
       if (jpn?.id) {
@@ -108,8 +110,8 @@ export async function seedDatabase(): Promise<void> {
           `INSERT INTO attendees (event_id, type, entity_id, role, confirmed)
            VALUES ($1,'country',$2,'participant', FALSE)
            ON CONFLICT DO NOTHING`,
-          [eventId, jpn.id]
-        );
+          [eventId, jpn.id],
+        )
       }
 
       // Denormalized attendees array on events for quick filters
@@ -117,8 +119,8 @@ export async function seedDatabase(): Promise<void> {
         `UPDATE events SET attendees = (
             SELECT array_agg(entity_id) FROM attendees WHERE event_id = $1
          ) WHERE id = $1`,
-        [eventId]
-      );
+        [eventId],
+      )
     }
 
     // Add sample dossiers
@@ -153,23 +155,23 @@ export async function seedDatabase(): Promise<void> {
        'موضوع شامل حول التحول الرقمي في الإنتاج الإحصائي',
        ARRAY['digital', 'transformation', 'innovation'])
       ON CONFLICT DO NOTHING;
-    `);
+    `)
 
-    client.release();
+    client.release()
 
-    logInfo('Database seeding completed successfully');
+    logInfo('Database seeding completed successfully')
   } catch (error) {
-    logError('Database seeding failed:', error as Error);
-    throw error;
+    logError('Database seeding failed:', error as Error)
+    throw error
   } finally {
-    await pool.end();
+    await pool.end()
   }
 }
 
 // CLI interface for seeding
 if (require.main === module) {
   seedDatabase().catch((error) => {
-    logError('Seeding command failed:', error as Error);
-    process.exit(1);
-  });
+    logError('Seeding command failed:', error as Error)
+    process.exit(1)
+  })
 }

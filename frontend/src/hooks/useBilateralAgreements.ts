@@ -5,33 +5,33 @@
  * Includes caching and error handling via TanStack Query.
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 
 export interface BilateralAgreement {
-  id: string;
-  reference_number: string;
-  title: string;
-  title_ar: string;
-  type: string;
-  mou_category: string;
-  lifecycle_state: string;
-  effective_date?: string;
-  expiry_date?: string;
-  description?: string;
+  id: string
+  reference_number: string
+  title: string
+  title_ar: string
+  type: string
+  mou_category: string
+  lifecycle_state: string
+  effective_date?: string
+  expiry_date?: string
+  description?: string
   dates?: {
-    signed?: string;
-    effective?: string;
-    expires?: string;
-  };
-  parties?: any;
-  country_id?: string;
-  organization_id?: string;
+    signed?: string
+    effective?: string
+    expires?: string
+  }
+  parties?: any
+  country_id?: string
+  organization_id?: string
 }
 
 export interface UseBilateralAgreementsOptions {
-  countryId: string;
-  enabled?: boolean;
+  countryId: string
+  enabled?: boolean
 }
 
 export function useBilateralAgreements({
@@ -46,16 +46,16 @@ export function useBilateralAgreements({
         .select('*')
         .eq('country_id', countryId)
         .eq('is_deleted', false)
-        .order('effective_date', { ascending: false, nullsFirst: false });
+        .order('effective_date', { ascending: false, nullsFirst: false })
 
       if (error) {
-        throw new Error(`Failed to fetch bilateral agreements: ${error.message}`);
+        throw new Error(`Failed to fetch bilateral agreements: ${error.message}`)
       }
 
-      return data || [];
+      return data || []
     },
     enabled: enabled && !!countryId,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
-  });
+  })
 }

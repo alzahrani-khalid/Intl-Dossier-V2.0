@@ -8,25 +8,21 @@
  * T087 [US3]: Audit logging for migration events
  */
 
-import { supabaseAdmin } from '../config/supabase';
-import { createAuditLog } from './link-audit.service';
-import type {
-  EntityLink,
-  LinkType,
-  CreateLinkRequest,
-} from '../types/intake-entity-links.types';
+import { supabaseAdmin } from '../config/supabase'
+import { createAuditLog } from './link-audit.service'
+import type { EntityLink, LinkType } from '../types/intake-entity-links.types'
 
 /**
  * Link type mapping for intake-to-position migration
  * T084: Transformation rules for link types
  */
 const LINK_TYPE_MAPPING: Record<LinkType, LinkType> = {
-  primary: 'primary',        // Primary stays primary
-  related: 'related',        // Related stays related
-  mentioned: 'mentioned',    // Mentioned stays mentioned
-  requested: 'related',      // Requested becomes related (position already exists)
+  primary: 'primary', // Primary stays primary
+  related: 'related', // Related stays related
+  mentioned: 'mentioned', // Mentioned stays mentioned
+  requested: 'related', // Requested becomes related (position already exists)
   assigned_to: 'assigned_to', // Assigned stays assigned
-};
+}
 
 /**
  * Maps link types from intake context to position context
@@ -36,7 +32,7 @@ const LINK_TYPE_MAPPING: Record<LinkType, LinkType> = {
  * @returns Mapped link type for position
  */
 export function mapLinkTypes(intakeLinkType: LinkType): LinkType {
-  return LINK_TYPE_MAPPING[intakeLinkType] || 'related';
+  return LINK_TYPE_MAPPING[intakeLinkType] || 'related'
 }
 
 /**
@@ -64,19 +60,19 @@ export async function migrateIntakeLinksToPosition(
   sourceIntakeId: string,
   targetPositionId: string,
   userId: string,
-  atomic: boolean = false
+  atomic: boolean = false,
 ): Promise<{
-  success: boolean;
-  migrated_count: number;
-  failed_count: number;
-  intake_id: string;
-  position_id: string;
+  success: boolean
+  migrated_count: number
+  failed_count: number
+  intake_id: string
+  position_id: string
   link_mappings: Array<{
-    intake_link_id: string;
-    position_link_id: string;
-    link_type_before: LinkType;
-    link_type_after: LinkType;
-  }>;
+    intake_link_id: string
+    position_link_id: string
+    link_type_before: LinkType
+    link_type_after: LinkType
+  }>
 }> {
   try {
     // Step 1: Validate target position exists and get its metadata
@@ -84,14 +80,14 @@ export async function migrateIntakeLinksToPosition(
       .from('positions')
       .select('id, classification_level, organization_id')
       .eq('id', targetPositionId)
-      .single();
+      .single()
 
     if (positionError || !targetPosition) {
       throw {
         code: 'POSITION_NOT_FOUND',
         message: `Target position ${targetPositionId} not found`,
         statusCode: 404,
-      };
+      }
     }
 
     // Step 2: Retrieve all active links from source intake
@@ -100,14 +96,14 @@ export async function migrateIntakeLinksToPosition(
       .select('*')
       .eq('intake_id', sourceIntakeId)
       .is('deleted_at', null)
-      .order('link_order', { ascending: true });
+      .order('link_order', { ascending: true })
 
     if (linksError) {
       throw {
         code: 'FETCH_LINKS_FAILED',
         message: `Failed to fetch intake links: ${linksError.message}`,
         statusCode: 500,
-      };
+      }
     }
 
     if (!intakeLinks || intakeLinks.length === 0) {
@@ -119,17 +115,14 @@ export async function migrateIntakeLinksToPosition(
         intake_id: sourceIntakeId,
         position_id: targetPositionId,
         link_mappings: [],
-      };
+      }
     }
 
     // Step 3: Validate clearance constraints for atomic mode
     if (atomic) {
       // Check if any linked entity has higher clearance than target position
       for (const link of intakeLinks) {
-        const entityMetadata = await getEntityClearanceLevel(
-          link.entity_type,
-          link.entity_id
-        );
+        const entityMetadata = await getEntityClearanceLevel(link.entity_type, link.entity_id)
 
         if (
           entityMetadata.classificationLevel !== undefined &&
@@ -150,32 +143,32 @@ export async function migrateIntakeLinksToPosition(
                 },
               ],
             },
-          };
+          }
         }
       }
     }
 
     // Step 4: Begin migration transaction
     const linkMappings: Array<{
-      intake_link_id: string;
-      position_link_id: string;
-      link_type_before: LinkType;
-      link_type_after: LinkType;
-    }> = [];
+      intake_link_id: string
+      position_link_id: string
+      link_type_before: LinkType
+      link_type_after: LinkType
+    }> = []
 
-    const migratedLinks: EntityLink[] = [];
+    const migratedLinks: EntityLink[] = []
     const failedLinks: Array<{
-      intake_link_id: string;
-      entity_id: string;
-      entity_type: string;
-      error: string;
-    }> = [];
+      intake_link_id: string
+      entity_id: string
+      entity_type: string
+      error: string
+    }> = []
 
     // T086: Transaction boundary - all operations must succeed or fail together
     for (const intakeLink of intakeLinks) {
       try {
         // Map link type for position context
-        const mappedLinkType = mapLinkTypes(intakeLink.link_type);
+        const mappedLinkType = mapLinkTypes(intakeLink.link_type)
 
         // Create new link on position
         const { data: newPositionLink, error: createError } = await supabaseAdmin
@@ -194,10 +187,10 @@ export async function migrateIntakeLinksToPosition(
             _version: 1,
           })
           .select()
-          .single();
+          .single()
 
         if (createError || !newPositionLink) {
-          const errorMsg = `Failed to create link on position: ${createError?.message}`;
+          const errorMsg = `Failed to create link on position: ${createError?.message}`
 
           if (atomic) {
             // Atomic mode: rollback by throwing error
@@ -214,7 +207,7 @@ export async function migrateIntakeLinksToPosition(
                   },
                 ],
               },
-            };
+            }
           } else {
             // Non-atomic mode: track failure and continue
             failedLinks.push({
@@ -222,19 +215,19 @@ export async function migrateIntakeLinksToPosition(
               entity_id: intakeLink.entity_id,
               entity_type: intakeLink.entity_type,
               error: errorMsg,
-            });
-            continue;
+            })
+            continue
           }
         }
 
         // Track successful migration
-        migratedLinks.push(newPositionLink as EntityLink);
+        migratedLinks.push(newPositionLink as EntityLink)
         linkMappings.push({
           intake_link_id: intakeLink.id,
           position_link_id: newPositionLink.id,
           link_type_before: intakeLink.link_type,
           link_type_after: mappedLinkType,
-        });
+        })
 
         // Soft-delete original intake link
         await supabaseAdmin
@@ -243,12 +236,11 @@ export async function migrateIntakeLinksToPosition(
             deleted_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           })
-          .eq('id', intakeLink.id);
-
+          .eq('id', intakeLink.id)
       } catch (linkError: any) {
         if (atomic) {
           // In atomic mode, re-throw to trigger full rollback
-          throw linkError;
+          throw linkError
         }
         // In non-atomic mode, track error and continue
         failedLinks.push({
@@ -256,13 +248,13 @@ export async function migrateIntakeLinksToPosition(
           entity_id: intakeLink.entity_id,
           entity_type: intakeLink.entity_type,
           error: linkError.message || 'Unknown error',
-        });
+        })
       }
     }
 
     // Step 5: T087 - Create comprehensive audit log for migration
     // Note: Using the first migrated link's ID, or creating a special migration audit entry
-    const auditLinkId = migratedLinks.length > 0 ? migratedLinks[0].id : sourceIntakeId;
+    const auditLinkId = migratedLinks.length > 0 ? migratedLinks[0].id : sourceIntakeId
     await createAuditLog(
       auditLinkId,
       'created', // Use 'created' action for successful migration
@@ -276,8 +268,8 @@ export async function migrateIntakeLinksToPosition(
         link_mappings: linkMappings,
         failed_links: failedLinks.length > 0 ? failedLinks : undefined,
         timestamp: new Date().toISOString(),
-      } // new values (migration details)
-    );
+      }, // new values (migration details)
+    )
 
     // Step 6: Return migration result
     return {
@@ -287,8 +279,7 @@ export async function migrateIntakeLinksToPosition(
       intake_id: sourceIntakeId,
       position_id: targetPositionId,
       link_mappings: linkMappings,
-    };
-
+    }
   } catch (error: any) {
     // T087: Log migration failure to audit trail
     await createAuditLog(
@@ -302,19 +293,19 @@ export async function migrateIntakeLinksToPosition(
         error_code: error.code || 'MIGRATION_FAILED',
         error_message: error.message,
         timestamp: new Date().toISOString(),
-      } // new values (error details)
-    );
+      }, // new values (error details)
+    )
 
     // Re-throw if already formatted
     if (error.code && error.statusCode) {
-      throw error;
+      throw error
     }
     // Format unexpected errors
     throw {
       code: 'INTERNAL_ERROR',
       message: error.message || 'An unexpected error occurred during migration',
       statusCode: 500,
-    };
+    }
   }
 }
 
@@ -328,15 +319,18 @@ export async function migrateIntakeLinksToPosition(
  */
 async function getEntityClearanceLevel(
   entityType: string,
-  entityId: string
+  entityId: string,
 ): Promise<{
-  classificationLevel?: number;
+  classificationLevel?: number
 }> {
   // Map entity types to their respective tables and fields
-  const tableMapping: Record<string, {
-    table: string;
-    classificationField?: string;
-  }> = {
+  const tableMapping: Record<
+    string,
+    {
+      table: string
+      classificationField?: string
+    }
+  > = {
     dossier: {
       table: 'dossiers',
       classificationField: 'classification_level',
@@ -380,24 +374,24 @@ async function getEntityClearanceLevel(
     topic: {
       table: 'topics',
     },
-  };
+  }
 
-  const mapping = tableMapping[entityType];
+  const mapping = tableMapping[entityType]
   if (!mapping || !mapping.classificationField) {
-    return {};
+    return {}
   }
 
   const { data: entity } = await supabaseAdmin
     .from(mapping.table)
     .select(mapping.classificationField)
     .eq('id', entityId)
-    .single();
+    .single()
 
   if (!entity) {
-    return {};
+    return {}
   }
 
   return {
     classificationLevel: entity[mapping.classificationField],
-  };
+  }
 }

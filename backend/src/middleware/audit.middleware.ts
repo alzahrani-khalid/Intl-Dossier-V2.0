@@ -247,7 +247,7 @@ async function logToDatabase(auditLog: AuditLog): Promise<void> {
   } catch (error) {
     // Fallback to console logging if database fails
     console.error('Audit log database error:', error)
-    console.log('AUDIT_LOG:', JSON.stringify(auditLog))
+    console.warn('AUDIT_LOG:', JSON.stringify(auditLog))
 
     // Could also write to a file or send to external service
     await writeToFallbackLog(auditLog)

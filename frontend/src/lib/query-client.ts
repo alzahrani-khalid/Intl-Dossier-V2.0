@@ -10,8 +10,8 @@
  * @module lib/query-client
  */
 
-import { QueryClient, QueryClientConfig } from '@tanstack/react-query';
-import { toast } from 'sonner'; // or your preferred toast library
+import { QueryClient, QueryClientConfig } from '@tanstack/react-query'
+import { toast } from 'sonner' // or your preferred toast library
 
 /**
  * Default query options
@@ -28,14 +28,14 @@ const defaultQueryOptions: QueryClientConfig['defaultOptions'] = {
     retry: (failureCount, error: unknown) => {
       // Don't retry on 4xx errors (client errors)
       if (error && typeof error === 'object' && 'status' in error) {
-        const status = (error as { status: number }).status;
+        const status = (error as { status: number }).status
         if (status >= 400 && status < 500) {
-          return false;
+          return false
         }
       }
 
       // Retry up to 3 times for other errors
-      return failureCount < 3;
+      return failureCount < 3
     },
 
     // Retry delay with exponential backoff
@@ -57,36 +57,36 @@ const defaultQueryOptions: QueryClientConfig['defaultOptions'] = {
 
     // Global mutation error handler
     onError: (error) => {
-      console.error('Mutation error:', error);
+      console.error('Mutation error:', error)
 
       // Extract error message
-      let errorMessage = 'An unexpected error occurred';
+      let errorMessage = 'An unexpected error occurred'
       if (error && typeof error === 'object') {
         if ('message' in error && typeof error.message === 'string') {
-          errorMessage = error.message;
+          errorMessage = error.message
         } else if ('error' in error && typeof error.error === 'string') {
-          errorMessage = error.error;
+          errorMessage = error.error
         }
       }
 
       // Show error toast
-      toast.error(errorMessage);
+      toast.error(errorMessage)
     },
 
     // Global mutation success handler
     onSuccess: () => {
       // Default success toast (can be overridden per mutation)
-      toast.success('Operation completed successfully');
+      toast.success('Operation completed successfully')
     },
   },
-};
+}
 
 /**
  * Create Query Client instance
  */
 export const queryClient = new QueryClient({
   defaultOptions: defaultQueryOptions,
-});
+})
 
 /**
  * Query keys for user management
@@ -145,7 +145,7 @@ export const queryKeys = {
     all: ['audit-logs'] as const,
     user: (userId: string) => [...queryKeys.auditLogs.all, 'user', userId] as const,
   },
-};
+}
 
 /**
  * Utility function to invalidate related queries after mutations
@@ -155,49 +155,49 @@ export const invalidateQueries = {
    * Invalidate all user-related queries
    */
   users: async () => {
-    await queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.users.all })
   },
 
   /**
    * Invalidate specific user details
    */
   userDetail: async (userId: string) => {
-    await queryClient.invalidateQueries({ queryKey: queryKeys.users.detail(userId) });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.users.detail(userId) })
   },
 
   /**
    * Invalidate user permissions
    */
   userPermissions: async (userId: string) => {
-    await queryClient.invalidateQueries({ queryKey: queryKeys.users.permissions(userId) });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.users.permissions(userId) })
   },
 
   /**
    * Invalidate all delegation queries
    */
   delegations: async () => {
-    await queryClient.invalidateQueries({ queryKey: queryKeys.delegations.all });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.delegations.all })
   },
 
   /**
    * Invalidate role approvals
    */
   roleApprovals: async () => {
-    await queryClient.invalidateQueries({ queryKey: queryKeys.roles.approvals() });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.roles.approvals() })
   },
 
   /**
    * Invalidate access reviews
    */
   accessReviews: async () => {
-    await queryClient.invalidateQueries({ queryKey: queryKeys.accessReviews.all });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.accessReviews.all })
   },
 
   /**
    * Invalidate notifications
    */
   notifications: async () => {
-    await queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
   },
 
   /**
@@ -205,12 +205,12 @@ export const invalidateQueries = {
    */
   auditLogs: async (userId?: string) => {
     if (userId) {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.auditLogs.user(userId) });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.auditLogs.user(userId) })
     } else {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.auditLogs.all });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.auditLogs.all })
     }
   },
-};
+}
 
 /**
  * HTTP client error class
@@ -219,10 +219,10 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     public error: string,
-    message?: string
+    message?: string,
   ) {
-    super(message || error);
-    this.name = 'ApiError';
+    super(message || error)
+    this.name = 'ApiError'
   }
 }
 
@@ -233,32 +233,25 @@ export class ApiError extends Error {
  * @param options - Fetch options
  * @returns Response data
  */
-export async function fetchApi<T>(
-  url: string,
-  options: RequestInit = {}
-): Promise<T> {
+export async function fetchApi<T>(url: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(url, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options.headers,
     },
-  });
+  })
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({
       error: response.statusText,
       message: 'Request failed',
-    }));
+    }))
 
-    throw new ApiError(
-      response.status,
-      errorData.error || response.statusText,
-      errorData.message
-    );
+    throw new ApiError(response.status, errorData.error || response.statusText, errorData.message)
   }
 
-  return response.json();
+  return response.json()
 }
 
 /**
@@ -270,7 +263,7 @@ export async function prefetchUserList(filters?: unknown): Promise<void> {
   await queryClient.prefetchQuery({
     queryKey: queryKeys.users.list(filters),
     queryFn: () => fetchApi(`/api/users?${new URLSearchParams(filters as Record<string, string>)}`),
-  });
+  })
 }
 
 /**
@@ -280,19 +273,19 @@ export async function prefetchUserDetail(userId: string): Promise<void> {
   await queryClient.prefetchQuery({
     queryKey: queryKeys.users.detail(userId),
     queryFn: () => fetchApi(`/api/users/${userId}`),
-  });
+  })
 }
 
 /**
  * Set query data manually (optimistic updates)
  */
 export function setQueryData<T>(queryKey: unknown[], data: T): void {
-  queryClient.setQueryData(queryKey, data);
+  queryClient.setQueryData(queryKey, data)
 }
 
 /**
  * Get query data
  */
 export function getQueryData<T>(queryKey: unknown[]): T | undefined {
-  return queryClient.getQueryData<T>(queryKey);
+  return queryClient.getQueryData<T>(queryKey)
 }

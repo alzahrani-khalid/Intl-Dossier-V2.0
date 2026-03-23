@@ -78,7 +78,7 @@ export function useTerminologyList(filters: Partial<TerminologyFilters> = {}) {
 
       // Get usage counts
       const termIds = (data || []).map((t) => t.id)
-      let usageCounts: Record<string, number> = {}
+      const usageCounts: Record<string, number> = {}
 
       if (termIds.length > 0) {
         const { data: usage } = await supabase
@@ -201,7 +201,7 @@ export function useMostUsedTerms(params: MostUsedTermsParams = {}) {
       cutoffDate.setDate(cutoffDate.getDate() - days)
 
       // Get usage counts from recent period
-      let usageQuery = supabase
+      const usageQuery = supabase
         .from('term_usage_log')
         .select('terminology_id')
         .gte('used_at', cutoffDate.toISOString())

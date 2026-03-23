@@ -2,7 +2,6 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import {
   UserPreference,
   UserPreferenceUpdate,
-  UserPreferenceSchema,
   UserPreferenceUpdateSchema,
   USER_PREFERENCES_TABLE,
   DEFAULT_PREFERENCES,

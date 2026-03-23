@@ -9,24 +9,28 @@
  * - Relationships - network growth
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { EnhancedVerticalTimeline } from './EnhancedVerticalTimeline';
-import { TimelineFilters } from './TimelineFilters';
-import { useUnifiedTimeline, getDefaultEventTypes, getAvailableEventTypes } from '@/hooks/useUnifiedTimeline';
-import type { TimelineFilters as ITimelineFilters } from '@/types/timeline.types';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { EnhancedVerticalTimeline } from './EnhancedVerticalTimeline'
+import { TimelineFilters } from './TimelineFilters'
+import {
+  useUnifiedTimeline,
+  getDefaultEventTypes,
+  getAvailableEventTypes,
+} from '@/hooks/useUnifiedTimeline'
+import type { TimelineFilters as ITimelineFilters } from '@/types/timeline.types'
 
 interface PersonTimelineProps {
-  dossierId: string;
-  className?: string;
+  dossierId: string
+  className?: string
 }
 
 export function PersonTimeline({ dossierId, className }: PersonTimelineProps) {
-  const { t } = useTranslation('dossier');
-  const [showFilters, setShowFilters] = useState(false);
+  const { t } = useTranslation('dossier')
+  const [showFilters, setShowFilters] = useState(false)
 
-  const defaultEventTypes = getDefaultEventTypes('Person');
-  const availableEventTypes = getAvailableEventTypes('Person');
+  const defaultEventTypes = getDefaultEventTypes('Person')
+  const availableEventTypes = getAvailableEventTypes('Person')
 
   const {
     events,
@@ -46,11 +50,11 @@ export function PersonTimeline({ dossierId, className }: PersonTimelineProps) {
     },
     itemsPerPage: 20,
     enableRealtime: false,
-  });
+  })
 
   const handleFiltersChange = (newFilters: ITimelineFilters) => {
-    setFilters(newFilters);
-  };
+    setFilters(newFilters)
+  }
 
   return (
     <div className={className}>
@@ -74,5 +78,5 @@ export function PersonTimeline({ dossierId, className }: PersonTimelineProps) {
         emptyMessage={t('timeline.empty.person')}
       />
     </div>
-  );
+  )
 }

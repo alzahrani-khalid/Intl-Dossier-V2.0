@@ -72,7 +72,8 @@ export function useSideEvents(sessionId: string, filters: Partial<SideEventFilte
 
       // Get logistics stats for each event
       const eventIds = (data || []).map((e) => e.id)
-      let logisticsStats: Record<string, { total: number; pending: number; confirmed: number }> = {}
+      const logisticsStats: Record<string, { total: number; pending: number; confirmed: number }> =
+        {}
 
       if (eventIds.length > 0) {
         const { data: logistics } = await supabase

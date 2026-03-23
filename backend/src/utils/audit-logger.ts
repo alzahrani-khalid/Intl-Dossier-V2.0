@@ -10,13 +10,13 @@
  * @module utils/audit-logger
  */
 
-import { createClient } from '@supabase/supabase-js';
-import { logInfo, logError } from './logger';
+import { createClient } from '@supabase/supabase-js'
+import { logInfo, logError } from './logger'
 
 // Initialize Supabase client for audit logging
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = process.env.SUPABASE_URL || ''
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 /**
  * Audit log event types
@@ -74,19 +74,19 @@ export enum AuditResourceType {
  * Audit log entry interface
  */
 export interface AuditLogEntry {
-  eventType: AuditEventType;
-  userId?: string;
-  targetUserId?: string;
-  resourceType: AuditResourceType;
-  resourceId?: string;
-  action: AuditAction;
+  eventType: AuditEventType
+  userId?: string
+  targetUserId?: string
+  resourceType: AuditResourceType
+  resourceId?: string
+  action: AuditAction
   changes?: {
-    before?: Record<string, unknown>;
-    after?: Record<string, unknown>;
-  };
-  metadata?: Record<string, unknown>;
-  ipAddress?: string;
-  userAgent?: string;
+    before?: Record<string, unknown>
+    after?: Record<string, unknown>
+  }
+  metadata?: Record<string, unknown>
+  ipAddress?: string
+  userAgent?: string
 }
 
 /**
@@ -134,23 +134,23 @@ export async function logAuditEvent(entry: AuditLogEntry): Promise<string | null
         created_at: new Date().toISOString(),
       })
       .select('id')
-      .single();
+      .single()
 
     if (error) {
-      logError('Audit log write failed', error);
-      return null;
+      logError('Audit log write failed', error)
+      return null
     }
 
     logInfo('Audit log created', {
       auditId: data.id,
       eventType: entry.eventType,
-      action: entry.action
-    });
+      action: entry.action,
+    })
 
-    return data.id;
+    return data.id
   } catch (error) {
-    logError('Audit logging error', error instanceof Error ? error : new Error(String(error)));
-    return null;
+    logError('Audit logging error', error instanceof Error ? error : new Error(String(error)))
+    return null
   }
 }
 
@@ -162,7 +162,7 @@ export async function logUserCreation(
   newUserId: string,
   userData: Record<string, unknown>,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ): Promise<string | null> {
   return logAuditEvent({
     eventType: AuditEventType.USER_CREATED,
@@ -179,7 +179,7 @@ export async function logUserCreation(
     },
     ipAddress,
     userAgent,
-  });
+  })
 }
 
 /**
@@ -192,7 +192,7 @@ export async function logRoleAssignment(
   newRole: string,
   reason: string,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ): Promise<string | null> {
   return logAuditEvent({
     eventType: AuditEventType.ROLE_ASSIGNED,
@@ -211,7 +211,7 @@ export async function logRoleAssignment(
     },
     ipAddress,
     userAgent,
-  });
+  })
 }
 
 /**
@@ -224,7 +224,7 @@ export async function logDelegationCreation(
   permissions: string[],
   expiresAt: string,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ): Promise<string | null> {
   return logAuditEvent({
     eventType: AuditEventType.DELEGATION_CREATED,
@@ -241,7 +241,7 @@ export async function logDelegationCreation(
     },
     ipAddress,
     userAgent,
-  });
+  })
 }
 
 /**
@@ -252,7 +252,7 @@ export async function logDelegationRevocation(
   delegationId: string,
   reason: string,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ): Promise<string | null> {
   return logAuditEvent({
     eventType: AuditEventType.DELEGATION_REVOKED,
@@ -265,7 +265,7 @@ export async function logDelegationRevocation(
     },
     ipAddress,
     userAgent,
-  });
+  })
 }
 
 /**
@@ -276,7 +276,7 @@ export async function logUserDeactivation(
   targetUserId: string,
   reason: string,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ): Promise<string | null> {
   return logAuditEvent({
     eventType: AuditEventType.USER_DEACTIVATED,
@@ -294,7 +294,7 @@ export async function logUserDeactivation(
     },
     ipAddress,
     userAgent,
-  });
+  })
 }
 
 /**
@@ -305,7 +305,7 @@ export async function logSessionTermination(
   sessionId: string,
   reason: string,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ): Promise<string | null> {
   return logAuditEvent({
     eventType: AuditEventType.SESSION_TERMINATED,
@@ -318,7 +318,7 @@ export async function logSessionTermination(
     },
     ipAddress,
     userAgent,
-  });
+  })
 }
 
 /**
@@ -330,7 +330,7 @@ export async function logAccessReviewCreation(
   scope: string,
   scopeValue?: string,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ): Promise<string | null> {
   return logAuditEvent({
     eventType: AuditEventType.ACCESS_REVIEW_CREATED,
@@ -344,7 +344,7 @@ export async function logAccessReviewCreation(
     },
     ipAddress,
     userAgent,
-  });
+  })
 }
 
 /**
@@ -357,7 +357,7 @@ export async function logAccessCertification(
   status: string,
   changeRequests?: Record<string, unknown>,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ): Promise<string | null> {
   return logAuditEvent({
     eventType: AuditEventType.ACCESS_CERTIFIED,
@@ -374,7 +374,7 @@ export async function logAccessCertification(
     },
     ipAddress,
     userAgent,
-  });
+  })
 }
 
 /**
@@ -387,58 +387,55 @@ export async function logAccessCertification(
  * @returns Audit log entries
  */
 export async function queryAuditLogs(filters: {
-  userId?: string;
-  targetUserId?: string;
-  eventType?: AuditEventType;
-  resourceType?: AuditResourceType;
-  startDate?: string;
-  endDate?: string;
-  limit?: number;
+  userId?: string
+  targetUserId?: string
+  eventType?: AuditEventType
+  resourceType?: AuditResourceType
+  startDate?: string
+  endDate?: string
+  limit?: number
 }): Promise<unknown[]> {
   try {
-    let query = supabase
-      .from('audit_logs')
-      .select('*')
-      .order('created_at', { ascending: false });
+    let query = supabase.from('audit_logs').select('*').order('created_at', { ascending: false })
 
     if (filters.userId) {
-      query = query.eq('user_id', filters.userId);
+      query = query.eq('user_id', filters.userId)
     }
 
     if (filters.targetUserId) {
-      query = query.eq('target_user_id', filters.targetUserId);
+      query = query.eq('target_user_id', filters.targetUserId)
     }
 
     if (filters.eventType) {
-      query = query.eq('event_type', filters.eventType);
+      query = query.eq('event_type', filters.eventType)
     }
 
     if (filters.resourceType) {
-      query = query.eq('resource_type', filters.resourceType);
+      query = query.eq('resource_type', filters.resourceType)
     }
 
     if (filters.startDate) {
-      query = query.gte('created_at', filters.startDate);
+      query = query.gte('created_at', filters.startDate)
     }
 
     if (filters.endDate) {
-      query = query.lte('created_at', filters.endDate);
+      query = query.lte('created_at', filters.endDate)
     }
 
     if (filters.limit) {
-      query = query.limit(filters.limit);
+      query = query.limit(filters.limit)
     }
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
     if (error) {
-      logError('Audit log query failed', error);
-      return [];
+      logError('Audit log query failed', error)
+      return []
     }
 
-    return data || [];
+    return data || []
   } catch (error) {
-    logError('Audit log query error', error instanceof Error ? error : new Error(String(error)));
-    return [];
+    logError('Audit log query error', error instanceof Error ? error : new Error(String(error)))
+    return []
   }
 }

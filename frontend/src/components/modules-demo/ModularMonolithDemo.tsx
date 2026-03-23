@@ -110,7 +110,7 @@ export function ModularMonolithDemo() {
     )
 
     if (result.success) {
-      console.log('Linked documents:', result.data)
+      console.warn('Linked documents:', result.data)
     } else if (isModuleErr(result)) {
       console.error('Error:', result.error.message)
     }
@@ -127,7 +127,7 @@ export function ModularMonolithDemo() {
     )
 
     if (result.success) {
-      console.log('Relationships:', result.data)
+      console.warn('Relationships:', result.data)
     } else if (isModuleErr(result)) {
       console.error('Error:', result.error.message)
     }
@@ -149,7 +149,7 @@ export function ModularMonolithDemo() {
     )
 
     if (result.success) {
-      console.log('Generated brief:', result.data)
+      console.warn('Generated brief:', result.data)
     } else if (isModuleErr(result)) {
       console.error('Error:', result.error.message)
     }

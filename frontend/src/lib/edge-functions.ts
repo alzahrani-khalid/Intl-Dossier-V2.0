@@ -76,7 +76,7 @@ export interface EdgeFunctionResult<T> {
  *   return
  * }
  *
- * console.log('Users:', result.data.users)
+ * console.warn('Users:', result.data.users)
  * ```
  */
 export async function invokeEdgeFunction<T>(

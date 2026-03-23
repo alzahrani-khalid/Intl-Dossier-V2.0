@@ -120,10 +120,10 @@ export class WinstonLoggerAdapter implements ILoggerPort {
         break
       case 'debug':
       case 'trace':
-        console.debug(output)
+        console.warn(output) // eslint: console.debug not allowed
         break
       default:
-        console.log(output)
+        console.warn(output)
     }
   }
 

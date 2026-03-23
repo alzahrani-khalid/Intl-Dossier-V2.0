@@ -1,14 +1,14 @@
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import { LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
+import { LucideIcon } from 'lucide-react'
 
 interface EmptyStateProps {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  actionLabel?: string;
-  onAction?: () => void;
-  className?: string;
+  icon: LucideIcon
+  title: string
+  description: string
+  actionLabel?: string
+  onAction?: () => void
+  className?: string
 }
 
 /**
@@ -30,8 +30,8 @@ export function EmptyState({
   onAction,
   className = '',
 }: EmptyStateProps) {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
     <div
@@ -65,5 +65,5 @@ export function EmptyState({
         </Button>
       )}
     </div>
-  );
+  )
 }

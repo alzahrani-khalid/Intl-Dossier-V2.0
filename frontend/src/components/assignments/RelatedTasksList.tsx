@@ -109,8 +109,7 @@ export function RelatedTasksList({
                   {/* Task Title and Status */}
                   <div className="flex items-start justify-between gap-2">
                     <h4 className="text-sm font-medium line-clamp-1 flex-1">
-                      {`${assignment.work_item_type} #${assignment.work_item_id}` ||
-                        t('relatedTasks.untitledTask')}
+                      {`${assignment.work_item_type} #${assignment.work_item_id}`}
                     </h4>
                     <Badge variant={getStatusColor(assignment.status)} className="flex-shrink-0">
                       {t(`status.${assignment.status}`)}

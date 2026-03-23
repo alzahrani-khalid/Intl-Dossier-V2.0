@@ -55,7 +55,7 @@ export type { DocumentEventType } from '../core/contracts'
  * )
  *
  * if (result.success) {
- *   console.log('Documents:', result.data)
+ *   console.warn('Documents:', result.data)
  * }
  *
  * @example
@@ -66,6 +66,6 @@ export type { DocumentEventType } from '../core/contracts'
  * const eventBus = getEventBus()
  *
  * eventBus.subscribe(DOCUMENT_EVENTS.UPLOADED, (event) => {
- *   console.log('Document uploaded:', event.payload)
+ *   console.warn('Document uploaded:', event.payload)
  * })
  */

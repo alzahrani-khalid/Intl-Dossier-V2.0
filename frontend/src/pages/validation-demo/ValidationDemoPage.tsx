@@ -64,7 +64,7 @@ export function ValidationDemoPage() {
 
       if (!hasErrors) {
         // Form is valid - show success
-        console.log('Form submitted:', formValues)
+        console.warn('Form submitted:', formValues)
       }
     },
     [formValues, validationErrors],

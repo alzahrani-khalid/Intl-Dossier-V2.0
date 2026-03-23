@@ -215,6 +215,7 @@ export class ServiceScope implements IServiceScope {
    * Get the root scope
    */
   private getRootScope(): IServiceScope {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: IServiceScope = this
     while (current.parent) {
       current = current.parent

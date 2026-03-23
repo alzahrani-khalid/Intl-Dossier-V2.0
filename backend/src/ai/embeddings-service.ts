@@ -157,7 +157,6 @@ class EmbeddingsService {
     if (!initialized || !this.embedder) return null
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const output = await (this.embedder as any)(text, {
         pooling: 'cls',
         normalize: true,

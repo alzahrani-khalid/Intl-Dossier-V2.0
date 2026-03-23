@@ -5,8 +5,8 @@
  * Uses Redis for queue management and job persistence.
  */
 
-import { Queue, QueueOptions } from 'bullmq';
-import redis from './redis';
+import { Queue, QueueOptions } from 'bullmq'
+import redis from './redis'
 
 /**
  * Common queue configuration options
@@ -28,7 +28,7 @@ const baseQueueOptions: QueueOptions = {
       count: 1000, // Keep last 1000 failed jobs
     },
   },
-};
+}
 
 /**
  * Reminder queue for follow-up notifications
@@ -40,7 +40,7 @@ export const reminderQueue = new Queue('waiting-queue-reminders', {
     ...baseQueueOptions.defaultJobOptions,
     priority: 5, // Medium priority
   },
-});
+})
 
 /**
  * Escalation queue for assignment escalations
@@ -52,7 +52,7 @@ export const escalationQueue = new Queue('waiting-queue-escalations', {
     ...baseQueueOptions.defaultJobOptions,
     priority: 3, // Higher priority than reminders
   },
-});
+})
 
 /**
  * Notification queue for email and in-app notifications
@@ -65,49 +65,49 @@ export const notificationQueue = new Queue('waiting-queue-notifications', {
     priority: 4, // High priority
     attempts: 3, // Retry up to 3 times (1s, 5s, 15s exponential backoff)
   },
-});
+})
 
 /**
  * Job types for type safety
  */
 export interface ReminderJobData {
-  assignment_id: string;
-  sent_by_user_id: string;
-  sent_to_user_id: string;
-  locale: 'en' | 'ar';
-  notification_type: 'email' | 'in_app' | 'both';
+  assignment_id: string
+  sent_by_user_id: string
+  sent_to_user_id: string
+  locale: 'en' | 'ar'
+  notification_type: 'email' | 'in_app' | 'both'
 }
 
 export interface BulkReminderJobData {
-  assignment_ids: string[];
-  sent_by_user_id: string;
-  locale: 'en' | 'ar';
-  job_id: string;
+  assignment_ids: string[]
+  sent_by_user_id: string
+  locale: 'en' | 'ar'
+  job_id: string
 }
 
 export interface EscalationJobData {
-  assignment_id: string;
-  escalated_from_user_id: string;
-  escalated_to_user_id: string;
-  reason?: string;
+  assignment_id: string
+  escalated_from_user_id: string
+  escalated_to_user_id: string
+  reason?: string
 }
 
 export interface BulkEscalationJobData {
-  assignment_ids: string[];
-  escalated_from_user_id: string;
-  escalated_to_user_id?: string; // Optional - auto-resolve from hierarchy if not provided
-  reason?: string;
-  job_id: string;
+  assignment_ids: string[]
+  escalated_from_user_id: string
+  escalated_to_user_id?: string // Optional - auto-resolve from hierarchy if not provided
+  reason?: string
+  job_id: string
 }
 
 export interface NotificationJobData {
-  recipient_user_id: string;
-  recipient_email?: string;
-  template: 'reminder-en' | 'reminder-ar' | 'escalation-en' | 'escalation-ar';
-  data: Record<string, unknown>;
-  notification_type: 'email' | 'in_app' | 'both';
-  reminder_id?: string; // For tracking delivery status
-  escalation_id?: string; // For tracking delivery status
+  recipient_user_id: string
+  recipient_email?: string
+  template: 'reminder-en' | 'reminder-ar' | 'escalation-en' | 'escalation-ar'
+  data: Record<string, unknown>
+  notification_type: 'email' | 'in_app' | 'both'
+  reminder_id?: string // For tracking delivery status
+  escalation_id?: string // For tracking delivery status
 }
 
 /**
@@ -120,11 +120,11 @@ export async function checkQueuesHealth(): Promise<boolean> {
       reminderQueue.client.ping(),
       escalationQueue.client.ping(),
       notificationQueue.client.ping(),
-    ]);
-    return true;
+    ])
+    return true
   } catch (error) {
-    console.error('[Queues] Health check failed:', error);
-    return false;
+    console.error('[Queues] Health check failed:', error)
+    return false
   }
 }
 
@@ -136,26 +136,22 @@ export async function getQueueMetrics() {
     reminderQueue.getJobCounts(),
     escalationQueue.getJobCounts(),
     notificationQueue.getJobCounts(),
-  ]);
+  ])
 
   return {
     reminders: reminderCounts,
     escalations: escalationCounts,
     notifications: notificationCounts,
-  };
+  }
 }
 
 /**
  * Gracefully close all queues
  */
 export async function closeQueues(): Promise<void> {
-  console.log('[Queues] Closing all queues...');
-  await Promise.all([
-    reminderQueue.close(),
-    escalationQueue.close(),
-    notificationQueue.close(),
-  ]);
-  console.log('[Queues] All queues closed');
+  console.warn('[Queues] Closing all queues...')
+  await Promise.all([reminderQueue.close(), escalationQueue.close(), notificationQueue.close()])
+  console.warn('[Queues] All queues closed')
 }
 
 // Export queues
@@ -166,4 +162,4 @@ export default {
   checkQueuesHealth,
   getQueueMetrics,
   closeQueues,
-};
+}

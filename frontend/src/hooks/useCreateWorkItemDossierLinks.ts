@@ -98,7 +98,7 @@ export interface UseCreateWorkItemDossierLinksOptions {
  * ```tsx
  * const { mutateAsync: createDossierLinks } = useCreateWorkItemDossierLinks({
  *   onSuccess: (data) => {
- *     console.log(`Created ${data.created_count} dossier links`);
+ *     console.warn(`Created ${data.created_count} dossier links`);
  *   },
  * });
  *

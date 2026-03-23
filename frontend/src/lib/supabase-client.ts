@@ -4,7 +4,6 @@
  */
 
 import { supabase as client, supabaseUrl } from './supabase'
-import { createClient as _originalCreateClient } from '@supabase/supabase-js'
 
 /**
  * Get the shared supabase client instance

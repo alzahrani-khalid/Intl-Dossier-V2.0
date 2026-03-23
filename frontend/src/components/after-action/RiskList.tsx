@@ -88,7 +88,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
       {risks.map((risk, index) => (
         <Card
           key={index}
-          className="border-l-4"
+          className="border-s-4"
           style={{ borderLeftColor: `var(--${severityColors[risk.severity]})` }}
         >
           <CardHeader>

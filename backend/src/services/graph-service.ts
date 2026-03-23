@@ -1,40 +1,40 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '../types/database.types';
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { Database } from '../types/database.types'
 
 interface GraphNode {
-  id: string;
-  type: string;
-  name_en: string;
-  name_ar: string;
-  status: string;
-  sensitivity_level: number;
-  depth: number; // Distance from starting node
-  path: string[]; // Array of node IDs from start to this node
+  id: string
+  type: string
+  name_en: string
+  name_ar: string
+  status: string
+  sensitivity_level: number
+  depth: number // Distance from starting node
+  path: string[] // Array of node IDs from start to this node
 }
 
 interface GraphEdge {
-  source_id: string;
-  target_id: string;
-  relationship_type: string;
-  relationship_metadata?: Record<string, unknown>;
+  source_id: string
+  target_id: string
+  relationship_type: string
+  relationship_metadata?: Record<string, unknown>
 }
 
 interface GraphTraversalOptions {
-  max_depth?: number; // Maximum degrees of separation (default 5, max 10)
-  relationship_types?: string[]; // Filter by specific relationship types
-  direction?: 'outgoing' | 'incoming' | 'both'; // Traversal direction
-  include_inactive?: boolean; // Include inactive dossiers (default false)
+  max_depth?: number // Maximum degrees of separation (default 5, max 10)
+  relationship_types?: string[] // Filter by specific relationship types
+  direction?: 'outgoing' | 'incoming' | 'both' // Traversal direction
+  include_inactive?: boolean // Include inactive dossiers (default false)
 }
 
 interface GraphData {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
+  nodes: GraphNode[]
+  edges: GraphEdge[]
   stats: {
-    total_nodes: number;
-    total_edges: number;
-    max_depth_reached: number;
-    query_time_ms: number;
-  };
+    total_nodes: number
+    total_edges: number
+    max_depth_reached: number
+    query_time_ms: number
+  }
 }
 
 /**
@@ -61,16 +61,16 @@ interface GraphData {
  * // Returns: ['saudi-arabia-uuid', 'g20-uuid', 'china-uuid']
  */
 export class GraphService {
-  private supabase: SupabaseClient<Database>;
-  private readonly MAX_DEPTH = 10;
-  private readonly DEFAULT_DEPTH = 5;
-  private readonly COMPLEXITY_BUDGET = 10000; // Max nodes to process
+  private supabase: SupabaseClient<Database>
+  private readonly MAX_DEPTH = 10
+  private readonly DEFAULT_DEPTH = 5
+  private readonly COMPLEXITY_BUDGET = 10000 // Max nodes to process
 
   constructor(supabaseUrl?: string, supabaseKey?: string) {
     this.supabase = createClient<Database>(
       supabaseUrl || process.env.SUPABASE_URL!,
-      supabaseKey || process.env.SUPABASE_ANON_KEY!
-    );
+      supabaseKey || process.env.SUPABASE_ANON_KEY!,
+    )
   }
 
   /**
@@ -85,13 +85,13 @@ export class GraphService {
   async traverseGraphRPC(
     startDossierId: string,
     maxDegrees: number = 2,
-    relationshipTypeFilter?: string
+    relationshipTypeFilter?: string,
   ) {
-    const startTime = Date.now();
+    const startTime = Date.now()
 
     // Validate max_degrees
     if (maxDegrees > this.MAX_DEPTH) {
-      throw new Error(`maxDegrees cannot exceed ${this.MAX_DEPTH}`);
+      throw new Error(`maxDegrees cannot exceed ${this.MAX_DEPTH}`)
     }
 
     // Call database function
@@ -99,20 +99,20 @@ export class GraphService {
       start_dossier_id: startDossierId,
       max_degrees: maxDegrees,
       relationship_type_filter: relationshipTypeFilter || null,
-    });
+    })
 
     if (error) {
-      throw new Error(`Graph traversal failed: ${error.message}`);
+      throw new Error(`Graph traversal failed: ${error.message}`)
     }
 
-    const queryTime = Date.now() - startTime;
+    const queryTime = Date.now() - startTime
 
     // Transform database results to GraphData format
-    const nodesMap = new Map<string, GraphNode>();
-    const edges: GraphEdge[] = [];
+    const nodesMap = new Map<string, GraphNode>()
+    const edges: GraphEdge[] = []
 
     // Process results
-    (data || []).forEach((row: any) => {
+    ;(data || []).forEach((row: any) => {
       // Add node
       if (!nodesMap.has(row.dossier_id)) {
         nodesMap.set(row.dossier_id, {
@@ -124,37 +124,37 @@ export class GraphService {
           sensitivity_level: 1, // Will be filtered by RLS
           depth: row.degree,
           path: row.path,
-        });
+        })
       }
 
       // Build edges from path
       if (row.path && row.path.length > 1 && row.relationship_path) {
         for (let i = 0; i < row.path.length - 1; i++) {
-          const sourceId = row.path[i];
-          const targetId = row.path[i + 1];
-          const relationshipType = row.relationship_path[i];
+          const sourceId = row.path[i]
+          const targetId = row.path[i + 1]
+          const relationshipType = row.relationship_path[i]
 
           // Check if edge already exists
           const edgeExists = edges.some(
             (e) =>
               e.source_id === sourceId &&
               e.target_id === targetId &&
-              e.relationship_type === relationshipType
-          );
+              e.relationship_type === relationshipType,
+          )
 
           if (!edgeExists) {
             edges.push({
               source_id: sourceId,
               target_id: targetId,
               relationship_type: relationshipType,
-            });
+            })
           }
         }
       }
-    });
+    })
 
-    const nodes = Array.from(nodesMap.values());
-    const maxDepthReached = nodes.length > 0 ? Math.max(...nodes.map((n) => n.depth)) : 0;
+    const nodes = Array.from(nodesMap.values())
+    const maxDepthReached = nodes.length > 0 ? Math.max(...nodes.map((n) => n.depth)) : 0
 
     return {
       nodes,
@@ -165,7 +165,7 @@ export class GraphService {
         max_depth_reached: maxDepthReached,
         query_time_ms: queryTime,
       },
-    };
+    }
   }
 
   /**
@@ -178,19 +178,19 @@ export class GraphService {
   async getBidirectionalRelationshipsRPC(
     dossierId: string,
     relationshipTypeFilter?: string,
-    includeInactive: boolean = false
+    includeInactive: boolean = false,
   ) {
     const { data, error } = await this.supabase.rpc('get_bidirectional_relationships', {
       dossier_id_param: dossierId,
       relationship_type_filter: relationshipTypeFilter || null,
       include_inactive: includeInactive,
-    });
+    })
 
     if (error) {
-      throw new Error(`Failed to get bidirectional relationships: ${error.message}`);
+      throw new Error(`Failed to get bidirectional relationships: ${error.message}`)
     }
 
-    return data || [];
+    return data || []
   }
 
   /**
@@ -200,22 +200,18 @@ export class GraphService {
    * @param maxDepth - Maximum path length (default 5)
    * @returns Path data or null if no path found
    */
-  async findPathRPC(
-    sourceId: string,
-    targetId: string,
-    maxDepth: number = 5
-  ) {
+  async findPathRPC(sourceId: string, targetId: string, maxDepth: number = 5) {
     const { data, error } = await this.supabase.rpc('get_relationship_path', {
       source_dossier_id: sourceId,
       target_dossier_id: targetId,
       max_depth: maxDepth,
-    });
+    })
 
     if (error) {
-      throw new Error(`Failed to find path: ${error.message}`);
+      throw new Error(`Failed to find path: ${error.message}`)
     }
 
-    return data && data.length > 0 ? data[0] : null;
+    return data && data.length > 0 ? data[0] : null
   }
 
   /**
@@ -230,68 +226,68 @@ export class GraphService {
    */
   async traverseGraph(
     startDossierId: string,
-    options: GraphTraversalOptions = {}
+    options: GraphTraversalOptions = {},
   ): Promise<GraphData> {
-    const startTime = Date.now();
+    const startTime = Date.now()
 
     const {
       max_depth = this.DEFAULT_DEPTH,
       relationship_types,
       direction = 'both',
       include_inactive = false,
-    } = options;
+    } = options
 
     // Validate max_depth
     if (max_depth > this.MAX_DEPTH) {
-      throw new Error(`max_depth cannot exceed ${this.MAX_DEPTH}`);
+      throw new Error(`max_depth cannot exceed ${this.MAX_DEPTH}`)
     }
 
     // Initialize collections
-    const nodes: Map<string, GraphNode> = new Map();
-    const edges: GraphEdge[] = [];
-    const visited: Set<string> = new Set();
-    const queue: Array<{ id: string; depth: number; path: string[] }> = [];
+    const nodes: Map<string, GraphNode> = new Map()
+    const edges: GraphEdge[] = []
+    const visited: Set<string> = new Set()
+    const queue: Array<{ id: string; depth: number; path: string[] }> = []
 
     // Get starting node
-    const startNode = await this.getDossierNode(startDossierId);
+    const startNode = await this.getDossierNode(startDossierId)
     if (!startNode) {
-      throw new Error(`Starting dossier not found: ${startDossierId}`);
+      throw new Error(`Starting dossier not found: ${startDossierId}`)
     }
 
     // Add start node
-    nodes.set(startDossierId, { ...startNode, depth: 0, path: [startDossierId] });
-    visited.add(startDossierId);
-    queue.push({ id: startDossierId, depth: 0, path: [startDossierId] });
+    nodes.set(startDossierId, { ...startNode, depth: 0, path: [startDossierId] })
+    visited.add(startDossierId)
+    queue.push({ id: startDossierId, depth: 0, path: [startDossierId] })
 
-    let processedNodes = 0;
+    let processedNodes = 0
 
     // BFS traversal
     while (queue.length > 0) {
-      const current = queue.shift()!;
+      const current = queue.shift()!
 
       // Check complexity budget
       if (processedNodes >= this.COMPLEXITY_BUDGET) {
-        console.warn(`Complexity budget exceeded at depth ${current.depth}`);
-        break;
+        console.warn(`Complexity budget exceeded at depth ${current.depth}`)
+        break
       }
 
       // Stop if max depth reached
       if (current.depth >= max_depth) {
-        continue;
+        continue
       }
 
-      processedNodes++;
+      processedNodes++
 
       // Get related nodes
       const related = await this.getAdjacentNodes(
         current.id,
         direction,
         relationship_types,
-        include_inactive
-      );
+        include_inactive,
+      )
 
       for (const rel of related) {
-        const targetId = rel.target_id;
+        const targetId = rel.target_id
 
         // Add edge
         edges.push({
@@ -299,39 +295,39 @@ export class GraphService {
           target_id: rel.target_id,
           relationship_type: rel.relationship_type,
           relationship_metadata: rel.relationship_metadata,
-        });
+        })
 
         // Skip if already visited
         if (visited.has(targetId)) {
-          continue;
+          continue
         }
 
         // Get node data
-        const nodeData = await this.getDossierNode(targetId);
-        if (!nodeData) continue;
+        const nodeData = await this.getDossierNode(targetId)
+        if (!nodeData) continue
 
         // Add node
-        const newPath = [...current.path, targetId];
+        const newPath = [...current.path, targetId]
         nodes.set(targetId, {
           ...nodeData,
           depth: current.depth + 1,
           path: newPath,
-        });
+        })
 
-        visited.add(targetId);
+        visited.add(targetId)
         queue.push({
           id: targetId,
           depth: current.depth + 1,
           path: newPath,
-        });
+        })
       }
     }
 
-    const queryTime = Date.now() - startTime;
+    const queryTime = Date.now() - startTime
 
     // Calculate stats
-    const depths = Array.from(nodes.values()).map((n) => n.depth);
-    const maxDepthReached = depths.length > 0 ? Math.max(...depths) : 0;
+    const depths = Array.from(nodes.values()).map((n) => n.depth)
+    const maxDepthReached = depths.length > 0 ? Math.max(...depths) : 0
 
     return {
       nodes: Array.from(nodes.values()),
@@ -342,7 +338,7 @@ export class GraphService {
         max_depth_reached: maxDepthReached,
         query_time_ms: queryTime,
       },
-    };
+    }
   }
 
   /**
@@ -356,49 +352,49 @@ export class GraphService {
   async findPath(
     startId: string,
     targetId: string,
-    maxDepth: number = 5
+    maxDepth: number = 5,
   ): Promise<string[] | null> {
     if (startId === targetId) {
-      return [startId];
+      return [startId]
     }
 
-    const visited: Set<string> = new Set();
-    const queue: Array<{ id: string; path: string[]; depth: number }> = [];
+    const visited: Set<string> = new Set()
+    const queue: Array<{ id: string; path: string[]; depth: number }> = []
 
-    visited.add(startId);
-    queue.push({ id: startId, path: [startId], depth: 0 });
+    visited.add(startId)
+    queue.push({ id: startId, path: [startId], depth: 0 })
 
     while (queue.length > 0) {
-      const current = queue.shift()!;
+      const current = queue.shift()!
 
       if (current.depth >= maxDepth) {
-        continue;
+        continue
       }
 
       // Get adjacent nodes
-      const adjacent = await this.getAdjacentNodes(current.id, 'both');
+      const adjacent = await this.getAdjacentNodes(current.id, 'both')
 
       for (const rel of adjacent) {
-        const nextId = rel.target_id;
+        const nextId = rel.target_id
 
         // Found target!
         if (nextId === targetId) {
-          return [...current.path, nextId];
+          return [...current.path, nextId]
         }
 
         // Continue search
         if (!visited.has(nextId)) {
-          visited.add(nextId);
+          visited.add(nextId)
           queue.push({
             id: nextId,
             path: [...current.path, nextId],
             depth: current.depth + 1,
-          });
+          })
         }
       }
     }
 
-    return null; // No path found
+    return null // No path found
   }
 
   /**
@@ -413,33 +409,35 @@ export class GraphService {
     dossierId: string,
     direction: 'outgoing' | 'incoming' | 'both' = 'both',
     relationshipTypes?: string[],
-    includeInactive: boolean = false
+    includeInactive: boolean = false,
   ) {
     let query = this.supabase
       .from('dossier_relationships')
-      .select('source_dossier_id, target_dossier_id, relationship_type, relationship_metadata, status');
+      .select(
+        'source_dossier_id, target_dossier_id, relationship_type, relationship_metadata, status',
+      )
 
     // Direction filtering
     if (direction === 'outgoing') {
-      query = query.eq('source_dossier_id', dossierId);
+      query = query.eq('source_dossier_id', dossierId)
     } else if (direction === 'incoming') {
-      query = query.eq('target_dossier_id', dossierId);
+      query = query.eq('target_dossier_id', dossierId)
     } else {
       // Both directions
-      query = query.or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`);
+      query = query.or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`)
     }
 
     // Relationship type filtering
     if (relationshipTypes && relationshipTypes.length > 0) {
-      query = query.in('relationship_type', relationshipTypes);
+      query = query.in('relationship_type', relationshipTypes)
     }
 
     // Status filtering
-    query = query.eq('status', 'active');
+    query = query.eq('status', 'active')
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
-    if (error) throw error;
+    if (error) throw error
 
     // Normalize results: always return source_id, target_id
     return (data || []).map((rel) => {
@@ -450,7 +448,7 @@ export class GraphService {
           target_id: rel.source_dossier_id,
           relationship_type: rel.relationship_type,
           relationship_metadata: rel.relationship_metadata as Record<string, unknown> | undefined,
-        };
+        }
       }
 
       return {
@@ -458,8 +456,8 @@ export class GraphService {
         target_id: rel.target_dossier_id,
         relationship_type: rel.relationship_type,
         relationship_metadata: rel.relationship_metadata as Record<string, unknown> | undefined,
-      };
-    });
+      }
+    })
   }
 
   /**
@@ -467,14 +465,16 @@ export class GraphService {
    * @param dossierId - UUID of the dossier
    * @returns Node data or null if not found
    */
-  private async getDossierNode(dossierId: string): Promise<Omit<GraphNode, 'depth' | 'path'> | null> {
+  private async getDossierNode(
+    dossierId: string,
+  ): Promise<Omit<GraphNode, 'depth' | 'path'> | null> {
     const { data, error } = await this.supabase
       .from('dossiers')
       .select('id, type, name_en, name_ar, status, sensitivity_level')
       .eq('id', dossierId)
-      .single();
+      .single()
 
-    if (error) return null;
+    if (error) return null
 
     return {
       id: data.id,
@@ -483,7 +483,7 @@ export class GraphService {
       name_ar: data.name_ar,
       status: data.status,
       sensitivity_level: data.sensitivity_level,
-    };
+    }
   }
 
   /**
@@ -493,24 +493,24 @@ export class GraphService {
    * @returns Network statistics
    */
   async getNetworkStats(dossierId: string, maxDepth: number = 2) {
-    const graph = await this.traverseGraph(dossierId, { max_depth: maxDepth });
+    const graph = await this.traverseGraph(dossierId, { max_depth: maxDepth })
 
     // Calculate degree centrality (number of direct connections)
-    const startNode = graph.nodes.find((n) => n.id === dossierId);
-    const directConnections = graph.nodes.filter((n) => n.depth === 1).length;
+    const startNode = graph.nodes.find((n) => n.id === dossierId)
+    const directConnections = graph.nodes.filter((n) => n.depth === 1).length
 
     // Calculate relationship type distribution
-    const relationshipTypeCounts: Record<string, number> = {};
+    const relationshipTypeCounts: Record<string, number> = {}
     graph.edges.forEach((edge) => {
       relationshipTypeCounts[edge.relationship_type] =
-        (relationshipTypeCounts[edge.relationship_type] || 0) + 1;
-    });
+        (relationshipTypeCounts[edge.relationship_type] || 0) + 1
+    })
 
     // Calculate node type distribution
-    const nodeTypeCounts: Record<string, number> = {};
+    const nodeTypeCounts: Record<string, number> = {}
     graph.nodes.forEach((node) => {
-      nodeTypeCounts[node.type] = (nodeTypeCounts[node.type] || 0) + 1;
-    });
+      nodeTypeCounts[node.type] = (nodeTypeCounts[node.type] || 0) + 1
+    })
 
     return {
       degree_centrality: directConnections,
@@ -519,7 +519,7 @@ export class GraphService {
       relationship_types: relationshipTypeCounts,
       node_types: nodeTypeCounts,
       max_depth_explored: graph.stats.max_depth_reached,
-    };
+    }
   }
 
   /**
@@ -528,36 +528,36 @@ export class GraphService {
    * @returns Array of cycles found (each cycle is an array of dossier IDs)
    */
   async detectCycles(startDossierId: string): Promise<string[][]> {
-    const cycles: string[][] = [];
-    const visited: Set<string> = new Set();
-    const recursionStack: Set<string> = new Set();
+    const cycles: string[][] = []
+    const visited: Set<string> = new Set()
+    const recursionStack: Set<string> = new Set()
 
     const dfs = async (currentId: string, path: string[]): Promise<void> => {
-      visited.add(currentId);
-      recursionStack.add(currentId);
-      path.push(currentId);
+      visited.add(currentId)
+      recursionStack.add(currentId)
+      path.push(currentId)
 
-      const adjacent = await this.getAdjacentNodes(currentId, 'outgoing');
+      const adjacent = await this.getAdjacentNodes(currentId, 'outgoing')
 
       for (const rel of adjacent) {
-        const nextId = rel.target_id;
+        const nextId = rel.target_id
 
         if (!visited.has(nextId)) {
-          await dfs(nextId, [...path]);
+          await dfs(nextId, [...path])
         } else if (recursionStack.has(nextId)) {
           // Cycle detected!
-          const cycleStart = path.indexOf(nextId);
-          const cycle = path.slice(cycleStart);
-          cycles.push([...cycle, nextId]);
+          const cycleStart = path.indexOf(nextId)
+          const cycle = path.slice(cycleStart)
+          cycles.push([...cycle, nextId])
         }
       }
 
-      recursionStack.delete(currentId);
-    };
+      recursionStack.delete(currentId)
+    }
 
-    await dfs(startDossierId, []);
+    await dfs(startDossierId, [])
 
-    return cycles;
+    return cycles
   }
 
   /**
@@ -572,25 +572,23 @@ export class GraphService {
     const [neighbors1, neighbors2] = await Promise.all([
       this.getAdjacentNodes(dossier1Id, 'both'),
       this.getAdjacentNodes(dossier2Id, 'both'),
-    ]);
+    ])
 
-    const set1 = new Set(neighbors1.map((n) => n.target_id));
-    const set2 = new Set(neighbors2.map((n) => n.target_id));
+    const set1 = new Set(neighbors1.map((n) => n.target_id))
+    const set2 = new Set(neighbors2.map((n) => n.target_id))
 
     // Find intersection
-    const common: string[] = [];
+    const common: string[] = []
     set1.forEach((id) => {
       if (set2.has(id)) {
-        common.push(id);
+        common.push(id)
       }
-    });
+    })
 
     // Get full node data for common connections
-    const commonNodes = await Promise.all(
-      common.map((id) => this.getDossierNode(id))
-    );
+    const commonNodes = await Promise.all(common.map((id) => this.getDossierNode(id)))
 
-    return commonNodes.filter((n): n is NonNullable<typeof n> => n !== null);
+    return commonNodes.filter((n): n is NonNullable<typeof n> => n !== null)
   }
 
   /**
@@ -602,20 +600,20 @@ export class GraphService {
    */
   async validateComplexity(
     startDossierId: string,
-    maxDepth: number
+    maxDepth: number,
   ): Promise<{ estimated_nodes: number; within_budget: boolean }> {
     // Sample relationship count at start node
-    const sample = await this.getAdjacentNodes(startDossierId, 'both');
-    const avgDegree = sample.length;
+    const sample = await this.getAdjacentNodes(startDossierId, 'both')
+    const avgDegree = sample.length
 
     // Estimate: nodes = avgDegree^depth (exponential growth)
-    const estimatedNodes = Math.pow(avgDegree, maxDepth);
+    const estimatedNodes = Math.pow(avgDegree, maxDepth)
 
     return {
       estimated_nodes: estimatedNodes,
       within_budget: estimatedNodes <= this.COMPLEXITY_BUDGET,
-    };
+    }
   }
 }
 
-export default GraphService;
+export default GraphService

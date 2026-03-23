@@ -44,7 +44,7 @@ export async function enqueueWorkItem(params: {
     throw new Error(`Failed to enqueue work item: ${error.message}`)
   }
 
-  console.log(`✓ Work item ${params.workItemId} queued (priority: ${params.priority})`)
+  console.warn(`✓ Work item ${params.workItemId} queued (priority: ${params.priority})`)
   return data
 }
 
@@ -58,7 +58,7 @@ export async function dequeueWorkItem(queueId: string): Promise<void> {
     throw new Error(`Failed to dequeue work item: ${error.message}`)
   }
 
-  console.log(`✓ Queue entry ${queueId} removed`)
+  console.warn(`✓ Queue entry ${queueId} removed`)
 }
 
 /**
@@ -87,11 +87,11 @@ export async function processQueue(unitId: string, freedSkills: string[]): Promi
   }
 
   if (!queuedItems || queuedItems.length === 0) {
-    console.log('✓ Queue empty, nothing to process')
+    console.warn('✓ Queue empty, nothing to process')
     return []
   }
 
-  console.log(`Processing ${queuedItems.length} queued items for unit ${unitId}`)
+  console.warn(`Processing ${queuedItems.length} queued items for unit ${unitId}`)
 
   const assignedItems: QueueEntry[] = []
 
@@ -100,7 +100,7 @@ export async function processQueue(unitId: string, freedSkills: string[]): Promi
     try {
       // Attempt assignment will be implemented in auto-assignment.service.ts (T040)
       // For now, just log
-      console.log(`  - Processing queue item ${item.id} (${item.work_item_type})`)
+      console.warn(`  - Processing queue item ${item.id} (${item.work_item_type})`)
 
       // Increment attempt count
       await supabase

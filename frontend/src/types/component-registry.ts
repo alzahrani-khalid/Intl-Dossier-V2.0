@@ -2,7 +2,7 @@
  * Component registry entry describing a UI component source and metadata.
  * Mirrors the schema in specs/007-responsive-design-compliance/contracts/api-spec.yaml.
  */
-export type ComponentSource = 'shadcn' | 'custom';
+export type ComponentSource = 'shadcn' | 'custom'
 
 export type ComponentCategory =
   | 'layout'
@@ -10,16 +10,15 @@ export type ComponentCategory =
   | 'display'
   | 'feedback'
   | 'navigation'
-  | 'overlay';
+  | 'overlay'
 
 export interface ComponentRegistry {
-  name: string;
-  version: string;
-  source: ComponentSource;
-  category: ComponentCategory;
+  name: string
+  version: string
+  source: ComponentSource
+  category: ComponentCategory
   /** Import path within the codebase (e.g., components/ui/button) */
-  path: string;
-  dependencies?: string[];
-  documentation?: string;
+  path: string
+  dependencies?: string[]
+  documentation?: string
 }
-

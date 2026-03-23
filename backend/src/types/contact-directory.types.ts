@@ -1,16 +1,10 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: '13.0.5'
   }
   public: {
     Tables: {
@@ -50,11 +44,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "aa_attachments_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'aa_attachments_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -112,18 +106,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "aa_commitments_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'aa_commitments_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "aa_commitments_owner_contact_id_fkey"
-            columns: ["owner_contact_id"]
+            foreignKeyName: 'aa_commitments_owner_contact_id_fkey'
+            columns: ['owner_contact_id']
             isOneToOne: false
-            referencedRelation: "external_contacts"
-            referencedColumns: ["id"]
+            referencedRelation: 'external_contacts'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -160,11 +154,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "aa_follow_up_actions_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'aa_follow_up_actions_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -240,11 +234,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "aa_risks_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'aa_risks_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -267,7 +261,7 @@ export type Database = {
           participants: Json | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["activity_type"]
+          type: Database['public']['Enums']['activity_type']
           updated_at: string
           version: number
         }
@@ -289,7 +283,7 @@ export type Database = {
           participants?: Json | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["activity_type"]
+          type: Database['public']['Enums']['activity_type']
           updated_at?: string
           version?: number
         }
@@ -311,7 +305,7 @@ export type Database = {
           participants?: Json | null
           tenant_id?: string
           title?: string
-          type?: Database["public"]["Enums"]["activity_type"]
+          type?: Database['public']['Enums']['activity_type']
           updated_at?: string
           version?: number
         }
@@ -350,18 +344,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "activity_participants_activity_id_fkey"
-            columns: ["activity_id"]
+            foreignKeyName: 'activity_participants_activity_id_fkey'
+            columns: ['activity_id']
             isOneToOne: false
-            referencedRelation: "activities"
-            referencedColumns: ["id"]
+            referencedRelation: 'activities'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "activity_participants_contact_id_fkey"
-            columns: ["contact_id"]
+            foreignKeyName: 'activity_participants_contact_id_fkey'
+            columns: ['contact_id']
             isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
+            referencedRelation: 'contacts'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -464,11 +458,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "after_action_versions_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'after_action_versions_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -519,7 +513,7 @@ export type Database = {
           model: string
           model_version: string
           owner_id: string
-          owner_type: Database["public"]["Enums"]["embedding_owner_type"]
+          owner_type: Database['public']['Enums']['embedding_owner_type']
         }
         Insert: {
           content_hash: string
@@ -531,7 +525,7 @@ export type Database = {
           model: string
           model_version: string
           owner_id: string
-          owner_type: Database["public"]["Enums"]["embedding_owner_type"]
+          owner_type: Database['public']['Enums']['embedding_owner_type']
         }
         Update: {
           content_hash?: string
@@ -543,7 +537,7 @@ export type Database = {
           model?: string
           model_version?: string
           owner_id?: string
-          owner_type?: Database["public"]["Enums"]["embedding_owner_type"]
+          owner_type?: Database['public']['Enums']['embedding_owner_type']
         }
         Relationships: []
       }
@@ -589,18 +583,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "ai_link_suggestions_intake_id_fkey"
-            columns: ["intake_id"]
+            foreignKeyName: 'ai_link_suggestions_intake_id_fkey'
+            columns: ['intake_id']
             isOneToOne: false
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "ai_link_suggestions_reviewed_by_fkey"
-            columns: ["reviewed_by"]
+            foreignKeyName: 'ai_link_suggestions_reviewed_by_fkey'
+            columns: ['reviewed_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -673,11 +667,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "analysis_metadata_embedding_id_fkey"
-            columns: ["embedding_id"]
+            foreignKeyName: 'analysis_metadata_embedding_id_fkey'
+            columns: ['embedding_id']
             isOneToOne: false
-            referencedRelation: "ai_embeddings"
-            referencedColumns: ["id"]
+            referencedRelation: 'ai_embeddings'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -765,11 +759,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "assignment_checklist_items_assignment_id_fkey"
-            columns: ["assignment_id"]
+            foreignKeyName: 'assignment_checklist_items_assignment_id_fkey'
+            columns: ['assignment_id']
             isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -836,11 +830,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "assignment_comments_assignment_id_fkey"
-            columns: ["assignment_id"]
+            foreignKeyName: 'assignment_comments_assignment_id_fkey'
+            columns: ['assignment_id']
             isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -850,7 +844,7 @@ export type Database = {
           assignment_id: string
           created_at: string
           event_data: Json
-          event_type: Database["public"]["Enums"]["assignment_event_type"]
+          event_type: Database['public']['Enums']['assignment_event_type']
           id: string
         }
         Insert: {
@@ -858,7 +852,7 @@ export type Database = {
           assignment_id: string
           created_at?: string
           event_data?: Json
-          event_type: Database["public"]["Enums"]["assignment_event_type"]
+          event_type: Database['public']['Enums']['assignment_event_type']
           id?: string
         }
         Update: {
@@ -866,16 +860,16 @@ export type Database = {
           assignment_id?: string
           created_at?: string
           event_data?: Json
-          event_type?: Database["public"]["Enums"]["assignment_event_type"]
+          event_type?: Database['public']['Enums']['assignment_event_type']
           id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "assignment_events_assignment_id_fkey"
-            columns: ["assignment_id"]
+            foreignKeyName: 'assignment_events_assignment_id_fkey'
+            columns: ['assignment_id']
             isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -903,11 +897,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "assignment_observers_assignment_id_fkey"
-            columns: ["assignment_id"]
+            foreignKeyName: 'assignment_observers_assignment_id_fkey'
+            columns: ['assignment_id']
             isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -918,11 +912,11 @@ export type Database = {
           id: string
           last_attempt_at: string | null
           notes: string | null
-          priority: Database["public"]["Enums"]["priority_level"]
+          priority: Database['public']['Enums']['priority_level']
           required_skills: string[]
           target_unit_id: string | null
           work_item_id: string
-          work_item_type: Database["public"]["Enums"]["work_item_type"]
+          work_item_type: Database['public']['Enums']['work_item_type']
         }
         Insert: {
           attempts?: number
@@ -930,11 +924,11 @@ export type Database = {
           id?: string
           last_attempt_at?: string | null
           notes?: string | null
-          priority: Database["public"]["Enums"]["priority_level"]
+          priority: Database['public']['Enums']['priority_level']
           required_skills: string[]
           target_unit_id?: string | null
           work_item_id: string
-          work_item_type: Database["public"]["Enums"]["work_item_type"]
+          work_item_type: Database['public']['Enums']['work_item_type']
         }
         Update: {
           attempts?: number
@@ -942,19 +936,19 @@ export type Database = {
           id?: string
           last_attempt_at?: string | null
           notes?: string | null
-          priority?: Database["public"]["Enums"]["priority_level"]
+          priority?: Database['public']['Enums']['priority_level']
           required_skills?: string[]
           target_unit_id?: string | null
           work_item_id?: string
-          work_item_type?: Database["public"]["Enums"]["work_item_type"]
+          work_item_type?: Database['public']['Enums']['work_item_type']
         }
         Relationships: [
           {
-            foreignKeyName: "assignment_queue_target_unit_id_fkey"
-            columns: ["target_unit_id"]
+            foreignKeyName: 'assignment_queue_target_unit_id_fkey'
+            columns: ['target_unit_id']
             isOneToOne: false
-            referencedRelation: "organizational_units"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizational_units'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -997,59 +991,59 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "assignment_rules_unit_id_fkey"
-            columns: ["unit_id"]
+            foreignKeyName: 'assignment_rules_unit_id_fkey'
+            columns: ['unit_id']
             isOneToOne: false
-            referencedRelation: "organizational_units"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizational_units'
+            referencedColumns: ['id']
           },
         ]
       }
       assignment_stage_history: {
         Row: {
           assignment_id: string
-          from_stage: Database["public"]["Enums"]["engagement_workflow_stage"]
+          from_stage: Database['public']['Enums']['engagement_workflow_stage']
           id: string
           stage_duration_seconds: number | null
           stage_sla_met: boolean | null
-          to_stage: Database["public"]["Enums"]["engagement_workflow_stage"]
+          to_stage: Database['public']['Enums']['engagement_workflow_stage']
           transitioned_at: string
           transitioned_by: string
         }
         Insert: {
           assignment_id: string
-          from_stage: Database["public"]["Enums"]["engagement_workflow_stage"]
+          from_stage: Database['public']['Enums']['engagement_workflow_stage']
           id?: string
           stage_duration_seconds?: number | null
           stage_sla_met?: boolean | null
-          to_stage: Database["public"]["Enums"]["engagement_workflow_stage"]
+          to_stage: Database['public']['Enums']['engagement_workflow_stage']
           transitioned_at?: string
           transitioned_by: string
         }
         Update: {
           assignment_id?: string
-          from_stage?: Database["public"]["Enums"]["engagement_workflow_stage"]
+          from_stage?: Database['public']['Enums']['engagement_workflow_stage']
           id?: string
           stage_duration_seconds?: number | null
           stage_sla_met?: boolean | null
-          to_stage?: Database["public"]["Enums"]["engagement_workflow_stage"]
+          to_stage?: Database['public']['Enums']['engagement_workflow_stage']
           transitioned_at?: string
           transitioned_by?: string
         }
         Relationships: [
           {
-            foreignKeyName: "assignment_stage_history_assignment_id_fkey"
-            columns: ["assignment_id"]
+            foreignKeyName: 'assignment_stage_history_assignment_id_fkey'
+            columns: ['assignment_id']
             isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignments'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "assignment_stage_history_transitioned_by_fkey"
-            columns: ["transitioned_by"]
+            foreignKeyName: 'assignment_stage_history_transitioned_by_fkey'
+            columns: ['transitioned_by']
             isOneToOne: false
-            referencedRelation: "staff_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'staff_profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1068,14 +1062,14 @@ export type Database = {
           id: string
           last_reminder_sent_at: string | null
           overall_sla_deadline: string | null
-          priority: Database["public"]["Enums"]["priority_level"]
+          priority: Database['public']['Enums']['priority_level']
           sla_deadline: string
-          status: Database["public"]["Enums"]["assignment_status"]
+          status: Database['public']['Enums']['assignment_status']
           updated_at: string
           warning_sent_at: string | null
           work_item_id: string
-          work_item_type: Database["public"]["Enums"]["work_item_type"]
-          workflow_stage: Database["public"]["Enums"]["engagement_workflow_stage"]
+          work_item_type: Database['public']['Enums']['work_item_type']
+          workflow_stage: Database['public']['Enums']['engagement_workflow_stage']
         }
         Insert: {
           _version?: number
@@ -1091,14 +1085,14 @@ export type Database = {
           id?: string
           last_reminder_sent_at?: string | null
           overall_sla_deadline?: string | null
-          priority: Database["public"]["Enums"]["priority_level"]
+          priority: Database['public']['Enums']['priority_level']
           sla_deadline: string
-          status?: Database["public"]["Enums"]["assignment_status"]
+          status?: Database['public']['Enums']['assignment_status']
           updated_at?: string
           warning_sent_at?: string | null
           work_item_id: string
-          work_item_type: Database["public"]["Enums"]["work_item_type"]
-          workflow_stage?: Database["public"]["Enums"]["engagement_workflow_stage"]
+          work_item_type: Database['public']['Enums']['work_item_type']
+          workflow_stage?: Database['public']['Enums']['engagement_workflow_stage']
         }
         Update: {
           _version?: number
@@ -1114,14 +1108,14 @@ export type Database = {
           id?: string
           last_reminder_sent_at?: string | null
           overall_sla_deadline?: string | null
-          priority?: Database["public"]["Enums"]["priority_level"]
+          priority?: Database['public']['Enums']['priority_level']
           sla_deadline?: string
-          status?: Database["public"]["Enums"]["assignment_status"]
+          status?: Database['public']['Enums']['assignment_status']
           updated_at?: string
           warning_sent_at?: string | null
           work_item_id?: string
-          work_item_type?: Database["public"]["Enums"]["work_item_type"]
-          workflow_stage?: Database["public"]["Enums"]["engagement_workflow_stage"]
+          work_item_type?: Database['public']['Enums']['work_item_type']
+          workflow_stage?: Database['public']['Enums']['engagement_workflow_stage']
         }
         Relationships: []
       }
@@ -1134,7 +1128,7 @@ export type Database = {
           file_size: number
           id: string
           mime_type: string
-          scan_status: Database["public"]["Enums"]["scan_status"]
+          scan_status: Database['public']['Enums']['scan_status']
           search_vector: unknown
           uploaded_at: string | null
           uploaded_by: string
@@ -1147,7 +1141,7 @@ export type Database = {
           file_size: number
           id?: string
           mime_type: string
-          scan_status?: Database["public"]["Enums"]["scan_status"]
+          scan_status?: Database['public']['Enums']['scan_status']
           search_vector?: unknown
           uploaded_at?: string | null
           uploaded_by: string
@@ -1160,18 +1154,18 @@ export type Database = {
           file_size?: number
           id?: string
           mime_type?: string
-          scan_status?: Database["public"]["Enums"]["scan_status"]
+          scan_status?: Database['public']['Enums']['scan_status']
           search_vector?: unknown
           uploaded_at?: string | null
           uploaded_by?: string
         }
         Relationships: [
           {
-            foreignKeyName: "attachments_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'attachments_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1182,8 +1176,8 @@ export type Database = {
           entity_id: string
           event_id: string
           id: string
-          role: Database["public"]["Enums"]["attendee_role"]
-          type: Database["public"]["Enums"]["attendee_type"]
+          role: Database['public']['Enums']['attendee_role']
+          type: Database['public']['Enums']['attendee_type']
         }
         Insert: {
           confirmed?: boolean
@@ -1191,8 +1185,8 @@ export type Database = {
           entity_id: string
           event_id: string
           id?: string
-          role?: Database["public"]["Enums"]["attendee_role"]
-          type: Database["public"]["Enums"]["attendee_type"]
+          role?: Database['public']['Enums']['attendee_role']
+          type: Database['public']['Enums']['attendee_type']
         }
         Update: {
           confirmed?: boolean
@@ -1200,16 +1194,16 @@ export type Database = {
           entity_id?: string
           event_id?: string
           id?: string
-          role?: Database["public"]["Enums"]["attendee_role"]
-          type?: Database["public"]["Enums"]["attendee_type"]
+          role?: Database['public']['Enums']['attendee_role']
+          type?: Database['public']['Enums']['attendee_type']
         }
         Relationships: [
           {
-            foreignKeyName: "attendees_event_id_fkey"
-            columns: ["event_id"]
+            foreignKeyName: 'attendees_event_id_fkey'
+            columns: ['event_id']
             isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
+            referencedRelation: 'events'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1430,7 +1424,7 @@ export type Database = {
           parameters: Json
           purpose: string
           search_vector: unknown
-          status: Database["public"]["Enums"]["brief_status"]
+          status: Database['public']['Enums']['brief_status']
           summary: string | null
           target_entity: Json
           tenant_id: string
@@ -1458,7 +1452,7 @@ export type Database = {
           parameters?: Json
           purpose: string
           search_vector?: unknown
-          status?: Database["public"]["Enums"]["brief_status"]
+          status?: Database['public']['Enums']['brief_status']
           summary?: string | null
           target_entity?: Json
           tenant_id: string
@@ -1486,7 +1480,7 @@ export type Database = {
           parameters?: Json
           purpose?: string
           search_vector?: unknown
-          status?: Database["public"]["Enums"]["brief_status"]
+          status?: Database['public']['Enums']['brief_status']
           summary?: string | null
           target_entity?: Json
           tenant_id?: string
@@ -1498,18 +1492,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "fk_briefs_intelligence_report"
-            columns: ["intelligence_report_id"]
+            foreignKeyName: 'fk_briefs_intelligence_report'
+            columns: ['intelligence_report_id']
             isOneToOne: false
-            referencedRelation: "intelligence_cache_status"
-            referencedColumns: ["id"]
+            referencedRelation: 'intelligence_cache_status'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "fk_briefs_intelligence_report"
-            columns: ["intelligence_report_id"]
+            foreignKeyName: 'fk_briefs_intelligence_report'
+            columns: ['intelligence_report_id']
             isOneToOne: false
-            referencedRelation: "intelligence_reports"
-            referencedColumns: ["id"]
+            referencedRelation: 'intelligence_reports'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1663,11 +1657,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "calendar_events_dossier_id_fkey"
-            columns: ["dossier_id"]
+            foreignKeyName: 'calendar_events_dossier_id_fkey'
+            columns: ['dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1704,11 +1698,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "capacity_snapshots_unit_id_fkey"
-            columns: ["unit_id"]
+            foreignKeyName: 'capacity_snapshots_unit_id_fkey'
+            columns: ['unit_id']
             isOneToOne: false
-            referencedRelation: "organizational_units"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizational_units'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1736,11 +1730,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "comment_mentions_comment_id_fkey"
-            columns: ["comment_id"]
+            foreignKeyName: 'comment_mentions_comment_id_fkey'
+            columns: ['comment_id']
             isOneToOne: false
-            referencedRelation: "assignment_comments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignment_comments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1768,11 +1762,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "comment_reactions_comment_id_fkey"
-            columns: ["comment_id"]
+            foreignKeyName: 'comment_reactions_comment_id_fkey'
+            columns: ['comment_id']
             isOneToOne: false
-            referencedRelation: "assignment_comments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignment_comments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1786,15 +1780,15 @@ export type Database = {
           id: string
           is_deleted: boolean
           last_modified_by: string
-          priority: Database["public"]["Enums"]["priority_level"]
+          priority: Database['public']['Enums']['priority_level']
           responsible: Json
           source: Json
-          status: Database["public"]["Enums"]["commitment_status"]
+          status: Database['public']['Enums']['commitment_status']
           tenant_id: string
           timeline: Json
           title: string
           tracking: Json | null
-          type: Database["public"]["Enums"]["commitment_type"]
+          type: Database['public']['Enums']['commitment_type']
           updated_at: string
           version: number
         }
@@ -1807,15 +1801,15 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           last_modified_by: string
-          priority?: Database["public"]["Enums"]["priority_level"]
+          priority?: Database['public']['Enums']['priority_level']
           responsible?: Json
           source?: Json
-          status?: Database["public"]["Enums"]["commitment_status"]
+          status?: Database['public']['Enums']['commitment_status']
           tenant_id: string
           timeline?: Json
           title: string
           tracking?: Json | null
-          type: Database["public"]["Enums"]["commitment_type"]
+          type: Database['public']['Enums']['commitment_type']
           updated_at?: string
           version?: number
         }
@@ -1828,15 +1822,15 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           last_modified_by?: string
-          priority?: Database["public"]["Enums"]["priority_level"]
+          priority?: Database['public']['Enums']['priority_level']
           responsible?: Json
           source?: Json
-          status?: Database["public"]["Enums"]["commitment_status"]
+          status?: Database['public']['Enums']['commitment_status']
           tenant_id?: string
           timeline?: Json
           title?: string
           tracking?: Json | null
-          type?: Database["public"]["Enums"]["commitment_type"]
+          type?: Database['public']['Enums']['commitment_type']
           updated_at?: string
           version?: number
         }
@@ -1992,11 +1986,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "countries_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'countries_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2041,7 +2035,7 @@ export type Database = {
       }
       data_library_items: {
         Row: {
-          access_level: Database["public"]["Enums"]["access_level"]
+          access_level: Database['public']['Enums']['access_level']
           country_id: string | null
           created_at: string | null
           deleted_at: string | null
@@ -2060,7 +2054,7 @@ export type Database = {
           version: number | null
         }
         Insert: {
-          access_level?: Database["public"]["Enums"]["access_level"]
+          access_level?: Database['public']['Enums']['access_level']
           country_id?: string | null
           created_at?: string | null
           deleted_at?: string | null
@@ -2079,7 +2073,7 @@ export type Database = {
           version?: number | null
         }
         Update: {
-          access_level?: Database["public"]["Enums"]["access_level"]
+          access_level?: Database['public']['Enums']['access_level']
           country_id?: string | null
           created_at?: string | null
           deleted_at?: string | null
@@ -2099,18 +2093,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "data_library_items_deleted_by_fkey"
-            columns: ["deleted_by"]
+            foreignKeyName: 'data_library_items_deleted_by_fkey'
+            columns: ['deleted_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "data_library_items_uploaded_by_fkey"
-            columns: ["uploaded_by"]
+            foreignKeyName: 'data_library_items_uploaded_by_fkey'
+            columns: ['uploaded_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2147,11 +2141,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "decisions_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'decisions_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2164,7 +2158,7 @@ export type Database = {
           id: string
           metadata: Json | null
           source_id: string
-          source_type: Database["public"]["Enums"]["entity_type"]
+          source_type: Database['public']['Enums']['entity_type']
           updated_at: string | null
         }
         Insert: {
@@ -2175,7 +2169,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           source_id: string
-          source_type: Database["public"]["Enums"]["entity_type"]
+          source_type: Database['public']['Enums']['entity_type']
           updated_at?: string | null
         }
         Update: {
@@ -2186,7 +2180,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           source_id?: string
-          source_type?: Database["public"]["Enums"]["entity_type"]
+          source_type?: Database['public']['Enums']['entity_type']
           updated_at?: string | null
         }
         Relationships: []
@@ -2218,71 +2212,71 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "document_relations_document_id_fkey"
-            columns: ["document_id"]
+            foreignKeyName: 'document_relations_document_id_fkey'
+            columns: ['document_id']
             isOneToOne: false
-            referencedRelation: "documents"
-            referencedColumns: ["id"]
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
           },
         ]
       }
       documents: {
         Row: {
           access_control: Json
-          classification: Database["public"]["Enums"]["classification_level"]
+          classification: Database['public']['Enums']['classification_level']
           created_at: string
           created_by: string
           deleted_at: string | null
           file_info: Json
           id: string
           is_deleted: boolean
-          language: Database["public"]["Enums"]["document_language"]
+          language: Database['public']['Enums']['document_language']
           last_modified_by: string
           related_entities: Json | null
           retention: Json | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["document_type"]
+          type: Database['public']['Enums']['document_type']
           updated_at: string
           version: Json
           version_number: number
         }
         Insert: {
           access_control?: Json
-          classification?: Database["public"]["Enums"]["classification_level"]
+          classification?: Database['public']['Enums']['classification_level']
           created_at?: string
           created_by: string
           deleted_at?: string | null
           file_info?: Json
           id?: string
           is_deleted?: boolean
-          language?: Database["public"]["Enums"]["document_language"]
+          language?: Database['public']['Enums']['document_language']
           last_modified_by: string
           related_entities?: Json | null
           retention?: Json | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["document_type"]
+          type: Database['public']['Enums']['document_type']
           updated_at?: string
           version?: Json
           version_number?: number
         }
         Update: {
           access_control?: Json
-          classification?: Database["public"]["Enums"]["classification_level"]
+          classification?: Database['public']['Enums']['classification_level']
           created_at?: string
           created_by?: string
           deleted_at?: string | null
           file_info?: Json
           id?: string
           is_deleted?: boolean
-          language?: Database["public"]["Enums"]["document_language"]
+          language?: Database['public']['Enums']['document_language']
           last_modified_by?: string
           related_entities?: Json | null
           retention?: Json | null
           tenant_id?: string
           title?: string
-          type?: Database["public"]["Enums"]["document_type"]
+          type?: Database['public']['Enums']['document_type']
           updated_at?: string
           version?: Json
           version_number?: number
@@ -2328,11 +2322,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "dossier_interactions_dossier_id_fkey"
-            columns: ["dossier_id"]
+            foreignKeyName: 'dossier_interactions_dossier_id_fkey'
+            columns: ['dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2402,18 +2396,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
-            columns: ["source_dossier_id"]
+            foreignKeyName: 'dossier_relationships_source_dossier_id_fkey'
+            columns: ['source_dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
-            columns: ["target_dossier_id"]
+            foreignKeyName: 'dossier_relationships_target_dossier_id_fkey'
+            columns: ['target_dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2444,11 +2438,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "dossier_tags_dossier_id_fkey"
-            columns: ["dossier_id"]
+            foreignKeyName: 'dossier_tags_dossier_id_fkey'
+            columns: ['dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2521,7 +2515,7 @@ export type Database = {
           resolved_at: string | null
           resolved_by: string | null
           source_ticket_id: string
-          status: Database["public"]["Enums"]["duplicate_status"]
+          status: Database['public']['Enums']['duplicate_status']
           target_ticket_id: string
           title_similarity: number | null
         }
@@ -2536,7 +2530,7 @@ export type Database = {
           resolved_at?: string | null
           resolved_by?: string | null
           source_ticket_id: string
-          status?: Database["public"]["Enums"]["duplicate_status"]
+          status?: Database['public']['Enums']['duplicate_status']
           target_ticket_id: string
           title_similarity?: number | null
         }
@@ -2551,24 +2545,24 @@ export type Database = {
           resolved_at?: string | null
           resolved_by?: string | null
           source_ticket_id?: string
-          status?: Database["public"]["Enums"]["duplicate_status"]
+          status?: Database['public']['Enums']['duplicate_status']
           target_ticket_id?: string
           title_similarity?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "duplicate_candidates_source_ticket_id_fkey"
-            columns: ["source_ticket_id"]
+            foreignKeyName: 'duplicate_candidates_source_ticket_id_fkey'
+            columns: ['source_ticket_id']
             isOneToOne: false
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "duplicate_candidates_target_ticket_id_fkey"
-            columns: ["target_ticket_id"]
+            foreignKeyName: 'duplicate_candidates_target_ticket_id_fkey'
+            columns: ['target_ticket_id']
             isOneToOne: false
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2668,11 +2662,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "engagements_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'engagements_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2716,7 +2710,7 @@ export type Database = {
           escalated_to_id: string
           id: string
           notes: string | null
-          reason: Database["public"]["Enums"]["escalation_reason"]
+          reason: Database['public']['Enums']['escalation_reason']
           resolved_at: string | null
         }
         Insert: {
@@ -2728,7 +2722,7 @@ export type Database = {
           escalated_to_id: string
           id?: string
           notes?: string | null
-          reason: Database["public"]["Enums"]["escalation_reason"]
+          reason: Database['public']['Enums']['escalation_reason']
           resolved_at?: string | null
         }
         Update: {
@@ -2740,16 +2734,16 @@ export type Database = {
           escalated_to_id?: string
           id?: string
           notes?: string | null
-          reason?: Database["public"]["Enums"]["escalation_reason"]
+          reason?: Database['public']['Enums']['escalation_reason']
           resolved_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "escalation_events_assignment_id_fkey"
-            columns: ["assignment_id"]
+            foreignKeyName: 'escalation_events_assignment_id_fkey'
+            columns: ['assignment_id']
             isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2792,11 +2786,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "escalation_records_assignment_id_fkey"
-            columns: ["assignment_id"]
+            foreignKeyName: 'escalation_records_assignment_id_fkey'
+            columns: ['assignment_id']
             isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2836,18 +2830,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "event_attendees_added_by_fkey"
-            columns: ["added_by"]
+            foreignKeyName: 'event_attendees_added_by_fkey'
+            columns: ['added_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "event_attendees_event_id_fkey"
-            columns: ["event_id"]
+            foreignKeyName: 'event_attendees_event_id_fkey'
+            columns: ['event_id']
             isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
+            referencedRelation: 'events'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2884,11 +2878,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "event_participants_event_id_fkey"
-            columns: ["event_id"]
+            foreignKeyName: 'event_participants_event_id_fkey'
+            columns: ['event_id']
             isOneToOne: false
-            referencedRelation: "calendar_events"
-            referencedColumns: ["id"]
+            referencedRelation: 'calendar_events'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2907,13 +2901,13 @@ export type Database = {
           location: string
           recurrence_pattern: string | null
           start_time: string
-          status: Database["public"]["Enums"]["event_status"]
+          status: Database['public']['Enums']['event_status']
           tags: string[] | null
           title: string
-          type: Database["public"]["Enums"]["event_type"]
+          type: Database['public']['Enums']['event_type']
           updated_at: string
           virtual_link: string | null
-          visibility: Database["public"]["Enums"]["visibility_level"]
+          visibility: Database['public']['Enums']['visibility_level']
         }
         Insert: {
           attendees?: string[] | null
@@ -2929,13 +2923,13 @@ export type Database = {
           location: string
           recurrence_pattern?: string | null
           start_time: string
-          status?: Database["public"]["Enums"]["event_status"]
+          status?: Database['public']['Enums']['event_status']
           tags?: string[] | null
           title: string
-          type?: Database["public"]["Enums"]["event_type"]
+          type?: Database['public']['Enums']['event_type']
           updated_at?: string
           virtual_link?: string | null
-          visibility?: Database["public"]["Enums"]["visibility_level"]
+          visibility?: Database['public']['Enums']['visibility_level']
         }
         Update: {
           attendees?: string[] | null
@@ -2951,28 +2945,28 @@ export type Database = {
           location?: string
           recurrence_pattern?: string | null
           start_time?: string
-          status?: Database["public"]["Enums"]["event_status"]
+          status?: Database['public']['Enums']['event_status']
           tags?: string[] | null
           title?: string
-          type?: Database["public"]["Enums"]["event_type"]
+          type?: Database['public']['Enums']['event_type']
           updated_at?: string
           virtual_link?: string | null
-          visibility?: Database["public"]["Enums"]["visibility_level"]
+          visibility?: Database['public']['Enums']['visibility_level']
         }
         Relationships: [
           {
-            foreignKeyName: "events_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'events_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "events_deleted_by_fkey"
-            columns: ["deleted_by"]
+            foreignKeyName: 'events_deleted_by_fkey'
+            columns: ['deleted_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3042,11 +3036,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "follow_up_actions_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'follow_up_actions_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3086,11 +3080,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "followup_reminders_assignment_id_fkey"
-            columns: ["assignment_id"]
+            foreignKeyName: 'followup_reminders_assignment_id_fkey'
+            columns: ['assignment_id']
             isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
+            referencedRelation: 'assignments'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3157,11 +3151,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "forums_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'forums_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3201,11 +3195,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "health_scores_dossier_id_fkey"
-            columns: ["dossier_id"]
+            foreignKeyName: 'health_scores_dossier_id_fkey'
+            columns: ['dossier_id']
             isOneToOne: true
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3217,7 +3211,7 @@ export type Database = {
           id: string
           mime_type: string
           scan_result: Json | null
-          scan_status: Database["public"]["Enums"]["scan_status"]
+          scan_status: Database['public']['Enums']['scan_status']
           storage_path: string
           ticket_id: string
           uploaded_at: string
@@ -3230,7 +3224,7 @@ export type Database = {
           id?: string
           mime_type: string
           scan_result?: Json | null
-          scan_status?: Database["public"]["Enums"]["scan_status"]
+          scan_status?: Database['public']['Enums']['scan_status']
           storage_path: string
           ticket_id: string
           uploaded_at?: string
@@ -3243,7 +3237,7 @@ export type Database = {
           id?: string
           mime_type?: string
           scan_result?: Json | null
-          scan_status?: Database["public"]["Enums"]["scan_status"]
+          scan_status?: Database['public']['Enums']['scan_status']
           storage_path?: string
           ticket_id?: string
           uploaded_at?: string
@@ -3251,11 +3245,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intake_attachments_ticket_id_fkey"
-            columns: ["ticket_id"]
+            foreignKeyName: 'intake_attachments_ticket_id_fkey'
+            columns: ['ticket_id']
             isOneToOne: false
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3283,11 +3277,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intake_embeddings_intake_id_fkey"
-            columns: ["intake_id"]
+            foreignKeyName: 'intake_embeddings_intake_id_fkey'
+            columns: ['intake_id']
             isOneToOne: true
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3345,25 +3339,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intake_entity_links_intake_id_fkey"
-            columns: ["intake_id"]
+            foreignKeyName: 'intake_entity_links_intake_id_fkey'
+            columns: ['intake_id']
             isOneToOne: false
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intake_entity_links_linked_by_fkey"
-            columns: ["linked_by"]
+            foreignKeyName: 'intake_entity_links_linked_by_fkey'
+            columns: ['linked_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['user_id']
           },
           {
-            foreignKeyName: "intake_entity_links_suggested_by_fkey"
-            columns: ["suggested_by"]
+            foreignKeyName: 'intake_entity_links_suggested_by_fkey'
+            columns: ['suggested_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['user_id']
           },
         ]
       }
@@ -3375,7 +3369,7 @@ export type Database = {
           client_metadata: Json | null
           closed_at: string | null
           converted_to_id: string | null
-          converted_to_type: Database["public"]["Enums"]["request_type"] | null
+          converted_to_type: Database['public']['Enums']['request_type'] | null
           created_at: string
           created_by: string
           description: string
@@ -3383,14 +3377,14 @@ export type Database = {
           dossier_id: string | null
           id: string
           parent_ticket_id: string | null
-          priority: Database["public"]["Enums"]["priority_level"]
-          request_type: Database["public"]["Enums"]["request_type"]
+          priority: Database['public']['Enums']['priority_level']
+          request_type: Database['public']['Enums']['request_type']
           resolution: string | null
           resolution_ar: string | null
           resolved_at: string | null
-          sensitivity: Database["public"]["Enums"]["sensitivity_level"]
-          source: Database["public"]["Enums"]["ticket_source"]
-          status: Database["public"]["Enums"]["ticket_status"]
+          sensitivity: Database['public']['Enums']['sensitivity_level']
+          source: Database['public']['Enums']['ticket_source']
+          status: Database['public']['Enums']['ticket_status']
           submitted_at: string | null
           ticket_number: string
           title: string
@@ -3399,7 +3393,7 @@ export type Database = {
           type_specific_fields: Json | null
           updated_at: string
           updated_by: string
-          urgency: Database["public"]["Enums"]["urgency_level"]
+          urgency: Database['public']['Enums']['urgency_level']
         }
         Insert: {
           assigned_at?: string | null
@@ -3408,7 +3402,7 @@ export type Database = {
           client_metadata?: Json | null
           closed_at?: string | null
           converted_to_id?: string | null
-          converted_to_type?: Database["public"]["Enums"]["request_type"] | null
+          converted_to_type?: Database['public']['Enums']['request_type'] | null
           created_at?: string
           created_by: string
           description: string
@@ -3416,14 +3410,14 @@ export type Database = {
           dossier_id?: string | null
           id?: string
           parent_ticket_id?: string | null
-          priority?: Database["public"]["Enums"]["priority_level"]
-          request_type: Database["public"]["Enums"]["request_type"]
+          priority?: Database['public']['Enums']['priority_level']
+          request_type: Database['public']['Enums']['request_type']
           resolution?: string | null
           resolution_ar?: string | null
           resolved_at?: string | null
-          sensitivity?: Database["public"]["Enums"]["sensitivity_level"]
-          source?: Database["public"]["Enums"]["ticket_source"]
-          status?: Database["public"]["Enums"]["ticket_status"]
+          sensitivity?: Database['public']['Enums']['sensitivity_level']
+          source?: Database['public']['Enums']['ticket_source']
+          status?: Database['public']['Enums']['ticket_status']
           submitted_at?: string | null
           ticket_number: string
           title: string
@@ -3432,7 +3426,7 @@ export type Database = {
           type_specific_fields?: Json | null
           updated_at?: string
           updated_by: string
-          urgency?: Database["public"]["Enums"]["urgency_level"]
+          urgency?: Database['public']['Enums']['urgency_level']
         }
         Update: {
           assigned_at?: string | null
@@ -3441,7 +3435,7 @@ export type Database = {
           client_metadata?: Json | null
           closed_at?: string | null
           converted_to_id?: string | null
-          converted_to_type?: Database["public"]["Enums"]["request_type"] | null
+          converted_to_type?: Database['public']['Enums']['request_type'] | null
           created_at?: string
           created_by?: string
           description?: string
@@ -3449,14 +3443,14 @@ export type Database = {
           dossier_id?: string | null
           id?: string
           parent_ticket_id?: string | null
-          priority?: Database["public"]["Enums"]["priority_level"]
-          request_type?: Database["public"]["Enums"]["request_type"]
+          priority?: Database['public']['Enums']['priority_level']
+          request_type?: Database['public']['Enums']['request_type']
           resolution?: string | null
           resolution_ar?: string | null
           resolved_at?: string | null
-          sensitivity?: Database["public"]["Enums"]["sensitivity_level"]
-          source?: Database["public"]["Enums"]["ticket_source"]
-          status?: Database["public"]["Enums"]["ticket_status"]
+          sensitivity?: Database['public']['Enums']['sensitivity_level']
+          source?: Database['public']['Enums']['ticket_source']
+          status?: Database['public']['Enums']['ticket_status']
           submitted_at?: string | null
           ticket_number?: string
           title?: string
@@ -3465,15 +3459,15 @@ export type Database = {
           type_specific_fields?: Json | null
           updated_at?: string
           updated_by?: string
-          urgency?: Database["public"]["Enums"]["urgency_level"]
+          urgency?: Database['public']['Enums']['urgency_level']
         }
         Relationships: [
           {
-            foreignKeyName: "intake_tickets_parent_ticket_id_fkey"
-            columns: ["parent_ticket_id"]
+            foreignKeyName: 'intake_tickets_parent_ticket_id_fkey'
+            columns: ['parent_ticket_id']
             isOneToOne: false
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3481,7 +3475,7 @@ export type Database = {
         Row: {
           action_required: boolean | null
           action_taken: Json | null
-          category: Database["public"]["Enums"]["intelligence_category"]
+          category: Database['public']['Enums']['intelligence_category']
           created_at: string
           created_by: string
           deleted_at: string | null
@@ -3496,14 +3490,14 @@ export type Database = {
           tags: string[] | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["intelligence_type"]
+          type: Database['public']['Enums']['intelligence_type']
           updated_at: string
           version: number
         }
         Insert: {
           action_required?: boolean | null
           action_taken?: Json | null
-          category: Database["public"]["Enums"]["intelligence_category"]
+          category: Database['public']['Enums']['intelligence_category']
           created_at?: string
           created_by: string
           deleted_at?: string | null
@@ -3518,14 +3512,14 @@ export type Database = {
           tags?: string[] | null
           tenant_id: string
           title: string
-          type: Database["public"]["Enums"]["intelligence_type"]
+          type: Database['public']['Enums']['intelligence_type']
           updated_at?: string
           version?: number
         }
         Update: {
           action_required?: boolean | null
           action_taken?: Json | null
-          category?: Database["public"]["Enums"]["intelligence_category"]
+          category?: Database['public']['Enums']['intelligence_category']
           created_at?: string
           created_by?: string
           deleted_at?: string | null
@@ -3540,7 +3534,7 @@ export type Database = {
           tags?: string[] | null
           tenant_id?: string
           title?: string
-          type?: Database["public"]["Enums"]["intelligence_type"]
+          type?: Database['public']['Enums']['intelligence_type']
           updated_at?: string
           version?: number
         }
@@ -3603,11 +3597,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intelligence_items_source_id_fkey"
-            columns: ["source_id"]
+            foreignKeyName: 'intelligence_items_source_id_fkey'
+            columns: ['source_id']
             isOneToOne: false
-            referencedRelation: "intelligence_sources"
-            referencedColumns: ["id"]
+            referencedRelation: 'intelligence_sources'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3671,40 +3665,38 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intelligence_report_sources_data_library_item_id_fkey"
-            columns: ["data_library_item_id"]
+            foreignKeyName: 'intelligence_report_sources_data_library_item_id_fkey'
+            columns: ['data_library_item_id']
             isOneToOne: false
-            referencedRelation: "data_library_items"
-            referencedColumns: ["id"]
+            referencedRelation: 'data_library_items'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intelligence_report_sources_intelligence_report_id_fkey"
-            columns: ["intelligence_report_id"]
+            foreignKeyName: 'intelligence_report_sources_intelligence_report_id_fkey'
+            columns: ['intelligence_report_id']
             isOneToOne: false
-            referencedRelation: "intelligence_cache_status"
-            referencedColumns: ["id"]
+            referencedRelation: 'intelligence_cache_status'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intelligence_report_sources_intelligence_report_id_fkey"
-            columns: ["intelligence_report_id"]
+            foreignKeyName: 'intelligence_report_sources_intelligence_report_id_fkey'
+            columns: ['intelligence_report_id']
             isOneToOne: false
-            referencedRelation: "intelligence_reports"
-            referencedColumns: ["id"]
+            referencedRelation: 'intelligence_reports'
+            referencedColumns: ['id']
           },
         ]
       }
       intelligence_reports: {
         Row: {
-          analysis_type: Database["public"]["Enums"]["analysis_type"] | null
+          analysis_type: Database['public']['Enums']['analysis_type'] | null
           anythingllm_query: string | null
           anythingllm_response_metadata: Json | null
           anythingllm_workspace_id: string | null
           cache_created_at: string | null
           cache_expires_at: string | null
-          classification: Database["public"]["Enums"]["classification_level"]
-          confidence_level:
-            | Database["public"]["Enums"]["confidence_level"]
-            | null
+          classification: Database['public']['Enums']['classification_level']
+          confidence_level: Database['public']['Enums']['confidence_level'] | null
           confidence_score: number | null
           content: string
           content_ar: string | null
@@ -3728,7 +3720,7 @@ export type Database = {
           refresh_status: string
           refresh_trigger_type: string | null
           refresh_triggered_by: string | null
-          status: Database["public"]["Enums"]["intelligence_status"]
+          status: Database['public']['Enums']['intelligence_status']
           title: string
           title_ar: string | null
           updated_at: string | null
@@ -3737,16 +3729,14 @@ export type Database = {
           version_notes: string | null
         }
         Insert: {
-          analysis_type?: Database["public"]["Enums"]["analysis_type"] | null
+          analysis_type?: Database['public']['Enums']['analysis_type'] | null
           anythingllm_query?: string | null
           anythingllm_response_metadata?: Json | null
           anythingllm_workspace_id?: string | null
           cache_created_at?: string | null
           cache_expires_at?: string | null
-          classification?: Database["public"]["Enums"]["classification_level"]
-          confidence_level?:
-            | Database["public"]["Enums"]["confidence_level"]
-            | null
+          classification?: Database['public']['Enums']['classification_level']
+          confidence_level?: Database['public']['Enums']['confidence_level'] | null
           confidence_score?: number | null
           content: string
           content_ar?: string | null
@@ -3770,7 +3760,7 @@ export type Database = {
           refresh_status?: string
           refresh_trigger_type?: string | null
           refresh_triggered_by?: string | null
-          status?: Database["public"]["Enums"]["intelligence_status"]
+          status?: Database['public']['Enums']['intelligence_status']
           title: string
           title_ar?: string | null
           updated_at?: string | null
@@ -3779,16 +3769,14 @@ export type Database = {
           version_notes?: string | null
         }
         Update: {
-          analysis_type?: Database["public"]["Enums"]["analysis_type"] | null
+          analysis_type?: Database['public']['Enums']['analysis_type'] | null
           anythingllm_query?: string | null
           anythingllm_response_metadata?: Json | null
           anythingllm_workspace_id?: string | null
           cache_created_at?: string | null
           cache_expires_at?: string | null
-          classification?: Database["public"]["Enums"]["classification_level"]
-          confidence_level?:
-            | Database["public"]["Enums"]["confidence_level"]
-            | null
+          classification?: Database['public']['Enums']['classification_level']
+          confidence_level?: Database['public']['Enums']['confidence_level'] | null
           confidence_score?: number | null
           content?: string
           content_ar?: string | null
@@ -3812,7 +3800,7 @@ export type Database = {
           refresh_status?: string
           refresh_trigger_type?: string | null
           refresh_triggered_by?: string | null
-          status?: Database["public"]["Enums"]["intelligence_status"]
+          status?: Database['public']['Enums']['intelligence_status']
           title?: string
           title_ar?: string | null
           updated_at?: string | null
@@ -3822,46 +3810,46 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intelligence_reports_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'intelligence_reports_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intelligence_reports_deleted_by_fkey"
-            columns: ["deleted_by"]
+            foreignKeyName: 'intelligence_reports_deleted_by_fkey'
+            columns: ['deleted_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intelligence_reports_entity_id_fkey"
-            columns: ["entity_id"]
+            foreignKeyName: 'intelligence_reports_entity_id_fkey'
+            columns: ['entity_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intelligence_reports_parent_version_id_fkey"
-            columns: ["parent_version_id"]
+            foreignKeyName: 'intelligence_reports_parent_version_id_fkey'
+            columns: ['parent_version_id']
             isOneToOne: false
-            referencedRelation: "intelligence_cache_status"
-            referencedColumns: ["id"]
+            referencedRelation: 'intelligence_cache_status'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intelligence_reports_parent_version_id_fkey"
-            columns: ["parent_version_id"]
+            foreignKeyName: 'intelligence_reports_parent_version_id_fkey'
+            columns: ['parent_version_id']
             isOneToOne: false
-            referencedRelation: "intelligence_reports"
-            referencedColumns: ["id"]
+            referencedRelation: 'intelligence_reports'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intelligence_reports_refresh_triggered_by_fkey"
-            columns: ["refresh_triggered_by"]
+            foreignKeyName: 'intelligence_reports_refresh_triggered_by_fkey'
+            columns: ['refresh_triggered_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4069,11 +4057,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "link_audit_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: 'link_audit_logs_performed_by_fkey'
+            columns: ['performed_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['user_id']
           },
         ]
       }
@@ -4113,18 +4101,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "mou_parties_mou_id_fkey"
-            columns: ["mou_id"]
+            foreignKeyName: 'mou_parties_mou_id_fkey'
+            columns: ['mou_id']
             isOneToOne: false
-            referencedRelation: "mous"
-            referencedColumns: ["id"]
+            referencedRelation: 'mous'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "mou_parties_mou_id_fkey"
-            columns: ["mou_id"]
+            foreignKeyName: 'mou_parties_mou_id_fkey'
+            columns: ['mou_id']
             isOneToOne: false
-            referencedRelation: "mous_frontend"
-            referencedColumns: ["id"]
+            referencedRelation: 'mous_frontend'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4147,9 +4135,9 @@ export type Database = {
           id: string
           is_deleted: boolean
           last_modified_by: string
-          lifecycle_state: Database["public"]["Enums"]["mou_state"]
+          lifecycle_state: Database['public']['Enums']['mou_state']
           mime_type: string | null
-          mou_category: Database["public"]["Enums"]["mou_category"]
+          mou_category: Database['public']['Enums']['mou_category']
           organization_id: string | null
           parties: Json | null
           performance_metrics: Json | null
@@ -4159,7 +4147,7 @@ export type Database = {
           tenant_id: string
           title: string
           title_ar: string
-          type: Database["public"]["Enums"]["mou_type"]
+          type: Database['public']['Enums']['mou_type']
           updated_at: string
           version: number
         }
@@ -4181,9 +4169,9 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           last_modified_by: string
-          lifecycle_state?: Database["public"]["Enums"]["mou_state"]
+          lifecycle_state?: Database['public']['Enums']['mou_state']
           mime_type?: string | null
-          mou_category: Database["public"]["Enums"]["mou_category"]
+          mou_category: Database['public']['Enums']['mou_category']
           organization_id?: string | null
           parties?: Json | null
           performance_metrics?: Json | null
@@ -4193,7 +4181,7 @@ export type Database = {
           tenant_id: string
           title: string
           title_ar: string
-          type: Database["public"]["Enums"]["mou_type"]
+          type: Database['public']['Enums']['mou_type']
           updated_at?: string
           version?: number
         }
@@ -4215,9 +4203,9 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           last_modified_by?: string
-          lifecycle_state?: Database["public"]["Enums"]["mou_state"]
+          lifecycle_state?: Database['public']['Enums']['mou_state']
           mime_type?: string | null
-          mou_category?: Database["public"]["Enums"]["mou_category"]
+          mou_category?: Database['public']['Enums']['mou_category']
           organization_id?: string | null
           parties?: Json | null
           performance_metrics?: Json | null
@@ -4227,24 +4215,24 @@ export type Database = {
           tenant_id?: string
           title?: string
           title_ar?: string
-          type?: Database["public"]["Enums"]["mou_type"]
+          type?: Database['public']['Enums']['mou_type']
           updated_at?: string
           version?: number
         }
         Relationships: [
           {
-            foreignKeyName: "mous_signatory_1_dossier_id_fkey"
-            columns: ["signatory_1_dossier_id"]
+            foreignKeyName: 'mous_signatory_1_dossier_id_fkey'
+            columns: ['signatory_1_dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "mous_signatory_2_dossier_id_fkey"
-            columns: ["signatory_2_dossier_id"]
+            foreignKeyName: 'mous_signatory_2_dossier_id_fkey'
+            columns: ['signatory_2_dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4256,7 +4244,7 @@ export type Database = {
           message: string
           read_at: string | null
           title: string
-          type: Database["public"]["Enums"]["notification_type"]
+          type: Database['public']['Enums']['notification_type']
           user_id: string
         }
         Insert: {
@@ -4266,7 +4254,7 @@ export type Database = {
           message: string
           read_at?: string | null
           title: string
-          type: Database["public"]["Enums"]["notification_type"]
+          type: Database['public']['Enums']['notification_type']
           user_id: string
         }
         Update: {
@@ -4276,7 +4264,7 @@ export type Database = {
           message?: string
           read_at?: string | null
           title?: string
-          type?: Database["public"]["Enums"]["notification_type"]
+          type?: Database['public']['Enums']['notification_type']
           user_id?: string
         }
         Relationships: []
@@ -4353,11 +4341,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'organization_members_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4424,11 +4412,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "organizational_units_parent_unit_id_fkey"
-            columns: ["parent_unit_id"]
+            foreignKeyName: 'organizational_units_parent_unit_id_fkey'
+            columns: ['parent_unit_id']
             isOneToOne: false
-            referencedRelation: "organizational_units"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizational_units'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4477,25 +4465,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "organizations_headquarters_country_id_fkey"
-            columns: ["headquarters_country_id"]
+            foreignKeyName: 'organizations_headquarters_country_id_fkey'
+            columns: ['headquarters_country_id']
             isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
+            referencedRelation: 'countries'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "organizations_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'organizations_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "organizations_parent_org_id_fkey"
-            columns: ["parent_org_id"]
+            foreignKeyName: 'organizations_parent_org_id_fkey'
+            columns: ['parent_org_id']
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4589,25 +4577,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "persons_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'persons_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "persons_nationality_country_id_fkey"
-            columns: ["nationality_country_id"]
+            foreignKeyName: 'persons_nationality_country_id_fkey'
+            columns: ['nationality_country_id']
             isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
+            referencedRelation: 'countries'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "persons_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: 'persons_organization_id_fkey'
+            columns: ['organization_id']
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4632,11 +4620,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "position_audience_groups_audience_group_id_fkey"
-            columns: ["audience_group_id"]
+            foreignKeyName: 'position_audience_groups_audience_group_id_fkey'
+            columns: ['audience_group_id']
             isOneToOne: false
-            referencedRelation: "audience_groups"
-            referencedColumns: ["id"]
+            referencedRelation: 'audience_groups'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4688,11 +4676,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "position_conflicts_consistency_id_fkey"
-            columns: ["consistency_id"]
+            foreignKeyName: 'position_conflicts_consistency_id_fkey'
+            columns: ['consistency_id']
             isOneToOne: false
-            referencedRelation: "position_consistency"
-            referencedColumns: ["id"]
+            referencedRelation: 'position_consistency'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4735,11 +4723,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "position_consistency_thematic_area_id_fkey"
-            columns: ["thematic_area_id"]
+            foreignKeyName: 'position_consistency_thematic_area_id_fkey'
+            columns: ['thematic_area_id']
             isOneToOne: false
-            referencedRelation: "thematic_areas"
-            referencedColumns: ["id"]
+            referencedRelation: 'thematic_areas'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -4773,18 +4761,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "position_dossier_links_dossier_id_fkey"
-            columns: ["dossier_id"]
+            foreignKeyName: 'position_dossier_links_dossier_id_fkey'
+            columns: ['dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "position_dossier_links_position_id_fkey"
-            columns: ["position_id"]
+            foreignKeyName: 'position_dossier_links_position_id_fkey'
+            columns: ['position_id']
             isOneToOne: false
-            referencedRelation: "positions"
-            referencedColumns: ["id"]
+            referencedRelation: 'positions'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5214,11 +5202,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "positions_position_type_id_fkey"
-            columns: ["position_type_id"]
+            foreignKeyName: 'positions_position_type_id_fkey'
+            columns: ['position_type_id']
             isOneToOne: false
-            referencedRelation: "position_types"
-            referencedColumns: ["id"]
+            referencedRelation: 'position_types'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5279,11 +5267,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "query_embeddings_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'query_embeddings_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5322,18 +5310,16 @@ export type Database = {
           engagement_history: Json | null
           focal_points: Json | null
           health_metrics: Json | null
-          health_status: Database["public"]["Enums"]["health_status"] | null
+          health_status: Database['public']['Enums']['health_status'] | null
           id: string
           is_deleted: boolean
           last_modified_by: string
           notes: string | null
           parties: Json
           status: string
-          strategic_importance:
-            | Database["public"]["Enums"]["priority_level"]
-            | null
+          strategic_importance: Database['public']['Enums']['priority_level'] | null
           tenant_id: string
-          type: Database["public"]["Enums"]["relationship_type"]
+          type: Database['public']['Enums']['relationship_type']
           updated_at: string
           version: number
         }
@@ -5344,18 +5330,16 @@ export type Database = {
           engagement_history?: Json | null
           focal_points?: Json | null
           health_metrics?: Json | null
-          health_status?: Database["public"]["Enums"]["health_status"] | null
+          health_status?: Database['public']['Enums']['health_status'] | null
           id?: string
           is_deleted?: boolean
           last_modified_by: string
           notes?: string | null
           parties?: Json
           status?: string
-          strategic_importance?:
-            | Database["public"]["Enums"]["priority_level"]
-            | null
+          strategic_importance?: Database['public']['Enums']['priority_level'] | null
           tenant_id: string
-          type: Database["public"]["Enums"]["relationship_type"]
+          type: Database['public']['Enums']['relationship_type']
           updated_at?: string
           version?: number
         }
@@ -5366,18 +5350,16 @@ export type Database = {
           engagement_history?: Json | null
           focal_points?: Json | null
           health_metrics?: Json | null
-          health_status?: Database["public"]["Enums"]["health_status"] | null
+          health_status?: Database['public']['Enums']['health_status'] | null
           id?: string
           is_deleted?: boolean
           last_modified_by?: string
           notes?: string | null
           parties?: Json
           status?: string
-          strategic_importance?:
-            | Database["public"]["Enums"]["priority_level"]
-            | null
+          strategic_importance?: Database['public']['Enums']['priority_level'] | null
           tenant_id?: string
-          type?: Database["public"]["Enums"]["relationship_type"]
+          type?: Database['public']['Enums']['relationship_type']
           updated_at?: string
           version?: number
         }
@@ -5390,10 +5372,10 @@ export type Database = {
           created_at: string | null
           description: string
           id: string
-          likelihood: Database["public"]["Enums"]["likelihood"]
+          likelihood: Database['public']['Enums']['likelihood']
           mitigation_strategy: string | null
           owner: string | null
-          severity: Database["public"]["Enums"]["severity"]
+          severity: Database['public']['Enums']['severity']
           updated_at: string | null
         }
         Insert: {
@@ -5402,10 +5384,10 @@ export type Database = {
           created_at?: string | null
           description: string
           id?: string
-          likelihood: Database["public"]["Enums"]["likelihood"]
+          likelihood: Database['public']['Enums']['likelihood']
           mitigation_strategy?: string | null
           owner?: string | null
-          severity: Database["public"]["Enums"]["severity"]
+          severity: Database['public']['Enums']['severity']
           updated_at?: string | null
         }
         Update: {
@@ -5414,19 +5396,19 @@ export type Database = {
           created_at?: string | null
           description?: string
           id?: string
-          likelihood?: Database["public"]["Enums"]["likelihood"]
+          likelihood?: Database['public']['Enums']['likelihood']
           mitigation_strategy?: string | null
           owner?: string | null
-          severity?: Database["public"]["Enums"]["severity"]
+          severity?: Database['public']['Enums']['severity']
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "risks_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'risks_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5541,25 +5523,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "signature_requests_document_id_fkey"
-            columns: ["document_id"]
+            foreignKeyName: 'signature_requests_document_id_fkey'
+            columns: ['document_id']
             isOneToOne: false
-            referencedRelation: "documents"
-            referencedColumns: ["id"]
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "signature_requests_mou_id_fkey"
-            columns: ["mou_id"]
+            foreignKeyName: 'signature_requests_mou_id_fkey'
+            columns: ['mou_id']
             isOneToOne: false
-            referencedRelation: "mous"
-            referencedColumns: ["id"]
+            referencedRelation: 'mous'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "signature_requests_mou_id_fkey"
-            columns: ["mou_id"]
+            foreignKeyName: 'signature_requests_mou_id_fkey'
+            columns: ['mou_id']
             isOneToOne: false
-            referencedRelation: "mous_frontend"
-            referencedColumns: ["id"]
+            referencedRelation: 'mous_frontend'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5602,18 +5584,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "signature_signatories_contact_id_fkey"
-            columns: ["contact_id"]
+            foreignKeyName: 'signature_signatories_contact_id_fkey'
+            columns: ['contact_id']
             isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
+            referencedRelation: 'contacts'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "signature_signatories_request_id_fkey"
-            columns: ["request_id"]
+            foreignKeyName: 'signature_signatories_request_id_fkey'
+            columns: ['request_id']
             isOneToOne: false
-            referencedRelation: "signature_requests"
-            referencedColumns: ["id"]
+            referencedRelation: 'signature_requests'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5646,25 +5628,25 @@ export type Database = {
           created_at: string
           deadline_hours: number
           id: string
-          priority: Database["public"]["Enums"]["priority_level"]
+          priority: Database['public']['Enums']['priority_level']
           warning_threshold_pct: number
-          work_item_type: Database["public"]["Enums"]["work_item_type"]
+          work_item_type: Database['public']['Enums']['work_item_type']
         }
         Insert: {
           created_at?: string
           deadline_hours: number
           id?: string
-          priority: Database["public"]["Enums"]["priority_level"]
+          priority: Database['public']['Enums']['priority_level']
           warning_threshold_pct?: number
-          work_item_type: Database["public"]["Enums"]["work_item_type"]
+          work_item_type: Database['public']['Enums']['work_item_type']
         }
         Update: {
           created_at?: string
           deadline_hours?: number
           id?: string
-          priority?: Database["public"]["Enums"]["priority_level"]
+          priority?: Database['public']['Enums']['priority_level']
           warning_threshold_pct?: number
-          work_item_type?: Database["public"]["Enums"]["work_item_type"]
+          work_item_type?: Database['public']['Enums']['work_item_type']
         }
         Relationships: []
       }
@@ -5673,7 +5655,7 @@ export type Database = {
           created_by: string
           elapsed_minutes: number
           event_timestamp: string
-          event_type: Database["public"]["Enums"]["sla_event_type"]
+          event_type: Database['public']['Enums']['sla_event_type']
           id: string
           is_breached: boolean
           policy_id: string
@@ -5685,7 +5667,7 @@ export type Database = {
           created_by: string
           elapsed_minutes?: number
           event_timestamp?: string
-          event_type: Database["public"]["Enums"]["sla_event_type"]
+          event_type: Database['public']['Enums']['sla_event_type']
           id?: string
           is_breached?: boolean
           policy_id: string
@@ -5697,7 +5679,7 @@ export type Database = {
           created_by?: string
           elapsed_minutes?: number
           event_timestamp?: string
-          event_type?: Database["public"]["Enums"]["sla_event_type"]
+          event_type?: Database['public']['Enums']['sla_event_type']
           id?: string
           is_breached?: boolean
           policy_id?: string
@@ -5707,18 +5689,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "sla_events_policy_id_fkey"
-            columns: ["policy_id"]
+            foreignKeyName: 'sla_events_policy_id_fkey'
+            columns: ['policy_id']
             isOneToOne: false
-            referencedRelation: "sla_policies"
-            referencedColumns: ["id"]
+            referencedRelation: 'sla_policies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "sla_events_ticket_id_fkey"
-            columns: ["ticket_id"]
+            foreignKeyName: 'sla_events_ticket_id_fkey'
+            columns: ['ticket_id']
             isOneToOne: false
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5729,13 +5711,13 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean
-          priority: Database["public"]["Enums"]["priority_level"] | null
-          request_type: Database["public"]["Enums"]["request_type"] | null
+          priority: Database['public']['Enums']['priority_level'] | null
+          request_type: Database['public']['Enums']['request_type'] | null
           resolution_target: number
-          sensitivity: Database["public"]["Enums"]["sensitivity_level"] | null
+          sensitivity: Database['public']['Enums']['sensitivity_level'] | null
           timezone: string
           updated_at: string
-          urgency: Database["public"]["Enums"]["urgency_level"] | null
+          urgency: Database['public']['Enums']['urgency_level'] | null
         }
         Insert: {
           acknowledgment_target: number
@@ -5743,13 +5725,13 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
-          priority?: Database["public"]["Enums"]["priority_level"] | null
-          request_type?: Database["public"]["Enums"]["request_type"] | null
+          priority?: Database['public']['Enums']['priority_level'] | null
+          request_type?: Database['public']['Enums']['request_type'] | null
           resolution_target: number
-          sensitivity?: Database["public"]["Enums"]["sensitivity_level"] | null
+          sensitivity?: Database['public']['Enums']['sensitivity_level'] | null
           timezone?: string
           updated_at?: string
-          urgency?: Database["public"]["Enums"]["urgency_level"] | null
+          urgency?: Database['public']['Enums']['urgency_level'] | null
         }
         Update: {
           acknowledgment_target?: number
@@ -5757,20 +5739,20 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
-          priority?: Database["public"]["Enums"]["priority_level"] | null
-          request_type?: Database["public"]["Enums"]["request_type"] | null
+          priority?: Database['public']['Enums']['priority_level'] | null
+          request_type?: Database['public']['Enums']['request_type'] | null
           resolution_target?: number
-          sensitivity?: Database["public"]["Enums"]["sensitivity_level"] | null
+          sensitivity?: Database['public']['Enums']['sensitivity_level'] | null
           timezone?: string
           updated_at?: string
-          urgency?: Database["public"]["Enums"]["urgency_level"] | null
+          urgency?: Database['public']['Enums']['urgency_level'] | null
         }
         Relationships: []
       }
       staff_profiles: {
         Row: {
           availability_source: string
-          availability_status: Database["public"]["Enums"]["availability_status"]
+          availability_status: Database['public']['Enums']['availability_status']
           created_at: string
           current_assignment_count: number
           escalation_chain_id: string | null
@@ -5789,7 +5771,7 @@ export type Database = {
         }
         Insert: {
           availability_source?: string
-          availability_status?: Database["public"]["Enums"]["availability_status"]
+          availability_status?: Database['public']['Enums']['availability_status']
           created_at?: string
           current_assignment_count?: number
           escalation_chain_id?: string | null
@@ -5808,7 +5790,7 @@ export type Database = {
         }
         Update: {
           availability_source?: string
-          availability_status?: Database["public"]["Enums"]["availability_status"]
+          availability_status?: Database['public']['Enums']['availability_status']
           created_at?: string
           current_assignment_count?: number
           escalation_chain_id?: string | null
@@ -5827,18 +5809,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "staff_profiles_escalation_chain_id_fkey"
-            columns: ["escalation_chain_id"]
+            foreignKeyName: 'staff_profiles_escalation_chain_id_fkey'
+            columns: ['escalation_chain_id']
             isOneToOne: false
-            referencedRelation: "staff_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'staff_profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "staff_profiles_unit_id_fkey"
-            columns: ["unit_id"]
+            foreignKeyName: 'staff_profiles_unit_id_fkey'
+            columns: ['unit_id']
             isOneToOne: false
-            referencedRelation: "organizational_units"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizational_units'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5866,11 +5848,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "task_assignments_task_id_fkey"
-            columns: ["task_id"]
+            foreignKeyName: 'task_assignments_task_id_fkey'
+            columns: ['task_id']
             isOneToOne: false
-            referencedRelation: "tasks"
-            referencedColumns: ["id"]
+            referencedRelation: 'tasks'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5904,11 +5886,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "task_contributors_task_id_fkey"
-            columns: ["task_id"]
+            foreignKeyName: 'task_contributors_task_id_fkey'
+            columns: ['task_id']
             isOneToOne: false
-            referencedRelation: "tasks"
-            referencedColumns: ["id"]
+            referencedRelation: 'tasks'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -5928,15 +5910,15 @@ export type Database = {
           id: string
           is_deleted: boolean
           last_modified_by: string
-          priority: Database["public"]["Enums"]["urgent_priority"]
+          priority: Database['public']['Enums']['urgent_priority']
           progress: Json | null
           sla_deadline: string | null
           source: Json
-          status: Database["public"]["Enums"]["task_status"]
+          status: Database['public']['Enums']['task_status']
           tenant_id: string
           timeline: Json
           title: string
-          type: Database["public"]["Enums"]["task_type"]
+          type: Database['public']['Enums']['task_type']
           updated_at: string
           updated_by: string | null
           version: number
@@ -5959,15 +5941,15 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           last_modified_by: string
-          priority?: Database["public"]["Enums"]["urgent_priority"]
+          priority?: Database['public']['Enums']['urgent_priority']
           progress?: Json | null
           sla_deadline?: string | null
           source?: Json
-          status?: Database["public"]["Enums"]["task_status"]
+          status?: Database['public']['Enums']['task_status']
           tenant_id: string
           timeline?: Json
           title: string
-          type: Database["public"]["Enums"]["task_type"]
+          type: Database['public']['Enums']['task_type']
           updated_at?: string
           updated_by?: string | null
           version?: number
@@ -5990,15 +5972,15 @@ export type Database = {
           id?: string
           is_deleted?: boolean
           last_modified_by?: string
-          priority?: Database["public"]["Enums"]["urgent_priority"]
+          priority?: Database['public']['Enums']['urgent_priority']
           progress?: Json | null
           sla_deadline?: string | null
           source?: Json
-          status?: Database["public"]["Enums"]["task_status"]
+          status?: Database['public']['Enums']['task_status']
           tenant_id?: string
           timeline?: Json
           title?: string
-          type?: Database["public"]["Enums"]["task_type"]
+          type?: Database['public']['Enums']['task_type']
           updated_at?: string
           updated_by?: string | null
           version?: number
@@ -6035,25 +6017,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "thematic_area_experts_contact_id_fkey"
-            columns: ["contact_id"]
+            foreignKeyName: 'thematic_area_experts_contact_id_fkey'
+            columns: ['contact_id']
             isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
+            referencedRelation: 'contacts'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "thematic_area_experts_thematic_area_id_fkey"
-            columns: ["thematic_area_id"]
+            foreignKeyName: 'thematic_area_experts_thematic_area_id_fkey'
+            columns: ['thematic_area_id']
             isOneToOne: false
-            referencedRelation: "thematic_areas"
-            referencedColumns: ["id"]
+            referencedRelation: 'thematic_areas'
+            referencedColumns: ['id']
           },
         ]
       }
       thematic_areas: {
         Row: {
           best_practices: Json | null
-          category: Database["public"]["Enums"]["thematic_category"]
+          category: Database['public']['Enums']['thematic_category']
           code: string
           created_at: string
           created_by: string
@@ -6074,7 +6056,7 @@ export type Database = {
         }
         Insert: {
           best_practices?: Json | null
-          category: Database["public"]["Enums"]["thematic_category"]
+          category: Database['public']['Enums']['thematic_category']
           code: string
           created_at?: string
           created_by: string
@@ -6095,7 +6077,7 @@ export type Database = {
         }
         Update: {
           best_practices?: Json | null
-          category?: Database["public"]["Enums"]["thematic_category"]
+          category?: Database['public']['Enums']['thematic_category']
           code?: string
           created_at?: string
           created_by?: string
@@ -6116,11 +6098,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "thematic_areas_parent_area_id_fkey"
-            columns: ["parent_area_id"]
+            foreignKeyName: 'thematic_areas_parent_area_id_fkey'
+            columns: ['parent_area_id']
             isOneToOne: false
-            referencedRelation: "thematic_areas"
-            referencedColumns: ["id"]
+            referencedRelation: 'thematic_areas'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6142,18 +6124,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "topics_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'topics_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "topics_parent_topic_id_fkey"
-            columns: ["parent_theme_id"]
+            foreignKeyName: 'topics_parent_topic_id_fkey'
+            columns: ['parent_theme_id']
             isOneToOne: false
-            referencedRelation: "topics"
-            referencedColumns: ["id"]
+            referencedRelation: 'topics'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6164,26 +6146,22 @@ export type Database = {
           confidence_score: number | null
           created_at: string
           created_by: string
-          decision_type: Database["public"]["Enums"]["decision_type"]
+          decision_type: Database['public']['Enums']['decision_type']
           final_assignee: string | null
-          final_sensitivity:
-            | Database["public"]["Enums"]["sensitivity_level"]
-            | null
-          final_type: Database["public"]["Enums"]["request_type"] | null
+          final_sensitivity: Database['public']['Enums']['sensitivity_level'] | null
+          final_type: Database['public']['Enums']['request_type'] | null
           final_unit: string | null
-          final_urgency: Database["public"]["Enums"]["urgency_level"] | null
+          final_urgency: Database['public']['Enums']['urgency_level'] | null
           id: string
           model_name: string | null
           model_version: string | null
           override_reason: string | null
           override_reason_ar: string | null
           suggested_assignee: string | null
-          suggested_sensitivity:
-            | Database["public"]["Enums"]["sensitivity_level"]
-            | null
-          suggested_type: Database["public"]["Enums"]["request_type"] | null
+          suggested_sensitivity: Database['public']['Enums']['sensitivity_level'] | null
+          suggested_type: Database['public']['Enums']['request_type'] | null
           suggested_unit: string | null
-          suggested_urgency: Database["public"]["Enums"]["urgency_level"] | null
+          suggested_urgency: Database['public']['Enums']['urgency_level'] | null
           ticket_id: string
         }
         Insert: {
@@ -6192,28 +6170,22 @@ export type Database = {
           confidence_score?: number | null
           created_at?: string
           created_by: string
-          decision_type: Database["public"]["Enums"]["decision_type"]
+          decision_type: Database['public']['Enums']['decision_type']
           final_assignee?: string | null
-          final_sensitivity?:
-            | Database["public"]["Enums"]["sensitivity_level"]
-            | null
-          final_type?: Database["public"]["Enums"]["request_type"] | null
+          final_sensitivity?: Database['public']['Enums']['sensitivity_level'] | null
+          final_type?: Database['public']['Enums']['request_type'] | null
           final_unit?: string | null
-          final_urgency?: Database["public"]["Enums"]["urgency_level"] | null
+          final_urgency?: Database['public']['Enums']['urgency_level'] | null
           id?: string
           model_name?: string | null
           model_version?: string | null
           override_reason?: string | null
           override_reason_ar?: string | null
           suggested_assignee?: string | null
-          suggested_sensitivity?:
-            | Database["public"]["Enums"]["sensitivity_level"]
-            | null
-          suggested_type?: Database["public"]["Enums"]["request_type"] | null
+          suggested_sensitivity?: Database['public']['Enums']['sensitivity_level'] | null
+          suggested_type?: Database['public']['Enums']['request_type'] | null
           suggested_unit?: string | null
-          suggested_urgency?:
-            | Database["public"]["Enums"]["urgency_level"]
-            | null
+          suggested_urgency?: Database['public']['Enums']['urgency_level'] | null
           ticket_id: string
         }
         Update: {
@@ -6222,37 +6194,31 @@ export type Database = {
           confidence_score?: number | null
           created_at?: string
           created_by?: string
-          decision_type?: Database["public"]["Enums"]["decision_type"]
+          decision_type?: Database['public']['Enums']['decision_type']
           final_assignee?: string | null
-          final_sensitivity?:
-            | Database["public"]["Enums"]["sensitivity_level"]
-            | null
-          final_type?: Database["public"]["Enums"]["request_type"] | null
+          final_sensitivity?: Database['public']['Enums']['sensitivity_level'] | null
+          final_type?: Database['public']['Enums']['request_type'] | null
           final_unit?: string | null
-          final_urgency?: Database["public"]["Enums"]["urgency_level"] | null
+          final_urgency?: Database['public']['Enums']['urgency_level'] | null
           id?: string
           model_name?: string | null
           model_version?: string | null
           override_reason?: string | null
           override_reason_ar?: string | null
           suggested_assignee?: string | null
-          suggested_sensitivity?:
-            | Database["public"]["Enums"]["sensitivity_level"]
-            | null
-          suggested_type?: Database["public"]["Enums"]["request_type"] | null
+          suggested_sensitivity?: Database['public']['Enums']['sensitivity_level'] | null
+          suggested_type?: Database['public']['Enums']['request_type'] | null
           suggested_unit?: string | null
-          suggested_urgency?:
-            | Database["public"]["Enums"]["urgency_level"]
-            | null
+          suggested_urgency?: Database['public']['Enums']['urgency_level'] | null
           ticket_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "triage_decisions_ticket_id_fkey"
-            columns: ["ticket_id"]
+            foreignKeyName: 'triage_decisions_ticket_id_fkey'
+            columns: ['ticket_id']
             isOneToOne: false
-            referencedRelation: "intake_tickets"
-            referencedColumns: ["id"]
+            referencedRelation: 'intake_tickets'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6274,11 +6240,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_audience_memberships_audience_group_id_fkey"
-            columns: ["audience_group_id"]
+            foreignKeyName: 'user_audience_memberships_audience_group_id_fkey'
+            columns: ['audience_group_id']
             isOneToOne: false
-            referencedRelation: "audience_groups"
-            referencedColumns: ["id"]
+            referencedRelation: 'audience_groups'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6465,25 +6431,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "users_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'users_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "users_deleted_by_fkey"
-            columns: ["deleted_by"]
+            foreignKeyName: 'users_deleted_by_fkey'
+            columns: ['deleted_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "users_updated_by_fkey"
-            columns: ["updated_by"]
+            foreignKeyName: 'users_updated_by_fkey'
+            columns: ['updated_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6571,11 +6537,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "vector_search_stats_config_id_fkey"
-            columns: ["config_id"]
+            foreignKeyName: 'vector_search_stats_config_id_fkey'
+            columns: ['config_id']
             isOneToOne: false
-            referencedRelation: "vector_search_config"
-            referencedColumns: ["id"]
+            referencedRelation: 'vector_search_config'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6618,11 +6584,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "version_snapshots_after_action_id_fkey"
-            columns: ["after_action_id"]
+            foreignKeyName: 'version_snapshots_after_action_id_fkey'
+            columns: ['after_action_id']
             isOneToOne: false
-            referencedRelation: "after_action_records"
-            referencedColumns: ["id"]
+            referencedRelation: 'after_action_records'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6656,18 +6622,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "working_groups_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'working_groups_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "working_groups_lead_org_id_fkey"
-            columns: ["lead_org_id"]
+            foreignKeyName: 'working_groups_lead_org_id_fkey'
+            columns: ['lead_org_id']
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6698,11 +6664,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "workspace_members_workspace_id_fkey"
-            columns: ["workspace_id"]
+            foreignKeyName: 'workspace_members_workspace_id_fkey'
+            columns: ['workspace_id']
             isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
+            referencedRelation: 'workspaces'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6724,7 +6690,7 @@ export type Database = {
           settings: Json | null
           status: string
           tenant_id: string
-          type: Database["public"]["Enums"]["workspace_type"]
+          type: Database['public']['Enums']['workspace_type']
           updated_at: string
           version: number
         }
@@ -6745,7 +6711,7 @@ export type Database = {
           settings?: Json | null
           status?: string
           tenant_id: string
-          type: Database["public"]["Enums"]["workspace_type"]
+          type: Database['public']['Enums']['workspace_type']
           updated_at?: string
           version?: number
         }
@@ -6766,7 +6732,7 @@ export type Database = {
           settings?: Json | null
           status?: string
           tenant_id?: string
-          type?: Database["public"]["Enums"]["workspace_type"]
+          type?: Database['public']['Enums']['workspace_type']
           updated_at?: string
           version?: number
         }
@@ -6822,11 +6788,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "link_audit_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: 'link_audit_logs_performed_by_fkey'
+            columns: ['performed_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['user_id']
           },
         ]
       }
@@ -6852,20 +6818,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "dossier_interactions_dossier_id_fkey"
-            columns: ["dossier_id"]
+            foreignKeyName: 'dossier_interactions_dossier_id_fkey'
+            columns: ['dossier_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
         ]
       }
       intelligence_cache_status: {
         Row: {
           cache_expires_at: string | null
-          confidence_level:
-            | Database["public"]["Enums"]["confidence_level"]
-            | null
+          confidence_level: Database['public']['Enums']['confidence_level'] | null
           entity_id: string | null
           entity_name: string | null
           entity_type: string | null
@@ -6883,18 +6847,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intelligence_reports_entity_id_fkey"
-            columns: ["entity_id"]
+            foreignKeyName: 'intelligence_reports_entity_id_fkey'
+            columns: ['entity_id']
             isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
+            referencedRelation: 'dossiers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "intelligence_reports_refresh_triggered_by_fkey"
-            columns: ["refresh_triggered_by"]
+            foreignKeyName: 'intelligence_reports_refresh_triggered_by_fkey'
+            columns: ['refresh_triggered_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -6937,11 +6901,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "link_audit_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: 'link_audit_logs_performed_by_fkey'
+            columns: ['performed_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['user_id']
           },
         ]
       }
@@ -7013,10 +6977,10 @@ export type Database = {
       calculate_next_scan_time: { Args: { frequency: string }; Returns: string }
       calculate_priority: {
         Args: {
-          p_sensitivity: Database["public"]["Enums"]["sensitivity_level"]
-          p_urgency: Database["public"]["Enums"]["urgency_level"]
+          p_sensitivity: Database['public']['Enums']['sensitivity_level']
+          p_urgency: Database['public']['Enums']['urgency_level']
         }
-        Returns: Database["public"]["Enums"]["priority_level"]
+        Returns: Database['public']['Enums']['priority_level']
       }
       calculate_text_similarity: {
         Args: { text1: string; text2: string }
@@ -7087,18 +7051,18 @@ export type Database = {
       euclidean_distance: { Args: { v1: string; v2: string }; Returns: number }
       find_matching_sla_policy: {
         Args: {
-          p_priority: Database["public"]["Enums"]["priority_level"]
-          p_request_type: Database["public"]["Enums"]["request_type"]
-          p_sensitivity: Database["public"]["Enums"]["sensitivity_level"]
-          p_urgency: Database["public"]["Enums"]["urgency_level"]
+          p_priority: Database['public']['Enums']['priority_level']
+          p_request_type: Database['public']['Enums']['request_type']
+          p_sensitivity: Database['public']['Enums']['sensitivity_level']
+          p_urgency: Database['public']['Enums']['urgency_level']
         }
         Returns: string
       }
       find_related_intelligence: {
         Args: { limit_count?: number; report_id: string }
         Returns: {
-          classification: Database["public"]["Enums"]["classification_level"]
-          confidence_level: Database["public"]["Enums"]["confidence_level"]
+          classification: Database['public']['Enums']['classification_level']
+          confidence_level: Database['public']['Enums']['confidence_level']
           related_report_id: string
           related_report_title: string
           similarity_score: number
@@ -7251,17 +7215,17 @@ export type Database = {
       get_user_clearance_level: { Args: { user_id: string }; Returns: number }
       get_user_max_sensitivity: {
         Args: { p_user_id: string }
-        Returns: Database["public"]["Enums"]["sensitivity_level"]
+        Returns: Database['public']['Enums']['sensitivity_level']
       }
       get_user_role: { Args: never; Returns: string }
       get_user_unit: { Args: never; Returns: string }
       get_user_units: { Args: { p_user_id: string }; Returns: string[] }
       http: {
-        Args: { request: Database["public"]["CompositeTypes"]["http_request"] }
-        Returns: Database["public"]["CompositeTypes"]["http_response"]
+        Args: { request: Database['public']['CompositeTypes']['http_request'] }
+        Returns: Database['public']['CompositeTypes']['http_response']
         SetofOptions: {
-          from: "http_request"
-          to: "http_response"
+          from: 'http_request'
+          to: 'http_response'
           isOneToOne: true
           isSetofReturn: false
         }
@@ -7269,20 +7233,20 @@ export type Database = {
       http_delete:
         | {
             Args: { uri: string }
-            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            Returns: Database['public']['CompositeTypes']['http_response']
             SetofOptions: {
-              from: "*"
-              to: "http_response"
+              from: '*'
+              to: 'http_response'
               isOneToOne: true
               isSetofReturn: false
             }
           }
         | {
             Args: { content: string; content_type: string; uri: string }
-            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            Returns: Database['public']['CompositeTypes']['http_response']
             SetofOptions: {
-              from: "*"
-              to: "http_response"
+              from: '*'
+              to: 'http_response'
               isOneToOne: true
               isSetofReturn: false
             }
@@ -7290,40 +7254,40 @@ export type Database = {
       http_get:
         | {
             Args: { uri: string }
-            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            Returns: Database['public']['CompositeTypes']['http_response']
             SetofOptions: {
-              from: "*"
-              to: "http_response"
+              from: '*'
+              to: 'http_response'
               isOneToOne: true
               isSetofReturn: false
             }
           }
         | {
             Args: { data: Json; uri: string }
-            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            Returns: Database['public']['CompositeTypes']['http_response']
             SetofOptions: {
-              from: "*"
-              to: "http_response"
+              from: '*'
+              to: 'http_response'
               isOneToOne: true
               isSetofReturn: false
             }
           }
       http_head: {
         Args: { uri: string }
-        Returns: Database["public"]["CompositeTypes"]["http_response"]
+        Returns: Database['public']['CompositeTypes']['http_response']
         SetofOptions: {
-          from: "*"
-          to: "http_response"
+          from: '*'
+          to: 'http_response'
           isOneToOne: true
           isSetofReturn: false
         }
       }
       http_header: {
         Args: { field: string; value: string }
-        Returns: Database["public"]["CompositeTypes"]["http_header"]
+        Returns: Database['public']['CompositeTypes']['http_header']
         SetofOptions: {
-          from: "*"
-          to: "http_header"
+          from: '*'
+          to: 'http_header'
           isOneToOne: true
           isSetofReturn: false
         }
@@ -7337,10 +7301,10 @@ export type Database = {
       }
       http_patch: {
         Args: { content: string; content_type: string; uri: string }
-        Returns: Database["public"]["CompositeTypes"]["http_response"]
+        Returns: Database['public']['CompositeTypes']['http_response']
         SetofOptions: {
-          from: "*"
-          to: "http_response"
+          from: '*'
+          to: 'http_response'
           isOneToOne: true
           isSetofReturn: false
         }
@@ -7348,30 +7312,30 @@ export type Database = {
       http_post:
         | {
             Args: { content: string; content_type: string; uri: string }
-            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            Returns: Database['public']['CompositeTypes']['http_response']
             SetofOptions: {
-              from: "*"
-              to: "http_response"
+              from: '*'
+              to: 'http_response'
               isOneToOne: true
               isSetofReturn: false
             }
           }
         | {
             Args: { data: Json; uri: string }
-            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            Returns: Database['public']['CompositeTypes']['http_response']
             SetofOptions: {
-              from: "*"
-              to: "http_response"
+              from: '*'
+              to: 'http_response'
               isOneToOne: true
               isSetofReturn: false
             }
           }
       http_put: {
         Args: { content: string; content_type: string; uri: string }
-        Returns: Database["public"]["CompositeTypes"]["http_response"]
+        Returns: Database['public']['CompositeTypes']['http_response']
         SetofOptions: {
-          from: "*"
-          to: "http_response"
+          from: '*'
+          to: 'http_response'
           isOneToOne: true
           isSetofReturn: false
         }
@@ -7570,8 +7534,8 @@ export type Database = {
           updated_by: string | null
         }[]
         SetofOptions: {
-          from: "*"
-          to: "dossiers"
+          from: '*'
+          to: 'dossiers'
           isOneToOne: false
           isSetofReturn: true
         }
@@ -7579,7 +7543,7 @@ export type Database = {
       search_similar_documents: {
         Args: {
           filter_id?: string
-          filter_type?: Database["public"]["Enums"]["entity_type"]
+          filter_type?: Database['public']['Enums']['entity_type']
           limit_count?: number
           query_embedding: string
           threshold?: number
@@ -7590,7 +7554,7 @@ export type Database = {
           metadata: Json
           similarity_score: number
           source_id: string
-          source_type: Database["public"]["Enums"]["entity_type"]
+          source_type: Database['public']['Enums']['entity_type']
         }[]
       }
       search_tickets_by_keywords: {
@@ -7623,7 +7587,7 @@ export type Database = {
         }[]
       }
       show_limit: { Args: never; Returns: number }
-      show_trgm: { Args: { "": string }; Returns: string[] }
+      show_trgm: { Args: { '': string }; Returns: string[] }
       sign: {
         Args: { algorithm?: string; payload: Json; secret: string }
         Returns: string
@@ -7676,14 +7640,9 @@ export type Database = {
             Args: { string: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.urlencode(string => bytea), public.urlencode(string => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & 'Could not choose the best candidate function between: public.urlencode(string => bytea), public.urlencode(string => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved'
           }
-        | {
-            Args: { string: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.urlencode(string => bytea), public.urlencode(string => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
+
       user_can_view_assignment: {
         Args: { assignment_id: string; user_id: string }
         Returns: boolean
@@ -7702,261 +7661,155 @@ export type Database = {
       }
     }
     Enums: {
-      aa_commitment_status:
-        | "pending"
-        | "in_progress"
-        | "completed"
-        | "cancelled"
-        | "overdue"
-      aa_owner_type: "internal" | "external"
-      aa_priority: "low" | "medium" | "high" | "critical"
-      aa_tracking_mode: "automatic" | "manual"
-      access_level: "public" | "internal" | "confidential" | "secret"
+      aa_commitment_status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'overdue'
+      aa_owner_type: 'internal' | 'external'
+      aa_priority: 'low' | 'medium' | 'high' | 'critical'
+      aa_tracking_mode: 'automatic' | 'manual'
+      access_level: 'public' | 'internal' | 'confidential' | 'secret'
       activity_type:
-        | "meeting"
-        | "mission"
-        | "conference"
-        | "workshop"
-        | "phone_call"
-        | "email_exchange"
-      analysis_type: "trend" | "pattern" | "prediction" | "assessment"
+        | 'meeting'
+        | 'mission'
+        | 'conference'
+        | 'workshop'
+        | 'phone_call'
+        | 'email_exchange'
+      analysis_type: 'trend' | 'pattern' | 'prediction' | 'assessment'
       assignment_event_type:
-        | "created"
-        | "status_changed"
-        | "escalated"
-        | "completed"
-        | "commented"
-        | "checklist_updated"
-        | "observer_added"
-        | "reassigned"
-        | "workflow_stage_changed"
-      assignment_status:
-        | "pending"
-        | "assigned"
-        | "in_progress"
-        | "completed"
-        | "cancelled"
-      attendee_role: "host" | "participant" | "observer" | "speaker"
-      attendee_type: "country" | "organization" | "contact"
-      availability_status: "available" | "on_leave" | "unavailable"
-      brief_status: "draft" | "review" | "approved" | "published"
-      classification_level: "public" | "internal" | "confidential" | "secret"
-      commitment_status:
-        | "pending"
-        | "in_progress"
-        | "completed"
-        | "overdue"
-        | "cancelled"
-      commitment_type:
-        | "deliverable"
-        | "payment"
-        | "report"
-        | "participation"
-        | "data_submission"
-      communication_channel: "email" | "phone" | "whatsapp"
-      confidence_level: "low" | "medium" | "high" | "critical"
-      contact_level:
-        | "minister"
-        | "director"
-        | "head"
-        | "manager"
-        | "specialist"
-        | "other"
-      contact_type:
-        | "primary"
-        | "secondary"
-        | "technical"
-        | "administrative"
-        | "executive"
-      country_status: "active" | "inactive" | "suspended"
-      decision_type: "ai_suggestion" | "manual_override" | "auto_assignment"
-      deliverable_status:
-        | "not_started"
-        | "in_progress"
-        | "completed"
-        | "delayed"
-        | "at_risk"
-      document_classification: "public" | "internal" | "confidential" | "secret"
-      document_language: "ar" | "en" | "bilingual"
+        | 'created'
+        | 'status_changed'
+        | 'escalated'
+        | 'completed'
+        | 'commented'
+        | 'checklist_updated'
+        | 'observer_added'
+        | 'reassigned'
+        | 'workflow_stage_changed'
+      assignment_status: 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled'
+      attendee_role: 'host' | 'participant' | 'observer' | 'speaker'
+      attendee_type: 'country' | 'organization' | 'contact'
+      availability_status: 'available' | 'on_leave' | 'unavailable'
+      brief_status: 'draft' | 'review' | 'approved' | 'published'
+      classification_level: 'public' | 'internal' | 'confidential' | 'secret'
+      commitment_status: 'pending' | 'in_progress' | 'completed' | 'overdue' | 'cancelled'
+      commitment_type: 'deliverable' | 'payment' | 'report' | 'participation' | 'data_submission'
+      communication_channel: 'email' | 'phone' | 'whatsapp'
+      confidence_level: 'low' | 'medium' | 'high' | 'critical'
+      contact_level: 'minister' | 'director' | 'head' | 'manager' | 'specialist' | 'other'
+      contact_type: 'primary' | 'secondary' | 'technical' | 'administrative' | 'executive'
+      country_status: 'active' | 'inactive' | 'suspended'
+      decision_type: 'ai_suggestion' | 'manual_override' | 'auto_assignment'
+      deliverable_status: 'not_started' | 'in_progress' | 'completed' | 'delayed' | 'at_risk'
+      document_classification: 'public' | 'internal' | 'confidential' | 'secret'
+      document_language: 'ar' | 'en' | 'bilingual'
       document_type:
-        | "agreement"
-        | "report"
-        | "presentation"
-        | "correspondence"
-        | "position_paper"
-        | "minutes"
-        | "brief"
-        | "other"
-      duplicate_status:
-        | "pending"
-        | "confirmed_duplicate"
-        | "not_duplicate"
-        | "merged"
-      embedding_owner_type: "ticket" | "artifact"
-      engagement_workflow_stage:
-        | "todo"
-        | "in_progress"
-        | "review"
-        | "done"
-        | "cancelled"
+        | 'agreement'
+        | 'report'
+        | 'presentation'
+        | 'correspondence'
+        | 'position_paper'
+        | 'minutes'
+        | 'brief'
+        | 'other'
+      duplicate_status: 'pending' | 'confirmed_duplicate' | 'not_duplicate' | 'merged'
+      embedding_owner_type: 'ticket' | 'artifact'
+      engagement_workflow_stage: 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled'
       entity_type:
-        | "country"
-        | "organization"
-        | "mou"
-        | "event"
-        | "forum"
-        | "brief"
-        | "intelligence_report"
-        | "data_library_item"
-      escalation_reason: "sla_breach" | "manual" | "capacity_exhaustion"
-      event_status: "scheduled" | "in_progress" | "completed" | "cancelled"
-      event_type:
-        | "meeting"
-        | "conference"
-        | "workshop"
-        | "ceremony"
-        | "visit"
-        | "other"
-      forum_frequency:
-        | "annual"
-        | "biennial"
-        | "quarterly"
-        | "one_time"
-        | "ad_hoc"
-      forum_type:
-        | "conference"
-        | "workshop"
-        | "summit"
-        | "committee_meeting"
-        | "bilateral"
-      health_status: "healthy" | "monitor" | "at_risk" | "critical"
+        | 'country'
+        | 'organization'
+        | 'mou'
+        | 'event'
+        | 'forum'
+        | 'brief'
+        | 'intelligence_report'
+        | 'data_library_item'
+      escalation_reason: 'sla_breach' | 'manual' | 'capacity_exhaustion'
+      event_status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled'
+      event_type: 'meeting' | 'conference' | 'workshop' | 'ceremony' | 'visit' | 'other'
+      forum_frequency: 'annual' | 'biennial' | 'quarterly' | 'one_time' | 'ad_hoc'
+      forum_type: 'conference' | 'workshop' | 'summit' | 'committee_meeting' | 'bilateral'
+      health_status: 'healthy' | 'monitor' | 'at_risk' | 'critical'
       intelligence_category:
-        | "statistical_method"
-        | "technology"
-        | "partnership"
-        | "regulation"
-        | "event"
-        | "other"
-      intelligence_status: "draft" | "review" | "approved" | "published"
-      intelligence_type:
-        | "trend"
-        | "opportunity"
-        | "risk"
-        | "best_practice"
-        | "news"
-      language_preference: "en" | "ar"
-      language_proficiency: "native" | "fluent" | "professional" | "basic"
-      likelihood: "unlikely" | "possible" | "likely" | "certain"
-      location_type: "in_person" | "virtual" | "hybrid"
-      membership_status: "member" | "observer" | "partner" | "none"
-      mou_category:
-        | "data_exchange"
-        | "capacity_building"
-        | "strategic"
-        | "technical"
+        | 'statistical_method'
+        | 'technology'
+        | 'partnership'
+        | 'regulation'
+        | 'event'
+        | 'other'
+      intelligence_status: 'draft' | 'review' | 'approved' | 'published'
+      intelligence_type: 'trend' | 'opportunity' | 'risk' | 'best_practice' | 'news'
+      language_preference: 'en' | 'ar'
+      language_proficiency: 'native' | 'fluent' | 'professional' | 'basic'
+      likelihood: 'unlikely' | 'possible' | 'likely' | 'certain'
+      location_type: 'in_person' | 'virtual' | 'hybrid'
+      membership_status: 'member' | 'observer' | 'partner' | 'none'
+      mou_category: 'data_exchange' | 'capacity_building' | 'strategic' | 'technical'
       mou_state:
-        | "draft"
-        | "negotiation"
-        | "pending_approval"
-        | "signed"
-        | "active"
-        | "suspended"
-        | "expired"
-        | "terminated"
-      mou_status:
-        | "draft"
-        | "negotiation"
-        | "signed"
-        | "active"
-        | "expired"
-        | "terminated"
-      mou_type: "bilateral" | "multilateral" | "framework" | "technical"
+        | 'draft'
+        | 'negotiation'
+        | 'pending_approval'
+        | 'signed'
+        | 'active'
+        | 'suspended'
+        | 'expired'
+        | 'terminated'
+      mou_status: 'draft' | 'negotiation' | 'signed' | 'active' | 'expired' | 'terminated'
+      mou_type: 'bilateral' | 'multilateral' | 'framework' | 'technical'
       notification_type:
-        | "commitment_assigned"
-        | "commitment_due_soon"
-        | "after_action_published"
-        | "edit_approved"
-        | "edit_rejected"
-      organization_status: "active" | "inactive" | "suspended"
+        | 'commitment_assigned'
+        | 'commitment_due_soon'
+        | 'after_action_published'
+        | 'edit_approved'
+        | 'edit_rejected'
+      organization_status: 'active' | 'inactive' | 'suspended'
       organization_type:
-        | "government"
-        | "international"
-        | "ngo"
-        | "private"
-        | "academic"
-        | "research"
-      participation_level: "active" | "occasional" | "observer"
-      priority_level:
-        | "critical"
-        | "urgent"
-        | "high"
-        | "normal"
-        | "medium"
-        | "low"
-      relationship_health: "excellent" | "good" | "fair" | "poor" | "critical"
-      relationship_status: "active" | "developing" | "dormant"
-      relationship_type:
-        | "bilateral"
-        | "multilateral"
-        | "membership"
-        | "partnership"
-      reporting_frequency: "annual" | "quarterly" | "monthly" | "ad_hoc"
-      request_type: "engagement" | "position" | "mou_action" | "foresight"
-      retention_category:
-        | "permanent"
-        | "long_term"
-        | "medium_term"
-        | "temporary"
-      scan_status: "pending" | "clean" | "infected" | "error"
-      sensitivity_level: "public" | "internal" | "confidential" | "secret"
-      severity: "low" | "medium" | "high" | "critical"
-      sla_event_type:
-        | "started"
-        | "paused"
-        | "resumed"
-        | "met"
-        | "breached"
-        | "cancelled"
-      statistical_system_type: "centralized" | "decentralized" | "hybrid"
-      task_priority: "urgent" | "high" | "medium" | "low"
-      task_status: "pending" | "in_progress" | "completed" | "cancelled"
-      task_type:
-        | "action_item"
-        | "follow_up"
-        | "preparation"
-        | "analysis"
-        | "other"
-      thematic_category:
-        | "sdg"
-        | "methodology"
-        | "technology"
-        | "governance"
-        | "capacity"
-      ticket_source: "web" | "api" | "email" | "import"
+        | 'government'
+        | 'international'
+        | 'ngo'
+        | 'private'
+        | 'academic'
+        | 'research'
+      participation_level: 'active' | 'occasional' | 'observer'
+      priority_level: 'critical' | 'urgent' | 'high' | 'normal' | 'medium' | 'low'
+      relationship_health: 'excellent' | 'good' | 'fair' | 'poor' | 'critical'
+      relationship_status: 'active' | 'developing' | 'dormant'
+      relationship_type: 'bilateral' | 'multilateral' | 'membership' | 'partnership'
+      reporting_frequency: 'annual' | 'quarterly' | 'monthly' | 'ad_hoc'
+      request_type: 'engagement' | 'position' | 'mou_action' | 'foresight'
+      retention_category: 'permanent' | 'long_term' | 'medium_term' | 'temporary'
+      scan_status: 'pending' | 'clean' | 'infected' | 'error'
+      sensitivity_level: 'public' | 'internal' | 'confidential' | 'secret'
+      severity: 'low' | 'medium' | 'high' | 'critical'
+      sla_event_type: 'started' | 'paused' | 'resumed' | 'met' | 'breached' | 'cancelled'
+      statistical_system_type: 'centralized' | 'decentralized' | 'hybrid'
+      task_priority: 'urgent' | 'high' | 'medium' | 'low'
+      task_status: 'pending' | 'in_progress' | 'completed' | 'cancelled'
+      task_type: 'action_item' | 'follow_up' | 'preparation' | 'analysis' | 'other'
+      thematic_category: 'sdg' | 'methodology' | 'technology' | 'governance' | 'capacity'
+      ticket_source: 'web' | 'api' | 'email' | 'import'
       ticket_status:
-        | "draft"
-        | "submitted"
-        | "triaged"
-        | "assigned"
-        | "in_progress"
-        | "converted"
-        | "closed"
-        | "merged"
-      urgency_level: "low" | "medium" | "high" | "critical"
-      urgent_priority: "urgent" | "high" | "medium" | "low"
+        | 'draft'
+        | 'submitted'
+        | 'triaged'
+        | 'assigned'
+        | 'in_progress'
+        | 'converted'
+        | 'closed'
+        | 'merged'
+      urgency_level: 'low' | 'medium' | 'high' | 'critical'
+      urgent_priority: 'urgent' | 'high' | 'medium' | 'low'
       user_role:
-        | "super_admin"
-        | "admin"
-        | "manager"
-        | "analyst"
-        | "viewer"
-        | "security_admin"
-        | "editor"
-        | "user"
-        | "moderator"
-      visibility_level: "public" | "internal" | "restricted"
-      work_item_type: "dossier" | "ticket" | "position" | "task"
-      workspace_type: "project" | "committee" | "initiative" | "temporary"
+        | 'super_admin'
+        | 'admin'
+        | 'manager'
+        | 'analyst'
+        | 'viewer'
+        | 'security_admin'
+        | 'editor'
+        | 'user'
+        | 'moderator'
+      visibility_level: 'public' | 'internal' | 'restricted'
+      work_item_type: 'dossier' | 'ticket' | 'position' | 'task'
+      workspace_type: 'project' | 'committee' | 'initiative' | 'temporary'
     }
     CompositeTypes: {
       http_header: {
@@ -7966,47 +7819,45 @@ export type Database = {
       http_request: {
         method: unknown
         uri: string | null
-        headers: Database["public"]["CompositeTypes"]["http_header"][] | null
+        headers: Database['public']['CompositeTypes']['http_header'][] | null
         content_type: string | null
         content: string | null
       }
       http_response: {
         status: number | null
         content_type: string | null
-        headers: Database["public"]["CompositeTypes"]["http_header"][] | null
+        headers: Database['public']['CompositeTypes']['http_header'][] | null
         content: string | null
       }
     }
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -8015,23 +7866,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -8040,23 +7891,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -8065,320 +7916,193 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
+    | keyof DefaultSchema['Enums']
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
+    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
+    | keyof DefaultSchema['CompositeTypes']
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
+    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
   public: {
     Enums: {
-      aa_commitment_status: [
-        "pending",
-        "in_progress",
-        "completed",
-        "cancelled",
-        "overdue",
-      ],
-      aa_owner_type: ["internal", "external"],
-      aa_priority: ["low", "medium", "high", "critical"],
-      aa_tracking_mode: ["automatic", "manual"],
-      access_level: ["public", "internal", "confidential", "secret"],
+      aa_commitment_status: ['pending', 'in_progress', 'completed', 'cancelled', 'overdue'],
+      aa_owner_type: ['internal', 'external'],
+      aa_priority: ['low', 'medium', 'high', 'critical'],
+      aa_tracking_mode: ['automatic', 'manual'],
+      access_level: ['public', 'internal', 'confidential', 'secret'],
       activity_type: [
-        "meeting",
-        "mission",
-        "conference",
-        "workshop",
-        "phone_call",
-        "email_exchange",
+        'meeting',
+        'mission',
+        'conference',
+        'workshop',
+        'phone_call',
+        'email_exchange',
       ],
-      analysis_type: ["trend", "pattern", "prediction", "assessment"],
+      analysis_type: ['trend', 'pattern', 'prediction', 'assessment'],
       assignment_event_type: [
-        "created",
-        "status_changed",
-        "escalated",
-        "completed",
-        "commented",
-        "checklist_updated",
-        "observer_added",
-        "reassigned",
-        "workflow_stage_changed",
+        'created',
+        'status_changed',
+        'escalated',
+        'completed',
+        'commented',
+        'checklist_updated',
+        'observer_added',
+        'reassigned',
+        'workflow_stage_changed',
       ],
-      assignment_status: [
-        "pending",
-        "assigned",
-        "in_progress",
-        "completed",
-        "cancelled",
-      ],
-      attendee_role: ["host", "participant", "observer", "speaker"],
-      attendee_type: ["country", "organization", "contact"],
-      availability_status: ["available", "on_leave", "unavailable"],
-      brief_status: ["draft", "review", "approved", "published"],
-      classification_level: ["public", "internal", "confidential", "secret"],
-      commitment_status: [
-        "pending",
-        "in_progress",
-        "completed",
-        "overdue",
-        "cancelled",
-      ],
-      commitment_type: [
-        "deliverable",
-        "payment",
-        "report",
-        "participation",
-        "data_submission",
-      ],
-      communication_channel: ["email", "phone", "whatsapp"],
-      confidence_level: ["low", "medium", "high", "critical"],
-      contact_level: [
-        "minister",
-        "director",
-        "head",
-        "manager",
-        "specialist",
-        "other",
-      ],
-      contact_type: [
-        "primary",
-        "secondary",
-        "technical",
-        "administrative",
-        "executive",
-      ],
-      country_status: ["active", "inactive", "suspended"],
-      decision_type: ["ai_suggestion", "manual_override", "auto_assignment"],
-      deliverable_status: [
-        "not_started",
-        "in_progress",
-        "completed",
-        "delayed",
-        "at_risk",
-      ],
-      document_classification: ["public", "internal", "confidential", "secret"],
-      document_language: ["ar", "en", "bilingual"],
+      assignment_status: ['pending', 'assigned', 'in_progress', 'completed', 'cancelled'],
+      attendee_role: ['host', 'participant', 'observer', 'speaker'],
+      attendee_type: ['country', 'organization', 'contact'],
+      availability_status: ['available', 'on_leave', 'unavailable'],
+      brief_status: ['draft', 'review', 'approved', 'published'],
+      classification_level: ['public', 'internal', 'confidential', 'secret'],
+      commitment_status: ['pending', 'in_progress', 'completed', 'overdue', 'cancelled'],
+      commitment_type: ['deliverable', 'payment', 'report', 'participation', 'data_submission'],
+      communication_channel: ['email', 'phone', 'whatsapp'],
+      confidence_level: ['low', 'medium', 'high', 'critical'],
+      contact_level: ['minister', 'director', 'head', 'manager', 'specialist', 'other'],
+      contact_type: ['primary', 'secondary', 'technical', 'administrative', 'executive'],
+      country_status: ['active', 'inactive', 'suspended'],
+      decision_type: ['ai_suggestion', 'manual_override', 'auto_assignment'],
+      deliverable_status: ['not_started', 'in_progress', 'completed', 'delayed', 'at_risk'],
+      document_classification: ['public', 'internal', 'confidential', 'secret'],
+      document_language: ['ar', 'en', 'bilingual'],
       document_type: [
-        "agreement",
-        "report",
-        "presentation",
-        "correspondence",
-        "position_paper",
-        "minutes",
-        "brief",
-        "other",
+        'agreement',
+        'report',
+        'presentation',
+        'correspondence',
+        'position_paper',
+        'minutes',
+        'brief',
+        'other',
       ],
-      duplicate_status: [
-        "pending",
-        "confirmed_duplicate",
-        "not_duplicate",
-        "merged",
-      ],
-      embedding_owner_type: ["ticket", "artifact"],
-      engagement_workflow_stage: [
-        "todo",
-        "in_progress",
-        "review",
-        "done",
-        "cancelled",
-      ],
+      duplicate_status: ['pending', 'confirmed_duplicate', 'not_duplicate', 'merged'],
+      embedding_owner_type: ['ticket', 'artifact'],
+      engagement_workflow_stage: ['todo', 'in_progress', 'review', 'done', 'cancelled'],
       entity_type: [
-        "country",
-        "organization",
-        "mou",
-        "event",
-        "forum",
-        "brief",
-        "intelligence_report",
-        "data_library_item",
+        'country',
+        'organization',
+        'mou',
+        'event',
+        'forum',
+        'brief',
+        'intelligence_report',
+        'data_library_item',
       ],
-      escalation_reason: ["sla_breach", "manual", "capacity_exhaustion"],
-      event_status: ["scheduled", "in_progress", "completed", "cancelled"],
-      event_type: [
-        "meeting",
-        "conference",
-        "workshop",
-        "ceremony",
-        "visit",
-        "other",
-      ],
-      forum_frequency: [
-        "annual",
-        "biennial",
-        "quarterly",
-        "one_time",
-        "ad_hoc",
-      ],
-      forum_type: [
-        "conference",
-        "workshop",
-        "summit",
-        "committee_meeting",
-        "bilateral",
-      ],
-      health_status: ["healthy", "monitor", "at_risk", "critical"],
+      escalation_reason: ['sla_breach', 'manual', 'capacity_exhaustion'],
+      event_status: ['scheduled', 'in_progress', 'completed', 'cancelled'],
+      event_type: ['meeting', 'conference', 'workshop', 'ceremony', 'visit', 'other'],
+      forum_frequency: ['annual', 'biennial', 'quarterly', 'one_time', 'ad_hoc'],
+      forum_type: ['conference', 'workshop', 'summit', 'committee_meeting', 'bilateral'],
+      health_status: ['healthy', 'monitor', 'at_risk', 'critical'],
       intelligence_category: [
-        "statistical_method",
-        "technology",
-        "partnership",
-        "regulation",
-        "event",
-        "other",
+        'statistical_method',
+        'technology',
+        'partnership',
+        'regulation',
+        'event',
+        'other',
       ],
-      intelligence_status: ["draft", "review", "approved", "published"],
-      intelligence_type: [
-        "trend",
-        "opportunity",
-        "risk",
-        "best_practice",
-        "news",
-      ],
-      language_preference: ["en", "ar"],
-      language_proficiency: ["native", "fluent", "professional", "basic"],
-      likelihood: ["unlikely", "possible", "likely", "certain"],
-      location_type: ["in_person", "virtual", "hybrid"],
-      membership_status: ["member", "observer", "partner", "none"],
-      mou_category: [
-        "data_exchange",
-        "capacity_building",
-        "strategic",
-        "technical",
-      ],
+      intelligence_status: ['draft', 'review', 'approved', 'published'],
+      intelligence_type: ['trend', 'opportunity', 'risk', 'best_practice', 'news'],
+      language_preference: ['en', 'ar'],
+      language_proficiency: ['native', 'fluent', 'professional', 'basic'],
+      likelihood: ['unlikely', 'possible', 'likely', 'certain'],
+      location_type: ['in_person', 'virtual', 'hybrid'],
+      membership_status: ['member', 'observer', 'partner', 'none'],
+      mou_category: ['data_exchange', 'capacity_building', 'strategic', 'technical'],
       mou_state: [
-        "draft",
-        "negotiation",
-        "pending_approval",
-        "signed",
-        "active",
-        "suspended",
-        "expired",
-        "terminated",
+        'draft',
+        'negotiation',
+        'pending_approval',
+        'signed',
+        'active',
+        'suspended',
+        'expired',
+        'terminated',
       ],
-      mou_status: [
-        "draft",
-        "negotiation",
-        "signed",
-        "active",
-        "expired",
-        "terminated",
-      ],
-      mou_type: ["bilateral", "multilateral", "framework", "technical"],
+      mou_status: ['draft', 'negotiation', 'signed', 'active', 'expired', 'terminated'],
+      mou_type: ['bilateral', 'multilateral', 'framework', 'technical'],
       notification_type: [
-        "commitment_assigned",
-        "commitment_due_soon",
-        "after_action_published",
-        "edit_approved",
-        "edit_rejected",
+        'commitment_assigned',
+        'commitment_due_soon',
+        'after_action_published',
+        'edit_approved',
+        'edit_rejected',
       ],
-      organization_status: ["active", "inactive", "suspended"],
-      organization_type: [
-        "government",
-        "international",
-        "ngo",
-        "private",
-        "academic",
-        "research",
-      ],
-      participation_level: ["active", "occasional", "observer"],
-      priority_level: ["critical", "urgent", "high", "normal", "medium", "low"],
-      relationship_health: ["excellent", "good", "fair", "poor", "critical"],
-      relationship_status: ["active", "developing", "dormant"],
-      relationship_type: [
-        "bilateral",
-        "multilateral",
-        "membership",
-        "partnership",
-      ],
-      reporting_frequency: ["annual", "quarterly", "monthly", "ad_hoc"],
-      request_type: ["engagement", "position", "mou_action", "foresight"],
-      retention_category: [
-        "permanent",
-        "long_term",
-        "medium_term",
-        "temporary",
-      ],
-      scan_status: ["pending", "clean", "infected", "error"],
-      sensitivity_level: ["public", "internal", "confidential", "secret"],
-      severity: ["low", "medium", "high", "critical"],
-      sla_event_type: [
-        "started",
-        "paused",
-        "resumed",
-        "met",
-        "breached",
-        "cancelled",
-      ],
-      statistical_system_type: ["centralized", "decentralized", "hybrid"],
-      task_priority: ["urgent", "high", "medium", "low"],
-      task_status: ["pending", "in_progress", "completed", "cancelled"],
-      task_type: [
-        "action_item",
-        "follow_up",
-        "preparation",
-        "analysis",
-        "other",
-      ],
-      thematic_category: [
-        "sdg",
-        "methodology",
-        "technology",
-        "governance",
-        "capacity",
-      ],
-      ticket_source: ["web", "api", "email", "import"],
+      organization_status: ['active', 'inactive', 'suspended'],
+      organization_type: ['government', 'international', 'ngo', 'private', 'academic', 'research'],
+      participation_level: ['active', 'occasional', 'observer'],
+      priority_level: ['critical', 'urgent', 'high', 'normal', 'medium', 'low'],
+      relationship_health: ['excellent', 'good', 'fair', 'poor', 'critical'],
+      relationship_status: ['active', 'developing', 'dormant'],
+      relationship_type: ['bilateral', 'multilateral', 'membership', 'partnership'],
+      reporting_frequency: ['annual', 'quarterly', 'monthly', 'ad_hoc'],
+      request_type: ['engagement', 'position', 'mou_action', 'foresight'],
+      retention_category: ['permanent', 'long_term', 'medium_term', 'temporary'],
+      scan_status: ['pending', 'clean', 'infected', 'error'],
+      sensitivity_level: ['public', 'internal', 'confidential', 'secret'],
+      severity: ['low', 'medium', 'high', 'critical'],
+      sla_event_type: ['started', 'paused', 'resumed', 'met', 'breached', 'cancelled'],
+      statistical_system_type: ['centralized', 'decentralized', 'hybrid'],
+      task_priority: ['urgent', 'high', 'medium', 'low'],
+      task_status: ['pending', 'in_progress', 'completed', 'cancelled'],
+      task_type: ['action_item', 'follow_up', 'preparation', 'analysis', 'other'],
+      thematic_category: ['sdg', 'methodology', 'technology', 'governance', 'capacity'],
+      ticket_source: ['web', 'api', 'email', 'import'],
       ticket_status: [
-        "draft",
-        "submitted",
-        "triaged",
-        "assigned",
-        "in_progress",
-        "converted",
-        "closed",
-        "merged",
+        'draft',
+        'submitted',
+        'triaged',
+        'assigned',
+        'in_progress',
+        'converted',
+        'closed',
+        'merged',
       ],
-      urgency_level: ["low", "medium", "high", "critical"],
-      urgent_priority: ["urgent", "high", "medium", "low"],
+      urgency_level: ['low', 'medium', 'high', 'critical'],
+      urgent_priority: ['urgent', 'high', 'medium', 'low'],
       user_role: [
-        "super_admin",
-        "admin",
-        "manager",
-        "analyst",
-        "viewer",
-        "security_admin",
-        "editor",
-        "user",
-        "moderator",
+        'super_admin',
+        'admin',
+        'manager',
+        'analyst',
+        'viewer',
+        'security_admin',
+        'editor',
+        'user',
+        'moderator',
       ],
-      visibility_level: ["public", "internal", "restricted"],
-      work_item_type: ["dossier", "ticket", "position", "task"],
-      workspace_type: ["project", "committee", "initiative", "temporary"],
+      visibility_level: ['public', 'internal', 'restricted'],
+      work_item_type: ['dossier', 'ticket', 'position', 'task'],
+      workspace_type: ['project', 'committee', 'initiative', 'temporary'],
     },
   },
 } as const

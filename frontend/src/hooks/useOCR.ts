@@ -6,7 +6,12 @@
  * and optimistic updates.
  */
 
-import { useMutation, useQuery, type UseMutationResult, type UseQueryResult } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  type UseMutationResult,
+  type UseQueryResult,
+} from '@tanstack/react-query'
 import {
   uploadBusinessCard,
   normalizeOCRFields,
@@ -17,23 +22,23 @@ import {
   type DocumentUploadResponse,
   type DocumentStatusResponse,
   OCRAPIError,
-} from '@/services/ocr-api';
-import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
+} from '@/services/ocr-api'
+import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Upload Business Card Parameters
  */
 export interface UploadBusinessCardParams {
-  file: File;
-  consentCloudOCR?: boolean;
+  file: File
+  consentCloudOCR?: boolean
 }
 
 /**
  * Normalized OCR Response with cleaned fields
  */
 export interface NormalizedOCRResponse extends OCRResponse {
-  normalized_fields: OCRParsedFields;
+  normalized_fields: OCRParsedFields
 }
 
 /**
@@ -46,43 +51,39 @@ export function useUploadBusinessCard(): UseMutationResult<
   UploadBusinessCardParams,
   unknown
 > {
-  const { t } = useTranslation('contacts');
+  const { t } = useTranslation('contacts')
 
   return useMutation({
     mutationFn: async ({ file, consentCloudOCR = false }: UploadBusinessCardParams) => {
-      const result = await uploadBusinessCard(file, consentCloudOCR);
+      const result = await uploadBusinessCard(file, consentCloudOCR)
 
       // Normalize extracted fields
-      const normalized_fields = normalizeOCRFields(result.parsed_fields);
+      const normalized_fields = normalizeOCRFields(result.parsed_fields)
 
       return {
         ...result,
         normalized_fields,
-      };
+      }
     },
     onSuccess: (data) => {
       // Show success toast with extracted fields count
-      const fieldsCount = Object.keys(data.normalized_fields).filter(
-        (key) => {
-          const value = data.normalized_fields[key as keyof OCRParsedFields];
-          return value && (Array.isArray(value) ? value.length > 0 : true);
-        }
-      ).length;
+      const fieldsCount = Object.keys(data.normalized_fields).filter((key) => {
+        const value = data.normalized_fields[key as keyof OCRParsedFields]
+        return value && (Array.isArray(value) ? value.length > 0 : true)
+      }).length
 
       toast.success(
         t('contactDirectory.ocr.extraction_success', {
           confidence: Math.round(data.confidence),
           fieldsCount,
-        })
-      );
+        }),
+      )
     },
     onError: (error: OCRAPIError) => {
       // Show error toast
-      toast.error(
-        t('contactDirectory.ocr.extraction_error', { error: error.message })
-      );
+      toast.error(t('contactDirectory.ocr.extraction_error', { error: error.message }))
     },
-  });
+  })
 }
 
 /**
@@ -96,7 +97,7 @@ export function useOCRCapabilities() {
     tesseractAvailable: true,
     googleVisionAvailable: true, // Requires user consent
     languagesSupported: ['en', 'ar'],
-  };
+  }
 }
 
 /**
@@ -105,32 +106,30 @@ export function useOCRCapabilities() {
  * @returns boolean indicating if confidence is acceptable
  */
 export function isConfidenceAcceptable(confidence: number): boolean {
-  return confidence >= 70; // 70% threshold for acceptable confidence
+  return confidence >= 70 // 70% threshold for acceptable confidence
 }
 
 /**
  * Get confidence level label for UI
  */
-export function getConfidenceLevel(
-  confidence: number
-): 'high' | 'medium' | 'low' {
-  if (confidence >= 85) return 'high';
-  if (confidence >= 70) return 'medium';
-  return 'low';
+export function getConfidenceLevel(confidence: number): 'high' | 'medium' | 'low' {
+  if (confidence >= 85) return 'high'
+  if (confidence >= 70) return 'medium'
+  return 'low'
 }
 
 /**
  * Get confidence color for UI badges
  */
 export function getConfidenceColor(confidence: number): string {
-  const level = getConfidenceLevel(confidence);
+  const level = getConfidenceLevel(confidence)
   switch (level) {
     case 'high':
-      return 'bg-green-100 text-green-800 border-green-300';
+      return 'bg-green-100 text-green-800 border-green-300'
     case 'medium':
-      return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      return 'bg-yellow-100 text-yellow-800 border-yellow-300'
     case 'low':
-      return 'bg-red-100 text-red-800 border-red-300';
+      return 'bg-red-100 text-red-800 border-red-300'
   }
 }
 
@@ -138,7 +137,7 @@ export function getConfidenceColor(confidence: number): string {
  * Upload Document Parameters
  */
 export interface UploadDocumentParams {
-  file: File;
+  file: File
 }
 
 /**
@@ -151,21 +150,19 @@ export function useUploadDocument(): UseMutationResult<
   UploadDocumentParams,
   unknown
 > {
-  const { t } = useTranslation('contacts');
+  const { t } = useTranslation('contacts')
 
   return useMutation({
     mutationFn: async ({ file }: UploadDocumentParams) => {
-      return await uploadDocument(file);
+      return await uploadDocument(file)
     },
     onSuccess: () => {
-      toast.success(t('contactDirectory.documentExtraction.upload_success'));
+      toast.success(t('contactDirectory.documentExtraction.upload_success'))
     },
     onError: (error: OCRAPIError) => {
-      toast.error(
-        t('contactDirectory.documentExtraction.upload_error', { error: error.message })
-      );
+      toast.error(t('contactDirectory.documentExtraction.upload_error', { error: error.message }))
     },
-  });
+  })
 }
 
 /**
@@ -175,33 +172,33 @@ export function useUploadDocument(): UseMutationResult<
 export function useDocumentStatus(
   documentSourceId: string | null,
   options?: {
-    enabled?: boolean;
-    onCompleted?: (data: DocumentStatusResponse) => void;
-    onFailed?: (error: string) => void;
-  }
+    enabled?: boolean
+    onCompleted?: (data: DocumentStatusResponse) => void
+    onFailed?: (error: string) => void
+  },
 ): UseQueryResult<DocumentStatusResponse, OCRAPIError> {
   return useQuery({
     queryKey: ['document-status', documentSourceId],
     queryFn: async () => {
-      if (!documentSourceId) throw new OCRAPIError('Document source ID is required', 400);
-      return await checkDocumentStatus(documentSourceId);
+      if (!documentSourceId) throw new OCRAPIError('Document source ID is required', 400)
+      return await checkDocumentStatus(documentSourceId)
     },
     enabled: options?.enabled !== false && !!documentSourceId,
     refetchInterval: (query) => {
       // Stop polling if processing is complete or failed
-      const data = query.state.data;
-      if (!data) return false;
+      const data = query.state.data
+      if (!data) return false
       if (data.processing_status === 'completed') {
-        options?.onCompleted?.(data);
-        return false;
+        options?.onCompleted?.(data)
+        return false
       }
       if (data.processing_status === 'failed') {
-        options?.onFailed?.(data.processing_error || 'Processing failed');
-        return false;
+        options?.onFailed?.(data.processing_error || 'Processing failed')
+        return false
       }
       // Continue polling every 2 seconds while pending or processing
-      return 2000;
+      return 2000
     },
     refetchIntervalInBackground: true, // Continue polling even when tab is not focused
-  });
+  })
 }

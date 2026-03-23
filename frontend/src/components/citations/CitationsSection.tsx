@@ -408,7 +408,7 @@ export function CitationsSection({
 
   const handleViewCitation = useCallback((citation: EntityCitation) => {
     // Navigate to the related entity - implement based on your routing
-    console.log('View citation:', citation)
+    console.warn('View citation:', citation)
   }, [])
 
   // Loading state
@@ -528,7 +528,7 @@ export function CitationsSection({
               entityId={entityId}
               height="500px"
               onNodeClick={(nodeId, nodeType) => {
-                console.log('Clicked node:', nodeId, nodeType)
+                console.warn('Clicked node:', nodeId, nodeType)
               }}
             />
           </TabsContent>

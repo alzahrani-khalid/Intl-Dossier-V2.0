@@ -235,7 +235,6 @@ export function useFormValidation(options: UseFormValidationOptions): UseFormVal
   const fieldValidations: Record<string, UseFieldValidationReturn> = {}
 
   Object.entries(fields).forEach(([fieldName, fieldConfig]) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     fieldValidations[fieldName] = useFieldValidation({
       ...fieldConfig,
       debounceMs,

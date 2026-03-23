@@ -33,7 +33,7 @@ export const commitmentServiceStubs = `
     if (error) throw error;
     return data;
   }
-`;
+`
 
 // For DocumentService - add these methods:
 export const documentServiceStubs = `
@@ -74,7 +74,7 @@ export const documentServiceStubs = `
     if (error) throw error;
     return { success: true };
   }
-`;
+`
 
 // For OrganizationService - add these methods:
 export const organizationServiceStubs = `
@@ -125,7 +125,7 @@ export const organizationServiceStubs = `
     if (error) throw error;
     return { success: true };
   }
-`;
+`
 
 // For IntelligenceService - add these methods:
 export const intelligenceServiceStubs = `
@@ -156,7 +156,7 @@ export const intelligenceServiceStubs = `
       score: 0
     };
   }
-`;
+`
 
 // For SearchService - add these methods:
 export const searchServiceStubs = `
@@ -177,7 +177,7 @@ export const searchServiceStubs = `
       related: []
     };
   }
-`;
+`
 
 // For RelationshipHealthService - add this method:
 export const relationshipHealthServiceStubs = `
@@ -189,4 +189,4 @@ export const relationshipHealthServiceStubs = `
       priority: 'medium'
     };
   }
-`;
+`

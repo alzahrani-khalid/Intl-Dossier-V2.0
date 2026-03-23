@@ -84,7 +84,7 @@ interface QuickNavItemProps {
   isPinned?: boolean
   onPinToggle?: () => void
   isRTL: boolean
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   t: (...args: any[]) => any
   compact?: boolean
   onLinkClick?: () => void

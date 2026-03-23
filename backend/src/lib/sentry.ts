@@ -34,7 +34,7 @@ export function initSentry(): void {
   // Don't initialize if no DSN configured
   if (!dsn) {
     if (process.env.NODE_ENV !== 'production') {
-      console.log('[Sentry] No DSN configured, error tracking disabled')
+      console.warn('[Sentry] No DSN configured, error tracking disabled')
     }
     return
   }
@@ -111,7 +111,7 @@ export function initSentry(): void {
     debug: process.env.NODE_ENV === 'development',
   })
 
-  console.log(`[Sentry] Initialized for ${environment} environment`)
+  console.warn(`[Sentry] Initialized for ${environment} environment`)
 }
 
 /**

@@ -5,19 +5,22 @@
  * Mobile-first responsive design with RTL support.
  */
 
-import { Skeleton, SkeletonCard, SkeletonText } from '@/components/ui/skeleton';
-import { useTranslation } from 'react-i18next';
+import { Skeleton, SkeletonCard, SkeletonText } from '@/components/ui/skeleton'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Country Dossier Skeleton
  * Layout: 2-column asymmetric grid (lg:grid-cols-[2fr_1fr])
  */
 export function CountryDossierSkeleton() {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -63,7 +66,7 @@ export function CountryDossierSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 /**
@@ -71,11 +74,14 @@ export function CountryDossierSkeleton() {
  * Layout: 1-column vertical (grid-cols-1)
  */
 export function EngagementDossierSkeleton() {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -111,7 +117,7 @@ export function EngagementDossierSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 /**
@@ -119,11 +125,14 @@ export function EngagementDossierSkeleton() {
  * Layout: Sidebar + main content (md:grid-cols-[300px_1fr])
  */
 export function PersonDossierSkeleton() {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -167,7 +176,7 @@ export function PersonDossierSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 /**
@@ -175,11 +184,14 @@ export function PersonDossierSkeleton() {
  * Layout: 3-column grid (lg:grid-cols-3)
  */
 export function OrganizationDossierSkeleton() {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -214,7 +226,7 @@ export function OrganizationDossierSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 /**
@@ -222,11 +234,14 @@ export function OrganizationDossierSkeleton() {
  * Layout: Bento grid (md:grid-cols-2 lg:grid-cols-3)
  */
 export function ForumDossierSkeleton() {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -263,7 +278,7 @@ export function ForumDossierSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 /**
@@ -272,7 +287,7 @@ export function ForumDossierSkeleton() {
  */
 export function WorkingGroupDossierSkeleton() {
   // Reuse ForumDossierSkeleton as they have the same layout
-  return <ForumDossierSkeleton />;
+  return <ForumDossierSkeleton />
 }
 
 /**
@@ -280,11 +295,14 @@ export function WorkingGroupDossierSkeleton() {
  * Layout: BentoGrid with 6 type cards
  */
 export function DossiersHubSkeleton() {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <Skeleton className="h-8 sm:h-10 w-1/2 mb-3" />
@@ -345,5 +363,5 @@ export function DossiersHubSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }

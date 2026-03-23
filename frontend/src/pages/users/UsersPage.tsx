@@ -1,1 +1,1 @@
-export { UsersListPage as UsersPage } from './UsersListPage';
+export { UsersListPage as UsersPage } from './UsersListPage'

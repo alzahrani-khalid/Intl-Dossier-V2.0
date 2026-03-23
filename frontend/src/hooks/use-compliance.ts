@@ -10,12 +10,12 @@ export function useCompliance() {
   const validateElement = useCallback(
     async (componentName: string, element?: HTMLElement | null) =>
       validate({ componentName, element }),
-    [validate]
+    [validate],
   )
 
   const validateHtml = useCallback(
     async (componentName: string, html: string) => validate({ componentName, html }),
-    [validate]
+    [validate],
   )
 
   return {
@@ -27,4 +27,3 @@ export function useCompliance() {
     validateHtml,
   }
 }
-

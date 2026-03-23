@@ -1,11 +1,11 @@
-import { useTranslation } from 'react-i18next';
-import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, AlertCircle, Info, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next'
+import { Badge } from '@/components/ui/badge'
+import { CheckCircle2, AlertCircle, Info, ShieldCheck } from 'lucide-react'
 
 interface ConfidenceBadgeProps {
-  level: 'low' | 'medium' | 'high' | 'verified';
-  showIcon?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  level: 'low' | 'medium' | 'high' | 'verified'
+  showIcon?: boolean
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const confidenceConfig = {
@@ -33,30 +33,26 @@ const confidenceConfig = {
     textColor: 'text-purple-700 dark:text-purple-300',
     borderColor: 'border-purple-300 dark:border-purple-600',
   },
-} as const;
+} as const
 
 const sizeClasses = {
   sm: 'text-xs px-2 py-0.5',
   md: 'text-sm px-2.5 py-1',
   lg: 'text-base px-3 py-1.5',
-} as const;
+} as const
 
 const iconSizes = {
   sm: 'h-3 w-3',
   md: 'h-3.5 w-3.5',
   lg: 'h-4 w-4',
-} as const;
+} as const
 
-export function ConfidenceBadge({
-  level,
-  showIcon = true,
-  size = 'sm',
-}: ConfidenceBadgeProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+export function ConfidenceBadge({ level, showIcon = true, size = 'sm' }: ConfidenceBadgeProps) {
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
-  const config = confidenceConfig[level];
-  const Icon = config.icon;
+  const config = confidenceConfig[level]
+  const Icon = config.icon
 
   return (
     <Badge
@@ -76,5 +72,5 @@ export function ConfidenceBadge({
       {showIcon && <Icon className={iconSizes[size]} />}
       <span>{t(`intelligence.confidence.${level}`, level)}</span>
     </Badge>
-  );
+  )
 }

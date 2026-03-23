@@ -5,18 +5,18 @@
  * TanStack Query hook for on-demand health score calculation
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { calculateHealthScore, type HealthScoreResponse } from '@/services/dossier-stats.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { calculateHealthScore, type HealthScoreResponse } from '@/services/dossier-stats.service'
 
 export interface UseHealthScoreOptions {
   /**
    * Callback when health score calculation succeeds
    */
-  onSuccess?: (data: HealthScoreResponse) => void;
+  onSuccess?: (data: HealthScoreResponse) => void
   /**
    * Callback when health score calculation fails
    */
-  onError?: (error: Error) => void;
+  onError?: (error: Error) => void
 }
 
 /**
@@ -31,7 +31,7 @@ export interface UseHealthScoreOptions {
  * @returns TanStack Mutation result
  */
 export function useHealthScore(options?: UseHealthScoreOptions) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation<
     HealthScoreResponse,
@@ -44,14 +44,14 @@ export function useHealthScore(options?: UseHealthScoreOptions) {
       // Invalidate dossierStats cache to refetch with new health score
       queryClient.invalidateQueries({
         queryKey: ['dossierStats', variables.dossierId],
-      });
+      })
 
       // Call user-provided onSuccess callback
-      options?.onSuccess?.(data);
+      options?.onSuccess?.(data)
     },
     onError: (error) => {
       // Call user-provided onError callback
-      options?.onError?.(error);
+      options?.onError?.(error)
     },
-  });
+  })
 }

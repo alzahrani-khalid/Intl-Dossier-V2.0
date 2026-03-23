@@ -126,14 +126,14 @@ export function createScopeMiddleware(
         parentScope = serviceProvider.createTenantScope(tenantId)
 
         if (debug) {
-          console.log(`[DI] Created/retrieved tenant scope: ${tenantId} for request ${requestId}`)
+          console.warn(`[DI] Created/retrieved tenant scope: ${tenantId} for request ${requestId}`)
         }
       } else {
         // Use root scope as parent
         parentScope = serviceProvider.getRootScope()
 
         if (debug) {
-          console.log(`[DI] Using root scope for request ${requestId}`)
+          console.warn(`[DI] Using root scope for request ${requestId}`)
         }
       }
 
@@ -143,7 +143,7 @@ export function createScopeMiddleware(
       req.scope = requestScope
 
       if (debug) {
-        console.log(
+        console.warn(
           `[DI] Created request scope: ${requestScope.id} (tenant: ${tenantId ?? 'none'}, user: ${userId ?? 'anonymous'})`,
         )
       }
@@ -155,7 +155,7 @@ export function createScopeMiddleware(
             await req.scope.dispose()
 
             if (debug) {
-              console.log(`[DI] Disposed request scope: ${requestScope.id}`)
+              console.warn(`[DI] Disposed request scope: ${requestScope.id}`)
             }
           }
         } catch (error) {

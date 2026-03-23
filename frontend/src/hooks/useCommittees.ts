@@ -78,7 +78,7 @@ export function useCommittees(filters: Partial<CommitteeFilters> = {}) {
 
       // Get pending nominations count for each committee
       const committeeIds = (data || []).map((c) => c.id)
-      let nominationsCounts: Record<string, number> = {}
+      const nominationsCounts: Record<string, number> = {}
 
       if (committeeIds.length > 0) {
         const { data: nominations } = await supabase

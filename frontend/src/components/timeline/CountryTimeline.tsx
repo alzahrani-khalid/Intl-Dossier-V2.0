@@ -10,25 +10,29 @@
  * - Relationships (diplomatic ties)
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { EnhancedVerticalTimeline } from './EnhancedVerticalTimeline';
-import { TimelineFilters } from './TimelineFilters';
-import { useUnifiedTimeline, getDefaultEventTypes, getAvailableEventTypes } from '@/hooks/useUnifiedTimeline';
-import type { TimelineFilters as ITimelineFilters } from '@/types/timeline.types';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { EnhancedVerticalTimeline } from './EnhancedVerticalTimeline'
+import { TimelineFilters } from './TimelineFilters'
+import {
+  useUnifiedTimeline,
+  getDefaultEventTypes,
+  getAvailableEventTypes,
+} from '@/hooks/useUnifiedTimeline'
+import type { TimelineFilters as ITimelineFilters } from '@/types/timeline.types'
 
 interface CountryTimelineProps {
-  dossierId: string;
-  className?: string;
+  dossierId: string
+  className?: string
 }
 
 export function CountryTimeline({ dossierId, className }: CountryTimelineProps) {
-  const { t } = useTranslation('dossier');
-  const [showFilters, setShowFilters] = useState(false);
+  const { t } = useTranslation('dossier')
+  const [showFilters, setShowFilters] = useState(false)
 
   // Initialize with default event types for Country dossiers
-  const defaultEventTypes = getDefaultEventTypes('Country');
-  const availableEventTypes = getAvailableEventTypes('Country');
+  const defaultEventTypes = getDefaultEventTypes('Country')
+  const availableEventTypes = getAvailableEventTypes('Country')
 
   const {
     events,
@@ -48,11 +52,11 @@ export function CountryTimeline({ dossierId, className }: CountryTimelineProps) 
     },
     itemsPerPage: 20,
     enableRealtime: false,
-  });
+  })
 
   const handleFiltersChange = (newFilters: ITimelineFilters) => {
-    setFilters(newFilters);
-  };
+    setFilters(newFilters)
+  }
 
   return (
     <div className={className}>
@@ -78,5 +82,5 @@ export function CountryTimeline({ dossierId, className }: CountryTimelineProps) 
         emptyMessage={t('timeline.empty.country')}
       />
     </div>
-  );
+  )
 }

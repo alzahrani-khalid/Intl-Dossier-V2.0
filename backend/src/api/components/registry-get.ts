@@ -1,43 +1,43 @@
-import { Request, Response } from 'express';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import { Request, Response } from 'express'
+import * as fs from 'fs/promises'
+import * as path from 'path'
 
 export interface ComponentRegistry {
-  name: string;
-  version: string;
-  source: 'shadcn' | 'custom';
-  category: 'layout' | 'form' | 'display' | 'feedback' | 'navigation' | 'overlay';
-  path: string;
-  dependencies: string[];
-  variants?: ComponentVariant[];
-  validation?: ValidationRule[];
-  documentation?: string;
-  examples?: CodeExample[];
-  createdAt: Date;
-  updatedAt: Date;
+  name: string
+  version: string
+  source: 'shadcn' | 'custom'
+  category: 'layout' | 'form' | 'display' | 'feedback' | 'navigation' | 'overlay'
+  path: string
+  dependencies: string[]
+  variants?: ComponentVariant[]
+  validation?: ValidationRule[]
+  documentation?: string
+  examples?: CodeExample[]
+  createdAt: Date
+  updatedAt: Date
 }
 
 interface ComponentVariant {
-  id: string;
-  componentName: string;
-  variant: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  props: Record<string, any>;
-  className?: string;
-  rtlSupport: boolean;
+  id: string
+  componentName: string
+  variant: string
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  props: Record<string, any>
+  className?: string
+  rtlSupport: boolean
 }
 
 interface ValidationRule {
-  id: string;
-  ruleType: string;
-  severity: 'error' | 'warning' | 'info';
-  message: string;
+  id: string
+  ruleType: string
+  severity: 'error' | 'warning' | 'info'
+  message: string
 }
 
 interface CodeExample {
-  title: string;
-  code: string;
-  language: string;
+  title: string
+  code: string
+  language: string
 }
 
 const MOCK_REGISTRY: ComponentRegistry[] = [
@@ -72,7 +72,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         props: {},
         className: 'hover:bg-accent hover:text-accent-foreground',
         rtlSupport: true,
-      }
+      },
     ],
     validation: [
       {
@@ -86,7 +86,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         ruleType: 'accessibility',
         severity: 'warning',
         message: 'Icon-only buttons must have aria-label',
-      }
+      },
     ],
     documentation: 'https://ui.shadcn.com/docs/components/button',
     createdAt: new Date(),
@@ -107,7 +107,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         props: {},
         className: 'rounded-lg border bg-card text-card-foreground shadow-sm',
         rtlSupport: true,
-      }
+      },
     ],
     validation: [
       {
@@ -115,7 +115,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         ruleType: 'responsive',
         severity: 'info',
         message: 'Card should adapt padding based on viewport',
-      }
+      },
     ],
     documentation: 'https://ui.shadcn.com/docs/components/card',
     createdAt: new Date(),
@@ -136,7 +136,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         props: {},
         className: 'fixed inset-0 z-50 bg-background/80 backdrop-blur-sm',
         rtlSupport: true,
-      }
+      },
     ],
     validation: [
       {
@@ -150,7 +150,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         ruleType: 'accessibility',
         severity: 'error',
         message: 'Dialog must close on ESC key',
-      }
+      },
     ],
     documentation: 'https://ui.shadcn.com/docs/components/dialog',
     createdAt: new Date(),
@@ -171,7 +171,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         props: {},
         className: 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2',
         rtlSupport: true,
-      }
+      },
     ],
     validation: [
       {
@@ -179,7 +179,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         ruleType: 'accessibility',
         severity: 'error',
         message: 'Input must have associated label',
-      }
+      },
     ],
     documentation: 'https://ui.shadcn.com/docs/components/input',
     createdAt: new Date(),
@@ -200,7 +200,7 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         props: {},
         className: 'w-full caption-bottom text-sm',
         rtlSupport: true,
-      }
+      },
     ],
     validation: [
       {
@@ -214,51 +214,51 @@ const MOCK_REGISTRY: ComponentRegistry[] = [
         ruleType: 'accessibility',
         severity: 'error',
         message: 'Table must have proper th elements',
-      }
+      },
     ],
     documentation: 'https://ui.shadcn.com/docs/components/table',
     createdAt: new Date(),
     updatedAt: new Date(),
-  }
-];
+  },
+]
 
 export async function getComponentRegistry(req: Request, res: Response) {
   try {
-    const { category, source } = req.query;
-    
-    let components = [...MOCK_REGISTRY];
-    
+    const { category, source } = req.query
+
+    let components = [...MOCK_REGISTRY]
+
     if (category && typeof category === 'string') {
-      components = components.filter(c => c.category === category);
+      components = components.filter((c) => c.category === category)
     }
-    
+
     if (source && typeof source === 'string') {
-      components = components.filter(c => c.source === source);
+      components = components.filter((c) => c.source === source)
     }
-    
+
     try {
-      const componentsJsonPath = path.join(process.cwd(), 'frontend', 'components.json');
-      const componentsJson = await fs.readFile(componentsJsonPath, 'utf-8');
-      const config = JSON.parse(componentsJson);
-      
+      const componentsJsonPath = path.join(process.cwd(), 'frontend', 'components.json')
+      const componentsJson = await fs.readFile(componentsJsonPath, 'utf-8')
+      const config = JSON.parse(componentsJson)
+
       if (config.aliases?.components) {
-        components.forEach(component => {
-          component.path = config.aliases.components + '/' + component.name;
-        });
+        components.forEach((component) => {
+          component.path = config.aliases.components + '/' + component.name
+        })
       }
     } catch (error) {
-      console.log('components.json not found, using default paths');
+      console.warn('components.json not found, using default paths')
     }
-    
+
     return res.json({
       components,
       count: components.length,
-      timestamp: new Date().toISOString()
-    });
+      timestamp: new Date().toISOString(),
+    })
   } catch (error) {
-    console.error('Error fetching component registry:', error);
+    console.error('Error fetching component registry:', error)
     return res.status(500).json({
-      error: 'Failed to fetch component registry'
-    });
+      error: 'Failed to fetch component registry',
+    })
   }
 }

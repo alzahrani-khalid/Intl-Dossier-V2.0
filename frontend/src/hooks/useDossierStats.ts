@@ -87,7 +87,7 @@ export interface UseDossierStatsOptions {
  * @example
  * // Basic usage
  * const { data: stats } = useDossierStats({ dossierId: 'uuid-123' });
- * console.log(`Health score: ${stats?.health?.score}`);
+ * console.warn(`Health score: ${stats?.health?.score}`);
  *
  * @example
  * // With selective inclusion
@@ -95,7 +95,7 @@ export interface UseDossierStatsOptions {
  *   dossierId: 'uuid-123',
  *   include: ['commitments'],
  * });
- * console.log(`Open commitments: ${data?.commitments?.open}`);
+ * console.warn(`Open commitments: ${data?.commitments?.open}`);
  */
 export function useDossierStats(options: UseDossierStatsOptions) {
   const { dossierId, include, enabled = true } = options

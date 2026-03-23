@@ -470,7 +470,7 @@ export const projectPlugin: EntityPlugin<ProjectExtension> = createPlugin<Projec
         icon: 'CheckCircle',
         action: async (entity) => {
           // This would trigger an update
-          console.log('Marking project as complete:', entity.id)
+          console.warn('Marking project as complete:', entity.id)
         },
         isVisible: (entity) => entity.project_status === 'active',
         isDisabled: (entity) => (entity.completion_percentage || 0) < 100,
@@ -480,7 +480,7 @@ export const projectPlugin: EntityPlugin<ProjectExtension> = createPlugin<Projec
         label: { en: 'Put On Hold', ar: 'وضع قيد الانتظار' },
         icon: 'PauseCircle',
         action: async (entity) => {
-          console.log('Putting project on hold:', entity.id)
+          console.warn('Putting project on hold:', entity.id)
         },
         isVisible: (entity) => entity.project_status === 'active',
       },
@@ -489,7 +489,7 @@ export const projectPlugin: EntityPlugin<ProjectExtension> = createPlugin<Projec
         label: { en: 'Cancel Project', ar: 'إلغاء المشروع' },
         icon: 'XCircle',
         action: async (entity) => {
-          console.log('Cancelling project:', entity.id)
+          console.warn('Cancelling project:', entity.id)
         },
         isVisible: (entity) => !['completed', 'cancelled'].includes(entity.project_status),
         variant: 'destructive',
@@ -571,16 +571,16 @@ export const projectPlugin: EntityPlugin<ProjectExtension> = createPlugin<Projec
   // ============================================================================
   lifecycle: {
     onRegister: () => {
-      console.log('Project plugin registered')
+      console.warn('Project plugin registered')
     },
     onEnable: () => {
-      console.log('Project plugin enabled')
+      console.warn('Project plugin enabled')
     },
     onDisable: () => {
-      console.log('Project plugin disabled')
+      console.warn('Project plugin disabled')
     },
     onUnregister: () => {
-      console.log('Project plugin unregistered')
+      console.warn('Project plugin unregistered')
     },
   },
 

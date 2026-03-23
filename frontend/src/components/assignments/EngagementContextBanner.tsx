@@ -65,7 +65,7 @@ export function EngagementContextBanner({
   }
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'} className="border-l-4 border-l-primary bg-primary/5">
+    <Card dir={isRTL ? 'rtl' : 'ltr'} className="border-s-4 border-s-primary bg-primary/5">
       <CardContent className="pt-6">
         <div className="space-y-4">
           {/* Header */}

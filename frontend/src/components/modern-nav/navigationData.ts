@@ -32,31 +32,31 @@ import {
   Shield,
   Eye,
   LucideIcon,
-} from 'lucide-react';
+} from 'lucide-react'
 
 /**
  * Navigation item structure for ExpandedPanel sections
  */
 export interface NavigationItem {
-  id: string;
-  label: string;
-  labelKey: string; // i18n key
-  icon: LucideIcon;
-  path: string;
-  count?: number;
-  badge?: string;
-  adminOnly?: boolean; // Only visible to admin users
+  id: string
+  label: string
+  labelKey: string // i18n key
+  icon: LucideIcon
+  path: string
+  count?: number
+  badge?: string
+  adminOnly?: boolean // Only visible to admin users
 }
 
 /**
  * Main category structure for IconRail
  */
 export interface NavigationCategory {
-  id: string;
-  icon: LucideIcon;
-  tooltipKey: string;
-  path: string; // Default path when category is clicked
-  items: NavigationItem[]; // Items to show in ExpandedPanel
+  id: string
+  icon: LucideIcon
+  tooltipKey: string
+  path: string // Default path when category is clicked
+  items: NavigationItem[] // Items to show in ExpandedPanel
 }
 
 /**
@@ -333,18 +333,18 @@ export const navigationCategories: NavigationCategory[] = [
       },
     ],
   },
-];
+]
 
 /**
  * Get navigation category by ID
  */
 export function getNavigationCategory(id: string): NavigationCategory | undefined {
-  return navigationCategories.find((cat) => cat.id === id);
+  return navigationCategories.find((cat) => cat.id === id)
 }
 
 /**
  * Get all navigation items flattened (for search, etc.)
  */
 export function getAllNavigationItems(): NavigationItem[] {
-  return navigationCategories.flatMap((cat) => cat.items);
+  return navigationCategories.flatMap((cat) => cat.items)
 }

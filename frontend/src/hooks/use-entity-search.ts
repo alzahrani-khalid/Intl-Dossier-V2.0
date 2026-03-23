@@ -7,31 +7,28 @@
  * with FR-001a ranking (AI confidence 50% + recency 30% + alphabetical 20%)
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { useState, useCallback, useEffect } from 'react';
-import {
-  intakeEntityLinksAPI,
-  type EntitySearchFilters,
-} from '@/services/entity-links-api';
-import type { EntitySearchResult } from '../../../backend/src/types/intake-entity-links.types';
+import { useQuery } from '@tanstack/react-query'
+import { useState, useCallback, useEffect } from 'react'
+import { intakeEntityLinksAPI, type EntitySearchFilters } from '@/services/entity-links-api'
+import type { EntitySearchResult } from '../../../backend/src/types/intake-entity-links.types'
 
 /**
  * Debounced value hook
  */
 function useDebouncedValue<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+      setDebouncedValue(value)
+    }, delay)
 
     return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
+      clearTimeout(handler)
+    }
+  }, [value, delay])
 
-  return debouncedValue;
+  return debouncedValue
 }
 
 /**
@@ -40,22 +37,21 @@ function useDebouncedValue<T>(value: T, delay: number): T {
 export const entitySearchKeys = {
   all: ['entity-search'] as const,
   searches: () => [...entitySearchKeys.all, 'search'] as const,
-  search: (filters: EntitySearchFilters) =>
-    [...entitySearchKeys.searches(), filters] as const,
-};
+  search: (filters: EntitySearchFilters) => [...entitySearchKeys.searches(), filters] as const,
+}
 
 /**
  * Entity search options
  */
 export interface UseEntitySearchOptions {
   /** Debounce delay in milliseconds (default: 300ms) */
-  debounceMs?: number;
+  debounceMs?: number
   /** Minimum query length to trigger search (default: 2) */
-  minQueryLength?: number;
+  minQueryLength?: number
   /** Enable the query (default: true) */
-  enabled?: boolean;
+  enabled?: boolean
   /** Results limit (default: 20) */
-  limit?: number;
+  limit?: number
 }
 
 /**
@@ -63,22 +59,15 @@ export interface UseEntitySearchOptions {
  */
 export function useEntitySearch(
   filters: Omit<EntitySearchFilters, 'limit'>,
-  options: UseEntitySearchOptions = {}
+  options: UseEntitySearchOptions = {},
 ) {
-  const {
-    debounceMs = 300,
-    minQueryLength = 2,
-    enabled = true,
-    limit = 20,
-  } = options;
+  const { debounceMs = 300, minQueryLength = 2, enabled = true, limit = 20 } = options
 
   // Debounce the search query
-  const debouncedQuery = useDebouncedValue(filters.query || '', debounceMs);
+  const debouncedQuery = useDebouncedValue(filters.query || '', debounceMs)
 
   // Determine if search should be enabled
-  const shouldSearch =
-    enabled &&
-    debouncedQuery.length >= minQueryLength;
+  const shouldSearch = enabled && debouncedQuery.length >= minQueryLength
 
   return useQuery({
     queryKey: entitySearchKeys.search({
@@ -95,7 +84,7 @@ export function useEntitySearch(
     enabled: shouldSearch,
     staleTime: 1000 * 60 * 5, // 5 minutes - entity data changes infrequently
     gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
-  });
+  })
 }
 
 /**
@@ -104,12 +93,12 @@ export function useEntitySearch(
  */
 export function useEntitySearchState(
   initialFilters: Omit<EntitySearchFilters, 'query' | 'limit'> = {},
-  options: UseEntitySearchOptions = {}
+  options: UseEntitySearchOptions = {},
 ) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState('')
   const [selectedTypes, setSelectedTypes] = useState<EntitySearchFilters['entity_types']>(
-    initialFilters.entity_types
-  );
+    initialFilters.entity_types,
+  )
 
   const searchFilters: Omit<EntitySearchFilters, 'limit'> = {
     query,
@@ -117,34 +106,31 @@ export function useEntitySearchState(
     organization_id: initialFilters.organization_id,
     classification_level: initialFilters.classification_level,
     include_archived: initialFilters.include_archived ?? false,
-  };
+  }
 
-  const searchQuery = useEntitySearch(searchFilters, options);
+  const searchQuery = useEntitySearch(searchFilters, options)
 
   // Clear query handler
   const clearSearch = useCallback(() => {
-    setQuery('');
-  }, []);
+    setQuery('')
+  }, [])
 
   // Toggle entity type filter
-  const toggleEntityType = useCallback(
-    (entityType: string) => {
-      setSelectedTypes((prev) => {
-        if (!prev) return [entityType] as EntitySearchFilters['entity_types'];
-        if (prev.includes(entityType as any)) {
-          return prev.filter((t) => t !== entityType) as EntitySearchFilters['entity_types'];
-        }
-        return [...prev, entityType] as EntitySearchFilters['entity_types'];
-      });
-    },
-    []
-  );
+  const toggleEntityType = useCallback((entityType: string) => {
+    setSelectedTypes((prev) => {
+      if (!prev) return [entityType] as EntitySearchFilters['entity_types']
+      if (prev.includes(entityType as any)) {
+        return prev.filter((t) => t !== entityType) as EntitySearchFilters['entity_types']
+      }
+      return [...prev, entityType] as EntitySearchFilters['entity_types']
+    })
+  }, [])
 
   // Clear all filters
   const clearFilters = useCallback(() => {
-    setQuery('');
-    setSelectedTypes(undefined);
-  }, []);
+    setQuery('')
+    setSelectedTypes(undefined)
+  }, [])
 
   return {
     // Query state
@@ -162,7 +148,7 @@ export function useEntitySearchState(
 
     // Search query result
     ...searchQuery,
-  };
+  }
 }
 
 /**
@@ -173,34 +159,29 @@ export function useEntityIntakes(
   entityType: string,
   entityId: string,
   filters?: {
-    status?: string[];
-    from_date?: string;
-    to_date?: string;
-    page?: number;
-    limit?: number;
-  }
+    status?: string[]
+    from_date?: string
+    to_date?: string
+    page?: number
+    limit?: number
+  },
 ) {
   return useQuery({
     queryKey: ['entity-intakes', entityType, entityId, filters],
-    queryFn: () =>
-      intakeEntityLinksAPI.getEntityIntakes(
-        entityType as any,
-        entityId,
-        filters
-      ),
+    queryFn: () => intakeEntityLinksAPI.getEntityIntakes(entityType as any, entityId, filters),
     enabled: !!entityType && !!entityId,
     staleTime: 1000 * 60 * 2, // 2 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
-  });
+  })
 }
 
 /**
  * Type guard to check if results are available
  */
 export function hasSearchResults(
-  data: EntitySearchResult[] | undefined
+  data: EntitySearchResult[] | undefined,
 ): data is EntitySearchResult[] {
-  return Array.isArray(data) && data.length > 0;
+  return Array.isArray(data) && data.length > 0
 }
 
 /**
@@ -220,7 +201,7 @@ export function formatEntityType(entityType: string): string {
     forum: 'Forum',
     working_group: 'Working Group',
     topic: 'Topic',
-  };
+  }
 
-  return typeMap[entityType] || entityType;
+  return typeMap[entityType] || entityType
 }
