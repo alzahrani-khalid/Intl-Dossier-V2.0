@@ -3,6 +3,7 @@ import tseslint from 'typescript-eslint'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import unusedImports from 'eslint-plugin-unused-imports'
+import checkFile from 'eslint-plugin-check-file'
 import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tseslint.config(
@@ -177,6 +178,160 @@ export default tseslint.config(
       // Legacy patterns in backend adapters/integrations
       '@typescript-eslint/no-namespace': 'off',
       'no-useless-escape': 'off',
+    },
+  },
+
+  // === Filename & Folder Naming Convention Enforcement (Phase 2: ARCH-01) ===
+
+  // Frontend component directories: kebab-case dirs, PascalCase files
+  {
+    files: ['frontend/src/components/**/*.{ts,tsx}'],
+    ignores: [
+      'frontend/src/components/ui/**',
+      'frontend/src/components/__tests__/**',
+    ],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/folder-naming-convention': [
+        'error',
+        {
+          'frontend/src/components/**/': 'KEBAB_CASE',
+        },
+      ],
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'frontend/src/components/**/*.{tsx,ts}': 'PASCAL_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
+  },
+
+  // Frontend UI primitives: kebab-case files (shadcn convention)
+  {
+    files: ['frontend/src/components/ui/**/*.{ts,tsx}'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'frontend/src/components/ui/**/*.{ts,tsx}': 'KEBAB_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
+  },
+
+  // Frontend hooks: camelCase files
+  {
+    files: ['frontend/src/hooks/**/*.{ts,tsx}'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'frontend/src/hooks/**/*.{ts,tsx}': 'CAMEL_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
+  },
+
+  // Frontend types: kebab-case files
+  {
+    files: ['frontend/src/types/**/*.ts'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'frontend/src/types/**/*.ts': 'KEBAB_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
+  },
+
+  // Frontend lib: kebab-case files
+  {
+    files: ['frontend/src/lib/**/*.ts'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'frontend/src/lib/**/*.ts': 'KEBAB_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
+  },
+
+  // Backend services: kebab-case files and folders
+  {
+    files: ['backend/src/services/**/*.ts'],
+    ignores: ['backend/src/services/__tests__/**'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'backend/src/services/**/*.ts': 'KEBAB_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
+      'check-file/folder-naming-convention': [
+        'error',
+        {
+          'backend/src/services/**/': 'KEBAB_CASE',
+        },
+      ],
+    },
+  },
+
+  // Backend models: kebab-case files
+  {
+    files: ['backend/src/models/**/*.ts'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'backend/src/models/**/*.ts': 'KEBAB_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
+  },
+
+  // Backend API routes: kebab-case files
+  {
+    files: ['backend/src/api/**/*.ts'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'backend/src/api/**/*.ts': 'KEBAB_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
+  },
+
+  // Backend middleware: kebab-case files
+  {
+    files: ['backend/src/middleware/**/*.ts'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        {
+          'backend/src/middleware/**/*.ts': 'KEBAB_CASE',
+        },
+        { ignoreMiddleExtensions: true },
+      ],
     },
   },
 
