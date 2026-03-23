@@ -58,7 +58,7 @@ Plans:
 Plans:
 
 - [x] 02-01-PLAN.md — Rename 18 kebab-case hooks to camelCase, rename 12 PascalCase component dirs to kebab-case
-- [ ] 02-02-PLAN.md — Move 37 standalone component files into kebab-case subdirectories
+- [x] 02-02-PLAN.md — Move 37 standalone component files into kebab-case subdirectories
 - [x] 02-03-PLAN.md — Rename 21 backend service/model files to kebab-case, add ESLint filename enforcement
 
 ### Phase 3: Security Hardening
