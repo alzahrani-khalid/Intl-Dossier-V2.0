@@ -30,7 +30,7 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 
 ### Active
 
-- [ ] Dead code removal — unused imports, unreachable code, leftover experiments across full stack
+- ✓ Dead code removal — 691 unused files, 61 deps, 1330 exports removed; unified ESLint 9 + Knip + pre-commit hooks (Validated in Phase 1: dead-code-toolchain)
 - [ ] Code architecture consolidation — deduplicate logic, enforce consistent patterns, proper abstractions
 - [ ] Performance optimization — slow queries, unnecessary re-renders, bundle size, lazy loading gaps
 - [ ] Security hardening — RLS policy audit, input validation gaps, auth edge cases, OWASP compliance
@@ -53,7 +53,7 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 - **Theming:** HeroUI v3 with oklch color system, dark/light/system modes, but theme switching has visual bugs
 - **RTL:** `forceRTL` rules in CLAUDE.md for React Native (now cancelled), web uses Tailwind logical properties but inconsistently
 - **Responsive:** Mobile-first mandated in CLAUDE.md but not consistently implemented across all pages
-- **Dependencies:** Large dependency tree (AI/ML libs, PDF processing, multiple ORMs) — may have unused packages
+- **Dependencies:** Cleaned — 61 unused packages removed in Phase 1; AI/ML deps audited (kept anthropic, openai, mastra, xenova; removed langchain)
 
 ## Constraints
 
@@ -92,4 +92,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-23 after initialization_
+_Last updated: 2026-03-23 after Phase 1 completion_
