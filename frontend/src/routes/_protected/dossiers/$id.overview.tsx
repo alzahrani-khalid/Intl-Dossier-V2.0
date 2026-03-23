@@ -132,4 +132,3 @@ function DossierOverviewRoute() {
   )
 }
 
-export default DossierOverviewRoute

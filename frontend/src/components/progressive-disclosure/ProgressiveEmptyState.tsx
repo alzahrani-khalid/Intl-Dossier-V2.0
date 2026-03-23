@@ -174,7 +174,7 @@ function HintTierSection({ tier, isExpanded, isLocked, onToggle, size }: HintTie
  *   hints={dossierHints}
  * />
  */
-export function ProgressiveEmptyState({
+function ProgressiveEmptyState({
   pageContext,
   title,
   description,
@@ -403,4 +403,3 @@ export function ProgressiveEmptyState({
   return content
 }
 
-export default ProgressiveEmptyState

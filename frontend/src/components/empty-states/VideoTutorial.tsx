@@ -509,4 +509,4 @@ export function VideoTutorial({
   )
 }
 
-export type { TranscriptSegment as VideoTranscriptSegment }
+

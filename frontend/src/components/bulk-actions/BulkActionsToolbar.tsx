@@ -228,4 +228,3 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
   )
 }
 
-export default BulkActionsToolbar

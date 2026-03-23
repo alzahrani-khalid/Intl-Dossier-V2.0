@@ -243,4 +243,3 @@ function EntityTemplatesDemoPage() {
   )
 }
 
-export default EntityTemplatesDemoPage

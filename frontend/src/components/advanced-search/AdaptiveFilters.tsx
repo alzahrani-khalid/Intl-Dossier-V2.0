@@ -204,7 +204,7 @@ function FilterSection({
 // Main Component
 // =============================================================================
 
-export function AdaptiveFilters({
+function AdaptiveFilters({
   cacheKey,
   entityTypes,
   baseQuery,
@@ -349,4 +349,3 @@ export function AdaptiveFilters({
   )
 }
 
-export default AdaptiveFilters

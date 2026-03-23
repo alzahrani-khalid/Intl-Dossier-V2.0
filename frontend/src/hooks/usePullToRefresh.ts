@@ -263,4 +263,3 @@ export function usePullToRefresh(config: PullToRefreshConfig): PullToRefreshResu
   }
 }
 
-export default usePullToRefresh

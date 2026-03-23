@@ -129,7 +129,7 @@ function groupByPriority(items: WorkItem[]): Swimlane[] {
 /**
  * Get items for a specific swimlane and column
  */
-export function getSwimlanColumnItems(swimlane: Swimlane, columnKey: string): WorkItem[] {
+function getSwimlanColumnItems(swimlane: Swimlane, columnKey: string): WorkItem[] {
   return swimlane.items.filter((item) => item.column_key === columnKey)
 }
 

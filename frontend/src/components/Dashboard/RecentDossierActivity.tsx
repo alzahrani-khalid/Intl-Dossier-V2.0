@@ -369,4 +369,3 @@ function ActivityItemSkeleton() {
   )
 }
 
-export default RecentDossierActivity

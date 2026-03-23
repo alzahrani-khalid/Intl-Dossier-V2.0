@@ -74,7 +74,7 @@ export interface UpdateAnnotationRequest {
 /**
  * Annotation filter options
  */
-export interface AnnotationFilters {
+interface AnnotationFilters {
   types?: AnnotationType[]
   colors?: AnnotationColor[]
   visibility?: AnnotationVisibility[]

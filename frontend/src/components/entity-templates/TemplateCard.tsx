@@ -183,4 +183,3 @@ export function TemplateCard({
   )
 }
 
-export default TemplateCard

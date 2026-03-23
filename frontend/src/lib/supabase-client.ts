@@ -17,4 +17,3 @@ export const supabase = client
 
 export { supabaseUrl }
 
-export default client

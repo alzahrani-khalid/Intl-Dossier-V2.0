@@ -547,4 +547,3 @@ export function ProgressiveFormDemoPage() {
   )
 }
 
-export default ProgressiveFormDemoPage

@@ -120,4 +120,3 @@ export function SampleDataEmptyState({
   )
 }
 
-export default SampleDataEmptyState

@@ -220,4 +220,3 @@ export function useDossierActivityTimeline(
   }
 }
 
-export default useDossierActivityTimeline

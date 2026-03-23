@@ -382,4 +382,3 @@ function DossierWorkItemSkeleton() {
   )
 }
 
-export default PendingWorkByDossier

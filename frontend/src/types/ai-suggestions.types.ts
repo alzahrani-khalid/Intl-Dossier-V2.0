@@ -40,7 +40,7 @@ export interface GenerateSuggestionsRequest {
 /**
  * Response payload for AI suggestion generation
  */
-export interface GenerateSuggestionsResponse {
+interface GenerateSuggestionsResponse {
   /** List of AI suggestions */
   suggestions: AILinkSuggestion[]
   /** Metadata about the generation */
@@ -69,7 +69,7 @@ export interface AcceptSuggestionRequest {
 /**
  * Response payload for accepting an AI suggestion
  */
-export interface AcceptSuggestionResponse {
+interface AcceptSuggestionResponse {
   /** The created link */
   link: {
     id: string

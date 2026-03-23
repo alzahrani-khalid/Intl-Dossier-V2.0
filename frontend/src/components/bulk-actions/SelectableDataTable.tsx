@@ -239,4 +239,3 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
   )
 }
 
-export default SelectableDataTable

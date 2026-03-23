@@ -126,7 +126,7 @@ export function ContactList({
 /**
  * Grid variant of ContactList (non-virtualized, better for smaller lists)
  */
-export function ContactListGrid({
+function ContactListGrid({
   contacts,
   tags = EMPTY_TAGS,
   onContactClick,
@@ -189,7 +189,7 @@ export function ContactListGrid({
 /**
  * Grouped variant of ContactList - Groups contacts by organization
  */
-export function ContactListGrouped({
+function ContactListGrouped({
   contacts,
   tags = EMPTY_TAGS,
   onContactClick,

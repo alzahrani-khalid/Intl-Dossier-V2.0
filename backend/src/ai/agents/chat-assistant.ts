@@ -851,4 +851,3 @@ export class ChatAssistantAgent {
 }
 
 export const chatAssistantAgent = new ChatAssistantAgent()
-export default chatAssistantAgent

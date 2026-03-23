@@ -191,4 +191,3 @@ export function SidebarSearch({
   )
 }
 
-export default SidebarSearch

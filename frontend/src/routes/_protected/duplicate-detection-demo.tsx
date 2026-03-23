@@ -68,4 +68,3 @@ function DuplicateDetectionDemoPage() {
   )
 }
 
-export default DuplicateDetectionDemoPage

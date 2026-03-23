@@ -214,4 +214,3 @@ export function useBenchmarkPreview(): {
   }
 }
 
-export default useBenchmarkPreview

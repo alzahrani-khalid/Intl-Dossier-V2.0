@@ -194,7 +194,7 @@ export function useFilteredAssignments(filters: FilterCriteria) {
 /**
  * Load user filter preferences from backend
  */
-export function useFilterPreferences() {
+function useFilterPreferences() {
   return useQuery({
     queryKey: ['filter-preferences'],
     queryFn: async () => {
@@ -226,7 +226,7 @@ export function useFilterPreferences() {
 /**
  * Save user filter preferences to backend
  */
-export function useSaveFilterPreferences() {
+function useSaveFilterPreferences() {
   const queryClient = useQueryClient()
 
   return useMutation({

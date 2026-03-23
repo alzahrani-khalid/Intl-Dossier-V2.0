@@ -340,4 +340,3 @@ export function ExportDossierDialog({
   )
 }
 
-export default ExportDossierDialog

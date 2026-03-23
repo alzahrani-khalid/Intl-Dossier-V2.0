@@ -53,11 +53,11 @@ import { withDossierErrorBoundary } from './DossierErrorBoundary'
 import { DossierSelector as _DossierSelector } from './DossierSelector'
 import { DossierActivityTimeline as _DossierActivityTimeline } from './DossierActivityTimeline'
 
-export const SafeDossierSelector = withDossierErrorBoundary(_DossierSelector, {
+const SafeDossierSelector = withDossierErrorBoundary(_DossierSelector, {
   componentType: 'selector',
 })
 
-export const SafeDossierActivityTimeline = withDossierErrorBoundary(_DossierActivityTimeline, {
+const SafeDossierActivityTimeline = withDossierErrorBoundary(_DossierActivityTimeline, {
   componentType: 'timeline',
 })
 

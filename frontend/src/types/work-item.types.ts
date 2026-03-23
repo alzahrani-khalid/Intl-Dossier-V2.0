@@ -138,7 +138,7 @@ export interface KanbanData {
 /**
  * Request parameters for fetching Kanban data
  */
-export interface KanbanRequest {
+interface KanbanRequest {
   action: 'list' | 'update-status'
 
   // For 'list' action
@@ -202,7 +202,7 @@ export interface KanbanErrorResponse {
   }
 }
 
-export type KanbanResponse = KanbanListResponse | KanbanUpdateResponse | KanbanErrorResponse
+type KanbanResponse = KanbanListResponse | KanbanUpdateResponse | KanbanErrorResponse
 
 // ============================================
 // Status Transition Types
@@ -211,7 +211,7 @@ export type KanbanResponse = KanbanListResponse | KanbanUpdateResponse | KanbanE
 /**
  * Valid status transitions per source type
  */
-export interface StatusTransitionRules {
+interface StatusTransitionRules {
   task: Record<WorkflowStage, WorkflowStage[]>
   commitment: Record<WorkStatus, WorkStatus[]>
   intake: Record<string, string[]>
@@ -220,7 +220,7 @@ export interface StatusTransitionRules {
 /**
  * Status update mutation variables
  */
-export interface StatusUpdateVariables {
+interface StatusUpdateVariables {
   itemId: string
   source: WorkSource
   newStatus: string
@@ -234,7 +234,7 @@ export interface StatusUpdateVariables {
 /**
  * Filter state for Kanban board
  */
-export interface KanbanFilters {
+interface KanbanFilters {
   sources?: WorkSource[]
   statuses?: string[]
   priorities?: Priority[]
@@ -251,7 +251,7 @@ export type SortOrder = 'asc' | 'desc'
 /**
  * URL state for Kanban board
  */
-export interface KanbanUrlState {
+interface KanbanUrlState {
   mode?: KanbanColumnMode
   sources?: WorkSource[]
   search?: string
@@ -266,7 +266,7 @@ export interface KanbanUrlState {
 /**
  * Realtime event for work item changes
  */
-export type WorkItemRealtimeEvent =
+type WorkItemRealtimeEvent =
   | { type: 'INSERT'; payload: WorkItem }
   | { type: 'UPDATE'; payload: Partial<WorkItem> & { id: string } }
   | { type: 'DELETE'; payload: { id: string } }
@@ -299,7 +299,7 @@ export interface WipLimits {
 /**
  * Default WIP limits
  */
-export const DEFAULT_WIP_LIMITS: WipLimits = {
+const DEFAULT_WIP_LIMITS: WipLimits = {
   in_progress: 5,
   review: 3,
 }
@@ -316,7 +316,7 @@ export type BulkActionType = 'move' | 'assign' | 'delete' | 'updatePriority'
 /**
  * Bulk operation payload
  */
-export interface BulkOperationPayload {
+interface BulkOperationPayload {
   itemIds: string[]
   action: BulkActionType
   targetValue?: string // column key, assignee id, priority, etc.
@@ -357,7 +357,7 @@ export interface UnifiedKanbanBoardProps {
 /**
  * Props for UnifiedKanbanColumn component
  */
-export interface UnifiedKanbanColumnProps {
+interface UnifiedKanbanColumnProps {
   column: KanbanColumn
   items: WorkItem[]
   isLoading?: boolean
@@ -368,7 +368,7 @@ export interface UnifiedKanbanColumnProps {
 /**
  * Props for UnifiedKanbanCard component
  */
-export interface UnifiedKanbanCardProps {
+interface UnifiedKanbanCardProps {
   item: WorkItem
   isDragging?: boolean
   onClick?: (item: WorkItem) => void
@@ -381,7 +381,7 @@ export interface UnifiedKanbanCardProps {
 /**
  * Map source to its primary status field
  */
-export type SourceStatusField = {
+type SourceStatusField = {
   task: 'workflow_stage'
   commitment: 'status'
   intake: 'status'
@@ -390,7 +390,7 @@ export type SourceStatusField = {
 /**
  * Get the status type for a given source
  */
-export type StatusForSource<S extends WorkSource> = S extends 'task'
+type StatusForSource<S extends WorkSource> = S extends 'task'
   ? WorkflowStage
   : S extends 'commitment'
     ? WorkStatus
@@ -404,7 +404,7 @@ export type StatusForSource<S extends WorkSource> = S extends 'task'
  * Extended status type for the unified work items view
  * Includes additional statuses not in the Kanban workflow
  */
-export type UnifiedWorkStatus =
+type UnifiedWorkStatus =
   | 'pending'
   | 'in_progress'
   | 'completed'
@@ -512,7 +512,7 @@ export interface PaginatedWorkItems {
 export type WorkItemSortBy = 'deadline' | 'created_at' | 'priority'
 
 /** Query parameters for fetching work items */
-export interface WorkItemQueryParams extends UnifiedWorkItemFilters {
+interface WorkItemQueryParams extends UnifiedWorkItemFilters {
   cursor?: WorkItemCursor
   limit?: number
   sortBy?: WorkItemSortBy
@@ -520,7 +520,7 @@ export interface WorkItemQueryParams extends UnifiedWorkItemFilters {
 }
 
 /** URL state for the My Work dashboard */
-export interface MyWorkUrlState {
+interface MyWorkUrlState {
   tab?: 'all' | 'commitments' | 'tasks' | 'intake'
   filter?: 'active' | 'overdue' | 'due-today' | 'due-week'
   trackingType?: TrackingType

@@ -321,4 +321,3 @@ export class IntelligenceService {
   }
 }
 
-export default IntelligenceService

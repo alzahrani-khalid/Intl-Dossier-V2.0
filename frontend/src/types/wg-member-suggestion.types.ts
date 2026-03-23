@@ -26,7 +26,7 @@ export type SuggestedEntityType = 'organization' | 'person'
 /**
  * Suggestion status
  */
-export type WGSuggestionStatus = 'pending' | 'accepted' | 'rejected' | 'expired'
+type WGSuggestionStatus = 'pending' | 'accepted' | 'rejected' | 'expired'
 
 /**
  * Member roles available
@@ -205,7 +205,7 @@ export const MEMBER_ROLE_LABELS: Record<MemberRole, { en: string; ar: string }> 
 /**
  * Icons for suggestion types
  */
-export const WG_SUGGESTION_TYPE_ICONS: Record<WGSuggestionType, string> = {
+const WG_SUGGESTION_TYPE_ICONS: Record<WGSuggestionType, string> = {
   parent_forum_member: 'users',
   related_engagement: 'calendar',
   past_collaboration: 'history',

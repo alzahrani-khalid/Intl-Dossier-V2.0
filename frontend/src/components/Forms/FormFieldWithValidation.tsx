@@ -415,5 +415,4 @@ export function FormFieldWithValidation({
 // EXPORTS
 // =============================================================================
 
-export default FormFieldWithValidation
 export type { FormFieldWithValidationProps }

@@ -343,7 +343,7 @@ export function useStakeholderInteractionMutations(stakeholderType: string, stak
 /**
  * Get default event types for stakeholder type
  */
-export function getDefaultInteractionTypes(stakeholderType: string): string[] {
+function getDefaultInteractionTypes(stakeholderType: string): string[] {
   const typeMap: Record<string, string[]> = {
     dossier: ['meeting', 'email', 'document_exchange', 'phone_call', 'visit'],
     contact: ['meeting', 'email', 'phone_call', 'message'],

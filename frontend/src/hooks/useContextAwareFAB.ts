@@ -431,4 +431,3 @@ export function useContextAwareFAB(
   }
 }
 
-export default useContextAwareFAB

@@ -177,4 +177,3 @@ export function LinkList({
   )
 }
 
-export default LinkList

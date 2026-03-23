@@ -115,7 +115,7 @@ export function useNoResultsSuggestions(
 /**
  * Hook for building navigation routes for create entity suggestions
  */
-export function useCreateEntityRoute(suggestion?: CreateEntitySuggestion): string | null {
+function useCreateEntityRoute(suggestion?: CreateEntitySuggestion): string | null {
   if (!suggestion) return null
 
   const baseRoute = suggestion.route
@@ -149,4 +149,3 @@ export function formatEntityTypeLabel(entityType: string, language: string): str
   return language === 'ar' ? label.ar : label.en
 }
 
-export default useNoResultsSuggestions

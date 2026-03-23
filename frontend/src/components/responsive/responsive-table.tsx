@@ -170,7 +170,7 @@ export interface ResponsiveDataGridProps {
   className?: string
 }
 
-export function ResponsiveDataGrid({ children, className }: ResponsiveDataGridProps) {
+function ResponsiveDataGrid({ children, className }: ResponsiveDataGridProps) {
   const { viewport } = useResponsive()
 
   const gridClasses = {

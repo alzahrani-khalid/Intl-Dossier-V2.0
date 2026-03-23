@@ -330,7 +330,7 @@ export interface UseStakeholderTimelineReturn {
 /**
  * Hook return type for interaction mutations
  */
-export interface UseStakeholderInteractionMutationsReturn {
+interface UseStakeholderInteractionMutationsReturn {
   createInteraction: (data: CreateInteractionRequest) => Promise<StakeholderInteraction>
   isCreating: boolean
   createAnnotation: (data: CreateAnnotationRequest) => Promise<TimelineAnnotation>
@@ -375,7 +375,7 @@ export interface InteractionCardProps {
 /**
  * Stats card props
  */
-export interface InteractionStatsCardProps {
+interface InteractionStatsCardProps {
   stats: StakeholderInteractionStats
   isLoading?: boolean
   className?: string

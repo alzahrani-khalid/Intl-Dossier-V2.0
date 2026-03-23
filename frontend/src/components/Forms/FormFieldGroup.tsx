@@ -329,4 +329,3 @@ export function FormFieldGroup({
 // =============================================================================
 
 export { CompletionRing }
-export default FormFieldGroup

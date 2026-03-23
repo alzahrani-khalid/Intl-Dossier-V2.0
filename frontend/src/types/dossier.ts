@@ -95,7 +95,7 @@ export interface Dossier {
 /**
  * @deprecated Use CreateDossierRequest from '@/services/dossier-api' instead
  */
-export interface DossierCreate {
+interface DossierCreate {
   name_en: string
   name_ar: string
   type: DossierTypeCanonical
@@ -111,7 +111,7 @@ export interface DossierCreate {
 /**
  * @deprecated Define update type locally or use UpdateDossierRequest from dossier-api
  */
-export interface DossierUpdate {
+interface DossierUpdate {
   version?: number
   name_en?: string
   name_ar?: string
@@ -180,7 +180,7 @@ export interface BriefContent {
   }>
 }
 
-export interface Brief {
+interface Brief {
   id: string
   dossier_id: string
   content_en: BriefContent
@@ -250,12 +250,12 @@ export interface DossierListResponse {
 /**
  * @deprecated Use TimelineResponse from '@/types/timeline.types' instead
  */
-export interface TimelineEventResponse {
+interface TimelineEventResponse {
   data: TimelineEvent[]
   pagination: CursorPagination
 }
 
-export interface DossierDetailResponse extends Dossier {
+interface DossierDetailResponse extends Dossier {
   stats?: DossierStats
   owners?: DossierOwner[]
   contacts?: KeyContact[]
@@ -276,7 +276,7 @@ export interface DossierFilters {
 /**
  * @deprecated Use TimelineFilters from '@/types/timeline.types' instead
  */
-export interface TimelineFilters {
+interface TimelineFilters {
   event_type?: EventType[]
   start_date?: string
   end_date?: string
@@ -299,13 +299,13 @@ export interface ApiError {
   error: ErrorDetail
 }
 
-export interface ConflictError extends ApiError {
+interface ConflictError extends ApiError {
   error: ErrorDetail & {
     current_version: number
   }
 }
 
-export interface BriefGenerationFallback {
+interface BriefGenerationFallback {
   error: ErrorDetail
   fallback: {
     template: BriefTemplate

@@ -168,7 +168,7 @@ export function StatusDropdown({
  * StatusBadge Component
  * A non-interactive status badge for display purposes
  */
-export function StatusBadge({
+function StatusBadge({
   status,
   showIcon = true,
   className = '',

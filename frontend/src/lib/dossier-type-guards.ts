@@ -600,7 +600,7 @@ export function isElectedOfficial(extension: PersonExtension): boolean {
  * }
  * ```
  */
-export function isElectedOfficialPerson(dossier: Dossier): dossier is PersonDossier {
+function isElectedOfficialPerson(dossier: Dossier): dossier is PersonDossier {
   return dossier.type === 'person' && dossier.extension?.person_subtype === 'elected_official'
 }
 
@@ -684,7 +684,7 @@ export function getTypeGuard(type: DossierType): (dossier: Dossier) => boolean {
  * });
  * ```
  */
-export function assertDossierType(
+function assertDossierType(
   dossier: Dossier,
   expectedType: DossierType,
 ): asserts dossier is Extract<Dossier, { type: typeof expectedType }> {
@@ -706,7 +706,7 @@ export function assertDossierType(
  * getDossierTypeLabel('working_group', 'ar'); // Returns "مجموعة عمل"
  * ```
  */
-export function getDossierTypeLabel(type: DossierType, language: 'en' | 'ar'): string {
+function getDossierTypeLabel(type: DossierType, language: 'en' | 'ar'): string {
   const labels: Record<DossierType, { en: string; ar: string }> = {
     country: { en: 'Country', ar: 'دولة' },
     organization: { en: 'Organization', ar: 'منظمة' },
@@ -733,7 +733,7 @@ export function getDossierTypeLabel(type: DossierType, language: 'en' | 'ar'): s
  * getPersonSubtypeLabel('standard', 'ar'); // Returns "شخص"
  * ```
  */
-export function getPersonSubtypeLabel(subtype: PersonSubtype, language: 'en' | 'ar'): string {
+function getPersonSubtypeLabel(subtype: PersonSubtype, language: 'en' | 'ar'): string {
   const labels: Record<PersonSubtype, { en: string; ar: string }> = {
     standard: { en: 'Person', ar: 'شخص' },
     elected_official: { en: 'Elected Official', ar: 'مسؤول منتخب' },
@@ -755,7 +755,7 @@ export function getPersonSubtypeLabel(subtype: PersonSubtype, language: 'en' | '
  * // ['country', 'organization', 'person', 'engagement', 'forum', 'working_group', 'topic']
  * ```
  */
-export function getAllDossierTypes(): DossierType[] {
+function getAllDossierTypes(): DossierType[] {
   return ['country', 'organization', 'person', 'engagement', 'forum', 'working_group', 'topic']
 }
 
@@ -766,6 +766,6 @@ export function getAllDossierTypes(): DossierType[] {
  *
  * @returns Array of all valid person subtypes
  */
-export function getAllPersonSubtypes(): PersonSubtype[] {
+function getAllPersonSubtypes(): PersonSubtype[] {
   return ['standard', 'elected_official']
 }

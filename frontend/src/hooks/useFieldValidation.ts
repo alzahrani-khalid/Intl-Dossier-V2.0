@@ -228,7 +228,7 @@ export interface UseFormValidationReturn {
   resetAll: () => void
 }
 
-export function useFormValidation(options: UseFormValidationOptions): UseFormValidationReturn {
+function useFormValidation(options: UseFormValidationOptions): UseFormValidationReturn {
   const { fields, debounceMs = 300 } = options
 
   // Create individual field validations
@@ -280,4 +280,3 @@ export function useFormValidation(options: UseFormValidationOptions): UseFormVal
   }
 }
 
-export default useFieldValidation

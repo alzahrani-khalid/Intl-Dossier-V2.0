@@ -603,4 +603,3 @@ function ConflictComparisonItem({
   )
 }
 
-export default SchedulingConflictComparison

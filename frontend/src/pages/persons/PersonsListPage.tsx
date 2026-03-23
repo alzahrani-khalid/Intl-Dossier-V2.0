@@ -41,7 +41,7 @@ import { usePersons } from '@/hooks/usePersons'
 import type { PersonSearchParams, ImportanceLevel } from '@/types/person.types'
 import { IMPORTANCE_LEVEL_LABELS } from '@/types/person.types'
 
-export function PersonsListPage() {
+function PersonsListPage() {
   const { t, i18n } = useTranslation('persons')
   const isRTL = i18n.language === 'ar'
   const navigate = useNavigate()

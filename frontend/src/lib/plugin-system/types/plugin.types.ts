@@ -55,7 +55,7 @@ export interface BaseDossier {
 /**
  * Base list item for entity lists
  */
-export interface BaseListItem {
+interface BaseListItem {
   id: string
   name_en: string
   name_ar: string
@@ -505,7 +505,7 @@ export interface BadgeDefinition<T = Record<string, unknown>> {
 /**
  * Search parameters for listing entities
  */
-export interface EntitySearchParams {
+interface EntitySearchParams {
   search?: string
   status?: EntityStatus
   sensitivity_level?: SensitivityLevel
@@ -520,7 +520,7 @@ export interface EntitySearchParams {
 /**
  * List response type
  */
-export interface EntityListResponse<T = Record<string, unknown>> {
+interface EntityListResponse<T = Record<string, unknown>> {
   data: Array<BaseDossier & T>
   pagination: {
     page: number

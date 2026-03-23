@@ -147,21 +147,21 @@ export interface FieldHistoryTimelineProps {
   className?: string
 }
 
-export interface FieldHistoryEntryCardProps {
+interface FieldHistoryEntryCardProps {
   entry: FieldHistoryEntry
   isRTL: boolean
   onRollback?: (entry: FieldHistoryEntry) => void
   className?: string
 }
 
-export interface FieldHistoryGroupCardProps {
+interface FieldHistoryGroupCardProps {
   field: FieldHistoryGrouped
   isRTL: boolean
   onClick?: (fieldName: string) => void
   className?: string
 }
 
-export interface FieldHistoryDiffViewProps {
+interface FieldHistoryDiffViewProps {
   oldValue: unknown
   newValue: unknown
   fieldName: string
@@ -169,7 +169,7 @@ export interface FieldHistoryDiffViewProps {
   className?: string
 }
 
-export interface RollbackConfirmDialogProps {
+interface RollbackConfirmDialogProps {
   entry: FieldHistoryEntry
   isOpen: boolean
   isLoading: boolean

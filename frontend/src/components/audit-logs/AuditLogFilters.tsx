@@ -532,4 +532,3 @@ export function AuditLogFilters({
   )
 }
 
-export default AuditLogFilters

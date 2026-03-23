@@ -170,7 +170,7 @@ export interface UpdateFieldPermissionRequest {
   expires_at?: string | null
 }
 
-export interface CheckPermissionsRequest {
+interface CheckPermissionsRequest {
   entity_type: FieldPermissionEntityType
   entity_id?: string
   field_names?: string[]
@@ -195,23 +195,23 @@ export interface GetAuditLogsParams {
 
 // Response types
 
-export interface FieldPermissionsResponse {
+interface FieldPermissionsResponse {
   data: FieldPermission[]
 }
 
-export interface FieldDefinitionsResponse {
+interface FieldDefinitionsResponse {
   data: FieldDefinition[]
 }
 
-export interface ResolvedPermissionsResponse {
+interface ResolvedPermissionsResponse {
   data: ResolvedFieldPermission[]
 }
 
-export interface BulkPermissionCheckResponse {
+interface BulkPermissionCheckResponse {
   data: BulkPermissionCheck[]
 }
 
-export interface AuditLogsResponse {
+interface AuditLogsResponse {
   data: FieldPermissionAudit[]
   pagination: {
     limit: number
@@ -234,7 +234,7 @@ export interface FieldWithPermission extends FieldDefinition {
 /**
  * Permission rule for admin management UI
  */
-export interface PermissionRuleDisplay extends FieldPermission {
+interface PermissionRuleDisplay extends FieldPermission {
   scope_display: string
   entity_display?: string
   field_display: string
@@ -322,7 +322,7 @@ export const SCOPE_TYPE_CONFIG: ScopeTypeConfig[] = [
   },
 ]
 
-export const FIELD_CATEGORY_CONFIG: { value: FieldCategory; label_en: string; label_ar: string }[] =
+const FIELD_CATEGORY_CONFIG: { value: FieldCategory; label_en: string; label_ar: string }[] =
   [
     { value: 'base', label_en: 'Base Fields', label_ar: 'الحقول الأساسية' },
     { value: 'extension', label_en: 'Extension Fields', label_ar: 'حقول الامتداد' },

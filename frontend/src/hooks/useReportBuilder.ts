@@ -248,7 +248,7 @@ export function useReportPreview() {
 // Report Execution Hook
 // ============================================================================
 
-export function useExecuteReport() {
+function useExecuteReport() {
   const { t } = useTranslation('report-builder')
 
   return useMutation({
@@ -268,7 +268,7 @@ export function useExecuteReport() {
 // Schedule Hooks
 // ============================================================================
 
-export function useReportSchedules(reportId: string | undefined) {
+function useReportSchedules(reportId: string | undefined) {
   return useQuery({
     queryKey: reportBuilderKeys.schedules(reportId!),
     queryFn: async (): Promise<ReportSchedule[]> => {
@@ -301,7 +301,7 @@ export function useCreateSchedule() {
   })
 }
 
-export function useUpdateSchedule() {
+function useUpdateSchedule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -324,7 +324,7 @@ export function useUpdateSchedule() {
   })
 }
 
-export function useDeleteSchedule() {
+function useDeleteSchedule() {
   const queryClient = useQueryClient()
 
   return useMutation({

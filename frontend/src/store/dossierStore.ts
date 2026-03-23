@@ -562,7 +562,7 @@ export function usePinnedDossiers() {
 /**
  * Hook for context resolution
  */
-export function useDossierContextResolution() {
+function useDossierContextResolution() {
   return useDossierStore((state) => ({
     resolvedDossiers: state.resolvedDossiers,
     resolvedFrom: state.resolvedFrom,
@@ -580,7 +580,7 @@ export function useDossierContextResolution() {
 /**
  * Helper to get dossier route based on type
  */
-export function getDossierRoute(dossier: DossierEntry): string {
+function getDossierRoute(dossier: DossierEntry): string {
   if (dossier.route) return dossier.route
 
   const typeRouteMap: Partial<Record<DossierType, string>> = {
@@ -600,7 +600,7 @@ export function getDossierRoute(dossier: DossierEntry): string {
 /**
  * Helper to get color class for pinned dossier
  */
-export function getDossierColorClass(color: DossierEntry['color']): string {
+function getDossierColorClass(color: DossierEntry['color']): string {
   const colorMap: Record<NonNullable<DossierEntry['color']>, string> = {
     default: 'bg-muted text-muted-foreground',
     red: 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300',

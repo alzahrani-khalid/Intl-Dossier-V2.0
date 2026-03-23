@@ -45,7 +45,7 @@ export const relationshipKeys = {
 /**
  * Hook to fetch a single relationship by ID
  */
-export function useRelationship(
+function useRelationship(
   id: string,
   options?: Omit<
     UseQueryOptions<RelationshipWithDossiers, RelationshipAPIError>,
@@ -62,7 +62,7 @@ export function useRelationship(
 /**
  * Hook to fetch list of relationships with filters
  */
-export function useRelationships(
+function useRelationships(
   filters?: RelationshipFilters,
   options?: Omit<
     UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>,
@@ -98,7 +98,7 @@ export function useRelationshipsForDossier(
 /**
  * Hook to fetch relationships by type
  */
-export function useRelationshipsByType(
+function useRelationshipsByType(
   dossierId: string,
   relationshipType: RelationshipType,
   page?: number,
@@ -118,7 +118,7 @@ export function useRelationshipsByType(
 /**
  * Hook to create a new relationship
  */
-export function useCreateRelationship() {
+function useCreateRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -150,7 +150,7 @@ export function useCreateRelationship() {
 /**
  * Hook to update a relationship
  */
-export function useUpdateRelationship() {
+function useUpdateRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -209,7 +209,7 @@ export function useUpdateRelationship() {
 /**
  * Hook to delete a relationship
  */
-export function useDeleteRelationship() {
+function useDeleteRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -260,7 +260,7 @@ export function useDeleteRelationship() {
 /**
  * Hook to prefetch relationships for a dossier (useful for hover effects, navigation hints)
  */
-export function usePrefetchRelationshipsForDossier() {
+function usePrefetchRelationshipsForDossier() {
   const queryClient = useQueryClient()
 
   return (dossierId: string) => {
@@ -274,7 +274,7 @@ export function usePrefetchRelationshipsForDossier() {
 /**
  * Hook to invalidate relationship queries (useful after bulk operations)
  */
-export function useInvalidateRelationships() {
+function useInvalidateRelationships() {
   const queryClient = useQueryClient()
 
   return () => {
@@ -398,7 +398,7 @@ async function fetchGraphData(
  * const { data, isLoading, error } = useGraphData('dossier-uuid', 3, 'bilateral_relation');
  * // data contains nodes, edges, and stats for visualization
  */
-export function useGraphData(
+function useGraphData(
   startDossierId: string,
   maxDegrees: number = 2,
   relationshipType?: string,
@@ -421,7 +421,7 @@ export function useGraphData(
 /**
  * Hook to prefetch graph data (useful for hover effects, navigation hints)
  */
-export function usePrefetchGraphData() {
+function usePrefetchGraphData() {
   const queryClient = useQueryClient()
 
   return (startDossierId: string, maxDegrees: number = 2, relationshipType?: string) => {

@@ -89,4 +89,3 @@ export function useWorkCreation() {
   return context
 }
 
-export default WorkCreationProvider

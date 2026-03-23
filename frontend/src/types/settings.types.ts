@@ -56,7 +56,7 @@ export const profileSettingsSchema = z.object({
   avatar_url: z.string().url().optional().nullable(),
 })
 
-export type ProfileSettings = z.infer<typeof profileSettingsSchema>
+type ProfileSettings = z.infer<typeof profileSettingsSchema>
 
 /**
  * General settings schema
@@ -68,7 +68,7 @@ export const generalSettingsSchema = z.object({
   start_of_week: z.enum(['sunday', 'monday', 'saturday']),
 })
 
-export type GeneralSettings = z.infer<typeof generalSettingsSchema>
+type GeneralSettings = z.infer<typeof generalSettingsSchema>
 
 /**
  * Appearance settings schema
@@ -79,7 +79,7 @@ export const appearanceSettingsSchema = z.object({
   display_density: z.enum(['compact', 'comfortable', 'spacious']),
 })
 
-export type AppearanceSettings = z.infer<typeof appearanceSettingsSchema>
+type AppearanceSettings = z.infer<typeof appearanceSettingsSchema>
 
 /**
  * Notification settings schema
@@ -95,7 +95,7 @@ export const notificationSettingsSchema = z.object({
   notifications_mentions: z.boolean(),
 })
 
-export type NotificationSettings = z.infer<typeof notificationSettingsSchema>
+type NotificationSettings = z.infer<typeof notificationSettingsSchema>
 
 /**
  * Accessibility settings schema
@@ -109,7 +109,7 @@ export const accessibilitySettingsSchema = z.object({
   screen_reader: z.boolean(),
 })
 
-export type AccessibilitySettings = z.infer<typeof accessibilitySettingsSchema>
+type AccessibilitySettings = z.infer<typeof accessibilitySettingsSchema>
 
 /**
  * Security settings schema
@@ -119,7 +119,7 @@ export const securitySettingsSchema = z.object({
   session_timeout: z.number().min(5).max(480),
 })
 
-export type SecuritySettings = z.infer<typeof securitySettingsSchema>
+type SecuritySettings = z.infer<typeof securitySettingsSchema>
 
 /**
  * Combined user settings type
@@ -170,7 +170,7 @@ export interface UserSettings {
 /**
  * Settings section navigation item
  */
-export interface SettingsNavItem {
+interface SettingsNavItem {
   id: SettingsSectionId
   labelKey: string
   icon: React.ComponentType<{ className?: string }>
@@ -189,7 +189,7 @@ export interface TimezoneOption {
 /**
  * Active session info
  */
-export interface ActiveSession {
+interface ActiveSession {
   id: string
   device: string
   browser: string

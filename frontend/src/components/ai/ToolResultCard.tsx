@@ -188,4 +188,3 @@ export function ToolResultCard({
   )
 }
 
-export default ToolResultCard

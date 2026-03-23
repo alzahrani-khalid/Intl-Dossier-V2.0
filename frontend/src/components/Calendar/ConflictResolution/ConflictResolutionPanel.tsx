@@ -345,4 +345,3 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
   )
 }
 
-export default ConflictResolutionPanel

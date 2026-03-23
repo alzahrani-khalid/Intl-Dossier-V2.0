@@ -259,4 +259,3 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
   )
 })
 
-export default EntityComparisonPage

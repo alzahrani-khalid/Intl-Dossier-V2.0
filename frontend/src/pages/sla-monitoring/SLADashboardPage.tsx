@@ -82,7 +82,7 @@ const getDateRange = (option: DateRangeOption) => {
   }
 }
 
-export function SLADashboardPage() {
+function SLADashboardPage() {
   const { t, i18n } = useTranslation('sla')
   const isRTL = i18n.language === 'ar'
 

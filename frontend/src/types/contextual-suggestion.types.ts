@@ -197,7 +197,7 @@ export interface ContextualSuggestionsResponse {
 /**
  * Known organizational calendar events used for seasonal suggestions
  */
-export const ORGANIZATIONAL_CALENDAR_EVENTS = {
+const ORGANIZATIONAL_CALENDAR_EVENTS = {
   UN_GENERAL_ASSEMBLY: {
     name_en: 'UN General Assembly',
     name_ar: 'الجمعية العامة للأمم المتحدة',
@@ -237,7 +237,7 @@ export const ORGANIZATIONAL_CALENDAR_EVENTS = {
 /**
  * Union type of all suggestion types
  */
-export type AnySuggestion =
+type AnySuggestion =
   | UpcomingEventSuggestion
   | ExpiringMouSuggestion
   | OverdueCommitmentSuggestion
@@ -248,7 +248,7 @@ export type AnySuggestion =
 /**
  * Type guard for upcoming event suggestion
  */
-export function isUpcomingEventSuggestion(
+function isUpcomingEventSuggestion(
   suggestion: ContextualSuggestion,
 ): suggestion is UpcomingEventSuggestion {
   return suggestion.category === 'upcoming_event'
@@ -257,7 +257,7 @@ export function isUpcomingEventSuggestion(
 /**
  * Type guard for expiring MOU suggestion
  */
-export function isExpiringMouSuggestion(
+function isExpiringMouSuggestion(
   suggestion: ContextualSuggestion,
 ): suggestion is ExpiringMouSuggestion {
   return suggestion.category === 'expiring_mou'
@@ -266,7 +266,7 @@ export function isExpiringMouSuggestion(
 /**
  * Type guard for overdue commitment suggestion
  */
-export function isOverdueCommitmentSuggestion(
+function isOverdueCommitmentSuggestion(
   suggestion: ContextualSuggestion,
 ): suggestion is OverdueCommitmentSuggestion {
   return suggestion.category === 'overdue_commitment'
@@ -275,7 +275,7 @@ export function isOverdueCommitmentSuggestion(
 /**
  * Type guard for seasonal suggestion
  */
-export function isSeasonalSuggestion(
+function isSeasonalSuggestion(
   suggestion: ContextualSuggestion,
 ): suggestion is SeasonalSuggestion {
   return suggestion.category === 'seasonal'
@@ -284,7 +284,7 @@ export function isSeasonalSuggestion(
 /**
  * Type guard for anniversary suggestion
  */
-export function isAnniversarySuggestion(
+function isAnniversarySuggestion(
   suggestion: ContextualSuggestion,
 ): suggestion is AnniversarySuggestion {
   return suggestion.category === 'anniversary'
@@ -293,7 +293,7 @@ export function isAnniversarySuggestion(
 /**
  * Type guard for quick action suggestion
  */
-export function isQuickActionSuggestion(
+function isQuickActionSuggestion(
   suggestion: ContextualSuggestion,
 ): suggestion is QuickActionSuggestion {
   return suggestion.category === 'quick_action'

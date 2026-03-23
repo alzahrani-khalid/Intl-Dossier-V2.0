@@ -87,7 +87,7 @@ export interface FieldDisplayConfig {
 /**
  * Field configuration registry by dossier type
  */
-export type FieldConfigRegistry = Record<DossierType, FieldDisplayConfig[]>
+type FieldConfigRegistry = Record<DossierType, FieldDisplayConfig[]>
 
 /**
  * Comparison view mode
@@ -166,7 +166,7 @@ export interface EntitySelectionState {
 /**
  * Props for the EntityComparisonTable component
  */
-export interface EntityComparisonTableProps {
+interface EntityComparisonTableProps {
   /** Comparison result to display */
   comparisonResult: EntityComparisonResult
   /** Current view mode */
@@ -186,7 +186,7 @@ export interface EntityComparisonTableProps {
 /**
  * Props for the EntityComparisonSelector component
  */
-export interface EntityComparisonSelectorProps {
+interface EntityComparisonSelectorProps {
   /** Current selection state */
   selectionState: EntitySelectionState
   /** Callback when selection changes */
@@ -204,7 +204,7 @@ export interface EntityComparisonSelectorProps {
 /**
  * Props for the ComparisonExport component
  */
-export interface ComparisonExportProps {
+interface ComparisonExportProps {
   /** Comparison result to export */
   comparisonResult: EntityComparisonResult
   /** Export configuration */
@@ -220,7 +220,7 @@ export interface ComparisonExportProps {
 /**
  * Default comparison filters
  */
-export const DEFAULT_COMPARISON_FILTERS: ComparisonFilters = {
+const DEFAULT_COMPARISON_FILTERS: ComparisonFilters = {
   showOnlyDifferences: false,
   showBaseFields: true,
   showExtensionFields: true,
@@ -232,7 +232,7 @@ export const DEFAULT_COMPARISON_FILTERS: ComparisonFilters = {
 /**
  * Default export configuration
  */
-export const DEFAULT_EXPORT_CONFIG: ComparisonExportConfig = {
+const DEFAULT_EXPORT_CONFIG: ComparisonExportConfig = {
   format: 'csv',
   includeHeader: true,
   includeSummary: true,

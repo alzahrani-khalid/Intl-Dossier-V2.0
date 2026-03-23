@@ -189,4 +189,3 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
   )
 }
 
-export default AuditLogStatistics

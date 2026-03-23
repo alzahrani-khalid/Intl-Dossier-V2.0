@@ -99,7 +99,7 @@ export const useCreateTicket = () => {
 /**
  * List Tickets
  */
-export const useTicketList = (filters?: {
+const useTicketList = (filters?: {
   status?: string
   requestType?: string
   sensitivity?: string
@@ -166,7 +166,7 @@ export const useTicket = (ticketId: string) => {
 /**
  * Update Ticket
  */
-export const useUpdateTicket = (ticketId: string) => {
+const useUpdateTicket = (ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -262,7 +262,7 @@ export const useApplyTriage = (ticketId: string) => {
 /**
  * Assign Ticket
  */
-export const useAssignTicket = (ticketId: string) => {
+const useAssignTicket = (ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -623,7 +623,7 @@ export const useResumeSLA = (ticketId: string) => {
 /**
  * Get SLA pause history for a ticket
  */
-export const useSLAPauseHistory = (ticketId: string) => {
+const useSLAPauseHistory = (ticketId: string) => {
   return useQuery({
     queryKey: ['sla-pause-history', ticketId],
     queryFn: async () => {
@@ -646,7 +646,7 @@ export const useSLAPauseHistory = (ticketId: string) => {
 /**
  * Health Check
  */
-export const useHealthCheck = () => {
+const useHealthCheck = () => {
   return useQuery({
     queryKey: intakeKeys.health(),
     queryFn: async () => {
@@ -663,7 +663,7 @@ export const useHealthCheck = () => {
 /**
  * AI Health Check
  */
-export const useAIHealthCheck = () => {
+const useAIHealthCheck = () => {
   return useQuery({
     queryKey: intakeKeys.aiHealth(),
     queryFn: async () => {

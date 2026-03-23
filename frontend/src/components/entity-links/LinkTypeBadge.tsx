@@ -131,7 +131,7 @@ export function LinkTypeBadge({
 /**
  * Helper function to get link type label for non-component contexts
  */
-export function getLinkTypeLabel(
+function getLinkTypeLabel(
   linkType: EntityLink['link_type'],
   t: (key: string) => string,
 ): string {
@@ -141,15 +141,14 @@ export function getLinkTypeLabel(
 /**
  * Helper to get link type icon
  */
-export function getLinkTypeIcon(linkType: EntityLink['link_type']): string {
+function getLinkTypeIcon(linkType: EntityLink['link_type']): string {
   return LINK_TYPE_CONFIG[linkType]?.icon || LINK_TYPE_CONFIG.related.icon
 }
 
 /**
  * Helper to get link type color class
  */
-export function getLinkTypeColorClass(linkType: EntityLink['link_type']): string {
+function getLinkTypeColorClass(linkType: EntityLink['link_type']): string {
   return LINK_TYPE_CONFIG[linkType]?.colorClass || LINK_TYPE_CONFIG.related.colorClass
 }
 
-export default LinkTypeBadge

@@ -245,4 +245,3 @@ export function ActionableErrorSummary({
   )
 }
 
-export default ActionableErrorSummary

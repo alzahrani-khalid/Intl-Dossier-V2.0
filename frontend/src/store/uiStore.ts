@@ -46,7 +46,7 @@ export interface Notification {
   read: boolean
 }
 
-export type ModalState = Record<string, boolean>
+type ModalState = Record<string, boolean>
 
 export type { SupportedLanguage } from '../i18n'
 

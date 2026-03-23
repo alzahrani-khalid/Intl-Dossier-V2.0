@@ -335,4 +335,3 @@ export function useFilterPresets(options?: UseFilterPresetsOptions) {
   }
 }
 
-export default useFilterPresets

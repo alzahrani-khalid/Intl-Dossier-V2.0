@@ -364,9 +364,8 @@ export const intakeEntityLinksAPI = {
 /**
  * Export singleton instance
  */
-export default intakeEntityLinksAPI
 
 /**
  * Export with alternative names for convenience
  */
-export const entityLinksApi = intakeEntityLinksAPI
+const entityLinksApi = intakeEntityLinksAPI

@@ -226,4 +226,3 @@ export function DuplicateCandidateCard({
   )
 }
 
-export default DuplicateCandidateCard

@@ -265,7 +265,7 @@ export function useCreateDossier() {
  *   },
  * });
  */
-export function useUpdateDossier() {
+function useUpdateDossier() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -330,7 +330,7 @@ export function useUpdateDossier() {
  *   }
  * };
  */
-export function useDeleteDossier() {
+function useDeleteDossier() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -386,7 +386,7 @@ export function useDeleteDossier() {
  *   View Dossier
  * </Link>
  */
-export function usePrefetchDossier() {
+function usePrefetchDossier() {
   const queryClient = useQueryClient()
 
   return (id: string) => {
@@ -413,7 +413,7 @@ export function usePrefetchDossier() {
  * await bulkImportDossiers(data);
  * invalidate(); // Force refetch of all dossier queries
  */
-export function useInvalidateDossiers() {
+function useInvalidateDossiers() {
   const queryClient = useQueryClient()
 
   return () => {
@@ -450,7 +450,7 @@ export const documentLinksKeys = {
  * // Render linked documents
  * documents?.map(doc => <DocumentCard key={doc.id} document={doc} />);
  */
-export function useDocumentLinks(
+function useDocumentLinks(
   dossierId: string,
   options?: Omit<UseQueryOptions<LinkedDocument[], DossierAPIError>, 'queryKey' | 'queryFn'>,
 ) {
@@ -480,7 +480,7 @@ export function useDocumentLinks(
  *   documentType: 'position',
  * });
  */
-export function useLinkDocument() {
+function useLinkDocument() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -526,7 +526,7 @@ export function useLinkDocument() {
  *   documentType: 'position',
  * });
  */
-export function useUnlinkDocument() {
+function useUnlinkDocument() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -718,7 +718,7 @@ export function useDossierCounts(
  * const { data: countryCount } = useDossierCountByType('country');
  * console.warn(`Total countries: ${countryCount}`);
  */
-export function useDossierCountByType(
+function useDossierCountByType(
   type: TypeGuardDossierType,
   options?: Omit<UseQueryOptions<number, DossierAPIError>, 'queryKey' | 'queryFn'>,
 ) {

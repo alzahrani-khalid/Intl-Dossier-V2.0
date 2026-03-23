@@ -767,4 +767,3 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
   )
 })
 
-export default FieldHistoryTimeline

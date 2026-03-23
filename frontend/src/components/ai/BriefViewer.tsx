@@ -325,4 +325,3 @@ function Section({ icon, title, children }: SectionProps) {
   )
 }
 
-export default BriefViewer

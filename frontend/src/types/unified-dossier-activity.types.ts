@@ -268,7 +268,7 @@ export interface RawUnifiedActivity {
 /**
  * Error response from the API
  */
-export interface UnifiedActivityError {
+interface UnifiedActivityError {
   error: string
   code: string
   details?: string
@@ -281,7 +281,7 @@ export interface UnifiedActivityError {
 /**
  * Return type for the useUnifiedDossierActivity hook
  */
-export interface UseUnifiedDossierActivityReturn {
+interface UseUnifiedDossierActivityReturn {
   /** List of activities (flattened from all pages) */
   activities: UnifiedActivity[]
 
@@ -320,7 +320,7 @@ export interface UseUnifiedDossierActivityReturn {
 /**
  * Props for the unified activity feed component
  */
-export interface UnifiedActivityFeedProps {
+interface UnifiedActivityFeedProps {
   /** Dossier ID to fetch activities for */
   dossierId: string
 
@@ -346,7 +346,7 @@ export interface UnifiedActivityFeedProps {
 /**
  * Props for individual activity items
  */
-export interface UnifiedActivityItemProps {
+interface UnifiedActivityItemProps {
   /** The activity to display */
   activity: UnifiedActivity
 
@@ -363,7 +363,7 @@ export interface UnifiedActivityItemProps {
 /**
  * Props for activity filter controls
  */
-export interface UnifiedActivityFiltersProps {
+interface UnifiedActivityFiltersProps {
   /** Current filters */
   filters: UnifiedActivityFilters
 
@@ -407,7 +407,7 @@ export interface ActivityActionConfig {
 /**
  * Default configurations for activity types
  */
-export const ACTIVITY_TYPE_CONFIGS: Record<UnifiedActivityType, ActivityTypeConfig> = {
+const ACTIVITY_TYPE_CONFIGS: Record<UnifiedActivityType, ActivityTypeConfig> = {
   task: {
     type: 'task',
     icon: 'CheckSquare',
@@ -477,7 +477,7 @@ export const ACTIVITY_TYPE_CONFIGS: Record<UnifiedActivityType, ActivityTypeConf
 /**
  * Default configurations for action types
  */
-export const ACTIVITY_ACTION_CONFIGS: Record<UnifiedActivityAction, ActivityActionConfig> = {
+const ACTIVITY_ACTION_CONFIGS: Record<UnifiedActivityAction, ActivityActionConfig> = {
   created: {
     action: 'created',
     icon: 'Plus',

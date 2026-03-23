@@ -279,7 +279,7 @@ export async function autocompleteDossiers(
 /**
  * Search within a specific dossier type
  */
-export async function searchByType(
+async function searchByType(
   type: DossierType,
   query: string,
   page?: number,
@@ -296,7 +296,7 @@ export async function searchByType(
 /**
  * Quick search (default sort by relevance, first page only)
  */
-export async function quickSearch(query: string): Promise<SearchResponse> {
+async function quickSearch(query: string): Promise<SearchResponse> {
   return searchDossiers({
     query,
     page: 1,

@@ -66,7 +66,7 @@ export function useMyDossiers(filters?: MyDossiersFilters, options?: { enabled?:
 /**
  * Hook for fetching recent activity across user's dossiers with infinite scroll
  */
-export function useRecentDossierActivity(
+function useRecentDossierActivity(
   filters?: RecentActivityFilters,
   options?: { enabled?: boolean; pageSize?: number },
 ) {
@@ -154,7 +154,7 @@ export function useDossierDashboardSummary(options?: { enabled?: boolean }) {
 /**
  * Combined hook for all dashboard data - use for initial dashboard load
  */
-export function useDossierDashboard(options?: {
+function useDossierDashboard(options?: {
   myDossiersFilters?: MyDossiersFilters
   recentActivityFilters?: RecentActivityFilters
   pendingWorkFilters?: PendingWorkFilters
@@ -195,7 +195,7 @@ export function useDossierDashboard(options?: {
 /**
  * Hook to invalidate all dossier dashboard queries
  */
-export function useInvalidateDossierDashboard() {
+function useInvalidateDossierDashboard() {
   const queryClient = useQueryClient()
 
   return {

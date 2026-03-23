@@ -133,7 +133,7 @@ export function useCreateEntityLink(intakeId: string) {
 /**
  * Hook to update an existing entity link
  */
-export function useUpdateEntityLink(intakeId: string, linkId: string) {
+function useUpdateEntityLink(intakeId: string, linkId: string) {
   const { t } = useTranslation()
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -472,7 +472,7 @@ export function useCreateBatchEntityLinks(intakeId: string) {
 /**
  * Hook to fetch audit log for a link
  */
-export function useEntityLinkAuditLog(intakeId: string, linkId: string) {
+function useEntityLinkAuditLog(intakeId: string, linkId: string) {
   return useQuery({
     queryKey: entityLinksKeys.auditLog(intakeId, linkId),
     queryFn: () => intakeEntityLinksAPI.getAuditLog(intakeId, linkId),

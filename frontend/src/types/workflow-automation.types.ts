@@ -496,7 +496,7 @@ export interface ConditionOperatorOption {
 // Builder State Types
 // =============================================================================
 
-export interface WorkflowBuilderState {
+interface WorkflowBuilderState {
   step: 'trigger' | 'conditions' | 'actions' | 'settings' | 'review'
   rule: Partial<WorkflowRuleCreate>
   errors: Record<string, string>

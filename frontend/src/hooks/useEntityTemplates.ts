@@ -272,7 +272,7 @@ export function useContextAwareTemplates(
 /**
  * Create a new template
  */
-export function useCreateTemplate() {
+function useCreateTemplate() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -289,7 +289,7 @@ export function useCreateTemplate() {
 /**
  * Update an existing template
  */
-export function useUpdateTemplate() {
+function useUpdateTemplate() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -305,7 +305,7 @@ export function useUpdateTemplate() {
 /**
  * Delete a template
  */
-export function useDeleteTemplate(entityType: TemplateEntityType) {
+function useDeleteTemplate(entityType: TemplateEntityType) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -372,4 +372,3 @@ export function useApplyTemplate() {
   }
 }
 
-export default useEntityTemplates

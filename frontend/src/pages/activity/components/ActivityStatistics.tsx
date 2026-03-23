@@ -84,4 +84,3 @@ export function ActivityStatistics({ followingCount, className }: ActivityStatis
   )
 }
 
-export default ActivityStatistics

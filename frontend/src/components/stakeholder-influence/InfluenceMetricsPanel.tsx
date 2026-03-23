@@ -393,4 +393,3 @@ export function InfluenceMetricsPanel({
   )
 }
 
-export default InfluenceMetricsPanel

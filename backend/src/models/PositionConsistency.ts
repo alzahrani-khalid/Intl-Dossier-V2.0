@@ -43,7 +43,7 @@ export interface ConsistencyAnalysisResult {
   analysis_time_ms: number
 }
 
-export class PositionConsistencyModel {
+class PositionConsistencyModel {
   static tableName = 'position_consistencies'
 
   static readonly CONSISTENCY_THRESHOLDS = {
@@ -220,4 +220,3 @@ export class PositionConsistencyModel {
   }
 }
 
-export default PositionConsistencyModel

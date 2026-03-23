@@ -151,4 +151,3 @@ export function ActivityPage() {
   )
 }
 
-export default ActivityPage

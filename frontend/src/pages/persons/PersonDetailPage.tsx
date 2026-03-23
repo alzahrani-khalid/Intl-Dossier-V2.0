@@ -65,7 +65,7 @@ import {
   RELATIONSHIP_TYPE_LABELS,
 } from '@/types/person.types'
 
-export function PersonDetailPage() {
+function PersonDetailPage() {
   const { personId } = useParams({ from: '/_protected/persons/$personId' })
   const { t, i18n } = useTranslation('persons')
   const isRTL = i18n.language === 'ar'

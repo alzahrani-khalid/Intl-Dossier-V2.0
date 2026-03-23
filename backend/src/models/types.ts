@@ -23,7 +23,7 @@ export interface StandardMetadata {
 /**
  * MoU Lifecycle State Machine
  */
-export enum MoUState {
+enum MoUState {
   DRAFT = 'draft',
   NEGOTIATION = 'negotiation',
   PENDING_APPROVAL = 'pending_approval',
@@ -37,7 +37,7 @@ export enum MoUState {
 /**
  * Task Status State Machine
  */
-export enum TaskStatus {
+enum TaskStatus {
   PENDING = 'pending',
   IN_PROGRESS = 'in_progress',
   BLOCKED = 'blocked',
@@ -48,33 +48,33 @@ export enum TaskStatus {
 /**
  * Commitment Status
  */
-export type CommitmentStatus = 'pending' | 'in_progress' | 'completed' | 'overdue' | 'cancelled'
+type CommitmentStatus = 'pending' | 'in_progress' | 'completed' | 'overdue' | 'cancelled'
 
 /**
  * Priority Levels
  */
-export type Priority = 'critical' | 'high' | 'medium' | 'low'
-export type UrgentPriority = 'urgent' | 'high' | 'medium' | 'low'
+type Priority = 'critical' | 'high' | 'medium' | 'low'
+type UrgentPriority = 'urgent' | 'high' | 'medium' | 'low'
 
 /**
  * Document Classification Levels
  */
-export type Classification = 'public' | 'internal' | 'confidential' | 'secret'
+type Classification = 'public' | 'internal' | 'confidential' | 'secret'
 
 /**
  * Language Options
  */
-export type Language = 'ar' | 'en' | 'bilingual'
+type Language = 'ar' | 'en' | 'bilingual'
 
 /**
  * Relationship Health Status
  */
-export type HealthStatus = 'healthy' | 'monitor' | 'at_risk' | 'critical'
+type HealthStatus = 'healthy' | 'monitor' | 'at_risk' | 'critical'
 
 /**
  * Entity Types for polymorphic relationships
  */
-export type EntityType =
+type EntityType =
   | 'country'
   | 'organization'
   | 'forum'
@@ -94,7 +94,7 @@ export type EntityType =
 /**
  * Health Score Weights for relationship calculation
  */
-export interface HealthScoreWeights {
+interface HealthScoreWeights {
   engagement_frequency: 0.4
   commitment_fulfillment: 0.35
   response_time: 0.25

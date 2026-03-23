@@ -418,7 +418,7 @@ export interface ExportProgress {
 /**
  * Validation error codes
  */
-export const VALIDATION_ERROR_CODES = {
+const VALIDATION_ERROR_CODES = {
   REQUIRED_FIELD: 'required_field',
   INVALID_TYPE: 'invalid_type',
   INVALID_FORMAT: 'invalid_format',

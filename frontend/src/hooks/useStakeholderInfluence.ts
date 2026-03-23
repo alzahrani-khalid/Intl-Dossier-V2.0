@@ -406,7 +406,7 @@ export function useCreateInfluenceReport() {
 /**
  * Hook to prefetch stakeholder influence data (useful for hover effects)
  */
-export function usePrefetchStakeholderInfluence() {
+function usePrefetchStakeholderInfluence() {
   const queryClient = useQueryClient()
 
   return (dossierId: string) => {
@@ -421,7 +421,7 @@ export function usePrefetchStakeholderInfluence() {
 /**
  * Hook to prefetch network data
  */
-export function usePrefetchNetworkData() {
+function usePrefetchNetworkData() {
   const queryClient = useQueryClient()
 
   return (dossierId: string, degrees: number = 2) => {
@@ -441,7 +441,7 @@ export function usePrefetchNetworkData() {
 /**
  * Hook to invalidate all influence queries (useful after bulk operations)
  */
-export function useInvalidateInfluenceQueries() {
+function useInvalidateInfluenceQueries() {
   const queryClient = useQueryClient()
 
   return () => {
@@ -457,7 +457,7 @@ export function useInvalidateInfluenceQueries() {
  * Hook to fetch all influence dashboard data
  * Combines statistics, top influencers, and key connectors
  */
-export function useInfluenceDashboardData() {
+function useInfluenceDashboardData() {
   const statistics = useNetworkStatistics()
   const topInfluencers = useTopInfluencers({ limit: 10 })
   const keyConnectors = useKeyConnectors(10, 40)

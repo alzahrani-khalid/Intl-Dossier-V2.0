@@ -156,7 +156,7 @@ const StrategyButton = memo(function StrategyButton({
  * Displays a visual diff of changes and allows users to choose
  * how to resolve the conflict.
  */
-export function ConflictResolutionDialog({
+function ConflictResolutionDialog({
   open,
   onOpenChange,
   conflict,
@@ -268,7 +268,7 @@ export function ConflictResolutionDialog({
 /**
  * Simple conflict banner for inline display
  */
-export function ConflictBanner({
+function ConflictBanner({
   conflict: _conflict,
   onResolve,
   className,
@@ -313,4 +313,3 @@ export function ConflictBanner({
   )
 }
 
-export default ConflictResolutionDialog

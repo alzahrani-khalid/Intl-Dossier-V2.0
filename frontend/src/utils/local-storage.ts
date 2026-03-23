@@ -251,7 +251,7 @@ export async function clearStaleDrafts(): Promise<number> {
  *
  * @returns {Promise<void>}
  */
-export async function clearAllTaskDrafts(): Promise<void> {
+async function clearAllTaskDrafts(): Promise<void> {
   const db = await openDB()
   const transaction = db.transaction([STORE_NAME], 'readwrite')
   const store = transaction.objectStore(STORE_NAME)

@@ -258,4 +258,3 @@ export function useAIChat(): UseAIChatReturn {
   }
 }
 
-export default useAIChat

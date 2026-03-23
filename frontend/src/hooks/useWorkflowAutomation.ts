@@ -250,7 +250,7 @@ export function useWorkflowRules(params: WorkflowRulesListParams = {}) {
 /**
  * Fetch infinite scrolling workflow rules
  */
-export function useInfiniteWorkflowRules(params: Omit<WorkflowRulesListParams, 'page'>) {
+function useInfiniteWorkflowRules(params: Omit<WorkflowRulesListParams, 'page'>) {
   return useInfiniteQuery({
     queryKey: workflowKeys.rulesList({ ...params, page: undefined }),
     queryFn: ({ pageParam = 1 }) => fetchWorkflowRules({ ...params, page: pageParam }),
@@ -269,7 +269,7 @@ export function useInfiniteWorkflowRules(params: Omit<WorkflowRulesListParams, '
 /**
  * Fetch a single workflow rule
  */
-export function useWorkflowRule(id: string, enabled = true) {
+function useWorkflowRule(id: string, enabled = true) {
   return useQuery({
     queryKey: workflowKeys.rule(id),
     queryFn: () => fetchWorkflowRule(id),
@@ -293,7 +293,7 @@ export function useWorkflowExecutions(params: WorkflowExecutionsListParams = {})
 /**
  * Fetch executions for a specific rule
  */
-export function useRuleExecutions(ruleId: string, enabled = true) {
+function useRuleExecutions(ruleId: string, enabled = true) {
   return useQuery({
     queryKey: workflowKeys.ruleExecutions(ruleId),
     queryFn: () => fetchWorkflowExecutions({ rule_id: ruleId, limit: 50 }),
@@ -305,7 +305,7 @@ export function useRuleExecutions(ruleId: string, enabled = true) {
 /**
  * Fetch notification templates
  */
-export function useNotificationTemplates() {
+function useNotificationTemplates() {
   return useQuery({
     queryKey: workflowKeys.templates(),
     queryFn: fetchNotificationTemplates,
@@ -424,7 +424,7 @@ export function useTestWorkflowRule() {
 /**
  * Manually trigger a workflow
  */
-export function useTriggerWorkflow() {
+function useTriggerWorkflow() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -453,7 +453,7 @@ export function useRetryWorkflowExecution() {
 // Invalidation Helpers
 // =============================================================================
 
-export function useInvalidateWorkflows() {
+function useInvalidateWorkflows() {
   const queryClient = useQueryClient()
 
   return {

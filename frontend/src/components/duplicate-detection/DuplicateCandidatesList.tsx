@@ -295,4 +295,3 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
   )
 }
 
-export default DuplicateCandidatesList

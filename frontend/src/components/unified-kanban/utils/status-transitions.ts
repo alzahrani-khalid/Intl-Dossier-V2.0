@@ -434,6 +434,6 @@ export function getTransitionErrorMessage(
 /**
  * Validates if a status is a valid ticket_status enum value
  */
-export function isValidTicketStatus(status: string): status is TicketStatus {
+function isValidTicketStatus(status: string): status is TicketStatus {
   return VALID_TICKET_STATUSES.includes(status as TicketStatus)
 }

@@ -405,6 +405,6 @@ export function getCountryCode(countryName: string | null | undefined): string |
  * @param countryName - Country name to validate
  * @returns true if country name maps to a valid code
  */
-export function isValidCountry(countryName: string | null | undefined): boolean {
+function isValidCountry(countryName: string | null | undefined): boolean {
   return getCountryCode(countryName) !== null
 }

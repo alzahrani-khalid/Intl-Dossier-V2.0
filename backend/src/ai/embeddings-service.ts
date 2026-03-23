@@ -534,4 +534,3 @@ class EmbeddingsService {
 }
 
 export const embeddingsService = new EmbeddingsService()
-export default embeddingsService

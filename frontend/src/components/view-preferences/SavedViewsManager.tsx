@@ -624,4 +624,3 @@ export function SavedViewsManager({
   )
 }
 
-export default SavedViewsManager

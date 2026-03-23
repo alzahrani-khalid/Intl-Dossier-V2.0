@@ -244,4 +244,3 @@ export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
   )
 }
 
-export default EventsWidget

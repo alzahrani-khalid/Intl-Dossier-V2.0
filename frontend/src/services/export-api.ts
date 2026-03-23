@@ -167,7 +167,7 @@ export async function exportAllContacts(
  * @param filters - Optional filters to apply
  * @returns Estimated number of contacts to export
  */
-export async function getExportSizeEstimate(filters?: ExportFilters): Promise<number> {
+async function getExportSizeEstimate(filters?: ExportFilters): Promise<number> {
   try {
     let query = supabase
       .from('contacts')

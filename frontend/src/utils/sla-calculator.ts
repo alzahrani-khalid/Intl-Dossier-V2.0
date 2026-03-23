@@ -180,7 +180,7 @@ export function formatTimeDiff(diffMs: number): string {
  * @param completedAt - Task completion timestamp
  * @returns true if SLA is currently breached (not completed and past deadline)
  */
-export function isSLABreached(
+function isSLABreached(
   deadline: string | null,
   isCompleted: boolean = false,
   completedAt: string | null = null,
@@ -200,7 +200,7 @@ export function isSLABreached(
  * @param startTime - SLA start time (defaults to 7 days before deadline)
  * @returns Timestamp when SLA enters warning zone
  */
-export function getSLAWarningThreshold(deadline: string, startTime?: string): Date {
+function getSLAWarningThreshold(deadline: string, startTime?: string): Date {
   const deadlineDate = new Date(deadline)
   const startDate = startTime
     ? new Date(startTime)
@@ -224,7 +224,7 @@ export function getSLAWarningThreshold(deadline: string, startTime?: string): Da
  * @param tasks - Array of tasks to sort
  * @returns Sorted array
  */
-export function sortBySLAUrgency<T extends { sla_deadline: string | null; status: string }>(
+function sortBySLAUrgency<T extends { sla_deadline: string | null; status: string }>(
   tasks: T[],
 ): T[] {
   return [...tasks].sort((a, b) => {
@@ -260,7 +260,7 @@ export function sortBySLAUrgency<T extends { sla_deadline: string | null; status
  * @param status - SLA status
  * @returns Tailwind color class
  */
-export function getSLAColorClass(status: SLAStatusType): string {
+function getSLAColorClass(status: SLAStatusType): string {
   switch (status) {
     case 'safe':
       return 'text-green-600 dark:text-green-400'

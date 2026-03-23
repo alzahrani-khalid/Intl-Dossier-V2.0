@@ -183,4 +183,3 @@ export function DossierContextBadge({
   return badgeWithTooltip
 }
 
-export default DossierContextBadge

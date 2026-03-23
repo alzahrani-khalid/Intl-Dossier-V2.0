@@ -126,7 +126,7 @@ export function useWorkingGroups(
 /**
  * Hook to get a single working group with full details
  */
-export function useWorkingGroup(
+function useWorkingGroup(
   id: string | undefined,
   options?: Omit<UseQueryOptions<WorkingGroupFullResponse | null, Error>, 'queryKey' | 'queryFn'>,
 ) {
@@ -361,7 +361,7 @@ export function useDeleteWorkingGroup() {
 /**
  * Hook to list members of a working group
  */
-export function useWorkingGroupMembers(workingGroupId: string | undefined) {
+function useWorkingGroupMembers(workingGroupId: string | undefined) {
   return useQuery({
     queryKey: workingGroupKeys.members(workingGroupId || ''),
     queryFn: async (): Promise<WorkingGroupMember[]> => {
@@ -404,7 +404,7 @@ export function useWorkingGroupMembers(workingGroupId: string | undefined) {
 /**
  * Hook to add a member to a working group
  */
-export function useAddWorkingGroupMember() {
+function useAddWorkingGroupMember() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('working-groups')
 
@@ -448,7 +448,7 @@ export function useAddWorkingGroupMember() {
 /**
  * Hook to update a working group member
  */
-export function useUpdateWorkingGroupMember() {
+function useUpdateWorkingGroupMember() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('working-groups')
 
@@ -484,7 +484,7 @@ export function useUpdateWorkingGroupMember() {
 /**
  * Hook to remove a member from a working group
  */
-export function useRemoveWorkingGroupMember() {
+function useRemoveWorkingGroupMember() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('working-groups')
 
@@ -519,7 +519,7 @@ export function useRemoveWorkingGroupMember() {
 /**
  * Hook to list deliverables of a working group
  */
-export function useWorkingGroupDeliverables(workingGroupId: string | undefined) {
+function useWorkingGroupDeliverables(workingGroupId: string | undefined) {
   return useQuery({
     queryKey: workingGroupKeys.deliverables(workingGroupId || ''),
     queryFn: async (): Promise<WorkingGroupDeliverable[]> => {
@@ -543,7 +543,7 @@ export function useWorkingGroupDeliverables(workingGroupId: string | undefined) 
 /**
  * Hook to add a deliverable to a working group
  */
-export function useAddWorkingGroupDeliverable() {
+function useAddWorkingGroupDeliverable() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('working-groups')
 
@@ -585,7 +585,7 @@ export function useAddWorkingGroupDeliverable() {
 /**
  * Hook to update a deliverable
  */
-export function useUpdateWorkingGroupDeliverable() {
+function useUpdateWorkingGroupDeliverable() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('working-groups')
 
@@ -626,7 +626,7 @@ export function useUpdateWorkingGroupDeliverable() {
 /**
  * Hook to delete a deliverable
  */
-export function useDeleteWorkingGroupDeliverable() {
+function useDeleteWorkingGroupDeliverable() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('working-groups')
 
@@ -661,7 +661,7 @@ export function useDeleteWorkingGroupDeliverable() {
 /**
  * Hook to list meetings of a working group
  */
-export function useWorkingGroupMeetings(workingGroupId: string | undefined) {
+function useWorkingGroupMeetings(workingGroupId: string | undefined) {
   return useQuery({
     queryKey: workingGroupKeys.meetings(workingGroupId || ''),
     queryFn: async (): Promise<WorkingGroupMeeting[]> => {
@@ -684,7 +684,7 @@ export function useWorkingGroupMeetings(workingGroupId: string | undefined) {
 /**
  * Hook to add a meeting to a working group
  */
-export function useAddWorkingGroupMeeting() {
+function useAddWorkingGroupMeeting() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('working-groups')
 
@@ -727,7 +727,7 @@ export function useAddWorkingGroupMeeting() {
 /**
  * Hook to update a meeting
  */
-export function useUpdateWorkingGroupMeeting() {
+function useUpdateWorkingGroupMeeting() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('working-groups')
 

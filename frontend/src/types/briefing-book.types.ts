@@ -274,7 +274,7 @@ export interface BriefingBookProgress {
 /**
  * Default sections configuration
  */
-export const DEFAULT_SECTIONS: BriefingBookSection[] = [
+const DEFAULT_SECTIONS: BriefingBookSection[] = [
   {
     type: 'executive_summary',
     title_en: 'Executive Summary',
@@ -351,7 +351,7 @@ export const DEFAULT_SECTIONS: BriefingBookSection[] = [
 /**
  * Available topics with labels
  */
-export const BRIEFING_TOPICS: Array<{
+const BRIEFING_TOPICS: Array<{
   value: BriefingBookTopic
   label_en: string
   label_ar: string

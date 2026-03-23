@@ -728,4 +728,3 @@ export function MiniRelationshipGraph({
   )
 }
 
-export default MiniRelationshipGraph

@@ -176,4 +176,3 @@ export function UndoToast({
   )
 }
 
-export default UndoToast

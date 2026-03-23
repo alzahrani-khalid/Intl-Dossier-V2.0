@@ -337,4 +337,3 @@ export function ActionItemsList({
   )
 }
 
-export default ActionItemsList

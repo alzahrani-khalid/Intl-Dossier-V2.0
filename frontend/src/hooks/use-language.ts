@@ -9,7 +9,7 @@ export const useLanguage = useLanguageFromProvider
  * Hook to get just the current language and direction
  * Useful for components that only need to read language state
  */
-export function useLanguageValue() {
+function useLanguageValue() {
   const { language, direction } = useLanguage()
 
   return {
@@ -25,7 +25,7 @@ export function useLanguageValue() {
 /**
  * Hook to toggle between languages
  */
-export function useLanguageToggle() {
+function useLanguageToggle() {
   const { language, setLanguage } = useLanguage()
 
   const toggleLanguage = () => {
@@ -43,7 +43,7 @@ export function useLanguageToggle() {
  */
 type TranslateOptions = Record<string, unknown> | undefined
 
-export function useTranslate(namespace: string = 'common') {
+function useTranslate(namespace: string = 'common') {
   const { t } = useLanguage()
 
   return (key: string, _options?: TranslateOptions) => {

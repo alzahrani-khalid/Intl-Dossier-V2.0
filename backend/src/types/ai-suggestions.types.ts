@@ -37,7 +37,7 @@ export interface AcceptSuggestionRequest {
 }
 
 // AI configuration
-export interface AIConfig {
+interface AIConfig {
   // AnythingLLM API configuration
   api_url: string
   api_key: string
@@ -73,12 +73,12 @@ export interface VectorEmbedding {
 }
 
 // Intake embedding
-export interface IntakeEmbedding extends VectorEmbedding {
+interface IntakeEmbedding extends VectorEmbedding {
   intake_id: string
 }
 
 // Entity embedding
-export interface EntityEmbedding extends VectorEmbedding {
+interface EntityEmbedding extends VectorEmbedding {
   entity_type: EntityType
   entity_id: string
   metadata: {
@@ -91,7 +91,7 @@ export interface EntityEmbedding extends VectorEmbedding {
 }
 
 // Vector similarity search result
-export interface VectorSearchResult {
+interface VectorSearchResult {
   entity_type: EntityType
   entity_id: string
   entity_name: string
@@ -115,27 +115,27 @@ export interface SuggestionGenerationResult {
 }
 
 // AnythingLLM API request
-export interface AnythingLLMRequest {
+interface AnythingLLMRequest {
   message: string
   mode: 'chat' | 'query'
   workspace_slug: string
 }
 
 // AnythingLLM API response
-export interface AnythingLLMResponse {
+interface AnythingLLMResponse {
   success: boolean
   response?: string
   error?: string
 }
 
 // Embedding generation request
-export interface EmbeddingRequest {
+interface EmbeddingRequest {
   text: string
   model?: string
 }
 
 // Embedding generation response
-export interface EmbeddingResponse {
+interface EmbeddingResponse {
   embedding: number[]
   model: string
   dimensions: number
@@ -146,7 +146,7 @@ export interface EmbeddingResponse {
 }
 
 // Ranked suggestion with combined scoring
-export interface RankedSuggestion {
+interface RankedSuggestion {
   entity_type: EntityType
   entity_id: string
   entity_name: string

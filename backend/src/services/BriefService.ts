@@ -540,4 +540,3 @@ export class BriefService {
   }
 }
 
-export default BriefService

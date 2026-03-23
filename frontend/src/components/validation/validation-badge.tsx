@@ -124,7 +124,7 @@ export interface ValidationSummaryProps {
   className?: string
 }
 
-export function ValidationSummary({ componentNames, className }: ValidationSummaryProps) {
+function ValidationSummary({ componentNames, className }: ValidationSummaryProps) {
   const { lastResult } = useCompliance()
 
   if (process.env.NODE_ENV !== 'development') {

@@ -40,6 +40,6 @@ export const checkValidation = (req: Request, res: Response, next: NextFunction)
 /**
  * Export the same as handleValidation for compatibility
  */
-export const handleValidation = checkValidation
+const handleValidation = checkValidation
 
 // no-op

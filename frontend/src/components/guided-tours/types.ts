@@ -159,7 +159,7 @@ export interface TourContextValue extends TourState, TourActions {}
 /**
  * Props for tour trigger component
  */
-export interface TourTriggerProps {
+interface TourTriggerProps {
   /** Tour ID to trigger */
   tourId: TourId
   /** Whether the section is empty (triggers tour suggestion) */
@@ -173,7 +173,7 @@ export interface TourTriggerProps {
 /**
  * Props for tour step overlay
  */
-export interface TourStepOverlayProps {
+interface TourStepOverlayProps {
   /** The current step */
   step: TourStep
   /** Current step number (1-indexed for display) */
@@ -197,7 +197,7 @@ export interface TourStepOverlayProps {
 /**
  * Props for guided tour wrapper
  */
-export interface GuidedTourProps {
+interface GuidedTourProps {
   /** Children to wrap */
   children: React.ReactNode
 }

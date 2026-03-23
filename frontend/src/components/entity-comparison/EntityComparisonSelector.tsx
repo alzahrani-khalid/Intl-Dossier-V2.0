@@ -357,4 +357,3 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
   )
 })
 
-export default EntityComparisonSelector

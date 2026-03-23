@@ -50,7 +50,7 @@ export interface ThemeVariables {
   shadow2xl: string
 }
 
-export interface ThemeConfiguration {
+interface ThemeConfiguration {
   name: 'canvas' | 'gastat' | 'natural' | 'zinc'
   displayName: {
     en: string
@@ -68,7 +68,7 @@ export interface ThemeConfiguration {
   radius: string
 }
 
-export interface LanguageConfiguration {
+interface LanguageConfiguration {
   code: 'en' | 'ar'
   name: {
     en: string

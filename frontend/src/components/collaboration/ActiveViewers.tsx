@@ -378,4 +378,3 @@ export function ActiveViewersCompact({
   )
 }
 
-export default ActiveViewers

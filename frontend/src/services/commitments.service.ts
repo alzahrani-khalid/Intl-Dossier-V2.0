@@ -423,7 +423,7 @@ export async function getEvidenceUrl(proofUrl: string): Promise<EvidenceUrlRespo
  * @param commitmentId - UUID of the commitment
  * @param reason - Reason for deletion/cancellation
  */
-export async function deleteCommitment(commitmentId: string, reason: string): Promise<void> {
+async function deleteCommitment(commitmentId: string, reason: string): Promise<void> {
   await cancelCommitment({ id: commitmentId, reason })
 }
 
@@ -437,7 +437,7 @@ export async function deleteCommitment(commitmentId: string, reason: string): Pr
  * @param status - Commitment status
  * @returns Tailwind CSS color classes
  */
-export function getCommitmentStatusColor(status: CommitmentStatus): string {
+function getCommitmentStatusColor(status: CommitmentStatus): string {
   switch (status) {
     case 'completed':
       return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20'
@@ -458,7 +458,7 @@ export function getCommitmentStatusColor(status: CommitmentStatus): string {
  * @param priority - Commitment priority
  * @returns Tailwind CSS color class
  */
-export function getCommitmentPriorityColor(priority: CommitmentPriority): string {
+function getCommitmentPriorityColor(priority: CommitmentPriority): string {
   switch (priority) {
     case 'urgent':
       return 'text-red-600 dark:text-red-400'

@@ -218,7 +218,7 @@ export function useDelegationsExpiringSoon() {
  * @param _userId - User ID (used for context, filtering handled by hooks)
  * @returns Combined delegation operations
  */
-export function useDelegation(_userId?: string) {
+function useDelegation(_userId?: string) {
   const createDelegation = useDelegatePermissions()
   const revokeResult = useRevokeDelegation()
   const validateMutation = useMutation({

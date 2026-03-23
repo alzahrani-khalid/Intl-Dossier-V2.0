@@ -482,4 +482,3 @@ function StepIndicator({ step, label, active, complete }: StepIndicatorProps) {
   )
 }
 
-export default BriefGenerationPanel

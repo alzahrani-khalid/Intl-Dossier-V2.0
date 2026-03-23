@@ -21,8 +21,7 @@ export enum ConfidentialityLevel {
 export enum AfterActionStatus {
   DRAFT = 'draft',
   PUBLISHED = 'published',
-  EDIT_PENDING = 'edit_pending',
-}
+  }
 
 export enum OwnerType {
   INTERNAL = 'internal',
@@ -162,7 +161,7 @@ export interface Attachment {
 /**
  * Version snapshot entity
  */
-export interface VersionSnapshot {
+interface VersionSnapshot {
   id?: string
   after_action_id: string
   version_number: number
@@ -178,7 +177,7 @@ export interface VersionSnapshot {
 /**
  * After-action record entity (main)
  */
-export interface AfterActionRecord {
+interface AfterActionRecord {
   id?: string
   engagement_id: string
   dossier_id: string
@@ -212,7 +211,7 @@ export interface AfterActionRecord {
 /**
  * External contact entity
  */
-export interface ExternalContact {
+interface ExternalContact {
   id?: string
   email: string
   name: string
@@ -403,8 +402,8 @@ export const editApprovalSchema = z.object({
 })
 
 // Export types inferred from schemas
-export type AfterActionCreateInput = z.infer<typeof afterActionCreateSchema>
-export type AfterActionUpdateInput = z.infer<typeof afterActionUpdateSchema>
-export type ExternalContactInput = z.infer<typeof externalContactSchema>
-export type EditRequestInput = z.infer<typeof editRequestSchema>
-export type EditApprovalInput = z.infer<typeof editApprovalSchema>
+type AfterActionCreateInput = z.infer<typeof afterActionCreateSchema>
+type AfterActionUpdateInput = z.infer<typeof afterActionUpdateSchema>
+type ExternalContactInput = z.infer<typeof externalContactSchema>
+type EditRequestInput = z.infer<typeof editRequestSchema>
+type EditApprovalInput = z.infer<typeof editApprovalSchema>

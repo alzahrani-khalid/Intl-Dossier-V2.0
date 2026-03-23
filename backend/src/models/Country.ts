@@ -30,7 +30,7 @@ export interface Country {
 /**
  * Country creation/update input (without generated fields)
  */
-export interface CountryInput {
+interface CountryInput {
   code: string
   code3: string
   name_en: string
@@ -45,7 +45,7 @@ export interface CountryInput {
 /**
  * Country with relationships (for queries with joins)
  */
-export interface CountryWithRelations extends Country {
+interface CountryWithRelations extends Country {
   organizations?: Array<{
     id: UUID
     name_en: string

@@ -565,4 +565,3 @@ export function EnhancedActivityFeed({
   )
 }
 
-export default EnhancedActivityFeed

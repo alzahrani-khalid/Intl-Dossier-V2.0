@@ -182,7 +182,7 @@ export interface LegalHoldInput {
 /**
  * Entity retention status tracking
  */
-export interface EntityRetentionStatus {
+interface EntityRetentionStatus {
   id: string
   entity_type: RetentionEntityType
   entity_id: string
@@ -382,7 +382,7 @@ export interface ProcessorConfig {
 /**
  * Display-friendly retention policy for tables/lists
  */
-export interface RetentionPolicyDisplay extends RetentionPolicy {
+interface RetentionPolicyDisplay extends RetentionPolicy {
   retention_display: string // e.g., "7 Years", "Permanent", "90 Days"
   action_display: string // Translated action label
   status_display: string // Translated status label
@@ -391,7 +391,7 @@ export interface RetentionPolicyDisplay extends RetentionPolicy {
 /**
  * Legal hold with resolved user names
  */
-export interface LegalHoldDisplay extends LegalHold {
+interface LegalHoldDisplay extends LegalHold {
   created_by_name?: string
   released_by_name?: string
   status_display: string
@@ -400,7 +400,7 @@ export interface LegalHoldDisplay extends LegalHold {
 /**
  * Summary card data
  */
-export interface RetentionSummary {
+interface RetentionSummary {
   total_policies: number
   active_policies: number
   active_legal_holds: number

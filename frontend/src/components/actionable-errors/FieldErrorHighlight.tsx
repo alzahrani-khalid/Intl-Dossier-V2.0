@@ -117,4 +117,3 @@ export function FieldErrorHighlight({
   )
 }
 
-export default FieldErrorHighlight

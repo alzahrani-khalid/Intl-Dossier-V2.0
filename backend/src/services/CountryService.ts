@@ -277,4 +277,3 @@ export class CountryService {
   }
 }
 
-export default CountryService

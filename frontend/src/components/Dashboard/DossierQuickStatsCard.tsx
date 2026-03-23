@@ -300,4 +300,3 @@ function formatRelativeTime(
   })
 }
 
-export default DossierQuickStatsCard

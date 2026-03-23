@@ -184,4 +184,3 @@ export function QuickActionsWidget({ config, onActionClick }: QuickActionsWidget
   )
 }
 
-export default QuickActionsWidget

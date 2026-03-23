@@ -356,4 +356,3 @@ function ScoreRow({ icon: Icon, label, score }: ScoreRowProps) {
   )
 }
 
-export default ReschedulingSuggestions

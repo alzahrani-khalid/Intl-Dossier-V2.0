@@ -760,4 +760,3 @@ export function ActivityFeedFilters({
   )
 }
 
-export default ActivityFeedFilters

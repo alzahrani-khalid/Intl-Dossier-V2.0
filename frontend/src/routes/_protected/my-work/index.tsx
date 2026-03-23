@@ -32,7 +32,7 @@ const myWorkSearchSchema = z.object({
   assignee: z.string().uuid().optional(),
 })
 
-export type MyWorkSearchParams = z.infer<typeof myWorkSearchSchema>
+type MyWorkSearchParams = z.infer<typeof myWorkSearchSchema>
 
 export const Route = createFileRoute('/_protected/my-work/')({
   component: MyWorkDashboard,

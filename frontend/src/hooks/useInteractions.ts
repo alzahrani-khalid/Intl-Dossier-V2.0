@@ -108,7 +108,7 @@ export function useCreateNote() {
 /**
  * Hook to update an existing interaction note
  */
-export function useUpdateNote() {
+function useUpdateNote() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('contacts')
 
@@ -283,7 +283,7 @@ export function useDownloadAttachment() {
  * Hook to invalidate all interaction queries
  * Useful after batch operations or external changes
  */
-export function useInvalidateInteractions() {
+function useInvalidateInteractions() {
   const queryClient = useQueryClient()
 
   return (contactId?: string) => {
@@ -299,7 +299,7 @@ export function useInvalidateInteractions() {
  * Hook to prefetch interaction notes for a contact
  * Useful for hover cards or preloading before navigation
  */
-export function usePrefetchInteractionNotes() {
+function usePrefetchInteractionNotes() {
   const queryClient = useQueryClient()
 
   return (contactId: string) => {

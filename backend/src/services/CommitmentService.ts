@@ -97,4 +97,3 @@ export class CommitmentService {
   }
 }
 
-export default CommitmentService

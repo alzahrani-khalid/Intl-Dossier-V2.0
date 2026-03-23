@@ -370,4 +370,3 @@ export function IntakeQuickForm({
   )
 }
 
-export default IntakeQuickForm

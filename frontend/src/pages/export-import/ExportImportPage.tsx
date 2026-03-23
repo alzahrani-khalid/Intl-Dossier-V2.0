@@ -73,7 +73,7 @@ const ENTITY_OPTIONS: Array<{
   },
 ]
 
-export function ExportImportPage() {
+function ExportImportPage() {
   const { t, i18n } = useTranslation('export-import')
   const isRTL = i18n.language === 'ar'
 

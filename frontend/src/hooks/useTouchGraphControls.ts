@@ -454,4 +454,3 @@ export function useTouchGraphControls(
   }
 }
 
-export default useTouchGraphControls

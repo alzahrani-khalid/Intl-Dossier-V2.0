@@ -33,7 +33,7 @@ const boardSearchSchema = z.object({
   sources: z.array(z.enum(['commitment', 'task', 'intake'])).optional(),
 })
 
-export type BoardSearchParams = z.infer<typeof boardSearchSchema>
+type BoardSearchParams = z.infer<typeof boardSearchSchema>
 
 export const Route = createFileRoute('/_protected/my-work/board')({
   component: MyWorkBoardPage,

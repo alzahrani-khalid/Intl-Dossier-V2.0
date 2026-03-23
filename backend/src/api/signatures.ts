@@ -7,7 +7,7 @@ import { body, param } from 'express-validator'
 const router = Router()
 let signatureService: SignatureService
 
-export function initializeSignaturesRouter(
+function initializeSignaturesRouter(
   supabaseUrl: string,
   supabaseKey: string,
   docusignConfig?: any,

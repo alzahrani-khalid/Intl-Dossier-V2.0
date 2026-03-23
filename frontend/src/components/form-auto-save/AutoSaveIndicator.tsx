@@ -145,4 +145,3 @@ export function AutoSaveIndicator({ status, className, compact = false }: AutoSa
   )
 }
 
-export default AutoSaveIndicator

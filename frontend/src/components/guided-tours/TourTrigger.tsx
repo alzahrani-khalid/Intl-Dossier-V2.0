@@ -250,7 +250,7 @@ export function TourTrigger({
 /**
  * Simple hook to use in components that want to show tour trigger
  */
-export function useTourTrigger(tourId: TourId, isEmpty: boolean) {
+function useTourTrigger(tourId: TourId, isEmpty: boolean) {
   const shouldShow = useShouldShowTour(tourId, isEmpty)
   const { startTour, dismissTourPrompt } = useTour()
   const tour = getTour(tourId)

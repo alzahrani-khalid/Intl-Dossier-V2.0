@@ -241,7 +241,7 @@ export interface ResolveConflictRequest {
 /**
  * Participant availability
  */
-export interface ParticipantAvailability {
+interface ParticipantAvailability {
   id: string
   participant_id: string
   participant_type: 'user' | 'person_dossier' | 'external_contact'
@@ -258,7 +258,7 @@ export interface ParticipantAvailability {
 /**
  * Venue/resource information
  */
-export interface VenueResource {
+interface VenueResource {
   id: string
   name_en: string
   name_ar?: string
@@ -275,7 +275,7 @@ export interface VenueResource {
 /**
  * Travel logistics between locations
  */
-export interface TravelLogistics {
+interface TravelLogistics {
   id: string
   from_location: string
   to_location: string
@@ -339,7 +339,7 @@ export const SEVERITY_COLORS: Record<
 /**
  * Conflict type icons mapping
  */
-export const CONFLICT_TYPE_ICONS: Record<ConflictType, string> = {
+const CONFLICT_TYPE_ICONS: Record<ConflictType, string> = {
   venue: 'Building2',
   participant: 'Users',
   organizer: 'UserCog',

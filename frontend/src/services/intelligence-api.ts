@@ -291,7 +291,7 @@ export async function refreshIntelligence(
  * );
  * ```
  */
-export async function getIntelligenceByType(
+async function getIntelligenceByType(
   entityId: string,
   intelligenceType: IntelligenceType,
   language: Language = 'en',
@@ -320,7 +320,7 @@ export async function getIntelligenceByType(
  * );
  * ```
  */
-export async function getAllIntelligence(
+async function getAllIntelligence(
   entityId: string,
   language: Language = 'en',
 ): Promise<GetIntelligenceResponse> {
@@ -350,7 +350,7 @@ export async function getAllIntelligence(
  * );
  * ```
  */
-export async function refreshIntelligenceType(
+async function refreshIntelligenceType(
   entityId: string,
   intelligenceType: IntelligenceType,
   options?: {
@@ -383,7 +383,7 @@ export async function refreshIntelligenceType(
  * }
  * ```
  */
-export async function isIntelligenceStale(entityId: string): Promise<boolean> {
+async function isIntelligenceStale(entityId: string): Promise<boolean> {
   try {
     const response = await getIntelligence({
       entity_id: entityId,
@@ -417,7 +417,7 @@ export async function isIntelligenceStale(entityId: string): Promise<boolean> {
  * }
  * ```
  */
-export async function getStaleIntelligenceTypes(entityId: string): Promise<IntelligenceType[]> {
+async function getStaleIntelligenceTypes(entityId: string): Promise<IntelligenceType[]> {
   try {
     const response = await getIntelligence({
       entity_id: entityId,

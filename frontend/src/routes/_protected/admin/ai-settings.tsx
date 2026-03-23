@@ -672,4 +672,3 @@ function AISettingsPage() {
   )
 }
 
-export default AISettingsPage

@@ -145,4 +145,3 @@ export function useCreateWorkItemDossierLinks(options: UseCreateWorkItemDossierL
   })
 }
 
-export default useCreateWorkItemDossierLinks

@@ -374,4 +374,3 @@ export function FormCompletionProgress({
 // =============================================================================
 
 export { ProgressBar }
-export default FormCompletionProgress

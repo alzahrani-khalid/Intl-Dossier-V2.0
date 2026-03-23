@@ -253,4 +253,3 @@ export function MFAVerification({ onSuccess, onBack }: MFAVerificationProps) {
   )
 }
 
-export default MFAVerification

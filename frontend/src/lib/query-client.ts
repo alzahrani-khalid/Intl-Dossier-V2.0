@@ -150,7 +150,7 @@ export const queryKeys = {
 /**
  * Utility function to invalidate related queries after mutations
  */
-export const invalidateQueries = {
+const invalidateQueries = {
   /**
    * Invalidate all user-related queries
    */
@@ -259,7 +259,7 @@ export async function fetchApi<T>(url: string, options: RequestInit = {}): Promi
  *
  * Useful for pre-loading data on page navigation
  */
-export async function prefetchUserList(filters?: unknown): Promise<void> {
+async function prefetchUserList(filters?: unknown): Promise<void> {
   await queryClient.prefetchQuery({
     queryKey: queryKeys.users.list(filters),
     queryFn: () => fetchApi(`/api/users?${new URLSearchParams(filters as Record<string, string>)}`),
@@ -269,7 +269,7 @@ export async function prefetchUserList(filters?: unknown): Promise<void> {
 /**
  * Prefetch user details
  */
-export async function prefetchUserDetail(userId: string): Promise<void> {
+async function prefetchUserDetail(userId: string): Promise<void> {
   await queryClient.prefetchQuery({
     queryKey: queryKeys.users.detail(userId),
     queryFn: () => fetchApi(`/api/users/${userId}`),
@@ -279,13 +279,13 @@ export async function prefetchUserDetail(userId: string): Promise<void> {
 /**
  * Set query data manually (optimistic updates)
  */
-export function setQueryData<T>(queryKey: unknown[], data: T): void {
+function setQueryData<T>(queryKey: unknown[], data: T): void {
   queryClient.setQueryData(queryKey, data)
 }
 
 /**
  * Get query data
  */
-export function getQueryData<T>(queryKey: unknown[]): T | undefined {
+function getQueryData<T>(queryKey: unknown[]): T | undefined {
   return queryClient.getQueryData<T>(queryKey)
 }

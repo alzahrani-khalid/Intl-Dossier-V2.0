@@ -464,4 +464,3 @@ export function useDossierContextSafe(): ExtendedDossierContextValue | null {
   return useContext(DossierContext)
 }
 
-export default DossierContextProvider

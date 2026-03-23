@@ -275,4 +275,3 @@ export function SmartInputDemo() {
   )
 }
 
-export default SmartInputDemo

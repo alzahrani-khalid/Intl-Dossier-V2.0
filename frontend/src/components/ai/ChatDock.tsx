@@ -234,4 +234,3 @@ function SuggestionButton({ children, onClick, isRTL }: SuggestionButtonProps) {
   )
 }
 
-export default ChatDock

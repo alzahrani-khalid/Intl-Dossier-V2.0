@@ -293,7 +293,7 @@ export interface ComplianceRuleTemplate {
 /**
  * Compliance check log entry
  */
-export interface ComplianceCheckLog {
+interface ComplianceCheckLog {
   id: string
   entity_type: ComplianceEntityType
   entity_id: string
@@ -597,7 +597,7 @@ export const SEVERITY_COLORS: Record<
 /**
  * Labels for violation status
  */
-export const VIOLATION_STATUS_LABELS: Record<ViolationStatus, { en: string; ar: string }> = {
+const VIOLATION_STATUS_LABELS: Record<ViolationStatus, { en: string; ar: string }> = {
   pending: { en: 'Pending', ar: 'قيد الانتظار' },
   acknowledged: { en: 'Acknowledged', ar: 'تم الإقرار' },
   signed_off: { en: 'Signed Off', ar: 'تمت الموافقة' },
@@ -654,7 +654,7 @@ export const VIOLATION_STATUS_COLORS: Record<
 /**
  * Labels for sign-off actions
  */
-export const SIGNOFF_ACTION_LABELS: Record<SignoffAction, { en: string; ar: string }> = {
+const SIGNOFF_ACTION_LABELS: Record<SignoffAction, { en: string; ar: string }> = {
   approve: { en: 'Approve', ar: 'موافقة' },
   reject: { en: 'Reject', ar: 'رفض' },
   request_info: { en: 'Request Information', ar: 'طلب معلومات' },
@@ -665,7 +665,7 @@ export const SIGNOFF_ACTION_LABELS: Record<SignoffAction, { en: string; ar: stri
 /**
  * Labels for entity types
  */
-export const ENTITY_TYPE_LABELS: Record<ComplianceEntityType, { en: string; ar: string }> = {
+const ENTITY_TYPE_LABELS: Record<ComplianceEntityType, { en: string; ar: string }> = {
   engagement: { en: 'Engagement', ar: 'مشاركة' },
   commitment: { en: 'Commitment', ar: 'التزام' },
   relationship: { en: 'Relationship', ar: 'علاقة' },
@@ -678,7 +678,7 @@ export const ENTITY_TYPE_LABELS: Record<ComplianceEntityType, { en: string; ar: 
 /**
  * Helper to check if a severity requires immediate attention
  */
-export function requiresImmediateAttention(severity: ComplianceSeverity): boolean {
+function requiresImmediateAttention(severity: ComplianceSeverity): boolean {
   return severity === 'critical' || severity === 'blocking'
 }
 
@@ -692,7 +692,7 @@ export function canSignOff(violation: ComplianceViolation): boolean {
 /**
  * Helper to get severity rank for sorting
  */
-export function getSeverityRank(severity: ComplianceSeverity): number {
+function getSeverityRank(severity: ComplianceSeverity): number {
   const ranks: Record<ComplianceSeverity, number> = {
     blocking: 4,
     critical: 3,
@@ -705,6 +705,6 @@ export function getSeverityRank(severity: ComplianceSeverity): number {
 /**
  * Helper to check if an entity has blocking violations
  */
-export function hasBlockingViolations(summary: EntityComplianceSummary): boolean {
+function hasBlockingViolations(summary: EntityComplianceSummary): boolean {
   return summary.blocking_violations > 0
 }

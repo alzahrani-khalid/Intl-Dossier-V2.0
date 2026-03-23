@@ -88,4 +88,3 @@ export class DocumentService {
   }
 }
 
-export default DocumentService

@@ -103,7 +103,7 @@ export interface ErrorContext {
 /**
  * Structured API error response
  */
-export interface ApiActionableError {
+interface ApiActionableError {
   /** HTTP status code */
   status: number
   /** Error code for categorization */
@@ -150,7 +150,7 @@ export interface FieldHighlight {
 /**
  * Registry of error codes to actionable error generators
  */
-export type ErrorRegistry = Record<string, (context: ErrorContext) => ActionableError>
+type ErrorRegistry = Record<string, (context: ErrorContext) => ActionableError>
 
 // =============================================================================
 // HOOK RETURN TYPES

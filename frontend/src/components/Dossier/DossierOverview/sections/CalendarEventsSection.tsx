@@ -350,4 +350,3 @@ export function CalendarEventsSection({
   )
 }
 
-export default CalendarEventsSection

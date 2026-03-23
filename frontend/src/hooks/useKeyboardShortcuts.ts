@@ -40,7 +40,7 @@ export interface KeyboardShortcut {
   priority?: number
 }
 
-export interface ShortcutRegistration {
+interface ShortcutRegistration {
   shortcut: KeyboardShortcut
   unregister: () => void
 }
@@ -295,7 +295,7 @@ export function useGlobalKeyboardHandler() {
 /**
  * Hook to subscribe to shortcut registry changes
  */
-export function useShortcutRegistrySubscription(callback: () => void) {
+function useShortcutRegistrySubscription(callback: () => void) {
   useEffect(() => {
     return shortcutRegistry.subscribe(callback)
   }, [callback])
@@ -426,7 +426,7 @@ export function useNavigationShortcuts() {
 /**
  * Pre-defined action shortcuts for common operations
  */
-export function useActionShortcuts(callbacks: {
+function useActionShortcuts(callbacks: {
   onNewTask?: () => void
   onSave?: () => void
   onDelete?: () => void
@@ -515,7 +515,7 @@ export function useActionShortcuts(callbacks: {
 /**
  * Pre-defined list navigation shortcuts
  */
-export function useListNavigationShortcuts(callbacks: {
+function useListNavigationShortcuts(callbacks: {
   onMoveUp?: () => void
   onMoveDown?: () => void
   onSelectItem?: () => void

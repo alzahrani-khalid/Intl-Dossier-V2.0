@@ -86,7 +86,7 @@ export interface BatchCreateLinksRequest {
 }
 
 // Request to reorder links
-export interface ReorderLinksRequest {
+interface ReorderLinksRequest {
   intake_id: string
   link_orders: Array<{
     link_id: string

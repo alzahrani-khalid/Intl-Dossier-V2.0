@@ -332,21 +332,21 @@ initializeStore()
 setupNetworkListeners()
 
 // Export utility functions
-export const addToQueue = (
+const addToQueue = (
   action: Omit<QueuedAction, 'id' | 'timestamp' | 'retryCount' | 'status'>,
 ) => {
   useOfflineQueue.getState().addAction(action)
 }
 
-export const processQueue = () => {
+const processQueue = () => {
   useOfflineQueue.getState().processQueue()
 }
 
-export const clearCompleted = () => {
+const clearCompleted = () => {
   useOfflineQueue.getState().clearCompleted()
 }
 
-export const retryFailed = () => {
+const retryFailed = () => {
   useOfflineQueue.getState().retryFailed()
 }
 

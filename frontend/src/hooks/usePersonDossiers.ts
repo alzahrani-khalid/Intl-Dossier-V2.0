@@ -143,7 +143,7 @@ export function useCreatePersonDossier() {
 /**
  * Hook to update a person dossier
  */
-export function useUpdatePersonDossier() {
+function useUpdatePersonDossier() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('contacts')
 
@@ -241,7 +241,7 @@ export function useArchivePersonDossier() {
 /**
  * Hook to invalidate all person dossier queries
  */
-export function useInvalidatePersonDossiers() {
+function useInvalidatePersonDossiers() {
   const queryClient = useQueryClient()
 
   return () => {

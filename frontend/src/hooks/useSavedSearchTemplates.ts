@@ -143,7 +143,7 @@ async function deleteTemplate(id: string): Promise<{ success: boolean }> {
 }
 
 // Hook: List templates
-export function useSearchTemplates(params?: {
+function useSearchTemplates(params?: {
   category?: TemplateCategory
   limit?: number
   offset?: number
@@ -182,7 +182,7 @@ export function usePopularTemplates(limit = 5) {
 }
 
 // Hook: Get recent templates (user's recent)
-export function useRecentTemplates(limit = 5) {
+function useRecentTemplates(limit = 5) {
   return useQuery({
     queryKey: templateKeys.recent(),
     queryFn: () =>
@@ -197,7 +197,7 @@ export function useRecentTemplates(limit = 5) {
 }
 
 // Hook: Get system templates (quick access)
-export function useSystemTemplates() {
+function useSystemTemplates() {
   return useQuery({
     queryKey: templateKeys.system(),
     queryFn: () =>
@@ -223,7 +223,7 @@ export function useQuickTemplates() {
 }
 
 // Hook: Get single template
-export function useSearchTemplate(id: string | null, options?: { enabled?: boolean }) {
+function useSearchTemplate(id: string | null, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: id ? templateKeys.detail(id) : ['search-templates', 'disabled'],
     queryFn: () => (id ? fetchTemplate(id) : Promise.resolve(null)),
@@ -249,7 +249,7 @@ export function useCreateTemplate() {
 }
 
 // Mutation: Update template
-export function useUpdateTemplate() {
+function useUpdateTemplate() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -281,7 +281,7 @@ export function useDeleteTemplate() {
 }
 
 // Hook: Prefetch template for hover state
-export function usePrefetchTemplate() {
+function usePrefetchTemplate() {
   const queryClient = useQueryClient()
 
   return (id: string) => {
@@ -367,7 +367,7 @@ export function getTemplateColorClasses(color: string): {
 }
 
 // Helper: Get icon component name for template
-export function getTemplateIconName(icon: string): string {
+function getTemplateIconName(icon: string): string {
   const iconMap: Record<string, string> = {
     search: 'Search',
     'file-text': 'FileText',

@@ -51,7 +51,7 @@ export interface ForesightFields {
   stakeholders: string
 }
 
-export type TypeSpecificFields =
+type TypeSpecificFields =
   | EngagementFields
   | PositionFields
   | MouActionFields
@@ -75,7 +75,7 @@ export interface IntakeFormData {
 /**
  * Intake Ticket (full entity)
  */
-export interface IntakeTicket {
+interface IntakeTicket {
   id: string
   ticketNumber: string
   requestType: RequestType
@@ -207,7 +207,7 @@ export type ConfidenceLevel = 'very_low' | 'low' | 'medium' | 'high' | 'very_hig
 /**
  * Feedback type for ML predictions
  */
-export type FeedbackType = 'accepted' | 'rejected' | 'corrected' | 'ignored'
+type FeedbackType = 'accepted' | 'rejected' | 'corrected' | 'ignored'
 
 /**
  * ML Model Status
@@ -244,7 +244,7 @@ export interface TriageSuggestions {
 /**
  * ML Classification Prediction
  */
-export interface MLClassificationPrediction {
+interface MLClassificationPrediction {
   predictionId: string
   predictions: {
     type: RequestType
@@ -348,7 +348,7 @@ export interface MLModelInfo {
 /**
  * ML Model Performance Metrics
  */
-export interface MLModelPerformance {
+interface MLModelPerformance {
   model: MLModelInfo
   performance: {
     totalPredictions: number
@@ -368,7 +368,7 @@ export interface MLModelPerformance {
 /**
  * ML Prediction Feedback Request
  */
-export interface MLPredictionFeedbackRequest {
+interface MLPredictionFeedbackRequest {
   predictionId: string
   finalValues: {
     type?: RequestType
@@ -384,7 +384,7 @@ export interface MLPredictionFeedbackRequest {
 /**
  * ML Prediction Feedback Response
  */
-export interface MLPredictionFeedbackResponse {
+interface MLPredictionFeedbackResponse {
   feedbackId: string
   message: string
   usedForTraining: boolean
@@ -393,7 +393,7 @@ export interface MLPredictionFeedbackResponse {
 /**
  * ML Keyword Pattern
  */
-export interface MLKeywordPattern {
+interface MLKeywordPattern {
   id: string
   pattern: string
   patternAr?: string
@@ -412,7 +412,7 @@ export interface MLKeywordPattern {
 /**
  * ML Assignment Rule
  */
-export interface MLAssignmentRule {
+interface MLAssignmentRule {
   id: string
   ruleName: string
   ruleNameAr?: string

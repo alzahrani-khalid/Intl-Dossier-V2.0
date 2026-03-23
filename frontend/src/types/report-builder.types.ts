@@ -258,7 +258,7 @@ export interface ReportSchedule {
 // Report Execution Types
 // ============================================================================
 
-export interface ReportExecutionResult {
+interface ReportExecutionResult {
   id: string
   reportId: string
   status: 'pending' | 'running' | 'completed' | 'failed'
@@ -270,7 +270,7 @@ export interface ReportExecutionResult {
   completedAt?: string
 }
 
-export interface ReportPreviewRequest {
+interface ReportPreviewRequest {
   configuration: ReportConfiguration
   limit?: number
 }
@@ -296,7 +296,7 @@ export interface DragItem {
 
 export type DropZoneType = 'columns' | 'filters' | 'groupings' | 'aggregations' | 'trash'
 
-export interface DropZone {
+interface DropZone {
   type: DropZoneType
   accepts: DragItemType[]
 }
@@ -305,7 +305,7 @@ export interface DropZone {
 // Builder State Types
 // ============================================================================
 
-export interface ReportBuilderState {
+interface ReportBuilderState {
   // Configuration
   configuration: ReportConfiguration
 
@@ -372,7 +372,7 @@ export interface CreateScheduleRequest {
   recipients: string[]
 }
 
-export interface UpdateScheduleRequest extends Partial<CreateScheduleRequest> {
+interface UpdateScheduleRequest extends Partial<CreateScheduleRequest> {
   id: string
   isActive?: boolean
 }
@@ -1211,11 +1211,11 @@ export const ENTITY_FIELDS: Record<ReportEntityType, ReportField[]> = {
 // Helper Functions
 // ============================================================================
 
-export function getFieldsForEntity(entity: ReportEntityType): ReportField[] {
+function getFieldsForEntity(entity: ReportEntityType): ReportField[] {
   return ENTITY_FIELDS[entity] || []
 }
 
-export function getFieldById(fieldId: string): ReportField | undefined {
+function getFieldById(fieldId: string): ReportField | undefined {
   const [entity] = fieldId.split('.') as [ReportEntityType]
   const fields = ENTITY_FIELDS[entity]
   return fields?.find((f) => f.id === fieldId)
@@ -1247,7 +1247,7 @@ export function createEmptyReportConfiguration(): ReportConfiguration {
   }
 }
 
-export function createDefaultSavedReport(): Omit<
+function createDefaultSavedReport(): Omit<
   SavedReport,
   'id' | 'createdBy' | 'createdAt' | 'updatedAt'
 > {

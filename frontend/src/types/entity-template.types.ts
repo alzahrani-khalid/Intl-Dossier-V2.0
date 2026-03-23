@@ -82,7 +82,7 @@ export interface TemplateContext {
 /**
  * Request to get templates
  */
-export interface GetTemplatesRequest {
+interface GetTemplatesRequest {
   entity_type: TemplateEntityType
   context?: TemplateContext
   include_recent?: boolean
@@ -120,7 +120,7 @@ export interface CreateTemplateRequest {
 /**
  * Request to track template usage
  */
-export interface TrackUsageRequest {
+interface TrackUsageRequest {
   action: 'track-usage'
   template_id: string
 }
@@ -128,7 +128,7 @@ export interface TrackUsageRequest {
 /**
  * Request to toggle favorite
  */
-export interface ToggleFavoriteRequest {
+interface ToggleFavoriteRequest {
   action: 'toggle-favorite'
   template_id: string
 }
@@ -167,7 +167,7 @@ export interface ToggleFavoriteResponse {
 /**
  * Props for TemplateSelector component
  */
-export interface TemplateSelectorProps {
+interface TemplateSelectorProps {
   entityType: TemplateEntityType
   context?: TemplateContext
   onSelect: (template: EntityTemplate) => void
@@ -189,7 +189,7 @@ export interface TemplateCardProps {
 /**
  * Props for QuickEntryMode component
  */
-export interface QuickEntryModeProps {
+interface QuickEntryModeProps {
   entityType: TemplateEntityType
   onSubmit: (values: Record<string, unknown>, template?: EntityTemplate) => void
   onCancel: () => void
@@ -200,7 +200,7 @@ export interface QuickEntryModeProps {
 /**
  * Props for TemplateFormDialog component
  */
-export interface TemplateFormDialogProps {
+interface TemplateFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   entityType: TemplateEntityType
@@ -215,7 +215,7 @@ export interface TemplateFormDialogProps {
 /**
  * Keyboard shortcut registration
  */
-export interface TemplateShortcut {
+interface TemplateShortcut {
   template_id: string
   shortcut: string
   entity_type: TemplateEntityType
@@ -224,7 +224,7 @@ export interface TemplateShortcut {
 /**
  * Quick entry keyboard commands
  */
-export const QUICK_ENTRY_KEYS = {
+const QUICK_ENTRY_KEYS = {
   OPEN_PICKER: ['Alt+T', 'Cmd+Shift+T'],
   SUBMIT: 'Cmd+Enter',
   CANCEL: 'Escape',
@@ -241,7 +241,7 @@ export const QUICK_ENTRY_KEYS = {
 /**
  * Icon options for templates
  */
-export const TEMPLATE_ICONS = [
+const TEMPLATE_ICONS = [
   'FileText',
   'Users',
   'Globe',
@@ -262,7 +262,7 @@ export const TEMPLATE_ICONS = [
 /**
  * Color options for templates
  */
-export const TEMPLATE_COLORS = [
+const TEMPLATE_COLORS = [
   'blue',
   'green',
   'purple',
@@ -284,7 +284,7 @@ export const TEMPLATE_COLORS = [
 /**
  * Get icon component name from template
  */
-export function getIconName(template: EntityTemplate): string {
+function getIconName(template: EntityTemplate): string {
   return template.icon || 'FileText'
 }
 

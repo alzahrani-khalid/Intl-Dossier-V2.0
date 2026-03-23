@@ -393,7 +393,7 @@ export function useMultiLangContent({
 /**
  * Hook for getting content in the current UI language with fallback
  */
-export function useLocalizedContent(
+function useLocalizedContent(
   entityType: TranslatableEntityType,
   entityId: string,
   fieldName: string,
@@ -428,7 +428,7 @@ export function useLocalizedContent(
 /**
  * Hook for bulk saving multiple translations
  */
-export function useBulkSaveTranslations() {
+function useBulkSaveTranslations() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -478,4 +478,3 @@ export function useBulkSaveTranslations() {
   })
 }
 
-export default useMultiLangContent

@@ -1069,4 +1069,3 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
   )
 }
 
-export default WebhooksPage

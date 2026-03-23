@@ -597,4 +597,3 @@ export function ProgressiveHint({
   )
 }
 
-export default ProgressiveHint

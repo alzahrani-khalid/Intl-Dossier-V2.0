@@ -433,4 +433,3 @@ export function DossierSelector({
   )
 }
 
-export default DossierSelector

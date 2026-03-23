@@ -400,4 +400,3 @@ export function DossierPicker({
   )
 }
 
-export default DossierPicker

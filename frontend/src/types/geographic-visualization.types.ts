@@ -49,7 +49,7 @@ export type CountryRegion = 'africa' | 'americas' | 'asia' | 'europe' | 'oceania
 /**
  * Regional grouping for filtering
  */
-export interface RegionalGroup {
+interface RegionalGroup {
   id: string
   name_en: string
   name_ar: string
@@ -90,7 +90,7 @@ export interface CountryEngagementMetrics {
 /**
  * Heatmap configuration
  */
-export interface HeatmapConfig {
+interface HeatmapConfig {
   metric: 'total' | 'recent' | 'upcoming' | 'intensity'
   colorScale: string[] // gradient colors from low to high
   showLabels: boolean
@@ -162,7 +162,7 @@ export interface GeoVisualizationFilters {
 /**
  * Default filter values
  */
-export const DEFAULT_GEO_FILTERS: GeoVisualizationFilters = {
+const DEFAULT_GEO_FILTERS: GeoVisualizationFilters = {
   timeRange: '90d',
   relationshipTypes: [],
   engagementTypes: [],
@@ -186,7 +186,7 @@ export type MapViewMode = 'relationships' | 'engagements' | 'combined' | 'region
 /**
  * Map marker type
  */
-export interface MapMarker {
+interface MapMarker {
   id: string
   coordinates: GeoCoordinates
   type: 'country' | 'organization' | 'engagement'
@@ -200,7 +200,7 @@ export interface MapMarker {
 /**
  * Map tooltip content
  */
-export interface MapTooltipContent {
+interface MapTooltipContent {
   title_en: string
   title_ar: string
   subtitle_en?: string
@@ -225,7 +225,7 @@ export interface MapTooltipContent {
 /**
  * Geographic visualization API request
  */
-export interface GeoVisualizationRequest {
+interface GeoVisualizationRequest {
   endpoint: 'countries' | 'engagements' | 'relationships' | 'summary'
   filters: Partial<GeoVisualizationFilters>
 }
@@ -283,7 +283,7 @@ export interface GeoVisualizationErrorResponse {
   }
 }
 
-export type GeoVisualizationApiResponse = GeoVisualizationResponse | GeoVisualizationErrorResponse
+type GeoVisualizationApiResponse = GeoVisualizationResponse | GeoVisualizationErrorResponse
 
 // ============================================================================
 // Country Coordinates Reference
@@ -352,7 +352,7 @@ export const COUNTRY_COORDINATES: Record<string, GeoCoordinates> = {
 /**
  * Calculate engagement intensity from count
  */
-export function calculateIntensity(count: number, maxCount: number): EngagementIntensity {
+function calculateIntensity(count: number, maxCount: number): EngagementIntensity {
   if (count === 0) return 'none'
   const ratio = count / Math.max(maxCount, 1)
   if (ratio >= 0.8) return 'very_high'
@@ -364,7 +364,7 @@ export function calculateIntensity(count: number, maxCount: number): EngagementI
 /**
  * Calculate intensity score (0-100)
  */
-export function calculateIntensityScore(count: number, maxCount: number): number {
+function calculateIntensityScore(count: number, maxCount: number): number {
   if (maxCount === 0) return 0
   return Math.min(100, Math.round((count / maxCount) * 100))
 }
@@ -420,7 +420,7 @@ export const REGION_LABELS: Record<CountryRegion, { en: string; ar: string }> = 
 /**
  * Labels for map view modes
  */
-export const VIEW_MODE_LABELS: Record<MapViewMode, { en: string; ar: string }> = {
+const VIEW_MODE_LABELS: Record<MapViewMode, { en: string; ar: string }> = {
   relationships: { en: 'Relationships', ar: 'العلاقات' },
   engagements: { en: 'Engagements', ar: 'الارتباطات' },
   combined: { en: 'Combined View', ar: 'العرض المدمج' },

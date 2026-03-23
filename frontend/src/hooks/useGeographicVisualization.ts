@@ -292,7 +292,7 @@ export function useGeographicVisualization(initialFilters?: Partial<GeoVisualiza
 /**
  * Hook for just country data
  */
-export function useCountryEngagementMetrics(filters?: Partial<GeoVisualizationFilters>) {
+function useCountryEngagementMetrics(filters?: Partial<GeoVisualizationFilters>) {
   return useQuery({
     queryKey: GEO_VIZ_KEYS.countries(filters || {}),
     queryFn: () => fetchGeoVisualizationData('countries', filters || {}),
@@ -304,7 +304,7 @@ export function useCountryEngagementMetrics(filters?: Partial<GeoVisualizationFi
 /**
  * Hook for just relationship data
  */
-export function useRelationshipFlows(filters?: Partial<GeoVisualizationFilters>) {
+function useRelationshipFlows(filters?: Partial<GeoVisualizationFilters>) {
   return useQuery({
     queryKey: GEO_VIZ_KEYS.relationships(filters || {}),
     queryFn: () => fetchGeoVisualizationData('relationships', filters || {}),
@@ -319,7 +319,7 @@ export function useRelationshipFlows(filters?: Partial<GeoVisualizationFilters>)
 /**
  * Hook for summary statistics
  */
-export function useGeoVisualizationSummary(filters?: Partial<GeoVisualizationFilters>) {
+function useGeoVisualizationSummary(filters?: Partial<GeoVisualizationFilters>) {
   return useQuery({
     queryKey: GEO_VIZ_KEYS.summary(filters || {}),
     queryFn: () => fetchGeoVisualizationData('summary', filters || {}),
@@ -328,4 +328,3 @@ export function useGeoVisualizationSummary(filters?: Partial<GeoVisualizationFil
   })
 }
 
-export default useGeographicVisualization

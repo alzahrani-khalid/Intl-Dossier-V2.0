@@ -22,7 +22,7 @@ export interface RankingFactors {
   isExactMatch: boolean // Keyword exact match vs semantic match
 }
 
-export interface RankedResult {
+interface RankedResult {
   id: string
   type: string
   title_en: string
@@ -153,7 +153,7 @@ export function sortByRankScore<T extends { rank_score: number }>(results: T[]):
  * @param results - Mixed results
  * @returns Object with exactMatches and semanticMatches arrays
  */
-export function separateMatchTypes<T extends { rank_score: number; match_type?: string }>(
+function separateMatchTypes<T extends { rank_score: number; match_type?: string }>(
   results: T[],
 ): { exactMatches: T[]; semanticMatches: T[] } {
   const exactMatches = results.filter((r) => r.rank_score >= 100)
@@ -189,6 +189,6 @@ export function getDaysSinceUpdate(updatedAt: string): number {
  * @param tsRank - Raw ts_rank_cd value
  * @returns Normalized rank (0.0 - 1.0)
  */
-export function normalizeTsRank(tsRank: number): number {
+function normalizeTsRank(tsRank: number): number {
   return Math.min(1.0, Math.max(0.0, tsRank))
 }

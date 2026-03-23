@@ -146,7 +146,7 @@ export function getColumnByKey(mode: KanbanColumnMode, key: string): KanbanColum
 /**
  * Check if a source can appear in a column
  */
-export function canSourceAppearInColumn(
+function canSourceAppearInColumn(
   source: WorkSource,
   columnKey: string,
   mode: KanbanColumnMode,
@@ -254,7 +254,7 @@ export function mapStatusToColumnKey(
  *
  * IMPORTANT: Returns only valid database enum values
  */
-export function mapColumnKeyToStatus(
+function mapColumnKeyToStatus(
   source: WorkSource,
   columnKey: string,
 ): { status: string; workflowStage?: string } {

@@ -145,4 +145,3 @@ export function FormProgressIndicator({
   )
 }
 
-export default FormProgressIndicator

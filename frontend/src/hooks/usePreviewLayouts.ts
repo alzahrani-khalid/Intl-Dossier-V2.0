@@ -116,7 +116,7 @@ async function fetchLayoutWithFields(layoutId: string): Promise<PreviewLayout | 
 /**
  * Hook to get the effective preview layout for an entity type
  */
-export function usePreviewLayout(
+function usePreviewLayout(
   entityType: PreviewEntityType,
   context: PreviewContext = 'hover',
   options: { enabled?: boolean } = {},
@@ -449,7 +449,7 @@ export function useReorderLayoutFields() {
 /**
  * Get display label based on language
  */
-export function getLayoutLabel(
+function getLayoutLabel(
   layout: { name_en: string; name_ar: string } | null,
   isRTL: boolean,
 ): string {
@@ -460,7 +460,7 @@ export function getLayoutLabel(
 /**
  * Get field label based on language
  */
-export function getFieldLabel(
+function getFieldLabel(
   field: { label_en: string; label_ar: string },
   isRTL: boolean,
 ): string {
@@ -470,7 +470,7 @@ export function getFieldLabel(
 /**
  * Apply default config for missing properties
  */
-export function applyDefaultConfig(
+function applyDefaultConfig(
   config: Partial<PreviewLayoutConfig> | null,
 ): PreviewLayoutConfig {
   const defaults: PreviewLayoutConfig = {

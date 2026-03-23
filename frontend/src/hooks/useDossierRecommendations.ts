@@ -217,7 +217,7 @@ export function useDossierRecommendations(
 /**
  * Hook for fetching a single recommendation with full details
  */
-export function useDossierRecommendation(id: string, enabled = true) {
+function useDossierRecommendation(id: string, enabled = true) {
   return useQuery({
     queryKey: dossierRecommendationKeys.detail(id),
     queryFn: () => fetchDossierRecommendation(id),
@@ -230,7 +230,7 @@ export function useDossierRecommendation(id: string, enabled = true) {
 /**
  * Hook for updating a recommendation status
  */
-export function useUpdateDossierRecommendation() {
+function useUpdateDossierRecommendation() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -380,7 +380,7 @@ export function useGenerateDossierRecommendations() {
 /**
  * Hook for fetching high-priority recommendations for a dossier
  */
-export function useHighPriorityDossierRecommendations(sourceDossierId: string, enabled = true) {
+function useHighPriorityDossierRecommendations(sourceDossierId: string, enabled = true) {
   return useDossierRecommendations(
     sourceDossierId,
     {
@@ -395,7 +395,7 @@ export function useHighPriorityDossierRecommendations(sourceDossierId: string, e
 /**
  * Hook for prefetching recommendations when hovering over a dossier
  */
-export function usePrefetchDossierRecommendations() {
+function usePrefetchDossierRecommendations() {
   const queryClient = useQueryClient()
 
   return (dossierId: string) => {

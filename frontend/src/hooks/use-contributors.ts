@@ -51,7 +51,7 @@ export function useTaskContributors(taskId: string) {
 /**
  * Hook to fetch contributor history for a task (including removed)
  */
-export function useContributorHistory(taskId: string) {
+function useContributorHistory(taskId: string) {
   return useQuery({
     queryKey: contributorsKeys.taskHistory(taskId),
     queryFn: () => contributorsAPI.getContributorHistory(taskId),
@@ -64,7 +64,7 @@ export function useContributorHistory(taskId: string) {
 /**
  * Hook to fetch tasks where user is a contributor
  */
-export function useUserContributorTasks(userId: string) {
+function useUserContributorTasks(userId: string) {
   return useQuery({
     queryKey: contributorsKeys.user(userId),
     queryFn: () => contributorsAPI.getUserContributorTasks(userId),
@@ -77,7 +77,7 @@ export function useUserContributorTasks(userId: string) {
 /**
  * Hook to get contributor count for a task
  */
-export function useContributorCount(taskId: string) {
+function useContributorCount(taskId: string) {
   return useQuery({
     queryKey: contributorsKeys.count(taskId),
     queryFn: () => contributorsAPI.getContributorCount(taskId),
@@ -90,7 +90,7 @@ export function useContributorCount(taskId: string) {
 /**
  * Hook to check if user is a contributor on a task
  */
-export function useIsContributor(taskId: string, userId: string) {
+function useIsContributor(taskId: string, userId: string) {
   return useQuery({
     queryKey: contributorsKeys.isContributor(taskId, userId),
     queryFn: () => contributorsAPI.isContributor(taskId, userId),
@@ -183,7 +183,7 @@ export function useAddContributor(taskId: string) {
 /**
  * Hook to add multiple contributors to a task
  */
-export function useAddMultipleContributors(taskId: string) {
+function useAddMultipleContributors(taskId: string) {
   const { t } = useTranslation()
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -283,7 +283,7 @@ export function useRemoveContributor(taskId: string) {
 /**
  * Hook to remove multiple contributors from a task
  */
-export function useRemoveMultipleContributors(taskId: string) {
+function useRemoveMultipleContributors(taskId: string) {
   const { t } = useTranslation()
   const { toast } = useToast()
   const queryClient = useQueryClient()

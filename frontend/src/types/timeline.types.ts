@@ -112,7 +112,7 @@ export interface TimelineFilters {
 /**
  * Timeline configuration per dossier type
  */
-export interface TimelineConfig {
+interface TimelineConfig {
   dossier_type:
     | 'Country'
     | 'Organization'
@@ -154,7 +154,7 @@ export type DateRangePreset =
 /**
  * Date range filter configuration
  */
-export interface DateRangeConfig {
+interface DateRangeConfig {
   preset: DateRangePreset
   custom_from?: string
   custom_to?: string
@@ -163,7 +163,7 @@ export interface DateRangeConfig {
 /**
  * Timeline event card state
  */
-export interface TimelineCardState {
+interface TimelineCardState {
   isExpanded: boolean
   isLoading: boolean
   error?: string

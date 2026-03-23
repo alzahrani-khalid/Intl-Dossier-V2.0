@@ -260,4 +260,3 @@ export function ComplianceSignoffDialog({
   )
 }
 
-export default ComplianceSignoffDialog

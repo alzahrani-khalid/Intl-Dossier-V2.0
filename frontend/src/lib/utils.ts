@@ -15,7 +15,7 @@ export function getDocDir(): 'ltr' | 'rtl' {
   return (document.documentElement.dir as 'ltr' | 'rtl') || 'ltr'
 }
 
-export function generateUserColor() {
+function generateUserColor() {
   const colors = [
     '#FF6B6B',
     '#4ECDC4',
@@ -42,7 +42,7 @@ export function generateUserColor() {
  * @param decimals - Number of decimal places (default: 2)
  * @returns Formatted string (e.g., "1.5 MB")
  */
-export function formatBytes(bytes: number, decimals: number = 2): string {
+function formatBytes(bytes: number, decimals: number = 2): string {
   if (bytes === 0) return '0 Bytes'
 
   const k = 1024

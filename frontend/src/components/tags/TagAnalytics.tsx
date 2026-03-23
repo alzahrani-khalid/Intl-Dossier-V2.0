@@ -364,4 +364,3 @@ function StatCard({ icon: Icon, label, value, subValue }: StatCardProps) {
   )
 }
 
-export default TagAnalytics

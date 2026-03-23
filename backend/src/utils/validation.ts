@@ -79,20 +79,20 @@ export const idParamSchema = z.object({
   id: z.string().uuid(),
 })
 
-export const searchQuerySchema = z.object({
+const searchQuerySchema = z.object({
   q: z.string().min(1).max(200),
   lang: z.enum(['en', 'ar']).optional(),
   ...paginationSchema.shape,
 })
 
 // Bilingual field validation
-export const bilingualFieldSchema = z.object({
+const bilingualFieldSchema = z.object({
   en: z.string(),
   ar: z.string(),
 })
 
 // Date range validation
-export const dateRangeSchema = z
+const dateRangeSchema = z
   .object({
     startDate: z.string().datetime().optional(),
     endDate: z.string().datetime().optional(),
@@ -102,7 +102,7 @@ export const dateRangeSchema = z
   })
 
 // File upload validation
-export const fileUploadSchema = z.object({
+const fileUploadSchema = z.object({
   mimetype: z.string().min(1, 'Invalid mimetype'),
   size: z.number().max(10 * 1024 * 1024), // 10MB max
 })

@@ -603,4 +603,3 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
 
 SmartInput.displayName = 'SmartInput'
 
-export default SmartInput

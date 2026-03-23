@@ -33,7 +33,7 @@ export interface FieldValidationConfig {
 // COMMON PATTERNS WITH CONTEXTUAL MESSAGES
 // =============================================================================
 
-export const ValidationPatterns = {
+const ValidationPatterns = {
   email: {
     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     name: 'email',
@@ -331,7 +331,7 @@ export function calculatePasswordStrength(password: string): StrengthResult {
 /**
  * Creates a Zod string schema with contextual validation messages
  */
-export function createContextualStringSchema(options: {
+function createContextualStringSchema(options: {
   required?: boolean
   minLength?: number
   maxLength?: number
@@ -367,7 +367,7 @@ export function createContextualStringSchema(options: {
 /**
  * Creates an email schema with contextual messages
  */
-export function createEmailSchema(required = true) {
+function createEmailSchema(required = true) {
   let schema = z.string()
 
   if (required) {
@@ -380,7 +380,7 @@ export function createEmailSchema(required = true) {
 /**
  * Creates a URL schema with contextual messages
  */
-export function createUrlSchema(required = false) {
+function createUrlSchema(required = false) {
   let schema = z.string()
 
   if (required) {
@@ -405,7 +405,7 @@ export interface FormValidationState {
 /**
  * Creates initial form validation state
  */
-export function createFormValidationState(): FormValidationState {
+function createFormValidationState(): FormValidationState {
   return {
     isValid: true,
     errors: {},
@@ -418,7 +418,7 @@ export function createFormValidationState(): FormValidationState {
 /**
  * Updates form validation state with field result
  */
-export function updateFormValidationState(
+function updateFormValidationState(
   state: FormValidationState,
   fieldName: string,
   result: ValidationResult,

@@ -156,4 +156,3 @@ export function useWorkItemDossierLinks(
   }
 }
 
-export default useWorkItemDossierLinks

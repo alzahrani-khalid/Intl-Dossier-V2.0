@@ -161,7 +161,7 @@ function convertToTsquery(tokens: string[], language: string): string {
  * @param language - Language for text search configuration
  * @returns tsquery string ready for PostgreSQL
  */
-export function buildTsquery(userQuery: string, language: 'en' | 'ar' = 'en'): string {
+function buildTsquery(userQuery: string, language: 'en' | 'ar' = 'en'): string {
   const parsed = parseQueryToTsquery(userQuery, language)
 
   // If no Boolean operators, use plainto_tsquery for simpler matching
@@ -179,7 +179,7 @@ export function buildTsquery(userQuery: string, language: 'en' | 'ar' = 'en'): s
  * @param query - User query
  * @returns True if valid, throws error if invalid
  */
-export function validateQuerySyntax(query: string): boolean {
+function validateQuerySyntax(query: string): boolean {
   if (!query || query.trim().length === 0) {
     throw new Error('Query cannot be empty')
   }

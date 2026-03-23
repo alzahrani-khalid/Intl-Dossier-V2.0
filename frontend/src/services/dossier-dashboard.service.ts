@@ -297,7 +297,7 @@ export async function fetchDossierDashboardSummary(): Promise<DossierDashboardSu
 /**
  * Fetches my dossiers via direct RPC call
  */
-export async function fetchMyDossiersRPC(filters?: MyDossiersFilters): Promise<MyDossiersResponse> {
+async function fetchMyDossiersRPC(filters?: MyDossiersFilters): Promise<MyDossiersResponse> {
   const { data, error } = await supabase.rpc('get_my_dossiers_with_stats', {
     p_relation_type: filters?.relation_type
       ? Array.isArray(filters.relation_type)
@@ -340,7 +340,7 @@ export async function fetchMyDossiersRPC(filters?: MyDossiersFilters): Promise<M
 /**
  * Fetches recent activity via direct RPC call
  */
-export async function fetchRecentDossierActivityRPC(
+async function fetchRecentDossierActivityRPC(
   filters?: RecentActivityFilters,
 ): Promise<RecentDossierActivityResponse> {
   const { data, error } = await supabase.rpc('get_recent_dossier_activity', {
@@ -368,7 +368,7 @@ export async function fetchRecentDossierActivityRPC(
 /**
  * Fetches pending work by dossier via direct RPC call
  */
-export async function fetchPendingWorkByDossierRPC(
+async function fetchPendingWorkByDossierRPC(
   filters?: PendingWorkFilters,
 ): Promise<PendingWorkByDossierResponse> {
   const { data, error } = await supabase.rpc('get_pending_work_by_dossier', {

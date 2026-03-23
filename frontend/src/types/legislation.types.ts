@@ -81,7 +81,7 @@ export type LegislationRelationshipType =
 // STATUS CONFIGURATION
 // =============================================
 
-export const LEGISLATION_STATUS_ORDER: LegislationStatus[] = [
+const LEGISLATION_STATUS_ORDER: LegislationStatus[] = [
   'draft',
   'proposed',
   'under_review',
@@ -96,7 +96,7 @@ export const LEGISLATION_STATUS_ORDER: LegislationStatus[] = [
   'withdrawn',
 ]
 
-export const VALID_STATUS_TRANSITIONS: Record<LegislationStatus, LegislationStatus[]> = {
+const VALID_STATUS_TRANSITIONS: Record<LegislationStatus, LegislationStatus[]> = {
   draft: ['proposed', 'withdrawn'],
   proposed: ['under_review', 'in_committee', 'withdrawn'],
   under_review: ['in_committee', 'pending_vote', 'withdrawn'],
@@ -366,7 +366,7 @@ export interface LegislationDeadline {
   updated_at: string
 }
 
-export interface LegislationDeadlineAlert {
+interface LegislationDeadlineAlert {
   id: string
   deadline_id: string
   legislation_id: string

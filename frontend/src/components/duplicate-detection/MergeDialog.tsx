@@ -503,4 +503,3 @@ export function MergeDialog({
   )
 }
 
-export default MergeDialog

@@ -84,7 +84,7 @@ export function useCalendarConnections() {
 /**
  * Fetch a single connection
  */
-export function useCalendarConnection(connectionId: string | undefined) {
+function useCalendarConnection(connectionId: string | undefined) {
   return useQuery({
     queryKey: calendarSyncKeys.connection(connectionId || ''),
     queryFn: () => fetchCalendarSync<ExternalCalendarConnection>(`/connections/${connectionId}`),
@@ -428,7 +428,7 @@ export function useRefreshICalFeed() {
 /**
  * Fetch unified calendar events (internal + external + iCal)
  */
-export function useUnifiedCalendarEvents(startDate: string, endDate: string) {
+function useUnifiedCalendarEvents(startDate: string, endDate: string) {
   return useQuery({
     queryKey: calendarSyncKeys.unifiedEvents(startDate, endDate),
     queryFn: () =>
@@ -552,4 +552,3 @@ export function useCalendarSync() {
   }
 }
 
-export default useCalendarSync

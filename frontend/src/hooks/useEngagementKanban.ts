@@ -35,7 +35,7 @@ export type SortOption = 'created_at' | 'sla_deadline' | 'priority'
 export type WorkflowStage = 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled'
 
 /** Response shape for engagement kanban data */
-export interface EngagementKanbanResponse {
+interface EngagementKanbanResponse {
   columns: {
     [key in WorkflowStage]: {
       assignments: KanbanAssignment[]

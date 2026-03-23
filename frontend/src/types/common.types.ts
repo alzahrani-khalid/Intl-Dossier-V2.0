@@ -47,7 +47,7 @@ export type Metadata = Record<string, JsonValue>
  * Audit log changes
  * Use instead of `Record<string, any>` for tracking field changes
  */
-export interface AuditChange {
+interface AuditChange {
   field: string
   old_value: JsonValue
   new_value: JsonValue
@@ -58,7 +58,7 @@ export type AuditChanges = Record<string, { old: JsonValue; new: JsonValue }>
  * Generic callback payload for realtime subscriptions
  * Use instead of `any` in callback signatures
  */
-export interface RealtimePayload<T = JsonObject> {
+interface RealtimePayload<T = JsonObject> {
   schema: string
   table: string
   commit_timestamp: string
@@ -82,13 +82,13 @@ export interface PresenceData {
  * Report parameters
  * Use instead of `Record<string, any>` for report configuration
  */
-export type ReportParameters = Record<string, JsonValue>
+type ReportParameters = Record<string, JsonValue>
 
 /**
  * Navigation state
  * Use instead of `Record<string, any>` for URL query parameters
  */
-export type NavigationState = Record<
+type NavigationState = Record<
   string,
   string | string[] | number | boolean | null | undefined
 >
@@ -97,13 +97,13 @@ export type NavigationState = Record<
  * Generic filter state
  * Use for typed filter objects
  */
-export type FilterState<T extends string = string> = Record<T, JsonValue>
+type FilterState<T extends string = string> = Record<T, JsonValue>
 
 /**
  * Database row with dynamic fields
  * Use for rows that may have additional unknown columns
  */
-export type DatabaseRow<T extends object = object> = T & Record<string, JsonValue>
+type DatabaseRow<T extends object = object> = T & Record<string, JsonValue>
 
 /**
  * Type guard to check if a value is a JsonObject
@@ -137,7 +137,7 @@ export function isJsonValue(value: unknown): value is JsonValue {
  * Safe type assertion for unknown data
  * Returns the value as JsonValue if valid, undefined otherwise
  */
-export function toJsonValue(value: unknown): JsonValue | undefined {
+function toJsonValue(value: unknown): JsonValue | undefined {
   if (isJsonValue(value)) {
     return value
   }
@@ -182,7 +182,7 @@ export interface ForesightSpecificFields {
   stakeholders?: string
 }
 
-export type TypeSpecificFieldsMap = {
+type TypeSpecificFieldsMap = {
   engagement: EngagementSpecificFields
   position: PositionSpecificFields
   mou_action: MouActionSpecificFields

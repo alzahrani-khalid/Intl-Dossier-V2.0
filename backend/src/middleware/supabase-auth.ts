@@ -128,7 +128,7 @@ export const supabaseAuth = async (
 /**
  * Optional Supabase auth - doesn't fail if no token
  */
-export const optionalSupabaseAuth = async (
+const optionalSupabaseAuth = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -188,4 +188,3 @@ export const optionalSupabaseAuth = async (
   }
 }
 
-export default supabaseAuth

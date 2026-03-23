@@ -245,4 +245,3 @@ export function KeyContactsSection({
   )
 }
 
-export default KeyContactsSection

@@ -291,4 +291,3 @@ export class PermissionDelegationService {
   }
 }
 
-export default PermissionDelegationService

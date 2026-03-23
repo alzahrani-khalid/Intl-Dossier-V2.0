@@ -236,7 +236,7 @@ export interface DossierExportResponse {
 /**
  * Dossier summary for export cover page
  */
-export interface DossierExportSummary {
+interface DossierExportSummary {
   id: string
   name_en: string
   name_ar: string

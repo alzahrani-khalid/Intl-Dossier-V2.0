@@ -374,4 +374,3 @@ export const ComparisonExport = memo(function ComparisonExport({
   )
 })
 
-export default ComparisonExport

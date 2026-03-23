@@ -103,4 +103,3 @@ export function useDeleteWorkItemDossierLink(options: UseDeleteWorkItemDossierLi
   })
 }
 
-export default useDeleteWorkItemDossierLink

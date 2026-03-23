@@ -366,4 +366,3 @@ export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskLi
   )
 }
 
-export default TaskListWidget

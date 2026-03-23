@@ -191,7 +191,7 @@ export interface OnboardingActions {
 /**
  * Combined onboarding context value
  */
-export interface OnboardingContextValue extends OnboardingState, OnboardingActions {}
+interface OnboardingContextValue extends OnboardingState, OnboardingActions {}
 
 /**
  * Props for OnboardingChecklist component
@@ -250,7 +250,7 @@ export interface OnboardingEmptyStateProps {
 /**
  * Database table structure for user_onboarding_progress
  */
-export interface UserOnboardingProgressRow {
+interface UserOnboardingProgressRow {
   id: string
   user_id: string
   role: UserRole
@@ -267,7 +267,7 @@ export interface UserOnboardingProgressRow {
 /**
  * API request for updating progress
  */
-export interface UpdateProgressRequest {
+interface UpdateProgressRequest {
   itemId: string
   action: 'complete' | 'skip' | 'uncomplete'
 }
@@ -275,7 +275,7 @@ export interface UpdateProgressRequest {
 /**
  * API response for onboarding endpoints
  */
-export interface OnboardingResponse {
+interface OnboardingResponse {
   success: boolean
   data?: OnboardingProgress
   error?: string

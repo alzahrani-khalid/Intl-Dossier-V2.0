@@ -30,7 +30,7 @@ export function useRequestEdit() {
   })
 }
 
-export function useApproveEdit() {
+function useApproveEdit() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -48,7 +48,7 @@ export function useApproveEdit() {
   })
 }
 
-export function useRejectEdit() {
+function useRejectEdit() {
   const queryClient = useQueryClient()
 
   return useMutation({

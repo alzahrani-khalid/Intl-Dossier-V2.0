@@ -32,14 +32,14 @@ export interface HistorySuggestion {
   created_at: string
 }
 
-export interface SearchSuggestionsResponse {
+interface SearchSuggestionsResponse {
   suggestions: CategorizedSuggestions
   query: string
   entity_types: string[]
   took_ms: number
 }
 
-export interface PopularSearch {
+interface PopularSearch {
   query: string
   count: number
 }
@@ -57,24 +57,24 @@ export interface SearchHistoryItem {
   created_at: string
 }
 
-export interface SearchHistoryResponse {
+interface SearchHistoryResponse {
   history: SearchHistoryItem[]
   count: number
 }
 
-export interface AddSearchHistoryRequest {
+interface AddSearchHistoryRequest {
   query: string
   entity_types: string[]
   result_count: number
   filters?: Record<string, unknown>
 }
 
-export interface AddSearchHistoryResponse {
+interface AddSearchHistoryResponse {
   success: boolean
   history_id: string
 }
 
-export interface ClearSearchHistoryResponse {
+interface ClearSearchHistoryResponse {
   success: boolean
   deleted_count: number
 }
@@ -91,14 +91,14 @@ export interface FilterCount {
 
 export type FilterType = 'status' | 'type' | 'tag' | 'date_range' | 'sensitivity_level'
 
-export interface FilterCountsRequest {
+interface FilterCountsRequest {
   cache_key: string
   entity_types: string[]
   base_query?: string
   compute_if_missing?: boolean
 }
 
-export interface FilterCountsResponse {
+interface FilterCountsResponse {
   filter_counts: FilterCount[]
   from_cache: boolean
 }
@@ -150,13 +150,13 @@ export type EnhancedSearchAction =
 // Fuzzy Matching Types
 // =============================================================================
 
-export interface FuzzyMatchResult {
+interface FuzzyMatchResult {
   text: string
   score: number
   matchedIndices: number[]
 }
 
-export interface FuzzyMatchOptions {
+interface FuzzyMatchOptions {
   threshold?: number // Minimum similarity score (0-1)
   ignoreCase?: boolean
   ignoreAccents?: boolean
@@ -167,7 +167,7 @@ export interface FuzzyMatchOptions {
 // UI Component Props Types
 // =============================================================================
 
-export interface EnhancedSearchInputProps {
+interface EnhancedSearchInputProps {
   value: string
   onChange: (value: string) => void
   onSearch: (query: string) => void
@@ -181,7 +181,7 @@ export interface EnhancedSearchInputProps {
   debounceMs?: number
 }
 
-export interface SuggestionDropdownProps {
+interface SuggestionDropdownProps {
   suggestions: CategorizedSuggestions | null
   isOpen: boolean
   isLoading: boolean
@@ -192,7 +192,7 @@ export interface SuggestionDropdownProps {
   className?: string
 }
 
-export interface AdaptiveFiltersProps {
+interface AdaptiveFiltersProps {
   filters: AdaptiveFilter[]
   selectedFilters: Record<FilterType, string[]>
   onFilterChange: (filterType: FilterType, values: string[]) => void
@@ -204,7 +204,7 @@ export interface AdaptiveFiltersProps {
 // Constants
 // =============================================================================
 
-export const SUGGESTION_TYPE_LABELS: Record<
+const SUGGESTION_TYPE_LABELS: Record<
   SuggestionType,
   { label_en: string; label_ar: string; icon: string }
 > = {
@@ -217,7 +217,7 @@ export const SUGGESTION_TYPE_LABELS: Record<
   history: { label_en: 'Recent', label_ar: 'الأخيرة', icon: 'clock' },
 }
 
-export const FILTER_TYPE_LABELS: Record<FilterType, { label_en: string; label_ar: string }> = {
+const FILTER_TYPE_LABELS: Record<FilterType, { label_en: string; label_ar: string }> = {
   status: { label_en: 'Status', label_ar: 'الحالة' },
   type: { label_en: 'Type', label_ar: 'النوع' },
   tag: { label_en: 'Tags', label_ar: 'الوسوم' },
@@ -569,7 +569,7 @@ export interface FilterPresetsSectionProps {
 /**
  * Response from the filter presets API
  */
-export interface FilterPresetsResponse {
+interface FilterPresetsResponse {
   /** List of available presets */
   presets: FilterPreset[]
   /** Whether these are personalized based on user behavior */
@@ -581,7 +581,7 @@ export interface FilterPresetsResponse {
 /**
  * Smart preset with analytics data
  */
-export interface SmartFilterPreset extends FilterPreset {
+interface SmartFilterPreset extends FilterPreset {
   /** How often this preset has been used by the user */
   user_usage_count: number
   /** How often this preset is used organization-wide */

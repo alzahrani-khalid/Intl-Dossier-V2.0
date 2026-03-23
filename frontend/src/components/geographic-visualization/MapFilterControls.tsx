@@ -437,4 +437,3 @@ export function MapFilterControls({
   )
 }
 
-export default MapFilterControls

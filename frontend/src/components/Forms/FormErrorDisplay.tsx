@@ -116,7 +116,7 @@ function getErrorMessage(error: FieldError | string | undefined): string | undef
 /**
  * Inline error display for individual form fields
  */
-export function InlineError({
+function InlineError({
   error,
   severity = 'error',
   showIcon = true,
@@ -166,7 +166,7 @@ interface ErrorWithSuggestionProps extends InlineErrorProps {
 /**
  * Error display with recovery suggestion and action
  */
-export function ErrorWithSuggestion({
+function ErrorWithSuggestion({
   error,
   severity = 'error',
   suggestion,
@@ -355,7 +355,7 @@ export function ErrorSummary({
  */
 const EMPTY_FIELD_LABELS: Record<string, string> = {}
 
-export function FieldErrorList({
+function FieldErrorList({
   errors,
   fields,
   fieldLabels = EMPTY_FIELD_LABELS,
@@ -414,7 +414,7 @@ interface ToastErrorProps {
 /**
  * Toast-style floating error notification
  */
-export function ToastError({
+function ToastError({
   message,
   visible,
   onClose,
@@ -468,4 +468,3 @@ export function ToastError({
   )
 }
 
-export default InlineError

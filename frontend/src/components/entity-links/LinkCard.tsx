@@ -355,4 +355,3 @@ export function LinkCard({
   )
 }
 
-export default LinkCard

@@ -87,4 +87,3 @@ export function RealtimeStatus() {
   )
 }
 
-export default RealtimeStatus

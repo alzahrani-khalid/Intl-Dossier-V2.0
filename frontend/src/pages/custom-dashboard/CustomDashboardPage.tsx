@@ -290,4 +290,3 @@ export function CustomDashboardPage() {
   )
 }
 
-export default CustomDashboardPage

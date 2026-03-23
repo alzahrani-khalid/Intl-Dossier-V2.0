@@ -75,7 +75,7 @@ export interface ProjectExtension {
 /**
  * Full project type (base + extension)
  */
-export type Project = BaseDossier & ProjectExtension
+type Project = BaseDossier & ProjectExtension
 
 // ============================================================================
 // Labels

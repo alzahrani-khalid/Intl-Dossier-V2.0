@@ -390,4 +390,3 @@ export function FieldLabelWithHelp({
 // EXPORTS
 // =============================================================================
 
-export default ContextualHelp

@@ -293,4 +293,3 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
   return null
 }
 
-export default MFASetup

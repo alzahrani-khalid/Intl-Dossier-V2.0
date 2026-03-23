@@ -305,7 +305,7 @@ setupConnectionMonitoringFn = setupConnectionMonitoring
 export { initializeRealtimeMonitoring }
 
 // Hook for easy subscription management
-export function useRealtimeSubscription() {
+function useRealtimeSubscription() {
   const { subscribe, unsubscribe, unsubscribeAll, isConnected, connectionStatus } =
     useRealtimeStore()
 
@@ -319,7 +319,7 @@ export function useRealtimeSubscription() {
 }
 
 // Specific hooks for common subscriptions
-export function useTableSubscription<T extends Record<string, unknown> = RealtimeRecord>(
+function useTableSubscription<T extends Record<string, unknown> = RealtimeRecord>(
   table: string,
   event: 'INSERT' | 'UPDATE' | 'DELETE' | '*',
   callback: (payload: RealtimePostgresChangesPayload<T>) => void,
@@ -342,7 +342,7 @@ export function useTableSubscription<T extends Record<string, unknown> = Realtim
 }
 
 // Presence management for collaborative features
-export function usePresence(channelName: string) {
+function usePresence(channelName: string) {
   const [presence, setPresence] = React.useState<Map<string, PresenceData[]>>(new Map())
   const [isOnline, setIsOnline] = React.useState(false)
 
@@ -400,8 +400,7 @@ export function usePresence(channelName: string) {
 export { supabase }
 
 // Export utility functions
-export const getConnectionStatus = () => useRealtimeStore.getState().connectionStatus
-export const getSubscriptions = () => useRealtimeStore.getState().subscriptions
-export const isRealtimeConnected = () => useRealtimeStore.getState().isConnected
+const getConnectionStatus = () => useRealtimeStore.getState().connectionStatus
+const getSubscriptions = () => useRealtimeStore.getState().subscriptions
+const isRealtimeConnected = () => useRealtimeStore.getState().isConnected
 
-export default useRealtimeStore

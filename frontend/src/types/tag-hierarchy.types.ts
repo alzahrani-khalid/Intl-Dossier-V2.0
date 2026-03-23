@@ -330,7 +330,7 @@ export const TAG_COLOR_PALETTE = [
 /**
  * Default tag icons (Lucide icon names)
  */
-export const TAG_ICON_OPTIONS = [
+const TAG_ICON_OPTIONS = [
   'tag',
   'bookmark',
   'folder',
@@ -369,7 +369,7 @@ export const TAG_ENTITY_TYPE_LABELS: Record<TagEntityType, { en: string; ar: str
 /**
  * Bilingual labels for match types
  */
-export const TAG_MATCH_TYPE_LABELS: Record<TagMatchType, { en: string; ar: string }> = {
+const TAG_MATCH_TYPE_LABELS: Record<TagMatchType, { en: string; ar: string }> = {
   exact: { en: 'Exact match', ar: 'تطابق تام' },
   prefix: { en: 'Starts with', ar: 'يبدأ بـ' },
   partial: { en: 'Contains', ar: 'يحتوي على' },
@@ -391,7 +391,7 @@ export const TAG_SUGGESTION_REASON_LABELS: Record<TagSuggestionReason, { en: str
 // Type Guards
 // ============================================================================
 
-export function isTagCategory(value: unknown): value is TagCategory {
+function isTagCategory(value: unknown): value is TagCategory {
   return (
     typeof value === 'object' &&
     value !== null &&
@@ -402,7 +402,7 @@ export function isTagCategory(value: unknown): value is TagCategory {
   )
 }
 
-export function isTagEntityType(value: string): value is TagEntityType {
+function isTagEntityType(value: string): value is TagEntityType {
   return TAG_ENTITY_TYPES.includes(value as TagEntityType)
 }
 
@@ -420,7 +420,7 @@ export function getTagName(tag: Pick<TagCategory, 'name_en' | 'name_ar'>, isRTL:
 /**
  * Get the description for a tag based on language
  */
-export function getTagDescription(
+function getTagDescription(
   tag: Pick<TagCategory, 'description_en' | 'description_ar'>,
   isRTL: boolean,
 ): string | undefined {
@@ -430,7 +430,7 @@ export function getTagDescription(
 /**
  * Build a flat list from hierarchical tags
  */
-export function flattenTagHierarchy(tags: TagCategory[]): TagCategory[] {
+function flattenTagHierarchy(tags: TagCategory[]): TagCategory[] {
   const result: TagCategory[] = []
 
   function traverse(tag: TagCategory) {
@@ -494,7 +494,7 @@ export function getTagAncestors(tag: TagCategory, allTags: TagCategory[]): TagCa
 /**
  * Get breadcrumb path for a tag
  */
-export function getTagBreadcrumb(
+function getTagBreadcrumb(
   tag: TagCategory,
   allTags: TagCategory[],
   isRTL: boolean,

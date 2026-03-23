@@ -361,4 +361,3 @@ export function ActivityTimelineSection({
   )
 }
 
-export default ActivityTimelineSection

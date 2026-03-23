@@ -279,4 +279,3 @@ export function AttendeesList({
   )
 }
 
-export default AttendeesList

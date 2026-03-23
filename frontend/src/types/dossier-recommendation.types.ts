@@ -135,7 +135,7 @@ export interface DossierRecommendationListItem {
 /**
  * Interaction record
  */
-export interface RecommendationInteraction {
+interface RecommendationInteraction {
   id: string
   recommendation_id: string
   user_id: string
@@ -255,7 +255,7 @@ export function getReasonBgColor(reason: DossierRecommendationReason): string {
 /**
  * Get icon name for recommendation reason
  */
-export function getReasonIcon(reason: DossierRecommendationReason): string {
+function getReasonIcon(reason: DossierRecommendationReason): string {
   const icons: Record<DossierRecommendationReason, string> = {
     similar_content: 'FileText',
     shared_relationships: 'Network',
@@ -281,7 +281,7 @@ export function getSimilarityColor(score: number): string {
 /**
  * Get status badge color
  */
-export function getStatusColor(status: DossierRecommendationStatus): string {
+function getStatusColor(status: DossierRecommendationStatus): string {
   const colors: Record<DossierRecommendationStatus, string> = {
     pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
     viewed: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
@@ -302,14 +302,14 @@ export function formatSimilarity(score: number): string {
 /**
  * Check if recommendation is actionable
  */
-export function isActionable(recommendation: DossierRecommendation): boolean {
+function isActionable(recommendation: DossierRecommendation): boolean {
   return recommendation.status === 'pending' || recommendation.status === 'viewed'
 }
 
 /**
  * Get priority display color
  */
-export function getPriorityColor(priority: number): string {
+function getPriorityColor(priority: number): string {
   if (priority >= 5) return 'text-red-600 dark:text-red-400'
   if (priority >= 4) return 'text-orange-600 dark:text-orange-400'
   if (priority >= 3) return 'text-yellow-600 dark:text-yellow-400'
@@ -336,7 +336,7 @@ export const REASON_LABELS: Record<DossierRecommendationReason, { en: string; ar
 /**
  * Status labels (bilingual)
  */
-export const STATUS_LABELS: Record<DossierRecommendationStatus, { en: string; ar: string }> = {
+const STATUS_LABELS: Record<DossierRecommendationStatus, { en: string; ar: string }> = {
   pending: { en: 'New', ar: 'جديد' },
   viewed: { en: 'Viewed', ar: 'تمت المشاهدة' },
   accepted: { en: 'Opened', ar: 'تم الفتح' },

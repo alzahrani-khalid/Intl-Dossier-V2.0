@@ -181,7 +181,7 @@ export function CountryMapImage({
 /**
  * Lightweight version without loading states (for lists/grids)
  */
-export function CountryMapImageSimple({
+function CountryMapImageSimple({
   countryCode,
   className,
   size = 'sm',

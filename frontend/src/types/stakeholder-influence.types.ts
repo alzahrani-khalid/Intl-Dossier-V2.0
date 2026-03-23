@@ -360,7 +360,7 @@ export interface CalculationResult {
 /**
  * Get influence tier from score
  */
-export function getInfluenceTierFromScore(score: number): InfluenceTier {
+function getInfluenceTierFromScore(score: number): InfluenceTier {
   if (score >= 80) return 'key_influencer'
   if (score >= 60) return 'high_influence'
   if (score >= 40) return 'moderate_influence'
@@ -371,7 +371,7 @@ export function getInfluenceTierFromScore(score: number): InfluenceTier {
 /**
  * Get CSS color class for influence tier
  */
-export function getInfluenceTierColor(tier: InfluenceTier): string {
+function getInfluenceTierColor(tier: InfluenceTier): string {
   const colors: Record<InfluenceTier, string> = {
     key_influencer: 'text-purple-600 dark:text-purple-400',
     high_influence: 'text-blue-600 dark:text-blue-400',
@@ -385,7 +385,7 @@ export function getInfluenceTierColor(tier: InfluenceTier): string {
 /**
  * Get background color class for influence tier
  */
-export function getInfluenceTierBgColor(tier: InfluenceTier): string {
+function getInfluenceTierBgColor(tier: InfluenceTier): string {
   const colors: Record<InfluenceTier, string> = {
     key_influencer: 'bg-purple-100 dark:bg-purple-900/30',
     high_influence: 'bg-blue-100 dark:bg-blue-900/30',
@@ -399,7 +399,7 @@ export function getInfluenceTierBgColor(tier: InfluenceTier): string {
 /**
  * Get CSS color class for stakeholder role
  */
-export function getStakeholderRoleColor(role: StakeholderRole): string {
+function getStakeholderRoleColor(role: StakeholderRole): string {
   const colors: Record<StakeholderRole, string> = {
     hub: 'text-amber-600 dark:text-amber-400',
     bridge: 'text-indigo-600 dark:text-indigo-400',
@@ -413,7 +413,7 @@ export function getStakeholderRoleColor(role: StakeholderRole): string {
 /**
  * Get icon name for stakeholder role
  */
-export function getStakeholderRoleIcon(role: StakeholderRole): string {
+function getStakeholderRoleIcon(role: StakeholderRole): string {
   const icons: Record<StakeholderRole, string> = {
     hub: 'Share2',
     bridge: 'GitBranch',

@@ -252,4 +252,3 @@ export function useGenerateBrief(): UseGenerateBriefReturn {
   }
 }
 
-export default useGenerateBrief

@@ -82,7 +82,7 @@ const logger = winston.createLogger({
 })
 
 // Create a stream object with a 'write' function for HTTP logging
-export const loggerStream = {
+const loggerStream = {
   write: (message: string) => {
     logger.http(message.trim())
   },
@@ -111,16 +111,16 @@ export const logWarn = (message: string, meta?: any) => {
   logger.warn(message, meta)
 }
 
-export const logDebug = (message: string, meta?: any) => {
+const logDebug = (message: string, meta?: any) => {
   logger.debug(message, meta)
 }
 
-export const logHttp = (message: string, meta?: any) => {
+const logHttp = (message: string, meta?: any) => {
   logger.http(message, meta)
 }
 
 // Database operation logging helpers
-export const logDatabaseQuery = (query: string, duration: number, meta?: any) => {
+const logDatabaseQuery = (query: string, duration: number, meta?: any) => {
   logger.info('Database query executed', {
     type: 'database',
     query: query.substring(0, 200) + (query.length > 200 ? '...' : ''), // Truncate long queries
@@ -129,7 +129,7 @@ export const logDatabaseQuery = (query: string, duration: number, meta?: any) =>
   })
 }
 
-export const logDatabaseError = (query: string, error: Error, meta?: any) => {
+const logDatabaseError = (query: string, error: Error, meta?: any) => {
   logger.error('Database query failed', {
     type: 'database',
     query: query.substring(0, 200) + (query.length > 200 ? '...' : ''),
@@ -160,7 +160,7 @@ export const logApiRequest = (
   })
 }
 
-export const logApiError = (method: string, url: string, error: Error, meta?: any) => {
+const logApiError = (method: string, url: string, error: Error, meta?: any) => {
   logger.error('API request failed', {
     type: 'api',
     method,
@@ -199,7 +199,7 @@ export const logAuthEvent = (event: string, userId?: string, meta?: any) => {
 }
 
 // Performance logging helpers
-export const logPerformance = (operation: string, duration: number, meta?: any) => {
+const logPerformance = (operation: string, duration: number, meta?: any) => {
   const logLevel = duration > 1000 ? 'warn' : 'info' // Warn if operation takes more than 1 second
   logger[logLevel](`Performance: ${operation}`, {
     type: 'performance',

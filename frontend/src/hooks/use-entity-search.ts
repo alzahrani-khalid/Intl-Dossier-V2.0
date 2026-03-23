@@ -155,7 +155,7 @@ export function useEntitySearchState(
  * Hook to get entity intakes (reverse lookup)
  * For displaying all intake tickets linked to an entity
  */
-export function useEntityIntakes(
+function useEntityIntakes(
   entityType: string,
   entityId: string,
   filters?: {
@@ -178,7 +178,7 @@ export function useEntityIntakes(
 /**
  * Type guard to check if results are available
  */
-export function hasSearchResults(
+function hasSearchResults(
   data: EntitySearchResult[] | undefined,
 ): data is EntitySearchResult[] {
   return Array.isArray(data) && data.length > 0

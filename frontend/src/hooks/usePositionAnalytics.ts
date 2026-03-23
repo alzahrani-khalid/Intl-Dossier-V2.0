@@ -122,7 +122,7 @@ async function fetchTopPositions(options: TopPositionsOptions): Promise<TopPosit
   return result.data || []
 }
 
-export function useTopPositions(options: TopPositionsOptions = {}) {
+function useTopPositions(options: TopPositionsOptions = {}) {
   const { metric = 'popularity', timeRange = '30d', limit = 10, enabled = true } = options
 
   const { data, isLoading, isError, error, refetch } = useQuery({

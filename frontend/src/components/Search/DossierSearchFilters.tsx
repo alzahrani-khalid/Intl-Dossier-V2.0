@@ -268,7 +268,7 @@ export function DossierSearchFilters({
 }
 
 // Export filter chip component for alternative layout
-export function DossierTypeChips({
+function DossierTypeChips({
   selectedType,
   onChange,
   counts,

@@ -426,7 +426,7 @@ export function useDeleteParticipant() {
 // Combined Export Hook
 // =============================================================================
 
-export function useAvailabilityPolling() {
+function useAvailabilityPolling() {
   return {
     // Queries
     usePolls,

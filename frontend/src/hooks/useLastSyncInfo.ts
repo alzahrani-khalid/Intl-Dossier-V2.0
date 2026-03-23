@@ -167,7 +167,7 @@ export function useLastSyncInfo(
  * Hook to track offline queue from IndexedDB or service worker
  * This is a placeholder that can be extended for real offline sync
  */
-export function useOfflineQueue(storageKey: string) {
+function useOfflineQueue(storageKey: string) {
   const [queueCount, setQueueCount] = useState(0)
 
   // Listen for service worker messages about offline queue
@@ -200,4 +200,3 @@ export function useOfflineQueue(storageKey: string) {
   return queueCount
 }
 
-export default useLastSyncInfo

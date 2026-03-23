@@ -139,4 +139,3 @@ export function FormDraftBanner({
   )
 }
 
-export default FormDraftBanner

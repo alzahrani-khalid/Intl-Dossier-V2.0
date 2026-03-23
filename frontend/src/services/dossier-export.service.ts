@@ -90,7 +90,7 @@ export async function exportDossier(request: DossierExportRequest): Promise<Doss
 /**
  * Quick export with default settings
  */
-export async function quickExportDossier(
+async function quickExportDossier(
   dossierId: string,
   format: DossierExportFormat = 'pdf',
 ): Promise<DossierExportResponse> {
@@ -139,7 +139,7 @@ export async function downloadExportedFile(downloadUrl: string, fileName: string
 /**
  * Get estimated export size based on dossier content
  */
-export async function getExportEstimate(dossierId: string): Promise<{
+async function getExportEstimate(dossierId: string): Promise<{
   estimated_pages: number
   estimated_size_kb: number
   sections_with_content: string[]

@@ -83,7 +83,7 @@ export function useCommitmentDeliverables(
  * @param options - Hook options
  * @returns TanStack Query result
  */
-export function useCommitmentDeliverable(
+function useCommitmentDeliverable(
   deliverableId: string,
   options?: UseCommitmentDeliverablesOptions,
 ) {
@@ -109,7 +109,7 @@ export function useCommitmentDeliverable(
  * @param options - Hook options
  * @returns TanStack Query result
  */
-export function useCommitmentProgress(
+function useCommitmentProgress(
   commitmentId: string,
   options?: UseCommitmentDeliverablesOptions,
 ) {
@@ -135,7 +135,7 @@ export function useCommitmentProgress(
  * @param options - Hook options
  * @returns TanStack Query result
  */
-export function useHasDeliverables(
+function useHasDeliverables(
   commitmentId: string,
   options?: UseCommitmentDeliverablesOptions,
 ) {
@@ -374,7 +374,7 @@ interface UpdateProgressInput {
  *
  * @returns TanStack Mutation result
  */
-export function useUpdateDeliverableProgress() {
+function useUpdateDeliverableProgress() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('commitment-deliverables')
 
@@ -446,7 +446,7 @@ interface ReorderDeliverablesInput {
  *
  * @returns TanStack Mutation result
  */
-export function useReorderDeliverables() {
+function useReorderDeliverables() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('commitment-deliverables')
 

@@ -248,4 +248,3 @@ export function useSampleData() {
   }
 }
 
-export default useSampleData

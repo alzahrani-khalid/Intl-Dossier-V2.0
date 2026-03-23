@@ -60,7 +60,7 @@ export function isErr<T, E>(result: Result<T, E>): result is Failure<E> {
 /**
  * Unwrap result or throw error
  */
-export function unwrap<T, E>(result: Result<T, E>): T {
+function unwrap<T, E>(result: Result<T, E>): T {
   if (isOk(result)) {
     return result.data
   }
@@ -70,7 +70,7 @@ export function unwrap<T, E>(result: Result<T, E>): T {
 /**
  * Unwrap result or return default value
  */
-export function unwrapOr<T, E>(result: Result<T, E>, defaultValue: T): T {
+function unwrapOr<T, E>(result: Result<T, E>, defaultValue: T): T {
   if (isOk(result)) {
     return result.data
   }
@@ -80,7 +80,7 @@ export function unwrapOr<T, E>(result: Result<T, E>, defaultValue: T): T {
 /**
  * Map over success value
  */
-export function map<T, U, E>(result: Result<T, E>, fn: (data: T) => U): Result<U, E> {
+function map<T, U, E>(result: Result<T, E>, fn: (data: T) => U): Result<U, E> {
   if (isOk(result)) {
     return ok(fn(result.data))
   }
@@ -90,7 +90,7 @@ export function map<T, U, E>(result: Result<T, E>, fn: (data: T) => U): Result<U
 /**
  * Map over error value
  */
-export function mapErr<T, E, F>(result: Result<T, E>, fn: (error: E) => F): Result<T, F> {
+function mapErr<T, E, F>(result: Result<T, E>, fn: (error: E) => F): Result<T, F> {
   if (isErr(result)) {
     return err(fn(result.error))
   }
@@ -100,7 +100,7 @@ export function mapErr<T, E, F>(result: Result<T, E>, fn: (error: E) => F): Resu
 /**
  * Chain results (flatMap)
  */
-export function andThen<T, U, E>(
+function andThen<T, U, E>(
   result: Result<T, E>,
   fn: (data: T) => Result<U, E>,
 ): Result<U, E> {
@@ -113,7 +113,7 @@ export function andThen<T, U, E>(
 /**
  * Execute function on error without changing result
  */
-export function tapErr<T, E>(result: Result<T, E>, fn: (error: E) => void): Result<T, E> {
+function tapErr<T, E>(result: Result<T, E>, fn: (error: E) => void): Result<T, E> {
   if (isErr(result)) {
     fn(result.error)
   }
@@ -123,7 +123,7 @@ export function tapErr<T, E>(result: Result<T, E>, fn: (error: E) => void): Resu
 /**
  * Convert Promise to Result
  */
-export async function fromPromise<T>(promise: Promise<T>): Promise<Result<T, Error>> {
+async function fromPromise<T>(promise: Promise<T>): Promise<Result<T, Error>> {
   try {
     const data = await promise
     return ok(data)
@@ -135,7 +135,7 @@ export async function fromPromise<T>(promise: Promise<T>): Promise<Result<T, Err
 /**
  * Combine multiple results into one
  */
-export function combine<T, E>(results: Result<T, E>[]): Result<T[], E> {
+function combine<T, E>(results: Result<T, E>[]): Result<T[], E> {
   const data: T[] = []
   for (const result of results) {
     if (isErr(result)) {

@@ -196,4 +196,3 @@ export function SampleDataTemplateSelector({
   )
 }
 
-export default SampleDataTemplateSelector

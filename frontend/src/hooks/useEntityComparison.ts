@@ -593,7 +593,7 @@ export function useEntityComparison(entityType: DossierType | null, entityIds: s
 /**
  * Hook to get field configurations for a dossier type
  */
-export function useFieldConfigs(entityType: DossierType | null) {
+function useFieldConfigs(entityType: DossierType | null) {
   return useMemo(() => {
     if (!entityType) {
       return { baseFields: BASE_FIELD_CONFIGS, extensionFields: [] }
@@ -721,4 +721,3 @@ export function useEntitySelection(maxSelections: number = 5, minSelections: num
   }
 }
 
-export default useEntityComparison

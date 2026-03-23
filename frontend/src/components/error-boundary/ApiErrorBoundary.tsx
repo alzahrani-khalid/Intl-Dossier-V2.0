@@ -16,7 +16,7 @@ interface State {
   isRetrying: boolean
 }
 
-export class ApiErrorBoundary extends Component<Props, State> {
+class ApiErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -150,7 +150,7 @@ function ApiErrorFallback({
 }
 
 // Hook for handling API errors in functional components
-export function useApiErrorHandler() {
+function useApiErrorHandler() {
   const { addAction: addToQueue } = useOfflineQueue()
 
   return (error: Error, action?: { method: string; url: string; data?: any }) => {
@@ -173,4 +173,3 @@ export function useApiErrorHandler() {
   }
 }
 
-export default ApiErrorBoundary

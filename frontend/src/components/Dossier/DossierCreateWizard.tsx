@@ -1910,4 +1910,3 @@ export function DossierCreateWizard({
   )
 }
 
-export default DossierCreateWizard

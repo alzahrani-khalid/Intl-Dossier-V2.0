@@ -887,4 +887,3 @@ function ReviewStep({
   )
 }
 
-export default WGMemberSuggestions

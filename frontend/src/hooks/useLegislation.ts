@@ -84,7 +84,7 @@ export function useLegislations(options?: UseLegislationsOptions) {
 /**
  * Hook for infinite scroll pagination of legislations
  */
-export function useInfiniteLegislations(options?: UseLegislationsOptions) {
+function useInfiniteLegislations(options?: UseLegislationsOptions) {
   const { enabled = true, ...filters } = options ?? {}
 
   return useInfiniteQuery<
@@ -165,7 +165,7 @@ export function useUpdateLegislation() {
 /**
  * Hook to update legislation status
  */
-export function useUpdateLegislationStatus() {
+function useUpdateLegislationStatus() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -214,7 +214,7 @@ export function useLegislationSponsors(legislationId: string, enabled: boolean =
   })
 }
 
-export function useAddLegislationSponsor() {
+function useAddLegislationSponsor() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -231,7 +231,7 @@ export function useAddLegislationSponsor() {
   })
 }
 
-export function useRemoveLegislationSponsor() {
+function useRemoveLegislationSponsor() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -264,7 +264,7 @@ export function useLegislationAmendments(legislationId: string, enabled: boolean
   })
 }
 
-export function useCreateLegislationAmendment() {
+function useCreateLegislationAmendment() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -281,7 +281,7 @@ export function useCreateLegislationAmendment() {
   })
 }
 
-export function useUpdateLegislationAmendment() {
+function useUpdateLegislationAmendment() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -321,7 +321,7 @@ export function useLegislationDeadlines(legislationId: string, enabled: boolean 
   })
 }
 
-export function useCreateLegislationDeadline() {
+function useCreateLegislationDeadline() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -339,7 +339,7 @@ export function useCreateLegislationDeadline() {
   })
 }
 
-export function useUpdateLegislationDeadline() {
+function useUpdateLegislationDeadline() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -390,7 +390,7 @@ export function useCompleteLegislationDeadline() {
   })
 }
 
-export function useDeleteLegislationDeadline() {
+function useDeleteLegislationDeadline() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -416,7 +416,7 @@ export function useDeleteLegislationDeadline() {
 // UPCOMING DEADLINES & COMMENT PERIODS
 // =============================================
 
-export function useUpcomingDeadlines(filters?: LegislationDeadlineFilters) {
+function useUpcomingDeadlines(filters?: LegislationDeadlineFilters) {
   return useQuery({
     queryKey: legislationKeys.upcomingDeadlines(filters),
     queryFn: () => getUpcomingDeadlines(filters),
@@ -425,7 +425,7 @@ export function useUpcomingDeadlines(filters?: LegislationDeadlineFilters) {
   })
 }
 
-export function useOpenCommentPeriods() {
+function useOpenCommentPeriods() {
   return useQuery({
     queryKey: legislationKeys.openCommentPeriods(),
     queryFn: () => getOpenCommentPeriods(),
@@ -484,7 +484,7 @@ export function useUnwatchLegislation() {
   })
 }
 
-export function useUpdateWatchPreferences() {
+function useUpdateWatchPreferences() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -506,7 +506,7 @@ export function useUpdateWatchPreferences() {
   })
 }
 
-export function useMyWatchedLegislations() {
+function useMyWatchedLegislations() {
   return useQuery({
     queryKey: legislationKeys.myWatches(),
     queryFn: () => getMyWatchedLegislations(),
@@ -526,7 +526,7 @@ export function useRelatedLegislations(legislationId: string, enabled: boolean =
   })
 }
 
-export function useAddRelatedLegislation() {
+function useAddRelatedLegislation() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -547,7 +547,7 @@ export function useAddRelatedLegislation() {
   })
 }
 
-export function useRemoveRelatedLegislation() {
+function useRemoveRelatedLegislation() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('legislation')
 
@@ -573,7 +573,7 @@ export function useRemoveRelatedLegislation() {
 // SEARCH HOOK
 // =============================================
 
-export function useSearchLegislations(query: string, limit: number = 20) {
+function useSearchLegislations(query: string, limit: number = 20) {
   return useQuery({
     queryKey: ['legislations', 'search', query, limit],
     queryFn: () => searchLegislations(query, limit),

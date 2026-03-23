@@ -766,4 +766,3 @@ export function TagHierarchyManager({
   )
 }
 
-export default TagHierarchyManager

@@ -141,7 +141,7 @@ export const usePinnedEntitiesStore = create<PinnedEntitiesState>()(
 /**
  * Helper to get pinned entity color class
  */
-export function getPinnedColorClass(color: PinnedEntityEntry['color']): string {
+function getPinnedColorClass(color: PinnedEntityEntry['color']): string {
   const colorMap: Record<NonNullable<PinnedEntityEntry['color']>, string> = {
     default: 'bg-muted text-muted-foreground',
     red: 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300',

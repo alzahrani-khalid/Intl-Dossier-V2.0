@@ -90,7 +90,7 @@ export interface RecommendationReasoning {
 /**
  * Dossier reference in recommendation
  */
-export interface RecommendationDossierRef {
+interface RecommendationDossierRef {
   id: string
   name_en: string
   name_ar: string
@@ -226,7 +226,7 @@ export interface RecommendationFeedbackCreate {
 /**
  * Recommendation batch record
  */
-export interface RecommendationBatch {
+interface RecommendationBatch {
   id: string
   batch_type: 'scheduled' | 'manual' | 'event_based'
   relationships_analyzed: number
@@ -323,7 +323,7 @@ export interface RecommendationStats {
 /**
  * Weekly recommendation summary
  */
-export interface RecommendationWeeklySummary {
+interface RecommendationWeeklySummary {
   week_start: string
   week_end: string
   generated: number
@@ -365,7 +365,7 @@ export function getUrgencyBgColor(urgency: RecommendationUrgency): string {
 /**
  * Get display color for priority (1-5)
  */
-export function getPriorityColor(priority: number): string {
+function getPriorityColor(priority: number): string {
   if (priority >= 5) return 'text-red-600 dark:text-red-400'
   if (priority >= 4) return 'text-orange-600 dark:text-orange-400'
   if (priority >= 3) return 'text-yellow-600 dark:text-yellow-400'
@@ -392,7 +392,7 @@ export function getRecommendationTypeBgColor(type: RecommendationType): string {
 /**
  * Get icon name for recommendation type
  */
-export function getRecommendationTypeIcon(type: RecommendationType): string {
+function getRecommendationTypeIcon(type: RecommendationType): string {
   const icons: Record<RecommendationType, string> = {
     proactive_outreach: 'Send',
     follow_up: 'Reply',
@@ -430,7 +430,7 @@ export function formatConfidence(score: number): string {
 /**
  * Check if recommendation is actionable
  */
-export function isActionable(recommendation: EngagementRecommendation): boolean {
+function isActionable(recommendation: EngagementRecommendation): boolean {
   return recommendation.status === 'pending' || recommendation.status === 'viewed'
 }
 
@@ -486,7 +486,7 @@ export const STATUS_LABELS: Record<RecommendationStatus, { en: string; ar: strin
 /**
  * Feedback type labels
  */
-export const FEEDBACK_TYPE_LABELS: Record<RecommendationFeedbackType, { en: string; ar: string }> =
+const FEEDBACK_TYPE_LABELS: Record<RecommendationFeedbackType, { en: string; ar: string }> =
   {
     helpful: { en: 'Helpful', ar: 'مفيد' },
     not_helpful: { en: 'Not Helpful', ar: 'غير مفيد' },
@@ -500,7 +500,7 @@ export const FEEDBACK_TYPE_LABELS: Record<RecommendationFeedbackType, { en: stri
 /**
  * Suggested format labels
  */
-export const FORMAT_LABELS: Record<SuggestedFormat, { en: string; ar: string }> = {
+const FORMAT_LABELS: Record<SuggestedFormat, { en: string; ar: string }> = {
   in_person: { en: 'In Person', ar: 'حضوري' },
   virtual: { en: 'Virtual', ar: 'افتراضي' },
   hybrid: { en: 'Hybrid', ar: 'هجين' },
@@ -512,7 +512,7 @@ export const FORMAT_LABELS: Record<SuggestedFormat, { en: string; ar: string }> 
 /**
  * Priority labels
  */
-export const PRIORITY_LABELS: Record<number, { en: string; ar: string }> = {
+const PRIORITY_LABELS: Record<number, { en: string; ar: string }> = {
   1: { en: 'Very Low', ar: 'منخفض جدًا' },
   2: { en: 'Low', ar: 'منخفض' },
   3: { en: 'Medium', ar: 'متوسط' },

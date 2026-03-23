@@ -372,7 +372,7 @@ export function useViewPreferences(entityType: EntityViewType) {
  * Helper hook to sync view config with URL params
  * Useful for pages that want URL-based state with preference persistence
  */
-export function useViewPreferencesWithUrl<T extends ViewConfig>(
+function useViewPreferencesWithUrl<T extends ViewConfig>(
   entityType: EntityViewType,
   urlConfig: T,
   setUrlConfig: (config: T) => void,
@@ -419,4 +419,3 @@ export function useViewPreferencesWithUrl<T extends ViewConfig>(
   }
 }
 
-export default useViewPreferences

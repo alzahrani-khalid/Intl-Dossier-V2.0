@@ -276,7 +276,7 @@ export interface IntelligenceReport {
  * Type for inserting new intelligence reports
  * Omits auto-generated fields
  */
-export type IntelligenceReportInsert = Omit<
+type IntelligenceReportInsert = Omit<
   IntelligenceReport,
   | 'id'
   | 'created_at'
@@ -302,7 +302,7 @@ export type IntelligenceReportInsert = Omit<
  * Type for updating intelligence reports
  * All fields optional except id
  */
-export type IntelligenceReportUpdate = Partial<
+type IntelligenceReportUpdate = Partial<
   Omit<IntelligenceReport, 'id' | 'created_at' | 'created_by'>
 > & {
   id: string
@@ -342,7 +342,7 @@ export interface IntelligenceCacheStatus {
  * Request parameters for refreshing intelligence
  * Used by intelligence-refresh Edge Function
  */
-export interface RefreshIntelligenceRequest {
+interface RefreshIntelligenceRequest {
   /** Entity (dossier) ID to refresh intelligence for */
   entity_id: string
 
@@ -359,7 +359,7 @@ export interface RefreshIntelligenceRequest {
 /**
  * Response from intelligence refresh operation
  */
-export interface RefreshIntelligenceResponse {
+interface RefreshIntelligenceResponse {
   /** Whether the refresh was successful */
   success: boolean
 
@@ -383,7 +383,7 @@ export interface RefreshIntelligenceResponse {
  * Request parameters for fetching intelligence
  * Used by intelligence-get Edge Function
  */
-export interface GetIntelligenceRequest {
+interface GetIntelligenceRequest {
   /** Entity (dossier) ID to fetch intelligence for */
   entity_id: string
 
@@ -403,7 +403,7 @@ export interface GetIntelligenceRequest {
 /**
  * Response from intelligence fetch operation
  */
-export interface GetIntelligenceResponse {
+interface GetIntelligenceResponse {
   /** Whether the fetch was successful */
   success: boolean
 
@@ -429,7 +429,7 @@ export interface GetIntelligenceResponse {
 /**
  * Props for inline intelligence widget component
  */
-export interface IntelligenceWidgetProps {
+interface IntelligenceWidgetProps {
   /** Entity (dossier) ID */
   entityId: string
 
@@ -455,7 +455,7 @@ export interface IntelligenceWidgetProps {
 /**
  * Props for intelligence dashboard component
  */
-export interface IntelligenceDashboardProps {
+interface IntelligenceDashboardProps {
   /** Entity (dossier) ID */
   entityId: string
 
@@ -488,14 +488,14 @@ export interface IntelligenceDashboardProps {
 /**
  * Helper type for intelligence grouped by type
  */
-export type IntelligenceByType = {
+type IntelligenceByType = {
   [K in IntelligenceType]?: IntelligenceReport[]
 }
 
 /**
  * Helper type for cache status grouped by type
  */
-export type CacheStatusByType = {
+type CacheStatusByType = {
   [K in IntelligenceType]?: IntelligenceCacheStatus
 }
 
@@ -510,7 +510,7 @@ export function isIntelligenceExpired(report: IntelligenceReport): boolean {
 /**
  * Type guard: Check if intelligence is stale (expired or error status)
  */
-export function isIntelligenceStale(report: IntelligenceReport): boolean {
+function isIntelligenceStale(report: IntelligenceReport): boolean {
   return (
     report.refresh_status === 'stale' ||
     report.refresh_status === 'expired' ||
@@ -522,14 +522,14 @@ export function isIntelligenceStale(report: IntelligenceReport): boolean {
 /**
  * Type guard: Check if intelligence is currently refreshing
  */
-export function isIntelligenceRefreshing(report: IntelligenceReport): boolean {
+function isIntelligenceRefreshing(report: IntelligenceReport): boolean {
   return report.refresh_status === 'refreshing'
 }
 
 /**
  * Get human-readable label for intelligence type
  */
-export function getIntelligenceTypeLabel(
+function getIntelligenceTypeLabel(
   type: IntelligenceType,
   language: 'en' | 'ar' = 'en',
 ): string {
@@ -547,14 +547,14 @@ export function getIntelligenceTypeLabel(
 /**
  * Get TTL in milliseconds for intelligence type
  */
-export function getIntelligenceTTLMs(type: IntelligenceType): number {
+function getIntelligenceTTLMs(type: IntelligenceType): number {
   return INTELLIGENCE_TTL_HOURS[type] * 60 * 60 * 1000
 }
 
 /**
  * Calculate time until expiry in milliseconds
  */
-export function getTimeUntilExpiry(report: IntelligenceReport): number | null {
+function getTimeUntilExpiry(report: IntelligenceReport): number | null {
   if (!report.cache_expires_at) return null
   return new Date(report.cache_expires_at).getTime() - Date.now()
 }
@@ -562,7 +562,7 @@ export function getTimeUntilExpiry(report: IntelligenceReport): number | null {
 /**
  * Format time remaining as human-readable string
  */
-export function formatTimeRemaining(ms: number, language: 'en' | 'ar' = 'en'): string {
+function formatTimeRemaining(ms: number, language: 'en' | 'ar' = 'en'): string {
   if (ms <= 0) return language === 'en' ? 'Expired' : 'منتهي'
 
   const hours = Math.floor(ms / (1000 * 60 * 60))

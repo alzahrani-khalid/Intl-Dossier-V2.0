@@ -305,4 +305,3 @@ export function useFieldRollback(): UseFieldRollbackReturn {
 }
 
 // Default export
-export default useFieldHistory

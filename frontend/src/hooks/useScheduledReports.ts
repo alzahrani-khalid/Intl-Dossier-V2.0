@@ -154,7 +154,7 @@ export function useScheduledReports() {
 }
 
 // Hook: Get single schedule
-export function useScheduledReport(id: string) {
+function useScheduledReport(id: string) {
   return useQuery({
     queryKey: QUERY_KEYS.schedule(id),
     queryFn: async () => {
@@ -387,7 +387,7 @@ export function useAddRecipient() {
 }
 
 // Hook: Update recipient
-export function useUpdateRecipient() {
+function useUpdateRecipient() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -447,7 +447,7 @@ export function useAddCondition() {
 }
 
 // Hook: Update condition
-export function useUpdateCondition() {
+function useUpdateCondition() {
   const queryClient = useQueryClient()
 
   return useMutation({

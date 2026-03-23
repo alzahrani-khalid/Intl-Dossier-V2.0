@@ -453,7 +453,7 @@ export function useWebhookTemplates(
 /**
  * Hook to invalidate all webhook queries
  */
-export function useInvalidateWebhooks() {
+function useInvalidateWebhooks() {
   const queryClient = useQueryClient()
 
   return () => {
@@ -464,7 +464,7 @@ export function useInvalidateWebhooks() {
 /**
  * Hook to invalidate webhook deliveries
  */
-export function useInvalidateWebhookDeliveries(webhookId: string) {
+function useInvalidateWebhookDeliveries(webhookId: string) {
   const queryClient = useQueryClient()
 
   return () => {

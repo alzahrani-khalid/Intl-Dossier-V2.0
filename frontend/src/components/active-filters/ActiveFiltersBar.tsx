@@ -305,4 +305,3 @@ export function ActiveFiltersBar({
   )
 }
 
-export default ActiveFiltersBar

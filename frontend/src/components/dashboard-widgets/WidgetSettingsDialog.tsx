@@ -630,4 +630,3 @@ export function WidgetSettingsDialog({
   )
 }
 
-export default WidgetSettingsDialog

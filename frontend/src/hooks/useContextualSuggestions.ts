@@ -111,7 +111,7 @@ export function useContextualSuggestions(
 /**
  * Hook for dashboard contextual suggestions
  */
-export function useDashboardSuggestions(
+function useDashboardSuggestions(
   options?: Omit<UseQueryOptions<ContextualSuggestionsResponse, Error>, 'queryKey' | 'queryFn'>,
 ) {
   return useContextualSuggestions({ context: 'dashboard', limit: 5 }, options)
@@ -120,7 +120,7 @@ export function useDashboardSuggestions(
 /**
  * Hook for calendar empty state suggestions
  */
-export function useCalendarSuggestions(
+function useCalendarSuggestions(
   options?: Omit<UseQueryOptions<ContextualSuggestionsResponse, Error>, 'queryKey' | 'queryFn'>,
 ) {
   return useContextualSuggestions({ context: 'calendar', limit: 4 }, options)
@@ -129,7 +129,7 @@ export function useCalendarSuggestions(
 /**
  * Hook for engagement list suggestions
  */
-export function useEngagementSuggestions(
+function useEngagementSuggestions(
   options?: Omit<UseQueryOptions<ContextualSuggestionsResponse, Error>, 'queryKey' | 'queryFn'>,
 ) {
   return useContextualSuggestions({ context: 'engagement', limit: 3 }, options)
@@ -138,7 +138,7 @@ export function useEngagementSuggestions(
 /**
  * Hook for commitment list suggestions
  */
-export function useCommitmentSuggestions(
+function useCommitmentSuggestions(
   options?: Omit<UseQueryOptions<ContextualSuggestionsResponse, Error>, 'queryKey' | 'queryFn'>,
 ) {
   return useContextualSuggestions({ context: 'commitment', limit: 3 }, options)
@@ -147,7 +147,7 @@ export function useCommitmentSuggestions(
 /**
  * Hook for dossier detail suggestions
  */
-export function useDossierSuggestions(
+function useDossierSuggestions(
   dossierId: string,
   options?: Omit<UseQueryOptions<ContextualSuggestionsResponse, Error>, 'queryKey' | 'queryFn'>,
 ) {
@@ -164,7 +164,7 @@ export function useDossierSuggestions(
 /**
  * Get the highest priority suggestion from a list
  */
-export function getTopSuggestion(
+function getTopSuggestion(
   suggestions: ContextualSuggestion[],
 ): ContextualSuggestion | undefined {
   const priorityOrder = { high: 0, medium: 1, low: 2 }
@@ -174,7 +174,7 @@ export function getTopSuggestion(
 /**
  * Filter suggestions by category
  */
-export function filterSuggestionsByCategory(
+function filterSuggestionsByCategory(
   suggestions: ContextualSuggestion[],
   category: ContextualSuggestion['category'],
 ): ContextualSuggestion[] {
@@ -193,7 +193,7 @@ export function hasUrgentSuggestions(suggestions: ContextualSuggestion[]): boole
 /**
  * Group suggestions by category
  */
-export function groupSuggestionsByCategory(
+function groupSuggestionsByCategory(
   suggestions: ContextualSuggestion[],
 ): Record<ContextualSuggestion['category'], ContextualSuggestion[]> {
   return suggestions.reduce(

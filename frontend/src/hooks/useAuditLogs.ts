@@ -147,7 +147,7 @@ export function useAuditLogs(initialFilters?: AuditLogFilters): UseAuditLogsRetu
 // AUDIT LOG DETAIL HOOK
 // =============================================
 
-export function useAuditLogDetail(logId: string | null): UseAuditLogDetailReturn {
+function useAuditLogDetail(logId: string | null): UseAuditLogDetailReturn {
   const { data, isLoading, error } = useQuery<
     { data: { log: AuditLogDetail; related_logs: AuditLogRelated[] } },
     Error

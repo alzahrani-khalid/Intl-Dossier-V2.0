@@ -123,7 +123,7 @@ interface ContributorsAvatarGroupProps {
   className?: string
 }
 
-export function ContributorsAvatarGroup({
+function ContributorsAvatarGroup({
   contributors,
   maxDisplay = 3,
   className = '',

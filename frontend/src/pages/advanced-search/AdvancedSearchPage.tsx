@@ -400,4 +400,3 @@ export function AdvancedSearchPage() {
   )
 }
 
-export default AdvancedSearchPage

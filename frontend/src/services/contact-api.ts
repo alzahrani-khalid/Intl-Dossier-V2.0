@@ -97,7 +97,7 @@ export interface ContactCreateInput {
 /**
  * Search contacts with filters
  */
-export async function searchContacts(params: ContactSearchParams): Promise<ContactListResponse> {
+async function searchContacts(params: ContactSearchParams): Promise<ContactListResponse> {
   const {
     query,
     organization_id,

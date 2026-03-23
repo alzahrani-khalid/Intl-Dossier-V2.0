@@ -204,4 +204,3 @@ function RenameHistoryCard({ isRTL }: { isRTL: boolean }) {
   )
 }
 
-export default TagsPage

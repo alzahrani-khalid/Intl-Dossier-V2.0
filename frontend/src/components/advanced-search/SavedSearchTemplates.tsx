@@ -204,4 +204,3 @@ export function SavedSearchTemplates({ onApply, className }: SavedSearchTemplate
   )
 }
 
-export default SavedSearchTemplates

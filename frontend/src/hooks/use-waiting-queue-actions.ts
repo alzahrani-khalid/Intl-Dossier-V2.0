@@ -24,7 +24,7 @@ import type { Assignment } from '@/components/waiting-queue/AssignmentDetailsMod
  * @param assignmentId - UUID of the assignment
  * @returns Query result with assignment data
  */
-export function useAssignmentDetails(assignmentId: string | null) {
+function useAssignmentDetails(assignmentId: string | null) {
   return useQuery({
     queryKey: ['assignment', assignmentId],
     queryFn: async (): Promise<Assignment> => {
@@ -590,7 +590,7 @@ export function useEscalationAction() {
  * Acknowledge an escalation (for recipients)
  * @returns Mutation result
  */
-export function useAcknowledgeEscalation() {
+function useAcknowledgeEscalation() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -637,7 +637,7 @@ export function useAcknowledgeEscalation() {
  * Resolve an escalation (for recipients)
  * @returns Mutation result
  */
-export function useResolveEscalation() {
+function useResolveEscalation() {
   const queryClient = useQueryClient()
 
   return useMutation({

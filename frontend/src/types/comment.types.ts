@@ -42,7 +42,7 @@ export type CommentReactionEmoji =
   | '💡'
   | '🔥'
 
-export const COMMENT_REACTION_EMOJIS: CommentReactionEmoji[] = [
+const COMMENT_REACTION_EMOJIS: CommentReactionEmoji[] = [
   '👍',
   '👎',
   '❤️',
@@ -169,7 +169,7 @@ export interface SearchUsersResponse {
 }
 
 // API Request types
-export interface CreateCommentRequest {
+interface CreateCommentRequest {
   entity_type: CommentableEntityType
   entity_id: string
   content: string
@@ -177,12 +177,12 @@ export interface CreateCommentRequest {
   visibility?: CommentVisibility
 }
 
-export interface UpdateCommentRequest {
+interface UpdateCommentRequest {
   content: string
   visibility?: CommentVisibility
 }
 
-export interface ToggleReactionRequest {
+interface ToggleReactionRequest {
   emoji: CommentReactionEmoji
 }
 
@@ -195,7 +195,7 @@ export interface GetCommentsParams {
   include_replies?: boolean
 }
 
-export interface SearchUsersParams {
+interface SearchUsersParams {
   query: string
   limit?: number
 }
@@ -207,7 +207,7 @@ export type CommentNotificationType =
   | 'reaction' // Reaction to user's comment
   | 'thread_update' // Update in a thread user participated in
 
-export interface CommentNotification {
+interface CommentNotification {
   id: string
   user_id: string
   comment_id: string
@@ -223,7 +223,7 @@ export interface CommentNotification {
 }
 
 // Comment attachment
-export interface CommentAttachment {
+interface CommentAttachment {
   id: string
   comment_id: string
   file_name: string
@@ -241,12 +241,12 @@ export interface CommentError {
   message_ar?: string
 }
 
-export interface CommentErrorResponse {
+interface CommentErrorResponse {
   error: CommentError
 }
 
 // Utility types for component props
-export interface CommentFormProps {
+interface CommentFormProps {
   entityType: CommentableEntityType
   entityId: string
   parentId?: string
@@ -258,7 +258,7 @@ export interface CommentFormProps {
   maxLength?: number
 }
 
-export interface CommentListProps {
+interface CommentListProps {
   entityType: CommentableEntityType
   entityId: string
   showReplies?: boolean
@@ -267,7 +267,7 @@ export interface CommentListProps {
   emptyMessage?: string
 }
 
-export interface CommentItemProps {
+interface CommentItemProps {
   comment: CommentWithDetails
   showReplies?: boolean
   maxDepth?: number
@@ -277,7 +277,7 @@ export interface CommentItemProps {
   onDelete?: (commentId: string) => void
 }
 
-export interface MentionInputProps {
+interface MentionInputProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
@@ -287,7 +287,7 @@ export interface MentionInputProps {
   className?: string
 }
 
-export interface ReactionPickerProps {
+interface ReactionPickerProps {
   commentId: string
   currentReactions: CommentReactions
   userReactions?: CommentReactionEmoji[]

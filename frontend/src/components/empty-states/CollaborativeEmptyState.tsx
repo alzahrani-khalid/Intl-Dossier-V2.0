@@ -332,4 +332,3 @@ function ContributorRow({ contributor, t }: ContributorRowProps) {
   )
 }
 
-export default CollaborativeEmptyState

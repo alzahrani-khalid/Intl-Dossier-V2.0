@@ -297,7 +297,7 @@ export function useGenerateEngagementBrief() {
 /**
  * Hook to link an existing brief to an engagement
  */
-export function useLinkBriefToEngagement() {
+function useLinkBriefToEngagement() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('engagement-briefs')
 
@@ -372,7 +372,7 @@ export function useUnlinkBriefFromEngagement() {
 /**
  * Hook to invalidate all engagement brief queries
  */
-export function useInvalidateEngagementBriefs() {
+function useInvalidateEngagementBriefs() {
   const queryClient = useQueryClient()
 
   return (engagementId?: string) => {

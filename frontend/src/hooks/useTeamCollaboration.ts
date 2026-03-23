@@ -165,7 +165,7 @@ export interface UseMyInvitationsOptions {
  * @param options - Hook options
  * @returns TanStack Query result with invitations array
  */
-export function useMyInvitations(options: UseMyInvitationsOptions = {}) {
+function useMyInvitations(options: UseMyInvitationsOptions = {}) {
   const { enabled = true } = options
 
   return useQuery<TeamInvitation[], Error>({
@@ -191,7 +191,7 @@ export interface RespondToInvitationParams {
  *
  * @returns Mutation for responding to invitations
  */
-export function useRespondToInvitation() {
+function useRespondToInvitation() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const { i18n } = useTranslation()

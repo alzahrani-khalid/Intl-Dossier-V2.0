@@ -299,7 +299,7 @@ export const createNavigationSections = (
   return sections
 }
 
-export const bottomNavigationItems: NavigationItem[] = [
+const bottomNavigationItems: NavigationItem[] = [
   {
     id: 'settings',
     label: 'navigation.settings',

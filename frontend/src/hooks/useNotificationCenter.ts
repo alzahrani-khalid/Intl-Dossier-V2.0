@@ -38,7 +38,7 @@ export interface Notification {
   updated_at: string
 }
 
-export interface NotificationCounts {
+interface NotificationCounts {
   total: number
   byCategory: Record<NotificationCategory, { total: number; unread: number }>
 }

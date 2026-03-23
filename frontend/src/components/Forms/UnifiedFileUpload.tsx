@@ -615,7 +615,7 @@ export function UnifiedFileUpload({
 /**
  * Pre-configured UnifiedFileUpload for documents
  */
-export function DocumentUpload(
+function DocumentUpload(
   props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number },
 ) {
   const { maxFiles = 5, ...rest } = props
@@ -647,7 +647,7 @@ export function DocumentUpload(
 /**
  * Pre-configured UnifiedFileUpload for images
  */
-export function ImageUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number }) {
+function ImageUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number }) {
   const { maxFiles = 10, ...rest } = props
 
   return (
@@ -667,7 +667,7 @@ export function ImageUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { ma
 /**
  * Pre-configured UnifiedFileUpload for evidence attachments
  */
-export function EvidenceUpload(props: Omit<UnifiedFileUploadProps, 'config'>) {
+function EvidenceUpload(props: Omit<UnifiedFileUploadProps, 'config'>) {
   return (
     <UnifiedFileUpload
       {...props}
@@ -685,7 +685,7 @@ export function EvidenceUpload(props: Omit<UnifiedFileUploadProps, 'config'>) {
 /**
  * Pre-configured UnifiedFileUpload for single file (e.g., avatar, business card)
  */
-export function SingleFileUpload(
+function SingleFileUpload(
   props: Omit<UnifiedFileUploadProps, 'config'> & { acceptedTypes?: string[] },
 ) {
   const { acceptedTypes = ['image/*'], ...rest } = props
@@ -704,4 +704,3 @@ export function SingleFileUpload(
   )
 }
 
-export default UnifiedFileUpload

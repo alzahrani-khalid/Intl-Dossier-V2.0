@@ -92,7 +92,7 @@ export function useDuplicateCandidates(params: DuplicateCandidatesListParams = {
 /**
  * Hook for infinite scroll of duplicate candidates
  */
-export function useDuplicateCandidatesInfinite(
+function useDuplicateCandidatesInfinite(
   params: Omit<DuplicateCandidatesListParams, 'offset'> = {},
 ) {
   const pageSize = params.limit || 20
@@ -131,7 +131,7 @@ export function useDuplicateCandidatesInfinite(
 /**
  * Hook to get a single duplicate candidate with entity details
  */
-export function useDuplicateCandidate(id: string | undefined) {
+function useDuplicateCandidate(id: string | undefined) {
   return useQuery({
     queryKey: duplicateKeys.candidate(id || ''),
     queryFn: async () => {
@@ -159,7 +159,7 @@ export function useDuplicateCandidate(id: string | undefined) {
 /**
  * Hook to search for duplicates of a specific entity
  */
-export function useDuplicateSearch(
+function useDuplicateSearch(
   entityId: string | undefined,
   entityType: DuplicateEntityType,
   options?: { threshold?: number; limit?: number; enabled?: boolean },
@@ -195,7 +195,7 @@ export function useDuplicateSearch(
 /**
  * Hook to get merge history for an entity
  */
-export function useMergeHistory(entityId: string | undefined) {
+function useMergeHistory(entityId: string | undefined) {
   return useQuery({
     queryKey: duplicateKeys.history(entityId || ''),
     queryFn: async (): Promise<MergeHistoryRecord[]> => {
@@ -215,7 +215,7 @@ export function useMergeHistory(entityId: string | undefined) {
 /**
  * Hook to get duplicate detection settings
  */
-export function useDuplicateSettings() {
+function useDuplicateSettings() {
   return useQuery({
     queryKey: duplicateKeys.settings(),
     queryFn: async (): Promise<DuplicateDetectionSettings[]> => {
@@ -357,7 +357,7 @@ export function useDismissDuplicate() {
 /**
  * Hook to update duplicate detection settings
  */
-export function useUpdateDuplicateSettings() {
+function useUpdateDuplicateSettings() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -390,7 +390,7 @@ export function useUpdateDuplicateSettings() {
 /**
  * Hook to check for duplicates when creating an entity
  */
-export function useCheckDuplicatesOnCreate(entityType: DuplicateEntityType) {
+function useCheckDuplicatesOnCreate(entityType: DuplicateEntityType) {
   return useMutation({
     mutationFn: async ({
       name_en,
@@ -480,16 +480,3 @@ function calculateSimpleSimilarity(str1: string, str2: string): number {
   return (2 * intersection) / (bigrams1.size + bigrams2.size)
 }
 
-export default {
-  useDuplicateCandidates,
-  useDuplicateCandidatesInfinite,
-  useDuplicateCandidate,
-  useDuplicateSearch,
-  useMergeHistory,
-  useDuplicateSettings,
-  useDuplicateScan,
-  useMergeDuplicates,
-  useDismissDuplicate,
-  useUpdateDuplicateSettings,
-  useCheckDuplicatesOnCreate,
-}

@@ -106,7 +106,7 @@ export function useComments(
 /**
  * Fetch a single comment by ID
  */
-export function useComment(commentId: string, options?: { enabled?: boolean }) {
+function useComment(commentId: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: commentQueryKeys.detail(commentId),
     queryFn: async () => {
@@ -397,7 +397,7 @@ export function useToggleReaction() {
 /**
  * Hook to get the current user's reactions for optimistic UI updates
  */
-export function useUserReactionsForComment(
+function useUserReactionsForComment(
   _commentId: string,
   _currentReactions: Record<string, number>,
 ): CommentReactionEmoji[] {
@@ -409,7 +409,7 @@ export function useUserReactionsForComment(
 /**
  * Invalidate all comments for an entity (useful after bulk operations)
  */
-export function useInvalidateComments() {
+function useInvalidateComments() {
   const queryClient = useQueryClient()
 
   return (entityType: CommentableEntityType, entityId: string) => {

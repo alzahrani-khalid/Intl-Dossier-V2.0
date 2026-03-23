@@ -141,7 +141,7 @@ export function usePerson(
 /**
  * Hook to get person's relationship network for visualization
  */
-export function usePersonNetwork(
+function usePersonNetwork(
   id: string,
   depth: number = 1,
   options?: Omit<UseQueryOptions<PersonNetwork, Error>, 'queryKey' | 'queryFn'>,
@@ -212,7 +212,7 @@ export function useCreatePerson() {
 /**
  * Hook to update a person
  */
-export function useUpdatePerson() {
+function useUpdatePerson() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -309,7 +309,7 @@ export function useArchivePerson() {
 /**
  * Hook to add a role to a person
  */
-export function useAddPersonRole() {
+function useAddPersonRole() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -349,7 +349,7 @@ export function useAddPersonRole() {
 /**
  * Hook to delete a role from a person
  */
-export function useDeletePersonRole() {
+function useDeletePersonRole() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -392,7 +392,7 @@ export function useDeletePersonRole() {
 /**
  * Hook to add an affiliation to a person
  */
-export function useAddPersonAffiliation() {
+function useAddPersonAffiliation() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -432,7 +432,7 @@ export function useAddPersonAffiliation() {
 /**
  * Hook to delete an affiliation from a person
  */
-export function useDeletePersonAffiliation() {
+function useDeletePersonAffiliation() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -478,7 +478,7 @@ export function useDeletePersonAffiliation() {
 /**
  * Hook to add a relationship between persons
  */
-export function useAddPersonRelationship() {
+function useAddPersonRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -520,7 +520,7 @@ export function useAddPersonRelationship() {
 /**
  * Hook to delete a relationship
  */
-export function useDeletePersonRelationship() {
+function useDeletePersonRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -567,7 +567,7 @@ export function useDeletePersonRelationship() {
 /**
  * Hook to invalidate all person queries
  */
-export function useInvalidatePersons() {
+function useInvalidatePersons() {
   const queryClient = useQueryClient()
 
   return () => {

@@ -121,7 +121,7 @@ function EmptyState({ message }: { message: string }) {
 // Main Component
 // ============================================================================
 
-export function RecommendationsList({
+function RecommendationsList({
   relationshipId,
   dossierId,
   defaultFilters = {},
@@ -402,4 +402,3 @@ export function RecommendationsList({
   )
 }
 
-export default RecommendationsList

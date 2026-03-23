@@ -144,7 +144,7 @@ export type DateRangePreset =
   | 'last_month'
   | 'custom'
 
-export interface DateRangeFilter {
+interface DateRangeFilter {
   preset: DateRangePreset
   from?: string
   to?: string
@@ -154,7 +154,7 @@ export interface DateRangeFilter {
 // PAGINATION
 // =============================================
 
-export interface ActivityPagination {
+interface ActivityPagination {
   cursor?: string
   limit?: number
 }
@@ -282,7 +282,7 @@ export interface UseActivityPreferencesReturn {
 // CONFIGURATION
 // =============================================
 
-export interface ActivityActionConfig {
+interface ActivityActionConfig {
   type: ActivityActionType
   icon: string // Lucide icon name
   color: string // Tailwind color class
@@ -291,7 +291,7 @@ export interface ActivityActionConfig {
   label_ar: string
 }
 
-export interface ActivityEntityConfig {
+interface ActivityEntityConfig {
   type: ActivityEntityType
   icon: string // Lucide icon name
   color: string // Tailwind color class
@@ -328,7 +328,7 @@ export interface ActivityFiltersProps {
   className?: string
 }
 
-export interface ActivityItemProps {
+interface ActivityItemProps {
   activity: ActivityItem
   compact?: boolean
   showEntityType?: boolean
@@ -336,7 +336,7 @@ export interface ActivityItemProps {
   className?: string
 }
 
-export interface FollowButtonProps {
+interface FollowButtonProps {
   entityType: ActivityEntityType
   entityId: string
   entityNameEn: string

@@ -19,7 +19,7 @@ export { AVAILABLE_THEMES }
  * Hook to get just the current theme without setters
  * Useful for components that only need to read theme state
  */
-export function useThemeValue() {
+function useThemeValue() {
   const { theme, colorMode, isDark } = useTheme()
 
   return {
@@ -33,7 +33,7 @@ export function useThemeValue() {
 /**
  * Hook to toggle between light and dark modes
  */
-export function useColorModeToggle() {
+function useColorModeToggle() {
   const { colorMode, setColorMode, isDark } = useTheme()
 
   const toggleColorMode = () => {
@@ -67,7 +67,7 @@ export function useThemeRtl() {
   }
 }
 
-export const useTextDirection = useThemeRtl
+const useTextDirection = useThemeRtl
 
 /**
  * Hook for RTL/LTR support with theme integration
@@ -116,7 +116,7 @@ export function useDirection() {
 /**
  * Combined hook for theme with RTL support
  */
-export function useThemeWithRTL() {
+function useThemeWithRTL() {
   const theme = useTheme()
   const direction = useDirection()
 

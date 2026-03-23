@@ -271,4 +271,3 @@ export function DocumentsSection({
   )
 }
 
-export default DocumentsSection

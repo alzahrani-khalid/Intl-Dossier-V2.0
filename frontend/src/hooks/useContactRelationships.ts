@@ -92,7 +92,7 @@ export function useCreateRelationship() {
 /**
  * Hook to delete a relationship
  */
-export function useDeleteRelationship() {
+function useDeleteRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('contacts')
 
@@ -143,7 +143,7 @@ export function useDeleteRelationship() {
  * Hook to invalidate all relationship queries
  * Useful after bulk operations or external changes
  */
-export function useInvalidateRelationships() {
+function useInvalidateRelationships() {
   const queryClient = useQueryClient()
 
   return () => {

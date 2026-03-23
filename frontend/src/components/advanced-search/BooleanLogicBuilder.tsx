@@ -386,4 +386,3 @@ export function BooleanLogicBuilder({
   )
 }
 
-export default BooleanLogicBuilder

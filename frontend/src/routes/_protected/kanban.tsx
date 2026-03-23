@@ -45,7 +45,7 @@ const kanbanSearchSchema = z.object({
   wipReview: z.coerce.number().optional().default(3),
 })
 
-export type KanbanSearchParams = z.infer<typeof kanbanSearchSchema>
+type KanbanSearchParams = z.infer<typeof kanbanSearchSchema>
 
 export const Route = createFileRoute('/_protected/kanban')({
   component: KanbanTaskBoardPage,

@@ -146,7 +146,7 @@ export const preferenceBroadcaster = new PreferenceBroadcaster()
 /**
  * React hook for preference broadcasting
  */
-export function usePreferenceBroadcast() {
+function usePreferenceBroadcast() {
   const broadcast = (preferences: StoredPreferences) => {
     preferenceBroadcaster.broadcast(preferences)
   }

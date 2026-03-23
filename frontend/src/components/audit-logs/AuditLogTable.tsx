@@ -406,4 +406,3 @@ export function AuditLogTable({
   )
 }
 
-export default AuditLogTable

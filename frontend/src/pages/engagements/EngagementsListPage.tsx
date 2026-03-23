@@ -51,7 +51,7 @@ import {
   ENGAGEMENT_STATUS_LABELS,
 } from '@/types/engagement.types'
 
-export function EngagementsListPage() {
+function EngagementsListPage() {
   const { t, i18n } = useTranslation('engagements')
   const isRTL = i18n.language === 'ar'
   const navigate = useNavigate()

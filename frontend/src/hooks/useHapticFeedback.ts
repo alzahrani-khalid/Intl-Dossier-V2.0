@@ -120,4 +120,3 @@ export function useHapticFeedback(options: HapticFeedbackOptions = {}): HapticFe
   }
 }
 
-export default useHapticFeedback

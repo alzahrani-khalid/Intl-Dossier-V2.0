@@ -136,4 +136,3 @@ export function useCreationContext(): CreationContext {
   return context
 }
 
-export default useCreationContext

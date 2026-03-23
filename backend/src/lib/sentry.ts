@@ -156,7 +156,7 @@ export const sentryErrorHandler: ErrorRequestHandler = (
  * Middleware to set user context from request
  * Add this AFTER authentication middleware
  */
-export function sentryUserMiddleware(
+function sentryUserMiddleware(
   getUserFromRequest: (req: Request) => SentryUserContext | null,
 ): RequestHandler {
   return (req: Request, _res: Response, next: NextFunction) => {
@@ -195,7 +195,7 @@ export function setSentryUser(user: SentryUserContext): void {
 /**
  * Clear user context
  */
-export function clearSentryUser(): void {
+function clearSentryUser(): void {
   Sentry.setUser(null)
   Sentry.setTag('user.role', undefined)
   Sentry.setTag('user.tenant', undefined)
@@ -205,7 +205,7 @@ export function clearSentryUser(): void {
  * Add breadcrumb for tracking actions
  * Useful for debugging error context
  */
-export function addBreadcrumb(
+function addBreadcrumb(
   message: string,
   category: string,
   level: Sentry.SeverityLevel = 'info',
@@ -223,7 +223,7 @@ export function addBreadcrumb(
 /**
  * Set custom context for error tracking
  */
-export function setContext(key: string, context: Record<string, unknown>): void {
+function setContext(key: string, context: Record<string, unknown>): void {
   Sentry.setContext(key, context)
 }
 
@@ -251,7 +251,7 @@ export function captureException(
 /**
  * Capture a message with severity level
  */
-export function captureMessage(
+function captureMessage(
   message: string,
   level: Sentry.SeverityLevel = 'info',
   context?: Record<string, unknown>,
@@ -265,7 +265,7 @@ export function captureMessage(
 /**
  * Start a performance transaction
  */
-export function startTransaction(
+function startTransaction(
   name: string,
   op: string,
 ): ReturnType<typeof Sentry.startInactiveSpan> {

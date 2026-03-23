@@ -282,4 +282,3 @@ export function ProgressiveFormField({
 // =============================================================================
 
 export { ImportanceBadge, StatusIndicator }
-export default ProgressiveFormField

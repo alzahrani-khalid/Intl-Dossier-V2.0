@@ -320,4 +320,3 @@ export function useAIFieldAssist(): UseAIFieldAssistReturn {
   }
 }
 
-export default useAIFieldAssist

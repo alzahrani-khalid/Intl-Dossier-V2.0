@@ -530,4 +530,3 @@ export class ContactService {
   }
 }
 
-export default ContactService

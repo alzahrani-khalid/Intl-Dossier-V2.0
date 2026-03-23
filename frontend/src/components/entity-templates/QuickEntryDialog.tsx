@@ -373,4 +373,3 @@ export function QuickEntryDialog({
   )
 }
 
-export default QuickEntryDialog

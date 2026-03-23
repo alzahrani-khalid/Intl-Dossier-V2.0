@@ -465,7 +465,7 @@ export function useAutoSaveForm<T extends Record<string, unknown>>(
 /**
  * Utility to clear all stale form drafts
  */
-export async function clearStaleFormDrafts(ttlMs: number = DEFAULT_TTL_MS): Promise<number> {
+async function clearStaleFormDrafts(ttlMs: number = DEFAULT_TTL_MS): Promise<number> {
   if (!isIndexedDBAvailable()) return 0
 
   try {
@@ -513,7 +513,7 @@ export async function clearStaleFormDrafts(ttlMs: number = DEFAULT_TTL_MS): Prom
 /**
  * Utility to get all form drafts for the current user
  */
-export async function getAllFormDrafts(): Promise<FormDraft<unknown>[]> {
+async function getAllFormDrafts(): Promise<FormDraft<unknown>[]> {
   if (!isIndexedDBAvailable()) return []
 
   try {
@@ -536,4 +536,3 @@ export async function getAllFormDrafts(): Promise<FormDraft<unknown>[]> {
   }
 }
 
-export default useAutoSaveForm

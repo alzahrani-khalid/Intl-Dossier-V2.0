@@ -671,4 +671,3 @@ export class LLMRouter {
 }
 
 export const llmRouter = new LLMRouter()
-export default llmRouter

@@ -422,4 +422,3 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
   return renderPlaceholder()
 }
 
-export default AnalyticsPreviewOverlay

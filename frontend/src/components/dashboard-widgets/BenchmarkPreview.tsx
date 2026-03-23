@@ -366,4 +366,3 @@ export function BenchmarkPreview({
   )
 }
 
-export default BenchmarkPreview

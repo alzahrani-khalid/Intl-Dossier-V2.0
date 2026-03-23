@@ -931,4 +931,3 @@ export function useWidgetDashboard(options: UseWidgetDashboardOptions = {}) {
   }
 }
 
-export default useWidgetDashboard

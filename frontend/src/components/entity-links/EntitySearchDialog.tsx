@@ -676,4 +676,3 @@ export function EntitySearchDialog({
   )
 }
 
-export default EntitySearchDialog

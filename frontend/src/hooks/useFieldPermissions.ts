@@ -207,7 +207,7 @@ export function useResolvedPermissions(
 /**
  * Hook to check bulk field permissions
  */
-export function useBulkPermissionCheck(
+function useBulkPermissionCheck(
   entityType: FieldPermissionEntityType,
   fieldNames: string[],
   entityId?: string,
@@ -278,7 +278,7 @@ export function useFieldPermissionAudit(params: GetAuditLogsParams = {}) {
 /**
  * Hook to get fields with permissions merged (definitions + resolved permissions)
  */
-export function useFieldsWithPermissions(entityType: FieldPermissionEntityType, entityId?: string) {
+function useFieldsWithPermissions(entityType: FieldPermissionEntityType, entityId?: string) {
   const { data: definitions, isLoading: definitionsLoading } = useFieldDefinitions({
     entity_type: entityType,
   })
@@ -313,7 +313,7 @@ export function useFieldsWithPermissions(entityType: FieldPermissionEntityType, 
 /**
  * Hook to check if user can view/edit a specific field
  */
-export function useFieldPermission(
+function useFieldPermission(
   entityType: FieldPermissionEntityType,
   fieldName: string,
   entityId?: string,
@@ -340,7 +340,7 @@ export function useFieldPermission(
 /**
  * Hook to filter visible fields from a data object
  */
-export function useVisibleFields<T extends Record<string, unknown>>(
+function useVisibleFields<T extends Record<string, unknown>>(
   data: T | null | undefined,
   entityType: FieldPermissionEntityType,
   entityId?: string,
@@ -377,7 +377,7 @@ export function useVisibleFields<T extends Record<string, unknown>>(
 /**
  * Hook to get editable fields from a data object
  */
-export function useEditableFields(
+function useEditableFields(
   entityType: FieldPermissionEntityType,
   entityId?: string,
 ): { editableFields: Set<string>; isLoading: boolean } {
@@ -396,7 +396,7 @@ export function useEditableFields(
  * Utility function to check field permission synchronously (for use in non-React contexts)
  * This requires the permissions to be pre-fetched
  */
-export function checkFieldPermission(
+function checkFieldPermission(
   permissions: ResolvedFieldPermission[] | undefined,
   fieldName: string,
   action: 'view' | 'edit',

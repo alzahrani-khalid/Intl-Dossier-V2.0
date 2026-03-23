@@ -234,7 +234,7 @@ export function useSearchSuggestions(
 /**
  * Hook for managing search history
  */
-export function useSearchHistory(options?: { enabled?: boolean }) {
+function useSearchHistory(options?: { enabled?: boolean }) {
   const queryClient = useQueryClient()
 
   const historyQuery = useQuery({
@@ -509,7 +509,7 @@ export function useEnhancedSearch(
 /**
  * Simple fuzzy matching function for client-side filtering
  */
-export function fuzzyMatch(query: string, text: string, options?: { threshold?: number }): boolean {
+function fuzzyMatch(query: string, text: string, options?: { threshold?: number }): boolean {
   const threshold = options?.threshold ?? 0.3
   const normalizedQuery = query.toLowerCase().trim()
   const normalizedText = text.toLowerCase().trim()
@@ -544,7 +544,7 @@ export function fuzzyMatch(query: string, text: string, options?: { threshold?: 
 /**
  * Calculate similarity score between two strings (Levenshtein-based)
  */
-export function calculateSimilarity(str1: string, str2: string): number {
+function calculateSimilarity(str1: string, str2: string): number {
   const s1 = str1.toLowerCase()
   const s2 = str2.toLowerCase()
 

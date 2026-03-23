@@ -499,4 +499,3 @@ async function simulateBulkAction(
   }
 }
 
-export default useBulkActions

@@ -406,4 +406,3 @@ export function ValidationDemoPage() {
   )
 }
 
-export default ValidationDemoPage

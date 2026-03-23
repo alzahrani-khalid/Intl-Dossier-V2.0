@@ -112,7 +112,7 @@ const entityDefaults: Record<OnboardingEntityType, { titleKey: string; descripti
  * Displays a contextual empty state with an integrated onboarding checklist
  * that guides users through essential setup steps for their role.
  */
-export function OnboardingEmptyState({
+function OnboardingEmptyState({
   entityType,
   showChecklist = true,
   checklistVariant = 'compact',
@@ -266,4 +266,3 @@ export function OnboardingEmptyState({
   )
 }
 
-export default OnboardingEmptyState

@@ -72,7 +72,7 @@ export function clearStoredPreferences(): void {
 /**
  * Get system color mode preference
  */
-export function getSystemColorMode(): 'light' | 'dark' {
+function getSystemColorMode(): 'light' | 'dark' {
   if (typeof window === 'undefined') return 'light'
 
   return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -81,7 +81,7 @@ export function getSystemColorMode(): 'light' | 'dark' {
 /**
  * Get system language preference
  */
-export function getSystemLanguage(): 'en' | 'ar' {
+function getSystemLanguage(): 'en' | 'ar' {
   if (typeof window === 'undefined') return 'en'
 
   const browserLang = navigator.language.toLowerCase()
@@ -91,7 +91,7 @@ export function getSystemLanguage(): 'en' | 'ar' {
 /**
  * Watch for storage changes from other tabs
  */
-export function watchStorageChanges(
+function watchStorageChanges(
   callback: (preferences: StoredPreferences | null) => void,
 ): () => void {
   const handleStorageChange = (event: StorageEvent) => {

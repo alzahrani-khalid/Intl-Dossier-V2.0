@@ -6,7 +6,7 @@ export type BreakpointDeviceType = 'mobile' | 'tablet' | 'desktop' | 'wide'
 
 export type BreakpointOrientation = 'portrait' | 'landscape' | 'any'
 
-export interface BreakpointConfig {
+interface BreakpointConfig {
   id: string
   name: string
   /** Minimum viewport width in pixels where this breakpoint becomes active */

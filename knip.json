@@ -1,22 +1,23 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": [".claude/**", "tests/**", "**/tests/**", "**/__tests__/**"],
+  "ignoreBinaries": ["supabase", "only-allow", "tsx", "docker-compose"],
   "workspaces": {
     ".": {
       "entry": ["scripts/*.ts"],
       "project": ["scripts/**/*.ts"],
-      "ignoreDependencies": ["turbo", "only-allow"]
+      "ignoreDependencies": ["@supabase/supabase-js", "dotenv", "@vitest/coverage-v8"]
     },
     "frontend": {
-      "entry": ["src/main.tsx", "src/routeTree.gen.ts"],
+      "entry": ["src/routeTree.gen.ts", "src/i18n/index.ts"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignore": ["src/components/ui/heroui-*.tsx", "src/components/ui/*.tsx"],
-      "ignoreDependencies": ["@vitejs/plugin-react"]
+      "ignoreDependencies": ["flag-icons", "@vitest/coverage-v8"]
     },
     "backend": {
-      "entry": ["src/index.ts"],
-      "project": ["src/**/*.ts"],
-      "ignoreDependencies": ["tsx"]
+      "project": ["src/**/*.ts"]
     }
   },
-  "ignoreExportsUsedInFile": true
+  "ignoreExportsUsedInFile": true,
+  "exclude": ["duplicates"]
 }

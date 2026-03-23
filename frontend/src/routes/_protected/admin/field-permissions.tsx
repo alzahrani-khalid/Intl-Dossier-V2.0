@@ -946,4 +946,3 @@ function PermissionDialog({
   )
 }
 
-export default FieldPermissionsPage

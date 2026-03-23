@@ -1180,4 +1180,3 @@ function FieldForm({ values, onChange, isRTL, t }: FieldFormProps) {
   )
 }
 
-export default PreviewLayoutsPage

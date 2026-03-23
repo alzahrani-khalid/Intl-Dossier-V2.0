@@ -609,4 +609,3 @@ export const tasksAPI = {
   },
 }
 
-export default tasksAPI

@@ -78,7 +78,7 @@ export interface Commitment {
 /**
  * Commitment with computed properties for UI display
  */
-export interface CommitmentWithComputedProps extends Commitment {
+interface CommitmentWithComputedProps extends Commitment {
   isOverdue: boolean
   daysOverdue: number
   daysUntilDue: number
@@ -321,4 +321,4 @@ export const MAX_EVIDENCE_SIZE = 10 * 1024 * 1024
 /**
  * Default page size for pagination
  */
-export const DEFAULT_PAGE_SIZE = 20
+const DEFAULT_PAGE_SIZE = 20

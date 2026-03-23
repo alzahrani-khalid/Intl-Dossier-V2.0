@@ -137,4 +137,3 @@ export function TaskDetailPage() {
   )
 }
 
-export default TaskDetailPage

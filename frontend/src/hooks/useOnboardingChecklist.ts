@@ -497,4 +497,3 @@ export function useOnboardingChecklist(
   }
 }
 
-export default useOnboardingChecklist

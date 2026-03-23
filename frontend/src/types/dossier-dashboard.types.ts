@@ -350,7 +350,7 @@ export interface PendingWorkByDossierProps {
 /**
  * Props for DossierQuickStatsCard component
  */
-export interface DossierQuickStatsCardProps {
+interface DossierQuickStatsCardProps {
   /** The dossier to display */
   dossier: MyDossier
   /** Whether to show the full card or compact version */

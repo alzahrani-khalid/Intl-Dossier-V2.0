@@ -239,7 +239,7 @@ export function useEngagementRecommendations(params: RecommendationListParams = 
 /**
  * Hook for infinite scrolling recommendations
  */
-export function useInfiniteRecommendations(params: Omit<RecommendationListParams, 'offset'> = {}) {
+function useInfiniteRecommendations(params: Omit<RecommendationListParams, 'offset'> = {}) {
   const pageSize = params.limit || 20
 
   return useInfiniteQuery({
@@ -259,7 +259,7 @@ export function useInfiniteRecommendations(params: Omit<RecommendationListParams
 /**
  * Hook for fetching a single recommendation with full details
  */
-export function useEngagementRecommendation(id: string, enabled = true) {
+function useEngagementRecommendation(id: string, enabled = true) {
   return useQuery({
     queryKey: recommendationKeys.detail(id),
     queryFn: () => fetchRecommendation(id),
@@ -362,7 +362,7 @@ export function useDismissRecommendation() {
 /**
  * Hook for adding feedback to a recommendation
  */
-export function useAddRecommendationFeedback() {
+function useAddRecommendationFeedback() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -417,7 +417,7 @@ export function useHighPriorityRecommendations(limit = 5) {
 /**
  * Hook for fetching recommendations for a specific relationship
  */
-export function useRelationshipRecommendations(relationshipId: string, _enabled = true) {
+function useRelationshipRecommendations(relationshipId: string, _enabled = true) {
   return useEngagementRecommendations({
     relationship_id: relationshipId,
     status: ['pending', 'viewed'],
@@ -429,7 +429,7 @@ export function useRelationshipRecommendations(relationshipId: string, _enabled 
 /**
  * Hook for fetching recommendations for a specific dossier
  */
-export function useDossierRecommendations(dossierId: string, _enabled = true) {
+function useDossierRecommendations(dossierId: string, _enabled = true) {
   return useEngagementRecommendations({
     target_dossier_id: dossierId,
     status: ['pending', 'viewed'],
@@ -441,7 +441,7 @@ export function useDossierRecommendations(dossierId: string, _enabled = true) {
 /**
  * Hook for fetching critical urgency recommendations
  */
-export function useCriticalRecommendations(limit = 10) {
+function useCriticalRecommendations(limit = 10) {
   return useEngagementRecommendations({
     urgency: 'critical',
     status: ['pending', 'viewed'],

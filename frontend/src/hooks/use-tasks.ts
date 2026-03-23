@@ -56,7 +56,7 @@ export const tasksKeys = {
 /**
  * Hook to fetch tasks with filtering and pagination
  */
-export function useTasks(filters: TaskFilters = {}) {
+function useTasks(filters: TaskFilters = {}) {
   return useQuery({
     queryKey: tasksKeys.list(filters),
     queryFn: () => tasksAPI.getTasks(filters),
@@ -106,7 +106,7 @@ export function useContributedTasks(filters: Omit<TaskFilters, 'filter'> = {}) {
 /**
  * Hook to fetch tasks for an engagement (kanban board)
  */
-export function useEngagementTasks(engagementId: string) {
+function useEngagementTasks(engagementId: string) {
   return useQuery({
     queryKey: tasksKeys.engagement(engagementId),
     queryFn: () => tasksAPI.getEngagementTasks(engagementId),
@@ -119,7 +119,7 @@ export function useEngagementTasks(engagementId: string) {
 /**
  * Hook to fetch tasks linked to a work item
  */
-export function useWorkItemTasks(
+function useWorkItemTasks(
   workItemType: 'dossier' | 'position' | 'ticket' | 'generic',
   workItemId: string,
 ) {
@@ -135,7 +135,7 @@ export function useWorkItemTasks(
 /**
  * Hook to fetch overdue tasks
  */
-export function useOverdueTasks(assigneeId?: string) {
+function useOverdueTasks(assigneeId?: string) {
   return useQuery({
     queryKey: tasksKeys.overdue(assigneeId),
     queryFn: () => tasksAPI.getOverdueTasks(assigneeId),
@@ -147,7 +147,7 @@ export function useOverdueTasks(assigneeId?: string) {
 /**
  * Hook to fetch tasks approaching deadline
  */
-export function useTasksApproachingDeadline(hours: number = 4, assigneeId?: string) {
+function useTasksApproachingDeadline(hours: number = 4, assigneeId?: string) {
   return useQuery({
     queryKey: tasksKeys.approaching(hours, assigneeId),
     queryFn: () => tasksAPI.getTasksApproachingDeadline(hours, assigneeId),
@@ -309,7 +309,7 @@ export function useUpdateTask(options?: {
 /**
  * Hook to update task workflow stage (for kanban drag-and-drop)
  */
-export function useUpdateWorkflowStage() {
+function useUpdateWorkflowStage() {
   const { t } = useTranslation()
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -361,7 +361,7 @@ export function useUpdateWorkflowStage() {
 /**
  * Hook to mark task as completed
  */
-export function useCompleteTask() {
+function useCompleteTask() {
   const { t } = useTranslation()
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -454,7 +454,7 @@ export function useDeleteTask() {
  *
  * Usage: Call this hook once in the root App component
  */
-export function useTaskDraftRecovery() {
+function useTaskDraftRecovery() {
   const { t } = useTranslation()
   const { toast } = useToast()
   const { isOnline } = useOfflineState()
@@ -562,7 +562,7 @@ export function useTaskDraftRecovery() {
  * };
  * ```
  */
-export function useTaskOfflineDraft(taskId: string) {
+function useTaskOfflineDraft(taskId: string) {
   const { isOffline } = useOfflineState()
   const { toast } = useToast()
   const { t } = useTranslation()

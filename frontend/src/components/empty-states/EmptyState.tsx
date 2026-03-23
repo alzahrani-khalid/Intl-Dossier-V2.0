@@ -248,4 +248,4 @@ export function EmptyState({
 }
 
 // Export common icons for convenience
-export { Plus, Upload, Search, HelpCircle }
+export {    HelpCircle }

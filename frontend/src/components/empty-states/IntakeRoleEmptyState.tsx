@@ -562,4 +562,3 @@ function buildQuickActions(
   return actions[role]
 }
 
-export default IntakeRoleEmptyState

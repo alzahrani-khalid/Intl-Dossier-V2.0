@@ -188,7 +188,7 @@ class TokenBucketRateLimiter {
 const tokenBucketLimiter = new TokenBucketRateLimiter(redis)
 
 // Enhanced rate limiting middleware with database policies
-export const dynamicRateLimitMiddleware = async (
+const dynamicRateLimitMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -418,7 +418,7 @@ export const createRoleBasedRateLimit = (role: string) => {
 const roleLimiters = new Map<string, ReturnType<typeof rateLimit>>()
 
 // Middleware to apply rate limiting based on user role
-export const roleBasedRateLimit = (req: Request, res: Response, next: NextFunction) => {
+const roleBasedRateLimit = (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = (req as any).user
     const role = user?.role || 'guest'
@@ -443,7 +443,7 @@ export const aiLimiter = aiRateLimitMiddleware
 export const dynamicLimiter = (role: string) => createRoleBasedRateLimit(role)
 
 // Search rate limiting — 60 req/min (matching original search-rate-limit.ts)
-export const searchRateLimit = rateLimit({
+const searchRateLimit = rateLimit({
   windowMs: RATE_LIMIT_WINDOW_MS,
   max: SEARCH_RATE_LIMIT_MAX_REQUESTS,
   message: {

@@ -179,4 +179,3 @@ export function ReactionPicker({
   )
 }
 
-export default ReactionPicker

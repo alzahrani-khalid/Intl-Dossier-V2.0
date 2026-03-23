@@ -160,7 +160,7 @@ export function getSessionKey(sessionId: string): string {
  * @param userId - User identifier
  * @param metadata - Additional session metadata
  */
-export async function storeSession(
+async function storeSession(
   sessionId: string,
   userId: string,
   metadata: Record<string, unknown> = {},
@@ -179,7 +179,7 @@ export async function storeSession(
  * @param sessionId - Session identifier
  * @returns Session data if valid, null if invalid
  */
-export async function validateSession(sessionId: string): Promise<Record<string, unknown> | null> {
+async function validateSession(sessionId: string): Promise<Record<string, unknown> | null> {
   const key = getSessionKey(sessionId)
   const sessionJson = await redis.get(key)
   if (!sessionJson) return null
@@ -195,7 +195,7 @@ export async function validateSession(sessionId: string): Promise<Record<string,
  * Invalidate a specific session
  * @param sessionId - Session identifier
  */
-export async function invalidateSession(sessionId: string): Promise<void> {
+async function invalidateSession(sessionId: string): Promise<void> {
   const key = getSessionKey(sessionId)
   await redis.del(key)
 }
@@ -204,7 +204,7 @@ export async function invalidateSession(sessionId: string): Promise<void> {
  * Invalidate all sessions for a user
  * @param userId - User identifier
  */
-export async function invalidateAllUserSessions(userId: string): Promise<void> {
+async function invalidateAllUserSessions(userId: string): Promise<void> {
   // Scan for all session keys
   const pattern = `${SESSION_KEY_PREFIX}*`
   const keys = await redis.keys(pattern)
@@ -236,7 +236,7 @@ export async function invalidateAllUserSessions(userId: string): Promise<void> {
  * Refresh session TTL
  * @param sessionId - Session identifier
  */
-export async function refreshSession(sessionId: string): Promise<void> {
+async function refreshSession(sessionId: string): Promise<void> {
   const key = getSessionKey(sessionId)
   await redis.expire(key, SESSION_TTL)
 }
@@ -246,7 +246,7 @@ export async function refreshSession(sessionId: string): Promise<void> {
  *
  * Key prefix patterns and TTL values for waiting queue operations
  */
-export const WAITING_QUEUE_KEYS = {
+const WAITING_QUEUE_KEYS = {
   RATE_LIMIT: (userId: string) => `rate-limit:reminder:${userId}`,
   QUEUE_FILTER_CACHE: (userId: string, filterHash: string) =>
     `queue-filter:${userId}:${filterHash}`,
@@ -254,11 +254,10 @@ export const WAITING_QUEUE_KEYS = {
   COOLDOWN_TRACKER: (assignmentId: string) => `cooldown:${assignmentId}`,
 } as const
 
-export const WAITING_QUEUE_TTL = {
+const WAITING_QUEUE_TTL = {
   RATE_LIMIT_WINDOW: 300, // 5 minutes
   FILTER_CACHE: 300, // 5 minutes
   BULK_JOB_STATUS: 3600, // 1 hour
   COOLDOWN_TRACKER: 86400, // 24 hours
 } as const
 
-export default redis

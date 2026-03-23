@@ -432,4 +432,3 @@ export function CommitmentQuickForm({
   )
 }
 
-export default CommitmentQuickForm

@@ -257,4 +257,3 @@ export function WidgetGrid({
   )
 }
 
-export default WidgetGrid

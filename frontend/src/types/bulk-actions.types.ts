@@ -228,7 +228,7 @@ export interface BulkActionConfirmationProps {
 /**
  * Progress indicator props
  */
-export interface BulkActionProgressProps {
+interface BulkActionProgressProps {
   /** Current status */
   status: BulkActionStatus
   /** Progress percentage */
@@ -248,7 +248,7 @@ export interface BulkActionProgressProps {
 /**
  * Undo toast props
  */
-export interface BulkActionUndoToastProps {
+interface BulkActionUndoToastProps {
   /** Whether toast is visible */
   visible: boolean
   /** Action that was performed */
@@ -266,7 +266,7 @@ export interface BulkActionUndoToastProps {
 /**
  * Toolbar props for bulk actions
  */
-export interface BulkActionsToolbarProps<T extends BulkSelectableItem = BulkSelectableItem> {
+interface BulkActionsToolbarProps<T extends BulkSelectableItem = BulkSelectableItem> {
   /** Selection state */
   selection: BulkSelectionState
   /** Available actions */
@@ -290,7 +290,7 @@ export interface BulkActionsToolbarProps<T extends BulkSelectableItem = BulkSele
 /**
  * Selectable data table props
  */
-export interface SelectableDataTableProps<T extends BulkSelectableItem> {
+interface SelectableDataTableProps<T extends BulkSelectableItem> {
   /** Data items */
   data: T[]
   /** Column definitions */
@@ -460,7 +460,7 @@ export const DEFAULT_BULK_ACTIONS: BulkActionDefinition[] = [
 /**
  * Entity-specific action configurations
  */
-export const ENTITY_ACTIONS: Record<BulkActionEntityType, BulkActionType[]> = {
+const ENTITY_ACTIONS: Record<BulkActionEntityType, BulkActionType[]> = {
   entity: ['update-status', 'assign', 'add-tags', 'export', 'delete'],
   document: ['add-tags', 'remove-tags', 'export', 'delete', 'archive'],
   ticket: ['update-status', 'assign', 'change-priority', 'escalate', 'export'],

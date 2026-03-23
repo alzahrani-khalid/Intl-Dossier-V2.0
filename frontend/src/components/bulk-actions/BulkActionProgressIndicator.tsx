@@ -143,4 +143,3 @@ export function BulkActionProgressIndicator({
   )
 }
 
-export default BulkActionProgressIndicator

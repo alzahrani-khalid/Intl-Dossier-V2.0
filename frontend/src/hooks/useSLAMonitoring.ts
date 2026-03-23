@@ -219,7 +219,7 @@ export function useSLAAtRiskItems(params: SLAAtRiskParams = {}) {
   })
 }
 
-export function useSLABreachedItems() {
+function useSLABreachedItems() {
   return useQuery({
     queryKey: ['sla', 'breached'],
     queryFn: () => fetchSLAEndpoint<SLABreachedItem[]>('breached'),
@@ -240,7 +240,7 @@ export function useSLAPolicies() {
   })
 }
 
-export function useSLAPolicy(policyId: string | undefined) {
+function useSLAPolicy(policyId: string | undefined) {
   return useQuery({
     queryKey: ['sla', 'policies', policyId],
     queryFn: () => fetchSLAEndpoint<SLAPolicy>(`policies/${policyId}`),
@@ -274,7 +274,7 @@ export function useUpdateSLAPolicy() {
   })
 }
 
-export function useDeleteSLAPolicy() {
+function useDeleteSLAPolicy() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -337,7 +337,7 @@ export function useResolveEscalation() {
 // Manual Breach Check Hook
 // ============================================
 
-export function useCheckSLABreaches() {
+function useCheckSLABreaches() {
   const queryClient = useQueryClient()
 
   return useMutation({

@@ -16,7 +16,7 @@ import { BriefingBookBuilder, BriefingBooksList } from '@/components/briefing-bo
 
 type ViewMode = 'list' | 'builder'
 
-export function BriefingBooksPage() {
+function BriefingBooksPage() {
   const { t, i18n } = useTranslation('briefing-books')
   const isRTL = i18n.language === 'ar'
 

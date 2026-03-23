@@ -154,7 +154,7 @@ export interface SavedView {
 /**
  * Input for creating/updating default preferences
  */
-export interface UpsertDefaultPreferencesInput {
+interface UpsertDefaultPreferencesInput {
   entity_type: EntityViewType
   default_preferences: DefaultViewPreferences
 }
@@ -194,7 +194,7 @@ export interface ViewPreferencesResponse {
 /**
  * Hook return type for useViewPreferences
  */
-export interface UseViewPreferencesReturn {
+interface UseViewPreferencesReturn {
   // Data
   preferences: UserViewPreference | null
   savedViews: SavedView[]
@@ -237,7 +237,7 @@ export interface DossierViewConfig extends ViewConfig {
 /**
  * My Work-specific view configuration
  */
-export interface MyWorkViewConfig extends ViewConfig {
+interface MyWorkViewConfig extends ViewConfig {
   customSettings?: {
     sourceTab?: 'all' | 'commitments' | 'tasks' | 'intake'
     trackingType?: string
@@ -248,7 +248,7 @@ export interface MyWorkViewConfig extends ViewConfig {
 /**
  * Engagement-specific view configuration
  */
-export interface EngagementViewConfig extends ViewConfig {
+interface EngagementViewConfig extends ViewConfig {
   customSettings?: {
     statusFilter?: string[]
     dateRange?: { start?: string; end?: string }

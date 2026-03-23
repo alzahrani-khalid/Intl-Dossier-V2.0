@@ -415,4 +415,3 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
   )
 })
 
-export default DossierContextIndicator

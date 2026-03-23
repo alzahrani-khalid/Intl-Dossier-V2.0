@@ -334,4 +334,3 @@ export function EntityBreadcrumbTrail({
   )
 }
 
-export default EntityBreadcrumbTrail

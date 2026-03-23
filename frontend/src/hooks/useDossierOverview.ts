@@ -126,7 +126,7 @@ export function useDossierExport(): UseDossierExportReturn {
 /**
  * Hook for invalidating dossier overview cache
  */
-export function useInvalidateDossierOverview() {
+function useInvalidateDossierOverview() {
   const queryClient = useQueryClient()
 
   return {
@@ -146,7 +146,7 @@ export function useInvalidateDossierOverview() {
 /**
  * Hook for prefetching dossier overview (useful for hover states)
  */
-export function usePrefetchDossierOverview() {
+function usePrefetchDossierOverview() {
   const queryClient = useQueryClient()
 
   return {

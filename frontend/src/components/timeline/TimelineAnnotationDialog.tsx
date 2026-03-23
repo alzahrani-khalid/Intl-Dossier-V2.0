@@ -330,7 +330,7 @@ export function TimelineAnnotationDialog({
  * Annotation Badge Component
  * Compact display for annotations on timeline events
  */
-export function TimelineAnnotationBadge({
+function TimelineAnnotationBadge({
   annotation,
   onClick,
   onDelete,

@@ -410,4 +410,3 @@ export function InfluenceReportView({
   )
 }
 
-export default InfluenceReportView

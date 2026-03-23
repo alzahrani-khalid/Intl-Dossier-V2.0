@@ -112,7 +112,7 @@ export interface SLAPolicyInput {
 // SLA Event Types
 // ============================================
 
-export interface SLAEvent {
+interface SLAEvent {
   id: string
   ticket_id: string
   policy_id: string
@@ -225,7 +225,7 @@ export interface SLABreachedItem {
 // Compliance Snapshot Types
 // ============================================
 
-export interface SLAComplianceSnapshot {
+interface SLAComplianceSnapshot {
   id: string
   snapshot_date: string
   entity_type: SLAEntityType
@@ -263,26 +263,26 @@ export interface SLAComplianceSnapshot {
 // API Request/Response Types
 // ============================================
 
-export interface SLADashboardRequest {
+interface SLADashboardRequest {
   entity_type?: SLAEntityType
   start_date?: string
   end_date?: string
 }
 
-export interface SLAComplianceRequest {
+interface SLAComplianceRequest {
   entity_type?: SLAEntityType
   start_date?: string
   end_date?: string
   limit?: number
 }
 
-export interface SLAAtRiskRequest {
+interface SLAAtRiskRequest {
   entity_type?: SLAEntityType
   threshold?: number
   limit?: number
 }
 
-export interface SLAEscalationsRequest {
+interface SLAEscalationsRequest {
   status?: SLAEscalationStatus
   entity_type?: SLAEntityType
   limit?: number

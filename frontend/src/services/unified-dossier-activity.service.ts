@@ -194,7 +194,7 @@ export async function fetchUnifiedDossierActivities(request: UnifiedActivityRequ
 /**
  * Convenience function to get all activity types for a dossier
  */
-export async function fetchAllDossierActivities(
+async function fetchAllDossierActivities(
   dossierId: string,
   options?: {
     limit?: number
@@ -215,7 +215,7 @@ export async function fetchAllDossierActivities(
 /**
  * Convenience function to get activities of specific types
  */
-export async function fetchDossierActivitiesByType(
+async function fetchDossierActivitiesByType(
   dossierId: string,
   activityTypes: UnifiedActivityType[],
   options?: {
@@ -242,7 +242,7 @@ export async function fetchDossierActivitiesByType(
 /**
  * Get recent activities for a dossier (last N days)
  */
-export async function fetchRecentDossierActivities(
+async function fetchRecentDossierActivities(
   dossierId: string,
   days: number = 7,
   limit: number = 20,

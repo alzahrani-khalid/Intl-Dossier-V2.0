@@ -81,7 +81,7 @@ export type DossierType =
  * Person subtype discriminator
  * Used to distinguish between standard persons and elected officials
  */
-export type PersonSubtype = 'standard' | 'elected_official'
+type PersonSubtype = 'standard' | 'elected_official'
 
 /**
  * Dossier status
@@ -115,7 +115,7 @@ export interface ResolvedDossierContext {
 /**
  * Context resolution request
  */
-export interface DossierContextRequest {
+interface DossierContextRequest {
   entity_type: ContextEntityType
   entity_id: string
 }
@@ -123,7 +123,7 @@ export interface DossierContextRequest {
 /**
  * Context resolution response
  */
-export interface DossierContextResponse {
+interface DossierContextResponse {
   dossiers: ResolvedDossierContext[]
   resolved_from: ContextEntityType
   query_time_ms: number
@@ -136,7 +136,7 @@ export interface DossierContextResponse {
 /**
  * Creation context (detected from URL)
  */
-export interface CreationContext {
+interface CreationContext {
   route: string
   entityType?: ContextEntityType
   entityId?: string
@@ -230,7 +230,7 @@ export interface DossierActivity {
 /**
  * Timeline query parameters
  */
-export interface DossierTimelineParams {
+interface DossierTimelineParams {
   dossier_id: string
   limit?: number
   cursor?: string // ISO timestamp
@@ -241,7 +241,7 @@ export interface DossierTimelineParams {
 /**
  * Timeline response
  */
-export interface DossierTimelineResponse {
+interface DossierTimelineResponse {
   activities: DossierActivity[]
   next_cursor: string | null
   total_count: number
@@ -254,7 +254,7 @@ export interface DossierTimelineResponse {
 /**
  * DossierContextBadge props
  */
-export interface DossierContextBadgeProps {
+interface DossierContextBadgeProps {
   dossier: DossierReference
   inheritanceSource?: InheritanceSource
   inheritedFromName?: string
@@ -267,7 +267,7 @@ export interface DossierContextBadgeProps {
 /**
  * DossierSelector props
  */
-export interface DossierSelectorProps {
+interface DossierSelectorProps {
   value: string[]
   onChange: (dossierIds: string[]) => void
   multiple?: boolean
@@ -285,7 +285,7 @@ export interface DossierSelectorProps {
 /**
  * DossierActivityTimeline props
  */
-export interface DossierActivityTimelineProps {
+interface DossierActivityTimelineProps {
   dossierId: string
   className?: string
   initialLimit?: number
@@ -298,7 +298,7 @@ export interface DossierActivityTimelineProps {
 /**
  * DossierTypeIcon props
  */
-export interface DossierTypeIconProps {
+interface DossierTypeIconProps {
   type: DossierType
   className?: string
   size?: 'sm' | 'md' | 'lg'
@@ -307,7 +307,7 @@ export interface DossierTypeIconProps {
 /**
  * ActivityTimelineItem props
  */
-export interface ActivityTimelineItemProps {
+interface ActivityTimelineItemProps {
   activity: DossierActivity
   className?: string
   onNavigate?: (workItemType: WorkItemType, workItemId: string) => void
@@ -320,7 +320,7 @@ export interface ActivityTimelineItemProps {
 /**
  * Create work item dossier link request
  */
-export interface CreateWorkItemDossierLinkRequest {
+interface CreateWorkItemDossierLinkRequest {
   work_item_type: WorkItemType
   work_item_id: string
   dossier_ids: string[]
@@ -333,7 +333,7 @@ export interface CreateWorkItemDossierLinkRequest {
 /**
  * Create work item dossier link response
  */
-export interface CreateWorkItemDossierLinkResponse {
+interface CreateWorkItemDossierLinkResponse {
   links: WorkItemDossierLink[]
   created_count: number
 }
@@ -341,7 +341,7 @@ export interface CreateWorkItemDossierLinkResponse {
 /**
  * List work item dossier links response
  */
-export interface ListWorkItemDossierLinksResponse {
+interface ListWorkItemDossierLinksResponse {
   links: WorkItemDossierLink[]
   primary_dossier: DossierReference | null
 }
@@ -366,7 +366,7 @@ export interface DossierSearchResult extends DossierReference {
 /**
  * Dossier search params
  */
-export interface DossierSearchParams {
+interface DossierSearchParams {
   query: string
   limit?: number
   type?: DossierType
@@ -377,7 +377,7 @@ export interface DossierSearchParams {
 /**
  * Dossier search response
  */
-export interface DossierSearchResponse {
+interface DossierSearchResponse {
   results: DossierSearchResult[]
   total_count: number
   query_time_ms: number

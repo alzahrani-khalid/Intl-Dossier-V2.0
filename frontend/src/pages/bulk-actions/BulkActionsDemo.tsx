@@ -273,4 +273,3 @@ export function BulkActionsDemo() {
   )
 }
 
-export default BulkActionsDemo

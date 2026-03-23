@@ -96,12 +96,12 @@ export interface AuditLogMetadata {
 // API RESPONSES
 // =============================================
 
-export interface AuditLogListResponse {
+interface AuditLogListResponse {
   data: AuditLogEntry[]
   metadata: AuditLogMetadata
 }
 
-export interface AuditLogDetailResponse {
+interface AuditLogDetailResponse {
   data: {
     log: AuditLogEntry
     related_logs: AuditLogRelated[]
@@ -124,7 +124,7 @@ export interface AuditLogStatistics {
   total_events: number
 }
 
-export interface AuditLogStatisticsResponse {
+interface AuditLogStatisticsResponse {
   data: AuditLogStatistics
 }
 
@@ -184,7 +184,7 @@ export interface UseAuditLogExportReturn {
 // COMPONENT PROPS
 // =============================================
 
-export interface AuditLogViewerProps {
+interface AuditLogViewerProps {
   initialFilters?: AuditLogFilters
   showFilters?: boolean
   showExport?: boolean
@@ -193,7 +193,7 @@ export interface AuditLogViewerProps {
   className?: string
 }
 
-export interface AuditLogFiltersProps {
+interface AuditLogFiltersProps {
   filters: AuditLogFilters
   onFiltersChange: (filters: AuditLogFilters) => void
   onClearFilters: () => void
@@ -201,7 +201,7 @@ export interface AuditLogFiltersProps {
   className?: string
 }
 
-export interface AuditLogTableProps {
+interface AuditLogTableProps {
   logs: AuditLogEntry[]
   isLoading: boolean
   onLogClick?: (log: AuditLogEntry) => void
@@ -209,20 +209,20 @@ export interface AuditLogTableProps {
   className?: string
 }
 
-export interface AuditLogDetailProps {
+interface AuditLogDetailProps {
   logId: string
   onClose?: () => void
   className?: string
 }
 
-export interface AuditLogDiffViewProps {
+interface AuditLogDiffViewProps {
   oldData: Record<string, unknown> | null
   newData: Record<string, unknown> | null
   changedFields: string[] | null
   className?: string
 }
 
-export interface AuditLogExportButtonProps {
+interface AuditLogExportButtonProps {
   filters: AuditLogFilters
   disabled?: boolean
   className?: string
@@ -241,7 +241,7 @@ export interface OperationConfig {
   icon: string
 }
 
-export const OPERATION_CONFIG: Record<AuditOperation, OperationConfig> = {
+const OPERATION_CONFIG: Record<AuditOperation, OperationConfig> = {
   INSERT: {
     operation: 'INSERT',
     label_en: 'Created',
@@ -269,7 +269,7 @@ export const OPERATION_CONFIG: Record<AuditOperation, OperationConfig> = {
 }
 
 // Common table names for display
-export const TABLE_DISPLAY_NAMES: Record<string, { en: string; ar: string }> = {
+const TABLE_DISPLAY_NAMES: Record<string, { en: string; ar: string }> = {
   users: { en: 'Users', ar: 'المستخدمون' },
   countries: { en: 'Countries', ar: 'الدول' },
   organizations: { en: 'Organizations', ar: 'المنظمات' },

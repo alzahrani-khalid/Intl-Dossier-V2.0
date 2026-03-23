@@ -163,7 +163,7 @@ export function useEmailPreferences() {
 }
 
 // Hook for email threads by ticket
-export function useEmailThreads(ticketId: string | null) {
+function useEmailThreads(ticketId: string | null) {
   return useQuery({
     queryKey: ['emailThreads', ticketId],
     queryFn: async () => {
@@ -188,7 +188,7 @@ export function useEmailThreads(ticketId: string | null) {
 }
 
 // Hook for a single email thread
-export function useEmailThread(threadId: string | null) {
+function useEmailThread(threadId: string | null) {
   return useQuery({
     queryKey: ['emailThread', threadId],
     queryFn: async () => {
@@ -213,7 +213,7 @@ export function useEmailThread(threadId: string | null) {
 }
 
 // Hook for email templates
-export function useEmailTemplates() {
+function useEmailTemplates() {
   return useQuery({
     queryKey: ['emailTemplates'],
     queryFn: async () => {
@@ -230,7 +230,7 @@ export function useEmailTemplates() {
 }
 
 // Hook for sending emails
-export function useSendEmail() {
+function useSendEmail() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -285,7 +285,7 @@ export interface TicketComment {
   }
 }
 
-export function useTicketComments(ticketId: string | null) {
+function useTicketComments(ticketId: string | null) {
   return useQuery({
     queryKey: ['ticketComments', ticketId],
     queryFn: async () => {
@@ -309,7 +309,7 @@ export function useTicketComments(ticketId: string | null) {
   })
 }
 
-export function useAddTicketComment() {
+function useAddTicketComment() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -352,7 +352,7 @@ export function useAddTicketComment() {
 }
 
 // Hook to unsubscribe using token
-export function useUnsubscribe() {
+function useUnsubscribe() {
   return useMutation({
     mutationFn: async (token: string) => {
       const { data, error } = await supabase.rpc('process_unsubscribe', {

@@ -436,4 +436,3 @@ export function InfluenceNetworkGraph({
   )
 }
 
-export default InfluenceNetworkGraph

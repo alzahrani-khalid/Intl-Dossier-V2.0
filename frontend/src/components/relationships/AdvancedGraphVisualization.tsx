@@ -1885,4 +1885,3 @@ export function AdvancedGraphVisualization(props: AdvancedGraphVisualizationProp
   )
 }
 
-export default AdvancedGraphVisualization

@@ -58,7 +58,7 @@ async function executeAdvancedSearch(
 }
 
 // Main search hook with caching
-export function useAdvancedSearch(
+function useAdvancedSearch(
   request: AdvancedSearchRequest | null,
   options?: {
     enabled?: boolean
@@ -138,12 +138,12 @@ export function getSearchHistory(): SearchHistoryItem[] {
   }
 }
 
-export function clearSearchHistory(): void {
+function clearSearchHistory(): void {
   localStorage.removeItem(SEARCH_HISTORY_KEY)
 }
 
 // Hook for search history
-export function useSearchHistory() {
+function useSearchHistory() {
   return useQuery({
     queryKey: advancedSearchKeys.history(),
     queryFn: getSearchHistory,

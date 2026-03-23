@@ -184,7 +184,7 @@ export async function deleteRelationship(relationshipId: string): Promise<void> 
  * Get relationships for a contact (direct Supabase query - fallback method)
  * Used when Edge Function is unavailable
  */
-export async function getRelationshipsForContactDirect(
+async function getRelationshipsForContactDirect(
   contactId: string,
 ): Promise<RelationshipResponse[]> {
   // Query relationships where contact is either from or to

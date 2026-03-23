@@ -676,4 +676,3 @@ export function RecurrencePatternEditor({
   )
 }
 
-export default RecurrencePatternEditor

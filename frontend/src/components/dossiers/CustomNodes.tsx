@@ -319,4 +319,4 @@ export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNode>)
 RelatedNode.displayName = 'RelatedNode'
 
 // Dark mode variants (kept for backwards compatibility)
-export const CenterNodeDark = CenterNode
+const CenterNodeDark = CenterNode

@@ -561,4 +561,3 @@ export function DossierLinksWidget({
   )
 }
 
-export default DossierLinksWidget

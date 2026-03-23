@@ -571,4 +571,3 @@ export class OrganizationService {
   }
 }
 
-export default OrganizationService

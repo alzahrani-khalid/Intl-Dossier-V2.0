@@ -443,7 +443,7 @@ export const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-export const getFileIcon = (type: string): string => {
+const getFileIcon = (type: string): string => {
   if (type.startsWith('image/')) return '🖼️'
   if (type.includes('pdf')) return '📄'
   if (type.includes('word') || type.includes('document')) return '📝'
@@ -452,4 +452,3 @@ export const getFileIcon = (type: string): string => {
   return '📁'
 }
 
-export default useUploadStore

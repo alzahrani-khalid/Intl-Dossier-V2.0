@@ -186,7 +186,7 @@ export interface PreviewLayout {
 /**
  * Simplified layout for listing
  */
-export interface PreviewLayoutSummary {
+interface PreviewLayoutSummary {
   layout_id: string
   context: PreviewContext
   name_en: string
@@ -207,7 +207,7 @@ export interface PreviewLayoutSummary {
 /**
  * User-specific preview preferences
  */
-export interface UserPreviewPreference {
+interface UserPreviewPreference {
   id: string
   user_id: string
   entity_type: PreviewEntityType

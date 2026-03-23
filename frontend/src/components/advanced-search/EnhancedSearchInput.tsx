@@ -328,7 +328,7 @@ function SuggestionsDropdown({
 // Main Component
 // =============================================================================
 
-export const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInputProps>(
+const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInputProps>(
   function EnhancedSearchInput(
     {
       onSearch,
@@ -471,4 +471,3 @@ export const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInpu
   },
 )
 
-export default EnhancedSearchInput

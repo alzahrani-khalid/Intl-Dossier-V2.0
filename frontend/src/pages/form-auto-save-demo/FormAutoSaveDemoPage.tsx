@@ -657,4 +657,3 @@ export function FormAutoSaveDemoPage() {
   )
 }
 
-export default FormAutoSaveDemoPage

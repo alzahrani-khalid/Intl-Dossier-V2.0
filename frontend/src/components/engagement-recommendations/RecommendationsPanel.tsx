@@ -312,4 +312,3 @@ export function RecommendationsPanel({
   )
 }
 
-export default RecommendationsPanel

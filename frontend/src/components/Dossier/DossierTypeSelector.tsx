@@ -209,7 +209,7 @@ export function DossierTypeSelector({
 /**
  * Compact variant for inline use (e.g., filters)
  */
-export function DossierTypeSelectorCompact({
+function DossierTypeSelectorCompact({
   value,
   onChange,
   className,

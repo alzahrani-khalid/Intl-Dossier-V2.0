@@ -80,7 +80,7 @@ const STATUS_CONFIG: Record<
   discarded: { icon: XCircle, color: 'text-muted-foreground', bg: 'bg-muted' },
 }
 
-export function WhatIfScenarioPanel({
+function WhatIfScenarioPanel({
   scenarios,
   isLoading,
   onCreate,
@@ -424,4 +424,3 @@ export function WhatIfScenarioPanel({
   )
 }
 
-export default WhatIfScenarioPanel

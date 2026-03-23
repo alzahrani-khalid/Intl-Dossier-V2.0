@@ -55,7 +55,7 @@ export interface UseOptimisticLockingOptions {
   showNotifications?: boolean
 }
 
-export function useOptimisticLocking(options: UseOptimisticLockingOptions = {}) {
+function useOptimisticLocking(options: UseOptimisticLockingOptions = {}) {
   const { t } = useTranslation()
   const { toast } = useToast()
 

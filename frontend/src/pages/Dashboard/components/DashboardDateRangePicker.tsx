@@ -21,7 +21,7 @@ interface DashboardDateRangePickerProps {
 }
 
 /** Convert a preset to a start date ISO string */
-export function presetToStartDate(preset: DateRangePreset): string {
+function presetToStartDate(preset: DateRangePreset): string {
   const d = new Date()
   switch (preset) {
     case 'today':

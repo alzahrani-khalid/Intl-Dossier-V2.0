@@ -458,4 +458,3 @@ ${language === 'ar' ? 'Respond in Arabic.' : ''}`)
 }
 
 export const intakeLinkerAgent = new IntakeLinkerAgent()
-export default intakeLinkerAgent

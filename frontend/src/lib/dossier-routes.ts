@@ -51,7 +51,7 @@ export function getDossierDetailPath(dossierId: string, type: string | undefined
  * @param type - The type string to validate
  * @returns True if the type is a known dossier type
  */
-export function isValidDossierType(type: string | undefined | null): boolean {
+function isValidDossierType(type: string | undefined | null): boolean {
   if (!type) {
     return false
   }

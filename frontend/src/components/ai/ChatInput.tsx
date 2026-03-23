@@ -104,4 +104,3 @@ export function ChatInput({
   )
 }
 
-export default ChatInput

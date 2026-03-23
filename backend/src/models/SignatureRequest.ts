@@ -69,7 +69,7 @@ export interface SignatureVerificationResult {
   errors?: string[]
 }
 
-export class SignatureRequestModel {
+class SignatureRequestModel {
   static tableName = 'signature_requests'
 
   static readonly STATUS_TRANSITIONS: Record<SignatureStatus, SignatureStatus[]> = {
@@ -170,4 +170,3 @@ export class SignatureRequestModel {
   }
 }
 
-export default SignatureRequestModel

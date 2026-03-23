@@ -77,7 +77,7 @@ function markOnboardingCompleted(): void {
 /**
  * Reset onboarding state (for replay)
  */
-export function resetOnboardingState(): void {
+function resetOnboardingState(): void {
   try {
     localStorage.removeItem(ONBOARDING_SEEN_KEY)
     localStorage.removeItem(ONBOARDING_COMPLETED_KEY)
@@ -288,4 +288,3 @@ export function OnboardingTourTrigger({
   )
 }
 
-export default OnboardingTourTrigger

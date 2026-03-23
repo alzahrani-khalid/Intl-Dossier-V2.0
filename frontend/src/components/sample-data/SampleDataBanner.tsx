@@ -267,4 +267,3 @@ function StatCard({
   )
 }
 
-export default SampleDataBanner

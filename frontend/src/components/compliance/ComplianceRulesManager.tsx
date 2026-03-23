@@ -489,4 +489,3 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
   )
 }
 
-export default ComplianceRulesManager

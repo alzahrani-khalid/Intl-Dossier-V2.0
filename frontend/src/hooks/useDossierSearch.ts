@@ -146,4 +146,3 @@ export function useDossierSearch(options: UseDossierSearchOptions = {}): UseDoss
   }
 }
 
-export default useDossierSearch

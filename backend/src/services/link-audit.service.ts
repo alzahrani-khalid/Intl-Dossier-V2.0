@@ -101,7 +101,7 @@ export async function createAuditLog(
  * @param limit - Maximum number of logs to return
  * @returns Array of LinkAuditLog entries
  */
-export async function getAuditLogs(linkId: string, limit: number = 100): Promise<LinkAuditLog[]> {
+async function getAuditLogs(linkId: string, limit: number = 100): Promise<LinkAuditLog[]> {
   try {
     const { data: logs, error } = await supabaseAdmin
       .from('link_audit_logs')
@@ -162,7 +162,7 @@ export async function getIntakeAuditLogs(
  * @param endDate - Optional end date filter
  * @returns Array of LinkAuditLog entries
  */
-export async function getUserAuditLogs(
+async function getUserAuditLogs(
   userId: string,
   limit: number = 100,
   startDate?: Date,
@@ -207,7 +207,7 @@ export async function getUserAuditLogs(
  * @param endDate - Optional end date filter
  * @returns Array of LinkAuditLog entries
  */
-export async function getAuditLogsByAction(
+async function getAuditLogsByAction(
   action: AuditAction,
   limit: number = 100,
   startDate?: Date,
@@ -250,7 +250,7 @@ export async function getAuditLogsByAction(
  * @param logs - Array of audit log entries to create
  * @returns Promise<void> - Fire-and-forget operation
  */
-export async function createBatchAuditLogs(
+async function createBatchAuditLogs(
   logs: Array<{
     linkId: string
     action: AuditAction
@@ -342,7 +342,7 @@ export async function createBatchAuditLogs(
  * @param endDate - Optional end date
  * @returns Statistics object
  */
-export async function getAuditStatistics(
+async function getAuditStatistics(
   intakeId?: string,
   startDate?: Date,
   endDate?: Date,

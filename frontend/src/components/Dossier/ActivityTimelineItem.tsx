@@ -271,4 +271,3 @@ export function ActivityTimelineItem({
   )
 }
 
-export default ActivityTimelineItem

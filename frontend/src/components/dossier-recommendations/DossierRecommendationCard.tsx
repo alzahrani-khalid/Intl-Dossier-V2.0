@@ -446,4 +446,3 @@ export function DossierRecommendationCard({
   )
 }
 
-export default DossierRecommendationCard

@@ -171,7 +171,7 @@ const DEFAULT_TUTORIALS: TutorialVideo[] = [
  *   onTutorialWatched={(id) => trackEvent('tutorial_completed', { id })}
  * />
  */
-export function TutorialEmptyState({
+function TutorialEmptyState({
   entityType,
   onCreate,
   onImport,

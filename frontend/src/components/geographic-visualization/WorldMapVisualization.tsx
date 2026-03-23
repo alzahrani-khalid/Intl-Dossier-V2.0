@@ -340,4 +340,3 @@ function SummaryCard({ icon, label, value, subValue, isLoading }: SummaryCardPro
   )
 }
 
-export default WorldMapVisualization

@@ -380,7 +380,7 @@ export function useDossierPresence(
 /**
  * Check if a section is locked by another user
  */
-export function isSectionLocked(
+function isSectionLocked(
   sectionId: string,
   sectionLocks: Map<string, DossierPresenceUser>,
   currentUserId?: string,

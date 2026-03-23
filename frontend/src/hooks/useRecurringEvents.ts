@@ -90,7 +90,7 @@ export function useCreateRecurringEvent() {
 /**
  * Get an event series by ID
  */
-export function useEventSeries(seriesId: string | undefined) {
+function useEventSeries(seriesId: string | undefined) {
   return useQuery({
     queryKey: ['event-series', seriesId],
     queryFn: async (): Promise<EventSeries> => {
@@ -116,7 +116,7 @@ export function useEventSeries(seriesId: string | undefined) {
 /**
  * Get series occurrences with exceptions
  */
-export function useSeriesOccurrences(
+function useSeriesOccurrences(
   seriesId: string | undefined,
   options?: {
     startDate?: string
@@ -158,7 +158,7 @@ export function useSeriesOccurrences(
 /**
  * Update a recurring event series
  */
-export function useUpdateSeries() {
+function useUpdateSeries() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -192,7 +192,7 @@ export function useUpdateSeries() {
 /**
  * Delete occurrence(s) from a series
  */
-export function useDeleteOccurrences() {
+function useDeleteOccurrences() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -226,7 +226,7 @@ export function useDeleteOccurrences() {
 /**
  * Add an exception to a series (cancel, reschedule, or modify a single occurrence)
  */
-export function useCreateException() {
+function useCreateException() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -255,7 +255,7 @@ export function useCreateException() {
 /**
  * Remove an exception (restore a cancelled occurrence)
  */
-export function useRemoveException() {
+function useRemoveException() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -291,7 +291,7 @@ export function useRemoveException() {
 /**
  * Get user's event notifications
  */
-export function useEventNotifications(options?: { unreadOnly?: boolean; limit?: number }) {
+function useEventNotifications(options?: { unreadOnly?: boolean; limit?: number }) {
   return useQuery({
     queryKey: ['event-notifications', options],
     queryFn: async (): Promise<{ notifications: EventNotification[]; unread_count: number }> => {
@@ -318,7 +318,7 @@ export function useEventNotifications(options?: { unreadOnly?: boolean; limit?: 
 /**
  * Mark notification as read
  */
-export function useMarkNotificationRead() {
+function useMarkNotificationRead() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -343,7 +343,7 @@ export function useMarkNotificationRead() {
 /**
  * Mark all notifications as read
  */
-export function useMarkAllNotificationsRead() {
+function useMarkAllNotificationsRead() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -372,7 +372,7 @@ export function useMarkAllNotificationsRead() {
 /**
  * Check if an event is part of a recurring series
  */
-export function useIsRecurringEvent(eventId: string | undefined) {
+function useIsRecurringEvent(eventId: string | undefined) {
   return useQuery({
     queryKey: ['event-is-recurring', eventId],
     queryFn: async (): Promise<{ is_recurring: boolean; series_id?: string }> => {
@@ -398,7 +398,7 @@ export function useIsRecurringEvent(eventId: string | undefined) {
 /**
  * Calculate next occurrences for a recurrence rule
  */
-export function useNextOccurrences(
+function useNextOccurrences(
   ruleId: string | undefined,
   options?: {
     startDate?: string

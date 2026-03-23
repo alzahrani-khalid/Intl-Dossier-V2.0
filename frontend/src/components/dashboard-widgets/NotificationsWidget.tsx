@@ -260,4 +260,3 @@ export function NotificationsWidget({
   )
 }
 
-export default NotificationsWidget

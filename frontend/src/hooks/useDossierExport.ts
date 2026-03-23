@@ -193,4 +193,3 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
   }
 }
 
-export default useDossierExport

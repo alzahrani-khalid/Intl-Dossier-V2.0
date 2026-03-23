@@ -457,4 +457,3 @@ export function QuickNavigationMenu({
   )
 }
 
-export default QuickNavigationMenu

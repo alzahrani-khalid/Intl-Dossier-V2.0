@@ -381,4 +381,3 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
   )
 }
 
-export default BriefingBooksList

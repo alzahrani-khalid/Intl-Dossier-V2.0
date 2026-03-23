@@ -837,4 +837,3 @@ export function CalendarSyncSettings() {
   )
 }
 
-export default CalendarSyncSettings

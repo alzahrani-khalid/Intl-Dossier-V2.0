@@ -139,7 +139,7 @@ export interface MilestoneTemplate {
 /**
  * Milestone planning state for a dossier
  */
-export interface MilestonePlanningState {
+interface MilestonePlanningState {
   milestones: PlannedMilestone[]
   is_planning_mode: boolean
   selected_milestone_id?: string
@@ -302,7 +302,7 @@ export const MILESTONE_TEMPLATES: MilestoneTemplate[] = [
 /**
  * Get icon for milestone type
  */
-export function getMilestoneIcon(type: MilestoneType): string {
+function getMilestoneIcon(type: MilestoneType): string {
   const template = MILESTONE_TEMPLATES.find((t) => t.type === type)
   return template?.icon || 'Flag'
 }
@@ -310,7 +310,7 @@ export function getMilestoneIcon(type: MilestoneType): string {
 /**
  * Get color for milestone type
  */
-export function getMilestoneColor(type: MilestoneType): string {
+function getMilestoneColor(type: MilestoneType): string {
   const template = MILESTONE_TEMPLATES.find((t) => t.type === type)
   return template?.color || 'gray'
 }

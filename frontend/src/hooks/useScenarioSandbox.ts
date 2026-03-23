@@ -165,7 +165,7 @@ export function useScenarios(
 /**
  * Hook to fetch a single scenario with full data
  */
-export function useScenario(
+function useScenario(
   id: string,
   options?: Omit<UseQueryOptions<ScenarioFull, ScenarioAPIError>, 'queryKey' | 'queryFn'>,
 ) {
@@ -277,7 +277,7 @@ export function useCloneScenario() {
 /**
  * Hook to fetch variables for a scenario
  */
-export function useScenarioVariables(
+function useScenarioVariables(
   scenarioId: string,
   options?: Omit<UseQueryOptions<ScenarioVariable[], ScenarioAPIError>, 'queryKey' | 'queryFn'>,
 ) {
@@ -292,7 +292,7 @@ export function useScenarioVariables(
 /**
  * Hook to create a variable
  */
-export function useCreateVariable() {
+function useCreateVariable() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -317,7 +317,7 @@ export function useCreateVariable() {
 /**
  * Hook to update a variable
  */
-export function useUpdateVariable() {
+function useUpdateVariable() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -342,7 +342,7 @@ export function useUpdateVariable() {
 /**
  * Hook to delete a variable
  */
-export function useDeleteVariable() {
+function useDeleteVariable() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -368,7 +368,7 @@ export function useDeleteVariable() {
 /**
  * Hook to fetch outcomes for a scenario
  */
-export function useScenarioOutcomes(
+function useScenarioOutcomes(
   scenarioId: string,
   options?: Omit<UseQueryOptions<ScenarioOutcome[], ScenarioAPIError>, 'queryKey' | 'queryFn'>,
 ) {
@@ -383,7 +383,7 @@ export function useScenarioOutcomes(
 /**
  * Hook to create an outcome
  */
-export function useCreateOutcome() {
+function useCreateOutcome() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -408,7 +408,7 @@ export function useCreateOutcome() {
 /**
  * Hook to update an outcome
  */
-export function useUpdateOutcome() {
+function useUpdateOutcome() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -433,7 +433,7 @@ export function useUpdateOutcome() {
 /**
  * Hook to delete an outcome
  */
-export function useDeleteOutcome() {
+function useDeleteOutcome() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -459,7 +459,7 @@ export function useDeleteOutcome() {
 /**
  * Hook to fetch comparisons
  */
-export function useScenarioComparisons(
+function useScenarioComparisons(
   options?: Omit<UseQueryOptions<ScenarioComparison[], ScenarioAPIError>, 'queryKey' | 'queryFn'>,
 ) {
   return useQuery({
@@ -491,7 +491,7 @@ export function useCompareScenarios(
 /**
  * Hook to create a comparison
  */
-export function useCreateComparison() {
+function useCreateComparison() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -515,7 +515,7 @@ export function useCreateComparison() {
 /**
  * Hook to delete a comparison
  */
-export function useDeleteComparison() {
+function useDeleteComparison() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -540,7 +540,7 @@ export function useDeleteComparison() {
 /**
  * Hook to add a collaborator
  */
-export function useAddCollaborator() {
+function useAddCollaborator() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -564,7 +564,7 @@ export function useAddCollaborator() {
 /**
  * Hook to remove a collaborator
  */
-export function useRemoveCollaborator() {
+function useRemoveCollaborator() {
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('scenario-sandbox')
 
@@ -591,7 +591,7 @@ export function useRemoveCollaborator() {
 /**
  * Hook to invalidate all scenario queries
  */
-export function useInvalidateScenarioQueries() {
+function useInvalidateScenarioQueries() {
   const queryClient = useQueryClient()
 
   return () => {

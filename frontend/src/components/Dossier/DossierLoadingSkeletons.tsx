@@ -73,7 +73,7 @@ export function CountryDossierSkeleton() {
  * Engagement Dossier Skeleton
  * Layout: 1-column vertical (grid-cols-1)
  */
-export function EngagementDossierSkeleton() {
+function EngagementDossierSkeleton() {
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
@@ -124,7 +124,7 @@ export function EngagementDossierSkeleton() {
  * Person Dossier Skeleton
  * Layout: Sidebar + main content (md:grid-cols-[300px_1fr])
  */
-export function PersonDossierSkeleton() {
+function PersonDossierSkeleton() {
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
@@ -183,7 +183,7 @@ export function PersonDossierSkeleton() {
  * Organization Dossier Skeleton
  * Layout: 3-column grid (lg:grid-cols-3)
  */
-export function OrganizationDossierSkeleton() {
+function OrganizationDossierSkeleton() {
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
@@ -285,7 +285,7 @@ export function ForumDossierSkeleton() {
  * Working Group Dossier Skeleton
  * Layout: Similar to Forum (md:grid-cols-2 lg:grid-cols-3)
  */
-export function WorkingGroupDossierSkeleton() {
+function WorkingGroupDossierSkeleton() {
   // Reuse ForumDossierSkeleton as they have the same layout
   return <ForumDossierSkeleton />
 }
@@ -294,7 +294,7 @@ export function WorkingGroupDossierSkeleton() {
  * Dossiers Hub Skeleton
  * Layout: BentoGrid with 6 type cards
  */
-export function DossiersHubSkeleton() {
+function DossiersHubSkeleton() {
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 

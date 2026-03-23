@@ -528,4 +528,3 @@ ${context.recentEngagements.map((e) => `- [${e.id}] ${e.title_en} (${e.engagemen
 }
 
 export const briefGeneratorAgent = new BriefGeneratorAgent()
-export default briefGeneratorAgent

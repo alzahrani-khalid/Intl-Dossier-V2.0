@@ -345,6 +345,6 @@ export function getNavigationCategory(id: string): NavigationCategory | undefine
 /**
  * Get all navigation items flattened (for search, etc.)
  */
-export function getAllNavigationItems(): NavigationItem[] {
+function getAllNavigationItems(): NavigationItem[] {
   return navigationCategories.flatMap((cat) => cat.items)
 }

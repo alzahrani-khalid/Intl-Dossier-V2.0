@@ -219,4 +219,3 @@ function DossierCardSkeleton() {
   )
 }
 
-export default MyDossiersSection

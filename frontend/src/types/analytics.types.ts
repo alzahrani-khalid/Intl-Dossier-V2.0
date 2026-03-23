@@ -176,7 +176,7 @@ export interface TimeSeriesDataPoint {
   label?: string
 }
 
-export interface MultiSeriesDataPoint {
+interface MultiSeriesDataPoint {
   date: string
   [key: string]: number | string
 }
@@ -208,7 +208,7 @@ export interface AnalyticsSummary {
 
 export type ExportFormat = 'csv' | 'xlsx' | 'pdf' | 'png'
 
-export interface ExportOptions {
+interface ExportOptions {
   format: ExportFormat
   includeCharts: boolean
   dateRange: DateRange
@@ -221,7 +221,7 @@ export type ExportSection = 'summary' | 'engagements' | 'relationships' | 'commi
 // API Request/Response Types
 // ============================================================================
 
-export interface AnalyticsDashboardRequest {
+interface AnalyticsDashboardRequest {
   timeRange: TimeRange
   customDateRange?: DateRange
   endpoint: 'summary' | 'engagements' | 'relationships' | 'commitments' | 'workload' | 'export'
@@ -252,13 +252,13 @@ export interface AnalyticsErrorResponse {
   }
 }
 
-export type AnalyticsResponse = AnalyticsDashboardResponse | AnalyticsErrorResponse
+type AnalyticsResponse = AnalyticsDashboardResponse | AnalyticsErrorResponse
 
 // ============================================================================
 // Chart Configuration Types
 // ============================================================================
 
-export interface ChartConfig {
+interface ChartConfig {
   type: 'line' | 'bar' | 'pie' | 'donut' | 'area' | 'radar'
   title: string
   titleAr: string
@@ -319,7 +319,7 @@ export interface AnalyticsUrlState {
 /**
  * Calculate date range from time range option
  */
-export function getDateRangeFromTimeRange(timeRange: TimeRange): DateRange {
+function getDateRangeFromTimeRange(timeRange: TimeRange): DateRange {
   const end = new Date()
   const start = new Date()
 
@@ -349,7 +349,7 @@ export function getDateRangeFromTimeRange(timeRange: TimeRange): DateRange {
 /**
  * Format percentage with sign
  */
-export function formatPercentageChange(value: number): string {
+function formatPercentageChange(value: number): string {
   const sign = value > 0 ? '+' : ''
   return `${sign}${value.toFixed(1)}%`
 }
@@ -357,7 +357,7 @@ export function formatPercentageChange(value: number): string {
 /**
  * Get trend direction from percentage change
  */
-export function getTrendDirection(change: number): 'up' | 'down' | 'neutral' {
+function getTrendDirection(change: number): 'up' | 'down' | 'neutral' {
   if (change > 1) return 'up'
   if (change < -1) return 'down'
   return 'neutral'

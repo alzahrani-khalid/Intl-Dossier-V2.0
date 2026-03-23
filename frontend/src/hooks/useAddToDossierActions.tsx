@@ -239,7 +239,7 @@ export interface AddToDossierProviderProps {
   onActionError?: (actionType: AddToDossierActionType, error: Error) => void
 }
 
-export function AddToDossierProvider({
+function AddToDossierProvider({
   dossier,
   children,
   onActionStart,
@@ -264,7 +264,7 @@ export function AddToDossierProvider({
   return <AddToDossierContext.Provider value={value}>{children}</AddToDossierContext.Provider>
 }
 
-export function useAddToDossierContext() {
+function useAddToDossierContext() {
   const context = React.useContext(AddToDossierContext)
   if (!context) {
     throw new Error('useAddToDossierContext must be used within AddToDossierProvider')
@@ -285,7 +285,7 @@ export interface CreateWorkItemWithContextOptions {
 /**
  * Creates the payload for linking a work item to a dossier
  */
-export function buildWorkItemDossierLinkPayload(options: CreateWorkItemWithContextOptions) {
+function buildWorkItemDossierLinkPayload(options: CreateWorkItemWithContextOptions) {
   return {
     work_item_type: options.workItemType,
     work_item_id: options.workItemId,

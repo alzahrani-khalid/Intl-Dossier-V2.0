@@ -82,7 +82,7 @@ export type DecisionStatus =
   | 'withdrawn'
 
 // Labels for UI display
-export const WORKING_GROUP_TYPE_LABELS: Record<WorkingGroupType, { en: string; ar: string }> = {
+const WORKING_GROUP_TYPE_LABELS: Record<WorkingGroupType, { en: string; ar: string }> = {
   committee: { en: 'Committee', ar: 'لجنة' },
   task_force: { en: 'Task Force', ar: 'فريق عمل' },
   advisory_board: { en: 'Advisory Board', ar: 'مجلس استشاري' },
@@ -90,7 +90,7 @@ export const WORKING_GROUP_TYPE_LABELS: Record<WorkingGroupType, { en: string; a
   steering_committee: { en: 'Steering Committee', ar: 'لجنة توجيهية' },
 }
 
-export const MEMBER_ROLE_LABELS: Record<MemberRole, { en: string; ar: string }> = {
+const MEMBER_ROLE_LABELS: Record<MemberRole, { en: string; ar: string }> = {
   chair: { en: 'Chair', ar: 'رئيس' },
   co_chair: { en: 'Co-Chair', ar: 'رئيس مشارك' },
   vice_chair: { en: 'Vice Chair', ar: 'نائب الرئيس' },
@@ -101,7 +101,7 @@ export const MEMBER_ROLE_LABELS: Record<MemberRole, { en: string; ar: string }> 
   liaison: { en: 'Liaison', ar: 'ضابط اتصال' },
 }
 
-export const DELIVERABLE_STATUS_LABELS: Record<DeliverableStatus, { en: string; ar: string }> = {
+const DELIVERABLE_STATUS_LABELS: Record<DeliverableStatus, { en: string; ar: string }> = {
   pending: { en: 'Pending', ar: 'قيد الانتظار' },
   in_progress: { en: 'In Progress', ar: 'قيد التنفيذ' },
   review: { en: 'Under Review', ar: 'قيد المراجعة' },
@@ -110,7 +110,7 @@ export const DELIVERABLE_STATUS_LABELS: Record<DeliverableStatus, { en: string; 
   deferred: { en: 'Deferred', ar: 'مؤجل' },
 }
 
-export const MEETING_FREQUENCY_LABELS: Record<MeetingFrequency, { en: string; ar: string }> = {
+const MEETING_FREQUENCY_LABELS: Record<MeetingFrequency, { en: string; ar: string }> = {
   weekly: { en: 'Weekly', ar: 'أسبوعي' },
   biweekly: { en: 'Bi-weekly', ar: 'كل أسبوعين' },
   monthly: { en: 'Monthly', ar: 'شهري' },

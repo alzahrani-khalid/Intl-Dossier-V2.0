@@ -67,7 +67,7 @@ const personFormSchema = z.object({
 
 type PersonFormValues = z.infer<typeof personFormSchema>
 
-export function PersonCreatePage() {
+function PersonCreatePage() {
   const { t, i18n } = useTranslation('persons')
   const isRTL = i18n.language === 'ar'
   const navigate = useNavigate()

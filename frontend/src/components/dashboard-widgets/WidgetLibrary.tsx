@@ -415,4 +415,3 @@ export function WidgetLibrary({
 // Export registry for use in other components
 export { WIDGET_REGISTRY }
 
-export default WidgetLibrary

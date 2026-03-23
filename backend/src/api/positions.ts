@@ -7,7 +7,7 @@ import { body, param, query } from 'express-validator'
 const router = Router()
 let consistencyService: PositionConsistencyService
 
-export function initializePositionsRouter(supabaseUrl: string, supabaseKey: string): Router {
+function initializePositionsRouter(supabaseUrl: string, supabaseKey: string): Router {
   consistencyService = new PositionConsistencyService(supabaseUrl, supabaseKey)
   return router
 }

@@ -22,7 +22,7 @@ export interface ChatResponse {
   usage?: Record<string, unknown>
 }
 
-export class AnythingLLMService {
+class AnythingLLMService {
   private readonly baseUrl: string
   private readonly apiKey: string
   private readonly workspace: string

@@ -385,7 +385,7 @@ export function useBulkReschedule() {
 // Export Combined Hook
 // ============================================================================
 
-export function useCalendarConflicts() {
+function useCalendarConflicts() {
   return {
     // Conflict checking
     useCheckConflicts,

@@ -342,4 +342,3 @@ export function WorkCreationPalette({
   )
 }
 
-export default WorkCreationPalette

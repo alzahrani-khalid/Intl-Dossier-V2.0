@@ -121,4 +121,3 @@ export function ChatMessage({
   )
 }
 
-export default ChatMessage

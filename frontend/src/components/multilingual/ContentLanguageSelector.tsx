@@ -53,7 +53,7 @@ function getLanguageDisplayName(
 /**
  * ContentLanguageSelector - Dropdown selector for content languages
  */
-export function ContentLanguageSelector({
+function ContentLanguageSelector({
   value,
   onChange,
   availableLanguages,
@@ -261,7 +261,7 @@ export interface LanguageIndicatorProps {
   className?: string
 }
 
-export function LanguageIndicator({
+function LanguageIndicator({
   language,
   showRTLIndicator = true,
   size = 'default',
@@ -292,4 +292,3 @@ export function LanguageIndicator({
 
 export type { ContentLanguageSelectorProps } from '@/types/multilingual-content.types'
 
-export default ContentLanguageSelector

@@ -466,4 +466,3 @@ export function ChartWidget({ config, data, isLoading }: ChartWidgetProps) {
   return <div className="h-full">{renderChart()}</div>
 }
 
-export default ChartWidget

@@ -402,4 +402,3 @@ export function WorkItemsSection({
   )
 }
 
-export default WorkItemsSection

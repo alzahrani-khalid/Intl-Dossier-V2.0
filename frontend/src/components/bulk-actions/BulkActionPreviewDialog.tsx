@@ -646,4 +646,3 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
   )
 }
 
-export default BulkActionPreviewDialog

@@ -1115,4 +1115,3 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
   )
 }
 
-export default BriefingBookBuilder

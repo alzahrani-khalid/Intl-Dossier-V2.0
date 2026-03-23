@@ -85,7 +85,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
 }
 
-export function useChatContext(): ChatContextValue {
+function useChatContext(): ChatContextValue {
   const context = useContext(ChatContext)
   if (context === undefined) {
     throw new Error('useChatContext must be used within a ChatProvider')
@@ -93,4 +93,3 @@ export function useChatContext(): ChatContextValue {
   return context
 }
 
-export default ChatContext

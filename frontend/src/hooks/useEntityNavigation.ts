@@ -24,7 +24,7 @@ interface UseEntityNavigationOptions {
 /**
  * Hook to track a dossier entity in navigation history
  */
-export function useDossierNavigation(
+function useDossierNavigation(
   id: string | undefined,
   dossier:
     | { name_en?: string; name_ar?: string; dossier_type?: string; type?: string }
@@ -134,7 +134,7 @@ export function usePositionNavigation(
 /**
  * Generic hook to track any entity in navigation history
  */
-export function useEntityNavigation(
+function useEntityNavigation(
   id: string | undefined,
   entityData:
     | {
@@ -177,7 +177,7 @@ export function useEntityNavigation(
 /**
  * Hook to get entity history data
  */
-export function useEntityHistory(count?: number) {
+function useEntityHistory(count?: number) {
   const { history, getRecentEntities, clearHistory, removeEntity } = useEntityHistoryStore()
 
   return {

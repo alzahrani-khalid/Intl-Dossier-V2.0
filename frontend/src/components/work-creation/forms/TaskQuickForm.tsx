@@ -437,4 +437,3 @@ export function TaskQuickForm({
   )
 }
 
-export default TaskQuickForm

@@ -130,7 +130,7 @@ export function useInvalidateUnifiedWork() {
 /**
  * Optimistic update helper for work item status changes
  */
-export function useOptimisticWorkItemUpdate() {
+function useOptimisticWorkItemUpdate() {
   const queryClient = useQueryClient()
 
   return {

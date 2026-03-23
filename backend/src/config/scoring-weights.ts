@@ -31,7 +31,7 @@ if (totalWeight !== 100) {
 /**
  * Type for assignment scoring result
  */
-export interface AssignmentScore {
+interface AssignmentScore {
   staffId: string
   score: number
   breakdown: {

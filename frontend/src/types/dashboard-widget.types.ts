@@ -306,7 +306,7 @@ export interface DashboardLayout {
 /**
  * User dashboard preferences
  */
-export interface DashboardPreferences {
+interface DashboardPreferences {
   userId: string
   activeLayoutId: string
   layouts: DashboardLayout[]
@@ -334,7 +334,7 @@ export interface KpiData {
 /**
  * Chart data point
  */
-export interface ChartDataPoint {
+interface ChartDataPoint {
   label: string
   value: number
   color?: string
@@ -344,7 +344,7 @@ export interface ChartDataPoint {
 /**
  * Time series data point
  */
-export interface TimeSeriesDataPoint {
+interface TimeSeriesDataPoint {
   timestamp: string
   value: number
   label?: string
@@ -401,7 +401,7 @@ export interface NotificationData {
 /**
  * Activity data for activity feed
  */
-export interface ActivityData {
+interface ActivityData {
   id: string
   type: ActivityType
   actor: {
@@ -435,7 +435,7 @@ export interface WidgetLoadingState {
 /**
  * Widget with runtime state
  */
-export interface WidgetWithState<T = unknown> {
+interface WidgetWithState<T = unknown> {
   config: WidgetConfig
   data: T | null
   state: WidgetLoadingState
@@ -448,7 +448,7 @@ export interface WidgetWithState<T = unknown> {
 /**
  * Drag event data for widget reordering
  */
-export interface WidgetDragData {
+interface WidgetDragData {
   widgetId: UniqueIdentifier
   type: WidgetType
   fromIndex: number
@@ -457,7 +457,7 @@ export interface WidgetDragData {
 /**
  * Drop result for widget placement
  */
-export interface WidgetDropResult {
+interface WidgetDropResult {
   widgetId: UniqueIdentifier
   toIndex: number
   position?: WidgetPosition
@@ -487,7 +487,7 @@ export interface WidgetRegistryEntry {
 /**
  * Widget registry for all available widgets
  */
-export type WidgetRegistry = Record<WidgetType, WidgetRegistryEntry>
+type WidgetRegistry = Record<WidgetType, WidgetRegistryEntry>
 
 // ============================================================================
 // Default Values and Constants
@@ -496,7 +496,7 @@ export type WidgetRegistry = Record<WidgetType, WidgetRegistryEntry>
 /**
  * Size to grid columns mapping
  */
-export const SIZE_TO_COLUMNS: Record<WidgetSize, number> = {
+const SIZE_TO_COLUMNS: Record<WidgetSize, number> = {
   small: 1,
   medium: 2,
   large: 3,
@@ -506,7 +506,7 @@ export const SIZE_TO_COLUMNS: Record<WidgetSize, number> = {
 /**
  * Size to grid rows mapping
  */
-export const SIZE_TO_ROWS: Record<WidgetSize, number> = {
+const SIZE_TO_ROWS: Record<WidgetSize, number> = {
   small: 1,
   medium: 1,
   large: 2,
@@ -516,7 +516,7 @@ export const SIZE_TO_ROWS: Record<WidgetSize, number> = {
 /**
  * Refresh interval labels
  */
-export const REFRESH_INTERVAL_OPTIONS: { value: RefreshInterval; label: string }[] = [
+const REFRESH_INTERVAL_OPTIONS: { value: RefreshInterval; label: string }[] = [
   { value: 0, label: 'Never' },
   { value: 30000, label: '30 seconds' },
   { value: 60000, label: '1 minute' },
@@ -528,6 +528,6 @@ export const REFRESH_INTERVAL_OPTIONS: { value: RefreshInterval; label: string }
 /**
  * Default dashboard layout
  */
-export const DEFAULT_COLUMNS = 4
-export const DEFAULT_ROW_HEIGHT = 150
-export const WIDGET_GAP = 16
+const DEFAULT_COLUMNS = 4
+const DEFAULT_ROW_HEIGHT = 150
+const WIDGET_GAP = 16

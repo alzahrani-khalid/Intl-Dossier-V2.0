@@ -106,7 +106,7 @@ export interface DossierRelationshipWithDossiers extends DossierRelationship {
 /**
  * Input for creating a new relationship
  */
-export interface RelationshipCreate {
+interface RelationshipCreate {
   source_dossier_id: string
   target_dossier_id: string
   relationship_type: DossierRelationshipType
@@ -121,7 +121,7 @@ export interface RelationshipCreate {
 /**
  * Input for updating a relationship
  */
-export interface RelationshipUpdate {
+interface RelationshipUpdate {
   relationship_type?: DossierRelationshipType
   relationship_metadata?: Record<string, unknown>
   notes_en?: string
@@ -134,7 +134,7 @@ export interface RelationshipUpdate {
 /**
  * Parameters for listing relationships
  */
-export interface RelationshipListParams {
+interface RelationshipListParams {
   source_dossier_id?: string
   target_dossier_id?: string
   dossier_id?: string
@@ -151,7 +151,7 @@ export interface RelationshipListParams {
 /**
  * Paginated relationship list response
  */
-export interface RelationshipListResponse {
+interface RelationshipListResponse {
   data: DossierRelationshipWithDossiers[]
   pagination: {
     total?: number
@@ -168,7 +168,7 @@ export interface RelationshipListResponse {
 /**
  * All valid relationship types
  */
-export const RELATIONSHIP_TYPES: DossierRelationshipType[] = [
+const RELATIONSHIP_TYPES: DossierRelationshipType[] = [
   'member_of',
   'participates_in',
   'cooperates_with',
@@ -217,7 +217,7 @@ export const RELATIONSHIP_TYPE_LABELS: Record<DossierRelationshipType, { en: str
 /**
  * Labels for relationship status
  */
-export const RELATIONSHIP_STATUS_LABELS: Record<RelationshipStatus, { en: string; ar: string }> = {
+const RELATIONSHIP_STATUS_LABELS: Record<RelationshipStatus, { en: string; ar: string }> = {
   active: { en: 'Active', ar: 'نشط' },
   historical: { en: 'Historical', ar: 'تاريخي' },
   terminated: { en: 'Terminated', ar: 'منتهي' },
@@ -226,7 +226,7 @@ export const RELATIONSHIP_STATUS_LABELS: Record<RelationshipStatus, { en: string
 /**
  * Labels for dossier types
  */
-export const DOSSIER_TYPE_LABELS: Record<DossierType, { en: string; ar: string }> = {
+const DOSSIER_TYPE_LABELS: Record<DossierType, { en: string; ar: string }> = {
   country: { en: 'Country', ar: 'دولة' },
   organization: { en: 'Organization', ar: 'منظمة' },
   forum: { en: 'Forum', ar: 'منتدى' },
@@ -239,7 +239,7 @@ export const DOSSIER_TYPE_LABELS: Record<DossierType, { en: string; ar: string }
 /**
  * Get inverse relationship type (for bidirectional display)
  */
-export function getInverseRelationshipType(
+function getInverseRelationshipType(
   type: DossierRelationshipType,
 ): DossierRelationshipType | null {
   const inverseMap: Partial<Record<DossierRelationshipType, DossierRelationshipType>> = {
@@ -257,7 +257,7 @@ export function getInverseRelationshipType(
 /**
  * Check if relationship type is symmetric (same meaning in both directions)
  */
-export function isSymmetricRelationship(type: DossierRelationshipType): boolean {
+function isSymmetricRelationship(type: DossierRelationshipType): boolean {
   const symmetricTypes: DossierRelationshipType[] = [
     'cooperates_with',
     'bilateral_relation',

@@ -389,4 +389,3 @@ export const MobileTouchControls = memo(function MobileTouchControls({
   )
 })
 
-export default TouchOptimizedGraphControls

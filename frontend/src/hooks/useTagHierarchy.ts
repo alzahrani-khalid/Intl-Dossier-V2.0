@@ -98,7 +98,7 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> 
 /**
  * Get full tag hierarchy tree
  */
-export function useTagHierarchy(
+function useTagHierarchy(
   filters: TagHierarchyFilters = {},
   options?: Omit<UseQueryOptions<TagHierarchyResponse>, 'queryKey' | 'queryFn'>,
 ) {
@@ -250,7 +250,7 @@ export function useTagAnalytics(
 /**
  * Get tag synonyms
  */
-export function useTagSynonyms(
+function useTagSynonyms(
   tagId: string,
   options?: Omit<UseQueryOptions<TagSynonym[]>, 'queryKey' | 'queryFn'>,
 ) {
@@ -366,7 +366,7 @@ export function useDeleteTag() {
 /**
  * Add a synonym to a tag
  */
-export function useAddSynonym() {
+function useAddSynonym() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -386,7 +386,7 @@ export function useAddSynonym() {
 /**
  * Remove a synonym
  */
-export function useRemoveSynonym() {
+function useRemoveSynonym() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -485,7 +485,7 @@ export function useMergeTags() {
 /**
  * Rename a tag
  */
-export function useRenameTag() {
+function useRenameTag() {
   const queryClient = useQueryClient()
 
   return useMutation({

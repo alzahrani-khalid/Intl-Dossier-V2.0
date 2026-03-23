@@ -276,7 +276,7 @@ export async function uploadAttachment(
 /**
  * Get public URL for attachment
  */
-export async function getAttachmentUrl(path: string): Promise<string> {
+async function getAttachmentUrl(path: string): Promise<string> {
   const { data } = supabase.storage.from('contact-files').getPublicUrl(path)
   return data.publicUrl
 }
@@ -298,7 +298,7 @@ export async function downloadAttachment(path: string): Promise<Blob> {
 /**
  * Delete attachment from storage
  */
-export async function deleteAttachment(path: string): Promise<void> {
+async function deleteAttachment(path: string): Promise<void> {
   const { error } = await supabase.storage.from('contact-files').remove([path])
 
   if (error) {
@@ -310,7 +310,7 @@ export async function deleteAttachment(path: string): Promise<void> {
  * Get interaction notes (direct Supabase query - fallback method)
  * Used when Edge Function is unavailable
  */
-export async function getNotesForContactDirect(
+async function getNotesForContactDirect(
   contactId: string,
 ): Promise<InteractionNoteResponse[]> {
   const { data, error } = await supabase

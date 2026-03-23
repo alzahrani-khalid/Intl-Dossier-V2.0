@@ -546,4 +546,3 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
   )
 })
 
-export default EntityComparisonTable

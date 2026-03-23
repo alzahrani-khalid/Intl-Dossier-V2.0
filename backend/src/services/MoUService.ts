@@ -652,4 +652,3 @@ export class MoUService {
   }
 }
 
-export default MoUService

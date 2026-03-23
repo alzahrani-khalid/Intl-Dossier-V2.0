@@ -140,7 +140,7 @@ export function usePreferenceSync(userId?: string) {
 /**
  * Setup real-time subscription for preference changes
  */
-export function usePreferenceSubscription(userId?: string) {
+function usePreferenceSubscription(userId?: string) {
   const queryClient = useQueryClient()
 
   useEffect(() => {

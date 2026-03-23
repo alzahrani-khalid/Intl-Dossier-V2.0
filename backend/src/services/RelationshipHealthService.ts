@@ -142,4 +142,3 @@ export class RelationshipHealthService {
   }
 }
 
-export default RelationshipHealthService

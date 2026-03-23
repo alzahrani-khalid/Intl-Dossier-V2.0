@@ -162,7 +162,7 @@ export const requirePermission = (permissions: string[]) => {
 /**
  * Optional authentication - doesn't fail if no token
  */
-export const optionalAuth = async (req: Request, res: Response, next: NextFunction) => {
+const optionalAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization
     const token = authHeader && authHeader.split(' ')[1]
@@ -206,7 +206,7 @@ export const optionalAuth = async (req: Request, res: Response, next: NextFuncti
 /**
  * Verify user owns the resource or is admin
  */
-export const requireOwnershipOrAdmin = (getResourceOwnerId: (req: Request) => Promise<string>) => {
+const requireOwnershipOrAdmin = (getResourceOwnerId: (req: Request) => Promise<string>) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.user) {

@@ -71,7 +71,7 @@ const ENTITY_ICONS: Record<string, typeof FileText> = {
   commitment: Check,
 }
 
-export function EntityLinkSuggestions({
+function EntityLinkSuggestions({
   ticketId,
   onLinkClick,
   className,

@@ -284,4 +284,3 @@ export function useProgressiveForm({
   }
 }
 
-export default useProgressiveForm

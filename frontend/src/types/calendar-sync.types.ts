@@ -89,7 +89,7 @@ export interface ExternalCalendar {
 /**
  * Mapping between internal and external events
  */
-export interface CalendarEventSyncMapping {
+interface CalendarEventSyncMapping {
   id: string
   internal_event_id?: string
   internal_series_id?: string
@@ -217,7 +217,7 @@ export interface ICalFeedSubscription {
 /**
  * Event from iCal feed
  */
-export interface ICalFeedEvent {
+interface ICalFeedEvent {
   id: string
   subscription_id: string
 
@@ -259,7 +259,7 @@ export interface ICalFeedEvent {
 /**
  * OAuth authorization request
  */
-export interface OAuthAuthorizationRequest {
+interface OAuthAuthorizationRequest {
   provider: ExternalCalendarProvider
   redirect_uri: string
   scopes?: string[]
@@ -268,7 +268,7 @@ export interface OAuthAuthorizationRequest {
 /**
  * OAuth authorization response
  */
-export interface OAuthAuthorizationResponse {
+interface OAuthAuthorizationResponse {
   authorization_url: string
   state: string
 }
@@ -276,7 +276,7 @@ export interface OAuthAuthorizationResponse {
 /**
  * OAuth callback request
  */
-export interface OAuthCallbackRequest {
+interface OAuthCallbackRequest {
   provider: ExternalCalendarProvider
   code: string
   state: string
@@ -285,7 +285,7 @@ export interface OAuthCallbackRequest {
 /**
  * Connection creation input
  */
-export interface CreateConnectionInput {
+interface CreateConnectionInput {
   provider: ExternalCalendarProvider
   sync_direction?: SyncDirection
   conflict_strategy?: SyncConflictStrategy
@@ -382,7 +382,7 @@ export interface UnifiedCalendarEvent {
 /**
  * Calendar source filter
  */
-export interface CalendarSourceFilter {
+interface CalendarSourceFilter {
   internal: boolean
   ical_feeds: string[]
   external_calendars: string[]
@@ -395,7 +395,7 @@ export interface CalendarSourceFilter {
 /**
  * Google Calendar event (simplified)
  */
-export interface GoogleCalendarEvent {
+interface GoogleCalendarEvent {
   id: string
   summary: string
   description?: string
@@ -412,7 +412,7 @@ export interface GoogleCalendarEvent {
 /**
  * Outlook/Exchange event (simplified)
  */
-export interface OutlookCalendarEvent {
+interface OutlookCalendarEvent {
   id: string
   subject: string
   bodyPreview?: string
@@ -433,7 +433,7 @@ export interface OutlookCalendarEvent {
 // Hook Return Types
 // ============================================================================
 
-export interface UseCalendarSyncReturn {
+interface UseCalendarSyncReturn {
   // Connections
   connections: ExternalCalendarConnection[]
   isLoadingConnections: boolean

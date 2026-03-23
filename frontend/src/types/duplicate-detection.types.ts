@@ -117,7 +117,7 @@ export interface DuplicateCandidate {
 /**
  * Duplicate candidate with entity details (for display)
  */
-export interface DuplicateCandidateWithEntities extends DuplicateCandidate {
+interface DuplicateCandidateWithEntities extends DuplicateCandidate {
   source_dossier?: {
     id: string
     name_en: string
@@ -224,7 +224,7 @@ export interface MergeHistoryRecord {
 /**
  * Merge preview showing what will be transferred
  */
-export interface MergePreview {
+interface MergePreview {
   primary_entity: {
     id: string
     name_en: string
@@ -299,7 +299,7 @@ export interface SettingsUpdateRequest {
 /**
  * Request to search for duplicates
  */
-export interface DuplicateSearchParams {
+interface DuplicateSearchParams {
   entity_id: string
   type: DuplicateEntityType
   threshold?: number
@@ -351,7 +351,7 @@ export interface DuplicateScanResponse {
 /**
  * Request to merge duplicates
  */
-export interface MergeRequest {
+interface MergeRequest {
   primary_entity_id: string
   duplicate_entity_id: string
   field_resolutions?: Record<string, FieldResolution>
@@ -372,14 +372,14 @@ export interface MergeResponse {
 /**
  * Request to dismiss a duplicate candidate
  */
-export interface DismissRequest {
+interface DismissRequest {
   reason?: string
 }
 
 /**
  * Response from dismiss operation
  */
-export interface DismissResponse {
+interface DismissResponse {
   success: boolean
   candidate_id: string
 }
@@ -391,7 +391,7 @@ export interface DismissResponse {
 /**
  * Props for duplicate candidate card
  */
-export interface DuplicateCandidateCardProps {
+interface DuplicateCandidateCardProps {
   candidate: DuplicateCandidateListItem
   onMerge: (candidate: DuplicateCandidateListItem) => void
   onDismiss: (candidate: DuplicateCandidateListItem) => void
@@ -402,7 +402,7 @@ export interface DuplicateCandidateCardProps {
 /**
  * Props for merge dialog
  */
-export interface MergeDialogProps {
+interface MergeDialogProps {
   isOpen: boolean
   onClose: () => void
   candidate: DuplicateCandidateListItem | null
@@ -417,7 +417,7 @@ export interface MergeDialogProps {
 /**
  * Entity comparison data for merge preview
  */
-export interface EntityComparisonData {
+interface EntityComparisonData {
   field: string
   label_en: string
   label_ar: string
@@ -434,7 +434,7 @@ export interface EntityComparisonData {
 /**
  * Get confidence level from score
  */
-export function getConfidenceLevel(score: number): ConfidenceLevel {
+function getConfidenceLevel(score: number): ConfidenceLevel {
   if (score >= CONFIDENCE_THRESHOLDS.high) return 'high'
   if (score >= CONFIDENCE_THRESHOLDS.medium) return 'medium'
   return 'low'
@@ -468,7 +468,7 @@ export const CONFIDENCE_LEVEL_LABELS: Record<ConfidenceLevel, { en: string; ar: 
 /**
  * Labels for duplicate status
  */
-export const DUPLICATE_STATUS_LABELS: Record<DuplicateCandidateStatus, { en: string; ar: string }> =
+const DUPLICATE_STATUS_LABELS: Record<DuplicateCandidateStatus, { en: string; ar: string }> =
   {
     pending: { en: 'Pending Review', ar: 'في انتظار المراجعة' },
     confirmed: { en: 'Confirmed Duplicate', ar: 'تكرار مؤكد' },
@@ -480,7 +480,7 @@ export const DUPLICATE_STATUS_LABELS: Record<DuplicateCandidateStatus, { en: str
 /**
  * Labels for detection source
  */
-export const DETECTION_SOURCE_LABELS: Record<DetectionSource, { en: string; ar: string }> = {
+const DETECTION_SOURCE_LABELS: Record<DetectionSource, { en: string; ar: string }> = {
   auto_scan: { en: 'Automatic Scan', ar: 'فحص تلقائي' },
   on_create: { en: 'On Creation', ar: 'عند الإنشاء' },
   manual_search: { en: 'Manual Search', ar: 'بحث يدوي' },

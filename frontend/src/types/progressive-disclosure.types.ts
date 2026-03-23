@@ -154,7 +154,7 @@ export interface SessionHintTracking {
 /**
  * Progressive disclosure state
  */
-export interface ProgressiveDisclosureState {
+interface ProgressiveDisclosureState {
   /** User's preferences */
   preferences: DisclosurePreferences | null
   /** Hint interactions map (hintId -> interaction) */
@@ -274,7 +274,7 @@ export interface ProgressiveEmptyStateProps {
 /**
  * Database row for user_hint_interactions
  */
-export interface UserHintInteractionRow {
+interface UserHintInteractionRow {
   id: string
   user_id: string
   hint_id: string
@@ -297,7 +297,7 @@ export interface UserHintInteractionRow {
 /**
  * Database row for user_disclosure_preferences
  */
-export interface UserDisclosurePreferencesRow {
+interface UserDisclosurePreferencesRow {
   id: string
   user_id: string
   experience_level: UserExperienceLevel
@@ -323,7 +323,7 @@ export interface UserDisclosurePreferencesRow {
 /**
  * API request for recording hint interaction
  */
-export interface RecordHintInteractionRequest {
+interface RecordHintInteractionRequest {
   hintId: string
   hintContext: HintContextType
   pageContext?: string
@@ -333,7 +333,7 @@ export interface RecordHintInteractionRequest {
 /**
  * API response for hint interaction
  */
-export interface HintInteractionResponse {
+interface HintInteractionResponse {
   success: boolean
   data?: HintInteraction
   error?: string
@@ -342,7 +342,7 @@ export interface HintInteractionResponse {
 /**
  * API response for disclosure preferences
  */
-export interface DisclosurePreferencesResponse {
+interface DisclosurePreferencesResponse {
   success: boolean
   data?: {
     preferences: DisclosurePreferences

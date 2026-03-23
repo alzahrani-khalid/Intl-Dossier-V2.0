@@ -237,7 +237,7 @@ export function useDossierContext(): UseDossierContextReturn {
  * } = useDossierStoreState();
  * ```
  */
-export function useDossierStoreState() {
+function useDossierStoreState() {
   // Import directly from store to avoid context requirement
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { useActiveDossier, useRecentDossiers, usePinnedDossiers } = require('@/store/dossierStore')
@@ -284,7 +284,7 @@ export function useDossierStoreState() {
  * }
  * ```
  */
-export function useDossierContextSafeHook(): Partial<UseDossierContextReturn> | null {
+function useDossierContextSafeHook(): Partial<UseDossierContextReturn> | null {
   const context = useDossierContextSafe()
 
   if (!context) {
@@ -353,4 +353,3 @@ export function useDossierContextSafeHook(): Partial<UseDossierContextReturn> | 
   }
 }
 
-export default useDossierContext

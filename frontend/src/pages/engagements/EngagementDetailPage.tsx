@@ -64,7 +64,7 @@ import {
   AGENDA_ITEM_STATUS_LABELS,
 } from '@/types/engagement.types'
 
-export function EngagementDetailPage() {
+function EngagementDetailPage() {
   const { engagementId } = useParams({ from: '/_protected/engagements/$engagementId' })
   const { t, i18n } = useTranslation('engagements')
   const isRTL = i18n.language === 'ar'

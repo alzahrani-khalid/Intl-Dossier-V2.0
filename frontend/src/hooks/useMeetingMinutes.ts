@@ -72,7 +72,7 @@ export function useMeetingMinutesList(filters?: MeetingMinutesFilters) {
 /**
  * Fetch single meeting minutes with full details
  */
-export function useMeetingMinutesDetail(id: string | undefined) {
+function useMeetingMinutesDetail(id: string | undefined) {
   return useQuery({
     queryKey: ['meeting-minutes', 'detail', id],
     queryFn: async (): Promise<MeetingMinutesFull | null> => {
@@ -96,7 +96,7 @@ export function useMeetingMinutesDetail(id: string | undefined) {
 /**
  * Create new meeting minutes
  */
-export function useCreateMeetingMinutes() {
+function useCreateMeetingMinutes() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -122,7 +122,7 @@ export function useCreateMeetingMinutes() {
 /**
  * Update meeting minutes
  */
-export function useUpdateMeetingMinutes() {
+function useUpdateMeetingMinutes() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -156,7 +156,7 @@ export function useUpdateMeetingMinutes() {
 /**
  * Delete meeting minutes (soft delete)
  */
-export function useDeleteMeetingMinutes() {
+function useDeleteMeetingMinutes() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -180,7 +180,7 @@ export function useDeleteMeetingMinutes() {
 /**
  * Approve meeting minutes
  */
-export function useApproveMeetingMinutes() {
+function useApproveMeetingMinutes() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -215,7 +215,7 @@ export function useApproveMeetingMinutes() {
 /**
  * Add attendee to meeting
  */
-export function useAddAttendee() {
+function useAddAttendee() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -240,7 +240,7 @@ export function useAddAttendee() {
 /**
  * Update attendee
  */
-export function useUpdateAttendee() {
+function useUpdateAttendee() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -273,7 +273,7 @@ export function useUpdateAttendee() {
 /**
  * Remove attendee
  */
-export function useRemoveAttendee() {
+function useRemoveAttendee() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -297,7 +297,7 @@ export function useRemoveAttendee() {
 /**
  * Add action item to meeting
  */
-export function useAddActionItem() {
+function useAddActionItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -325,7 +325,7 @@ export function useAddActionItem() {
 /**
  * Update action item
  */
-export function useUpdateActionItem() {
+function useUpdateActionItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -361,7 +361,7 @@ export function useUpdateActionItem() {
 /**
  * Remove action item
  */
-export function useRemoveActionItem() {
+function useRemoveActionItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -381,7 +381,7 @@ export function useRemoveActionItem() {
 /**
  * Convert action item to commitment
  */
-export function useConvertActionItemToCommitment() {
+function useConvertActionItemToCommitment() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -417,7 +417,7 @@ export function useConvertActionItemToCommitment() {
 /**
  * Generate AI summary for meeting minutes
  */
-export function useGenerateAISummary() {
+function useGenerateAISummary() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -475,7 +475,7 @@ export function useGenerateAISummary() {
 /**
  * Extract action items from text using AI
  */
-export function useExtractActionItems() {
+function useExtractActionItems() {
   const queryClient = useQueryClient()
 
   return useMutation({

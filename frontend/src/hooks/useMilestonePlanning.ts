@@ -354,7 +354,7 @@ export function useMilestonePlanning({
 /**
  * Hook for marking a milestone as complete
  */
-export function useMarkMilestoneComplete(dossierId: string) {
+function useMarkMilestoneComplete(dossierId: string) {
   const { t } = useTranslation('milestone-planning')
   const queryClient = useQueryClient()
   const queryKey = ['milestones', dossierId]

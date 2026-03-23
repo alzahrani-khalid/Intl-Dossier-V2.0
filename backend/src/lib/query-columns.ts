@@ -271,4 +271,3 @@ export const COLUMNS = {
   LINK_AUDIT: LINK_AUDIT_COLUMNS,
 } as const
 
-export default COLUMNS

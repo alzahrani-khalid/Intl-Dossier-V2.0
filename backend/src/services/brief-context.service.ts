@@ -361,4 +361,3 @@ export class BriefContextService {
 }
 
 export const briefContextService = new BriefContextService()
-export default briefContextService

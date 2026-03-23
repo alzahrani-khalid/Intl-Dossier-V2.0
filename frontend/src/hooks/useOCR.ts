@@ -90,7 +90,7 @@ export function useUploadBusinessCard(): UseMutationResult<
  * Hook to prefetch OCR capabilities (for feature detection)
  * Can be used to check if cloud OCR is available
  */
-export function useOCRCapabilities() {
+function useOCRCapabilities() {
   // This could be expanded to check server capabilities
   // For now, we assume OCR is always available
   return {
@@ -105,7 +105,7 @@ export function useOCRCapabilities() {
  * @param confidence - Confidence score (0-100)
  * @returns boolean indicating if confidence is acceptable
  */
-export function isConfidenceAcceptable(confidence: number): boolean {
+function isConfidenceAcceptable(confidence: number): boolean {
   return confidence >= 70 // 70% threshold for acceptable confidence
 }
 

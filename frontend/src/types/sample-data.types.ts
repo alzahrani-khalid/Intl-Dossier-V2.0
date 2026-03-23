@@ -69,7 +69,7 @@ export interface RemoveSampleDataResponse {
   message_ar: string
 }
 
-export type TemplateSlug =
+type TemplateSlug =
   | 'trade-relations'
   | 'cultural-exchange'
   | 'security-cooperation'

@@ -236,4 +236,3 @@ export const contributorsAPI = {
   },
 }
 
-export default contributorsAPI

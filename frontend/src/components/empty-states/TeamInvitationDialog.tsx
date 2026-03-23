@@ -351,4 +351,3 @@ export function TeamInvitationDialog({
   )
 }
 
-export default TeamInvitationDialog

@@ -653,4 +653,3 @@ function StakeholderInfluencePage() {
   )
 }
 
-export default StakeholderInfluencePage

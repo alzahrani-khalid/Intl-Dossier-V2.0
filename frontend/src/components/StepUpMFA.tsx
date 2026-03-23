@@ -510,7 +510,7 @@ export function StepUpMFA({
 /**
  * Hook to get elevated token from storage
  */
-export function useElevatedToken(): {
+function useElevatedToken(): {
   token: string | null
   isValid: boolean
   validUntil: string | null
@@ -530,7 +530,7 @@ export function useElevatedToken(): {
 /**
  * Hook to clear elevated token
  */
-export function clearElevatedToken(): void {
+function clearElevatedToken(): void {
   sessionStorage.removeItem('elevated_token')
   sessionStorage.removeItem('elevated_token_valid_until')
 }

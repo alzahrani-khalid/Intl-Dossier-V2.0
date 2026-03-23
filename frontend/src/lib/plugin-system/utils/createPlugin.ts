@@ -115,7 +115,7 @@ export class PluginBuilder<T = Record<string, unknown>> {
 /**
  * Create a new plugin builder
  */
-export function createPluginBuilder<T = Record<string, unknown>>(): PluginBuilder<T> {
+function createPluginBuilder<T = Record<string, unknown>>(): PluginBuilder<T> {
   return new PluginBuilder<T>()
 }
 
@@ -193,7 +193,7 @@ export function textField(
 /**
  * Create a bilingual text field definition
  */
-export function bilingualField(
+function bilingualField(
   name: string,
   label: BilingualField,
   options?: Partial<Omit<ExtensionFieldDefinition, 'name' | 'label' | 'type'>>,
@@ -225,7 +225,7 @@ export function numberField(
 /**
  * Create a boolean field definition
  */
-export function booleanField(
+function booleanField(
   name: string,
   label: BilingualField,
   options?: Partial<Omit<ExtensionFieldDefinition, 'name' | 'label' | 'type'>>,
@@ -257,7 +257,7 @@ export function dateField(
 /**
  * Create a datetime field definition
  */
-export function datetimeField(
+function datetimeField(
   name: string,
   label: BilingualField,
   options?: Partial<Omit<ExtensionFieldDefinition, 'name' | 'label' | 'type'>>,
@@ -291,7 +291,7 @@ export function enumField(
 /**
  * Create an array field definition
  */
-export function arrayField(
+function arrayField(
   name: string,
   label: BilingualField,
   itemType: Omit<ExtensionFieldDefinition, 'name' | 'label'>,
@@ -331,7 +331,7 @@ export function relationship(
 /**
  * Create a one-to-one relationship
  */
-export function oneToOneRelationship(
+function oneToOneRelationship(
   type: string,
   label: BilingualField,
   targetTypes: string[],
@@ -348,7 +348,7 @@ export function oneToOneRelationship(
 /**
  * Create a one-to-many relationship
  */
-export function oneToManyRelationship(
+function oneToManyRelationship(
   type: string,
   label: BilingualField,
   targetTypes: string[],

@@ -248,7 +248,7 @@ export function useBriefingBookTemplates() {
 /**
  * Hook for fetching a single briefing book
  */
-export function useBriefingBook(id: string | undefined) {
+function useBriefingBook(id: string | undefined) {
   return useQuery({
     queryKey: briefingBooksKeys.detail(id!),
     queryFn: () => fetchBriefingBook(id!),
@@ -259,7 +259,7 @@ export function useBriefingBook(id: string | undefined) {
 /**
  * Hook for listing briefing books with filters
  */
-export function useBriefingBooksList(filters: ListBriefingBooksRequest = {}) {
+function useBriefingBooksList(filters: ListBriefingBooksRequest = {}) {
   return useQuery({
     queryKey: briefingBooksKeys.list(filters),
     queryFn: () => fetchBriefingBooks(filters),

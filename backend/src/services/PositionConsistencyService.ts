@@ -333,4 +333,3 @@ export class PositionConsistencyService {
   }
 }
 
-export default PositionConsistencyService

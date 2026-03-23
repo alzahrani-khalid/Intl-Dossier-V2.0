@@ -293,7 +293,7 @@ export function EditingLockIndicator({
 /**
  * Hook-friendly wrapper that only renders when locked
  */
-export function EditingLockIndicatorConditional({
+function EditingLockIndicatorConditional({
   isLocked,
   lockedBy,
   ...props
@@ -308,4 +308,3 @@ export function EditingLockIndicatorConditional({
   return <EditingLockIndicator lockedBy={lockedBy} {...props} />
 }
 
-export default EditingLockIndicator

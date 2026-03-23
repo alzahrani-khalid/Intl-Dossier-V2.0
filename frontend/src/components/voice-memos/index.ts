@@ -1,1 +1,0 @@
-export { VoiceMemoList } from './VoiceMemoList'

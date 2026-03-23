@@ -4,7 +4,7 @@
 import type { DossierStatus } from './dossier'
 
 // Forum status (extends dossier status with forum-specific states)
-export type ForumStatus = DossierStatus | 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
+type ForumStatus = DossierStatus | 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
 
 // Sponsor tier levels
 export type SponsorTier = 'platinum' | 'gold' | 'silver' | 'bronze'
@@ -115,7 +115,7 @@ export interface ForumFilters {
 }
 
 // API error response
-export interface ForumApiError {
+interface ForumApiError {
   error: {
     code: string
     message_en: string
@@ -125,7 +125,7 @@ export interface ForumApiError {
 }
 
 // Forum with related data (for detail views)
-export interface ForumWithRelations extends Forum {
+interface ForumWithRelations extends Forum {
   participants_count?: number
   sessions_count?: number
   documents_count?: number

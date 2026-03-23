@@ -44,7 +44,7 @@ interface TagSelectorProps {
   onTagsChange?: (tags: EntityTagAssignment[]) => void
 }
 
-export function TagSelector({
+function TagSelector({
   entityType,
   entityId,
   className,
@@ -370,7 +370,7 @@ interface TagDisplayProps {
   className?: string
 }
 
-export function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps) {
+function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps) {
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
@@ -401,4 +401,3 @@ export function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps)
   )
 }
 
-export default TagSelector

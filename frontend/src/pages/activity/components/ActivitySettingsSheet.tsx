@@ -133,4 +133,3 @@ export function ActivitySettingsSheet({ open, onOpenChange }: ActivitySettingsSh
   )
 }
 
-export default ActivitySettingsSheet

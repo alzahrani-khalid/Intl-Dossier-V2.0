@@ -7,7 +7,7 @@ import { body, param, query } from 'express-validator'
 const router = Router()
 let permissionService: PermissionDelegationService
 
-export function initializePermissionsRouter(supabaseUrl: string, supabaseKey: string): Router {
+function initializePermissionsRouter(supabaseUrl: string, supabaseKey: string): Router {
   permissionService = new PermissionDelegationService(supabaseUrl, supabaseKey)
   return router
 }

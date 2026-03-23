@@ -28,7 +28,7 @@ export const supabaseAnon: SupabaseClient = createClient(supabaseUrl, supabaseAn
 })
 
 // Helper function to create a client with a specific user's JWT
-export const createSupabaseClient = (jwt?: string): SupabaseClient => {
+const createSupabaseClient = (jwt?: string): SupabaseClient => {
   return createClient(supabaseUrl, supabaseAnonKey, {
     global: {
       headers: jwt
@@ -40,4 +40,3 @@ export const createSupabaseClient = (jwt?: string): SupabaseClient => {
   })
 }
 
-export default supabaseAdmin

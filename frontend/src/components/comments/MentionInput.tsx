@@ -304,4 +304,3 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
 
 MentionInput.displayName = 'MentionInput'
 
-export default MentionInput

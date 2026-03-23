@@ -385,4 +385,3 @@ export function MilestonesCelebration({
   )
 }
 
-export default MilestonesCelebration

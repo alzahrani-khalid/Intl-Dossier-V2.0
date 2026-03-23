@@ -167,7 +167,7 @@ export const CACHE_TAGS = {
 /**
  * Get TTL for a specific entity type
  */
-export function getTTL(entityType: CacheableEntityType): number {
+function getTTL(entityType: CacheableEntityType): number {
   return CACHE_TTL[entityType] ?? CACHE_TTL.default
 }
 
@@ -181,7 +181,7 @@ export function getKeyPrefix(entityType: CacheableEntityType): string {
 /**
  * Generate a cache key with proper prefix
  */
-export function generateCacheKey(
+function generateCacheKey(
   entityType: CacheableEntityType,
   identifier: string | Record<string, unknown>,
 ): string {
@@ -211,7 +211,7 @@ function simpleHash(str: string): string {
 /**
  * Get tags for an entity type (for invalidation grouping)
  */
-export function getTagsForEntity(entityType: CacheableEntityType): string[] {
+function getTagsForEntity(entityType: CacheableEntityType): string[] {
   const tagMap: Partial<Record<CacheableEntityType, string[]>> = {
     dossier: [CACHE_TAGS.DOSSIERS],
     country: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.COUNTRIES],
@@ -242,4 +242,4 @@ export function getTagsForEntity(entityType: CacheableEntityType): string[] {
   return tagMap[entityType] ?? []
 }
 
-export type CacheTag = (typeof CACHE_TAGS)[keyof typeof CACHE_TAGS]
+type CacheTag = (typeof CACHE_TAGS)[keyof typeof CACHE_TAGS]

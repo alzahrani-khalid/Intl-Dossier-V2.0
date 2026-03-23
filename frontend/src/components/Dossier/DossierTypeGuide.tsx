@@ -441,8 +441,7 @@ export function DossierTypeGuideGrid({
 }
 
 // Backward compatibility exports - map old names to new names
-export const EntityTypeGuide = DossierTypeGuide
-export const EntityTypeGuideGrid = DossierTypeGuideGrid
-export type EntityTypeGuideProps = DossierTypeGuideProps
+const EntityTypeGuide = DossierTypeGuide
+const EntityTypeGuideGrid = DossierTypeGuideGrid
+type EntityTypeGuideProps = DossierTypeGuideProps
 
-export default DossierTypeGuide

@@ -996,7 +996,7 @@ interface ShortcutHintProps {
   className?: string
 }
 
-export function ShortcutHint({ shortcutKey, modifiers, className }: ShortcutHintProps) {
+function ShortcutHint({ shortcutKey, modifiers, className }: ShortcutHintProps) {
   const { formatShortcut, isRTL } = useKeyboardShortcutContext()
 
   return (
@@ -1021,7 +1021,7 @@ interface ShortcutGuideProps {
   className?: string
 }
 
-export function ShortcutGuide({ category, maxItems = 5, className }: ShortcutGuideProps) {
+function ShortcutGuide({ category, maxItems = 5, className }: ShortcutGuideProps) {
   const { t, i18n } = useTranslation('keyboard-shortcuts')
   const isRTL = i18n.language === 'ar'
   const { getShortcutsByCategory, getAllShortcuts, formatShortcut } = useKeyboardShortcutContext()

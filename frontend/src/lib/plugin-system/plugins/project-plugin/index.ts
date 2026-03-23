@@ -591,4 +591,3 @@ export const projectPlugin: EntityPlugin<ProjectExtension> = createPlugin<Projec
 export * from './types'
 
 // Export the plugin as default
-export default projectPlugin

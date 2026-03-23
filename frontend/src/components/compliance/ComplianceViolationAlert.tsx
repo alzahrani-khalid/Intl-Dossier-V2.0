@@ -283,7 +283,7 @@ interface ComplianceViolationListProps {
   emptyMessage?: string
 }
 
-export function ComplianceViolationList({
+function ComplianceViolationList({
   violations,
   onSignOff,
   onAcknowledge,
@@ -334,4 +334,3 @@ export function ComplianceViolationList({
   )
 }
 
-export default ComplianceViolationAlert

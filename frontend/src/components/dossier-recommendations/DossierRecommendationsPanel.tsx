@@ -354,4 +354,3 @@ export function DossierRecommendationsPanel({
   )
 }
 
-export default DossierRecommendationsPanel

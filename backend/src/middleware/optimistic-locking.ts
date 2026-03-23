@@ -112,7 +112,7 @@ export function optimisticLockingMiddleware(table: 'tasks' | 'task_contributors'
  * @param delayMs - Base delay between retries in milliseconds (default: 100ms)
  * @returns Operation result or throws error after max retries
  */
-export async function autoRetryOnConflict<T>(
+async function autoRetryOnConflict<T>(
   operation: () => Promise<T>,
   maxRetries: number = 3,
   delayMs: number = 100,

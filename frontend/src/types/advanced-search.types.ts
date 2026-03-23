@@ -253,7 +253,7 @@ export interface UpdateTemplateRequest {
 }
 
 // Saved filter (from database)
-export interface SavedFilter {
+interface SavedFilter {
   id: string
   user_id: string
   name: string
@@ -278,7 +278,7 @@ export interface SavedFilter {
 }
 
 // Filter condition with database fields
-export interface SearchFilterCondition {
+interface SearchFilterCondition {
   id: string
   filter_id: string
   group_operator: LogicOperator
@@ -292,7 +292,7 @@ export interface SearchFilterCondition {
 }
 
 // Relationship filter with database fields
-export interface SearchFilterRelationship {
+interface SearchFilterRelationship {
   id: string
   filter_id: string
   source_entity_type: SearchableEntityType

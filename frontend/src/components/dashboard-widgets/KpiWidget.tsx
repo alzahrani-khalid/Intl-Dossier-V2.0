@@ -227,4 +227,3 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
   )
 }
 
-export default KpiWidget

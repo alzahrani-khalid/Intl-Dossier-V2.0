@@ -121,7 +121,7 @@ export function useRetentionPolicies(
 /**
  * Hook to get a single retention policy
  */
-export function useRetentionPolicy(
+function useRetentionPolicy(
   id: string,
   options?: Omit<UseQueryOptions<RetentionPolicy, Error>, 'queryKey' | 'queryFn'>,
 ) {
@@ -223,7 +223,7 @@ export function useUpdateRetentionPolicy() {
 /**
  * Hook to archive (soft delete) a retention policy
  */
-export function useArchiveRetentionPolicy() {
+function useArchiveRetentionPolicy() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('retention-policies')
 
@@ -290,7 +290,7 @@ export function useLegalHolds(
 /**
  * Hook to get a single legal hold
  */
-export function useLegalHold(
+function useLegalHold(
   id: string,
   options?: Omit<UseQueryOptions<LegalHold, Error>, 'queryKey' | 'queryFn'>,
 ) {
@@ -352,7 +352,7 @@ export function useCreateLegalHold() {
 /**
  * Hook to update a legal hold
  */
-export function useUpdateLegalHold() {
+function useUpdateLegalHold() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('retention-policies')
 
@@ -428,7 +428,7 @@ export function useReleaseLegalHold() {
 /**
  * Hook to delete a legal hold (only if not active)
  */
-export function useDeleteLegalHold() {
+function useDeleteLegalHold() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('retention-policies')
 
@@ -647,7 +647,7 @@ export function useRunRetentionProcessor() {
 /**
  * Hook to apply retention policy to specific entity
  */
-export function useApplyRetentionPolicy() {
+function useApplyRetentionPolicy() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('retention-policies')
 
@@ -686,7 +686,7 @@ export function useApplyRetentionPolicy() {
 /**
  * Hook to set manual hold on entity
  */
-export function useSetManualHold() {
+function useSetManualHold() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('retention-policies')
 
@@ -728,7 +728,7 @@ export function useSetManualHold() {
 /**
  * Hook to invalidate all retention policy queries
  */
-export function useInvalidateRetentionPolicies() {
+function useInvalidateRetentionPolicies() {
   const queryClient = useQueryClient()
 
   return () => {

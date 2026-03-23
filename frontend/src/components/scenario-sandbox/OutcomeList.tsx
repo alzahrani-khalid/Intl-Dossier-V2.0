@@ -38,7 +38,7 @@ interface OutcomeListProps {
   isLoading?: boolean
 }
 
-export function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: OutcomeListProps) {
+function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: OutcomeListProps) {
   const { t, i18n } = useTranslation('scenario-sandbox')
   const isRTL = i18n.language === 'ar'
   const [deleteId, setDeleteId] = useState<string | null>(null)

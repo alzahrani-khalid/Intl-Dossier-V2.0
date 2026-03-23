@@ -102,7 +102,7 @@ function getRefetchInterval(intelligenceType?: string): number | false {
  * @param params - Query parameters (entity_id required)
  * @param options - TanStack Query options for customization
  */
-export function useIntelligence(
+function useIntelligence(
   params: GetIntelligenceParams & { enableBackgroundNotifications?: boolean },
   options?: Omit<
     UseQueryOptions<GetIntelligenceResponse, IntelligenceAPIError>,
@@ -194,7 +194,7 @@ export function useIntelligence(
  * );
  * ```
  */
-export function useIntelligenceByType(
+function useIntelligenceByType(
   entityId: string,
   intelligenceType: 'economic' | 'political' | 'security' | 'bilateral' | 'general',
   options?: Omit<
@@ -428,7 +428,7 @@ export function useRefreshIntelligence(
  * });
  * ```
  */
-export function useRefreshIntelligenceType(
+function useRefreshIntelligenceType(
   options?: UseMutationOptions<
     RefreshIntelligenceResponse,
     IntelligenceAPIError,
@@ -499,7 +499,7 @@ export function usePrefetchIntelligence() {
  * };
  * ```
  */
-export function useInvalidateAllIntelligence() {
+function useInvalidateAllIntelligence() {
   const queryClient = useQueryClient()
 
   return () => {
@@ -519,7 +519,7 @@ export function useInvalidateAllIntelligence() {
  * {isStale && <Badge>Outdated Data</Badge>}
  * ```
  */
-export function useIntelligenceStaleStatus(entityId: string): boolean {
+function useIntelligenceStaleStatus(entityId: string): boolean {
   const { data } = useAllIntelligence(entityId, {
     enabled: !!entityId,
   })
@@ -542,7 +542,7 @@ export function useIntelligenceStaleStatus(entityId: string): boolean {
  * {status.hasErrors && <Alert>Some intelligence failed to refresh</Alert>}
  * ```
  */
-export function useIntelligenceRefreshStatus(entityId: string) {
+function useIntelligenceRefreshStatus(entityId: string) {
   const { data } = useAllIntelligence(entityId, {
     enabled: !!entityId,
   })

@@ -272,4 +272,3 @@ export function FilterPresetsSection({
   )
 }
 
-export default FilterPresetsSection

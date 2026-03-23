@@ -436,4 +436,3 @@ export function ContextualSuggestions({
 // Exports
 // ============================================================================
 
-export default ContextualSuggestions

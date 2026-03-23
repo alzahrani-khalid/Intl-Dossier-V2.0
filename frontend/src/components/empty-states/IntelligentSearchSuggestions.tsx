@@ -656,4 +656,3 @@ export function IntelligentSearchSuggestions({
   )
 }
 
-export default IntelligentSearchSuggestions

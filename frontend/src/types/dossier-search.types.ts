@@ -140,7 +140,7 @@ export interface DossierFirstSearchResponse {
 /**
  * Dossier-first search request
  */
-export interface DossierFirstSearchRequest {
+interface DossierFirstSearchRequest {
   query: string
   filters: DossierSearchFilters
   page?: number
@@ -152,7 +152,7 @@ export interface DossierFirstSearchRequest {
 /**
  * Search result section type
  */
-export type SearchSectionType = 'dossiers' | 'related_work'
+type SearchSectionType = 'dossiers' | 'related_work'
 
 /**
  * Props for the dossier-first search results component
@@ -185,7 +185,7 @@ export interface DossierTypeFilterOption {
 /**
  * Default dossier type filter options
  */
-export const DOSSIER_TYPE_FILTER_OPTIONS: DossierTypeFilterOption[] = [
+const DOSSIER_TYPE_FILTER_OPTIONS: DossierTypeFilterOption[] = [
   { value: 'all', label_en: 'All Types', label_ar: 'جميع الأنواع' },
   { value: 'country', label_en: 'Countries', label_ar: 'الدول' },
   { value: 'organization', label_en: 'Organizations', label_ar: 'المنظمات' },
@@ -199,7 +199,7 @@ export const DOSSIER_TYPE_FILTER_OPTIONS: DossierTypeFilterOption[] = [
 /**
  * Related work type display config
  */
-export const RELATED_WORK_TYPE_CONFIG: Record<
+const RELATED_WORK_TYPE_CONFIG: Record<
   RelatedWorkType,
   { label_en: string; label_ar: string; color: string; bgColor: string }
 > = {

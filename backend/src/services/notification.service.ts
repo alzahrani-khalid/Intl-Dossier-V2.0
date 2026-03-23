@@ -64,57 +64,6 @@ export async function sendInAppNotification(
   return data as Notification
 }
 
-/**
- * T178: Fetch notifications for a user
- * @param userId - The user ID to fetch notifications for
- * @param unreadOnly - If true, only return unread notifications
- * @returns Array of notifications
- */
-export async function getNotifications(
-  userId: string,
-  unreadOnly: boolean = false,
-): Promise<Notification[]> {
-  let query = supabase
-    .from('notifications')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-
-  if (unreadOnly) {
-    query = query.eq('read', false)
-  }
-
-  const { data, error } = await query
-
-  if (error) {
-    console.error('[NOTIFICATION-SERVICE] Failed to fetch notifications:', error)
-    throw new Error(`Failed to fetch notifications: ${error.message}`)
-  }
-
-  return (data as Notification[]) || []
-}
-
-/**
- * T179: Mark notification as read
- * @param notificationId - The notification ID to mark as read
- * @returns The updated notification record
- */
-export async function markNotificationAsRead(notificationId: string): Promise<Notification> {
-  const { data, error } = await supabase
-    .from('notifications')
-    .update({ read: true })
-    .eq('id', notificationId)
-    .select()
-    .single()
-
-  if (error) {
-    console.error('[NOTIFICATION-SERVICE] Failed to mark notification as read:', error)
-    throw new Error(`Failed to mark notification as read: ${error.message}`)
-  }
-
-  console.warn(`[NOTIFICATION-SERVICE] Marked notification ${notificationId} as read`)
-  return data as Notification
-}
 
 /**
  * T183-T185: Send health score drop notification
@@ -154,51 +103,6 @@ export async function sendHealthScoreDropNotification(
   console.warn(
     `[HEALTH-NOTIFICATION] Sent notification to user ${ownerId} for dossier ${dossierId}`,
   )
-}
-
-/**
- * T189: Send overdue commitment notification (used by detect-overdue-commitments job)
- * @param commitment - The overdue commitment
- * @param dossierName - The dossier name
- * @param dossierOwnerId - The dossier owner user ID (optional)
- */
-export async function sendOverdueNotification(
-  commitment: {
-    id: string
-    dossier_id: string
-    description: string
-    due_date: string
-    owner_id: string
-  },
-  dossierName: string,
-  dossierOwnerId?: string,
-): Promise<void> {
-  const title = 'Commitment is overdue'
-  const message = `${commitment.description} is overdue (due ${commitment.due_date}). Dossier: ${dossierName}. Recommended: Update status or extend deadline.`
-
-  const metadata = {
-    dossierId: commitment.dossier_id,
-    commitmentId: commitment.id,
-    type: 'commitment_overdue' as const,
-  }
-
-  // Send notification to commitment owner
-  await sendInAppNotification(commitment.owner_id, title, message, metadata)
-
-  // T189: Send notification to dossier owner as well (if provided and different)
-  if (dossierOwnerId && dossierOwnerId !== commitment.owner_id) {
-    await sendInAppNotification(dossierOwnerId, title, message, metadata)
-  }
-
-  console.warn(`[OVERDUE-NOTIFICATION] Sent notification for commitment ${commitment.id}`)
-}
-
-export default {
-  sendInAppNotification,
-  getNotifications,
-  markNotificationAsRead,
-  sendHealthScoreDropNotification,
-  sendOverdueNotification,
 }
 
 /**

@@ -107,7 +107,7 @@ export function useComplianceRules(params: ListRulesParams = {}) {
 /**
  * Hook to get a single compliance rule
  */
-export function useComplianceRule(ruleId: string | undefined) {
+function useComplianceRule(ruleId: string | undefined) {
   return useQuery({
     queryKey: complianceKeys.rule(ruleId || ''),
     queryFn: () => complianceFetch<ComplianceRule>(`/rules/${ruleId}`),
@@ -118,7 +118,7 @@ export function useComplianceRule(ruleId: string | undefined) {
 /**
  * Hook to create a compliance rule
  */
-export function useCreateComplianceRule() {
+function useCreateComplianceRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -136,7 +136,7 @@ export function useCreateComplianceRule() {
 /**
  * Hook to update a compliance rule
  */
-export function useUpdateComplianceRule() {
+function useUpdateComplianceRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -155,7 +155,7 @@ export function useUpdateComplianceRule() {
 /**
  * Hook to deactivate a compliance rule
  */
-export function useDeactivateComplianceRule() {
+function useDeactivateComplianceRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -207,7 +207,7 @@ export function useComplianceViolations(filters: ViolationFilters = {}, pageSize
 /**
  * Hook to get violations for a specific entity
  */
-export function useEntityViolations(
+function useEntityViolations(
   entityType: ComplianceEntityType,
   entityId: string | undefined,
 ) {
@@ -224,7 +224,7 @@ export function useEntityViolations(
 /**
  * Hook to get a single violation with details
  */
-export function useComplianceViolation(violationId: string | undefined) {
+function useComplianceViolation(violationId: string | undefined) {
   return useQuery({
     queryKey: complianceKeys.violation(violationId || ''),
     queryFn: () =>
@@ -242,7 +242,7 @@ export function useComplianceViolation(violationId: string | undefined) {
 /**
  * Hook to run a compliance check for an entity
  */
-export function useCheckCompliance() {
+function useCheckCompliance() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -267,7 +267,7 @@ export function useCheckCompliance() {
 /**
  * Hook to get compliance summary for an entity
  */
-export function useEntityComplianceSummary(
+function useEntityComplianceSummary(
   entityType: ComplianceEntityType,
   entityId: string | undefined,
 ) {
@@ -358,7 +358,7 @@ export function useComplianceTemplates() {
 /**
  * Hook to create a rule from a template
  */
-export function useCreateRuleFromTemplate() {
+function useCreateRuleFromTemplate() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -392,7 +392,7 @@ export function useCreateRuleFromTemplate() {
 /**
  * Hook to list exemptions
  */
-export function useComplianceExemptions(
+function useComplianceExemptions(
   params: {
     rule_id?: string
     entity_type?: string
@@ -432,7 +432,7 @@ export function useComplianceExemptions(
 /**
  * Hook to create an exemption
  */
-export function useCreateExemption() {
+function useCreateExemption() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -450,7 +450,7 @@ export function useCreateExemption() {
 /**
  * Hook to revoke an exemption
  */
-export function useRevokeExemption() {
+function useRevokeExemption() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -483,7 +483,7 @@ export function useRevokeExemption() {
 /**
  * Hook to get pending violations count for the current user
  */
-export function usePendingViolationsCount() {
+function usePendingViolationsCount() {
   return useQuery({
     queryKey: [...complianceKeys.violations(), 'pending-count'],
     queryFn: async () => {
@@ -529,7 +529,7 @@ export function useBlockingViolations(
 /**
  * Hook to check if an entity can proceed (no blocking violations)
  */
-export function useCanProceed(entityType: ComplianceEntityType, entityId: string | undefined) {
+function useCanProceed(entityType: ComplianceEntityType, entityId: string | undefined) {
   const { data: blockingViolations, isLoading } = useBlockingViolations(entityType, entityId)
 
   return {

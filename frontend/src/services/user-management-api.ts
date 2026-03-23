@@ -36,7 +36,7 @@ export interface ActivateAccountResponse {
   message: string
 }
 
-export interface ApiError {
+interface ApiError {
   error: string
   code: string
   details?: string[]
@@ -258,7 +258,7 @@ export interface MyDelegationsResponse {
  * @returns Promise with user creation response
  * @throws ApiError if creation fails
  */
-export async function createUser(data: CreateUserRequest): Promise<CreateUserResponse> {
+async function createUser(data: CreateUserRequest): Promise<CreateUserResponse> {
   const { data: result, error } = await supabase.functions.invoke<CreateUserResponse>(
     'create-user',
     {
@@ -284,7 +284,7 @@ export async function createUser(data: CreateUserRequest): Promise<CreateUserRes
  * @returns Promise with activation response
  * @throws ApiError if activation fails
  */
-export async function activateAccount(
+async function activateAccount(
   data: ActivateAccountRequest,
 ): Promise<ActivateAccountResponse> {
   const { data: result, error } = await supabase.functions.invoke<ActivateAccountResponse>(
@@ -315,7 +315,7 @@ export async function activateAccount(
  * @returns Promise with role assignment response
  * @throws ApiError if assignment fails
  */
-export async function assignRole(data: AssignRoleRequest): Promise<AssignRoleResponse> {
+async function assignRole(data: AssignRoleRequest): Promise<AssignRoleResponse> {
   const { data: result, error } = await supabase.functions.invoke<AssignRoleResponse>(
     'assign-role',
     {
@@ -343,7 +343,7 @@ export async function assignRole(data: AssignRoleRequest): Promise<AssignRoleRes
  * @returns Promise with approval response
  * @throws ApiError if approval fails
  */
-export async function approveRoleChange(
+async function approveRoleChange(
   data: ApproveRoleChangeRequest,
 ): Promise<ApproveRoleChangeResponse> {
   const { data: result, error } = await supabase.functions.invoke<ApproveRoleChangeResponse>(
@@ -371,7 +371,7 @@ export async function approveRoleChange(
  * @returns Promise with pending approvals list
  * @throws ApiError if request fails
  */
-export async function getPendingApprovals(params?: {
+async function getPendingApprovals(params?: {
   status?: 'pending' | 'first_approved' | 'approved' | 'rejected'
   limit?: number
   offset?: number
@@ -408,7 +408,7 @@ export async function getPendingApprovals(params?: {
  * @returns Promise with user permissions response
  * @throws ApiError if request fails
  */
-export async function getUserPermissions(userId: string): Promise<UserPermissionsResponse> {
+async function getUserPermissions(userId: string): Promise<UserPermissionsResponse> {
   const { data: result, error } = await supabase.functions.invoke<UserPermissionsResponse>(
     'user-permissions',
     {
@@ -438,7 +438,7 @@ export async function getUserPermissions(userId: string): Promise<UserPermission
  * @returns Promise with deactivation response including orphaned items summary
  * @throws ApiError if deactivation fails
  */
-export async function deactivateUser(data: DeactivateUserRequest): Promise<DeactivateUserResponse> {
+async function deactivateUser(data: DeactivateUserRequest): Promise<DeactivateUserResponse> {
   const { data: result, error } = await supabase.functions.invoke<DeactivateUserResponse>(
     'deactivate-user',
     {
@@ -466,7 +466,7 @@ export async function deactivateUser(data: DeactivateUserRequest): Promise<Deact
  * @returns Promise with reactivation response
  * @throws ApiError if reactivation fails
  */
-export async function reactivateUser(data: ReactivateUserRequest): Promise<ReactivateUserResponse> {
+async function reactivateUser(data: ReactivateUserRequest): Promise<ReactivateUserResponse> {
   const { data: result, error } = await supabase.functions.invoke<ReactivateUserResponse>(
     'reactivate-user',
     {
@@ -754,7 +754,7 @@ export interface ScheduleAccessReviewResponse {
  * @returns Promise with review generation response
  * @throws ApiError if generation fails
  */
-export async function generateAccessReview(
+async function generateAccessReview(
   data: GenerateAccessReviewRequest,
 ): Promise<GenerateAccessReviewResponse> {
   const { data: result, error } = await supabase.functions.invoke<GenerateAccessReviewResponse>(
@@ -785,7 +785,7 @@ export async function generateAccessReview(
  * @returns Promise with review detail response
  * @throws ApiError if request fails
  */
-export async function getAccessReviewDetail(
+async function getAccessReviewDetail(
   reviewId: string,
   findingType?:
     | 'all'
@@ -823,7 +823,7 @@ export async function getAccessReviewDetail(
  * @returns Promise with certification response
  * @throws ApiError if certification fails
  */
-export async function certifyUserAccess(
+async function certifyUserAccess(
   data: CertifyUserAccessRequest,
 ): Promise<CertifyUserAccessResponse> {
   const { data: result, error } = await supabase.functions.invoke<CertifyUserAccessResponse>(
@@ -854,7 +854,7 @@ export async function certifyUserAccess(
  * @returns Promise with completion response
  * @throws ApiError if completion fails
  */
-export async function completeAccessReview(
+async function completeAccessReview(
   data: CompleteAccessReviewRequest,
 ): Promise<CompleteAccessReviewResponse> {
   const { data: result, error } = await supabase.functions.invoke<CompleteAccessReviewResponse>(
@@ -885,7 +885,7 @@ export async function completeAccessReview(
  * @returns Promise with inactive users list
  * @throws ApiError if request fails
  */
-export async function getInactiveUsers(
+async function getInactiveUsers(
   inactiveDays: number = 90,
   limit: number = 100,
 ): Promise<InactiveUsersResponse> {
@@ -919,7 +919,7 @@ export async function getInactiveUsers(
  * @returns Promise with schedule configuration response
  * @throws ApiError if configuration fails
  */
-export async function scheduleAccessReview(
+async function scheduleAccessReview(
   data: ScheduleAccessReviewRequest,
 ): Promise<ScheduleAccessReviewResponse> {
   const { data: result, error } = await supabase.functions.invoke<ScheduleAccessReviewResponse>(

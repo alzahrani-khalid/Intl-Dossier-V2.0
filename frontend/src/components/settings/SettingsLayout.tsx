@@ -164,7 +164,7 @@ interface SettingsEmptyStateProps {
   action?: ReactNode
 }
 
-export function SettingsEmptyState({
+function SettingsEmptyState({
   icon: Icon,
   title,
   description,

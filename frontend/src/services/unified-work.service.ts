@@ -153,7 +153,7 @@ export async function fetchTeamWorkload(): Promise<TeamMemberWorkload[]> {
 /**
  * Direct RPC call for work items (alternative to Edge Function)
  */
-export async function fetchWorkItemsRPC(
+async function fetchWorkItemsRPC(
   filters: WorkItemFilters = {},
   cursor?: WorkItemCursor,
   limit = 50,
@@ -185,7 +185,7 @@ export async function fetchWorkItemsRPC(
 /**
  * Direct RPC call for work summary
  */
-export async function fetchUserWorkSummaryRPC(): Promise<UserWorkSummary | null> {
+async function fetchUserWorkSummaryRPC(): Promise<UserWorkSummary | null> {
   const { data, error } = await supabase.rpc('get_user_work_summary')
 
   if (error) {
@@ -198,7 +198,7 @@ export async function fetchUserWorkSummaryRPC(): Promise<UserWorkSummary | null>
 /**
  * Direct RPC call for productivity metrics
  */
-export async function fetchUserProductivityMetricsRPC(): Promise<UserProductivityMetrics | null> {
+async function fetchUserProductivityMetricsRPC(): Promise<UserProductivityMetrics | null> {
   const { data, error } = await supabase.rpc('get_user_productivity_metrics')
 
   if (error) {
@@ -211,7 +211,7 @@ export async function fetchUserProductivityMetricsRPC(): Promise<UserProductivit
 /**
  * Direct RPC call for team workload
  */
-export async function fetchTeamWorkloadRPC(): Promise<TeamMemberWorkload[]> {
+async function fetchTeamWorkloadRPC(): Promise<TeamMemberWorkload[]> {
   const { data, error } = await supabase.rpc('get_team_workload')
 
   if (error) {

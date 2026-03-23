@@ -50,7 +50,7 @@ export function isRTLLanguage(lang: ContentLanguage): boolean {
 /**
  * Get text direction for a language
  */
-export function getLanguageDirection(lang: ContentLanguage): 'rtl' | 'ltr' {
+function getLanguageDirection(lang: ContentLanguage): 'rtl' | 'ltr' {
   return isRTLLanguage(lang) ? 'rtl' : 'ltr'
 }
 
@@ -61,7 +61,7 @@ export function getLanguageDirection(lang: ContentLanguage): 'rtl' | 'ltr' {
 /**
  * Language metadata from database
  */
-export interface SupportedLanguage {
+interface SupportedLanguage {
   code: ContentLanguage
   name_en: string
   name_native: string
@@ -196,7 +196,7 @@ export interface EntityAvailableLanguage {
 /**
  * Request to get entity translations
  */
-export interface GetEntityTranslationsRequest {
+interface GetEntityTranslationsRequest {
   entity_type: TranslatableEntityType
   entity_id: string
   language?: ContentLanguage
@@ -205,7 +205,7 @@ export interface GetEntityTranslationsRequest {
 /**
  * Response from get entity translations
  */
-export interface GetEntityTranslationsResponse {
+interface GetEntityTranslationsResponse {
   translations: EntityContentTranslation[]
   available_languages: EntityAvailableLanguage[]
   settings: EntityLanguageSettings | null
@@ -214,7 +214,7 @@ export interface GetEntityTranslationsResponse {
 /**
  * Request to upsert a translation
  */
-export interface UpsertTranslationRequest {
+interface UpsertTranslationRequest {
   entity_type: TranslatableEntityType
   entity_id: string
   field_name: string
@@ -231,7 +231,7 @@ export interface UpsertTranslationRequest {
 /**
  * Request to get content in a specific language
  */
-export interface GetEntityContentRequest {
+interface GetEntityContentRequest {
   entity_type: TranslatableEntityType
   entity_id: string
   field_name: string
@@ -242,7 +242,7 @@ export interface GetEntityContentRequest {
 /**
  * Response from get entity content
  */
-export interface GetEntityContentResponse {
+interface GetEntityContentResponse {
   content: string
   language: ContentLanguage
   is_fallback: boolean
@@ -253,7 +253,7 @@ export interface GetEntityContentResponse {
 /**
  * Request to bulk upsert translations
  */
-export interface BulkUpsertTranslationsRequest {
+interface BulkUpsertTranslationsRequest {
   entity_type: TranslatableEntityType
   entity_id: string
   translations: Array<{
@@ -268,7 +268,7 @@ export interface BulkUpsertTranslationsRequest {
 /**
  * Request to translate content to another language
  */
-export interface TranslateContentRequest {
+interface TranslateContentRequest {
   entity_type: TranslatableEntityType
   entity_id: string
   field_name: string
@@ -280,7 +280,7 @@ export interface TranslateContentRequest {
 /**
  * Response from translate content
  */
-export interface TranslateContentResponse {
+interface TranslateContentResponse {
   original_content: string
   translated_content: string
   source_language: ContentLanguage
@@ -403,7 +403,7 @@ export interface MultiLanguageContentEditorProps {
 /**
  * Props for LanguageTabPanel component
  */
-export interface LanguageTabPanelProps {
+interface LanguageTabPanelProps {
   /** Currently selected language */
   selectedLanguage: ContentLanguage
   /** Callback when language tab changes */
@@ -423,7 +423,7 @@ export interface LanguageTabPanelProps {
 /**
  * Props for TranslationStatusBadge component
  */
-export interface TranslationStatusBadgeProps {
+interface TranslationStatusBadgeProps {
   status: TranslationStatus
   isMachineTranslated?: boolean
   confidence?: number | null
@@ -442,7 +442,7 @@ export type FieldContentByLanguage = Record<ContentLanguage, string | undefined>
 /**
  * Map of all fields by language
  */
-export type EntityContentByLanguage = Record<string, FieldContentByLanguage>
+type EntityContentByLanguage = Record<string, FieldContentByLanguage>
 
 /**
  * Translation completeness info
@@ -486,7 +486,7 @@ export function calculateCompleteness(
 /**
  * Group translations by field name
  */
-export function groupTranslationsByField(
+function groupTranslationsByField(
   translations: EntityContentTranslation[],
 ): Record<string, EntityContentTranslation[]> {
   return translations.reduce(
@@ -505,7 +505,7 @@ export function groupTranslationsByField(
 /**
  * Get content for a specific field and language
  */
-export function getFieldContent(
+function getFieldContent(
   translations: EntityContentTranslation[],
   fieldName: string,
   language: ContentLanguage,

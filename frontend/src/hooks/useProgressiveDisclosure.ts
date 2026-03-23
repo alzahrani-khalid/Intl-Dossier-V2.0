@@ -615,4 +615,3 @@ export function useProgressiveDisclosure(
   }
 }
 
-export default useProgressiveDisclosure

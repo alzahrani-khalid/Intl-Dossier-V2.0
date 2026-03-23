@@ -292,4 +292,3 @@ export const cacheMetrics = {
   getSummary: getMetricsSummary,
 }
 
-export default cacheMetrics

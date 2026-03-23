@@ -162,4 +162,3 @@ export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinut
   )
 }
 
-export default MeetingMinutesCard

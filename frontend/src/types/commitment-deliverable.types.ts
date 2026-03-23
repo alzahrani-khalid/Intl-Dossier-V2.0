@@ -69,7 +69,7 @@ export interface CommitmentDeliverable {
 /**
  * Deliverable with computed properties for UI display
  */
-export interface CommitmentDeliverableWithComputedProps extends CommitmentDeliverable {
+interface CommitmentDeliverableWithComputedProps extends CommitmentDeliverable {
   isOverdue: boolean
   daysUntilDue: number
   displayTitle: string // Based on current language
@@ -358,7 +358,7 @@ export const VALID_DELIVERABLE_STATUS_TRANSITIONS: Record<
 /**
  * Check if a status transition is valid
  */
-export function isValidDeliverableStatusTransition(
+function isValidDeliverableStatusTransition(
   from: CommitmentDeliverableStatus,
   to: CommitmentDeliverableStatus,
 ): boolean {

@@ -141,7 +141,7 @@ export function useEngagement(
 /**
  * Hook to create a new engagement
  */
-export function useCreateEngagement() {
+function useCreateEngagement() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('engagements')
 
@@ -181,7 +181,7 @@ export function useCreateEngagement() {
 /**
  * Hook to update an engagement
  */
-export function useUpdateEngagement() {
+function useUpdateEngagement() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('engagements')
 
@@ -272,7 +272,7 @@ export function useArchiveEngagement() {
 /**
  * Hook to get participants for an engagement
  */
-export function useEngagementParticipants(
+function useEngagementParticipants(
   engagementId: string,
   options?: Omit<UseQueryOptions<{ data: EngagementParticipant[] }, Error>, 'queryKey' | 'queryFn'>,
 ) {
@@ -300,7 +300,7 @@ export function useEngagementParticipants(
 /**
  * Hook to add a participant to an engagement
  */
-export function useAddEngagementParticipant() {
+function useAddEngagementParticipant() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('engagements')
 
@@ -343,7 +343,7 @@ export function useAddEngagementParticipant() {
 /**
  * Hook to remove a participant from an engagement
  */
-export function useRemoveEngagementParticipant() {
+function useRemoveEngagementParticipant() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('engagements')
 
@@ -389,7 +389,7 @@ export function useRemoveEngagementParticipant() {
 /**
  * Hook to get agenda items for an engagement
  */
-export function useEngagementAgenda(
+function useEngagementAgenda(
   engagementId: string,
   options?: Omit<UseQueryOptions<{ data: EngagementAgendaItem[] }, Error>, 'queryKey' | 'queryFn'>,
 ) {
@@ -416,7 +416,7 @@ export function useEngagementAgenda(
 /**
  * Hook to add an agenda item to an engagement
  */
-export function useAddEngagementAgendaItem() {
+function useAddEngagementAgendaItem() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('engagements')
 
@@ -456,7 +456,7 @@ export function useAddEngagementAgendaItem() {
 /**
  * Hook to update an agenda item
  */
-export function useUpdateEngagementAgendaItem() {
+function useUpdateEngagementAgendaItem() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('engagements')
 
@@ -501,7 +501,7 @@ export function useUpdateEngagementAgendaItem() {
 /**
  * Hook to remove an agenda item from an engagement
  */
-export function useRemoveEngagementAgendaItem() {
+function useRemoveEngagementAgendaItem() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('engagements')
 
@@ -547,7 +547,7 @@ export function useRemoveEngagementAgendaItem() {
 /**
  * Hook to invalidate all engagement queries
  */
-export function useInvalidateEngagements() {
+function useInvalidateEngagements() {
   const queryClient = useQueryClient()
 
   return () => {

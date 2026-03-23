@@ -258,7 +258,7 @@ export interface SubmitVoteRequest {
 /**
  * Batch submit votes request (multiple slots at once)
  */
-export interface BatchSubmitVotesRequest {
+interface BatchSubmitVotesRequest {
   poll_id: string
   votes: SubmitVoteRequest[]
 }
@@ -330,14 +330,14 @@ export interface OptimalSlot {
 /**
  * Close poll request
  */
-export interface ClosePollRequest {
+interface ClosePollRequest {
   selected_slot_id?: string
 }
 
 /**
  * Auto-schedule request
  */
-export interface AutoScheduleRequest {
+interface AutoScheduleRequest {
   poll_id: string
   slot_id?: string // If not provided, uses best slot
   event_type?: string
@@ -368,7 +368,7 @@ export interface AutoScheduleResponse {
 /**
  * Slot with user's response for UI
  */
-export interface SlotWithResponse extends PollSlot {
+interface SlotWithResponse extends PollSlot {
   my_response?: PollResponseType
   my_notes?: string
   response_summary: {
@@ -385,7 +385,7 @@ export interface SlotWithResponse extends PollSlot {
 /**
  * Participant with response status for UI
  */
-export interface ParticipantWithStatus extends PollParticipant {
+interface ParticipantWithStatus extends PollParticipant {
   response_count: number
   total_slots: number
   has_completed: boolean
@@ -394,7 +394,7 @@ export interface ParticipantWithStatus extends PollParticipant {
 /**
  * Vote matrix cell for grid display
  */
-export interface VoteMatrixCell {
+interface VoteMatrixCell {
   slot_id: string
   participant_id: string
   response?: PollResponseType
@@ -404,7 +404,7 @@ export interface VoteMatrixCell {
 /**
  * Vote matrix row (participant)
  */
-export interface VoteMatrixRow {
+interface VoteMatrixRow {
   participant: PollParticipant
   votes: Map<string, PollResponseType | undefined>
 }
@@ -466,7 +466,7 @@ export const POLL_STATUS_COLORS: Record<PollStatus, { bg: string; text: string; 
   }
 
 /** Voting rule icons */
-export const VOTING_RULE_ICONS: Record<VotingRule, string> = {
+const VOTING_RULE_ICONS: Record<VotingRule, string> = {
   simple_majority: 'Vote',
   consensus: 'Users',
   unanimous: 'CheckCircle2',
@@ -474,7 +474,7 @@ export const VOTING_RULE_ICONS: Record<VotingRule, string> = {
 }
 
 /** Response type icons */
-export const RESPONSE_TYPE_ICONS: Record<PollResponseType, string> = {
+const RESPONSE_TYPE_ICONS: Record<PollResponseType, string> = {
   available: 'Check',
   unavailable: 'X',
   maybe: 'HelpCircle',

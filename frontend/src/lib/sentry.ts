@@ -203,7 +203,7 @@ export function captureMessage(
 /**
  * Start a performance transaction
  */
-export function startTransaction(
+function startTransaction(
   name: string,
   op: string,
 ): ReturnType<typeof Sentry.startInactiveSpan> {
@@ -217,12 +217,12 @@ export function startTransaction(
  * React Error Boundary wrapper from Sentry
  * Use this instead of a custom error boundary for automatic Sentry integration
  */
-export const SentryErrorBoundary = Sentry.ErrorBoundary
+const SentryErrorBoundary = Sentry.ErrorBoundary
 
 /**
  * Sentry React profiler for performance monitoring
  */
-export const SentryProfiler = Sentry.withProfiler
+const SentryProfiler = Sentry.withProfiler
 
 // Re-export commonly used Sentry functions
 export { Sentry }

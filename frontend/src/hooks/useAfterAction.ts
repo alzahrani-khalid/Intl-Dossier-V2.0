@@ -171,7 +171,7 @@ export function useAfterAction(id: string | undefined) {
 }
 
 // Fetch after-actions list for a dossier
-export function useAfterActions(
+function useAfterActions(
   dossierId: string | undefined,
   options?: {
     status?: 'draft' | 'published' | 'edit_requested'
@@ -218,7 +218,7 @@ export function useCreateAfterAction() {
 }
 
 // Update after-action mutation with optimistic locking
-export function useUpdateAfterAction(id: string) {
+function useUpdateAfterAction(id: string) {
   const queryClient = useQueryClient()
 
   return useMutation({

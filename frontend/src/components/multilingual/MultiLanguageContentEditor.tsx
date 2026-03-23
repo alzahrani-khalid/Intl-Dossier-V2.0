@@ -487,4 +487,3 @@ export function MultiLanguageContentEditor({
   )
 }
 
-export default MultiLanguageContentEditor

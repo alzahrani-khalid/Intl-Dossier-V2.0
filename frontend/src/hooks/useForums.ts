@@ -99,7 +99,7 @@ export function useForums(filters: ForumFilters = {}) {
 /**
  * Fetch single forum by ID
  */
-export function useForum(id: string | undefined) {
+function useForum(id: string | undefined) {
   return useQuery<Forum | null, Error>({
     queryKey: [FORUM_QUERY_KEY, id],
     queryFn: async () => {
@@ -207,7 +207,7 @@ export function useCreateForum() {
 /**
  * Update existing forum
  */
-export function useUpdateForum() {
+function useUpdateForum() {
   const queryClient = useQueryClient()
 
   return useMutation({

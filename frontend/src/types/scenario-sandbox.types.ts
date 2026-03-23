@@ -72,7 +72,7 @@ export interface Scenario {
 /**
  * Scenario with computed fields
  */
-export interface ScenarioWithStats extends Scenario {
+interface ScenarioWithStats extends Scenario {
   variable_count: number
   outcome_count: number
   positive_outcomes: number
@@ -139,7 +139,7 @@ export interface ScenarioComparison {
 /**
  * Scenario snapshot (for versioning)
  */
-export interface ScenarioSnapshot {
+interface ScenarioSnapshot {
   id: string
   scenario_id: string
   version: number
@@ -370,7 +370,7 @@ export interface SuccessResponse {
 /**
  * Variable form state
  */
-export interface VariableFormState {
+interface VariableFormState {
   name_en: string
   name_ar: string
   change_type: VariableChangeType
@@ -383,7 +383,7 @@ export interface VariableFormState {
 /**
  * Outcome form state
  */
-export interface OutcomeFormState {
+interface OutcomeFormState {
   title_en: string
   title_ar: string
   description_en: string
@@ -444,7 +444,7 @@ export const IMPACT_LEVEL_LABELS: Record<ImpactLevel, { en: string; ar: string }
 /**
  * Collaborator role labels
  */
-export const COLLABORATOR_ROLE_LABELS: Record<CollaboratorRole, { en: string; ar: string }> = {
+const COLLABORATOR_ROLE_LABELS: Record<CollaboratorRole, { en: string; ar: string }> = {
   owner: { en: 'Owner', ar: 'المالك' },
   editor: { en: 'Editor', ar: 'المحرر' },
   viewer: { en: 'Viewer', ar: 'المشاهد' },
@@ -470,7 +470,7 @@ export function getStatusColor(status: ScenarioStatus): string {
 /**
  * Get scenario type icon name
  */
-export function getScenarioTypeIcon(type: ScenarioType): string {
+function getScenarioTypeIcon(type: ScenarioType): string {
   const icons: Record<ScenarioType, string> = {
     stakeholder_engagement: 'Users',
     policy_change: 'FileText',
@@ -498,7 +498,7 @@ export function getImpactLevelColor(level: ImpactLevel): string {
 /**
  * Get impact level background color
  */
-export function getImpactLevelBgColor(level: ImpactLevel): string {
+function getImpactLevelBgColor(level: ImpactLevel): string {
   const colors: Record<ImpactLevel, string> = {
     minimal: 'bg-gray-100 dark:bg-gray-800',
     low: 'bg-blue-100 dark:bg-blue-900/30',
