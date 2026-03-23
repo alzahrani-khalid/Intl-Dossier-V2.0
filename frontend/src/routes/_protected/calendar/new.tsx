@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft } from 'lucide-react'
-import { CalendarEntryForm } from '@/components/Calendar/CalendarEntryForm'
+import { CalendarEntryForm } from '@/components/calendar/CalendarEntryForm'
 
 export const Route = createFileRoute('/_protected/calendar/new')({
   component: NewCalendarEntryPage,

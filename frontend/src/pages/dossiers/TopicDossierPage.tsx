@@ -6,8 +6,8 @@
  * Renders TopicDossierDetail component.
  */
 
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
-import { TopicDossierDetail } from '@/components/Dossier/TopicDossierDetail'
+import { DossierDetailLayout } from '@/components/dossier/DossierDetailLayout'
+import { TopicDossierDetail } from '@/components/dossier/TopicDossierDetail'
 import type { DossierWithExtension } from '@/services/dossier-api'
 import type { Dossier } from '@/lib/dossier-type-guards'
 

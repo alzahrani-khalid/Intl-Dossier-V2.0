@@ -44,7 +44,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { AdvancedDataTable } from '@/components/Table/AdvancedDataTable'
+import { AdvancedDataTable } from '@/components/table/AdvancedDataTable'
 import { ForumDetailsDialog } from '@/components/forums/ForumDetailsDialog'
 import { useForums, useCreateForum, useDeleteForum } from '@/hooks/useForums'
 import { format } from 'date-fns'

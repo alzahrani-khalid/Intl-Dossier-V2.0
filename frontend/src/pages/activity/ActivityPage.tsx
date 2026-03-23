@@ -14,7 +14,7 @@ import { Activity, BarChart3, RefreshCcw, Loader2, Settings } from 'lucide-react
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
-import { EnhancedActivityFeed } from '@/components/ActivityFeed/EnhancedActivityFeed'
+import { EnhancedActivityFeed } from '@/components/activity-feed/EnhancedActivityFeed'
 import { useEntityFollow } from '@/hooks/useActivityFeed'
 import { ActivityStatistics } from './components/ActivityStatistics'
 import { ActivitySettingsSheet } from './components/ActivitySettingsSheet'

@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useSidebar } from '@/components/ui/sidebar'
-import { useKeyboardShortcutContext } from '@/components/KeyboardShortcuts/KeyboardShortcutProvider'
+import { useKeyboardShortcutContext } from '@/components/keyboard-shortcuts/KeyboardShortcutProvider'
 
 interface SidebarSearchProps {
   /** Whether sidebar is expanded (overrides useSidebar state) */

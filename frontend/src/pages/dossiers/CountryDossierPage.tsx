@@ -6,8 +6,8 @@
  * Mobile-first, RTL-compatible, WCAG AA compliant.
  */
 
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
-import { CountryDossierDetail } from '@/components/Dossier/CountryDossierDetail'
+import { DossierDetailLayout } from '@/components/dossier/DossierDetailLayout'
+import { CountryDossierDetail } from '@/components/dossier/CountryDossierDetail'
 import type { CountryDossier } from '@/lib/dossier-type-guards'
 
 interface CountryDossierPageProps {

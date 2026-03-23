@@ -9,12 +9,12 @@
 
 import { useTranslation } from 'react-i18next'
 import { useSessionStorage } from '@/hooks/useSessionStorage'
-import { CollapsibleSection } from '@/components/Dossier/CollapsibleSection'
-import { EngagementInformation } from '@/components/Dossier/sections/EngagementInformation'
+import { CollapsibleSection } from '@/components/dossier/CollapsibleSection'
+import { EngagementInformation } from '@/components/dossier/sections/EngagementInformation'
 import { EngagementTimeline } from '@/components/timeline/EngagementTimeline'
-import { ParticipantsList } from '@/components/Dossier/sections/ParticipantsList'
-import { OutcomesSummary } from '@/components/Dossier/sections/OutcomesSummary'
-import { FollowUpActions } from '@/components/Dossier/sections/FollowUpActions'
+import { ParticipantsList } from '@/components/dossier/sections/ParticipantsList'
+import { OutcomesSummary } from '@/components/dossier/sections/OutcomesSummary'
+import { FollowUpActions } from '@/components/dossier/sections/FollowUpActions'
 import { EngagementPositionsSection } from '@/components/positions/EngagementPositionsSection'
 import type { EngagementDossier } from '@/lib/dossier-type-guards'
 

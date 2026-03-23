@@ -23,7 +23,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 // Lazy load the DossierOverview component for code splitting
 const DossierOverview = lazy(() =>
-  import('@/components/Dossier/DossierOverview').then((module) => ({
+  import('@/components/dossier/DossierOverview').then((module) => ({
     default: module.DossierOverview,
   })),
 )

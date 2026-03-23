@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SmartInput, SearchableSelect, type SelectOption } from '@/components/Forms'
+import { SmartInput, SearchableSelect, type SelectOption } from '@/components/forms'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 

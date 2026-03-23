@@ -48,9 +48,9 @@ import {
   useFormDraft,
   ConditionalField,
 } from '@/components/ui/form-wizard'
-import { DossierTypeSelector } from '@/components/Dossier/DossierTypeSelector'
+import { DossierTypeSelector } from '@/components/dossier/DossierTypeSelector'
 import { DossierPicker } from '@/components/work-creation/DossierPicker'
-import { AIFieldAssist } from '@/components/Dossier/AIFieldAssist'
+import { AIFieldAssist } from '@/components/dossier/AIFieldAssist'
 import type { GeneratedFields } from '@/hooks/useAIFieldAssist'
 import {
   Form,
@@ -61,7 +61,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { FieldLabelWithHelp } from '@/components/Forms/ContextualHelp'
+import { FieldLabelWithHelp } from '@/components/forms/ContextualHelp'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import {

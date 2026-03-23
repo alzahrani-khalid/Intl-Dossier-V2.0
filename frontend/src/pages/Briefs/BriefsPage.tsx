@@ -5,7 +5,7 @@ import { Plus, FileText, Calendar, Eye, Download, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { DataTable } from '@/components/Table/DataTable'
+import { DataTable } from '@/components/table/DataTable'
 import {
   Dialog,
   DialogContent,

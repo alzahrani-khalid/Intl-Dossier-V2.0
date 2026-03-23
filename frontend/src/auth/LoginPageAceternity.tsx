@@ -8,8 +8,8 @@ import { useAuthStore } from '../store/authStore'
 import { Eye, EyeOff, Loader2, Globe, Mail, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
-import { FormInputAceternity } from '../components/Forms/FormInputAceternity'
-import { FormCheckboxAceternity } from '../components/Forms/FormCheckboxAceternity'
+import { FormInputAceternity } from '../components/forms/FormInputAceternity'
+import { FormCheckboxAceternity } from '../components/forms/FormCheckboxAceternity'
 
 const loginSchema = z.object({
   email: z.string().min(1, 'validation.required').email('validation.email'),

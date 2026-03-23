@@ -11,7 +11,7 @@
  * - Mobile-first, RTL-compatible design
  * - Accessibility (proper heading levels, ARIA attributes)
  *
- * @module components/Forms/FormSection
+ * @module components/forms/FormSection
  */
 
 import { useState, useCallback, createContext, useContext, type ReactNode } from 'react'

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { NotificationPreferences } from '@/components/Notifications/NotificationPreferences'
+import { NotificationPreferences } from '@/components/notifications/NotificationPreferences'
 
 export const Route = createFileRoute('/_protected/settings/notifications')({
   component: NotificationSettingsPage,

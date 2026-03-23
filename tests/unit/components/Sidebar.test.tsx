@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Sidebar } from '../../../frontend/src/components/Layout/Sidebar'
+import { Sidebar } from '../../../frontend/src/components/layout/Sidebar'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '../../../frontend/src/i18n'
 

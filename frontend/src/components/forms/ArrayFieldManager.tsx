@@ -12,7 +12,7 @@
  * - Mobile-first, RTL-compatible design
  * - Integration with react-hook-form
  *
- * @module components/Forms/ArrayFieldManager
+ * @module components/forms/ArrayFieldManager
  */
 
 import { useCallback, useState } from 'react'

@@ -7,8 +7,8 @@
  */
 
 import type { PersonDossier } from '@/lib/dossier-type-guards'
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
-import { PersonDossierDetail } from '@/components/Dossier/PersonDossierDetail'
+import { DossierDetailLayout } from '@/components/dossier/DossierDetailLayout'
+import { PersonDossierDetail } from '@/components/dossier/PersonDossierDetail'
 
 interface PersonDossierPageProps {
   dossier: PersonDossier

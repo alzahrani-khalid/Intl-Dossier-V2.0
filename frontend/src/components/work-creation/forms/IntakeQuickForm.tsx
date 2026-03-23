@@ -37,7 +37,7 @@ import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import type { CreationContext } from '../hooks/useCreationContext'
 import type { CreateTicketRequest } from '@/types/intake'
-import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/Dossier'
+import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/dossier'
 import type { DossierType } from '@/types/relationship.types'
 
 // Validation schema

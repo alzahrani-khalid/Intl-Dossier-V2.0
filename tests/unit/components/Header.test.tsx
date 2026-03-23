@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Header } from '../../../frontend/src/components/Layout/Header'
+import { Header } from '../../../frontend/src/components/layout/Header'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '../../../frontend/src/i18n'
 
@@ -24,7 +24,7 @@ vi.mock('../../../frontend/src/components/LanguageToggle', () => ({
 }))
 
 // Mock the notification center
-vi.mock('../../../frontend/src/components/Notifications/NotificationCenter', () => ({
+vi.mock('../../../frontend/src/components/notifications/NotificationCenter', () => ({
   NotificationCenter: () => <div data-testid="notification-center">Notifications</div>
 }))
 

@@ -11,7 +11,7 @@
  * - Unsaved changes warning
  * - Mobile-first, RTL-compatible design
  *
- * @module components/Forms/AutoSaveFormWrapper
+ * @module components/forms/AutoSaveFormWrapper
  */
 
 import { useEffect, useCallback, useState, createContext, useContext, type ReactNode } from 'react'

@@ -1,15 +1,15 @@
 import { render, screen } from '@testing-library/react'
-import { MainLayout } from '../../../frontend/src/components/Layout/MainLayout'
+import { MainLayout } from '../../../frontend/src/components/layout/MainLayout'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '../../../frontend/src/i18n'
 
 // Mock the Header component
-vi.mock('../../../frontend/src/components/Layout/Header', () => ({
+vi.mock('../../../frontend/src/components/layout/Header', () => ({
   Header: () => <header data-testid="header">Header</header>
 }))
 
 // Mock the Sidebar component
-vi.mock('../../../frontend/src/components/Layout/Sidebar', () => ({
+vi.mock('../../../frontend/src/components/layout/Sidebar', () => ({
   Sidebar: () => <aside data-testid="sidebar">Sidebar</aside>
 }))
 

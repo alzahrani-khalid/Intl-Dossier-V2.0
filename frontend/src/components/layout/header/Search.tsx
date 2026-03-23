@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { SearchIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { useKeyboardShortcutContext } from '@/components/KeyboardShortcuts/KeyboardShortcutProvider'
+import { useKeyboardShortcutContext } from '@/components/keyboard-shortcuts/KeyboardShortcutProvider'
 
 export function HeaderSearch({ className }: { className?: string }) {
   const { t } = useTranslation('common')

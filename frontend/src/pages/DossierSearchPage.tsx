@@ -20,8 +20,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
-import { DossierFirstSearchResults } from '@/components/Search/DossierFirstSearchResults'
-import { DossierSearchFilters } from '@/components/Search/DossierSearchFilters'
+import { DossierFirstSearchResults } from '@/components/search/DossierFirstSearchResults'
+import { DossierSearchFilters } from '@/components/search/DossierSearchFilters'
 import { useDossierFirstSearch } from '@/hooks/useDossierFirstSearch'
 import type {
   DossierSearchResult,

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { FormSelect } from '../../../frontend/src/components/Forms/FormSelect'
+import { FormSelect } from '../../../frontend/src/components/forms/FormSelect'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '../../../frontend/src/i18n'
 

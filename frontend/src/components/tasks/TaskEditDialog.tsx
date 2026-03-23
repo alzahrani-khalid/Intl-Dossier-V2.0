@@ -44,7 +44,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { UserPicker } from '@/components/Forms/UserPicker'
+import { UserPicker } from '@/components/forms/UserPicker'
 import { useUpdateTask } from '@/hooks/useTasks'
 import type { Database } from '../../../../backend/src/types/database.types'
 

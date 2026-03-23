@@ -4,7 +4,7 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
-import { CalendarSyncSettings } from '@/components/Calendar/CalendarSyncSettings'
+import { CalendarSyncSettings } from '@/components/calendar/CalendarSyncSettings'
 
 export const Route = createFileRoute('/_protected/settings/calendar-sync')({
   component: CalendarSyncSettingsPage,

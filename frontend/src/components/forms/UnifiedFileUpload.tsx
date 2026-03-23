@@ -16,7 +16,7 @@
  * - Accessibility (ARIA labels, keyboard support)
  * - Error handling with recovery suggestions
  *
- * @module components/Forms/UnifiedFileUpload
+ * @module components/forms/UnifiedFileUpload
  */
 
 import { useCallback, useState, useId } from 'react'

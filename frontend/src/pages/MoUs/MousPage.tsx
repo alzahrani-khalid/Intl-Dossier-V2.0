@@ -6,7 +6,7 @@ import { Plus, FileText, AlertCircle, ChevronRight, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { DataTable } from '@/components/Table/DataTable'
+import { DataTable } from '@/components/table/DataTable'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 

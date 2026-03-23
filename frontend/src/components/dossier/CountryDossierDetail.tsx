@@ -30,7 +30,7 @@ const IntelligenceTabContent = lazy(() =>
   })),
 )
 import { CountryTimeline } from '@/components/timeline/CountryTimeline'
-import { DossierActivityTimeline } from '@/components/Dossier/DossierActivityTimeline'
+import { DossierActivityTimeline } from '@/components/dossier/DossierActivityTimeline'
 import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph'
 import { DossierPositionsTab } from '@/components/positions/DossierPositionsTab'
 import { DossierMoUsTab } from '@/components/dossiers/DossierMoUsTab'

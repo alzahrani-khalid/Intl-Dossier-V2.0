@@ -23,8 +23,8 @@
  * - Tab content lazy-loaded with Suspense
  */
 
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
-import { OrganizationDossierDetail } from '@/components/Dossier/OrganizationDossierDetail'
+import { DossierDetailLayout } from '@/components/dossier/DossierDetailLayout'
+import { OrganizationDossierDetail } from '@/components/dossier/OrganizationDossierDetail'
 import type { OrganizationDossier } from '@/lib/dossier-type-guards'
 
 interface OrganizationDossierPageProps {

@@ -5,8 +5,8 @@ import { useAuthStore } from '../../store/authStore'
 import { useUIStore } from '../../store/uiStore'
 import { ThemeSelector } from '../theme-selector/theme-selector'
 import { LanguageToggle } from '../LanguageToggle'
-import { NotificationPanel } from '../Notifications'
-import { useOptionalKeyboardShortcutContext } from '../KeyboardShortcuts'
+import { NotificationPanel } from '../notifications'
+import { useOptionalKeyboardShortcutContext } from '../keyboard-shortcuts'
 
 export function Header() {
   const { t } = useTranslation()

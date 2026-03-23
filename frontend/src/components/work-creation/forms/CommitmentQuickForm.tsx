@@ -43,7 +43,7 @@ import type { CreateCommitmentInput, Commitment } from '@/types/commitment.types
 import type { CreationContext } from '../hooks/useCreationContext'
 import type { DossierOption } from '../DossierPicker'
 import { useCreateWorkItemDossierLinks } from '@/hooks/useCreateWorkItemDossierLinks'
-import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/Dossier'
+import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/dossier'
 import type { InheritanceSource, ContextEntityType } from '@/types/dossier-context.types'
 import type { DossierType } from '@/types/relationship.types'
 

@@ -29,7 +29,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { UserPicker } from '@/components/Forms/UserPicker'
+import { UserPicker } from '@/components/forms/UserPicker'
 import {
   Select,
   SelectContent,
@@ -44,7 +44,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import type { CreationContext } from '../hooks/useCreationContext'
 import { useCreateWorkItemDossierLinks } from '@/hooks/useCreateWorkItemDossierLinks'
-import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/Dossier'
+import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/dossier'
 import type { InheritanceSource, ContextEntityType } from '@/types/dossier-context.types'
 import type { DossierType } from '@/types/relationship.types'
 

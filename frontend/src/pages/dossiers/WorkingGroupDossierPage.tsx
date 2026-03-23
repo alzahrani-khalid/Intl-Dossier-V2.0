@@ -21,8 +21,8 @@
  * - Will be lazy-loaded via React.lazy in polish phase (T064)
  */
 
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
-import { WorkingGroupDossierDetail } from '@/components/Dossier/WorkingGroupDossierDetail'
+import { DossierDetailLayout } from '@/components/dossier/DossierDetailLayout'
+import { WorkingGroupDossierDetail } from '@/components/dossier/WorkingGroupDossierDetail'
 import type { WorkingGroupDossier } from '@/lib/dossier-type-guards'
 
 interface WorkingGroupDossierPageProps {

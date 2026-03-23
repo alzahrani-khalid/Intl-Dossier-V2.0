@@ -39,7 +39,7 @@ import { StatusTimeline } from './StatusTimeline'
 import { CommitmentForm } from './CommitmentForm'
 import { EvidenceUpload } from './EvidenceUpload'
 import { DeliverablesTimeline } from './deliverables'
-import { DossierLinksWidget } from '@/components/Dossier'
+import { DossierLinksWidget } from '@/components/dossier'
 
 export interface CommitmentDetailDrawerProps {
   commitmentId: string | null

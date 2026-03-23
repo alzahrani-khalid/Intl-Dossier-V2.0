@@ -7,7 +7,7 @@
  * - Contextual recovery suggestions
  * - Mobile-first, RTL-compatible design
  *
- * @module components/Forms/FormErrorDisplay
+ * @module components/forms/FormErrorDisplay
  */
 
 import { useTranslation } from 'react-i18next'

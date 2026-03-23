@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
-import { MainLayout } from '../components/Layout/MainLayout'
+import { MainLayout } from '../components/layout/MainLayout'
 import { useAuthStore, supabase } from '../store/authStore'
 import { ChatDock } from '@/components/ai/ChatDock'
 import { ChatProvider } from '@/contexts/ChatContext'

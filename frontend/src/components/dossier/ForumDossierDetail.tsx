@@ -47,7 +47,7 @@ import { DecisionLogs } from './sections/DecisionLogs'
 // Shared tab components
 import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph'
 import { DossierMoUsTab } from '@/components/dossiers/DossierMoUsTab'
-import { DossierActivityTimeline } from '@/components/Dossier/DossierActivityTimeline'
+import { DossierActivityTimeline } from '@/components/dossier/DossierActivityTimeline'
 import { DossierTimeline } from '@/components/DossierTimeline'
 import { CommentList } from '@/components/comments'
 

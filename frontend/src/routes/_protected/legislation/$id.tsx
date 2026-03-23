@@ -6,7 +6,7 @@
 import { useState, useCallback } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { LegislationDetail, LegislationForm } from '@/components/Legislation'
+import { LegislationDetail, LegislationForm } from '@/components/legislation'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { useLegislation } from '@/hooks/useLegislation'
 

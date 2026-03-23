@@ -22,8 +22,8 @@
  * - Tab content loaded on demand with Suspense
  */
 
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
-import { ForumDossierDetail } from '@/components/Dossier/ForumDossierDetail'
+import { DossierDetailLayout } from '@/components/dossier/DossierDetailLayout'
+import { ForumDossierDetail } from '@/components/dossier/ForumDossierDetail'
 import type { ForumDossier } from '@/lib/dossier-type-guards'
 
 interface ForumDossierPageProps {

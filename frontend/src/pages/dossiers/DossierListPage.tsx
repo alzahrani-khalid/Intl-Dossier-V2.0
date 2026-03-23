@@ -21,11 +21,11 @@ import { useSampleData } from '@/hooks/useSampleData'
 import { usePullToRefresh } from '@/hooks/usePullToRefresh'
 import { useLastSyncInfo } from '@/hooks/useLastSyncInfo'
 import { PullToRefreshIndicator, SyncStatusBar } from '@/components/ui/pull-to-refresh-indicator'
-import { ExpandableDossierCard } from '@/components/Dossier/ExpandableDossierCard'
+import { ExpandableDossierCard } from '@/components/dossier/ExpandableDossierCard'
 import {
   DossierTypeStatsCard,
   DossierTypeStatsCardSkeleton,
-} from '@/components/Dossier/DossierTypeStatsCard'
+} from '@/components/dossier/DossierTypeStatsCard'
 import { SavedViewsManager } from '@/components/view-preferences/SavedViewsManager'
 import { SampleDataBanner, SampleDataEmptyState } from '@/components/sample-data'
 import { SearchEmptyState } from '@/components/empty-states'

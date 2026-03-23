@@ -9,7 +9,7 @@ import { useDossierContextSafe } from '@/contexts/dossier-context'
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import { ContextAwareFAB } from '@/components/ui/context-aware-fab'
 import { EntityBreadcrumbTrail } from './EntityBreadcrumbTrail'
-import { DossierContextIndicator } from '@/components/Dossier/DossierContextIndicator'
+import { DossierContextIndicator } from '@/components/dossier/DossierContextIndicator'
 import { AppSidebar } from './AppSidebar'
 import { SiteHeader } from './SiteHeader'
 

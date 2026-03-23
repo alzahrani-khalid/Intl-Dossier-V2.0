@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Calendar as CalendarIcon, Plus } from 'lucide-react'
 
 const UnifiedCalendar = lazy(() =>
-  import('@/components/Calendar/UnifiedCalendar').then((m) => ({
+  import('@/components/calendar/UnifiedCalendar').then((m) => ({
     default: m.UnifiedCalendar,
   })),
 )

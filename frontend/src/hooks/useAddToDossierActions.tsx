@@ -15,7 +15,7 @@
 import * as React from 'react'
 import type { Dossier } from '@/lib/dossier-type-guards'
 import type { DossierType, InheritanceSource } from '@/types/dossier-context.types'
-import type { AddToDossierActionType, DossierContext } from '@/components/Dossier/AddToDossierMenu'
+import type { AddToDossierActionType, DossierContext } from '@/components/dossier/AddToDossierMenu'
 
 // =============================================================================
 // Types

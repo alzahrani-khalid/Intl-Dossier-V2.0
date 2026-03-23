@@ -21,7 +21,7 @@ import {
   MyDossiersSection,
   RecentDossierActivity,
   PendingWorkByDossier,
-} from '@/components/Dashboard'
+} from '@/components/dashboard'
 import { useDossierDashboardSummary, useMyDossiers } from '@/hooks/useDossierDashboard'
 import { RecommendationsPanel } from '@/components/engagement-recommendations'
 import { useWorkCreation } from '@/components/work-creation'

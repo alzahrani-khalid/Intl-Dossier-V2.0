@@ -6,8 +6,8 @@
 import { useState, useCallback } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { LegislationList } from '@/components/Legislation'
-import { LegislationForm } from '@/components/Legislation'
+import { LegislationList } from '@/components/legislation'
+import { LegislationForm } from '@/components/legislation'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
 // Search params schema for URL filter synchronization
