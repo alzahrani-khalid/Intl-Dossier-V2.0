@@ -53,11 +53,13 @@ Plans:
 1. Backend services use kebab-case filenames exclusively (no PascalCase/camelCase service files remain)
 2. Frontend components use PascalCase, hooks use camelCase, and UI primitives use kebab-case consistently
 3. No two files in the same directory use different naming conventions for the same concept
-   **Plans**: TBD
+   **Plans**: 3 plans
 
 Plans:
 
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Rename 18 kebab-case hooks to camelCase, rename 12 PascalCase component dirs to kebab-case
+- [ ] 02-02-PLAN.md — Move 37 standalone component files into kebab-case subdirectories
+- [ ] 02-03-PLAN.md — Rename 21 backend service/model files to kebab-case, add ESLint filename enforcement
 
 ### Phase 3: Security Hardening
 
@@ -164,8 +166,8 @@ Note: Phase 3 (Security) depends only on Phase 1 and can run in parallel with Ph
 
 | Phase                         | Plans Complete | Status      | Completed |
 | ----------------------------- | -------------- | ----------- | --------- |
-| 1. Dead Code & Toolchain      | 0/3            | Planning    | -         |
-| 2. Naming & File Structure    | 0/1            | Not started | -         |
+| 1. Dead Code & Toolchain      | 3/3            | Complete    | -         |
+| 2. Naming & File Structure    | 0/3            | Planning    | -         |
 | 3. Security Hardening         | 0/3            | Not started | -         |
 | 4. RTL/LTR Consistency        | 0/2            | Not started | -         |
 | 5. Responsive Design          | 0/3            | Not started | -         |
