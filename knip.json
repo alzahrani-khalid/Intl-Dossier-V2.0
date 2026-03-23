@@ -1,0 +1,22 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/*.ts"],
+      "project": ["scripts/**/*.ts"],
+      "ignoreDependencies": ["turbo", "only-allow"]
+    },
+    "frontend": {
+      "entry": ["src/main.tsx", "src/routeTree.gen.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignore": ["src/components/ui/heroui-*.tsx", "src/components/ui/*.tsx"],
+      "ignoreDependencies": ["@vitejs/plugin-react"]
+    },
+    "backend": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": ["tsx"]
+    }
+  },
+  "ignoreExportsUsedInFile": true
+}
