@@ -10,10 +10,10 @@ Requirements for production quality milestone. Each maps to roadmap phases.
 ### Dead Code & Tooling
 
 - [ ] **TOOL-01**: Knip scan removes all unused files, exports, and dependencies across monorepo
-- [ ] **TOOL-02**: ESLint 9 flat config consolidates root/frontend/backend into single config with workspace overrides
+- [x] **TOOL-02**: ESLint 9 flat config consolidates root/frontend/backend into single config with workspace overrides
 - [ ] **TOOL-03**: husky + lint-staged enforces lint/format rules on every commit automatically
 - [ ] **TOOL-04**: All unused npm dependencies removed (verified by Knip report showing zero unused)
-- [ ] **TOOL-05**: All stack dependencies updated to latest stable versions compatible with current toolchain
+- [x] **TOOL-05**: All stack dependencies updated to latest stable versions compatible with current toolchain
 
 ### Security Hardening
 
@@ -90,10 +90,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase   | Status  |
 | ----------- | ------- | ------- |
 | TOOL-01     | Phase 1 | Pending |
-| TOOL-02     | Phase 1 | Pending |
+| TOOL-02     | Phase 1 | Complete |
 | TOOL-03     | Phase 1 | Pending |
 | TOOL-04     | Phase 1 | Pending |
-| TOOL-05     | Phase 1 | Pending |
+| TOOL-05     | Phase 1 | Complete |
 | SEC-01      | Phase 3 | Pending |
 | SEC-02      | Phase 3 | Pending |
 | SEC-03      | Phase 3 | Pending |
