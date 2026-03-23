@@ -41,7 +41,7 @@ Plans:
 
 - [x] 01-01-PLAN.md — Consolidate ESLint/Prettier/Knip configs, delete 13 legacy files, fix ESLint violations
 - [x] 01-02-PLAN.md — Run Knip cleanup, remove unused deps/files/exports, audit AI/ML tree, clean i18n keys
-- [ ] 01-03-PLAN.md — Wire pre-commit hooks (4 checks), update all deps to latest stable, verify build
+- [x] 01-03-PLAN.md — Wire pre-commit hooks (4 checks), update all deps to latest stable, verify build
 
 ### Phase 2: Naming & File Structure
 
