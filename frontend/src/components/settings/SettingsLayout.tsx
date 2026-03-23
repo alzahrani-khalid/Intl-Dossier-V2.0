@@ -164,12 +164,7 @@ interface SettingsEmptyStateProps {
   action?: ReactNode
 }
 
-function SettingsEmptyState({
-  icon: Icon,
-  title,
-  description,
-  action,
-}: SettingsEmptyStateProps) {
+function SettingsEmptyState({ icon: Icon, title, description, action }: SettingsEmptyStateProps) {
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 

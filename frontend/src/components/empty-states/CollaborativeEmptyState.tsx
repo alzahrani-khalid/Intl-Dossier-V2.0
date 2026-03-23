@@ -331,4 +331,3 @@ function ContributorRow({ contributor, t }: ContributorRowProps) {
     </div>
   )
 }
-

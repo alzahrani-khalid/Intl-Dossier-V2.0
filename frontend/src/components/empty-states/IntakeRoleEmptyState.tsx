@@ -561,4 +561,3 @@ function buildQuickActions(
 
   return actions[role]
 }
-

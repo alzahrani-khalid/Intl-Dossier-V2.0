@@ -294,4 +294,3 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
     </div>
   )
 }
-

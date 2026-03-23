@@ -83,4 +83,3 @@ export function ActivityStatistics({ followingCount, className }: ActivityStatis
     </div>
   )
 }
-

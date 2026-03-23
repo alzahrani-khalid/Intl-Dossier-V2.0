@@ -945,4 +945,3 @@ function PermissionDialog({
     </Dialog>
   )
 }
-

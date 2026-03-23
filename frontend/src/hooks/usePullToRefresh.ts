@@ -262,4 +262,3 @@ export function usePullToRefresh(config: PullToRefreshConfig): PullToRefreshResu
     reset,
   }
 }
-

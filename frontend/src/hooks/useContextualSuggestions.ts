@@ -164,9 +164,7 @@ function useDossierSuggestions(
 /**
  * Get the highest priority suggestion from a list
  */
-function getTopSuggestion(
-  suggestions: ContextualSuggestion[],
-): ContextualSuggestion | undefined {
+function getTopSuggestion(suggestions: ContextualSuggestion[]): ContextualSuggestion | undefined {
   const priorityOrder = { high: 0, medium: 1, low: 2 }
   return [...suggestions].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])[0]
 }

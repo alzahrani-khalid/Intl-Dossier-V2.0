@@ -836,4 +836,3 @@ export function CalendarSyncSettings() {
     </div>
   )
 }
-

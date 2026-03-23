@@ -332,9 +332,7 @@ initializeStore()
 setupNetworkListeners()
 
 // Export utility functions
-const addToQueue = (
-  action: Omit<QueuedAction, 'id' | 'timestamp' | 'retryCount' | 'status'>,
-) => {
+const addToQueue = (action: Omit<QueuedAction, 'id' | 'timestamp' | 'retryCount' | 'status'>) => {
   useOfflineQueue.getState().addAction(action)
 }
 

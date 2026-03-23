@@ -445,4 +445,3 @@ export function DossierRecommendationCard({
     </m.div>
   )
 }
-

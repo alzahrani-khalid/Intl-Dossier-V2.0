@@ -73,4 +73,3 @@ export function AuditLogExport({ filters, disabled = false, className }: AuditLo
     </DropdownMenu>
   )
 }
-

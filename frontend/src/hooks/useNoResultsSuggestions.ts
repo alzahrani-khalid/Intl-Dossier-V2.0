@@ -148,4 +148,3 @@ export function formatEntityTypeLabel(entityType: string, language: string): str
 
   return language === 'ar' ? label.ar : label.en
 }
-

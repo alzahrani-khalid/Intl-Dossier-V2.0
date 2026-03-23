@@ -244,4 +244,3 @@ export function KeyContactsSection({
     </Card>
   )
 }
-

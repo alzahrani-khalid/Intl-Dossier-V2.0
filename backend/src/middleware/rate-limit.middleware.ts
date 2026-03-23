@@ -188,11 +188,7 @@ class TokenBucketRateLimiter {
 const tokenBucketLimiter = new TokenBucketRateLimiter(redis)
 
 // Enhanced rate limiting middleware with database policies
-const dynamicRateLimitMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const dynamicRateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Skip rate limiting for health checks and static assets
     if (

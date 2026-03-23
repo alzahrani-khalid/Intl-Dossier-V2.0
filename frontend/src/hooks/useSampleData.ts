@@ -247,4 +247,3 @@ export function useSampleData() {
     refetchStatus: status.refetch,
   }
 }
-

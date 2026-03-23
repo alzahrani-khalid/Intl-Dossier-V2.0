@@ -84,10 +84,7 @@ export function useOfflineState(): OfflineState {
  * @param {Function} onOffline - Optional callback when connection is lost
  * @returns {OfflineState} Current offline state
  */
-function useOfflineStateWithCallback(
-  onOnline?: () => void,
-  onOffline?: () => void,
-): OfflineState {
+function useOfflineStateWithCallback(onOnline?: () => void, onOffline?: () => void): OfflineState {
   const offlineState = useOfflineState()
 
   useEffect(() => {

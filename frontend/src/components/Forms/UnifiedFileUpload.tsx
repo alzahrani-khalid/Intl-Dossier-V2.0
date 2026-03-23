@@ -615,9 +615,7 @@ export function UnifiedFileUpload({
 /**
  * Pre-configured UnifiedFileUpload for documents
  */
-function DocumentUpload(
-  props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number },
-) {
+function DocumentUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number }) {
   const { maxFiles = 5, ...rest } = props
 
   return (
@@ -703,4 +701,3 @@ function SingleFileUpload(
     />
   )
 }
-

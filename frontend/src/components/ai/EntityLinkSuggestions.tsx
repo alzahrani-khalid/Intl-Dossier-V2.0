@@ -71,11 +71,7 @@ const ENTITY_ICONS: Record<string, typeof FileText> = {
   commitment: Check,
 }
 
-function EntityLinkSuggestions({
-  ticketId,
-  onLinkClick,
-  className,
-}: EntityLinkSuggestionsProps) {
+function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkSuggestionsProps) {
   const { t, i18n } = useTranslation('entity-linking')
   const isRTL = i18n.language === 'ar'
   const queryClient = useQueryClient()

@@ -629,4 +629,3 @@ export function WidgetSettingsDialog({
     </Dialog>
   )
 }
-

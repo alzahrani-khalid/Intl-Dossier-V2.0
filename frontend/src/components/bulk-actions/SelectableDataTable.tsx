@@ -238,4 +238,3 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
     </div>
   )
 }
-

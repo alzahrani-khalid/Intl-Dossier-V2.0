@@ -388,4 +388,3 @@ export const MobileTouchControls = memo(function MobileTouchControls({
     </div>
   )
 })
-

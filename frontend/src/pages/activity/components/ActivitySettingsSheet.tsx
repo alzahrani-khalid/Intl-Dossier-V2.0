@@ -132,4 +132,3 @@ export function ActivitySettingsSheet({ open, onOpenChange }: ActivitySettingsSh
     </Sheet>
   )
 }
-

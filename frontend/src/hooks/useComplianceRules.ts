@@ -207,10 +207,7 @@ export function useComplianceViolations(filters: ViolationFilters = {}, pageSize
 /**
  * Hook to get violations for a specific entity
  */
-function useEntityViolations(
-  entityType: ComplianceEntityType,
-  entityId: string | undefined,
-) {
+function useEntityViolations(entityType: ComplianceEntityType, entityId: string | undefined) {
   return useQuery({
     queryKey: complianceKeys.violationsByEntity(entityType, entityId || ''),
     queryFn: () =>

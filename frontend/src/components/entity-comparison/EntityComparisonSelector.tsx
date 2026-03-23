@@ -356,4 +356,3 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
     </Card>
   )
 })
-

@@ -402,4 +402,3 @@ function ProgressiveEmptyState({
 
   return content
 }
-

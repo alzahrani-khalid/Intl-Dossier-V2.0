@@ -369,4 +369,3 @@ export function IntakeQuickForm({
     </Form>
   )
 }
-

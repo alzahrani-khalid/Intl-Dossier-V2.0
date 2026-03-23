@@ -142,4 +142,3 @@ export function BulkActionProgressIndicator({
     </div>
   )
 }
-

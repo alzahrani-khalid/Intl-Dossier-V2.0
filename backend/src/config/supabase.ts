@@ -39,4 +39,3 @@ const createSupabaseClient = (jwt?: string): SupabaseClient => {
     },
   })
 }
-

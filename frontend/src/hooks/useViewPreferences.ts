@@ -418,4 +418,3 @@ function useViewPreferencesWithUrl<T extends ViewConfig>(
     initialized,
   }
 }
-

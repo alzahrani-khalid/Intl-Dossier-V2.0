@@ -275,9 +275,7 @@ function isOverdueCommitmentSuggestion(
 /**
  * Type guard for seasonal suggestion
  */
-function isSeasonalSuggestion(
-  suggestion: ContextualSuggestion,
-): suggestion is SeasonalSuggestion {
+function isSeasonalSuggestion(suggestion: ContextualSuggestion): suggestion is SeasonalSuggestion {
   return suggestion.category === 'seasonal'
 }
 

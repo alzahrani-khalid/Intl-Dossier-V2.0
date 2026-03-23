@@ -1114,4 +1114,3 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
     </div>
   )
 }
-

@@ -529,10 +529,7 @@ function isIntelligenceRefreshing(report: IntelligenceReport): boolean {
 /**
  * Get human-readable label for intelligence type
  */
-function getIntelligenceTypeLabel(
-  type: IntelligenceType,
-  language: 'en' | 'ar' = 'en',
-): string {
+function getIntelligenceTypeLabel(type: IntelligenceType, language: 'en' | 'ar' = 'en'): string {
   const labels: Record<IntelligenceType, { en: string; ar: string }> = {
     economic: { en: 'Economic Indicators', ar: 'المؤشرات الاقتصادية' },
     political: { en: 'Political Analysis', ar: 'التحليل السياسي' },

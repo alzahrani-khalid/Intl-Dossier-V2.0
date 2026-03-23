@@ -570,4 +570,3 @@ export class OrganizationService {
     return this.deleteOrganization(id)
   }
 }
-

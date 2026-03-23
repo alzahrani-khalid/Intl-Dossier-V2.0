@@ -127,10 +127,7 @@ function calculateColumnWipStats(
 /**
  * Get columns that are at or over WIP limit
  */
-function getColumnsOverWip(
-  columns: Record<string, WorkItem[]>,
-  wipLimits: WipLimits,
-): string[] {
+function getColumnsOverWip(columns: Record<string, WorkItem[]>, wipLimits: WipLimits): string[] {
   return Object.entries(columns)
     .filter(([columnKey, items]) => {
       const status = checkWipLimit(columnKey, items.length, wipLimits)

@@ -265,4 +265,3 @@ function OnboardingEmptyState({
     </div>
   )
 }
-

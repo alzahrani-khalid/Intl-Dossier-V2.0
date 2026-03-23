@@ -109,10 +109,7 @@ function useCommitmentDeliverable(
  * @param options - Hook options
  * @returns TanStack Query result
  */
-function useCommitmentProgress(
-  commitmentId: string,
-  options?: UseCommitmentDeliverablesOptions,
-) {
+function useCommitmentProgress(commitmentId: string, options?: UseCommitmentDeliverablesOptions) {
   const { enabled = true } = options ?? {}
 
   return useQuery<number, Error>({
@@ -135,10 +132,7 @@ function useCommitmentProgress(
  * @param options - Hook options
  * @returns TanStack Query result
  */
-function useHasDeliverables(
-  commitmentId: string,
-  options?: UseCommitmentDeliverablesOptions,
-) {
+function useHasDeliverables(commitmentId: string, options?: UseCommitmentDeliverablesOptions) {
   const { enabled = true } = options ?? {}
 
   return useQuery<boolean, Error>({

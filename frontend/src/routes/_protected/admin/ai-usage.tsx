@@ -563,4 +563,3 @@ function MetricCard({ title, value, icon: Icon, trend, isLoading }: MetricCardPr
     </Card>
   )
 }
-

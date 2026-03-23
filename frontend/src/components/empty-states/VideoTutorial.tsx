@@ -508,5 +508,3 @@ export function VideoTutorial({
     </div>
   )
 }
-
-

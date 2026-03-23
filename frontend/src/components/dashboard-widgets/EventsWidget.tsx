@@ -243,4 +243,3 @@ export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
     </ScrollArea>
   )
 }
-

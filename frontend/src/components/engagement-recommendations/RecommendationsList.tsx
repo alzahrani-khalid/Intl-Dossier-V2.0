@@ -401,4 +401,3 @@ function RecommendationsList({
     </div>
   )
 }
-

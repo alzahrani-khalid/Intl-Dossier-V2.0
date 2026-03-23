@@ -187,4 +187,3 @@ const optionalSupabaseAuth = async (
     next() // Continue without auth on error
   }
 }
-

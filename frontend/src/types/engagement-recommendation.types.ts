@@ -486,16 +486,15 @@ export const STATUS_LABELS: Record<RecommendationStatus, { en: string; ar: strin
 /**
  * Feedback type labels
  */
-const FEEDBACK_TYPE_LABELS: Record<RecommendationFeedbackType, { en: string; ar: string }> =
-  {
-    helpful: { en: 'Helpful', ar: 'مفيد' },
-    not_helpful: { en: 'Not Helpful', ar: 'غير مفيد' },
-    timing_wrong: { en: 'Timing Wrong', ar: 'التوقيت خاطئ' },
-    already_planned: { en: 'Already Planned', ar: 'مخطط له مسبقًا' },
-    not_relevant: { en: 'Not Relevant', ar: 'غير ذي صلة' },
-    too_early: { en: 'Too Early', ar: 'مبكر جدًا' },
-    too_late: { en: 'Too Late', ar: 'متأخر جدًا' },
-  }
+const FEEDBACK_TYPE_LABELS: Record<RecommendationFeedbackType, { en: string; ar: string }> = {
+  helpful: { en: 'Helpful', ar: 'مفيد' },
+  not_helpful: { en: 'Not Helpful', ar: 'غير مفيد' },
+  timing_wrong: { en: 'Timing Wrong', ar: 'التوقيت خاطئ' },
+  already_planned: { en: 'Already Planned', ar: 'مخطط له مسبقًا' },
+  not_relevant: { en: 'Not Relevant', ar: 'غير ذي صلة' },
+  too_early: { en: 'Too Early', ar: 'مبكر جدًا' },
+  too_late: { en: 'Too Late', ar: 'متأخر جدًا' },
+}
 
 /**
  * Suggested format labels

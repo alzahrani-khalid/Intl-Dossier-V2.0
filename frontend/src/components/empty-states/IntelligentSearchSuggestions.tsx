@@ -655,4 +655,3 @@ export function IntelligentSearchSuggestions({
     </div>
   )
 }
-

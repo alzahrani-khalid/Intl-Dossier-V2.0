@@ -399,4 +399,3 @@ export function AdvancedSearchPage() {
     </div>
   )
 }
-

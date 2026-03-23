@@ -131,10 +131,7 @@ export function LinkTypeBadge({
 /**
  * Helper function to get link type label for non-component contexts
  */
-function getLinkTypeLabel(
-  linkType: EntityLink['link_type'],
-  t: (key: string) => string,
-): string {
+function getLinkTypeLabel(linkType: EntityLink['link_type'], t: (key: string) => string): string {
   return t(`entityLinks.linkTypes.${linkType}`)
 }
 
@@ -151,4 +148,3 @@ function getLinkTypeIcon(linkType: EntityLink['link_type']): string {
 function getLinkTypeColorClass(linkType: EntityLink['link_type']): string {
   return LINK_TYPE_CONFIG[linkType]?.colorClass || LINK_TYPE_CONFIG.related.colorClass
 }
-

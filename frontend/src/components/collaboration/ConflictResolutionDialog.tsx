@@ -312,4 +312,3 @@ function ConflictBanner({
     </div>
   )
 }
-

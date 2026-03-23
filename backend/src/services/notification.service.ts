@@ -64,7 +64,6 @@ export async function sendInAppNotification(
   return data as Notification
 }
 
-
 /**
  * T183-T185: Send health score drop notification
  * @param dossierId - The dossier ID

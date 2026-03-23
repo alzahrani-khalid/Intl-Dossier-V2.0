@@ -90,4 +90,3 @@ export function DossierTypeIcon({
 
   return <Icon className={cn(sizeClasses[size], colorClass, className)} aria-hidden="true" />
 }
-

@@ -379,4 +379,3 @@ export function RecommendationCard({
     </m.div>
   )
 }
-

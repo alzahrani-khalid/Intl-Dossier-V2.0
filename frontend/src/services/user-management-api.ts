@@ -284,9 +284,7 @@ async function createUser(data: CreateUserRequest): Promise<CreateUserResponse> 
  * @returns Promise with activation response
  * @throws ApiError if activation fails
  */
-async function activateAccount(
-  data: ActivateAccountRequest,
-): Promise<ActivateAccountResponse> {
+async function activateAccount(data: ActivateAccountRequest): Promise<ActivateAccountResponse> {
   const { data: result, error } = await supabase.functions.invoke<ActivateAccountResponse>(
     'activate-account',
     {

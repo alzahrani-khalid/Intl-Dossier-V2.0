@@ -258,4 +258,3 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
     </div>
   )
 })
-

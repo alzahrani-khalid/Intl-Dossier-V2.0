@@ -271,4 +271,3 @@ export function FilterPresetsSection({
     </div>
   )
 }
-

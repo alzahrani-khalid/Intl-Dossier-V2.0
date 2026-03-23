@@ -355,4 +355,3 @@ function ScoreRow({ icon: Icon, label, score }: ScoreRowProps) {
     </div>
   )
 }
-

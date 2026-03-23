@@ -54,7 +54,7 @@ export function MainLayout({
   const dossierContext = useDossierContextSafe()
   const hasDossierContext = Boolean(
     dossierContext?.activeDossier ||
-      (dossierContext?.state?.selectedDossiers && dossierContext.state.selectedDossiers.length > 0),
+    (dossierContext?.state?.selectedDossiers && dossierContext.state.selectedDossiers.length > 0),
   )
   const displayDossierContext = showDossierContext && hasDossierContext
 

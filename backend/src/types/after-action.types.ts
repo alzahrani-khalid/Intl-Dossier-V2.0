@@ -21,7 +21,7 @@ export enum ConfidentialityLevel {
 export enum AfterActionStatus {
   DRAFT = 'draft',
   PUBLISHED = 'published',
-  }
+}
 
 export enum OwnerType {
   INTERNAL = 'internal',

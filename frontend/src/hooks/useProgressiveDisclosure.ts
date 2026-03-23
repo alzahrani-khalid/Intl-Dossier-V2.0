@@ -614,4 +614,3 @@ export function useProgressiveDisclosure(
     refreshPreferences,
   }
 }
-

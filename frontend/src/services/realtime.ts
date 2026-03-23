@@ -403,4 +403,3 @@ export { supabase }
 const getConnectionStatus = () => useRealtimeStore.getState().connectionStatus
 const getSubscriptions = () => useRealtimeStore.getState().subscriptions
 const isRealtimeConnected = () => useRealtimeStore.getState().isConnected
-

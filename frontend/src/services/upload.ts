@@ -451,4 +451,3 @@ const getFileIcon = (type: string): string => {
   if (type.includes('text')) return '📄'
   return '📁'
 }
-

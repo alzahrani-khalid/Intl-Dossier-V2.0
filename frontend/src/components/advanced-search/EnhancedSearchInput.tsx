@@ -470,4 +470,3 @@ const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInputProps>
     )
   },
 )
-

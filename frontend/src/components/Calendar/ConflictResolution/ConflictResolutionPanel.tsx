@@ -344,4 +344,3 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
     </motion.div>
   )
 }
-

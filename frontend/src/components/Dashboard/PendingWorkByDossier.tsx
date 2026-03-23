@@ -381,4 +381,3 @@ function DossierWorkItemSkeleton() {
     </div>
   )
 }
-

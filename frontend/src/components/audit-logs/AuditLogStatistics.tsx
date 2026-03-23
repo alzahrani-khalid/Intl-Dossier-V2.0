@@ -188,4 +188,3 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
     </Card>
   )
 }
-

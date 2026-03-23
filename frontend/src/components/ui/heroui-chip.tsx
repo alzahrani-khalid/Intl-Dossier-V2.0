@@ -44,8 +44,7 @@ const badgeVariants = cva(
 // ============================================================================
 
 export interface HeroUIChipProps
-  extends React.ComponentProps<'span'>,
-    VariantProps<typeof badgeVariants> {
+  extends React.ComponentProps<'span'>, VariantProps<typeof badgeVariants> {
   asChild?: boolean
 }
 

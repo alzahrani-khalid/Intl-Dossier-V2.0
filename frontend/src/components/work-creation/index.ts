@@ -27,8 +27,4 @@ export {
   type CreationContext,
   type EntityType,
 } from './hooks/useCreationContext'
-export {
-  useGlobalKeyboard,
-  getShortcutText,
-  type GlobalKeyboardOptions,
-} from './hooks/useGlobalKeyboard'
+export { useGlobalKeyboard, type GlobalKeyboardOptions } from './hooks/useGlobalKeyboard'

@@ -203,4 +203,3 @@ export function SavedSearchTemplates({ onApply, className }: SavedSearchTemplate
     </div>
   )
 }
-

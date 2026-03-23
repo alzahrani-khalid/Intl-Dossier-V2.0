@@ -332,4 +332,3 @@ export class PositionConsistencyService {
     }
   }
 }
-

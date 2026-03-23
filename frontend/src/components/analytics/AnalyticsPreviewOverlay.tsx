@@ -421,4 +421,3 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
 
   return renderPlaceholder()
 }
-

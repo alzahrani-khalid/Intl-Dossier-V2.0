@@ -119,4 +119,3 @@ export function useHapticFeedback(options: HapticFeedbackOptions = {}): HapticFe
     isSupported,
   }
 }
-

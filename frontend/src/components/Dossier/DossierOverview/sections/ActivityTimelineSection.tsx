@@ -360,4 +360,3 @@ export function ActivityTimelineSection({
     </Card>
   )
 }
-

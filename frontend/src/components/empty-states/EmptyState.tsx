@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { LucideIcon, Plus, Upload, Search, HelpCircle } from 'lucide-react'
+import { LucideIcon, HelpCircle } from 'lucide-react'
 
 export type EmptyStateVariant = 'default' | 'card' | 'inline' | 'compact'
 export type EmptyStateSize = 'sm' | 'md' | 'lg'
@@ -248,4 +248,4 @@ export function EmptyState({
 }
 
 // Export common icons for convenience
-export {    HelpCircle }
+export { HelpCircle }

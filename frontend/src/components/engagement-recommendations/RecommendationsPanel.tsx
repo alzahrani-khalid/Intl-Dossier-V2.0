@@ -311,4 +311,3 @@ export function RecommendationsPanel({
     </Card>
   )
 }
-

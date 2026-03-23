@@ -255,4 +255,3 @@ export function getPrivateProvider(): AIProviderConfig | null {
   const privateProvider = aiConfig.routing.privateProvider
   return privateProvider ? getProviderConfig(privateProvider) : null
 }
-

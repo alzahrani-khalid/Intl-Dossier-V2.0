@@ -385,4 +385,3 @@ export function BooleanLogicBuilder({
     </div>
   )
 }
-

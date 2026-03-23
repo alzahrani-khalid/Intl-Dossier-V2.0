@@ -463,4 +463,3 @@ export function useDossierContextInternal(): ExtendedDossierContextValue {
 export function useDossierContextSafe(): ExtendedDossierContextValue | null {
   return useContext(DossierContext)
 }
-

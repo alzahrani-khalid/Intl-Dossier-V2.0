@@ -54,8 +54,10 @@ export interface InputMaskConfig {
   suffix?: string
 }
 
-export interface SmartInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
+export interface SmartInputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'onChange'
+> {
   /** Smart input type - determines keyboard and masking */
   type?: SmartInputType
   /** Label for the input */
@@ -602,4 +604,3 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
 )
 
 SmartInput.displayName = 'SmartInput'
-

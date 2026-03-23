@@ -203,10 +203,7 @@ export function captureMessage(
 /**
  * Start a performance transaction
  */
-function startTransaction(
-  name: string,
-  op: string,
-): ReturnType<typeof Sentry.startInactiveSpan> {
+function startTransaction(name: string, op: string): ReturnType<typeof Sentry.startInactiveSpan> {
   return Sentry.startInactiveSpan({
     name,
     op,

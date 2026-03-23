@@ -1179,4 +1179,3 @@ function FieldForm({ values, onChange, isRTL, t }: FieldFormProps) {
     </div>
   )
 }
-

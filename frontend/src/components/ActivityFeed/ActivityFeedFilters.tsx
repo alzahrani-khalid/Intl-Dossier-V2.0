@@ -759,4 +759,3 @@ export function ActivityFeedFilters({
     </div>
   )
 }
-

@@ -16,4 +16,3 @@ export const createClient = () => client
 export const supabase = client
 
 export { supabaseUrl }
-

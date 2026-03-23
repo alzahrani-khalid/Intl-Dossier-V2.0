@@ -545,4 +545,3 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
     </div>
   )
 })
-

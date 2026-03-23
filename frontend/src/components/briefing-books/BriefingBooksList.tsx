@@ -380,4 +380,3 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
     </div>
   )
 }
-

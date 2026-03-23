@@ -105,4 +105,3 @@ class PermissionDelegationModel {
     return !delegation.resource_id
   }
 }
-

@@ -219,4 +219,3 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
 )
 
 WidgetContainer.displayName = 'WidgetContainer'
-

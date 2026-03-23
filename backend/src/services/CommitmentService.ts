@@ -96,4 +96,3 @@ export class CommitmentService {
     return this.updateCommitmentStatus(id, status)
   }
 }
-

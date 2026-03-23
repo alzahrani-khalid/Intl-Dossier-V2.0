@@ -291,4 +291,3 @@ export const cacheMetrics = {
   loadFromRedis: loadMetricsFromRedis,
   getSummary: getMetricsSummary,
 }
-

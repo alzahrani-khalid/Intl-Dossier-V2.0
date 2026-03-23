@@ -113,4 +113,3 @@ function useTemplateKeyboardShortcuts(
     shortcutTemplates,
   }
 }
-

@@ -235,4 +235,3 @@ export const contributorsAPI = {
     return count || 0
   },
 }
-

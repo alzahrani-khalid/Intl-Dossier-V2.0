@@ -409,4 +409,3 @@ export function InfluenceReportView({
     </div>
   )
 }
-

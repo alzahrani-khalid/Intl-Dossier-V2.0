@@ -327,4 +327,3 @@ function useGeoVisualizationSummary(filters?: Partial<GeoVisualizationFilters>) 
     select: (data) => data?.summary,
   })
 }
-

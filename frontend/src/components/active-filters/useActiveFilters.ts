@@ -303,4 +303,3 @@ function useActiveFilters<T extends Record<string, unknown>>({
     toggleCollapsed,
   }
 }
-

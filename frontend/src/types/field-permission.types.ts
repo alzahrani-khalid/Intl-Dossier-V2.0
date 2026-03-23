@@ -322,14 +322,13 @@ export const SCOPE_TYPE_CONFIG: ScopeTypeConfig[] = [
   },
 ]
 
-const FIELD_CATEGORY_CONFIG: { value: FieldCategory; label_en: string; label_ar: string }[] =
-  [
-    { value: 'base', label_en: 'Base Fields', label_ar: 'الحقول الأساسية' },
-    { value: 'extension', label_en: 'Extension Fields', label_ar: 'حقول الامتداد' },
-    { value: 'metadata', label_en: 'Metadata', label_ar: 'البيانات الوصفية' },
-    { value: 'relationship', label_en: 'Relationships', label_ar: 'العلاقات' },
-    { value: 'sensitive', label_en: 'Sensitive', label_ar: 'حساس' },
-  ]
+const FIELD_CATEGORY_CONFIG: { value: FieldCategory; label_en: string; label_ar: string }[] = [
+  { value: 'base', label_en: 'Base Fields', label_ar: 'الحقول الأساسية' },
+  { value: 'extension', label_en: 'Extension Fields', label_ar: 'حقول الامتداد' },
+  { value: 'metadata', label_en: 'Metadata', label_ar: 'البيانات الوصفية' },
+  { value: 'relationship', label_en: 'Relationships', label_ar: 'العلاقات' },
+  { value: 'sensitive', label_en: 'Sensitive', label_ar: 'حساس' },
+]
 
 export const SENSITIVITY_LEVEL_CONFIG: {
   value: FieldSensitivityLevel

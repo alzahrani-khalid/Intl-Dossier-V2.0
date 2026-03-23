@@ -100,10 +100,7 @@ function mapErr<T, E, F>(result: Result<T, E>, fn: (error: E) => F): Result<T, F
 /**
  * Chain results (flatMap)
  */
-function andThen<T, U, E>(
-  result: Result<T, E>,
-  fn: (data: T) => Result<U, E>,
-): Result<U, E> {
+function andThen<T, U, E>(result: Result<T, E>, fn: (data: T) => Result<U, E>): Result<U, E> {
   if (isOk(result)) {
     return fn(result.data)
   }

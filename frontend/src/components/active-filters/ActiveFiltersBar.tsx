@@ -304,4 +304,3 @@ export function ActiveFiltersBar({
     </div>
   )
 }
-

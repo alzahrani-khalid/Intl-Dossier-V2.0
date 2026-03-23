@@ -145,4 +145,3 @@ export function useDossierSearch(options: UseDossierSearchOptions = {}): UseDoss
     totalCount: data?.pagination?.total_count ?? 0,
   }
 }
-

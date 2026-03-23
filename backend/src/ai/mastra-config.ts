@@ -81,4 +81,3 @@ export function defineAgent(config: AgentConfig): AgentConfig {
   mastraRegistry.registerAgent(config)
   return config
 }
-

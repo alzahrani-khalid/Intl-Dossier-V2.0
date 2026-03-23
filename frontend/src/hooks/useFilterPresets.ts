@@ -334,4 +334,3 @@ export function useFilterPresets(options?: UseFilterPresetsOptions) {
     error: null,
   }
 }
-

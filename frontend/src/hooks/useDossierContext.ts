@@ -352,4 +352,3 @@ function useDossierContextSafeHook(): Partial<UseDossierContextReturn> | null {
     }),
   }
 }
-

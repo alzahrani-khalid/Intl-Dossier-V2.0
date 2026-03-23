@@ -279,4 +279,3 @@ function useFormValidation(options: UseFormValidationOptions): UseFormValidation
     resetAll,
   }
 }
-

@@ -551,4 +551,3 @@ export function useCalendarSync() {
     refetchIcal: icalQuery.refetch,
   }
 }
-

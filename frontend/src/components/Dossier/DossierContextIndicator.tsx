@@ -414,4 +414,3 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
     </AnimatePresence>
   )
 })
-

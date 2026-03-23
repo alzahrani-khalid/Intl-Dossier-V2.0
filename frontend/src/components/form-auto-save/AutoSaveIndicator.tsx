@@ -144,4 +144,3 @@ export function AutoSaveIndicator({ status, className, compact = false }: AutoSa
     </div>
   )
 }
-

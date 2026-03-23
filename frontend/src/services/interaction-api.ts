@@ -310,9 +310,7 @@ async function deleteAttachment(path: string): Promise<void> {
  * Get interaction notes (direct Supabase query - fallback method)
  * Used when Edge Function is unavailable
  */
-async function getNotesForContactDirect(
-  contactId: string,
-): Promise<InteractionNoteResponse[]> {
+async function getNotesForContactDirect(contactId: string): Promise<InteractionNoteResponse[]> {
   const { data, error } = await supabase
     .from('interaction_notes')
     .select(

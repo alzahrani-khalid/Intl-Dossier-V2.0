@@ -242,4 +242,3 @@ function EntityTemplatesDemoPage() {
     </div>
   )
 }
-

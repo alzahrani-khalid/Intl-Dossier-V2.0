@@ -479,4 +479,3 @@ function calculateSimpleSimilarity(str1: string, str2: string): number {
   // Dice coefficient
   return (2 * intersection) / (bigrams1.size + bigrams2.size)
 }
-

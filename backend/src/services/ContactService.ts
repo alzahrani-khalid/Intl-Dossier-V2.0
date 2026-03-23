@@ -529,4 +529,3 @@ export class ContactService {
     }
   }
 }
-

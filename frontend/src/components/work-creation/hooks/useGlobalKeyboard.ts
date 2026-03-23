@@ -77,4 +77,3 @@ export function useGlobalKeyboard({ onCreateNew, enabled = true }: GlobalKeyboar
 function getShortcutText(): string {
   return isMac() ? '⌘K' : 'Ctrl+K'
 }
-

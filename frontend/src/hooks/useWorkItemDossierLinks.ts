@@ -155,4 +155,3 @@ export function useWorkItemDossierLinks(
     refetch: () => query.refetch(),
   }
 }
-

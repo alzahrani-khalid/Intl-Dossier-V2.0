@@ -252,4 +252,3 @@ export function MFAVerification({ onSuccess, onBack }: MFAVerificationProps) {
     </Card>
   )
 }
-

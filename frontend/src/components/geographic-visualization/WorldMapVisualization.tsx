@@ -339,4 +339,3 @@ function SummaryCard({ icon, label, value, subValue, isLoading }: SummaryCardPro
     </Card>
   )
 }
-

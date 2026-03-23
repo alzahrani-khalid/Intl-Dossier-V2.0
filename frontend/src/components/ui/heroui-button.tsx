@@ -57,8 +57,7 @@ const buttonVariants = cva(
 // ============================================================================
 
 export interface HeroUIButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean
   /** Whether the button is in a loading state */
   loading?: boolean

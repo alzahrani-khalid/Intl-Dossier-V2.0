@@ -278,4 +278,3 @@ export function AttendeesList({
     </div>
   )
 }
-

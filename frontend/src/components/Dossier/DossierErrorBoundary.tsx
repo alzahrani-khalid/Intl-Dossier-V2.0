@@ -263,4 +263,3 @@ export function withDossierErrorBoundary<P extends object>(
 
   return WrappedComponent
 }
-

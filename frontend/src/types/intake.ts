@@ -51,11 +51,7 @@ export interface ForesightFields {
   stakeholders: string
 }
 
-type TypeSpecificFields =
-  | EngagementFields
-  | PositionFields
-  | MouActionFields
-  | ForesightFields
+type TypeSpecificFields = EngagementFields | PositionFields | MouActionFields | ForesightFields
 
 /**
  * Intake Form Data

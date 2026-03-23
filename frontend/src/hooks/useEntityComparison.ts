@@ -720,4 +720,3 @@ export function useEntitySelection(maxSelections: number = 5, minSelections: num
     minSelections,
   }
 }
-

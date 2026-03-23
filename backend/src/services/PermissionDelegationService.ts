@@ -290,4 +290,3 @@ export class PermissionDelegationService {
     return data.role === 'admin' || data.role === 'security_admin'
   }
 }
-

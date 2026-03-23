@@ -1068,4 +1068,3 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
     </Dialog>
   )
 }
-

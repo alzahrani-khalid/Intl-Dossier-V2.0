@@ -468,14 +468,13 @@ export const CONFIDENCE_LEVEL_LABELS: Record<ConfidenceLevel, { en: string; ar: 
 /**
  * Labels for duplicate status
  */
-const DUPLICATE_STATUS_LABELS: Record<DuplicateCandidateStatus, { en: string; ar: string }> =
-  {
-    pending: { en: 'Pending Review', ar: 'في انتظار المراجعة' },
-    confirmed: { en: 'Confirmed Duplicate', ar: 'تكرار مؤكد' },
-    not_duplicate: { en: 'Not a Duplicate', ar: 'ليس تكراراً' },
-    merged: { en: 'Merged', ar: 'تم الدمج' },
-    auto_dismissed: { en: 'Auto-Dismissed', ar: 'مرفوض تلقائياً' },
-  }
+const DUPLICATE_STATUS_LABELS: Record<DuplicateCandidateStatus, { en: string; ar: string }> = {
+  pending: { en: 'Pending Review', ar: 'في انتظار المراجعة' },
+  confirmed: { en: 'Confirmed Duplicate', ar: 'تكرار مؤكد' },
+  not_duplicate: { en: 'Not a Duplicate', ar: 'ليس تكراراً' },
+  merged: { en: 'Merged', ar: 'تم الدمج' },
+  auto_dismissed: { en: 'Auto-Dismissed', ar: 'مرفوض تلقائياً' },
+}
 
 /**
  * Labels for detection source

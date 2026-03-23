@@ -652,4 +652,3 @@ function StakeholderInfluencePage() {
     </div>
   )
 }
-

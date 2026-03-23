@@ -102,4 +102,3 @@ export function useDeleteWorkItemDossierLink(options: UseDeleteWorkItemDossierLi
     },
   })
 }
-

@@ -333,4 +333,3 @@ export function EntityBreadcrumbTrail({
     </div>
   )
 }
-

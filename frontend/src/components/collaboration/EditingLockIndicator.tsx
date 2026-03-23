@@ -307,4 +307,3 @@ function EditingLockIndicatorConditional({
 
   return <EditingLockIndicator lockedBy={lockedBy} {...props} />
 }
-

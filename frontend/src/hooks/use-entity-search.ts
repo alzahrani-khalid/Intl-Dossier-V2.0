@@ -178,9 +178,7 @@ function useEntityIntakes(
 /**
  * Type guard to check if results are available
  */
-function hasSearchResults(
-  data: EntitySearchResult[] | undefined,
-): data is EntitySearchResult[] {
+function hasSearchResults(data: EntitySearchResult[] | undefined): data is EntitySearchResult[] {
   return Array.isArray(data) && data.length > 0
 }
 

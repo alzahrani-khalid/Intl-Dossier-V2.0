@@ -930,4 +930,3 @@ export function useWidgetDashboard(options: UseWidgetDashboardOptions = {}) {
     setIsLibraryOpen,
   }
 }
-

@@ -488,4 +488,3 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
     </div>
   )
 }
-

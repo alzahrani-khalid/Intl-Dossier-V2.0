@@ -291,4 +291,3 @@ function LanguageIndicator({
 }
 
 export type { ContentLanguageSelectorProps } from '@/types/multilingual-content.types'
-

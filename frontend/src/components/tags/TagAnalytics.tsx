@@ -363,4 +363,3 @@ function StatCard({ icon: Icon, label, value, subValue }: StatCardProps) {
     </Card>
   )
 }
-

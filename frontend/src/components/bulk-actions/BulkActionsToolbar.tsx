@@ -227,4 +227,3 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
     </div>
   )
 }
-

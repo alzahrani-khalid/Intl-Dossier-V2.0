@@ -88,10 +88,7 @@ type ReportParameters = Record<string, JsonValue>
  * Navigation state
  * Use instead of `Record<string, any>` for URL query parameters
  */
-type NavigationState = Record<
-  string,
-  string | string[] | number | boolean | null | undefined
->
+type NavigationState = Record<string, string | string[] | number | boolean | null | undefined>
 
 /**
  * Generic filter state

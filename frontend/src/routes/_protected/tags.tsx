@@ -203,4 +203,3 @@ function RenameHistoryCard({ isRTL }: { isRTL: boolean }) {
     </Card>
   )
 }
-

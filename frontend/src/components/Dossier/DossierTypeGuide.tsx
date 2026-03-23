@@ -444,4 +444,3 @@ export function DossierTypeGuideGrid({
 const EntityTypeGuide = DossierTypeGuide
 const EntityTypeGuideGrid = DossierTypeGuideGrid
 type EntityTypeGuideProps = DossierTypeGuideProps
-

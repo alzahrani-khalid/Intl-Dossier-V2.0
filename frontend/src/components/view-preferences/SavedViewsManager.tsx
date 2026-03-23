@@ -623,4 +623,3 @@ export function SavedViewsManager({
     </div>
   )
 }
-

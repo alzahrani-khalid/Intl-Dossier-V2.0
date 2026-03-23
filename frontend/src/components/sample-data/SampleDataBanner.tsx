@@ -266,4 +266,3 @@ function StatCard({
     </div>
   )
 }
-

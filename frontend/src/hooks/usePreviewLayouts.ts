@@ -460,19 +460,14 @@ function getLayoutLabel(
 /**
  * Get field label based on language
  */
-function getFieldLabel(
-  field: { label_en: string; label_ar: string },
-  isRTL: boolean,
-): string {
+function getFieldLabel(field: { label_en: string; label_ar: string }, isRTL: boolean): string {
   return isRTL ? field.label_ar : field.label_en
 }
 
 /**
  * Apply default config for missing properties
  */
-function applyDefaultConfig(
-  config: Partial<PreviewLayoutConfig> | null,
-): PreviewLayoutConfig {
+function applyDefaultConfig(config: Partial<PreviewLayoutConfig> | null): PreviewLayoutConfig {
   const defaults: PreviewLayoutConfig = {
     showAvatar: true,
     showStatus: true,

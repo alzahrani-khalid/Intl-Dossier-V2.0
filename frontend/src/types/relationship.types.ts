@@ -239,9 +239,7 @@ const DOSSIER_TYPE_LABELS: Record<DossierType, { en: string; ar: string }> = {
 /**
  * Get inverse relationship type (for bidirectional display)
  */
-function getInverseRelationshipType(
-  type: DossierRelationshipType,
-): DossierRelationshipType | null {
+function getInverseRelationshipType(type: DossierRelationshipType): DossierRelationshipType | null {
   const inverseMap: Partial<Record<DossierRelationshipType, DossierRelationshipType>> = {
     member_of: 'involves',
     parent_of: 'subsidiary_of',

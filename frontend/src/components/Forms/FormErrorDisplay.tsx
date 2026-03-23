@@ -116,12 +116,7 @@ function getErrorMessage(error: FieldError | string | undefined): string | undef
 /**
  * Inline error display for individual form fields
  */
-function InlineError({
-  error,
-  severity = 'error',
-  showIcon = true,
-  className,
-}: InlineErrorProps) {
+function InlineError({ error, severity = 'error', showIcon = true, className }: InlineErrorProps) {
   const message = getErrorMessage(error)
 
   if (!message) return null
@@ -467,4 +462,3 @@ function ToastError({
     </AnimatePresence>
   )
 }
-

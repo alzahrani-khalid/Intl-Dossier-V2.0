@@ -216,8 +216,9 @@ BottomSheetHandle.displayName = 'BottomSheetHandle'
 // BottomSheet Content
 // ============================================================================
 
-interface BottomSheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
+interface BottomSheetContentProps extends React.ComponentPropsWithoutRef<
+  typeof DrawerPrimitive.Content
+> {
   /** Show the handle indicator */
   showHandle?: boolean
   /** Show drag hint text */

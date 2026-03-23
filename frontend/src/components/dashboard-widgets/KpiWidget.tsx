@@ -226,4 +226,3 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
     </div>
   )
 }
-

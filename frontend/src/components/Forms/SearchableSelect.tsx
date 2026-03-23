@@ -570,4 +570,3 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
 )
 
 SearchableSelect.displayName = 'SearchableSelect'
-

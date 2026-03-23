@@ -321,8 +321,10 @@ export interface DossierFilters {
   sort_order?: 'asc' | 'desc'
 }
 
-export interface DossierWithExtension
-  extends Omit<Dossier, 'type' | 'status' | 'expires_at' | 'freshness_status'> {
+export interface DossierWithExtension extends Omit<
+  Dossier,
+  'type' | 'status' | 'expires_at' | 'freshness_status'
+> {
   type: DossierType
   status: DossierStatus
   extension?: DossierExtensionData

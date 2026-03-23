@@ -400,4 +400,3 @@ function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps) {
     </div>
   )
 }
-
