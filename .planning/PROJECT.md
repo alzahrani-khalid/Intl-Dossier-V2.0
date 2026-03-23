@@ -31,6 +31,7 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 ### Active
 
 - ✓ Dead code removal — 691 unused files, 61 deps, 1330 exports removed; unified ESLint 9 + Knip + pre-commit hooks (Validated in Phase 1: dead-code-toolchain)
+- ✓ Naming & file structure — 18 hooks to camelCase, 12 component dirs to kebab-case, 35 standalone components into subdirs, 21 backend files renamed, ESLint filename enforcement added (Validated in Phase 2: naming-file-structure)
 - [ ] Code architecture consolidation — deduplicate logic, enforce consistent patterns, proper abstractions
 - [ ] Performance optimization — slow queries, unnecessary re-renders, bundle size, lazy loading gaps
 - [ ] Security hardening — RLS policy audit, input validation gaps, auth edge cases, OWASP compliance
@@ -54,6 +55,7 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 - **RTL:** `forceRTL` rules in CLAUDE.md for React Native (now cancelled), web uses Tailwind logical properties but inconsistently
 - **Responsive:** Mobile-first mandated in CLAUDE.md but not consistently implemented across all pages
 - **Dependencies:** Cleaned — 61 unused packages removed in Phase 1; AI/ML deps audited (kept anthropic, openai, mastra, xenova; removed langchain)
+- **Naming:** Phase 2 complete — all file/directory naming conventions enforced via ESLint `check-file` plugin; hooks (camelCase), component dirs (kebab-case), backend services/models (kebab-case with suffixes)
 
 ## Constraints
 
