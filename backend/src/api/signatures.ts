@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import { SignatureService } from '../services/SignatureService'
+import { SignatureService } from '../services/signature.service'
 import { authenticate } from '../middleware/auth'
 import { validate } from '../middleware/validation'
 import { body, param } from 'express-validator'

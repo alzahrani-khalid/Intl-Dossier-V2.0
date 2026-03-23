@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { CommitmentService } from '../services/CommitmentService'
+import { CommitmentService } from '../services/commitment.service'
 import { validate, paginationSchema, idParamSchema } from '../utils/validation'
 
 const router = Router()

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-import { SignatureRequest, SignatureStatus } from '../models/SignatureRequest'
+import { SignatureRequest, SignatureStatus } from '../models/signature-request.model'
 
 export interface DocuSignConfig {
   accountId: string

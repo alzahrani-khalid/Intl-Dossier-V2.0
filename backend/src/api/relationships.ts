@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { RelationshipHealthService } from '../services/RelationshipHealthService'
+import { RelationshipHealthService } from '../services/relationship-health.service'
 import { validate, idParamSchema } from '../utils/validation'
 import { logInfo } from '../utils/logger'
 

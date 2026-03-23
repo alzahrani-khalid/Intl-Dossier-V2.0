@@ -4,7 +4,7 @@ import {
   CreatePermissionDelegationDto,
   UpdatePermissionDelegationDto,
   PermissionType,
-} from '../models/PermissionDelegation'
+} from '../models/permission-delegation.model'
 
 export class PermissionDelegationService {
   private supabase

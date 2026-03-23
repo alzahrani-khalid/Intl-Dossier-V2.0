@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { PositionConsistencyService } from '../../../backend/src/services/PositionConsistencyService'
+import { PositionConsistencyService } from '../../../backend/src/services/position-consistency.service'
 import { supabaseAdmin } from '../../../backend/src/config/supabase'
 
 // Mock supabase

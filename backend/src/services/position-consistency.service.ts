@@ -7,7 +7,7 @@ import {
   PositionConflict,
   ConflictType,
   ConflictSeverity,
-} from '../models/PositionConsistency'
+} from '../models/position-consistency.model'
 
 export class PositionConsistencyService {
   private supabase

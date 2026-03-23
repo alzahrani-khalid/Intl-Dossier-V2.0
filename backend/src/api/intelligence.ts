@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { IntelligenceService } from '../services/IntelligenceService'
+import { IntelligenceService } from '../services/intelligence.service'
 import { validate } from '../utils/validation'
 import { z } from 'zod'
 import { requirePermission } from '../middleware/auth'

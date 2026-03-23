@@ -1,4 +1,4 @@
-import { SignatureRequest, Signatory, SignatureStatus } from '../models/SignatureRequest'
+import { SignatureRequest, Signatory, SignatureStatus } from '../models/signature-request.model'
 import { DocuSignClient, DocuSignConfig } from '../integrations/DocuSignClient'
 import { PKIClient, PKIConfig, PKISignature } from '../integrations/PKIClient'
 import { createClient } from '@supabase/supabase-js'

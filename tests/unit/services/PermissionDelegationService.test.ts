@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { PermissionDelegationService } from '../../../backend/src/services/PermissionDelegationService'
+import { PermissionDelegationService } from '../../../backend/src/services/permission-delegation.service'
 import { supabaseAdmin } from '../../../backend/src/config/supabase'
 
 // Mock supabase

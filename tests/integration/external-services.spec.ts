@@ -1,8 +1,8 @@
 import { test, expect, describe, beforeAll, afterAll } from '@playwright/test';
 import { DocuSignClient, DocuSignConfig } from '../../backend/src/integrations/DocuSignClient';
 import { PKIClient, PKIConfig } from '../../backend/src/integrations/PKIClient';
-import { SignatureOrchestrator, SignatureProviderConfig } from '../../backend/src/services/SignatureOrchestrator';
-import { SignatureRequest, Signatory } from '../../backend/src/models/SignatureRequest';
+import { SignatureOrchestrator, SignatureProviderConfig } from '../../backend/src/services/signature-orchestrator';
+import { SignatureRequest, Signatory } from '../../backend/src/models/signature-request.model';
 
 // Mock configurations for testing
 const mockDocuSignConfig: DocuSignConfig = {

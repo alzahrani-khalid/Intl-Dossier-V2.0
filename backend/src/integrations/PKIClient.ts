@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { SignatureRequest, Signatory } from '../models/SignatureRequest'
+import { SignatureRequest, Signatory } from '../models/signature-request.model'
 
 export interface PKIConfig {
   certificateAuthority: string

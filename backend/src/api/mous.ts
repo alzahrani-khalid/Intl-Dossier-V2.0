@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { MoUService } from '../services/MoUService'
+import { MoUService } from '../services/mou.service'
 import { supabaseAdmin } from '../config/supabase'
 import {
   validate,

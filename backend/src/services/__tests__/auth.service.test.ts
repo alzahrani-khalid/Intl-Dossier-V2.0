@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { AuthService } from '../AuthService'
+import { AuthService } from '../auth.service'
 import { supabaseAdmin, supabaseAnon } from '../../config/supabase'
 
 // Mock supabase

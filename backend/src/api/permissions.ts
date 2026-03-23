@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express'
-import { PermissionDelegationService } from '../services/PermissionDelegationService'
+import { PermissionDelegationService } from '../services/permission-delegation.service'
 import { authenticate } from '../middleware/auth'
 import { validate } from '../middleware/validation'
 import { body, param, query } from 'express-validator'

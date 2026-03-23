@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { MoUService } from '../../../backend/src/services/MoUService'
+import { MoUService } from '../../../backend/src/services/mou.service'
 import { supabaseAdmin } from '../../../backend/src/config/supabase'
 
 // Mock supabase

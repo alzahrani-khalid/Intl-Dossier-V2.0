@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { EventService } from '../services/EventService'
+import { EventService } from '../services/event.service'
 import {
   validate,
   paginationSchema,

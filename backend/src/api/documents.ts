@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { DocumentService } from '../services/DocumentService'
+import { DocumentService } from '../services/document.service'
 import { validate, idParamSchema } from '../utils/validation'
 import { requirePermission } from '../middleware/auth'
 import multer from 'multer'

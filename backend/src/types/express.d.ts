@@ -1,4 +1,4 @@
-import { User } from '../models/User'
+import { User } from '../models/user.model'
 import { SupabaseClient } from '@supabase/supabase-js'
 
 declare global {

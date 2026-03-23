@@ -6,7 +6,7 @@ import {
   SignatureVerificationResult,
   SignatureStatus,
   Signatory,
-} from '../models/SignatureRequest'
+} from '../models/signature-request.model'
 
 // DocuSign integration types
 interface DocuSignConfig {

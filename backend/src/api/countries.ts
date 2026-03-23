@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { CountryService } from '../services/CountryService'
+import { CountryService } from '../services/country.service'
 import {
   validate,
   paginationSchema,

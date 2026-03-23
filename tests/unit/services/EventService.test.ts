@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { EventService } from '../../../backend/src/services/EventService'
+import { EventService } from '../../../backend/src/services/event.service'
 import { supabaseAdmin } from '../../../backend/src/config/supabase'
 
 // Mock supabase

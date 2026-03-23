@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { IntelligenceService } from '../../../backend/src/services/IntelligenceService'
+import { IntelligenceService } from '../../../backend/src/services/intelligence.service'
 import { supabaseAdmin } from '../../../backend/src/config/supabase'
 
 // Mock supabase

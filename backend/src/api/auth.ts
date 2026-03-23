@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import AuthService from '../services/AuthService'
+import AuthService from '../services/auth.service'
 import { validate, createBilingualError, getRequestLanguage } from '../utils/validation'
 import { logInfo, logError } from '../utils/logger'
 

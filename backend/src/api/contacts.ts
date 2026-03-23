@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { z } from 'zod'
 import { validate, idParamSchema } from '../utils/validation'
 import { requirePermission } from '../middleware/auth'
-import { ContactService } from '../services/ContactService'
+import { ContactService } from '../services/contact.service'
 
 const router = Router()
 

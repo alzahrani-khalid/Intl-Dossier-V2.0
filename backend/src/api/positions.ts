@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express'
-import { PositionConsistencyService } from '../services/PositionConsistencyService'
+import { PositionConsistencyService } from '../services/position-consistency.service'
 import { authenticate } from '../middleware/auth'
 import { validate } from '../middleware/validation'
 import { body, param, query } from 'express-validator'

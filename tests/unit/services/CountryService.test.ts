@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { CountryService } from '../../../backend/src/services/CountryService'
+import { CountryService } from '../../../backend/src/services/country.service'
 import { supabaseAdmin } from '../../../backend/src/config/supabase'
 
 // Mock supabase

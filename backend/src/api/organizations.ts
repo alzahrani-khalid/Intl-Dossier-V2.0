@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { OrganizationService } from '../services/OrganizationService'
+import { OrganizationService } from '../services/organization.service'
 import { validate, paginationSchema, idParamSchema } from '../utils/validation'
 import { requirePermission } from '../middleware/auth'
 
