@@ -49,7 +49,7 @@ Requirements for production quality milestone. Each maps to roadmap phases.
 
 ### Architecture Consolidation
 
-- [ ] **ARCH-01**: Consistent naming conventions enforced across monorepo (files, functions, components, services)
+- [x] **ARCH-01**: Consistent naming conventions enforced across monorepo (files, functions, components, services)
 - [ ] **ARCH-02**: Frontend domain repositories created for all 13+ domains (hooks use repo layer, not direct API calls)
 - [ ] **ARCH-03**: Backend duplicate services consolidated (single service per domain, no PascalCase/kebab-case variants)
 - [ ] **ARCH-04**: Shared patterns extracted into reusable components and hooks (DRY across dossier types)
@@ -114,7 +114,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PERF-02     | Phase 7 | Pending |
 | PERF-03     | Phase 7 | Pending |
 | PERF-04     | Phase 7 | Pending |
-| ARCH-01     | Phase 2 | Pending |
+| ARCH-01     | Phase 2 | Complete |
 | ARCH-02     | Phase 6 | Pending |
 | ARCH-03     | Phase 6 | Pending |
 | ARCH-04     | Phase 6 | Pending |
