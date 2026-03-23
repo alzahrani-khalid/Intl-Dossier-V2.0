@@ -1,1 +1,9 @@
+#!/usr/bin/env sh
+
+# Run lint-staged for ESLint + Prettier on staged files
 npx lint-staged
+
+# Run full-project checks (cannot be scoped to staged files)
+# Build verifies TypeScript compilation via Vite/esbuild (strict tsc deferred to Phase 2)
+pnpm build
+pnpm exec knip --no-progress
