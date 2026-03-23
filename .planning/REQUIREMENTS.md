@@ -87,45 +87,45 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status  |
-| ----------- | ----- | ------- |
-| TOOL-01     | TBD   | Pending |
-| TOOL-02     | TBD   | Pending |
-| TOOL-03     | TBD   | Pending |
-| TOOL-04     | TBD   | Pending |
-| TOOL-05     | TBD   | Pending |
-| SEC-01      | TBD   | Pending |
-| SEC-02      | TBD   | Pending |
-| SEC-03      | TBD   | Pending |
-| SEC-04      | TBD   | Pending |
-| SEC-05      | TBD   | Pending |
-| SEC-06      | TBD   | Pending |
-| RTL-01      | TBD   | Pending |
-| RTL-02      | TBD   | Pending |
-| RTL-03      | TBD   | Pending |
-| RTL-04      | TBD   | Pending |
-| RTL-05      | TBD   | Pending |
-| RESP-01     | TBD   | Pending |
-| RESP-02     | TBD   | Pending |
-| RESP-03     | TBD   | Pending |
-| RESP-04     | TBD   | Pending |
-| RESP-05     | TBD   | Pending |
-| PERF-01     | TBD   | Pending |
-| PERF-02     | TBD   | Pending |
-| PERF-03     | TBD   | Pending |
-| PERF-04     | TBD   | Pending |
-| ARCH-01     | TBD   | Pending |
-| ARCH-02     | TBD   | Pending |
-| ARCH-03     | TBD   | Pending |
-| ARCH-04     | TBD   | Pending |
+| Requirement | Phase   | Status  |
+| ----------- | ------- | ------- |
+| TOOL-01     | Phase 1 | Pending |
+| TOOL-02     | Phase 1 | Pending |
+| TOOL-03     | Phase 1 | Pending |
+| TOOL-04     | Phase 1 | Pending |
+| TOOL-05     | Phase 1 | Pending |
+| SEC-01      | Phase 3 | Pending |
+| SEC-02      | Phase 3 | Pending |
+| SEC-03      | Phase 3 | Pending |
+| SEC-04      | Phase 3 | Pending |
+| SEC-05      | Phase 3 | Pending |
+| SEC-06      | Phase 3 | Pending |
+| RTL-01      | Phase 4 | Pending |
+| RTL-02      | Phase 4 | Pending |
+| RTL-03      | Phase 4 | Pending |
+| RTL-04      | Phase 4 | Pending |
+| RTL-05      | Phase 4 | Pending |
+| RESP-01     | Phase 5 | Pending |
+| RESP-02     | Phase 5 | Pending |
+| RESP-03     | Phase 5 | Pending |
+| RESP-04     | Phase 5 | Pending |
+| RESP-05     | Phase 5 | Pending |
+| PERF-01     | Phase 7 | Pending |
+| PERF-02     | Phase 7 | Pending |
+| PERF-03     | Phase 7 | Pending |
+| PERF-04     | Phase 7 | Pending |
+| ARCH-01     | Phase 2 | Pending |
+| ARCH-02     | Phase 6 | Pending |
+| ARCH-03     | Phase 6 | Pending |
+| ARCH-04     | Phase 6 | Pending |
 
 **Coverage:**
 
 - v1 requirements: 29 total
-- Mapped to phases: 0
-- Unmapped: 29 (pending roadmap creation)
+- Mapped to phases: 29
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-03-23_
-_Last updated: 2026-03-23 after initial definition_
+_Last updated: 2026-03-23 after roadmap creation_
