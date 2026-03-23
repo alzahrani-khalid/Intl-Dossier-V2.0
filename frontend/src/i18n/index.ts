@@ -38,56 +38,34 @@ import enRelationships from './en/relationships.json'
 import arRelationships from './ar/relationships.json'
 import enAdvancedSearch from './en/advanced-search.json'
 import arAdvancedSearch from './ar/advanced-search.json'
-// eslint-disable-next-line no-restricted-syntax
-import enMLClassification from './en/ml-classification.json'
-// eslint-disable-next-line no-restricted-syntax
-import arMLClassification from './ar/ml-classification.json'
-import enAISummary from './en/ai-summary.json'
-import arAISummary from './ar/ai-summary.json'
 import enAuditLogs from './en/audit-logs.json'
 import arAuditLogs from './ar/audit-logs.json'
 import enBulkActions from './en/bulk-actions.json'
 import arBulkActions from './ar/bulk-actions.json'
-import enMouRenewals from './en/mou-renewals.json'
-import arMouRenewals from './ar/mou-renewals.json'
 import enDashboardWidgets from './en/dashboard-widgets.json'
 import arDashboardWidgets from './ar/dashboard-widgets.json'
 import enDashboard from './en/dashboard.json'
 import arDashboard from './ar/dashboard.json'
 import enDelegation from './en/delegation.json'
 import arDelegation from './ar/delegation.json'
-import enRetentionPolicies from './en/retention-policies.json'
-import arRetentionPolicies from './ar/retention-policies.json'
-import enDocumentOcr from './en/document-ocr.json'
-import arDocumentOcr from './ar/document-ocr.json'
 import enEmail from './en/email.json'
 import arEmail from './ar/email.json'
 import enCalendar from './en/calendar.json'
 import arCalendar from './ar/calendar.json'
 import enExportImport from './en/export-import.json'
 import arExportImport from './ar/export-import.json'
-import enDocumentPreview from './en/document-preview.json'
-import arDocumentPreview from './ar/document-preview.json'
 import enNotificationCenter from './en/notification-center.json'
 import arNotificationCenter from './ar/notification-center.json'
 import enGraphTraversal from './en/graph-traversal.json'
 import arGraphTraversal from './ar/graph-traversal.json'
 import enComments from './en/comments.json'
 import arComments from './ar/comments.json'
-import enRelationshipHealth from './en/relationship-health.json'
-import arRelationshipHealth from './ar/relationship-health.json'
-import enSemanticSearch from './en/semantic-search.json'
-import arSemanticSearch from './ar/semantic-search.json'
 import enAnalytics from './en/analytics.json'
 import arAnalytics from './ar/analytics.json'
 import enSla from './en/sla.json'
 import arSla from './ar/sla.json'
 import enTags from './en/tags.json'
 import arTags from './ar/tags.json'
-import enTranslation from './en/translation.json'
-import arTranslation from './ar/translation.json'
-import enDocumentVersions from './en/document-versions.json'
-import arDocumentVersions from './ar/document-versions.json'
 import enWebhooks from './en/webhooks.json'
 import arWebhooks from './ar/webhooks.json'
 import enCalendarSync from './en/calendar-sync.json'
@@ -96,10 +74,6 @@ import enReportBuilder from './en/report-builder.json'
 import arReportBuilder from './ar/report-builder.json'
 import enEntityComparison from './en/entity-comparison.json'
 import arEntityComparison from './ar/entity-comparison.json'
-import enGeographicVisualization from './en/geographic-visualization.json'
-import arGeographicVisualization from './ar/geographic-visualization.json'
-import enGraphExport from './en/graph-export.json'
-import arGraphExport from './ar/graph-export.json'
 import enAvailabilityPolling from './en/availability-polling.json'
 import arAvailabilityPolling from './ar/availability-polling.json'
 import enEngagementRecommendations from './en/engagement-recommendations.json'
@@ -108,22 +82,6 @@ import enWorkflowAutomation from './en/workflow-automation.json'
 import arWorkflowAutomation from './ar/workflow-automation.json'
 import enMultilingual from './en/multilingual.json'
 import arMultilingual from './ar/multilingual.json'
-import enDocumentClassification from './en/document-classification.json'
-import arDocumentClassification from './ar/document-classification.json'
-import enBriefingBooks from './en/briefing-books.json'
-import arBriefingBooks from './ar/briefing-books.json'
-import enDocumentTemplates from './en/document-templates.json'
-import arDocumentTemplates from './ar/document-templates.json'
-import enCollaborativeEditing from './en/collaborative-editing.json'
-import arCollaborativeEditing from './ar/collaborative-editing.json'
-import enCitations from './en/citations.json'
-import arCitations from './ar/citations.json'
-import enVoiceMemos from './en/voice-memos.json'
-import arVoiceMemos from './ar/voice-memos.json'
-import enAnnotations from './en/annotations.json'
-import arAnnotations from './ar/annotations.json'
-import enContentExpiration from './en/content-expiration.json'
-import arContentExpiration from './ar/content-expiration.json'
 import enFormWizard from './en/form-wizard.json'
 import arFormWizard from './ar/form-wizard.json'
 import enEmptyStates from './en/empty-states.json'
@@ -146,14 +104,10 @@ import enSampleData from './en/sample-data.json'
 import arSampleData from './ar/sample-data.json'
 import enOnboarding from './en/onboarding.json'
 import arOnboarding from './ar/onboarding.json'
-import enSmartImport from './en/smart-import.json'
-import arSmartImport from './ar/smart-import.json'
 import enContextualSuggestions from './en/contextual-suggestions.json'
 import arContextualSuggestions from './ar/contextual-suggestions.json'
 import enProgressiveDisclosure from './en/progressive-disclosure.json'
 import arProgressiveDisclosure from './ar/progressive-disclosure.json'
-import enAIPolicyBrief from './en/ai-policy-brief.json'
-import arAIPolicyBrief from './ar/ai-policy-brief.json'
 import enMilestonePlanning from './en/milestone-planning.json'
 import arMilestonePlanning from './ar/milestone-planning.json'
 import enSwipeGestures from './en/swipe-gestures.json'
@@ -166,16 +120,10 @@ import enSmartInput from './en/smart-input.json'
 import arSmartInput from './ar/smart-input.json'
 import enFieldHistory from './en/field-history.json'
 import arFieldHistory from './ar/field-history.json'
-import enWatchlist from './en/watchlist.json'
-import arWatchlist from './ar/watchlist.json'
-import enSavedSearches from './en/saved-searches.json'
-import arSavedSearches from './ar/saved-searches.json'
 import enEntityTemplates from './en/entity-templates.json'
 import arEntityTemplates from './ar/entity-templates.json'
 import enDuplicateDetection from './en/duplicate-detection.json'
 import arDuplicateDetection from './ar/duplicate-detection.json'
-import enRoleDashboard from './en/role-dashboard.json'
-import arRoleDashboard from './ar/role-dashboard.json'
 import enMeetingMinutes from './en/meeting-minutes.json'
 import arMeetingMinutes from './ar/meeting-minutes.json'
 import enCompliance from './en/compliance.json'
@@ -190,12 +138,8 @@ import enUserManagement from './en/user-management.json'
 import arUserManagement from './ar/user-management.json'
 import enActionableErrors from './en/actionable-errors.json'
 import arActionableErrors from './ar/actionable-errors.json'
-import enRichAutocomplete from './en/rich-autocomplete.json'
-import arRichAutocomplete from './ar/rich-autocomplete.json'
 import enProgressiveForm from './en/progressive-form.json'
 import arProgressiveForm from './ar/progressive-form.json'
-import enPermissionErrors from './en/permission-errors.json'
-import arPermissionErrors from './ar/permission-errors.json'
 import enActiveFilters from './en/active-filters.json'
 import arActiveFilters from './ar/active-filters.json'
 import enEmailDigest from './en/email-digest.json'
@@ -210,8 +154,6 @@ import enAgenda from './en/agenda.json'
 import arAgenda from './ar/agenda.json'
 import enStakeholderInteractions from './en/stakeholder-interactions.json'
 import arStakeholderInteractions from './ar/stakeholder-interactions.json'
-import enEntityDependencies from './en/entity-dependencies.json'
-import arEntityDependencies from './ar/entity-dependencies.json'
 import enScheduledReports from './en/scheduled-reports.json'
 import arScheduledReports from './ar/scheduled-reports.json'
 import enLegislation from './en/legislation.json'
@@ -224,24 +166,14 @@ import enQuickswitcher from './en/quickswitcher.json'
 import arQuickswitcher from './ar/quickswitcher.json'
 import enDossierRecommendations from './en/dossier-recommendations.json'
 import arDossierRecommendations from './ar/dossier-recommendations.json'
-import enMouNotifications from './en/mou-notifications.json'
-import arMouNotifications from './ar/mou-notifications.json'
 import enCollaboration from './en/collaboration.json'
 import arCollaboration from './ar/collaboration.json'
 import enDossierExport from './en/dossier-export.json'
 import arDossierExport from './ar/dossier-export.json'
 import enSettings from './en/settings.json'
 import arSettings from './ar/settings.json'
-import enForumManagement from './en/forum-management.json'
-import arForumManagement from './ar/forum-management.json'
-import enMouLifecycle from './en/mou-lifecycle.json'
-import arMouLifecycle from './ar/mou-lifecycle.json'
 import enCommittees from './en/committees.json'
 import arCommittees from './ar/committees.json'
-import enTerminology from './en/terminology.json'
-import arTerminology from './ar/terminology.json'
-import enContactsExtended from './en/contacts-extended.json'
-import arContactsExtended from './ar/contacts-extended.json'
 import enMyWork from './en/my-work.json'
 import arMyWork from './ar/my-work.json'
 // Force reload - updated 2026-02-10 - v109 - Added my-work namespace
@@ -270,48 +202,28 @@ const resources = {
     'engagement-briefs': enEngagementBriefs,
     relationships: enRelationships,
     'advanced-search': enAdvancedSearch,
-    'ml-classification': enMLClassification, // eslint-disable-line no-restricted-syntax
-    'ai-summary': enAISummary,
     'audit-logs': enAuditLogs,
     'bulk-actions': enBulkActions,
-    'mou-renewals': enMouRenewals,
     'dashboard-widgets': enDashboardWidgets,
     dashboard: enDashboard,
     delegation: enDelegation,
-    'retention-policies': enRetentionPolicies,
-    'document-ocr': enDocumentOcr,
     email: enEmail,
     calendar: enCalendar,
     'export-import': enExportImport,
-    'document-preview': enDocumentPreview,
     'notification-center': enNotificationCenter,
     'graph-traversal': enGraphTraversal,
     comments: enComments,
-    'relationship-health': enRelationshipHealth,
-    'semantic-search': enSemanticSearch,
     analytics: enAnalytics,
     sla: enSla,
     tags: enTags,
-    'translation-service': enTranslation,
-    'document-versions': enDocumentVersions,
     webhooks: enWebhooks,
     'calendar-sync': enCalendarSync,
     'report-builder': enReportBuilder,
     'entity-comparison': enEntityComparison,
-    'geographic-visualization': enGeographicVisualization,
-    'graph-export': enGraphExport,
     'availability-polling': enAvailabilityPolling,
     'engagement-recommendations': enEngagementRecommendations,
     'workflow-automation': enWorkflowAutomation,
     multilingual: enMultilingual,
-    'document-classification': enDocumentClassification,
-    'briefing-books': enBriefingBooks,
-    'document-templates': enDocumentTemplates,
-    'collaborative-editing': enCollaborativeEditing,
-    citations: enCitations,
-    'voice-memos': enVoiceMemos,
-    annotations: enAnnotations,
-    'content-expiration': enContentExpiration,
     'form-wizard': enFormWizard,
     'empty-states': enEmptyStates,
     validation: enValidation,
@@ -323,21 +235,16 @@ const resources = {
     'guided-tours': enGuidedTours,
     'sample-data': enSampleData,
     onboarding: enOnboarding,
-    'smart-import': enSmartImport,
     'contextual-suggestions': enContextualSuggestions,
     'progressive-disclosure': enProgressiveDisclosure,
-    'ai-policy-brief': enAIPolicyBrief,
     'milestone-planning': enMilestonePlanning,
     'swipe-gestures': enSwipeGestures,
     'bottom-sheet': enBottomSheet,
     fab: enFab,
     'smart-input': enSmartInput,
     'field-history': enFieldHistory,
-    watchlist: enWatchlist,
-    'saved-searches': enSavedSearches,
     'entity-templates': enEntityTemplates,
     'duplicate-detection': enDuplicateDetection,
-    'role-dashboard': enRoleDashboard,
     'meeting-minutes': enMeetingMinutes,
     compliance: enCompliance,
     'stakeholder-influence': enStakeholderInfluence,
@@ -345,9 +252,7 @@ const resources = {
     'form-auto-save': enFormAutoSave,
     'user-management': enUserManagement,
     'actionable-errors': enActionableErrors,
-    'rich-autocomplete': enRichAutocomplete,
     'progressive-form': enProgressiveForm,
-    'permission-errors': enPermissionErrors,
     'active-filters': enActiveFilters,
     'email-digest': enEmailDigest,
     'commitment-deliverables': enCommitmentDeliverables,
@@ -355,22 +260,16 @@ const resources = {
     integrations: enIntegrations,
     agenda: enAgenda,
     'stakeholder-interactions': enStakeholderInteractions,
-    'entity-dependencies': enEntityDependencies,
     'scheduled-reports': enScheduledReports,
     legislation: enLegislation,
     'dossier-search': enDossierSearch,
     'dossier-overview': enDossierOverview,
     quickswitcher: enQuickswitcher,
     'dossier-recommendations': enDossierRecommendations,
-    'mou-notifications': enMouNotifications,
     collaboration: enCollaboration,
     'dossier-export': enDossierExport,
     settings: enSettings,
-    'forum-management': enForumManagement,
-    'mou-lifecycle': enMouLifecycle,
     committees: enCommittees,
-    terminology: enTerminology,
-    'contacts-extended': enContactsExtended,
     'my-work': enMyWork,
   },
   ar: {
@@ -393,48 +292,28 @@ const resources = {
     'engagement-briefs': arEngagementBriefs,
     relationships: arRelationships,
     'advanced-search': arAdvancedSearch,
-    'ml-classification': arMLClassification, // eslint-disable-line no-restricted-syntax
-    'ai-summary': arAISummary,
     'audit-logs': arAuditLogs,
     'bulk-actions': arBulkActions,
-    'mou-renewals': arMouRenewals,
     'dashboard-widgets': arDashboardWidgets,
     dashboard: arDashboard,
     delegation: arDelegation,
-    'retention-policies': arRetentionPolicies,
-    'document-ocr': arDocumentOcr,
     email: arEmail,
     calendar: arCalendar,
     'export-import': arExportImport,
-    'document-preview': arDocumentPreview,
     'notification-center': arNotificationCenter,
     'graph-traversal': arGraphTraversal,
     comments: arComments,
-    'relationship-health': arRelationshipHealth,
-    'semantic-search': arSemanticSearch,
     analytics: arAnalytics,
     sla: arSla,
     tags: arTags,
-    'translation-service': arTranslation,
-    'document-versions': arDocumentVersions,
     webhooks: arWebhooks,
     'calendar-sync': arCalendarSync,
     'report-builder': arReportBuilder,
     'entity-comparison': arEntityComparison,
-    'geographic-visualization': arGeographicVisualization,
-    'graph-export': arGraphExport,
     'availability-polling': arAvailabilityPolling,
     'engagement-recommendations': arEngagementRecommendations,
     'workflow-automation': arWorkflowAutomation,
     multilingual: arMultilingual,
-    'document-classification': arDocumentClassification,
-    'briefing-books': arBriefingBooks,
-    'document-templates': arDocumentTemplates,
-    'collaborative-editing': arCollaborativeEditing,
-    citations: arCitations,
-    'voice-memos': arVoiceMemos,
-    annotations: arAnnotations,
-    'content-expiration': arContentExpiration,
     'form-wizard': arFormWizard,
     'empty-states': arEmptyStates,
     validation: arValidation,
@@ -446,21 +325,16 @@ const resources = {
     'guided-tours': arGuidedTours,
     'sample-data': arSampleData,
     onboarding: arOnboarding,
-    'smart-import': arSmartImport,
     'contextual-suggestions': arContextualSuggestions,
     'progressive-disclosure': arProgressiveDisclosure,
-    'ai-policy-brief': arAIPolicyBrief,
     'milestone-planning': arMilestonePlanning,
     'swipe-gestures': arSwipeGestures,
     'bottom-sheet': arBottomSheet,
     fab: arFab,
     'smart-input': arSmartInput,
     'field-history': arFieldHistory,
-    watchlist: arWatchlist,
-    'saved-searches': arSavedSearches,
     'entity-templates': arEntityTemplates,
     'duplicate-detection': arDuplicateDetection,
-    'role-dashboard': arRoleDashboard,
     'meeting-minutes': arMeetingMinutes,
     compliance: arCompliance,
     'stakeholder-influence': arStakeholderInfluence,
@@ -468,9 +342,7 @@ const resources = {
     'form-auto-save': arFormAutoSave,
     'user-management': arUserManagement,
     'actionable-errors': arActionableErrors,
-    'rich-autocomplete': arRichAutocomplete,
     'progressive-form': arProgressiveForm,
-    'permission-errors': arPermissionErrors,
     'active-filters': arActiveFilters,
     'email-digest': arEmailDigest,
     'commitment-deliverables': arCommitmentDeliverables,
@@ -478,22 +350,16 @@ const resources = {
     integrations: arIntegrations,
     agenda: arAgenda,
     'stakeholder-interactions': arStakeholderInteractions,
-    'entity-dependencies': arEntityDependencies,
     'scheduled-reports': arScheduledReports,
     legislation: arLegislation,
     'dossier-search': arDossierSearch,
     'dossier-overview': arDossierOverview,
     quickswitcher: arQuickswitcher,
     'dossier-recommendations': arDossierRecommendations,
-    'mou-notifications': arMouNotifications,
     collaboration: arCollaboration,
     'dossier-export': arDossierExport,
     settings: arSettings,
-    'forum-management': arForumManagement,
-    'mou-lifecycle': arMouLifecycle,
     committees: arCommittees,
-    terminology: arTerminology,
-    'contacts-extended': arContactsExtended,
     'my-work': arMyWork,
   },
 }
