@@ -4,7 +4,7 @@ import { Menu, Search, User, LogOut, Settings, ChevronDown } from 'lucide-react'
 import { useAuthStore } from '../../store/authStore'
 import { useUIStore } from '../../store/uiStore'
 import { ThemeSelector } from '../theme-selector/theme-selector'
-import { LanguageToggle } from '../LanguageToggle'
+import { LanguageToggle } from '../language-toggle/LanguageToggle'
 import { NotificationPanel } from '../notifications'
 import { useOptionalKeyboardShortcutContext } from '../keyboard-shortcuts'
 

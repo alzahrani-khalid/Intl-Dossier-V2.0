@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { VersionHistoryViewer } from '@/components/VersionHistoryViewer'
+import { VersionHistoryViewer } from '@/components/version-history-viewer/VersionHistoryViewer'
 import { ArrowLeft } from 'lucide-react'
 
 export const Route = createFileRoute('/_protected/after-actions/$afterActionId/versions')({

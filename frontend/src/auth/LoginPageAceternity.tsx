@@ -7,7 +7,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '../store/authStore'
 import { Eye, EyeOff, Loader2, Globe, Mail, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { LanguageSwitcher } from '../components/LanguageSwitcher'
+import { LanguageSwitcher } from '../components/language-switcher/LanguageSwitcher'
 import { FormInputAceternity } from '../components/forms/FormInputAceternity'
 import { FormCheckboxAceternity } from '../components/forms/FormCheckboxAceternity'
 

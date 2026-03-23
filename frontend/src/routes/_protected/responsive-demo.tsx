@@ -4,7 +4,7 @@ import { ResponsiveCardGrid } from '@/components/responsive/responsive-card'
 import { ResponsiveTable } from '@/components/responsive/responsive-table'
 import { ResponsiveNav, type NavItem } from '@/components/responsive/responsive-nav'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { LanguageSwitcher } from '@/components/language-switcher/LanguageSwitcher'
 import { useResponsive } from '@/hooks/useResponsive'
 
 function ViewInfo() {

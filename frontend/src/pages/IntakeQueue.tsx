@@ -42,7 +42,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu'
-import { TriagePanel } from '../components/TriagePanel'
+import { TriagePanel } from '../components/triage-panel/TriagePanel'
 import { IntakeRoleEmptyState } from '../components/empty-states'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { useLastSyncInfo } from '../hooks/useLastSyncInfo'

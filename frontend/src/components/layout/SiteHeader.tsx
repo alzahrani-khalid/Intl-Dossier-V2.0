@@ -12,7 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useSidebar } from '@/components/ui/sidebar'
 import { NotificationPanel } from '@/components/notifications'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
-import { LanguageToggle } from '@/components/LanguageToggle'
+import { LanguageToggle } from '@/components/language-toggle/LanguageToggle'
 import { HeaderSearch } from './header/Search'
 import { UserMenu } from './header/UserMenu'
 

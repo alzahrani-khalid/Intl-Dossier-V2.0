@@ -20,7 +20,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { ArrowLeft, CheckCircle, XCircle, UserPlus, Users } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
-import ApprovalChain from '@/components/ApprovalChain'
+import ApprovalChain from '@/components/approval-chain/ApprovalChain'
 import { Skeleton } from '@/components/ui/skeleton'
 import { p } from '@/lib/navigation'
 

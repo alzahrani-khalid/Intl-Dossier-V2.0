@@ -38,7 +38,7 @@ import { useBulkReminderAction, useBulkReminderJobStatus } from '../hooks/useWai
 import { useBulkSelection } from '../hooks/useBulkSelection'
 import { useQueueFilters, useFilteredAssignments } from '../hooks/useQueueFilters'
 import { useToast } from '../hooks/useToast'
-import QueryErrorBoundary from '../components/QueryErrorBoundary'
+import QueryErrorBoundary from '../components/query-error-boundary/QueryErrorBoundary'
 
 interface LinkedEntity {
   type: 'dossier' | 'position' | 'ticket'

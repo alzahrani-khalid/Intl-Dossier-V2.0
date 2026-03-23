@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { IntakeForm } from '../../../components/IntakeForm'
+import { IntakeForm } from '../../../components/intake-form/IntakeForm'
 
 export const Route = createFileRoute('/_protected/intake/new')({
   component: NewIntakeTicket,

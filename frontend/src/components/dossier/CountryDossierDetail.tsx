@@ -21,7 +21,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
-import QueryErrorBoundary from '@/components/QueryErrorBoundary'
+import QueryErrorBoundary from '@/components/query-error-boundary/QueryErrorBoundary'
 
 // Lazy load intelligence dashboard for better performance
 const IntelligenceTabContent = lazy(() =>
@@ -34,7 +34,7 @@ import { DossierActivityTimeline } from '@/components/dossier/DossierActivityTim
 import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph'
 import { DossierPositionsTab } from '@/components/positions/DossierPositionsTab'
 import { DossierMoUsTab } from '@/components/dossiers/DossierMoUsTab'
-import { KeyContactsPanel } from '@/components/KeyContactsPanel'
+import { KeyContactsPanel } from '@/components/key-contacts-panel/KeyContactsPanel'
 import { CommentList } from '@/components/comments'
 import { MultiLanguageContentEditor } from '@/components/multilingual'
 import type { CountryDossier } from '@/lib/dossier-type-guards'

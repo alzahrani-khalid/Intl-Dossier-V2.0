@@ -10,12 +10,12 @@ import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Save, Send, Loader2, AlertCircle, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { DecisionList, type Decision } from './DecisionList'
+import { DecisionList, type Decision } from '../decision-list/DecisionList'
 import { CommitmentList, type Commitment } from './CommitmentList'
-import { RiskList, type Risk } from './RiskList'
-import { FollowUpList } from '../FollowUpList'
-import { AttachmentUploader } from '../AttachmentUploader'
-import { AIExtractionButton } from '../AIExtractionButton'
+import { RiskList, type Risk } from '../risk-list/RiskList'
+import { FollowUpList } from '../follow-up-list/FollowUpList'
+import { AttachmentUploader } from '../attachment-uploader/AttachmentUploader'
+import { AIExtractionButton } from '../ai-extraction-button/AIExtractionButton'
 
 interface FollowUpAction {
   id?: string

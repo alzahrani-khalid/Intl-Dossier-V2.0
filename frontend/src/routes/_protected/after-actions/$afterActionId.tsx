@@ -9,8 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
-import { PDFGeneratorButton } from '@/components/PDFGeneratorButton'
-import { EditApprovalFlow } from '@/components/EditApprovalFlow'
+import { PDFGeneratorButton } from '@/components/pdf-generator-button/PDFGeneratorButton'
+import { EditApprovalFlow } from '@/components/edit-approval-flow/EditApprovalFlow'
 import {
   FileText,
   Users,

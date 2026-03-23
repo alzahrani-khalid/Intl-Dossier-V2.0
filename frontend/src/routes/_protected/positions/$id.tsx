@@ -13,12 +13,12 @@ import { usePosition } from '@/hooks/usePosition'
 import { useUpdatePosition } from '@/hooks/useUpdatePosition'
 import { useSubmitPosition } from '@/hooks/useSubmitPosition'
 import { usePositionNavigation } from '@/hooks/useEntityNavigation'
-import { PositionEditor } from '@/components/PositionEditor'
+import { PositionEditor } from '@/components/position-editor/PositionEditor'
 import {
   ApprovalChain,
   type ApprovalChainConfig as ComponentApprovalChainConfig,
-} from '@/components/ApprovalChain'
-import { ConsistencyPanel } from '@/components/ConsistencyPanel'
+} from '@/components/approval-chain/ApprovalChain'
+import { ConsistencyPanel } from '@/components/consistency-panel/ConsistencyPanel'
 import { AttachmentUploader } from '@/components/positions/AttachmentUploader'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'

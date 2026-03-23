@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { ArrowLeft, GitCompare } from 'lucide-react'
-import { VersionComparison } from '@/components/VersionComparison'
+import { VersionComparison } from '@/components/version-comparison/VersionComparison'
 import { Skeleton } from '@/components/ui/skeleton'
 import { p } from '@/lib/navigation'
 

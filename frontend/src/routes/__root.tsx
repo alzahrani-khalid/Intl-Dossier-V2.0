@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import ErrorBoundary from '@/components/ErrorBoundary'
+import ErrorBoundary from '@/components/app-error-boundary/ErrorBoundary'
 import { WorkCreationProvider } from '@/components/work-creation'
 import { KeyboardShortcutProvider, CommandPalette } from '@/components/keyboard-shortcuts'
 import { TourProvider, TourOverlay } from '@/components/guided-tours'
