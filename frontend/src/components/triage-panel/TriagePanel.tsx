@@ -61,9 +61,9 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
       {
         action: 'override',
         sensitivity: overrideValues.suggested_sensitivity as
-          | import('../types/intake').Sensitivity
+          | import('@/types/intake').Sensitivity
           | undefined,
-        urgency: overrideValues.suggested_urgency as import('../types/intake').Urgency | undefined,
+        urgency: overrideValues.suggested_urgency as import('@/types/intake').Urgency | undefined,
         assignedTo: overrideValues.suggested_assignee,
         assignedUnit: overrideValues.suggested_unit,
         overrideReason: overrideReason,
