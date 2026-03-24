@@ -78,7 +78,7 @@ Plans:
 Plans:
 
 - [ ] 03-01-PLAN.md — Unify dual auth middleware, implement hierarchical RBAC, fix org isolation (hardcoded org ID)
-- [ ] 03-02-PLAN.md — Harden Helmet CSP with origin whitelist, close input validation gaps, migrate express-validator to Zod
+- [x] 03-02-PLAN.md — Harden Helmet CSP with origin whitelist, close input validation gaps, migrate express-validator to Zod
 - [ ] 03-03-PLAN.md — Audit all tables for RLS coverage, create fix migration, build org isolation SDK test suite
 
 ### Phase 4: RTL/LTR Consistency
