@@ -9,6 +9,7 @@
  */
 
 import { Router, Request, Response, NextFunction } from 'express'
+import { z } from 'zod'
 import {
   cacheMetrics,
   getEntityMetrics,
@@ -18,8 +19,26 @@ import {
 import { redis, cacheHelpers } from '../config/redis'
 import { CACHE_TTL, type CacheableEntityType } from '../config/cache-ttl.config'
 import { logInfo, logError } from '../utils/logger'
+import { validate } from '../utils/validation'
 
 const router = Router()
+
+// Validation schemas
+const entityTypeParamSchema = z.object({
+  entityType: z.string().min(1).max(100),
+})
+
+const clearPatternParamSchema = z.object({
+  pattern: z.string().min(1).max(200),
+})
+
+const keysPrefixParamSchema = z.object({
+  prefix: z.string().min(1).max(200),
+})
+
+const keysQuerySchema = z.object({
+  limit: z.coerce.number().min(1).max(1000).default(100),
+})
 
 /**
  * GET /cache/metrics
@@ -46,7 +65,7 @@ router.get('/metrics', async (_req: Request, res: Response, next: NextFunction) 
  * GET /cache/metrics/:entityType
  * Get metrics for a specific entity type
  */
-router.get('/metrics/:entityType', (req: Request, res: Response, next: NextFunction) => {
+router.get('/metrics/:entityType', validate({ params: entityTypeParamSchema }), (req: Request, res: Response, next: NextFunction) => {
   try {
     const entityType = req.params.entityType as CacheableEntityType
     const metrics = getEntityMetrics(entityType)
@@ -137,7 +156,7 @@ router.get('/health', async (_req: Request, res: Response) => {
  * DELETE /cache/clear/:pattern
  * Clear cache entries matching a pattern (requires admin permissions)
  */
-router.delete('/clear/:pattern', async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/clear/:pattern', validate({ params: clearPatternParamSchema }), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const pattern = req.params.pattern || '*'
     // In production, you'd want to check for admin permissions here
@@ -164,11 +183,10 @@ router.delete('/clear/:pattern', async (req: Request, res: Response, next: NextF
  * GET /cache/keys/:prefix
  * List cache keys with a specific prefix (for debugging)
  */
-router.get('/keys/:prefix', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/keys/:prefix', validate({ params: keysPrefixParamSchema, query: keysQuerySchema }), async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const prefix = req.params.prefix || ''
-    const limitParam = req.query.limit
-    const limit = typeof limitParam === 'string' ? parseInt(limitParam, 10) : 100
+    const prefix = req.params.prefix
+    const limit = (req.query as { limit: number }).limit
 
     const keys = await redis.keys(`${prefix}*`)
     const limitedKeys = keys.slice(0, limit)

@@ -110,7 +110,21 @@ export const helmetConfig = helmet({
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:', 'https:'],
       scriptSrc: ["'self'"],
-      connectSrc: ["'self'", process.env.SUPABASE_URL || 'https://*.supabase.co'].filter(Boolean),
+      connectSrc: [
+        "'self'",
+        process.env.SUPABASE_URL || 'https://*.supabase.co',
+        // Supabase Realtime WebSocket
+        process.env.SUPABASE_URL
+          ? process.env.SUPABASE_URL.replace('https://', 'wss://')
+          : 'wss://*.supabase.co',
+        // Sentry error reporting
+        process.env.SENTRY_DSN
+          ? new URL(process.env.SENTRY_DSN).origin
+          : null,
+        // AnythingLLM API
+        process.env.ANYTHINGLLM_API_URL || null,
+      ].filter(Boolean) as string[],
+      workerSrc: ["'self'", 'blob:'],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
@@ -214,12 +228,8 @@ export const requestSizeLimit = (maxSize: string = '10mb') => {
 
 // Security headers middleware
 export const securityHeaders = (_req: Request, res: Response, next: NextFunction): void => {
-  // Custom security headers
+  // Custom security headers (Helmet already removes X-Powered-By)
   res.setHeader('X-API-Version', '1.0')
-  res.setHeader('X-Powered-By', 'GASTAT-API')
-
-  // Remove sensitive headers
-  res.removeHeader('X-Powered-By')
 
   // Add custom rate limit info
   res.setHeader('X-RateLimit-Policy', '100;w=900') // 100 requests per 15 minutes

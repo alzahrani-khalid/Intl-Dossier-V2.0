@@ -5,15 +5,47 @@
  */
 
 import { Router, Request, Response } from 'express'
+import { z } from 'zod'
 import {
   searchEntities,
   getEntityMetadata,
   invalidateEntityCache,
 } from '../services/entity-search.service'
 import { requireRole } from '../middleware/auth'
+import { validate } from '../utils/validation'
 import type { EntityType } from '../types/intake-entity-links.types'
 
 const router = Router()
+
+// Valid entity types for this API
+const validEntityTypes = [
+  'dossier',
+  'position',
+  'mou',
+  'engagement',
+  'assignment',
+  'commitment',
+  'intelligence_signal',
+  'organization',
+  'country',
+  'forum',
+  'working_group',
+  'topic',
+] as const
+
+// Validation schemas
+const entitySearchQuerySchema = z.object({
+  q: z.string().min(1).max(200),
+  entity_types: z.string().optional(),
+  limit: z.coerce.number().min(1).max(50).default(10),
+  offset: z.coerce.number().min(0).default(0),
+  min_confidence: z.coerce.number().min(0).max(1).optional(),
+})
+
+const entityParamsSchema = z.object({
+  entity_type: z.enum(validEntityTypes),
+  entity_id: z.string().min(1),
+})
 
 /**
  * GET /api/entities/search
@@ -26,7 +58,7 @@ const router = Router()
  * - offset: Offset for pagination (default: 0)
  * - min_confidence: Minimum confidence score for AI suggestions (optional)
  */
-router.get('/entities/search', async (req: Request, res: Response) => {
+router.get('/entities/search', validate({ query: entitySearchQuerySchema }), async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id
 
@@ -40,46 +72,15 @@ router.get('/entities/search', async (req: Request, res: Response) => {
       })
     }
 
-    // Parse query parameters
-    const query = req.query.q as string
-    const entityTypesParam = req.query.entity_types as string
-    const limitParam = req.query.limit as string
-    const offsetParam = req.query.offset as string
-    const minConfidenceParam = req.query.min_confidence as string
+    // Query params are validated and coerced by Zod
+    const { q: query, entity_types: entityTypesParam, limit, offset, min_confidence: minConfidence } = req.query as z.infer<typeof entitySearchQuerySchema>
 
-    // Validate required query parameter
-    if (!query || query.trim().length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Missing required query parameter: q',
-        },
-      })
-    }
-
-    // Parse entity types
+    // Parse entity types from comma-separated string
     let entityTypes: EntityType[] | undefined
     if (entityTypesParam) {
       entityTypes = entityTypesParam.split(',').map((type) => type.trim()) as EntityType[]
 
-      // Validate entity types
-      const validTypes: EntityType[] = [
-        'dossier',
-        'position',
-        'mou',
-        'engagement',
-        'assignment',
-        'commitment',
-        'intelligence_signal',
-        'organization',
-        'country',
-        'forum',
-        'working_group',
-        'topic',
-      ]
-
-      const invalidTypes = entityTypes.filter((type) => !validTypes.includes(type))
+      const invalidTypes = entityTypes.filter((type) => !validEntityTypes.includes(type as typeof validEntityTypes[number]))
       if (invalidTypes.length > 0) {
         return res.status(400).json({
           success: false,
@@ -87,7 +88,7 @@ router.get('/entities/search', async (req: Request, res: Response) => {
             code: 'VALIDATION_ERROR',
             message: `Invalid entity types: ${invalidTypes.join(', ')}`,
             details: {
-              valid_types: validTypes,
+              valid_types: [...validEntityTypes],
               invalid_types: invalidTypes,
             },
           },
@@ -95,42 +96,14 @@ router.get('/entities/search', async (req: Request, res: Response) => {
       }
     }
 
-    // Parse pagination parameters
-    const limit = limitParam ? Math.min(parseInt(limitParam), 50) : 10
-    const offset = offsetParam ? parseInt(offsetParam) : 0
-
-    // Parse min confidence
-    const minConfidence = minConfidenceParam ? parseFloat(minConfidenceParam) : undefined
-
-    // Validate pagination parameters
-    if (limit < 1 || isNaN(limit)) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid limit parameter. Must be between 1 and 50.',
-        },
-      })
-    }
-
-    if (offset < 0 || isNaN(offset)) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid offset parameter. Must be 0 or greater.',
-        },
-      })
-    }
-
     // Perform entity search
     const searchResults = await searchEntities(
-      query.trim(),
+      (query as string).trim(),
       {
         entity_types: entityTypes,
-        min_confidence: minConfidence,
-        limit,
-        offset,
+        min_confidence: minConfidence as number | undefined,
+        limit: limit as number,
+        offset: offset as number,
       },
       userId,
     )
@@ -174,7 +147,7 @@ router.get('/entities/search', async (req: Request, res: Response) => {
  * GET /api/entities/:entity_type/:entity_id
  * Gets metadata for a specific entity
  */
-router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Response) => {
+router.get('/entities/:entity_type/:entity_id', validate({ params: entityParamsSchema }), async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id
 
@@ -189,35 +162,6 @@ router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Respon
     }
 
     const { entity_type, entity_id } = req.params
-
-    // Validate entity type
-    const validTypes: EntityType[] = [
-      'dossier',
-      'position',
-      'mou',
-      'engagement',
-      'assignment',
-      'commitment',
-      'intelligence_signal',
-      'organization',
-      'country',
-      'forum',
-      'working_group',
-      'topic',
-    ]
-
-    if (!validTypes.includes(entity_type as EntityType)) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'INVALID_ENTITY_TYPE',
-          message: `Invalid entity type: ${entity_type}`,
-          details: {
-            valid_types: validTypes,
-          },
-        },
-      })
-    }
 
     // Get entity metadata
     const metadata = await getEntityMetadata(entity_type as EntityType, entity_id)
@@ -259,6 +203,7 @@ router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Respon
 router.post(
   '/entities/:entity_type/:entity_id/invalidate-cache',
   requireRole(['admin']),
+  validate({ params: entityParamsSchema }),
   async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id
@@ -273,35 +218,7 @@ router.post(
         })
       }
 
-      // Admin check handled by requireRole middleware
-
       const { entity_type, entity_id } = req.params
-
-      // Validate entity type
-      const validTypes: EntityType[] = [
-        'dossier',
-        'position',
-        'mou',
-        'engagement',
-        'assignment',
-        'commitment',
-        'intelligence_signal',
-        'organization',
-        'country',
-        'forum',
-        'working_group',
-        'topic',
-      ]
-
-      if (!validTypes.includes(entity_type as EntityType)) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: 'INVALID_ENTITY_TYPE',
-            message: `Invalid entity type: ${entity_type}`,
-          },
-        })
-      }
 
       // Invalidate cache
       await invalidateEntityCache(entity_type as EntityType, entity_id)

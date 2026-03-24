@@ -5,6 +5,7 @@
  */
 
 import { Router, Request, Response } from 'express'
+import { z } from 'zod'
 import {
   createEntityLink,
   getEntityLinks,
@@ -17,15 +18,104 @@ import {
 } from '../services/link.service'
 import { createAuditLog, getIntakeAuditLogs } from '../services/link-audit.service'
 import { migrateIntakeLinksToPosition } from '../services/link-migration.service'
+import { validate } from '../utils/validation'
 import type { CreateLinkRequest, UpdateLinkRequest } from '../types/intake-entity-links.types'
 
 const router = Router()
+
+// Valid entity types for intake linking
+const validEntityTypes = [
+  'dossier',
+  'position',
+  'mou',
+  'engagement',
+  'assignment',
+  'commitment',
+  'intelligence_signal',
+  'organization',
+  'country',
+  'forum',
+  'working_group',
+  'topic',
+] as const
+
+const validLinkTypes = ['primary', 'related', 'mentioned', 'requested', 'assigned_to'] as const
+
+// Validation schemas
+const intakeIdParamSchema = z.object({
+  intake_id: z.string().uuid(),
+})
+
+const intakeLinkParamSchema = z.object({
+  intake_id: z.string().uuid(),
+  link_id: z.string().uuid(),
+})
+
+const createLinkBodySchema = z.object({
+  entity_type: z.enum(validEntityTypes),
+  entity_id: z.string().uuid(),
+  link_type: z.string().min(1).max(50),
+  source: z.enum(['human', 'ai']).default('human'),
+  confidence: z.number().min(0).max(1).optional(),
+  notes: z.string().max(2000).optional(),
+  link_order: z.number().int().min(0).optional(),
+  suggested_by: z.string().uuid().optional(),
+})
+
+const batchLinksBodySchema = z.object({
+  links: z.array(z.object({
+    entity_type: z.enum(validEntityTypes),
+    entity_id: z.string().uuid(),
+    link_type: z.string().min(1).max(50),
+    source: z.enum(['human', 'ai']).default('human'),
+    confidence: z.number().min(0).max(1).optional(),
+    notes: z.string().max(2000).optional(),
+    link_order: z.number().int().min(0).optional(),
+  })).min(1).max(50),
+})
+
+const migrateLinkBodySchema = z.object({
+  target_position_id: z.string().uuid(),
+  atomic: z.boolean().default(false),
+})
+
+const getLinksQuerySchema = z.object({
+  include_deleted: z.enum(['true', 'false']).default('false'),
+})
+
+const updateLinkBodySchema = z.object({
+  notes: z.string().max(2000).optional(),
+  link_order: z.number().int().min(0).optional(),
+  _version: z.number().int(),
+})
+
+const reorderBodySchema = z.object({
+  link_orders: z.array(z.object({
+    link_id: z.string().uuid(),
+    link_order: z.number().int().min(0),
+  })).min(1),
+})
+
+const auditQuerySchema = z.object({
+  limit: z.coerce.number().min(1).max(1000).default(100),
+})
+
+const entityIntakesParamSchema = z.object({
+  entity_type: z.enum(validEntityTypes),
+  entity_id: z.string().min(1),
+})
+
+const entityIntakesQuerySchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  page_size: z.coerce.number().min(1).max(100).default(50),
+  link_type: z.enum(validLinkTypes).optional(),
+})
 
 /**
  * POST /api/intake/:intake_id/links
  * Creates a new entity link for an intake ticket
  */
-router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
+router.post('/intake/:intake_id/links', validate({ params: intakeIdParamSchema, body: createLinkBodySchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id } = req.params
     const userId = req.user?.id
@@ -40,35 +130,17 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
       })
     }
 
-    // Parse and validate request body
+    // Body is validated by Zod middleware
     const linkData: CreateLinkRequest = {
       intake_id,
       entity_type: req.body.entity_type,
       entity_id: req.body.entity_id,
       link_type: req.body.link_type,
-      source: req.body.source || 'human',
+      source: req.body.source,
       confidence: req.body.confidence,
       notes: req.body.notes,
       link_order: req.body.link_order,
       suggested_by: req.body.suggested_by,
-    }
-
-    // Validate required fields
-    if (!linkData.entity_type || !linkData.entity_id || !linkData.link_type) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Missing required fields: entity_type, entity_id, link_type',
-          details: {
-            missing_fields: [
-              !linkData.entity_type && 'entity_type',
-              !linkData.entity_id && 'entity_id',
-              !linkData.link_type && 'link_type',
-            ].filter(Boolean),
-          },
-        },
-      })
     }
 
     // Create the entity link
@@ -119,7 +191,7 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
  * Creates multiple entity links in a single batch operation
  * T085 [US3]: Batch link creation endpoint
  */
-router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response) => {
+router.post('/intake/:intake_id/links/batch', validate({ params: intakeIdParamSchema, body: batchLinksBodySchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id } = req.params
     const userId = req.user?.id
@@ -134,34 +206,8 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
       })
     }
 
-    // Validate request body has links array
+    // Body validated by Zod middleware (links array, size 1-50)
     const { links } = req.body
-
-    if (!Array.isArray(links)) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Request body must contain a "links" array',
-        },
-      })
-    }
-
-    // Validate batch size (1-50 links)
-    if (links.length < 1 || links.length > 50) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Batch size must be between 1 and 50 links',
-          details: {
-            current_size: links.length,
-            min_size: 1,
-            max_size: 50,
-          },
-        },
-      })
-    }
 
     // Process batch link creation
     const result = await createBatchLinks(intake_id, userId, links)
@@ -213,7 +259,7 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
  * Migrates all entity links from an intake ticket to a position
  * T083 [US3]: Link migration endpoint
  */
-router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Response) => {
+router.post('/intake/:intake_id/migrate-links', validate({ params: intakeIdParamSchema, body: migrateLinkBodySchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id } = req.params
     const userId = req.user?.id
@@ -228,18 +274,8 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
       })
     }
 
-    // Validate request body
+    // Body validated by Zod middleware
     const { target_position_id, atomic } = req.body
-
-    if (!target_position_id) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Missing required field: target_position_id',
-        },
-      })
-    }
 
     // Execute migration
     const result = await migrateIntakeLinksToPosition(
@@ -294,7 +330,7 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
  * GET /api/intake/:intake_id/links
  * Gets all entity links for an intake ticket
  */
-router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
+router.get('/intake/:intake_id/links', validate({ params: intakeIdParamSchema, query: getLinksQuerySchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id } = req.params
     const userId = req.user?.id
@@ -309,7 +345,7 @@ router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
       })
     }
 
-    // Parse query parameters
+    // Query validated by Zod middleware
     const includeDeleted = req.query.include_deleted === 'true'
 
     // TODO: Check if user has access to this intake ticket
@@ -356,7 +392,7 @@ router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
  * PUT /api/intake/:intake_id/links/:link_id
  * Updates an existing entity link
  */
-router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Response) => {
+router.put('/intake/:intake_id/links/:link_id', validate({ params: intakeLinkParamSchema, body: updateLinkBodySchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id, link_id } = req.params
     const userId = req.user?.id
@@ -371,22 +407,11 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
       })
     }
 
-    // Parse and validate request body
+    // Body validated by Zod middleware (_version is required integer)
     const updateData: UpdateLinkRequest = {
       notes: req.body.notes,
       link_order: req.body.link_order,
       _version: req.body._version,
-    }
-
-    // Validate _version field for optimistic locking
-    if (typeof updateData._version !== 'number') {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Missing or invalid _version field for optimistic locking',
-        },
-      })
     }
 
     // Get old values for audit log
@@ -440,7 +465,7 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
  * Reorders entity links for an intake ticket
  * T113 [US5]: Reorder endpoint for drag-and-drop functionality
  */
-router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Response) => {
+router.put('/intake/:intake_id/links/reorder', validate({ params: intakeIdParamSchema, body: reorderBodySchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id } = req.params
     const userId = req.user?.id
@@ -455,36 +480,8 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
       })
     }
 
-    // Parse and validate request body
+    // Body validated by Zod middleware (link_orders array with link_id + link_order)
     const { link_orders } = req.body
-
-    if (!Array.isArray(link_orders)) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Request body must contain a "link_orders" array',
-        },
-      })
-    }
-
-    // Validate each link order entry has required fields
-    const invalidEntries = link_orders.filter(
-      (entry: any) => !entry.link_id || typeof entry.link_order !== 'number',
-    )
-
-    if (invalidEntries.length > 0) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Each link order entry must have link_id (string) and link_order (number)',
-          details: {
-            invalid_count: invalidEntries.length,
-          },
-        },
-      })
-    }
 
     // Reorder the links
     const updatedLinks = await reorderEntityLinks(intake_id, userId, link_orders)
@@ -547,7 +544,7 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
  * DELETE /api/intake/:intake_id/links/:link_id
  * Soft deletes an entity link
  */
-router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Response) => {
+router.delete('/intake/:intake_id/links/:link_id', validate({ params: intakeLinkParamSchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id, link_id } = req.params
     const userId = req.user?.id
@@ -608,7 +605,7 @@ router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Res
  * POST /api/intake/:intake_id/links/:link_id/restore
  * Restores a soft-deleted entity link
  */
-router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, res: Response) => {
+router.post('/intake/:intake_id/links/:link_id/restore', validate({ params: intakeLinkParamSchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id, link_id } = req.params
     const userId = req.user?.id
@@ -669,7 +666,7 @@ router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, re
  * GET /api/intake/:intake_id/links/audit
  * Gets audit logs for all links in an intake ticket
  */
-router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response) => {
+router.get('/intake/:intake_id/links/audit', validate({ params: intakeIdParamSchema, query: auditQuerySchema }), async (req: Request, res: Response) => {
   try {
     const { intake_id } = req.params
     const userId = req.user?.id
@@ -684,8 +681,8 @@ router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response)
       })
     }
 
-    // Parse query parameters
-    const limit = parseInt(req.query.limit as string) || 100
+    // Query validated by Zod middleware
+    const limit = (req.query as { limit: number }).limit
 
     // Get audit logs
     const auditLogs = await getIntakeAuditLogs(intake_id, limit)
@@ -717,7 +714,7 @@ router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response)
  *
  * Performance target: <2 seconds for 1000+ intakes (SC-004)
  */
-router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res: Response) => {
+router.get('/entities/:entity_type/:entity_id/intakes', validate({ params: entityIntakesParamSchema, query: entityIntakesQuerySchema }), async (req: Request, res: Response) => {
   try {
     const { entity_type, entity_id } = req.params
     const userId = req.user?.id
@@ -739,61 +736,13 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
       .eq('user_id', userId)
       .single()
 
-    // Parse query parameters
-    const page = parseInt(req.query.page as string) || 1
-    const pageSize = parseInt(req.query.page_size as string) || 50
-    const linkType = req.query.link_type as string | undefined
-
-    // Validate entity_type
-    const validEntityTypes = [
-      'dossier',
-      'country',
-      'organization',
-      'forum',
-      'working_group',
-      'topic',
-      'position',
-      'mou',
-      'engagement',
-      'assignment',
-      'commitment',
-      'intelligence_signal',
-    ]
-
-    if (!validEntityTypes.includes(entity_type)) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: `Invalid entity_type: ${entity_type}`,
-          details: {
-            valid_types: validEntityTypes,
-          },
-        },
-      })
-    }
-
-    // Validate link_type if provided
-    if (linkType) {
-      const validLinkTypes = ['primary', 'related', 'mentioned', 'requested', 'assigned_to']
-      if (!validLinkTypes.includes(linkType)) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: `Invalid link_type: ${linkType}`,
-            details: {
-              valid_types: validLinkTypes,
-            },
-          },
-        })
-      }
-    }
+    // Query validated by Zod middleware
+    const { page, page_size: pageSize, link_type: linkType } = req.query as unknown as z.infer<typeof entityIntakesQuerySchema>
 
     // Get entity intakes with reverse lookup
     const result = await getEntityIntakes(entity_type, entity_id, {
-      page,
-      pageSize,
+      page: page as number,
+      pageSize: pageSize as number,
       linkType: linkType as any,
       userClearanceLevel: userProfile?.clearance_level,
     })
