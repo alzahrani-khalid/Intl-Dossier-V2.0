@@ -34,7 +34,7 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 - ✓ Naming & file structure — 18 hooks to camelCase, 12 component dirs to kebab-case, 35 standalone components into subdirs, 21 backend files renamed, ESLint filename enforcement added (Validated in Phase 2: naming-file-structure)
 - [ ] Code architecture consolidation — deduplicate logic, enforce consistent patterns, proper abstractions
 - [ ] Performance optimization — slow queries, unnecessary re-renders, bundle size, lazy loading gaps
-- [ ] Security hardening — RLS policy audit, input validation gaps, auth edge cases, OWASP compliance
+- ✓ Security hardening — unified auth middleware (Supabase-first + JWT fallback), RBAC (role hierarchy, permissions, clearance), CSP hardened, Zod validation on all routes, RLS audit with org-scoped policies on all tables (Validated in Phase 3: security-hardening)
 - [ ] RTL/LTR theming consistency — all components use logical properties, theme switching works without visual bugs
 - [ ] Mobile/tablet responsiveness — full responsive audit across all pages, touch targets, breakpoint coverage
 
@@ -56,6 +56,7 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 - **Responsive:** Mobile-first mandated in CLAUDE.md but not consistently implemented across all pages
 - **Dependencies:** Cleaned — 61 unused packages removed in Phase 1; AI/ML deps audited (kept anthropic, openai, mastra, xenova; removed langchain)
 - **Naming:** Phase 2 complete — all file/directory naming conventions enforced via ESLint `check-file` plugin; hooks (camelCase), component dirs (kebab-case), backend services/models (kebab-case with suffixes)
+- **Security:** Phase 3 complete — unified Supabase-first auth, RBAC with hierarchical roles, CSP hardened with explicit origins, all API routes use Zod validation (express-validator fully removed), RLS enabled on all tables with org-scoped policies, 50+ security tests
 
 ## Constraints
 
@@ -94,4 +95,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-23 after Phase 1 completion_
+_Last updated: 2026-03-24 after Phase 3 completion_
