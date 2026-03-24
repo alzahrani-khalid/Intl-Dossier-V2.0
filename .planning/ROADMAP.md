@@ -73,13 +73,13 @@ Plans:
 3. Helmet is active with a strict CSP that whitelists only Supabase, Sentry, and AnythingLLM origins
 4. Every API endpoint rejects malformed input with a structured validation error
 5. Users only see data belonging to their organization — cross-org data is inaccessible
-   **Plans**: TBD
+   **Plans**: 3 plans
 
 Plans:
 
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
-- [ ] 03-03: TBD
+- [ ] 03-01-PLAN.md — Unify dual auth middleware, implement hierarchical RBAC, fix org isolation (hardcoded org ID)
+- [ ] 03-02-PLAN.md — Harden Helmet CSP with origin whitelist, close input validation gaps, migrate express-validator to Zod
+- [ ] 03-03-PLAN.md — Audit all tables for RLS coverage, create fix migration, build org isolation SDK test suite
 
 ### Phase 4: RTL/LTR Consistency
 
@@ -167,8 +167,8 @@ Note: Phase 3 (Security) depends only on Phase 1 and can run in parallel with Ph
 | Phase                         | Plans Complete | Status      | Completed |
 | ----------------------------- | -------------- | ----------- | --------- |
 | 1. Dead Code & Toolchain      | 3/3            | Complete    | -         |
-| 2. Naming & File Structure    | 0/3            | Planning    | -         |
-| 3. Security Hardening         | 0/3            | Not started | -         |
+| 2. Naming & File Structure    | 3/3            | Complete    | -         |
+| 3. Security Hardening         | 0/3            | Planning    | -         |
 | 4. RTL/LTR Consistency        | 0/2            | Not started | -         |
 | 5. Responsive Design          | 0/3            | Not started | -         |
 | 6. Architecture Consolidation | 0/2            | Not started | -         |
