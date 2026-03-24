@@ -18,11 +18,11 @@ Requirements for production quality milestone. Each maps to roadmap phases.
 ### Security Hardening
 
 - [ ] **SEC-01**: Every Supabase table has RLS policies verified via live audit (not SQL editor which bypasses RLS)
-- [ ] **SEC-02**: Clearance middleware replaced from placeholder stub to real role-based access control
+- [x] **SEC-02**: Clearance middleware replaced from placeholder stub to real role-based access control
 - [x] **SEC-03**: Helmet configured with strict Content Security Policy headers appropriate for the app
 - [x] **SEC-04**: All API endpoints validate and sanitize input (express-validator on every route)
-- [ ] **SEC-05**: Organization isolation implemented (users only see data for their org)
-- [ ] **SEC-06**: Auth edge cases handled (expired tokens, concurrent sessions, password reset flows)
+- [x] **SEC-05**: Organization isolation implemented (users only see data for their org)
+- [x] **SEC-06**: Auth edge cases handled (expired tokens, concurrent sessions, password reset flows)
 
 ### RTL/LTR Theming
 
@@ -95,11 +95,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TOOL-04     | Phase 1 | Complete |
 | TOOL-05     | Phase 1 | Complete |
 | SEC-01      | Phase 3 | Pending |
-| SEC-02      | Phase 3 | Pending |
+| SEC-02      | Phase 3 | Complete |
 | SEC-03      | Phase 3 | Complete |
 | SEC-04      | Phase 3 | Complete |
-| SEC-05      | Phase 3 | Pending |
-| SEC-06      | Phase 3 | Pending |
+| SEC-05      | Phase 3 | Complete |
+| SEC-06      | Phase 3 | Complete |
 | RTL-01      | Phase 4 | Pending |
 | RTL-02      | Phase 4 | Pending |
 | RTL-03      | Phase 4 | Pending |
