@@ -92,7 +92,7 @@ router.post(
       const task = await tasksService.createTask({
         ...req.body,
         created_by: userId,
-        tenant_id: req.user.tenantId,
+        tenant_id: req.user?.organization_id,
       })
 
       res.status(201).json(task)
