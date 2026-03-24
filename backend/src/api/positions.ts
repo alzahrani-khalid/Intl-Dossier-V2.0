@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express'
+import { z } from 'zod'
 import { PositionConsistencyService } from '../services/position-consistency.service'
-import { authenticate } from '../middleware/auth'
-import { validate } from '../middleware/validation'
-import { body, param, query } from 'express-validator'
+import { authenticate, requireRole } from '../middleware/auth'
+import { validate } from '../utils/validation'
 
 const router = Router()
 let consistencyService: PositionConsistencyService
@@ -12,6 +12,38 @@ function initializePositionsRouter(supabaseUrl: string, supabaseKey: string): Ro
   return router
 }
 
+// Validation schemas
+const uuidParamSchema = z.object({
+  id: z.string().uuid(),
+})
+
+const thematicAreaIdParamSchema = z.object({
+  thematicAreaId: z.string().uuid(),
+})
+
+const validateBodySchema = z.object({
+  thematic_area_id: z.string().uuid(),
+  force_refresh: z.boolean().optional(),
+})
+
+const reconcileBodySchema = z.object({
+  conflict_index: z.number().int().min(0),
+  resolution_notes: z.string().min(1),
+})
+
+const unresolvedQuerySchema = z.object({
+  severity: z.enum(['low', 'medium', 'high']).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+})
+
+const historyQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(50).optional(),
+})
+
+const bulkAnalyzeBodySchema = z.object({
+  thematic_area_ids: z.array(z.string().uuid()).min(1).max(10),
+})
+
 /**
  * @route GET /api/positions/:id/consistency
  * @desc Get consistency analysis for a thematic area
@@ -20,8 +52,7 @@ function initializePositionsRouter(supabaseUrl: string, supabaseKey: string): Ro
 router.get(
   '/:id/consistency',
   authenticate,
-  [param('id').isUUID().withMessage('Valid thematic area ID required')],
-  validate,
+  validate({ params: uuidParamSchema }),
   async (req: Request, res: Response) => {
     try {
       const analysis = await consistencyService.analyzeConsistency(req.params.id)
@@ -51,11 +82,7 @@ router.get(
 router.post(
   '/validate',
   authenticate,
-  [
-    body('thematic_area_id').isUUID().withMessage('Valid thematic area ID required'),
-    body('force_refresh').optional().isBoolean(),
-  ],
-  validate,
+  validate({ body: validateBodySchema }),
   async (req: Request, res: Response) => {
     try {
       const { thematic_area_id, force_refresh } = req.body
@@ -110,12 +137,7 @@ router.post(
 router.put(
   '/consistency/:id/reconcile',
   authenticate,
-  [
-    param('id').isUUID().withMessage('Valid consistency ID required'),
-    body('conflict_index').isInt({ min: 0 }).withMessage('Valid conflict index required'),
-    body('resolution_notes').notEmpty().withMessage('Resolution notes required'),
-  ],
-  validate,
+  validate({ params: uuidParamSchema, body: reconcileBodySchema }),
   async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id
@@ -151,11 +173,7 @@ router.put(
 router.get(
   '/consistency/unresolved',
   authenticate,
-  [
-    query('severity').optional().isIn(['low', 'medium', 'high']),
-    query('limit').optional().isInt({ min: 1, max: 100 }),
-  ],
-  validate,
+  validate({ query: unresolvedQuerySchema }),
   async (req: Request, res: Response) => {
     try {
       let unresolved = await consistencyService.getUnresolvedConflicts()
@@ -228,11 +246,7 @@ router.get('/consistency/critical', authenticate, async (req: Request, res: Resp
 router.get(
   '/consistency/history/:thematicAreaId',
   authenticate,
-  [
-    param('thematicAreaId').isUUID().withMessage('Valid thematic area ID required'),
-    query('limit').optional().isInt({ min: 1, max: 50 }),
-  ],
-  validate,
+  validate({ params: thematicAreaIdParamSchema, query: historyQuerySchema }),
   async (req: Request, res: Response) => {
     try {
       const limit = parseInt(req.query.limit as string) || 10
@@ -267,14 +281,10 @@ router.get(
 router.post(
   '/consistency/bulk-analyze',
   authenticate,
-  [body('thematic_area_ids').isArray({ min: 1, max: 10 }), body('thematic_area_ids.*').isUUID()],
-  validate,
+  requireRole(['admin', 'analyst']),
+  validate({ body: bulkAnalyzeBodySchema }),
   async (req: Request, res: Response) => {
     try {
-      // Check if user is admin or analyst
-      if (!['admin', 'analyst'].includes(req.user?.role || '')) {
-        return res.status(403).json({ error: 'Insufficient permissions' })
-      }
 
       const results = []
       const errors = []

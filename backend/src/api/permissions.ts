@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express'
+import { z } from 'zod'
 import { PermissionDelegationService } from '../services/permission-delegation.service'
 import { authenticate } from '../middleware/auth'
-import { validate } from '../middleware/validation'
-import { body, param, query } from 'express-validator'
+import { validate } from '../utils/validation'
 
 const router = Router()
 let permissionService: PermissionDelegationService
@@ -12,6 +12,40 @@ function initializePermissionsRouter(supabaseUrl: string, supabaseKey: string): 
   return router
 }
 
+// Validation schemas
+const delegateBodySchema = z.object({
+  grantee_id: z.string().uuid(),
+  resource_type: z.enum(['dossier', 'mou', 'all']),
+  resource_id: z.string().uuid().optional(),
+  permissions: z.array(z.enum(['read', 'write', 'delete', 'approve'])).min(1),
+  reason: z.string().min(1),
+  valid_from: z.string().datetime(),
+  valid_until: z.string().datetime(),
+})
+
+const delegationIdParamSchema = z.object({
+  id: z.string().uuid(),
+})
+
+const delegatedQuerySchema = z.object({
+  type: z.enum(['granted', 'received']).optional(),
+})
+
+const checkQuerySchema = z.object({
+  resource_type: z.string().min(1),
+  resource_id: z.string().uuid().optional(),
+})
+
+const updateDelegationBodySchema = z.object({
+  permissions: z.array(z.enum(['read', 'write', 'delete', 'approve'])).optional(),
+  valid_until: z.string().datetime().optional(),
+  reason: z.string().min(1).optional(),
+})
+
+const expiringQuerySchema = z.object({
+  days: z.coerce.number().int().min(1).max(30).optional(),
+})
+
 /**
  * @route POST /api/permissions/delegate
  * @desc Create a new permission delegation
@@ -20,17 +54,7 @@ function initializePermissionsRouter(supabaseUrl: string, supabaseKey: string): 
 router.post(
   '/delegate',
   authenticate,
-  [
-    body('grantee_id').isUUID().withMessage('Valid grantee ID required'),
-    body('resource_type').isIn(['dossier', 'mou', 'all']).withMessage('Invalid resource type'),
-    body('resource_id').optional().isUUID(),
-    body('permissions').isArray().withMessage('Permissions must be an array'),
-    body('permissions.*').isIn(['read', 'write', 'delete', 'approve']),
-    body('reason').notEmpty().withMessage('Reason is required'),
-    body('valid_from').isISO8601().withMessage('Valid from date required'),
-    body('valid_until').isISO8601().withMessage('Valid until date required'),
-  ],
-  validate,
+  validate({ body: delegateBodySchema }),
   async (req: Request, res: Response) => {
     try {
       const grantorId = req.user?.id
@@ -62,8 +86,7 @@ router.post(
 router.delete(
   '/delegate/:id',
   authenticate,
-  [param('id').isUUID().withMessage('Valid delegation ID required')],
-  validate,
+  validate({ params: delegationIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id
@@ -94,8 +117,7 @@ router.delete(
 router.get(
   '/delegated',
   authenticate,
-  [query('type').optional().isIn(['granted', 'received']).withMessage('Invalid type')],
-  validate,
+  validate({ query: delegatedQuerySchema }),
   async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id
@@ -135,11 +157,7 @@ router.get(
 router.get(
   '/check',
   authenticate,
-  [
-    query('resource_type').notEmpty().withMessage('Resource type required'),
-    query('resource_id').optional().isUUID(),
-  ],
-  validate,
+  validate({ query: checkQuerySchema }),
   async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id
@@ -177,14 +195,7 @@ router.get(
 router.put(
   '/delegate/:id',
   authenticate,
-  [
-    param('id').isUUID().withMessage('Valid delegation ID required'),
-    body('permissions').optional().isArray(),
-    body('permissions.*').optional().isIn(['read', 'write', 'delete', 'approve']),
-    body('valid_until').optional().isISO8601(),
-    body('reason').optional().notEmpty(),
-  ],
-  validate,
+  validate({ params: delegationIdParamSchema, body: updateDelegationBodySchema }),
   async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id
@@ -216,8 +227,7 @@ router.put(
 router.get(
   '/expiring',
   authenticate,
-  [query('days').optional().isInt({ min: 1, max: 30 }).withMessage('Days must be 1-30')],
-  validate,
+  validate({ query: expiringQuerySchema }),
   async (req: Request, res: Response) => {
     try {
       const days = parseInt(req.query.days as string) || 7

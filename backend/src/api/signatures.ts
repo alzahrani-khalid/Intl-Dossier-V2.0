@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express'
+import { z } from 'zod'
 import { SignatureService } from '../services/signature.service'
 import { authenticate } from '../middleware/auth'
-import { validate } from '../middleware/validation'
-import { body, param } from 'express-validator'
+import { validate } from '../utils/validation'
 
 const router = Router()
 let signatureService: SignatureService
@@ -17,6 +17,37 @@ function initializeSignaturesRouter(
   return router
 }
 
+// Validation schemas
+const uuidParamSchema = z.object({
+  id: z.string().uuid(),
+})
+
+const mouIdParamSchema = z.object({
+  mouId: z.string().uuid(),
+})
+
+const createSignatureBodySchema = z.object({
+  document_id: z.string().uuid(),
+  provider: z.enum(['docusign', 'pki']),
+  signatories: z.array(z.object({
+    contact_id: z.string().uuid(),
+    order: z.number().int().min(0).optional(),
+  })).min(1),
+  workflow: z.enum(['parallel', 'sequential']).optional(),
+  expires_at: z.string().datetime(),
+})
+
+const verifyBodySchema = z.object({
+  signature_data: z.string().min(1),
+})
+
+const updateStatusBodySchema = z.object({
+  status: z.string().min(1),
+  signatory_id: z.string().uuid().optional(),
+  signed_at: z.string().datetime().optional(),
+  metadata: z.record(z.unknown()).optional(),
+})
+
 /**
  * @route POST /api/mous/:id/signature
  * @desc Create a signature request for an MoU
@@ -25,17 +56,7 @@ function initializeSignaturesRouter(
 router.post(
   '/mous/:id/signature',
   authenticate,
-  [
-    param('id').isUUID().withMessage('Valid MoU ID required'),
-    body('document_id').isUUID().withMessage('Valid document ID required'),
-    body('provider').isIn(['docusign', 'pki']).withMessage('Invalid provider'),
-    body('signatories').isArray({ min: 1 }).withMessage('At least one signatory required'),
-    body('signatories.*.contact_id').isUUID().withMessage('Valid contact ID required'),
-    body('signatories.*.order').optional().isInt({ min: 0 }),
-    body('workflow').optional().isIn(['parallel', 'sequential']),
-    body('expires_at').isISO8601().withMessage('Expiry date required'),
-  ],
-  validate,
+  validate({ params: uuidParamSchema, body: createSignatureBodySchema }),
   async (req: Request, res: Response, _next: NextFunction) => {
     try {
       const signatureRequest = await signatureService.createSignatureRequest({
@@ -65,8 +86,7 @@ router.post(
 router.post(
   '/:id/send',
   authenticate,
-  [param('id').isUUID().withMessage('Valid signature request ID required')],
-  validate,
+  validate({ params: uuidParamSchema }),
   async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id
@@ -98,8 +118,7 @@ router.post(
 router.get(
   '/:id/status',
   authenticate,
-  [param('id').isUUID().withMessage('Valid signature request ID required')],
-  validate,
+  validate({ params: uuidParamSchema }),
   async (req: Request, res: Response) => {
     try {
       const signatureRequest = await signatureService.getSignatureRequest(req.params.id)
@@ -131,11 +150,7 @@ router.get(
 router.post(
   '/:id/verify',
   authenticate,
-  [
-    param('id').isUUID().withMessage('Valid signature request ID required'),
-    body('signature_data').notEmpty().withMessage('Signature data required'),
-  ],
-  validate,
+  validate({ params: uuidParamSchema, body: verifyBodySchema }),
   async (req: Request, res: Response) => {
     try {
       const verification = await signatureService.verifySignature(
@@ -164,6 +179,7 @@ router.post(
 router.put(
   '/:id/status',
   // Note: In production, validate webhook signature instead of user auth
+  validate({ params: uuidParamSchema, body: updateStatusBodySchema }),
   async (req: Request, res: Response, _next: NextFunction) => {
     try {
       const updated = await signatureService.updateSignatureStatus(req.params.id, req.body)
@@ -190,8 +206,7 @@ router.put(
 router.get(
   '/mou/:mouId',
   authenticate,
-  [param('mouId').isUUID().withMessage('Valid MoU ID required')],
-  validate,
+  validate({ params: mouIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
       const requests = await signatureService.getSignatureRequestsByMoU(req.params.mouId)

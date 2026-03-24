@@ -100,37 +100,47 @@ export const corsOptions: cors.CorsOptions = {
   maxAge: 86400, // 24 hours
 }
 
+// CSP directives (exported for testing)
+export function buildCspDirectives(): Record<string, string[]> {
+  return {
+    defaultSrc: ["'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+    fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+    imgSrc: ["'self'", 'data:', 'https:'],
+    scriptSrc: ["'self'"],
+    connectSrc: [
+      "'self'",
+      process.env.SUPABASE_URL || 'https://*.supabase.co',
+      // Supabase Realtime WebSocket
+      process.env.SUPABASE_URL
+        ? process.env.SUPABASE_URL.replace('https://', 'wss://')
+        : 'wss://*.supabase.co',
+      // Sentry error reporting
+      process.env.SENTRY_DSN
+        ? new URL(process.env.SENTRY_DSN).origin
+        : null,
+      // AnythingLLM API
+      process.env.ANYTHINGLLM_API_URL || null,
+    ].filter(Boolean) as string[],
+    workerSrc: ["'self'", 'blob:'],
+    frameSrc: ["'none'"],
+    objectSrc: ["'none'"],
+    baseUri: ["'self'"],
+    formAction: ["'self'"],
+  }
+}
+
+// Whether CSP is in report-only mode
+export function isCspReportOnly(): boolean {
+  return NODE_ENV === 'development'
+}
+
 // Helmet configuration for security headers
 export const helmetConfig = helmet({
   // Content Security Policy
   contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-      imgSrc: ["'self'", 'data:', 'https:'],
-      scriptSrc: ["'self'"],
-      connectSrc: [
-        "'self'",
-        process.env.SUPABASE_URL || 'https://*.supabase.co',
-        // Supabase Realtime WebSocket
-        process.env.SUPABASE_URL
-          ? process.env.SUPABASE_URL.replace('https://', 'wss://')
-          : 'wss://*.supabase.co',
-        // Sentry error reporting
-        process.env.SENTRY_DSN
-          ? new URL(process.env.SENTRY_DSN).origin
-          : null,
-        // AnythingLLM API
-        process.env.ANYTHINGLLM_API_URL || null,
-      ].filter(Boolean) as string[],
-      workerSrc: ["'self'", 'blob:'],
-      frameSrc: ["'none'"],
-      objectSrc: ["'none'"],
-      baseUri: ["'self'"],
-      formAction: ["'self'"],
-    },
-    reportOnly: NODE_ENV === 'development',
+    directives: buildCspDirectives(),
+    reportOnly: isCspReportOnly(),
   },
 
   // HTTP Strict Transport Security
