@@ -120,7 +120,7 @@ const entityConfig: Record<TourableEntityType, { icon: LucideIcon; translationKe
  *   tourVariant="inline"
  * />
  */
-function TourableEmptyState({
+export function TourableEmptyState({
   entityType,
   onCreate,
   onImport,
@@ -210,6 +210,6 @@ function TourableEmptyState({
 /**
  * Helper to get the tour ID for an entity type
  */
-function getTourIdForEntity(entityType: TourableEntityType): TourId | undefined {
+export function getTourIdForEntity(entityType: TourableEntityType): TourId | undefined {
   return entityToTourMap[entityType]
 }

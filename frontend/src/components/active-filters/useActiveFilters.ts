@@ -74,7 +74,7 @@ export interface UseActiveFiltersReturn {
 /**
  * Hook to manage active filters and generate chip configurations
  */
-function useActiveFilters<T extends Record<string, unknown>>({
+export function useActiveFilters<T extends Record<string, unknown>>({
   filters,
   fieldConfigs,
   namespace = 'active-filters',

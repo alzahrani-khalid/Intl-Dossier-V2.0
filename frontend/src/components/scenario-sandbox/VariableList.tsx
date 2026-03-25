@@ -62,7 +62,7 @@ function formatValue(value: unknown): string {
   return JSON.stringify(value)
 }
 
-function VariableList({ variables, onAdd, onEdit, onDelete, isLoading }: VariableListProps) {
+export function VariableList({ variables, onAdd, onEdit, onDelete, isLoading }: VariableListProps) {
   const { t } = useTranslation('scenario-sandbox')
   const { isRTL } = useDirection()
 const [deleteId, setDeleteId] = useState<string | null>(null)

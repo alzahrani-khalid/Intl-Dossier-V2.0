@@ -291,7 +291,7 @@ const [showForceEditDialog, setShowForceEditDialog] = useState(false)
 /**
  * Hook-friendly wrapper that only renders when locked
  */
-function EditingLockIndicatorConditional({
+export function EditingLockIndicatorConditional({
   isLocked,
   lockedBy,
   ...props

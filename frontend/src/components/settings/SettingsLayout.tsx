@@ -163,7 +163,7 @@ interface SettingsEmptyStateProps {
   action?: ReactNode
 }
 
-function SettingsEmptyState({ icon: Icon, title, description, action }: SettingsEmptyStateProps) {
+export function SettingsEmptyState({ icon: Icon, title, description, action }: SettingsEmptyStateProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
 

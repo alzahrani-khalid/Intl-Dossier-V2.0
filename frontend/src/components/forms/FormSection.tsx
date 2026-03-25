@@ -72,7 +72,7 @@ interface FormSectionContextValue {
 
 const FormSectionContext = createContext<FormSectionContextValue | null>(null)
 
-function useFormSection() {
+export function useFormSection() {
   const context = useContext(FormSectionContext)
   if (!context) {
     throw new Error('useFormSection must be used within a FormSection')
@@ -146,7 +146,7 @@ function ProgressBadge({ completed, total }: ProgressBadgeProps) {
 // MAIN COMPONENT
 // =============================================================================
 
-function FormSection({
+export function FormSection({
   title,
   description,
   collapsible = false,
@@ -353,7 +353,7 @@ interface FormSectionsProps {
 /**
  * Container for multiple FormSection components with consistent spacing
  */
-function FormSections({ children, gap = 'md', className }: FormSectionsProps) {
+export function FormSections({ children, gap = 'md', className }: FormSectionsProps) {
   const gapClasses = {
     sm: 'space-y-3',
     md: 'space-y-4 sm:space-y-6',
@@ -381,7 +381,7 @@ interface FieldRowProps {
 /**
  * Responsive row layout for form fields
  */
-function FieldRow({ children, columns = 2, gap = 'md', className }: FieldRowProps) {
+export function FieldRow({ children, columns = 2, gap = 'md', className }: FieldRowProps) {
   const columnClasses = {
     1: 'grid-cols-1',
     2: 'grid-cols-1 sm:grid-cols-2',

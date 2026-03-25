@@ -18,7 +18,7 @@ interface FormSelectAceternityProps extends React.SelectHTMLAttributes<HTMLSelec
   variant?: 'default' | 'aceternity' // aceternity = enhanced styling with animations
 }
 
-function FormSelectAceternity({
+export function FormSelectAceternity({
   label,
   name,
   options,

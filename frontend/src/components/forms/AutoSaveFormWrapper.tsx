@@ -105,7 +105,7 @@ interface AutoSaveFormWrapperProps<T extends Record<string, unknown>> {
 
 const AutoSaveFormContext = createContext<AutoSaveFormContextValue<any> | null>(null)
 
-function useAutoSaveFormContext<T extends Record<string, unknown>>() {
+export function useAutoSaveFormContext<T extends Record<string, unknown>>() {
   const context = useContext(AutoSaveFormContext)
   if (!context) {
     throw new Error('useAutoSaveFormContext must be used within an AutoSaveFormWrapper')
@@ -292,7 +292,7 @@ function SaveStatusIndicator({ status }: SaveStatusIndicatorProps) {
 // MAIN COMPONENT
 // =============================================================================
 
-function AutoSaveFormWrapper<T extends Record<string, unknown>>({
+export function AutoSaveFormWrapper<T extends Record<string, unknown>>({
   formKey,
   requiredFields,
   debounceMs = 1000,

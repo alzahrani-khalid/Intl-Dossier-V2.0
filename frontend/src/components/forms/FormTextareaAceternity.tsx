@@ -16,7 +16,7 @@ interface FormTextareaAceternityProps extends React.TextareaHTMLAttributes<HTMLT
   showCharCount?: boolean
 }
 
-function FormTextareaAceternity({
+export function FormTextareaAceternity({
   label,
   name,
   register,

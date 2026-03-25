@@ -40,7 +40,7 @@ export { AddToDossierDialogs, type AddToDossierDialogsProps } from './AddToDossi
 export { DossierDetailLayout } from './DossierDetailLayout'
 
 // Export Dialog (Feature: dossier-export-pack)
-export { ExportDossierDialog, default as ExportDossierDialogDefault } from './ExportDossierDialog'
+export { ExportDossierDialog } from './ExportDossierDialog'
 
 // Dossier Links Widget (Reusable for entity detail pages)
 export { DossierLinksWidget, type DossierLinksWidgetProps } from './DossierLinksWidget'

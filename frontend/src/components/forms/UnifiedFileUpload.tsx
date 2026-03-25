@@ -614,7 +614,7 @@ export function UnifiedFileUpload({
 /**
  * Pre-configured UnifiedFileUpload for documents
  */
-function DocumentUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number }) {
+export function DocumentUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number }) {
   const { maxFiles = 5, ...rest } = props
 
   return (
@@ -644,7 +644,7 @@ function DocumentUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFil
 /**
  * Pre-configured UnifiedFileUpload for images
  */
-function ImageUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number }) {
+export function ImageUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number }) {
   const { maxFiles = 10, ...rest } = props
 
   return (
@@ -664,7 +664,7 @@ function ImageUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?
 /**
  * Pre-configured UnifiedFileUpload for evidence attachments
  */
-function EvidenceUpload(props: Omit<UnifiedFileUploadProps, 'config'>) {
+export function EvidenceUpload(props: Omit<UnifiedFileUploadProps, 'config'>) {
   return (
     <UnifiedFileUpload
       {...props}
@@ -682,7 +682,7 @@ function EvidenceUpload(props: Omit<UnifiedFileUploadProps, 'config'>) {
 /**
  * Pre-configured UnifiedFileUpload for single file (e.g., avatar, business card)
  */
-function SingleFileUpload(
+export function SingleFileUpload(
   props: Omit<UnifiedFileUploadProps, 'config'> & { acceptedTypes?: string[] },
 ) {
   const { acceptedTypes = ['image/*'], ...rest } = props

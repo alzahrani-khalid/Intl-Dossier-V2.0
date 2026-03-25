@@ -53,7 +53,7 @@ function getLanguageDisplayName(
 /**
  * ContentLanguageSelector - Dropdown selector for content languages
  */
-function ContentLanguageSelector({
+export function ContentLanguageSelector({
   value,
   onChange,
   availableLanguages,

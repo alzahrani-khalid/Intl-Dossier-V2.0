@@ -28,7 +28,7 @@ interface FormRadioAceternityProps {
   layout?: 'vertical' | 'horizontal' // Layout direction for options
 }
 
-function FormRadioAceternity({
+export function FormRadioAceternity({
   label,
   name,
   options,

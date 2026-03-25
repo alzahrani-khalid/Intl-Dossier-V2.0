@@ -122,7 +122,7 @@ function EmptyState({ message }: { message: string }) {
 // Main Component
 // ============================================================================
 
-function RecommendationsList({
+export function RecommendationsList({
   relationshipId,
   dossierId,
   defaultFilters = {},

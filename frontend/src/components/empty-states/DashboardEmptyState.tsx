@@ -82,7 +82,7 @@ const widgetConfig: Record<
  *   size="sm"
  * />
  */
-function DashboardEmptyState({
+export function DashboardEmptyState({
   widgetType,
   onPrimaryAction,
   onSetup,

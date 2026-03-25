@@ -322,7 +322,7 @@ export function generateSampleAnalyticsSummary(): AnalyticsSummary {
 /**
  * Generate all sample data for analytics preview
  */
-function generateAllSampleData() {
+export function generateAllSampleData() {
   return {
     summary: generateSampleAnalyticsSummary(),
     engagements: generateSampleEngagementMetrics(),

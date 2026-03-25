@@ -31,7 +31,7 @@ interface NavItem {
   icon: React.ElementType
 }
 
-const NAV_ITEMS: NavItem[] = [
+export const NAV_ITEMS: NavItem[] = [
   { id: 'profile', labelKey: 'navigation.profile', icon: User },
   { id: 'general', labelKey: 'navigation.general', icon: Settings2 },
   { id: 'appearance', labelKey: 'navigation.appearance', icon: Palette },
@@ -194,4 +194,3 @@ export function SettingsTabs({
   )
 }
 
-export { NAV_ITEMS }

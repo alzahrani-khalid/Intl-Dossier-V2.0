@@ -492,7 +492,7 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
 /**
  * Pre-configured ArrayFieldManager for email addresses
  */
-function EmailArrayField<TFormValues extends Record<string, unknown>>(
+export function EmailArrayField<TFormValues extends Record<string, unknown>>(
   props: Omit<ArrayFieldManagerProps<TFormValues>, 'inputType' | 'validation'>,
 ) {
   const { t } = useTranslation('validation')
@@ -512,7 +512,7 @@ function EmailArrayField<TFormValues extends Record<string, unknown>>(
 /**
  * Pre-configured ArrayFieldManager for phone numbers
  */
-function PhoneArrayField<TFormValues extends Record<string, unknown>>(
+export function PhoneArrayField<TFormValues extends Record<string, unknown>>(
   props: Omit<ArrayFieldManagerProps<TFormValues>, 'inputType' | 'validation'>,
 ) {
   const { t } = useTranslation('validation')
@@ -533,7 +533,7 @@ function PhoneArrayField<TFormValues extends Record<string, unknown>>(
 /**
  * Pre-configured ArrayFieldManager for URLs
  */
-function UrlArrayField<TFormValues extends Record<string, unknown>>(
+export function UrlArrayField<TFormValues extends Record<string, unknown>>(
   props: Omit<ArrayFieldManagerProps<TFormValues>, 'inputType' | 'validation'>,
 ) {
   const { t } = useTranslation('validation')

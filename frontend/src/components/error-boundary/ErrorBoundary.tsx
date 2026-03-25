@@ -215,7 +215,7 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
 }
 
 // Hook for functional components to trigger error boundary
-function useErrorHandler() {
+export function useErrorHandler() {
   return (error: Error, _errorInfo?: ErrorInfo) => {
     // This will be caught by the nearest ErrorBoundary
     throw error
@@ -223,7 +223,7 @@ function useErrorHandler() {
 }
 
 // Higher-order component for easier error boundary wrapping
-function withErrorBoundary<P extends object>(
+export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   errorBoundaryProps?: Omit<Props, 'children'>,
 ) {

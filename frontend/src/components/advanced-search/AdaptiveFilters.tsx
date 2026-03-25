@@ -205,7 +205,7 @@ function FilterSection({
 // Main Component
 // =============================================================================
 
-function AdaptiveFilters({
+export function AdaptiveFilters({
   cacheKey,
   entityTypes,
   baseQuery,

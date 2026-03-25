@@ -197,7 +197,7 @@ function buildDossierContext(dossier: Dossier): DossierContext {
 // Component: AddToDossierMenu (Button Variant)
 // =============================================================================
 
-function AddToDossierButton({
+export function AddToDossierButton({
   dossier,
   onAction,
   actions: actionOverrides,
@@ -305,7 +305,7 @@ const [isOpen, setIsOpen] = React.useState(false)
 // Component: AddToDossierMenu (FAB Variant)
 // =============================================================================
 
-function AddToDossierFAB({
+export function AddToDossierFAB({
   dossier,
   onAction,
   actions: actionOverrides,
@@ -468,7 +468,7 @@ function AddToDossierFAB({
 // Component: AddToDossierMenu (Card Variant)
 // =============================================================================
 
-function AddToDossierCard({
+export function AddToDossierCard({
   dossier,
   onAction,
   actions: actionOverrides,
@@ -572,5 +572,3 @@ export function AddToDossierMenu(props: AddToDossierMenuProps) {
   }
 }
 
-// Named exports for direct imports
-export { AddToDossierButton, AddToDossierFAB, AddToDossierCard }

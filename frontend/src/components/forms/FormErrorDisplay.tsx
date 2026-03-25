@@ -117,7 +117,7 @@ function getErrorMessage(error: FieldError | string | undefined): string | undef
 /**
  * Inline error display for individual form fields
  */
-function InlineError({ error, severity = 'error', showIcon = true, className }: InlineErrorProps) {
+export function InlineError({ error, severity = 'error', showIcon = true, className }: InlineErrorProps) {
   const message = getErrorMessage(error)
 
   if (!message) return null
@@ -162,7 +162,7 @@ interface ErrorWithSuggestionProps extends InlineErrorProps {
 /**
  * Error display with recovery suggestion and action
  */
-function ErrorWithSuggestion({
+export function ErrorWithSuggestion({
   error,
   severity = 'error',
   suggestion,
@@ -349,7 +349,7 @@ export function ErrorSummary({
  */
 const EMPTY_FIELD_LABELS: Record<string, string> = {}
 
-function FieldErrorList({
+export function FieldErrorList({
   errors,
   fields,
   fieldLabels = EMPTY_FIELD_LABELS,
@@ -408,7 +408,7 @@ interface ToastErrorProps {
 /**
  * Toast-style floating error notification
  */
-function ToastError({
+export function ToastError({
   message,
   visible,
   onClose,

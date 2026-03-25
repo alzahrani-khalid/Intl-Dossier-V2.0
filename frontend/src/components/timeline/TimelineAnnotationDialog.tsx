@@ -331,7 +331,7 @@ const isEditing = !!annotation
  * Annotation Badge Component
  * Compact display for annotations on timeline events
  */
-function TimelineAnnotationBadge({
+export function TimelineAnnotationBadge({
   annotation,
   onClick,
   onDelete,

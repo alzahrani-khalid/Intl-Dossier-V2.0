@@ -247,7 +247,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
 /**
  * Simple hook to use in components that want to show tour trigger
  */
-function useTourTrigger(tourId: TourId, isEmpty: boolean) {
+export function useTourTrigger(tourId: TourId, isEmpty: boolean) {
   const shouldShow = useShouldShowTour(tourId, isEmpty)
   const { startTour, dismissTourPrompt } = useTour()
   const tour = getTour(tourId)

@@ -15,7 +15,7 @@ export { KanbanColumn as UnifiedKanbanColumn } from '@/components/ui/kanban'
 /**
  * Skeleton for loading state
  */
-function UnifiedKanbanColumnSkeleton() {
+export function UnifiedKanbanColumnSkeleton() {
   return (
     <div className="flex flex-col rounded-lg border bg-muted/30 w-full sm:w-[300px] sm:min-w-[300px] h-[500px]">
       <div className="flex items-center justify-between p-3 border-b bg-muted/50">

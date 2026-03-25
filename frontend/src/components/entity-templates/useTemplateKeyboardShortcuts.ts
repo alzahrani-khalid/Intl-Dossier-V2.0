@@ -33,7 +33,7 @@ export interface UseTemplateKeyboardShortcutsResult {
   shortcutTemplates: EntityTemplate[]
 }
 
-function useTemplateKeyboardShortcuts(
+export function useTemplateKeyboardShortcuts(
   options: UseTemplateKeyboardShortcutsOptions = {},
 ): UseTemplateKeyboardShortcutsResult {
   const { entityType = 'task', onTemplateSelect, enabled = true } = options

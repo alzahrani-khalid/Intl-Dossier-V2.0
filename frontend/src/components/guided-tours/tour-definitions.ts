@@ -541,6 +541,6 @@ export function getTour(tourId: TourId): Tour | undefined {
 /**
  * Get all available tours
  */
-function getAllTours(): Tour[] {
+export function getAllTours(): Tour[] {
   return Object.values(tourRegistry)
 }

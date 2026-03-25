@@ -397,7 +397,7 @@ export function InteractiveTimeline({
 /**
  * Compact timeline view for embedding in other components
  */
-function CompactInteractiveTimeline({
+export function CompactInteractiveTimeline({
   dossierId,
   dossierType,
   maxEvents = 5,

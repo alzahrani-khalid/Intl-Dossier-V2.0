@@ -51,7 +51,7 @@ export function checkWipLimit(
 /**
  * Check if adding an item to a column would exceed the WIP limit
  */
-function wouldExceedWipLimit(
+export function wouldExceedWipLimit(
   columnKey: string,
   currentCount: number,
   wipLimits: WipLimits,
@@ -111,7 +111,7 @@ export function getWipProgressColor(level: WipWarningLevel): string {
 /**
  * Calculate WIP statistics for all columns
  */
-function calculateColumnWipStats(
+export function calculateColumnWipStats(
   columns: Record<string, WorkItem[]>,
   wipLimits: WipLimits,
 ): Record<string, WipStatus> {
@@ -127,7 +127,7 @@ function calculateColumnWipStats(
 /**
  * Get columns that are at or over WIP limit
  */
-function getColumnsOverWip(columns: Record<string, WorkItem[]>, wipLimits: WipLimits): string[] {
+export function getColumnsOverWip(columns: Record<string, WorkItem[]>, wipLimits: WipLimits): string[] {
   return Object.entries(columns)
     .filter(([columnKey, items]) => {
       const status = checkWipLimit(columnKey, items.length, wipLimits)
