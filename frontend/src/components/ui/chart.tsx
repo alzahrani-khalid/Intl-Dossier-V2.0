@@ -4,6 +4,7 @@ import type { NameType, Payload, ValueType } from 'recharts/types/component/Defa
 import type { LegendPayload } from 'recharts/types/component/DefaultLegendContent'
 
 import { cn } from '@/lib/utils'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const
@@ -58,7 +59,9 @@ function ChartContainer({
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
+        <LtrIsolate>
+          <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
+        </LtrIsolate>
       </div>
     </ChartContext.Provider>
   )
