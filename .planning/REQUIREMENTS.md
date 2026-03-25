@@ -26,11 +26,11 @@ Requirements for production quality milestone. Each maps to roadmap phases.
 
 ### RTL/LTR Theming
 
-- [ ] **RTL-01**: Single DirectionProvider at document root replaces all per-component `dir={isRTL}` scattered across codebase
-- [ ] **RTL-02**: Zero physical CSS properties remain — all `ml-*`, `mr-*`, `pl-*`, `pr-*`, `text-left`, `text-right` replaced with logical equivalents
-- [ ] **RTL-03**: Theme switching (dark/light/system + AR/EN language) works without visual bugs or layout shifts
-- [ ] **RTL-04**: Third-party components (React Flow, Recharts, DnD-kit, TanStack Table) render correctly in RTL mode
-- [ ] **RTL-05**: Reusable RTL-aware component patterns extracted (no duplicate RTL logic across components)
+- [x] **RTL-01**: Single DirectionProvider at document root replaces all per-component `dir={isRTL}` scattered across codebase
+- [x] **RTL-02**: Zero physical CSS properties remain — all `ml-*`, `mr-*`, `pl-*`, `pr-*`, `text-left`, `text-right` replaced with logical equivalents
+- [x] **RTL-03**: Theme switching (dark/light/system + AR/EN language) works without visual bugs or layout shifts
+- [x] **RTL-04**: Third-party components (React Flow, Recharts, DnD-kit, TanStack Table) render correctly in RTL mode
+- [x] **RTL-05**: Reusable RTL-aware component patterns extracted (no duplicate RTL logic across components)
 
 ### Responsive Design
 
@@ -100,11 +100,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-04      | Phase 3 | Complete |
 | SEC-05      | Phase 3 | Complete |
 | SEC-06      | Phase 3 | Complete |
-| RTL-01      | Phase 4 | Pending |
-| RTL-02      | Phase 4 | Pending |
-| RTL-03      | Phase 4 | Pending |
-| RTL-04      | Phase 4 | Pending |
-| RTL-05      | Phase 4 | Pending |
+| RTL-01      | Phase 4 | Complete |
+| RTL-02      | Phase 4 | Complete |
+| RTL-03      | Phase 4 | Complete |
+| RTL-04      | Phase 4 | Complete |
+| RTL-05      | Phase 4 | Complete |
 | RESP-01     | Phase 5 | Pending |
 | RESP-02     | Phase 5 | Pending |
 | RESP-03     | Phase 5 | Pending |

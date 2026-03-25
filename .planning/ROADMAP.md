@@ -100,7 +100,7 @@ Plans:
 
 - [x] 04-01-PLAN.md — Create useDirection() hook, LtrIsolate wrapper, install eslint-plugin-rtl-friendly, remove rtl.css
 - [x] 04-02-PLAN.md — Bulk-remove 787 per-component dir= attributes from 469 files, replace isRTL patterns with useDirection(), fix physical CSS
-- [ ] 04-03-PLAN.md — Wrap React Flow/Recharts in LtrIsolate, configure DnD-kit/TanStack Table for RTL, visual verification checkpoint
+- [x] 04-03-PLAN.md — Wrap React Flow/Recharts in LtrIsolate, configure DnD-kit/TanStack Table for RTL, visual verification checkpoint
 
 ### Phase 5: Responsive Design
 
