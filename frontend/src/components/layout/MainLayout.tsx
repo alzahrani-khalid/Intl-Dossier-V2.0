@@ -1,7 +1,9 @@
+/** @deprecated Replaced by NavigationShell in Phase 5. Remove in Phase 6. */
+
 import { type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 
-import { useIsMobile } from '@/hooks/useMobile'
+import { useResponsive } from '@/hooks/use-responsive'
 import { useContextAwareFAB } from '@/hooks/useContextAwareFAB'
 import { useEntityHistoryStore } from '@/store/entityHistoryStore'
 import { useDossierContextSafe } from '@/contexts/dossier-context'
@@ -9,7 +11,7 @@ import { useDossierContextSafe } from '@/contexts/dossier-context'
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import { ContextAwareFAB } from '@/components/ui/context-aware-fab'
 import { EntityBreadcrumbTrail } from './EntityBreadcrumbTrail'
-import { DossierContextIndicator } from '@/components/dossier/DossierContextIndicator'
+import { DossierContextIndicator } from '@/components/Dossier/DossierContextIndicator'
 import { AppSidebar } from './AppSidebar'
 import { SiteHeader } from './SiteHeader'
 
@@ -40,7 +42,7 @@ export function MainLayout({
   showBreadcrumbTrail = true,
   showDossierContext = true,
 }: MainLayoutProps) {
-  const isMobile = useIsMobile()
+  const { isMobile } = useResponsive()
 
   // Context-aware FAB configuration
   const { contextActions, speedDialActions, defaultAction, shouldShowFAB } = useContextAwareFAB()
@@ -54,7 +56,7 @@ export function MainLayout({
   const dossierContext = useDossierContextSafe()
   const hasDossierContext = Boolean(
     dossierContext?.activeDossier ||
-    (dossierContext?.state?.selectedDossiers && dossierContext.state.selectedDossiers.length > 0),
+      (dossierContext?.state?.selectedDossiers && dossierContext.state.selectedDossiers.length > 0),
   )
   const displayDossierContext = showDossierContext && hasDossierContext
 
