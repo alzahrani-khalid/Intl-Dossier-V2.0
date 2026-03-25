@@ -170,7 +170,7 @@ export function UniversalDossierCard({
         </div>
       )}
 
-      <CardHeader className="flex flex-col gap-2 sm:gap-3 p-4 sm:p-6 relative z-10">
+      <CardHeader className="flex flex-col gap-2 sm:gap-3 p-3 sm:p-4 relative z-10">
         {/* Person type: Show avatar with info */}
         {dossier.type === 'person' && (dossier.extension as any)?.photo_url ? (
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -283,7 +283,7 @@ export function UniversalDossierCard({
               variant="default"
               size="sm"
               onClick={() => onView(dossier.id)}
-              className=" px-3 sm:px-4"
+              className="min-h-11 min-w-11 px-3 sm:px-4"
             >
               <Eye className={cn('h-4 w-4', isRTL && 'rotate-180')} />
               <span className="hidden sm:inline ms-2">{t('action.view')}</span>
@@ -295,7 +295,7 @@ export function UniversalDossierCard({
               variant="outline"
               size="sm"
               onClick={() => onEdit(dossier.id)}
-              className=" px-3 sm:px-4"
+              className="min-h-11 min-w-11 px-3 sm:px-4"
             >
               <Edit className="h-4 w-4" />
               <span className="hidden sm:inline ms-2">{t('action.edit')}</span>
@@ -307,7 +307,7 @@ export function UniversalDossierCard({
         {onDelete && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className=" " aria-label={t('action.more')}>
+              <Button variant="ghost" size="sm" className="min-h-11 min-w-11" aria-label={t('action.more')}>
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>

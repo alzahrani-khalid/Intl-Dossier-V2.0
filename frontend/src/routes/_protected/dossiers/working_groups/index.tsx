@@ -60,7 +60,7 @@ function WorkingGroupsListPage() {
         <div className="flex items-center gap-3">
           <Briefcase className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
           <div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold text-start">
               {t('type.working_group')}
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-1">
@@ -68,7 +68,7 @@ function WorkingGroupsListPage() {
             </p>
           </div>
         </div>
-        <Button asChild>
+        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
           <Link to="/dossiers/create">
             <Plus className="h-4 w-4 me-2" />
             {t('action.create')}
@@ -83,7 +83,7 @@ function WorkingGroupsListPage() {
           placeholder={t('filter.search')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-md"
+          className="max-w-md min-h-11"
         />
       </div>
 
@@ -165,7 +165,7 @@ function WorkingGroupsListPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-end">
-                      <Button variant="ghost" size="sm" asChild>
+                      <Button variant="ghost" size="sm" asChild className="min-h-11 min-w-11">
                         <Link to={getDossierDetailPath(dossier.id, 'working_group')}>
                           {t('action.view')}
                         </Link>
@@ -183,7 +183,7 @@ function WorkingGroupsListPage() {
               <Link
                 key={dossier.id}
                 to={getDossierDetailPath(dossier.id, 'working_group')}
-                className="block p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
+                className="block p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent transition-colors min-h-11"
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <h3 className="font-semibold text-base">
@@ -209,11 +209,12 @@ function WorkingGroupsListPage() {
 
           {/* Pagination */}
           {data && data.total! > pageSize && (
-            <div className="mt-8 flex items-center justify-between">
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
               <Button
                 variant="outline"
                 disabled={page === 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="min-h-11 min-w-11 w-full sm:w-auto"
               >
                 {t('action.back')}
               </Button>
@@ -227,6 +228,7 @@ function WorkingGroupsListPage() {
                 variant="outline"
                 disabled={page * pageSize >= data.total!}
                 onClick={() => setPage((p) => p + 1)}
+                className="min-h-11 min-w-11 w-full sm:w-auto"
               >
                 {t('action.next')}
               </Button>
