@@ -152,7 +152,7 @@ const [filtersOpen, setFiltersOpen] = useState(false)
           )}
           {overdueCount > 0 && (
             <Badge variant="destructive" className="text-xs flex items-center gap-1">
-              <AlertTriangle className="h-3 w-3" />
+              <AlertTriangle className="size-3" />
               {overdueCount}
             </Badge>
           )}
@@ -166,9 +166,9 @@ const [filtersOpen, setFiltersOpen] = useState(false)
               size="icon"
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="h-9 w-9"
+              className="size-11"
             >
-              <RefreshCw className={cn('h-4 w-4', isRefreshing && 'animate-spin')} />
+              <RefreshCw className={cn('size-4', isRefreshing && 'animate-spin')} />
               <span className="sr-only">{t('actions.refresh')}</span>
             </Button>
           )}
@@ -181,15 +181,15 @@ const [filtersOpen, setFiltersOpen] = useState(false)
             >
               <TabsList className="h-9">
                 <TabsTrigger value="board" className="h-7 px-2.5 gap-1">
-                  <LayoutGrid className="h-4 w-4" />
+                  <LayoutGrid className="size-4" />
                   <span className="hidden sm:inline text-xs">{t('viewModes.board')}</span>
                 </TabsTrigger>
                 <TabsTrigger value="list" className="h-7 px-2.5 gap-1">
-                  <List className="h-4 w-4" />
+                  <List className="size-4" />
                   <span className="hidden sm:inline text-xs">{t('viewModes.list')}</span>
                 </TabsTrigger>
                 <TabsTrigger value="table" className="h-7 px-2.5 gap-1">
-                  <Table2 className="h-4 w-4" />
+                  <Table2 className="size-4" />
                   <span className="hidden sm:inline text-xs">{t('viewModes.table')}</span>
                 </TabsTrigger>
               </TabsList>
@@ -214,19 +214,19 @@ const [filtersOpen, setFiltersOpen] = useState(false)
               <SelectContent>
                 <SelectItem value="status">
                   <div className="flex items-center gap-2">
-                    <Columns3 className="h-4 w-4" />
+                    <Columns3 className="size-4" />
                     {t('columnModes.status')}
                   </div>
                 </SelectItem>
                 <SelectItem value="priority">
                   <div className="flex items-center gap-2">
-                    <Signal className="h-4 w-4" />
+                    <Signal className="size-4" />
                     {t('columnModes.priority')}
                   </div>
                 </SelectItem>
                 <SelectItem value="tracking_type">
                   <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
+                    <Filter className="size-4" />
                     {t('columnModes.trackingType')}
                   </div>
                 </SelectItem>
@@ -240,7 +240,7 @@ const [filtersOpen, setFiltersOpen] = useState(false)
           <div className="relative w-full sm:w-auto sm:min-w-[200px] sm:max-w-[280px]">
             <Search
               className={cn(
-                'absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground',
+                'absolute top-1/2 -translate-y-1/2 size-4 text-muted-foreground',
                 isRTL ? 'end-3' : 'start-3',
               )}
             />
@@ -260,7 +260,7 @@ const [filtersOpen, setFiltersOpen] = useState(false)
                   isRTL ? 'start-1.5' : 'end-1.5',
                 )}
               >
-                <X className="h-3.5 w-3.5 text-muted-foreground" />
+                <X className="size-3.5 text-muted-foreground" />
               </button>
             )}
           </div>
@@ -270,8 +270,8 @@ const [filtersOpen, setFiltersOpen] = useState(false)
         {showFilters && onSourceFilterChange && (
           <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="h-9 gap-2">
-                <Filter className="h-4 w-4" />
+              <Button variant="outline" size="sm" className="min-h-11 gap-2">
+                <Filter className="size-4" />
                 <span className="hidden sm:inline">{t('filters.title')}</span>
                 {activeFilterCount > 0 && (
                   <Badge variant="secondary" className="h-5 min-w-5 px-1 text-xs">
@@ -292,13 +292,13 @@ const [filtersOpen, setFiltersOpen] = useState(false)
                       >
                         <div
                           className={cn(
-                            'flex h-4 w-4 items-center justify-center rounded-sm border',
+                            'flex size-4 items-center justify-center rounded-sm border',
                             sourceFilter.includes(source)
                               ? 'bg-primary border-primary text-primary-foreground'
                               : 'opacity-50',
                           )}
                         >
-                          {sourceFilter.includes(source) && <Check className="h-3 w-3" />}
+                          {sourceFilter.includes(source) && <Check className="size-3" />}
                         </div>
                         {t(`sources.${source}`)}
                       </CommandItem>
@@ -314,13 +314,13 @@ const [filtersOpen, setFiltersOpen] = useState(false)
                       >
                         <div
                           className={cn(
-                            'flex h-4 w-4 items-center justify-center rounded-sm border',
+                            'flex size-4 items-center justify-center rounded-sm border',
                             priorityFilter.includes(priority)
                               ? 'bg-primary border-primary text-primary-foreground'
                               : 'opacity-50',
                           )}
                         >
-                          {priorityFilter.includes(priority) && <Check className="h-3 w-3" />}
+                          {priorityFilter.includes(priority) && <Check className="size-3" />}
                         </div>
                         {t(`priority.${priority}`)}
                       </CommandItem>

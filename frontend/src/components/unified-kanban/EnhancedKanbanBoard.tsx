@@ -375,7 +375,7 @@ const { toast } = useToast()
           {wipStatus.current}/{wipStatus.limit}
         </Badge>
         {(warningLevel === 'at_limit' || warningLevel === 'over_limit') && (
-          <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+          <AlertTriangle className="size-3.5 text-amber-500" />
         )}
       </div>
     )
@@ -396,16 +396,16 @@ const { toast } = useToast()
           variant={bulkOps.selectionState.isSelecting ? 'secondary' : 'outline'}
           size="sm"
           onClick={bulkOps.toggleSelectMode}
-          className="gap-2"
+          className="gap-2 min-h-11"
         >
           {bulkOps.selectionState.isSelecting ? (
             <>
-              <X className="h-4 w-4" />
+              <X className="size-4" />
               {t('bulkActions.cancel')}
             </>
           ) : (
             <>
-              <CheckSquare className="h-4 w-4" />
+              <CheckSquare className="size-4" />
               {t('bulkActions.select')}
             </>
           )}
@@ -426,7 +426,7 @@ const { toast } = useToast()
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
-                      <Move className="h-4 w-4" />
+                      <Move className="size-4" />
                       {t('bulkActions.moveTo')}
                     </Button>
                   </DropdownMenuTrigger>
@@ -443,7 +443,7 @@ const { toast } = useToast()
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="gap-2">
-                        <UserPlus className="h-4 w-4" />
+                        <UserPlus className="size-4" />
                         {t('bulkActions.assign')}
                       </Button>
                     </DropdownMenuTrigger>
@@ -467,7 +467,7 @@ const { toast } = useToast()
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
-                      <Signal className="h-4 w-4" />
+                      <Signal className="size-4" />
                       {t('bulkActions.priority')}
                     </Button>
                   </DropdownMenuTrigger>
@@ -491,7 +491,7 @@ const { toast } = useToast()
                     onClick={() => setShowDossierPicker(!showDossierPicker)}
                     className="gap-2"
                   >
-                    <Link2 className="h-4 w-4" />
+                    <Link2 className="size-4" />
                     {t('bulkActions.linkToDossier', 'Link to Dossier')}
                   </Button>
                   {showDossierPicker && (
@@ -528,7 +528,7 @@ const { toast } = useToast()
   // Render swimlane selector
   const renderSwimlaneSelector = () => (
     <div className="flex items-center gap-2 ms-4">
-      <Users className="h-4 w-4 text-muted-foreground" />
+      <Users className="size-4 text-muted-foreground" />
       <Select value={swimlaneMode} onValueChange={(v) => handleSwimlaneChange(v as SwimlaneMode)}>
         <SelectTrigger className="h-8 w-[140px]">
           <SelectValue />
@@ -561,16 +561,16 @@ const { toast } = useToast()
         <button
           onClick={() => toggleSwimlane(swimlane.id)}
           className={cn(
-            'flex items-center justify-between w-full px-4 py-2',
+            'flex items-center justify-between w-full px-4 py-2 min-h-11',
             'hover:bg-muted/50 transition-colors',
             'text-start',
           )}
         >
           <div className="flex items-center gap-2">
             {isCollapsed ? (
-              <ChevronUp className={cn('h-4 w-4', isRTL && 'rotate-180')} />
+              <ChevronUp className={cn('size-4', isRTL && 'rotate-180')} />
             ) : (
-              <ChevronDown className={cn('h-4 w-4', isRTL && 'rotate-180')} />
+              <ChevronDown className={cn('size-4', isRTL && 'rotate-180')} />
             )}
             <span className="font-medium">
               {isRTL && swimlane.titleAr ? swimlane.titleAr : swimlane.title}
@@ -646,7 +646,7 @@ const { toast } = useToast()
         <p className="text-lg text-muted-foreground mb-4">{t('errors.loadFailed')}</p>
         <p className="text-sm text-muted-foreground mb-4">{t('errors.loadFailedDescription')}</p>
         {onRefresh && (
-          <button onClick={onRefresh} className="text-primary hover:underline">
+          <button onClick={onRefresh} className="text-primary hover:underline min-h-11">
             {t('actions.retry')}
           </button>
         )}
@@ -769,7 +769,7 @@ const { toast } = useToast()
                           <Kanban.Item key={item.id} value={item.id} asHandle asChild>
                             <Card
                               className={cn(
-                                'border-0 p-3 cursor-grab active:cursor-grabbing',
+                                'border-0 p-3 min-h-12 cursor-grab active:cursor-grabbing',
                                 item.is_overdue && 'ring-1 ring-destructive/30',
                                 bulkOps.isSelected(item.id) && 'ring-2 ring-primary',
                               )}

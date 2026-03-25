@@ -21,7 +21,7 @@ import {
   MyDossiersSection,
   RecentDossierActivity,
   PendingWorkByDossier,
-} from '@/components/dashboard'
+} from '@/components/Dashboard'
 import { useDossierDashboardSummary, useMyDossiers } from '@/hooks/useDossierDashboard'
 import { RecommendationsPanel } from '@/components/engagement-recommendations'
 import { useWorkCreation } from '@/components/work-creation'
@@ -37,8 +37,9 @@ import {
 import { type DateRangePreset, presetToTrendRange } from './components/DashboardDateRangePicker'
 
 export function DashboardPage() {
-  const { t } = useTranslation(['dashboard', 'dossiers'])
+  const { t, i18n } = useTranslation(['dashboard', 'dossiers'])
   const navigate = useNavigate()
+  const isRTL = i18n.language === 'ar'
   const { openPalette } = useWorkCreation()
 
   // Date range state — drives all dashboard queries
@@ -52,16 +53,16 @@ export function DashboardPage() {
   const { data: myDossiersData } = useMyDossiers({ limit: 100 })
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-4 px-4 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <section className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+        <h1 className="font-display text-lg font-bold tracking-tight text-foreground sm:text-xl lg:text-2xl">
           {t('dashboard:title')}
         </h1>
         <div className="flex items-center gap-2">
           <DashboardDateRangePicker value={dateRange} onChange={setDateRange} />
           <DashboardExportButton summary={summary} dossiers={myDossiersData?.dossiers} />
-          <Button onClick={() => openPalette('task')} className="min-h-9 gap-2">
+          <Button onClick={() => openPalette('task')} className="min-h-11 min-w-11 gap-2">
             <Plus className="size-4" />
             <span className="hidden sm:inline">{t('dashboard:new_task')}</span>
           </Button>
@@ -81,9 +82,9 @@ export function DashboardPage() {
           <DashboardMetricCards summary={summary} isLoading={summaryLoading} />
 
           {/* Charts Row: Trends (2/3) + Success Metrics (1/3) */}
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
             <ChartWorkItemTrends className="lg:col-span-2" range={trendRange} />
-            <DossierSuccessMetrics isLoading={summaryLoading} />
+            <DossierSuccessMetrics className="hidden sm:block" isLoading={summaryLoading} />
           </div>
 
           {/* My Dossiers Section */}
@@ -94,7 +95,7 @@ export function DashboardPage() {
           />
 
           {/* Pending Work + Distribution + Recommendations */}
-          <div className="mt-4 grid gap-4 xl:grid-cols-2 2xl:grid-cols-4">
+          <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
             <PendingWorkByDossier
               maxDossiers={5}
               defaultExpanded={false}
@@ -137,7 +138,7 @@ export function DashboardPage() {
 
         {/* Activities Tab */}
         <TabsContent value="activities" className="space-y-4">
-          <section className="grid gap-4 lg:grid-cols-2">
+          <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <RecentDossierActivity maxItems={20} maxHeight="600px" showDossierBadges={true} />
             <PendingWorkByDossier maxDossiers={10} defaultExpanded={true} />
           </section>
