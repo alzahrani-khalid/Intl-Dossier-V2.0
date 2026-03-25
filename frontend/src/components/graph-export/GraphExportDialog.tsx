@@ -9,14 +9,7 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -175,20 +168,47 @@ export function GraphExportDialog({
     },
   }
 
-  return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent
-        className="sm:max-w-[560px] max-h-[90vh] overflow-y-auto"
-        dir={isRTL ? 'rtl' : 'ltr'}
+  const dialogFooter = (
+    <>
+      <Button
+        variant="outline"
+        onClick={handleClose}
+        disabled={isExporting}
+        className="w-full sm:w-auto min-h-11"
       >
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Share2 className="h-5 w-5" />
-            {t('title')}
-          </DialogTitle>
-          <DialogDescription>{t('description')}</DialogDescription>
-        </DialogHeader>
+        {t('actions.cancel')}
+      </Button>
+      <Button onClick={handleExport} disabled={isExporting} className="w-full sm:w-auto min-h-11">
+        {isExporting ? (
+          <>
+            <Loader2 className="h-4 w-4 me-2 animate-spin" />
+            {t('actions.exporting')}
+          </>
+        ) : (
+          <>
+            <Download className="h-4 w-4 me-2" />
+            {t('actions.export')}
+          </>
+        )}
+      </Button>
+    </>
+  )
 
+  return (
+    <AdaptiveDialog
+      open={open}
+      onOpenChange={handleClose}
+      title={
+        <span className="flex items-center gap-2">
+          <Share2 className="h-5 w-5" />
+          {t('title')}
+        </span>
+      }
+      description={t('description')}
+      snapPreset="large"
+      maxWidth="sm:max-w-[560px]"
+      footer={dialogFooter}
+    >
         <div className="grid gap-6 py-4">
           {/* Format Selection */}
           <div className="space-y-3">
@@ -432,31 +452,7 @@ export function GraphExportDialog({
           )}
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
-          <Button
-            variant="outline"
-            onClick={handleClose}
-            disabled={isExporting}
-            className="w-full sm:w-auto"
-          >
-            {t('actions.cancel')}
-          </Button>
-          <Button onClick={handleExport} disabled={isExporting} className="w-full sm:w-auto">
-            {isExporting ? (
-              <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                {t('actions.exporting')}
-              </>
-            ) : (
-              <>
-                <Download className="h-4 w-4 me-2" />
-                {t('actions.export')}
-              </>
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    </AdaptiveDialog>
   )
 }
 

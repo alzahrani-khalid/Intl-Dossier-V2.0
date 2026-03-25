@@ -1,14 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-import { X, ExternalLink, Calendar, User, Mail, Tag, Clock } from 'lucide-react';
-import {
- Dialog,
- DialogContent,
- DialogHeader,
- DialogTitle,
- DialogDescription,
- DialogClose,
-} from '@/components/ui/dialog';
+import { ExternalLink, Calendar, User, Mail, Tag, Clock } from 'lucide-react';
+import { AdaptiveDialog } from '@/components/ui/adaptive-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AgingIndicator } from './AgingIndicator';
@@ -151,45 +144,18 @@ export function AssignmentDetailsModal({
  };
 
  return (
- <Dialog open={isOpen} onOpenChange={onClose}>
- <DialogContent
- className="max-w-2xl w-full px-4 py-6 sm:px-6 md:px-8 max-h-[90vh] overflow-y-auto"
- dir={isRTL ? 'rtl' : 'ltr'}
- data-testid="assignment-details-modal"
- >
- {/* Header */}
- <DialogHeader className="flex flex-col gap-2 sm:gap-3">
- <div className="flex items-start justify-between gap-4">
- <DialogTitle
- className="text-lg sm:text-xl md:text-2xl font-semibold text-start"
- data-testid="modal-title"
- >
- {t('waitingQueue.assignmentDetails.title', 'Assignment Details')}
- </DialogTitle>
-
- {/* Close Button - Touch-friendly 44x44px */}
- <DialogClose asChild>
- <Button
- variant="ghost"
- size="icon"
- className=" h-11 w-11 rounded-full"
- data-testid="close-modal-button"
- aria-label={t('common.close', 'Close')}
- >
- <X className={`h-5 w-5 ${isRTL ? 'rotate-0' : ''}`} />
- </Button>
- </DialogClose>
- </div>
-
- {/* Accessible description for screen readers */}
- <DialogDescription className="sr-only">
- {t('waitingQueue.assignmentDetails.description',
+ <AdaptiveDialog
+ open={isOpen}
+ onOpenChange={onClose}
+ title={t('waitingQueue.assignmentDetails.title', 'Assignment Details')}
+ description={t('waitingQueue.assignmentDetails.description',
  `View complete details for assignment ${assignment.id.substring(0, 8)}, assigned to ${assignment.assignee_name || 'Unknown'}`
  )}
- </DialogDescription>
-
+ snapPreset="large"
+ maxWidth="sm:max-w-2xl"
+ >
  {/* Work Item Title and Aging Badge */}
- <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+ <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
  <h3
  className="text-base sm:text-lg font-medium text-start"
  data-testid="work-item-id"
@@ -198,7 +164,6 @@ export function AssignmentDetailsModal({
  </h3>
  <AgingIndicator days={daysWaiting} />
  </div>
- </DialogHeader>
 
  {/* Content - Mobile-first grid layout */}
  <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
@@ -469,9 +434,6 @@ export function AssignmentDetailsModal({
  </section>
  </div>
 
- {/* Overlay for click-outside detection */}
- <div className="hidden" data-testid="modal-overlay" />
- </DialogContent>
- </Dialog>
+ </AdaptiveDialog>
  );
 }

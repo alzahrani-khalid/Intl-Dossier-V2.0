@@ -8,14 +8,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, ArrowRight, Check, X } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
@@ -95,15 +88,39 @@ export function ClassificationChangeDialog({
     setError(null)
   }
 
+  const dialogFooter = (
+    <>
+      <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading} className="min-h-11 w-full sm:w-auto">
+        <X className="h-4 w-4 me-2" />
+        {t('common.cancel', 'Cancel')}
+      </Button>
+      <Button
+        onClick={handleSubmit}
+        disabled={isLoading || noChange}
+        className={`min-h-11 w-full sm:w-auto ${needsApproval ? 'bg-amber-600 hover:bg-amber-700' : ''}`}
+      >
+        {isLoading ? (
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent me-2" />
+        ) : (
+          <Check className="h-4 w-4 me-2" />
+        )}
+        {needsApproval
+          ? t('changeDialog.submitForApproval', 'Submit for Approval')
+          : t('changeDialog.applyChange', 'Apply Change')}
+      </Button>
+    </>
+  )
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
-        <DialogHeader>
-          <DialogTitle>{t('changeDialog.title', 'Change Classification')}</DialogTitle>
-          <DialogDescription>
-            {t('changeDialog.description', 'Update the classification level for this document')}
-          </DialogDescription>
-        </DialogHeader>
+    <AdaptiveDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t('changeDialog.title', 'Change Classification')}
+      description={t('changeDialog.description', 'Update the classification level for this document')}
+      snapPreset="large"
+      maxWidth="sm:max-w-[500px]"
+      footer={dialogFooter}
+    >
 
         {document && (
           <div className="space-y-4 py-4">
@@ -195,28 +212,7 @@ export function ClassificationChangeDialog({
           </div>
         )}
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
-            <X className="h-4 w-4 me-2" />
-            {t('common.cancel', 'Cancel')}
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={isLoading || noChange}
-            className={needsApproval ? 'bg-amber-600 hover:bg-amber-700' : ''}
-          >
-            {isLoading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent me-2" />
-            ) : (
-              <Check className="h-4 w-4 me-2" />
-            )}
-            {needsApproval
-              ? t('changeDialog.submitForApproval', 'Submit for Approval')
-              : t('changeDialog.applyChange', 'Apply Change')}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    </AdaptiveDialog>
   )
 }
 
