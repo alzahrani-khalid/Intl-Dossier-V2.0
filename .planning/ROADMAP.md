@@ -93,7 +93,7 @@ Plans:
 3. Switching between dark/light and AR/EN produces no visual bugs or layout shifts
 4. React Flow graphs, Recharts, DnD-kit, and TanStack Table render correctly in RTL mode
 5. Reusable RTL-aware patterns are extracted — no duplicate direction logic across components
-   **Plans**: 5 plans
+   **Plans**: 6 plans
    **UI hint**: yes
 
 Plans:
@@ -102,7 +102,8 @@ Plans:
 - [x] 04-02-PLAN.md — Bulk-remove 787 per-component dir= attributes from 469 files, replace isRTL patterns with useDirection(), fix physical CSS
 - [x] 04-03-PLAN.md — Wrap React Flow/Recharts in LtrIsolate, configure DnD-kit/TanStack Table for RTL, visual verification checkpoint
 - [x] 04-04-PLAN.md — [GAP] Wire eslint-plugin-rtl-friendly into eslint.config.mjs
-- [x] 04-05-PLAN.md — [GAP] Wrap remaining 18 Recharts files in LtrIsolate
+- [x] 04-05-PLAN.md — [GAP] Wrap remaining Recharts files in LtrIsolate (ChartContainer + ClusterVisualization)
+- [x] 04-06-PLAN.md — [GAP] Close false-positive verification gap — correct VERIFICATION.md to reflect all Recharts files covered
 
 ### Phase 5: Responsive Design
 
@@ -172,7 +173,7 @@ Note: Phase 3 (Security) depends only on Phase 1 and can run in parallel with Ph
 | 1. Dead Code & Toolchain      | 3/3            | Complete    | -          |
 | 2. Naming & File Structure    | 3/3            | Complete    | -          |
 | 3. Security Hardening         | 3/3            | Complete    | -          |
-| 4. RTL/LTR Consistency        | 3/5            | Gap closure | 2026-03-25 |
+| 4. RTL/LTR Consistency        | 5/6            | Gap closure | 2026-03-25 |
 | 5. Responsive Design          | 0/3            | Not started | -          |
 | 6. Architecture Consolidation | 0/2            | Not started | -          |
 | 7. Performance Optimization   | 0/2            | Not started | -          |

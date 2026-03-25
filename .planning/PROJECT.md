@@ -35,7 +35,7 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 - [ ] Code architecture consolidation — deduplicate logic, enforce consistent patterns, proper abstractions
 - [ ] Performance optimization — slow queries, unnecessary re-renders, bundle size, lazy loading gaps
 - ✓ Security hardening — unified auth middleware (Supabase-first + JWT fallback), RBAC (role hierarchy, permissions, clearance), CSP hardened, Zod validation on all routes, RLS audit with org-scoped policies on all tables (Validated in Phase 3: security-hardening)
-- [ ] RTL/LTR theming consistency — all components use logical properties, theme switching works without visual bugs
+- ✓ RTL/LTR theming consistency — useDirection() hook + LtrIsolate wrapper centralized, 787 per-component dir= removed, eslint-plugin-rtl-friendly enforces logical properties, all Recharts/React Flow wrapped (Validated in Phase 4: rtl-ltr-consistency)
 - [ ] Mobile/tablet responsiveness — full responsive audit across all pages, touch targets, breakpoint coverage
 
 ### Out of Scope
@@ -52,7 +52,7 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 - **Codebase map:** `.planning/codebase/` contains detailed analysis (STACK, ARCHITECTURE, STRUCTURE, CONVENTIONS, TESTING, INTEGRATIONS, CONCERNS)
 - **Known issues from CONCERNS.md:** Tech debt around inconsistent patterns, mixed RTL approaches, untested responsive breakpoints, potential RLS gaps
 - **Theming:** HeroUI v3 with oklch color system, dark/light/system modes, but theme switching has visual bugs
-- **RTL:** `forceRTL` rules in CLAUDE.md for React Native (now cancelled), web uses Tailwind logical properties but inconsistently
+- **RTL:** Phase 4 complete — centralized useDirection() hook, LtrIsolate for third-party libs, eslint-plugin-rtl-friendly enforcement, zero physical CSS properties, all 469 files migrated
 - **Responsive:** Mobile-first mandated in CLAUDE.md but not consistently implemented across all pages
 - **Dependencies:** Cleaned — 61 unused packages removed in Phase 1; AI/ML deps audited (kept anthropic, openai, mastra, xenova; removed langchain)
 - **Naming:** Phase 2 complete — all file/directory naming conventions enforced via ESLint `check-file` plugin; hooks (camelCase), component dirs (kebab-case), backend services/models (kebab-case with suffixes)
@@ -95,4 +95,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-24 after Phase 3 completion_
+_Last updated: 2026-03-25 after Phase 4 completion_
