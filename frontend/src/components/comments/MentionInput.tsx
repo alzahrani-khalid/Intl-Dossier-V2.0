@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import type { MentionUser } from '@/types/comment.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MentionInputProps {
   value: string
@@ -45,10 +46,9 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
     },
     ref,
   ) {
-    const { t, i18n } = useTranslation('comments')
-    const isRTL = i18n.language === 'ar'
-
-    const [mentionQuery, setMentionQuery] = useState('')
+    const { t } = useTranslation('comments')
+    const { isRTL } = useDirection()
+const [mentionQuery, setMentionQuery] = useState('')
     const [showMentionList, setShowMentionList] = useState(false)
     const [mentionStartIndex, setMentionStartIndex] = useState<number | null>(null)
     const [selectedIndex, setSelectedIndex] = useState(0)
@@ -203,7 +203,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
     const isOverLimit = charCount > maxLength
 
     return (
-      <div className="relative" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="relative">
         <Textarea
           ref={setRefs}
           value={value}

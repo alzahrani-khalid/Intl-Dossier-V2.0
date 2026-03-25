@@ -10,6 +10,7 @@ import { Mail, Phone, Users, FileText, Clock, Info } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { PersonDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ContactPreferencesSectionProps {
   /** PersonDossier with person_subtype === 'elected_official' */
@@ -17,9 +18,9 @@ interface ContactPreferencesSectionProps {
 }
 
 export function ContactPreferencesSection({ dossier }: ContactPreferencesSectionProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const { extension } = dossier
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { extension } = dossier
   const preferences = extension.contact_preferences
 
   // Get channel icon
@@ -82,7 +83,7 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="p-0 space-y-4">
         {/* Preferred Channel & Time */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Preferred Channel */}

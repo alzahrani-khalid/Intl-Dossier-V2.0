@@ -35,6 +35,7 @@ import {
   RECOMMENDATION_TYPE_LABELS,
 } from '@/types/engagement-recommendation.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -89,10 +90,9 @@ interface TypeDistributionProps {
 }
 
 function TypeDistribution({ data }: TypeDistributionProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const total = Object.values(data).reduce((sum, count) => sum + count, 0)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const total = Object.values(data).reduce((sum, count) => sum + count, 0)
   if (total === 0) return null
 
   const sortedTypes = Object.entries(data)
@@ -148,8 +148,8 @@ export function RecommendationsPanel({
   showStats = true,
   className,
 }: RecommendationsPanelProps) {
-  const { t, i18n } = useTranslation('engagement-recommendations')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('engagement-recommendations')
+  const { isRTL } = useDirection()
 
   // Queries
   const statsQuery = useRecommendationStats()
@@ -180,7 +180,7 @@ export function RecommendationsPanel({
   }
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -30,6 +30,7 @@ import {
 } from 'lucide-react'
 import { useUIStore } from '../../store/uiStore'
 import { useAuthStore } from '../../store/authStore'
+import { useDirection } from '@/hooks/useDirection'
 
 interface NavItem {
   id: string
@@ -42,14 +43,13 @@ interface NavItem {
 }
 
 export function Sidebar() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
   const { isSidebarOpen } = useUIStore()
   const { user, logout } = useAuthStore()
-  const isRTL = i18n.language === 'ar'
-
-  const handleLogout = async () => {
+  const { isRTL } = useDirection()
+const handleLogout = async () => {
     try {
       await logout()
       navigate({ to: '/login' })
@@ -310,7 +310,6 @@ export function Sidebar() {
   return (
     <aside
       className="hidden h-screen w-72 flex-col border-e border-border bg-sidebar lg:flex"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="p-4">
         <div className="flex items-center gap-3 mb-6">

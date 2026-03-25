@@ -49,16 +49,14 @@ export const Route = createFileRoute('/_protected/dossiers/working_groups/$id')(
 
 function WorkingGroupDossierDetailRoute() {
   const { id } = Route.useParams()
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('dossier')
   // Fetch working group dossier with type validation
   const { data: dossier, isLoading, error } = useTypedDossier(id, 'working_group')
 
   // Loading State
   if (isLoading) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex min-h-[50vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin text-primary" />
           <p className="text-sm sm:text-base text-muted-foreground">{t('detail.loading')}</p>
@@ -72,7 +70,6 @@ function WorkingGroupDossierDetailRoute() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="max-w-2xl mx-auto">
           <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-6 sm:p-8">
@@ -101,7 +98,6 @@ function WorkingGroupDossierDetailRoute() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="max-w-2xl mx-auto">
           <div className="rounded-lg border border-warning/20 bg-warning/10 p-6 sm:p-8">

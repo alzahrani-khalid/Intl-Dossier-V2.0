@@ -11,6 +11,7 @@ import { Sun, Moon, Monitor, ChevronDown, Check } from 'lucide-react'
 import { Button, Dropdown } from '@heroui/react'
 import { cn } from '@/lib/utils'
 import { useTheme, AVAILABLE_COLOR_MODES } from '@/components/theme-provider/theme-provider'
+import { useDirection } from '@/hooks/useDirection'
 
 type ColorMode = 'light' | 'dark' | 'system'
 
@@ -45,11 +46,10 @@ export function ThemeToggle({
   className,
   showDropdown = true,
 }: ThemeToggleProps) {
-  const { t, i18n } = useTranslation(['common'])
+  const { t } = useTranslation(['common'])
   const { colorMode, resolvedColorMode, setColorMode, toggleColorMode } = useTheme()
-  const isRTL = i18n.language === 'ar'
-
-  // Get current icon based on resolved mode (what's actually shown)
+  const { isRTL } = useDirection()
+// Get current icon based on resolved mode (what's actually shown)
   const CurrentIcon = modeIcons[resolvedColorMode]
 
   // Get current mode label

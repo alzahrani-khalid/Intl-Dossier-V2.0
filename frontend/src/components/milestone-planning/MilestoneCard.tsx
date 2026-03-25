@@ -40,6 +40,7 @@ import {
 import { cn } from '@/lib/utils'
 import type { PlannedMilestone, MilestoneType } from '@/types/milestone-planning.types'
 import type { TimelinePriority } from '@/types/timeline.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MilestoneCardProps {
   milestone: PlannedMilestone
@@ -111,8 +112,8 @@ export function MilestoneCard({
   onConvertToEvent,
 }: MilestoneCardProps) {
   const { t, i18n } = useTranslation('milestone-planning')
-  const isRTL = i18n.language === 'ar'
-  const [isExpanded, setIsExpanded] = useState(false)
+  const { isRTL } = useDirection()
+const [isExpanded, setIsExpanded] = useState(false)
 
   const TypeIcon = typeIcons[milestone.milestone_type]
   const daysUntil = getDaysUntil(milestone.target_date)
@@ -163,7 +164,6 @@ export function MilestoneCard({
           isOverdue && 'border-red-300 dark:border-red-700',
           milestone.status === 'completed' && 'opacity-75',
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <CardContent className="p-3 sm:p-4">
           <div className="flex items-start gap-3">

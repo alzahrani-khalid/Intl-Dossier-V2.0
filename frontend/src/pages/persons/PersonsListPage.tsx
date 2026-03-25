@@ -40,11 +40,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { usePersons } from '@/hooks/usePersons'
 import type { PersonSearchParams, ImportanceLevel } from '@/types/person.types'
 import { IMPORTANCE_LEVEL_LABELS } from '@/types/person.types'
+import { useDirection } from '@/hooks/useDirection'
 
 function PersonsListPage() {
-  const { t, i18n } = useTranslation('persons')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('persons')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   // Search & filter state
   const [searchTerm, setSearchTerm] = useState('')
@@ -149,7 +150,7 @@ function PersonsListPage() {
   }
 
   return (
-    <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen">
       {/* Header */}
       <header className="border-b bg-background sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">

@@ -36,8 +36,7 @@ const DEFAULT_PREFERENCES: CategoryPreference = {
 }
 
 export function NotificationPreferences() {
-  const { t, i18n } = useTranslation('notification-center')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('notification-center')
   const { toast } = useToast()
 
   // Hooks
@@ -155,7 +154,7 @@ export function NotificationPreferences() {
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'} data-testid="notification-preferences">
+    <div className="space-y-6" data-testid="notification-preferences">
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold">{t('preferences.title')}</h2>

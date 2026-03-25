@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface FormSelectAceternityProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string
@@ -29,9 +30,9 @@ function FormSelectAceternity({
   variant = 'default',
   ...rest
 }: FormSelectAceternityProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [isFocused, setIsFocused] = useState(false)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [isFocused, setIsFocused] = useState(false)
 
   const selectBaseClasses = cn(
     // Base styles
@@ -66,7 +67,7 @@ function FormSelectAceternity({
   )
 
   return (
-    <div className="space-y-2" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-2">
       {/* Label */}
       <motion.label
         htmlFor={name}

@@ -34,6 +34,7 @@ import type {
   SuggestionCategory,
   SuggestionContext,
 } from '@/types/contextual-suggestion.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -335,10 +336,9 @@ export function ContextualSuggestions({
   entityId,
   testId = 'contextual-suggestions',
 }: ContextualSuggestionsProps) {
-  const { t, i18n } = useTranslation('contextual-suggestions')
-  const isRTL = i18n.language === 'ar'
-
-  const { data, isLoading, isError } = useContextualSuggestions({
+  const { t } = useTranslation('contextual-suggestions')
+  const { isRTL } = useDirection()
+const { data, isLoading, isError } = useContextualSuggestions({
     context,
     entity_type: entityType,
     entity_id: entityId,
@@ -359,7 +359,6 @@ export function ContextualSuggestions({
     return (
       <div
         className={cn('rounded-lg bg-muted/30', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
         data-testid={`${testId}-loading`}
       >
         <SuggestionSkeleton size={size} count={Math.min(limit, 3)} />
@@ -373,7 +372,7 @@ export function ContextualSuggestions({
   }
 
   return (
-    <div className={cn('rounded-lg', className)} dir={isRTL ? 'rtl' : 'ltr'} data-testid={testId}>
+    <div className={cn('rounded-lg', className)} data-testid={testId}>
       {/* Title */}
       {showTitle && (
         <div className="flex items-center gap-2 mb-3 sm:mb-4">

@@ -33,6 +33,7 @@ import { Badge } from '@/components/ui/badge'
 
 import type { SampleDataInstance } from '@/types/sample-data.types'
 import { templateBannerColors } from '@/types/sample-data.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SampleDataBannerProps {
   instances: SampleDataInstance[]
@@ -45,10 +46,9 @@ export function SampleDataBanner({
   onRemove,
   isRemoving = false,
 }: SampleDataBannerProps) {
-  const { t, i18n } = useTranslation('sample-data')
-  const isRTL = i18n.language === 'ar'
-
-  const [isExpanded, setIsExpanded] = useState(false)
+  const { t } = useTranslation('sample-data')
+  const { isRTL } = useDirection()
+const [isExpanded, setIsExpanded] = useState(false)
   const [showRemoveDialog, setShowRemoveDialog] = useState(false)
   const [instanceToRemove, setInstanceToRemove] = useState<string | undefined>()
 
@@ -90,7 +90,6 @@ export function SampleDataBanner({
           w-full border rounded-lg mb-4 overflow-hidden transition-all
           ${bannerColor}
         `}
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="alert"
         aria-live="polite"
       >
@@ -215,7 +214,7 @@ export function SampleDataBanner({
 
       {/* Remove confirmation dialog */}
       <AlertDialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('dialog.removeTitle')}</AlertDialogTitle>
             <AlertDialogDescription>

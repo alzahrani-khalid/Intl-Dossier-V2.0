@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface DocumentFolder {
   id: string
@@ -61,9 +62,9 @@ export function DocumentTree({
   showSearch = true,
   className,
 }: DocumentTreeProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [searchQuery, setSearchQuery] = useState('')
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [searchQuery, setSearchQuery] = useState('')
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     new Set(['system-management', '2025-updates']),
   )

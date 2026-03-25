@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { SmartInput, SearchableSelect, type SelectOption } from '@/components/forms'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { useDirection } from '@/hooks/useDirection'
 
 // Sample options for searchable select demo
 const countryOptions: SelectOption[] = [
@@ -35,10 +36,9 @@ const countryOptions: SelectOption[] = [
 ]
 
 export function SmartInputDemo() {
-  const { t, i18n } = useTranslation(['smart-input', 'common'])
-  const isRTL = i18n.language === 'ar'
-
-  // Form state
+  const { t } = useTranslation(['smart-input', 'common'])
+  const { isRTL } = useDirection()
+// Form state
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [url, setUrl] = useState('')
@@ -70,7 +70,6 @@ export function SmartInputDemo() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}

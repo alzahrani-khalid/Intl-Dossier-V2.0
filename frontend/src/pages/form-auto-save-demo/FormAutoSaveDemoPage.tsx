@@ -57,6 +57,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
+import { useDirection } from '@/hooks/useDirection'
 
 // Demo form schema
 const demoFormSchema = z.object({
@@ -94,10 +95,9 @@ const DEFAULT_VALUES: DemoFormData = {
 }
 
 export function FormAutoSaveDemoPage() {
-  const { t, i18n } = useTranslation(['form-auto-save', 'common'])
-  const isRTL = i18n.language === 'ar'
-
-  const [showDraftBanner, setShowDraftBanner] = useState(false)
+  const { t } = useTranslation(['form-auto-save', 'common'])
+  const { isRTL } = useDirection()
+const [showDraftBanner, setShowDraftBanner] = useState(false)
   const [isRestoring, setIsRestoring] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -195,7 +195,6 @@ export function FormAutoSaveDemoPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">

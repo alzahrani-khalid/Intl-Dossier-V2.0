@@ -28,6 +28,7 @@ import type {
   MeetingMinutesStatus,
 } from '@/types/meeting-minutes.types'
 import { MEETING_MINUTES_STATUSES } from '@/types/meeting-minutes.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MeetingMinutesListProps {
   dossierId?: string
@@ -44,10 +45,9 @@ export function MeetingMinutesList({
   onSelectMinutes,
   className,
 }: MeetingMinutesListProps) {
-  const { t, i18n } = useTranslation('meeting-minutes')
-  const isRTL = i18n.language === 'ar'
-
-  const [filters, setFilters] = useState<MeetingMinutesFilters>({
+  const { t } = useTranslation('meeting-minutes')
+  const { isRTL } = useDirection()
+const [filters, setFilters] = useState<MeetingMinutesFilters>({
     dossier_id: dossierId,
     engagement_id: engagementId,
   })
@@ -84,7 +84,7 @@ export function MeetingMinutesList({
   const hasActiveFilters = filters.search || filters.status || filters.from_date || filters.to_date
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>

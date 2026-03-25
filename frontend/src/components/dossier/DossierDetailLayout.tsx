@@ -41,6 +41,7 @@ import { useAddToDossierActions } from '@/hooks/useAddToDossierActions'
 import { useDossierPresence } from '@/hooks/useDossierPresence'
 import { useAuth } from '@/contexts/auth.context'
 import { ActiveViewers, ActiveViewersCompact } from '@/components/collaboration'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DossierDetailLayoutProps {
   /**
@@ -117,10 +118,9 @@ export function DossierDetailLayout({
   onAddAction,
   editingSection,
 }: DossierDetailLayoutProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  // Get current user
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+// Get current user
   const { user } = useAuth()
 
   // Sidebar toggle state (for relationship widget visibility on smaller screens)
@@ -155,7 +155,6 @@ export function DossierDetailLayout({
       <nav
         className="flex items-center gap-2 text-sm sm:text-base mb-4 sm:mb-6"
         aria-label="Breadcrumb"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Link
           to="/dossiers"
@@ -173,7 +172,6 @@ export function DossierDetailLayout({
       {/* Header */}
       <header
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex-1 min-w-0">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 truncate">
@@ -286,7 +284,6 @@ export function DossierDetailLayout({
       {/* Main Content with Optional Sidebar */}
       <div
         className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Main Content - Type-Specific Grid Layout */}
         <main className={`flex-1 min-w-0 grid ${gridClassName} gap-4 sm:gap-6 lg:gap-8`}>

@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ArrowRight, Calendar, Clock, XCircle, AlertTriangle, User, FileText } from 'lucide-react'
 import type { Delegation } from '@/services/user-management-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DelegationCardProps {
   delegation: Delegation
@@ -28,9 +29,9 @@ export function DelegationCard({
   onRevoke,
   isRevoking = false,
 }: DelegationCardProps) {
-  const { t, i18n } = useTranslation('delegation')
-  const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
+  const { t } = useTranslation('delegation')
+  const { isRTL } = useDirection()
+const dateLocale = isRTL ? ar : enUS
 
   // Calculate status and expiry info
   const now = new Date()

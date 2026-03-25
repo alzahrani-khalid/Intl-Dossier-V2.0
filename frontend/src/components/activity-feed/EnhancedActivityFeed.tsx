@@ -10,7 +10,6 @@
  */
 
 import { useRef, useEffect, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { formatDistanceToNow, format } from 'date-fns'
 import { ar } from 'date-fns/locale'
 import {
@@ -70,6 +69,7 @@ import type {
   ActivityActionType,
   ActivityFeedProps,
 } from '@/types/activity-feed.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // CONFIGURATION
@@ -380,10 +380,8 @@ export function EnhancedActivityFeed({
   emptyMessage,
   onActivityClick,
 }: ActivityFeedProps) {
-  const { i18n } = useTranslation('activity-feed')
-  const isRTL = i18n.language === 'ar'
-
-  const loadMoreRef = useRef<HTMLDivElement>(null)
+const { isRTL } = useDirection()
+const loadMoreRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(loadMoreRef as React.RefObject<HTMLElement>)
 
   // Hooks
@@ -453,7 +451,7 @@ export function EnhancedActivityFeed({
   )
 
   return (
-    <Card className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('', className)}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <CalendarDays className="h-5 w-5" />

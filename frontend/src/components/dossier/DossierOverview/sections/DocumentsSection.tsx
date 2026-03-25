@@ -127,7 +127,7 @@ function EmptyState({ type, isRTL }: { type?: DossierDocumentType | 'all'; isRTL
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="text-center py-6 sm:py-8">
       <div className="p-3 rounded-full bg-muted inline-block mb-3">
         <FileStack className="h-6 w-6 text-muted-foreground" />
       </div>

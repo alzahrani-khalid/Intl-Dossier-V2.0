@@ -42,6 +42,7 @@ import type {
 import { REGION_LABELS, INTENSITY_LABELS } from '@/types/geographic-visualization.types'
 import { RELATIONSHIP_TYPE_LABELS, type DossierRelationshipType } from '@/types/relationship.types'
 import { type TimeRange } from '@/types/analytics.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MapFilterControlsProps {
   filters: GeoVisualizationFilters
@@ -60,10 +61,9 @@ export function MapFilterControls({
   compact = false,
   className = '',
 }: MapFilterControlsProps) {
-  const { t, i18n } = useTranslation('geographic-visualization')
-  const isRTL = i18n.language === 'ar'
-
-  // Time range options
+  const { t } = useTranslation('geographic-visualization')
+  const { isRTL } = useDirection()
+// Time range options
   const timeRangeOptions = useMemo(
     () => [
       { value: '7d', label: t('filters.timeRange.7d', '7 Days') },
@@ -154,7 +154,7 @@ export function MapFilterControls({
 
   if (compact) {
     return (
-      <div className={`flex flex-wrap items-center gap-2 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={`flex flex-wrap items-center gap-2 ${className}`}>
         {/* Time Range */}
         <Select
           value={filters.timeRange}
@@ -270,7 +270,7 @@ export function MapFilterControls({
 
   // Full filter layout
   return (
-    <div className={`space-y-4 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`space-y-4 ${className}`}>
       <div className="flex flex-col sm:flex-row flex-wrap gap-3">
         {/* Time Range */}
         <div className="flex-1 min-w-[150px]">

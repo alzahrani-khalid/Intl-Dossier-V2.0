@@ -63,6 +63,7 @@ import type {
   BriefingBookTopic,
 } from '@/types/briefing-book.types'
 import type { DossierType, SensitivityLevel } from '@/types/dossier'
+import { useDirection } from '@/hooks/useDirection'
 
 interface BriefingBookBuilderProps {
   onSuccess?: () => void
@@ -128,10 +129,9 @@ function SortableSectionItem({
 }
 
 export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilderProps) {
-  const { t, i18n } = useTranslation('briefing-books')
-  const isRTL = i18n.language === 'ar'
-
-  // Hooks
+  const { t } = useTranslation('briefing-books')
+  const { isRTL } = useDirection()
+// Hooks
   const { createBriefingBook, isGenerating, progress } = useBriefingBooks({
     onCreateSuccess: () => {
       onSuccess?.()
@@ -437,7 +437,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
     switch (currentStep) {
       case 'entities':
         return (
-          <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div className="space-y-4">
             {/* Title input */}
             <div className="space-y-2">
               <Label htmlFor="title">{t('builder.configuration.title')}</Label>
@@ -610,7 +610,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
 
       case 'sections':
         return (
-          <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div className="space-y-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div>
                 <h3 className="font-semibold">{t('builder.sections.title')}</h3>
@@ -704,7 +704,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
 
       case 'options':
         return (
-          <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div className="space-y-6">
             {/* Format */}
             <div className="space-y-3">
               <Label>{t('builder.options.format.title')}</Label>
@@ -847,7 +847,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
         const enabledSections = config.sections?.filter((s) => s.enabled) ?? []
 
         return (
-          <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>
@@ -1000,7 +1000,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div>
         <h2 className="text-xl sm:text-2xl font-bold">{t('builder.title')}</h2>

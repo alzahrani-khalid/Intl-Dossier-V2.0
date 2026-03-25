@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { RotateCcw, X, Loader2 } from 'lucide-react'
 import type { BulkActionType } from '@/types/bulk-actions.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface UndoToastProps {
   /** Whether toast is visible */
@@ -42,10 +43,9 @@ export function UndoToast({
   onDismiss,
   className,
 }: UndoToastProps) {
-  const { t, i18n } = useTranslation('bulk-actions')
-  const isRTL = i18n.language === 'ar'
-
-  const [remainingTime, setRemainingTime] = useState(undoTtl)
+  const { t } = useTranslation('bulk-actions')
+  const { isRTL } = useDirection()
+const [remainingTime, setRemainingTime] = useState(undoTtl)
   const [isUndoing, setIsUndoing] = useState(false)
 
   // Calculate progress percentage
@@ -106,7 +106,6 @@ export function UndoToast({
         'z-50 animate-in slide-in-from-bottom-4 fade-in-0',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="alert"
       aria-live="polite"
     >

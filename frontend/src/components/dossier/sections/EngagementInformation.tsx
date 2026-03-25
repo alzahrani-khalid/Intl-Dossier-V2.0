@@ -9,15 +9,16 @@ import { Calendar, MapPin, FileText, Users } from 'lucide-react'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import type { EngagementDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface EngagementInformationProps {
   dossier: EngagementDossier
 }
 
 export function EngagementInformation({ dossier }: EngagementInformationProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   // Safe access to extension data
   const extension = dossier.extension as any
@@ -26,7 +27,7 @@ export function EngagementInformation({ dossier }: EngagementInformationProps) {
     : extension?.location_en || extension?.location
 
   return (
-    <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4 sm:space-y-6">
       {/* Engagement Date */}
       <div className="flex items-start gap-3 sm:gap-4">
         <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground mt-0.5 flex-shrink-0" />

@@ -20,9 +20,7 @@ interface ActivityStatisticsProps {
 }
 
 export function ActivityStatistics({ followingCount, className }: ActivityStatisticsProps) {
-  const { t, i18n } = useTranslation('activity-feed')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('activity-feed')
   const stats = [
     {
       key: 'followingCount',
@@ -50,7 +48,6 @@ export function ActivityStatistics({ followingCount, className }: ActivityStatis
   return (
     <div
       className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {stats.map((stat) => {
         const Icon = stat.icon

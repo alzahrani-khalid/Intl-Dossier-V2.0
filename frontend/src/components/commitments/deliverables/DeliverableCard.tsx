@@ -49,6 +49,7 @@ import {
   type CommitmentDeliverableType,
 } from '@/types/commitment-deliverable.types'
 import { useUpdateDeliverableStatus, useDeleteDeliverable } from '@/hooks/useCommitmentDeliverables'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for deliverable types
 const TYPE_ICONS: Record<CommitmentDeliverableType, typeof FileText> = {
@@ -69,9 +70,8 @@ interface DeliverableCardProps {
 
 export function DeliverableCard({ deliverable, commitmentId, onEdit }: DeliverableCardProps) {
   const { t, i18n } = useTranslation('commitment-deliverables')
-  const isRTL = i18n.language === 'ar'
-
-  const updateStatusMutation = useUpdateDeliverableStatus()
+  const { isRTL } = useDirection()
+const updateStatusMutation = useUpdateDeliverableStatus()
   const deleteMutation = useDeleteDeliverable()
 
   const [isDeleting, setIsDeleting] = useState(false)

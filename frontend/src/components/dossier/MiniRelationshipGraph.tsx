@@ -50,6 +50,7 @@ import { useRelationshipsForDossier } from '@/hooks/useRelationships'
 import type { Dossier } from '@/lib/dossier-type-guards'
 import type { DossierType } from '@/types/relationship.types'
 import type { RelationshipWithDossiers } from '@/services/relationship-api'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -134,9 +135,9 @@ interface MiniNodeData {
 }
 
 const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const name = isRTL ? data.name_ar || data.name_en : data.name_en
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const name = isRTL ? data.name_ar || data.name_en : data.name_en
 
   const nodeColor = NODE_COLORS[data.type] || '#6b7280'
   const size = data.isCenter ? 50 : 36
@@ -427,7 +428,6 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
       ref={containerRef}
       className="relative w-full rounded-lg border bg-background/50 overflow-hidden"
       style={{ height }}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReactFlow
         nodes={reactFlowNodes}
@@ -491,8 +491,8 @@ export function MiniRelationshipGraph({
   maxHeight = '200px',
   className,
 }: MiniRelationshipGraphProps) {
-  const { t, i18n } = useTranslation('graph')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('graph')
+  const { isRTL } = useDirection()
 
   // State
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed)

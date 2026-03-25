@@ -73,9 +73,7 @@ export function BulkActionProgressIndicator({
   onCancel,
   className,
 }: BulkActionProgressIndicatorProps) {
-  const { t, i18n } = useTranslation('bulk-actions')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('bulk-actions')
   // Don't render for idle status
   if (status === 'idle') {
     return null
@@ -94,7 +92,6 @@ export function BulkActionProgressIndicator({
         'space-y-3',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="progressbar"
       aria-valuenow={progress}
       aria-valuemin={0}

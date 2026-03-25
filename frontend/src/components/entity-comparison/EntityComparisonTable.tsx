@@ -38,6 +38,7 @@ import type {
   FieldDifferenceType,
 } from '@/types/entity-comparison.types'
 import type { Dossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Props for EntityComparisonTable
@@ -383,10 +384,9 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
   onFiltersChange,
   className,
 }: EntityComparisonTableProps) {
-  const { t, i18n } = useTranslation('entity-comparison')
-  const isRTL = i18n.language === 'ar'
-
-  const { entities } = comparisonResult
+  const { t } = useTranslation('entity-comparison')
+  const { isRTL } = useDirection()
+const { entities } = comparisonResult
 
   // Group fields by category for organized display
   const groupedFields = useMemo(() => {
@@ -415,7 +415,7 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
 
     if (differentFields.length === 0) {
       return (
-        <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className={cn('space-y-4', className)}>
           <ComparisonSummary comparisonResult={comparisonResult} />
           <ViewModeToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
           <div className="text-center py-8 sm:py-12 border rounded-lg bg-muted/30">
@@ -431,7 +431,7 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
   }
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Summary */}
       <ComparisonSummary comparisonResult={comparisonResult} />
 

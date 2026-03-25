@@ -67,6 +67,7 @@ import {
   type LegislationStatusHistory,
   type RelatedLegislationWithDetails,
 } from '@/types/legislation.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface LegislationDetailProps {
   id: string
@@ -75,10 +76,9 @@ interface LegislationDetailProps {
 }
 
 export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps) {
-  const { t, i18n } = useTranslation('legislation')
-  const isRTL = i18n.language === 'ar'
-
-  const [activeTab, setActiveTab] = useState('overview')
+  const { t } = useTranslation('legislation')
+  const { isRTL } = useDirection()
+const [activeTab, setActiveTab] = useState('overview')
 
   // Fetch data
   const { data: legislation, isLoading, error } = useLegislation(id)
@@ -115,6 +115,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
   }
 
   if (error || !legislation) {
+  const { isRTL } = useDirection()
     return (
       <Card className="border-destructive">
         <CardContent className="p-8">
@@ -134,7 +135,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
   }
 
   const title =
-    i18n.language === 'ar' && legislation.title_ar ? legislation.title_ar : legislation.title_en
+    isRTL && legislation.title_ar ? legislation.title_ar : legislation.title_en
 
   const statusColors = STATUS_COLORS[legislation.status]
   const priorityColors = PRIORITY_COLORS[legislation.priority]
@@ -143,7 +144,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
   const isWatchingLoading = watchMutation.isPending || unwatchMutation.isPending
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
@@ -235,7 +236,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
           colors={impactColors}
         />
         {legislation.comment_period_status === 'open' && legislation.comment_period_end && (
-          <CommentPeriodCard endDate={legislation.comment_period_end} isRTL={isRTL} />
+          <CommentPeriodCard endDate={legislation.comment_period_end} />
         )}
       </div>
 
@@ -284,7 +285,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          <OverviewTab legislation={legislation} isRTL={isRTL} />
+          <OverviewTab legislation={legislation} />
         </TabsContent>
 
         <TabsContent value="deadlines" className="mt-6">
@@ -294,24 +295,23 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
             onComplete={(deadlineId) =>
               completeDeadlineMutation.mutate({ id: deadlineId, legislationId: id })
             }
-            isRTL={isRTL}
           />
         </TabsContent>
 
         <TabsContent value="amendments" className="mt-6">
-          <AmendmentsTab amendments={amendments || []} isRTL={isRTL} />
+          <AmendmentsTab amendments={amendments || []} />
         </TabsContent>
 
         <TabsContent value="sponsors" className="mt-6">
-          <SponsorsTab sponsors={sponsors || []} isRTL={isRTL} />
+          <SponsorsTab sponsors={sponsors || []} />
         </TabsContent>
 
         <TabsContent value="related" className="mt-6">
-          <RelatedTab relatedLegislations={relatedLegislations || []} isRTL={isRTL} />
+          <RelatedTab relatedLegislations={relatedLegislations || []} />
         </TabsContent>
 
         <TabsContent value="history" className="mt-6">
-          <HistoryTab statusHistory={statusHistory || []} isRTL={isRTL} />
+          <HistoryTab statusHistory={statusHistory || []} />
         </TabsContent>
       </Tabs>
     </div>
@@ -339,7 +339,7 @@ function StatusCard({
   )
 }
 
-function CommentPeriodCard({ endDate }: { endDate: string; isRTL: boolean }) {
+function CommentPeriodCard({ endDate }: { endDate: string }) {
   const { t } = useTranslation('legislation')
   const daysRemaining = Math.ceil(
     (new Date(endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
@@ -359,20 +359,19 @@ function CommentPeriodCard({ endDate }: { endDate: string; isRTL: boolean }) {
 
 function OverviewTab({
   legislation,
-  isRTL,
 }: {
   legislation: LegislationWithDetails
-  isRTL: boolean
 }) {
-  const { t, i18n } = useTranslation('legislation')
+  const { t } = useTranslation('legislation')
+  const { isRTL } = useDirection()
 
   const summary =
-    i18n.language === 'ar' && legislation.summary_ar
+    isRTL && legislation.summary_ar
       ? legislation.summary_ar
       : legislation.summary_en
 
   const description =
-    i18n.language === 'ar' && legislation.description_ar
+    isRTL && legislation.description_ar
       ? legislation.description_ar
       : legislation.description_en
 
@@ -426,7 +425,7 @@ function OverviewTab({
                     </p>
                     <p className="font-medium text-start">
                       {new Date(legislation.comment_period_start).toLocaleDateString(
-                        i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                        isRTL ? 'ar-SA' : 'en-US',
                       )}
                     </p>
                   </div>
@@ -438,7 +437,7 @@ function OverviewTab({
                     </p>
                     <p className="font-medium text-start">
                       {new Date(legislation.comment_period_end).toLocaleDateString(
-                        i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                        isRTL ? 'ar-SA' : 'en-US',
                       )}
                     </p>
                   </div>
@@ -478,7 +477,7 @@ function OverviewTab({
                   </p>
                   <p className="font-medium text-start">
                     {new Date(legislation.introduced_date).toLocaleDateString(
-                      i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                      isRTL ? 'ar-SA' : 'en-US',
                     )}
                   </p>
                 </div>
@@ -493,7 +492,7 @@ function OverviewTab({
                   </p>
                   <p className="font-medium text-start">
                     {new Date(legislation.effective_date).toLocaleDateString(
-                      i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                      isRTL ? 'ar-SA' : 'en-US',
                     )}
                   </p>
                 </div>
@@ -508,7 +507,7 @@ function OverviewTab({
                   </p>
                   <p className="font-medium text-start">
                     {new Date(legislation.expiration_date).toLocaleDateString(
-                      i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                      isRTL ? 'ar-SA' : 'en-US',
                     )}
                   </p>
                 </div>
@@ -592,7 +591,7 @@ function OverviewTab({
               >
                 <Building className="h-5 w-5 text-muted-foreground" />
                 <span className="font-medium text-start">
-                  {i18n.language === 'ar' && legislation.dossier.name_ar
+                  {isRTL && legislation.dossier.name_ar
                     ? legislation.dossier.name_ar
                     : legislation.dossier.name_en}
                 </span>
@@ -614,7 +613,7 @@ function OverviewTab({
                 <p className="text-muted-foreground text-start">{t('detail.lastUpdated')}</p>
                 <p className="font-medium text-start">
                   {new Date(legislation.updated_at).toLocaleDateString(
-                    i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                    isRTL ? 'ar-SA' : 'en-US',
                   )}
                 </p>
               </div>
@@ -633,9 +632,9 @@ function DeadlinesTab({
   deadlines: LegislationDeadline[]
   legislationId: string
   onComplete: (id: string) => void
-  isRTL: boolean
 }) {
-  const { t, i18n } = useTranslation('legislation')
+  const { t } = useTranslation('legislation')
+  const { isRTL } = useDirection()
 
   const sortedDeadlines = [...deadlines].sort(
     (a, b) => new Date(a.deadline_date).getTime() - new Date(b.deadline_date).getTime(),
@@ -691,13 +690,13 @@ function DeadlinesTab({
                     )}
                   </div>
                   <h4 className="font-medium text-start">
-                    {i18n.language === 'ar' && deadline.title_ar
+                    {isRTL && deadline.title_ar
                       ? deadline.title_ar
                       : deadline.title_en}
                   </h4>
                   {deadline.description_en && (
                     <p className="text-sm text-muted-foreground text-start mt-1">
-                      {i18n.language === 'ar' && deadline.description_ar
+                      {isRTL && deadline.description_ar
                         ? deadline.description_ar
                         : deadline.description_en}
                     </p>
@@ -707,7 +706,7 @@ function DeadlinesTab({
                   <div className="text-end">
                     <p className="font-medium">
                       {new Date(deadline.deadline_date).toLocaleDateString(
-                        i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                        isRTL ? 'ar-SA' : 'en-US',
                       )}
                     </p>
                     <p
@@ -740,8 +739,9 @@ function DeadlinesTab({
   )
 }
 
-function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[]; isRTL: boolean }) {
-  const { t, i18n } = useTranslation('legislation')
+function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[] }) {
+  const { isRTL } = useDirection()
+  const { t } = useTranslation('legislation')
 
   if (amendments.length === 0) {
     return (
@@ -767,13 +767,13 @@ function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[]; isR
                 <Badge>{t(`amendments.status.${amendment.status}`)}</Badge>
               </div>
               <h4 className="font-medium text-start">
-                {i18n.language === 'ar' && amendment.title_ar
+                {isRTL && amendment.title_ar
                   ? amendment.title_ar
                   : amendment.title_en}
               </h4>
               {amendment.description_en && (
                 <p className="text-sm text-muted-foreground text-start">
-                  {i18n.language === 'ar' && amendment.description_ar
+                  {isRTL && amendment.description_ar
                     ? amendment.description_ar
                     : amendment.description_en}
                 </p>
@@ -782,7 +782,7 @@ function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[]; isR
                 <p className="text-sm text-muted-foreground text-start">
                   {t('amendments.form.proposedDate')}:{' '}
                   {new Date(amendment.proposed_date).toLocaleDateString(
-                    i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                    isRTL ? 'ar-SA' : 'en-US',
                   )}
                 </p>
               )}
@@ -794,8 +794,9 @@ function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[]; isR
   )
 }
 
-function SponsorsTab({ sponsors }: { sponsors: LegislationSponsor[]; isRTL: boolean }) {
-  const { t, i18n } = useTranslation('legislation')
+function SponsorsTab({ sponsors }: { sponsors: LegislationSponsor[] }) {
+  const { isRTL } = useDirection()
+  const { t } = useTranslation('legislation')
 
   if (sponsors.length === 0) {
     return (
@@ -834,20 +835,20 @@ function SponsorsTab({ sponsors }: { sponsors: LegislationSponsor[]; isRTL: bool
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-start">
-                        {i18n.language === 'ar' && sponsor.name_ar
+                        {isRTL && sponsor.name_ar
                           ? sponsor.name_ar
                           : sponsor.name_en || t('common:unknown')}
                       </p>
                       {sponsor.title_en && (
                         <p className="text-sm text-muted-foreground text-start">
-                          {i18n.language === 'ar' && sponsor.title_ar
+                          {isRTL && sponsor.title_ar
                             ? sponsor.title_ar
                             : sponsor.title_en}
                         </p>
                       )}
                       {sponsor.affiliation_en && (
                         <p className="text-sm text-muted-foreground text-start">
-                          {i18n.language === 'ar' && sponsor.affiliation_ar
+                          {isRTL && sponsor.affiliation_ar
                             ? sponsor.affiliation_ar
                             : sponsor.affiliation_en}
                         </p>
@@ -866,12 +867,11 @@ function SponsorsTab({ sponsors }: { sponsors: LegislationSponsor[]; isRTL: bool
 
 function RelatedTab({
   relatedLegislations,
-  isRTL,
 }: {
   relatedLegislations: RelatedLegislationWithDetails[]
-  isRTL: boolean
 }) {
-  const { t, i18n } = useTranslation('legislation')
+  const { t } = useTranslation('legislation')
+  const { isRTL } = useDirection()
 
   if (relatedLegislations.length === 0) {
     return (
@@ -899,7 +899,7 @@ function RelatedTab({
                 <div className="flex items-center gap-3 hover:text-primary transition-colors">
                   <FileText className="h-4 w-4" />
                   <span className="font-medium text-start">
-                    {i18n.language === 'ar' && rel.related_legislation.title_ar
+                    {isRTL && rel.related_legislation.title_ar
                       ? rel.related_legislation.title_ar
                       : rel.related_legislation.title_en}
                   </span>
@@ -921,12 +921,11 @@ function RelatedTab({
 
 function HistoryTab({
   statusHistory,
-  isRTL,
 }: {
   statusHistory: LegislationStatusHistory[]
-  isRTL: boolean
 }) {
-  const { t, i18n } = useTranslation('legislation')
+  const { t } = useTranslation('legislation')
+  const { isRTL } = useDirection()
 
   if (statusHistory.length === 0) {
     return (
@@ -980,7 +979,7 @@ function HistoryTab({
                 </div>
                 <p className="text-sm text-muted-foreground text-start">
                   {new Date(entry.changed_at).toLocaleString(
-                    i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                    isRTL ? 'ar-SA' : 'en-US',
                   )}
                 </p>
                 {entry.change_reason && (

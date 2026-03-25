@@ -28,6 +28,7 @@ import type {
   ErrorActionType,
 } from '@/types/actionable-error.types'
 import { useState, useCallback } from 'react'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // ICON MAPPING
@@ -165,10 +166,9 @@ export function ActionableErrorMessage({
   compact = false,
   className,
 }: ActionableErrorMessageProps) {
-  const { t, i18n } = useTranslation('actionable-errors')
-  const isRTL = i18n.language === 'ar'
-
-  const [executingActions, setExecutingActions] = useState<Set<string>>(new Set())
+  const { t } = useTranslation('actionable-errors')
+  const { isRTL } = useDirection()
+const [executingActions, setExecutingActions] = useState<Set<string>>(new Set())
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set())
 
   const styles = severityStyles[error.severity]
@@ -222,7 +222,6 @@ export function ActionableErrorMessage({
         exit={{ opacity: 0, y: -8, height: 0 }}
         transition={{ duration: 0.2 }}
         className={cn('overflow-hidden', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="alert"
         aria-live="polite"
       >

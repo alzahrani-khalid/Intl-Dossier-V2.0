@@ -51,6 +51,7 @@ import type { ParticipantConflictInfo } from './ConflictResolution'
 import { RecurrencePatternEditor } from './RecurrencePatternEditor'
 import type { ConflictCheckRequest } from '@/types/calendar-conflict.types'
 import type { CreateRecurrenceRuleInput } from '@/types/recurrence.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface CalendarEntryFormProps {
   entryId?: string
@@ -102,10 +103,9 @@ export function CalendarEntryForm({
   onSuccess,
   onCancel,
 }: CalendarEntryFormProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_meeting')
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_meeting')
   const [titleEn, setTitleEn] = useState(initialData?.title_en || '')
   const [titleAr, setTitleAr] = useState(initialData?.title_ar || '')
   const [descriptionEn, setDescriptionEn] = useState(initialData?.description_en || '')
@@ -338,7 +338,7 @@ export function CalendarEntryForm({
   const isPending = createEvent.isPending || updateEvent.isPending || createRecurringEvent.isPending
 
   return (
-    <Card className="p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-6">
         <CalendarIcon className="h-5 w-5" />
         <h2 className="text-lg sm:text-xl font-semibold">

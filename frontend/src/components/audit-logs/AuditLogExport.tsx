@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useAuditLogExport } from '@/hooks/useAuditLogs'
 import type { AuditLogFilters, ExportFormat } from '@/types/audit-log.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // PROPS
@@ -34,10 +35,9 @@ interface AuditLogExportProps {
 // =============================================
 
 export function AuditLogExport({ filters, disabled = false, className }: AuditLogExportProps) {
-  const { t, i18n } = useTranslation('audit-logs')
-  const isRTL = i18n.language === 'ar'
-
-  const { exportLogs, isExporting } = useAuditLogExport()
+  const { t } = useTranslation('audit-logs')
+  const { isRTL } = useDirection()
+const { exportLogs, isExporting } = useAuditLogExport()
 
   const handleExport = async (format: ExportFormat) => {
     await exportLogs({ format, filters })

@@ -35,6 +35,7 @@ import {
 import { cn } from '@/lib/utils'
 import type { MeetingAttendee, AttendeeRole, AttendanceStatus } from '@/types/meeting-minutes.types'
 import { ATTENDANCE_STATUS_COLORS } from '@/types/meeting-minutes.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface AttendeesListProps {
   attendees: MeetingAttendee[]
@@ -75,10 +76,9 @@ export function AttendeesList({
   onUpdateAttendance,
   className,
 }: AttendeesListProps) {
-  const { t, i18n } = useTranslation('meeting-minutes')
-  const isRTL = i18n.language === 'ar'
-
-  // Sort attendees by role
+  const { t } = useTranslation('meeting-minutes')
+  const { isRTL } = useDirection()
+// Sort attendees by role
   const sortedAttendees = [...attendees].sort((a, b) => {
     const aIndex = roleOrder.indexOf(a.role)
     const bIndex = roleOrder.indexOf(b.role)
@@ -104,14 +104,14 @@ export function AttendeesList({
 
   if (attendees.length === 0 && !onAddAttendee) {
     return (
-      <div className={cn('text-center py-8', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('text-center py-8', className)}>
         <p className="text-sm text-muted-foreground">{t('attendees.noAttendees')}</p>
       </div>
     )
   }
 
   return (
-    <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-3', className)}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

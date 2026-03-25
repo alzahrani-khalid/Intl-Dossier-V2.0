@@ -39,6 +39,7 @@ import {
   getEntityTypeDisplayName,
   type SuggestedUser,
 } from '@/hooks/useTeamCollaboration'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface TeamInvitationDialogProps {
   /** Whether the dialog is open */
@@ -75,10 +76,9 @@ export function TeamInvitationDialog({
   suggestedUsers = EMPTY_SUGGESTED_USERS,
   inviterName = 'Team Member',
 }: TeamInvitationDialogProps) {
-  const { t, i18n } = useTranslation('empty-states')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('empty-states')
+  const { isRTL } = useDirection()
+// State
   const [email, setEmail] = useState('')
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('')
   const [customMessage, setCustomMessage] = useState('')
@@ -168,7 +168,6 @@ export function TeamInvitationDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className={cn('sm:max-w-lg max-h-[90vh] overflow-y-auto', 'px-4 sm:px-6')}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl font-semibold text-start">

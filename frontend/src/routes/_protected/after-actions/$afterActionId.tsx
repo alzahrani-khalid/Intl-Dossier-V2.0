@@ -25,6 +25,7 @@ import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/after-actions/$afterActionId')({
   component: AfterActionDetailPage,
@@ -32,9 +33,9 @@ export const Route = createFileRoute('/_protected/after-actions/$afterActionId')
 
 function AfterActionDetailPage() {
   const { afterActionId } = Route.useParams()
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
   const { user } = useAuth()
 
   const { data: afterAction, isLoading, error } = useAfterAction(afterActionId)

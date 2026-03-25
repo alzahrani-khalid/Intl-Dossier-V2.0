@@ -22,6 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useTestWorkflowRule } from '@/hooks/useWorkflowAutomation'
 import type { WorkflowRule, WorkflowTestResponse } from '@/types/workflow-automation.types'
 import { getActionTypeOption } from './workflow-config'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkflowTestDialogProps {
   rule: WorkflowRule | null
@@ -30,10 +31,9 @@ interface WorkflowTestDialogProps {
 }
 
 export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDialogProps) {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-
-  const [entityId, setEntityId] = useState('')
+  const { t } = useTranslation('workflow-automation')
+  const { isRTL } = useDirection()
+const [entityId, setEntityId] = useState('')
   const [dryRun, setDryRun] = useState(true)
   const [testResult, setTestResult] = useState<WorkflowTestResponse['data'] | null>(null)
 
@@ -68,7 +68,7 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t('test.title')}</DialogTitle>
           <DialogDescription>{ruleName}</DialogDescription>

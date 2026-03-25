@@ -4,15 +4,16 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft } from 'lucide-react'
 import { CalendarEntryForm } from '@/components/calendar/CalendarEntryForm'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/calendar/new')({
   component: NewCalendarEntryPage,
 })
 
 function NewCalendarEntryPage() {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const handleSuccess = () => {
     navigate({ to: '/calendar' })
@@ -25,7 +26,6 @@ function NewCalendarEntryPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-4xl"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Breadcrumb */}
       <div className="mb-6">

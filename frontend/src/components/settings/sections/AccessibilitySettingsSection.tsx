@@ -16,9 +16,7 @@ interface AccessibilitySettingsSectionProps {
  * Handles visual, motion, and navigation accessibility preferences
  */
 export function AccessibilitySettingsSection({ form }: AccessibilitySettingsSectionProps) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('settings')
   const highContrast = form.watch('high_contrast')
   const largeText = form.watch('large_text')
   const reduceMotion = form.watch('reduce_motion')
@@ -38,7 +36,7 @@ export function AccessibilitySettingsSection({ form }: AccessibilitySettingsSect
       description={t('accessibility.description')}
       icon={Accessibility}
     >
-      <div className="space-y-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-8">
         {/* Visual Settings */}
         <SettingsGroup title={t('accessibility.visual')}>
           <SettingsItem

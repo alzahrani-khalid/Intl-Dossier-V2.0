@@ -43,6 +43,7 @@ import { useCommentThread, useDeleteComment } from '@/hooks/useComments'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
 import type { CommentWithDetails, CommentVisibility } from '@/types/comment.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface CommentItemProps {
   comment: CommentWithDetails
@@ -70,9 +71,9 @@ export function CommentItem({
   onEdit,
   onDelete,
 }: CommentItemProps) {
-  const { t, i18n } = useTranslation('comments')
-  const isRTL = i18n.language === 'ar'
-  const locale = i18n.language === 'ar' ? ar : enUS
+  const { t } = useTranslation('comments')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   const [isReplying, setIsReplying] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -212,7 +213,6 @@ export function CommentItem({
   return (
     <div
       className={cn('py-3', currentDepth > 0 && 'ps-4 border-s-2 border-muted ms-4')}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="comment-item"
     >
       {/* Comment header */}

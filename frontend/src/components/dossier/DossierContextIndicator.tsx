@@ -24,6 +24,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import type { DossierType as IconDossierType } from '@/types/relationship.types'
 import type { DossierType as ContextDossierType } from '@/types/dossier-context.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Props
@@ -111,10 +112,9 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
   onClear,
   onChange,
 }: DossierContextIndicatorProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const { activeDossier, activeInheritance, hasDossierContext, reset, setActiveDossier } =
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { activeDossier, activeInheritance, hasDossierContext, reset, setActiveDossier } =
     useDossierContext()
 
   const [changePopoverOpen, setChangePopoverOpen] = useState(false)
@@ -191,7 +191,6 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
           sizeClasses.container,
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <FolderOpen className={cn(sizeClasses.icon, 'text-muted-foreground')} />
         <span className={cn(sizeClasses.text, 'text-muted-foreground')}>
@@ -243,7 +242,6 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
           sizeClasses.container,
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
         data-testid="dossier-context-indicator"
       >
         {/* Context icon */}

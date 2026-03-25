@@ -24,6 +24,7 @@ import type {
   NotificationData,
   NotificationCategory,
 } from '@/types/dashboard-widget.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface NotificationsWidgetProps {
   config: NotificationsWidgetConfig
@@ -186,9 +187,9 @@ export function NotificationsWidget({
   isLoading,
   onMarkAsRead,
 }: NotificationsWidgetProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? 'ar-SA' : 'en-US'
+  const { t } = useTranslation('dashboard-widgets')
+  const { isRTL } = useDirection()
+const locale = isRTL ? 'ar-SA' : 'en-US'
 
   const { settings } = config
 

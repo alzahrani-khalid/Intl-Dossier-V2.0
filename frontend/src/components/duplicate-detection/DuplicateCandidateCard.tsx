@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import type { DuplicateCandidateListItem, ConfidenceLevel } from '@/types/duplicate-detection.types'
 import { getConfidenceLevelColor, CONFIDENCE_LEVEL_LABELS } from '@/types/duplicate-detection.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DuplicateCandidateCardProps {
   candidate: DuplicateCandidateListItem
@@ -44,9 +45,9 @@ export function DuplicateCandidateCard({
   onViewDetails,
   isLoading = false,
 }: DuplicateCandidateCardProps) {
-  const { t, i18n } = useTranslation('duplicate-detection')
-  const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
+  const { t } = useTranslation('duplicate-detection')
+  const { isRTL } = useDirection()
+const dateLocale = isRTL ? ar : enUS
 
   const scorePercentage = Math.round(candidate.overall_score * 100)
 
@@ -77,7 +78,6 @@ export function DuplicateCandidateCard({
         'relative overflow-hidden transition-shadow hover:shadow-md',
         isLoading && 'opacity-50 pointer-events-none',
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Confidence indicator bar */}
       <div

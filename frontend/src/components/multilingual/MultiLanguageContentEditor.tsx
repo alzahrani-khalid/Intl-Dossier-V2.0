@@ -158,9 +158,7 @@ export function MultiLanguageContentEditor({
   readOnly = false,
   className,
 }: MultiLanguageContentEditorProps) {
-  const { t, i18n } = useTranslation('multilingual')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('multilingual')
   // State
   const [selectedLanguage, setSelectedLanguage] = useState<ContentLanguage>('en')
   const [localContent, setLocalContent] = useState<Record<string, Record<ContentLanguage, string>>>(
@@ -309,7 +307,7 @@ export function MultiLanguageContentEditor({
   }
 
   return (
-    <Card className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('w-full', className)}>
       <CardHeader className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -376,7 +374,7 @@ export function MultiLanguageContentEditor({
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+                  <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>{t('removeLanguage')}</AlertDialogTitle>
                       <AlertDialogDescription>

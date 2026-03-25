@@ -66,9 +66,7 @@ function ErrorFallback({
   componentType = 'general',
   className,
 }: ErrorFallbackProps) {
-  const { t, i18n } = useTranslation('dossier-context')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('dossier-context')
   // Get component-specific error message
   const getErrorTitle = () => {
     switch (componentType) {
@@ -113,7 +111,7 @@ function ErrorFallback({
   }
 
   return (
-    <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('w-full', className)}>
       <Alert variant="destructive">
         <AlertTriangle className="size-4" />
         <AlertTitle>{getErrorTitle()}</AlertTitle>

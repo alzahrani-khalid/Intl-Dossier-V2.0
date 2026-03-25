@@ -11,6 +11,7 @@ import { TrendingUp, TrendingDown, Minus, Target } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Progress } from '@/components/ui/progress'
 import type { KpiWidgetConfig, KpiData, TrendDirection } from '@/types/dashboard-widget.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface KpiWidgetProps {
   config: KpiWidgetConfig
@@ -141,10 +142,9 @@ function TargetProgress({
 }
 
 export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-
-  const {
+  const { t } = useTranslation('dashboard-widgets')
+  const { isRTL } = useDirection()
+const {
     settings: { metric, showTrend, showSparkline, comparisonPeriod },
   } = config
 

@@ -57,11 +57,9 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
   mode: _mode = 'create',
   onSuccess,
 }) => {
-  const { t, i18n } = useTranslation('intake')
+  const { t } = useTranslation('intake')
   const { t: tDossier } = useTranslation('dossier-context')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
   const [attachmentIds, setAttachmentIds] = useState<string[]>([])
   const [showSuccess, setShowSuccess] = useState(false)
   const [createdTicket, setCreatedTicket] = useState<{
@@ -143,7 +141,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     <>
       {/* Success Dialog */}
       <Dialog open={showSuccess && !!createdTicket} onOpenChange={setShowSuccess}>
-        <DialogContent className="sm:max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-success/10">
               <CheckCircle2 className="size-6 text-success" />
@@ -175,7 +173,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
       </Dialog>
 
       {/* Form */}
-      <div className="mx-auto max-w-4xl px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="mx-auto max-w-4xl px-4 py-6 sm:py-8">
         <Card>
           <CardHeader>
             <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t('title')}</h1>

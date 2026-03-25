@@ -48,6 +48,7 @@ import {
   useRemoveRecipient,
   type ScheduleRecipient,
 } from '@/hooks/useScheduledReports'
+import { useDirection } from '@/hooks/useDirection'
 
 const externalRecipientSchema = z.object({
   external_email: z.string().email('Invalid email address'),
@@ -64,9 +65,9 @@ interface RecipientsManagerProps {
 }
 
 export function RecipientsManager({ scheduleId }: RecipientsManagerProps) {
-  const { t, i18n } = useTranslation('scheduled-reports')
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation('scheduled-reports')
+  const { isRTL } = useDirection()
+const { toast } = useToast()
 
   const [addDialogOpen, setAddDialogOpen] = useState(false)
 
@@ -203,7 +204,7 @@ export function RecipientsManager({ scheduleId }: RecipientsManagerProps) {
 
       {/* Add External Recipient Dialog */}
       <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
-        <DialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('recipients.addExternal')}</DialogTitle>
           </DialogHeader>

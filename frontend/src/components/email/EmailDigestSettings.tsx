@@ -74,8 +74,7 @@ interface WatchlistSummary {
 }
 
 export function EmailDigestSettings() {
-  const { t, i18n } = useTranslation('email-digest')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('email-digest')
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
@@ -251,7 +250,6 @@ export function EmailDigestSettings() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="email-digest-settings"
     >
       {/* Page Header */}

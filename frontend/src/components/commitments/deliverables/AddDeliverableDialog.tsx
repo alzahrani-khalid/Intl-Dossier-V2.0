@@ -50,6 +50,7 @@ import type {
   CommitmentDeliverable,
   CommitmentDeliverableType,
 } from '@/types/commitment-deliverable.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Form validation schema
 const formSchema = z.object({
@@ -122,10 +123,9 @@ export function AddDeliverableDialog({
   defaultType,
   editDeliverable,
 }: AddDeliverableDialogProps) {
-  const { t, i18n } = useTranslation('commitment-deliverables')
-  const isRTL = i18n.language === 'ar'
-
-  const createMutation = useCreateDeliverable()
+  const { t } = useTranslation('commitment-deliverables')
+  const { isRTL } = useDirection()
+const createMutation = useCreateDeliverable()
   const updateMutation = useUpdateDeliverable()
 
   const isEditing = !!editDeliverable
@@ -215,7 +215,7 @@ export function AddDeliverableDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-start">
             {isEditing ? t('form.editDeliverable') : t('form.addDeliverable')}

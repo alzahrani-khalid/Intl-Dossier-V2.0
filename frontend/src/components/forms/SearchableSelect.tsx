@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -191,9 +192,9 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
     },
     ref,
   ) => {
-    const { t, i18n } = useTranslation(['smart-input', 'common'])
-    const isRTL = i18n.language === 'ar'
-    const uniqueId = useId()
+    const { t } = useTranslation(['smart-input', 'common'])
+    const { isRTL } = useDirection()
+const uniqueId = useId()
 
     // State
     const [open, setOpen] = useState(false)
@@ -398,7 +399,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
     const triggerClasses = variant === 'aceternity' ? aceternityTriggerClasses : triggerBaseClasses
 
     return (
-      <div className={cn('space-y-2', containerClassName)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('space-y-2', containerClassName)}>
         {/* Label */}
         {label && (
           <motion.label

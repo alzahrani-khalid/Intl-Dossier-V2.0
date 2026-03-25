@@ -33,8 +33,7 @@ interface EngagementTimelineProps {
 }
 
 export function EngagementTimeline({ dossierId, className }: EngagementTimelineProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
   const queryClient = useQueryClient()
   const [showFilters, setShowFilters] = useState(false)
 
@@ -111,7 +110,7 @@ export function EngagementTimeline({ dossierId, className }: EngagementTimelineP
   // Show milestone planner when no timeline events exist
   if (!isLoading && events.length === 0) {
     return (
-      <div className={className} dir={isRTL ? 'rtl' : 'ltr'} data-testid="event-timeline-section">
+      <div className={className} data-testid="event-timeline-section">
         <MilestonePlannerEmptyState
           dossierId={dossierId}
           dossierType="Engagement"

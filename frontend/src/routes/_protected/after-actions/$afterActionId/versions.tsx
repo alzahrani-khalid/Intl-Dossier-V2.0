@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton'
 import { VersionHistoryViewer } from '@/components/version-history-viewer/VersionHistoryViewer'
 import { ArrowLeft } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/after-actions/$afterActionId/versions')({
   component: VersionHistoryPage,
@@ -13,10 +14,9 @@ export const Route = createFileRoute('/_protected/after-actions/$afterActionId/v
 
 function VersionHistoryPage() {
   const { afterActionId } = Route.useParams()
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const { data: versions, isLoading, error } = useAfterActionVersions(afterActionId)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const { data: versions, isLoading, error } = useAfterActionVersions(afterActionId)
 
   if (isLoading) {
     return (

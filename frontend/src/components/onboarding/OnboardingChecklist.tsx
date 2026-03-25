@@ -46,6 +46,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useOnboardingChecklist } from '@/hooks/useOnboardingChecklist'
 import type { OnboardingChecklistItem, OnboardingChecklistProps } from '@/types/onboarding.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for checklist items
 const iconMap: Record<string, LucideIcon> = {
@@ -323,11 +324,10 @@ export function OnboardingChecklist({
   onDismiss,
   onComplete,
 }: OnboardingChecklistProps) {
-  const { t, i18n } = useTranslation('onboarding')
+  const { t } = useTranslation('onboarding')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  const {
+  const { isRTL } = useDirection()
+const {
     checklist,
     isLoading,
     completedCount,
@@ -398,7 +398,6 @@ export function OnboardingChecklist({
     return (
       <div
         className={cn('flex items-center justify-center p-4', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Button variant="outline" onClick={resumeOnboarding} className="min-h-11">
           <RotateCcw className={cn('w-4 h-4', isRTL ? 'ms-2' : 'me-2')} />
@@ -416,7 +415,6 @@ export function OnboardingChecklist({
           'flex flex-col items-center justify-center p-6 sm:p-8 text-center',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
           <Check className="w-8 h-8 sm:w-10 sm:h-10 text-green-600 dark:text-green-400" />
@@ -434,7 +432,7 @@ export function OnboardingChecklist({
   // Loading state
   if (isLoading) {
     return (
-      <div className={cn('animate-pulse space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('animate-pulse space-y-3', className)}>
         <div className="h-4 bg-muted rounded w-1/3" />
         <div className="h-2 bg-muted rounded w-full" />
         <div className="space-y-2 mt-4">
@@ -449,7 +447,7 @@ export function OnboardingChecklist({
   // Card variant wrapper
   if (variant === 'card') {
     return (
-      <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className={className}>
         <CardHeader className="pb-2 sm:pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base sm:text-lg">{t('checklist.title')}</CardTitle>
@@ -541,7 +539,7 @@ export function OnboardingChecklist({
   // Compact/inline variant
   if (variant === 'compact' || variant === 'inline') {
     return (
-      <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('space-y-2', className)}>
         {showProgress && (
           <div className="flex items-center gap-2 mb-3">
             <Progress value={completionPercentage} className="h-1.5 flex-1" />
@@ -573,7 +571,7 @@ export function OnboardingChecklist({
 
   // Full variant (default)
   return (
-    <div className={cn('space-y-4 sm:space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4 sm:space-y-6', className)}>
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>

@@ -14,15 +14,16 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
 import type { NavigationSection } from './navigation-config'
+import { useDirection } from '@/hooks/useDirection'
 
 interface NavMainProps {
   sections: NavigationSection[]
 }
 
 export function NavMain({ sections }: NavMainProps) {
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
-  const location = useLocation()
+  const { t } = useTranslation('common')
+  const { isRTL } = useDirection()
+const location = useLocation()
   const pathname = location.pathname
 
   return (

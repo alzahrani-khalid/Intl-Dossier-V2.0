@@ -29,9 +29,7 @@ const priorities: Priority[] = [
 ]
 
 export function PriorityFilter({ value = [], onChange, disabled = false }: PriorityFilterProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation()
   const handleToggle = (priorityValue: 'low' | 'medium' | 'high' | 'urgent') => {
     const newValue = value.includes(priorityValue)
       ? value.filter((v) => v !== priorityValue)
@@ -45,7 +43,6 @@ export function PriorityFilter({ value = [], onChange, disabled = false }: Prior
         <div
           key={priority.value}
           className="flex items-center gap-2 rounded-sm hover:bg-accent/50 transition-colors px-1 py-1"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <Checkbox
             id={`priority-${priority.value}`}

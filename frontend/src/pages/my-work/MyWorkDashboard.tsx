@@ -26,8 +26,7 @@ import { TeamWorkloadPanel } from './components/TeamWorkloadPanel'
 import { WorkItemFiltersBar } from './components/WorkItemFiltersBar'
 
 export default function MyWorkDashboard() {
-  const { t, i18n } = useTranslation('my-work')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('my-work')
   const navigate = useNavigate()
 
   // URL state
@@ -165,7 +164,6 @@ export default function MyWorkDashboard() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils'
 
 import type { SampleDataTemplate } from '@/types/sample-data.types'
 import { templateColors, templateIconColors } from '@/types/sample-data.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping
 const iconMap: Record<string, React.ElementType> = {
@@ -56,10 +57,9 @@ export function SampleDataTemplateSelector({
   isLoading = false,
   isPopulating = false,
 }: SampleDataTemplateSelectorProps) {
-  const { t, i18n } = useTranslation('sample-data')
-  const isRTL = i18n.language === 'ar'
-
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
+  const { t } = useTranslation('sample-data')
+  const { isRTL } = useDirection()
+const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
 
   // Use sheet on mobile, dialog on desktop
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
@@ -169,7 +169,7 @@ export function SampleDataTemplateSelector({
   if (isMobile) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" className="h-[85vh]" dir={isRTL ? 'rtl' : 'ltr'}>
+        <SheetContent side="bottom" className="h-[85vh]">
           <SheetHeader className="text-start">
             <SheetTitle>{t('templates.title')}</SheetTitle>
             <SheetDescription>{t('templates.description')}</SheetDescription>
@@ -184,7 +184,7 @@ export function SampleDataTemplateSelector({
   // Desktop: Dialog (modal)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader className={isRTL ? 'text-end' : 'text-start'}>
           <DialogTitle>{t('templates.title')}</DialogTitle>
           <DialogDescription>{t('templates.description')}</DialogDescription>

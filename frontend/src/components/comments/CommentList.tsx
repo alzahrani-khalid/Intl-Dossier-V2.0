@@ -46,9 +46,7 @@ export function CommentList({
   title,
   className,
 }: CommentListProps) {
-  const { t, i18n } = useTranslation('comments')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('comments')
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   const {
@@ -96,7 +94,6 @@ export function CommentList({
     return (
       <div
         className={cn('flex items-center justify-center py-8', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         <span className="ms-2 text-muted-foreground">{t('loading', 'Loading comments...')}</span>
@@ -121,7 +118,6 @@ export function CommentList({
   return (
     <div
       className={cn('space-y-4', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="comment-list"
     >
       {/* Header */}

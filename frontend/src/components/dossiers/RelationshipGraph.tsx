@@ -36,6 +36,7 @@ import {
   FloatingZoomIndicator,
   MobileTouchControls,
 } from '@/components/relationships/TouchOptimizedGraphControls'
+import { useDirection } from '@/hooks/useDirection'
 
 interface RelationshipGraphProps {
   dossierId: string
@@ -58,11 +59,10 @@ export function RelationshipGraph({
   dossierId,
   dossierName = 'Current Dossier',
 }: RelationshipGraphProps) {
-  const { t, i18n } = useTranslation('dossiers')
+  const { t } = useTranslation('dossiers')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  const [relationshipTypeFilter, setRelationshipTypeFilter] = useState<string | undefined>(
+  const { isRTL } = useDirection()
+const [relationshipTypeFilter, setRelationshipTypeFilter] = useState<string | undefined>(
     undefined,
   )
 
@@ -305,7 +305,7 @@ export function RelationshipGraph({
   }
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col gap-4 sm:gap-6">
       {/* Filter Controls - Theme aware */}
       <Card className="p-4 sm:p-6 bg-accent/10 border-accent/20">
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center">

@@ -21,9 +21,7 @@ interface WorkItemTabsProps {
 }
 
 export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsProps) {
-  const { t, i18n } = useTranslation('my-work')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('my-work')
   const tabs = [
     {
       id: 'all',
@@ -56,7 +54,6 @@ export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsPro
       value={activeTab}
       onValueChange={onTabChange}
       className="mb-4"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <TabsList className="w-full h-auto flex-wrap justify-start gap-1 bg-muted/50 p-1">
         {tabs.map((tab) => {

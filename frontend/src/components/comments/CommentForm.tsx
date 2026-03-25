@@ -63,9 +63,7 @@ export function CommentForm({
   maxLength = 10000,
   compact = false,
 }: CommentFormProps) {
-  const { t, i18n } = useTranslation('comments')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('comments')
   const [content, setContent] = useState(editingComment?.content || '')
   const [visibility, setVisibility] = useState<CommentVisibility>(
     editingComment?.visibility || defaultVisibility,
@@ -146,7 +144,6 @@ export function CommentForm({
   return (
     <div
       className={cn('space-y-3', compact && 'space-y-2')}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="comment-form"
     >
       {/* Textarea with @mention support */}

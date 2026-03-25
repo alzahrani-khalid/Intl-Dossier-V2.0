@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { X, AlertTriangle, Filter, Eye, EyeOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Generic filter chip configuration
@@ -179,10 +180,9 @@ export function ActiveFiltersBar({
   collapsed = false,
   onToggleCollapsed,
 }: ActiveFiltersBarProps) {
-  const { t, i18n } = useTranslation('active-filters')
-  const isRTL = i18n.language === 'ar'
-
-  // Don't render if no active filters
+  const { t } = useTranslation('active-filters')
+  const { isRTL } = useDirection()
+// Don't render if no active filters
   if (filters.length === 0) {
     return null
   }
@@ -196,7 +196,6 @@ export function ActiveFiltersBar({
   return (
     <div
       className={cn('w-full', sticky && 'sticky top-0 z-10', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Main filter bar container */}
       <div

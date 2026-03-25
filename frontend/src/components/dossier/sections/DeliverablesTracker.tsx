@@ -19,8 +19,6 @@ type DeliverableStatus = 'pending' | 'in_progress' | 'completed'
 
 export function DeliverablesTracker({ dossier }: DeliverablesTrackerProps) {
   const { i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
   // Extract deliverables (only forums have this in extension)
   // Use optional chaining since extension may be undefined for newly created dossiers
   const deliverables = dossier.type === 'forum' ? dossier.extension?.deliverables || [] : []
@@ -29,7 +27,6 @@ export function DeliverablesTracker({ dossier }: DeliverablesTrackerProps) {
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
           <Target className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
@@ -67,7 +64,7 @@ export function DeliverablesTracker({ dossier }: DeliverablesTrackerProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
       {/* Group deliverables by status (Kanban columns) */}
       {(['pending', 'in_progress', 'completed'] as DeliverableStatus[]).map((status) => {
         const config = statusConfig[status]

@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useTour } from './TourContext'
+import { useDirection } from '@/hooks/useDirection'
 
 // Storage keys
 const ONBOARDING_SEEN_KEY = 'intl-dossier-onboarding-seen'
@@ -98,10 +99,9 @@ export function OnboardingTourTrigger({
   replayButtonPosition = 'bottom-right',
   className,
 }: OnboardingTourTriggerProps) {
-  const { t, i18n } = useTranslation('guided-tours')
-  const isRTL = i18n.language === 'ar'
-
-  const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
+  const { t } = useTranslation('guided-tours')
+  const { isRTL } = useDirection()
+const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
 
   const [showWelcomePrompt, setShowWelcomePrompt] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
@@ -179,7 +179,6 @@ export function OnboardingTourTrigger({
                 'rounded-2xl shadow-2xl border border-border/50',
               )}
               onClick={(e) => e.stopPropagation()}
-              dir={isRTL ? 'rtl' : 'ltr'}
             >
               {/* Close button */}
               <button

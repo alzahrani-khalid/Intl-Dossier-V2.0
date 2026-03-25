@@ -32,6 +32,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useBenchmarkPreview } from '@/hooks/useOrganizationBenchmarks'
 import type { OrganizationBenchmark, BenchmarkCategory } from '@/types/organization-benchmark.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface BenchmarkPreviewProps {
   /** Callback when user clicks to customize dashboard */
@@ -141,7 +142,6 @@ function BenchmarkStatCard({
         'transition-all duration-200 hover:shadow-md hover:border-primary/20',
         compact ? 'p-2 sm:p-3' : 'p-3 sm:p-4',
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div
         className={cn(
@@ -223,10 +223,9 @@ export function BenchmarkPreview({
   compact = false,
   className,
 }: BenchmarkPreviewProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-
-  const { data, isLoading, dismissPreview } = useBenchmarkPreview()
+  const { t } = useTranslation('dashboard-widgets')
+  const { isRTL } = useDirection()
+const { data, isLoading, dismissPreview } = useBenchmarkPreview()
   const [isVisible, setIsVisible] = useState(true)
 
   // Listen for dismiss events
@@ -267,7 +266,6 @@ export function BenchmarkPreview({
         'bg-gradient-to-br from-background via-background to-primary/5',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Decorative background elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">

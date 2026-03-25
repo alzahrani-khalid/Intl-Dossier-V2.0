@@ -27,9 +27,7 @@ export function TeamWorkloadPanel({
   onMemberClick,
   selectedMemberId,
 }: TeamWorkloadPanelProps) {
-  const { t, i18n } = useTranslation('my-work')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('my-work')
   if (isLoading) {
     return (
       <Card className="mb-4 sm:mb-6">
@@ -64,7 +62,7 @@ export function TeamWorkloadPanel({
   }
 
   return (
-    <Card className="mb-4 sm:mb-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="mb-4 sm:mb-6">
       <CardHeader className="pb-2 px-4 sm:px-6">
         <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-start">
           <Users className="h-5 w-5" />

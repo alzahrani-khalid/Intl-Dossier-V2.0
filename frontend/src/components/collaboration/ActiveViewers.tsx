@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { DossierPresenceUser, PresenceStatus } from '@/hooks/useDossierPresence'
 import { Eye, Pencil, Moon, Users } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ActiveViewersProps {
   /** List of users viewing/editing the dossier */
@@ -144,7 +145,6 @@ const UserAvatar = memo(function UserAvatar({
         <TooltipContent
           side={isRTL ? 'right' : 'left'}
           className="max-w-xs"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <div className="flex items-center gap-2">
             <StatusIcon className="h-4 w-4 text-muted-foreground" />
@@ -199,7 +199,7 @@ const OverflowIndicator = memo(function OverflowIndicator({
             </span>
           </div>
         </TooltipTrigger>
-        <TooltipContent side={isRTL ? 'right' : 'left'} dir={isRTL ? 'rtl' : 'ltr'}>
+        <TooltipContent side={isRTL ? 'right' : 'left'}>
           <div className="space-y-1">
             <p className="font-medium text-sm">{t('moreViewers', { count })}</p>
             <ul className="text-xs text-muted-foreground">
@@ -231,9 +231,9 @@ export function ActiveViewers({
   showStatus = true,
   className,
 }: ActiveViewersProps) {
-  const { t, i18n } = useTranslation('collaboration')
-  const isRTL = i18n.language === 'ar'
-  const sizeClasses = SIZE_CLASSES[size]
+  const { t } = useTranslation('collaboration')
+  const { isRTL } = useDirection()
+const sizeClasses = SIZE_CLASSES[size]
 
   // Filter out current user and sort by status (editing first, then viewing, then idle)
   const otherViewers = viewers
@@ -259,7 +259,6 @@ export function ActiveViewers({
   return (
     <div
       className={cn('flex items-center gap-2', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="group"
       aria-label={t('activeViewersLabel', { count: otherViewers.length })}
     >
@@ -318,8 +317,8 @@ export function ActiveViewersCompact({
   currentUserId,
   className,
 }: Pick<ActiveViewersProps, 'viewers' | 'currentUserId' | 'className'>) {
-  const { t, i18n } = useTranslation('collaboration')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('collaboration')
+  const { isRTL } = useDirection()
 
   const otherViewers = viewers.filter((v) => v.user_id !== currentUserId)
   const editingCount = otherViewers.filter((v) => v.status === 'editing').length
@@ -339,7 +338,6 @@ export function ActiveViewersCompact({
                 'bg-green-100/50 text-green-700 dark:bg-green-900/20 dark:text-green-400',
               className,
             )}
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             {editingCount > 0 ? (
               <Pencil className="h-3.5 w-3.5" />
@@ -349,7 +347,7 @@ export function ActiveViewersCompact({
             <span>{otherViewers.length}</span>
           </div>
         </TooltipTrigger>
-        <TooltipContent side={isRTL ? 'right' : 'left'} dir={isRTL ? 'rtl' : 'ltr'}>
+        <TooltipContent side={isRTL ? 'right' : 'left'}>
           <div className="space-y-1">
             <p className="font-medium text-sm">
               {t('viewersSummary', {

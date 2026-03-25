@@ -21,6 +21,7 @@ import type {
   SuggestionType,
 } from '@/types/enhanced-search.types'
 import { isSearchSuggestion } from '@/types/enhanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // Types
@@ -341,10 +342,9 @@ const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInputProps>
     },
     ref,
   ) {
-    const { t, i18n } = useTranslation('enhanced-search')
-    const isRTL = i18n.language === 'ar'
-
-    const {
+    const { t } = useTranslation('enhanced-search')
+    const { isRTL } = useDirection()
+const {
       query,
       isLoading,
       showSuggestions,
@@ -376,7 +376,7 @@ const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInputProps>
     )
 
     return (
-      <div ref={ref} className={cn('relative w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div ref={ref} className={cn('relative w-full', className)}>
         <form onSubmit={handleSubmit} className="relative">
           {/* Search Icon */}
           <Search

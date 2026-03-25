@@ -47,6 +47,7 @@ import { IntakeRoleEmptyState } from '../components/empty-states'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { useLastSyncInfo } from '../hooks/useLastSyncInfo'
 import { PullToRefreshIndicator, SyncStatusBar } from '../components/ui/pull-to-refresh-indicator'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Valid ticket_status enum values from database
@@ -108,9 +109,9 @@ interface QueueFilters {
 }
 
 export function IntakeQueuePage() {
-  const { t, i18n } = useTranslation(['common', 'intake'])
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation(['common', 'intake'])
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const [selectedTickets, setSelectedTickets] = useState<string[]>([])
   const [classifyDialogOpen, setClassifyDialogOpen] = useState(false)
@@ -266,7 +267,7 @@ export function IntakeQueuePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="container mx-auto p-4 sm:p-6 lg:px-8">
@@ -570,7 +571,6 @@ export function IntakeQueuePage() {
       <Dialog open={classifyDialogOpen} onOpenChange={setClassifyDialogOpen}>
         <DialogContent
           className="max-h-[90vh] max-w-3xl overflow-y-auto"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <DialogHeader>
             <DialogTitle className="text-xl sm:text-2xl">

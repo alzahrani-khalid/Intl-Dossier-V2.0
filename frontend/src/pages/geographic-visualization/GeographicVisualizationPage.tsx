@@ -34,11 +34,12 @@ import {
   REGION_LABELS,
 } from '@/types/geographic-visualization.types'
 import { Globe, Map, List, TrendingUp, Activity, Calendar, ChevronRight } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export function GeographicVisualizationPage() {
-  const { t, i18n } = useTranslation('geographic-visualization')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('geographic-visualization')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState<'map' | 'list'>('map')
 
@@ -63,7 +64,6 @@ export function GeographicVisualizationPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

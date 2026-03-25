@@ -87,9 +87,7 @@ export function StakeholderInteractionDialog({
   stakeholderId,
   isLoading = false,
 }: StakeholderInteractionDialogProps) {
-  const { t, i18n } = useTranslation('stakeholder-interactions')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('stakeholder-interactions')
   // Form state
   const [interactionType, setInteractionType] = useState<StakeholderInteractionType>('meeting')
   const [titleEn, setTitleEn] = useState('')
@@ -192,7 +190,6 @@ export function StakeholderInteractionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="sm:max-w-2xl max-h-[90vh] overflow-y-auto"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="text-start">{t('dialog.create_title')}</DialogTitle>

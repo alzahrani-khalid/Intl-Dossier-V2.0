@@ -48,6 +48,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -299,10 +300,9 @@ export function ContextAwareFAB({
   onSpeedDialChange,
   className,
 }: ContextAwareFABProps) {
-  const { t, i18n } = useTranslation('fab')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('fab')
+  const { isRTL } = useDirection()
+// State
   const [isScrollingDown, setIsScrollingDown] = React.useState(false)
   const [isSpeedDialOpen, setIsSpeedDialOpen] = React.useState(false)
   const [isLongPressing, setIsLongPressing] = React.useState(false)

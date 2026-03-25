@@ -4,10 +4,9 @@
  *
  * Displays a metric with its value, change indicator, and optional trend
  */
-
-import { useTranslation } from 'react-i18next'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SummaryCardProps {
   title: string
@@ -28,10 +27,8 @@ export function SummaryCard({
   format = 'number',
   className,
 }: SummaryCardProps) {
-  const { i18n } = useTranslation('analytics')
-  const isRTL = i18n.language === 'ar'
-
-  const formatValue = (val: number | string) => {
+  const { isRTL } = useDirection()
+const formatValue = (val: number | string) => {
     if (typeof val === 'string') return val
     switch (format) {
       case 'percentage':
@@ -39,7 +36,7 @@ export function SummaryCard({
       case 'score':
         return val.toFixed(0)
       default:
-        return val.toLocaleString(i18n.language === 'ar' ? 'ar-SA' : 'en-US')
+        return val.toLocaleString(isRTL ? 'ar-SA' : 'en-US')
     }
   }
 
@@ -60,7 +57,6 @@ export function SummaryCard({
   return (
     <div
       className={cn('rounded-lg border bg-card p-4 sm:p-6', 'flex flex-col gap-2', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex items-center justify-between">
         <span className="text-sm text-muted-foreground">{title}</span>

@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Checkbox } from '@/components/ui/checkbox'
 import type { TaskListWidgetConfig } from '@/types/dashboard-widget.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Task item type (simplified from UnifiedWorkItem)
 interface TaskItem {
@@ -236,9 +237,9 @@ function GroupHeader({ label, count }: { label: string; count: number }) {
 }
 
 export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskListWidgetProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? 'ar-SA' : 'en-US'
+  const { t } = useTranslation('dashboard-widgets')
+  const { isRTL } = useDirection()
+const locale = isRTL ? 'ar-SA' : 'en-US'
 
   const { settings } = config
 

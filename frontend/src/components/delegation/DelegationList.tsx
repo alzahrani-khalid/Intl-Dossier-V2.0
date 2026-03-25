@@ -26,9 +26,7 @@ export function DelegationList({
   isLoading = false,
   onRefresh,
 }: DelegationListProps) {
-  const { t, i18n } = useTranslation('delegation')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('delegation')
   const [revokeDialogOpen, setRevokeDialogOpen] = useState(false)
   const [selectedDelegation, setSelectedDelegation] = useState<Delegation | null>(null)
 
@@ -77,7 +75,6 @@ export function DelegationList({
     return (
       <div
         className="flex flex-col items-center justify-center py-12 px-4 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="rounded-full bg-muted p-4 mb-4">
           <EmptyIcon className="h-8 w-8 text-muted-foreground" />

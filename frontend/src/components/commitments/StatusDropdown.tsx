@@ -36,6 +36,7 @@ import {
   isValidStatusTransition,
 } from '@/types/commitment.types'
 import { useUpdateCommitmentStatus } from '@/hooks/useCommitments'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface StatusDropdownProps {
   commitmentId: string
@@ -59,10 +60,9 @@ export function StatusDropdown({
   disabled = false,
   compact = false,
 }: StatusDropdownProps) {
-  const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-
-  const updateStatusMutation = useUpdateCommitmentStatus()
+  const { t } = useTranslation('commitments')
+  const { isRTL } = useDirection()
+const updateStatusMutation = useUpdateCommitmentStatus()
 
   // Early return with loading state if currentStatus is not yet available or invalid
   if (!currentStatus || !STATUS_COLORS[currentStatus]) {

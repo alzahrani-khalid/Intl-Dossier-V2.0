@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Progress } from '@/components/ui/progress'
 import type { UserProductivityMetrics } from '@/types/unified-work.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ProductivityMetricsProps {
   metrics?: UserProductivityMetrics
@@ -17,10 +18,9 @@ interface ProductivityMetricsProps {
 }
 
 export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsProps) {
-  const { t, i18n } = useTranslation('my-work')
-  const isRTL = i18n.language === 'ar'
-
-  if (isLoading) {
+  const { t } = useTranslation('my-work')
+  const { isRTL } = useDirection()
+if (isLoading) {
     return (
       <Card className="mb-3 sm:mb-4">
         <CardContent className="px-3 py-2 sm:px-4">
@@ -89,7 +89,7 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
   ]
 
   return (
-    <Card className="mb-3 sm:mb-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="mb-3 sm:mb-4">
       <CardContent className="px-3 py-2 sm:px-4">
         <p className="text-xs font-medium text-muted-foreground text-start mb-2">
           {t('metrics.title', 'Your Productivity')}

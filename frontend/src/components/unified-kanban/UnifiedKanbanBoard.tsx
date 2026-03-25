@@ -34,6 +34,7 @@ import type {
   WorkSource,
   KanbanColumn as ColumnDefinition,
 } from '@/types/work-item.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface BoardProps extends UnifiedKanbanBoardProps {
   items?: WorkItem[]
@@ -65,9 +66,9 @@ export function UnifiedKanbanBoard({
   onRefresh,
   isRefreshing = false,
 }: BoardProps) {
-  const { t, i18n } = useTranslation('unified-kanban')
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation('unified-kanban')
+  const { isRTL } = useDirection()
+const { toast } = useToast()
 
   // State
   const [columnMode, setColumnMode] = useState<KanbanColumnMode>(initialColumnMode)
@@ -214,7 +215,7 @@ export function UnifiedKanbanBoard({
   }
 
   return (
-    <div className={cn('flex flex-col h-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-col h-full', className)}>
       {/* Header */}
       <UnifiedKanbanHeader
         columnMode={columnMode}

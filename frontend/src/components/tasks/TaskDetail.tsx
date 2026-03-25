@@ -39,6 +39,7 @@ import { LinkedItemsList } from './LinkedItemsList'
 import { useUpdateTask } from '@/hooks/useTasks'
 import { DossierLinksWidget } from '@/components/dossier'
 import { useTaskContributors, useRemoveContributor } from '@/hooks/useContributors'
+import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -59,10 +60,9 @@ export function TaskDetail({
   showActions = true,
   isTaskOwner = false,
 }: TaskDetailProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  // Mutation hook for updating work items
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+// Mutation hook for updating work items
   const updateTask = useUpdateTask()
 
   // Contributors management
@@ -94,7 +94,7 @@ export function TaskDetail({
   const isCompleted = task.status === 'completed' || task.status === 'cancelled'
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Page Header with Task Title */}
       <div>
         <div className="flex flex-wrap items-start justify-between gap-4 mb-4">

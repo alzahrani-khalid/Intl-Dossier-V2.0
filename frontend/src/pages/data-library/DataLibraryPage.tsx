@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DataLibraryItem {
   id: string
@@ -37,15 +38,14 @@ interface UploadProgress {
 }
 
 export function DataLibraryPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState<string>('all')
   const [dragActive, setDragActive] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<Record<string, UploadProgress>>({})
   const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const isRTL = i18n.language === 'ar'
-
-  const {
+  const { isRTL } = useDirection()
+const {
     data: items,
     isLoading,
     refetch,

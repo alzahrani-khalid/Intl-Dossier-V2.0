@@ -37,6 +37,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useDossierSearch, type DossierSearchResult } from '@/hooks/useDossierSearch'
 import type { DossierType as BaseDossierType } from '@/types/dossier'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Type Icons
@@ -132,10 +133,9 @@ export function DossierSelector({
   hint,
   className,
 }: DossierSelectorProps) {
-  const { t, i18n } = useTranslation('dossier-context')
-  const isRTL = i18n.language === 'ar'
-
-  const [open, setOpen] = useState(false)
+  const { t } = useTranslation('dossier-context')
+  const { isRTL } = useDirection()
+const [open, setOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [internalSelectedDossiers, setInternalSelectedDossiers] = useState<SelectedDossier[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
@@ -263,7 +263,7 @@ export function DossierSelector({
   }
 
   return (
-    <div className={cn('w-full space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('w-full space-y-2', className)}>
       {/* Label */}
       {label && (
         <Label className="text-sm font-medium">
@@ -344,7 +344,6 @@ export function DossierSelector({
         <PopoverContent
           className="w-[var(--radix-popover-trigger-width)] p-0"
           align="start"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <Command shouldFilter={false}>
             <div className="flex items-center border-b px-3">

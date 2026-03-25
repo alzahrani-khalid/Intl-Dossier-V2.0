@@ -29,6 +29,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/hooks/useAuth'
+import { useDirection } from '@/hooks/useDirection'
 
 export type IntakeUserRole = 'requester' | 'reviewer' | 'assignee' | 'viewer'
 
@@ -105,9 +106,9 @@ export function IntakeRoleEmptyState({
   className,
   testId = 'intake-role-empty-state',
 }: IntakeRoleEmptyStateProps) {
-  const { t, i18n } = useTranslation(['empty-states', 'intake', 'common'])
-  const isRTL = i18n.language === 'ar'
-  const { user } = useAuth()
+  const { t } = useTranslation(['empty-states', 'intake', 'common'])
+  const { isRTL } = useDirection()
+const { user } = useAuth()
 
   // Determine the user's role
   const detectedRole = determineIntakeRole(user?.role)
@@ -145,7 +146,6 @@ export function IntakeRoleEmptyState({
         'flex flex-col items-center justify-center py-8 px-4 sm:py-12 sm:px-6 lg:py-16',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid={testId}
     >
       {/* Icon and Badge */}

@@ -39,6 +39,7 @@ import {
   INFLUENCE_TIER_LABELS,
   STAKEHOLDER_ROLE_LABELS,
 } from '@/types/stakeholder-influence.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -82,10 +83,9 @@ const TYPE_ICONS: Record<string, typeof User> = {
 // ============================================================================
 
 function InfluenceNode({ data }: { data: Record<string, unknown> }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const isCenter = data.isCenter as boolean
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const isCenter = data.isCenter as boolean
   const tier = data.tier as InfluenceTier
   const role = data.role as StakeholderRole
   const type = data.type as string
@@ -129,7 +129,6 @@ function InfluenceNode({ data }: { data: Record<string, unknown> }) {
       {/* Tooltip with name */}
       <div
         className="absolute -bottom-8 start-1/2 -translate-x-1/2 px-2 py-1 bg-background border rounded shadow-sm whitespace-nowrap text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {name}
         <span className="ms-1 text-muted-foreground">({influenceScore})</span>
@@ -143,8 +142,8 @@ function InfluenceNode({ data }: { data: Record<string, unknown> }) {
 // ============================================================================
 
 function DetailedInfluenceNode({ data }: { data: Record<string, unknown> }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   const tier = data.tier as InfluenceTier
   const role = data.role as StakeholderRole
@@ -206,8 +205,8 @@ export function InfluenceNetworkGraph({
   showStats = true,
   className = '',
 }: InfluenceNetworkGraphProps) {
-  const { t, i18n } = useTranslation('stakeholder-influence')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('stakeholder-influence')
+  const { isRTL } = useDirection()
 
   const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
@@ -355,7 +354,6 @@ export function InfluenceNetworkGraph({
     <div
       className={`rounded-lg border overflow-hidden bg-background ${className}`}
       style={{ height: typeof height === 'number' ? `${height}px` : height }}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReactFlow
         nodes={nodes}

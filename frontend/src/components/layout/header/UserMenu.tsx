@@ -13,11 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useDirection } from '@/hooks/useDirection'
 
 export function UserMenu() {
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
-  const { user, logout } = useAuth()
+  const { t } = useTranslation('common')
+  const { isRTL } = useDirection()
+const { user, logout } = useAuth()
 
   if (!user) return null
 

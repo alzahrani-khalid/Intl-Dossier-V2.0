@@ -9,15 +9,16 @@ import { useTranslation } from 'react-i18next'
 import { LegislationDetail, LegislationForm } from '@/components/legislation'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { useLegislation } from '@/hooks/useLegislation'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/legislation/$id')({
   component: LegislationDetailPage,
 })
 
 function LegislationDetailPage() {
-  const { t, i18n } = useTranslation('legislation')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('legislation')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   const { id } = Route.useParams()
 
   const [isEditOpen, setIsEditOpen] = useState(false)

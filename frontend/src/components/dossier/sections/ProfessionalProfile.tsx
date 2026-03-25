@@ -11,15 +11,16 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import type { PersonDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ProfessionalProfileProps {
   dossier: PersonDossier
 }
 
 export function ProfessionalProfile({ dossier }: ProfessionalProfileProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const { extension } = dossier
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { extension } = dossier
 
   // Get display values based on language
   const name = isRTL ? dossier.name_ar : dossier.name_en
@@ -52,7 +53,7 @@ export function ProfessionalProfile({ dossier }: ProfessionalProfileProps) {
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="p-0 space-y-4 sm:space-y-6">
         {/* Profile Header */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
           <Avatar className="h-20 w-20 sm:h-24 sm:w-24">

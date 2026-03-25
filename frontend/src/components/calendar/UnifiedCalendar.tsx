@@ -25,6 +25,7 @@ import {
 } from 'date-fns'
 import { CalendarEmptyWizard, type EventTemplate } from './CalendarEmptyWizard'
 import { CalendarEntryForm } from './CalendarEntryForm'
+import { useDirection } from '@/hooks/useDirection'
 
 interface UnifiedCalendarProps {
   linkedItemType?: string
@@ -47,10 +48,9 @@ export function UnifiedCalendar({
   isLoading: propIsLoading,
   viewMode: _viewMode = 'month',
 }: UnifiedCalendarProps) {
-  const { t, i18n } = useTranslation('calendar')
-  const isRTL = i18n.language === 'ar'
-
-  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const { t } = useTranslation('calendar')
+  const { isRTL } = useDirection()
+const [currentMonth, setCurrentMonth] = useState(new Date())
   const [entryTypeFilter, setEntryTypeFilter] = useState<string | undefined>(undefined)
   const [showWizard, setShowWizard] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
@@ -153,7 +153,7 @@ export function UnifiedCalendar({
   // Show create form if triggered from wizard
   if (showCreateForm) {
     return (
-      <div className="flex flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex flex-col gap-4">
         <CalendarEntryForm
           initialData={
             selectedTemplate
@@ -176,7 +176,7 @@ export function UnifiedCalendar({
   // Show wizard if calendar is empty and user hasn't dismissed it
   if (isCalendarEmpty && showWizard) {
     return (
-      <div className="flex flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex flex-col gap-4">
         <CalendarEmptyWizard
           onCreateEvent={handleCreateFromTemplate}
           onDismiss={handleWizardDismiss}
@@ -186,7 +186,7 @@ export function UnifiedCalendar({
   }
 
   return (
-    <div className="flex flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col gap-4">
       {/* Header & Controls */}
       <Card className="p-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

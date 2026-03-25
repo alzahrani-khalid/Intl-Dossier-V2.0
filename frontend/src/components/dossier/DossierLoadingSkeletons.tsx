@@ -6,20 +6,17 @@
  */
 
 import { Skeleton, SkeletonCard, SkeletonText } from '@/components/ui/skeleton'
-import { useTranslation } from 'react-i18next'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Country Dossier Skeleton
  * Layout: 2-column asymmetric grid (lg:grid-cols-[2fr_1fr])
  */
 export function CountryDossierSkeleton() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
+const { isRTL } = useDirection()
+return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -74,13 +71,11 @@ export function CountryDossierSkeleton() {
  * Layout: 1-column vertical (grid-cols-1)
  */
 function EngagementDossierSkeleton() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -125,13 +120,11 @@ function EngagementDossierSkeleton() {
  * Layout: Sidebar + main content (md:grid-cols-[300px_1fr])
  */
 function PersonDossierSkeleton() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -184,13 +177,11 @@ function PersonDossierSkeleton() {
  * Layout: 3-column grid (lg:grid-cols-3)
  */
 function OrganizationDossierSkeleton() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -234,13 +225,11 @@ function OrganizationDossierSkeleton() {
  * Layout: Bento grid (md:grid-cols-2 lg:grid-cols-3)
  */
 export function ForumDossierSkeleton() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -295,13 +284,11 @@ function WorkingGroupDossierSkeleton() {
  * Layout: BentoGrid with 6 type cards
  */
 function DossiersHubSkeleton() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8">

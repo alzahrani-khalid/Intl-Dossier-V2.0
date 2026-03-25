@@ -31,6 +31,7 @@ import type {
   Path,
   PathValue,
 } from 'react-hook-form'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -226,7 +227,6 @@ function ArrayFieldItemRow({
                 'h-11 px-4 text-base sm:h-10',
                 displayError && 'border-red-500 focus-visible:ring-red-500',
               )}
-              dir={isRTL ? 'rtl' : 'ltr'}
             />
             {displayError && (
               <div
@@ -305,10 +305,9 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
   className,
   disabled = false,
 }: ArrayFieldManagerProps<TFormValues>) {
-  const { t, i18n } = useTranslation(['common', 'validation'])
-  const isRTL = i18n.language === 'ar'
-
-  // State for items
+  const { t } = useTranslation(['common', 'validation'])
+  const { isRTL } = useDirection()
+// State for items
   const [items, setItems] = useState<ArrayFieldItem[]>(() => {
     const initialValues = externalValues || (watch?.(name) as string[]) || ['']
     return initialValues.map((value) => ({
@@ -394,7 +393,7 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
   const canRemove = items.length > minItems
 
   return (
-    <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-3', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 sm:text-base">

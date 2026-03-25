@@ -19,6 +19,7 @@ import {
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { PositionCard } from './PositionCard'
 import type { Position } from '@/types/position'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface PositionListProps {
   positions: Position[]
@@ -114,9 +115,8 @@ export const PositionList: React.FC<PositionListProps> = ({
     overscan: 5, // Render 5 extra items above/below viewport
   })
 
-  const isRTL = i18n.language === 'ar'
-
-  if (isLoading && positions.length === 0) {
+  const { isRTL } = useDirection()
+if (isLoading && positions.length === 0) {
     return layout === 'grid' ? (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Skeleton loading cards - Grid */}

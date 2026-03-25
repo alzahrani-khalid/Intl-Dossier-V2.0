@@ -10,6 +10,7 @@ import { Calendar, Clock, Hash, CheckCircle2, Circle } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { PersonDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TermHistoryProps {
   /** PersonDossier with person_subtype === 'elected_official' */
@@ -17,9 +18,9 @@ interface TermHistoryProps {
 }
 
 export function TermHistory({ dossier }: TermHistoryProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const { extension } = dossier
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { extension } = dossier
 
   // Format date for display
   const formatDate = (dateString?: string) => {
@@ -83,7 +84,7 @@ export function TermHistory({ dossier }: TermHistoryProps) {
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="p-0 space-y-4">
         {/* Current Term */}
         <div className="p-4 rounded-lg bg-muted/50 space-y-3">
           <div className="flex items-center justify-between">

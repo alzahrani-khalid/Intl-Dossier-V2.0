@@ -22,9 +22,7 @@ interface NotificationsSettingsSectionProps {
  * Handles all notification preferences
  */
 export function NotificationsSettingsSection({ form }: NotificationsSettingsSectionProps) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('settings')
   const notificationSettings = [
     {
       key: 'notifications_push',
@@ -82,7 +80,7 @@ export function NotificationsSettingsSection({ form }: NotificationsSettingsSect
       description={t('notifications.description')}
       icon={Bell}
     >
-      <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-3">
         {notificationSettings.map((setting) => {
           const Icon = setting.icon
           const value = form.watch(setting.key)

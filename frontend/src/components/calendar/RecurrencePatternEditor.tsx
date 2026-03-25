@@ -38,6 +38,7 @@ import {
   MONTH_LABELS,
   WEEK_POSITION_LABELS,
 } from '@/types/recurrence.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface RecurrencePatternEditorProps {
   /** Initial recurrence pattern (for editing) */
@@ -178,9 +179,9 @@ export function RecurrencePatternEditor({
   disabled = false,
   className = '',
 }: RecurrencePatternEditorProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const lang = isRTL ? 'ar' : 'en'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const lang = isRTL ? 'ar' : 'en'
 
   // State for recurrence enabled
   const [isEnabled, setIsEnabled] = useState(!!initialPattern)
@@ -324,7 +325,7 @@ export function RecurrencePatternEditor({
   const monthLabels = MONTH_LABELS[lang]
 
   return (
-    <Card className={`p-4 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={`p-4 ${className}`}>
       {/* Header with toggle */}
       <div className="flex items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-2">

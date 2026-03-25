@@ -35,6 +35,7 @@ import type {
 } from '@/types/engagement-recommendation.types'
 import { RECOMMENDATION_TYPE_LABELS, URGENCY_LABELS } from '@/types/engagement-recommendation.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -131,10 +132,9 @@ function RecommendationsList({
   onViewDetails,
   className,
 }: RecommendationsListProps) {
-  const { t, i18n } = useTranslation('engagement-recommendations')
-  const isRTL = i18n.language === 'ar'
-
-  // Filter state
+  const { t } = useTranslation('engagement-recommendations')
+  const { isRTL } = useDirection()
+// Filter state
   const [selectedTypes, setSelectedTypes] = useState<RecommendationType[]>([])
   const [selectedUrgencies, setSelectedUrgencies] = useState<RecommendationUrgency[]>([])
 
@@ -197,7 +197,7 @@ function RecommendationsList({
   const hasActiveFilters = selectedTypes.length > 0 || selectedUrgencies.length > 0
 
   return (
-    <div className={cn('flex flex-col gap-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-col gap-4', className)}>
       {/* Header with Filters */}
       {(showFilters || showGenerateButton) && (
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

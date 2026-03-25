@@ -41,16 +41,16 @@ import {
 } from '@/components/audit-logs'
 import { useAuditLogs } from '@/hooks/useAuditLogs'
 import type { AuditLogEntry } from '@/types/audit-log.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // COMPONENT
 // =============================================
 
 export function AuditLogsPage() {
-  const { t, i18n } = useTranslation('audit-logs')
-  const isRTL = i18n.language === 'ar'
-
-  const [showStatistics, setShowStatistics] = useState(false)
+  const { t } = useTranslation('audit-logs')
+  const { isRTL } = useDirection()
+const [showStatistics, setShowStatistics] = useState(false)
   const [_selectedLog, setSelectedLog] = useState<AuditLogEntry | null>(null)
 
   const {
@@ -91,7 +91,6 @@ export function AuditLogsPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

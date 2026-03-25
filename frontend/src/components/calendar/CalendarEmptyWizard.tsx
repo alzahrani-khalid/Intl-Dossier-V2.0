@@ -39,6 +39,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // Event template type
 interface EventTemplate {
@@ -171,9 +172,9 @@ export function CalendarEmptyWizard({
   onDismiss,
   className,
 }: CalendarEmptyWizardProps) {
-  const { t, i18n } = useTranslation('calendar')
-  const isRTL = i18n.language === 'ar'
-  const { user } = useAuth()
+  const { t } = useTranslation('calendar')
+  const { isRTL } = useDirection()
+const { user } = useAuth()
 
   const [step, setStep] = useState<'welcome' | 'templates' | 'quick-create'>('welcome')
   const [selectedTemplate, setSelectedTemplate] = useState<EventTemplate | null>(null)
@@ -218,7 +219,7 @@ export function CalendarEmptyWizard({
   }, [step])
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <AnimatePresence mode="wait">
         {step === 'welcome' && (
           <motion.div

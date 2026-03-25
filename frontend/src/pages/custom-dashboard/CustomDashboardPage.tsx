@@ -31,6 +31,7 @@ import {
 } from '@/components/dashboard-widgets'
 import { useWidgetDashboard } from '@/hooks/useWidgetDashboard'
 import { toast } from 'sonner'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Page header component
@@ -105,7 +106,7 @@ function DashboardHeader({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+            <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>{t('resetLayout')}</AlertDialogTitle>
                 <AlertDialogDescription>{t('confirmations.resetLayout')}</AlertDialogDescription>
@@ -180,10 +181,9 @@ function LoadingSkeleton() {
  * Main CustomDashboard page component
  */
 export function CustomDashboardPage() {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-
-  const {
+  const { t } = useTranslation('dashboard-widgets')
+  const { isRTL } = useDirection()
+const {
     widgets,
     widgetData,
     isEditMode,
@@ -231,7 +231,6 @@ export function CustomDashboardPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <DashboardHeader

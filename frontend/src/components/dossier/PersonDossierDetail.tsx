@@ -45,9 +45,7 @@ interface SectionStates {
 }
 
 export function PersonDossierDetail({ dossier }: PersonDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('dossier')
   // Check if this person is an elected official
   const isElectedOfficialPerson = isElectedOfficial(dossier.extension)
 
@@ -78,7 +76,6 @@ export function PersonDossierDetail({ dossier }: PersonDossierDetailProps) {
     return (
       <div
         className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4 sm:gap-6 lg:gap-8"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Left Column: Profile & Office Info (Elected Official) */}
         <div className="space-y-4 sm:space-y-6">
@@ -168,7 +165,6 @@ export function PersonDossierDetail({ dossier }: PersonDossierDetailProps) {
   return (
     <div
       className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4 sm:gap-6 lg:gap-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Left Column: Profile */}
       <div className="space-y-4 sm:space-y-6">

@@ -15,6 +15,7 @@ import {
   X,
   RotateCcw,
 } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface TranscriptSegment {
   /** Start time in seconds */
@@ -88,10 +89,9 @@ export function VideoTutorial({
   className,
   testId = 'video-tutorial',
 }: VideoTutorialProps) {
-  const { t, i18n } = useTranslation('empty-states')
-  const isRTL = i18n.language === 'ar'
-
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const { t } = useTranslation('empty-states')
+  const { isRTL } = useDirection()
+const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const [isPlaying, setIsPlaying] = useState(false)
@@ -248,7 +248,6 @@ export function VideoTutorial({
     <div
       ref={containerRef}
       className={cn('w-full mx-auto', sizeClasses.container, className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid={testId}
     >
       {/* Video Container */}

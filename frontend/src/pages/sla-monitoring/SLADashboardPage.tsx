@@ -57,6 +57,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useDirection } from '@/hooks/useDirection'
 
 type DateRangeOption = '7d' | '30d' | '90d'
 
@@ -83,10 +84,9 @@ const getDateRange = (option: DateRangeOption) => {
 }
 
 function SLADashboardPage() {
-  const { t, i18n } = useTranslation('sla')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('sla')
+  const { isRTL } = useDirection()
+// State
   const [activeTab, setActiveTab] = useState('dashboard')
   const [dateRange, setDateRange] = useState<DateRangeOption>('30d')
   const [entityType, setEntityType] = useState<SLAEntityType>('ticket')
@@ -185,7 +185,7 @@ function SLADashboardPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -360,7 +360,6 @@ function SLADashboardPage() {
       <Dialog open={policyDialogOpen} onOpenChange={setPolicyDialogOpen}>
         <DialogContent
           className="max-w-4xl max-h-[90vh] overflow-y-auto"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <DialogHeader>
             <DialogTitle>{editingPolicy ? t('policies.edit') : t('policies.create')}</DialogTitle>

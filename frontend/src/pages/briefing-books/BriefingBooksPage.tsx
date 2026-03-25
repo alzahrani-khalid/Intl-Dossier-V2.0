@@ -13,14 +13,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 import { Button } from '@/components/ui/button'
 import { BriefingBookBuilder, BriefingBooksList } from '@/components/briefing-books'
+import { useDirection } from '@/hooks/useDirection'
 
 type ViewMode = 'list' | 'builder'
 
 function BriefingBooksPage() {
-  const { t, i18n } = useTranslation('briefing-books')
-  const isRTL = i18n.language === 'ar'
-
-  const [viewMode, setViewMode] = useState<ViewMode>('list')
+  const { t } = useTranslation('briefing-books')
+  const { isRTL } = useDirection()
+const [viewMode, setViewMode] = useState<ViewMode>('list')
 
   const handleCreateNew = useCallback(() => {
     setViewMode('builder')
@@ -37,7 +37,6 @@ function BriefingBooksPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <AnimatePresence mode="wait">
         {viewMode === 'list' ? (

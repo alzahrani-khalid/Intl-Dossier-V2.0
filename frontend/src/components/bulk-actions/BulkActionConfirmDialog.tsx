@@ -96,9 +96,7 @@ function BulkActionConfirmDialog({
   isProcessing = false,
   undoTtl = DEFAULT_UNDO_TTL,
 }: BulkActionConfirmDialogProps) {
-  const { t, i18n } = useTranslation('bulk-actions')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('bulk-actions')
   // Parameter state
   const [selectedStatus, setSelectedStatus] = useState<EntityStatus>('pending')
   const [selectedPriority, setSelectedPriority] = useState<Priority>('medium')
@@ -251,7 +249,6 @@ function BulkActionConfirmDialog({
     <AlertDialog open={open} onOpenChange={(isOpen) => !isOpen && onCancel()}>
       <AlertDialogContent
         className={cn('max-w-md w-[calc(100%-2rem)] sm:w-full', 'mx-4 sm:mx-auto')}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <AlertDialogHeader>
           <AlertDialogTitle>

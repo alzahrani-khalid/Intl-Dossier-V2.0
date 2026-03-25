@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { EventsWidgetConfig, EventData, EventType } from '@/types/dashboard-widget.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface EventsWidgetProps {
   config: EventsWidgetConfig
@@ -177,9 +178,9 @@ function EventItem({ event, locale, isRTL }: { event: EventData; locale: string;
 }
 
 export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? 'ar-SA' : 'en-US'
+  const { t } = useTranslation('dashboard-widgets')
+  const { isRTL } = useDirection()
+const locale = isRTL ? 'ar-SA' : 'en-US'
 
   const { settings } = config
 

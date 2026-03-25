@@ -13,6 +13,7 @@ import { AlertTriangle, RefreshCw, Wifi, WifiOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import ErrorBoundary from '../app-error-boundary/ErrorBoundary'
+import { useDirection } from '@/hooks/useDirection'
 
 interface QueryErrorBoundaryProps {
   children: ReactNode
@@ -52,10 +53,9 @@ interface QueryErrorFallbackProps {
 }
 
 function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  // Determine error type
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+// Determine error type
   const isNetworkError = error?.message.includes('fetch') || error?.message.includes('network')
   const isAuthError = error?.message.includes('401') || error?.message.includes('unauthorized')
   const isServerError = error?.message.includes('500') || error?.message.includes('server')
@@ -97,7 +97,6 @@ function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps
   return (
     <div
       className="flex min-h-[400px] items-center justify-center p-4 sm:p-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="w-full max-w-lg">
         <Alert variant="destructive" className="mb-4">

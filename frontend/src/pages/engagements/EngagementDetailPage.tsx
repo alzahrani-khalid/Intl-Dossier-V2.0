@@ -63,12 +63,13 @@ import {
   ATTENDANCE_STATUS_LABELS,
   AGENDA_ITEM_STATUS_LABELS,
 } from '@/types/engagement.types'
+import { useDirection } from '@/hooks/useDirection'
 
 function EngagementDetailPage() {
   const { engagementId } = useParams({ from: '/_protected/engagements/$engagementId' })
-  const { t, i18n } = useTranslation('engagements')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('engagements')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -231,7 +232,7 @@ function EngagementDetailPage() {
   const notes = isRTL ? engagement.notes_ar : engagement.notes_en
 
   return (
-    <div className="min-h-screen bg-background" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-background sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">

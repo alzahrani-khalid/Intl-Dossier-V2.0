@@ -20,6 +20,7 @@ import {
   type TimelineFilters,
 } from '@/hooks/useDossierActivityTimeline'
 import { ActivityTimelineItem } from './ActivityTimelineItem'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Props
@@ -66,10 +67,9 @@ export function DossierActivityTimeline({
   className,
   maxHeight = '600px',
 }: DossierActivityTimelineProps) {
-  const { t, i18n } = useTranslation('dossier-context')
-  const isRTL = i18n.language === 'ar'
-
-  // Fetch timeline data with infinite scroll
+  const { t } = useTranslation('dossier-context')
+  const { isRTL } = useDirection()
+// Fetch timeline data with infinite scroll
   const {
     activities,
     isLoading,
@@ -100,7 +100,7 @@ export function DossierActivityTimeline({
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Header with count and refresh */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">

@@ -34,6 +34,7 @@ import type {
   CreatePollSlotRequest,
 } from '@/types/availability-polling.types'
 import { DEFAULT_DURATION_OPTIONS, DEFAULT_TIMEZONE } from '@/types/availability-polling.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface AvailabilityPollCreatorProps {
   onSuccess?: (pollId: string) => void
@@ -72,10 +73,9 @@ export function AvailabilityPollCreator({
   onCancel,
   dossierId,
 }: AvailabilityPollCreatorProps) {
-  const { t, i18n } = useTranslation('availability-polling')
-  const isRTL = i18n.language === 'ar'
-
-  const createPoll = useCreatePoll()
+  const { t } = useTranslation('availability-polling')
+  const { isRTL } = useDirection()
+const createPoll = useCreatePoll()
 
   // Default values
   const defaultDeadline = format(addDays(new Date(), 7), "yyyy-MM-dd'T'HH:mm")
@@ -205,7 +205,7 @@ export function AvailabilityPollCreator({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Meeting Title */}
       <div className="space-y-4">
         <div className="space-y-2">

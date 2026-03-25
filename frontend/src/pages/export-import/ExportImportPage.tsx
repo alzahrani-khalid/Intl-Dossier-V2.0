@@ -33,6 +33,7 @@ import {
 } from 'lucide-react'
 import { ExportDialog, ImportDialog } from '@/components/export-import'
 import type { ExportableEntityType } from '@/types/export-import.types'
+import { useDirection } from '@/hooks/useDirection'
 
 const ENTITY_OPTIONS: Array<{
   value: ExportableEntityType
@@ -74,17 +75,16 @@ const ENTITY_OPTIONS: Array<{
 ]
 
 function ExportImportPage() {
-  const { t, i18n } = useTranslation('export-import')
-  const isRTL = i18n.language === 'ar'
-
-  const [entityType, setEntityType] = useState<ExportableEntityType>('dossier')
+  const { t } = useTranslation('export-import')
+  const { isRTL } = useDirection()
+const [entityType, setEntityType] = useState<ExportableEntityType>('dossier')
   const [exportDialogOpen, setExportDialogOpen] = useState(false)
   const [importDialogOpen, setImportDialogOpen] = useState(false)
 
   const selectedEntity = ENTITY_OPTIONS.find((e) => e.value === entityType)
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground mt-1">

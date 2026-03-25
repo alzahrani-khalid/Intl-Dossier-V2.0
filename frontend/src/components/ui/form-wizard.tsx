@@ -22,6 +22,7 @@ import { Check, ChevronLeft, ChevronRight, Save, Loader2, AlertCircle } from 'lu
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // Types
 export interface WizardStep {
@@ -177,10 +178,9 @@ export function FormWizard({
   namespace = 'form-wizard',
   actionBarMode = 'inline',
 }: FormWizardProps) {
-  const { t, i18n } = useTranslation(namespace)
-  const isRTL = i18n.language === 'ar'
-
-  const [isValidating, setIsValidating] = React.useState(false)
+  const { t } = useTranslation(namespace)
+  const { isRTL } = useDirection()
+const [isValidating, setIsValidating] = React.useState(false)
 
   const totalSteps = steps.length
   const isFirstStep = currentStep === 0
@@ -237,7 +237,7 @@ export function FormWizard({
 
   return (
     <WizardContext.Provider value={contextValue}>
-      <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('space-y-6', className)}>
         {/* Progress bar */}
         {showProgress && (
           <div className="space-y-2">

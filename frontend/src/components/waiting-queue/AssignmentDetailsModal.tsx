@@ -12,6 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { AgingIndicator } from './AgingIndicator'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Assignment Details Modal Component
@@ -77,10 +78,9 @@ export function AssignmentDetailsModal({
   isOpen,
   onClose,
 }: AssignmentDetailsModalProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  if (!assignment) return null
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+if (!assignment) return null
 
   // Calculate days waiting if not provided
   const daysWaiting =
@@ -155,7 +155,6 @@ export function AssignmentDetailsModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="max-w-2xl w-full px-4 py-6 sm:px-6 md:px-8 max-h-[90vh] overflow-y-auto"
-        dir={isRTL ? 'rtl' : 'ltr'}
         data-testid="assignment-details-modal"
       >
         {/* Header */}

@@ -6,11 +6,10 @@
  *
  * Mobile-first, RTL-compatible
  */
-
-import { useTranslation } from 'react-i18next'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Base Types
@@ -32,11 +31,9 @@ interface BaseSkeletonProps {
  * Skeleton for a work item / task card
  */
 export function WorkItemSkeleton({ className }: BaseSkeletonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+const { isRTL } = useDirection()
+return (
+    <Card className={cn('overflow-hidden', className)}>
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           {/* Status/Type icon */}
@@ -65,11 +62,10 @@ export function WorkItemSkeleton({ className }: BaseSkeletonProps) {
  * Skeleton for a list of work items
  */
 export function WorkItemListSkeleton({ count = 5, className }: BaseSkeletonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-3', className)}>
       {Array.from({ length: count }, (_, n) => n).map((n) => (
         <WorkItemSkeleton key={n} />
       ))}
@@ -81,11 +77,10 @@ export function WorkItemListSkeleton({ count = 5, className }: BaseSkeletonProps
  * Skeleton for a person/contact card
  */
 export function PersonCardSkeleton({ className }: BaseSkeletonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           {/* Avatar */}
@@ -135,11 +130,10 @@ export function TableSkeleton({
   showHeader = true,
   className,
 }: BaseSkeletonProps & { rows?: number; columns?: number; showHeader?: boolean }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <div className={cn('rounded-lg border overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('rounded-lg border overflow-hidden', className)}>
       {/* Header */}
       {showHeader && (
         <div className="flex items-center gap-4 px-4 py-3 bg-muted/50 border-b">
@@ -167,11 +161,10 @@ export function TableSkeleton({
  * Skeleton for a metric/KPI card
  */
 export function MetricCardSkeleton({ className }: BaseSkeletonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-start justify-between mb-3">
           <Skeleton className="h-4 w-24" />
@@ -197,8 +190,7 @@ export function MetricsGridSkeleton({
   columns = 4,
   className,
 }: BaseSkeletonProps & { columns?: number }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   const gridCols =
     {
@@ -208,7 +200,7 @@ export function MetricsGridSkeleton({
     }[columns] || 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
 
   return (
-    <div className={cn('grid gap-4', gridCols, className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('grid gap-4', gridCols, className)}>
       {Array.from({ length: count }, (_, n) => n).map((n) => (
         <MetricCardSkeleton key={n} />
       ))}
@@ -223,11 +215,10 @@ export function ChartSkeleton({
   className,
   height = 'h-64 sm:h-80',
 }: BaseSkeletonProps & { height?: string }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <Skeleton className="h-5 w-32" />
@@ -265,11 +256,10 @@ export function ChartSkeleton({
  * Skeleton for a timeline item
  */
 export function TimelineItemSkeleton({ className }: BaseSkeletonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <div className={cn('flex gap-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex gap-4', className)}>
       {/* Timeline line + dot */}
       <div className="flex flex-col items-center">
         <Skeleton className="h-3 w-3 rounded-full shrink-0" />
@@ -292,11 +282,10 @@ export function TimelineItemSkeleton({ className }: BaseSkeletonProps) {
  * Skeleton for a timeline
  */
 export function TimelineSkeleton({ count = 5, className }: BaseSkeletonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <div className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('', className)}>
       {Array.from({ length: count }, (_, n) => n).map((n) => (
         <TimelineItemSkeleton key={n} />
       ))}
@@ -329,8 +318,7 @@ export function FormSkeleton({
   showSubmit = true,
   className,
 }: BaseSkeletonProps & { fields?: number; columns?: number; showSubmit?: boolean }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   const gridCols =
     {
@@ -340,7 +328,7 @@ export function FormSkeleton({
     }[columns] || 'grid-cols-1'
 
   return (
-    <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-6', className)}>
       <div className={cn('grid gap-4', gridCols)}>
         {Array.from({ length: fields }, (_, n) => n).map((n) => (
           <FormFieldSkeleton key={n} />
@@ -364,11 +352,10 @@ export function FormSkeleton({
  * Skeleton for a detail page header
  */
 export function DetailHeaderSkeleton({ className }: BaseSkeletonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Breadcrumb */}
       <div className="flex items-center gap-2">
         <Skeleton className="h-4 w-16" />
@@ -400,11 +387,10 @@ export function TabbedContentSkeleton({
   tabs = 4,
   className,
 }: BaseSkeletonProps & { tabs?: number }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-6', className)}>
       {/* Tab list */}
       <div className="flex items-center gap-1 border-b pb-1 overflow-x-auto">
         {Array.from({ length: tabs }, (_, n) => n).map((n) => (
@@ -479,11 +465,10 @@ export function KanbanBoardSkeleton({
   cardsPerColumn = 4,
   className,
 }: BaseSkeletonProps & { columns?: number; cardsPerColumn?: number }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <div className={cn('flex gap-4 overflow-x-auto pb-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex gap-4 overflow-x-auto pb-4', className)}>
       {Array.from({ length: columns }, (_, n) => n).map((n) => (
         <KanbanColumnSkeleton key={n} cards={cardsPerColumn} />
       ))}
@@ -499,11 +484,10 @@ export function KanbanBoardSkeleton({
  * Skeleton for a calendar grid
  */
 export function CalendarSkeleton({ className }: BaseSkeletonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <Skeleton className="h-6 w-32" />
@@ -542,11 +526,10 @@ export function NetworkGraphSkeleton({
   className,
   height = 'h-96',
 }: BaseSkeletonProps & { height?: string }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <Skeleton className="h-5 w-36" />

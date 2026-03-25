@@ -33,6 +33,7 @@ import { useToast } from '@/hooks/useToast'
 import { useTagSearch, useEntityTagging, useTagsFlat } from '@/hooks/useTagHierarchy'
 import type { TagEntityType, EntityTagAssignment, TagSuggestion } from '@/types/tag-hierarchy.types'
 import { getTagName, TAG_SUGGESTION_REASON_LABELS } from '@/types/tag-hierarchy.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TagSelectorProps {
   entityType: TagEntityType
@@ -53,9 +54,9 @@ function TagSelector({
   showSuggestions = true,
   onTagsChange,
 }: TagSelectorProps) {
-  const { t, i18n } = useTranslation('tags')
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation('tags')
+  const { isRTL } = useDirection()
+const { toast } = useToast()
   const inputRef = useRef<HTMLInputElement>(null)
 
   // State
@@ -200,7 +201,7 @@ function TagSelector({
   }
 
   return (
-    <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-2', className)}>
       {/* Assigned tags display */}
       <div className="flex flex-wrap items-center gap-1.5">
         {isLoadingTags ? (
@@ -371,13 +372,13 @@ interface TagDisplayProps {
 }
 
 function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   if (!tags || tags.length === 0) return null
 
   return (
-    <div className={cn('flex flex-wrap items-center gap-1', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-wrap items-center gap-1', className)}>
       <Tag className="size-3.5 text-muted-foreground" />
       {tags.slice(0, maxDisplay).map((tag) => (
         <Badge

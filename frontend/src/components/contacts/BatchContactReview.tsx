@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckSquare, Square, AlertCircle, Trash2, Users } from 'lucide-react'
 import { getConfidenceColor } from '@/hooks/useOCR'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * ContactInsert fields expected by the contacts table.
@@ -64,10 +65,9 @@ export function BatchContactReview({
   onCancel,
   isImporting = false,
 }: BatchContactReviewProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  // Calculate selected contacts
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+// Calculate selected contacts
   const selectedContacts = useMemo(() => contacts.filter((c) => c.selected), [contacts])
 
   const allSelected = contacts.length > 0 && selectedContacts.length === contacts.length
@@ -244,7 +244,7 @@ export function BatchContactReview({
   }, [selectedContacts, onImport, t])
 
   return (
-    <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4 sm:space-y-6">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between gap-4">

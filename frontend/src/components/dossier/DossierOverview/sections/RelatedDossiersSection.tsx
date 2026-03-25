@@ -96,7 +96,7 @@ function EmptyState({ isRTL }: { isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-8 sm:py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="text-center py-8 sm:py-12">
       <div className="p-4 rounded-full bg-muted inline-block mb-4">
         <Network className="h-8 w-8 text-muted-foreground" />
       </div>

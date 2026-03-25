@@ -20,11 +20,12 @@ import { Alert, AlertDescription } from '../components/ui/alert'
 import { Button } from '../components/ui/button'
 import { Skeleton } from '../components/ui/skeleton'
 import { AlertCircle, ChevronRight } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export function TaskDetailPage() {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   const { toast } = useToast()
   const { id } = useParams({ from: '/_protected/tasks/$id' })
 
@@ -76,7 +77,6 @@ export function TaskDetailPage() {
   return (
     <div
       className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Loading State */}
       {isLoading && (

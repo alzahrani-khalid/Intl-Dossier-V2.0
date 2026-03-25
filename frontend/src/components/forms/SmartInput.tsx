@@ -18,6 +18,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { Phone, Mail, Globe, Calendar, Hash, CreditCard, DollarSign, Lock } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -348,9 +349,9 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
     },
     ref,
   ) => {
-    const { t, i18n } = useTranslation(['validation', 'common'])
-    const isRTL = i18n.language === 'ar'
-    const uniqueId = useId()
+    const { t } = useTranslation(['validation', 'common'])
+    const { isRTL } = useDirection()
+const uniqueId = useId()
 
     // Local state for uncontrolled usage
     const [internalValue, setInternalValue] = useState<string>((defaultValue as string) || '')
@@ -500,7 +501,7 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
         : ''
 
     return (
-      <div className={cn('space-y-2', containerClassName)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('space-y-2', containerClassName)}>
         {/* Label */}
         {label && (
           <motion.label

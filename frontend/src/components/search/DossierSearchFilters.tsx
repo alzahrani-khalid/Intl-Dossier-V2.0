@@ -25,6 +25,7 @@ import { Globe, Building2, Users, Briefcase, Target, BookOpen, User, Filter, X }
 import { cn } from '@/lib/utils'
 import type { DossierType } from '@/lib/dossier-type-guards'
 import type { DossierSearchFilters as FilterState } from '@/types/dossier-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Dossier type icons
 const typeIcons: Record<DossierType | 'all', React.ComponentType<{ className?: string }>> = {
@@ -53,10 +54,9 @@ export function DossierSearchFilters({
   disabled = false,
   className,
 }: DossierSearchFiltersProps) {
-  const { t, i18n } = useTranslation('dossier-search')
-  const isRTL = i18n.language === 'ar'
-
-  // Handle type filter change
+  const { t } = useTranslation('dossier-search')
+  const { isRTL } = useDirection()
+// Handle type filter change
   const handleTypeChange = (value: string) => {
     if (value === 'all') {
       onChange({ ...filters, types: 'all' })
@@ -97,7 +97,6 @@ export function DossierSearchFilters({
   return (
     <div
       className={cn('flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Type Filter Dropdown */}
       <div className="flex items-center gap-2">
@@ -279,8 +278,8 @@ function DossierTypeChips({
   counts?: Record<DossierType | 'all', number>
   disabled?: boolean
 }) {
-  const { t, i18n } = useTranslation('dossier-search')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier-search')
+  const { isRTL } = useDirection()
 
   const types: (DossierType | 'all')[] = [
     'all',
@@ -294,7 +293,7 @@ function DossierTypeChips({
   ]
 
   return (
-    <div className="flex flex-wrap gap-2" dir={isRTL ? 'rtl' : 'ltr'} role="tablist">
+    <div className="flex flex-wrap gap-2" role="tablist">
       {types.map((type) => {
         const Icon = typeIcons[type]
         const isSelected = selectedType === type

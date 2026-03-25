@@ -67,6 +67,7 @@ import {
 } from '@/hooks/useTagHierarchy'
 import type { TagCategory } from '@/types/tag-hierarchy.types'
 import { TAG_COLOR_PALETTE, getTagName } from '@/types/tag-hierarchy.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TagHierarchyManagerProps {
   className?: string
@@ -101,9 +102,9 @@ export function TagHierarchyManager({
   selectedTagId,
   showActions = true,
 }: TagHierarchyManagerProps) {
-  const { t, i18n } = useTranslation('tags')
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation('tags')
+  const { isRTL } = useDirection()
+const { toast } = useToast()
 
   // State
   const [searchQuery, setSearchQuery] = useState('')
@@ -481,7 +482,7 @@ export function TagHierarchyManager({
   }
 
   return (
-    <div className={cn('flex flex-col', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-col', className)}>
       {/* Header with search and actions */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="relative flex-1 max-w-sm">

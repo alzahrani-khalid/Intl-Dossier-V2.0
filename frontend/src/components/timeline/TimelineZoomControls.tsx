@@ -24,6 +24,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { TimelineZoomLevel, ZoomLevelConfig } from '@/types/timeline-annotation.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TimelineZoomControlsProps {
   currentZoom: TimelineZoomLevel
@@ -68,10 +69,9 @@ export function TimelineZoomControls({
   currentDateLabel,
   className,
 }: TimelineZoomControlsProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
 
   return (
     <div
@@ -79,7 +79,6 @@ export function TimelineZoomControls({
         'flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-2 sm:p-3 bg-card rounded-lg border shadow-sm',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Navigation Controls */}
       <div className="flex items-center gap-1">

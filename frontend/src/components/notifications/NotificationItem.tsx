@@ -29,6 +29,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
+import { useDirection } from '@/hooks/useDirection'
 
 interface NotificationItemProps {
   notification: Notification
@@ -72,9 +73,9 @@ export function NotificationItem({
   onDelete,
   onClick,
 }: NotificationItemProps) {
-  const { t, i18n } = useTranslation('notification-center')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('notification-center')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   const Icon = categoryIcons[notification.category] || Bell
 
@@ -101,7 +102,6 @@ export function NotificationItem({
         !notification.read && 'ring-1 ring-primary/20',
       )}
       onClick={handleClick}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Unread indicator */}
       {!notification.read && (

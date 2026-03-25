@@ -16,16 +16,16 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Plus, X, Link as LinkIcon } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface PositionDossierLinkerProps {
   positionId: string
 }
 
 export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps) {
-  const { t, i18n } = useTranslation(['positions', 'translation'])
-  const isRTL = i18n.language === 'ar'
-
-  const [isAdding, setIsAdding] = useState(false)
+  const { t } = useTranslation(['positions', 'translation'])
+  const { isRTL } = useDirection()
+const [isAdding, setIsAdding] = useState(false)
   const [selectedDossierId, setSelectedDossierId] = useState('')
   const [linkType, setLinkType] = useState<'primary' | 'related' | 'reference'>('related')
   const [notes, setNotes] = useState('')
@@ -82,7 +82,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
   }
 
   return (
-    <div className="flex flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col gap-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <h3 className="text-lg sm:text-xl font-semibold flex items-center gap-2">

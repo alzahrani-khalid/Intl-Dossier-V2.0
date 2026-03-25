@@ -45,6 +45,7 @@ import type {
   TimelineEventStatus,
   DateRangePreset,
 } from '@/types/timeline.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TimelineFiltersProps {
   filters: ITimelineFilters
@@ -67,10 +68,9 @@ export function TimelineFilters({
   onRefresh,
   className,
 }: TimelineFiltersProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const [searchInput, setSearchInput] = useState(filters.search_query || '')
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const [searchInput, setSearchInput] = useState(filters.search_query || '')
   const [dateRangePreset, setDateRangePreset] = useState<DateRangePreset>('all_time')
   const [customDateFrom, setCustomDateFrom] = useState<Date | undefined>()
   const [customDateTo, setCustomDateTo] = useState<Date | undefined>()
@@ -194,7 +194,7 @@ export function TimelineFilters({
     (filters.search_query ? 1 : 0)
 
   return (
-    <div className={cn('space-y-4 mb-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4 mb-6', className)}>
       {/* Filter Toggle & Search Bar */}
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
         {/* Search Input */}

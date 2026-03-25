@@ -40,8 +40,7 @@ export const Route = createFileRoute('/_protected/dossiers/countries/$id')({
 })
 
 function CountryDossierDetailRoute() {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
   const { id } = Route.useParams()
   const searchParams = Route.useSearch()
 
@@ -58,7 +57,6 @@ function CountryDossierDetailRoute() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div
           className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"
@@ -93,7 +91,6 @@ function CountryDossierDetailRoute() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div
           className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"

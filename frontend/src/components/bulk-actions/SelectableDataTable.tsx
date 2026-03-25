@@ -73,8 +73,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
   emptyMessage,
   className,
 }: SelectableDataTableProps<T>) {
-  const { t, i18n } = useTranslation('bulk-actions')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('bulk-actions')
   const lastClickedRef = useRef<string | null>(null)
 
   const { selectedIds, selectedCount, allSelected, partiallySelected, maxReached } = selection
@@ -129,7 +128,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
   }
 
   return (
-    <div className={cn('w-full overflow-auto', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('w-full overflow-auto', className)}>
       <Table>
         <TableHeader>
           <TableRow>

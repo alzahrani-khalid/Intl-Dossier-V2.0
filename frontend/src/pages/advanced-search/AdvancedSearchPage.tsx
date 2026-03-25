@@ -48,6 +48,7 @@ import {
 import { useCreateTemplate } from '@/hooks/useSavedSearchTemplates'
 import type { SearchResult, SearchableEntityType } from '@/types/advanced-search.types'
 import { ENTITY_TYPE_LABELS } from '@/types/advanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for entity types
 const entityIcons: Record<SearchableEntityType, React.ComponentType<{ className?: string }>> = {
@@ -72,10 +73,9 @@ const statusColors: Record<string, string> = {
 }
 
 export function AdvancedSearchPage() {
-  const { t, i18n } = useTranslation('advanced-search')
-  const isRTL = i18n.language === 'ar'
-
-  const [saveDialogOpen, setSaveDialogOpen] = useState(false)
+  const { t } = useTranslation('advanced-search')
+  const { isRTL } = useDirection()
+const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [templateState, setTemplateState] = useState<SearchState | null>(null)
   const [templateName, setTemplateName] = useState({ en: '', ar: '' })
   const [templateDescription, setTemplateDescription] = useState({ en: '', ar: '' })
@@ -218,7 +218,7 @@ export function AdvancedSearchPage() {
   )
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">

@@ -52,6 +52,7 @@ import { DossierTimeline } from '@/components/dossier-timeline/DossierTimeline'
 import { CommentList } from '@/components/comments'
 
 import type { ForumDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ForumDossierDetailProps {
   dossier: ForumDossier
@@ -72,9 +73,9 @@ type ForumTabType =
   | 'comments'
 
 export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   // Active tab state with URL persistence
   const [activeTab, setActiveTab] = useState<ForumTabType>(
     (initialTab as ForumTabType) || 'overview',
@@ -114,7 +115,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
   )
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Tabs Navigation - HeroUI v3 Styled */}
       <div className="bg-card text-card-foreground rounded-lg shadow border border-border">
         <Tabs value={activeTab} onValueChange={(value) => handleTabChange(value as ForumTabType)}>

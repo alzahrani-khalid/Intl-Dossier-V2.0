@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import type { FormDraftBannerProps } from '@/types/form-auto-save.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export function FormDraftBanner({
   draft,
@@ -33,10 +34,9 @@ export function FormDraftBanner({
   isRestoring = false,
   className,
 }: FormDraftBannerProps) {
-  const { t, i18n } = useTranslation('form-auto-save')
-  const isRTL = i18n.language === 'ar'
-
-  // Format the saved time relative to now
+  const { t } = useTranslation('form-auto-save')
+  const { isRTL } = useDirection()
+// Format the saved time relative to now
   const savedTimeAgo = React.useMemo(() => {
     try {
       return formatDistanceToNow(new Date(draft.savedAt), {
@@ -59,7 +59,6 @@ export function FormDraftBanner({
           'overflow-hidden rounded-lg border bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="alert"
         aria-live="polite"
       >

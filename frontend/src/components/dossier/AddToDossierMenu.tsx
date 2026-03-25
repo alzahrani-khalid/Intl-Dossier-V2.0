@@ -49,6 +49,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import type { Dossier } from '@/lib/dossier-type-guards'
 import type { DossierType } from '@/types/dossier-context.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // Types
@@ -204,9 +205,9 @@ function AddToDossierButton({
   size = 'default',
   showDescriptions = false,
 }: AddToDossierMenuProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const [isOpen, setIsOpen] = React.useState(false)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const [isOpen, setIsOpen] = React.useState(false)
 
   const defaultActions = getDefaultActions(t)
   const dossierContext = buildDossierContext(dossier)
@@ -311,8 +312,8 @@ function AddToDossierFAB({
   className,
   size = 'default',
 }: AddToDossierMenuProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
   const [isExpanded, setIsExpanded] = React.useState(false)
 
   const defaultActions = getDefaultActions(t)
@@ -388,7 +389,6 @@ function AddToDossierFAB({
           isRTL ? 'start-4 sm:start-6' : 'end-4 sm:end-6',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Speed dial items */}
         <AnimatePresence>
@@ -475,8 +475,8 @@ function AddToDossierCard({
   className,
   showDescriptions = true,
 }: AddToDossierMenuProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
 
   const defaultActions = getDefaultActions(t)
   const dossierContext = buildDossierContext(dossier)
@@ -503,7 +503,6 @@ function AddToDossierCard({
   return (
     <div
       className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="px-4 py-3 border-b">

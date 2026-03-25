@@ -30,6 +30,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useMyDossiers } from '@/hooks/useDossierDashboard'
 import type { MyDossier } from '@/types/dossier-dashboard.types'
+import { useDirection } from '@/hooks/useDirection'
 
 const typeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   country: Globe,
@@ -56,9 +57,9 @@ interface RecentDossiersTableProps {
 }
 
 export function RecentDossiersTable({ className, maxItems = 5 }: RecentDossiersTableProps) {
-  const { t, i18n } = useTranslation(['dashboard', 'dossiers'])
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation(['dashboard', 'dossiers'])
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   const { data, isLoading } = useMyDossiers({
     limit: maxItems,
     sort_by: 'last_activity',

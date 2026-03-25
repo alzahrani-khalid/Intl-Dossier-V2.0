@@ -25,11 +25,11 @@
  */
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button, type ButtonProps } from '@/components/ui/button'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface FloatingActionButtonProps extends Omit<ButtonProps, 'size' | 'asChild'> {
   /**
@@ -86,10 +86,8 @@ export function FloatingActionButton({
   className,
   ...props
 }: FloatingActionButtonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [isScrollingDown, setIsScrollingDown] = React.useState(false)
+const { isRTL } = useDirection()
+const [isScrollingDown, setIsScrollingDown] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
   const lastScrollY = React.useRef(0)
 

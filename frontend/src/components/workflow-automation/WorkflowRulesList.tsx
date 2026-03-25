@@ -30,6 +30,7 @@ import type {
 } from '@/types/workflow-automation.types'
 import { WorkflowRuleCard } from './WorkflowRuleCard'
 import { entityTypes, triggerTypes } from './workflow-config'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkflowRulesListProps {
   onCreateNew: () => void
@@ -44,10 +45,9 @@ export function WorkflowRulesList({
   onViewExecutions,
   onTest,
 }: WorkflowRulesListProps) {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-
-  // Filter state
+  const { t } = useTranslation('workflow-automation')
+  const { isRTL } = useDirection()
+// Filter state
   const [filters, setFilters] = useState<WorkflowRulesListParams>({
     page: 1,
     limit: 20,
@@ -93,7 +93,7 @@ export function WorkflowRulesList({
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>

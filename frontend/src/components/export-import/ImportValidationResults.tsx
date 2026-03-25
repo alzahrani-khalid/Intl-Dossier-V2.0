@@ -33,6 +33,7 @@ import {
 } from 'lucide-react'
 import type { ImportValidationResult, CellValidationError } from '@/types/export-import.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ImportValidationResultsProps {
   result: ImportValidationResult
@@ -70,10 +71,9 @@ export function ImportValidationResults({
   maxRowsPreview = 100,
   className,
 }: ImportValidationResultsProps) {
-  const { t, i18n } = useTranslation('export-import')
-  const isRTL = i18n.language === 'ar'
-
-  const [showAllErrors, setShowAllErrors] = useState(false)
+  const { t } = useTranslation('export-import')
+  const { isRTL } = useDirection()
+const [showAllErrors, setShowAllErrors] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
 
   const toggleRowExpanded = (rowNumber: number) => {
@@ -123,7 +123,7 @@ export function ImportValidationResults({
   }
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="rounded-lg border p-3 bg-card">

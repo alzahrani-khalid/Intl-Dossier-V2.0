@@ -31,11 +31,10 @@ export function MyDossiersSection({
   filter,
   className,
 }: MyDossiersSectionProps) {
-  const { t, i18n } = useTranslation('dossier-dashboard')
+  const { t } = useTranslation('dossier-dashboard')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  // Fetch dossiers
+  const { isRTL } = useDirection()
+// Fetch dossiers
   const { data, isLoading, isError, error } = useMyDossiers({
     ...filter,
     limit: maxItems,
@@ -193,6 +192,7 @@ function DossiersGrid({ dossiers }: { dossiers: MyDossier[] }) {
 // =============================================================================
 
 import type { MyDossier } from '@/types/dossier-dashboard.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // Loading Skeleton

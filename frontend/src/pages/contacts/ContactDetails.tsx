@@ -43,11 +43,12 @@ import { InteractionTimeline } from '@/components/contacts/InteractionTimeline'
 import { InteractionNoteForm } from '@/components/contacts/InteractionNoteForm'
 import { format } from 'date-fns'
 import type { InteractionNoteResponse } from '@/services/interaction-api'
+import { useDirection } from '@/hooks/useDirection'
 
 export function ContactDetails() {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   const { contactId } = useParams({ from: '/contacts/$contactId' })
 
   const [isEditing, setIsEditing] = useState(false)
@@ -116,7 +117,7 @@ export function ContactDetails() {
   }
 
   return (
-    <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">

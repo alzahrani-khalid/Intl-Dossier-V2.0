@@ -50,6 +50,7 @@ import {
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import type { SavedReport, ReportAccessLevel } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SavedReportsListProps {
   reports: SavedReport[]
@@ -83,9 +84,9 @@ export function SavedReportsList({
   onScheduleReport,
   onExportReport,
 }: SavedReportsListProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-  const [search, setSearch] = useState('')
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<'all' | 'mine' | 'shared' | 'favorites'>('all')
   const [reportToDelete, setReportToDelete] = useState<string | null>(null)
 
@@ -114,7 +115,7 @@ export function SavedReportsList({
   }
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'} className="h-full flex flex-col">
+    <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg flex items-center gap-2">
           <FileText className="h-5 w-5" />
@@ -356,7 +357,7 @@ export function SavedReportsList({
         open={!!reportToDelete}
         onOpenChange={(open) => !open && setReportToDelete(null)}
       >
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('savedReports.confirmDelete.title')}</AlertDialogTitle>
             <AlertDialogDescription>

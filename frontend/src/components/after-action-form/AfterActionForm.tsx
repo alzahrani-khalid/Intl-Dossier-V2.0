@@ -16,6 +16,7 @@ import { RiskList, type Risk } from '../risk-list/RiskList'
 import { FollowUpList } from '../follow-up-list/FollowUpList'
 import { AttachmentUploader } from '../attachment-uploader/AttachmentUploader'
 import { AIExtractionButton } from '../ai-extraction-button/AIExtractionButton'
+import { useDirection } from '@/hooks/useDirection'
 
 interface FollowUpAction {
   id?: string
@@ -62,10 +63,9 @@ export function AfterActionForm({
   availableUsers = [],
   className,
 }: AfterActionFormProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  // Form state
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+// Form state
   const [formData, setFormData] = useState<AfterActionFormData>({
     engagement_id: engagementId,
     dossier_id: dossierId,
@@ -182,7 +182,6 @@ export function AfterActionForm({
   return (
     <form
       className={cn('space-y-6', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       onSubmit={(e) => {
         e.preventDefault()
         handleSaveDraft()
@@ -225,7 +224,6 @@ export function AfterActionForm({
               onChange={(e) => setAttendeesInput(e.target.value)}
               placeholder={t('afterActions.form.attendeesPlaceholder')}
               disabled={readOnly}
-              dir={isRTL ? 'rtl' : 'ltr'}
               required
             />
             <p className="text-xs text-muted-foreground">
@@ -270,7 +268,6 @@ export function AfterActionForm({
               placeholder={t('afterActions.form.notesPlaceholder')}
               rows={4}
               disabled={readOnly}
-              dir={isRTL ? 'rtl' : 'ltr'}
             />
           </div>
         </CardContent>

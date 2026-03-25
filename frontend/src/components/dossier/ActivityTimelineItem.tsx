@@ -23,6 +23,7 @@ import { p, s } from '@/lib/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import type { TimelineActivity } from '@/hooks/useDossierActivityTimeline'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Type Icons
@@ -97,9 +98,8 @@ export function ActivityTimelineItem({
 }: ActivityTimelineItemProps) {
   const { t, i18n } = useTranslation('dossier-context')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  // Get icon for type
+  const { isRTL } = useDirection()
+// Get icon for type
   const TypeIcon = typeIcons[activity.work_item_type] || CheckSquare
 
   // Format date

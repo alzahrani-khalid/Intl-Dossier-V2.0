@@ -13,6 +13,7 @@ import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { captureException, addBreadcrumb, setContext } from '@/lib/sentry'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -136,13 +137,11 @@ function ErrorFallback({
   onGoHome,
   showDetails = false,
 }: ErrorFallbackProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+return (
     <div
       className="flex min-h-screen items-center justify-center bg-muted/30 p-4 sm:p-6 lg:p-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="w-full max-w-2xl">
         <Alert variant="destructive" className="mb-6">

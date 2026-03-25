@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import type { DossierDashboardSummary } from '@/types/dossier-dashboard.types'
 import type { MyDossier } from '@/types/dossier-dashboard.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DashboardExportButtonProps {
   className?: string
@@ -92,10 +93,9 @@ export function DashboardExportButton({
   summary,
   dossiers,
 }: DashboardExportButtonProps) {
-  const { t, i18n } = useTranslation('dashboard')
-  const isRTL = i18n.language === 'ar'
-
-  const handleExportCSV = () => {
+  const { t } = useTranslation('dashboard')
+  const { isRTL } = useDirection()
+const handleExportCSV = () => {
     const csv = generateCSV(summary, dossiers ?? [], t, isRTL)
     const date = new Date().toISOString().slice(0, 10)
     downloadCSV(csv, `dashboard-export-${date}.csv`)

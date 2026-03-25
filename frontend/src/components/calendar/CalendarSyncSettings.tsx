@@ -62,6 +62,7 @@ import {
   SYNC_DIRECTION_OPTIONS,
   CONFLICT_STRATEGY_OPTIONS,
 } from '@/types/calendar-sync.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Provider Icons
@@ -136,9 +137,9 @@ function ConnectionCard({
   onUpdateSettings,
   isSyncing,
 }: ConnectionCardProps) {
-  const { t, i18n } = useTranslation('calendar-sync')
-  const isRTL = i18n.language === 'ar'
-  const [isExpanded, setIsExpanded] = useState(false)
+  const { t } = useTranslation('calendar-sync')
+  const { isRTL } = useDirection()
+const [isExpanded, setIsExpanded] = useState(false)
   const [showDisconnectDialog, setShowDisconnectDialog] = useState(false)
 
   const { data: calendars } = useExternalCalendars(isExpanded ? connection.id : undefined)
@@ -146,7 +147,7 @@ function ConnectionCard({
   const providerConfig = CALENDAR_PROVIDERS[connection.provider]
 
   return (
-    <Card className="w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="w-full">
       <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between gap-4">
@@ -207,7 +208,7 @@ function ConnectionCard({
                     {t('disconnect')}
                   </Button>
                 </DialogTrigger>
-                <DialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+                <DialogContent>
                   <DialogHeader>
                     <DialogTitle>{t('disconnectConfirm.title')}</DialogTitle>
                     <DialogDescription>
@@ -383,14 +384,14 @@ function ConnectProviderDialog({
   onConnect,
   isConnecting,
 }: ConnectProviderDialogProps) {
-  const { t, i18n } = useTranslation('calendar-sync')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('calendar-sync')
+  const { isRTL } = useDirection()
 
   const providers: ExternalCalendarProvider[] = ['google_calendar', 'outlook', 'exchange']
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent dir={isRTL ? 'rtl' : 'ltr'} className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t('connect.title')}</DialogTitle>
           <DialogDescription>{t('connect.description')}</DialogDescription>
@@ -437,8 +438,8 @@ interface ICalFeedDialogProps {
 }
 
 function ICalFeedDialog({ open, onOpenChange, onAdd, isAdding }: ICalFeedDialogProps) {
-  const { t, i18n } = useTranslation('calendar-sync')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('calendar-sync')
+  const { isRTL } = useDirection()
   const [feedUrl, setFeedUrl] = useState('')
   const [feedName, setFeedName] = useState('')
   const [color, setColor] = useState('#3B82F6')
@@ -455,7 +456,7 @@ function ICalFeedDialog({ open, onOpenChange, onAdd, isAdding }: ICalFeedDialogP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('ical.addTitle')}</DialogTitle>
           <DialogDescription>{t('ical.addDescription')}</DialogDescription>
@@ -526,11 +527,11 @@ function ICalSubscriptionCard({
   onUpdate,
   isRefreshing,
 }: ICalSubscriptionCardProps) {
-  const { t, i18n } = useTranslation('calendar-sync')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('calendar-sync')
+  const { isRTL } = useDirection()
 
   return (
-    <Card className="w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="w-full">
       <CardContent className="p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -593,11 +594,11 @@ interface ConflictCardProps {
 }
 
 function ConflictCard({ conflict, onResolve, isResolving }: ConflictCardProps) {
-  const { t, i18n } = useTranslation('calendar-sync')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('calendar-sync')
+  const { isRTL } = useDirection()
 
   return (
-    <Card className="w-full border-warning" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="w-full border-warning">
       <CardContent className="p-4 space-y-4">
         <div className="flex items-center gap-2 text-warning">
           <AlertTriangle className="h-5 w-5" />
@@ -661,8 +662,8 @@ function ConflictCard({ conflict, onResolve, isResolving }: ConflictCardProps) {
 // ============================================================================
 
 export function CalendarSyncSettings() {
-  const { t, i18n } = useTranslation('calendar-sync')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('calendar-sync')
+  const { isRTL } = useDirection()
 
   const [showConnectDialog, setShowConnectDialog] = useState(false)
   const [showICalDialog, setShowICalDialog] = useState(false)
@@ -699,7 +700,6 @@ export function CalendarSyncSettings() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

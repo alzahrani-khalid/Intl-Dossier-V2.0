@@ -26,6 +26,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ReportField, FieldDataType } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface FieldListProps {
   fields: ReportField[]
@@ -111,9 +112,9 @@ function DraggableField({ field, isRTL, onAddColumn }: DraggableFieldProps) {
 }
 
 export function FieldList({ fields, onAddColumn }: FieldListProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-  const [search, setSearch] = useState('')
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const [search, setSearch] = useState('')
 
   // Group fields by entity
   const groupedFields = useMemo(() => {
@@ -155,7 +156,7 @@ export function FieldList({ fields, onAddColumn }: FieldListProps) {
   const hasFields = fields.length > 0
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'} className="h-full flex flex-col">
+    <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg">{t('fields.title')}</CardTitle>
         <CardDescription className="text-xs sm:text-sm">{t('fields.description')}</CardDescription>

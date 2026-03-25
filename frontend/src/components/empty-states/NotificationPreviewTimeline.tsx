@@ -30,6 +30,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { NotificationCategory, CategoryPreference } from '@/hooks/useNotificationCenter'
+import { useDirection } from '@/hooks/useDirection'
 
 // Example notification data for preview
 export interface PreviewNotification {
@@ -174,10 +175,9 @@ export function NotificationPreviewTimeline({
   compact = false,
   className,
 }: NotificationPreviewTimelineProps) {
-  const { t, i18n } = useTranslation('notification-center')
-  const isRTL = i18n.language === 'ar'
-
-  // Current step: 0 = timeline preview, 1 = preferences setup
+  const { t } = useTranslation('notification-center')
+  const { isRTL } = useDirection()
+// Current step: 0 = timeline preview, 1 = preferences setup
   const [currentStep, setCurrentStep] = useState(0)
   const [isAnimating, setIsAnimating] = useState(true)
   const [activeNotificationIndex, setActiveNotificationIndex] = useState(0)
@@ -624,7 +624,6 @@ export function NotificationPreviewTimeline({
   return (
     <div
       className={cn('w-full', compact ? 'max-w-2xl' : 'max-w-3xl', 'mx-auto', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="notification-preview-timeline"
     >
       <AnimatePresence mode="wait">

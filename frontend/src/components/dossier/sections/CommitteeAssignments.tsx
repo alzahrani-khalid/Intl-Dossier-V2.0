@@ -10,6 +10,7 @@ import { Users, Crown, UserCheck, User } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { PersonDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface CommitteeAssignmentsProps {
   /** PersonDossier with person_subtype === 'elected_official' */
@@ -17,9 +18,9 @@ interface CommitteeAssignmentsProps {
 }
 
 export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const { extension } = dossier
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { extension } = dossier
 
   const committees = extension.committee_assignments || []
 
@@ -78,7 +79,6 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
                 <div
                   key={index}
                   className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 >
                   {getRoleIcon(committee.role)}
                   <div className="flex-1 min-w-0">
@@ -110,7 +110,6 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
                 <div
                   key={index}
                   className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 opacity-70"
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 >
                   {getRoleIcon(committee.role)}
                   <div className="flex-1 min-w-0">

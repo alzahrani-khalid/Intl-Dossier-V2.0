@@ -16,9 +16,7 @@ import { Loader2 } from 'lucide-react'
 import type { CommitmentStatus } from '@/types/commitment.types'
 
 export function PersonalCommitmentsDashboard() {
-  const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('commitments')
   // Get current user ID for filtering
   const { data: userData, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -72,7 +70,7 @@ export function PersonalCommitmentsDashboard() {
 
   if (userLoading) {
     return (
-      <div className="flex items-center justify-center py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
         <span className="ms-3 text-gray-600">{t('list.loading')}</span>
       </div>
@@ -85,7 +83,6 @@ export function PersonalCommitmentsDashboard() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8">

@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDashboardTrends, type TrendRange } from '@/hooks/useDashboardTrends'
+import { useDirection } from '@/hooks/useDirection'
 
 const chartConfig = {
   created: {
@@ -58,6 +59,7 @@ export function ChartWorkItemTrends({
   onRangeChange,
 }: ChartWorkItemTrendsProps) {
   const { t, i18n } = useTranslation('dashboard')
+  const { isRTL } = useDirection()
   const [internalRange, setInternalRange] = useState<TrendRange>('30d')
 
   const range = controlledRange ?? internalRange
@@ -67,7 +69,7 @@ export function ChartWorkItemTrends({
   }
 
   const { data, isLoading } = useDashboardTrends(range)
-  const locale = i18n.language === 'ar' ? 'ar-SA' : i18n.language
+  const locale = isRTL ? 'ar-SA' : i18n.language
 
   return (
     <Card className={`@container/card ${className ?? ''}`}>

@@ -35,6 +35,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Badge } from '@/components/ui/badge'
 import { autocompleteDossiers, type AutocompleteResult } from '@/services/search-api'
 import type { DossierType } from '@/services/dossier-api'
+import { useDirection } from '@/hooks/useDirection'
 
 const STORAGE_KEY = 'recent_dossiers_for_work_creation'
 const MAX_RECENT = 5
@@ -120,10 +121,9 @@ export function DossierPicker({
   allowQuickAdd = false,
   onQuickAdd,
 }: DossierPickerProps) {
-  const { t, i18n } = useTranslation('work-creation')
-  const isRTL = i18n.language === 'ar'
-
-  const [open, setOpen] = useState(false)
+  const { t } = useTranslation('work-creation')
+  const { isRTL } = useDirection()
+const [open, setOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<DossierOption[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -209,7 +209,6 @@ export function DossierPicker({
       {selectedDossier && (
         <div
           className="flex items-center gap-2 p-3 mb-2 rounded-lg border bg-muted/50"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           {Icon && <Icon className="size-4 text-muted-foreground shrink-0" />}
           <span className="flex-1 text-sm font-medium truncate">{displayName}</span>
@@ -256,7 +255,6 @@ export function DossierPicker({
         <PopoverContent
           className="w-[var(--radix-popover-trigger-width)] p-0"
           align="start"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <Command shouldFilter={false}>
             <CommandInput

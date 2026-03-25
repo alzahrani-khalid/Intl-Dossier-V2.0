@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/engagements/$engagementId/after-action')({
   component: AfterActionFormPage,
@@ -15,9 +16,9 @@ export const Route = createFileRoute('/_protected/engagements/$engagementId/afte
 
 function AfterActionFormPage() {
   const { engagementId } = Route.useParams()
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const { data: engagement, isLoading: loadingEngagement } = useEngagement(engagementId)
   const createAfterAction = useCreateAfterAction()

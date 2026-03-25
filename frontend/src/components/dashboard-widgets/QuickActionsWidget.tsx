@@ -4,8 +4,6 @@
  * Displays quick action buttons for common operations.
  * Supports custom actions and RTL layout.
  */
-
-import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
   Plus,
@@ -20,6 +18,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { QuickActionsWidgetConfig, QuickAction } from '@/types/dashboard-widget.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface QuickActionsWidgetProps {
   config: QuickActionsWidgetConfig
@@ -156,10 +155,8 @@ function ActionButton({
 }
 
 export function QuickActionsWidget({ config, onActionClick }: QuickActionsWidgetProps) {
-  const { i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-
-  const { settings } = config
+const { isRTL } = useDirection()
+const { settings } = config
   const actions = settings.actions.length > 0 ? settings.actions : DEFAULT_QUICK_ACTIONS
 
   const handleActionClick = (action: QuickAction) => {

@@ -9,11 +9,11 @@
  */
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Building2, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { WGMemberSuggestions } from '@/components/working-groups/WGMemberSuggestions'
 import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MemberOrganizationsProps {
   dossier: ForumDossier | WorkingGroupDossier
@@ -21,9 +21,8 @@ interface MemberOrganizationsProps {
 }
 
 export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberOrganizationsProps) {
-  const { i18n } = useTranslation(['dossier', 'working-groups'])
-  const isRTL = i18n.language === 'ar'
-  const [showSuggestions, setShowSuggestions] = useState(true)
+const { isRTL } = useDirection()
+const [showSuggestions, setShowSuggestions] = useState(true)
 
   // Extract member organizations based on type
   // Use optional chaining since extension may be undefined for newly created dossiers
@@ -37,7 +36,7 @@ export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberO
   // For working groups with no members, show AI suggestions
   if (members.length === 0 && isWorkingGroup && showSuggestions) {
     return (
-      <div dir={isRTL ? 'rtl' : 'ltr'}>
+      <div>
         <WGMemberSuggestions
           workingGroupId={dossier.id}
           workingGroupName={isRTL ? dossier.name_ar : dossier.name_en}
@@ -56,7 +55,6 @@ export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberO
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
           <Building2 className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
@@ -87,7 +85,6 @@ export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberO
   return (
     <div
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {members.map((member, index) => {
         // Working group members have role info

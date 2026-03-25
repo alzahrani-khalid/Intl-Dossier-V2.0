@@ -44,6 +44,7 @@ import { TriggerSelector } from './TriggerSelector'
 import { ConditionBuilder } from './ConditionBuilder'
 import { ActionBuilder } from './ActionBuilder'
 import { entityTypes, getTriggerTypeOption, getEntityTypeOption } from './workflow-config'
+import { useDirection } from '@/hooks/useDirection'
 
 type BuilderStep = 'trigger' | 'conditions' | 'actions' | 'settings' | 'review'
 
@@ -64,10 +65,9 @@ interface WorkflowBuilderProps {
 }
 
 export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps) {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-
-  const isEditing = !!rule
+  const { t } = useTranslation('workflow-automation')
+  const { isRTL } = useDirection()
+const isEditing = !!rule
 
   // Step state
   const [currentStep, setCurrentStep] = useState<BuilderStep>('trigger')
@@ -385,7 +385,7 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">

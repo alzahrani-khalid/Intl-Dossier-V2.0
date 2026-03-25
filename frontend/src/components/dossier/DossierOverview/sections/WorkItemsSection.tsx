@@ -195,7 +195,7 @@ function StatusBreakdown({
   ]
 
   return (
-    <div className="space-y-4 p-4 bg-muted/50 rounded-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">{t('workItems.completion')}</span>
         <span className="text-sm text-muted-foreground">{completedPercent}%</span>
@@ -229,7 +229,7 @@ function EmptyState({ source, isRTL }: { source?: WorkItemSource | 'all'; isRTL:
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="text-center py-6 sm:py-8">
       <div className="p-3 rounded-full bg-muted inline-block mb-3">
         <ClipboardList className="h-6 w-6 text-muted-foreground" />
       </div>

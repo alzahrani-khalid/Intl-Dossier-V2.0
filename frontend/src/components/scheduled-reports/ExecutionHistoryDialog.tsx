@@ -16,6 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { useScheduleExecutions, type ReportExecution } from '@/hooks/useScheduledReports'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ExecutionHistoryDialogProps {
   open: boolean
@@ -30,9 +31,9 @@ export function ExecutionHistoryDialog({
   scheduleId,
   scheduleName,
 }: ExecutionHistoryDialogProps) {
-  const { t, i18n } = useTranslation('scheduled-reports')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('scheduled-reports')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   const { data: executions, isLoading } = useScheduleExecutions(scheduleId)
 
@@ -74,7 +75,7 @@ export function ExecutionHistoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-2xl max-h-[80vh]">
         <DialogHeader>
           <DialogTitle>
             {t('history.title')} - {scheduleName}

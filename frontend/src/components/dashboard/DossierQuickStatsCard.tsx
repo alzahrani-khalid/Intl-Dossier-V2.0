@@ -33,6 +33,7 @@ import { Badge } from '@/components/ui/badge'
 import type { MyDossier } from '@/types/dossier-dashboard.types'
 import type { DossierType } from '@/types/dossier-context.types'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // Type Icons
@@ -89,9 +90,8 @@ export function DossierQuickStatsCard({
 }: DossierQuickStatsCardProps) {
   const { t, i18n } = useTranslation('dossier-dashboard')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  // Get icon for type
+  const { isRTL } = useDirection()
+// Get icon for type
   const TypeIcon = typeIcons[dossier.type] || Folder
 
   // Handle click - navigate to dossier detail

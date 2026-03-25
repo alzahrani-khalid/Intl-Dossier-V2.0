@@ -26,6 +26,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import type { ComplianceViolation, ComplianceSeverity } from '@/types/compliance.types'
 import { SEVERITY_COLORS, VIOLATION_STATUS_COLORS, canSignOff } from '@/types/compliance.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ComplianceViolationAlertProps {
   violation: ComplianceViolation
@@ -60,9 +61,9 @@ export function ComplianceViolationAlert({
   compact = false,
   showActions = true,
 }: ComplianceViolationAlertProps) {
-  const { t, i18n } = useTranslation('compliance')
-  const isRTL = i18n.language === 'ar'
-  const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation('compliance')
+  const { isRTL } = useDirection()
+const [isOpen, setIsOpen] = useState(false)
 
   const severityColors = SEVERITY_COLORS[violation.severity]
   const statusColors = VIOLATION_STATUS_COLORS[violation.status]
@@ -91,7 +92,6 @@ export function ComplianceViolationAlert({
     return (
       <div
         className={`flex items-center justify-between gap-3 rounded-lg border p-3 ${severityColors.bg} ${severityColors.border}`}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex items-center gap-3 min-w-0">
           <SeverityIcon severity={violation.severity} />
@@ -124,7 +124,7 @@ export function ComplianceViolationAlert({
   }
 
   return (
-    <Card className={`${severityColors.border} ${severityColors.bg}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={`${severityColors.border} ${severityColors.bg}`}>
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-4">
@@ -292,8 +292,8 @@ function ComplianceViolationList({
   showEmpty = true,
   emptyMessage,
 }: ComplianceViolationListProps) {
-  const { t, i18n } = useTranslation('compliance')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('compliance')
+  const { isRTL } = useDirection()
 
   const displayedViolations = maxItems ? violations.slice(0, maxItems) : violations
   const hasMore = maxItems && violations.length > maxItems
@@ -302,7 +302,6 @@ function ComplianceViolationList({
     return (
       <div
         className="flex flex-col items-center justify-center py-8 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <AlertCircle className="h-12 w-12 text-muted-foreground mb-3" />
         <p className="text-muted-foreground">{emptyMessage || t('violations.noViolations')}</p>
@@ -314,7 +313,7 @@ function ComplianceViolationList({
   }
 
   return (
-    <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-3">
       {displayedViolations.map((violation) => (
         <ComplianceViolationAlert
           key={violation.id}

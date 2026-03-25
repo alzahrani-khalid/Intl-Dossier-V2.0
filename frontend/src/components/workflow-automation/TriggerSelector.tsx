@@ -27,6 +27,7 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import type { WorkflowTriggerType, TriggerConfig } from '@/types/workflow-automation.types'
 import { triggerTypes, getTriggersByCategory } from './workflow-config'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TriggerSelectorProps {
   selectedTrigger: WorkflowTriggerType | null
@@ -59,10 +60,9 @@ export function TriggerSelector({
   onSelectTrigger,
   onConfigChange,
 }: TriggerSelectorProps) {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-
-  const eventTriggers = getTriggersByCategory('event')
+  const { t } = useTranslation('workflow-automation')
+  const { isRTL } = useDirection()
+const eventTriggers = getTriggersByCategory('event')
   const timeTriggers = getTriggersByCategory('time')
   const manualTriggers = getTriggersByCategory('manual')
 
@@ -102,7 +102,7 @@ export function TriggerSelector({
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">{t('builder.whenThis')}</h3>
         <p className="text-sm text-muted-foreground">{t('help.trigger')}</p>

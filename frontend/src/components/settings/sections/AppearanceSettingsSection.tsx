@@ -16,9 +16,7 @@ interface AppearanceSettingsSectionProps {
  * Handles color mode, theme, and display density
  */
 export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionProps) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('settings')
   const colorMode = form.watch('color_mode')
   const theme = form.watch('theme')
   const displayDensity = form.watch('display_density')
@@ -111,7 +109,7 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
       description={t('appearance.description')}
       icon={Palette}
     >
-      <div className="space-y-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-8">
         {/* Color Mode Section */}
         <SettingsGroup title={t('appearance.colorMode')}>
           <p className="text-sm text-muted-foreground text-start -mt-2 mb-3">

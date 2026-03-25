@@ -524,9 +524,7 @@ export function WidgetSettingsDialog({
   onClose,
   onSave,
 }: WidgetSettingsDialogProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('dashboard-widgets')
   const [editedWidget, setEditedWidget] = useState<WidgetConfig | null>(null)
 
   // Initialize edited widget when dialog opens
@@ -596,7 +594,7 @@ export function WidgetSettingsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t('settings.title')}</DialogTitle>
           <DialogDescription>

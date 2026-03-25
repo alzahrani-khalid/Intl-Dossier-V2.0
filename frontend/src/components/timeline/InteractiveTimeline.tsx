@@ -202,8 +202,6 @@ export function InteractiveTimeline({
   className,
 }: InteractiveTimelineProps) {
   const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
   // Timeline state
   const [state, dispatch] = useReducer(timelineReducer, {
     zoomLevel: initialZoom,
@@ -293,7 +291,7 @@ export function InteractiveTimeline({
   )
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         {title && <h2 className="text-xl sm:text-2xl font-semibold text-start">{title}</h2>}

@@ -28,6 +28,7 @@ import {
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { useAuth } from '@/contexts/auth.context'
+import { useDirection } from '@/hooks/useDirection'
 
 interface Forum {
   id: string
@@ -76,11 +77,10 @@ export function ForumDetailsDialog({
   open,
   onOpenChange,
 }: ForumDetailsDialogProps) {
-  const { t, i18n } = useTranslation('forums')
+  const { t } = useTranslation('forums')
   const { user } = useAuth()
-  const isRTL = i18n.language === 'ar'
-
-  // Check if user has edit permissions (admin or manager roles)
+  const { isRTL } = useDirection()
+// Check if user has edit permissions (admin or manager roles)
   const canEdit = user?.role === 'admin' || user?.role === 'manager'
 
   const handleEdit = () => {

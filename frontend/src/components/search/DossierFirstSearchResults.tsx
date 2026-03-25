@@ -40,6 +40,7 @@ import type {
   DossierFirstSearchResultsProps,
   RelatedWorkType,
 } from '@/types/dossier-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Dossier type configuration with icons and colors
 const dossierTypeConfig: Record<
@@ -200,11 +201,10 @@ interface DossierCardProps {
 }
 
 function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
-  const { i18n, t } = useTranslation('dossier-search')
+  const { t } = useTranslation('dossier-search')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  const config = dossierTypeConfig[dossier.type]
+  const { isRTL } = useDirection()
+const config = dossierTypeConfig[dossier.type]
   const Icon = config.icon
 
   const name = isRTL ? dossier.name_ar : dossier.name_en
@@ -251,7 +251,6 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
         'hover:border-blue-500 hover:shadow-md dark:border-gray-700 dark:hover:border-blue-400',
         'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex items-start gap-3">
         {/* Dossier type icon */}
@@ -359,8 +358,8 @@ interface WorkItemCardProps {
 }
 
 function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
-  const { i18n, t } = useTranslation('dossier-search')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier-search')
+  const { isRTL } = useDirection()
 
   const workConfig = relatedWorkTypeConfig[item.type]
   const dossierConfig = dossierTypeConfig[item.dossier_context.type]
@@ -407,7 +406,6 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
         'hover:border-blue-500 hover:shadow-md dark:border-gray-700 dark:hover:border-blue-400',
         'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex items-start gap-3">
         {/* Work type icon */}
@@ -542,8 +540,8 @@ export function DossierFirstSearchResults({
   onDossierClick,
   onWorkItemClick,
 }: DossierFirstSearchResultsProps) {
-  const { t, i18n } = useTranslation('dossier-search')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier-search')
+  const { isRTL } = useDirection()
 
   const [dossiersExpanded, setDossiersExpanded] = React.useState(true)
   const [workExpanded, setWorkExpanded] = React.useState(true)
@@ -551,7 +549,7 @@ export function DossierFirstSearchResults({
   // Empty state
   if (!isLoading && dossiers.length === 0 && relatedWork.length === 0) {
     return (
-      <div className="py-12 text-center" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="py-12 text-center">
         <div className="mb-4 text-6xl">🔍</div>
         <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
           {t('empty.title')}
@@ -562,7 +560,7 @@ export function DossierFirstSearchResults({
   }
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="space-y-6">
+    <div className="space-y-6">
       {/* Section 1: DOSSIERS */}
       <section>
         <SectionHeader

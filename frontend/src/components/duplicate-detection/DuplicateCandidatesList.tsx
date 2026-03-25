@@ -30,6 +30,7 @@ import type {
   DuplicateEntityType,
   ConfidenceLevel,
 } from '@/types/duplicate-detection.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DuplicateCandidatesListProps {
   onMerge: (candidate: DuplicateCandidateListItem) => void
@@ -37,10 +38,9 @@ interface DuplicateCandidatesListProps {
 }
 
 export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCandidatesListProps) {
-  const { t, i18n } = useTranslation('duplicate-detection')
-  const isRTL = i18n.language === 'ar'
-
-  // Filters state
+  const { t } = useTranslation('duplicate-detection')
+  const { isRTL } = useDirection()
+// Filters state
   const [entityType, setEntityType] = useState<DuplicateEntityType | 'all'>('all')
   const [confidenceLevel, setConfidenceLevel] = useState<ConfidenceLevel | 'all'>('all')
   const [page, setPage] = useState(0)
@@ -79,7 +79,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
   const hasMore = data?.pagination?.has_more || false
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>

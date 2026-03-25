@@ -64,7 +64,6 @@ export function ResponsiveCard({
         isMobile && mobileLayout === 'stack' && 'space-y-2',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {(title || description) && (
         <CardHeader

@@ -41,11 +41,9 @@ const entityIcons: Record<ReportEntityType, React.ComponentType<{ className?: st
 }
 
 export function EntitySelector({ selectedEntities, onToggleEntity }: EntitySelectorProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('report-builder')
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg">{t('entities.title')}</CardTitle>
         <CardDescription className="text-xs sm:text-sm">

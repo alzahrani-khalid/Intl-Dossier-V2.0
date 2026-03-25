@@ -123,9 +123,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
   renderItem,
   displayField,
 }: BulkActionPreviewDialogProps<T>) {
-  const { t, i18n } = useTranslation('bulk-actions')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('bulk-actions')
   // Excluded items state
   const [excludedIds, setExcludedIds] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
@@ -379,7 +377,6 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
           'max-w-lg w-[calc(100%-2rem)] sm:w-full max-h-[90vh]',
           'mx-4 sm:mx-auto flex flex-col',
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <AlertDialogHeader>
           <AlertDialogTitle>

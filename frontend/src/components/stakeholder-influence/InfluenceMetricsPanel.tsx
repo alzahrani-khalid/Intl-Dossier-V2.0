@@ -36,6 +36,7 @@ import {
   METRIC_LABELS,
 } from '@/types/stakeholder-influence.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -136,10 +137,9 @@ export function InfluenceMetricsPanel({
   compact = false,
   className,
 }: InfluenceMetricsPanelProps) {
-  const { t, i18n } = useTranslation('stakeholder-influence')
-  const isRTL = i18n.language === 'ar'
-
-  // Loading state
+  const { t } = useTranslation('stakeholder-influence')
+  const { isRTL } = useDirection()
+// Loading state
   if (isLoading) {
     return (
       <Card className={cn('animate-pulse', className)}>
@@ -183,7 +183,7 @@ export function InfluenceMetricsPanel({
   const RoleIcon = ROLE_ICONS[data.stakeholder_role]
 
   return (
-    <Card className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('', className)}>
       <CardHeader className={compact ? 'pb-3' : ''}>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">

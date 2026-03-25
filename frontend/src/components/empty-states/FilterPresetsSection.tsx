@@ -27,6 +27,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { FilterPreset, FilterPresetsSectionProps } from '@/types/enhanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Get icon component for a preset based on icon name
@@ -185,15 +186,15 @@ export function FilterPresetsSection({
   className,
 }: FilterPresetsSectionProps) {
   const { t, i18n } = useTranslation('enhanced-search')
-  const isRTL = i18n.language === 'ar'
-  const language = i18n.language
+  const { isRTL } = useDirection()
+const language = i18n.language
 
   const [showAll, setShowAll] = useState(false)
 
   // Show loading state
   if (isLoading) {
     return (
-      <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('space-y-3', className)}>
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
           <span>{t('filterPresets.loading')}</span>
@@ -206,7 +207,7 @@ export function FilterPresetsSection({
   // Show error state
   if (error) {
     return (
-      <div className={cn('text-sm text-muted-foreground', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('text-sm text-muted-foreground', className)}>
         {t('filterPresets.error')}
       </div>
     )
@@ -223,7 +224,6 @@ export function FilterPresetsSection({
   return (
     <div
       className={cn('space-y-3', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="filter-presets-section"
     >
       {/* Header */}

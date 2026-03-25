@@ -5,13 +5,12 @@
  * Mobile-first, RTL-ready contact summary card.
  * Displays contact information with organization badge, position, and tags.
  */
-
-import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Mail, Phone, Building2, Briefcase, Tag, Network } from 'lucide-react'
 import { useRelationshipStats } from '@/hooks/useContactRelationships'
 import type { Database, Json } from '@/types/contact-directory.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type Contact = Database['public']['Tables']['contacts']['Row']
 type Organization = Database['public']['Tables']['organizations']['Row']
@@ -52,10 +51,8 @@ export function ContactCard({
   onClick,
   className = '',
 }: ContactCardProps) {
-  const { i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  // Get relationship stats
+const { isRTL } = useDirection()
+// Get relationship stats
   const { data: relationshipStats } = useRelationshipStats(contact.id)
 
   // Derive full name from first_name + last_name
@@ -83,7 +80,6 @@ export function ContactCard({
     <Card
       className={`cursor-pointer transition-shadow hover:shadow-md ${className}`}
       onClick={onClick}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">

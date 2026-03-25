@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { RotateCcw, X, Loader2, CheckCircle, Clock } from 'lucide-react'
 import type { BulkActionType, BulkActionEntityType } from '@/types/bulk-actions.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface EnhancedUndoToastProps {
   /** Whether toast is visible */
@@ -52,10 +53,9 @@ function EnhancedUndoToast({
 }: EnhancedUndoToastProps) {
   // entityType is kept for future use in custom messages
   void _entityType
-  const { t, i18n } = useTranslation('bulk-actions')
-  const isRTL = i18n.language === 'ar'
-
-  const [remainingTime, setRemainingTime] = useState(undoTtl)
+  const { t } = useTranslation('bulk-actions')
+  const { isRTL } = useDirection()
+const [remainingTime, setRemainingTime] = useState(undoTtl)
   const [isUndoing, setIsUndoing] = useState(false)
   const [showSuccess, setShowSuccess] = useState(showSuccessFirst)
   const [isPaused, setIsPaused] = useState(false)
@@ -163,7 +163,6 @@ function EnhancedUndoToast({
         'z-50 animate-in slide-in-from-bottom-4 fade-in-0 duration-300',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="alert"
       aria-live="assertive"
       onMouseEnter={() => !showSuccess && setIsPaused(true)}

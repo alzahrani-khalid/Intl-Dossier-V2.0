@@ -133,9 +133,7 @@ function TourableEmptyState({
   showTourTrigger,
   tourVariant = 'banner',
 }: TourableEmptyStateProps) {
-  const { t, i18n } = useTranslation('empty-states')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('empty-states')
   const config = entityConfig[entityType]
   const translationKey = config.translationKey
   const tourId = entityToTourMap[entityType]
@@ -187,7 +185,7 @@ function TourableEmptyState({
   }
 
   return (
-    <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('w-full', className)}>
       {/* Tour trigger banner (shown above empty state when applicable) */}
       {tourId && shouldShowTour && (
         <TourTrigger tourId={tourId} isEmpty={isEmpty} variant={tourVariant} className="mb-4" />

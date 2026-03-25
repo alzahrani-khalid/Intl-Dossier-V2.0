@@ -35,6 +35,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import type { ScenarioVariable, VariableChangeType } from '@/types/scenario-sandbox.types'
 import { VARIABLE_CHANGE_TYPE_LABELS } from '@/types/scenario-sandbox.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface VariableListProps {
   variables: ScenarioVariable[]
@@ -62,9 +63,9 @@ function formatValue(value: unknown): string {
 }
 
 function VariableList({ variables, onAdd, onEdit, onDelete, isLoading }: VariableListProps) {
-  const { t, i18n } = useTranslation('scenario-sandbox')
-  const isRTL = i18n.language === 'ar'
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const { t } = useTranslation('scenario-sandbox')
+  const { isRTL } = useDirection()
+const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const handleConfirmDelete = () => {
     if (deleteId) {
@@ -170,7 +171,7 @@ function VariableList({ variables, onAdd, onEdit, onDelete, isLoading }: Variabl
       </Card>
 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('variable.delete')}</AlertDialogTitle>
             <AlertDialogDescription>{t('scenario.confirmDelete')}</AlertDialogDescription>

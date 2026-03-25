@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -28,6 +27,7 @@ import {
   Trash2,
   ChevronRight,
 } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * CommitmentsHelpPage Component
@@ -44,14 +44,12 @@ import {
  * - RTL support for Arabic
  */
 export function CommitmentsHelpPage() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [activeSection, setActiveSection] = useState('overview')
+const { isRTL } = useDirection()
+const [activeSection, setActiveSection] = useState('overview')
 
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header with Back Navigation */}
       <div className="mb-6">

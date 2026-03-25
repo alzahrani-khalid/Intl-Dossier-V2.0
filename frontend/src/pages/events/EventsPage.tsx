@@ -23,6 +23,7 @@ import {
   isSameMonth,
   isSameDay,
 } from 'date-fns'
+import { useDirection } from '@/hooks/useDirection'
 
 interface Event {
   id: string
@@ -49,14 +50,13 @@ interface Event {
 }
 
 export function EventsPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar')
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [filterType, setFilterType] = useState<string>('all')
-  const isRTL = i18n.language === 'ar'
-
-  const { data: events, isLoading } = useQuery({
+  const { isRTL } = useDirection()
+const { data: events, isLoading } = useQuery({
     queryKey: ['events', searchTerm, filterType, selectedDate],
     queryFn: async () => {
       let query = supabase

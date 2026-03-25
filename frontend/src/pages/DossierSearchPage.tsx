@@ -29,6 +29,7 @@ import type {
   DossierSearchFilters as FilterState,
 } from '@/types/dossier-search.types'
 import type { DossierType } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SearchParams {
   q?: string
@@ -38,11 +39,11 @@ interface SearchParams {
 }
 
 export function DossierSearchPage() {
-  const { t, i18n } = useTranslation('dossier-search')
+  const { t } = useTranslation('dossier-search')
   const navigate = useNavigate()
   const searchParams = useSearch({ from: '/_protected/search' }) as SearchParams
-  const isRTL = i18n.language === 'ar'
-  const inputRef = useRef<HTMLInputElement>(null)
+  const { isRTL } = useDirection()
+const inputRef = useRef<HTMLInputElement>(null)
 
   // Initialize filters from URL params
   const initialFilters: Partial<FilterState> = {
@@ -165,7 +166,6 @@ export function DossierSearchPage() {
   return (
     <div
       className="container mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="mb-6">

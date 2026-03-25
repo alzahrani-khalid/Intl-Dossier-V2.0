@@ -15,6 +15,7 @@ import { supabase } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface FollowUpAction {
   id: string
@@ -32,9 +33,9 @@ interface FollowUpActionsProps {
 }
 
 export function FollowUpActions({ dossierId }: FollowUpActionsProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? arSA : enUS
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const dateLocale = isRTL ? arSA : enUS
 
   // Fetch follow-up actions from work_items linked to this dossier
   const { data: workItems = [], isLoading: isLoadingWorkItems } = useQuery({
@@ -142,7 +143,7 @@ export function FollowUpActions({ dossierId }: FollowUpActionsProps) {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
@@ -153,7 +154,6 @@ export function FollowUpActions({ dossierId }: FollowUpActionsProps) {
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -174,7 +174,7 @@ export function FollowUpActions({ dossierId }: FollowUpActionsProps) {
 
   // Render follow-up actions list
   return (
-    <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-3">
       {allActions.map((action) => (
         <Card
           key={action.id}

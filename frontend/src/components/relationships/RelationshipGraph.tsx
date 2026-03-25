@@ -28,6 +28,7 @@ import { Badge } from '@/components/ui/badge'
 import { Building2, User, Loader2 } from 'lucide-react'
 import type { RelationshipResponse } from '@/services/contact-relationship-api'
 import type { Database } from '@/types/contact-directory.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type Contact = Database['public']['Tables']['contacts']['Row']
 
@@ -110,10 +111,9 @@ export function RelationshipGraph({
   height = 500,
   className = '',
 }: RelationshipGraphProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
 
   /**
@@ -281,7 +281,6 @@ export function RelationshipGraph({
     <div
       className={`rounded-lg border overflow-hidden ${className}`}
       style={{ height: typeof height === 'number' ? `${height}px` : height }}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReactFlow
         nodes={nodes}

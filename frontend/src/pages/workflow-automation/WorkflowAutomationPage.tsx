@@ -18,9 +18,7 @@ type ViewMode = 'list' | 'create' | 'edit'
 type TabValue = 'rules' | 'executions'
 
 export function WorkflowAutomationPage() {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('workflow-automation')
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [selectedRule, setSelectedRule] = useState<WorkflowRule | null>(null)
@@ -60,7 +58,7 @@ export function WorkflowAutomationPage() {
   // Render builder view
   if (viewMode === 'create' || viewMode === 'edit') {
     return (
-      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <WorkflowBuilder rule={selectedRule} onSave={handleSave} onCancel={handleCancel} />
       </div>
     )
@@ -68,7 +66,7 @@ export function WorkflowAutomationPage() {
 
   // Render list view with tabs
   return (
-    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>

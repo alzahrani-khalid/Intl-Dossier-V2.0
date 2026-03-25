@@ -7,6 +7,7 @@ import { Play, X, ChevronRight, ChevronLeft } from 'lucide-react'
 import { ListEmptyState, type EntityType } from './ListEmptyState'
 import { VideoTutorial, type TranscriptSegment } from './VideoTutorial'
 import type { EmptyStateVariant, EmptyStateSize } from './EmptyState'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface TutorialVideo {
   /** Unique identifier for the tutorial */
@@ -187,10 +188,9 @@ function TutorialEmptyState({
   onTutorialStarted,
   testId = 'tutorial-empty-state',
 }: TutorialEmptyStateProps) {
-  const { t, i18n } = useTranslation('empty-states')
-  const isRTL = i18n.language === 'ar'
-
-  const [showTutorials, setShowTutorials] = useState(showTutorialsDefault)
+  const { t } = useTranslation('empty-states')
+  const { isRTL } = useDirection()
+const [showTutorials, setShowTutorials] = useState(showTutorialsDefault)
   const [activeTutorialIndex, setActiveTutorialIndex] = useState(0)
   const [expandedVideo, setExpandedVideo] = useState(false)
 
@@ -272,7 +272,7 @@ function TutorialEmptyState({
   const containerClasses = cn('flex flex-col gap-4 sm:gap-6', className)
 
   return (
-    <div className={containerClasses} dir={isRTL ? 'rtl' : 'ltr'} data-testid={testId}>
+    <div className={containerClasses} data-testid={testId}>
       {/* Tutorial Section */}
       {showTutorials && (
         <div className="w-full max-w-lg sm:max-w-xl lg:max-w-2xl mx-auto">

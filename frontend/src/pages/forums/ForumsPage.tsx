@@ -50,9 +50,10 @@ import { useForums, useCreateForum, useDeleteForum } from '@/hooks/useForums'
 import { format } from 'date-fns'
 import type { Forum, ForumCreateRequest } from '@/types/forum.types'
 import type { DossierStatus } from '@/types/dossier'
+import { useDirection } from '@/hooks/useDirection'
 
 export function ForumsPage() {
-  const { t, i18n } = useTranslation('forums')
+  const { t } = useTranslation('forums')
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState<DossierStatus | 'all'>('all')
   const [selectedForum, setSelectedForum] = useState<Forum | null>(null)
@@ -60,8 +61,8 @@ export function ForumsPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [page, setPage] = useState(1)
-  const isRTL = i18n.language === 'ar'
-  const showMobileFAB = useShowMobileFAB()
+  const { isRTL } = useDirection()
+const showMobileFAB = useShowMobileFAB()
 
   // Form state for create dialog
   const [formData, setFormData] = useState<ForumCreateRequest>({

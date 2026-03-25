@@ -33,8 +33,6 @@ export function NotificationList({
   className,
 }: NotificationListProps) {
   const { t, i18n } = useTranslation('notification-center')
-  const isRTL = i18n.language === 'ar'
-
   // Get category-specific empty message
   const getEmptyMessage = () => {
     if (emptyMessage) return emptyMessage
@@ -56,7 +54,6 @@ export function NotificationList({
     return (
       <div
         className={cn('flex flex-col items-center justify-center py-12 text-center', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
           <Bell className="h-8 w-8 text-muted-foreground" />
@@ -71,7 +68,7 @@ export function NotificationList({
   const groupedNotifications = groupByDate(notifications, i18n.language)
 
   return (
-    <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-6', className)}>
       {Object.entries(groupedNotifications).map(([dateLabel, items]) => (
         <div key={dateLabel}>
           <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">

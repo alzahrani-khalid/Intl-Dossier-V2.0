@@ -54,11 +54,12 @@ import {
 
 import { ScheduleFormDialog } from './ScheduleFormDialog'
 import { ExecutionHistoryDialog } from './ExecutionHistoryDialog'
+import { useDirection } from '@/hooks/useDirection'
 
 export function ScheduledReportsManager() {
-  const { t, i18n } = useTranslation('scheduled-reports')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('scheduled-reports')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
   const { toast } = useToast()
 
   const { data: schedules, isLoading, error, fetchStatus } = useScheduledReports()
@@ -365,7 +366,7 @@ export function ScheduledReportsManager() {
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('actions.delete')}</AlertDialogTitle>
             <AlertDialogDescription>{t('messages.deleteConfirm')}</AlertDialogDescription>

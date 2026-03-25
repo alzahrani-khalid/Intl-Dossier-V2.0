@@ -8,8 +8,6 @@
  * - For new forms, use these HeroUI components
  * - For migration, gradually replace shadcn imports
  */
-
-import { useTranslation } from 'react-i18next'
 import {
   TextField as HeroUITextField,
   Input as HeroUIInput,
@@ -22,6 +20,7 @@ import {
   Switch as HeroUISwitch,
 } from '@heroui/react'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // HeroUITextField - Full form field with label, input, description, error
@@ -73,10 +72,8 @@ export function HeroUIFormTextField({
   className,
   inputClassName,
 }: HeroUITextFieldProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
+const { isRTL } = useDirection()
+return (
     <HeroUITextField
       name={name}
       type={type}
@@ -133,8 +130,7 @@ export function HeroUIFormTextArea({
   inputClassName,
   rows = 4,
 }: HeroUITextAreaFieldProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <HeroUITextField
@@ -207,8 +203,7 @@ export function HeroUIFormCheckbox({
   isIndeterminate = false,
   className,
 }: HeroUICheckboxFieldProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <HeroUICheckbox
@@ -271,8 +266,7 @@ export function HeroUIFormSwitch({
   isDisabled = false,
   className,
 }: HeroUISwitchFieldProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <HeroUISwitch

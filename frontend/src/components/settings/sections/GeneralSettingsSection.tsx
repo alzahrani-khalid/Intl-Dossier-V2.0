@@ -22,9 +22,7 @@ interface GeneralSettingsSectionProps {
  * Handles language, timezone, date format, and start of week
  */
 export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('settings')
   const languagePreference = form.watch('language_preference')
   const timezone = form.watch('timezone')
   const dateFormat = form.watch('date_format')
@@ -48,7 +46,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
       description={t('general.description')}
       icon={Settings2}
     >
-      <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-6">
         {/* Language Selection */}
         <SettingsGroup>
           <div className="space-y-3">

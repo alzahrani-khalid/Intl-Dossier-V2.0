@@ -42,6 +42,7 @@ import {
   STATUS_COLORS,
   PRIORITY_COLORS,
 } from '@/types/legislation.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface LegislationListProps {
   dossierId?: string
@@ -50,10 +51,9 @@ interface LegislationListProps {
 }
 
 export function LegislationList({ dossierId, onCreateClick, className }: LegislationListProps) {
-  const { t, i18n } = useTranslation('legislation')
-  const isRTL = i18n.language === 'ar'
-
-  // Filter state
+  const { t } = useTranslation('legislation')
+  const { isRTL } = useDirection()
+// Filter state
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<LegislationType | 'all'>('all')
   const [statusFilter, setStatusFilter] = useState<LegislationStatus | 'all'>('all')
@@ -127,7 +127,7 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
   const priorities: LegislationPriority[] = ['low', 'medium', 'high', 'critical']
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -336,9 +336,9 @@ interface LegislationCardProps {
 }
 
 function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: LegislationCardProps) {
-  const { t, i18n } = useTranslation('legislation')
+  const { t } = useTranslation('legislation')
   const title =
-    i18n.language === 'ar' && legislation.title_ar ? legislation.title_ar : legislation.title_en
+    isRTL && legislation.title_ar ? legislation.title_ar : legislation.title_en
 
   const statusColors = STATUS_COLORS[legislation.status]
   const priorityColors = PRIORITY_COLORS[legislation.priority]
@@ -393,7 +393,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
                   {new Date(legislation.introduced_date).toLocaleDateString(
-                    i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                    isRTL ? 'ar-SA' : 'en-US',
                   )}
                 </span>
               )}

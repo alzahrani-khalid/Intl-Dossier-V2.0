@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import type { Position } from '@/types/position'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface PositionCardProps {
   position: Position & { link_type?: 'primary' | 'related' | 'reference' }
@@ -32,16 +33,16 @@ export const PositionCard: React.FC<PositionCardProps> = ({
   engagementAttachmentCount = 0,
   isAttached = false,
 }) => {
-  const { t, i18n } = useTranslation('positions')
-  const isRTL = i18n.language === 'ar'
-  const locale = i18n.language === 'ar' ? ar : enUS
+  const { t } = useTranslation('positions')
+  const { isRTL } = useDirection()
+  const locale = isRTL ? ar : enUS
 
   // Get localized title and content - handle both old and new schema
   const title =
-    (position as any).topic || (i18n.language === 'ar' ? position.title_ar : position.title_en)
+    (position as any).topic || (isRTL ? position.title_ar : position.title_en)
   const content =
     (position as any).rationale ||
-    (i18n.language === 'ar' ? position.content_ar : position.content_en)
+    (isRTL ? position.content_ar : position.content_en)
 
   // Get status from approval object or direct field
   const positionStatus = (position as any).approval?.status || position.status || 'draft'
@@ -143,7 +144,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
 
       <CardContent className="pb-3 flex-1 flex flex-col">
         {/* Content Preview */}
-        <p className="line-clamp-3 text-sm text-muted-foreground" dir={isRTL ? 'rtl' : 'ltr'}>
+        <p className="line-clamp-3 text-sm text-muted-foreground">
           {contentPreview}
         </p>
 

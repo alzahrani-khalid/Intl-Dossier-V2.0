@@ -97,8 +97,7 @@ export function CollapsibleSection({
   headerClassName,
   contentClassName,
 }: CollapsibleSectionProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
   const uniqueId = useId()
 
   // Use controlled state if provided, otherwise use internal state
@@ -128,7 +127,7 @@ export function CollapsibleSection({
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="border rounded-lg overflow-hidden">
       {/* Header - WCAG AA touch target: min 44x44px */}
       <button
         type="button"

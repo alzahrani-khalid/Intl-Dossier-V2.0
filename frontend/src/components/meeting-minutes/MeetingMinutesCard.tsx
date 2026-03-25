@@ -23,6 +23,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { MeetingMinutesListItem, MeetingMinutesStatus } from '@/types/meeting-minutes.types'
 import { STATUS_COLORS } from '@/types/meeting-minutes.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MeetingMinutesCardProps {
   minutes: MeetingMinutesListItem
@@ -31,10 +32,9 @@ interface MeetingMinutesCardProps {
 }
 
 export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinutesCardProps) {
-  const { t, i18n } = useTranslation('meeting-minutes')
-  const isRTL = i18n.language === 'ar'
-
-  const statusColors = STATUS_COLORS[minutes.status as MeetingMinutesStatus] || STATUS_COLORS.draft
+  const { t } = useTranslation('meeting-minutes')
+  const { isRTL } = useDirection()
+const statusColors = STATUS_COLORS[minutes.status as MeetingMinutesStatus] || STATUS_COLORS.draft
 
   const handleClick = () => {
     onClick?.(minutes)
@@ -60,7 +60,6 @@ export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinut
       tabIndex={0}
       role="button"
       aria-label={`${minutes.title_en || minutes.title_ar} - ${t(`status.${minutes.status}`)}`}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <CardContent className="p-4 sm:p-5">
         {/* Header: Title and Status */}

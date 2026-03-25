@@ -30,6 +30,7 @@ import type {
   CommitmentOwnerType,
   CommitmentFilters,
 } from '@/types/commitment.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface CommitmentFilterDrawerProps {
   open: boolean
@@ -52,10 +53,9 @@ export function CommitmentFilterDrawer({
   onApply,
   onClear,
 }: CommitmentFilterDrawerProps) {
-  const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-
-  // Local state for form values
+  const { t } = useTranslation('commitments')
+  const { isRTL } = useDirection()
+// Local state for form values
   const [localFilters, setLocalFilters] = useState<CommitmentFilters>(filters)
 
   // Sync local state with props when drawer opens
@@ -127,7 +127,6 @@ export function CommitmentFilterDrawer({
       <SheetContent
         side={isRTL ? 'left' : 'right'}
         className="w-full sm:max-w-md overflow-y-auto"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <SheetHeader>
           <SheetTitle className="text-start">{t('filters.title')}</SheetTitle>

@@ -49,6 +49,7 @@ import { CalendarEventsSection } from './sections/CalendarEventsSection'
 import { KeyContactsSection } from './sections/KeyContactsSection'
 import { ActivityTimelineSection } from './sections/ActivityTimelineSection'
 import type { DossierOverviewProps, ExportFormat } from '@/types/dossier-overview.types'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Stat card component for the overview header
@@ -81,7 +82,7 @@ function StatCard({
   return (
     <Card className={`${variantStyles[variant]} transition-colors`}>
       <CardContent className="p-3 sm:p-4">
-        <div className="flex items-center gap-2 sm:gap-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="flex items-center gap-2 sm:gap-3">
           <div className={`p-2 rounded-lg bg-background/80 ${iconStyles[variant]}`}>
             <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
@@ -132,10 +133,9 @@ export function DossierOverview({
   onExport,
   showExportButton = true,
 }: DossierOverviewProps) {
-  const { t, i18n } = useTranslation('dossier-overview')
-  const isRTL = i18n.language === 'ar'
-
-  const [activeTab, setActiveTab] = useState('related')
+  const { t } = useTranslation('dossier-overview')
+  const { isRTL } = useDirection()
+const [activeTab, setActiveTab] = useState('related')
 
   // Fetch dossier overview
   const { data, isLoading, isError, error, refetch } = useDossierOverview(dossierId)
@@ -248,7 +248,6 @@ export function DossierOverview({
   return (
     <div
       className={`container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 ${className}`}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Breadcrumbs */}
       <nav

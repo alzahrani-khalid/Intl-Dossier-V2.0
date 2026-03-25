@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { useDossier } from '@/hooks/useDossier'
 import { isPersonDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 const PersonDossierPage = lazy(() =>
   import('@/pages/dossiers/PersonDossierPage').then((m) => ({
@@ -26,9 +27,9 @@ export const Route = createFileRoute('/_protected/dossiers/persons/$id')({
 })
 
 function PersonDossierDetailRoute() {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const { id } = Route.useParams()
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { id } = Route.useParams()
 
   const { data: dossier, isLoading, error } = useDossier(id, ['stats', 'owners', 'contacts'])
 
@@ -37,7 +38,6 @@ function PersonDossierDetailRoute() {
     return (
       <div
         className="flex flex-col items-center justify-center min-h-[50vh] space-y-4"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         <p className="text-sm sm:text-base text-muted-foreground">{t('detail.loading')}</p>
@@ -50,7 +50,6 @@ function PersonDossierDetailRoute() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -76,7 +75,6 @@ function PersonDossierDetailRoute() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Alert>
           <AlertCircle className="h-4 w-4" />
@@ -103,7 +101,6 @@ function PersonDossierDetailRoute() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Alert>
           <AlertCircle className="h-4 w-4" />

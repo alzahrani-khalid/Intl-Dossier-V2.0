@@ -31,6 +31,7 @@ import { Label } from '@/components/ui/label'
 import { Loader2, XCircle, AlertTriangle } from 'lucide-react'
 import { useRevokeDelegation } from '@/hooks/useDelegation'
 import { useToast } from '@/hooks/useToast'
+import { useDirection } from '@/hooks/useDirection'
 
 interface RevokeDelegationDialogProps {
   open: boolean
@@ -47,11 +48,10 @@ export function RevokeDelegationDialog({
   granteeEmail,
   onSuccess,
 }: RevokeDelegationDialogProps) {
-  const { t, i18n } = useTranslation('delegation')
+  const { t } = useTranslation('delegation')
   const { toast } = useToast()
-  const isRTL = i18n.language === 'ar'
-
-  const [reason, setReason] = useState('')
+  const { isRTL } = useDirection()
+const [reason, setReason] = useState('')
   const [showConfirm, setShowConfirm] = useState(false)
 
   const revokeMutation = useRevokeDelegation()
@@ -87,7 +87,7 @@ export function RevokeDelegationDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[425px]" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-destructive">
               <XCircle className="h-5 w-5" />
@@ -152,7 +152,7 @@ export function RevokeDelegationDialog({
 
       {/* Confirmation Dialog */}
       <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />

@@ -42,6 +42,7 @@ import {
   Clock,
   Star,
 } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -81,10 +82,9 @@ export function QuickEntryDialog({
   context,
   onSelect,
 }: QuickEntryDialogProps) {
-  const { t, i18n } = useTranslation('entity-templates')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('entity-templates')
+  const { isRTL } = useDirection()
+// State
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [selectedEntityType, setSelectedEntityType] = useState<TemplateEntityType>(
@@ -231,7 +231,6 @@ export function QuickEntryDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="max-h-[80vh] max-w-lg overflow-hidden p-0"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader className="border-b px-4 py-3">
           <DialogTitle className="flex items-center gap-2 text-base">

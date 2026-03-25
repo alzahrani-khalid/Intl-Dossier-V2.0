@@ -31,6 +31,7 @@ import {
 } from 'lucide-react'
 import { DossierTypeGuide } from './DossierTypeGuide'
 import type { DossierType } from '@/services/dossier-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DossierTypeSelectorProps {
   value?: DossierType
@@ -99,9 +100,9 @@ export function DossierTypeSelector({
   className,
   disabled = false,
 }: DossierTypeSelectorProps) {
-  const { t, i18n } = useTranslation(['dossier', 'contextual-help'])
-  const isRTL = i18n.language === 'ar'
-  // Support both value and selectedType props
+  const { t } = useTranslation(['dossier', 'contextual-help'])
+  const { isRTL } = useDirection()
+// Support both value and selectedType props
   const currentValue = selectedType ?? value
 
   return (
@@ -110,7 +111,6 @@ export function DossierTypeSelector({
         'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {dossierTypeOptions.map((option) => {
         const Icon = option.icon
@@ -216,13 +216,12 @@ function DossierTypeSelectorCompact({
   disabled = false,
   showAllOption = false,
 }: DossierTypeSelectorProps & { showAllOption?: boolean }) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
 
   return (
     <div
       className={cn('flex flex-wrap gap-2', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="radiogroup"
     >
       {showAllOption && (

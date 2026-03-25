@@ -93,9 +93,7 @@ function DashboardEmptyState({
   className,
   showContextualSuggestions = false,
 }: DashboardEmptyStateProps) {
-  const { t, i18n } = useTranslation('empty-states')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('empty-states')
   const config = widgetConfig[widgetType]
 
   const title =
@@ -133,7 +131,7 @@ function DashboardEmptyState({
   }
 
   return (
-    <div className={cn('flex flex-col', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-col', className)}>
       <EmptyState
         icon={config.icon}
         title={title}

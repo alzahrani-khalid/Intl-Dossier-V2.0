@@ -25,7 +25,6 @@
  */
 
 import { useEffect, forwardRef, useImperativeHandle, type ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { usePullToRefresh, type PullToRefreshConfig } from '@/hooks/usePullToRefresh'
 import { useLastSyncInfo } from '@/hooks/useLastSyncInfo'
@@ -89,10 +88,7 @@ export const PullToRefreshContainer = forwardRef<
     },
     ref,
   ) => {
-    const { i18n } = useTranslation()
-    const isRTL = i18n.language === 'ar'
-
-    // Sync info tracking
+// Sync info tracking
     const {
       lastSyncTime,
       itemsSynced,
@@ -140,7 +136,7 @@ export const PullToRefreshContainer = forwardRef<
     )
 
     return (
-      <div className="flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex flex-col">
         {/* Sync status bar (optional) */}
         {showSyncStatusBar && (
           <SyncStatusBar

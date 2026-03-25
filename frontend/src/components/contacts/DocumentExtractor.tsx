@@ -17,6 +17,7 @@ import { Upload, X, CheckCircle2, AlertCircle, Loader2, FileText, Users } from '
 import { useUploadDocument, useDocumentStatus, getConfidenceColor } from '@/hooks/useOCR'
 import type { ExtractedContact } from '@/services/ocr-api'
 import type { Database } from '@/types/contact-directory.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type ContactInsert = Database['public']['Tables']['contacts']['Insert']
 
@@ -26,10 +27,9 @@ interface DocumentExtractorProps {
 }
 
 export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [documentSourceId, setDocumentSourceId] = useState<string | null>(null)
   const [extractedContacts, setExtractedContacts] = useState<ExtractedContact[]>([])
   const [processingComplete, setProcessingComplete] = useState(false)
@@ -136,7 +136,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
   const isProcessing = !!documentSourceId && !processingComplete && !processingError
 
   return (
-    <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4 sm:space-y-6">
       {/* File Selection */}
       {!documentSourceId && (
         <Card>

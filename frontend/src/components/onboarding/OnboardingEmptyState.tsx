@@ -32,6 +32,7 @@ import { OnboardingChecklist } from './OnboardingChecklist'
 import { MilestonesCelebration } from './MilestonesCelebration'
 import { useOnboardingChecklist } from '@/hooks/useOnboardingChecklist'
 import type { OnboardingEmptyStateProps, OnboardingEntityType } from '@/types/onboarding.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for entity types
 const entityIcons: Record<OnboardingEntityType, LucideIcon> = {
@@ -119,10 +120,9 @@ function OnboardingEmptyState({
   onCreate,
   className,
 }: OnboardingEmptyStateProps) {
-  const { t, i18n } = useTranslation('onboarding')
-  const isRTL = i18n.language === 'ar'
-
-  const {
+  const { t } = useTranslation('onboarding')
+  const { isRTL } = useDirection()
+const {
     isLoading,
     isDismissed,
     isFullyCompleted,
@@ -151,7 +151,6 @@ function OnboardingEmptyState({
   return (
     <div
       className={cn('w-full', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="onboarding-empty-state"
     >
       {/* Milestone celebration overlay */}

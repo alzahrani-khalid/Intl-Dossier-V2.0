@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import type { EntityLink } from '../../../../backend/src/types/intake-entity-links.types'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Link type configuration with colors and icons
@@ -72,10 +73,9 @@ export function LinkTypeBadge({
   className,
   size = 'default',
 }: LinkTypeBadgeProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const config = LINK_TYPE_CONFIG[linkType] || LINK_TYPE_CONFIG.related
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const config = LINK_TYPE_CONFIG[linkType] || LINK_TYPE_CONFIG.related
 
   // Determine if icon should be shown (default: desktop only for space optimization)
   const displayIcon = showIcon ?? false // Hidden by default on mobile, can be overridden

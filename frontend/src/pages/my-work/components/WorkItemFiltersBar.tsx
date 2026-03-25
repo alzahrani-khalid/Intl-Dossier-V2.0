@@ -20,6 +20,7 @@ import type { TrackingType, WorkItemSortBy, SortOrder } from '@/types/unified-wo
 import { cn } from '@/lib/utils'
 import { useState, useCallback } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkItemFiltersBarProps {
   trackingType?: TrackingType
@@ -40,9 +41,9 @@ export function WorkItemFiltersBar({
   sortOrder,
   onSortChange,
 }: WorkItemFiltersBarProps) {
-  const { t, i18n } = useTranslation('my-work')
-  const isRTL = i18n.language === 'ar'
-  const [localSearch, setLocalSearch] = useState(searchQuery)
+  const { t } = useTranslation('my-work')
+  const { isRTL } = useDirection()
+const [localSearch, setLocalSearch] = useState(searchQuery)
 
   // Debounce search to avoid excessive API calls
   const debouncedSearch = useDebouncedCallback((value: string) => {
@@ -98,7 +99,7 @@ export function WorkItemFiltersBar({
   )
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 mb-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col sm:flex-row gap-3 mb-4">
       {/* Search Input */}
       <div className="relative flex-1">
         <Search

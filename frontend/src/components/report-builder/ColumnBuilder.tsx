@@ -28,6 +28,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { GripVertical, X, Eye, EyeOff, Columns } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ReportColumn } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ColumnBuilderProps {
   columns: ReportColumn[]
@@ -119,10 +120,9 @@ export function ColumnBuilder({
   onUpdateColumn,
   onReorderColumns,
 }: ColumnBuilderProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
-  const { setNodeRef, isOver } = useDroppable({
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const { setNodeRef, isOver } = useDroppable({
     id: 'columns-drop-zone',
     data: { type: 'columns' },
   })
@@ -148,7 +148,7 @@ export function ColumnBuilder({
   const hiddenCount = columns.length - visibleCount
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'} className="h-full flex flex-col">
+    <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div>

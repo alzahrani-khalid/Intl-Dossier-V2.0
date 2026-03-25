@@ -29,6 +29,7 @@ import type {
   EntitySearchResult,
   EntityType,
 } from '../../../../backend/src/types/intake-entity-links.types'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Entity type filter options
@@ -90,10 +91,9 @@ export function EntitySearchDialog({
   classificationLevel,
   includeArchived = false,
 }: EntitySearchDialogProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  // State for selected entities (multi-select)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+// State for selected entities (multi-select)
   const [selectedEntities, setSelectedEntities] = useState<EntitySearchResult[]>([])
   // State for which entity should be primary (only one allowed)
   const [primaryEntityKey, setPrimaryEntityKey] = useState<string | null>(null)
@@ -241,7 +241,6 @@ export function EntitySearchDialog({
                   'min-h-11', // 44px touch target
                   isRTL ? 'pe-10 ps-3' : 'ps-10 pe-3',
                 )}
-                dir={isRTL ? 'rtl' : 'ltr'}
                 autoFocus
                 aria-label={t('entityLinks.searchInput')}
               />

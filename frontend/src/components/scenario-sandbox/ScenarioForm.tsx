@@ -39,6 +39,7 @@ import {
 import type { Scenario, ScenarioType, CreateScenarioRequest } from '@/types/scenario-sandbox.types'
 import { SCENARIO_TYPE_LABELS } from '@/types/scenario-sandbox.types'
 import { Loader2 } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 const scenarioSchema = z.object({
   title_en: z.string().min(1, 'Title is required').max(200),
@@ -73,10 +74,9 @@ export function ScenarioForm({
   onSubmit,
   isLoading,
 }: ScenarioFormProps) {
-  const { t, i18n } = useTranslation('scenario-sandbox')
-  const isRTL = i18n.language === 'ar'
-
-  const form = useForm<ScenarioFormValues, unknown, ScenarioFormValues>({
+  const { t } = useTranslation('scenario-sandbox')
+  const { isRTL } = useDirection()
+const form = useForm<ScenarioFormValues, unknown, ScenarioFormValues>({
     resolver: zodResolver(scenarioSchema),
     defaultValues: {
       title_en: scenario?.title_en || '',
@@ -110,7 +110,7 @@ export function ScenarioForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{scenario ? t('scenario.edit') : t('scenario.create')}</DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>

@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Button } from '@/components/ui/button'
 import type { ContactResponse } from '@/services/contact-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ContactListProps {
   contacts: ContactResponse[]
@@ -37,9 +38,9 @@ export function ContactList({
   emptyMessage,
   className = '',
 }: ContactListProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-  const parentRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const parentRef = useRef<HTMLDivElement>(null)
 
   // Virtual scrolling for large lists
   const rowVirtualizer = useVirtualizer({
@@ -85,7 +86,6 @@ export function ContactList({
       ref={parentRef}
       className={`overflow-auto ${className}`}
       style={{ height: '100%' }}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div
         style={{
@@ -135,8 +135,8 @@ function ContactListGrid({
   emptyMessage,
   className = '',
 }: ContactListProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
 
   // Loading state
   if (isLoading) {
@@ -172,7 +172,6 @@ function ContactListGrid({
   return (
     <div
       className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ${className}`}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {contacts.map((contact) => (
         <ContactCard
@@ -198,8 +197,8 @@ function ContactListGrouped({
   emptyMessage,
   className = '',
 }: ContactListProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
 
   // Group contacts by organization
   const groupedContacts = useMemo(() => {
@@ -262,7 +261,7 @@ function ContactListGrouped({
   }
 
   return (
-    <div className={`space-y-6 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`space-y-6 ${className}`}>
       {groupedContacts.map((group) => (
         <Collapsible key={group.id} defaultOpen className="space-y-4">
           <div className="flex items-center justify-between">

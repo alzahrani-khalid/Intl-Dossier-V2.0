@@ -35,6 +35,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface TouchOptimizedGraphControlsProps {
   /** Current zoom level (0.1 - 2) */
@@ -83,10 +84,9 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
   position = 'bottom-end',
   showGestureHint = true,
 }: TouchOptimizedGraphControlsProps) {
-  const { t, i18n } = useTranslation('relationships')
-  const isRTL = i18n.language === 'ar'
-
-  // Calculate zoom percentage if not provided
+  const { t } = useTranslation('relationships')
+  const { isRTL } = useDirection()
+// Calculate zoom percentage if not provided
   const displayPercentage = zoomPercentage || `${Math.round(zoomLevel * 100)}%`
 
   // Check if at zoom limits
@@ -107,7 +107,6 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
   return (
     <div
       className={cn('absolute z-20', getPositionClasses(), className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -285,8 +284,8 @@ export const FloatingZoomIndicator = memo(function FloatingZoomIndicator({
   isVisible: boolean
   className?: string
 }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   return (
     <AnimatePresence>
@@ -300,7 +299,6 @@ export const FloatingZoomIndicator = memo(function FloatingZoomIndicator({
             'bg-black/70 text-white px-6 py-4 rounded-2xl backdrop-blur-sm shadow-2xl',
             className,
           )}
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <span className="text-3xl sm:text-4xl font-bold tabular-nums">
             {Math.round(zoomLevel * 100)}%
@@ -332,8 +330,8 @@ export const MobileTouchControls = memo(function MobileTouchControls({
   maxZoom?: number
   className?: string
 }) {
-  const { t, i18n } = useTranslation('relationships')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('relationships')
+  const { isRTL } = useDirection()
 
   const isAtMinZoom = zoomLevel <= minZoom + 0.05
   const isAtMaxZoom = zoomLevel >= maxZoom - 0.05
@@ -346,7 +344,6 @@ export const MobileTouchControls = memo(function MobileTouchControls({
         'flex items-center gap-1 p-1',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <Button
         variant="ghost"

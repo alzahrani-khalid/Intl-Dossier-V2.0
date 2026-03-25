@@ -47,9 +47,7 @@ export function EngagementKanbanDialog({
   stats,
   onDragEnd,
 }: EngagementKanbanDialogProps): React.JSX.Element {
-  const { t, i18n } = useTranslation('assignments')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('assignments')
   // Transform columns to kibo-ui format
   const kanbanColumns = useMemo(
     () => [
@@ -122,7 +120,7 @@ export function EngagementKanbanDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent dir={isRTL ? 'rtl' : 'ltr'} className="max-w-[95vw] max-h-[90vh] p-0">
+      <DialogContent className="max-w-[95vw] max-h-[90vh] p-0">
         <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-4">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 space-y-2">

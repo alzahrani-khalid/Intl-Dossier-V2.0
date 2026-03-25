@@ -35,8 +35,7 @@ export function DeleteTaskDialog({
   onOpenChange,
   onSuccess,
 }: DeleteTaskDialogProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
   const deleteTask = useDeleteTask()
 
   const handleDelete = async () => {
@@ -51,7 +50,7 @@ export function DeleteTaskDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-start">
             {t('tasks.deleteTask', 'Delete Task')}

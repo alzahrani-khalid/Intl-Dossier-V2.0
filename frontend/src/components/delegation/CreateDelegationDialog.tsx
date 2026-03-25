@@ -37,6 +37,7 @@ import { cn } from '@/lib/utils'
 import { useDelegatePermissions, useValidateDelegation } from '@/hooks/useDelegation'
 import { useToast } from '@/hooks/useToast'
 import type { DelegatePermissionsRequest } from '@/services/user-management-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface CreateDelegationDialogProps {
   open: boolean
@@ -64,10 +65,10 @@ export function CreateDelegationDialog({
   onSuccess,
   users = EMPTY_USERS,
 }: CreateDelegationDialogProps) {
-  const { t, i18n } = useTranslation('delegation')
+  const { t } = useTranslation('delegation')
   const { toast } = useToast()
-  const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
+  const { isRTL } = useDirection()
+const dateLocale = isRTL ? ar : enUS
 
   type FormState = {
     selectedGranteeId: string
@@ -174,7 +175,6 @@ export function CreateDelegationDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">

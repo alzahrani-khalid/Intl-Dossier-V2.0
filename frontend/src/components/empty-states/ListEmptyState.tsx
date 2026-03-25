@@ -133,9 +133,7 @@ export function ListEmptyState({
   showCollaboration = false,
   currentUserName,
 }: ListEmptyStateProps) {
-  const { t, i18n } = useTranslation('empty-states')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('empty-states')
   const config = entityConfig[entityType]
   const translationKey = config.translationKey
 
@@ -209,7 +207,7 @@ export function ListEmptyState({
 
   // Standard empty state without collaboration features
   return (
-    <div className={cn('flex flex-col', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-col', className)}>
       <EmptyState
         icon={config.icon}
         title={title}

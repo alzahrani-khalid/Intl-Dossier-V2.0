@@ -59,6 +59,7 @@ import type { CreateWorkItemDossierLinksRequest } from '@/hooks/useCreateWorkIte
 import type { Dossier } from '@/lib/dossier-type-guards'
 import type { ActionDialogState, DossierContextForAction } from '@/hooks/useAddToDossierActions'
 import type { AddToDossierActionType } from './AddToDossierMenu'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // Types
@@ -219,7 +220,7 @@ function IntakeDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Inbox className="h-5 w-5" />
@@ -348,7 +349,7 @@ function TaskDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CheckSquare className="h-5 w-5" />
@@ -469,7 +470,7 @@ function CommitmentDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Handshake className="h-5 w-5" />
@@ -593,7 +594,7 @@ function PositionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
@@ -700,7 +701,7 @@ function EventDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
@@ -819,7 +820,7 @@ function RelationshipDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <GitBranch className="h-5 w-5" />
@@ -911,7 +912,7 @@ function BriefDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
@@ -1011,7 +1012,7 @@ function DocumentDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Upload className="h-5 w-5" />
@@ -1093,10 +1094,9 @@ export function AddToDossierDialogs({
   onClose,
   dossierContext,
 }: AddToDossierDialogsProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const commonProps = {
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const commonProps = {
     dossier,
     dossierContext,
     isRTL,

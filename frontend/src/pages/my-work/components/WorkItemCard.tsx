@@ -20,15 +20,16 @@ import type { UnifiedWorkItem, WorkSource, TrackingType } from '@/types/unified-
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow, format, isToday, isTomorrow, isPast } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkItemCardProps {
   item: UnifiedWorkItem
 }
 
 export function WorkItemCard({ item }: WorkItemCardProps) {
-  const { t, i18n } = useTranslation('my-work')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('my-work')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   // Source icon and color
   const sourceConfig: Record<WorkSource, { icon: LucideIcon; color: string; label: string }> = {
@@ -144,7 +145,6 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
           'transition-colors hover:bg-accent/50 cursor-pointer border-border/60',
           item.is_overdue && 'border-red-300 dark:border-red-800',
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <CardContent className="px-3 py-2 sm:px-4 sm:py-2.5">
           <div className="flex items-center gap-2.5">

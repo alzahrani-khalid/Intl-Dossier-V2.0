@@ -40,6 +40,7 @@ import {
   type EntityType,
   type EntityHistoryEntry,
 } from '@/store/entityHistoryStore'
+import { useDirection } from '@/hooks/useDirection'
 
 /** Map entity types to icons */
 const entityIcons: Record<EntityType, React.ComponentType<{ className?: string }>> = {
@@ -159,11 +160,10 @@ export function EntityBreadcrumbTrail({
   className,
   compact = false,
 }: EntityBreadcrumbTrailProps) {
-  const { t, i18n } = useTranslation('common')
+  const { t } = useTranslation('common')
   const location = useLocation()
-  const isRTL = i18n.language === 'ar'
-
-  const { history, removeEntity, clearHistory } = useEntityHistoryStore()
+  const { isRTL } = useDirection()
+const { history, removeEntity, clearHistory } = useEntityHistoryStore()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Get displayed entities
@@ -200,7 +200,6 @@ export function EntityBreadcrumbTrail({
         'border-b border-border/50',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* History Icon & Label */}
       <div

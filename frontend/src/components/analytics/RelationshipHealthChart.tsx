@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils'
 import type { RelationshipHealthTrends } from '@/types/analytics.types'
 import { HEALTH_LEVEL_COLORS, TREND_COLORS } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
+import { useDirection } from '@/hooks/useDirection'
 
 interface RelationshipHealthChartProps {
   data?: RelationshipHealthTrends
@@ -47,10 +48,9 @@ export function RelationshipHealthChart({
   showPreview = true,
   onShowSampleData,
 }: RelationshipHealthChartProps) {
-  const { t, i18n } = useTranslation('analytics')
-  const isRTL = i18n.language === 'ar'
-
-  const trendData = useMemo(() => {
+  const { t } = useTranslation('analytics')
+  const { isRTL } = useDirection()
+const trendData = useMemo(() => {
     if (!data?.scoreTrend) return []
     return data.scoreTrend.map((point) => ({
       ...point,
@@ -121,7 +121,7 @@ export function RelationshipHealthChart({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="bg-background border rounded-lg shadow-lg p-3">
           <p className="font-medium mb-2">{label}</p>
           {payload.map((entry: any, index: number) => (
             <div key={index} className="flex items-center gap-2 text-sm">
@@ -144,7 +144,7 @@ export function RelationshipHealthChart({
     if (active && payload && payload.length) {
       const item = payload[0]
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="bg-background border rounded-lg shadow-lg p-3">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
             <span className="font-medium">{item.name}</span>
@@ -160,7 +160,7 @@ export function RelationshipHealthChart({
   }
 
   return (
-    <Card className={cn('col-span-full lg:col-span-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('col-span-full lg:col-span-2', className)}>
       <CardHeader>
         <CardTitle>{t('relationships.title')}</CardTitle>
         <CardDescription>{t('relationships.description')}</CardDescription>

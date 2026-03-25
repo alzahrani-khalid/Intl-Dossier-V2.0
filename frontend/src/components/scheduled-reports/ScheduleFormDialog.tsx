@@ -51,6 +51,7 @@ import {
 
 import { RecipientsManager } from './RecipientsManager'
 import { ConditionsManager } from './ConditionsManager'
+import { useDirection } from '@/hooks/useDirection'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -78,9 +79,9 @@ interface ScheduleFormDialogProps {
 }
 
 export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFormDialogProps) {
-  const { t, i18n } = useTranslation('scheduled-reports')
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation('scheduled-reports')
+  const { isRTL } = useDirection()
+const { toast } = useToast()
 
   const [activeTab, setActiveTab] = useState('general')
 
@@ -160,7 +161,7 @@ export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFor
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{schedule ? t('editSchedule') : t('createNew')}</DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>

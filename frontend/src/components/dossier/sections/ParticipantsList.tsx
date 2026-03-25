@@ -14,6 +14,7 @@ import { supabase } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { useDirection } from '@/hooks/useDirection'
 
 interface Participant {
   id: string
@@ -31,10 +32,9 @@ interface ParticipantsListProps {
 }
 
 export function ParticipantsList({ dossierId }: ParticipantsListProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  // Fetch participants from dossier_relationships
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+// Fetch participants from dossier_relationships
   const { data: relationshipParticipants = [], isLoading: isLoadingRelationships } = useQuery({
     queryKey: ['dossier-participants', dossierId],
     queryFn: async () => {
@@ -148,7 +148,7 @@ export function ParticipantsList({ dossierId }: ParticipantsListProps) {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
@@ -159,7 +159,6 @@ export function ParticipantsList({ dossierId }: ParticipantsListProps) {
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -180,7 +179,7 @@ export function ParticipantsList({ dossierId }: ParticipantsListProps) {
 
   // Render participants list
   return (
-    <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-3">
       {/* Summary header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">

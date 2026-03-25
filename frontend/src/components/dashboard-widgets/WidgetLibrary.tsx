@@ -32,6 +32,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { WidgetType, WidgetRegistryEntry } from '@/types/dashboard-widget.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WidgetLibraryProps {
   isOpen: boolean
@@ -309,10 +310,9 @@ export function WidgetLibrary({
   onAddWidget,
   existingWidgetTypes = [],
 }: WidgetLibraryProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-
-  const [searchQuery, setSearchQuery] = useState('')
+  const { t } = useTranslation('dashboard-widgets')
+  const { isRTL } = useDirection()
+const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<WidgetCategory>('all')
 
   // Filter widgets by search and category
@@ -352,7 +352,6 @@ export function WidgetLibrary({
       <SheetContent
         side={isRTL ? 'left' : 'right'}
         className="w-full sm:max-w-md"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <SheetHeader className="mb-4">
           <SheetTitle>{t('widgetLibrary.title')}</SheetTitle>

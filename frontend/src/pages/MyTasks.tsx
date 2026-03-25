@@ -28,14 +28,15 @@ import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { AlertCircle, CheckCircle2, Filter, Plus, UserCheck, Users } from 'lucide-react'
 import { useWorkCreation } from '../components/work-creation'
 import type { Database } from '../../../backend/src/types/database.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 type ViewType = 'assigned' | 'contributed'
 
 export function MyTasksPage() {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const { openPalette } = useWorkCreation()
   const [viewType, setViewType] = useState<ViewType>('assigned')
@@ -132,7 +133,6 @@ export function MyTasksPage() {
   return (
     <div
       className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

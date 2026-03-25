@@ -20,20 +20,20 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatDistanceToNow } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/tags')({
   component: TagsPage,
 })
 
 function TagsPage() {
-  const { t, i18n } = useTranslation('tags')
-  const isRTL = i18n.language === 'ar'
-  const [activeTab, setActiveTab] = useState('hierarchy')
+  const { t } = useTranslation('tags')
+  const { isRTL } = useDirection()
+const [activeTab, setActiveTab] = useState('hierarchy')
 
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="flex flex-col gap-1">

@@ -61,6 +61,7 @@ import {
   type EngagementBrief,
   type BriefType,
 } from '@/hooks/useEngagementBriefs'
+import { useDirection } from '@/hooks/useDirection'
 
 interface EngagementBriefsSectionProps {
   engagementId: string
@@ -68,10 +69,9 @@ interface EngagementBriefsSectionProps {
 }
 
 export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectionProps) {
-  const { t, i18n } = useTranslation('engagement-briefs')
-  const isRTL = i18n.language === 'ar'
-
-  const [activeTab, setActiveTab] = useState('briefs')
+  const { t } = useTranslation('engagement-briefs')
+  const { isRTL } = useDirection()
+const [activeTab, setActiveTab] = useState('briefs')
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false)
   const [generateLanguage, setGenerateLanguage] = useState<'en' | 'ar'>('en')
   const [customPrompt, setCustomPrompt] = useState('')
@@ -150,7 +150,7 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
   }
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card>
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -173,7 +173,7 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
                   <span className="hidden sm:inline">{t('actions.generateWithAI')}</span>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+              <DialogContent className="max-w-lg">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
                     <Sparkles className="size-5 text-primary" />

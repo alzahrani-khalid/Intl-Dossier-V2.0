@@ -15,6 +15,7 @@ import { Sparkles, X, PlayCircle, Clock, ChevronRight, GraduationCap } from 'luc
 import { useTour, useShouldShowTour } from './TourContext'
 import { getTour } from './tour-definitions'
 import type { TourId } from './types'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface TourTriggerProps {
   /** Tour ID to trigger */
@@ -42,10 +43,9 @@ export function TourTrigger({
   variant = 'banner',
   className,
 }: TourTriggerProps) {
-  const { t, i18n } = useTranslation('guided-tours')
-  const isRTL = i18n.language === 'ar'
-
-  const { startTour, dismissTourPrompt, toursEnabled } = useTour()
+  const { t } = useTranslation('guided-tours')
+  const { isRTL } = useDirection()
+const { startTour, dismissTourPrompt, toursEnabled } = useTour()
   const shouldShow = useShouldShowTour(tourId, isEmpty)
   const [isVisible, setIsVisible] = useState(false)
   const [isDismissing, setIsDismissing] = useState(false)
@@ -90,7 +90,6 @@ export function TourTrigger({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className={cn('w-full mb-4 sm:mb-6', className)}
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             <div
               className={cn(
@@ -167,7 +166,6 @@ export function TourTrigger({
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
             className={cn('inline-flex', className)}
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             <button
               onClick={handleStartTour}
@@ -204,7 +202,6 @@ export function TourTrigger({
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
           className={cn('w-full max-w-sm', className)}
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
             <CardContent className="p-4 sm:p-5">

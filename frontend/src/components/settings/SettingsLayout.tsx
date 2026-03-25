@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SettingsNavigation, SettingsTabs } from './SettingsNavigation'
 import { SettingsSectionId } from '@/types/settings.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SettingsLayoutProps {
   /** Children sections to render */
@@ -34,13 +35,11 @@ export function SettingsLayout({
   isSaving = false,
   onSave,
 }: SettingsLayoutProps) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
-
-  return (
+  const { t } = useTranslation('settings')
+  const { isRTL } = useDirection()
+return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
@@ -165,13 +164,12 @@ interface SettingsEmptyStateProps {
 }
 
 function SettingsEmptyState({ icon: Icon, title, description, action }: SettingsEmptyStateProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   return (
     <div
       className="flex flex-col items-center justify-center py-12 text-center"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {Icon && <Icon className="h-12 w-12 text-muted-foreground/50 mb-4" />}
       <h3 className="text-lg font-medium">{title}</h3>

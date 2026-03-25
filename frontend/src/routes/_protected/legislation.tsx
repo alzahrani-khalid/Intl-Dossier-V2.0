@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { LegislationList } from '@/components/legislation'
 import { LegislationForm } from '@/components/legislation'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { useDirection } from '@/hooks/useDirection'
 
 // Search params schema for URL filter synchronization
 interface LegislationSearchParams {
@@ -41,9 +42,9 @@ export const Route = createFileRoute('/_protected/legislation')({
 })
 
 function LegislationPage() {
-  const { t, i18n } = useTranslation('legislation')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate({ from: Route.fullPath })
+  const { t } = useTranslation('legislation')
+  const { isRTL } = useDirection()
+const navigate = useNavigate({ from: Route.fullPath })
   const searchParams = Route.useSearch()
 
   const [isCreateOpen, setIsCreateOpen] = useState(false)

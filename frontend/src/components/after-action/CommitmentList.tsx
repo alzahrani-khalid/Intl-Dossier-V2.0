@@ -18,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Trash2, Plus, CalendarIcon, User, Mail } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface Commitment {
   id?: string
@@ -56,10 +57,9 @@ export function CommitmentList({
   readOnly = false,
   availableUsers = [],
 }: CommitmentListProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const addCommitment = () => {
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const addCommitment = () => {
     onChange([
       ...commitments,
       {
@@ -158,7 +158,6 @@ export function CommitmentList({
                 rows={2}
                 maxLength={2000}
                 disabled={readOnly}
-                dir={isRTL ? 'rtl' : 'ltr'}
                 required
               />
             </div>
@@ -200,7 +199,7 @@ export function CommitmentList({
                   onValueChange={(value) => updateCommitment(index, 'owner_user_id', value)}
                   disabled={readOnly}
                 >
-                  <SelectTrigger id={`owner-user-${index}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                  <SelectTrigger id={`owner-user-${index}`}>
                     <SelectValue placeholder={t('afterActions.commitments.selectUser')} />
                   </SelectTrigger>
                   <SelectContent>
@@ -225,7 +224,6 @@ export function CommitmentList({
                     onChange={(e) => updateCommitment(index, 'owner_contact_email', e.target.value)}
                     placeholder={t('afterActions.commitments.emailPlaceholder')}
                     disabled={readOnly}
-                    dir={isRTL ? 'rtl' : 'ltr'}
                     required
                   />
                 </div>
@@ -240,7 +238,6 @@ export function CommitmentList({
                     placeholder={t('afterActions.commitments.namePlaceholder')}
                     maxLength={200}
                     disabled={readOnly}
-                    dir={isRTL ? 'rtl' : 'ltr'}
                     required
                   />
                 </div>
@@ -257,7 +254,6 @@ export function CommitmentList({
                     placeholder={t('afterActions.commitments.orgPlaceholder')}
                     maxLength={200}
                     disabled={readOnly}
-                    dir={isRTL ? 'rtl' : 'ltr'}
                   />
                 </div>
               </div>
@@ -273,7 +269,7 @@ export function CommitmentList({
                   onValueChange={(value) => updateCommitment(index, 'priority', value)}
                   disabled={readOnly}
                 >
-                  <SelectTrigger id={`priority-${index}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                  <SelectTrigger id={`priority-${index}`}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -298,7 +294,7 @@ export function CommitmentList({
                         commitment.tracking_mode === 'automatic')
                     }
                   >
-                    <SelectTrigger id={`status-${index}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                    <SelectTrigger id={`status-${index}`}>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

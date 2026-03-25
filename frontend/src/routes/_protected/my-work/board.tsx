@@ -16,7 +16,6 @@
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { z } from 'zod'
-import { useTranslation } from 'react-i18next'
 import { useCallback } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import {
@@ -41,9 +40,7 @@ export const Route = createFileRoute('/_protected/my-work/board')({
 })
 
 function MyWorkBoardPage() {
-  const { i18n } = useTranslation('unified-kanban')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+const navigate = useNavigate()
   const { user } = useAuth()
   const { mode, sources } = Route.useSearch()
 
@@ -95,7 +92,7 @@ function MyWorkBoardPage() {
   )
 
   return (
-    <div className="flex flex-col h-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col h-full">
       <UnifiedKanbanBoard
         contextType="personal"
         columnMode={mode as KanbanColumnMode}

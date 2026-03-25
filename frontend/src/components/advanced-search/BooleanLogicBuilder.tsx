@@ -24,6 +24,7 @@ import type {
   LogicOperator,
 } from '@/types/advanced-search.types'
 import { getFieldsForEntityTypes, getOperatorsForFieldType } from '@/types/advanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface BooleanLogicBuilderProps {
   conditions: FilterCondition[]
@@ -48,10 +49,9 @@ export function BooleanLogicBuilder({
   onClear,
   className,
 }: BooleanLogicBuilderProps) {
-  const { t, i18n } = useTranslation('advanced-search')
-  const isRTL = i18n.language === 'ar'
-
-  const availableFields = getFieldsForEntityTypes(entityTypes)
+  const { t } = useTranslation('advanced-search')
+  const { isRTL } = useDirection()
+const availableFields = getFieldsForEntityTypes(entityTypes)
 
   const handleAddCondition = () => {
     if (availableFields.length === 0) return
@@ -206,7 +206,7 @@ export function BooleanLogicBuilder({
   }
 
   return (
-    <div className={cn('flex flex-col gap-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-col gap-4', className)}>
       {/* Header with Logic Toggle */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">

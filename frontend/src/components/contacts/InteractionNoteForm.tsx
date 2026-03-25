@@ -48,6 +48,7 @@ import { useCreateNote, useUploadAttachment } from '@/hooks/useInteractions'
 import { useSearchPersonDossiers } from '@/hooks/usePersonDossiers'
 import type { InteractionNoteResponse } from '@/services/interaction-api'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface InteractionNoteFormProps {
   contactId: string
@@ -84,10 +85,9 @@ export function InteractionNoteForm({
   open,
   onOpenChange,
 }: InteractionNoteFormProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  const createNoteMutation = useCreateNote()
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const createNoteMutation = useCreateNote()
   const uploadAttachmentMutation = useUploadAttachment()
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
@@ -192,7 +192,6 @@ export function InteractionNoteForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="max-w-2xl max-h-[90vh] overflow-y-auto px-4 sm:px-6"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl">

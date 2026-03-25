@@ -14,16 +14,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { usePerson } from '@/hooks/usePersons'
 import { ENGAGEMENT_ROLE_LABELS } from '@/types/person.types'
 import type { PersonEngagementWithDetails, EngagementRole } from '@/types/person.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface InteractionHistoryProps {
   dossierId: string
 }
 
 export function InteractionHistory({ dossierId }: InteractionHistoryProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const { data: personData, isLoading, isError } = usePerson(dossierId)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { data: personData, isLoading, isError } = usePerson(dossierId)
 
   // Get display value based on language
   const getDisplayValue = (en?: string, ar?: string) => {
@@ -49,7 +49,7 @@ export function InteractionHistory({ dossierId }: InteractionHistoryProps) {
 
   if (isLoading) {
     return (
-      <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-4">
         {[1, 2, 3].map((i) => (
           <Card key={i}>
             <CardContent className="p-4">
@@ -67,7 +67,6 @@ export function InteractionHistory({ dossierId }: InteractionHistoryProps) {
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-destructive/10 flex items-center justify-center">
@@ -88,7 +87,6 @@ export function InteractionHistory({ dossierId }: InteractionHistoryProps) {
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -113,7 +111,7 @@ export function InteractionHistory({ dossierId }: InteractionHistoryProps) {
   }
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Header with count and add button */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">

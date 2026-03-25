@@ -23,6 +23,7 @@ import {
   Database,
   Download,
 } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/admin/system')({
   component: AdminSystemPage,
@@ -111,9 +112,9 @@ async function fetchProgress(progressId: string): Promise<ProgressData> {
 }
 
 function AdminSystemPage() {
-  const { t, i18n } = useTranslation('admin')
-  const isRTL = i18n.language === 'ar'
-  const [result, setResult] = useState<PopulateCountriesResponse | null>(null)
+  const { t } = useTranslation('admin')
+  const { isRTL } = useDirection()
+const [result, setResult] = useState<PopulateCountriesResponse | null>(null)
   const [progress, setProgress] = useState<ProgressData | null>(null)
   const [_progressId, setProgressId] = useState<string | null>(null)
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -204,7 +205,7 @@ function AdminSystemPage() {
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="p-3 bg-primary/10 rounded-lg">

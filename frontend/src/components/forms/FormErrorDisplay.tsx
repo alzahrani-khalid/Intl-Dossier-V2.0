@@ -16,6 +16,7 @@ import { AlertCircle, AlertTriangle, Info, X, ChevronRight, Lightbulb } from 'lu
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import type { FieldErrors, FieldError } from 'react-hook-form'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -168,9 +169,9 @@ function ErrorWithSuggestion({
   recoveryAction,
   className,
 }: ErrorWithSuggestionProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const message = getErrorMessage(error)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const message = getErrorMessage(error)
 
   if (!message) return null
 
@@ -189,7 +190,6 @@ function ErrorWithSuggestion({
       >
         <div
           className={cn('rounded-lg border p-3 mt-2', styles.container)}
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           {/* Error message */}
           <div className={cn('flex items-start gap-2', styles.text)}>
@@ -240,8 +240,8 @@ export function ErrorSummary({
   onFieldClick,
   className,
 }: ErrorSummaryProps) {
-  const { t, i18n } = useTranslation('validation')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('validation')
+  const { isRTL } = useDirection()
 
   if (errors.length === 0) return null
 
@@ -260,7 +260,6 @@ export function ErrorSummary({
           'bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="alert"
         aria-live="assertive"
       >
@@ -416,8 +415,8 @@ function ToastError({
   autoDismiss = 5000,
   severity = 'error',
 }: ToastErrorProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   const styles = getSeverityStyles(severity)
   const IconComponent = styles.IconComponent
@@ -436,7 +435,6 @@ function ToastError({
           exit={{ opacity: 0, y: 50, scale: 0.9 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className={cn('fixed bottom-4 z-50', isRTL ? 'start-4' : 'end-4', 'max-w-sm w-full')}
-          dir={isRTL ? 'rtl' : 'ltr'}
           role="alert"
         >
           <div

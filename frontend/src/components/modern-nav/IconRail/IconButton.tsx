@@ -1,7 +1,7 @@
 import { LucideIcon } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface IconButtonProps {
   /** Lucide icon component */
@@ -42,10 +42,8 @@ export function IconButton({
   className,
   badge,
 }: IconButtonProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
+const { isRTL } = useDirection()
+return (
     <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>

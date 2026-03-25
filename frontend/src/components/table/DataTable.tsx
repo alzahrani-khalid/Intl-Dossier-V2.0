@@ -49,6 +49,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -92,10 +93,9 @@ export function DataTable<TData, TValue>({
   cardTitleColumn,
   cardDescriptionColumn,
 }: DataTableProps<TData, TValue>) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [sorting, setSorting] = useState<SortingState>([])
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -208,7 +208,7 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="space-y-2 min-w-0 w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-2 min-w-0 w-full">
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-2">
         {/* Search */}

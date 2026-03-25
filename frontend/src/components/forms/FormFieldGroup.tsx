@@ -10,6 +10,7 @@ import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { ChevronDown, CheckCircle2, AlertCircle, Folder } from 'lucide-react'
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -139,10 +140,9 @@ function GroupHeader({
   isCollapsed,
   collapsible,
 }: GroupHeaderProps) {
-  const { t, i18n } = useTranslation('progressive-form')
-  const isRTL = i18n.language === 'ar'
-
-  return (
+  const { t } = useTranslation('progressive-form')
+  const { isRTL } = useDirection()
+return (
     <div className="flex items-center gap-3 flex-wrap">
       {/* Icon */}
       <div className="flex-shrink-0">
@@ -229,8 +229,8 @@ export function FormFieldGroup({
   className,
   children,
 }: FormFieldGroupProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   // Container styling
   const containerClasses = cn(
@@ -266,7 +266,6 @@ export function FormFieldGroup({
         open={!isCollapsed}
         onOpenChange={(open) => onCollapsedChange?.(!open)}
         className={containerClasses}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <CollapsiblePrimitive.Trigger asChild>
           <button type="button" className={headerClasses} aria-expanded={!isCollapsed}>
@@ -305,7 +304,7 @@ export function FormFieldGroup({
 
   // Non-collapsible version
   return (
-    <div className={containerClasses} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={containerClasses}>
       <div className={headerClasses}>
         <GroupHeader
           title={title}

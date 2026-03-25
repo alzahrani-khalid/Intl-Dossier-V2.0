@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { SLATrendDataPoint } from '@/types/sla.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SLAComplianceChartProps {
   data?: SLATrendDataPoint[]
@@ -31,10 +32,9 @@ interface SLAComplianceChartProps {
 }
 
 export function SLAComplianceChart({ data, isLoading, className }: SLAComplianceChartProps) {
-  const { t, i18n } = useTranslation('sla')
-  const isRTL = i18n.language === 'ar'
-
-  const chartData = useMemo(() => {
+  const { t } = useTranslation('sla')
+  const { isRTL } = useDirection()
+const chartData = useMemo(() => {
     if (!data || data.length === 0) {
       // Generate mock data for empty state
       return []
@@ -83,7 +83,7 @@ export function SLAComplianceChart({ data, isLoading, className }: SLACompliance
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="bg-background border rounded-lg shadow-lg p-3">
           <p className="font-medium mb-2">{label}</p>
           {payload.map((entry: any, index: number) => (
             <div key={index} className="flex items-center gap-2 text-sm">
@@ -103,7 +103,7 @@ export function SLAComplianceChart({ data, isLoading, className }: SLACompliance
   }
 
   return (
-    <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>{t('charts.complianceTrend')}</CardTitle>
         <CardDescription>{t('charts.complianceTrendDescription')}</CardDescription>

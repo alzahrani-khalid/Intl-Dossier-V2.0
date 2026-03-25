@@ -37,6 +37,7 @@ import type {
   CreateMilestoneRequest,
   UpdateMilestoneRequest,
 } from '@/types/milestone-planning.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MilestonePlannerEmptyStateProps {
   dossierId: string
@@ -99,10 +100,9 @@ export function MilestonePlannerEmptyState({
   onMarkComplete,
   onConvertToEvent,
 }: MilestonePlannerEmptyStateProps) {
-  const { t, i18n } = useTranslation('milestone-planning')
-  const isRTL = i18n.language === 'ar'
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { t } = useTranslation('milestone-planning')
+  const { isRTL } = useDirection()
+const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editMilestone, setEditMilestone] = useState<PlannedMilestone | null>(null)
   const [_selectedType, setSelectedType] = useState<MilestoneType | null>(null)
   const [convertMilestone, setConvertMilestone] = useState<PlannedMilestone | null>(null)
@@ -180,7 +180,7 @@ export function MilestonePlannerEmptyState({
   const isEmpty = milestones.length === 0
 
   return (
-    <div className="w-full space-y-6" dir={isRTL ? 'rtl' : 'ltr'} data-testid="milestone-planner">
+    <div className="w-full space-y-6" data-testid="milestone-planner">
       {isEmpty ? (
         // Empty State - Planning Canvas Introduction
         <m.div

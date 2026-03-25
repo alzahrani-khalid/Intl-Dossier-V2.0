@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { FileText, Download, Loader2, AlertCircle, CheckCircle, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { StepUpMFA } from '../step-up-mfa/StepUpMFA'
+import { useDirection } from '@/hooks/useDirection'
 
 interface PDFGeneratorButtonProps {
   afterActionId: string
@@ -32,10 +33,9 @@ export function PDFGeneratorButton({
   disabled = false,
   className,
 }: PDFGeneratorButtonProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [open, setOpen] = useState(false)
   const [language, setLanguage] = useState<PDFLanguage>('both')
   const [status, setStatus] = useState<GenerationStatus>('idle')
   const [error, setError] = useState<string | null>(null)
@@ -157,7 +157,7 @@ export function PDFGeneratorButton({
           {t('afterActions.pdf.generateButton')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[450px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="size-5" />

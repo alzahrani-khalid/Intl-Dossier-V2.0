@@ -31,9 +31,7 @@ interface SecuritySettingsSectionProps {
  * Handles MFA, session timeout, and password change
  */
 export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('settings')
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [passwordSuccess, setPasswordSuccess] = useState(false)
@@ -124,7 +122,7 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
       description={t('security.description')}
       icon={Lock}
     >
-      <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-6">
         {/* Two-Factor Authentication */}
         <SettingsGroup>
           <SettingsItem

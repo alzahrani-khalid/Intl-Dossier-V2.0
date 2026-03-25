@@ -49,6 +49,7 @@ import type {
   UpdateCommitmentInput,
 } from '@/types/commitment.types'
 import { useCreateCommitment, useUpdateCommitment } from '@/hooks/useCommitments'
+import { useDirection } from '@/hooks/useDirection'
 
 // T029: Zod validation schema
 const commitmentFormSchema = z.object({
@@ -82,9 +83,9 @@ export function CommitmentForm({
   onSuccess,
   onCancel,
 }: CommitmentFormProps) {
-  const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-  const isEditMode = !!commitment
+  const { t } = useTranslation('commitments')
+  const { isRTL } = useDirection()
+const isEditMode = !!commitment
 
   const createMutation = useCreateCommitment()
   const updateMutation = useUpdateCommitment()
@@ -163,7 +164,6 @@ export function CommitmentForm({
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Title */}
         <FormField

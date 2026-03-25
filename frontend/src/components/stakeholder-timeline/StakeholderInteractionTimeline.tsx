@@ -55,6 +55,7 @@ import type {
   CreateInteractionRequest,
   CreateAnnotationRequest,
 } from '@/types/stakeholder-interaction.types'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Loading skeleton for timeline
@@ -130,10 +131,9 @@ function StatsOverviewCard({
   isLoading: boolean
   className?: string
 }) {
-  const { t, i18n } = useTranslation('stakeholder-interactions')
-  const isRTL = i18n.language === 'ar'
-
-  if (isLoading) {
+  const { t } = useTranslation('stakeholder-interactions')
+  const { isRTL } = useDirection()
+if (isLoading) {
     return (
       <Card className={className}>
         <CardContent className="pt-6">
@@ -179,7 +179,7 @@ function StatsOverviewCard({
   ]
 
   return (
-    <Card className={cn('mb-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('mb-6', className)}>
       <CardHeader className="pb-2">
         <CardTitle className="text-lg text-start">{t('stats.title')}</CardTitle>
         <CardDescription className="text-start">{t('stats.description')}</CardDescription>
@@ -223,8 +223,8 @@ export function StakeholderInteractionTimeline({
   itemsPerPage = 20,
   className,
 }: StakeholderInteractionTimelineProps) {
-  const { t, i18n } = useTranslation('stakeholder-interactions')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('stakeholder-interactions')
+  const { isRTL } = useDirection()
 
   // State
   const [showFiltersPanel, setShowFiltersPanel] = useState(false)
@@ -309,7 +309,7 @@ export function StakeholderInteractionTimeline({
     (filters.direction ? 1 : 0)
 
   return (
-    <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('w-full', className)}>
       {/* Header with title and actions */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>

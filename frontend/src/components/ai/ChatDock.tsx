@@ -21,6 +21,7 @@ import { MessageCircle, X, Minimize2, Maximize2, Trash2, Sparkles } from 'lucide
 import { ChatMessage, type Citation, type ToolCall } from './ChatMessage'
 import { ChatInput } from './ChatInput'
 import { useAIChat } from '@/hooks/useAIChat'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface ChatDockProps {
   onCitationClick?: (type: string, id: string) => void
@@ -28,9 +29,9 @@ export interface ChatDockProps {
 }
 
 export function ChatDock({ onCitationClick, className }: ChatDockProps) {
-  const { t, i18n } = useTranslation('ai-chat')
-  const isRTL = i18n.language === 'ar'
-  const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation('ai-chat')
+  const { isRTL } = useDirection()
+const [isOpen, setIsOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -76,7 +77,6 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
             isExpanded ? 'w-[480px] h-[600px]' : 'w-[360px] h-[480px]',
             'max-w-[calc(100vw-2rem)] max-h-[calc(100vh-6rem)]',
           )}
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           {/* Header */}
           <CardHeader className="py-3 px-4 border-b shrink-0">

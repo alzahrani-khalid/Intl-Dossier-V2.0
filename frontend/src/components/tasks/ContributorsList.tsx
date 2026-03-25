@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import type { Database } from '../../../../backend/src/types/database.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
 
@@ -34,10 +35,9 @@ export function ContributorsList({
   showRemoveButton = false,
   className = '',
 }: ContributorsListProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  // Filter out removed contributors
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+// Filter out removed contributors
   const activeContributors = contributors.filter((c) => !c.removed_at)
 
   // Split contributors into displayed and overflow
@@ -46,14 +46,14 @@ export function ContributorsList({
 
   if (activeContributors.length === 0) {
     return (
-      <div className="text-sm text-muted-foreground text-start" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="text-sm text-muted-foreground text-start">
         {t('tasks.noContributors', 'No contributors yet')}
       </div>
     )
   }
 
   return (
-    <div className={`flex flex-wrap gap-2 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`flex flex-wrap gap-2 ${className}`}>
       {displayedContributors.map((contributor) => (
         <div key={contributor.id} className="flex items-center gap-2 rounded-lg border p-2 ">
           {/* Avatar */}
@@ -128,8 +128,8 @@ function ContributorsAvatarGroup({
   maxDisplay = 3,
   className = '',
 }: ContributorsAvatarGroupProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   const activeContributors = contributors.filter((c) => !c.removed_at)
   const displayedContributors = activeContributors.slice(0, maxDisplay)
@@ -142,7 +142,6 @@ function ContributorsAvatarGroup({
   return (
     <div
       className={`flex ${isRTL ? 'flex-row-reverse' : 'flex-row'} -space-x-2 ${className}`}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {displayedContributors.map((contributor) => (
         <Avatar key={contributor.id} className="size-8 sm:size-10 border-2 border-background">

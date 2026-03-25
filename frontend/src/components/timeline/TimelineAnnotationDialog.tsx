@@ -35,6 +35,7 @@ import type {
   CreateAnnotationRequest,
   UpdateAnnotationRequest,
 } from '@/types/timeline-annotation.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TimelineAnnotationDialogProps {
   open: boolean
@@ -117,9 +118,9 @@ export function TimelineAnnotationDialog({
   eventId,
   isLoading = false,
 }: TimelineAnnotationDialogProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const isEditing = !!annotation
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const isEditing = !!annotation
 
   // Form state
   const [type, setType] = useState<AnnotationType>(annotation?.type || 'note')
@@ -165,7 +166,7 @@ export function TimelineAnnotationDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-start">
             {isEditing
@@ -341,8 +342,8 @@ function TimelineAnnotationBadge({
   onDelete?: () => void
   className?: string
 }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
   const TypeIcon = annotationTypes.find((t) => t.type === annotation.type)?.icon || MessageSquare
 
   const colorClass = colorOptions.find((c) => c.color === annotation.color)?.class || 'bg-blue-500'

@@ -17,6 +17,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Search, ChevronRight, Filter } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 // Node data structure
 interface NodeData {
@@ -41,10 +42,9 @@ export function RelationshipNavigator({
   startDossierId,
   onNodeSelect,
 }: RelationshipNavigatorProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [searchQuery, setSearchQuery] = useState('')
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [searchQuery, setSearchQuery] = useState('')
   const [degreeFilter, setDegreeFilter] = useState<string>('all')
   const [typeFilter, setTypeFilter] = useState<string>('all')
 

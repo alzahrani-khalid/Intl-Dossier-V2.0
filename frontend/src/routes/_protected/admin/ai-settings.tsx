@@ -111,8 +111,7 @@ const MODELS: Record<string, Array<{ value: string; label: string }>> = {
 }
 
 function AISettingsPage() {
-  const { t, i18n } = useTranslation('ai-admin')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('ai-admin')
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
@@ -253,7 +252,7 @@ function AISettingsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:py-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>

@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // Lazy load EntityLinkManager for performance (Task T049)
 const EntityLinkManager = lazy(() => import('../components/entity-links/EntityLinkManager'))
@@ -32,9 +33,9 @@ const statusVariants: Record<string, string> = {
 }
 
 export function TicketDetail() {
-  const { t, i18n } = useTranslation('intake')
-  const isRTL = i18n.language === 'ar'
-  const { id } = useParams({ strict: false })
+  const { t } = useTranslation('intake')
+  const { isRTL } = useDirection()
+const { id } = useParams({ strict: false })
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<
     'details' | 'triage' | 'duplicates' | 'history' | 'links'
@@ -88,7 +89,7 @@ export function TicketDetail() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
       <div className="mb-6">
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

@@ -23,9 +23,7 @@ export function FormProgressIndicator({
   className,
   size = 'default',
 }: FormProgressIndicatorProps) {
-  const { t, i18n } = useTranslation('form-auto-save')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('form-auto-save')
   const {
     percentage,
     completedFields,
@@ -65,7 +63,6 @@ export function FormProgressIndicator({
   return (
     <div
       className={cn('rounded-lg border bg-card', classes.container, className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="status"
       aria-label={t('progress.ariaLabel', { percentage })}
     >

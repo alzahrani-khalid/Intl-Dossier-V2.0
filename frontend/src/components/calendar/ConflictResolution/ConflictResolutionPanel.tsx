@@ -34,6 +34,7 @@ import type {
   ConflictCheckResponse,
 } from '@/types/calendar-conflict.types'
 import { SEVERITY_COLORS } from '@/types/calendar-conflict.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ConflictResolutionPanelProps {
   conflicts: ConflictCheckResponse | null
@@ -70,12 +71,11 @@ export function ConflictResolutionPanel({
   showWarnings = true,
   className,
 }: ConflictResolutionPanelProps) {
-  const { t, i18n } = useTranslation('calendar')
-  const isRTL = i18n.language === 'ar'
-
-  if (isLoading) {
+  const { t } = useTranslation('calendar')
+  const { isRTL } = useDirection()
+if (isLoading) {
     return (
-      <Card className={cn('p-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className={cn('p-4', className)}>
         <div className="flex items-center gap-2 animate-pulse">
           <div className="h-5 w-5 bg-muted rounded-full" />
           <div className="h-4 w-32 bg-muted rounded" />
@@ -100,7 +100,6 @@ export function ConflictResolutionPanel({
           : 'border-warning/50 bg-warning/5',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-3 sm:p-4 border-b bg-background/50">

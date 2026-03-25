@@ -42,6 +42,7 @@ import { Separator } from '@/components/ui/separator'
 import { useSearchNotes } from '@/hooks/useInteractions'
 import type { InteractionNoteResponse } from '@/services/interaction-api'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Get icon component for interaction type
@@ -170,9 +171,9 @@ function SearchResultItem({ note, isRTL, locale, onNavigate }: SearchResultItemP
  * Notes Search Page
  */
 export function NotesSearch() {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
   const navigate = useNavigate()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -207,7 +208,7 @@ export function NotesSearch() {
   }
 
   return (
-    <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">

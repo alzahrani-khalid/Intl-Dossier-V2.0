@@ -30,6 +30,7 @@ import type {
   HintContextType,
   ProgressiveHintProps,
 } from '@/types/progressive-disclosure.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for hint contexts
 const contextIcons: Record<HintContextType, LucideIcon> = {
@@ -108,7 +109,6 @@ function InlineHint({
         sizes.container,
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex-shrink-0 p-1.5 rounded-md bg-primary/10">
         <Icon className={cn('text-primary', sizes.icon)} />
@@ -184,7 +184,6 @@ function ExpandableHint({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       className={cn('rounded-lg border bg-card overflow-hidden', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <button
@@ -285,7 +284,6 @@ function CardHint({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <Card className={cn('relative overflow-hidden', className)}>
         {/* Gradient accent */}
@@ -377,7 +375,7 @@ function TooltipHint({
           side={side === 'auto' ? undefined : side}
           className="max-w-[300px] sm:max-w-[350px]"
         >
-          <div className="flex items-start gap-2" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div className="flex items-start gap-2">
             <Icon className={cn('text-primary flex-shrink-0 mt-0.5', sizes.icon)} />
             <div className="flex-1 min-w-0">
               <p className={cn('font-medium', sizes.title)}>{t(hint.titleKey)}</p>
@@ -453,9 +451,9 @@ export function ProgressiveHint({
   className,
   delayMs,
 }: ProgressiveHintProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [isVisible, setIsVisible] = useState(true)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [isVisible, setIsVisible] = useState(true)
   const hasTrackedShow = useRef(false)
 
   const {

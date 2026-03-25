@@ -39,6 +39,7 @@ import { useBulkSelection } from '../hooks/useBulkSelection'
 import { useQueueFilters, useFilteredAssignments } from '../hooks/useQueueFilters'
 import { useToast } from '../hooks/useToast'
 import QueryErrorBoundary from '../components/query-error-boundary/QueryErrorBoundary'
+import { useDirection } from '@/hooks/useDirection'
 
 interface LinkedEntity {
   type: 'dossier' | 'position' | 'ticket'
@@ -82,9 +83,9 @@ interface WaitingItem {
 }
 
 function WaitingQueuePageInner() {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const { toast } = useToast()
   const queryClient = useQueryClient()
 
   const [activeTab, setActiveTab] = useState<string>('all')
@@ -355,7 +356,7 @@ function WaitingQueuePageInner() {
   })
 
   return (
-    <div className="min-h-screen bg-background" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="container mx-auto p-4 sm:p-6 lg:px-8">
@@ -432,7 +433,6 @@ function WaitingQueuePageInner() {
       {bulkJobId && bulkJobStatus && (
         <div
           className="border-b border-border bg-blue-50 dark:bg-blue-950"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <div className="container mx-auto px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">

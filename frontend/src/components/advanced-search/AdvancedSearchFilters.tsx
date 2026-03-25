@@ -41,6 +41,7 @@ import {
 } from '@/hooks/useAdvancedSearch'
 import type { SearchableEntityType, TemplateDefinition } from '@/types/advanced-search.types'
 import { ENTITY_TYPE_LABELS } from '@/types/advanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for entity types
 const entityIcons: Record<SearchableEntityType, React.ComponentType<{ className?: string }>> = {
@@ -68,10 +69,9 @@ export function AdvancedSearchFilters({
   className,
   initialState,
 }: AdvancedSearchFiltersProps) {
-  const { t, i18n } = useTranslation('advanced-search')
-  const isRTL = i18n.language === 'ar'
-
-  const [state, dispatch] = useReducer(
+  const { t } = useTranslation('advanced-search')
+  const { isRTL } = useDirection()
+const [state, dispatch] = useReducer(
     searchReducer,
     initialState ? { ...defaultSearchState, ...initialState } : defaultSearchState,
   )
@@ -126,7 +126,6 @@ export function AdvancedSearchFilters({
   return (
     <div
       className={cn('flex flex-col gap-4 bg-background', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="search"
       aria-label={t('a11y.searchForm')}
     >

@@ -265,7 +265,7 @@ function EmptyState({ isRTL }: { isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-8 sm:py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="text-center py-8 sm:py-12">
       <div className="p-4 rounded-full bg-muted inline-block mb-4">
         <Activity className="h-8 w-8 text-muted-foreground" />
       </div>
@@ -336,7 +336,7 @@ export function ActivityTimelineSection({
       </CardHeader>
 
       <CardContent className="p-4 sm:p-6 pt-0">
-        <div className="space-y-1" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="space-y-1">
           {data.recent_activities.map((activity, index) => (
             <ActivityItem
               key={activity.id}

@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface UserProfileProps {
   /** User's display name */
@@ -58,10 +59,9 @@ export function UserProfile({
   onSettings,
   onProfile,
 }: UserProfileProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  // Generate initials from name
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+// Generate initials from name
   const getInitials = (name: string) => {
     return name
       .split(' ')

@@ -63,6 +63,7 @@ import {
 import { ComplianceViolationAlert } from './ComplianceViolationAlert'
 import { ComplianceSignoffDialog } from './ComplianceSignoffDialog'
 import { toast } from 'sonner'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ComplianceRulesManagerProps {
   entityType?: string
@@ -70,10 +71,9 @@ interface ComplianceRulesManagerProps {
 }
 
 export function ComplianceRulesManager({ entityType, entityId }: ComplianceRulesManagerProps) {
-  const { t, i18n } = useTranslation('compliance')
-  const isRTL = i18n.language === 'ar'
-
-  const [activeTab, setActiveTab] = useState('violations')
+  const { t } = useTranslation('compliance')
+  const { isRTL } = useDirection()
+const [activeTab, setActiveTab] = useState('violations')
   const [searchQuery, setSearchQuery] = useState('')
   const [ruleTypeFilter, setRuleTypeFilter] = useState<string>('all')
   const [severityFilter, setSeverityFilter] = useState<string>('all')
@@ -137,7 +137,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
   const allViolations = violationsData?.pages.flatMap((page) => page.violations) || []
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

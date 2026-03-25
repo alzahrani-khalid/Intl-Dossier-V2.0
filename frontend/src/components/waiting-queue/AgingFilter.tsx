@@ -28,9 +28,7 @@ const agingBuckets: AgingBucket[] = [
 ]
 
 export function AgingFilter({ value = [], onChange, disabled = false }: AgingFilterProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation()
   const handleToggle = (agingValue: '0-2' | '3-6' | '7+') => {
     const newValue = value.includes(agingValue)
       ? value.filter((v) => v !== agingValue)
@@ -44,7 +42,6 @@ export function AgingFilter({ value = [], onChange, disabled = false }: AgingFil
         <div
           key={bucket.value}
           className="flex items-center gap-2 rounded-sm hover:bg-accent/50 transition-colors px-1 py-1"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <Checkbox
             id={`aging-${bucket.value}`}

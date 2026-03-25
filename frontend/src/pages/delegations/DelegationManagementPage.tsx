@@ -33,14 +33,14 @@ import {
 import { useMyDelegations, useDelegationsExpiringSoon } from '@/hooks/useDelegation'
 import { supabase } from '@/lib/supabase'
 import { Plus, ArrowDownToLine, ArrowUpFromLine, Clock, Shield, AlertTriangle } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 type TabValue = 'granted' | 'received'
 
 export function DelegationManagementPage() {
-  const { t, i18n } = useTranslation('delegation')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('delegation')
+  const { isRTL } = useDirection()
+// State
   const [activeTab, setActiveTab] = useState<TabValue>('granted')
   const [showActiveOnly, setShowActiveOnly] = useState(true)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
@@ -100,7 +100,6 @@ export function DelegationManagementPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Expiring Soon Banner */}
       <DelegationExpiryBanner />

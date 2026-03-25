@@ -181,8 +181,6 @@ export const ComparisonExport = memo(function ComparisonExport({
   className,
 }: ComparisonExportProps) {
   const { t, i18n } = useTranslation('entity-comparison')
-  const isRTL = i18n.language === 'ar'
-
   const [isOpen, setIsOpen] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [config, setConfig] = useState<ComparisonExportConfig>({
@@ -264,7 +262,7 @@ export const ComparisonExport = memo(function ComparisonExport({
           <span className="hidden sm:inline">{t('actions.export')}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings2 className="h-5 w-5" />

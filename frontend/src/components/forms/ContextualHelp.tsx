@@ -20,6 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -107,9 +108,9 @@ export function ContextualHelp({
   className,
   children,
 }: ContextualHelpProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  // Suppress unused variable warning
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+// Suppress unused variable warning
   void _position
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -150,7 +151,7 @@ export function ContextualHelp({
         <Tooltip>
           <TooltipTrigger asChild>{renderTrigger()}</TooltipTrigger>
           <TooltipContent side={isRTL ? 'left' : 'right'} className="max-w-xs text-sm">
-            <p dir={isRTL ? 'rtl' : 'ltr'}>{tooltip}</p>
+            <p>{tooltip}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -211,7 +212,7 @@ export function ContextualHelp({
           </TooltipTrigger>
           {tooltip && !isPopoverOpen && (
             <TooltipContent side={isRTL ? 'left' : 'right'} className="max-w-xs text-sm">
-              <p dir={isRTL ? 'rtl' : 'ltr'}>{tooltip}</p>
+              <p>{tooltip}</p>
             </TooltipContent>
           )}
         </Tooltip>
@@ -219,7 +220,6 @@ export function ContextualHelp({
           side={isRTL ? 'left' : 'right'}
           align="start"
           className="w-80 sm:w-96"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <div className="space-y-3">
             {title && (
@@ -266,7 +266,6 @@ function ExpandableHelpContent({
   return (
     <div
       className={cn('rounded-md border bg-muted/50 p-3 space-y-3', 'text-sm')}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Description */}
       {description && <p className="text-muted-foreground">{description}</p>}
@@ -359,11 +358,11 @@ export function FieldLabelWithHelp({
   className,
   htmlFor,
 }: FieldLabelWithHelpProps) {
-  const { i18n, t } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   return (
-    <div className={cn('flex items-center gap-1.5', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex items-center gap-1.5', className)}>
       <label
         htmlFor={htmlFor}
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

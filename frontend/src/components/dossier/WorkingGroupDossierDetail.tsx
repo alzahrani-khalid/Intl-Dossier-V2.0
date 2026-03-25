@@ -43,9 +43,7 @@ interface WorkingGroupDossierDetailProps {
 }
 
 export function WorkingGroupDossierDetail({ dossier }: WorkingGroupDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('dossier')
   // Manage collapsible section state with session storage
   const [sections, toggleSection] = useCollapsibleSections(dossier.id, 'working_group', {
     memberOrganizations: true,
@@ -55,7 +53,7 @@ export function WorkingGroupDossierDetail({ dossier }: WorkingGroupDossierDetail
   })
 
   return (
-    <div className="space-y-5" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-5">
       {/* Member Organizations Section - Spans 2 columns on large screens */}
       <div className="lg:col-span-2">
         <CollapsibleSection

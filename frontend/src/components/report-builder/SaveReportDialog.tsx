@@ -77,8 +77,7 @@ export function SaveReportDialog({
   onSave,
   isSaving,
 }: SaveReportDialogProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('report-builder')
   const [tags, setTags] = useState<string[]>(existingReport?.tags || [])
 
   const form = useForm<FormValues>({
@@ -117,7 +116,7 @@ export function SaveReportDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Save className="h-5 w-5" />

@@ -33,9 +33,7 @@ const workItemTypes: WorkItemType[] = [
 const EMPTY_VALUE: ('dossier' | 'ticket' | 'position' | 'task')[] = []
 
 export function TypeFilter({ value = EMPTY_VALUE, onChange, disabled = false }: TypeFilterProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation()
   const handleToggle = (typeValue: 'dossier' | 'ticket' | 'position' | 'task') => {
     const newValue = value.includes(typeValue)
       ? value.filter((v) => v !== typeValue)
@@ -50,7 +48,6 @@ export function TypeFilter({ value = EMPTY_VALUE, onChange, disabled = false }: 
           <div
             key={type.value}
             className="flex items-center gap-2 rounded-sm hover:bg-accent/50 transition-colors px-1 py-1"
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             <Checkbox
               id={`type-${type.value}`}

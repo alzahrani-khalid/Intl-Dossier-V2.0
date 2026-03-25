@@ -1,8 +1,9 @@
-import { useTranslation } from 'react-i18next'
+
 import { UserProfile } from './UserProfile'
 import { NavigationSection } from './NavigationSection'
 import { cn } from '@/lib/utils'
 import { getNavigationCategory } from '../navigationData'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface ExpandedPanelProps {
   /** Whether the panel is open/visible */
@@ -58,10 +59,8 @@ export function ExpandedPanel({
   className,
   activeCategory = 'dashboard',
 }: ExpandedPanelProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  // Get navigation items for active category
+const { isRTL } = useDirection()
+// Get navigation items for active category
   const category = getNavigationCategory(activeCategory)
   const navigationItems = category?.items || []
 
@@ -90,7 +89,6 @@ export function ExpandedPanel({
         // Force solid background - overrides any transparency
         backgroundColor: 'var(--sidebar)',
       }}
-      dir={isRTL ? 'rtl' : 'ltr'}
       aria-label="Expanded navigation panel"
       aria-hidden={!isOpen}
     >

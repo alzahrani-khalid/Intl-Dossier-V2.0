@@ -15,6 +15,7 @@ import {
 } from '@/hooks/useNotificationCenter'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/useToast'
+import { useDirection } from '@/hooks/useDirection'
 
 interface NotificationPanelProps {
   className?: string
@@ -32,9 +33,9 @@ const CATEGORIES: NotificationCategory[] = [
 ]
 
 export function NotificationPanel({ className }: NotificationPanelProps) {
-  const { t, i18n } = useTranslation('notification-center')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('notification-center')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   const { toast } = useToast()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -148,7 +149,7 @@ export function NotificationPanel({ className }: NotificationPanelProps) {
         sideOffset={8}
         data-testid="notification-panel"
       >
-        <div dir={isRTL ? 'rtl' : 'ltr'}>
+        <div>
           {/* Header */}
           <div className="flex items-center justify-between border-b px-4 py-3">
             <div className="flex items-center gap-2">

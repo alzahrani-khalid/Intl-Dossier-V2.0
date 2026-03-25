@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export type PreviewChartType =
   | 'engagements'
@@ -97,10 +98,9 @@ export function AnalyticsPreviewOverlay({
   onHideSampleData,
   className,
 }: AnalyticsPreviewOverlayProps) {
-  const { t, i18n } = useTranslation('analytics')
-  const isRTL = i18n.language === 'ar'
-
-  const config = chartConfigs[chartType]
+  const { t } = useTranslation('analytics')
+  const { isRTL } = useDirection()
+const config = chartConfigs[chartType]
   const Icon = config.icon
 
   if (showingSampleData) {
@@ -110,7 +110,6 @@ export function AnalyticsPreviewOverlay({
           'border-dashed border-2 border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-900/20',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Sparkles className="h-4 w-4 text-blue-500" />
         <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -134,7 +133,6 @@ export function AnalyticsPreviewOverlay({
   return (
     <Card
       className={cn('relative overflow-hidden border-dashed border-2', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Gradient background */}
       <div className={cn('absolute inset-0 bg-gradient-to-br opacity-50', config.bgGradient)} />
@@ -219,8 +217,8 @@ export function AnalyticsPreviewOverlay({
  * Shows a stylized placeholder visualization representing the chart type
  */
 function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   const config = chartConfigs[chartType]
 

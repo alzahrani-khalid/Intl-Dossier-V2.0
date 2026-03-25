@@ -198,7 +198,6 @@ export default function Countries() {
               value={regionFilter}
               onChange={(event) => setRegionFilter(event.target.value)}
               className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              dir={isRTL ? 'rtl' : 'ltr'}
               aria-label={t('countries.filters.region', 'Region')}
             >
               <option value="all">{t('countries.filters.allRegions', 'All regions')}</option>
@@ -221,7 +220,6 @@ export default function Countries() {
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value)}
               className="w-44 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              dir={isRTL ? 'rtl' : 'ltr'}
               aria-label={t('countries.filters.status', 'Status')}
             >
               <option value="all">{t('countries.filters.allStatuses', 'All statuses')}</option>

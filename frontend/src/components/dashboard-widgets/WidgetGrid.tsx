@@ -6,7 +6,6 @@
  */
 
 import { useState, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   DndContext,
   DragEndEvent,
@@ -130,10 +129,7 @@ export function WidgetGrid({
   onRefresh,
   className,
 }: WidgetGridProps) {
-  const { i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-
-  const [activeWidget, setActiveWidget] = useState<WidgetConfig | null>(null)
+const [activeWidget, setActiveWidget] = useState<WidgetConfig | null>(null)
 
   // Configure sensors for drag-and-drop
   const sensors = useSensors(
@@ -210,7 +206,6 @@ export function WidgetGrid({
             'auto-rows-[minmax(150px,auto)]',
             className,
           )}
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           {widgets
             .filter((w) => w.isVisible)

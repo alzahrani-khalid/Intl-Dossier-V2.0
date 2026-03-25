@@ -40,6 +40,7 @@ import { useDossiersByType } from '@/hooks/useDossier'
 import type { DossierType } from '@/lib/dossier-type-guards'
 import type { DossierWithExtension } from '@/services/dossier-api'
 import { MIN_COMPARISON_ENTITIES, MAX_COMPARISON_ENTITIES } from '@/types/entity-comparison.types'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Props for EntityComparisonSelector
@@ -175,10 +176,9 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
   maxSelections = MAX_COMPARISON_ENTITIES,
   className,
 }: EntityComparisonSelectorProps) {
-  const { t, i18n } = useTranslation('entity-comparison')
-  const isRTL = i18n.language === 'ar'
-
-  // Fetch entities when type is selected
+  const { t } = useTranslation('entity-comparison')
+  const { isRTL } = useDirection()
+// Fetch entities when type is selected
   const { data: entitiesData, isLoading } = useDossiersByType(selectedType || 'country', 1, 50, {
     enabled: !!selectedType,
   })
@@ -224,7 +224,7 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
   const canCompare = selectedIds.length >= minSelections && selectedIds.length <= maxSelections
 
   return (
-    <Card className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('w-full', className)}>
       <CardHeader className="pb-4">
         <CardTitle className="text-lg sm:text-xl">{t('selector.title')}</CardTitle>
         <CardDescription>

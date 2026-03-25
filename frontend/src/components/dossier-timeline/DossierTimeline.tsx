@@ -21,6 +21,7 @@ import {
   ChevronDown,
 } from 'lucide-react'
 import type { TimelineEvent } from '@/types/dossier'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DossierTimelineProps {
   dossierId: string
@@ -42,8 +43,8 @@ export function DossierTimeline({
   activeFilter,
 }: DossierTimelineProps) {
   const { t, i18n } = useTranslation('dossiers')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   // Parse active filter into array (supports comma-separated values)
   const selectedFilters = activeFilter ? activeFilter.split(',') : []

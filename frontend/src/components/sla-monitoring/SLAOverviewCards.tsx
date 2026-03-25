@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import type { SLADashboardOverview } from '@/types/sla.types'
 import { getComplianceThreshold, formatSLADuration, formatSLADurationAr } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SLAOverviewCardsProps {
   data?: SLADashboardOverview
@@ -20,14 +21,12 @@ interface SLAOverviewCardsProps {
 }
 
 export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCardsProps) {
-  const { t, i18n } = useTranslation('sla')
-  const isRTL = i18n.language === 'ar'
-
-  if (isLoading) {
+  const { t } = useTranslation('sla')
+  const { isRTL } = useDirection()
+if (isLoading) {
     return (
       <div
         className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {[0, 1, 2, 3].map((n) => (
           <Card key={n}>
@@ -102,7 +101,6 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
   return (
     <div
       className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {cards.map((card) => (
         <Card key={card.title} className={cn('transition-colors', card.bgColor)}>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTriageSuggestions, useApplyTriage } from '@/hooks/useIntakeApi'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TriageSuggestion {
   suggested_type?: string
@@ -18,7 +19,8 @@ interface TriagePanelProps {
 }
 
 export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
-  const { t, i18n } = useTranslation('intake')
+  const { isRTL } = useDirection()
+  const { t } = useTranslation('intake')
   const [isOverriding, setIsOverriding] = useState(false)
   const [overrideValues, setOverrideValues] = useState<Partial<TriageSuggestion>>({})
   const [overrideReason, setOverrideReason] = useState('')
@@ -67,7 +69,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
         assignedTo: overrideValues.suggested_assignee,
         assignedUnit: overrideValues.suggested_unit,
         overrideReason: overrideReason,
-        overrideReasonAr: i18n.language === 'ar' ? overrideReason : undefined,
+        overrideReasonAr: isRTL ? overrideReason : undefined,
       },
       {
         onSuccess: () => {

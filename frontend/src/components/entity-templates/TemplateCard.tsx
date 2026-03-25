@@ -32,6 +32,7 @@ import {
 } from 'lucide-react'
 import type { TemplateCardProps } from '@/types/entity-template.types'
 import { formatKeyboardShortcut, getColorClass } from '@/types/entity-template.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -59,10 +60,9 @@ export function TemplateCard({
   onFavoriteToggle,
   showKeyboardShortcut = false,
 }: TemplateCardProps) {
-  const { t, i18n } = useTranslation('entity-templates')
-  const isRTL = i18n.language === 'ar'
-
-  // Get icon component
+  const { t } = useTranslation('entity-templates')
+  const { isRTL } = useDirection()
+// Get icon component
   const IconComponent = ICON_MAP[template.icon] || FileText
 
   // Get localized name and description
@@ -101,7 +101,6 @@ export function TemplateCard({
         isSelected && 'border-primary ring-2 ring-primary ring-offset-2',
         'min-h-[6rem] sm:min-h-[7rem]',
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header row */}
       <div className="flex items-start justify-between gap-2">

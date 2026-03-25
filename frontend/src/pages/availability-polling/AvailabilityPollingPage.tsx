@@ -35,14 +35,15 @@ import {
 } from '@/components/availability-polling'
 import type { AvailabilityPoll } from '@/types/availability-polling.types'
 import { POLL_STATUS_COLORS } from '@/types/availability-polling.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type ViewMode = 'grid' | 'list'
 type TabValue = 'my-polls' | 'invited' | 'all'
 
 export function AvailabilityPollingPage() {
-  const { t, i18n } = useTranslation('availability-polling')
-  const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
+  const { t } = useTranslation('availability-polling')
+  const { isRTL } = useDirection()
+const dateLocale = isRTL ? ar : enUS
 
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
@@ -210,7 +211,6 @@ export function AvailabilityPollingPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

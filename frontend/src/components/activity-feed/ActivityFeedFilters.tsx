@@ -13,7 +13,6 @@
  */
 
 import { useState, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   Search,
   X,
@@ -76,6 +75,7 @@ import type {
   DateRangePreset,
   ActivityFiltersProps,
 } from '@/types/activity-feed.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // CONFIGURATION
@@ -282,10 +282,8 @@ export function ActivityFeedFilters({
   showSearch = true,
   className,
 }: ActivityFiltersProps) {
-  const { i18n } = useTranslation('activity-feed')
-  const isRTL = i18n.language === 'ar'
-
-  const [searchValue, setSearchValue] = useState(filters.search || '')
+const { isRTL } = useDirection()
+const [searchValue, setSearchValue] = useState(filters.search || '')
   const [datePreset, setDatePreset] = useState<DateRangePreset>('last_30_days')
   const [showCustomDates, setShowCustomDates] = useState(false)
 
@@ -408,7 +406,7 @@ export function ActivityFeedFilters({
   }, [filters, onFiltersChange])
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Search and Quick Actions Row */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Search */}

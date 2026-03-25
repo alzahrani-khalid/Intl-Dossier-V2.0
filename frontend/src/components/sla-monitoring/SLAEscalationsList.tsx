@@ -34,6 +34,7 @@ import type { SLAEscalation, SLAEscalationStatus } from '@/types/sla.types'
 import { SLA_STATUS_CONFIG } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
+import { useDirection } from '@/hooks/useDirection'
 
 function StatusBadge({ status, isRTL }: { status: SLAEscalationStatus; isRTL: boolean }) {
   const config = SLA_STATUS_CONFIG[status]
@@ -73,9 +74,9 @@ export function SLAEscalationsList({
   onStatusFilterChange,
   className,
 }: SLAEscalationsListProps) {
-  const { t, i18n } = useTranslation('sla')
-  const isRTL = i18n.language === 'ar'
-  const [statusFilter, setStatusFilter] = useState<SLAEscalationStatus | 'all'>('all')
+  const { t } = useTranslation('sla')
+  const { isRTL } = useDirection()
+const [statusFilter, setStatusFilter] = useState<SLAEscalationStatus | 'all'>('all')
   const [resolveDialogOpen, setResolveDialogOpen] = useState(false)
   const [selectedEscalation, setSelectedEscalation] = useState<SLAEscalation | null>(null)
   const [resolveNotes, setResolveNotes] = useState('')
@@ -124,7 +125,7 @@ export function SLAEscalationsList({
   }
 
   return (
-    <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={className}>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <CardTitle className="flex items-center gap-2">
@@ -204,7 +205,7 @@ export function SLAEscalationsList({
                             {t('escalations.resolve')}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+                        <DialogContent>
                           <DialogHeader>
                             <DialogTitle>{t('escalations.resolveTitle')}</DialogTitle>
                             <DialogDescription>
@@ -243,7 +244,7 @@ export function SLAEscalationsList({
                             {t('escalations.resolve')}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+                        <DialogContent>
                           <DialogHeader>
                             <DialogTitle>{t('escalations.resolveTitle')}</DialogTitle>
                             <DialogDescription>

@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useSidebar } from '@/components/ui/sidebar'
 import { useKeyboardShortcutContext } from '@/components/keyboard-shortcuts/KeyboardShortcutProvider'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SidebarSearchProps {
   /** Whether sidebar is expanded (overrides useSidebar state) */
@@ -34,10 +35,10 @@ export function SidebarSearch({
   // Use sidebar context for expand state, with prop override
   const sidebarCtx = useSidebar()
   const isExpanded = isExpandedProp ?? sidebarCtx.state === 'expanded'
-  const { t, i18n } = useTranslation('common')
+  const { t } = useTranslation('common')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-  const inputRef = useRef<HTMLInputElement>(null)
+  const { isRTL } = useDirection()
+const inputRef = useRef<HTMLInputElement>(null)
 
   const [searchValue, setSearchValue] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -108,7 +109,7 @@ export function SidebarSearch({
   }
 
   return (
-    <div className={cn('px-2', className)} dir={isRTL ? 'rtl' : 'ltr'} data-tour="sidebar-search">
+    <div className={cn('px-2', className)} data-tour="sidebar-search">
       <div className="relative">
         {/* Search Icon */}
         <Search

@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils'
 import type { WorkloadDistribution } from '@/types/analytics.types'
 import { PRIORITY_COLORS } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkloadDistributionChartProps {
   data?: WorkloadDistribution
@@ -46,10 +47,9 @@ export function WorkloadDistributionChart({
   showPreview = true,
   onShowSampleData,
 }: WorkloadDistributionChartProps) {
-  const { t, i18n } = useTranslation('analytics')
-  const isRTL = i18n.language === 'ar'
-
-  const userWorkloadData = useMemo(() => {
+  const { t } = useTranslation('analytics')
+  const { isRTL } = useDirection()
+const userWorkloadData = useMemo(() => {
     if (!data?.byUser) return []
     return data.byUser.slice(0, 10).map((user) => ({
       ...user,
@@ -121,7 +121,7 @@ export function WorkloadDistributionChart({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="bg-background border rounded-lg shadow-lg p-3">
           <p className="font-medium mb-2">{label}</p>
           {payload.map((entry: any, index: number) => (
             <div key={index} className="flex items-center gap-2 text-sm">
@@ -142,7 +142,7 @@ export function WorkloadDistributionChart({
     if (active && payload && payload.length) {
       const item = payload[0]
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="bg-background border rounded-lg shadow-lg p-3">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
             <span className="font-medium">{item.name}</span>
@@ -158,7 +158,7 @@ export function WorkloadDistributionChart({
   }
 
   return (
-    <Card className={cn('col-span-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('col-span-full', className)}>
       <CardHeader>
         <CardTitle>{t('workload.title')}</CardTitle>
         <CardDescription>{t('workload.description')}</CardDescription>

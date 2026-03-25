@@ -8,6 +8,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ChartWidgetConfig, ChartData } from '@/types/dashboard-widget.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ChartWidgetProps {
   config: ChartWidgetConfig
@@ -401,10 +402,9 @@ function LineChart({
 }
 
 export function ChartWidget({ config, data, isLoading }: ChartWidgetProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const isRTL = i18n.language === 'ar'
-
-  const {
+  const { t } = useTranslation('dashboard-widgets')
+  const { isRTL } = useDirection()
+const {
     settings: { chartType, showLegend, showGrid, colors: customColors },
   } = config
 

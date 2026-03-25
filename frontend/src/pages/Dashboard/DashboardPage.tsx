@@ -37,9 +37,8 @@ import {
 import { type DateRangePreset, presetToTrendRange } from './components/DashboardDateRangePicker'
 
 export function DashboardPage() {
-  const { t, i18n } = useTranslation(['dashboard', 'dossiers'])
+  const { t } = useTranslation(['dashboard', 'dossiers'])
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
   const { openPalette } = useWorkCreation()
 
   // Date range state — drives all dashboard queries
@@ -53,7 +52,7 @@ export function DashboardPage() {
   const { data: myDossiersData } = useMyDossiers({ limit: 100 })
 
   return (
-    <div className="w-full space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="w-full space-y-4">
       {/* Header */}
       <section className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">

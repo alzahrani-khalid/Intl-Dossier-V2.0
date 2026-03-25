@@ -42,8 +42,6 @@ const statusIcons: Record<CommitmentStatus, React.ReactNode> = {
 
 export function StatusTimeline({ commitmentId, createdAt, createdBy }: StatusTimelineProps) {
   const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-
   // Fetch status history
   const { data: history, isLoading, isError } = useCommitmentStatusHistory(commitmentId)
 
@@ -87,7 +85,7 @@ export function StatusTimeline({ commitmentId, createdAt, createdBy }: StatusTim
   }
 
   return (
-    <div className="space-y-0" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-0">
       {/* Status history entries */}
       {history?.map((entry, index) => (
         <TimelineEntry

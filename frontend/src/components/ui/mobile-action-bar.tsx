@@ -27,9 +27,9 @@
  */
 
 import * as React from 'react'
-import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button, type ButtonProps } from '@/components/ui/button'
+import { useDirection } from '@/hooks/useDirection'
 
 // Context to pass RTL state and layout mode
 interface MobileActionBarContextValue {
@@ -75,10 +75,8 @@ function MobileActionBarRoot({
   showBorder = true,
   blurBackground = true,
 }: MobileActionBarProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const contextValue = React.useMemo(() => ({ isRTL, variant }), [isRTL, variant])
+const { isRTL } = useDirection()
+const contextValue = React.useMemo(() => ({ isRTL, variant }), [isRTL, variant])
 
   // Base styles for all variants
   const baseStyles = cn(
@@ -112,7 +110,6 @@ function MobileActionBarRoot({
     <MobileActionBarContext.Provider value={contextValue}>
       <div
         className={cn(baseStyles, positionStyles, className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="toolbar"
         aria-label="Action buttons"
       >

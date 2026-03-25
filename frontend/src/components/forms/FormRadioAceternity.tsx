@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface RadioOption {
   value: string
@@ -41,9 +42,9 @@ function FormRadioAceternity({
   disabled = false,
   layout = 'vertical',
 }: FormRadioAceternityProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [hoveredOption, setHoveredOption] = useState<string | null>(null)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [hoveredOption, setHoveredOption] = useState<string | null>(null)
 
   const radioGroupClasses = cn(
     // Base layout
@@ -77,7 +78,7 @@ function FormRadioAceternity({
     )
 
   return (
-    <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-3">
       {/* Group label */}
       <motion.label
         className={cn(

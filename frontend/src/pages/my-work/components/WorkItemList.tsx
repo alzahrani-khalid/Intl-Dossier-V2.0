@@ -16,6 +16,7 @@ import { usePullToRefresh } from '@/hooks/usePullToRefresh'
 import { useLastSyncInfo } from '@/hooks/useLastSyncInfo'
 import { PullToRefreshIndicator, SyncStatusBar } from '@/components/ui/pull-to-refresh-indicator'
 import type { UnifiedWorkItem } from '@/types/unified-work.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkItemListProps {
   items: UnifiedWorkItem[]
@@ -39,10 +40,9 @@ export function WorkItemList({
   isFetchingMore,
   onRefresh,
 }: WorkItemListProps) {
-  const { t, i18n } = useTranslation('my-work')
-  const isRTL = i18n.language === 'ar'
-
-  // Sync info tracking
+  const { t } = useTranslation('my-work')
+  const { isRTL } = useDirection()
+// Sync info tracking
   const { lastSyncTime, itemsSynced, updateSyncInfo } = useLastSyncInfo('my-work-list')
 
   // Pull-to-refresh hook
@@ -102,7 +102,7 @@ export function WorkItemList({
   // Error state
   if (isError) {
     return (
-      <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription className="flex items-center justify-between">
           <span>{error?.message || t('error.loading', 'Failed to load work items')}</span>
@@ -118,7 +118,7 @@ export function WorkItemList({
   // Empty state
   if (items.length === 0) {
     return (
-      <Card dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card>
         <CardContent className="py-12 text-center">
           <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
             <AlertCircle className="h-6 w-6 text-muted-foreground" />
@@ -134,7 +134,7 @@ export function WorkItemList({
 
   // Virtualized list with pull-to-refresh
   return (
-    <div className="flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col">
       {/* Sync status bar */}
       <SyncStatusBar
         lastSyncTime={lastSyncTime}

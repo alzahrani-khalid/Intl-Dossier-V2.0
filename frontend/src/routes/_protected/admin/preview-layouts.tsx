@@ -91,6 +91,7 @@ import {
   CONTEXT_LABELS,
   FIELD_TYPE_LABELS,
 } from '@/types/preview-layout.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/admin/preview-layouts')({
   component: PreviewLayoutsPage,
@@ -123,9 +124,9 @@ const ENTITY_ICONS: Record<PreviewEntityType, React.ComponentType<{ className?: 
 }
 
 function PreviewLayoutsPage() {
-  const { t, i18n } = useTranslation('preview-layouts')
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation('preview-layouts')
+  const { isRTL } = useDirection()
+const { toast } = useToast()
 
   // State
   const [selectedEntityType, setSelectedEntityType] = useState<PreviewEntityType | null>(null)
@@ -431,7 +432,7 @@ function PreviewLayoutsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:py-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>

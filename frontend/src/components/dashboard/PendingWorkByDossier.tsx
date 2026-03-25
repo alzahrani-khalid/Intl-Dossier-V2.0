@@ -41,6 +41,7 @@ import type {
 import type { DossierType } from '@/types/dossier-context.types'
 import type { WorkSource } from '@/types/unified-work.types'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // Icons
@@ -178,10 +179,10 @@ interface DossierWorkItemProps {
 }
 
 function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps) {
-  const { t, i18n } = useTranslation('dossier-dashboard')
+  const { t } = useTranslation('dossier-dashboard')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-  const [isOpen, setIsOpen] = useState(defaultExpanded)
+  const { isRTL } = useDirection()
+const [isOpen, setIsOpen] = useState(defaultExpanded)
 
   const DossierIcon = dossierTypeIcons[item.dossier.type] || Folder
 

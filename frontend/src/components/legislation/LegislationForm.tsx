@@ -115,8 +115,7 @@ interface LegislationFormProps {
 }
 
 export function LegislationForm({ legislation, onSuccess, onCancel }: LegislationFormProps) {
-  const { t, i18n } = useTranslation('legislation')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('legislation')
   const isEditing = !!legislation
 
   const createMutation = useCreateLegislation()
@@ -241,7 +240,6 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Basic Information */}
         <Card>

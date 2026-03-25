@@ -28,11 +28,12 @@ import { exportAllContacts, exportSelectedContacts } from '@/services/export-api
 import { useToast } from '@/hooks/useToast'
 import type { ContactResponse, ContactSearchParams } from '@/services/contact-api'
 import { p } from '@/lib/navigation'
+import { useDirection } from '@/hooks/useDirection'
 
 export function ContactsDirectory() {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   const { toast } = useToast()
 
   const [searchParams, setSearchParams] = useState<PersonSearchParams>({})
@@ -155,7 +156,7 @@ export function ContactsDirectory() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
       <div className="border-b bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">

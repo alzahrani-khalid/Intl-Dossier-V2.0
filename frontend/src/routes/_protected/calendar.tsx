@@ -17,13 +17,11 @@ export const Route = createFileRoute('/_protected/calendar')({
 })
 
 function CalendarPage() {
-  const { t, i18n } = useTranslation('dossiers')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('dossiers')
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month')
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Page Header */}
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

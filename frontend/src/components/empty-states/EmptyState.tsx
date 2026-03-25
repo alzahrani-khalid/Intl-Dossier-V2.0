@@ -1,8 +1,9 @@
-import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { LucideIcon, HelpCircle } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export type EmptyStateVariant = 'default' | 'card' | 'inline' | 'compact'
 export type EmptyStateSize = 'sm' | 'md' | 'lg'
@@ -109,9 +110,8 @@ export function EmptyState({
   className = '',
   testId = 'empty-state',
 }: EmptyStateProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const sizes = sizeClasses[size]
+const { isRTL } = useDirection()
+const sizes = sizeClasses[size]
 
   const content = (
     <div
@@ -120,7 +120,6 @@ export function EmptyState({
         sizes.container,
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid={testId}
     >
       {/* Icon */}
@@ -195,7 +194,6 @@ export function EmptyState({
           'flex items-center gap-3 py-4 px-3 sm:px-4 rounded-lg bg-muted/50',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
         data-testid={testId}
       >
         <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground flex-shrink-0" />
@@ -222,7 +220,6 @@ export function EmptyState({
     return (
       <div
         className={cn('flex flex-col items-center justify-center text-center py-6 px-4', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
         data-testid={testId}
       >
         <Icon className="w-8 h-8 text-muted-foreground mb-2" />

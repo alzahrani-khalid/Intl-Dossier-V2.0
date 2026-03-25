@@ -34,9 +34,7 @@ export interface BriefViewerProps {
 }
 
 export function BriefViewer({ brief, onCitationClick, className }: BriefViewerProps) {
-  const { t, i18n } = useTranslation('ai-brief')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('ai-brief')
   // Safely access arrays with fallbacks
   const keyParticipants = brief.keyParticipants ?? []
   const relevantPositions = brief.relevantPositions ?? []
@@ -86,7 +84,7 @@ ${brief.recommendations || ''}
   }
 
   return (
-    <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-6', className)}>
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>

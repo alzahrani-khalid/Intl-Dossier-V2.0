@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Loader2, Slack, MessageSquare, Link2, Unlink, Bell, Clock, Check } from 'lucide-react'
 import { toast } from 'sonner'
+import { useDirection } from '@/hooks/useDirection'
 
 // Types
 interface BotLink {
@@ -116,9 +117,9 @@ async function unlinkBotAccount(linkId: string): Promise<void> {
 }
 
 export function BotIntegrationsSettings() {
-  const { t, i18n } = useTranslation('integrations')
-  const isRTL = i18n.language === 'ar'
-  const queryClient = useQueryClient()
+  const { t } = useTranslation('integrations')
+  const { isRTL } = useDirection()
+const queryClient = useQueryClient()
 
   // Get URL search params
   const searchParams = useSearch({ strict: false }) as Record<string, string | undefined>
@@ -217,7 +218,7 @@ export function BotIntegrationsSettings() {
 
   if (verifying) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
           <p className="text-muted-foreground">{t('verification.verifying')}</p>
@@ -227,7 +228,7 @@ export function BotIntegrationsSettings() {
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('title')}</h1>
@@ -359,8 +360,8 @@ function BotLinkCard({
   isUpdating: boolean
   isUnlinking: boolean
 }) {
-  const { t, i18n } = useTranslation('integrations')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('integrations')
+  const { isRTL } = useDirection()
 
   const PlatformIcon = link.platform === 'slack' ? Slack : MessageSquare
   const platformColor = link.platform === 'slack' ? '#4A154B' : '#5558AF'

@@ -36,6 +36,7 @@ import { cn } from '@/lib/utils'
 import type { DossierWithExtension, DossierType, DossierStatus } from '@/services/dossier-api'
 import { getCountryCode } from '@/lib/country-codes'
 import { CountryMapImage } from './CountryMapImage'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ExpandableDossierCardProps {
   dossier: DossierWithExtension
@@ -208,8 +209,8 @@ export function ExpandableDossierCard({
   className,
 }: ExpandableDossierCardProps) {
   const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const id = useId()
+  const { isRTL } = useDirection()
+const id = useId()
   const ref = useRef<HTMLDivElement>(null)
 
   const displayName = isRTL ? dossier.name_ar : dossier.name_en
@@ -241,7 +242,6 @@ export function ExpandableDossierCard({
   return (
     <div
       className={cn('w-full', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       onMouseEnter={onMouseEnter}
     >
       {/* Collapsed State - Clickable Card */}

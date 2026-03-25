@@ -54,6 +54,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { SavedView, ViewConfig } from '@/types/view-preferences.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SavedViewsManagerProps {
   savedViews: SavedView[]
@@ -94,10 +95,9 @@ export function SavedViewsManager({
   onSetDefault,
   onTogglePinned,
 }: SavedViewsManagerProps) {
-  const { t, i18n } = useTranslation('view-preferences')
-  const isRTL = i18n.language === 'ar'
-
-  // Dialog states
+  const { t } = useTranslation('view-preferences')
+  const { isRTL } = useDirection()
+// Dialog states
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -227,7 +227,6 @@ export function SavedViewsManager({
   return (
     <div
       className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Quick pinned views */}
       {pinnedViews.length > 0 && (
@@ -444,7 +443,7 @@ export function SavedViewsManager({
 
       {/* Save View Dialog */}
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
-        <DialogContent className="sm:max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t('saveView', 'Save View')}</DialogTitle>
             <DialogDescription>
@@ -521,7 +520,7 @@ export function SavedViewsManager({
 
       {/* Edit View Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="sm:max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t('editView', 'Edit View')}</DialogTitle>
             <DialogDescription>
@@ -593,7 +592,7 @@ export function SavedViewsManager({
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('deleteView', 'Delete View')}</AlertDialogTitle>
             <AlertDialogDescription>

@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/table/DataTable'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MoU {
   id: string
@@ -76,12 +77,11 @@ function WorkflowIndicator({ state }: { state: string }) {
 }
 
 export function MousPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterState, setFilterState] = useState<string>('all')
-  const isRTL = i18n.language === 'ar'
-
-  const { data: mous, isLoading } = useQuery({
+  const { isRTL } = useDirection()
+const { data: mous, isLoading } = useQuery({
     queryKey: ['mous', searchTerm, filterState],
     queryFn: async () => {
       let query = supabase

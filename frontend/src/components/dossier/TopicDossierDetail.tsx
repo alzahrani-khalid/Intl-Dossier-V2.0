@@ -21,6 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Target, FileText, Network, FolderTree, ExternalLink } from 'lucide-react'
 import type { DossierWithExtension, TopicExtension } from '@/services/dossier-api'
 import type { RelationshipWithDossiers, DossierReference } from '@/services/relationship-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TopicDossierDetailProps {
   dossier: DossierWithExtension & { type: 'topic' }
@@ -31,10 +32,9 @@ interface TopicDossierDetailProps {
  * Displays strategic context, category, and parent topic if applicable
  */
 function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier'] }) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const extension = dossier.extension as TopicExtension | undefined
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const extension = dossier.extension as TopicExtension | undefined
 
   // Fetch parent topic name if parent_theme_id exists
   const parentRelationships = useRelationshipsForDossier(
@@ -108,8 +108,8 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
  * Shows countries, organizations, and engagements related to this topic
  */
 function RelatedDossiers({ dossierId }: { dossierId: string }) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
 
   const { data, isLoading } = useRelationshipsForDossier(dossierId)
   const relationships = data?.data || []
@@ -178,7 +178,7 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
           </div>
         </div>
 
-        <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="space-y-3">
           {relationships.map((rel: RelationshipWithDossiers) => {
             const relatedDossier: DossierReference | undefined =
               rel.source_dossier_id === dossierId ? rel.target_dossier : rel.source_dossier
@@ -221,8 +221,8 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
  * Policy papers, reports, and guidelines related to this topic
  */
 function KeyDocuments({ dossierId }: { dossierId: string }) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
 
   const { documents, isLoading } = useDocuments({
     owner_type: 'dossier',
@@ -293,7 +293,7 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
           </div>
         </div>
 
-        <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="space-y-3">
           {documents.map((doc) => {
             const displayTitle = isRTL ? doc.title_ar || doc.title_en : doc.title_en || doc.title_ar
 
@@ -332,8 +332,8 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
  * Child topics under this policy area
  */
 function Subtopics({ dossierId }: { dossierId: string }) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
 
   const { data: subtopics, isLoading } = useTopicSubtopics(dossierId)
 
@@ -401,7 +401,7 @@ function Subtopics({ dossierId }: { dossierId: string }) {
           </div>
         </div>
 
-        <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="space-y-3">
           {subtopics.map((sub) => {
             const displayName = isRTL ? sub.name_ar : sub.name_en
             const displayDescription = isRTL ? sub.description_ar : sub.description_en
@@ -443,8 +443,8 @@ function Subtopics({ dossierId }: { dossierId: string }) {
  * Main Topic Dossier Detail Component
  */
 export function TopicDossierDetail({ dossier }: TopicDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
 
   // Session storage for section collapse state
   const [policyOpen, setPolicyOpen] = useSessionStorage(`topic-${dossier.id}-policy-open`, true)
@@ -462,7 +462,7 @@ export function TopicDossierDetail({ dossier }: TopicDossierDetailProps) {
   )
 
   return (
-    <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4 sm:space-y-6">
       {/* Policy Overview Section */}
       <CollapsibleSection
         id={`topic-${dossier.id}-policy`}

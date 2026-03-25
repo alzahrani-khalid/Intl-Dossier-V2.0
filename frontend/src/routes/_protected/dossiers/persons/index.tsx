@@ -22,16 +22,16 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { useState } from 'react'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/dossiers/persons/')({
   component: PersonsListPage,
 })
 
 function PersonsListPage() {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const [searchQuery, setSearchQuery] = useState('')
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const [searchQuery, setSearchQuery] = useState('')
   const [page, setPage] = useState(1)
   const pageSize = 20
 
@@ -53,7 +53,6 @@ function PersonsListPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">

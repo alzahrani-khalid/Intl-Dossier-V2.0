@@ -33,6 +33,7 @@ import {
 import { cn } from '@/lib/utils'
 import { DossierTypeGuide } from './DossierTypeGuide'
 import type { DossierType } from '@/services/dossier-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DossierTypeStatsCardProps {
   type: DossierType
@@ -151,10 +152,9 @@ export function DossierTypeStatsCard({
   onClick,
   className,
 }: DossierTypeStatsCardProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  return (
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
@@ -170,7 +170,6 @@ export function DossierTypeStatsCard({
           className,
         )}
         onClick={onClick}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Gradient Header - Compact */}
         <div

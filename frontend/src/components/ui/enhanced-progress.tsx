@@ -168,9 +168,7 @@ export function EnhancedProgress({
   compact = false,
   color: _color = 'default',
 }: EnhancedProgressProps) {
-  const { t, i18n } = useTranslation('loading')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('loading')
   const statusConfig = STATUS_CONFIG[status]
   const sizeConfig = SIZE_CONFIG[size]
 
@@ -189,7 +187,6 @@ export function EnhancedProgress({
     return (
       <div
         className={cn('flex items-center gap-2 sm:gap-3', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="progressbar"
         aria-valuenow={progress}
         aria-valuemin={0}
@@ -221,7 +218,6 @@ export function EnhancedProgress({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       className={cn('rounded-lg border bg-card shadow-sm', sizeConfig.container, className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="progressbar"
       aria-valuenow={progress}
       aria-valuemin={0}

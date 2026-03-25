@@ -18,9 +18,7 @@ interface AssigneeFilterProps {
 }
 
 export function AssigneeFilter({ value, onChange, disabled = false }: AssigneeFilterProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation()
   // Get current user
   const { data: currentUser } = useQuery({
     queryKey: ['current-user'],
@@ -39,7 +37,6 @@ export function AssigneeFilter({ value, onChange, disabled = false }: AssigneeFi
     <div className="space-y-1.5" role="group" aria-labelledby="assignee-filter-label">
       <div
         className="flex items-center gap-2 rounded-sm hover:bg-accent/50 transition-colors px-1 py-1"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Checkbox
           id="assignee-me"

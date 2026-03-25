@@ -47,16 +47,16 @@ import {
 } from '@/hooks/useReportBuilder'
 
 import type { ReportField, SavedReport } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ReportBuilderProps {
   initialReportId?: string
 }
 
 export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
-  // Report builder state
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+// Report builder state
   const {
     configuration,
     selectedEntities,
@@ -237,7 +237,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
   )
 
   return (
-    <div className="flex flex-col h-full min-h-0" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col h-full min-h-0">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sm:mb-6">
         <div>

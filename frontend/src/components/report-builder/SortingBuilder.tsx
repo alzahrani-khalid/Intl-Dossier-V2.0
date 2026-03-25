@@ -18,6 +18,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { ArrowUpDown, ArrowUp, ArrowDown, Plus, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ReportSort, ReportField } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SortingBuilderProps {
   sorting: ReportSort[]
@@ -34,10 +35,9 @@ export function SortingBuilder({
   onRemoveSort,
   onUpdateSort,
 }: SortingBuilderProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
-  const sortableFields = availableFields.filter((f) => f.sortable)
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const sortableFields = availableFields.filter((f) => f.sortable)
 
   // Fields not yet used in sorting
   const availableSortFields = sortableFields.filter((f) => !sorting.some((s) => s.fieldId === f.id))
@@ -47,7 +47,7 @@ export function SortingBuilder({
   }
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg flex items-center gap-2">
           <ArrowUpDown className="h-5 w-5" />

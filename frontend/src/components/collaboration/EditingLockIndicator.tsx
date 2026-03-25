@@ -26,6 +26,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { DossierPresenceUser } from '@/hooks/useDossierPresence'
 import { Lock, AlertTriangle, Pencil } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface EditingLockIndicatorProps {
   /** User currently editing this section */
@@ -73,7 +74,6 @@ const InlineLock = memo(function InlineLock({
         <TooltipTrigger asChild>
           <div
             className="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-500"
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             {showAvatar ? (
               <Avatar className="h-5 w-5 border border-amber-500/50">
@@ -91,7 +91,7 @@ const InlineLock = memo(function InlineLock({
             <Pencil className="h-3 w-3 animate-pulse" />
           </div>
         </TooltipTrigger>
-        <TooltipContent side={isRTL ? 'right' : 'left'} dir={isRTL ? 'rtl' : 'ltr'}>
+        <TooltipContent side={isRTL ? 'right' : 'left'}>
           <p>{t('lockedBy', { name: lockedBy.name })}</p>
         </TooltipContent>
       </Tooltip>
@@ -122,7 +122,6 @@ const BannerLock = memo(function BannerLock({
         'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800',
         'text-amber-800 dark:text-amber-200',
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="alert"
     >
       <div className="flex items-center gap-2">
@@ -179,7 +178,6 @@ const BadgeLock = memo(function BadgeLock({
               'bg-amber-50 dark:bg-amber-900/20',
               'text-amber-700 dark:text-amber-300',
             )}
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             {showAvatar ? (
               <Avatar className="h-4 w-4">
@@ -198,7 +196,7 @@ const BadgeLock = memo(function BadgeLock({
             <Pencil className="h-3 w-3 animate-pulse" />
           </Badge>
         </TooltipTrigger>
-        <TooltipContent side={isRTL ? 'right' : 'left'} dir={isRTL ? 'rtl' : 'ltr'}>
+        <TooltipContent side={isRTL ? 'right' : 'left'}>
           <p>{t('lockedBy', { name: lockedBy.name })}</p>
         </TooltipContent>
       </Tooltip>
@@ -221,9 +219,9 @@ export function EditingLockIndicator({
   showWarningDialog = true,
   className,
 }: EditingLockIndicatorProps) {
-  const { t, i18n } = useTranslation('collaboration')
-  const isRTL = i18n.language === 'ar'
-  const [showForceEditDialog, setShowForceEditDialog] = useState(false)
+  const { t } = useTranslation('collaboration')
+  const { isRTL } = useDirection()
+const [showForceEditDialog, setShowForceEditDialog] = useState(false)
 
   // Handler for force-edit button clicks - can be exposed via onForceEdit prop for parent components
   // Currently used internally for the dialog trigger, prefixed with underscore to indicate reserved for future use
@@ -265,7 +263,7 @@ export function EditingLockIndicator({
 
       {/* Force edit warning dialog */}
       <AlertDialog open={showForceEditDialog} onOpenChange={setShowForceEditDialog}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-amber-500" />

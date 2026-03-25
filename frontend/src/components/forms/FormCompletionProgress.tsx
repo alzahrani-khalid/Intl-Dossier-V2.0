@@ -128,8 +128,7 @@ export function FormCompletionProgress({
   variant = 'default',
   className,
 }: FormCompletionProgressProps) {
-  const { t, i18n } = useTranslation('progressive-form')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('progressive-form')
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
 
   const {
@@ -179,7 +178,7 @@ export function FormCompletionProgress({
   // Minimal variant
   if (variant === 'minimal') {
     return (
-      <div className={cn('flex items-center gap-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('flex items-center gap-2', className)}>
         {getStatusIcon()}
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
           {overallPercentage}%
@@ -193,7 +192,6 @@ export function FormCompletionProgress({
     return (
       <div
         className={cn('flex items-center gap-3 sm:gap-4', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {getStatusIcon()}
         <div className="flex-1">
@@ -217,7 +215,6 @@ export function FormCompletionProgress({
         'overflow-hidden',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}

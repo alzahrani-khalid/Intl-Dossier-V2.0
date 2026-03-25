@@ -45,6 +45,7 @@ import type {
   AuditOperation,
   DateRangePreset,
 } from '@/types/audit-log.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // CONFIGURATION
@@ -95,10 +96,9 @@ export function AuditLogFilters({
   onClearFilters,
   className,
 }: AuditLogFiltersProps) {
-  const { t, i18n } = useTranslation('audit-logs')
-  const isRTL = i18n.language === 'ar'
-
-  const [searchValue, setSearchValue] = useState(filters.search || '')
+  const { t } = useTranslation('audit-logs')
+  const { isRTL } = useDirection()
+const [searchValue, setSearchValue] = useState(filters.search || '')
   const [datePreset, setDatePreset] = useState<DateRangePreset>('last_30_days')
   const [showCustomDates, setShowCustomDates] = useState(false)
 
@@ -190,7 +190,7 @@ export function AuditLogFilters({
   )
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Search and Quick Actions Row */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Search */}

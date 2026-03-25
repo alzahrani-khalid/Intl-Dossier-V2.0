@@ -35,6 +35,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { supabase } from '@/store/authStore'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface LinkProposal {
   id: string
@@ -73,8 +74,8 @@ const ENTITY_ICONS: Record<string, typeof FileText> = {
 
 function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkSuggestionsProps) {
   const { t, i18n } = useTranslation('entity-linking')
-  const isRTL = i18n.language === 'ar'
-  const queryClient = useQueryClient()
+  const { isRTL } = useDirection()
+const queryClient = useQueryClient()
   const [isGenerating, setIsGenerating] = useState(false)
 
   // Fetch proposals
@@ -220,7 +221,7 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
   const hasLinks = (links?.length || 0) > 0
 
   return (
-    <Card className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('w-full', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -24,6 +24,7 @@ import { AgingFilter } from './AgingFilter'
 import { TypeFilter } from './TypeFilter'
 import { AssigneeFilter } from './AssigneeFilter'
 import type { FilterCriteria } from '@/hooks/useQueueFilters'
+import { useDirection } from '@/hooks/useDirection'
 
 interface FilterPanelProps {
   filters: FilterCriteria
@@ -50,10 +51,9 @@ export default function FilterPanel({
   hasFilters = false,
   filterCount = 0,
 }: FilterPanelProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+return (
     <Popover open={isOpen} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
         <Button
@@ -72,7 +72,6 @@ export default function FilterPanel({
         className="w-[240px] p-0"
         align={isRTL ? 'end' : 'start'}
         side="bottom"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex flex-col max-h-[520px]">
           {/* Compact Header */}

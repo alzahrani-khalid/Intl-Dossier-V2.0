@@ -35,6 +35,7 @@ import {
   EyeOff,
 } from 'lucide-react'
 import type { ProgressiveFormConfig } from '@/types/progressive-form.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // FORM CONFIGURATION
@@ -168,10 +169,9 @@ const formConfig: ProgressiveFormConfig = {
 // =============================================================================
 
 export function ProgressiveFormDemoPage() {
-  const { t, i18n } = useTranslation(['progressive-form', 'common'])
-  const isRTL = i18n.language === 'ar'
-
-  // Form state
+  const { t } = useTranslation(['progressive-form', 'common'])
+  const { isRTL } = useDirection()
+// Form state
   const [formValues, setFormValues] = useState<Record<string, unknown>>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -351,7 +351,6 @@ export function ProgressiveFormDemoPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <m.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">

@@ -160,8 +160,7 @@ export function ProgressiveFormField({
   showStatusIndicator = true,
   showImportanceBadge = true,
 }: ProgressiveFormFieldProps) {
-  const { t, i18n } = useTranslation(['progressive-form', 'common'])
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation(['progressive-form', 'common'])
   const uniqueId = useId()
 
   const inputId = `${name}-${uniqueId}`
@@ -204,7 +203,6 @@ export function ProgressiveFormField({
   return (
     <motion.div
       className={containerClasses}
-      dir={isRTL ? 'rtl' : 'ltr'}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}

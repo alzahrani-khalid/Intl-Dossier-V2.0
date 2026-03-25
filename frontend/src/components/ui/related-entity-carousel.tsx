@@ -26,6 +26,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface CarouselItem {
   id: string
@@ -158,10 +159,9 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
   gapClass = 'gap-3 sm:gap-4',
   testId = 'related-entity-carousel',
 }: RelatedEntityCarouselProps<T>) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [canScrollPrev, setCanScrollPrev] = useState(false)
   const [canScrollNext, setCanScrollNext] = useState(false)
@@ -309,7 +309,6 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
     return (
       <div
         className={cn('py-8 sm:py-12 text-center', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
         data-testid={`${testId}-empty`}
       >
         <p className="text-sm sm:text-base text-muted-foreground">
@@ -323,7 +322,7 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
   }
 
   return (
-    <div className={cn('relative', className)} dir={isRTL ? 'rtl' : 'ltr'} data-testid={testId}>
+    <div className={cn('relative', className)} data-testid={testId}>
       {/* Header with title and navigation */}
       {(title || showNavigation) && (
         <div className="flex items-center justify-between gap-4 mb-3 sm:mb-4">

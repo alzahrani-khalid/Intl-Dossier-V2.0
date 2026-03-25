@@ -227,8 +227,7 @@ export function MilestonesCelebration({
   onComplete,
   autoDismiss = true,
 }: MilestonesCelebrationProps) {
-  const { t, i18n } = useTranslation('onboarding')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('onboarding')
   const [isVisible, setIsVisible] = useState(true)
 
   const BadgeIcon = badgeIcons[celebration.badgeIcon ?? 'Award'] || Award
@@ -261,7 +260,6 @@ export function MilestonesCelebration({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Backdrop */}
         <motion.div

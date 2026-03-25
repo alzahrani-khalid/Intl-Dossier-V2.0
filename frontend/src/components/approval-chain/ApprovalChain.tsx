@@ -14,6 +14,7 @@ import {
 import { Badge } from '../ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Approval Chain Component for Positions & Talking Points Lifecycle
@@ -121,9 +122,8 @@ export function ApprovalChain({
   className,
 }: ApprovalChainProps) {
   const { t, i18n } = useTranslation('positions')
-  const isRTL = i18n.language === 'ar'
-
-  // Extract stages from config
+  const { isRTL } = useDirection()
+// Extract stages from config
   const stages = approvalChainConfig?.stages || []
 
   if (stages.length === 0) {

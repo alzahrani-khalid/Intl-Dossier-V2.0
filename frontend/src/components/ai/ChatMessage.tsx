@@ -8,13 +8,12 @@
  * - Tool call cards
  * - Citations with deep links
  */
-
-import { useTranslation } from 'react-i18next'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { User, Bot, ExternalLink } from 'lucide-react'
 import { ToolResultCard } from './ToolResultCard'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface Citation {
   type: string
@@ -48,14 +47,12 @@ export function ChatMessage({
   onCitationClick,
   className,
 }: ChatMessageProps) {
-  const { i18n } = useTranslation('ai-chat')
-  const isRTL = i18n.language === 'ar'
-  const isUser = role === 'user'
+const { isRTL } = useDirection()
+const isUser = role === 'user'
 
   return (
     <div
       className={cn('flex gap-3 p-4', isUser ? 'flex-row-reverse' : 'flex-row', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Avatar */}
       <Avatar className={cn('h-8 w-8 shrink-0', isUser ? 'bg-primary' : 'bg-muted')}>

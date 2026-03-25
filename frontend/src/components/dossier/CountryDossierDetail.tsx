@@ -67,8 +67,7 @@ type CountryTabType =
   | 'languages'
 
 export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
   const navigate = useNavigate()
 
   // Active tab state
@@ -128,7 +127,7 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Tabs Navigation - HeroUI v3 Styled */}
       <div className="bg-card text-card-foreground rounded-lg shadow border border-border">
         <Tabs value={activeTab} onValueChange={(value) => handleTabChange(value as CountryTabType)}>

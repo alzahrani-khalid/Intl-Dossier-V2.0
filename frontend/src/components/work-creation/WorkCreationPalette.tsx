@@ -30,6 +30,7 @@ import { DossierPicker, type DossierOption } from './DossierPicker'
 import { CommitmentQuickForm } from './forms/CommitmentQuickForm'
 import { TaskQuickForm } from './forms/TaskQuickForm'
 import { IntakeQuickForm } from './forms/IntakeQuickForm'
+import { useDirection } from '@/hooks/useDirection'
 
 export type WorkItemType = 'commitment' | 'task' | 'intake'
 
@@ -83,10 +84,9 @@ export function WorkCreationPalette({
   contextOverride,
   onSuccess,
 }: WorkCreationPaletteProps) {
-  const { t, i18n } = useTranslation('work-creation')
-  const isRTL = i18n.language === 'ar'
-
-  // Auto-capture context from route
+  const { t } = useTranslation('work-creation')
+  const { isRTL } = useDirection()
+// Auto-capture context from route
   const autoContext = useCreationContext()
   const context: CreationContext = {
     ...autoContext,
@@ -200,7 +200,7 @@ export function WorkCreationPalette({
       onOpenChange={onOpenChange}
       preventCloseOnOutsideClick={step !== 'type-select'}
     >
-      <div className="flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex flex-col">
         {/* Header with back button */}
         {step !== 'type-select' && (
           <div className="flex items-center gap-2 px-3 py-2 border-b">

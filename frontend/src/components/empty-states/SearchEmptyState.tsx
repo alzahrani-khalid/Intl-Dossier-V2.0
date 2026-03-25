@@ -97,9 +97,7 @@ export function SearchEmptyState({
   onApplyPreset,
   showFilterPresets = true,
 }: SearchEmptyStateProps) {
-  const { t, i18n } = useTranslation('empty-states')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('empty-states')
   const getProps = (): Partial<EmptyStateProps> => {
     switch (type) {
       case 'no-query':
@@ -170,7 +168,6 @@ export function SearchEmptyState({
   return (
     <div
       className={className}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid={`search-empty-state-${type}`}
     >
       <EmptyState

@@ -163,9 +163,7 @@ function FormSection({
   id,
   onToggle,
 }: FormSectionProps) {
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('common')
   const [isExpanded, setIsExpanded] = useState(!defaultCollapsed)
 
   const toggleExpanded = useCallback(() => {
@@ -200,7 +198,6 @@ function FormSection({
           error && 'border-red-300 dark:border-red-700',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
         aria-labelledby={id ? `${id}-heading` : undefined}
       >
         {/* Header */}

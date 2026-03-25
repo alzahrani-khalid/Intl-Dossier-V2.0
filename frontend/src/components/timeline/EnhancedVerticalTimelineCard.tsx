@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useOutsideClick } from '@/hooks/useOutsideClick'
 import { cn } from '@/lib/utils'
 import type { UnifiedTimelineEvent } from '@/types/timeline.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface EnhancedVerticalTimelineCardProps {
   event: UnifiedTimelineEvent
@@ -158,8 +159,8 @@ export function EnhancedVerticalTimelineCard({
 }: EnhancedVerticalTimelineCardProps) {
   const { t, i18n } = useTranslation('dossier')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-  const [isActive, setIsActive] = useState(false)
+  const { isRTL } = useDirection()
+const [isActive, setIsActive] = useState(false)
   const id = useId()
   const ref = useRef<HTMLDivElement>(null)
 
@@ -220,7 +221,6 @@ export function EnhancedVerticalTimelineCard({
         {isActive && (
           <div
             className="fixed inset-0 grid place-items-center z-[101] p-4"
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             {/* Close Button */}
             <m.button
@@ -459,7 +459,7 @@ export function EnhancedVerticalTimelineCard({
         iconClassName={eventColorClass}
         onTimelineElementClick={handleCardClick}
       >
-        <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="space-y-3">
           {/* Date - Prominent Display for Single-Side Layout (Mobile & Tablet up to 1169px) */}
           <div className="xl:hidden mb-3 pb-3 border-b border-border">
             <div className="flex items-center gap-2 text-primary">

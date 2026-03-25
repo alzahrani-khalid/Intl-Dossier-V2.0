@@ -39,8 +39,7 @@ const CATEGORIES: NotificationCategory[] = [
 const PREVIEW_DISMISSED_KEY = 'intl-dossier-notification-preview-dismissed'
 
 export function NotificationsPage() {
-  const { t, i18n } = useTranslation('notification-center')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('notification-center')
   const navigate = useNavigate()
   const { toast } = useToast()
 
@@ -163,7 +162,6 @@ export function NotificationsPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">

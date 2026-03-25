@@ -135,8 +135,7 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
   },
   ref,
 ) {
-  const { t, i18n } = useTranslation('swipe-gestures')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('swipe-gestures')
   const haptic = useHapticFeedback()
   const [contextMenuOpen, setContextMenuOpen] = useState(false)
   const [hasTriggeredHaptic, setHasTriggeredHaptic] = useState(false)
@@ -320,7 +319,6 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
           touchAction: 'pan-y', // Allow vertical scrolling
           userSelect: 'none',
         }}
-        dir={isRTL ? 'rtl' : 'ltr'}
         data-testid={testId}
         data-swipe-state={state.state}
         data-swipe-direction={state.direction}
@@ -337,7 +335,7 @@ export const SwipeableCard = forwardRef<HTMLDivElement, SwipeableCardProps>(func
     return (
       <ContextMenu open={contextMenuOpen} onOpenChange={setContextMenuOpen}>
         <ContextMenuTrigger asChild>{cardContent}</ContextMenuTrigger>
-        <ContextMenuContent className="w-56" dir={isRTL ? 'rtl' : 'ltr'}>
+        <ContextMenuContent className="w-56">
           {contextMenuItems.map((item, _index) => (
             <ContextMenuItemComponent
               key={item.key}

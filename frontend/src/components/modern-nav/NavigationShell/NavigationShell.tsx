@@ -1,12 +1,12 @@
 import { useState, useEffect, ReactNode } from 'react'
 import { Menu, X } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { useLocation } from '@tanstack/react-router'
 import { IconRail, IconRailItem } from '../IconRail'
 import { ExpandedPanel } from '../ExpandedPanel'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { navigationCategories } from '../navigationData'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface NavigationShellProps {
   /** Icon rail items */
@@ -71,9 +71,8 @@ export function NavigationShell({
   className,
   defaultPanelOpen = true,
 }: NavigationShellProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const location = useLocation()
+const { isRTL } = useDirection()
+const location = useLocation()
 
   // Panel state - only open by default on desktop (>=768px)
   const [isPanelOpen, setIsPanelOpen] = useState(() => {
@@ -139,7 +138,6 @@ export function NavigationShell({
   return (
     <div
       className={cn('flex h-screen w-full overflow-hidden', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Mobile Menu Button - Only visible on mobile */}
       <div className="fixed top-0 start-0 z-50 p-4 md:hidden">

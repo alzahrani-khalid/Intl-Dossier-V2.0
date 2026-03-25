@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { SampleDataTemplateSelector } from './SampleDataTemplateSelector'
 
 import type { SampleDataTemplate } from '@/types/sample-data.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SampleDataEmptyStateProps {
   templates: SampleDataTemplate[]
@@ -30,10 +31,9 @@ export function SampleDataEmptyState({
   onCreateNew,
   className = '',
 }: SampleDataEmptyStateProps) {
-  const { t, i18n } = useTranslation('sample-data')
-  const isRTL = i18n.language === 'ar'
-
-  const [showTemplateSelector, setShowTemplateSelector] = useState(false)
+  const { t } = useTranslation('sample-data')
+  const { isRTL } = useDirection()
+const [showTemplateSelector, setShowTemplateSelector] = useState(false)
 
   const handlePopulate = (templateSlug: string) => {
     onPopulate(templateSlug)
@@ -50,7 +50,6 @@ export function SampleDataEmptyState({
           border border-dashed border-muted-foreground/20
           ${className}
         `}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Icon */}
         <div className="relative mb-6">
@@ -100,7 +99,7 @@ export function SampleDataEmptyState({
                 onClick={onCreateNew}
               >
                 <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {i18n.language === 'ar' ? 'إنشاء ملف جديد' : 'Create Dossier'}
+                {isRTL ? 'إنشاء ملف جديد' : 'Create Dossier'}
               </Button>
             </>
           )}

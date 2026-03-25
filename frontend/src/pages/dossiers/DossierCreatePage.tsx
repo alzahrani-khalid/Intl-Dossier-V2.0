@@ -28,11 +28,12 @@ import { DossierCreateWizard } from '@/components/dossier/DossierCreateWizard'
 import { cn } from '@/lib/utils'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import type { DossierType } from '@/services/dossier-api'
+import { useDirection } from '@/hooks/useDirection'
 
 export function DossierCreatePage() {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const handleBack = () => {
     navigate({ to: '/dossiers' })
@@ -45,7 +46,6 @@ export function DossierCreatePage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">

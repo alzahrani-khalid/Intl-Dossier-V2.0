@@ -15,6 +15,7 @@ import { supabase } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface Decision {
   id: string
@@ -46,9 +47,9 @@ interface OutcomesSummaryProps {
 }
 
 export function OutcomesSummary({ dossierId }: OutcomesSummaryProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? arSA : enUS
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const dateLocale = isRTL ? arSA : enUS
 
   // Fetch after-action records with decisions, commitments, and risks
   const { data: afterActionData, isLoading } = useQuery({
@@ -101,7 +102,7 @@ export function OutcomesSummary({ dossierId }: OutcomesSummaryProps) {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
@@ -112,7 +113,6 @@ export function OutcomesSummary({ dossierId }: OutcomesSummaryProps) {
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -133,7 +133,7 @@ export function OutcomesSummary({ dossierId }: OutcomesSummaryProps) {
 
   // Render outcomes summary
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Decisions Section */}
       {decisions.length > 0 && (
         <div>

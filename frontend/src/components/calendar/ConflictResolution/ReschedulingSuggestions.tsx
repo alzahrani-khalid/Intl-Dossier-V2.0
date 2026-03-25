@@ -33,6 +33,7 @@ import type {
   ReschedulingSuggestion,
   ReschedulingSuggestionResponse,
 } from '@/types/calendar-conflict.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ReschedulingSuggestionsProps {
   suggestions: ReschedulingSuggestion[] | ReschedulingSuggestionResponse['suggestions']
@@ -52,9 +53,9 @@ export function ReschedulingSuggestions({
   onRefresh,
   className,
 }: ReschedulingSuggestionsProps) {
-  const { t, i18n } = useTranslation('calendar')
-  const isRTL = i18n.language === 'ar'
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
+  const { t } = useTranslation('calendar')
+  const { isRTL } = useDirection()
+const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
 
   const formatDateTime = (datetime: string) => {
     const date = new Date(datetime)
@@ -85,7 +86,7 @@ export function ReschedulingSuggestions({
 
   if (isLoading) {
     return (
-      <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className={cn('overflow-hidden', className)}>
         <CardContent className="p-6">
           <div className="flex flex-col items-center justify-center gap-3 py-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -98,7 +99,7 @@ export function ReschedulingSuggestions({
 
   if (!suggestions || suggestions.length === 0) {
     return (
-      <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className={cn('overflow-hidden', className)}>
         <CardContent className="p-6">
           <div className="flex flex-col items-center justify-center gap-3 py-8 text-center">
             <Calendar className="h-12 w-12 text-muted-foreground/50" />
@@ -121,7 +122,7 @@ export function ReschedulingSuggestions({
   }
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">

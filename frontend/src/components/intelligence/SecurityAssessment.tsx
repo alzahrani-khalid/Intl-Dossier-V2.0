@@ -25,6 +25,7 @@ import { useRefreshIntelligence } from '@/hooks/useIntelligence'
 import { Shield, ShieldAlert } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import type { IntelligenceReport } from '@/services/intelligence-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SecurityAssessmentProps {
   reports: IntelligenceReport[]
@@ -32,10 +33,9 @@ interface SecurityAssessmentProps {
 }
 
 export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  // Get latest security report
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+// Get latest security report
   const latestReport = useMemo(() => {
     if (reports.length === 0) return null
     return reports.sort(
@@ -70,7 +70,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
   // Empty state (after all hooks)
   if (reports.length === 0) {
     return (
-      <Card className="h-full" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className="h-full">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -104,7 +104,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
   const [isExpanded, setIsExpanded] = React.useState(false)
 
   return (
-    <Card className="h-full flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="flex-1 min-w-0">

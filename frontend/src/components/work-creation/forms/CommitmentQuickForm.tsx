@@ -46,6 +46,7 @@ import { useCreateWorkItemDossierLinks } from '@/hooks/useCreateWorkItemDossierL
 import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/dossier'
 import type { InheritanceSource, ContextEntityType } from '@/types/dossier-context.types'
 import type { DossierType } from '@/types/relationship.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Validation schema
 const commitmentQuickFormSchema = z.object({
@@ -76,10 +77,9 @@ export function CommitmentQuickForm({
   onSuccess,
   onCancel,
 }: CommitmentQuickFormProps) {
-  const { t, i18n } = useTranslation(['work-creation', 'commitments', 'dossier-context'])
-  const isRTL = i18n.language === 'ar'
-
-  // State for user-selected dossier when no context is available (US4)
+  const { t } = useTranslation(['work-creation', 'commitments', 'dossier-context'])
+  const { isRTL } = useDirection()
+// State for user-selected dossier when no context is available (US4)
   const [userSelectedDossiers, setUserSelectedDossiers] = useState<SelectedDossier[]>([])
   const [dossierError, setDossierError] = useState<string>('')
 
@@ -203,7 +203,6 @@ export function CommitmentQuickForm({
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* T042/US4: Dossier context display or selector */}
         {/* Show badge when dossier is provided from props or context */}

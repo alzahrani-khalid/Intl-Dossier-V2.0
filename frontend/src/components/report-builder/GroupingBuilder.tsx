@@ -25,6 +25,7 @@ import type {
   AggregationFunction,
   ReportAggregation,
 } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface GroupingBuilderProps {
   groupings: ReportGrouping[]
@@ -54,10 +55,9 @@ export function GroupingBuilder({
   onAddAggregation,
   onRemoveAggregation,
 }: GroupingBuilderProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
-  const { setNodeRef, isOver } = useDroppable({
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const { setNodeRef, isOver } = useDroppable({
     id: 'groupings-drop-zone',
     data: { type: 'groupings' },
   })
@@ -90,7 +90,7 @@ export function GroupingBuilder({
   }
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg flex items-center gap-2">
           <Layers className="h-5 w-5" />

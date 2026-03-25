@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { useForumSessions, getSessionStatus, type ForumSession } from '@/hooks/useForumSessions'
 import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 type TranslationFunc = ReturnType<typeof useTranslation<'dossier'>>['t']
 
@@ -28,9 +29,8 @@ interface MeetingScheduleProps {
 
 export function MeetingSchedule({ dossier, isWorkingGroup = false }: MeetingScheduleProps) {
   const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  // For forums, fetch linked sessions
+  const { isRTL } = useDirection()
+// For forums, fetch linked sessions
   const { data, isLoading, error } = useForumSessions(dossier.type === 'forum' ? dossier.id : '', {
     enabled: dossier.type === 'forum',
   })
@@ -42,7 +42,7 @@ export function MeetingSchedule({ dossier, isWorkingGroup = false }: MeetingSche
 
   // Forum view - show sessions/editions
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Header with Add Session button */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
@@ -274,7 +274,7 @@ function WorkingGroupSchedule({ dossier, isRTL, t, i18n }: WorkingGroupScheduleP
     dossier.type === 'forum' ? dossier.extension?.meeting_frequency : undefined
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Next Meeting Highlight */}
       {nextMeetingDate && (
         <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">

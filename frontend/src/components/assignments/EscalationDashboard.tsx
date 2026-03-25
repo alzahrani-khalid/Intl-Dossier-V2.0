@@ -18,6 +18,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { format } from 'date-fns'
 import { CalendarIcon, TrendingUp, AlertTriangle, Users, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * EscalationDashboard Component - T083
@@ -75,10 +76,9 @@ interface EscalationReport {
 }
 
 export function EscalationDashboard() {
-  const { t, i18n } = useTranslation('assignments')
-  const isRTL = i18n.language === 'ar'
-
-  // State for filters
+  const { t } = useTranslation('assignments')
+  const { isRTL } = useDirection()
+// State for filters
   const [dateRange, setDateRange] = useState<{ start: Date; end: Date }>({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     end: new Date(),

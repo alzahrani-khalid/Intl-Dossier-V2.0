@@ -12,6 +12,7 @@ import { format } from 'date-fns'
 import { FileText, Clock, AlertCircle, Calendar } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MoU {
   id: string
@@ -38,10 +39,9 @@ interface DossierMoUsTabProps {
 }
 
 export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
-  const { t, i18n } = useTranslation('dossiers')
-  const isRTL = i18n.language === 'ar'
-
-  // Fetch MoUs for this dossier using unified architecture
+  const { t } = useTranslation('dossiers')
+  const { isRTL } = useDirection()
+// Fetch MoUs for this dossier using unified architecture
   const {
     data: mous,
     isLoading,

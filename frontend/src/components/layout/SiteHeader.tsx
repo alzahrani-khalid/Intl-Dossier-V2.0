@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+
 import {
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
@@ -15,11 +15,11 @@ import { ThemeSelector } from '@/components/theme-selector/theme-selector'
 import { LanguageToggle } from '@/components/language-toggle/LanguageToggle'
 import { HeaderSearch } from './header/Search'
 import { UserMenu } from './header/UserMenu'
+import { useDirection } from '@/hooks/useDirection'
 
 export function SiteHeader() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const { toggleSidebar, open, openMobile, isMobile } = useSidebar()
+const { isRTL } = useDirection()
+const { toggleSidebar, open, openMobile, isMobile } = useSidebar()
 
   const isExpanded = isMobile ? openMobile : open
   const ToggleIcon = isRTL

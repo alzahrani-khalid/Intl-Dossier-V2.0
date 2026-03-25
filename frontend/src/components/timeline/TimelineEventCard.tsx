@@ -36,6 +36,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import type { UnifiedTimelineEvent } from '@/types/timeline.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TimelineEventCardProps {
   event: UnifiedTimelineEvent
@@ -105,8 +106,8 @@ const formatEventDate = (dateString: string, locale: string): string => {
 export function TimelineEventCard({ event, isFirst, isLast, className }: TimelineEventCardProps) {
   const { t, i18n } = useTranslation('dossier')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-  const [isExpanded, setIsExpanded] = useState(false)
+  const { isRTL } = useDirection()
+const [isExpanded, setIsExpanded] = useState(false)
 
   const EventIcon = getEventIcon(event.event_type)
   const title = isRTL ? event.title_ar : event.title_en
@@ -124,7 +125,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
   }
 
   return (
-    <div className={cn('relative flex gap-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('relative flex gap-4', className)}>
       {/* Timeline Line & Icon */}
       <div className="relative flex flex-col items-center">
         {/* Line Above (hidden for first item) */}

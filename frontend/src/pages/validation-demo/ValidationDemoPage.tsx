@@ -2,8 +2,6 @@
  * ValidationDemoPage
  * Demonstrates the real-time form validation system with contextual errors
  */
-
-import { useTranslation } from 'react-i18next'
 import { useState, useCallback } from 'react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
@@ -16,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Mail, User, Phone, Globe, Lock, FileText, Send, RotateCcw } from 'lucide-react'
 import type { ValidationResult } from '@/lib/validation-rules'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -36,10 +35,8 @@ interface DemoFormData {
 // =============================================================================
 
 export function ValidationDemoPage() {
-  const { i18n } = useTranslation(['validation', 'common'])
-  const isRTL = i18n.language === 'ar'
-
-  // Form state
+const { isRTL } = useDirection()
+// Form state
   const [formValues, setFormValues] = useState<Partial<DemoFormData>>({})
   const [validationErrors, setValidationErrors] = useState<Record<string, ValidationResult>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -89,7 +86,6 @@ export function ValidationDemoPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">

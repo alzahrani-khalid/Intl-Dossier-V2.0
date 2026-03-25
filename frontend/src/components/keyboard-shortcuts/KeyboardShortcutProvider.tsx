@@ -7,7 +7,6 @@
  */
 
 import React, { createContext, useContext, useCallback, useState, useMemo, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   useGlobalKeyboardHandler,
   useNavigationShortcuts,
@@ -17,6 +16,7 @@ import {
   formatShortcut,
   isMac,
 } from '@/hooks/useKeyboardShortcuts'
+import { useDirection } from '@/hooks/useDirection'
 
 interface KeyboardShortcutContextValue {
   /** Whether the command palette is open */
@@ -46,10 +46,8 @@ interface KeyboardShortcutProviderProps {
 }
 
 export function KeyboardShortcutProvider({ children }: KeyboardShortcutProviderProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
+const { isRTL } = useDirection()
+const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
 
   // Set up the global keyboard handler
   useGlobalKeyboardHandler()

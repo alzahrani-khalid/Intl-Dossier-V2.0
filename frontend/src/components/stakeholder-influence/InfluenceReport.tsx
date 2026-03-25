@@ -28,6 +28,7 @@ import {
 import type { InfluenceReport } from '@/types/stakeholder-influence.types'
 import { NODE_COLORS, REPORT_TYPE_LABELS } from '@/types/stakeholder-influence.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -84,10 +85,9 @@ function FindingCard({
   finding: { en: string; ar: string }
   type?: 'info' | 'warning' | 'success'
 }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const icons = {
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const icons = {
     info: AlertCircle,
     warning: AlertCircle,
     success: CheckCircle,
@@ -116,8 +116,8 @@ function RecommendationCard({
   recommendation: { en: string; ar: string }
   index: number
 }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
   const text = isRTL ? recommendation.ar : recommendation.en
 
   return (
@@ -173,8 +173,8 @@ export function InfluenceReportView({
   onExport,
   className,
 }: InfluenceReportProps) {
-  const { t, i18n } = useTranslation('stakeholder-influence')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('stakeholder-influence')
+  const { isRTL } = useDirection()
 
   // Loading state
   if (isLoading) {
@@ -215,7 +215,7 @@ export function InfluenceReportView({
   const keyConnectors = report.report_data.key_connectors || []
 
   return (
-    <div className={cn('space-y-6 print:space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-6 print:space-y-4', className)}>
       {/* Report Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>

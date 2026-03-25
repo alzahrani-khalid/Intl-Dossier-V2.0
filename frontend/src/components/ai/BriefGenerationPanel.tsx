@@ -29,6 +29,7 @@ import {
   PenLine,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface BriefGenerationPanelProps {
   engagementId?: string
@@ -48,8 +49,8 @@ export function BriefGenerationPanel({
   className,
 }: BriefGenerationPanelProps) {
   const { t, i18n } = useTranslation('ai-brief')
-  const isRTL = i18n.language === 'ar'
-  const [customPrompt, setCustomPrompt] = useState('')
+  const { isRTL } = useDirection()
+const [customPrompt, setCustomPrompt] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [phase, setPhase] = useState<GenerationPhase>('idle')
 
@@ -137,7 +138,7 @@ export function BriefGenerationPanel({
   }
 
   return (
-    <Card className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('w-full', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -382,7 +383,6 @@ export function BriefGenerationPanel({
                   )}
                   className="resize-none min-h-[100px]"
                   rows={4}
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </div>
 
@@ -403,7 +403,6 @@ export function BriefGenerationPanel({
                   )}
                   className="resize-none min-h-[80px]"
                   rows={3}
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </div>
 
@@ -424,7 +423,6 @@ export function BriefGenerationPanel({
                   )}
                   className="resize-none min-h-[80px]"
                   rows={3}
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </div>
 

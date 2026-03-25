@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import type { EntityLink } from '../../../../backend/src/types/intake-entity-links.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface LinkCardProps {
   /** Entity link data */
@@ -71,10 +72,9 @@ export function LinkCard({
   onUpdateNotes,
   className,
 }: LinkCardProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [isEditing, setIsEditing] = useState(false)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [isEditing, setIsEditing] = useState(false)
   const [notesValue, setNotesValue] = useState(link.notes || '')
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
@@ -265,7 +265,6 @@ export function LinkCard({
                     isRTL && 'text-end',
                   )}
                   maxLength={1000}
-                  dir={isRTL ? 'rtl' : 'ltr'}
                   aria-label={t('entityLinks.notesInput')}
                 />
 

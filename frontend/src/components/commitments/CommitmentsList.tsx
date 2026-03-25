@@ -35,6 +35,7 @@ import type {
   Commitment,
   CommitmentFilters,
 } from '@/types/commitment.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface CommitmentsListProps {
   dossierId?: string
@@ -61,10 +62,9 @@ export function CommitmentsList({
   showCreateButton = true,
   onFiltersChange,
 }: CommitmentsListProps) {
-  const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-
-  // State for create/edit dialogs
+  const { t } = useTranslation('commitments')
+  const { isRTL } = useDirection()
+// State for create/edit dialogs
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [editingCommitment, setEditingCommitment] = useState<Commitment | null>(null)
   const [showFilterDrawer, setShowFilterDrawer] = useState(false)
@@ -212,7 +212,7 @@ export function CommitmentsList({
   // Loading state
   if (isLoading) {
     return (
-      <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-4">
         {[0, 1, 2].map((n) => (
           <Skeleton key={n} className="h-32 w-full rounded-lg" />
         ))}
@@ -223,7 +223,7 @@ export function CommitmentsList({
   // Error state
   if (isError) {
     return (
-      <div dir={isRTL ? 'rtl' : 'ltr'}>
+      <div>
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertDescription>
@@ -240,7 +240,7 @@ export function CommitmentsList({
     const isFiltered = hasActiveFilters
 
     return (
-      <div dir={isRTL ? 'rtl' : 'ltr'}>
+      <div>
         {/* Header with filter button even when empty */}
         {showFilters && (
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1 mb-4">
@@ -331,7 +331,6 @@ export function CommitmentsList({
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogContent
               className="max-w-lg max-h-[90vh] overflow-y-auto"
-              dir={isRTL ? 'rtl' : 'ltr'}
             >
               <DialogHeader>
                 <DialogTitle className="text-start">{t('actions.create')}</DialogTitle>
@@ -349,7 +348,7 @@ export function CommitmentsList({
   }
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Sync status bar */}
       <SyncStatusBar
         lastSyncTime={lastSyncTime}
@@ -458,7 +457,6 @@ export function CommitmentsList({
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogContent
             className="max-w-lg max-h-[90vh] overflow-y-auto"
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             <DialogHeader>
               <DialogTitle className="text-start">{t('actions.create')}</DialogTitle>
@@ -480,7 +478,6 @@ export function CommitmentsList({
         <SheetContent
           side={isRTL ? 'left' : 'right'}
           className="w-full sm:max-w-lg overflow-y-auto"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <SheetHeader>
             <SheetTitle className="text-start">{t('actions.edit')}</SheetTitle>

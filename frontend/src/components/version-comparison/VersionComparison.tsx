@@ -22,6 +22,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, AlertCircle, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DiffItem {
   type: 'added' | 'removed' | 'unchanged'
@@ -58,10 +59,9 @@ export function VersionComparison({
   defaultToVersion,
   className,
 }: VersionComparisonProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVersion)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVersion)
   const [toVersion, setToVersion] = useState<number | undefined>(defaultToVersion)
 
   // Fetch version comparison data

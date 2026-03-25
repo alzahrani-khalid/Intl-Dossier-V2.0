@@ -39,6 +39,7 @@ import { cn } from '@/lib/utils'
 
 import { usePollDetails, useClosePoll, useAutoSchedule } from '@/hooks/useAvailabilityPolling'
 import { POLL_STATUS_COLORS } from '@/types/availability-polling.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface AvailabilityPollResultsProps {
   pollId: string
@@ -51,9 +52,9 @@ export function AvailabilityPollResults({
   isOrganizer = false,
   onScheduleSuccess,
 }: AvailabilityPollResultsProps) {
-  const { t, i18n } = useTranslation('availability-polling')
-  const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
+  const { t } = useTranslation('availability-polling')
+  const { isRTL } = useDirection()
+const dateLocale = isRTL ? ar : enUS
 
   const { data: pollData, isLoading, error } = usePollDetails(pollId)
   const closePoll = useClosePoll()
@@ -115,7 +116,7 @@ export function AvailabilityPollResults({
   const isPollScheduled = poll.status === 'scheduled'
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div className="space-y-2">
         <div className="flex items-center justify-between flex-wrap gap-2">

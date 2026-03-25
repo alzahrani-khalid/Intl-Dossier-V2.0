@@ -34,6 +34,7 @@ import type {
   ReportConfiguration,
   ReportField,
 } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface VisualizationSelectorProps {
   visualization: ReportConfiguration['visualization']
@@ -92,16 +93,15 @@ export function VisualizationSelector({
   onSetVisualization,
   onUpdateVisualization,
 }: VisualizationSelectorProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
-  const showAxisConfig = AXIS_VISUALIZATIONS.includes(visualization.type)
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const showAxisConfig = AXIS_VISUALIZATIONS.includes(visualization.type)
   const showLegendConfig = LEGEND_VISUALIZATIONS.includes(visualization.type)
   const showGridConfig =
     visualization.type !== 'table' && visualization.type !== 'card' && visualization.type !== 'kpi'
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg">{t('visualization.title')}</CardTitle>
         <CardDescription className="text-xs sm:text-sm">

@@ -34,6 +34,7 @@ import {
 } from '@/types/commitment-deliverable.types'
 import { useBulkCreateDeliverables } from '@/hooks/useCommitmentDeliverables'
 import { AddDeliverableDialog } from './AddDeliverableDialog'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for deliverable types
 const TYPE_ICONS: Record<CommitmentDeliverableType, typeof FileText> = {
@@ -66,10 +67,9 @@ export function CommitmentDeliverablesEmptyState({
   commitmentId,
   commitmentDueDate,
 }: CommitmentDeliverablesEmptyStateProps) {
-  const { t, i18n } = useTranslation('commitment-deliverables')
-  const isRTL = i18n.language === 'ar'
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { t } = useTranslation('commitment-deliverables')
+  const { isRTL } = useDirection()
+const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<CommitmentDeliverableType | null>(null)
   const [isApplyingTemplate, setIsApplyingTemplate] = useState<string | null>(null)
 
@@ -113,7 +113,6 @@ export function CommitmentDeliverablesEmptyState({
   return (
     <div
       className="w-full space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="deliverables-empty-state"
     >
       {/* Empty State Hero */}

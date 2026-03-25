@@ -33,6 +33,7 @@ import {
 } from '@/hooks/useOptimisticLocking'
 import { AlertTriangle, Server, User, Combine, ArrowRight, Clock, FileWarning } from 'lucide-react'
 import type { JsonValue } from '@/types/common.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ConflictResolutionDialogProps {
   /** Whether the dialog is open */
@@ -80,7 +81,7 @@ const FieldDiff = memo(function FieldDiff({
   const serverStr = formatFieldValue(serverValue)
 
   return (
-    <div className="rounded-lg border bg-muted/30 p-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="rounded-lg border bg-muted/30 p-3">
       <p className="text-sm font-medium mb-2">{formatFieldName(field)}</p>
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-2 items-center text-sm">
         {/* Your changes */}
@@ -138,7 +139,6 @@ const StrategyButton = memo(function StrategyButton({
       )}
       onClick={onClick}
       disabled={disabled}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className={cn('rounded-full p-2', STRATEGY_COLORS[strategy.type])}>
         <Icon className="h-5 w-5" />
@@ -163,10 +163,9 @@ function ConflictResolutionDialog({
   onResolve,
   isResolving = false,
 }: ConflictResolutionDialogProps) {
-  const { t, i18n } = useTranslation('collaboration')
-  const isRTL = i18n.language === 'ar'
-
-  // Get conflict summary for display
+  const { t } = useTranslation('collaboration')
+  const { isRTL } = useDirection()
+// Get conflict summary for display
   const summary = useMemo(() => {
     if (!conflict) return null
     return getConflictSummary(conflict)
@@ -198,7 +197,7 @@ function ConflictResolutionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-amber-600 dark:text-amber-500">
             <FileWarning className="h-5 w-5" />
@@ -277,8 +276,8 @@ function ConflictBanner({
   onResolve: () => void
   className?: string
 }) {
-  const { t, i18n } = useTranslation('collaboration')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('collaboration')
+  const { isRTL } = useDirection()
 
   return (
     <div
@@ -288,7 +287,6 @@ function ConflictBanner({
         'text-amber-800 dark:text-amber-200',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="alert"
     >
       <div className="flex items-center gap-2">

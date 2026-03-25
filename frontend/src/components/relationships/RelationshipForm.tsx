@@ -22,6 +22,7 @@ import {
 import { Loader2 } from 'lucide-react'
 import { useCreateRelationship } from '@/hooks/useContactRelationships'
 import type { CreateRelationshipInput, RelationshipType } from '@/services/contact-relationship-api'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * RelationshipForm Props
@@ -60,10 +61,9 @@ export function RelationshipForm({
   onSuccess,
   onCancel,
 }: RelationshipFormProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  const {
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const {
     register,
     handleSubmit,
     setValue,
@@ -101,7 +101,7 @@ export function RelationshipForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Contact Selection (if not pre-selected) */}
       {!toContactId && (
         <div className="space-y-2">

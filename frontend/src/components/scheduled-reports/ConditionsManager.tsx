@@ -49,6 +49,7 @@ import {
   useRemoveCondition,
   type DeliveryCondition,
 } from '@/hooks/useScheduledReports'
+import { useDirection } from '@/hooks/useDirection'
 
 const conditionSchema = z.object({
   field_path: z.string().min(1, 'Field path is required'),
@@ -77,9 +78,9 @@ interface ConditionsManagerProps {
 }
 
 export function ConditionsManager({ scheduleId }: ConditionsManagerProps) {
-  const { t, i18n } = useTranslation('scheduled-reports')
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation('scheduled-reports')
+  const { isRTL } = useDirection()
+const { toast } = useToast()
 
   const [addDialogOpen, setAddDialogOpen] = useState(false)
 
@@ -223,7 +224,7 @@ export function ConditionsManager({ scheduleId }: ConditionsManagerProps) {
 
       {/* Add Condition Dialog */}
       <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
-        <DialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('conditions.addCondition')}</DialogTitle>
           </DialogHeader>

@@ -13,16 +13,16 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { X, AlertTriangle, ChevronRight, Clock } from 'lucide-react'
 import { useDelegationsExpiringSoon } from '@/hooks/useDelegation'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DelegationExpiryBannerProps {
   className?: string
 }
 
 export function DelegationExpiryBanner({ className }: DelegationExpiryBannerProps) {
-  const { t, i18n } = useTranslation('delegation')
-  const isRTL = i18n.language === 'ar'
-
-  const [isDismissed, setIsDismissed] = useState(false)
+  const { t } = useTranslation('delegation')
+  const { isRTL } = useDirection()
+const [isDismissed, setIsDismissed] = useState(false)
 
   const { data: expiringSoon, isLoading } = useDelegationsExpiringSoon()
 
@@ -37,7 +37,6 @@ export function DelegationExpiryBanner({ className }: DelegationExpiryBannerProp
     <Alert
       variant="default"
       className={`border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20 ${className}`}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <AlertTriangle className="h-4 w-4 text-yellow-600" />
       <AlertTitle className="flex items-center gap-2 text-yellow-800 dark:text-yellow-400">

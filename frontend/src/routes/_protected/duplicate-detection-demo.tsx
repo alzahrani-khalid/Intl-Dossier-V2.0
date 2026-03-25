@@ -16,9 +16,7 @@ export const Route = createFileRoute('/_protected/duplicate-detection-demo')({
 })
 
 function DuplicateDetectionDemoPage() {
-  const { t, i18n } = useTranslation('duplicate-detection')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('duplicate-detection')
   const [selectedCandidate, setSelectedCandidate] = useState<DuplicateCandidateListItem | null>(
     null,
   )
@@ -43,7 +41,6 @@ function DuplicateDetectionDemoPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="mb-6 sm:mb-8">

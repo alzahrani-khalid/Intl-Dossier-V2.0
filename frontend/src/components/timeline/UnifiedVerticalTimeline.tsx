@@ -100,8 +100,7 @@ export function UnifiedVerticalTimeline({
   emptyMessage,
   className,
 }: UnifiedVerticalTimelineProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
   const containerRef = useRef<HTMLDivElement>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
   // Disabled scroll-based animations to prevent SSR hydration issues
@@ -134,7 +133,7 @@ export function UnifiedVerticalTimeline({
   // Initial loading state
   if (isLoading) {
     return (
-      <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('w-full', className)}>
         <TimelineLoadingSkeleton count={5} />
       </div>
     )
@@ -143,7 +142,7 @@ export function UnifiedVerticalTimeline({
   // Error state
   if (error) {
     return (
-      <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('w-full', className)}>
         <TimelineErrorState error={error} />
       </div>
     )
@@ -152,7 +151,7 @@ export function UnifiedVerticalTimeline({
   // Empty state
   if (events.length === 0) {
     return (
-      <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('w-full', className)}>
         <TimelineEmptyState message={emptyMessage || ''} />
       </div>
     )
@@ -162,7 +161,6 @@ export function UnifiedVerticalTimeline({
     <motion.div
       ref={containerRef}
       className={cn('w-full relative', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

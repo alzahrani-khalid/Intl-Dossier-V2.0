@@ -29,6 +29,7 @@ import {
   COUNTRY_COORDINATES,
 } from '@/types/geographic-visualization.types'
 import { Globe, MapPin, Activity, TrendingUp, Calendar } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorldMapVisualizationProps {
   initialFilters?: Partial<GeoVisualizationFilters>
@@ -47,10 +48,9 @@ export function WorldMapVisualization({
   height = 'h-[400px] sm:h-[500px] lg:h-[600px]',
   className = '',
 }: WorldMapVisualizationProps) {
-  const { t, i18n } = useTranslation('geographic-visualization')
-  const isRTL = i18n.language === 'ar'
-
-  const [selectedCountry, setSelectedCountry] = useState<CountryEngagementMetrics | null>(null)
+  const { t } = useTranslation('geographic-visualization')
+  const { isRTL } = useDirection()
+const [selectedCountry, setSelectedCountry] = useState<CountryEngagementMetrics | null>(null)
 
   const { countries, connections, summary, isLoading, error, filters } =
     useGeographicVisualization(initialFilters)
@@ -128,7 +128,7 @@ export function WorldMapVisualization({
   }
 
   return (
-    <div className={`space-y-4 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`space-y-4 ${className}`}>
       {/* Summary Cards */}
       {showSummaryCards && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">

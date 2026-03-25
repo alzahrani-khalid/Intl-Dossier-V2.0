@@ -36,11 +36,12 @@ import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
 import { SidebarSearch } from './SidebarSearch'
 import { QuickNavigationMenu } from './QuickNavigationMenu'
+import { useDirection } from '@/hooks/useDirection'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
-  const { user } = useAuth()
+  const { t } = useTranslation('common')
+  const { isRTL } = useDirection()
+const { user } = useAuth()
   const isTablet = useIsTablet()
   const location = useLocation()
   const { setOpenMobile, setOpen, toggleSidebar, open, openMobile, isMobile } = useSidebar()

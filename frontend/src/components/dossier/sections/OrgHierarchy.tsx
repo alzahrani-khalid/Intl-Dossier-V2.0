@@ -28,6 +28,7 @@ import { hierarchy, tree } from 'd3-hierarchy'
 import { supabase } from '@/lib/supabase-client'
 import type { OrganizationDossier, OrganizationExtension } from '@/lib/dossier-type-guards'
 import { Badge } from '@/components/ui/badge'
+import { useDirection } from '@/hooks/useDirection'
 
 interface OrgHierarchyProps {
   dossier: OrganizationDossier
@@ -75,9 +76,9 @@ const nodeTypes: NodeTypes = {
 }
 
 export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const extension = dossier.extension ?? ({} as OrganizationExtension)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const extension = dossier.extension ?? ({} as OrganizationExtension)
 
   // Fetch organization hierarchy (parent and children)
   const { data: hierarchyOrgs, isLoading } = useQuery({
@@ -262,7 +263,7 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
   // Loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12 sm:py-16" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex items-center justify-center py-12 sm:py-16">
         <div className="text-center">
           <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
           <p className="text-sm sm:text-base text-muted-foreground">{t('common.loading')}</p>
@@ -276,7 +277,6 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
           <Network className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
@@ -295,7 +295,6 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
   return (
     <div
       className="w-full h-[500px] sm:h-[600px] lg:h-[700px] border rounded-lg overflow-hidden"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReactFlow
         nodes={nodes}

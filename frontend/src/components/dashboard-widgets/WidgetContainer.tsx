@@ -67,9 +67,7 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
     },
     ref,
   ) => {
-    const { t, i18n } = useTranslation('dashboard-widgets')
-    const isRTL = i18n.language === 'ar'
-
+    const { t } = useTranslation('dashboard-widgets')
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
       id,
       disabled: !isEditMode,
@@ -101,7 +99,6 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
           isDragging && 'opacity-50 z-50',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Card
           className={cn(

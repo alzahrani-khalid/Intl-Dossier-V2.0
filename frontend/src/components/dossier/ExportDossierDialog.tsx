@@ -39,6 +39,7 @@ import type {
 import { DEFAULT_EXPORT_SECTIONS } from '@/types/dossier-export.types'
 import { useDossierExport } from '@/hooks/useDossierExport'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Export dialog for dossier briefing packs
@@ -51,10 +52,9 @@ export function ExportDossierDialog({
   onClose,
   onSuccess,
 }: ExportDossierDialogProps) {
-  const { t, i18n } = useTranslation('dossier-export')
-  const isRTL = i18n.language === 'ar'
-
-  // Export configuration state
+  const { t } = useTranslation('dossier-export')
+  const { isRTL } = useDirection()
+// Export configuration state
   const [format, setFormat] = useState<DossierExportFormat>('pdf')
   const [language, setLanguage] = useState<ExportLanguage>('both')
   const [sections, setSections] = useState<ExportSectionConfig[]>(DEFAULT_EXPORT_SECTIONS)
@@ -113,7 +113,6 @@ export function ExportDossierDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
         className="max-w-md sm:max-w-lg md:max-w-xl max-h-[90vh] overflow-y-auto"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">

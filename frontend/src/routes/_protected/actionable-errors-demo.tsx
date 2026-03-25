@@ -20,16 +20,16 @@ import {
 } from '@/components/actionable-errors'
 import type { ActionableError, ErrorAction } from '@/types/actionable-error.types'
 import toast from 'react-hot-toast'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/actionable-errors-demo')({
   component: ActionableErrorsDemo,
 })
 
 function ActionableErrorsDemo() {
-  const { t, i18n } = useTranslation('actionable-errors')
-  const isRTL = i18n.language === 'ar'
-
-  // Form state
+  const { t } = useTranslation('actionable-errors')
+  const { isRTL } = useDirection()
+// Form state
   const [formValues, setFormValues] = useState({
     email: '',
     website: '',
@@ -129,7 +129,6 @@ function ActionableErrorsDemo() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8">

@@ -56,6 +56,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 import { useBriefingBooks } from '@/hooks/useBriefingBooks'
 import type { BriefingBook, BriefingBookStatus } from '@/types/briefing-book.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface BriefingBooksListProps {
   onCreateNew?: () => void
@@ -74,10 +75,9 @@ const statusConfig: Record<
 }
 
 export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
-  const { t, i18n } = useTranslation('briefing-books')
-  const isRTL = i18n.language === 'ar'
-
-  const { briefingBooks, isLoading, error, deleteBriefingBook, refresh } = useBriefingBooks()
+  const { t } = useTranslation('briefing-books')
+  const { isRTL } = useDirection()
+const { briefingBooks, isLoading, error, deleteBriefingBook, refresh } = useBriefingBooks()
 
   const [statusFilter, setStatusFilter] = useState<BriefingBookStatus | 'all'>('all')
   const [deleteDialogId, setDeleteDialogId] = useState<string | null>(null)
@@ -120,7 +120,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
   // Loading state
   if (isLoading) {
     return (
-      <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-4">
         <div className="flex justify-between items-center">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-10 w-32" />
@@ -135,7 +135,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
   // Error state
   if (error) {
     return (
-      <Card className="border-destructive" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className="border-destructive">
         <CardContent className="flex flex-col items-center justify-center py-8 text-center">
           <XCircle className="h-12 w-12 text-destructive mb-4" />
           <p className="text-destructive font-medium">{t('errors.loadFailed')}</p>
@@ -151,7 +151,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
   // Empty state
   if (briefingBooks.length === 0) {
     return (
-      <Card dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card>
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
           <FileText className="h-16 w-16 text-muted-foreground mb-4" />
           <h3 className="text-lg font-semibold mb-2">{t('list.empty')}</h3>
@@ -168,7 +168,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
   }
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Header with filters */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-xl font-semibold">{t('list.title')}</h2>
@@ -353,7 +353,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
 
       {/* Delete confirmation dialog */}
       <AlertDialog open={!!deleteDialogId} onOpenChange={() => setDeleteDialogId(null)}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('confirmDelete.title')}</AlertDialogTitle>
             <AlertDialogDescription>{t('confirmDelete.message')}</AlertDialogDescription>

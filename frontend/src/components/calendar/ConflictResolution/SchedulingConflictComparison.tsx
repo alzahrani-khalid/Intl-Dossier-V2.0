@@ -43,6 +43,7 @@ import type {
   ConflictSeverity,
 } from '@/types/calendar-conflict.types'
 import { SEVERITY_COLORS } from '@/types/calendar-conflict.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Types for the component
 export interface NewEventData {
@@ -89,9 +90,9 @@ export function SchedulingConflictComparison({
   onDismiss,
   className,
 }: SchedulingConflictComparisonProps) {
-  const { t, i18n } = useTranslation('calendar')
-  const isRTL = i18n.language === 'ar'
-  const [expandedConflictIndex, setExpandedConflictIndex] = useState<number | null>(0)
+  const { t } = useTranslation('calendar')
+  const { isRTL } = useDirection()
+const [expandedConflictIndex, setExpandedConflictIndex] = useState<number | null>(0)
   const [showDurationOptions, setShowDurationOptions] = useState(false)
 
   // Format datetime for display
@@ -155,7 +156,6 @@ export function SchedulingConflictComparison({
           : 'border-warning/60 bg-warning/5',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <CardHeader className="pb-3 bg-background/50">

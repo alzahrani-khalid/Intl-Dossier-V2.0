@@ -24,6 +24,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { cn } from '@/lib/utils'
 import { useFilterCounts } from '@/hooks/useEnhancedSearch'
 import type { FilterType } from '@/types/enhanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // Types
@@ -212,10 +213,9 @@ function AdaptiveFilters({
   onFilterChange,
   className,
 }: AdaptiveFiltersProps) {
-  const { t, i18n } = useTranslation('enhanced-search')
-  const isRTL = i18n.language === 'ar'
-
-  // Fetch filter counts
+  const { t } = useTranslation('enhanced-search')
+  const { isRTL } = useDirection()
+// Fetch filter counts
   const { data: filterCounts, isLoading } = useFilterCounts(cacheKey, entityTypes, baseQuery, {
     enabled: true,
   })
@@ -268,7 +268,6 @@ function AdaptiveFilters({
   return (
     <div
       className={cn('flex flex-col gap-2', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="region"
       aria-label={t('filters.a11y.adaptiveFilters')}
     >

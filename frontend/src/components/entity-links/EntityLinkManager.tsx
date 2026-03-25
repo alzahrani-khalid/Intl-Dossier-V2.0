@@ -31,6 +31,7 @@ import type {
   EntitySearchResult,
   LinkType,
 } from '../../../../backend/src/types/intake-entity-links.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface EntityLinkManagerProps {
   /** Intake ticket ID */
@@ -75,9 +76,9 @@ export function EntityLinkManager({
   useAgentSuggestions = true,
   className,
 }: EntityLinkManagerProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'active' | 'deleted'>('active')

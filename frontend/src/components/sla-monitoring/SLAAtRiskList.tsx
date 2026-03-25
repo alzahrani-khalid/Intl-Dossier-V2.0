@@ -17,6 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import type { SLAAtRiskItem } from '@/types/sla.types'
 import { formatSLADuration, formatSLADurationAr, getSLAProgressColor } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SLAAtRiskListProps {
   data?: SLAAtRiskItem[]
@@ -33,9 +34,9 @@ export function SLAAtRiskList({
   onItemClick,
   className,
 }: SLAAtRiskListProps) {
-  const { t, i18n } = useTranslation('sla')
-  const isRTL = i18n.language === 'ar'
-  const [now, setNow] = useState(Date.now())
+  const { t } = useTranslation('sla')
+  const { isRTL } = useDirection()
+const [now, setNow] = useState(Date.now())
 
   // Update countdown every minute
   useEffect(() => {
@@ -87,7 +88,7 @@ export function SLAAtRiskList({
   }
 
   return (
-    <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div>
           <CardTitle className="flex items-center gap-2">

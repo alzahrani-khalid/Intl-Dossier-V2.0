@@ -18,11 +18,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { useDirection } from '@/hooks/useDirection'
 
 export function NavUser() {
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
-  const { user, logout } = useAuth()
+  const { t } = useTranslation('common')
+  const { isRTL } = useDirection()
+const { user, logout } = useAuth()
   const { isMobile } = useSidebar()
 
   if (!user) return null

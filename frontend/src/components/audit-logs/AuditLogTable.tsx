@@ -40,6 +40,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { AuditLogEntry, AuditOperation, AuditLogFilters } from '@/types/audit-log.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // CONFIGURATION
@@ -79,10 +80,9 @@ export function AuditLogTable({
   onLogClick,
   className,
 }: AuditLogTableProps) {
-  const { t, i18n } = useTranslation('audit-logs')
-  const isRTL = i18n.language === 'ar'
-
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
+  const { t } = useTranslation('audit-logs')
+  const { isRTL } = useDirection()
+const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
 
   const toggleExpand = useCallback((id: string, e: React.MouseEvent) => {
     e.stopPropagation()

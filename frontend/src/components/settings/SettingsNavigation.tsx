@@ -14,6 +14,7 @@ import {
 import { cn } from '@/lib/utils'
 import { SettingsSectionId } from '@/types/settings.types'
 import { FloatingDock } from '@/components/ui/floating-dock'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SettingsNavigationProps {
   /** Currently active section */
@@ -50,17 +51,15 @@ export function SettingsNavigation({
   onSectionChange,
   variant = 'sidebar',
 }: SettingsNavigationProps) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
-
-  if (variant === 'dock') {
+  const { t } = useTranslation('settings')
+  const { isRTL } = useDirection()
+if (variant === 'dock') {
     return <SettingsMobileNav activeSection={activeSection} onSectionChange={onSectionChange} />
   }
 
   return (
     <nav
       className="space-y-1"
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="navigation"
       aria-label={t('pageTitle')}
     >
@@ -112,8 +111,8 @@ function SettingsMobileNav({
   activeSection: SettingsSectionId
   onSectionChange: (section: SettingsSectionId) => void
 }) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('settings')
+  const { isRTL } = useDirection()
 
   // Show only the most important items in mobile dock
   const mobileItems: NavItem[] = [
@@ -139,7 +138,7 @@ function SettingsMobileNav({
   }))
 
   return (
-    <div className="fixed bottom-0 start-0 end-0 z-50 pb-safe" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="fixed bottom-0 start-0 end-0 z-50 pb-safe">
       <div className="bg-background/95 backdrop-blur-sm border-t">
         <FloatingDock
           items={dockItems}
@@ -161,11 +160,11 @@ export function SettingsTabs({
   activeSection: SettingsSectionId
   onSectionChange: (section: SettingsSectionId) => void
 }) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('settings')
+  const { isRTL } = useDirection()
 
   return (
-    <div className="overflow-x-auto scrollbar-hide -mx-4 px-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
       <div className="flex gap-2 pb-2 min-w-max">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon

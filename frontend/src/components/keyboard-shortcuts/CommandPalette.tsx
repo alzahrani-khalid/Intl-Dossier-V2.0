@@ -89,6 +89,7 @@ import {
   type QuickSwitcherWorkItem,
 } from '@/hooks/useQuickSwitcherSearch'
 import type { DossierType } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface CommandPaletteProps {
   /** Additional class names */
@@ -276,13 +277,12 @@ const routeContexts: RouteContext[] = [
 ]
 
 export function CommandPalette({ className }: CommandPaletteProps) {
-  const { t, i18n } = useTranslation('keyboard-shortcuts')
+  const { t } = useTranslation('keyboard-shortcuts')
   const { t: tQs } = useTranslation('quickswitcher')
   const navigate = useNavigate()
   const location = useLocation()
-  const isRTL = i18n.language === 'ar'
-
-  const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortcut, isMac } =
+  const { isRTL } = useDirection()
+const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortcut, isMac } =
     useKeyboardShortcutContext()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -702,7 +702,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
         if (!open) closeCommandPalette()
       }}
     >
-      <div className={cn('flex flex-col', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('flex flex-col', className)}>
         <CommandInput
           ref={inputRef}
           placeholder={t('searchPlaceholder', 'Type a command or search...')}
@@ -1005,7 +1005,6 @@ function ShortcutHint({ shortcutKey, modifiers, className }: ShortcutHintProps) 
         'inline-flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {formatShortcut(shortcutKey, modifiers)}
     </kbd>
@@ -1022,8 +1021,8 @@ interface ShortcutGuideProps {
 }
 
 function ShortcutGuide({ category, maxItems = 5, className }: ShortcutGuideProps) {
-  const { t, i18n } = useTranslation('keyboard-shortcuts')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('keyboard-shortcuts')
+  const { isRTL } = useDirection()
   const { getShortcutsByCategory, getAllShortcuts, formatShortcut } = useKeyboardShortcutContext()
 
   const shortcuts = useMemo(() => {
@@ -1038,7 +1037,6 @@ function ShortcutGuide({ category, maxItems = 5, className }: ShortcutGuideProps
   return (
     <div
       className={cn('flex flex-col gap-1 text-xs text-muted-foreground', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="mb-1 font-medium text-foreground">
         {t('guide.title', 'Keyboard Shortcuts')}

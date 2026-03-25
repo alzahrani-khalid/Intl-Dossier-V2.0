@@ -74,6 +74,7 @@ import type {
   Swimlane,
   Priority,
 } from '@/types/work-item.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface EnhancedBoardProps {
   contextType: 'personal' | 'dossier' | 'engagement'
@@ -134,9 +135,9 @@ export function EnhancedKanbanBoard({
   totalCountPerColumn = {},
   onLoadMore,
 }: EnhancedBoardProps) {
-  const { t, i18n } = useTranslation('unified-kanban')
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation('unified-kanban')
+  const { isRTL } = useDirection()
+const { toast } = useToast()
 
   // State
   const [columnMode, setColumnMode] = useState<KanbanColumnMode>(initialColumnMode)
@@ -656,7 +657,6 @@ export function EnhancedKanbanBoard({
   return (
     <div
       className={cn('flex flex-col h-full', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       onClickCapture={boardClickCapture}
     >
       {/* Header */}

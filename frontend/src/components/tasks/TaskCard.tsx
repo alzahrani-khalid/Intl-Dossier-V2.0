@@ -12,6 +12,7 @@ import { Card, CardContent } from '../ui/card'
 import { Badge } from '../ui/badge'
 import { SLAIndicator } from './SLAIndicator'
 import type { Database } from '../../../../backend/src/types/database.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -30,10 +31,9 @@ export function TaskCard({
   showWorkItem = true,
   className = '',
 }: TaskCardProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const getPriorityColor = (priority: string): string => {
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const getPriorityColor = (priority: string): string => {
     const colors = {
       urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
       high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
@@ -60,7 +60,6 @@ export function TaskCard({
     <Card
       className={`hover:shadow-md transition-shadow cursor-pointer ${className}`}
       onClick={() => onClick?.(task)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <CardContent className="p-4 sm:p-6">
         {/* Header: Badges and Metadata */}

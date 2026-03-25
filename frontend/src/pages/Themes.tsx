@@ -159,7 +159,6 @@ export default function Themes() {
               value={scopeFilter}
               onChange={(event) => setScopeFilter(event.target.value)}
               className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              dir={isRTL ? 'rtl' : 'ltr'}
             >
               <option value="all">{t('themes.filters.allScopes', 'All scopes')}</option>
               <option value="global">{t('themes.scope.global', 'Global')}</option>
@@ -176,7 +175,6 @@ export default function Themes() {
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
               className="w-44 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              dir={isRTL ? 'rtl' : 'ltr'}
             >
               <option value="all">{t('themes.filters.allStatuses', 'All statuses')}</option>
               <option value="active">{t('themes.status.active', 'Active')}</option>

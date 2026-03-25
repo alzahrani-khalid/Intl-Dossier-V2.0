@@ -10,6 +10,7 @@ import { CheckCircle, XCircle, Loader2, AlertCircle, Eye } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import * as diff from 'deep-diff'
+import { useDirection } from '@/hooks/useDirection'
 
 interface EditRequest {
   id: string
@@ -49,10 +50,9 @@ export function EditApprovalFlow({
   disabled = false,
   className,
 }: EditApprovalFlowProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [action, setAction] = useState<'approve' | 'reject' | null>(null)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [action, setAction] = useState<'approve' | 'reject' | null>(null)
   const [approvalNotes, setApprovalNotes] = useState('')
   const [rejectionReason, setRejectionReason] = useState('')
   const [loading, setLoading] = useState(false)
@@ -154,7 +154,7 @@ export function EditApprovalFlow({
   }
 
   return (
-    <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-6', className)}>
       {/* Edit Request Info */}
       <Card>
         <CardHeader>
@@ -303,7 +303,6 @@ export function EditApprovalFlow({
                 placeholder={t('afterActions.editFlow.approvalNotesPlaceholder')}
                 rows={3}
                 disabled={loading}
-                dir={isRTL ? 'rtl' : 'ltr'}
               />
             </div>
 
@@ -354,7 +353,6 @@ export function EditApprovalFlow({
                 maxLength={500}
                 required
                 disabled={loading}
-                dir={isRTL ? 'rtl' : 'ltr'}
               />
               <p className="text-xs text-muted-foreground">
                 {rejectionReason.length} / 500 ({t('afterActions.editFlow.minChars', { count: 10 })}

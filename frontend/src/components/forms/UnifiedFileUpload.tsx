@@ -281,8 +281,7 @@ export function UnifiedFileUpload({
   required = false,
   error,
 }: UnifiedFileUploadProps) {
-  const { t, i18n } = useTranslation(['common', 'validation'])
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation(['common', 'validation'])
   const uniqueId = useId()
 
   // Merge config with defaults
@@ -448,7 +447,7 @@ export function UnifiedFileUpload({
   const displayError = error || (validationErrors.length > 0 ? validationErrors[0] : null)
 
   return (
-    <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-3', className)}>
       {/* Label */}
       {label && (
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:text-base">

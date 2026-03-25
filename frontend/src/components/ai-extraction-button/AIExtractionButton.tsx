@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils'
 import type { Decision } from '../decision-list/DecisionList'
 import type { Commitment } from '../commitment-editor/CommitmentEditor'
 import type { Risk } from '../risk-list/RiskList'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ExtractionResult {
   decisions?: Decision[]
@@ -52,9 +53,8 @@ export function AIExtractionButton({
   className,
 }: AIExtractionButtonProps) {
   const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [open, setOpen] = useState(false)
+  const { isRTL } = useDirection()
+const [open, setOpen] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [language, setLanguage] = useState<'en' | 'ar'>(i18n.language as 'en' | 'ar')
   const [mode, setMode] = useState<ExtractionMode>('auto')
@@ -206,7 +206,7 @@ export function AIExtractionButton({
           {t('afterActions.ai.extractButton')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="size-5 text-primary" />

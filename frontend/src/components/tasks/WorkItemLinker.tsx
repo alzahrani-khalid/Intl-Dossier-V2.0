@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useDirection } from '@/hooks/useDirection'
 
 type WorkItemType = 'dossier' | 'position' | 'ticket'
 
@@ -40,10 +41,9 @@ export function WorkItemLinker({
   onItemsChange,
   disabled = false,
 }: WorkItemLinkerProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [isOpen, setIsOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<WorkItemType>('dossier')
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<WorkItem[]>([])
@@ -87,7 +87,7 @@ export function WorkItemLinker({
   }
 
   return (
-    <div className="space-y-2" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-2">
       <Label className="text-sm sm:text-base">{t('tasks.linkedItems')}</Label>
 
       {/* Selected items display */}

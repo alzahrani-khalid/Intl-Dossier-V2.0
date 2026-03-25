@@ -24,6 +24,7 @@ import { History, Eye, Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import * as diff from 'deep-diff'
+import { useDirection } from '@/hooks/useDirection'
 
 interface Version {
   id: string
@@ -62,10 +63,9 @@ export function VersionHistoryViewer({
   disabled = false,
   className,
 }: VersionHistoryViewerProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [versions, setVersions] = useState<Version[]>([])
@@ -168,7 +168,6 @@ export function VersionHistoryViewer({
       <Dialog open={showDiff} onOpenChange={setShowDiff}>
         <DialogContent
           className="max-h-[80vh] max-w-4xl overflow-y-auto"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <DialogHeader>
             <DialogTitle>{t('afterActions.versions.diffTitle', { from: v1, to: v2 })}</DialogTitle>
@@ -246,7 +245,7 @@ export function VersionHistoryViewer({
           {t('afterActions.versions.button')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[80vh] max-w-3xl overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-h-[80vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <History className="size-5" />

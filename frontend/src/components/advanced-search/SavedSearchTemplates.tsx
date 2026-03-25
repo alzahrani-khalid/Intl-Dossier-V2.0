@@ -44,6 +44,7 @@ import {
   getTemplateColorClasses,
 } from '@/hooks/useSavedSearchTemplates'
 import type { SearchTemplate, TemplateDefinition } from '@/types/advanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -72,10 +73,9 @@ interface SavedSearchTemplatesProps {
 }
 
 export function SavedSearchTemplates({ onApply, className }: SavedSearchTemplatesProps) {
-  const { t, i18n } = useTranslation('advanced-search')
-  const isRTL = i18n.language === 'ar'
-
-  const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
+  const { t } = useTranslation('advanced-search')
+  const { isRTL } = useDirection()
+const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
 
   const { data: quickTemplates, isLoading: loadingQuick } = useQuickTemplates()
   const { data: popularTemplates, isLoading: loadingPopular } = usePopularTemplates()
@@ -144,7 +144,7 @@ export function SavedSearchTemplates({ onApply, className }: SavedSearchTemplate
   )
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-col gap-6', className)}>
       {/* Quick Templates */}
       <section>
         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">

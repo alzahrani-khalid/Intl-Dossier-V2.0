@@ -52,6 +52,7 @@ import { FileText, Upload, ChevronDown, Network } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import type { OrganizationDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface OrganizationDossierDetailProps {
   dossier: OrganizationDossier
@@ -67,9 +68,9 @@ type OrganizationTabType =
   | 'documents'
 
 export function OrganizationDossierDetail({ dossier, initialTab }: OrganizationDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   // Active tab state with URL persistence
   const [activeTab, setActiveTab] = useState<OrganizationTabType>(
     (initialTab as OrganizationTabType) || 'overview',
@@ -125,7 +126,7 @@ export function OrganizationDossierDetail({ dossier, initialTab }: OrganizationD
   )
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Tabs Navigation - HeroUI v3 Styled */}
       <div className="bg-card text-card-foreground rounded-lg shadow border border-border">
         <Tabs

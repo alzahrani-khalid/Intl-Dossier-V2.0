@@ -10,7 +10,6 @@
 
 import * as React from 'react'
 import { useState, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { m, AnimatePresence } from 'framer-motion'
 import {
   Sparkles,
@@ -60,6 +59,7 @@ import {
   type WGSuggestionType,
   type MemberRole,
 } from '@/types/wg-member-suggestion.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for suggestion types
 const SUGGESTION_TYPE_ICON_MAP: Record<
@@ -100,10 +100,8 @@ export function WGMemberSuggestions({
   onMembersAdded,
   className,
 }: WGMemberSuggestionsProps) {
-  const { i18n } = useTranslation('working-groups')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+const { isRTL } = useDirection()
+// State
   const [selectedMembers, setSelectedMembers] = useState<Map<string, SelectedMember>>(new Map())
   const [currentStep, setCurrentStep] = useState<'select' | 'assign-roles' | 'review'>('select')
   const [activeTab, setActiveTab] = useState<'all' | 'organizations' | 'persons'>('all')
@@ -269,7 +267,7 @@ export function WGMemberSuggestions({
   }
 
   return (
-    <div className={className} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={className}>
       <AnimatePresence mode="wait">
         {currentStep === 'select' && (
           <m.div

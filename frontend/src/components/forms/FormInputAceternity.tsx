@@ -3,6 +3,7 @@ import type { UseFormRegister, FieldError } from 'react-hook-form'
 import { cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'motion/react'
 import { useState, useEffect, type InputHTMLAttributes, type ReactNode } from 'react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface FormInputAceternityProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
@@ -30,9 +31,9 @@ export function FormInputAceternity({
   placeholder,
   ...rest
 }: FormInputAceternityProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
   const [isFocused, setIsFocused] = useState(false)
 
   // Rotating placeholder effect for aceternity variant
@@ -79,7 +80,7 @@ export function FormInputAceternity({
   )
 
   return (
-    <div className="space-y-2" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-2">
       {/* Label */}
       <motion.label
         htmlFor={name}

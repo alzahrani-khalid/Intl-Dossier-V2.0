@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/sheet'
 import type { ContactSearchParams } from '@/services/contact-api'
 import type { Database } from '@/types/contact-directory.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type Organization = Database['public']['Tables']['organizations']['Row']
 
@@ -50,10 +51,9 @@ export function ContactSearch({
   defaultParams,
   isLoading = false,
 }: ContactSearchProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  const [searchTerm, setSearchTerm] = useState(defaultParams?.query || '')
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const [searchTerm, setSearchTerm] = useState(defaultParams?.query || '')
   const [organizationId, setOrganizationId] = useState(defaultParams?.organization_id || '')
   const [selectedTags, setSelectedTags] = useState<string[]>(defaultParams?.tags || [])
   const [sortBy, setSortBy] = useState<'name' | 'organization' | 'created_at' | 'updated_at'>(
@@ -95,7 +95,7 @@ export function ContactSearch({
     sortOrder !== 'asc'
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Search Input - Always Visible */}
       <div className="flex gap-2">
         <div className="relative flex-1">
@@ -111,7 +111,6 @@ export function ContactSearch({
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             className={`h-11 ${isRTL ? 'pe-10 ps-4' : 'ps-10 pe-4'} text-base sm:h-10`}
-            dir={isRTL ? 'rtl' : 'ltr'}
           />
         </div>
 

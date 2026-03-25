@@ -27,6 +27,7 @@ import type {
   TemplateEntityType,
   TemplateContext,
 } from '@/types/entity-template.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface TemplateSelectorProps {
   entityType: TemplateEntityType
@@ -42,10 +43,9 @@ export function TemplateSelector({
   onSkip,
   className,
 }: TemplateSelectorProps) {
-  const { t, i18n } = useTranslation('entity-templates')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('entity-templates')
+  const { isRTL } = useDirection()
+// State
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [showShortcuts, setShowShortcuts] = useState(false)
@@ -164,7 +164,6 @@ export function TemplateSelector({
       ref={containerRef}
       data-testid="template-selector"
       className={cn('flex flex-col gap-4', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

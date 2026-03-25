@@ -11,6 +11,7 @@ import { CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useDirection } from '@/hooks/useDirection'
 
 export type DateRangePreset = 'today' | 'thisWeek' | 'last7' | 'last28' | 'last90'
 
@@ -61,9 +62,9 @@ export function DashboardDateRangePicker({
   value: controlledValue,
   onChange,
 }: DashboardDateRangePickerProps) {
-  const { t, i18n } = useTranslation('dashboard')
-  const isRTL = i18n.language === 'ar'
-  const [internalValue, setInternalValue] = useState<DateRangePreset>('last7')
+  const { t } = useTranslation('dashboard')
+  const { isRTL } = useDirection()
+const [internalValue, setInternalValue] = useState<DateRangePreset>('last7')
   const [open, setOpen] = useState(false)
 
   const selected = controlledValue ?? internalValue

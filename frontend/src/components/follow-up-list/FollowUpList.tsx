@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Trash2, Plus, CalendarIcon, ListTodo } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface FollowUpAction {
   id?: string
@@ -26,10 +27,9 @@ interface FollowUpListProps {
 }
 
 export function FollowUpList({ followUpActions, onChange, readOnly = false }: FollowUpListProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const addFollowUp = () => {
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const addFollowUp = () => {
     onChange([
       ...followUpActions,
       {
@@ -105,7 +105,6 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
                 rows={2}
                 maxLength={2000}
                 disabled={readOnly}
-                dir={isRTL ? 'rtl' : 'ltr'}
                 required
                 className={cn(action.completed && 'line-through')}
               />
@@ -124,7 +123,6 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
                   placeholder={t('afterActions.followUps.assignedPlaceholder')}
                   maxLength={200}
                   disabled={readOnly}
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </div>
 

@@ -46,6 +46,7 @@ import type {
   DuplicateEntityType,
   MatchDetails,
 } from '@/types/duplicate-detection.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface MergeDialogProps {
   isOpen: boolean
@@ -85,10 +86,9 @@ export function MergeDialog({
   sourceEntity,
   targetEntity,
 }: MergeDialogProps) {
-  const { t, i18n } = useTranslation('duplicate-detection')
-  const isRTL = i18n.language === 'ar'
-
-  // State for which entity is primary
+  const { t } = useTranslation('duplicate-detection')
+  const { isRTL } = useDirection()
+// State for which entity is primary
   const [primaryEntityId, setPrimaryEntityId] = useState<string>('')
   const [fieldResolutions, setFieldResolutions] = useState<Record<string, 'primary' | 'duplicate'>>(
     {},
@@ -252,7 +252,7 @@ export function MergeDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-2xl max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Merge className="h-5 w-5" />

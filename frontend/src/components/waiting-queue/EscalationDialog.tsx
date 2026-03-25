@@ -38,6 +38,7 @@ import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useEscalationAction } from '@/hooks/useWaitingQueueActions'
 import { useToast } from '@/hooks/useToast'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface EscalationDialogProps {
   /** Assignment ID to escalate */
@@ -97,9 +98,9 @@ export function EscalationDialog({
   onEscalate,
   isLoading: externalLoading = false,
 }: EscalationDialogProps) {
-  const { t, i18n } = useTranslation(['common', 'waitingQueue'])
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { t } = useTranslation(['common', 'waitingQueue'])
+  const { isRTL } = useDirection()
+const { toast } = useToast()
 
   const [selectedRecipientId, setSelectedRecipientId] = useState<string>('')
   const [reason, setReason] = useState<string>('')
@@ -182,7 +183,6 @@ export function EscalationDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="px-4 sm:px-6 max-w-md sm:max-w-lg md:max-w-xl"
-        dir={isRTL ? 'rtl' : 'ltr'}
         aria-labelledby="escalation-dialog-title"
         aria-describedby="escalation-dialog-description"
       >

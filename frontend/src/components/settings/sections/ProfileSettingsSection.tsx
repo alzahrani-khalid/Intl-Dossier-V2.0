@@ -22,8 +22,7 @@ interface ProfileSettingsSectionProps {
  * Handles avatar, display name, job title, department, phone, and bio
  */
 export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionProps) {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('settings')
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
@@ -127,7 +126,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
       description={t('profile.description')}
       icon={User}
     >
-      <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-6">
         {/* Avatar Section */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="relative">

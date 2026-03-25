@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ZoomIn, ZoomOut, Maximize2, Filter } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 // Node data structure
 interface NodeData {
@@ -62,9 +63,9 @@ interface GraphVisualizationProps {
 
 // T086: Memoized custom node component to prevent unnecessary re-renders
 const DossierNode = memo(({ data }: { data: NodeData }) => {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const name = isRTL ? data.name_ar : data.name_en
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const name = isRTL ? data.name_ar : data.name_en
 
   return (
     <Card className="min-w-[200px] px-4 py-3 border-2 shadow-md">
@@ -170,8 +171,8 @@ function GraphVisualizationInner({
   enableTypeFilter = true, // T085: Node type filtering
   enableRelationshipFilter = true, // T085: Relationship type filtering
 }: GraphVisualizationProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   // T085: Filter state for node types and relationship types
   const [selectedNodeType, setSelectedNodeType] = useState<string>('all')
@@ -266,7 +267,6 @@ function GraphVisualizationInner({
     <div
       className="relative w-full rounded-lg border bg-background"
       style={{ height }}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReactFlow
         nodes={reactFlowNodes}

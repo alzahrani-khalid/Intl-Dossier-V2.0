@@ -17,6 +17,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import type { IntelligenceType } from '@/types/intelligence-reports.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface RefreshButtonProps {
   /** Current intelligence types to refresh */
@@ -57,10 +58,9 @@ export function RefreshButton({
   showTypeSelection = true,
   className,
 }: RefreshButtonProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const handleRefreshAll = () => {
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const handleRefreshAll = () => {
     onRefresh(intelligenceTypes)
   }
 
@@ -77,7 +77,6 @@ export function RefreshButton({
         variant="outline"
         size="sm"
         className={`min-h-11 min-w-11 gap-2 ${className || ''}`}
-        dir={isRTL ? 'rtl' : 'ltr'}
         aria-label={t('intelligence.refreshButtonLabel', 'Refresh intelligence data')}
         aria-busy={isLoading}
       >
@@ -90,7 +89,7 @@ export function RefreshButton({
   }
 
   return (
-    <div className="flex flex-row gap-0" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-row gap-0">
       {/* Main refresh button */}
       <Button
         onClick={handleRefreshAll}

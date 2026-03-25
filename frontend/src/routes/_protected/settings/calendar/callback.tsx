@@ -33,8 +33,7 @@ export const Route = createFileRoute('/_protected/settings/calendar/callback')({
 })
 
 function CalendarOAuthCallback() {
-  const { t, i18n } = useTranslation('calendar-sync')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('calendar-sync')
   const navigate = useNavigate()
   const search = useSearch({ from: Route.id })
 
@@ -104,7 +103,6 @@ function CalendarOAuthCallback() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex items-center justify-center min-h-[60vh]"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <Card className="w-full max-w-md">
         <CardContent className="p-6 text-center space-y-4">

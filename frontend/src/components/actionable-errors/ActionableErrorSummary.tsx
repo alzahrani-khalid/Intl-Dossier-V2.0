@@ -14,6 +14,7 @@ import type {
   ActionableError,
   ErrorAction,
 } from '@/types/actionable-error.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // ERROR ITEM COMPONENT
@@ -97,10 +98,9 @@ export function ActionableErrorSummary({
   maxVisible = 3,
   className,
 }: ActionableErrorSummaryProps) {
-  const { t, i18n } = useTranslation('actionable-errors')
-  const isRTL = i18n.language === 'ar'
-
-  const [isExpanded, setIsExpanded] = useState(false)
+  const { t } = useTranslation('actionable-errors')
+  const { isRTL } = useDirection()
+const [isExpanded, setIsExpanded] = useState(false)
 
   // Filter to only show actual errors (not warnings/info)
   const errorItems = useMemo(() => errors.filter((e) => e.severity === 'error'), [errors])
@@ -139,7 +139,6 @@ export function ActionableErrorSummary({
         'p-4 sm:p-5',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="alert"
       aria-labelledby="error-summary-title"
     >

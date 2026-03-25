@@ -35,6 +35,7 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/positions/$positionId')({
   component: PositionDetailPage,
@@ -43,9 +44,9 @@ export const Route = createFileRoute('/_protected/positions/$positionId')({
 function PositionDetailPage() {
   const { positionId } = Route.useParams()
   const navigate = useNavigate()
-  const { t, i18n } = useTranslation(['positions', 'common'])
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation(['positions', 'common'])
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   // Fetch position data
   const { data: position, isLoading, error } = usePosition(positionId)

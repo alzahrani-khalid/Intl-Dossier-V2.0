@@ -27,6 +27,7 @@ import { usePositions } from '@/hooks/usePositions'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import type { Position } from '@/types/position'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface AttachPositionDialogProps {
   engagementId: string
@@ -46,8 +47,8 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
   maxSelections = 100,
 }) => {
   const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const locale = i18n.language === 'ar' ? ar : enUS
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   // Dialog state
   const [open, setOpen] = useState(false)
@@ -72,8 +73,8 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
     if (debouncedSearch) {
       const searchLower = debouncedSearch.toLowerCase()
       filtered = filtered.filter((position) => {
-        const title = i18n.language === 'ar' ? position.title_ar : position.title_en
-        const content = i18n.language === 'ar' ? position.content_ar : position.content_en
+        const title = isRTL ? position.title_ar : position.title_en
+        const content = isRTL ? position.content_ar : position.content_en
         return (
           title.toLowerCase().includes(searchLower) ||
           content?.toLowerCase().includes(searchLower) ||
@@ -87,12 +88,12 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
 
   // Get localized position title
   const getPositionTitle = (position: Position) => {
-    return i18n.language === 'ar' ? position.title_ar : position.title_en
+    return isRTL ? position.title_ar : position.title_en
   }
 
   // Get localized position content
   const getPositionContent = (position: Position) => {
-    return i18n.language === 'ar' ? position.content_ar : position.content_en
+    return isRTL ? position.content_ar : position.content_en
   }
 
   // Handle selection toggle
@@ -238,7 +239,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
 
                         {/* Position Info */}
                         <div className="flex-1 space-y-1">
-                          <h4 className="font-medium leading-tight" dir={isRTL ? 'rtl' : 'ltr'}>
+                          <h4 className="font-medium leading-tight">
                             {getPositionTitle(position)}
                           </h4>
                           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -277,7 +278,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
               <div className="flex h-full flex-col">
                 {/* Preview Header */}
                 <div className="flex items-start justify-between border-b p-4">
-                  <h3 className="font-semibold" dir={isRTL ? 'rtl' : 'ltr'}>
+                  <h3 className="font-semibold">
                     {t('positions.attach.previewTitle')}
                   </h3>
                   <Button variant="ghost" size="sm" onClick={() => setPreviewPosition(null)}>
@@ -289,7 +290,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                 <ScrollArea className="flex-1 p-4">
                   <div className="space-y-4">
                     <div>
-                      <h4 className="mb-1 text-lg font-semibold" dir={isRTL ? 'rtl' : 'ltr'}>
+                      <h4 className="mb-1 text-lg font-semibold">
                         {getPositionTitle(previewPosition)}
                       </h4>
                       <div className="flex flex-wrap gap-2">
@@ -306,7 +307,6 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                       <p className="mb-1 text-sm font-medium">{t('positions.attach.content')}</p>
                       <p
                         className="whitespace-pre-wrap text-sm text-muted-foreground"
-                        dir={isRTL ? 'rtl' : 'ltr'}
                       >
                         {getPositionContent(previewPosition)}
                       </p>
@@ -319,7 +319,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                           <p className="mb-1 text-sm font-medium">
                             {t('positions.attach.keyMessages')}
                           </p>
-                          <p className="text-sm text-muted-foreground" dir={isRTL ? 'rtl' : 'ltr'}>
+                          <p className="text-sm text-muted-foreground">
                             {isRTL ? previewPosition.rationale_ar : previewPosition.rationale_en}
                           </p>
                         </div>

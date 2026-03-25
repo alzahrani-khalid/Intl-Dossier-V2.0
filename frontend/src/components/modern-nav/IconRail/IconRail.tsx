@@ -15,6 +15,7 @@ import { useNavigate, useLocation } from '@tanstack/react-router'
 import { IconButton } from './IconButton'
 import { cn } from '@/lib/utils'
 import { useTheme } from '@/components/theme-provider/theme-provider'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface IconRailItem {
   /** Unique identifier */
@@ -72,9 +73,9 @@ export function IconRail({
   onCategoryChange,
 }: IconRailProps) {
   const { t, i18n } = useTranslation()
+  const { isRTL } = useDirection()
   const navigate = useNavigate()
   const location = useLocation()
-  const isRTL = i18n.language === 'ar'
   const { colorMode, setColorMode } = useTheme()
 
   // Default navigation items - 5 main categories
@@ -131,7 +132,7 @@ export function IconRail({
   }
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'ar' ? 'en' : 'ar'
+    const newLang = isRTL ? 'en' : 'ar'
     i18n.changeLanguage(newLang)
   }
 
@@ -150,7 +151,6 @@ export function IconRail({
         // Custom classes
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       aria-label={t('navigation.mainNav', 'Main navigation')}
     >
       {/* Top Navigation Items - ULTRA DARK Section */}
@@ -244,7 +244,7 @@ export function IconRail({
           id="nav-language-toggle"
           icon={Languages}
           tooltip={
-            i18n.language === 'ar'
+            isRTL
               ? t('navigation.switchToEnglish', 'Switch to English')
               : t('navigation.switchToArabic', 'Switch to Arabic')
           }

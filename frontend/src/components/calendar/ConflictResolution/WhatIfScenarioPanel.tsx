@@ -52,6 +52,7 @@ import type {
   ProposedChange,
   ScenarioStatus,
 } from '@/types/calendar-conflict.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WhatIfScenarioPanelProps {
   scenarios: WhatIfScenario[]
@@ -90,9 +91,9 @@ function WhatIfScenarioPanel({
   isApplying,
   className,
 }: WhatIfScenarioPanelProps) {
-  const { t, i18n } = useTranslation('calendar')
-  const isRTL = i18n.language === 'ar'
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const { t } = useTranslation('calendar')
+  const { isRTL } = useDirection()
+const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [newScenario, setNewScenario] = useState({
     name_en: '',
     name_ar: '',
@@ -140,7 +141,7 @@ function WhatIfScenarioPanel({
   }
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('overflow-hidden', className)}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -159,7 +160,7 @@ function WhatIfScenarioPanel({
                   {t('scenarios.create')}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+              <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                   <DialogTitle>{t('scenarios.createTitle')}</DialogTitle>
                   <DialogDescription>{t('scenarios.createDescription')}</DialogDescription>

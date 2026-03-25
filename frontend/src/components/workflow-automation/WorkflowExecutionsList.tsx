@@ -23,6 +23,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Skeleton } from '@/components/ui/skeleton'
 import { useWorkflowExecutions, useRetryWorkflowExecution } from '@/hooks/useWorkflowAutomation'
 import type { WorkflowExecution, WorkflowExecutionStatus } from '@/types/workflow-automation.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkflowExecutionsListProps {
   ruleId?: string
@@ -41,9 +42,9 @@ const statusConfig: Record<
 }
 
 export function WorkflowExecutionsList({ ruleId }: WorkflowExecutionsListProps) {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('workflow-automation')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
@@ -91,7 +92,7 @@ export function WorkflowExecutionsList({ ruleId }: WorkflowExecutionsListProps) 
   }
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       <h2 className="text-lg font-semibold">{t('headings.executions')}</h2>
 
       {data.data.map((execution) => (

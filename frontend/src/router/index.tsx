@@ -3,15 +3,14 @@ import { routeTree } from '../routeTree.gen'
 import type { AuthContextValue } from '../contexts/auth.context'
 import { useTranslation } from 'react-i18next'
 import { Home, ArrowLeft } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 function NotFoundComponent() {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+return (
     <div
       className="from-base-50 to-base-100 flex min-h-screen items-center justify-center bg-gradient-to-br p-4 sm:p-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="border-base-200 w-full max-w-lg rounded-2xl border bg-white p-6 text-center shadow-xl sm:p-8">
         <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-amber-100 sm:mb-6 sm:size-20">

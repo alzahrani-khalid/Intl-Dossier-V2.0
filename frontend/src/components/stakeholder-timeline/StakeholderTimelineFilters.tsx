@@ -34,6 +34,7 @@ import type {
   InteractionDirection,
   DateRangePreset,
 } from '@/types/stakeholder-interaction.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface StakeholderTimelineFiltersProps {
   filters: IFilters
@@ -48,10 +49,9 @@ export function StakeholderTimelineFilters({
   availableEventTypes,
   className,
 }: StakeholderTimelineFiltersProps) {
-  const { t, i18n } = useTranslation('stakeholder-interactions')
-  const isRTL = i18n.language === 'ar'
-
-  const [dateRangePreset, setDateRangePreset] = useState<DateRangePreset>('all_time')
+  const { t } = useTranslation('stakeholder-interactions')
+  const { isRTL } = useDirection()
+const [dateRangePreset, setDateRangePreset] = useState<DateRangePreset>('all_time')
   const [customDateFrom, setCustomDateFrom] = useState<Date | undefined>()
   const [customDateTo, setCustomDateTo] = useState<Date | undefined>()
 
@@ -151,7 +151,6 @@ export function StakeholderTimelineFilters({
   return (
     <div
       className={cn('rounded-lg border bg-card p-4 sm:p-6 space-y-4 sm:space-y-6', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Event Types */}
       <div className="space-y-3">

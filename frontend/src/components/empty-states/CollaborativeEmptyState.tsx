@@ -23,6 +23,7 @@ import {
   type TeamContributor,
 } from '@/hooks/useTeamCollaboration'
 import { TeamInvitationDialog } from './TeamInvitationDialog'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface CollaborativeEmptyStateProps {
   /** Entity type (dossier, document, engagement, etc.) */
@@ -78,10 +79,9 @@ export function CollaborativeEmptyState({
   className,
   testId = 'collaborative-empty-state',
 }: CollaborativeEmptyStateProps) {
-  const { t, i18n } = useTranslation('empty-states')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('empty-states')
+  const { isRTL } = useDirection()
+// State
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
 
   // Fetch team stats
@@ -107,7 +107,6 @@ export function CollaborativeEmptyState({
         'py-8 px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid={testId}
     >
       {/* Main Icon */}

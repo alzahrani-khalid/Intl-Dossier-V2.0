@@ -63,6 +63,7 @@ import {
   FIELD_CATEGORY_CONFIG,
   ENTITY_TYPE_DISPLAY,
 } from '@/types/field-history.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // ICON MAPPING
@@ -406,7 +407,7 @@ const RollbackConfirmDialog = memo(function RollbackConfirmDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent dir={isRTL ? 'rtl' : 'ltr'} className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <RotateCcw className={cn('h-5 w-5', isRTL && 'rotate-180')} />
@@ -506,10 +507,9 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
   onRollback: onRollbackProp,
   className,
 }: FieldHistoryTimelineProps) {
-  const { t, i18n } = useTranslation('field-history')
-  const isRTL = i18n.language === 'ar'
-
-  // View mode state
+  const { t } = useTranslation('field-history')
+  const { isRTL } = useDirection()
+// View mode state
   const [viewMode, setViewMode] = useState<'timeline' | 'grouped'>('timeline')
   const [selectedFieldName, setSelectedFieldName] = useState<string | undefined>(initialFieldName)
   const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null)
@@ -580,7 +580,7 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
   const entityName = isRTL ? entityDisplay.ar : entityDisplay.en
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Header */}
       <Card>
         <CardHeader className="pb-2">

@@ -22,16 +22,16 @@ import {
 import { FieldHistoryTimeline } from '@/components/field-history/FieldHistoryTimeline'
 import type { TrackableEntityType } from '@/types/field-history.types'
 import { ENTITY_TYPE_DISPLAY } from '@/types/field-history.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/field-history-demo')({
   component: FieldHistoryDemoPage,
 })
 
 function FieldHistoryDemoPage() {
-  const { t, i18n } = useTranslation('field-history')
-  const isRTL = i18n.language === 'ar'
-
-  // Demo state
+  const { t } = useTranslation('field-history')
+  const { isRTL } = useDirection()
+// Demo state
   const [entityType, setEntityType] = useState<TrackableEntityType>('person')
   const [entityId, setEntityId] = useState<string>('')
   const [showTimeline, setShowTimeline] = useState(false)
@@ -46,7 +46,6 @@ function FieldHistoryDemoPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

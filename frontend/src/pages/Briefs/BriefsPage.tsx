@@ -27,6 +27,7 @@ import { BriefGenerationPanel } from '@/components/ai/BriefGenerationPanel'
 import { BriefViewer } from '@/components/ai/BriefViewer'
 import type { BriefContent } from '@/hooks/useGenerateBrief'
 import { useToast } from '@/hooks/useToast'
+import { useDirection } from '@/hooks/useDirection'
 
 interface Brief {
   id: string
@@ -79,15 +80,15 @@ type BriefRow = {
 }
 
 export function BriefsPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
   const [showGenerateDialog, setShowGenerateDialog] = useState(false)
   const [selectedDossier, setSelectedDossier] = useState<string>('')
   const [briefViewerOpen, setBriefViewerOpen] = useState(false)
   const [generatedBrief, setGeneratedBrief] = useState<BriefContent | null>(null)
-  const isRTL = i18n.language === 'ar'
-  const { toast } = useToast()
+  const { isRTL } = useDirection()
+const { toast } = useToast()
   const queryClient = useQueryClient()
 
   // Fetch dossiers for selection
@@ -486,7 +487,7 @@ export function BriefsPage() {
 
       {/* Generate Brief Dialog */}
       <Dialog open={showGenerateDialog} onOpenChange={setShowGenerateDialog}>
-        <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className={`h-5 w-5 text-primary ${isRTL ? 'rotate-180' : ''}`} />
@@ -565,7 +566,6 @@ export function BriefsPage() {
       <Dialog open={briefViewerOpen} onOpenChange={setBriefViewerOpen}>
         <DialogContent
           className="sm:max-w-4xl max-h-[90vh] overflow-hidden"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <DialogHeader className="sr-only">
             <DialogTitle>{t('briefs.viewBrief', 'View Brief')}</DialogTitle>

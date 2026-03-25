@@ -69,7 +69,6 @@ interface UsageMetrics {
 
 function AIUsageDashboard() {
   const { t, i18n } = useTranslation('ai-admin')
-  const isRTL = i18n.language === 'ar'
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d'>('30d')
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'breakdown'>('overview')
 
@@ -198,7 +197,7 @@ function AIUsageDashboard() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:py-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>

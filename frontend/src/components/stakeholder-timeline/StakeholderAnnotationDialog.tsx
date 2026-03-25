@@ -44,6 +44,7 @@ import type {
   AnnotationColor,
   AnnotationVisibility,
 } from '@/types/stakeholder-interaction.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface StakeholderAnnotationDialogProps {
   open: boolean
@@ -169,10 +170,9 @@ export function StakeholderAnnotationDialog({
   event,
   isLoading = false,
 }: StakeholderAnnotationDialogProps) {
-  const { t, i18n } = useTranslation('stakeholder-interactions')
-  const isRTL = i18n.language === 'ar'
-
-  // Form state
+  const { t } = useTranslation('stakeholder-interactions')
+  const { isRTL } = useDirection()
+// Form state
   const [annotationType, setAnnotationType] = useState<TimelineAnnotationType>('note')
   const [contentEn, setContentEn] = useState('')
   const [contentAr, setContentAr] = useState('')
@@ -219,7 +219,6 @@ export function StakeholderAnnotationDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="sm:max-w-lg max-h-[90vh] overflow-y-auto"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="text-start">{t('annotation.create_title')}</DialogTitle>

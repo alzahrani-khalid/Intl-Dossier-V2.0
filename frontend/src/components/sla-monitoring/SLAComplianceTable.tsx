@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import type { SLAComplianceByType, SLAComplianceByAssignee } from '@/types/sla.types'
 import { getComplianceThreshold, formatSLADuration, formatSLADurationAr } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SLAComplianceTableProps {
   typeData?: SLAComplianceByType[]
@@ -38,10 +39,9 @@ export function SLAComplianceTable({
   isLoading,
   className,
 }: SLAComplianceTableProps) {
-  const { t, i18n } = useTranslation('sla')
-  const isRTL = i18n.language === 'ar'
-
-  if (isLoading) {
+  const { t } = useTranslation('sla')
+  const { isRTL } = useDirection()
+if (isLoading) {
     return (
       <Card className={className}>
         <CardHeader>
@@ -68,7 +68,7 @@ export function SLAComplianceTable({
     isRTL ? formatSLADurationAr(minutes) : formatSLADuration(minutes)
 
   return (
-    <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>{t('tables.complianceBreakdown')}</CardTitle>
         <CardDescription>{t('tables.complianceBreakdownDescription')}</CardDescription>

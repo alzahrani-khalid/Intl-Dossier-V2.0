@@ -26,6 +26,7 @@ import {
 import { useProgressiveDisclosure } from '@/hooks/useProgressiveDisclosure'
 import { ProgressiveHint } from './ProgressiveHint'
 import type { ProgressiveEmptyStateProps, HintTier } from '@/types/progressive-disclosure.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Size configurations
 const sizeConfig = {
@@ -185,9 +186,9 @@ function ProgressiveEmptyState({
   size = 'md',
   className,
 }: ProgressiveEmptyStateProps) {
-  const { t, i18n } = useTranslation('progressive-disclosure')
-  const isRTL = i18n.language === 'ar'
-  const sizes = sizeConfig[size]
+  const { t } = useTranslation('progressive-disclosure')
+  const { isRTL } = useDirection()
+const sizes = sizeConfig[size]
 
   const { experienceLevel, isFirstVisit, hasInteractedBefore, hintsEnabled, recordActionTaken } =
     useProgressiveDisclosure({ pageContext })
@@ -273,7 +274,6 @@ function ProgressiveEmptyState({
         sizes.container,
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="progressive-empty-state"
     >
       {/* Main empty state */}
@@ -383,7 +383,6 @@ function ProgressiveEmptyState({
     return (
       <div
         className={cn('flex flex-col items-center justify-center text-center py-8 px-4', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
         data-testid="progressive-empty-state"
       >
         <Icon className="w-10 h-10 text-muted-foreground mb-3" />

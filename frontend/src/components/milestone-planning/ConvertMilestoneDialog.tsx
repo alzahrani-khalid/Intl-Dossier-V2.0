@@ -21,6 +21,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import type { PlannedMilestone } from '@/types/milestone-planning.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ConvertMilestoneDialogProps {
   open: boolean
@@ -56,10 +57,9 @@ export function ConvertMilestoneDialog({
   milestone,
   onConvert,
 }: ConvertMilestoneDialogProps) {
-  const { t, i18n } = useTranslation('milestone-planning')
-  const isRTL = i18n.language === 'ar'
-
-  const [selectedType, setSelectedType] = useState('calendar')
+  const { t } = useTranslation('milestone-planning')
+  const { isRTL } = useDirection()
+const [selectedType, setSelectedType] = useState('calendar')
   const [isConverting, setIsConverting] = useState(false)
 
   const title = isRTL ? milestone.title_ar : milestone.title_en
@@ -76,7 +76,7 @@ export function ConvertMilestoneDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CalendarPlus className="h-5 w-5" />

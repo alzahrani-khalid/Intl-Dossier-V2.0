@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select'
 import { Trash2, Plus, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface Risk {
   id?: string
@@ -42,10 +43,9 @@ const severityColors = {
 }
 
 export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const addRisk = () => {
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const addRisk = () => {
     onChange([
       ...risks,
       {
@@ -139,7 +139,6 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                 rows={2}
                 maxLength={2000}
                 disabled={readOnly}
-                dir={isRTL ? 'rtl' : 'ltr'}
                 required
               />
             </div>
@@ -152,7 +151,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                   onValueChange={(value) => updateRisk(index, 'severity', value)}
                   disabled={readOnly}
                 >
-                  <SelectTrigger id={`severity-${index}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                  <SelectTrigger id={`severity-${index}`}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -174,7 +173,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                   onValueChange={(value) => updateRisk(index, 'likelihood', value)}
                   disabled={readOnly}
                 >
-                  <SelectTrigger id={`likelihood-${index}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                  <SelectTrigger id={`likelihood-${index}`}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -199,7 +198,6 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                 placeholder={t('afterActions.risks.mitigationPlaceholder')}
                 rows={2}
                 disabled={readOnly}
-                dir={isRTL ? 'rtl' : 'ltr'}
               />
             </div>
 
@@ -212,7 +210,6 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                 placeholder={t('afterActions.risks.ownerPlaceholder')}
                 maxLength={200}
                 disabled={readOnly}
-                dir={isRTL ? 'rtl' : 'ltr'}
               />
             </div>
           </CardContent>

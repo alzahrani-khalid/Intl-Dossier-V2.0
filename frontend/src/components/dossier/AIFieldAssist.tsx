@@ -16,7 +16,6 @@
  */
 
 import { useState, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   Sparkles,
   ChevronDown,
@@ -36,6 +35,7 @@ import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useAIFieldAssist, type GeneratedFields } from '@/hooks/useAIFieldAssist'
 import type { DossierType } from '@/services/dossier-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface AIFieldAssistProps {
   /** The selected dossier type */
@@ -54,10 +54,8 @@ export function AIFieldAssist({
   disabled = false,
   className,
 }: AIFieldAssistProps) {
-  const { i18n } = useTranslation(['dossier', 'common'])
-  const isRTL = i18n.language === 'ar'
-
-  // State
+const { isRTL } = useDirection()
+// State
   const [isExpanded, setIsExpanded] = useState(false)
   const [description, setDescription] = useState('')
   const [hasApplied, setHasApplied] = useState(false)
@@ -113,7 +111,6 @@ export function AIFieldAssist({
         isExpanded ? 'border-primary/30 bg-primary/5' : 'border-border bg-muted/30',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header - Always visible */}
       <button
@@ -191,7 +188,6 @@ export function AIFieldAssist({
                       : 'e.g., Track bilateral relations with France including trade agreements and cultural cooperation...'
                   }
                   className="min-h-[80px] sm:min-h-[100px] text-sm sm:text-base resize-none"
-                  dir={isRTL ? 'rtl' : 'ltr'}
                   disabled={isGenerating || disabled}
                 />
                 <p className="text-xs text-muted-foreground">

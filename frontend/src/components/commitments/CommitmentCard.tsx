@@ -54,6 +54,7 @@ import { useCancelCommitment } from '@/hooks/useCommitments'
 import { getEvidenceUrl } from '@/services/commitments.service'
 import { StatusDropdown } from './StatusDropdown'
 import { EvidenceUpload } from './EvidenceUpload'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface CommitmentCardProps {
   commitment: Commitment
@@ -71,9 +72,8 @@ export function CommitmentCard({
 }: CommitmentCardProps) {
   const { t, i18n } = useTranslation('commitments')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  const [showCancelDialog, setShowCancelDialog] = useState(false)
+  const { isRTL } = useDirection()
+const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [cancelReason, setCancelReason] = useState('')
   const [showUploadDialog, setShowUploadDialog] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -154,7 +154,6 @@ export function CommitmentCard({
           ${commitment.status === 'completed' ? 'opacity-75' : ''}
         `}
         onClick={handleCardClick}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <CardHeader className={compact ? 'pb-2 pt-3 px-3' : 'pb-3'}>
           <div className="flex items-start justify-between gap-2">
@@ -311,7 +310,7 @@ export function CommitmentCard({
 
       {/* Cancel Confirmation Dialog */}
       <AlertDialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-start">{t('confirm.cancel')}</AlertDialogTitle>
             <AlertDialogDescription className="text-start">
@@ -349,7 +348,6 @@ export function CommitmentCard({
       <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
         <DialogContent
           className="max-w-md max-h-[90vh] overflow-y-auto"
-          dir={isRTL ? 'rtl' : 'ltr'}
           onClick={(e) => e.stopPropagation()}
         >
           <DialogHeader>

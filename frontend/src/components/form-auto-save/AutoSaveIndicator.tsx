@@ -24,12 +24,12 @@ import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import type { AutoSaveIndicatorProps } from '@/types/form-auto-save.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export function AutoSaveIndicator({ status, className, compact = false }: AutoSaveIndicatorProps) {
-  const { t, i18n } = useTranslation('form-auto-save')
-  const isRTL = i18n.language === 'ar'
-
-  const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = status
+  const { t } = useTranslation('form-auto-save')
+  const { isRTL } = useDirection()
+const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = status
 
   // Format the last saved time
   const lastSavedText = React.useMemo(() => {
@@ -100,7 +100,6 @@ export function AutoSaveIndicator({ status, className, compact = false }: AutoSa
     return (
       <div
         className={cn('flex items-center gap-1.5', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="status"
         aria-live={ariaLive}
       >
@@ -124,7 +123,6 @@ export function AutoSaveIndicator({ status, className, compact = false }: AutoSa
   return (
     <div
       className={cn('flex items-center gap-2 text-sm', config.containerClass, className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="status"
       aria-live={ariaLive}
     >

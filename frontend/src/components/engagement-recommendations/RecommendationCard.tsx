@@ -47,6 +47,7 @@ import {
   STATUS_LABELS,
 } from '@/types/engagement-recommendation.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -81,9 +82,9 @@ const typeIcons: Record<RecommendationType, React.ComponentType<{ className?: st
 // ============================================================================
 
 function UrgencyBadge({ urgency }: { urgency: RecommendationUrgency }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const label = URGENCY_LABELS[urgency]
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const label = URGENCY_LABELS[urgency]
 
   return (
     <Badge
@@ -101,8 +102,8 @@ function UrgencyBadge({ urgency }: { urgency: RecommendationUrgency }) {
 }
 
 function TypeBadge({ type }: { type: RecommendationType }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
   const label = RECOMMENDATION_TYPE_LABELS[type]
   const Icon = typeIcons[type]
 
@@ -118,8 +119,8 @@ function TypeBadge({ type }: { type: RecommendationType }) {
 }
 
 function HealthTrendIndicator({ trend, score }: { trend?: string; score?: number }) {
-  const { t, i18n } = useTranslation('engagement-recommendations')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('engagement-recommendations')
+  const { isRTL } = useDirection()
 
   if (!trend && score === undefined) return null
 
@@ -166,8 +167,8 @@ function ConfidenceIndicator({ score }: { score: number }) {
 }
 
 function OptimalTimingBadge({ startDate, endDate }: { startDate?: string; endDate?: string }) {
-  const { i18n } = useTranslation('engagement-recommendations')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('engagement-recommendations')
+  const { isRTL } = useDirection()
 
   if (!startDate && !endDate) return null
 
@@ -205,8 +206,8 @@ export function RecommendationCard({
   variant = 'default',
   className,
 }: RecommendationCardProps) {
-  const { t, i18n } = useTranslation('engagement-recommendations')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('engagement-recommendations')
+  const { isRTL } = useDirection()
 
   const title = isRTL ? recommendation.title_ar : recommendation.title_en
   const targetName =
@@ -262,7 +263,6 @@ export function RecommendationCard({
           !isActionable && 'opacity-70',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Priority Indicator Strip */}
         <div

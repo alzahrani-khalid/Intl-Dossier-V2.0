@@ -40,6 +40,7 @@ import { CommitmentForm } from './CommitmentForm'
 import { EvidenceUpload } from './EvidenceUpload'
 import { DeliverablesTimeline } from './deliverables'
 import { DossierLinksWidget } from '@/components/dossier'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface CommitmentDetailDrawerProps {
   commitmentId: string | null
@@ -53,9 +54,8 @@ export function CommitmentDetailDrawer({
   onOpenChange,
 }: CommitmentDetailDrawerProps) {
   const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { isRTL } = useDirection()
+// State
   const [isEditing, setIsEditing] = useState(false)
   const [showUploadDialog, setShowUploadDialog] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -121,7 +121,6 @@ export function CommitmentDetailDrawer({
         <SheetContent
           side={isRTL ? 'left' : 'right'}
           className="w-full sm:max-w-lg overflow-y-auto"
-          dir={isRTL ? 'rtl' : 'ltr'}
           accessibleTitle={t('detail.title', 'Commitment Details')}
         >
           {/* Loading State */}
@@ -409,7 +408,6 @@ export function CommitmentDetailDrawer({
         <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
           <DialogContent
             className="max-w-md max-h-[90vh] overflow-y-auto"
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             <DialogHeader>
               <DialogTitle className="text-start">{t('evidence.title')}</DialogTitle>

@@ -39,6 +39,7 @@ import type {
 import type { DossierType } from '@/types/dossier-context.types'
 import type { WorkSource } from '@/types/unified-work.types'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // Icons
@@ -188,9 +189,8 @@ interface ActivityItemProps {
 function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: ActivityItemProps) {
   const { t, i18n } = useTranslation('dossier-dashboard')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  const TypeIcon = typeIcons[activity.work_item_type] || CheckSquare
+  const { isRTL } = useDirection()
+const TypeIcon = typeIcons[activity.work_item_type] || CheckSquare
   const DossierIcon = dossierTypeIcons[activity.dossier.type] || Folder
 
   // Navigate to work item

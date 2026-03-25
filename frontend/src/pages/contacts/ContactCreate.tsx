@@ -39,11 +39,12 @@ import {
 } from '@/services/contact-api'
 import type { OCRParsedFields } from '@/services/ocr-api'
 import { p } from '@/lib/navigation'
+import { useDirection } from '@/hooks/useDirection'
 
 export function ContactCreate() {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState<'manual' | 'scan' | 'document'>('manual')
   const [pendingContact, setPendingContact] = useState<PersonFormData | null>(null)
@@ -256,7 +257,7 @@ export function ContactCreate() {
 
   return (
     <>
-      <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="min-h-screen">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {/* Header */}
           <div className="mb-6">
@@ -344,7 +345,7 @@ export function ContactCreate() {
 
       {/* Single Contact Duplicate Warning Dialog */}
       <Dialog open={showDuplicateDialog} onOpenChange={setShowDuplicateDialog}>
-        <DialogContent className="max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-start">
               <AlertTriangle className="h-5 w-5 text-yellow-600" />
@@ -415,7 +416,6 @@ export function ContactCreate() {
       <Dialog open={showBatchDuplicateDialog} onOpenChange={setShowBatchDuplicateDialog}>
         <DialogContent
           className="max-w-4xl max-h-[80vh] overflow-y-auto"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-start">

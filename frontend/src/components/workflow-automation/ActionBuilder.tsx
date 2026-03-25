@@ -40,6 +40,7 @@ import type {
   ActionConfig,
 } from '@/types/workflow-automation.types'
 import { getActionTypeOption, getActionsByCategory } from './workflow-config'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ActionBuilderProps {
   actions: WorkflowAction[]
@@ -65,10 +66,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 }
 
 export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-
-  const addAction = (type: WorkflowActionType) => {
+  const { t } = useTranslation('workflow-automation')
+  const { isRTL } = useDirection()
+const addAction = (type: WorkflowActionType) => {
     const newAction: WorkflowAction = {
       id: crypto.randomUUID(),
       type,
@@ -202,7 +202,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
   const categories = ['notification', 'assignment', 'update', 'create', 'external', 'control']
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">{t('builder.thenDo')}</h3>
         <p className="text-sm text-muted-foreground">{t('help.actions')}</p>

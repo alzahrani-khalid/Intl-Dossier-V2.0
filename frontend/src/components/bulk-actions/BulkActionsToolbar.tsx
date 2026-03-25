@@ -30,6 +30,7 @@ import type {
   BulkActionEntityType,
 } from '@/types/bulk-actions.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface BulkActionsToolbarProps<T extends BulkSelectableItem = BulkSelectableItem> {
   /** Selection state */
@@ -94,10 +95,9 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
   disabled = false,
   className,
 }: BulkActionsToolbarProps<T>) {
-  const { t, i18n } = useTranslation('bulk-actions')
-  const isRTL = i18n.language === 'ar'
-
-  const { selectedCount, maxReached } = selection
+  const { t } = useTranslation('bulk-actions')
+  const { isRTL } = useDirection()
+const { selectedCount, maxReached } = selection
   const isProcessing = actionState.status === 'processing'
 
   // Don't render if nothing selected
@@ -122,7 +122,6 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
         'sm:flex-row sm:items-center sm:justify-between sm:gap-4',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="toolbar"
       aria-label={t('accessibility.toolbar')}
     >

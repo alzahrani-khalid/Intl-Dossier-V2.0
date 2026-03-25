@@ -27,6 +27,7 @@ import {
 } from '@/hooks/useDossierRecommendations'
 import { DossierRecommendationCard } from './DossierRecommendationCard'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -105,10 +106,9 @@ function RecommendationsHeader({
   onRefresh: () => void
   showRefresh: boolean
 }) {
-  const { t, i18n } = useTranslation('dossier-recommendations')
-  const isRTL = i18n.language === 'ar'
-
-  return (
+  const { t } = useTranslation('dossier-recommendations')
+  const { isRTL } = useDirection()
+return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
@@ -160,8 +160,8 @@ export function DossierRecommendationsPanel({
   collapsible = false,
   defaultExpanded = true,
 }: DossierRecommendationsPanelProps) {
-  const { t, i18n } = useTranslation('dossier-recommendations')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier-recommendations')
+  const { isRTL } = useDirection()
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
 
   // Queries and mutations
@@ -256,7 +256,7 @@ export function DossierRecommendationsPanel({
     if (collapsible) {
       return (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={className}>
-          <Card dir={isRTL ? 'rtl' : 'ltr'}>
+          <Card>
             <CollapsibleTrigger asChild>
               <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors py-3 px-4">
                 <div className="flex items-center justify-between">
@@ -287,7 +287,7 @@ export function DossierRecommendationsPanel({
     }
 
     return (
-      <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className={className}>
         <CardHeader className="py-3 px-4">
           <RecommendationsHeader
             count={recommendations.length}
@@ -305,7 +305,7 @@ export function DossierRecommendationsPanel({
   // Inline variant without card wrapper
   if (variant === 'inline') {
     return (
-      <div className={className} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={className}>
         <div className="mb-4">
           <RecommendationsHeader
             count={recommendations.length}
@@ -322,7 +322,7 @@ export function DossierRecommendationsPanel({
 
   // Compact variant - minimal design
   return (
-    <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-2', className)}>
       {isLoading ? (
         <div className="flex items-center gap-2 py-2">
           <Loader2 className="h-4 w-4 animate-spin" />

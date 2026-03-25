@@ -24,6 +24,7 @@ import type { CommitmentDeliverable } from '@/types/commitment-deliverable.types
 import { CommitmentDeliverablesEmptyState } from './CommitmentDeliverablesEmptyState'
 import { DeliverableCard } from './DeliverableCard'
 import { AddDeliverableDialog } from './AddDeliverableDialog'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DeliverablesTimelineProps {
   commitmentId: string
@@ -36,10 +37,9 @@ export function DeliverablesTimeline({
   commitmentDueDate,
   isCompact = false,
 }: DeliverablesTimelineProps) {
-  const { t, i18n } = useTranslation('commitment-deliverables')
-  const isRTL = i18n.language === 'ar'
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { t } = useTranslation('commitment-deliverables')
+  const { isRTL } = useDirection()
+const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editDeliverable, setEditDeliverable] = useState<CommitmentDeliverable | null>(null)
 
   const { data: deliverables, isLoading: isLoadingDeliverables } =
@@ -72,7 +72,7 @@ export function DeliverablesTimeline({
   // Loading state
   if (isLoading) {
     return (
-      <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Skeleton className="h-6 w-32" />
           <Skeleton className="h-9 w-24" />
@@ -101,7 +101,7 @@ export function DeliverablesTimeline({
 
   // Main timeline view
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'} data-testid="deliverables-timeline">
+    <div className="space-y-4" data-testid="deliverables-timeline">
       {/* Stats Bar */}
       {!isCompact && summary && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">

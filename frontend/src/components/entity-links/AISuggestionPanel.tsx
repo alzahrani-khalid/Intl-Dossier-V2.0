@@ -33,6 +33,7 @@ import {
   useAISuggestionAnalytics,
 } from '../../hooks/useAiSuggestions'
 import type { AILinkSuggestion as BackendAILinkSuggestion } from '../../../../backend/src/types/ai-suggestions.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface AISuggestionPanelProps {
   intakeId: string
@@ -45,10 +46,9 @@ export function AISuggestionPanel({
   onManualSearchClick,
   onSuggestionAccepted,
 }: AISuggestionPanelProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [suggestionsEnabled, setSuggestionsEnabled] = useState(false)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [suggestionsEnabled, setSuggestionsEnabled] = useState(false)
   const [suggestionStartTime, setSuggestionStartTime] = useState<number | null>(null)
 
   const analytics = useAISuggestionAnalytics(intakeId)

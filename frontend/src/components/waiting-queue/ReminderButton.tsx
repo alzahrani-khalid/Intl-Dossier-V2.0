@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Bell, Loader2, CheckCircle2 } from 'lucide-react'
 import { useReminderAction } from '@/hooks/useWaitingQueueActions'
 import { useToast } from '@/hooks/useToast'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Reminder Button Component
@@ -47,13 +48,12 @@ export function ReminderButton({
   size = 'default',
   className = '',
 }: ReminderButtonProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { toast } = useToast()
   const { mutate: sendReminder, isPending } = useReminderAction()
   const [showSuccess, setShowSuccess] = useState(false)
-  const isRTL = i18n.language === 'ar'
-
-  // Calculate if cooldown is active
+  const { isRTL } = useDirection()
+// Calculate if cooldown is active
   const isCooldownActive = () => {
     if (!lastReminderSentAt) return false
 

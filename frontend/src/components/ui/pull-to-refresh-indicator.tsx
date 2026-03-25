@@ -26,6 +26,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { RefreshCw, Check, WifiOff, Clock, Package } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { PullToRefreshState } from '@/hooks/usePullToRefresh'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface PullToRefreshIndicatorProps {
   /** Current pull distance in pixels */
@@ -53,10 +54,9 @@ export function PullToRefreshIndicator({
   offlineQueueCount = 0,
   className,
 }: PullToRefreshIndicatorProps) {
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
-
-  // Format relative time
+  const { t } = useTranslation('common')
+  const { isRTL } = useDirection()
+// Format relative time
   const formatLastSync = (time: string | Date | null | undefined) => {
     if (!time) return null
 
@@ -150,7 +150,6 @@ export function PullToRefreshIndicator({
             'bg-gradient-to-b from-muted/50 to-transparent',
             className,
           )}
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           {/* Main indicator */}
           <div className="flex items-center gap-3">
@@ -253,8 +252,8 @@ export function SyncStatusBar({
   offlineQueueCount = 0,
   className,
 }: SyncStatusBarProps) {
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('common')
+  const { isRTL } = useDirection()
 
   // Format relative time
   const formatTime = (time: string | Date | null | undefined) => {
@@ -286,7 +285,6 @@ export function SyncStatusBar({
         'text-xs text-muted-foreground',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Left side - item count */}
       <div className="flex items-center gap-1.5">

@@ -97,6 +97,7 @@ import type {
   WebhookTemplate,
 } from '@/types/webhook.types'
 import { WEBHOOK_EVENT_CATEGORIES } from '@/types/webhook.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Main Component
@@ -108,10 +109,9 @@ interface WebhooksPageProps {
 }
 
 export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: WebhooksPageProps) {
-  const { t, i18n } = useTranslation('webhooks')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('webhooks')
+  const { isRTL } = useDirection()
+// State
   const [activeTab, setActiveTab] = useState(initialTab)
   const [search, setSearch] = useState(initialSearch)
   const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'inactive'>('all')
@@ -189,7 +189,6 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -357,10 +356,11 @@ function WebhookCard({
   onCopyUrl,
   isTestLoading,
 }: WebhookCardProps) {
-  const { t, i18n } = useTranslation('webhooks')
+  const { t } = useTranslation('webhooks')
+  const { isRTL } = useDirection()
 
-  const name = i18n.language === 'ar' ? webhook.name_ar : webhook.name_en
-  const description = i18n.language === 'ar' ? webhook.description_ar : webhook.description_en
+  const name = isRTL ? webhook.name_ar : webhook.name_en
+  const description = isRTL ? webhook.description_ar : webhook.description_en
 
   const statusColor = webhook.is_active
     ? webhook.auto_disabled_at
@@ -489,9 +489,10 @@ interface TemplateCardProps {
 }
 
 function TemplateCard({ template, onUse }: TemplateCardProps) {
-  const { t, i18n } = useTranslation('webhooks')
-  const name = i18n.language === 'ar' ? template.name_ar : template.name_en
-  const description = i18n.language === 'ar' ? template.description_ar : template.description_en
+  const { isRTL } = useDirection()
+  const { t } = useTranslation('webhooks')
+  const name = isRTL ? template.name_ar : template.name_en
+  const description = isRTL ? template.description_ar : template.description_en
 
   return (
     <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={onUse}>
@@ -556,8 +557,8 @@ interface WebhookFormDialogProps {
 }
 
 function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFormDialogProps) {
-  const { t, i18n } = useTranslation('webhooks')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('webhooks')
+  const { isRTL } = useDirection()
 
   // Form state
   const [formData, setFormData] = useState<Partial<WebhookCreate>>({
@@ -620,7 +621,6 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle>{mode === 'create' ? t('headings.create') : t('headings.edit')}</DialogTitle>
@@ -892,8 +892,8 @@ interface WebhookDetailsDialogProps {
 }
 
 function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsDialogProps) {
-  const { t, i18n } = useTranslation('webhooks')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('webhooks')
+  const { isRTL } = useDirection()
 
   const [page, setPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState<WebhookDeliveryStatus | 'all'>('all')
@@ -907,7 +907,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
     status: statusFilter === 'all' ? undefined : statusFilter,
   })
 
-  const name = i18n.language === 'ar' ? webhook?.name_ar : webhook?.name_en
+  const name = isRTL ? webhook?.name_ar : webhook?.name_en
 
   const getStatusIcon = (status: WebhookDeliveryStatus) => {
     switch (status) {
@@ -926,7 +926,6 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle>{name}</DialogTitle>

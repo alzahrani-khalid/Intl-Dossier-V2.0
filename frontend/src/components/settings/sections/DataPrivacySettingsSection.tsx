@@ -38,8 +38,7 @@ interface Session {
  * Handles data export, active sessions, and account deletion
  */
 export function DataPrivacySettingsSection() {
-  const { t, i18n } = useTranslation('settings')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('settings')
   const { logout } = useAuthStore()
 
   const [isExporting, setIsExporting] = useState(false)
@@ -221,7 +220,7 @@ export function DataPrivacySettingsSection() {
       description={t('dataPrivacy.description')}
       icon={Shield}
     >
-      <div className="space-y-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-8">
         {/* Data Export */}
         <SettingsGroup>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-lg border">
@@ -312,7 +311,7 @@ export function DataPrivacySettingsSection() {
                   {t('dataPrivacy.signOutAll')}
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+              <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle className="text-start">
                     {t('dataPrivacy.signOutAll')}
@@ -358,7 +357,7 @@ export function DataPrivacySettingsSection() {
                         {t('dataPrivacy.deleteButton')}
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+                    <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle className="text-start text-destructive">
                           {t('dataPrivacy.deleteConfirmTitle')}

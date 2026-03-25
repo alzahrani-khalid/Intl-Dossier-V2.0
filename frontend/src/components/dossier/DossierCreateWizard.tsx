@@ -218,6 +218,7 @@ const typeIcons: Partial<Record<DossierType, typeof Globe>> = {
 }
 
 import type { DossierExtensionData } from '@/services/dossier-api'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Filter extension data to only include fields for the selected dossier type.
@@ -316,9 +317,9 @@ export function DossierCreateWizard({
   initialType,
   recommendedTags,
 }: DossierCreateWizardProps) {
-  const { t, i18n } = useTranslation(['dossier', 'form-wizard', 'contextual-help'])
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation(['dossier', 'form-wizard', 'contextual-help'])
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
   const createMutation = useCreateDossier()
 
   // Draft management - use template-specific key if using a template
@@ -1795,7 +1796,7 @@ export function DossierCreateWizard({
   }
 
   return (
-    <div className={cn('w-full max-w-4xl mx-auto', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('w-full max-w-4xl mx-auto', className)}>
       <FormProvider {...form}>
         <Form {...form}>
           <form onSubmit={(e) => e.preventDefault()}>
@@ -1828,7 +1829,7 @@ export function DossierCreateWizard({
 
       {/* Quick-add Organization Dialog */}
       <Dialog open={showQuickAddOrg} onOpenChange={setShowQuickAddOrg}>
-        <DialogContent className="sm:max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
               {t('dossier:form.forum.quickAddOrg', 'Quick Add Organization')}

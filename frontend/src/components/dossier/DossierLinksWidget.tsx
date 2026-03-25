@@ -51,6 +51,7 @@ import type {
   WorkItemDossierLink,
 } from '@/types/dossier-context.types'
 import type { DossierType } from '@/types/relationship.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -257,10 +258,9 @@ export function DossierLinksWidget({
   className,
   title,
 }: DossierLinksWidgetProps) {
-  const { t, i18n } = useTranslation('dossier-context')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('dossier-context')
+  const { isRTL } = useDirection()
+// State
   const [isExpanded, setIsExpanded] = useState(false)
   const [isAddingDossier, setIsAddingDossier] = useState(false)
   const [linkToRemove, setLinkToRemove] = useState<WorkItemDossierLink | null>(null)
@@ -412,7 +412,7 @@ export function DossierLinksWidget({
 
   // Main content
   const mainContent = (
-    <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-3">
       {/* Dossier Links List */}
       <Collapsible open={isExpanded || links.length <= maxVisible} onOpenChange={setIsExpanded}>
         <div className="space-y-2">
@@ -493,7 +493,7 @@ export function DossierLinksWidget({
   // Remove confirmation dialog
   const removeDialog = (
     <AlertDialog open={!!linkToRemove} onOpenChange={(open) => !open && setLinkToRemove(null)}>
-      <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
             {t('widget.confirm_remove_title', 'Remove Dossier Link')}

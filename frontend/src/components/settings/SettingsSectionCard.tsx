@@ -1,8 +1,8 @@
 import { ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 import { LucideIcon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SettingsSectionCardProps {
   /** Section title translation key or string */
@@ -28,10 +28,8 @@ export function SettingsSectionCard({
   children,
   className,
 }: SettingsSectionCardProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
+const { isRTL } = useDirection()
+return (
     <Card
       className={cn(
         'overflow-hidden',
@@ -39,7 +37,6 @@ export function SettingsSectionCard({
         'w-full',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <CardHeader className="px-4 py-4 sm:px-6 sm:py-5">
         <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl text-start">
@@ -78,8 +75,7 @@ export function SettingsItem({
   children,
   className,
 }: SettingsItemProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
     <div
@@ -89,7 +85,6 @@ export function SettingsItem({
         'rounded-lg border p-3 sm:p-4',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex items-start gap-3 text-start flex-1 min-w-0">
         {Icon && <Icon className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />}
@@ -116,11 +111,10 @@ interface SettingsGroupProps {
  * Group of related settings with optional title
  */
 export function SettingsGroup({ title, children, className }: SettingsGroupProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+const { isRTL } = useDirection()
 
   return (
-    <div className={cn('space-y-3 sm:space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-3 sm:space-y-4', className)}>
       {title && (
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide text-start">
           {title}

@@ -17,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { DossierTypeIcon } from './DossierTypeIcon'
 import type { DossierType } from '@/types/relationship.types'
 import type { InheritanceSource } from '@/types/dossier-context.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -100,10 +101,9 @@ export function DossierContextBadge({
   clickable = true,
   className,
 }: DossierContextBadgeProps) {
-  const { t, i18n } = useTranslation('dossier-context')
-  const isRTL = i18n.language === 'ar'
-
-  // Get display name based on language
+  const { t } = useTranslation('dossier-context')
+  const { isRTL } = useDirection()
+// Get display name based on language
   const displayName = isRTL ? nameAr || nameEn : nameEn
 
   // Get inheritance label

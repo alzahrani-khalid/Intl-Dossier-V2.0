@@ -30,6 +30,7 @@ import {
   conditionOperators,
   getConditionOperatorOption,
 } from './workflow-config'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ConditionBuilderProps {
   entityType: WorkflowEntityType
@@ -46,10 +47,9 @@ export function ConditionBuilder({
   onConditionsChange,
   onLogicChange,
 }: ConditionBuilderProps) {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-
-  const availableFields = getEntityFields(entityType)
+  const { t } = useTranslation('workflow-automation')
+  const { isRTL } = useDirection()
+const availableFields = getEntityFields(entityType)
 
   const addCondition = () => {
     const newCondition: WorkflowCondition = {
@@ -124,7 +124,7 @@ export function ConditionBuilder({
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">{t('builder.ifThese')}</h3>
         <p className="text-sm text-muted-foreground">{t('help.conditions')}</p>

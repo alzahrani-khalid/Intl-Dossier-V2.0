@@ -29,6 +29,7 @@ import {
   formatProbability,
   getProbabilityColor,
 } from '@/types/scenario-sandbox.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface OutcomeListProps {
   outcomes: ScenarioOutcome[]
@@ -39,9 +40,9 @@ interface OutcomeListProps {
 }
 
 function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: OutcomeListProps) {
-  const { t, i18n } = useTranslation('scenario-sandbox')
-  const isRTL = i18n.language === 'ar'
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const { t } = useTranslation('scenario-sandbox')
+  const { isRTL } = useDirection()
+const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const handleConfirmDelete = () => {
     if (deleteId) {
@@ -200,7 +201,7 @@ function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: OutcomeLi
       </Card>
 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
-        <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('outcome.delete')}</AlertDialogTitle>
             <AlertDialogDescription>{t('scenario.confirmDelete')}</AlertDialogDescription>

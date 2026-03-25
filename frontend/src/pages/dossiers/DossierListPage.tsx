@@ -65,6 +65,7 @@ import type { DossierType, DossierStatus, DossierFilters } from '@/services/doss
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import type { ViewConfig, DossierViewConfig } from '@/types/view-preferences.types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { useDirection } from '@/hooks/useDirection'
 
 const DOSSIER_TYPES: DossierType[] = [
   'country',
@@ -138,9 +139,9 @@ function filtersToViewConfig(filters: DossierFilters): DossierViewConfig {
 }
 
 export function DossierListPage() {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   // View preferences hook
   const viewPreferences = useViewPreferences('dossiers')
@@ -432,7 +433,6 @@ export function DossierListPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Sample Data Banner - shows when sample data is active */}
       {hasSampleData && activeInstances.length > 0 && (

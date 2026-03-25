@@ -47,6 +47,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { UserPicker } from '@/components/forms/UserPicker'
 import { useUpdateTask } from '@/hooks/useTasks'
 import type { Database } from '../../../../backend/src/types/database.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -69,10 +70,9 @@ interface TaskEditDialogProps {
 }
 
 export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEditDialogProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const updateTask = useUpdateTask()
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const updateTask = useUpdateTask()
 
   const form = useForm<EditTaskFormValues>({
     resolver: zodResolver(editTaskSchema),
@@ -123,7 +123,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-full sm:max-w-[640px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="w-full max-w-full sm:max-w-[640px]">
         <DialogHeader>
           <DialogTitle className="text-start text-xl sm:text-2xl">
             {t('tasks.editTask', 'Edit Task')}

@@ -23,6 +23,7 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import type { PersonDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ElectedOfficialProfileProps {
   /** PersonDossier with person_subtype === 'elected_official' */
@@ -30,9 +31,9 @@ interface ElectedOfficialProfileProps {
 }
 
 export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const { extension } = dossier
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { extension } = dossier
 
   // Get display values based on language
   const name = isRTL ? dossier.name_ar : dossier.name_en

@@ -13,6 +13,7 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import type { DateRange, DatePreset } from '@/types/advanced-search.types'
 import { DATE_PRESET_LABELS } from '@/types/advanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DateRangeFilterProps {
   value: DateRange | null
@@ -21,9 +22,9 @@ interface DateRangeFilterProps {
 }
 
 export function DateRangeFilter({ value, onChange, className }: DateRangeFilterProps) {
-  const { t, i18n } = useTranslation('advanced-search')
-  const isRTL = i18n.language === 'ar'
-  const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation('advanced-search')
+  const { isRTL } = useDirection()
+const [isOpen, setIsOpen] = useState(false)
   const [mode, setMode] = useState<'preset' | 'custom'>(value?.preset ? 'preset' : 'custom')
 
   const presets: DatePreset[] = [
@@ -74,7 +75,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
   }
 
   return (
-    <div className={cn('flex flex-col gap-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('flex flex-col gap-2', className)}>
       <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
         {t('dateRange.title')}
       </label>

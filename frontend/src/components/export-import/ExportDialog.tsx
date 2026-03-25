@@ -32,6 +32,7 @@ import { Download, FileSpreadsheet, FileText, FileJson, Loader2 } from 'lucide-r
 import { useExportData } from '@/hooks/useExportData'
 import type { ExportableEntityType, ExportRequest } from '@/types/export-import.types'
 import type { ExportFormat } from '@/types/bulk-actions.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ExportDialogProps {
   open: boolean
@@ -48,9 +49,8 @@ export function ExportDialog({
   selectedIds,
   onExportComplete,
 }: ExportDialogProps) {
-  const { t, i18n } = useTranslation('export-import')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('export-import')
+  const { isRTL } = useDirection()
   const [format, setFormat] = useState<ExportFormat>('xlsx')
   const [language, setLanguage] = useState<'en' | 'ar' | 'both'>('both')
   const [includeTemplate, setIncludeTemplate] = useState(false)
@@ -103,7 +103,7 @@ export function ExportDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[480px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Download className="h-5 w-5" />
@@ -205,7 +205,7 @@ export function ExportDialog({
           {progress && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span>{i18n.language === 'ar' ? progress.message_ar : progress.message_en}</span>
+                <span>{isRTL ? progress.message_ar : progress.message_en}</span>
                 <span>{progress.progress}%</span>
               </div>
               <Progress value={progress.progress} className="h-2" />

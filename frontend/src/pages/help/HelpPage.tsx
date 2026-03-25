@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -33,6 +32,7 @@ import {
   ArrowRight,
   Sparkles,
 } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * HelpPage Component - Redesigned
@@ -46,9 +46,8 @@ import {
  * - RTL support for Arabic
  */
 export function HelpPage() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [searchQuery, setSearchQuery] = useState('')
+const { isRTL } = useDirection()
+const [searchQuery, setSearchQuery] = useState('')
 
   // Feature guides configuration - easy to add new guides
   const featureGuides = [
@@ -165,7 +164,6 @@ export function HelpPage() {
   return (
     <div
       className="min-h-screen bg-gradient-to-b from-background to-muted/20"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Hero Section */}
       <div className="bg-primary/5 border-b">

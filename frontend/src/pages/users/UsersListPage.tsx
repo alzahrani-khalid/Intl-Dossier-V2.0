@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/pagination'
 import { Search, UserPlus, Eye, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useDirection } from '@/hooks/useDirection'
 
 type UserStatus = 'active' | 'inactive' | 'pending' | 'deactivated' | 'suspended'
 type UserRole = 'admin' | 'manager' | 'staff' | 'viewer'
@@ -64,11 +65,10 @@ type User = {
  * Mobile-first design with minimum 44x44px touch targets
  */
 export function UsersListPage() {
-  const { t, i18n } = useTranslation('user-management')
+  const { t } = useTranslation('user-management')
   const navigate = useNavigate()
-  const isRTL = i18n.language === 'ar'
-
-  // Filter & Search State
+  const { isRTL } = useDirection()
+// Filter & Search State
   const [searchQuery, setSearchQuery] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
@@ -196,7 +196,6 @@ export function UsersListPage() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -210,7 +209,6 @@ export function UsersListPage() {
     return (
       <div
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <AlertCircle className="h-12 w-12 text-destructive" />
@@ -226,7 +224,6 @@ export function UsersListPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">

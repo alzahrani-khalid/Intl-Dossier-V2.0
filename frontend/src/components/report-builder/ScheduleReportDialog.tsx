@@ -39,6 +39,7 @@ import {
 import { Calendar, Loader2, X, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ReportSchedule, ScheduleFrequency, ExportFormat } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ScheduleReportDialogProps {
   open: boolean
@@ -105,10 +106,9 @@ export function ScheduleReportDialog({
   onSave,
   isSaving,
 }: ScheduleReportDialogProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
-  const form = useForm<FormValues>({
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: existingSchedule?.name || '',
@@ -160,7 +160,7 @@ export function ScheduleReportDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />

@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import type { PersonDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface StaffDirectoryProps {
   /** PersonDossier with person_subtype === 'elected_official' */
@@ -18,9 +19,9 @@ interface StaffDirectoryProps {
 }
 
 export function StaffDirectory({ dossier }: StaffDirectoryProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const { extension } = dossier
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { extension } = dossier
 
   const staffContacts = extension.staff_contacts || []
 
@@ -77,7 +78,7 @@ export function StaffDirectory({ dossier }: StaffDirectoryProps) {
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="p-0 space-y-4">
         <div className="grid grid-cols-1 gap-3">
           {staffContacts.map((staff, index) => (
             <div

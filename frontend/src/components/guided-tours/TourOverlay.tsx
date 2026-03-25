@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils'
 import { ChevronLeft, ChevronRight, X, CheckCircle2, HelpCircle } from 'lucide-react'
 import { useTour } from './TourContext'
 import type { TourStepPlacement } from './types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TargetRect {
   top: number
@@ -140,10 +141,9 @@ function getTooltipPosition(
  * Tour Overlay Component
  */
 export function TourOverlay() {
-  const { t, i18n } = useTranslation('guided-tours')
-  const isRTL = i18n.language === 'ar'
-
-  const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, completeTour } =
+  const { t } = useTranslation('guided-tours')
+  const { isRTL } = useDirection()
+const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, completeTour } =
     useTour()
 
   const [targetRect, setTargetRect] = useState<TargetRect | null>(null)
@@ -289,7 +289,6 @@ export function TourOverlay() {
           transition={{ duration: 0.25, ease: 'easeOut' }}
           style={tooltipStyle}
           className="z-10"
-          dir={isRTL ? 'rtl' : 'ltr'}
         >
           <Card
             className={cn(

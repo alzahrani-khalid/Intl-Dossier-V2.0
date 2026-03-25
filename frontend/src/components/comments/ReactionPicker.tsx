@@ -20,6 +20,7 @@ import type {
   CommentReactionEmoji,
   CommentReactions,
 } from '@/types/comment.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ReactionPickerProps {
   commentId: string
@@ -70,10 +71,9 @@ export function ReactionPicker({
   userReactions = EMPTY_USER_REACTIONS,
   compact = false,
 }: ReactionPickerProps) {
-  const { t, i18n } = useTranslation('comments')
-  const isRTL = i18n.language === 'ar'
-
-  const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation('comments')
+  const { isRTL } = useDirection()
+const [isOpen, setIsOpen] = useState(false)
   const toggleReaction = useToggleReaction()
 
   const handleReactionClick = async (emoji: CommentReactionEmoji) => {

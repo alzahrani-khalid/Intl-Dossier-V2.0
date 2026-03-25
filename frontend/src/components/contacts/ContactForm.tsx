@@ -32,6 +32,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { X, Plus, Loader2, Sparkles } from 'lucide-react'
 import { getConfidenceColor } from '@/hooks/useOCR'
 import type { PersonMetadata } from '@/hooks/usePersonDossiers'
+import { useDirection } from '@/hooks/useDirection'
 
 type Organization = {
   id: string
@@ -95,10 +96,9 @@ export function ContactForm({
   mode = 'create',
   ocrConfidence,
 }: ContactFormProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  // Render OCR confidence badge
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+// Render OCR confidence badge
   const renderConfidenceBadge = (fieldName: keyof OCRFieldConfidence) => {
     if (!ocrConfidence || ocrConfidence[fieldName] === undefined) return null
 
@@ -199,7 +199,6 @@ export function ContactForm({
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-4 sm:space-y-6"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Full Name - Required */}
         <FormField
@@ -223,7 +222,6 @@ export function ContactForm({
                   {...field}
                   placeholder={t('contactDirectory.form.full_name_placeholder')}
                   className="h-11 px-4 text-base sm:h-10"
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </FormControl>
               <FormMessage />
@@ -276,7 +274,6 @@ export function ContactForm({
                   {...field}
                   placeholder={t('contactDirectory.form.position_placeholder')}
                   className="h-11 px-4 text-base sm:h-10"
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </FormControl>
               <FormMessage />
@@ -437,7 +434,6 @@ export function ContactForm({
                   {...field}
                   placeholder={t('contactDirectory.form.notes_placeholder')}
                   className="min-h-[100px] px-4 py-3 text-base resize-y"
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </FormControl>
               <FormDescription>{t('contactDirectory.form.notes_description')}</FormDescription>

@@ -82,6 +82,7 @@ import type {
   WorkingGroupStatus,
   MeetingFrequency,
 } from '@/types/working-group.types'
+import { useDirection } from '@/hooks/useDirection'
 
 const WORKING_GROUP_TYPES: WorkingGroupType[] = [
   'committee',
@@ -104,10 +105,9 @@ const MEETING_FREQUENCIES: MeetingFrequency[] = [
 ]
 
 export default function WorkingGroupsPage() {
-  const { t, i18n } = useTranslation('working-groups')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('working-groups')
+  const { isRTL } = useDirection()
+// State
   const [filters, setFilters] = useState<WorkingGroupFilters>({
     page: 1,
     limit: 20,
@@ -247,7 +247,6 @@ export default function WorkingGroupsPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <header className="flex flex-col gap-2">

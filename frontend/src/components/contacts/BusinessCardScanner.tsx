@@ -17,6 +17,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Camera, Upload, X, AlertCircle, Loader2 } from 'lucide-react'
 import { useUploadBusinessCard } from '@/hooks/useOCR'
 import type { OCRParsedFields } from '@/services/ocr-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface BusinessCardScannerProps {
   onExtracted: (fields: OCRParsedFields, confidence: number, rawText: string) => void
@@ -24,10 +25,9 @@ interface BusinessCardScannerProps {
 }
 
 export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScannerProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [consentCloudOCR, setConsentCloudOCR] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
@@ -174,7 +174,7 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
   }, [previewUrl, cameraStream])
 
   return (
-    <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4 sm:space-y-6">
       {/* Camera View */}
       {showCamera && (
         <Card>

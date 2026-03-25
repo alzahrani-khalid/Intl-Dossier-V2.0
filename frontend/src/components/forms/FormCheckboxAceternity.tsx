@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'motion/react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface FormCheckboxAceternityProps {
   label: string
@@ -30,9 +31,9 @@ export function FormCheckboxAceternity({
   onCheckedChange,
   disabled = false,
 }: FormCheckboxAceternityProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [isHovered, setIsHovered] = useState(false)
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [isHovered, setIsHovered] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
 
   const containerClasses = cn(
@@ -70,7 +71,7 @@ export function FormCheckboxAceternity({
   )
 
   return (
-    <div className="space-y-2" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-2">
       {/* Checkbox and label */}
       <motion.div
         className={containerClasses}

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Clock, AlertCircle, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { calculateSLAStatus, type SLAStatus } from '@/utils/sla-calculator'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SLAIndicatorProps {
   /**
@@ -52,10 +53,9 @@ export function SLAIndicator({
   mode = 'badge',
   className,
 }: SLAIndicatorProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  // No deadline = no SLA tracking
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+// No deadline = no SLA tracking
   if (!deadline) {
     return null
   }
@@ -145,7 +145,6 @@ function DetailedMode({
 
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="region"
       aria-labelledby="sla-info-title"
     >

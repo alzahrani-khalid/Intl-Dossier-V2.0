@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Search, Loader2 } from 'lucide-react'
 import { useAddContributor } from '@/hooks/useContributors'
 import type { AddContributorRequest } from '@/services/contributors-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface AddContributorDialogProps {
   open: boolean
@@ -59,10 +60,9 @@ export function AddContributorDialog({
   taskId,
   onSuccess,
 }: AddContributorDialogProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [searchQuery, setSearchQuery] = useState('')
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const [searchQuery, setSearchQuery] = useState('')
   const [selectedUserId, setSelectedUserId] = useState<string>('')
   const [selectedRole, setSelectedRole] = useState<ContributorRole>('helper')
   const [notes, setNotes] = useState('')
@@ -127,7 +127,6 @@ export function AddContributorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="text-start text-xl sm:text-2xl">

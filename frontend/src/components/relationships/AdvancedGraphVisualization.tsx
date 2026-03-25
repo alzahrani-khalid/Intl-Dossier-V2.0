@@ -82,6 +82,7 @@ import {
 import { cn } from '@/lib/utils'
 import { toPng, toSvg } from 'html-to-image'
 import { toast } from 'sonner'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================
 // Types
@@ -298,9 +299,9 @@ const AdvancedDossierNode = memo(
     }
     selected?: boolean
   }) => {
-    const { i18n } = useTranslation()
-    const isRTL = i18n.language === 'ar'
-    const name = isRTL ? data.name_ar : data.name_en
+    const { t } = useTranslation()
+    const { isRTL } = useDirection()
+const name = isRTL ? data.name_ar : data.name_en
 
     const baseSize = 40
     const connectionBonus = Math.min((data.connectionCount || 0) * 2, 30)
@@ -613,8 +614,8 @@ interface PathFindingPanelProps {
 }
 
 function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindingPanelProps) {
-  const { t, i18n } = useTranslation('graph')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('graph')
+  const { isRTL } = useDirection()
   const [sourceId, setSourceId] = useState<string>('')
   const [targetId, setTargetId] = useState<string>('')
   const [pathResult, setPathResult] = useState<PathResult | null>(null)
@@ -650,7 +651,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
     onClearPath()
   }, [onClearPath])
 
-  const getName = (node: NodeData) => (i18n.language === 'ar' ? node.name_ar : node.name_en)
+  const getName = (node: NodeData) => (isRTL ? node.name_ar : node.name_en)
 
   return (
     <Card className="w-full">
@@ -1065,8 +1066,8 @@ function AdvancedGraphVisualizationInner({
   showMiniMap = true,
   centerNodeId: _centerNodeId,
 }: AdvancedGraphVisualizationProps) {
-  const { t, i18n } = useTranslation('graph')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('graph')
+  const { isRTL } = useDirection()
   const { zoomIn, zoomOut, fitView } = useReactFlow()
   const reactFlowRef = useRef<HTMLDivElement>(null)
 
@@ -1450,7 +1451,6 @@ function AdvancedGraphVisualizationInner({
       ref={reactFlowRef}
       className="relative w-full rounded-lg border bg-background overflow-hidden"
       style={{ height }}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReactFlow
         nodes={nodes}

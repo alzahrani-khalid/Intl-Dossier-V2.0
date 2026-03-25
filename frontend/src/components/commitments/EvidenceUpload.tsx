@@ -29,6 +29,7 @@ import {
 } from 'lucide-react'
 import { ALLOWED_EVIDENCE_TYPES, MAX_EVIDENCE_SIZE } from '@/types/commitment.types'
 import { useUploadEvidence } from '@/hooks/useCommitments'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface EvidenceUploadProps {
   commitmentId: string
@@ -61,10 +62,9 @@ export function EvidenceUpload({
   onCancel,
   disabled = false,
 }: EvidenceUploadProps) {
-  const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-
-  // Refs
+  const { t } = useTranslation('commitments')
+  const { isRTL } = useDirection()
+// Refs
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
 
@@ -197,7 +197,7 @@ export function EvidenceUpload({
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Hidden file inputs */}
       <input
         ref={fileInputRef}

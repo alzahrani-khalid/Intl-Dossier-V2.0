@@ -24,6 +24,7 @@ import {
   PasswordStrength,
 } from './ValidationIndicator'
 import type { FieldError } from 'react-hook-form'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -92,9 +93,9 @@ export function FormFieldWithValidation({
   icon,
   inputProps,
 }: FormFieldWithValidationProps) {
-  const { t, i18n } = useTranslation(['validation', 'common'])
-  const isRTL = i18n.language === 'ar'
-  const uniqueId = useId()
+  const { t } = useTranslation(['validation', 'common'])
+  const { isRTL } = useDirection()
+const uniqueId = useId()
 
   // Local state
   const [value, setValue] = useState<string>('')
@@ -232,7 +233,7 @@ export function FormFieldWithValidation({
   const inputClasses = variant === 'aceternity' ? aceternityClasses : inputBaseClasses
 
   return (
-    <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-2', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
         <motion.label

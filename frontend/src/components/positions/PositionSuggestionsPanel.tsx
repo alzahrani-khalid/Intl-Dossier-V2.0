@@ -13,6 +13,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { usePositionSuggestions } from '@/hooks/usePositionSuggestions'
 import { useUpdateSuggestionAction } from '@/hooks/useUpdateSuggestionAction'
 import type { Position } from '@/types/position'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface PositionSuggestionsPanelProps {
   engagementId: string
@@ -37,9 +38,8 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
   onAttach,
   className = '',
 }) => {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
   // Fetch AI suggestions
   const {
     suggestions: rawSuggestions,
@@ -104,12 +104,12 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
 
   // Get localized position title
   const getPositionTitle = (position: Position) => {
-    return i18n.language === 'ar' ? position.title_ar : position.title_en
+    return isRTL ? position.title_ar : position.title_en
   }
 
   // Get localized position content preview
   const getPositionPreview = (position: Position) => {
-    const content = i18n.language === 'ar' ? position.content_ar : position.content_en
+    const content = isRTL ? position.content_ar : position.content_en
     return content ? (content.length > 150 ? `${content.substring(0, 150)}...` : content) : ''
   }
 
@@ -203,7 +203,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
                       {/* Position Info */}
                       <div className="flex-1 space-y-2">
                         <div className="flex items-start gap-2">
-                          <h4 className="font-medium leading-tight" dir={isRTL ? 'rtl' : 'ltr'}>
+                          <h4 className="font-medium leading-tight">
                             {getPositionTitle(suggestion.position)}
                           </h4>
                           <Badge variant={relevanceIndicator.variant} className="shrink-0">
@@ -215,7 +215,6 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
                         {/* Content Preview */}
                         <p
                           className="text-sm text-muted-foreground line-clamp-2"
-                          dir={isRTL ? 'rtl' : 'ltr'}
                         >
                           {getPositionPreview(suggestion.position)}
                         </p>

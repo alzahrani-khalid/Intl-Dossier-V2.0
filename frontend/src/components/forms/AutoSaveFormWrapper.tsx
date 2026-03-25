@@ -34,6 +34,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -159,7 +160,6 @@ function DraftBanner<T extends Record<string, unknown>>({
         'border border-amber-200 dark:border-amber-800',
         'rounded-lg',
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex items-center gap-3">
         <RotateCcw className="h-5 w-5 text-amber-600 dark:text-amber-400" />
@@ -212,7 +212,7 @@ function ProgressIndicator({ progress, isRTL }: ProgressIndicatorProps) {
   const { t } = useTranslation('common')
 
   return (
-    <div className="space-y-2" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
         <span className="text-gray-600 dark:text-gray-400">{t('forms.progress_label')}</span>
         <span className="font-medium text-gray-900 dark:text-gray-100">
@@ -307,10 +307,9 @@ function AutoSaveFormWrapper<T extends Record<string, unknown>>({
   className,
   children,
 }: AutoSaveFormWrapperProps<T>) {
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
-
-  // Auto-save hook
+  const { t } = useTranslation('common')
+  const { isRTL } = useDirection()
+// Auto-save hook
   const autoSave = useAutoSaveForm<T>({
     formKey,
     requiredFields,
@@ -385,7 +384,7 @@ function AutoSaveFormWrapper<T extends Record<string, unknown>>({
 
   return (
     <AutoSaveFormContext.Provider value={contextValue}>
-      <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('space-y-4', className)}>
         {/* Draft restoration banner */}
         <AnimatePresence>
           {showDraftBanner && showBanner && autoSave.draft && (
@@ -416,7 +415,7 @@ function AutoSaveFormWrapper<T extends Record<string, unknown>>({
 
         {/* Leave confirmation dialog */}
         <AlertDialog open={showLeaveDialog} onOpenChange={setShowLeaveDialog}>
-          <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+          <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>{t('forms.unsaved_changes_title')}</AlertDialogTitle>
               <AlertDialogDescription>

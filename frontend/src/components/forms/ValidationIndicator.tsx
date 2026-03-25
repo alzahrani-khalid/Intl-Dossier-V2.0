@@ -16,6 +16,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import type { ValidationResult, StrengthLevel } from '@/lib/validation-rules'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // VALIDATION ICON
@@ -124,10 +125,9 @@ export function ValidationMessage({
   className,
   onSuggestionClick,
 }: ValidationMessageProps) {
-  const { t, i18n } = useTranslation('validation')
-  const isRTL = i18n.language === 'ar'
-
-  if (!result || (!result.messageKey && !result.suggestion)) {
+  const { t } = useTranslation('validation')
+  const { isRTL } = useDirection()
+if (!result || (!result.messageKey && !result.suggestion)) {
     return null
   }
 
@@ -174,7 +174,6 @@ export function ValidationMessage({
         exit={{ opacity: 0, y: -8, height: 0 }}
         transition={{ duration: 0.2 }}
         className={cn('overflow-hidden', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div
           className={cn(
@@ -232,8 +231,8 @@ interface ValidationHintProps {
 }
 
 export function ValidationHint({ result, className }: ValidationHintProps) {
-  const { t, i18n } = useTranslation('validation')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('validation')
+  const { isRTL } = useDirection()
 
   if (!result || !result.messageKey) {
     return null
@@ -275,7 +274,6 @@ export function ValidationHint({ result, className }: ValidationHintProps) {
         exit={{ opacity: 0, x: isRTL ? 10 : -10 }}
         transition={{ duration: 0.15 }}
         className={cn('text-sm text-start', severityStyles[result.severity], className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {t(messageKey, allParams)}
       </motion.p>
@@ -294,8 +292,8 @@ interface CharacterCountProps {
 }
 
 export function CharacterCount({ current, max, className }: CharacterCountProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
 
   const percentage = (current / max) * 100
   const remaining = max - current
@@ -310,7 +308,6 @@ export function CharacterCount({ current, max, className }: CharacterCountProps)
   return (
     <motion.span
       className={cn('text-xs tabular-nums', colorClass, className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       animate={{
         scale: percentage >= 100 ? [1, 1.1, 1] : 1,
       }}
@@ -357,11 +354,11 @@ export function PasswordStrength({
   showImprovements = true,
   className,
 }: PasswordStrengthProps) {
-  const { t, i18n } = useTranslation('validation')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('validation')
+  const { isRTL } = useDirection()
 
   return (
-    <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-2', className)}>
       {/* Strength bar */}
       <div className="flex items-center gap-3">
         <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
@@ -413,8 +410,8 @@ interface ValidationSummaryProps {
 }
 
 export function ValidationSummary({ errors, className, onFieldClick }: ValidationSummaryProps) {
-  const { t, i18n } = useTranslation('validation')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('validation')
+  const { isRTL } = useDirection()
 
   const errorEntries = Object.entries(errors).filter(([, result]) => !result.isValid)
 
@@ -431,7 +428,6 @@ export function ValidationSummary({ errors, className, onFieldClick }: Validatio
         'bg-red-50 dark:bg-red-950/20 p-4',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="alert"
       aria-labelledby="validation-summary-title"
     >

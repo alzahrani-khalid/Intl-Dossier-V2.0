@@ -23,8 +23,6 @@ export interface FilterChipsProps {
 
 export function FilterChips({ filters, onRemoveFilter, onClearAll }: FilterChipsProps) {
   const { t, i18n } = useTranslation('commitments')
-  const isRTL = i18n.language === 'ar'
-
   // Count active filters
   const activeFilterCount =
     (filters.status?.length || 0) +
@@ -50,7 +48,7 @@ export function FilterChips({ filters, onRemoveFilter, onClearAll }: FilterChips
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2 py-2" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex flex-wrap items-center gap-2 py-2">
       {/* Status chips */}
       {filters.status?.map((status) => (
         <Badge

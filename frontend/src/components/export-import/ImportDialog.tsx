@@ -46,6 +46,7 @@ import type {
   ImportRequest,
 } from '@/types/export-import.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ImportDialogProps {
   open: boolean
@@ -62,10 +63,9 @@ export function ImportDialog({
   entityType,
   onImportComplete,
 }: ImportDialogProps) {
-  const { t, i18n } = useTranslation('export-import')
-  const isRTL = i18n.language === 'ar'
-
-  const [step, setStep] = useState<ImportStep>('upload')
+  const { t } = useTranslation('export-import')
+  const { isRTL } = useDirection()
+const [step, setStep] = useState<ImportStep>('upload')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [mode, setMode] = useState<ImportMode>('upsert')
   const [conflictResolution, setConflictResolution] = useState<ConflictResolution>('skip')
@@ -167,7 +167,6 @@ export function ImportDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
         className="sm:max-w-[600px] max-h-[90vh] overflow-hidden flex flex-col"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">

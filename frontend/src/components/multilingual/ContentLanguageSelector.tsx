@@ -65,9 +65,8 @@ function ContentLanguageSelector({
   size = 'default',
 }: ContentLanguageSelectorProps) {
   const { i18n } = useTranslation('multilingual')
-  const isRTL = i18n.language === 'ar'
-
-  // Determine which languages to show
+  const { isRTL } = useDirection()
+// Determine which languages to show
   const languages = useMemo(() => {
     if (showAllLanguages) {
       return Object.keys(LANGUAGE_METADATA) as ContentLanguage[]
@@ -98,7 +97,6 @@ function ContentLanguageSelector({
     <Select value={value} onValueChange={handleChange} disabled={disabled}>
       <SelectTrigger
         className={cn('min-w-[140px]', sizeClasses[size], className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <SelectValue>
           <span className="flex items-center gap-2">
@@ -111,7 +109,7 @@ function ContentLanguageSelector({
           </span>
         </SelectValue>
       </SelectTrigger>
-      <SelectContent dir={isRTL ? 'rtl' : 'ltr'}>
+      <SelectContent>
         {languages.map((code) => {
           const meta = LANGUAGE_METADATA[code]
           return (
@@ -154,13 +152,11 @@ export function ContentLanguageTabs({
   disabled = false,
   className,
 }: ContentLanguageTabsProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { isRTL } = useDirection()
 
   return (
     <div
       className={cn('flex flex-wrap gap-1 p-1 bg-muted rounded-lg', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="tablist"
     >
       {availableLanguages.map((code) => {
@@ -212,8 +208,8 @@ export function LanguageDropdownMenu({
   disabled = false,
   className,
 }: LanguageDropdownMenuProps) {
-  const { t, i18n } = useTranslation('multilingual')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('multilingual')
+  const { isRTL } = useDirection()
 
   // Languages not yet selected
   const unselectedLanguages = useMemo(() => {
@@ -291,3 +287,4 @@ function LanguageIndicator({
 }
 
 export type { ContentLanguageSelectorProps } from '@/types/multilingual-content.types'
+import { useDirection } from '@/hooks/useDirection'

@@ -15,6 +15,7 @@ import * as React from 'react'
 import { Drawer as DrawerPrimitive } from 'vaul'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // Snap point presets for common use cases
 export const BOTTOM_SHEET_SNAP_POINTS = {
@@ -81,10 +82,9 @@ const BottomSheet = ({
   children,
   ...props
 }: BottomSheetProps) => {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const snapPoints: (number | string)[] = customSnapPoints ?? [
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const snapPoints: (number | string)[] = customSnapPoints ?? [
     ...BOTTOM_SHEET_SNAP_POINTS[snapPreset],
   ]
   const [activeSnapPoint, setActiveSnapPoint] = React.useState<number | string | null>(
@@ -260,7 +260,6 @@ const BottomSheetContent = React.forwardRef<
         <BottomSheetOverlay />
         <DrawerPrimitive.Content
           ref={ref}
-          dir={isRTL ? 'rtl' : 'ltr'}
           className={cn(
             // Base styles
             'group fixed inset-x-0 bottom-0 z-50',
@@ -316,7 +315,6 @@ const BottomSheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDiv
 
   return (
     <div
-      dir={isRTL ? 'rtl' : 'ltr'}
       className={cn('grid gap-1.5 px-4 sm:px-6', 'text-center sm:text-start', className)}
       {...props}
     />
@@ -338,7 +336,6 @@ const BottomSheetFooter = ({ className, sticky = true, ...props }: BottomSheetFo
 
   return (
     <div
-      dir={isRTL ? 'rtl' : 'ltr'}
       className={cn(
         'flex flex-col gap-2 px-4 sm:px-6 py-4',
         'border-t border-border bg-background',
@@ -395,7 +392,6 @@ const BottomSheetBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivEl
 
   return (
     <div
-      dir={isRTL ? 'rtl' : 'ltr'}
       className={cn('flex-1 py-4 space-y-4', className)}
       {...props}
     />

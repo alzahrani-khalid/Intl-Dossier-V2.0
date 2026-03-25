@@ -17,9 +17,7 @@ interface LinkedItemsListProps {
 }
 
 export function LinkedItemsList({ items, emptyMessage }: LinkedItemsListProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation()
   const getIcon = (type: WorkItemType) => {
     const className = 'size-4 sm:size-5'
     switch (type) {
@@ -56,7 +54,7 @@ export function LinkedItemsList({ items, emptyMessage }: LinkedItemsListProps) {
 
   if (items.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed p-6 text-center" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="rounded-lg border border-dashed p-6 text-center">
         <p className="text-sm text-muted-foreground">{emptyMessage || t('tasks.noLinkedItems')}</p>
       </div>
     )
@@ -65,7 +63,6 @@ export function LinkedItemsList({ items, emptyMessage }: LinkedItemsListProps) {
   return (
     <div
       className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {items.map((item) => (
         <Link key={`${item.type}-${item.id}`} to={getLink(item)} className="group">

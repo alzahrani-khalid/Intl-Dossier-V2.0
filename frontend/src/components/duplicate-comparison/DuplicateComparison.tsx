@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { useDuplicateCandidates, useMergeTickets } from '@/hooks/useIntakeApi'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DuplicateCandidate {
   id: string
@@ -30,7 +31,8 @@ interface DuplicateComparisonProps {
 }
 
 export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
-  const { t, i18n } = useTranslation('intake')
+  const { isRTL } = useDirection()
+  const { t } = useTranslation('intake')
   const queryClient = useQueryClient()
   const [selectedCandidate, setSelectedCandidate] = useState<DuplicateCandidate | null>(null)
   const [mergeReason, setMergeReason] = useState('')
@@ -228,7 +230,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                         {selectedCandidate.target_ticket.ticket_number}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {i18n.language === 'ar' && selectedCandidate.target_ticket.title_ar
+                        {isRTL && selectedCandidate.target_ticket.title_ar
                           ? selectedCandidate.target_ticket.title_ar
                           : selectedCandidate.target_ticket.title}
                       </div>
@@ -284,7 +286,8 @@ function DuplicateCandidateCard({
   onNotDuplicate: () => void
   isSelected: boolean
 }) {
-  const { t, i18n } = useTranslation('intake')
+  const { t } = useTranslation('intake')
+  const { isRTL } = useDirection()
 
   const getSimilarityColor = (score: number): string => {
     if (score >= 0.8) return 'text-red-600 bg-red-100 dark:bg-red-900/20'
@@ -310,7 +313,7 @@ function DuplicateCandidateCard({
             {candidate.target_ticket.ticket_number} ↗
           </Link>
           <h4 className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
-            {i18n.language === 'ar' && candidate.target_ticket.title_ar
+            {isRTL && candidate.target_ticket.title_ar
               ? candidate.target_ticket.title_ar
               : candidate.target_ticket.title}
           </h4>
@@ -323,7 +326,7 @@ function DuplicateCandidateCard({
       </div>
 
       <p className="mb-3 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
-        {i18n.language === 'ar' && candidate.target_ticket.description_ar
+        {isRTL && candidate.target_ticket.description_ar
           ? candidate.target_ticket.description_ar
           : candidate.target_ticket.description}
       </p>

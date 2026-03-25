@@ -32,6 +32,7 @@ import type {
 import { SEVERITY_COLORS } from '@/types/compliance.types'
 import { useSignoffViolation } from '@/hooks/useComplianceRules'
 import { toast } from 'sonner'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ComplianceSignoffDialogProps {
   violation: ComplianceViolation | null
@@ -61,10 +62,9 @@ export function ComplianceSignoffDialog({
   onOpenChange,
   onSuccess,
 }: ComplianceSignoffDialogProps) {
-  const { t, i18n } = useTranslation('compliance')
-  const isRTL = i18n.language === 'ar'
-
-  const signoffMutation = useSignoffViolation()
+  const { t } = useTranslation('compliance')
+  const { isRTL } = useDirection()
+const signoffMutation = useSignoffViolation()
 
   const {
     register,
@@ -126,7 +126,7 @@ export function ComplianceSignoffDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">{t('signoff.title')}</DialogTitle>
           <DialogDescription>{t('signoff.subtitle')}</DialogDescription>

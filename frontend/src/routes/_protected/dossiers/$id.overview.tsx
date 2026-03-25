@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { AlertCircle, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useDirection } from '@/hooks/useDirection'
 
 // Lazy load the DossierOverview component for code splitting
 const DossierOverview = lazy(() =>
@@ -77,7 +78,6 @@ function ErrorState({ message, isRTL }: { message: string; isRTL: boolean }) {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div
         className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"
@@ -111,9 +111,9 @@ function ErrorState({ message, isRTL }: { message: string; isRTL: boolean }) {
  * Main route component
  */
 function DossierOverviewRoute() {
-  const { t, i18n } = useTranslation('dossier-overview')
-  const isRTL = i18n.language === 'ar'
-  const { id } = Route.useParams()
+  const { t } = useTranslation('dossier-overview')
+  const { isRTL } = useDirection()
+const { id } = Route.useParams()
 
   // Validate dossier ID
   if (!id) {

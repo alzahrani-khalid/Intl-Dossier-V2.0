@@ -17,6 +17,7 @@ import { Building2, Calendar, Globe, Hash, Network, Mail, Phone, MapPin, Flag } 
 import type { OrganizationDossier, OrganizationExtension } from '@/lib/dossier-type-guards'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { supabase } from '@/lib/supabase-client'
+import { useDirection } from '@/hooks/useDirection'
 
 interface InstitutionalProfileProps {
   dossier: OrganizationDossier
@@ -24,8 +25,8 @@ interface InstitutionalProfileProps {
 
 export function InstitutionalProfile({ dossier }: InstitutionalProfileProps) {
   const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
+  const { isRTL } = useDirection()
+const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
 
   // Fetch headquarters country name if headquarters_country_id exists
   const { data: headquartersCountry } = useQuery({
@@ -123,7 +124,7 @@ export function InstitutionalProfile({ dossier }: InstitutionalProfileProps) {
   }
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Organization Name Header - Always shown */}
       <div className="flex items-center gap-4 p-4 rounded-lg bg-muted/30">
         <Avatar className="h-16 w-16 sm:h-20 sm:w-20">

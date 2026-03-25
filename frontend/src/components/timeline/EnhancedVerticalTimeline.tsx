@@ -106,8 +106,7 @@ export function EnhancedVerticalTimeline({
   emptyMessage,
   className,
 }: EnhancedVerticalTimelineProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   // Intersection Observer for infinite scroll
@@ -131,7 +130,7 @@ export function EnhancedVerticalTimeline({
   // Initial loading state
   if (isLoading) {
     return (
-      <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('w-full', className)}>
         <TimelineLoadingSkeleton count={5} />
       </div>
     )
@@ -140,7 +139,7 @@ export function EnhancedVerticalTimeline({
   // Error state
   if (error) {
     return (
-      <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('w-full', className)}>
         <TimelineErrorState error={error} />
       </div>
     )
@@ -149,14 +148,14 @@ export function EnhancedVerticalTimeline({
   // Empty state
   if (events.length === 0) {
     return (
-      <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('w-full', className)}>
         <TimelineEmptyState message={emptyMessage || ''} />
       </div>
     )
   }
 
   return (
-    <div className={cn('w-full bg-background font-sans', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('w-full bg-background font-sans', className)}>
       <div className="max-w-7xl mx-auto">
         {/* Vertical Timeline */}
         <VerticalTimeline

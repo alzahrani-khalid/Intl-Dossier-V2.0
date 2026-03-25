@@ -54,9 +54,7 @@ function generateDemoData(count: number): DemoItem[] {
  * BulkActionsDemo - Demonstration page for bulk actions feature
  */
 export function BulkActionsDemo() {
-  const { t, i18n } = useTranslation('bulk-actions')
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation('bulk-actions')
   // Demo data
   const [data] = useState<DemoItem[]>(() => generateDemoData(25))
 
@@ -203,7 +201,6 @@ export function BulkActionsDemo() {
   return (
     <div
       className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="space-y-2">

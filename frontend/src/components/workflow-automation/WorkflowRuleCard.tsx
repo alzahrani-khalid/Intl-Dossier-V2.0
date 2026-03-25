@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import type { WorkflowRule } from '@/types/workflow-automation.types'
 import { getTriggerTypeOption, getEntityTypeOption } from './workflow-config'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkflowRuleCardProps {
   rule: WorkflowRule
@@ -40,9 +41,9 @@ export function WorkflowRuleCard({
   onViewExecutions,
   onTest,
 }: WorkflowRuleCardProps) {
-  const { t, i18n } = useTranslation('workflow-automation')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('workflow-automation')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   const triggerOption = getTriggerTypeOption(rule.trigger_type)
   const entityOption = getEntityTypeOption(rule.entity_type)
@@ -57,7 +58,6 @@ export function WorkflowRuleCard({
       className={`group transition-all hover:shadow-md ${
         rule.is_active ? 'border-s-4 border-s-green-500' : 'opacity-60'
       }`}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-4">

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { ArrowUp, ArrowDown, ArrowRight } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface TrendData {
   /** Trend value (percentage) */
@@ -63,9 +63,8 @@ export function MetricCard({
   className,
   onLinkClick,
 }: MetricCardProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const [displayValue, setDisplayValue] = useState(0)
+const { isRTL } = useDirection()
+const [displayValue, setDisplayValue] = useState(0)
   const [hasAnimated, setHasAnimated] = useState(false)
 
   // Animated counter effect

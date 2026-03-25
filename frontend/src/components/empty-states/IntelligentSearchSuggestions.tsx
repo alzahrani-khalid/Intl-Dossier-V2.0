@@ -44,6 +44,7 @@ import type {
   WorkspaceSearchHistory,
   ActionableSearchTip,
 } from '@/types/enhanced-search.types'
+import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Get icon for entity type
@@ -500,8 +501,8 @@ export function IntelligentSearchSuggestions({
   showFilterPresets = true,
 }: IntelligentSearchSuggestionsProps) {
   const { t, i18n } = useTranslation('enhanced-search')
-  const isRTL = i18n.language === 'ar'
-  const language = i18n.language
+  const { isRTL } = useDirection()
+const language = i18n.language
 
   const {
     data: suggestions,
@@ -538,7 +539,6 @@ export function IntelligentSearchSuggestions({
     return (
       <div
         className={cn('flex flex-col items-center justify-center py-8', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         <p className="mt-2 text-sm text-muted-foreground">{t('noResults.findingSuggestions')}</p>
@@ -552,7 +552,6 @@ export function IntelligentSearchSuggestions({
       return (
         <div
           className={cn('space-y-6', className)}
-          dir={isRTL ? 'rtl' : 'ltr'}
           data-testid="intelligent-search-suggestions"
         >
           <FilterPresetsSection
@@ -583,7 +582,6 @@ export function IntelligentSearchSuggestions({
   return (
     <div
       className={cn('space-y-6', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="intelligent-search-suggestions"
     >
       {/* Actionable Tips - Show first if there are filters to clear */}

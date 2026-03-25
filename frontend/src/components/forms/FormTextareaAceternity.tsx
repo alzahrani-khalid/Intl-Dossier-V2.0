@@ -29,8 +29,7 @@ function FormTextareaAceternity({
   rows = 4,
   ...rest
 }: FormTextareaAceternityProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
   const [isFocused, setIsFocused] = useState(false)
   const [charCount, setCharCount] = useState(0)
 
@@ -78,7 +77,7 @@ function FormTextareaAceternity({
   }
 
   return (
-    <div className="space-y-2" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-2">
       {/* Label and char count */}
       <div className="flex items-center justify-between">
         <motion.label

@@ -54,9 +54,7 @@ export function ConflictDialog({
   onForceOverwrite,
   onCancel,
 }: ConflictDialogProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
+  const { t } = useTranslation()
   // Get list of conflicting fields
   const conflictingFields = Object.keys(localChanges).filter(
     (key) => serverData && localChanges[key as keyof Task] !== serverData[key as keyof Task],
@@ -66,7 +64,6 @@ export function ConflictDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent
         className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <AlertDialogHeader>
           <div className="flex items-center gap-3">

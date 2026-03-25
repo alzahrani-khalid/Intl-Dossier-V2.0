@@ -18,6 +18,7 @@ import { DataTable } from '@/components/table/DataTable'
 import type { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
+import { useDirection } from '@/hooks/useDirection'
 
 interface IntelligenceReport {
   id: string
@@ -78,14 +79,13 @@ type IntelligenceReportRow = {
 }
 
 export function IntelligencePage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterConfidence, setFilterConfidence] = useState<string>('all')
   const [filterClassification, setFilterClassification] = useState<string>('all')
   const [similaritySearch, setSimilaritySearch] = useState('')
-  const isRTL = i18n.language === 'ar'
-
-  const { data: reports, isLoading } = useQuery({
+  const { isRTL } = useDirection()
+const { data: reports, isLoading } = useQuery({
     queryKey: ['intelligence', searchTerm, filterConfidence, filterClassification],
     queryFn: async () => {
       const { data, error } = await supabase

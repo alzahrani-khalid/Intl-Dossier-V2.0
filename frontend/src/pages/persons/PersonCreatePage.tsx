@@ -46,6 +46,7 @@ import {
 import { useCreatePerson } from '@/hooks/usePersons'
 import type { ImportanceLevel } from '@/types/person.types'
 import { IMPORTANCE_LEVEL_LABELS } from '@/types/person.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Form validation schema
 const personFormSchema = z.object({
@@ -68,9 +69,9 @@ const personFormSchema = z.object({
 type PersonFormValues = z.infer<typeof personFormSchema>
 
 function PersonCreatePage() {
-  const { t, i18n } = useTranslation('persons')
-  const isRTL = i18n.language === 'ar'
-  const navigate = useNavigate()
+  const { t } = useTranslation('persons')
+  const { isRTL } = useDirection()
+const navigate = useNavigate()
 
   const createPerson = useCreatePerson()
 
@@ -125,7 +126,7 @@ function PersonCreatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-background sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">

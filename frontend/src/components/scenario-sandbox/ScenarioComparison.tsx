@@ -24,6 +24,7 @@ import {
   SCENARIO_STATUS_LABELS,
   getStatusColor,
 } from '@/types/scenario-sandbox.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ScenarioComparisonProps {
   data: ScenarioComparisonData
@@ -31,10 +32,9 @@ interface ScenarioComparisonProps {
 }
 
 export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps) {
-  const { t, i18n } = useTranslation('scenario-sandbox')
-  const isRTL = i18n.language === 'ar'
-
-  if (isLoading) {
+  const { t } = useTranslation('scenario-sandbox')
+  const { isRTL } = useDirection()
+if (isLoading) {
     return (
       <Card>
         <CardContent className="py-12">

@@ -41,6 +41,7 @@ import {
   CommandSeparator,
 } from '@/components/ui/command'
 import type { KanbanColumnMode, WorkSource, Priority } from '@/types/work-item.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface UnifiedKanbanHeaderProps {
   columnMode: KanbanColumnMode
@@ -84,9 +85,9 @@ export function UnifiedKanbanHeader({
   searchQuery = '',
   onSearchChange,
 }: UnifiedKanbanHeaderProps) {
-  const { t, i18n } = useTranslation('unified-kanban')
-  const isRTL = i18n.language === 'ar'
-  const [filtersOpen, setFiltersOpen] = useState(false)
+  const { t } = useTranslation('unified-kanban')
+  const { isRTL } = useDirection()
+const [filtersOpen, setFiltersOpen] = useState(false)
 
   const toggleSource = (source: WorkSource) => {
     if (!onSourceFilterChange) return
@@ -139,7 +140,6 @@ export function UnifiedKanbanHeader({
       className={cn(
         'flex flex-col gap-3 px-4 sm:px-6 py-3 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Top row: Title, badges, refresh, view toggle */}
       <div className="flex items-center justify-between gap-4">

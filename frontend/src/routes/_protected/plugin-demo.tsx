@@ -6,7 +6,6 @@
 
 import { useState, useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
 import { FolderKanban, CheckCircle, XCircle, AlertCircle, Settings, RefreshCw } from 'lucide-react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -27,6 +26,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { pluginRegistry } from '@/lib/plugin-system/registry/plugin-registry'
 import { projectPlugin } from '@/lib/plugin-system/plugins/project-plugin'
 import type { EntityPlugin, ExtensionFieldDefinition } from '@/lib/plugin-system/types/plugin.types'
+import { useDirection } from '@/hooks/useDirection'
 
 // Route definition
 export const Route = createFileRoute('/_protected/plugin-demo')({
@@ -38,10 +38,8 @@ export const Route = createFileRoute('/_protected/plugin-demo')({
 // ============================================================================
 
 function PluginDemoPage() {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const [isInitialized, setIsInitialized] = useState(false)
+const { isRTL } = useDirection()
+const [isInitialized, setIsInitialized] = useState(false)
   const [plugins, setPlugins] = useState<EntityPlugin[]>([])
   const [entityTypes, setEntityTypes] = useState<string[]>([])
   const [selectedPlugin, setSelectedPlugin] = useState<EntityPlugin | null>(null)
@@ -108,7 +106,6 @@ function PluginDemoPage() {
   return (
     <div
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

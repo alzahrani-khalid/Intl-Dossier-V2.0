@@ -38,6 +38,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { DossierType } from '@/services/dossier-api'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface DossierTypeGuideProps {
   type: DossierType
@@ -147,9 +148,9 @@ function GuideContent({
   variant: 'tooltip' | 'popover' | 'inline'
   onSelect?: (type: DossierType) => void
 }) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const colors = getTypeColors(type)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const colors = getTypeColors(type)
 
   // Get guide content from translations
   const whenToUse = t(`typeGuide.${type}.whenToUse`, '')
@@ -160,7 +161,7 @@ function GuideContent({
   // Tooltip variant - compact
   if (variant === 'tooltip') {
     return (
-      <div className="space-y-2 max-w-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-2 max-w-xs">
         <div className="flex items-center gap-2">
           {getTypeIcon(type, cn('h-4 w-4', colors.text))}
           <span className="font-semibold">{t(`type.${type}`)}</span>
@@ -190,7 +191,6 @@ function GuideContent({
         variant === 'inline' && colors.bg,
         variant === 'inline' && colors.border,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex items-start gap-3">
@@ -289,8 +289,8 @@ export function DossierTypeGuide({
   showTrigger = true,
   onSelect,
 }: DossierTypeGuideProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
   const [open, setOpen] = useState(false)
 
   // Inline variant - no trigger needed
@@ -369,8 +369,8 @@ export function DossierTypeGuideGrid({
   selectedType?: DossierType
   className?: string
 }) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
 
   const types: DossierType[] = [
     'country',
@@ -388,7 +388,6 @@ export function DossierTypeGuideGrid({
         'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4',
         className,
       )}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {types.map((type) => {
         const colors = getTypeColors(type)

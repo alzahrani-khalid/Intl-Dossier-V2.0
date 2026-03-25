@@ -37,6 +37,7 @@ import {
 import { useInteractionNotes, useDeleteNote, useDownloadAttachment } from '@/hooks/useInteractions'
 import type { InteractionNoteResponse } from '@/services/interaction-api'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface InteractionTimelineProps {
   contactId: string
@@ -258,9 +259,9 @@ export function InteractionTimeline({
   onEditNote,
   className,
 }: InteractionTimelineProps) {
-  const { t, i18n } = useTranslation('contacts')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('contacts')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   const { data: notes, isLoading, error } = useInteractionNotes(contactId)
   const deleteNoteMutation = useDeleteNote()
@@ -280,7 +281,6 @@ export function InteractionTimeline({
     return (
       <div
         className={cn('flex items-center justify-center py-8', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex flex-col items-center gap-2">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
@@ -294,7 +294,7 @@ export function InteractionTimeline({
 
   if (error) {
     return (
-      <div className={cn('p-4 text-center', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('p-4 text-center', className)}>
         <p className="text-sm text-destructive">
           {t('contactDirectory.interactions.error')}: {error.message}
         </p>
@@ -306,7 +306,6 @@ export function InteractionTimeline({
     return (
       <div
         className={cn('flex flex-col items-center justify-center py-12 text-center', className)}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <FileText className="w-12 h-12 text-muted-foreground/50 mb-4" />
         <h3 className="text-base font-medium mb-2">
@@ -320,7 +319,7 @@ export function InteractionTimeline({
   }
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4', className)}>
       {/* Timeline Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-base sm:text-lg font-semibold">

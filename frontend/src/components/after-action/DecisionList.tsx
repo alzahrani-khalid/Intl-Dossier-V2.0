@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Trash2, Plus, CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface Decision {
   id?: string
@@ -27,10 +28,9 @@ interface DecisionListProps {
 }
 
 export function DecisionList({ decisions, onChange, readOnly = false }: DecisionListProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  const addDecision = () => {
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const addDecision = () => {
     onChange([
       ...decisions,
       {
@@ -116,7 +116,6 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                 rows={3}
                 maxLength={2000}
                 disabled={readOnly}
-                dir={isRTL ? 'rtl' : 'ltr'}
                 required
               />
               <p className="text-xs text-muted-foreground mt-1">
@@ -135,7 +134,6 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                 placeholder={t('afterActions.decisions.rationalePlaceholder')}
                 rows={2}
                 disabled={readOnly}
-                dir={isRTL ? 'rtl' : 'ltr'}
               />
             </div>
 
@@ -151,7 +149,6 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                   placeholder={t('afterActions.decisions.decisionMakerPlaceholder')}
                   maxLength={200}
                   disabled={readOnly}
-                  dir={isRTL ? 'rtl' : 'ltr'}
                   required
                 />
               </div>

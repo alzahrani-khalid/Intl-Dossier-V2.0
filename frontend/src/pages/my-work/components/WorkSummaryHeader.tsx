@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { UserWorkSummary } from '@/types/unified-work.types'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 interface WorkSummaryHeaderProps {
   summary?: UserWorkSummary
@@ -23,10 +24,9 @@ export function WorkSummaryHeader({
   onFilterClick,
   currentFilter,
 }: WorkSummaryHeaderProps) {
-  const { t, i18n } = useTranslation('my-work')
-  const isRTL = i18n.language === 'ar'
-
-  const stats = [
+  const { t } = useTranslation('my-work')
+  const { isRTL } = useDirection()
+const stats = [
     {
       key: 'active',
       label: t('stats.totalActive', 'Total Active'),
@@ -79,7 +79,6 @@ export function WorkSummaryHeader({
   return (
     <div
       className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-3 sm:mb-4"
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {stats.map((stat) => {
         const Icon = stat.icon

@@ -42,6 +42,7 @@ import {
 } from '@/types/scenario-sandbox.types'
 import { formatDistanceToNow } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ScenarioCardProps {
   scenario: Scenario & {
@@ -73,9 +74,9 @@ export function ScenarioCard({
   onArchive,
   onDelete,
 }: ScenarioCardProps) {
-  const { t, i18n } = useTranslation('scenario-sandbox')
-  const isRTL = i18n.language === 'ar'
-  const locale = isRTL ? ar : enUS
+  const { t } = useTranslation('scenario-sandbox')
+  const { isRTL } = useDirection()
+const locale = isRTL ? ar : enUS
 
   const title = isRTL ? scenario.title_ar : scenario.title_en
   const description = isRTL ? scenario.description_ar : scenario.description_en

@@ -17,15 +17,16 @@ import { EngagementDossierDetail } from '@/components/dossier/EngagementDossierD
 import { Button } from '@/components/ui/button'
 import { EngagementKanbanDialog } from '@/components/assignments/EngagementKanbanDialog'
 import { useEngagementKanban } from '@/hooks/useEngagementKanban'
+import { useDirection } from '@/hooks/useDirection'
 
 interface EngagementDossierPageProps {
   dossier: EngagementDossier
 }
 
 export function EngagementDossierPage({ dossier }: EngagementDossierPageProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-  const [kanbanOpen, setKanbanOpen] = useState(false)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const [kanbanOpen, setKanbanOpen] = useState(false)
 
   const { columns, stats, handleDragEnd } = useEngagementKanban(dossier.id)
 

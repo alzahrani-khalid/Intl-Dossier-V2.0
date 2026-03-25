@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAuditLogStatistics } from '@/hooks/useAuditLogs'
+import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // CONFIGURATION
@@ -48,10 +49,9 @@ interface AuditLogStatisticsProps {
 // =============================================
 
 export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStatisticsProps) {
-  const { t, i18n } = useTranslation('audit-logs')
-  const isRTL = i18n.language === 'ar'
-
-  const { statistics, isLoading, error } = useAuditLogStatistics(dateFrom, dateTo)
+  const { t } = useTranslation('audit-logs')
+  const { isRTL } = useDirection()
+const { statistics, isLoading, error } = useAuditLogStatistics(dateFrom, dateTo)
 
   if (isLoading) {
     return (
@@ -103,7 +103,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
   const maxTableCount = topTables.length > 0 ? topTables[0]!.count : 1
 
   return (
-    <Card className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className={cn('', className)}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <BarChart3 className="h-5 w-5" />

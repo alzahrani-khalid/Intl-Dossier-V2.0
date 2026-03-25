@@ -15,16 +15,16 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Command, FileText, CheckCircle, ClipboardList, FolderOpen } from 'lucide-react'
 import type { EntityTemplate, TemplateEntityType } from '@/types/entity-template.types'
+import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/entity-templates-demo')({
   component: EntityTemplatesDemoPage,
 })
 
 function EntityTemplatesDemoPage() {
-  const { t, i18n } = useTranslation('entity-templates')
-  const isRTL = i18n.language === 'ar'
-
-  // State
+  const { t } = useTranslation('entity-templates')
+  const { isRTL } = useDirection()
+// State
   const [selectedEntityType, setSelectedEntityType] = useState<TemplateEntityType>('task')
   const [selectedTemplate, setSelectedTemplate] = useState<EntityTemplate | null>(null)
   const [appliedValues, setAppliedValues] = useState<Record<string, unknown>>({})
@@ -70,7 +70,7 @@ function EntityTemplatesDemoPage() {
   ]
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>

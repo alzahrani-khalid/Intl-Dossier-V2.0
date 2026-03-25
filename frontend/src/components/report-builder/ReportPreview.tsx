@@ -39,6 +39,7 @@ import {
 import { RefreshCw, AlertCircle, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ReportConfiguration, ReportPreviewResponse } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ReportPreviewProps {
   configuration: ReportConfiguration
@@ -66,10 +67,9 @@ export function ReportPreview({
   error,
   onRefresh,
 }: ReportPreviewProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
-  const visibleColumns = useMemo(() => {
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const visibleColumns = useMemo(() => {
     return configuration.columns.filter((c) => c.visible)
   }, [configuration.columns])
 
@@ -345,7 +345,7 @@ export function ReportPreview({
   }
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div>

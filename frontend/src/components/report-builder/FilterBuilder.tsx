@@ -29,6 +29,7 @@ import type {
   FilterOperator,
   ReportField,
 } from '@/types/report-builder.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface FilterBuilderProps {
   filters: FilterGroup
@@ -214,10 +215,9 @@ export function FilterBuilder({
   onUpdateFilter,
   onSetFilterLogic,
 }: FilterBuilderProps) {
-  const { t, i18n } = useTranslation('report-builder')
-  const isRTL = i18n.language === 'ar'
-
-  const filterableFields = availableFields.filter((f) => f.filterable)
+  const { t } = useTranslation('report-builder')
+  const { isRTL } = useDirection()
+const filterableFields = availableFields.filter((f) => f.filterable)
 
   const handleAddFilter = () => {
     if (filterableFields.length === 0) return
@@ -230,7 +230,7 @@ export function FilterBuilder({
   }
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div>

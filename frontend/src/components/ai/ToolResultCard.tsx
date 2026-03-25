@@ -10,7 +10,6 @@
  */
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -25,6 +24,7 @@ import {
   Loader2,
   CheckCircle,
 } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface ToolResultCardProps {
   toolName: string
@@ -54,9 +54,8 @@ export function ToolResultCard({
   isLoading = false,
   className,
 }: ToolResultCardProps) {
-  const { i18n } = useTranslation('ai-chat')
-  const isRTL = i18n.language === 'ar'
-  const [isExpanded, setIsExpanded] = useState(false)
+const { isRTL } = useDirection()
+const [isExpanded, setIsExpanded] = useState(false)
 
   const Icon = TOOL_ICONS[toolName] || Search
   const label = TOOL_LABELS[toolName]?.[isRTL ? 'ar' : 'en'] || toolName
@@ -134,7 +133,6 @@ export function ToolResultCard({
   return (
     <Card
       className={cn('bg-muted/30 border-muted', 'transition-all duration-200', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <CardHeader className="py-2 px-3">
         <div className="flex items-center justify-between">

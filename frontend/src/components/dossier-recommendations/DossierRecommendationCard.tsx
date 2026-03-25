@@ -54,6 +54,7 @@ import {
 import type { DossierType } from '@/types/dossier'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Types
@@ -129,9 +130,9 @@ function SimilarityBadge({ score }: { score: number }) {
 }
 
 function PriorityIndicator({ priority }: { priority: number }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-  const label = PRIORITY_LABELS[priority]
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+const label = PRIORITY_LABELS[priority]
 
   return (
     <Badge
@@ -164,8 +165,8 @@ function DossierTypeBadge({ type }: { type: DossierType }) {
 }
 
 function ReasonBreakdownItem({ reason }: { reason: ReasonBreakdown }) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
   const Icon = reasonIcons[reason.reason] || FileText
   const label = REASON_LABELS[reason.reason]
   const percentage = Math.round(reason.weight * 100)
@@ -207,8 +208,8 @@ function WhyRecommendedSection({
   explanationAr: string
   onExpand?: () => void
 }) {
-  const { t, i18n } = useTranslation('dossier-recommendations')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier-recommendations')
+  const { isRTL } = useDirection()
   const [isOpen, setIsOpen] = useState(false)
 
   const handleToggle = () => {
@@ -271,8 +272,8 @@ export function DossierRecommendationCard({
   variant = 'default',
   className,
 }: DossierRecommendationCardProps) {
-  const { t, i18n } = useTranslation('dossier-recommendations')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('dossier-recommendations')
+  const { isRTL } = useDirection()
   const navigate = useNavigate()
 
   const dossier = recommendation.recommended_dossier
@@ -327,7 +328,6 @@ export function DossierRecommendationCard({
           !isActionable && 'opacity-60',
           className,
         )}
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Priority Indicator Strip */}
         <div

@@ -32,6 +32,7 @@ import { Separator } from '@/components/ui/separator'
 import type { SLAPolicyInput, EscalationLevel } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
+import { useDirection } from '@/hooks/useDirection'
 
 interface SLAPolicyFormProps {
   defaultValues?: Partial<SLAPolicyInput>
@@ -55,10 +56,9 @@ export function SLAPolicyForm({
   isSubmitting,
   className,
 }: SLAPolicyFormProps) {
-  const { t, i18n } = useTranslation('sla')
-  const isRTL = i18n.language === 'ar'
-
-  const [escalationLevels, setEscalationLevels] = useState<EscalationLevel[]>(
+  const { t } = useTranslation('sla')
+  const { isRTL } = useDirection()
+const [escalationLevels, setEscalationLevels] = useState<EscalationLevel[]>(
     defaultValues?.escalation_levels || [],
   )
   const [notificationChannels, setNotificationChannels] = useState<string[]>(
@@ -131,7 +131,7 @@ export function SLAPolicyForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <form onSubmit={handleSubmit(onFormSubmit)}>
       <Card className={className}>
         <CardHeader>
           <CardTitle>{defaultValues?.name ? t('policies.edit') : t('policies.create')}</CardTitle>

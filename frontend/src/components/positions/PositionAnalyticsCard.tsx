@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { usePositionAnalytics } from '@/hooks/usePositionAnalytics'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface PositionAnalyticsCardProps {
   positionId: string
@@ -21,8 +22,9 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
   positionId,
   className = '',
 }) => {
-  const { t, i18n } = useTranslation()
-  const locale = i18n.language === 'ar' ? ar : enUS
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+  const locale = isRTL ? ar : enUS
 
   const { analytics, isLoading, error } = usePositionAnalytics({ positionId })
 

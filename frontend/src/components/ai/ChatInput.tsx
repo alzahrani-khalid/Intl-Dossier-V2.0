@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { Send, Loader2 } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface ChatInputProps {
   onSend: (message: string) => void
@@ -32,9 +33,9 @@ export function ChatInput({
   placeholder,
   className,
 }: ChatInputProps) {
-  const { t, i18n } = useTranslation('ai-chat')
-  const isRTL = i18n.language === 'ar'
-  const [message, setMessage] = useState('')
+  const { t } = useTranslation('ai-chat')
+  const { isRTL } = useDirection()
+const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Auto-resize textarea
@@ -67,7 +68,6 @@ export function ChatInput({
   return (
     <div
       className={cn('flex items-end gap-2 p-3 border-t bg-background', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <Textarea
         ref={textareaRef}

@@ -48,6 +48,7 @@ import {
   type EntityHistoryEntry,
 } from '@/store/entityHistoryStore'
 import { usePinnedEntitiesStore, type PinnedEntityEntry } from '@/store/pinnedEntitiesStore'
+import { useDirection } from '@/hooks/useDirection'
 
 /** Map entity types to icons */
 const entityIcons: Record<EntityType, React.ComponentType<{ className?: string }>> = {
@@ -208,10 +209,9 @@ export function QuickNavigationMenu({
   // Use sidebar context for expand state, with prop override
   const sidebarCtx = useSidebar()
   const isExpanded = isExpandedProp ?? sidebarCtx.state === 'expanded'
-  const { t, i18n } = useTranslation('common')
-  const isRTL = i18n.language === 'ar'
-
-  // State for collapsible sections
+  const { t } = useTranslation('common')
+  const { isRTL } = useDirection()
+// State for collapsible sections
   const [isPinnedOpen, setIsPinnedOpen] = useState(true)
   const [isRecentOpen, setIsRecentOpen] = useState(true)
 
@@ -271,7 +271,7 @@ export function QuickNavigationMenu({
   }
 
   return (
-    <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-2', className)}>
       {/* Section Header */}
       <div className="flex items-center gap-2 px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
         <Zap className="h-3.5 w-3.5" />

@@ -14,16 +14,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { usePerson } from '@/hooks/usePersons'
 import { AFFILIATION_TYPE_LABELS } from '@/types/person.types'
 import type { AffiliationType } from '@/types/person.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface OrganizationAffiliationsProps {
   dossierId: string
 }
 
 export function OrganizationAffiliations({ dossierId }: OrganizationAffiliationsProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const { data: personData, isLoading, isError } = usePerson(dossierId)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { data: personData, isLoading, isError } = usePerson(dossierId)
 
   // Format date range
   const formatDateRange = (startDate?: string, endDate?: string): string => {
@@ -59,7 +59,7 @@ export function OrganizationAffiliations({ dossierId }: OrganizationAffiliations
 
   if (isLoading) {
     return (
-      <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-4">
         {[1, 2, 3].map((i) => (
           <Card key={i}>
             <CardContent className="p-4">
@@ -77,7 +77,6 @@ export function OrganizationAffiliations({ dossierId }: OrganizationAffiliations
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-destructive/10 flex items-center justify-center">
@@ -98,7 +97,6 @@ export function OrganizationAffiliations({ dossierId }: OrganizationAffiliations
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -132,7 +130,7 @@ export function OrganizationAffiliations({ dossierId }: OrganizationAffiliations
   })
 
   return (
-    <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4">
       {/* Header with count and add button */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">

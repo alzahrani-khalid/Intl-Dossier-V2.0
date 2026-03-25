@@ -65,6 +65,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/hooks/useDirection'
 
 // ============================================
 // Types
@@ -145,9 +146,9 @@ const EnhancedDossierNode = memo(
     }
     selected?: boolean
   }) => {
-    const { i18n } = useTranslation()
-    const isRTL = i18n.language === 'ar'
-    const name = isRTL ? data.name_ar : data.name_en
+    const { t } = useTranslation()
+    const { isRTL } = useDirection()
+const name = isRTL ? data.name_ar : data.name_en
 
     const baseSize = 40
     const connectionBonus = Math.min((data.connectionCount || 0) * 2, 30)
@@ -406,8 +407,8 @@ function EnhancedGraphVisualizationInner({
   // centerNodeId is used for potential future enhancements like auto-focusing
   centerNodeId: _centerNodeId,
 }: EnhancedGraphVisualizationProps) {
-  const { t, i18n } = useTranslation('graph')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('graph')
+  const { isRTL } = useDirection()
   const { zoomIn, zoomOut, fitView } = useReactFlow()
 
   // ============================================
@@ -714,7 +715,6 @@ function EnhancedGraphVisualizationInner({
     <div
       className="relative w-full rounded-lg border bg-background overflow-hidden"
       style={{ height }}
-      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReactFlow
         nodes={nodes}

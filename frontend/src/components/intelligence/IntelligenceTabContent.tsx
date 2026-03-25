@@ -29,6 +29,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Globe, MapPin, Users, Maximize2, AlertCircle, RefreshCw } from 'lucide-react'
 import type { CountryDossier } from '@/lib/dossier-type-guards'
+import { useDirection } from '@/hooks/useDirection'
 
 interface IntelligenceTabContentProps {
   dossierId: string
@@ -36,10 +37,9 @@ interface IntelligenceTabContentProps {
 }
 
 export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabContentProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  // Track if auto-generation has been attempted
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+// Track if auto-generation has been attempted
   const [autoGenerationAttempted, setAutoGenerationAttempted] = React.useState(false)
 
   // Fetch all intelligence data
@@ -145,7 +145,6 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
     return (
       <div
         className="space-y-6"
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="status"
         aria-live="polite"
         aria-busy="true"
@@ -170,7 +169,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
   // Error state (but not 404, which is handled as empty state)
   if (isError && error?.status !== 404) {
     return (
-      <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
           {error instanceof Error
@@ -202,7 +201,6 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
       return (
         <div
           className="flex flex-col items-center justify-center py-12 px-4 text-center"
-          dir={isRTL ? 'rtl' : 'ltr'}
           role="region"
           aria-live="polite"
           aria-busy="true"
@@ -237,7 +235,6 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
     return (
       <div
         className="flex flex-col items-center justify-center py-12 px-4 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
         role="region"
         aria-live="polite"
       >
@@ -310,7 +307,6 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
   return (
     <div
       className="space-y-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="region"
       aria-label={t('intelligence.dashboardLabel', 'Intelligence dashboard')}
     >

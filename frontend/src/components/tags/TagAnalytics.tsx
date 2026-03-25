@@ -33,16 +33,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useTagAnalytics, useRefreshTagAnalytics } from '@/hooks/useTagHierarchy'
 import { getTagName, TAG_ENTITY_TYPE_LABELS } from '@/types/tag-hierarchy.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface TagAnalyticsProps {
   className?: string
 }
 
 export function TagAnalytics({ className }: TagAnalyticsProps) {
-  const { t, i18n } = useTranslation('tags')
-  const isRTL = i18n.language === 'ar'
-
-  const { data: analytics, isLoading, error, refetch } = useTagAnalytics()
+  const { t } = useTranslation('tags')
+  const { isRTL } = useDirection()
+const { data: analytics, isLoading, error, refetch } = useTagAnalytics()
   const refreshAnalytics = useRefreshTagAnalytics()
 
   // Computed stats
@@ -138,7 +138,7 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
   }
 
   return (
-    <div className={cn('space-y-4 sm:space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-4 sm:space-y-6', className)}>
       {/* Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>

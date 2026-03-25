@@ -51,6 +51,7 @@ import type {
   ReminderChannel,
 } from '@/types/milestone-planning.types'
 import type { TimelinePriority } from '@/types/timeline.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface AddMilestoneDialogProps {
   open: boolean
@@ -132,10 +133,9 @@ export function AddMilestoneDialog({
   onSubmit,
   isSubmitting = false,
 }: AddMilestoneDialogProps) {
-  const { t, i18n } = useTranslation('milestone-planning')
-  const isRTL = i18n.language === 'ar'
-
-  const [formData, setFormData] = useState<FormData>(initialFormData)
+  const { t } = useTranslation('milestone-planning')
+  const { isRTL } = useDirection()
+const [formData, setFormData] = useState<FormData>(initialFormData)
 
   // Reset or populate form when dialog opens or editMilestone changes
   useEffect(() => {
@@ -256,7 +256,6 @@ export function AddMilestoneDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="max-h-[90vh] max-w-lg sm:max-w-xl overflow-y-auto"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">

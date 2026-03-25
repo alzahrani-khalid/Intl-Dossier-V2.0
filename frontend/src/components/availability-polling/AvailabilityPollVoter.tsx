@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils'
 import { usePollDetails, useSubmitVotes } from '@/hooks/useAvailabilityPolling'
 import type { PollResponseType, SubmitVoteRequest } from '@/types/availability-polling.types'
 import { RESPONSE_COLORS, POLL_STATUS_COLORS } from '@/types/availability-polling.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface AvailabilityPollVoterProps {
   pollId: string
@@ -35,9 +36,9 @@ interface SlotVote {
 }
 
 export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPollVoterProps) {
-  const { t, i18n } = useTranslation('availability-polling')
-  const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
+  const { t } = useTranslation('availability-polling')
+  const { isRTL } = useDirection()
+const dateLocale = isRTL ? ar : enUS
 
   const { data: pollData, isLoading, error } = usePollDetails(pollId)
   const submitVotes = useSubmitVotes()
@@ -168,7 +169,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6">
       {/* Header */}
       <div className="space-y-2">
         <div className="flex items-center justify-between flex-wrap gap-2">

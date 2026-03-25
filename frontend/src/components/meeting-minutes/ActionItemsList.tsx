@@ -42,6 +42,7 @@ import type {
   ActionItemPriority,
 } from '@/types/meeting-minutes.types'
 import { PRIORITY_COLORS, ACTION_ITEM_STATUS_COLORS } from '@/types/meeting-minutes.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ActionItemsListProps {
   items: MeetingActionItem[]
@@ -76,10 +77,9 @@ export function ActionItemsList({
   onConvertToTask,
   className,
 }: ActionItemsListProps) {
-  const { t, i18n } = useTranslation('meeting-minutes')
-  const isRTL = i18n.language === 'ar'
-
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const { t } = useTranslation('meeting-minutes')
+  const { isRTL } = useDirection()
+const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
 
   const toggleExpanded = (id: string) => {
     setExpandedItems((prev) => {
@@ -108,14 +108,14 @@ export function ActionItemsList({
 
   if (items.length === 0 && !onAddItem) {
     return (
-      <div className={cn('text-center py-8', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className={cn('text-center py-8', className)}>
         <p className="text-sm text-muted-foreground">{t('actionItems.noItems')}</p>
       </div>
     )
   }
 
   return (
-    <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={cn('space-y-3', className)}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-base sm:text-lg font-semibold text-foreground">

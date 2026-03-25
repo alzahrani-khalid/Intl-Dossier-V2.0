@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import type { WorkItem } from '@/types/work-item.types'
 import { getSourceBadgeColors, getPriorityColor } from './utils/column-definitions'
+import { useDirection } from '@/hooks/useDirection'
 
 interface CardContentProps {
   item: WorkItem
@@ -26,10 +27,9 @@ interface CardContentProps {
  * Card content component — clean design with outline badges and separator
  */
 export function UnifiedKanbanCardContent({ item }: CardContentProps) {
-  const { t, i18n } = useTranslation('unified-kanban')
-  const isRTL = i18n.language === 'ar'
-
-  const sourceClasses = getSourceBadgeColors(item.source)
+  const { t } = useTranslation('unified-kanban')
+  const { isRTL } = useDirection()
+const sourceClasses = getSourceBadgeColors(item.source)
   const priorityDotColor = getPriorityColor(item.priority)
 
   // Format deadline display
@@ -80,7 +80,7 @@ export function UnifiedKanbanCardContent({ item }: CardContentProps) {
   }
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'}>
+    <div>
       {/* Row 1: Source + Priority badges */}
       <div className="flex items-center justify-between gap-2 mb-2">
         <Badge variant="outline" className={cn('text-xs font-normal', sourceClasses)}>

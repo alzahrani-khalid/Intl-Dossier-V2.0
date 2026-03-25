@@ -16,6 +16,7 @@ import { useRelationshipsForDossier } from '@/hooks/useRelationships'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
 import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards'
 import type { RelationshipWithDossiers } from '@/services/relationship-api'
+import { useDirection } from '@/hooks/useDirection'
 
 interface DecisionLogsProps {
   dossier: ForumDossier | WorkingGroupDossier
@@ -23,10 +24,9 @@ interface DecisionLogsProps {
 }
 
 export function DecisionLogs({ dossier }: DecisionLogsProps) {
-  const { t, i18n } = useTranslation('dossier')
-  const isRTL = i18n.language === 'ar'
-
-  const { data, isLoading } = useRelationshipsForDossier(dossier.id)
+  const { t } = useTranslation('dossier')
+  const { isRTL } = useDirection()
+const { data, isLoading } = useRelationshipsForDossier(dossier.id)
   const allRelationships = data?.data || []
 
   // Filter for engagement-type related dossiers
@@ -37,7 +37,7 @@ export function DecisionLogs({ dossier }: DecisionLogsProps) {
 
   if (isLoading) {
     return (
-      <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-3">
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-16 w-full rounded-lg" />
         ))}
@@ -49,7 +49,6 @@ export function DecisionLogs({ dossier }: DecisionLogsProps) {
     return (
       <div
         className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
           <FileText className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
@@ -68,7 +67,7 @@ export function DecisionLogs({ dossier }: DecisionLogsProps) {
   }
 
   return (
-    <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-3">
       {engagementRelationships.map((rel: RelationshipWithDossiers) => {
         const engagement =
           rel.source_dossier_id === dossier.id ? rel.target_dossier : rel.source_dossier

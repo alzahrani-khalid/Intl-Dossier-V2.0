@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
+import { useDirection } from '@/hooks/useDirection'
 
 export interface BulkActionToolbarProps {
   selectedCount: number
@@ -31,17 +32,15 @@ export function BulkActionToolbar({
   onClearSelection,
   isProcessing = false,
 }: BulkActionToolbarProps) {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  if (selectedCount === 0) {
+  const { t } = useTranslation()
+  const { isRTL } = useDirection()
+if (selectedCount === 0) {
     return null
   }
 
   return (
     <div
       className="sticky top-0 z-10 flex flex-col gap-2 p-4 bg-blue-50 border-b border-blue-200 dark:bg-blue-950 dark:border-blue-800 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
-      dir={isRTL ? 'rtl' : 'ltr'}
       role="toolbar"
       aria-label={t('waitingQueue.bulkActions.toolbar')}
     >
