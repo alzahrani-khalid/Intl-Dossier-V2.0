@@ -158,7 +158,7 @@ export function DossierDetailLayout({
       >
         <Link
           to="/dossiers"
-          className="flex items-center gap-1 sm:gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1 sm:gap-2 text-muted-foreground hover:text-foreground transition-colors min-h-11"
         >
           <Home className="h-4 w-4" />
           <span>{t('hub.title')}</span>
@@ -174,7 +174,7 @@ export function DossierDetailLayout({
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b"
       >
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 truncate">
+          <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-2 truncate text-start">
             {isRTL ? dossier.name_ar : dossier.name_en}
           </h1>
           {(dossier.description_en || dossier.description_ar) && (
@@ -235,7 +235,7 @@ export function DossierDetailLayout({
           )}
 
           {/* Everything About button - opens comprehensive overview */}
-          <Button variant="outline" size="sm" asChild className="min-h-10">
+          <Button variant="outline" size="sm" asChild className="min-h-11 min-w-11">
             <Link to={`/dossiers/${dossier.id}/overview` as any}>
               <LayoutGrid className="h-4 w-4 me-2" />
               <span className="hidden sm:inline">
@@ -254,7 +254,7 @@ export function DossierDetailLayout({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="min-h-10"
+                  className="min-h-11 min-w-11"
                   onClick={() => setIsExportDialogOpen(true)}
                 >
                   <FileDown className="h-4 w-4 sm:me-2" />
@@ -307,7 +307,7 @@ export function DossierDetailLayout({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8"
+                      className="min-h-11 min-w-11"
                       onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                       aria-label={
                         isSidebarOpen

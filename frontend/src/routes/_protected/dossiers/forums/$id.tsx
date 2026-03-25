@@ -106,7 +106,7 @@ function ForumDossierDetailRoute() {
                 <p className="text-sm sm:text-base text-destructive/90 mb-4">
                   {error?.message || t('detail.errorGeneric')}
                 </p>
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="min-h-11">
                   <Link to="/dossiers">{t('action.backToHub')}</Link>
                 </Button>
               </div>
@@ -132,13 +132,13 @@ function ForumDossierDetailRoute() {
                 expectedType: t('type.forum' as any),
               })}
             </p>
-            <div className="flex gap-3">
-              <Button asChild>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button asChild className="min-h-11">
                 <Link to={`/dossiers/${dossier.type}s/${id}`}>
                   {t('action.viewCorrectType', { type: t(`type.${dossier.type}` as any) })}
                 </Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="min-h-11">
                 <Link to="/dossiers">{t('action.backToHub')}</Link>
               </Button>
             </div>
