@@ -5,6 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import tailwind from 'eslint-plugin-tailwindcss'
 import unusedImports from 'eslint-plugin-unused-imports'
+import rtlFriendly from 'eslint-plugin-rtl-friendly'
 
 export default tseslint.config(
   {
@@ -132,6 +133,21 @@ export default tseslint.config(
     rules: {
       'no-restricted-syntax': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  // RTL-friendly plugin: catches physical CSS properties in JS/TS string literals
+  {
+    files: ['**/*.{ts,tsx}'],
+    plugins: { 'rtl-friendly': rtlFriendly },
+    rules: {
+      'rtl-friendly/no-physical-properties': 'error',
+    },
+  },
+  // RTL-friendly exceptions for auto-generated UI components
+  {
+    files: ['**/components/ui/**/*.{ts,tsx}'],
+    rules: {
+      'rtl-friendly/no-physical-properties': 'off',
     },
   },
   // Disabled/backup files are exempt from all rules

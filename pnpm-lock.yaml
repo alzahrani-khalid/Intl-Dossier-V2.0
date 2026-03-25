@@ -57,6 +57,9 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.5.4
         version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.37.0(jiti@2.6.1)))(eslint@9.37.0(jiti@2.6.1))(prettier@3.6.2)
+      eslint-plugin-rtl-friendly:
+        specifier: ^0.5.1
+        version: 0.5.1(eslint@9.37.0(jiti@2.6.1))(tailwindcss@4.2.1)
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -6930,6 +6933,12 @@ packages:
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
+
+  eslint-plugin-rtl-friendly@0.5.1:
+    resolution: {integrity: sha512-ysvsO85eLiue6Wqm+wq9i01rNKQYEa1j5yilHVOaRsbw7kqmCUP7Stuz2DyXrCucXXzAMJhn7Kz+mvzj5wy4Ew==}
+    peerDependencies:
+      eslint: '>=9.0.0'
+      tailwindcss: '>=3.3.0 || >=4.0.0'
 
   eslint-plugin-tailwindcss@3.18.2:
     resolution: {integrity: sha512-QbkMLDC/OkkjFQ1iz/5jkMdHfiMu/uwujUHLAJK5iwNHD8RTxVTlsUezE0toTZ6VhybNBsk+gYGPDq2agfeRNA==}
@@ -16851,7 +16860,7 @@ snapshots:
 
   babel-plugin-react-compiler@1.0.0:
     dependencies:
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
     optional: true
 
   balanced-match@1.0.2: {}
@@ -17934,6 +17943,11 @@ snapshots:
       semver: 6.3.1
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
+
+  eslint-plugin-rtl-friendly@0.5.1(eslint@9.37.0(jiti@2.6.1))(tailwindcss@4.2.1):
+    dependencies:
+      eslint: 9.37.0(jiti@2.6.1)
+      tailwindcss: 4.2.1
 
   eslint-plugin-tailwindcss@3.18.2(tailwindcss@4.2.1):
     dependencies:
