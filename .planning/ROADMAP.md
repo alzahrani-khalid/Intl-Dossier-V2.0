@@ -122,10 +122,10 @@ Plans:
 
 Plans:
 
-- [ ] 05-01-PLAN.md — Install vaul, consolidate responsive hooks, create AdaptiveDialog, wire NavigationShell into production layout
-- [ ] 05-02-PLAN.md — Extend card-view toggle to AdvancedDataTable and SelectableDataTable with mobile bulk action bar
-- [ ] 05-03-PLAN.md — Dashboard and Kanban board responsive pass across all 5 breakpoints
-- [ ] 05-04-PLAN.md — Dossier list and detail pages responsive pass (all 8 dossier types)
+- [x] 05-01-PLAN.md — Install vaul, consolidate responsive hooks, create AdaptiveDialog, wire NavigationShell into production layout
+- [x] 05-02-PLAN.md — Extend card-view toggle to AdvancedDataTable and SelectableDataTable with mobile bulk action bar
+- [x] 05-03-PLAN.md — Dashboard and Kanban board responsive pass across all 5 breakpoints
+- [x] 05-04-PLAN.md — Dossier list and detail pages responsive pass (all 8 dossier types)
 - [ ] 05-05-PLAN.md — Forms/modals mobile pass, settings, profile, and ALL remaining routes responsive
 
 ### Phase 6: Architecture Consolidation
