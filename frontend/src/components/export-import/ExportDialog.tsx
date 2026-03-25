@@ -8,14 +8,7 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -32,7 +25,6 @@ import { Download, FileSpreadsheet, FileText, FileJson, Loader2 } from 'lucide-r
 import { useExportData } from '@/hooks/useExportData'
 import type { ExportableEntityType, ExportRequest } from '@/types/export-import.types'
 import type { ExportFormat } from '@/types/bulk-actions.types'
-import { useDirection } from '@/hooks/useDirection'
 
 interface ExportDialogProps {
   open: boolean
@@ -49,8 +41,9 @@ export function ExportDialog({
   selectedIds,
   onExportComplete,
 }: ExportDialogProps) {
-  const { t } = useTranslation('export-import')
-  const { isRTL } = useDirection()
+  const { t, i18n } = useTranslation('export-import')
+  const isRTL = i18n.language === 'ar'
+
   const [format, setFormat] = useState<ExportFormat>('xlsx')
   const [language, setLanguage] = useState<'en' | 'ar' | 'both'>('both')
   const [includeTemplate, setIncludeTemplate] = useState(false)
@@ -101,17 +94,58 @@ export function ExportDialog({
     pdf: <FileText className="h-4 w-4" />,
   }
 
-  return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[480px]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Download className="h-5 w-5" />
-            {t('export.title')}
-          </DialogTitle>
-          <DialogDescription>{t('export.description')}</DialogDescription>
-        </DialogHeader>
+  const dialogFooter = (
+    <>
+      <Button
+        variant="outline"
+        onClick={handleDownloadTemplate}
+        disabled={isExporting}
+        className="w-full sm:w-auto min-h-11"
+      >
+        <FileSpreadsheet className="h-4 w-4 me-2" />
+        {t('template.button')}
+      </Button>
+      <div className="flex gap-2 w-full sm:w-auto">
+        <Button
+          variant="outline"
+          onClick={handleClose}
+          disabled={isExporting}
+          className="flex-1 sm:flex-none min-h-11"
+        >
+          {t('common.cancel')}
+        </Button>
+        <Button onClick={handleExport} disabled={isExporting} className="flex-1 sm:flex-none min-h-11">
+          {isExporting ? (
+            <>
+              <Loader2 className="h-4 w-4 me-2 animate-spin" />
+              {t('export.downloading')}
+            </>
+          ) : (
+            <>
+              <Download className="h-4 w-4 me-2" />
+              {t('export.button')}
+            </>
+          )}
+        </Button>
+      </div>
+    </>
+  )
 
+  return (
+    <AdaptiveDialog
+      open={open}
+      onOpenChange={handleClose}
+      title={
+        <span className="flex items-center gap-2">
+          <Download className="h-5 w-5" />
+          {t('export.title')}
+        </span>
+      }
+      description={t('export.description')}
+      snapPreset="large"
+      maxWidth="sm:max-w-[480px]"
+      footer={dialogFooter}
+    >
         <div className="grid gap-6 py-4">
           {/* Format Selection */}
           <div className="space-y-3">
@@ -205,7 +239,7 @@ export function ExportDialog({
           {progress && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span>{isRTL ? progress.message_ar : progress.message_en}</span>
+                <span>{i18n.language === 'ar' ? progress.message_ar : progress.message_en}</span>
                 <span>{progress.progress}%</span>
               </div>
               <Progress value={progress.progress} className="h-2" />
@@ -213,41 +247,6 @@ export function ExportDialog({
           )}
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
-          <Button
-            variant="outline"
-            onClick={handleDownloadTemplate}
-            disabled={isExporting}
-            className="w-full sm:w-auto"
-          >
-            <FileSpreadsheet className="h-4 w-4 me-2" />
-            {t('template.button')}
-          </Button>
-          <div className="flex gap-2 w-full sm:w-auto">
-            <Button
-              variant="outline"
-              onClick={handleClose}
-              disabled={isExporting}
-              className="flex-1 sm:flex-none"
-            >
-              {t('common.cancel')}
-            </Button>
-            <Button onClick={handleExport} disabled={isExporting} className="flex-1 sm:flex-none">
-              {isExporting ? (
-                <>
-                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                  {t('export.downloading')}
-                </>
-              ) : (
-                <>
-                  <Download className="h-4 w-4 me-2" />
-                  {t('export.button')}
-                </>
-              )}
-            </Button>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    </AdaptiveDialog>
   )
 }

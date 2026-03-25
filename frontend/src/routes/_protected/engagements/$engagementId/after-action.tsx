@@ -25,7 +25,7 @@ const navigate = useNavigate()
 
   if (loadingEngagement) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-screen w-full" />
       </div>
@@ -34,7 +34,7 @@ const navigate = useNavigate()
 
   if (!engagement) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="border-destructive">
           <CardHeader>
             <CardTitle className="text-destructive">{t('common.error')}</CardTitle>
@@ -65,7 +65,7 @@ const navigate = useNavigate()
   }
 
   return (
-    <div className={`container mx-auto p-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>

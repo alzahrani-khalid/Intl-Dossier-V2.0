@@ -69,6 +69,7 @@ interface UsageMetrics {
 
 function AIUsageDashboard() {
   const { t, i18n } = useTranslation('ai-admin')
+  const isRTL = i18n.language === 'ar'
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d'>('30d')
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'breakdown'>('overview')
 
@@ -197,7 +198,7 @@ function AIUsageDashboard() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -376,7 +377,7 @@ function AIUsageDashboard() {
                         style={{ height: `${Math.max(height, 2)}%` }}
                         title={`${day.date}: ${day.runs} runs`}
                       >
-                        <div className="absolute bottom-full mb-2 start-1/2 -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                           {day.date}: {day.runs} runs
                         </div>
                       </div>
@@ -562,3 +563,5 @@ function MetricCard({ title, value, icon: Icon, trend, isLoading }: MetricCardPr
     </Card>
   )
 }
+
+export default AIUsageDashboard

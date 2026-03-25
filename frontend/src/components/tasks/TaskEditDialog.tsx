@@ -16,14 +16,7 @@ import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -44,10 +37,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { UserPicker } from '@/components/forms/UserPicker'
-import { useUpdateTask } from '@/hooks/useTasks'
+import { UserPicker } from '@/components/Forms/UserPicker'
+import { useUpdateTask } from '@/hooks/use-tasks'
 import type { Database } from '../../../../backend/src/types/database.types'
-import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -70,9 +62,10 @@ interface TaskEditDialogProps {
 }
 
 export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEditDialogProps) {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
-const updateTask = useUpdateTask()
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  const updateTask = useUpdateTask()
 
   const form = useForm<EditTaskFormValues>({
     resolver: zodResolver(editTaskSchema),
@@ -121,20 +114,39 @@ const updateTask = useUpdateTask()
     }
   }
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-full sm:max-w-[640px]">
-        <DialogHeader>
-          <DialogTitle className="text-start text-xl sm:text-2xl">
-            {t('tasks.editTask', 'Edit Task')}
-          </DialogTitle>
-          <DialogDescription className="text-start">
-            {t('tasks.editTaskDescription', 'Update the task details')}
-          </DialogDescription>
-        </DialogHeader>
+  const formFooter = (
+    <>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => onOpenChange(false)}
+        className="min-h-11 w-full sm:w-auto sm:min-w-[100px]"
+      >
+        {t('common.cancel', 'Cancel')}
+      </Button>
+      <Button
+        type="submit"
+        form="task-edit-form"
+        disabled={updateTask.isPending}
+        className="min-h-11 w-full sm:w-auto sm:min-w-[100px]"
+      >
+        {updateTask.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
+        {t('common.save', 'Save')}
+      </Button>
+    </>
+  )
 
+  return (
+    <AdaptiveDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t('tasks.editTask', 'Edit Task')}
+      description={t('tasks.editTaskDescription', 'Update the task details')}
+      snapPreset="large"
+      footer={formFooter}
+    >
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form id="task-edit-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
             {/* Title */}
             <FormField
               control={form.control}
@@ -289,27 +301,8 @@ const updateTask = useUpdateTask()
               )}
             />
 
-            <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                className="h-11 min-w-full sm:min-w-[100px]"
-              >
-                {t('common.cancel', 'Cancel')}
-              </Button>
-              <Button
-                type="submit"
-                disabled={updateTask.isPending}
-                className="h-11 min-w-full sm:min-w-[100px]"
-              >
-                {updateTask.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
-                {t('common.save', 'Save')}
-              </Button>
-            </DialogFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+    </AdaptiveDialog>
   )
 }

@@ -59,7 +59,7 @@ import {
   Activity,
   Calendar,
 } from 'lucide-react'
-import { useToast } from '@/hooks/useToast'
+import { useToast } from '@/hooks/use-toast'
 import {
   useEntityLayouts,
   useLayoutDetails,
@@ -91,7 +91,6 @@ import {
   CONTEXT_LABELS,
   FIELD_TYPE_LABELS,
 } from '@/types/preview-layout.types'
-import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/admin/preview-layouts')({
   component: PreviewLayoutsPage,
@@ -124,9 +123,9 @@ const ENTITY_ICONS: Record<PreviewEntityType, React.ComponentType<{ className?: 
 }
 
 function PreviewLayoutsPage() {
-  const { t } = useTranslation('preview-layouts')
-  const { isRTL } = useDirection()
-const { toast } = useToast()
+  const { t, i18n } = useTranslation('preview-layouts')
+  const isRTL = i18n.language === 'ar'
+  const { toast } = useToast()
 
   // State
   const [selectedEntityType, setSelectedEntityType] = useState<PreviewEntityType | null>(null)
@@ -432,7 +431,7 @@ const { toast } = useToast()
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -1180,3 +1179,5 @@ function FieldForm({ values, onChange, isRTL, t }: FieldFormProps) {
     </div>
   )
 }
+
+export default PreviewLayoutsPage

@@ -9,14 +9,7 @@
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { Check, X, AlertTriangle, ArrowUpRight, FileX, Calendar, Loader2 } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -32,7 +25,6 @@ import type {
 import { SEVERITY_COLORS } from '@/types/compliance.types'
 import { useSignoffViolation } from '@/hooks/useComplianceRules'
 import { toast } from 'sonner'
-import { useDirection } from '@/hooks/useDirection'
 
 interface ComplianceSignoffDialogProps {
   violation: ComplianceViolation | null
@@ -62,9 +54,10 @@ export function ComplianceSignoffDialog({
   onOpenChange,
   onSuccess,
 }: ComplianceSignoffDialogProps) {
-  const { t } = useTranslation('compliance')
-  const { isRTL } = useDirection()
-const signoffMutation = useSignoffViolation()
+  const { t, i18n } = useTranslation('compliance')
+  const isRTL = i18n.language === 'ar'
+
+  const signoffMutation = useSignoffViolation()
 
   const {
     register,
@@ -124,13 +117,39 @@ const signoffMutation = useSignoffViolation()
     return violation.rule_code
   }
 
+  const dialogFooter = (
+    <>
+      <Button type="button" variant="outline" onClick={handleClose} className="min-h-11 w-full sm:w-auto">
+        {t('signoff.cancel')}
+      </Button>
+      <Button
+        type="submit"
+        form="compliance-signoff-form"
+        disabled={signoffMutation.isPending}
+        className={`min-h-11 w-full sm:w-auto ${
+          selectedAction === 'approve'
+            ? 'bg-green-600 hover:bg-green-700'
+            : selectedAction === 'reject'
+              ? 'bg-red-600 hover:bg-red-700'
+              : ''
+        }`}
+      >
+        {signoffMutation.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+        {t('signoff.confirm')}
+      </Button>
+    </>
+  )
+
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">{t('signoff.title')}</DialogTitle>
-          <DialogDescription>{t('signoff.subtitle')}</DialogDescription>
-        </DialogHeader>
+    <AdaptiveDialog
+      open={open}
+      onOpenChange={handleClose}
+      title={t('signoff.title')}
+      description={t('signoff.subtitle')}
+      snapPreset="large"
+      maxWidth="sm:max-w-lg"
+      footer={dialogFooter}
+    >
 
         {/* Violation Summary */}
         <div className={`rounded-lg border p-4 ${severityColors.bg} ${severityColors.border}`}>
@@ -151,7 +170,7 @@ const signoffMutation = useSignoffViolation()
 
         <Separator />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form id="compliance-signoff-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {/* Action Selection */}
           <div className="space-y-3">
             <Label>{t('signoff.action')}</Label>
@@ -235,27 +254,9 @@ const signoffMutation = useSignoffViolation()
             </div>
           )}
 
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button type="button" variant="outline" onClick={handleClose}>
-              {t('signoff.cancel')}
-            </Button>
-            <Button
-              type="submit"
-              disabled={signoffMutation.isPending}
-              className={
-                selectedAction === 'approve'
-                  ? 'bg-green-600 hover:bg-green-700'
-                  : selectedAction === 'reject'
-                    ? 'bg-red-600 hover:bg-red-700'
-                    : ''
-              }
-            >
-              {signoffMutation.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-              {t('signoff.confirm')}
-            </Button>
-          </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+    </AdaptiveDialog>
   )
 }
+
+export default ComplianceSignoffDialog

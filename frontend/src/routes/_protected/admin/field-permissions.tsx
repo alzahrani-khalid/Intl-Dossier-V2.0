@@ -84,7 +84,6 @@ import {
   SCOPE_TYPE_CONFIG,
   SENSITIVITY_LEVEL_CONFIG,
 } from '@/types/field-permission.types'
-import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/admin/field-permissions')({
   component: FieldPermissionsPage,
@@ -111,9 +110,10 @@ const USER_ROLES = [
 ]
 
 function FieldPermissionsPage() {
-  const { t } = useTranslation('field-permissions')
-  const { isRTL } = useDirection()
-// State
+  const { t, i18n } = useTranslation('field-permissions')
+  const isRTL = i18n.language === 'ar'
+
+  // State
   const [activeTab, setActiveTab] = useState('permissions')
   const [showPermissionDialog, setShowPermissionDialog] = useState(false)
   const [selectedPermission, setSelectedPermission] = useState<FieldPermission | null>(null)
@@ -218,7 +218,7 @@ function FieldPermissionsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -702,8 +702,8 @@ function PermissionDialog({
   onSave: (data: CreateFieldPermissionRequest) => void
   isLoading: boolean
 }) {
-  const { t } = useTranslation('field-permissions')
-  const { isRTL } = useDirection()
+  const { t, i18n } = useTranslation('field-permissions')
+  const isRTL = i18n.language === 'ar'
 
   const [formData, setFormData] = useState<Partial<CreateFieldPermissionRequest>>({
     scope_type: 'role',
@@ -945,3 +945,5 @@ function PermissionDialog({
     </Dialog>
   )
 }
+
+export default FieldPermissionsPage

@@ -136,7 +136,9 @@ const RETENTION_ACTIONS: Array<{ value: RetentionActionType; label: string }> = 
 ]
 
 function DataRetentionPage() {
-  const { t } = useTranslation('retention-policies')
+  const { t, i18n } = useTranslation('retention-policies')
+  const isRTL = i18n.language === 'ar'
+
   // State
   const [activeTab, setActiveTab] = useState('overview')
   const [showPolicyDialog, setShowPolicyDialog] = useState(false)
@@ -211,7 +213,7 @@ function DataRetentionPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -1413,3 +1415,5 @@ function ProcessorDialog({
     </Dialog>
   )
 }
+
+export default DataRetentionPage

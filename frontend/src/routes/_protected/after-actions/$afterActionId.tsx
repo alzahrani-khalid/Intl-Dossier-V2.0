@@ -44,7 +44,7 @@ const locale = isRTL ? ar : enUS
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-screen w-full" />
       </div>
@@ -53,7 +53,7 @@ const locale = isRTL ? ar : enUS
 
   if (error) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="border-destructive">
           <CardHeader>
             <CardTitle className="text-destructive">{t('common.error')}</CardTitle>
@@ -66,7 +66,7 @@ const locale = isRTL ? ar : enUS
 
   if (!afterAction) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card>
           <CardHeader>
             <CardTitle>{t('afterActions.notFound')}</CardTitle>
@@ -115,7 +115,7 @@ const locale = isRTL ? ar : enUS
   }
 
   return (
-    <div className={`container mx-auto p-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
