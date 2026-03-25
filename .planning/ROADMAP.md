@@ -102,7 +102,7 @@ Plans:
 - [x] 04-02-PLAN.md — Bulk-remove 787 per-component dir= attributes from 469 files, replace isRTL patterns with useDirection(), fix physical CSS
 - [x] 04-03-PLAN.md — Wrap React Flow/Recharts in LtrIsolate, configure DnD-kit/TanStack Table for RTL, visual verification checkpoint
 - [x] 04-04-PLAN.md — [GAP] Wire eslint-plugin-rtl-friendly into eslint.config.mjs
-- [ ] 04-05-PLAN.md — [GAP] Wrap remaining 18 Recharts files in LtrIsolate
+- [x] 04-05-PLAN.md — [GAP] Wrap remaining 18 Recharts files in LtrIsolate
 
 ### Phase 5: Responsive Design
 
