@@ -116,7 +116,7 @@ function AdminApprovalsPage() {
 
  if (isLoading) {
  return (
- <div className="container mx-auto py-6 space-y-4">
+ <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
  <Skeleton className="h-8 w-64" />
  <Skeleton className="h-96" />
  </div>
@@ -124,7 +124,7 @@ function AdminApprovalsPage() {
  }
 
  return (
- <div className="container mx-auto py-6 space-y-6">
+ <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
  {/* Header */}
  <div className="flex items-center gap-3">
  <div className="p-3 bg-red-100 dark:bg-red-900 rounded-lg">
