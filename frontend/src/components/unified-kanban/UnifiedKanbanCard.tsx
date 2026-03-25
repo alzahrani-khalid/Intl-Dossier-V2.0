@@ -88,7 +88,7 @@ export function UnifiedKanbanCardContent({ item }: CardContentProps) {
         </Badge>
 
         <Badge variant="outline" className="text-xs font-normal gap-1.5">
-          <span className={cn('h-1.5 w-1.5 rounded-full shrink-0', priorityDotColor)} />
+          <span className={cn('size-1.5 rounded-full shrink-0', priorityDotColor)} />
           {t(`priority.${item.priority}`)}
         </Badge>
       </div>
@@ -105,25 +105,25 @@ export function UnifiedKanbanCardContent({ item }: CardContentProps) {
         {/* Deadline */}
         {deadlineDisplay ? (
           <div className={cn('flex items-center gap-1 text-xs', deadlineDisplay.className)}>
-            <Calendar className="h-3 w-3 shrink-0" />
+            <Calendar className="size-3 shrink-0" />
             <span>{deadlineDisplay.text}</span>
           </div>
         ) : (
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Calendar className="h-3 w-3 opacity-50 shrink-0" />
+            <Calendar className="size-3 opacity-50 shrink-0" />
             <span>{t('card.noDueDate')}</span>
           </div>
         )}
 
         {/* Assignee */}
         {item.assignee ? (
-          <Avatar className="h-6 w-6 shrink-0">
+          <Avatar className="size-6 shrink-0">
             <AvatarImage src={item.assignee.avatar_url || undefined} alt={item.assignee.name} />
             <AvatarFallback className="text-xs">{getInitials(item.assignee.name)}</AvatarFallback>
           </Avatar>
         ) : (
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <User className="h-3.5 w-3.5 shrink-0" />
+            <User className="size-3.5 shrink-0" />
           </div>
         )}
       </div>
@@ -146,7 +146,7 @@ export function UnifiedKanbanCardSkeleton() {
       <div className="h-px bg-muted mb-3" />
       <div className="flex justify-between">
         <div className="h-4 w-20 bg-muted rounded" />
-        <div className="h-6 w-6 bg-muted rounded-full" />
+        <div className="size-6 bg-muted rounded-full" />
       </div>
     </div>
   )

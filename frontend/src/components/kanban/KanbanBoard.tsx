@@ -22,11 +22,12 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Badge } from '../ui/badge'
 import { ScrollArea } from '../ui/scroll-area'
 import { SLAIndicator } from '../tasks/SLAIndicator'
-import { Loader2 } from 'lucide-react'
+import { Loader2, GripVertical } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import type { Database } from '../../../../backend/src/types/database.types'
 
@@ -195,17 +196,17 @@ export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="space-y-4">
-        {/* Mobile View: Single column with tabs/accordion (base to sm:) - Drag disabled on mobile */}
+      <div className="space-y-4 px-4 sm:px-6 lg:px-8">
+        {/* Mobile View: Stacked columns (base to sm:), Tablet: horizontal scroll (sm: to lg:) */}
         <div className="block lg:hidden">
-          <div className="space-y-4">
+          <div className="space-y-4 sm:flex sm:gap-4 sm:overflow-x-auto sm:pb-4 sm:space-y-0 sm:-webkit-overflow-scrolling-touch">
             {WORKFLOW_STAGES.map((stage) => {
               const stageTasks = tasksByStage[stage] ?? []
               return (
-                <Card key={stage} className={getStageColor(stage)}>
+                <Card key={stage} className={cn(getStageColor(stage), 'sm:min-w-[280px] sm:w-[280px] shrink-0')}>
                   <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-base sm:text-lg">
+                    <div className="flex items-center justify-between min-h-11">
+                      <CardTitle className="text-sm sm:text-base lg:text-lg">
                         {t(`workflow_stage.${stage}`, stage)}
                       </CardTitle>
                       <Badge variant="secondary">{stageTasks.length}</Badge>
@@ -325,7 +326,7 @@ function KanbanCard({ task, onClick, isRTL, getPriorityColor }: KanbanCardProps)
 
   return (
     <Card
-      className="cursor-pointer hover:shadow-md transition-shadow "
+      className="cursor-pointer hover:shadow-md transition-shadow min-h-12"
       onClick={() => onClick?.(task)}
     >
       <CardContent className="p-3">
@@ -343,7 +344,7 @@ function KanbanCard({ task, onClick, isRTL, getPriorityColor }: KanbanCardProps)
 
         {/* Task Title - Mobile-first, RTL-compatible */}
         <h4
-          className={`text-sm font-medium line-clamp-2 mb-2 ${isRTL ? 'text-end' : 'text-start'}`}
+          className="text-sm font-medium line-clamp-2 mb-2 text-start"
         >
           {task.title}
         </h4>
@@ -469,10 +470,14 @@ function DraggableKanbanCard({
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <div className="relative">
+        {/* Drag handle */}
+        <div className="absolute top-2 end-2 z-10 flex items-center justify-center min-h-11 min-w-11 cursor-grab active:cursor-grabbing">
+          <GripVertical className="size-4 text-muted-foreground" />
+        </div>
         {/* T062: Loading indicator visible within 200ms during retries */}
         {isRetrying && (
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            <Loader2 className="size-6 animate-spin text-primary" />
           </div>
         )}
         <KanbanCard
