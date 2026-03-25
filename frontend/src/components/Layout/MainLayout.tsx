@@ -1,3 +1,5 @@
+/** @deprecated Replaced by NavigationShell in Phase 5. Remove in Phase 6. */
+
 import { type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 
