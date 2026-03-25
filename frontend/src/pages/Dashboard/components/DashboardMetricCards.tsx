@@ -94,7 +94,7 @@ export function DashboardMetricCards({
     return (
       <div
         className={cn(
-          'grid gap-4 md:grid-cols-2 lg:grid-cols-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:bg-gradient-to-t',
+          'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:bg-gradient-to-t',
           className,
         )}
       >
@@ -119,7 +119,7 @@ export function DashboardMetricCards({
   return (
     <div
       className={cn(
-        'grid gap-4 md:grid-cols-2 lg:grid-cols-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:bg-gradient-to-t',
+        'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:bg-gradient-to-t',
         className,
       )}
     >

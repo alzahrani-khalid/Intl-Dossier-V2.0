@@ -204,7 +204,7 @@ export function RecentDossiersTable({ className, maxItems = 5 }: RecentDossiersT
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="size-7">
+                            <Button variant="ghost" size="icon" className="size-11 sm:size-8">
                               <MoreHorizontal className="size-4" />
                               <span className="sr-only">
                                 {t('dashboard:recentTable.columns.actions')}
