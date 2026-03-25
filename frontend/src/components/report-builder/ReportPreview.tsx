@@ -40,6 +40,7 @@ import { RefreshCw, AlertCircle, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ReportConfiguration, ReportPreviewResponse } from '@/types/report-builder.types'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 interface ReportPreviewProps {
   configuration: ReportConfiguration
@@ -158,7 +159,7 @@ const visibleColumns = useMemo(() => {
     const [, yField] = yAxisFieldId.split('.')
 
     return (
-      <ResponsiveContainer width="100%" height={300}>
+      <LtrIsolate className="w-full" style={{ height: 300 }}><ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
           {showGrid && <CartesianGrid strokeDasharray="3 3" />}
           <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
@@ -167,7 +168,7 @@ const visibleColumns = useMemo(() => {
           {showLegend && <Legend />}
           <Bar dataKey={yField} fill={CHART_COLORS[0]} name={getFieldLabel(yAxisFieldId)} />
         </BarChart>
-      </ResponsiveContainer>
+      </ResponsiveContainer></LtrIsolate>
     )
   }
 
@@ -186,7 +187,7 @@ const visibleColumns = useMemo(() => {
     const [, yField] = yAxisFieldId.split('.')
 
     return (
-      <ResponsiveContainer width="100%" height={300}>
+      <LtrIsolate className="w-full" style={{ height: 300 }}><ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData}>
           {showGrid && <CartesianGrid strokeDasharray="3 3" />}
           <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
@@ -201,7 +202,7 @@ const visibleColumns = useMemo(() => {
             name={getFieldLabel(yAxisFieldId)}
           />
         </LineChart>
-      </ResponsiveContainer>
+      </ResponsiveContainer></LtrIsolate>
     )
   }
 
@@ -220,7 +221,7 @@ const visibleColumns = useMemo(() => {
     const [, yField] = yAxisFieldId.split('.')
 
     return (
-      <ResponsiveContainer width="100%" height={300}>
+      <LtrIsolate className="w-full" style={{ height: 300 }}><ResponsiveContainer width="100%" height={300}>
         <AreaChart data={chartData}>
           {showGrid && <CartesianGrid strokeDasharray="3 3" />}
           <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
@@ -236,7 +237,7 @@ const visibleColumns = useMemo(() => {
             name={getFieldLabel(yAxisFieldId)}
           />
         </AreaChart>
-      </ResponsiveContainer>
+      </ResponsiveContainer></LtrIsolate>
     )
   }
 
@@ -267,7 +268,7 @@ const visibleColumns = useMemo(() => {
     const { showLegend, showLabels } = configuration.visualization
 
     return (
-      <ResponsiveContainer width="100%" height={300}>
+      <LtrIsolate className="w-full" style={{ height: 300 }}><ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
             data={pieData}
@@ -290,7 +291,7 @@ const visibleColumns = useMemo(() => {
           <Tooltip />
           {showLegend && <Legend />}
         </PieChart>
-      </ResponsiveContainer>
+      </ResponsiveContainer></LtrIsolate>
     )
   }
 

@@ -29,6 +29,7 @@ import { Building2, User, Loader2 } from 'lucide-react'
 import type { RelationshipResponse } from '@/services/contact-relationship-api'
 import type { Database } from '@/types/contact-directory.types'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 type Contact = Database['public']['Tables']['contacts']['Row']
 
@@ -278,10 +279,7 @@ const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
   }
 
   return (
-    <div
-      className={`rounded-lg border overflow-hidden ${className}`}
-      style={{ height: typeof height === 'number' ? `${height}px` : height }}
-    >
+    <LtrIsolate className={`rounded-lg border overflow-hidden ${className}`} style={{ height: typeof height === 'number' ? `${height}px` : height }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -298,6 +296,6 @@ const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
         <Background />
         <Controls position={isRTL ? 'top-left' : 'top-right'} />
       </ReactFlow>
-    </div>
+    </LtrIsolate>
   )
 }

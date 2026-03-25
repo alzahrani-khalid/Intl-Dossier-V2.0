@@ -29,6 +29,7 @@ import { supabase } from '@/lib/supabase-client'
 import type { OrganizationDossier, OrganizationExtension } from '@/lib/dossier-type-guards'
 import { Badge } from '@/components/ui/badge'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 interface OrgHierarchyProps {
   dossier: OrganizationDossier
@@ -293,9 +294,7 @@ const extension = dossier.extension ?? ({} as OrganizationExtension)
 
   // Hierarchy chart view
   return (
-    <div
-      className="w-full h-[500px] sm:h-[600px] lg:h-[700px] border rounded-lg overflow-hidden"
-    >
+    <LtrIsolate className="w-full h-[500px] sm:h-[600px] lg:h-[700px] border rounded-lg overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -315,6 +314,6 @@ const extension = dossier.extension ?? ({} as OrganizationExtension)
         <Background color="hsl(var(--muted-foreground))" gap={16} />
         <Controls position={isRTL ? 'top-left' : 'top-right'} />
       </ReactFlow>
-    </div>
+    </LtrIsolate>
   )
 }

@@ -66,6 +66,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 // ============================================
 // Types
@@ -712,10 +713,7 @@ function EnhancedGraphVisualizationInner({
   // ============================================
 
   return (
-    <div
-      className="relative w-full rounded-lg border bg-background overflow-hidden"
-      style={{ height }}
-    >
+    <LtrIsolate className="relative w-full rounded-lg border bg-background overflow-hidden" style={{ height }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -1009,7 +1007,7 @@ function EnhancedGraphVisualizationInner({
           )}
         </Panel>
       </ReactFlow>
-    </div>
+    </LtrIsolate>
   )
 }
 

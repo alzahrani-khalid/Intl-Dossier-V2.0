@@ -24,6 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { SLATrendDataPoint } from '@/types/sla.types'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 interface SLAComplianceChartProps {
   data?: SLATrendDataPoint[]
@@ -116,7 +117,7 @@ const chartData = useMemo(() => {
           </TabsList>
 
           <TabsContent value="line" className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={chartData}
                 margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
@@ -149,11 +150,11 @@ const chartData = useMemo(() => {
                   activeDot={{ r: 6 }}
                 />
               </LineChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer></LtrIsolate>
           </TabsContent>
 
           <TabsContent value="area" className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={chartData}
                 margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
@@ -192,7 +193,7 @@ const chartData = useMemo(() => {
                   fill="url(#colorCompliance)"
                 />
               </AreaChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer></LtrIsolate>
           </TabsContent>
         </Tabs>
       </CardContent>

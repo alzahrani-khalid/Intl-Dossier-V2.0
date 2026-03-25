@@ -35,6 +35,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDashboardTrends, type TrendRange } from '@/hooks/useDashboardTrends'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 const chartConfig = {
   created: {
@@ -111,9 +112,10 @@ export function ChartWorkItemTrends({
         {isLoading ? (
           <Skeleton className="h-[200px] lg:h-[250px] w-full rounded-lg" />
         ) : (
+          <LtrIsolate className="aspect-auto h-[200px] lg:h-[250px] w-full">
           <ChartContainer
             config={chartConfig}
-            className="aspect-auto h-[200px] lg:h-[250px] w-full"
+            className="h-full w-full"
           >
             <AreaChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: 4 }}>
               <defs>
@@ -173,6 +175,7 @@ export function ChartWorkItemTrends({
               <ChartLegend content={(props: any) => <ChartLegendContent {...props} />} />
             </AreaChart>
           </ChartContainer>
+          </LtrIsolate>
         )}
       </CardContent>
     </Card>

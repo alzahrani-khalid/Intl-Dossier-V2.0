@@ -48,6 +48,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import {
   ZoomIn,
   ZoomOut,
@@ -1447,10 +1448,10 @@ function AdvancedGraphVisualizationInner({
   // ============================================
 
   return (
+    <LtrIsolate className="relative w-full rounded-lg border bg-background overflow-hidden" style={{ height }}>
     <div
       ref={reactFlowRef}
-      className="relative w-full rounded-lg border bg-background overflow-hidden"
-      style={{ height }}
+      className="h-full w-full"
     >
       <ReactFlow
         nodes={nodes}
@@ -1873,6 +1874,7 @@ function AdvancedGraphVisualizationInner({
         </Panel>
       </ReactFlow>
     </div>
+    </LtrIsolate>
   )
 }
 

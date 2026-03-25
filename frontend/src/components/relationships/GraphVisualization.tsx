@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/select'
 import { ZoomIn, ZoomOut, Maximize2, Filter } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 // Node data structure
 interface NodeData {
@@ -264,10 +265,7 @@ function GraphVisualizationInner({
   )
 
   return (
-    <div
-      className="relative w-full rounded-lg border bg-background"
-      style={{ height }}
-    >
+    <LtrIsolate className="relative w-full rounded-lg border bg-background" style={{ height }}>
       <ReactFlow
         nodes={reactFlowNodes}
         edges={reactFlowEdges}
@@ -387,7 +385,7 @@ function GraphVisualizationInner({
           </div>
         </Panel>
       </ReactFlow>
-    </div>
+    </LtrIsolate>
   )
 }
 

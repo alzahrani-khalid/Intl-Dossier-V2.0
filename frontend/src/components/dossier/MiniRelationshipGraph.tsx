@@ -51,6 +51,7 @@ import type { Dossier } from '@/lib/dossier-type-guards'
 import type { DossierType } from '@/types/relationship.types'
 import type { RelationshipWithDossiers } from '@/services/relationship-api'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 // ============================================================================
 // Types
@@ -424,10 +425,10 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
   )
 
   return (
+    <LtrIsolate className="relative w-full rounded-lg border bg-background/50 overflow-hidden" style={{ height }}>
     <div
       ref={containerRef}
-      className="relative w-full rounded-lg border bg-background/50 overflow-hidden"
-      style={{ height }}
+      className="h-full w-full"
     >
       <ReactFlow
         nodes={reactFlowNodes}
@@ -478,6 +479,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
         )}
       </AnimatePresence>
     </div>
+    </LtrIsolate>
   )
 }
 

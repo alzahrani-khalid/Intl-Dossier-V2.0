@@ -40,6 +40,7 @@ import {
   STAKEHOLDER_ROLE_LABELS,
 } from '@/types/stakeholder-influence.types'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 // ============================================================================
 // Types
@@ -351,10 +352,7 @@ export function InfluenceNetworkGraph({
   }
 
   return (
-    <div
-      className={`rounded-lg border overflow-hidden bg-background ${className}`}
-      style={{ height: typeof height === 'number' ? `${height}px` : height }}
-    >
+    <LtrIsolate className={`rounded-lg border overflow-hidden bg-background ${className}`} style={{ height: typeof height === 'number' ? `${height}px` : height }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -430,6 +428,6 @@ export function InfluenceNetworkGraph({
           </Card>
         </Panel>
       </ReactFlow>
-    </div>
+    </LtrIsolate>
   )
 }

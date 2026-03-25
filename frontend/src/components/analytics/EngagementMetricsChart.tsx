@@ -30,6 +30,7 @@ import type { EngagementMetrics } from '@/types/analytics.types'
 import { DEFAULT_CHART_COLORS } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 interface EngagementMetricsChartProps {
   data?: EngagementMetrics
@@ -184,7 +185,7 @@ const trendData = useMemo(() => {
           </TabsList>
 
           <TabsContent value="trend" className="h-64 sm:h-72">
-            <ResponsiveContainer width="100%" height="100%">
+            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={trendData}
                 margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
@@ -215,11 +216,11 @@ const trendData = useMemo(() => {
                   activeDot={{ r: 5 }}
                 />
               </LineChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer></LtrIsolate>
           </TabsContent>
 
           <TabsContent value="type" className="h-64 sm:h-72">
-            <ResponsiveContainer width="100%" height="100%">
+            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={typeData}
                 layout="vertical"
@@ -242,11 +243,11 @@ const trendData = useMemo(() => {
                   ))}
                 </Bar>
               </BarChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer></LtrIsolate>
           </TabsContent>
 
           <TabsContent value="outcome" className="h-64 sm:h-72">
-            <ResponsiveContainer width="100%" height="100%">
+            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={outcomeData}
@@ -267,7 +268,7 @@ const trendData = useMemo(() => {
                 <Tooltip content={<PieTooltip />} />
                 <Legend />
               </PieChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer></LtrIsolate>
           </TabsContent>
         </Tabs>
       </CardContent>

@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils'
 import type { CommitmentFulfillment } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 interface CommitmentFulfillmentChartProps {
   data?: CommitmentFulfillment
@@ -215,7 +216,7 @@ const trendData = useMemo(() => {
           </TabsList>
 
           <TabsContent value="status" className="h-64 sm:h-72">
-            <ResponsiveContainer width="100%" height="100%">
+            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={statusData}
@@ -236,11 +237,11 @@ const trendData = useMemo(() => {
                 <Tooltip content={<PieTooltip />} />
                 <Legend />
               </PieChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer></LtrIsolate>
           </TabsContent>
 
           <TabsContent value="trend" className="h-64 sm:h-72">
-            <ResponsiveContainer width="100%" height="100%">
+            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={trendData}
                 margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
@@ -273,11 +274,11 @@ const trendData = useMemo(() => {
                   activeDot={{ r: 5 }}
                 />
               </LineChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer></LtrIsolate>
           </TabsContent>
 
           <TabsContent value="source" className="h-64 sm:h-72">
-            <ResponsiveContainer width="100%" height="100%">
+            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={sourceData}
                 margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
@@ -305,7 +306,7 @@ const trendData = useMemo(() => {
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer></LtrIsolate>
           </TabsContent>
         </Tabs>
 

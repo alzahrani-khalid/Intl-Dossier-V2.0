@@ -29,6 +29,7 @@ import type { WorkloadDistribution } from '@/types/analytics.types'
 import { PRIORITY_COLORS } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
+import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 interface WorkloadDistributionChartProps {
   data?: WorkloadDistribution
@@ -179,7 +180,7 @@ const userWorkloadData = useMemo(() => {
 
           <TabsContent value="users" className="h-64 sm:h-80">
             {userWorkloadData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={userWorkloadData}
                   layout="vertical"
@@ -212,7 +213,7 @@ const userWorkloadData = useMemo(() => {
                     stackId="b"
                   />
                 </BarChart>
-              </ResponsiveContainer>
+              </ResponsiveContainer></LtrIsolate>
             ) : (
               <div className="h-full flex items-center justify-center text-muted-foreground">
                 {t('errors.noData')}
