@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  type Row,
 } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import {
@@ -20,11 +21,14 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Download,
+  LayoutGrid,
   Search,
+  TableIcon,
   X,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
@@ -42,6 +46,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
+import { useResponsive } from '@/hooks/use-responsive'
+
+type ViewMode = 'table' | 'card'
 
 interface AdvancedDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -51,6 +58,14 @@ interface AdvancedDataTableProps<TData, TValue> {
   enableRowSelection?: boolean
   enableExport?: boolean
   exportFileName?: string
+  /** Show table/card toggle button */
+  enableViewToggle?: boolean
+  /** Column IDs to show in card view */
+  mobileCardColumns?: string[]
+  /** Column ID for card title */
+  cardTitleColumn?: string
+  /** Column ID for card description */
+  cardDescriptionColumn?: string
 }
 
 export function AdvancedDataTable<TData, TValue>({
@@ -61,15 +76,26 @@ export function AdvancedDataTable<TData, TValue>({
   enableRowSelection = false,
   enableExport = true,
   exportFileName = 'export',
+  enableViewToggle = true,
+  mobileCardColumns,
+  cardTitleColumn,
+  cardDescriptionColumn,
 }: AdvancedDataTableProps<TData, TValue>) {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.dir() === 'rtl'
+  const { isMobile } = useResponsive()
 
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState('')
+  const [viewMode, setViewMode] = React.useState<ViewMode>(isMobile ? 'card' : 'table')
+
+  // Auto-switch view mode when viewport changes
+  React.useEffect(() => {
+    setViewMode(isMobile ? 'card' : 'table')
+  }, [isMobile])
 
   // Add selection column if enabled
   const tableColumns = React.useMemo(() => {
@@ -125,6 +151,76 @@ export function AdvancedDataTable<TData, TValue>({
       globalFilter,
     },
   })
+
+  // Render mobile card for a row
+  const renderMobileCard = (row: Row<TData>): React.ReactNode => {
+    const cells = row.getVisibleCells()
+    const titleCell = cardTitleColumn
+      ? cells.find((c) => c.column.id === cardTitleColumn)
+      : cells.find((c) => c.column.id !== 'select') ?? cells[0]
+    const descCell = cardDescriptionColumn
+      ? cells.find((c) => c.column.id === cardDescriptionColumn)
+      : cells.find((c) => c.column.id !== 'select' && c !== titleCell)
+    const displayCells = mobileCardColumns
+      ? cells.filter((c) => mobileCardColumns.includes(c.column.id))
+      : cells.filter((c) => c !== titleCell && c !== descCell && c.column.id !== 'select' && c.column.id !== 'actions').slice(0, 4)
+
+    return (
+      <Card
+        key={row.id}
+        className={cn(
+          'transition-colors',
+          onRowClick && 'cursor-pointer hover:bg-accent/50 active:bg-accent',
+          row.getIsSelected() && 'ring-2 ring-primary bg-primary/5',
+        )}
+        onClick={() => onRowClick?.(row.original)}
+      >
+        <CardContent className="p-4 space-y-3">
+          {/* Card Header */}
+          <div className="flex items-start justify-between gap-3">
+            {enableRowSelection && (
+              <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label={t('common:selectRow')}
+                className="mt-0.5 min-h-11 min-w-11 flex items-center justify-center"
+              />
+            )}
+            <div className="flex-1 min-w-0">
+              {titleCell && (
+                <div className="font-medium text-sm sm:text-base truncate">
+                  {flexRender(titleCell.column.columnDef.cell, titleCell.getContext())}
+                </div>
+              )}
+              {descCell && descCell !== titleCell && (
+                <div className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-2">
+                  {flexRender(descCell.column.columnDef.cell, descCell.getContext())}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Card Details */}
+          {displayCells.length > 0 && (
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2 border-t border-border">
+              {displayCells.map((cell) => (
+                <div key={cell.id} className="space-y-0.5">
+                  <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">
+                    {typeof cell.column.columnDef.header === 'string'
+                      ? cell.column.columnDef.header
+                      : cell.column.id}
+                  </div>
+                  <div className="text-xs sm:text-sm font-medium">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    )
+  }
 
   // Export to CSV
   const exportToCSV = () => {
@@ -205,8 +301,32 @@ export function AdvancedDataTable<TData, TValue>({
           )}
         </div>
 
-        {/* Column Visibility & Export */}
+        {/* View Toggle, Column Visibility & Export */}
         <div className="flex gap-2">
+          {/* View Toggle */}
+          {enableViewToggle && (
+            <div className="flex items-center rounded-md border border-input p-0.5 sm:hidden">
+              <Button
+                variant={viewMode === 'card' ? 'secondary' : 'ghost'}
+                size="sm"
+                className="h-8 w-8 p-0 min-h-11 min-w-11"
+                onClick={() => setViewMode('card')}
+                aria-label={t('common:cardView', { defaultValue: 'Card view' })}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'secondary' : 'ghost'}
+                size="sm"
+                className="h-8 w-8 p-0 min-h-11 min-w-11"
+                onClick={() => setViewMode('table')}
+                aria-label={t('common:tableView', { defaultValue: 'Table view' })}
+              >
+                <TableIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
           {/* Column Visibility */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -249,73 +369,90 @@ export function AdvancedDataTable<TData, TValue>({
         </div>
       </div>
 
-      {/* Table */}
-      <div className="rounded-lg border border-border overflow-hidden">
-        <div className="overflow-x-auto touch-pan-x">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead
-                        key={header.id}
-                        className={cn(
-                          'px-3 py-2 sm:px-4 sm:py-3 lg:px-6',
-                          header.column.getCanSort() && 'cursor-pointer select-none',
-                        )}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {header.isPlaceholder ? null : (
-                          <div
-                            className={cn(
-                              'flex items-center gap-2',
-                              header.column.getCanSort() && 'hover:text-foreground',
-                            )}
-                          >
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                            {header.column.getCanSort() && <ArrowUpDown className="h-3 w-3" />}
-                          </div>
-                        )}
-                      </TableHead>
-                    )
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                    className={cn(
-                      onRowClick && 'cursor-pointer hover:bg-accent/50',
-                      'transition-colors',
-                    )}
-                    onClick={() => onRowClick?.(row.original)}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6 text-xs sm:text-sm"
-                      >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={tableColumns.length} className="h-24 text-center">
-                    {t('common:noData')}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+      {/* Mobile Card View */}
+      {viewMode === 'card' && (
+        <div className="grid grid-cols-1 gap-3">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => renderMobileCard(row))
+          ) : (
+            <Card>
+              <CardContent className="py-12 text-center text-muted-foreground">
+                {t('common:noData')}
+              </CardContent>
+            </Card>
+          )}
         </div>
-      </div>
+      )}
+
+      {/* Table View */}
+      {viewMode === 'table' && (
+        <div className="rounded-lg border border-border overflow-hidden">
+          <div className="overflow-x-auto touch-pan-x">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TableHead
+                          key={header.id}
+                          className={cn(
+                            'px-3 py-2 sm:px-4 sm:py-3 lg:px-6',
+                            header.column.getCanSort() && 'cursor-pointer select-none',
+                          )}
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {header.isPlaceholder ? null : (
+                            <div
+                              className={cn(
+                                'flex items-center gap-2',
+                                header.column.getCanSort() && 'hover:text-foreground',
+                              )}
+                            >
+                              {flexRender(header.column.columnDef.header, header.getContext())}
+                              {header.column.getCanSort() && <ArrowUpDown className="h-3 w-3" />}
+                            </div>
+                          )}
+                        </TableHead>
+                      )
+                    })}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && 'selected'}
+                      className={cn(
+                        onRowClick && 'cursor-pointer hover:bg-accent/50',
+                        'transition-colors',
+                      )}
+                      onClick={() => onRowClick?.(row.original)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6 text-xs sm:text-sm"
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={tableColumns.length} className="h-24 text-center">
+                      {t('common:noData')}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
