@@ -74,10 +74,10 @@ function CountryDossierDetailRoute() {
                 {error.message || t('detail.errorGeneric')}
               </p>
               <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild className="min-h-11">
                   <Link to="/dossiers">{t('action.backToHub')}</Link>
                 </Button>
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild className="min-h-11">
                   <Link to="/dossiers/countries">{t('action.backToList')}</Link>
                 </Button>
               </div>
@@ -112,11 +112,11 @@ function CountryDossierDetailRoute() {
                 })}
               </p>
               <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild className="min-h-11">
                   <Link to="/dossiers">{t('action.backToHub')}</Link>
                 </Button>
                 {dossier && (
-                  <Button variant="outline" asChild>
+                  <Button variant="outline" asChild className="min-h-11">
                     <Link to={`/dossiers/${dossier.type}s/${dossier.id}`}>
                       {t('action.viewCorrectType', { type: t(`type.${dossier.type}`) })}
                     </Link>

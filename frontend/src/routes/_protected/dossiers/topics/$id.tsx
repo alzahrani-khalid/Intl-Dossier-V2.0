@@ -63,7 +63,7 @@ function TopicDossierDetailRoute() {
         </Alert>
         <div className="mt-4 sm:mt-6">
           <Link to="/dossiers">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 min-h-11">
               <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
               {t('action.backToHub')}
             </Button>
@@ -87,7 +87,7 @@ function TopicDossierDetailRoute() {
         </Alert>
         <div className="mt-4 sm:mt-6">
           <Link to="/dossiers">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 min-h-11">
               <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
               {t('action.backToHub')}
             </Button>
@@ -116,7 +116,7 @@ function TopicDossierDetailRoute() {
         </Alert>
         <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
           <Link to={`/dossiers/${dossier.type}s/$id`} params={p({ id: dossier.id })}>
-            <Button className="gap-2 w-full sm:w-auto">
+            <Button className="gap-2 w-full sm:w-auto min-h-11">
               {t('action.viewCorrectType', { type: actualType })}
             </Button>
           </Link>
