@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 
-import { useIsMobile } from '@/hooks/use-mobile'
+import { useResponsive } from '@/hooks/use-responsive'
 import { useContextAwareFAB } from '@/hooks/useContextAwareFAB'
 import { useEntityHistoryStore } from '@/store/entityHistoryStore'
 import { useDossierContextSafe } from '@/contexts/dossier-context'
@@ -40,7 +40,7 @@ export function MainLayout({
   showBreadcrumbTrail = true,
   showDossierContext = true,
 }: MainLayoutProps) {
-  const isMobile = useIsMobile()
+  const { isMobile } = useResponsive()
 
   // Context-aware FAB configuration
   const { contextActions, speedDialActions, defaultAction, shouldShowFAB } = useContextAwareFAB()
