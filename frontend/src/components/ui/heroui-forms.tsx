@@ -86,21 +86,21 @@ return (
       isInvalid={!!error}
       className={cn('w-full', className)}
     >
-      <HeroUILabel className={cn(isRTL && 'text-right')}>{label}</HeroUILabel>
+      <HeroUILabel className={cn(isRTL && 'text-end')}>{label}</HeroUILabel>
       <HeroUIInput
         placeholder={placeholder}
         className={cn(
           // Mobile-first touch targets
           'min-h-11 sm:min-h-10',
           // RTL support
-          isRTL && 'text-right',
+          isRTL && 'text-end',
           inputClassName,
         )}
       />
       {error ? (
         <HeroUIFieldError>{error}</HeroUIFieldError>
       ) : description ? (
-        <HeroUIDescription className={cn(isRTL && 'text-right')}>{description}</HeroUIDescription>
+        <HeroUIDescription className={cn(isRTL && 'text-end')}>{description}</HeroUIDescription>
       ) : null}
     </HeroUITextField>
   )
@@ -144,7 +144,7 @@ const { isRTL } = useDirection()
       isInvalid={!!error}
       className={cn('w-full', className)}
     >
-      <HeroUILabel className={cn(isRTL && 'text-right')}>{label}</HeroUILabel>
+      <HeroUILabel className={cn(isRTL && 'text-end')}>{label}</HeroUILabel>
       <HeroUITextArea
         placeholder={placeholder}
         rows={rows}
@@ -152,14 +152,14 @@ const { isRTL } = useDirection()
           // Mobile-first
           'min-h-[100px]',
           // RTL support
-          isRTL && 'text-right',
+          isRTL && 'text-end',
           inputClassName,
         )}
       />
       {error ? (
         <HeroUIFieldError>{error}</HeroUIFieldError>
       ) : description ? (
-        <HeroUIDescription className={cn(isRTL && 'text-right')}>{description}</HeroUIDescription>
+        <HeroUIDescription className={cn(isRTL && 'text-end')}>{description}</HeroUIDescription>
       ) : null}
     </HeroUITextField>
   )
@@ -226,7 +226,7 @@ const { isRTL } = useDirection()
       <HeroUICheckbox.Control className="mt-0.5">
         <HeroUICheckbox.Indicator />
       </HeroUICheckbox.Control>
-      <div className={cn('flex flex-col', isRTL && 'text-right')}>
+      <div className={cn('flex flex-col', isRTL && 'text-end')}>
         <HeroUILabel>{label}</HeroUILabel>
         {description && <HeroUIDescription className="text-xs">{description}</HeroUIDescription>}
       </div>
@@ -284,7 +284,7 @@ const { isRTL } = useDirection()
         className,
       )}
     >
-      <div className={cn('flex flex-col', isRTL && 'text-right items-end')}>
+      <div className={cn('flex flex-col', isRTL && 'text-end items-end')}>
         <HeroUILabel>{label}</HeroUILabel>
         {description && <HeroUIDescription className="text-xs">{description}</HeroUIDescription>}
       </div>

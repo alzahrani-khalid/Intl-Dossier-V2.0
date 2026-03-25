@@ -117,7 +117,7 @@ return (
             // Base styles
             'bg-background border border-border',
             // RTL support
-            isRTL && 'text-right',
+            isRTL && 'text-end',
             className,
           )}
         >
