@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import unusedImports from 'eslint-plugin-unused-imports'
 import checkFile from 'eslint-plugin-check-file'
+import rtlFriendly from 'eslint-plugin-rtl-friendly'
 import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tseslint.config(
@@ -148,6 +149,18 @@ export default tseslint.config(
           message: 'Use border-e-* instead of border-r-* for RTL support.',
         },
       ],
+    },
+  },
+
+  // ── RTL-friendly plugin: catch physical CSS in Tailwind classes ────
+  {
+    files: ['frontend/**/*.{ts,tsx}'],
+    ignores: ['frontend/**/components/ui/**/*.{ts,tsx}'],
+    plugins: {
+      'rtl-friendly': rtlFriendly,
+    },
+    rules: {
+      'rtl-friendly/no-physical-properties': 'warn',
     },
   },
 
