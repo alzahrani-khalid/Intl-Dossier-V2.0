@@ -20,7 +20,7 @@ import type {
 } from '@/types/bulk-actions.types'
 import { MAX_BULK_SELECTION } from '@/types/bulk-actions.types'
 import { cn } from '@/lib/utils'
-import { useResponsive } from '@/hooks/use-responsive'
+import { useResponsive } from '@/hooks/useResponsive'
 
 type ViewMode = 'table' | 'card'
 
@@ -164,9 +164,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
     const canSelect = isSelected || !maxReached
 
     // Determine title, description, and detail columns
-    const titleColumn = cardTitleColumn
-      ? columns.find((c) => c.id === cardTitleColumn)
-      : columns[0]
+    const titleColumn = cardTitleColumn ? columns.find((c) => c.id === cardTitleColumn) : columns[0]
     const descColumn = cardDescriptionColumn
       ? columns.find((c) => c.id === cardDescriptionColumn)
       : columns[1]
@@ -225,9 +223,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
                   <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">
                     {t(column.headerKey, { defaultValue: column.headerKey })}
                   </div>
-                  <div className="text-xs sm:text-sm font-medium">
-                    {renderCell(item, column)}
-                  </div>
+                  <div className="text-xs sm:text-sm font-medium">{renderCell(item, column)}</div>
                 </div>
               ))}
             </div>
@@ -410,11 +406,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
               </span>
             )}
           </div>
-          {bulkActions && (
-            <MobileActionBar.ActionGroup>
-              {bulkActions}
-            </MobileActionBar.ActionGroup>
-          )}
+          {bulkActions && <MobileActionBar.ActionGroup>{bulkActions}</MobileActionBar.ActionGroup>}
         </MobileActionBar>
       )}
     </div>

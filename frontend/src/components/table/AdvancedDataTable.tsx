@@ -46,7 +46,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
-import { useResponsive } from '@/hooks/use-responsive'
+import { useResponsive } from '@/hooks/useResponsive'
 
 type ViewMode = 'table' | 'card'
 
@@ -157,13 +157,21 @@ export function AdvancedDataTable<TData, TValue>({
     const cells = row.getVisibleCells()
     const titleCell = cardTitleColumn
       ? cells.find((c) => c.column.id === cardTitleColumn)
-      : cells.find((c) => c.column.id !== 'select') ?? cells[0]
+      : (cells.find((c) => c.column.id !== 'select') ?? cells[0])
     const descCell = cardDescriptionColumn
       ? cells.find((c) => c.column.id === cardDescriptionColumn)
       : cells.find((c) => c.column.id !== 'select' && c !== titleCell)
     const displayCells = mobileCardColumns
       ? cells.filter((c) => mobileCardColumns.includes(c.column.id))
-      : cells.filter((c) => c !== titleCell && c !== descCell && c.column.id !== 'select' && c.column.id !== 'actions').slice(0, 4)
+      : cells
+          .filter(
+            (c) =>
+              c !== titleCell &&
+              c !== descCell &&
+              c.column.id !== 'select' &&
+              c.column.id !== 'actions',
+          )
+          .slice(0, 4)
 
     return (
       <Card

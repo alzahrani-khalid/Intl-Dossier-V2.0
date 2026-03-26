@@ -41,7 +41,7 @@ import {
   MessageSquare,
   Link2,
 } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 
 export const Route = createFileRoute('/_protected/admin/ai-settings')({
   component: AISettingsPage,
@@ -253,7 +253,10 @@ function AISettingsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>

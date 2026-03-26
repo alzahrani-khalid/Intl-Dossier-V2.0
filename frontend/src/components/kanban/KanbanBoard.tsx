@@ -28,7 +28,7 @@ import { Badge } from '../ui/badge'
 import { ScrollArea } from '../ui/scroll-area'
 import { SLAIndicator } from '../tasks/SLAIndicator'
 import { Loader2, GripVertical } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 import type { Database } from '../../../../backend/src/types/database.types'
 
 type Task = Database['public']['Tables']['tasks']['Row']
@@ -203,7 +203,10 @@ export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps
             {WORKFLOW_STAGES.map((stage) => {
               const stageTasks = tasksByStage[stage] ?? []
               return (
-                <Card key={stage} className={cn(getStageColor(stage), 'sm:min-w-[280px] sm:w-[280px] shrink-0')}>
+                <Card
+                  key={stage}
+                  className={cn(getStageColor(stage), 'sm:min-w-[280px] sm:w-[280px] shrink-0')}
+                >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between min-h-11">
                       <CardTitle className="text-sm sm:text-base lg:text-lg">
@@ -343,11 +346,7 @@ function KanbanCard({ task, onClick, isRTL, getPriorityColor }: KanbanCardProps)
         </div>
 
         {/* Task Title - Mobile-first, RTL-compatible */}
-        <h4
-          className="text-sm font-medium line-clamp-2 mb-2 text-start"
-        >
-          {task.title}
-        </h4>
+        <h4 className="text-sm font-medium line-clamp-2 mb-2 text-start">{task.title}</h4>
 
         {/* Metadata */}
         <div className="flex items-center gap-2 flex-wrap">

@@ -1,4 +1,4 @@
-/** @deprecated Use useResponsive() from '@/hooks/use-responsive' instead. Will be removed in Phase 6. */
+/** @deprecated Use useResponsive() from '@/hooks/useResponsive' instead. Will be removed in Phase 6. */
 
 import * as React from 'react'
 

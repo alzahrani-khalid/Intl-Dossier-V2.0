@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 import { useAuth } from '@/hooks/useAuth'
-import { useResponsive } from '@/hooks/use-responsive'
+import { useResponsive } from '@/hooks/useResponsive'
 import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
 import { LanguageToggle } from '@/components/LanguageToggle'
@@ -68,7 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     if (isTablet) {
       setOpen(false)
     }
-  }, [isTablet]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isTablet])
 
   const pathname = location.pathname
   const isExpanded = isMobile ? openMobile : open

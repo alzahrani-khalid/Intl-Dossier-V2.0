@@ -38,7 +38,7 @@ import {
 } from '@/components/ui/select'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { UserPicker } from '@/components/Forms/UserPicker'
-import { useUpdateTask } from '@/hooks/use-tasks'
+import { useUpdateTask } from '@/hooks/useTasks'
 import type { Database } from '../../../../backend/src/types/database.types'
 
 type Task = Database['public']['Tables']['tasks']['Row']
@@ -145,164 +145,163 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
       snapPreset="large"
       footer={formFooter}
     >
-        <Form {...form}>
-          <form id="task-edit-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            {/* Title */}
+      <Form {...form}>
+        <form
+          id="task-edit-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-4"
+        >
+          {/* Title */}
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-start">{t('tasks.title', 'Title')}</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="h-11"
+                    placeholder={t('tasks.titlePlaceholder', 'Task title...')}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Description */}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-start">
+                  {t('tasks.description', 'Description')}
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    rows={3}
+                    className="resize-none"
+                    placeholder={t('tasks.descriptionPlaceholder', 'Task description...')}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Assignee */}
+          <FormField
+            control={form.control}
+            name="assignee_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-start">{t('tasks.assignee', 'Assignee')}</FormLabel>
+                <FormControl>
+                  <UserPicker value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Priority & Workflow Stage row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="title"
+              name="priority"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-start">{t('tasks.title', 'Title')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="h-11"
-                      placeholder={t('tasks.titlePlaceholder', 'Task title...')}
+                  <FormLabel className="text-start">{t('tasks.priority', 'Priority')}</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="h-11">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="low">{t('priority.low', 'Low')}</SelectItem>
+                      <SelectItem value="medium">{t('priority.medium', 'Medium')}</SelectItem>
+                      <SelectItem value="high">{t('priority.high', 'High')}</SelectItem>
+                      <SelectItem value="urgent">{t('priority.urgent', 'Urgent')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="workflow_stage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-start">{t('tasks.workflowStage', 'Stage')}</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="h-11">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="todo">{t('workflow_stage.todo', 'To Do')}</SelectItem>
+                      <SelectItem value="in_progress">
+                        {t('workflow_stage.in_progress', 'In Progress')}
+                      </SelectItem>
+                      <SelectItem value="review">{t('workflow_stage.review', 'Review')}</SelectItem>
+                      <SelectItem value="done">{t('workflow_stage.done', 'Done')}</SelectItem>
+                      <SelectItem value="cancelled">
+                        {t('workflow_stage.cancelled', 'Cancelled')}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Deadline */}
+          <FormField
+            control={form.control}
+            name="sla_deadline"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-start">{t('tasks.deadline', 'Deadline')}</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          'w-full h-11 justify-start text-start font-normal',
+                          !field.value && 'text-muted-foreground',
+                        )}
+                      >
+                        <CalendarIcon className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
+                        {field.value
+                          ? format(field.value, 'PPP', { locale: isRTL ? ar : enUS })
+                          : t('tasks.selectDeadline', 'Select deadline')}
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value ?? undefined}
+                      onSelect={field.onChange}
+                      initialFocus
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Description */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-start">
-                    {t('tasks.description', 'Description')}
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      rows={3}
-                      className="resize-none"
-                      placeholder={t('tasks.descriptionPlaceholder', 'Task description...')}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Assignee */}
-            <FormField
-              control={form.control}
-              name="assignee_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-start">{t('tasks.assignee', 'Assignee')}</FormLabel>
-                  <FormControl>
-                    <UserPicker value={field.value} onChange={field.onChange} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Priority & Workflow Stage row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="priority"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-start">{t('tasks.priority', 'Priority')}</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="h-11">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="low">{t('priority.low', 'Low')}</SelectItem>
-                        <SelectItem value="medium">{t('priority.medium', 'Medium')}</SelectItem>
-                        <SelectItem value="high">{t('priority.high', 'High')}</SelectItem>
-                        <SelectItem value="urgent">{t('priority.urgent', 'Urgent')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="workflow_stage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-start">
-                      {t('tasks.workflowStage', 'Stage')}
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="h-11">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="todo">{t('workflow_stage.todo', 'To Do')}</SelectItem>
-                        <SelectItem value="in_progress">
-                          {t('workflow_stage.in_progress', 'In Progress')}
-                        </SelectItem>
-                        <SelectItem value="review">
-                          {t('workflow_stage.review', 'Review')}
-                        </SelectItem>
-                        <SelectItem value="done">{t('workflow_stage.done', 'Done')}</SelectItem>
-                        <SelectItem value="cancelled">
-                          {t('workflow_stage.cancelled', 'Cancelled')}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* Deadline */}
-            <FormField
-              control={form.control}
-              name="sla_deadline"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-start">{t('tasks.deadline', 'Deadline')}</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            'w-full h-11 justify-start text-start font-normal',
-                            !field.value && 'text-muted-foreground',
-                          )}
-                        >
-                          <CalendarIcon className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-                          {field.value
-                            ? format(field.value, 'PPP', { locale: isRTL ? ar : enUS })
-                            : t('tasks.selectDeadline', 'Select deadline')}
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value ?? undefined}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-          </form>
-        </Form>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
     </AdaptiveDialog>
   )
 }

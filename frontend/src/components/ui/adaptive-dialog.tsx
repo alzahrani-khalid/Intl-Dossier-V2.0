@@ -15,7 +15,7 @@
 
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useResponsive } from '@/hooks/use-responsive'
+import { useResponsive } from '@/hooks/useResponsive'
 import {
   Dialog,
   DialogContent,
@@ -81,11 +81,7 @@ export function AdaptiveDialog({
 
   if (isMobile) {
     return (
-      <BottomSheet
-        open={open}
-        onOpenChange={onOpenChange}
-        snapPreset={snapPreset}
-      >
+      <BottomSheet open={open} onOpenChange={onOpenChange} snapPreset={snapPreset}>
         <BottomSheetContent showHandle showHandleHint={false}>
           {(title !== undefined || description !== undefined) && (
             <BottomSheetHeader>
@@ -113,14 +109,10 @@ export function AdaptiveDialog({
         {(title !== undefined || description !== undefined) && (
           <DialogHeader>
             {title !== undefined && (
-              <DialogTitle className="text-start text-lg sm:text-xl">
-                {title}
-              </DialogTitle>
+              <DialogTitle className="text-start text-lg sm:text-xl">{title}</DialogTitle>
             )}
             {description !== undefined && (
-              <DialogDescription className="text-start">
-                {description}
-              </DialogDescription>
+              <DialogDescription className="text-start">{description}</DialogDescription>
             )}
           </DialogHeader>
         )}

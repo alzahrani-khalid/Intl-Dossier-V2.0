@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 
-import { useResponsive } from '@/hooks/use-responsive'
+import { useResponsive } from '@/hooks/useResponsive'
 import { useContextAwareFAB } from '@/hooks/useContextAwareFAB'
 import { useEntityHistoryStore } from '@/store/entityHistoryStore'
 import { useDossierContextSafe } from '@/contexts/dossier-context'
@@ -56,7 +56,7 @@ export function MainLayout({
   const dossierContext = useDossierContextSafe()
   const hasDossierContext = Boolean(
     dossierContext?.activeDossier ||
-      (dossierContext?.state?.selectedDossiers && dossierContext.state.selectedDossiers.length > 0),
+    (dossierContext?.state?.selectedDossiers && dossierContext.state.selectedDossiers.length > 0),
   )
   const displayDossierContext = showDossierContext && hasDossierContext
 
