@@ -159,12 +159,13 @@ Plans:
 2. Core Web Vitals pass: LCP < 2.5s, INP < 200ms, CLS < 0.1 with Sentry RUM tracking active
 3. No N+1 query patterns remain — slow Supabase queries have proper indexes
 4. Key pages (dashboard, dossier list, dossier detail) show no unnecessary re-renders in React DevTools profiler
-   **Plans**: TBD
+   **Plans**: 3 plans
 
 Plans:
 
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md — Bundle budget enforcement (size-limit CI gate), font preloading, Sentry deferral, Lighthouse CI config
+- [ ] 07-02-PLAN.md — TanStack Query staleTime tiers, Redis connection reliability fix, cache warming
+- [ ] 07-03-PLAN.md — Re-render profiling and targeted memoization on dashboard, kanban, dossier list/detail, context provider audit
 
 ## Progress
 
@@ -180,5 +181,5 @@ Note: Phase 3 (Security) depends only on Phase 1 and can run in parallel with Ph
 | 3. Security Hardening         | 3/3            | Complete    | -          |
 | 4. RTL/LTR Consistency        | 6/6            | Complete    | 2026-03-25 |
 | 5. Responsive Design          | 0/5            | Planning    | -          |
-| 6. Architecture Consolidation | 4/5 | In Progress|  |
-| 7. Performance Optimization   | 0/2            | Not started | -          |
+| 6. Architecture Consolidation | 4/5            | In Progress | -          |
+| 7. Performance Optimization   | 0/3            | Planned     | -          |
