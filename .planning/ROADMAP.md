@@ -138,12 +138,15 @@ Plans:
 1. Domain repositories exist for all 13+ backend API areas — no hooks call the API directly with raw fetch()
 2. Each backend domain has exactly one service file — no PascalCase/kebab-case duplicate pairs remain
 3. Shared patterns (CRUD operations, list/detail hooks, error handling) are extracted into reusable utilities across dossier types
-   **Plans**: TBD
+   **Plans**: 5 plans
 
 Plans:
 
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [x] 06-01-PLAN.md — Create shared apiClient, migrate dossiers domain (7 hooks), delete deprecated files
+- [ ] 06-02-PLAN.md — Migrate positions (10), engagements (4), calendar (5) domains to repository pattern
+- [x] 06-03-PLAN.md — Migrate work-items (4), relationships (2), documents (2), persons (1), topics (1) domains
+- [ ] 06-04-PLAN.md — Migrate AI (3), search (3), intake (3), audit (3), analytics (2), briefings (3), tags (3), import (3), misc (7+) domains
+- [ ] 06-05-PLAN.md — Merge 6 backend duplicate service pairs, update architecture docs
 
 ### Phase 7: Performance Optimization
 
@@ -177,5 +180,5 @@ Note: Phase 3 (Security) depends only on Phase 1 and can run in parallel with Ph
 | 3. Security Hardening         | 3/3            | Complete    | -          |
 | 4. RTL/LTR Consistency        | 6/6            | Complete    | 2026-03-25 |
 | 5. Responsive Design          | 0/5            | Planning    | -          |
-| 6. Architecture Consolidation | 0/2            | Not started | -          |
+| 6. Architecture Consolidation | 0/5            | Planned     | -          |
 | 7. Performance Optimization   | 0/2            | Not started | -          |
