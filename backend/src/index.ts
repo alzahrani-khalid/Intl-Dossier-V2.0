@@ -1,6 +1,7 @@
 import express from 'express'
 import { securityMiddleware } from './middleware/security.js'
 import { logInfo, logError } from './utils/logger'
+import { initializeRedis, warmCriticalCaches } from './config/redis'
 import apiRouter from './api'
 import mfaContractRouter from './api/contract/mfa'
 import monitoringContractRouter from './api/contract/monitoring'
@@ -116,12 +117,27 @@ app.use((_req, res) => {
   })
 })
 
-// Start server
-app.listen(PORT, () => {
-  logInfo(`Server starting on port ${PORT}`, {
-    port: PORT,
-    environment: process.env.NODE_ENV || 'development',
+// Start server with async initialization
+async function startServer(): Promise<void> {
+  // Initialize Redis explicitly (per D-09)
+  const redisAvailable = await initializeRedis()
+  if (redisAvailable) {
+    await warmCriticalCaches()
+  } else {
+    logInfo('Redis unavailable - cache operations will fail gracefully to direct DB queries')
+  }
+
+  app.listen(PORT, () => {
+    logInfo(`Server starting on port ${PORT}`, {
+      port: PORT,
+      environment: process.env.NODE_ENV || 'development',
+    })
   })
+}
+
+startServer().catch((err) => {
+  logError('Failed to start server', err)
+  process.exit(1)
 })
 
 // Graceful shutdown

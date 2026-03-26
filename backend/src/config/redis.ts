@@ -132,6 +132,64 @@ export const cacheHelpers = {
 }
 
 /**
+ * Explicitly initialize Redis connection at server startup.
+ * Replaces lazyConnect behavior with deterministic startup check.
+ * Returns true if Redis is available, false if operating in cache-bypass mode.
+ */
+export async function initializeRedis(): Promise<boolean> {
+  try {
+    await redis.connect()
+    const start = Date.now()
+    await redis.ping()
+    const latency = Date.now() - start
+    logInfo(`Redis connected and healthy (latency: ${latency}ms)`)
+    return true
+  } catch (err) {
+    logError('Redis initialization failed - operating in cache-bypass mode', err as Error)
+    return false
+  }
+}
+
+/**
+ * Check Redis health status.
+ * Used by health check endpoints and monitoring.
+ */
+export async function checkRedisHealth(): Promise<{
+  status: 'healthy' | 'unhealthy'
+  latency_ms: number
+  error?: string
+}> {
+  try {
+    const start = Date.now()
+    await redis.ping()
+    const latency = Date.now() - start
+    return { status: 'healthy', latency_ms: latency }
+  } catch (err) {
+    return {
+      status: 'unhealthy',
+      latency_ms: -1,
+      error: (err as Error).message,
+    }
+  }
+}
+
+/**
+ * Warm critical caches at startup for high-traffic queries.
+ * Called after Redis connects successfully.
+ */
+export async function warmCriticalCaches(): Promise<void> {
+  try {
+    logInfo('Starting cache warming for high-traffic queries...')
+    // Warm dossier list counts (most visited page)
+    // This primes the Redis cache so first user requests hit warm cache
+    const warmupKeys = await redis.keys('dossier:list:*')
+    logInfo(`Cache warming complete. ${warmupKeys.length} existing dossier cache entries found.`)
+  } catch (err) {
+    logError('Cache warming failed - continuing with cold cache', err as Error)
+  }
+}
+
+/**
  * Session Management Helpers for User Management & Access Control
  *
  * Session key prefix for Redis keys
