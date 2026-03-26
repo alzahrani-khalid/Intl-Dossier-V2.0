@@ -5,6 +5,13 @@
  * Re-exports existing position types and adds domain-specific interfaces.
  */
 
+// Import types used in local interface definitions
+import type {
+  Position as PositionType,
+  UpdatePositionRequest as UpdatePositionRequestType,
+  ConsistencyCheck as ConsistencyCheckType,
+} from '@/types/position'
+
 // Re-export core position types from shared types
 export type {
   Position,
@@ -143,7 +150,7 @@ export interface DeletePositionDossierLinkInput {
 
 export interface UpdatePositionVariables {
   id: string
-  data: UpdatePositionRequest
+  data: UpdatePositionRequestType
 }
 
 // ============================================================================
@@ -151,6 +158,6 @@ export interface UpdatePositionVariables {
 // ============================================================================
 
 export interface SubmitPositionResponse {
-  position: Position
-  consistency_check: ConsistencyCheck
+  position: PositionType
+  consistency_check: ConsistencyCheckType
 }

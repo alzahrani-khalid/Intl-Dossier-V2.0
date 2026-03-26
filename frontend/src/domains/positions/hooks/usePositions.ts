@@ -26,9 +26,7 @@ export const positionKeys = {
 /**
  * Hook to list positions with infinite scroll
  */
-export const usePositions = (filters?: Omit<PositionFilters, 'offset'>): ReturnType<typeof useInfiniteQuery<PositionListResponse>> => {
-  const pageSize = filters?.limit || 20
-
+export const usePositions = (filters?: Omit<PositionFilters, 'offset'>) => {
   return useInfiniteQuery({
     queryKey: positionKeys.list(filters),
     queryFn: async ({ pageParam = 0 }): Promise<PositionListResponse> => {

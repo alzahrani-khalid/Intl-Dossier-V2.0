@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import * as positionsRepo from '../repositories/positions.repository'
 import type { DeletePositionDossierLinkInput } from '../types'
 
-export function useDeletePositionDossierLink(): ReturnType<typeof useMutation> {
+export function useDeletePositionDossierLink() {
   const queryClient = useQueryClient()
 
   return useMutation({
