@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 06-02-PLAN.md
-last_updated: "2026-03-26T09:23:37.048Z"
+stopped_at: Completed 06-04-PLAN.md
+last_updated: "2026-03-26T09:25:26.704Z"
 progress:
   total_phases: 7
   completed_phases: 5
   total_plans: 25
-  completed_plans: 23
+  completed_plans: 24
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 ## Current Position
 
 Phase: 06 (architecture-consolidation) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ _Updated after each plan completion_
 | Phase 05 P05 | 12min | 2 tasks | 24 files |
 | Phase 06 P03 | 8min | 2 tasks | 35 files |
 | Phase 06 P02 | 16min | 2 tasks | 56 files |
+| Phase 06 P04 | 18min | 2 tasks | 93 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,8 @@ Recent decisions affecting current work:
 - [Phase 06]: SLA hooks retain custom fetch (not apiClient) for .data unwrap pattern
 - [Phase 06]: Work item dossier links uses Supabase client directly for joined FK queries
 - [Phase 06]: Removed ReturnType<typeof useMutation> annotations - let TS infer mutation types to avoid generic mismatch
+- [Phase 06]: AI domain repos use raw fetch for SSE streaming, returning Response objects; simple endpoints use apiGet with baseUrl express
+- [Phase 06]: Misc domain acts as catch-all for cross-cutting hooks without clear domain affinity (comments, stakeholders, reports, scenarios, onboarding)
 
 ### Pending Todos
 
@@ -125,6 +128,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T09:23:37.045Z
-Stopped at: Completed 06-02-PLAN.md
+Last session: 2026-03-26T09:25:26.701Z
+Stopped at: Completed 06-04-PLAN.md
 Resume file: None
