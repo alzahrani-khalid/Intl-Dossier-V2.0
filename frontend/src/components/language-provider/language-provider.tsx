@@ -1,3 +1,6 @@
+// Audit (D-12): Language context rarely changes (only on language switch), splitting not needed.
+// The context provides language + direction + setLanguage + t which all change together on
+// language switch. Most consumers need both language and direction. No cascading re-render issue.
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getDirection, type SupportedLanguage } from '../../i18n'

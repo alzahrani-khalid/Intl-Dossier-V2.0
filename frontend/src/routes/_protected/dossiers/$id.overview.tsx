@@ -2,6 +2,10 @@
  * Dossier Overview Route
  * Feature: Everything about [Dossier] comprehensive view
  *
+ * Performance audit (D-11): This route is a thin wrapper that lazy-loads DossierOverview.
+ * The Suspense boundary already isolates render cost. No additional memoization needed here
+ * since the only prop passed (dossierId) is a primitive string from URL params (stable).
+ *
  * One-click view that aggregates all connections to a dossier:
  * - Related Dossiers (by relationship type)
  * - Documents (positions, MOUs, briefs)

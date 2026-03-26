@@ -1,3 +1,8 @@
+// Audit (D-12): Context splitting not needed because AuthContext already uses useMemo
+// for the value object, provides only 8 fields, and is backed by a Zustand store which
+// handles fine-grained subscriptions. The context value only changes on login/logout
+// (infrequent). Splitting into AuthIdentityContext + AuthSessionContext would add
+// complexity without measurable benefit since loading state transitions are brief.
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
 import { useAuthStore, type AuthState } from '../store/authStore'
 

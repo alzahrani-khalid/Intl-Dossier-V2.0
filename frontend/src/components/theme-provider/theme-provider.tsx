@@ -1,3 +1,6 @@
+// Audit (D-12): Theme context rarely changes (only on user toggle), splitting not needed.
+// The context provides theme + colorMode state which always change together. All consumers
+// need the full set of values. No cascading re-render issue observed.
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 
 // Theme type - extensible for future themes
