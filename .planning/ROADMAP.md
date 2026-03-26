@@ -146,7 +146,7 @@ Plans:
 - [x] 06-02-PLAN.md — Migrate positions (10), engagements (4), calendar (5) domains to repository pattern
 - [x] 06-03-PLAN.md — Migrate work-items (4), relationships (2), documents (2), persons (1), topics (1) domains
 - [x] 06-04-PLAN.md — Migrate AI (3), search (3), intake (3), audit (3), analytics (2), briefings (3), tags (3), import (3), misc (7+) domains
-- [ ] 06-05-PLAN.md — Merge 6 backend duplicate service pairs, update architecture docs
+- [x] 06-05-PLAN.md — Merge 6 backend duplicate service pairs, update architecture docs
 
 ### Phase 7: Performance Optimization
 
