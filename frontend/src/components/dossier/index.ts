@@ -69,5 +69,4 @@ export {
   EntityTypeGuide,
   EntityTypeGuideGrid,
   type DossierTypeGuideProps,
-  type EntityTypeGuideProps,
 } from './DossierTypeGuide'

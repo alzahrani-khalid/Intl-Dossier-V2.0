@@ -34,21 +34,11 @@
 
 All backend business logic lives in `backend/src/services/` as a flat collection of service files. There are no ports, adapters, or hexagonal architecture directories -- services directly use `supabaseAdmin` or construct their own Supabase clients.
 
-After Phase 06 consolidation, 7 duplicate service files were merged into their primary counterparts:
-
-- `task-creation.service.ts` merged into `tasks.service.ts`
-- `event-conflicts.ts` merged into `event.service.ts`
-- `countries-search.ts` merged into `country.service.ts`
-- `signature-orchestrator.ts` merged into `signature.service.ts`
-- `brief-context.service.ts` merged into `brief.service.ts`
-- `link-audit.service.ts` merged into `link.service.ts`
-- `link-migration.service.ts` merged into `link.service.ts`
-
 **~37 service files** organized by feature domain:
 
 | Category | Files | Examples |
 |----------|-------|---------|
-| Core Entity CRUD | ~12 | `country.service.ts`, `event.service.ts`, `tasks.service.ts`, `DocumentService.ts` |
+| Core Entity CRUD | ~12 | `CountryService.ts`, `EventService.ts`, `tasks.service.ts`, `DocumentService.ts` |
 | AI/ML | ~6 | `anythingllm.service.ts`, `ai-extraction.service.ts`, `embeddings.service.ts` |
 | Search | 4 | `search.service.ts`, `SearchService.ts`, `semantic-search.service.ts`, `fulltext-search.service.ts` |
 | Workflow | ~5 | `kanban.service.ts`, `sla.service.ts`, `stage-transition.service.ts` |
@@ -93,7 +83,7 @@ All domain repositories use `frontend/src/lib/api-client.ts` as their HTTP layer
 - Error response normalization
 - `apiGet`, `apiPost`, `apiPut`, `apiDelete` helpers
 
-**Active domain directories (18 domains):**
+**Active domain directories:**
 
 | Domain | Purpose |
 |--------|---------|

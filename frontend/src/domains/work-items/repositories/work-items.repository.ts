@@ -14,6 +14,16 @@
 
 import { apiGet, apiPost, apiPatch, apiPut, apiDelete } from '@/lib/api-client'
 import type {
+  SLADashboardOverview,
+  SLAComplianceByType,
+  SLAComplianceByAssignee,
+  SLAAtRiskItem,
+  SLABreachedItem,
+  SLAPolicy,
+  SLAPolicyInput,
+  SLAEscalation,
+} from '@/types/sla.types'
+import type {
   WorkflowRulesListParams,
   WorkflowRulesListResponse,
   WorkflowRule,
@@ -122,6 +132,131 @@ export async function retryWorkflowExecution(
     '/workflow-executor?action=retry',
     { execution_id: executionId },
   )
+}
+
+// ============================================================================
+// SLA Monitoring (Edge Function)
+// ============================================================================
+
+/** Wrapper that unwraps the { data: T } envelope from SLA edge function responses */
+async function slaGet<T>(
+  endpoint: string,
+  params?: Record<string, string | number | undefined>,
+): Promise<T> {
+  const searchParams = new URLSearchParams()
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) {
+        searchParams.set(key, String(value))
+      }
+    })
+  }
+  const query = searchParams.toString()
+  const path = `/sla-monitoring/${endpoint}${query ? `?${query}` : ''}`
+  const result = await apiGet<{ data: T }>(path)
+  return result.data
+}
+
+async function slaPost<T>(endpoint: string, body?: Record<string, unknown>): Promise<T> {
+  const result = await apiPost<{ data: T }>(`/sla-monitoring/${endpoint}`, body ?? {})
+  return result.data
+}
+
+async function slaPut<T>(endpoint: string, body: Record<string, unknown>): Promise<T> {
+  const result = await apiPut<{ data: T }>(`/sla-monitoring/${endpoint}`, body)
+  return result.data
+}
+
+async function slaDelete(endpoint: string): Promise<void> {
+  await apiDelete<void>(`/sla-monitoring/${endpoint}`)
+}
+
+export async function getSLADashboard(params?: {
+  entity_type?: string
+  start_date?: string
+  end_date?: string
+}): Promise<SLADashboardOverview> {
+  return slaGet('dashboard', params)
+}
+
+export async function getSLAComplianceByType(params?: {
+  entity_type?: string
+  start_date?: string
+  end_date?: string
+}): Promise<SLAComplianceByType[]> {
+  return slaGet('compliance/type', params)
+}
+
+export async function getSLAComplianceByAssignee(params?: {
+  start_date?: string
+  end_date?: string
+  limit?: number
+}): Promise<SLAComplianceByAssignee[]> {
+  return slaGet('compliance/assignee', params)
+}
+
+export async function getSLAAtRiskItems(params?: {
+  entity_type?: string
+  threshold?: number
+  limit?: number
+}): Promise<SLAAtRiskItem[]> {
+  return slaGet('at-risk', params)
+}
+
+export async function getSLABreachedItems(): Promise<SLABreachedItem[]> {
+  return slaGet('breached')
+}
+
+export async function getSLAPolicies(): Promise<SLAPolicy[]> {
+  return slaGet('policies')
+}
+
+export async function getSLAPolicy(
+  policyId: string,
+): Promise<SLAPolicy> {
+  return slaGet(`policies/${policyId}`)
+}
+
+export async function createSLAPolicy(
+  input: SLAPolicyInput,
+): Promise<SLAPolicy> {
+  return slaPost('policies', input as unknown as Record<string, unknown>)
+}
+
+export async function updateSLAPolicy(
+  id: string,
+  input: Record<string, unknown>,
+): Promise<SLAPolicy> {
+  return slaPut(`policies/${id}`, input)
+}
+
+export async function deleteSLAPolicy(policyId: string): Promise<void> {
+  return slaDelete(`policies/${policyId}`)
+}
+
+export async function getSLAEscalations(params?: {
+  status?: string
+  entity_type?: string
+  limit?: number
+}): Promise<SLAEscalation[]> {
+  return slaGet('escalations', params)
+}
+
+export async function acknowledgeSLAEscalation(
+  escalationId: string,
+): Promise<SLAEscalation> {
+  return slaPost(`escalations/${escalationId}/acknowledge`)
+}
+
+export async function resolveSLAEscalation(
+  escalationId: string,
+  notes?: string,
+): Promise<SLAEscalation> {
+  return slaPost(`escalations/${escalationId}/resolve`, notes ? { notes } : undefined)
+}
+
+export async function checkSLABreaches(): Promise<{ breaches_detected: number }> {
+  return slaPost('check-breaches')
 }
 
 // ============================================================================

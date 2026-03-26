@@ -11,7 +11,12 @@
     "frontend": {
       "entry": ["src/routeTree.gen.ts", "src/i18n/index.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignore": ["src/components/ui/heroui-*.tsx", "src/components/ui/*.tsx"],
+      "ignore": [
+        "src/components/ui/heroui-*.tsx",
+        "src/components/ui/*.tsx",
+        "src/components/dashboard/*.tsx",
+        "src/components/dashboard/index.ts"
+      ],
       "ignoreDependencies": ["flag-icons", "@vitest/coverage-v8"]
     },
     "backend": {
