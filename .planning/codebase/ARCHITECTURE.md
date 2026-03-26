@@ -1,187 +1,192 @@
 # Architecture
 
-**Analysis Date:** 2026-03-23
+**Analysis Date:** 2026-03-26 (updated after Phase 06 consolidation)
 
 ## Pattern Overview
 
-**Overall:** Layered monorepo architecture with hexagonal (ports & adapters) backend and client-state-server separation in frontend.
+**Overall:** Layered monorepo architecture with flat service-based backend and domain-driven frontend using the repository pattern.
 
 **Key Characteristics:**
 
 - Monorepo structure (Turborepo) with 3 workspaces: `backend`, `frontend`, `shared`
-- Express.js backend with domain-driven design layers (core domain, ports, adapters)
+- Express.js backend with flat service files (no ports/adapters directories)
 - React 19 + TanStack Router v5 for URL-driven state management
 - Supabase PostgreSQL as primary data store with Realtime subscriptions
 - API-first architecture with separate auth and protected routes
+- Frontend domain repository pattern with shared `apiClient`
 - Error-tracked via Sentry on both frontend and backend
 
-## Layers
+## Key Layers
 
-**Backend - Domain Layer (Core):**
+| Layer | Location | Purpose |
+|-------|----------|---------|
+| API | `backend/src/api/` (60+ files) | Express routers, feature-based |
+| Services | `backend/src/services/` (~37 files) | Business logic, Supabase queries |
+| Middleware | `backend/src/middleware/` | Auth, rate-limit, security headers |
+| Routes | `frontend/src/routes/` (100+ files) | TanStack Router file-based routing |
+| Domains | `frontend/src/domains/{feature}/` | Repositories, hooks, types per feature |
+| Components | `frontend/src/components/ui/` | HeroUI wrappers + re-exports (shadcn compat) |
+| State | `frontend/src/contexts/`, `frontend/src/providers/` | Auth/theme/language contexts |
 
-- Purpose: Business logic and domain models isolated from external concerns
-- Location: `backend/src/core/domain/`
-- Contains: Domain entities, value objects, business rules
-- Depends on: No external libraries (framework-agnostic)
-- Used by: Services in ports/services layer
+## Backend Architecture
 
-**Backend - Ports & Adapters Layer:**
+### Services Layer (Flat Structure)
 
-- Purpose: Define contracts (ports) and implement infrastructure adapters
-- Location: `backend/src/core/ports/` (contracts) and `backend/src/adapters/` (implementations)
-- Contains: Repository interfaces, service interfaces, external API adapters (Supabase, AI, email, calendar)
-- Depends on: Domain layer
-- Used by: API controllers, scheduled jobs
+All backend business logic lives in `backend/src/services/` as a flat collection of service files. There are no ports, adapters, or hexagonal architecture directories -- services directly use `supabaseAdmin` or construct their own Supabase clients.
 
-**Backend - API/Controllers Layer:**
+After Phase 06 consolidation, 7 duplicate service files were merged into their primary counterparts:
 
-- Purpose: HTTP request handling and routing
+- `task-creation.service.ts` merged into `tasks.service.ts`
+- `event-conflicts.ts` merged into `event.service.ts`
+- `countries-search.ts` merged into `country.service.ts`
+- `signature-orchestrator.ts` merged into `signature.service.ts`
+- `brief-context.service.ts` merged into `brief.service.ts`
+- `link-audit.service.ts` merged into `link.service.ts`
+- `link-migration.service.ts` merged into `link.service.ts`
+
+**~37 service files** organized by feature domain:
+
+| Category | Files | Examples |
+|----------|-------|---------|
+| Core Entity CRUD | ~12 | `country.service.ts`, `event.service.ts`, `tasks.service.ts`, `DocumentService.ts` |
+| AI/ML | ~6 | `anythingllm.service.ts`, `ai-extraction.service.ts`, `embeddings.service.ts` |
+| Search | 4 | `search.service.ts`, `SearchService.ts`, `semantic-search.service.ts`, `fulltext-search.service.ts` |
+| Workflow | ~5 | `kanban.service.ts`, `sla.service.ts`, `stage-transition.service.ts` |
+| Auth/Security | ~4 | `AuthService.ts`, `mfa.service.ts`, `backup-codes.service.ts` |
+| Infrastructure | ~6 | `redis-cache.service.ts`, `queue.service.ts`, `notification.service.ts` |
+
+**Note:** Search services remain as 4 separate files because they implement distinct search strategies (fulltext, semantic, entity, unified) with different dependencies.
+
+### API Layer
+
 - Location: `backend/src/api/` (60+ endpoint files)
-- Contains: Express routers, request validation, response formatting
-- Depends on: Adapters, services
-- Pattern: Feature-based organization (countries, tasks, documents, ai, etc.)
+- Pattern: Feature-based Express routers
+- Each router imports from services and calls Supabase
+- Request validation via express-validator and Zod schemas
 
-**Backend - Middleware Layer:**
+### Middleware Layer
 
-- Purpose: Cross-cutting concerns
 - Location: `backend/src/middleware/`
-- Contains: Authentication, rate limiting, security headers, request logging
-- Applies to: All or filtered routes depending on configuration
+- Contains: Authentication (`authenticateToken`), rate limiting (`apiLimiter`, `authLimiter`, `uploadLimiter`, `aiLimiter`), security headers (Helmet + CSP), request logging
 
-**Frontend - Routing & Layout:**
+## Frontend Architecture
 
-- Purpose: Page structure and navigation
+### Domain Repository Pattern
+
+Frontend business logic is organized into domain directories under `frontend/src/domains/`. Each domain encapsulates its types, API repositories, and hooks.
+
+**Structure per domain:**
+
+```
+frontend/src/domains/{feature}/
+  repositories/     # API client functions (fetch wrappers)
+  hooks/            # TanStack Query hooks consuming repositories
+  types/            # TypeScript interfaces for the domain
+  index.ts          # Public API re-exports
+```
+
+**Shared API Client:**
+
+All domain repositories use `frontend/src/lib/api-client.ts` as their HTTP layer. This provides:
+- Centralized base URL configuration
+- Auth token injection
+- Error response normalization
+- `apiGet`, `apiPost`, `apiPut`, `apiDelete` helpers
+
+**Active domain directories (18 domains):**
+
+| Domain | Purpose |
+|--------|---------|
+| `dossiers` | Dossier CRUD, type-specific operations |
+| `positions` | Position management, consistency checks |
+| `engagements` | Engagement lifecycle, participants |
+| `calendar` | Calendar events, scheduling |
+| `work-items` | Unified task/commitment/intake operations |
+| `relationships` | Entity-to-entity relationship management |
+| `documents` | Document upload, parsing, versioning |
+| `persons` | Person/contact management |
+| `topics` | Topic/policy area tracking |
+| `ai` | AI briefing generation, extraction |
+| `search` | Unified search across entities |
+| `intake` | Intake ticket processing |
+| `audit` | Audit log viewing |
+| `analytics` | Dashboard metrics, charts |
+| `briefings` | Brief generation and review |
+| `tags` | Tag management across entities |
+| `import` | Bulk data import |
+| `misc` | Cross-cutting hooks (comments, stakeholders, reports, scenarios, onboarding) |
+
+**Backward Compatibility:**
+
+Hooks are re-exported from `frontend/src/hooks/` to avoid breaking existing imports. New code should import from `frontend/src/domains/{feature}/hooks/`.
+
+### Routing & Layout
+
 - Location: `frontend/src/routes/` (100+ route files) with TanStack Router file-based routing
-- Contains: Page components, layout wrappers, nested routes
-- Pattern: `__root.tsx` (root layout), `_protected.tsx` (auth wrapper), feature routes like `/dossiers/countries/$id.tsx`
-- Depends on: Components, hooks, contexts
+- Pattern: `__root.tsx` (root layout) -> `_protected.tsx` (auth wrapper) -> feature routes
+- Layout: `NavigationShell` wraps all protected routes (replaced `MainLayout` in Phase 05)
 
-**Frontend - Domains Layer:**
+### Components Layer
 
-- Purpose: Feature-specific business logic (replicating backend structure)
-- Location: `frontend/src/domains/{feature}/` (document, engagement, relationship, shared)
-- Contains: Types, repositories (API clients), hooks, services
-- Pattern: Each domain has `types/`, `repositories/`, `hooks/`, `services/` subdirectories
-- Used by: Page components and other domains
-
-**Frontend - Components Layer:**
-
-- Purpose: Reusable UI elements
 - Location: `frontend/src/components/` and `frontend/src/components/ui/`
-- Contains: HeroUI v3 wrappers (button, card, modal, forms), domain components, shared utilities
-- Pattern: HeroUI re-exports for backwards compatibility (button.tsx → heroui-button.tsx)
+- Pattern: HeroUI v3 wrappers with shadcn-compatible re-exports
+- Key files: `heroui-button.tsx`, `heroui-card.tsx`, `heroui-modal.tsx`, `heroui-forms.tsx`
+- Re-export files: `button.tsx`, `card.tsx`, `badge.tsx`, `skeleton.tsx`
 
-**Frontend - Contexts & Providers:**
+### Contexts & Providers
 
-- Purpose: Global state management
 - Location: `frontend/src/contexts/`, `frontend/src/providers/`
-- Contains: Auth context, theme context, language context
-- Pattern: React Context for auth state, Zustand for client state (if needed), TanStack Query for server state
+- Auth: `AuthProvider` manages JWT token and user state
+- Theme: `ThemeProvider` handles light/dark/system modes
+- Language: `LanguageProvider` manages i18n with `useDirection()` hook for RTL
 
 ## Data Flow
 
-**API Request Flow (Backend):**
+### Backend API Request Flow
 
 1. HTTP request hits Express app (`backend/src/index.ts`)
 2. Security middleware applies (Sentry, CORS, rate limiting, auth headers)
-3. Route matching to appropriate router (e.g., `/api/countries` → `countries.ts`)
-4. Request validation via express-validator
+3. Route matching to appropriate router (e.g., `/api/countries` -> `countries.ts`)
+4. Request validation via express-validator or Zod
 5. Auth token verified via `authenticateToken` middleware
-6. Controller calls adapter/repository (Supabase client)
-7. Data returned, formatted to JSON response
-8. Middleware post-processors (Sentry error handler)
+6. Router calls service function (e.g., `CountryService.getCountries()`)
+7. Service queries Supabase via `supabaseAdmin` client
+8. Data returned, formatted to JSON response
 
-**Page Navigation & Data Fetch (Frontend):**
+### Frontend Page Navigation & Data Fetch
 
 1. User navigates to `/dossiers/countries/$id`
-2. TanStack Router resolves route → loads `countries/$id.tsx`
-3. Component queries server state via TanStack Query hooks
-4. Query hook calls repository client (`domains/*/repositories/`)
-5. Repository calls backend API (`/api/countries/:id`)
+2. TanStack Router resolves route -> loads `countries/$id.tsx`
+3. Component calls domain hook (e.g., `useCountry(id)`)
+4. Hook calls repository function (e.g., `countriesRepository.getById(id)`)
+5. Repository calls backend API via `apiClient` (`apiGet('/api/countries/:id')`)
 6. Response cached by TanStack Query
 7. Component re-renders with data
 8. Realtime subscriptions via Supabase update cached state
 
-**State Management:**
+### State Management
 
 - **URL State:** TanStack Router manages search params, pagination, filters
 - **Server State:** TanStack Query caches API responses, handles refetch logic
 - **Client State:** React Context for auth, theme, language; Zustand for complex client state
 - **Realtime:** Supabase Realtime subscriptions for live updates
 
-## Key Abstractions
-
-**Repository Pattern:**
-
-- Purpose: Data access abstraction
-- Examples: `backend/src/adapters/repositories/supabase/` (CountryRepository, TaskRepository), `frontend/src/domains/document/repositories/`
-- Pattern: Interface-based (backend ports), class-based implementations (adapters), query builders
-
-**Service Pattern:**
-
-- Purpose: Business logic composition
-- Examples: `backend/src/core/ports/services/`, `frontend/src/domains/*/services/`
-- Pattern: Singleton services, dependency injection via constructor
-
-**Hook Pattern (Frontend):**
-
-- Purpose: Reusable logic in React components
-- Examples: `useCountry()`, `useDossierContext()`, `useTasks()`
-- Pattern: TanStack Query hooks for server state, custom hooks for client logic
-
-**Router Pattern:**
-
-- Purpose: Modular API routing
-- Backend: Express Router instances composed in `backend/src/api/index.ts`
-- Frontend: TanStack Router file-based routing with automatic code splitting via React.lazy()
-
 ## Entry Points
 
-**Backend Entry Point:**
+**Backend:** `backend/src/index.ts` - Creates Express app, registers middleware, mounts API routers, starts HTTP server on port 5000
 
-- Location: `backend/src/index.ts`
-- Triggers: Node.js process start (`npm run dev` or `node dist/index.js`)
-- Responsibilities:
-  - Initialize Sentry error tracking
-  - Create Express app and register middleware (security, logging, rate limiting)
-  - Mount API routers and contract test routes
-  - Start HTTP server on port 5000
-  - Register scheduled jobs (health scores, overdue commitment detection)
-
-**Frontend Entry Point:**
-
-- Location: `frontend/src/main.tsx`
-- Triggers: Vite development server or bundle load in browser
-- Responsibilities:
-  - Initialize Sentry error tracking
-  - Create React root
-  - Wrap app with providers (QueryClient, AuthProvider, ThemeProvider, LanguageProvider)
-  - Render App component (TanStack Router)
-
-**Frontend App Component:**
-
-- Location: `frontend/src/App.tsx`
-- Responsibilities:
-  - Compose all providers (QueryClient, Auth, Theme, Language, RTL wrapper)
-  - Mount TanStack Router with auth context
-  - Mount dev tools (React Query devtools, Offline indicator, Realtime status)
-  - Mount global toaster
+**Frontend:** `frontend/src/main.tsx` -> `App.tsx` - Initializes Sentry, creates React root, wraps with providers (QueryClient, Auth, Theme, Language), mounts TanStack Router
 
 ## Error Handling
 
-**Strategy:** Error-first with Sentry integration and fallback error boundaries
-
-**Patterns:**
-
-Backend:
-
+**Backend:**
 - Sentry middleware captures exceptions automatically
 - Express error handler wraps errors in JSON with status codes (400, 401, 403, 500)
 - Custom error classes: ValidationError, UnauthorizedError, ForbiddenError
 - Graceful shutdown on SIGTERM/SIGINT
+- Winston logger for structured logging
 
-Frontend:
-
+**Frontend:**
 - ErrorBoundary component catches React rendering errors
 - Sentry captures client-side exceptions
 - Toast notifications for user-facing errors
@@ -189,34 +194,16 @@ Frontend:
 
 ## Cross-Cutting Concerns
 
-**Logging:**
+**Authentication:** JWT via `authenticateToken` middleware + Supabase Auth; `_protected` route wrapper on frontend
 
-- Backend: Winston logger (`backend/src/utils/logger.ts`) with structured logging (method, URL, duration, IP, user-agent)
-- Frontend: Sentry error tracking, console logs in development
+**Validation:** express-validator + Zod (backend), React Hook Form + Zod (frontend)
 
-**Validation:**
+**Rate Limiting:** `rate-limit.middleware.ts` with `apiLimiter`, `authLimiter`, `uploadLimiter`, `aiLimiter`
 
-- Backend: express-validator for request validation in API controllers
-- Frontend: React Hook Form + Zod for form validation, type safety via TypeScript strict mode
+**Caching:** Redis/ioredis (backend), TanStack Query stale-while-revalidate (frontend)
 
-**Authentication:**
-
-- Backend: JWT token verification via `authenticateToken` middleware, Supabase Auth
-- Frontend: AuthProvider context manages token, auth.context guards protected routes via TanStack Router
-- Protected routes: Use `_protected` layout wrapper, require valid auth context
-
-**Rate Limiting:**
-
-- Backend: express-rate-limit configured via `backend/src/middleware/rate-limit.middleware.ts`
-- Aliases: `apiLimiter`, `authLimiter`, `uploadLimiter`, `aiLimiter`, `searchRateLimit`
-- Applied at root API and per-route basis
-
-**Caching:**
-
-- Backend: Redis via ioredis for cache metrics service
-- Frontend: TanStack Query with stale-while-revalidate, cache invalidation on mutations
-- Realtime: Supabase Realtime updates query cache automatically
+**Realtime:** Supabase Realtime subscriptions auto-update TanStack Query cache
 
 ---
 
-_Architecture analysis: 2026-03-23_
+_Architecture updated: 2026-03-26 (Phase 06 consolidation complete)_

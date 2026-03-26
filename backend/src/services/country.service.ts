@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '../config/supabase'
-import { logError } from '../utils/logger'
+import { logInfo, logError } from '../utils/logger'
 import { COLUMNS } from '../lib/query-columns'
 
 export class CountryService {
@@ -275,4 +275,42 @@ export class CountryService {
       throw error
     }
   }
+}
+
+export default CountryService
+
+// --- Merged from countries-search.ts (Phase 06 consolidation) ---
+// CountrySearchService provided standalone search with filters, pagination,
+// autocomplete, and bulk search. It had no active importers and used a separate
+// Supabase client constructor. The existing CountryService covers production
+// country operations. Key types preserved below for reference.
+
+export interface CountrySearchFilters {
+  name?: string;
+  nameAr?: string;
+  region?: 'africa' | 'americas' | 'asia' | 'europe' | 'oceania';
+  subRegion?: string;
+  isoCode?: string;
+  status?: 'active' | 'inactive';
+  populationMin?: number;
+  populationMax?: number;
+  areaMin?: number;
+  areaMax?: number;
+}
+
+export interface CountrySearchOptions {
+  filters: CountrySearchFilters;
+  sortBy?: 'name_en' | 'name_ar' | 'population' | 'area_sq_km' | 'created_at';
+  sortOrder?: 'asc' | 'desc';
+  page?: number;
+  pageSize?: number;
+  language?: 'en' | 'ar';
+}
+
+export interface CountrySearchResult {
+  data: Array<Record<string, unknown>>;
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }
