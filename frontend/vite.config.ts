@@ -103,7 +103,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     // Increase chunk size limit since we're using a simpler chunking strategy
-    chunkSizeWarningLimit: 1500,
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         // Strategic chunk splitting for better caching and load performance

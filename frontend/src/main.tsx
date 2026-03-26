@@ -2,12 +2,17 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ThemeProvider } from './components/theme-provider/theme-provider'
 import { LanguageProvider } from './components/language-provider/language-provider'
-import { initSentry } from './lib/sentry'
 import './index.css'
 import App from './App.tsx'
 
-// Initialize Sentry error tracking before rendering
-initSentry()
+// Defer Sentry initialization to after first paint (per D-06)
+// This removes @sentry/react from the critical rendering path
+requestIdleCallback(() => {
+  import('./lib/sentry').then(({ initSentry, initWebVitalsReporting }) => {
+    initSentry()
+    initWebVitalsReporting()
+  })
+})
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

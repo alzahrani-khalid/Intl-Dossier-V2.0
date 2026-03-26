@@ -42,8 +42,17 @@ export function initSentry(): void {
     environment,
     release,
 
-    // Performance monitoring
-    tracesSampleRate: environment === 'production' ? 0.1 : 1.0,
+    // Performance monitoring with page-specific sampling
+    tracesSampler: (samplingContext) => {
+      if (environment !== 'production') return 1.0
+      const url = samplingContext.attributes?.['url.path'] ?? ''
+      // Sample key pages at higher rate for statistical significance
+      const keyPages = ['/dashboard', '/dossiers', '/kanban']
+      if (keyPages.some((page) => typeof url === 'string' && url.startsWith(page))) {
+        return 0.5
+      }
+      return 0.1
+    },
 
     // Session replay (optional, uncomment if needed)
     // replaysSessionSampleRate: 0.1,
@@ -220,6 +229,21 @@ const SentryErrorBoundary = Sentry.ErrorBoundary
  * Sentry React profiler for performance monitoring
  */
 const SentryProfiler = Sentry.withProfiler
+
+/**
+ * Initialize web-vitals reporting for dev-time debugging
+ * Reports LCP, INP, CLS to console in development
+ * In production, Sentry browserTracingIntegration captures these automatically
+ */
+export function initWebVitalsReporting(): void {
+  if (import.meta.env.DEV) {
+    import('web-vitals').then(({ onLCP, onINP, onCLS }) => {
+      onLCP((metric) => console.warn('[Web Vitals] LCP:', metric.value.toFixed(0), 'ms'))
+      onINP((metric) => console.warn('[Web Vitals] INP:', metric.value.toFixed(0), 'ms'))
+      onCLS((metric) => console.warn('[Web Vitals] CLS:', metric.value.toFixed(4)))
+    })
+  }
+}
 
 // Re-export commonly used Sentry functions
 export { Sentry }
