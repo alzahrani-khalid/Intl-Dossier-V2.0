@@ -42,8 +42,8 @@ Requirements for production quality milestone. Each maps to roadmap phases.
 
 ### Performance
 
-- [ ] **PERF-01**: Initial JS bundle under 200KB gzipped (measured via bundle analyzer)
-- [ ] **PERF-02**: Core Web Vitals pass: LCP <2.5s, INP <200ms, CLS <0.1 with Sentry RUM tracking enabled
+- [x] **PERF-01**: Initial JS bundle under 200KB gzipped (measured via bundle analyzer)
+- [x] **PERF-02**: Core Web Vitals pass: LCP <2.5s, INP <200ms, CLS <0.1 with Sentry RUM tracking enabled
 - [x] **PERF-03**: Slow Supabase queries identified and optimized (proper indexes, no N+1 patterns)
 - [x] **PERF-04**: Unnecessary React re-renders eliminated (verified via React DevTools profiler on key pages)
 
@@ -110,8 +110,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RESP-03     | Phase 5 | Complete |
 | RESP-04     | Phase 5 | Complete |
 | RESP-05     | Phase 5 | Complete |
-| PERF-01     | Phase 7 | Pending |
-| PERF-02     | Phase 7 | Pending |
+| PERF-01     | Phase 7 | Complete |
+| PERF-02     | Phase 7 | Complete |
 | PERF-03     | Phase 7 | Complete |
 | PERF-04     | Phase 7 | Complete |
 | ARCH-01     | Phase 2 | Complete |

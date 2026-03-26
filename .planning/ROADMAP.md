@@ -163,7 +163,7 @@ Plans:
 
 Plans:
 
-- [ ] 07-01-PLAN.md — Bundle budget enforcement (size-limit CI gate), font preloading, Sentry deferral, Lighthouse CI config
+- [x] 07-01-PLAN.md — Bundle budget enforcement (size-limit CI gate), font preloading, Sentry deferral, Lighthouse CI config
 - [x] 07-02-PLAN.md — TanStack Query staleTime tiers, Redis connection reliability fix, cache warming
 - [ ] 07-03-PLAN.md — Re-render profiling and targeted memoization on dashboard, kanban, dossier list/detail, context provider audit
 
