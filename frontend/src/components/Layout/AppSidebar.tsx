@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 import { useAuth } from '@/hooks/useAuth'
-import { useIsTablet } from '@/hooks/use-mobile'
+import { useResponsive } from '@/hooks/use-responsive'
 import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
 import { LanguageToggle } from '@/components/LanguageToggle'
@@ -41,7 +41,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t, i18n } = useTranslation('common')
   const isRTL = i18n.language === 'ar'
   const { user } = useAuth()
-  const isTablet = useIsTablet()
+  const { isTablet } = useResponsive()
   const location = useLocation()
   const { setOpenMobile, setOpen, toggleSidebar, open, openMobile, isMobile } = useSidebar()
   const { data: workCounts } = useWorkQueueCounts()

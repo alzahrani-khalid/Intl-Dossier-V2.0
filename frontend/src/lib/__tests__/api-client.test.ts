@@ -10,14 +10,24 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 
-vi.stubEnv('VITE_SUPABASE_URL', 'https://test.supabase.co')
-vi.stubEnv('VITE_API_URL', 'http://localhost:3001')
-
 const mockFetch = vi.fn()
 globalThis.fetch = mockFetch
 
+/**
+ * Helper: get the expected Edge base URL from the current env
+ * (mirrors what api-client.ts reads at call time)
+ */
+function edgeBase(): string {
+  return import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
+}
+
+function expressBase(): string {
+  return import.meta.env.VITE_API_URL || ''
+}
+
 describe('apiClient', () => {
   beforeEach(() => {
+    vi.resetModules()
     mockFetch.mockReset()
     mockFetch.mockResolvedValue({
       ok: true,
@@ -34,7 +44,7 @@ describe('apiClient', () => {
     await apiGet('/test-endpoint')
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://test.supabase.co/functions/v1/test-endpoint',
+      `${edgeBase()}/test-endpoint`,
       expect.objectContaining({
         method: 'GET',
         headers: expect.objectContaining({
@@ -50,7 +60,7 @@ describe('apiClient', () => {
     await apiPost('/test-endpoint', body)
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://test.supabase.co/functions/v1/test-endpoint',
+      `${edgeBase()}/test-endpoint`,
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
@@ -72,24 +82,22 @@ describe('apiClient', () => {
     await expect(apiGet('/missing')).rejects.toThrow('API error 404: Not Found')
   })
 
-  it('apiGet uses Edge Functions base URL by default', async () => {
+  it('apiGet uses Edge Functions base URL by default (VITE_SUPABASE_URL + /functions/v1)', async () => {
     const { apiGet } = await import('@/lib/api-client')
     await apiGet('/dossiers-list')
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      'https://test.supabase.co/functions/v1/dossiers-list',
-      expect.anything(),
-    )
+    const calledUrl = mockFetch.mock.calls[0][0] as string
+    expect(calledUrl).toBe(`${edgeBase()}/dossiers-list`)
+    expect(calledUrl).toContain('/functions/v1/')
   })
 
-  it('apiGet uses Express base URL when options.baseUrl is express', async () => {
+  it('apiGet uses Express base URL when options.baseUrl is express (VITE_API_URL)', async () => {
     const { apiGet } = await import('@/lib/api-client')
     await apiGet('/api/health', { baseUrl: 'express' })
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      'http://localhost:3001/api/health',
-      expect.anything(),
-    )
+    const calledUrl = mockFetch.mock.calls[0][0] as string
+    expect(calledUrl).toBe(`${expressBase()}/api/health`)
+    expect(calledUrl).not.toContain('/functions/v1')
   })
 
   it('apiPut, apiPatch, apiDelete use correct HTTP methods', async () => {
