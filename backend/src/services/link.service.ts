@@ -11,6 +11,7 @@ import type {
   LinkType,
   EntityType,
   LinkValidationResult,
+  LinkAuditLog,
 } from '../types/intake-entity-links.types';
 
 // Anchor entity types that can have primary links
@@ -956,6 +957,552 @@ export async function createBatchLinks(
     throw {
       code: 'INTERNAL_ERROR',
       message: error.message || 'An unexpected error occurred',
+      statusCode: 500,
+    };
+  }
+}
+
+// --- Merged from link-audit.service.ts (Phase 06 consolidation) ---
+
+export type AuditAction = 'created' | 'updated' | 'deleted' | 'restored' | 'migrated' | 'reordered';
+
+export async function createAuditLog(
+  linkId: string,
+  action: AuditAction,
+  userId: string,
+  oldValues?: any,
+  newValues?: any,
+  ipAddress?: string,
+  userAgent?: string
+): Promise<void> {
+  try {
+    const { data: link, error: linkError } = await supabaseAdmin
+      .from('intake_entity_links')
+      .select('intake_id, entity_type, entity_id')
+      .eq('id', linkId)
+      .single();
+
+    if (linkError || !link) {
+      console.error('Failed to fetch link for audit log:', linkError);
+      return;
+    }
+
+    const details: Record<string, any> = {};
+
+    if (action === 'updated' && oldValues && newValues) {
+      details.old_values = oldValues;
+      details.new_values = newValues;
+      details.changed_fields = Object.keys(newValues);
+    } else if (action === 'created' && newValues) {
+      details.initial_values = newValues;
+    } else if (action === 'deleted' || action === 'restored') {
+      details.link_state = newValues || {};
+    } else if (action === 'migrated') {
+      details.migration_details = newValues || {};
+    } else if (action === 'reordered') {
+      details.reorder_details = newValues || {};
+    }
+
+    if (ipAddress) {
+      details.ip_address = ipAddress;
+    }
+    if (userAgent) {
+      details.user_agent = userAgent;
+    }
+
+    const { error: auditError } = await supabaseAdmin
+      .from('link_audit_logs')
+      .insert({
+        link_id: linkId,
+        intake_id: link.intake_id,
+        entity_type: link.entity_type,
+        entity_id: link.entity_id,
+        action: action,
+        performed_by: userId,
+        details: Object.keys(details).length > 0 ? details : null,
+        timestamp: new Date().toISOString(),
+      });
+
+    if (auditError) {
+      console.error('Failed to create audit log:', auditError);
+    }
+  } catch (error) {
+    console.error('Unexpected error in createAuditLog:', error);
+  }
+}
+
+export async function getAuditLogs(
+  linkId: string,
+  limit: number = 100
+): Promise<LinkAuditLog[]> {
+  try {
+    const { data: logs, error } = await supabaseAdmin
+      .from('link_audit_logs')
+      .select('*')
+      .eq('link_id', linkId)
+      .order('timestamp', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Failed to fetch audit logs:', error);
+      return [];
+    }
+
+    return (logs || []) as LinkAuditLog[];
+  } catch (error) {
+    console.error('Unexpected error in getAuditLogs:', error);
+    return [];
+  }
+}
+
+export async function getIntakeAuditLogs(
+  intakeId: string,
+  limit: number = 100
+): Promise<LinkAuditLog[]> {
+  try {
+    const { data: logs, error } = await supabaseAdmin
+      .from('link_audit_logs')
+      .select('*')
+      .eq('intake_id', intakeId)
+      .order('timestamp', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Failed to fetch intake audit logs:', error);
+      return [];
+    }
+
+    return (logs || []) as LinkAuditLog[];
+  } catch (error) {
+    console.error('Unexpected error in getIntakeAuditLogs:', error);
+    return [];
+  }
+}
+
+export async function getUserAuditLogs(
+  userId: string,
+  limit: number = 100,
+  startDate?: Date,
+  endDate?: Date
+): Promise<LinkAuditLog[]> {
+  try {
+    let query = supabaseAdmin
+      .from('link_audit_logs')
+      .select('*')
+      .eq('performed_by', userId)
+      .order('timestamp', { ascending: false })
+      .limit(limit);
+
+    if (startDate) {
+      query = query.gte('timestamp', startDate.toISOString());
+    }
+
+    if (endDate) {
+      query = query.lte('timestamp', endDate.toISOString());
+    }
+
+    const { data: logs, error } = await query;
+
+    if (error) {
+      console.error('Failed to fetch user audit logs:', error);
+      return [];
+    }
+
+    return (logs || []) as LinkAuditLog[];
+  } catch (error) {
+    console.error('Unexpected error in getUserAuditLogs:', error);
+    return [];
+  }
+}
+
+export async function getAuditLogsByAction(
+  action: AuditAction,
+  limit: number = 100,
+  startDate?: Date,
+  endDate?: Date
+): Promise<LinkAuditLog[]> {
+  try {
+    let query = supabaseAdmin
+      .from('link_audit_logs')
+      .select('*')
+      .eq('action', action)
+      .order('timestamp', { ascending: false })
+      .limit(limit);
+
+    if (startDate) {
+      query = query.gte('timestamp', startDate.toISOString());
+    }
+
+    if (endDate) {
+      query = query.lte('timestamp', endDate.toISOString());
+    }
+
+    const { data: logs, error } = await query;
+
+    if (error) {
+      console.error('Failed to fetch audit logs by action:', error);
+      return [];
+    }
+
+    return (logs || []) as LinkAuditLog[];
+  } catch (error) {
+    console.error('Unexpected error in getAuditLogsByAction:', error);
+    return [];
+  }
+}
+
+export async function createBatchAuditLogs(
+  logs: Array<{
+    linkId: string;
+    action: AuditAction;
+    userId: string;
+    oldValues?: any;
+    newValues?: any;
+    ipAddress?: string;
+    userAgent?: string;
+  }>
+): Promise<void> {
+  try {
+    const linkIds = logs.map(log => log.linkId);
+    const { data: links, error: linksError } = await supabaseAdmin
+      .from('intake_entity_links')
+      .select('id, intake_id, entity_type, entity_id')
+      .in('id', linkIds);
+
+    if (linksError || !links) {
+      console.error('Failed to fetch links for batch audit log:', linksError);
+      return;
+    }
+
+    const linkMap = new Map(links.map(link => [link.id, link]));
+
+    const auditEntries = logs.map(log => {
+      const link = linkMap.get(log.linkId);
+      if (!link) {
+        console.warn(`Link not found for audit log: ${log.linkId}`);
+        return null;
+      }
+
+      const details: Record<string, any> = {};
+
+      if (log.action === 'updated' && log.oldValues && log.newValues) {
+        details.old_values = log.oldValues;
+        details.new_values = log.newValues;
+        details.changed_fields = Object.keys(log.newValues);
+      } else if (log.action === 'created' && log.newValues) {
+        details.initial_values = log.newValues;
+      } else if (log.action === 'deleted' || log.action === 'restored') {
+        details.link_state = log.newValues || {};
+      }
+
+      if (log.ipAddress) {
+        details.ip_address = log.ipAddress;
+      }
+      if (log.userAgent) {
+        details.user_agent = log.userAgent;
+      }
+
+      return {
+        link_id: log.linkId,
+        intake_id: link.intake_id,
+        entity_type: link.entity_type,
+        entity_id: link.entity_id,
+        action: log.action,
+        performed_by: log.userId,
+        details: Object.keys(details).length > 0 ? details : null,
+        timestamp: new Date().toISOString(),
+      };
+    }).filter(entry => entry !== null);
+
+    if (auditEntries.length === 0) {
+      return;
+    }
+
+    const { error: auditError } = await supabaseAdmin
+      .from('link_audit_logs')
+      .insert(auditEntries);
+
+    if (auditError) {
+      console.error('Failed to create batch audit logs:', auditError);
+    }
+  } catch (error) {
+    console.error('Unexpected error in createBatchAuditLogs:', error);
+  }
+}
+
+export async function getAuditStatistics(
+  intakeId?: string,
+  startDate?: Date,
+  endDate?: Date
+): Promise<{
+  total_operations: number;
+  created: number;
+  updated: number;
+  deleted: number;
+  restored: number;
+  migrated: number;
+  reordered: number;
+  unique_users: number;
+}> {
+  try {
+    let query = supabaseAdmin
+      .from('link_audit_logs')
+      .select('action, performed_by');
+
+    if (intakeId) {
+      query = query.eq('intake_id', intakeId);
+    }
+
+    if (startDate) {
+      query = query.gte('timestamp', startDate.toISOString());
+    }
+
+    if (endDate) {
+      query = query.lte('timestamp', endDate.toISOString());
+    }
+
+    const { data: auditLogs, error } = await query;
+
+    if (error || !auditLogs) {
+      console.error('Failed to fetch audit statistics:', error);
+      return {
+        total_operations: 0, created: 0, updated: 0, deleted: 0,
+        restored: 0, migrated: 0, reordered: 0, unique_users: 0,
+      };
+    }
+
+    return {
+      total_operations: auditLogs.length,
+      created: auditLogs.filter(log => log.action === 'created').length,
+      updated: auditLogs.filter(log => log.action === 'updated').length,
+      deleted: auditLogs.filter(log => log.action === 'deleted').length,
+      restored: auditLogs.filter(log => log.action === 'restored').length,
+      migrated: auditLogs.filter(log => log.action === 'migrated').length,
+      reordered: auditLogs.filter(log => log.action === 'reordered').length,
+      unique_users: new Set(auditLogs.map(log => log.performed_by)).size,
+    };
+  } catch (error) {
+    console.error('Unexpected error in getAuditStatistics:', error);
+    return {
+      total_operations: 0, created: 0, updated: 0, deleted: 0,
+      restored: 0, migrated: 0, reordered: 0, unique_users: 0,
+    };
+  }
+}
+
+// --- Merged from link-migration.service.ts (Phase 06 consolidation) ---
+
+const LINK_TYPE_MAPPING: Record<LinkType, LinkType> = {
+  primary: 'primary',
+  related: 'related',
+  mentioned: 'mentioned',
+  requested: 'related',
+  assigned_to: 'assigned_to',
+};
+
+export function mapLinkTypes(intakeLinkType: LinkType): LinkType {
+  return LINK_TYPE_MAPPING[intakeLinkType] || 'related';
+}
+
+export async function migrateIntakeLinksToPosition(
+  sourceIntakeId: string,
+  targetPositionId: string,
+  userId: string,
+  atomic: boolean = false
+): Promise<{
+  success: boolean;
+  migrated_count: number;
+  failed_count: number;
+  intake_id: string;
+  position_id: string;
+  link_mappings: Array<{
+    intake_link_id: string;
+    position_link_id: string;
+    link_type_before: LinkType;
+    link_type_after: LinkType;
+  }>;
+}> {
+  try {
+    const { data: targetPosition, error: positionError } = await supabaseAdmin
+      .from('positions')
+      .select('id, classification_level, organization_id')
+      .eq('id', targetPositionId)
+      .single();
+
+    if (positionError || !targetPosition) {
+      throw {
+        code: 'POSITION_NOT_FOUND',
+        message: `Target position ${targetPositionId} not found`,
+        statusCode: 404,
+      };
+    }
+
+    const { data: intakeLinks, error: linksError } = await supabaseAdmin
+      .from('intake_entity_links')
+      .select('*')
+      .eq('intake_id', sourceIntakeId)
+      .is('deleted_at', null)
+      .order('link_order', { ascending: true });
+
+    if (linksError) {
+      throw {
+        code: 'FETCH_LINKS_FAILED',
+        message: `Failed to fetch intake links: ${linksError.message}`,
+        statusCode: 500,
+      };
+    }
+
+    if (!intakeLinks || intakeLinks.length === 0) {
+      return {
+        success: true,
+        migrated_count: 0,
+        failed_count: 0,
+        intake_id: sourceIntakeId,
+        position_id: targetPositionId,
+        link_mappings: [],
+      };
+    }
+
+    const linkMappings: Array<{
+      intake_link_id: string;
+      position_link_id: string;
+      link_type_before: LinkType;
+      link_type_after: LinkType;
+    }> = [];
+
+    const migratedLinks: EntityLink[] = [];
+    const failedLinks: Array<{
+      intake_link_id: string;
+      entity_id: string;
+      entity_type: string;
+      error: string;
+    }> = [];
+
+    for (const intakeLink of intakeLinks) {
+      try {
+        const mappedLinkType = mapLinkTypes(intakeLink.link_type);
+
+        const { data: newPositionLink, error: createError } = await supabaseAdmin
+          .from('intake_entity_links')
+          .insert({
+            intake_id: targetPositionId,
+            entity_type: intakeLink.entity_type,
+            entity_id: intakeLink.entity_id,
+            link_type: mappedLinkType,
+            source: 'import',
+            confidence: intakeLink.confidence,
+            notes: intakeLink.notes,
+            link_order: intakeLink.link_order,
+            suggested_by: intakeLink.suggested_by,
+            linked_by: userId,
+            _version: 1,
+          })
+          .select()
+          .single();
+
+        if (createError || !newPositionLink) {
+          const errorMsg = `Failed to create link on position: ${createError?.message}`;
+
+          if (atomic) {
+            throw {
+              code: 'MIGRATION_FAILED',
+              message: 'Link migration failed - rolling back all changes',
+              statusCode: 400,
+              details: {
+                failed_links: [{
+                  entity_id: intakeLink.entity_id,
+                  entity_type: intakeLink.entity_type,
+                  reason: errorMsg,
+                }],
+              },
+            };
+          } else {
+            failedLinks.push({
+              intake_link_id: intakeLink.id,
+              entity_id: intakeLink.entity_id,
+              entity_type: intakeLink.entity_type,
+              error: errorMsg,
+            });
+            continue;
+          }
+        }
+
+        migratedLinks.push(newPositionLink as EntityLink);
+        linkMappings.push({
+          intake_link_id: intakeLink.id,
+          position_link_id: newPositionLink.id,
+          link_type_before: intakeLink.link_type,
+          link_type_after: mappedLinkType,
+        });
+
+        await supabaseAdmin
+          .from('intake_entity_links')
+          .update({
+            deleted_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', intakeLink.id);
+
+      } catch (linkError: any) {
+        if (atomic) {
+          throw linkError;
+        }
+        failedLinks.push({
+          intake_link_id: intakeLink.id,
+          entity_id: intakeLink.entity_id,
+          entity_type: intakeLink.entity_type,
+          error: linkError.message || 'Unknown error',
+        });
+      }
+    }
+
+    const auditLinkId = migratedLinks.length > 0 ? migratedLinks[0].id : sourceIntakeId;
+    await createAuditLog(
+      auditLinkId,
+      'created',
+      userId,
+      {},
+      {
+        source_intake_id: sourceIntakeId,
+        target_position_id: targetPositionId,
+        migrated_count: migratedLinks.length,
+        failed_count: failedLinks.length,
+        link_mappings: linkMappings,
+        failed_links: failedLinks.length > 0 ? failedLinks : undefined,
+        timestamp: new Date().toISOString(),
+      }
+    );
+
+    return {
+      success: true,
+      migrated_count: migratedLinks.length,
+      failed_count: failedLinks.length,
+      intake_id: sourceIntakeId,
+      position_id: targetPositionId,
+      link_mappings: linkMappings,
+    };
+
+  } catch (error: any) {
+    await createAuditLog(
+      sourceIntakeId,
+      'deleted',
+      userId,
+      {},
+      {
+        source_intake_id: sourceIntakeId,
+        target_position_id: targetPositionId,
+        error_code: error.code || 'MIGRATION_FAILED',
+        error_message: error.message,
+        timestamp: new Date().toISOString(),
+      }
+    );
+
+    if (error.code && error.statusCode) {
+      throw error;
+    }
+    throw {
+      code: 'INTERNAL_ERROR',
+      message: error.message || 'An unexpected error occurred during migration',
       statusCode: 500,
     };
   }

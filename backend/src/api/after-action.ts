@@ -19,7 +19,7 @@ import {
   editApprovalSchema,
   AfterActionStatus,
 } from '../types/after-action.types'
-import { createTaskCreationService, TaskCreationService } from '../services/task-creation.service'
+import { createTaskCreationService, TaskCreationService } from '../services/tasks.service'
 import { createNotificationService, NotificationService } from '../services/notification.service'
 import logger from '../utils/logger'
 

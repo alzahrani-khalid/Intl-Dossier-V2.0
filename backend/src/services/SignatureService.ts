@@ -357,3 +357,45 @@ export class SignatureService {
 }
 
 export default SignatureService;
+
+// --- Merged from SignatureOrchestrator.ts (Phase 06 consolidation) ---
+// SignatureOrchestrator provided multi-provider orchestration (DocuSign + PKI)
+// with health checks, fallback, and mixed signing workflows. It had no active
+// importers and used external integration clients (DocuSignClient, PKIClient).
+// Key types preserved below for reference.
+
+export interface SignatureProviderConfig {
+  docusign?: Record<string, string>;
+  pki?: Record<string, string>;
+  defaultProvider: 'docusign' | 'pki';
+  fallbackProvider?: 'docusign' | 'pki';
+  retryAttempts: number;
+  retryDelay: number;
+}
+
+export interface SignatureSession {
+  sessionId: string;
+  signatureRequestId: string;
+  provider: 'docusign' | 'pki';
+  status: SignatureStatus;
+  participants: Signatory[];
+  createdAt: Date;
+  expiresAt: Date;
+  metadata: Record<string, any>;
+}
+
+export interface SignatureResult {
+  success: boolean;
+  signatureId?: string;
+  provider: 'docusign' | 'pki';
+  status: SignatureStatus;
+  error?: string;
+  metadata?: Record<string, any>;
+}
+
+export interface ProviderStatus {
+  provider: 'docusign' | 'pki';
+  isAvailable: boolean;
+  lastChecked: Date;
+  error?: string;
+}

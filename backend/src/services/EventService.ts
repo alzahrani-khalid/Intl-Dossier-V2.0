@@ -518,3 +518,55 @@ export class EventService {
 }
 
 export default EventService;
+
+// --- Merged from event-conflicts.ts (Phase 06 consolidation) ---
+// EventConflictService provided standalone conflict detection (venue, participant,
+// organizer, holiday, resource). The existing EventService.checkConflicts() method
+// covers production conflict detection. The standalone class had no active importers
+// and used a separate Supabase client constructor pattern inconsistent with the
+// shared supabaseAdmin approach. Its types are preserved below for reference.
+
+export interface ConflictCheckRequest {
+  eventId?: string;
+  start_datetime: string;
+  end_datetime: string;
+  venue_en?: string;
+  venue_ar?: string;
+  organizer_id?: string;
+  participantIds?: string[];
+  countryId?: string;
+}
+
+export interface EventConflict {
+  type: 'venue' | 'participant' | 'organizer' | 'holiday' | 'resource';
+  severity: 'high' | 'medium' | 'low';
+  conflictingEvent?: Event;
+  message: string;
+  details: {
+    overlappingTime?: {
+      start: string;
+      end: string;
+      durationMinutes: number;
+    };
+    affectedResources?: string[];
+    participantConflicts?: Array<{
+      participantId: string;
+      eventId: string;
+      eventTitle: string;
+    }>;
+  };
+}
+
+export interface ConflictCheckResult {
+  hasConflicts: boolean;
+  conflicts: EventConflict[];
+  warnings: string[];
+  suggestions?: {
+    alternativeTimeSlots?: Array<{
+      start: string;
+      end: string;
+      available: boolean;
+    }>;
+    alternativeVenues?: string[];
+  };
+}

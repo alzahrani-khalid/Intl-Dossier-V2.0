@@ -14,9 +14,10 @@ import {
   reorderEntityLinks,
   createBatchLinks,
   getEntityIntakes,
+  createAuditLog,
+  getIntakeAuditLogs,
+  migrateIntakeLinksToPosition,
 } from '../services/link.service'
-import { createAuditLog, getIntakeAuditLogs } from '../services/link-audit.service'
-import { migrateIntakeLinksToPosition } from '../services/link-migration.service'
 import type { CreateLinkRequest, UpdateLinkRequest } from '../types/intake-entity-links.types'
 
 const router = Router()

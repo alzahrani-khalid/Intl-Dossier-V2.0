@@ -540,3 +540,287 @@ export class BriefService {
 }
 
 export default BriefService;
+
+// --- Merged from brief-context.service.ts (Phase 06 consolidation) ---
+
+export interface BriefContextRequest {
+  engagementId?: string
+  dossierId?: string
+  organizationId: string
+  maxDossiers?: number
+  maxPositions?: number
+  maxCommitments?: number
+  maxEngagements?: number
+}
+
+export interface DossierContext {
+  id: string
+  name_en: string
+  name_ar: string
+  dossier_type: string
+  overview_en?: string
+  overview_ar?: string
+  background_en?: string
+  background_ar?: string
+  relevance_score?: number
+}
+
+export interface PositionContext {
+  id: string
+  title_en: string
+  title_ar: string
+  stance: string
+  context?: string
+  dossier_name?: string
+  last_updated?: string
+}
+
+export interface CommitmentContext {
+  id: string
+  description_en: string
+  description_ar: string
+  status: string
+  deadline?: string
+  commitment_type: string
+  source_entity?: string
+}
+
+export interface EngagementContext {
+  id: string
+  title_en: string
+  title_ar: string
+  engagement_type: string
+  start_date?: string
+  end_date?: string
+  location?: string
+  participants?: string[]
+  outcomes?: string
+}
+
+export interface BriefContext {
+  engagement?: EngagementContext
+  dossier?: DossierContext
+  relatedDossiers: DossierContext[]
+  positions: PositionContext[]
+  commitments: CommitmentContext[]
+  recentEngagements: EngagementContext[]
+  searchQuery?: string
+}
+
+export class BriefContextService {
+  async gatherContext(request: BriefContextRequest): Promise<BriefContext> {
+    const {
+      engagementId,
+      dossierId,
+      maxDossiers = 5,
+      maxPositions = 10,
+      maxCommitments = 10,
+    } = request
+
+    const context: BriefContext = {
+      relatedDossiers: [],
+      positions: [],
+      commitments: [],
+      recentEngagements: [],
+    }
+
+    try {
+      if (engagementId) {
+        context.engagement = await this.getEngagement(engagementId)
+      }
+
+      if (dossierId) {
+        context.dossier = await this.getDossier(dossierId)
+      }
+
+      const searchQuery = this.buildSearchQuery(context)
+      context.searchQuery = searchQuery
+
+      const [relatedDossiers, positions, commitments] = await Promise.all([
+        this.getTopDossiers(maxDossiers, dossierId),
+        this.getRelevantPositions(maxPositions),
+        this.getActiveCommitments(maxCommitments),
+      ])
+
+      context.relatedDossiers = relatedDossiers
+      context.positions = positions
+      context.commitments = commitments
+
+      return context
+    } catch (error) {
+      logError('Failed to gather brief context', error as Error)
+      return context
+    }
+  }
+
+  private async getEngagement(engagementId: string): Promise<EngagementContext | undefined> {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('engagements')
+        .select(`id, engagement_type, engagement_category, location_en, location_ar`)
+        .eq('id', engagementId)
+        .single()
+
+      if (error || !data) {
+        logError('Failed to get engagement', error as Error)
+        return undefined
+      }
+
+      return {
+        id: data.id,
+        title_en: `${data.engagement_type} - ${data.engagement_category}`,
+        title_ar: `${data.engagement_type} - ${data.engagement_category}`,
+        engagement_type: data.engagement_type,
+        location: data.location_en,
+      }
+    } catch (error) {
+      logError('Error fetching engagement', error as Error)
+      return undefined
+    }
+  }
+
+  private async getDossier(dossierId: string): Promise<DossierContext | undefined> {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('dossiers')
+        .select(`id, name_en, name_ar, type, description_en, description_ar`)
+        .eq('id', dossierId)
+        .single()
+
+      if (error || !data) {
+        logError('Failed to get dossier', error as Error)
+        return undefined
+      }
+
+      return {
+        id: data.id,
+        name_en: data.name_en || '',
+        name_ar: data.name_ar || '',
+        dossier_type: data.type || 'unknown',
+        overview_en: data.description_en,
+        overview_ar: data.description_ar,
+      }
+    } catch (error) {
+      logError('Error fetching dossier', error as Error)
+      return undefined
+    }
+  }
+
+  private buildSearchQuery(context: BriefContext): string {
+    const parts: string[] = []
+
+    if (context.engagement) {
+      parts.push(context.engagement.title_en || '')
+      if (context.engagement.location) {
+        parts.push(context.engagement.location)
+      }
+    }
+
+    if (context.dossier) {
+      parts.push(context.dossier.name_en || '')
+      if (context.dossier.overview_en) {
+        parts.push(context.dossier.overview_en.slice(0, 200))
+      }
+    }
+
+    return parts.filter(Boolean).join(' ').slice(0, 500)
+  }
+
+  private async getTopDossiers(limit: number, excludeId?: string): Promise<DossierContext[]> {
+    try {
+      let query = supabaseAdmin
+        .from('dossiers')
+        .select(`id, name_en, name_ar, type, description_en, description_ar`)
+        .eq('is_active', true)
+        .order('updated_at', { ascending: false })
+        .limit(limit)
+
+      if (excludeId) {
+        query = query.neq('id', excludeId)
+      }
+
+      const { data, error } = await query
+
+      if (error) {
+        logError('Failed to get top dossiers', error as Error)
+        return []
+      }
+
+      return (data || []).map((d) => ({
+        id: d.id,
+        name_en: d.name_en || '',
+        name_ar: d.name_ar || '',
+        dossier_type: d.type || 'unknown',
+        overview_en: d.description_en,
+        overview_ar: d.description_ar,
+      }))
+    } catch (error) {
+      logError('Error fetching top dossiers', error as Error)
+      return []
+    }
+  }
+
+  private async getRelevantPositions(limit: number): Promise<PositionContext[]> {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('positions')
+        .select(`id, title_en, title_ar, content_en, status, updated_at`)
+        .eq('status', 'approved')
+        .order('updated_at', { ascending: false })
+        .limit(limit)
+
+      if (error) {
+        logError('Failed to get positions', error as Error)
+        return []
+      }
+
+      return (data || []).map((p) => ({
+        id: p.id,
+        title_en: p.title_en || '',
+        title_ar: p.title_ar || '',
+        stance: p.status || 'neutral',
+        context: p.content_en,
+        last_updated: p.updated_at,
+      }))
+    } catch (error) {
+      logError('Error fetching positions', error as Error)
+      return []
+    }
+  }
+
+  private async getActiveCommitments(limit: number): Promise<CommitmentContext[]> {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('commitments')
+        .select(`id, title, type, status, priority, timeline, source`)
+        .in('status', ['pending', 'in_progress', 'active'])
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (error) {
+        logError('Failed to get commitments', error as Error)
+        return []
+      }
+
+      return (data || []).map((c) => {
+        const timeline = c.timeline as { deadline?: string } | null
+        const source = c.source as { entity?: string; name?: string } | null
+
+        return {
+          id: c.id,
+          description_en: c.title || '',
+          description_ar: c.title || '',
+          status: c.status || 'unknown',
+          deadline: timeline?.deadline,
+          commitment_type: c.type || 'general',
+          source_entity: source?.entity || source?.name,
+        }
+      })
+    } catch (error) {
+      logError('Error fetching commitments', error as Error)
+      return []
+    }
+  }
+}
+
+export const briefContextService = new BriefContextService()
