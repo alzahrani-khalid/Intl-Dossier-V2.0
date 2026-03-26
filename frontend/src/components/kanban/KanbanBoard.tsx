@@ -8,7 +8,7 @@
  * Includes drag-and-drop functionality with optimistic updates and auto-retry on failure
  */
 
-import React, { useState } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   DndContext,
@@ -44,6 +44,46 @@ interface KanbanBoardProps {
 
 const WORKFLOW_STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done']
 
+// Hoisted outside component: pure functions with no state dependencies.
+// Prevents new function references on each render, enabling React.memo on child components.
+const STAGE_COLORS: Record<string, string> = {
+  todo: 'border-gray-300 bg-gray-50 dark:bg-gray-900',
+  in_progress: 'border-blue-300 bg-blue-50 dark:bg-blue-950',
+  review: 'border-purple-300 bg-purple-50 dark:bg-purple-950',
+  done: 'border-green-300 bg-green-50 dark:bg-green-950',
+  cancelled: 'border-red-300 bg-red-50 dark:bg-red-950',
+}
+
+const PRIORITY_COLORS: Record<string, string> = {
+  urgent: 'bg-red-500',
+  high: 'bg-orange-500',
+  medium: 'bg-blue-500',
+  low: 'bg-gray-500',
+}
+
+function getStageColor(stage: WorkflowStage): string {
+  return STAGE_COLORS[stage] || STAGE_COLORS.todo
+}
+
+function getPriorityColor(priority: string): string {
+  return PRIORITY_COLORS[priority] || PRIORITY_COLORS.medium
+}
+
+function getSLAStatus(task: Task): 'safe' | 'warning' | 'breached' {
+  if (!task.sla_deadline) return 'safe'
+
+  const now = new Date()
+  const deadline = new Date(task.sla_deadline)
+  const created = new Date(task.created_at)
+  const total = deadline.getTime() - created.getTime()
+  const remaining = deadline.getTime() - now.getTime()
+  const percentage = (remaining / total) * 100
+
+  if (remaining < 0) return 'breached'
+  if (percentage < 25) return 'warning'
+  return 'safe'
+}
+
 export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps) {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
@@ -63,18 +103,18 @@ export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps
     }),
   )
 
-  // T060: Handle drag start
-  const handleDragStart = (event: DragStartEvent) => {
+  // Memo: useCallback prevents DndContext from re-rendering all children when parent re-renders
+  const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event
     const task = tasks.find((t) => t.id === active.id)
     if (task) {
       setActiveTask(task)
       setIsDragging(true)
     }
-  }
+  }, [tasks])
 
-  // T060-T063: Handle drag end with optimistic updates and retry logic
-  const handleDragEnd = async (event: DragEndEvent) => {
+  // Memo: useCallback stabilizes handler reference for DndContext onDragEnd prop
+  const handleDragEnd = useCallback(async (event: DragEndEvent) => {
     const { active, over } = event
     setIsDragging(false)
     setActiveTask(null)
@@ -124,7 +164,7 @@ export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps
       description: lastError?.message || t('tasks.move_error', 'Please try again'),
       variant: 'destructive',
     })
-  }
+  }, [tasks, onTaskMove, t, toast])
 
   // Group tasks by workflow_stage
   const tasksByStage = React.useMemo(() => {
@@ -151,42 +191,6 @@ export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps
 
     return grouped
   }, [tasks])
-
-  const getStageColor = (stage: WorkflowStage): string => {
-    const colors = {
-      todo: 'border-gray-300 bg-gray-50 dark:bg-gray-900',
-      in_progress: 'border-blue-300 bg-blue-50 dark:bg-blue-950',
-      review: 'border-purple-300 bg-purple-50 dark:bg-purple-950',
-      done: 'border-green-300 bg-green-50 dark:bg-green-950',
-      cancelled: 'border-red-300 bg-red-50 dark:bg-red-950',
-    }
-    return colors[stage as keyof typeof colors]
-  }
-
-  const getPriorityColor = (priority: string): string => {
-    const colors = {
-      urgent: 'bg-red-500',
-      high: 'bg-orange-500',
-      medium: 'bg-blue-500',
-      low: 'bg-gray-500',
-    }
-    return colors[priority as keyof typeof colors] || colors.medium
-  }
-
-  const getSLAStatus = (task: Task): 'safe' | 'warning' | 'breached' => {
-    if (!task.sla_deadline) return 'safe'
-
-    const now = new Date()
-    const deadline = new Date(task.sla_deadline)
-    const created = new Date(task.created_at)
-    const total = deadline.getTime() - created.getTime()
-    const remaining = deadline.getTime() - now.getTime()
-    const percentage = (remaining / total) * 100
-
-    if (remaining < 0) return 'breached'
-    if (percentage < 25) return 'warning'
-    return 'safe'
-  }
 
   // T064: Mobile-first responsive design (base: single column swipeable, lg: multi-column drag-drop, RTL: column order reversed)
   return (
@@ -318,7 +322,8 @@ interface KanbanCardProps {
   getSLAStatus: (task: Task) => 'safe' | 'warning' | 'breached'
 }
 
-function KanbanCard({ task, onClick, isRTL, getPriorityColor }: KanbanCardProps) {
+// Memo: prevents card re-render when unrelated cards/columns change (e.g., DnD in another column)
+const KanbanCard = React.memo(function KanbanCard({ task, onClick, isRTL, getPriorityColor }: KanbanCardProps) {
   const { t } = useTranslation()
   const isCompleted = task.status === 'completed' || task.status === 'cancelled'
 
@@ -391,7 +396,7 @@ function KanbanCard({ task, onClick, isRTL, getPriorityColor }: KanbanCardProps)
       </CardContent>
     </Card>
   )
-}
+})
 
 /**
  * Get user initials from user_id for avatar display
@@ -423,7 +428,8 @@ interface DroppableColumnProps {
   children: React.ReactNode
 }
 
-function DroppableColumn({ id, children }: DroppableColumnProps) {
+// Memo: prevents column re-render when items in other columns change
+const DroppableColumn = React.memo(function DroppableColumn({ id, children }: DroppableColumnProps) {
   const { setNodeRef } = useSortable({ id })
 
   return (
@@ -431,7 +437,7 @@ function DroppableColumn({ id, children }: DroppableColumnProps) {
       {children}
     </div>
   )
-}
+})
 
 /**
  * DraggableKanbanCard Component
@@ -443,7 +449,8 @@ interface DraggableKanbanCardProps extends Omit<KanbanCardProps, 'task'> {
   isDragging?: boolean
 }
 
-function DraggableKanbanCard({
+// Memo: prevents draggable card re-render when other cards move between columns
+const DraggableKanbanCard = React.memo(function DraggableKanbanCard({
   task,
   onClick,
   isRTL,
@@ -489,6 +496,6 @@ function DraggableKanbanCard({
       </div>
     </div>
   )
-}
+})
 
 export default KanbanBoard

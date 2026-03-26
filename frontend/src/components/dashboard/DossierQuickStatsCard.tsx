@@ -11,6 +11,7 @@
  * Mobile-first design with RTL support.
  */
 
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import {
@@ -82,7 +83,8 @@ export interface DossierQuickStatsCardProps {
 // Component
 // =============================================================================
 
-export function DossierQuickStatsCard({
+// Memo: prevents card re-render in dashboard grid when sibling cards or parent state changes
+export const DossierQuickStatsCard = React.memo(function DossierQuickStatsCard({
   dossier,
   variant = 'full',
   onClick,
@@ -94,15 +96,15 @@ export function DossierQuickStatsCard({
 // Get icon for type
   const TypeIcon = typeIcons[dossier.type] || Folder
 
-  // Handle click - navigate to dossier detail
-  const handleClick = () => {
+  // Memo: useCallback stabilizes click handler for memoized component
+  const handleClick = useCallback(() => {
     if (onClick) {
       onClick()
     } else {
       const path = getDossierDetailPath(dossier.id, dossier.type)
       navigate({ to: path })
     }
-  }
+  }, [onClick, dossier.id, dossier.type, navigate])
 
   // Get display name based on language
   const displayName = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en
@@ -267,7 +269,7 @@ export function DossierQuickStatsCard({
       </CardContent>
     </Card>
   )
-}
+})
 
 // =============================================================================
 // Helper: Format Relative Time

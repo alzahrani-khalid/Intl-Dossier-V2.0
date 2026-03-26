@@ -7,6 +7,7 @@
  * Mobile-first design with RTL support.
  */
 
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import {
@@ -186,7 +187,8 @@ interface ActivityItemProps {
   isLast?: boolean
 }
 
-function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: ActivityItemProps) {
+// Memo: prevents activity item re-render when sibling items or parent loading state changes
+const ActivityItem = React.memo(function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: ActivityItemProps) {
   const { t, i18n } = useTranslation('dossier-dashboard')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
@@ -347,7 +349,7 @@ const TypeIcon = typeIcons[activity.work_item_type] || CheckSquare
       )}
     </div>
   )
-}
+})
 
 // =============================================================================
 // Loading Skeleton

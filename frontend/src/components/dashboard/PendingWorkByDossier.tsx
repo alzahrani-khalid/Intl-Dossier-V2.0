@@ -7,7 +7,7 @@
  * Mobile-first design with RTL support.
  */
 
-import { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import {
@@ -178,7 +178,8 @@ interface DossierWorkItemProps {
   defaultExpanded?: boolean
 }
 
-function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps) {
+// Memo: prevents work item re-render when sibling dossier items expand/collapse
+const DossierWorkItem = React.memo(function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps) {
   const { t } = useTranslation('dossier-dashboard')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
@@ -362,7 +363,7 @@ const [isOpen, setIsOpen] = useState(defaultExpanded)
       </div>
     </Collapsible>
   )
-}
+})
 
 // =============================================================================
 // Loading Skeleton
