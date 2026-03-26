@@ -7,6 +7,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import {
   getAnalyticsDashboard as getAnalyticsDashboardApi,
 } from '../repositories/analytics.repository'
@@ -31,7 +32,7 @@ export function useAnalyticsDashboard(params?: {
     queryKey: analyticsKeys.dashboard(params),
     queryFn: () => getAnalyticsDashboardApi(searchParams),
     enabled: params?.enabled !== false,
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
     gcTime: 10 * 60 * 1000,
   })
 }

@@ -7,6 +7,7 @@
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import * as TopicsRepo from '../repositories/topics.repository'
 import type { DossierWithExtension } from '@/services/dossier-api'
 
@@ -32,7 +33,7 @@ export function useTopicSubtopics(
     queryKey: topicKeys.subtopics(topicId),
     queryFn: () => TopicsRepo.getTopicSubtopics(topicId),
     enabled: !!topicId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
     ...options,
   })
 }

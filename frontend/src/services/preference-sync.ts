@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '../lib/supabase'
 import { COLUMNS } from '../lib/query-columns'
 import { preferenceStorage, type StoredPreferences } from '../utils/storage/preference-storage'
@@ -49,7 +50,7 @@ export function usePreferenceSync(userId?: string) {
       return null
     },
     enabled: !!userId,
-    staleTime: 60000, // 1 minute
+    staleTime: STALE_TIME.NORMAL,
   })
 
   // Mutation to save preferences

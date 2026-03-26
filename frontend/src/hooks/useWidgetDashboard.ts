@@ -7,6 +7,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useQueries, useQueryClient } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 import { supabase } from '@/lib/supabase'
@@ -816,7 +817,7 @@ export function useWidgetDashboard(options: UseWidgetDashboardOptions = {}) {
       queryKey: widgetDashboardKeys.widgetData(widget.id as string),
       queryFn: fetchWidgetData(widget),
       refetchInterval: widget.refreshInterval || false,
-      staleTime: 30000, // 30 seconds
+      staleTime: STALE_TIME.LIVE,
     })),
   })
 

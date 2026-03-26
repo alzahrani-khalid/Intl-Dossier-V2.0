@@ -7,6 +7,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import * as WorkItemsRepo from '../repositories/work-items.repository'
 import type {
   WorkflowRule,
@@ -42,7 +43,7 @@ export function useWorkflowRules(params: WorkflowRulesListParams = {}): ReturnTy
   return useQuery({
     queryKey: workflowKeys.rulesList(params),
     queryFn: () => WorkItemsRepo.getWorkflowRules(params),
-    staleTime: 30 * 1000,
+    staleTime: STALE_TIME.LIVE,
     gcTime: 5 * 60 * 1000,
   })
 }
@@ -61,7 +62,7 @@ export function useInfiniteWorkflowRules(
       }
       return undefined
     },
-    staleTime: 30 * 1000,
+    staleTime: STALE_TIME.LIVE,
     gcTime: 5 * 60 * 1000,
   })
 }
@@ -71,7 +72,7 @@ export function useWorkflowRule(id: string, enabled = true): ReturnType<typeof u
     queryKey: workflowKeys.rule(id),
     queryFn: () => WorkItemsRepo.getWorkflowRule(id),
     enabled: enabled && !!id,
-    staleTime: 30 * 1000,
+    staleTime: STALE_TIME.LIVE,
   })
 }
 
@@ -81,7 +82,7 @@ export function useWorkflowExecutions(
   return useQuery({
     queryKey: workflowKeys.executionsList(params),
     queryFn: () => WorkItemsRepo.getWorkflowExecutions(params),
-    staleTime: 15 * 1000,
+    staleTime: STALE_TIME.LIVE,
     gcTime: 5 * 60 * 1000,
   })
 }
@@ -91,7 +92,7 @@ export function useRuleExecutions(ruleId: string, enabled = true): ReturnType<ty
     queryKey: workflowKeys.ruleExecutions(ruleId),
     queryFn: () => WorkItemsRepo.getWorkflowExecutions({ rule_id: ruleId, limit: 50 }),
     enabled: enabled && !!ruleId,
-    staleTime: 15 * 1000,
+    staleTime: STALE_TIME.LIVE,
   })
 }
 
@@ -99,7 +100,7 @@ export function useNotificationTemplates(): ReturnType<typeof useQuery> {
   return useQuery({
     queryKey: workflowKeys.templates(),
     queryFn: WorkItemsRepo.getNotificationTemplates,
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.STATIC,
     gcTime: 30 * 60 * 1000,
   })
 }

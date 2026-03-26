@@ -8,6 +8,7 @@
  */
 
 import { useQueries } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import { useMemo, useCallback, useState } from 'react'
 import { getDossier } from '@/services/dossier-api'
 import type { DossierType, Dossier } from '@/lib/dossier-type-guards'
@@ -544,7 +545,7 @@ export function useEntityComparison(entityType: DossierType | null, entityIds: s
       queryKey: dossierKeys.detail(id),
       queryFn: () => getDossier(id),
       enabled: !!entityType && entityIds.length >= 2,
-      staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+      staleTime: STALE_TIME.NORMAL,
     })),
   })
 

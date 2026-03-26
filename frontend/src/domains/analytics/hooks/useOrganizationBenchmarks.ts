@@ -7,6 +7,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import {
   getOrganizationBenchmarks as getOrganizationBenchmarksApi,
   getCurrentStats,
@@ -31,7 +32,7 @@ export function useOrganizationBenchmarks(params?: {
     queryKey: benchmarkKeys.list(params),
     queryFn: () => getOrganizationBenchmarksApi(searchParams),
     enabled: params?.enabled !== false,
-    staleTime: 10 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
   })
 }
 
@@ -39,6 +40,6 @@ export function useCurrentStats(): ReturnType<typeof useQuery> {
   return useQuery({
     queryKey: benchmarkKeys.currentStats(),
     queryFn: () => getCurrentStats(),
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
   })
 }

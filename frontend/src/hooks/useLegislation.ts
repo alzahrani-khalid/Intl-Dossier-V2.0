@@ -10,6 +10,7 @@ import {
   useInfiniteQuery,
   type InfiniteData,
 } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import {
@@ -74,7 +75,7 @@ export function useLegislations(options?: UseLegislationsOptions) {
   return useQuery({
     queryKey: legislationKeys.list(filters),
     queryFn: () => getLegislations(filters),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: STALE_TIME.LIVE, // 2 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     refetchOnWindowFocus: true,
     enabled,
@@ -98,7 +99,7 @@ function useInfiniteLegislations(options?: UseLegislationsOptions) {
     queryFn: ({ pageParam }) => getLegislations(filters, pageParam, 20),
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    staleTime: 2 * 60 * 1000,
+    staleTime: STALE_TIME.LIVE,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: true,
     enabled,
@@ -112,7 +113,7 @@ export function useLegislation(id: string, enabled: boolean = true) {
   return useQuery({
     queryKey: legislationKeys.detail(id),
     queryFn: () => getLegislation(id),
-    staleTime: 2 * 60 * 1000,
+    staleTime: STALE_TIME.LIVE,
     gcTime: 10 * 60 * 1000,
     enabled: enabled && !!id,
   })
@@ -420,7 +421,7 @@ function useUpcomingDeadlines(filters?: LegislationDeadlineFilters) {
   return useQuery({
     queryKey: legislationKeys.upcomingDeadlines(filters),
     queryFn: () => getUpcomingDeadlines(filters),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: STALE_TIME.NORMAL, // 5 minutes
     refetchInterval: 5 * 60 * 1000,
   })
 }
@@ -429,7 +430,7 @@ function useOpenCommentPeriods() {
   return useQuery({
     queryKey: legislationKeys.openCommentPeriods(),
     queryFn: () => getOpenCommentPeriods(),
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
     refetchInterval: 5 * 60 * 1000,
   })
 }
@@ -510,7 +511,7 @@ function useMyWatchedLegislations() {
   return useQuery({
     queryKey: legislationKeys.myWatches(),
     queryFn: () => getMyWatchedLegislations(),
-    staleTime: 2 * 60 * 1000,
+    staleTime: STALE_TIME.LIVE,
   })
 }
 
@@ -578,6 +579,6 @@ function useSearchLegislations(query: string, limit: number = 20) {
     queryKey: ['legislations', 'search', query, limit],
     queryFn: () => searchLegislations(query, limit),
     enabled: query.length >= 2,
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: STALE_TIME.LIVE, // 30 seconds
   })
 }

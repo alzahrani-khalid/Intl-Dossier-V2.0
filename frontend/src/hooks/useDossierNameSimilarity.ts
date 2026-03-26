@@ -6,6 +6,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '@/lib/supabase'
 import { useState, useEffect, useMemo } from 'react'
 import type { DossierType } from '@/lib/dossier-type-guards'
@@ -100,7 +101,7 @@ export function useDossierNameSimilarity(
       return (data as SimilarDossier[]) || []
     },
     enabled: shouldQuery,
-    staleTime: 30000, // Cache for 30 seconds
+    staleTime: STALE_TIME.LIVE,
     gcTime: 60000, // Keep in cache for 1 minute
   })
 

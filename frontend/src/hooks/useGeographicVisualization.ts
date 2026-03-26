@@ -10,6 +10,7 @@
  */
 
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '@/lib/supabase'
 import type {
   GeoVisualizationFilters,
@@ -197,7 +198,7 @@ export function useGeographicVisualization(initialFilters?: Partial<GeoVisualiza
   const { data, isLoading, error, refetch, isFetching } = useQuery({
     queryKey: GEO_VIZ_KEYS.data(filters),
     queryFn: () => fetchGeoVisualizationData('data', filters),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: STALE_TIME.NORMAL, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes cache
     retry: 2,
   })
@@ -296,7 +297,7 @@ function useCountryEngagementMetrics(filters?: Partial<GeoVisualizationFilters>)
   return useQuery({
     queryKey: GEO_VIZ_KEYS.countries(filters || {}),
     queryFn: () => fetchGeoVisualizationData('countries', filters || {}),
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
     select: (data) => data?.countries || [],
   })
 }
@@ -308,7 +309,7 @@ function useRelationshipFlows(filters?: Partial<GeoVisualizationFilters>) {
   return useQuery({
     queryKey: GEO_VIZ_KEYS.relationships(filters || {}),
     queryFn: () => fetchGeoVisualizationData('relationships', filters || {}),
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
     select: (data) => ({
       relationships: data?.relationships || [],
       connections: data?.connections || [],
@@ -323,7 +324,7 @@ function useGeoVisualizationSummary(filters?: Partial<GeoVisualizationFilters>) 
   return useQuery({
     queryKey: GEO_VIZ_KEYS.summary(filters || {}),
     queryFn: () => fetchGeoVisualizationData('summary', filters || {}),
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
     select: (data) => data?.summary,
   })
 }

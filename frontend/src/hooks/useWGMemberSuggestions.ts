@@ -6,6 +6,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import {
   getWGMemberSuggestions,
   addBulkWGMembers,
@@ -44,7 +45,7 @@ export function useWGMemberSuggestions(
     queryKey: wgMemberSuggestionsKeys.suggestions(workingGroupId),
     queryFn: () => getWGMemberSuggestions(workingGroupId, { limit, includeRejected }),
     enabled: enabled && !!workingGroupId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: STALE_TIME.NORMAL,
   })
 }
 

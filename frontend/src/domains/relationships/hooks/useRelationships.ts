@@ -8,6 +8,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import * as RelationshipsRepo from '../repositories/relationships.repository'
 import type {
   CreateRelationshipRequest,
@@ -363,7 +364,7 @@ export function useGraphData(
     queryKey: graphKeys.traversal(startDossierId, maxDegrees, relationshipType),
     queryFn: () => fetchGraphData(startDossierId, maxDegrees, relationshipType),
     enabled: !!startDossierId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
     ...options,
     meta: {
       errorMessage: t('graph.fetchError', 'Failed to load graph data'),
@@ -382,7 +383,7 @@ export function usePrefetchGraphData(): (
     queryClient.prefetchQuery({
       queryKey: graphKeys.traversal(startDossierId, maxDegrees, relationshipType),
       queryFn: () => fetchGraphData(startDossierId, maxDegrees, relationshipType),
-      staleTime: 5 * 60 * 1000,
+      staleTime: STALE_TIME.NORMAL,
     })
   }
 }

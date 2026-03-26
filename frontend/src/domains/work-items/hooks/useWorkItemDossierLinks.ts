@@ -7,6 +7,7 @@
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '@/lib/supabase'
 import type { WorkItemType, WorkItemDossierLink } from '@/types/dossier-context.types'
 import { workItemDossierKeys } from '@/hooks/useCreateWorkItemDossierLinks'
@@ -125,7 +126,7 @@ export function useWorkItemDossierLinks(
     queryKey: workItemDossierKeys.list(workItemType, workItemId),
     queryFn: () => fetchWorkItemDossierLinks(workItemType, workItemId),
     enabled: enabled && !!workItemType && !!workItemId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.NORMAL,
     gcTime: 30 * 60 * 1000,
     ...queryOptions,
   })

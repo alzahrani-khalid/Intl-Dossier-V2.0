@@ -12,14 +12,15 @@
 
 import { QueryClient, QueryClientConfig } from '@tanstack/react-query'
 import { toast } from 'sonner' // or your preferred toast library
+import { STALE_TIME } from './query-tiers'
 
 /**
  * Default query options
  */
 const defaultQueryOptions: QueryClientConfig['defaultOptions'] = {
   queries: {
-    // Stale time: 5 minutes (data is considered fresh for 5 minutes)
-    staleTime: 5 * 60 * 1000,
+    // Stale time: use NORMAL tier (5 min) as global default
+    staleTime: STALE_TIME.NORMAL,
 
     // Cache time: 10 minutes (unused data is garbage collected after 10 minutes)
     gcTime: 10 * 60 * 1000,

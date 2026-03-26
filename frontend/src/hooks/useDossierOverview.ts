@@ -6,6 +6,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import {
   fetchDossierOverview,
   exportDossierProfile,
@@ -62,7 +63,7 @@ export function useDossierOverview(
       return fetchDossierOverview(request)
     },
     enabled: enabled && !!dossierId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: STALE_TIME.NORMAL, // 5 minutes
     gcTime: 1000 * 60 * 30, // 30 minutes
   })
 
@@ -157,7 +158,7 @@ function usePrefetchDossierOverview() {
           fetchDossierOverview({
             dossier_id: dossierId,
           }),
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: STALE_TIME.NORMAL, // 5 minutes
       })
     },
   }

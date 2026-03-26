@@ -7,6 +7,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '@/lib/supabase'
 import type {
   SLAPolicyInput,
@@ -49,7 +50,7 @@ export function useSLADashboard(params: SLADashboardParams = {}): ReturnType<typ
         start_date: params.startDate,
         end_date: params.endDate,
       }),
-    staleTime: 30 * 1000,
+    staleTime: STALE_TIME.LIVE,
     refetchInterval: 60 * 1000,
   })
 }
@@ -65,7 +66,7 @@ export function useSLAComplianceByType(
         start_date: params.startDate,
         end_date: params.endDate,
       }),
-    staleTime: 30 * 1000,
+    staleTime: STALE_TIME.LIVE,
   })
 }
 
@@ -84,7 +85,7 @@ export function useSLAComplianceByAssignee(
         end_date: params.endDate,
         limit: params.limit,
       }),
-    staleTime: 30 * 1000,
+    staleTime: STALE_TIME.LIVE,
   })
 }
 
@@ -107,7 +108,7 @@ export function useSLAAtRiskItems(params: SLAAtRiskParams = {}): ReturnType<type
         threshold: params.threshold,
         limit: params.limit,
       }),
-    staleTime: 15 * 1000,
+    staleTime: STALE_TIME.LIVE,
     refetchInterval: 30 * 1000,
   })
 }
@@ -116,7 +117,7 @@ export function useSLABreachedItems(): ReturnType<typeof useQuery> {
   return useQuery({
     queryKey: ['sla', 'breached'],
     queryFn: () => getSLABreachedItems(),
-    staleTime: 15 * 1000,
+    staleTime: STALE_TIME.LIVE,
     refetchInterval: 30 * 1000,
   })
 }
@@ -129,7 +130,7 @@ export function useSLAPolicies(): ReturnType<typeof useQuery> {
   return useQuery({
     queryKey: ['sla', 'policies'],
     queryFn: () => getSLAPolicies(),
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.STATIC,
   })
 }
 
@@ -138,7 +139,7 @@ export function useSLAPolicy(policyId: string | undefined): ReturnType<typeof us
     queryKey: ['sla', 'policies', policyId],
     queryFn: () => getSLAPolicy(policyId!),
     enabled: !!policyId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_TIME.STATIC,
   })
 }
 
@@ -196,7 +197,7 @@ export function useSLAEscalations(params: SLAEscalationsParams = {}): ReturnType
         entity_type: params.entityType,
         limit: params.limit,
       }),
-    staleTime: 15 * 1000,
+    staleTime: STALE_TIME.LIVE,
     refetchInterval: 30 * 1000,
   })
 }
@@ -269,7 +270,7 @@ export function useSLARealtimeUpdates(onUpdate?: () => void): void {
 
       return { eventsChannel, escalationsChannel }
     },
-    staleTime: Infinity,
+    staleTime: STALE_TIME.STATIC,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
