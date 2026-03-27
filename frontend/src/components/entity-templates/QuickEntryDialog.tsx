@@ -201,10 +201,14 @@ export function QuickEntryDialog({
     }
   }, [open, entityType])
 
-  // Reset selection when search changes
-  useEffect(() => {
+  // Reset selection when search changes (render-time adjustment)
+  const prevSearchRef = useRef(searchQuery)
+  const prevEntityTypeRef = useRef(selectedEntityType)
+  if (prevSearchRef.current !== searchQuery || prevEntityTypeRef.current !== selectedEntityType) {
+    prevSearchRef.current = searchQuery
+    prevEntityTypeRef.current = selectedEntityType
     setSelectedIndex(0)
-  }, [searchQuery, selectedEntityType])
+  }
 
   // Scroll selected item into view
   useEffect(() => {

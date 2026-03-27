@@ -416,45 +416,29 @@ function ParticipantAvailabilityBadge({
   )
 }
 
-// Side-by-side comparison item
-interface ConflictComparisonItemProps {
-  conflict: EventConflict
-  newEvent: NewEventData
-  isExpanded: boolean
-  onToggle: () => void
-  isRTL: boolean
+// Event card component for side-by-side comparison
+interface EventCardProps {
+  title?: string
+  startDatetime: string
+  endDatetime?: string
+  location?: string
+  variant: 'new' | 'existing'
   formatDate: (datetime: string) => string
   formatTime: (datetime: string) => string
   t: (key: string, options?: Record<string, unknown>) => string
 }
 
-function ConflictComparisonItem({
-  conflict,
-  newEvent,
-  isExpanded,
-  onToggle,
-  isRTL,
+function EventCard({
+  title,
+  startDatetime,
+  endDatetime,
+  location,
+  variant,
   formatDate,
   formatTime,
   t,
-}: ConflictComparisonItemProps) {
-  const colors = SEVERITY_COLORS[conflict.severity]
-  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight
-
-  // Event card component for comparison
-  const EventCard = ({
-    title,
-    startDatetime,
-    endDatetime,
-    location,
-    variant,
-  }: {
-    title?: string
-    startDatetime: string
-    endDatetime?: string
-    location?: string
-    variant: 'new' | 'existing'
-  }) => (
+}: EventCardProps) {
+  return (
     <div
       className={cn(
         'flex-1 p-3 rounded-lg border',
@@ -499,6 +483,32 @@ function ConflictComparisonItem({
       </div>
     </div>
   )
+}
+
+// Side-by-side comparison item
+interface ConflictComparisonItemProps {
+  conflict: EventConflict
+  newEvent: NewEventData
+  isExpanded: boolean
+  onToggle: () => void
+  isRTL: boolean
+  formatDate: (datetime: string) => string
+  formatTime: (datetime: string) => string
+  t: (key: string, options?: Record<string, unknown>) => string
+}
+
+function ConflictComparisonItem({
+  conflict,
+  newEvent,
+  isExpanded,
+  onToggle,
+  isRTL,
+  formatDate,
+  formatTime,
+  t,
+}: ConflictComparisonItemProps) {
+  const colors = SEVERITY_COLORS[conflict.severity]
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight
 
   return (
     <Collapsible open={isExpanded} onOpenChange={onToggle}>
@@ -549,6 +559,9 @@ function ConflictComparisonItem({
               endDatetime={newEvent.end_datetime}
               location={newEvent.location}
               variant="new"
+              formatDate={formatDate}
+              formatTime={formatTime}
+              t={t}
             />
 
             {/* Arrow indicator */}
@@ -576,6 +589,9 @@ function ConflictComparisonItem({
                 startDatetime={conflict.conflicting_event.start_datetime}
                 endDatetime={conflict.conflicting_event.end_datetime}
                 variant="existing"
+                formatDate={formatDate}
+                formatTime={formatTime}
+                t={t}
               />
             )}
           </div>

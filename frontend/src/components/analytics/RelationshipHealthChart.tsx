@@ -32,6 +32,47 @@ import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
+function RelationshipCustomTooltip({ active, payload, label, isRTL }: any) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-background border rounded-lg shadow-lg p-3">
+        <p className="font-medium mb-2">{label}</p>
+        {payload.map((entry: any, index: number) => (
+          <div key={index} className="flex items-center gap-2 text-sm">
+            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
+            <span className="text-muted-foreground">{entry.name}:</span>
+            <span className="font-medium">
+              {typeof entry.value === 'number'
+                ? entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')
+                : entry.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  return null
+}
+
+function RelationshipPieTooltip({ active, payload, isRTL }: any) {
+  if (active && payload && payload.length) {
+    const item = payload[0]
+    return (
+      <div className="bg-background border rounded-lg shadow-lg p-3">
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
+          <span className="font-medium">{item.name}</span>
+        </div>
+        <div className="text-sm text-muted-foreground mt-1">
+          {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
+          {item.payload.percentage?.toFixed(1)}%)
+        </div>
+      </div>
+    )
+  }
+  return null
+}
+
 interface RelationshipHealthChartProps {
   data?: RelationshipHealthTrends
   isLoading?: boolean
@@ -119,47 +160,6 @@ const trendData = useMemo(() => {
     )
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-background border rounded-lg shadow-lg p-3">
-          <p className="font-medium mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
-              <span className="text-muted-foreground">{entry.name}:</span>
-              <span className="font-medium">
-                {typeof entry.value === 'number'
-                  ? entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')
-                  : entry.value}
-              </span>
-            </div>
-          ))}
-        </div>
-      )
-    }
-    return null
-  }
-
-  const PieTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const item = payload[0]
-      return (
-        <div className="bg-background border rounded-lg shadow-lg p-3">
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
-            <span className="font-medium">{item.name}</span>
-          </div>
-          <div className="text-sm text-muted-foreground mt-1">
-            {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
-            {item.payload.percentage?.toFixed(1)}%)
-          </div>
-        </div>
-      )
-    }
-    return null
-  }
-
   return (
     <Card className={cn('col-span-full lg:col-span-2', className)}>
       <CardHeader>
@@ -199,7 +199,7 @@ const trendData = useMemo(() => {
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
-                <Tooltip content={<PieTooltip />} />
+                <Tooltip content={<RelationshipPieTooltip isRTL={isRTL} />} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer></LtrIsolate>
@@ -226,7 +226,7 @@ const trendData = useMemo(() => {
                   axisLine={false}
                   orientation={isRTL ? 'right' : 'left'}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<RelationshipCustomTooltip isRTL={isRTL} />} />
                 <Legend />
                 <Line
                   type="monotone"
@@ -255,7 +255,7 @@ const trendData = useMemo(() => {
                   axisLine={false}
                   orientation={isRTL ? 'right' : 'left'}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<RelationshipCustomTooltip isRTL={isRTL} />} />
                 <Bar dataKey="count" name={t('relationships.count')} radius={[4, 4, 0, 0]}>
                   {trendDistributionData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />

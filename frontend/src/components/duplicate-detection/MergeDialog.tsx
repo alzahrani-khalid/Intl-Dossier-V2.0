@@ -104,30 +104,33 @@ export function MergeDialog({
     }
   }, [isOpen, candidate])
 
-  if (!candidate) return null
-
-  const entityType = candidate.entity_type as DuplicateEntityType
+  const entityType = candidate?.entity_type as DuplicateEntityType | undefined
 
   // Get display values
-  const source = {
-    id: candidate.source_entity_id,
-    name_en: candidate.source_name_en,
-    name_ar: candidate.source_name_ar,
-    ...sourceEntity,
-  }
+  const source = candidate
+    ? {
+        id: candidate.source_entity_id,
+        name_en: candidate.source_name_en,
+        name_ar: candidate.source_name_ar,
+        ...sourceEntity,
+      }
+    : { id: '', name_en: '', name_ar: '', ...sourceEntity }
 
-  const target = {
-    id: candidate.target_entity_id,
-    name_en: candidate.target_name_en,
-    name_ar: candidate.target_name_ar,
-    ...targetEntity,
-  }
+  const target = candidate
+    ? {
+        id: candidate.target_entity_id,
+        name_en: candidate.target_name_en,
+        name_ar: candidate.target_name_ar,
+        ...targetEntity,
+      }
+    : { id: '', name_en: '', name_ar: '', ...targetEntity }
 
   const primary = primaryEntityId === source.id ? source : target
   const duplicate = primaryEntityId === source.id ? target : source
 
   // Build field comparisons from match details
   const fieldComparisons: FieldComparisonRow[] = useMemo(() => {
+    if (!candidate) return []
     const details: Partial<MatchDetails> = candidate.match_details || {}
     const fields: FieldComparisonRow[] = []
 
@@ -207,6 +210,8 @@ export function MergeDialog({
 
     return fields
   }, [candidate, source, target])
+
+  if (!candidate) return null
 
   const handleFieldResolution = (field: string, value: 'primary' | 'duplicate') => {
     setFieldResolutions((prev) => ({

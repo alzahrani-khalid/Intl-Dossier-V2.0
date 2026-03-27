@@ -26,6 +26,15 @@ import { getComplianceThreshold, formatSLADuration, formatSLADurationAr } from '
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
 
+function ComplianceBadge({ rate }: { rate: number }) {
+  const threshold = getComplianceThreshold(rate)
+  return (
+    <Badge variant="outline" className={cn(threshold.color, threshold.bgColor)}>
+      {rate}%
+    </Badge>
+  )
+}
+
 interface SLAComplianceTableProps {
   typeData?: SLAComplianceByType[]
   assigneeData?: SLAComplianceByAssignee[]
@@ -52,15 +61,6 @@ if (isLoading) {
           <Skeleton className="h-64 w-full" />
         </CardContent>
       </Card>
-    )
-  }
-
-  const ComplianceBadge = ({ rate }: { rate: number }) => {
-    const threshold = getComplianceThreshold(rate)
-    return (
-      <Badge variant="outline" className={cn(threshold.color, threshold.bgColor)}>
-        {rate}%
-      </Badge>
     )
   }
 

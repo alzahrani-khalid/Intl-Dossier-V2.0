@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from '@tanstack/react-router'
 import {
@@ -58,10 +58,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     [workCounts?.intake, workCounts?.waiting, isAdmin],
   )
 
-  // Auto-close mobile sidebar on navigation
-  useEffect(() => {
+  // Auto-close mobile sidebar on navigation (render-time adjustment)
+  const prevPathnameRef = useRef(location.pathname)
+  if (prevPathnameRef.current !== location.pathname) {
+    prevPathnameRef.current = location.pathname
     setOpenMobile(false)
-  }, [location.pathname, setOpenMobile])
+  }
 
   // Auto-collapse when viewport shrinks to tablet size
   useEffect(() => {

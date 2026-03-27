@@ -15,6 +15,80 @@ import { usePerson } from '@/hooks/usePersons'
 import type { PersonRole } from '@/types/person.types'
 import { useDirection } from '@/hooks/useDirection'
 
+interface RoleCardProps {
+  role: PersonRole
+  isCurrent?: boolean
+  getDisplayValue: (en?: string, ar?: string) => string | undefined
+  formatDateRange: (startDate?: string, endDate?: string) => string
+  t: (key: string, defaultValue?: string) => string
+}
+
+function RoleCard({ role, isCurrent, getDisplayValue, formatDateRange, t }: RoleCardProps) {
+  const roleTitle = getDisplayValue(role.role_title_en, role.role_title_ar)
+  const orgName = getDisplayValue(role.organization_name_en, role.organization_name_ar)
+  const department = getDisplayValue(role.department_en, role.department_ar)
+  const description = getDisplayValue(role.description_en, role.description_ar)
+
+  return (
+    <Card className={isCurrent ? 'border-primary/50 bg-primary/5' : ''}>
+      <CardContent className="p-4">
+        <div className="flex items-start gap-3">
+          <div
+            className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+              isCurrent ? 'bg-primary/20' : 'bg-muted'
+            }`}
+          >
+            <Briefcase
+              className={`h-5 w-5 ${isCurrent ? 'text-primary' : 'text-muted-foreground'}`}
+            />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <h4 className="font-semibold text-sm sm:text-base">{roleTitle}</h4>
+                {orgName && (
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground mt-0.5">
+                    <Building2 className="h-3.5 w-3.5" />
+                    {role.organization_id ? (
+                      <Link
+                        to="/dossiers/organizations/$id"
+                        params={{ id: role.organization_id } as any}
+                        className="hover:underline text-primary"
+                      >
+                        {orgName}
+                      </Link>
+                    ) : (
+                      <span>{orgName}</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {isCurrent && (
+                <Badge className="bg-green-500 text-white flex-shrink-0">
+                  {t('sections.person.currentPosition', 'Current')}
+                </Badge>
+              )}
+            </div>
+
+            {department && <p className="text-sm text-muted-foreground mt-1">{department}</p>}
+
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
+              <Calendar className="h-3 w-3" />
+              <span>{formatDateRange(role.start_date, role.end_date)}</span>
+            </div>
+
+            {description && (
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{description}</p>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 interface PositionsHeldProps {
   dossierId: string
 }
@@ -110,73 +184,6 @@ const { data: personData, isLoading, isError } = usePerson(dossierId)
     )
   }
 
-  // Render role card
-  const RoleCard = ({ role, isCurrent }: { role: PersonRole; isCurrent?: boolean }) => {
-    const roleTitle = getDisplayValue(role.role_title_en, role.role_title_ar)
-    const orgName = getDisplayValue(role.organization_name_en, role.organization_name_ar)
-    const department = getDisplayValue(role.department_en, role.department_ar)
-    const description = getDisplayValue(role.description_en, role.description_ar)
-
-    return (
-      <Card className={isCurrent ? 'border-primary/50 bg-primary/5' : ''}>
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <div
-              className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                isCurrent ? 'bg-primary/20' : 'bg-muted'
-              }`}
-            >
-              <Briefcase
-                className={`h-5 w-5 ${isCurrent ? 'text-primary' : 'text-muted-foreground'}`}
-              />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h4 className="font-semibold text-sm sm:text-base">{roleTitle}</h4>
-                  {orgName && (
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground mt-0.5">
-                      <Building2 className="h-3.5 w-3.5" />
-                      {role.organization_id ? (
-                        <Link
-                          to="/dossiers/organizations/$id"
-                          params={{ id: role.organization_id } as any}
-                          className="hover:underline text-primary"
-                        >
-                          {orgName}
-                        </Link>
-                      ) : (
-                        <span>{orgName}</span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {isCurrent && (
-                  <Badge className="bg-green-500 text-white flex-shrink-0">
-                    {t('sections.person.currentPosition', 'Current')}
-                  </Badge>
-                )}
-              </div>
-
-              {department && <p className="text-sm text-muted-foreground mt-1">{department}</p>}
-
-              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
-                <Calendar className="h-3 w-3" />
-                <span>{formatDateRange(role.start_date, role.end_date)}</span>
-              </div>
-
-              {description && (
-                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{description}</p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
   // Combine and sort roles (current first, then by start date descending)
   const allRoles = [...(roles || [])]
   if (current_role && !allRoles.find((r) => r.id === current_role.id)) {
@@ -222,7 +229,7 @@ const { data: personData, isLoading, isError } = usePerson(dossierId)
                   role.is_current ? 'border-primary' : 'border-muted-foreground'
                 } ${isRTL ? 'end-[0.625rem]' : 'start-[0.625rem]'}`}
               />
-              <RoleCard role={role} isCurrent={role.is_current} />
+              <RoleCard role={role} isCurrent={role.is_current} getDisplayValue={getDisplayValue} formatDateRange={formatDateRange} t={t as (key: string, defaultValue?: string) => string} />
             </div>
           ))}
         </div>

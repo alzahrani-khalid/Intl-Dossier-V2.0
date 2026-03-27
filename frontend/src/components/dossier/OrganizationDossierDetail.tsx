@@ -54,6 +54,16 @@ import { Button } from '@/components/ui/button'
 import type { OrganizationDossier } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
 
+function OrgTabSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-1/3" />
+      <Skeleton className="h-32 w-full" />
+      <Skeleton className="h-32 w-full" />
+    </div>
+  )
+}
+
 interface OrganizationDossierDetailProps {
   dossier: OrganizationDossier
   initialTab?: string
@@ -116,15 +126,6 @@ const navigate = useNavigate()
     })
   }
 
-  // Tab panel loading skeleton
-  const TabSkeleton = () => (
-    <div className="space-y-4">
-      <Skeleton className="h-8 w-1/3" />
-      <Skeleton className="h-32 w-full" />
-      <Skeleton className="h-32 w-full" />
-    </div>
-  )
-
   return (
     <div className="space-y-6">
       {/* Tabs Navigation - HeroUI v3 Styled */}
@@ -174,7 +175,7 @@ const navigate = useNavigate()
               className="space-y-6"
             >
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<OrgTabSkeleton />}>
                   {/* Primary: RelationshipGraph with Filter (like Country dossier) */}
                   <RelationshipGraph dossierId={dossier.id} />
 
@@ -216,7 +217,7 @@ const navigate = useNavigate()
           {activeTab === 'mous' && (
             <div id="mous-panel" role="tabpanel" aria-labelledby="mous-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<OrgTabSkeleton />}>
                   <DossierMoUsTab dossierId={dossier.id} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -227,7 +228,7 @@ const navigate = useNavigate()
           {activeTab === 'contacts' && (
             <div id="contacts-panel" role="tabpanel" aria-labelledby="contacts-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<OrgTabSkeleton />}>
                   <KeyContactsPanel dossierId={dossier.id} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -243,7 +244,7 @@ const navigate = useNavigate()
               className="space-y-6"
             >
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<OrgTabSkeleton />}>
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold mb-4 text-start">
                       {t('tabs.activity', 'Activity')}

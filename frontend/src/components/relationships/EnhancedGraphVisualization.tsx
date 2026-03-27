@@ -13,7 +13,7 @@
  * - Mobile-first with RTL support
  */
 
-import { useCallback, useMemo, useState, useEffect, memo } from 'react'
+import { useCallback, useMemo, useState, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   ReactFlow,
@@ -22,8 +22,8 @@ import {
   Background,
   BackgroundVariant,
   MiniMap,
-  useNodesState,
-  useEdgesState,
+  applyNodeChanges,
+  applyEdgeChanges,
   ConnectionMode,
   Panel,
   NodeTypes,
@@ -31,6 +31,7 @@ import {
   MarkerType,
   ReactFlowProvider,
 } from '@xyflow/react'
+import type { NodeChange, EdgeChange } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
@@ -651,17 +652,25 @@ function EnhancedGraphVisualizationInner({
       })
   }, [filteredEdges, filteredNodes, showEdgeLabels, focusedNodeId, collapsedClusters])
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(reactFlowNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(reactFlowEdges)
+  const [nodes, setNodes] = useState(reactFlowNodes)
+  const [edges, setEdges] = useState(reactFlowEdges)
 
-  // Update nodes when layout or data changes
-  useEffect(() => {
+  // Sync nodes/edges when layout or data changes (render-time adjustment)
+  if (nodes !== reactFlowNodes) {
     setNodes(reactFlowNodes)
-  }, [reactFlowNodes, setNodes])
-
-  useEffect(() => {
+  }
+  if (edges !== reactFlowEdges) {
     setEdges(reactFlowEdges)
-  }, [reactFlowEdges, setEdges])
+  }
+
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    [],
+  )
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    [],
+  )
 
   // ============================================
   // Handlers

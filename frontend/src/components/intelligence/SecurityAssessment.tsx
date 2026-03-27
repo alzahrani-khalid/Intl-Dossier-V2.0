@@ -35,6 +35,10 @@ interface SecurityAssessmentProps {
 export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
+
+  // Track expand/collapse state (must be before any early returns)
+  const [isExpanded, setIsExpanded] = React.useState(false)
+
 // Get latest security report
   const latestReport = useMemo(() => {
     if (reports.length === 0) return null
@@ -99,9 +103,6 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
       </Card>
     )
   }
-
-  // Track expand/collapse state
-  const [isExpanded, setIsExpanded] = React.useState(false)
 
   return (
     <Card className="h-full flex flex-col">

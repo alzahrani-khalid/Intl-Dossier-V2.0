@@ -76,10 +76,12 @@ const [mentionQuery, setMentionQuery] = useState('')
       { enabled: showMentionList && mentionQuery.length >= 1 },
     )
 
-    // Reset selected index when users change
-    useEffect(() => {
+    // Reset selected index when users change (render-time adjustment)
+    const prevMentionUsersRef = useRef(mentionUsers)
+    if (prevMentionUsersRef.current !== mentionUsers) {
+      prevMentionUsersRef.current = mentionUsers
       setSelectedIndex(0)
-    }, [mentionUsers])
+    }
 
     // Handle text change
     const handleChange = useCallback(

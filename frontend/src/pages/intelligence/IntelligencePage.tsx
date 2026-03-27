@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import {
@@ -19,6 +19,67 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { useDirection } from '@/hooks/useDirection'
+
+function ConfidenceIndicator({ level, t }: { level: string; t: (key: string) => string }) {
+  const configs = {
+    low: { color: 'text-gray-600', bgColor: 'bg-gray-100', icon: '25%' },
+    medium: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: '50%' },
+    high: { color: 'text-blue-600', bgColor: 'bg-blue-100', icon: '75%' },
+    verified: { color: 'text-green-600', bgColor: 'bg-green-100', icon: '100%' },
+  }
+  const config = configs[level as keyof typeof configs]
+
+  return (
+    <div
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}
+    >
+      <Shield className="h-3 w-3 me-1" />
+      {t(`intelligence.confidenceLevels.${level}`)} ({config.icon})
+    </div>
+  )
+}
+
+function ClassificationBadge({ classification, t }: { classification: string; t: (key: string) => string }) {
+  const configs = {
+    public: { color: 'text-green-800', bgColor: 'bg-green-100' },
+    internal: { color: 'text-blue-800', bgColor: 'bg-blue-100' },
+    confidential: { color: 'text-orange-800', bgColor: 'bg-orange-100' },
+    restricted: { color: 'text-red-800', bgColor: 'bg-red-100' },
+  }
+  const config = configs[classification as keyof typeof configs]
+
+  return (
+    <span
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}
+    >
+      {t(`intelligence.classification.${classification}`)}
+    </span>
+  )
+}
+
+function AnalysisTypeBadges({ types, t }: { types: string[]; t: (key: string) => string }) {
+  const typeIcons: Record<string, React.ReactNode> = {
+    trends: <TrendingUp className="h-3 w-3" />,
+    patterns: <Brain className="h-3 w-3" />,
+    predictions: <Target className="h-3 w-3" />,
+    risks: <AlertTriangle className="h-3 w-3" />,
+    opportunities: <Target className="h-3 w-3" />,
+  }
+
+  return (
+    <div className="flex flex-wrap gap-1">
+      {types?.map((type, i) => (
+        <span
+          key={i}
+          className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs"
+        >
+          {typeIcons[type as keyof typeof typeIcons]}
+          {t(`intelligence.analysisTypes.${type}`)}
+        </span>
+      ))}
+    </div>
+  )
+}
 
 interface IntelligenceReport {
   id: string
@@ -204,67 +265,6 @@ const { data: reports, isLoading } = useQuery({
     },
   })
 
-  const ConfidenceIndicator = ({ level }: { level: string }) => {
-    const configs = {
-      low: { color: 'text-gray-600', bgColor: 'bg-gray-100', icon: '25%' },
-      medium: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: '50%' },
-      high: { color: 'text-blue-600', bgColor: 'bg-blue-100', icon: '75%' },
-      verified: { color: 'text-green-600', bgColor: 'bg-green-100', icon: '100%' },
-    }
-    const config = configs[level as keyof typeof configs]
-
-    return (
-      <div
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}
-      >
-        <Shield className="h-3 w-3 me-1" />
-        {t(`intelligence.confidenceLevels.${level}`)} ({config.icon})
-      </div>
-    )
-  }
-
-  const ClassificationBadge = ({ classification }: { classification: string }) => {
-    const configs = {
-      public: { color: 'text-green-800', bgColor: 'bg-green-100' },
-      internal: { color: 'text-blue-800', bgColor: 'bg-blue-100' },
-      confidential: { color: 'text-orange-800', bgColor: 'bg-orange-100' },
-      restricted: { color: 'text-red-800', bgColor: 'bg-red-100' },
-    }
-    const config = configs[classification as keyof typeof configs]
-
-    return (
-      <span
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}
-      >
-        {t(`intelligence.classification.${classification}`)}
-      </span>
-    )
-  }
-
-  const AnalysisTypeBadges = ({ types }: { types: string[] }) => {
-    const typeIcons = {
-      trends: <TrendingUp className="h-3 w-3" />,
-      patterns: <Brain className="h-3 w-3" />,
-      predictions: <Target className="h-3 w-3" />,
-      risks: <AlertTriangle className="h-3 w-3" />,
-      opportunities: <Target className="h-3 w-3" />,
-    }
-
-    return (
-      <div className="flex flex-wrap gap-1">
-        {types?.map((type, i) => (
-          <span
-            key={i}
-            className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs"
-          >
-            {typeIcons[type as keyof typeof typeIcons]}
-            {t(`intelligence.analysisTypes.${type}`)}
-          </span>
-        ))}
-      </div>
-    )
-  }
-
   const columns: ColumnDef<IntelligenceReport>[] = [
     {
       id: 'report',
@@ -287,17 +287,17 @@ const { data: reports, isLoading } = useQuery({
     {
       id: 'analysis',
       header: t('intelligence.analysisType'),
-      cell: ({ row }) => <AnalysisTypeBadges types={row.original.analysis_type} />,
+      cell: ({ row }) => <AnalysisTypeBadges types={row.original.analysis_type} t={t} />,
     },
     {
       id: 'confidence',
       header: t('intelligence.confidence'),
-      cell: ({ row }) => <ConfidenceIndicator level={row.original.confidence_level} />,
+      cell: ({ row }) => <ConfidenceIndicator level={row.original.confidence_level} t={t} />,
     },
     {
       id: 'classification',
       header: t('intelligence.classification'),
-      cell: ({ row }) => <ClassificationBadge classification={row.original.classification} />,
+      cell: ({ row }) => <ClassificationBadge classification={row.original.classification} t={t} />,
     },
     {
       id: 'findings',

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Table,
@@ -99,12 +99,9 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
   const isRTL = i18n.language === 'ar'
   const lastClickedRef = useRef<string | null>(null)
   const { isMobile } = useResponsive()
-  const [viewMode, setViewMode] = useState<ViewMode>(isMobile ? 'card' : 'table')
-
-  // Auto-switch view mode when viewport changes
-  useEffect(() => {
-    setViewMode(isMobile ? 'card' : 'table')
-  }, [isMobile])
+  const [viewModeOverride, setViewModeOverride] = useState<ViewMode | null>(null)
+  const viewMode = viewModeOverride ?? (isMobile ? 'card' : 'table')
+  const setViewMode = setViewModeOverride
 
   const { selectedIds, selectedCount, allSelected, partiallySelected, maxReached } = selection
 

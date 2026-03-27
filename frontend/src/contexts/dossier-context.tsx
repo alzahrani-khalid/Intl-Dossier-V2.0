@@ -214,16 +214,11 @@ export function DossierContextProvider({
     setResolvedContext: _storeSetResolvedContext,
   } = useDossierStore()
 
-  // Try to get dossier_id from URL search params
+  // Get dossier_id from URL search params
   // This provides URL sync for direct dossier links
-  let urlDossierId: string | undefined
-  try {
-    // useSearch may throw if route doesn't define search params
-    const search = useSearch({ strict: false }) as { dossier_id?: string } | undefined
-    urlDossierId = search?.dossier_id
-  } catch {
-    // Ignore - search params not available
-  }
+  // useSearch with strict: false returns {} when search params are not defined on the route
+  const search = useSearch({ strict: false }) as { dossier_id?: string } | undefined
+  const urlDossierId = search?.dossier_id
 
   // ============================================================================
   // Actions

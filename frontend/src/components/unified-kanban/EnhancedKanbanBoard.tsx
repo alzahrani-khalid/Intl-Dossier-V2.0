@@ -11,7 +11,7 @@
  * - RTL support for Arabic
  */
 
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import { useState, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UniqueIdentifier, DragEndEvent } from '@dnd-kit/core'
 import {
@@ -203,10 +203,12 @@ const { toast } = useToast()
   // Track columns state for DnD
   const [columns, setColumns] = useState(columnsRecord)
 
-  // Sync columns when columnsRecord changes
-  useEffect(() => {
+  // Sync columns when columnsRecord changes (render-time adjustment)
+  const prevColumnsRecordRef = useRef(columnsRecord)
+  if (prevColumnsRecordRef.current !== columnsRecord) {
+    prevColumnsRecordRef.current = columnsRecord
     setColumns(columnsRecord)
-  }, [columnsRecord])
+  }
 
   // Calculate counts
   const totalCount = filteredItems.length

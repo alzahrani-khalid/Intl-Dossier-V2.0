@@ -26,6 +26,28 @@ import type { SLATrendDataPoint } from '@/types/sla.types'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
+function SLACustomTooltip({ active, payload, label, isRTL, complianceLabel }: any) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-background border rounded-lg shadow-lg p-3">
+        <p className="font-medium mb-2">{label}</p>
+        {payload.map((entry: any, index: number) => (
+          <div key={index} className="flex items-center gap-2 text-sm">
+            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
+            <span className="text-muted-foreground">{entry.name}:</span>
+            <span className="font-medium">
+              {entry.name === complianceLabel
+                ? `${entry.value}%`
+                : entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  return null
+}
+
 interface SLAComplianceChartProps {
   data?: SLATrendDataPoint[]
   isLoading?: boolean
@@ -81,27 +103,7 @@ const chartData = useMemo(() => {
     )
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-background border rounded-lg shadow-lg p-3">
-          <p className="font-medium mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
-              <span className="text-muted-foreground">{entry.name}:</span>
-              <span className="font-medium">
-                {entry.name === t('charts.compliance')
-                  ? `${entry.value}%`
-                  : entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
-              </span>
-            </div>
-          ))}
-        </div>
-      )
-    }
-    return null
-  }
+  const complianceLabel = t('charts.compliance')
 
   return (
     <Card className={className}>
@@ -138,7 +140,7 @@ const chartData = useMemo(() => {
                   tickFormatter={(value) => `${value}%`}
                   orientation={isRTL ? 'right' : 'left'}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<SLACustomTooltip isRTL={isRTL} complianceLabel={complianceLabel} />} />
                 <Legend />
                 <Line
                   type="monotone"
@@ -175,7 +177,7 @@ const chartData = useMemo(() => {
                   tickFormatter={(value) => `${value}%`}
                   orientation={isRTL ? 'right' : 'left'}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<SLACustomTooltip isRTL={isRTL} complianceLabel={complianceLabel} />} />
                 <Legend />
                 <defs>
                   <linearGradient id="colorCompliance" x1="0" y1="0" x2="0" y2="1">

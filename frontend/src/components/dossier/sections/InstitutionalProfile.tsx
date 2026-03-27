@@ -19,6 +19,51 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { supabase } from '@/lib/supabase-client'
 import { useDirection } from '@/hooks/useDirection'
 
+interface ProfileFieldProps {
+  icon: typeof Building2
+  label: string
+  value: string | number | null | undefined
+  link?: string
+  linkType?: 'url' | 'email' | 'phone'
+  notAvailableText: string
+}
+
+function ProfileField({ icon: Icon, label, value, link, linkType, notAvailableText }: ProfileFieldProps) {
+  const displayValue = value || notAvailableText
+
+  const renderLink = () => {
+    if (!link || !value) return displayValue
+
+    let href = link
+    if (linkType === 'email') {
+      href = `mailto:${link}`
+    } else if (linkType === 'phone') {
+      href = `tel:${link}`
+    }
+
+    return (
+      <a
+        href={href}
+        target={linkType === 'url' ? '_blank' : undefined}
+        rel={linkType === 'url' ? 'noopener noreferrer' : undefined}
+        className="text-primary hover:underline"
+      >
+        {displayValue}
+      </a>
+    )
+  }
+
+  return (
+    <div className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+      <Icon className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+      <div className="flex-1 min-w-0">
+        <dt className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">{label}</dt>
+        <dd className="text-sm sm:text-base font-medium break-words">{renderLink()}</dd>
+      </div>
+    </div>
+  )
+}
+
 interface InstitutionalProfileProps {
   dossier: OrganizationDossier
 }
@@ -79,49 +124,7 @@ const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
     return isRTL ? headquartersCountry.name_ar : headquartersCountry.name_en
   }
 
-  interface ProfileFieldProps {
-    icon: typeof Building2
-    label: string
-    value: string | number | null | undefined
-    link?: string
-    linkType?: 'url' | 'email' | 'phone'
-  }
-
-  function ProfileField({ icon: Icon, label, value, link, linkType }: ProfileFieldProps) {
-    const displayValue = value || t('common.notAvailable')
-
-    const renderLink = () => {
-      if (!link || !value) return displayValue
-
-      let href = link
-      if (linkType === 'email') {
-        href = `mailto:${link}`
-      } else if (linkType === 'phone') {
-        href = `tel:${link}`
-      }
-
-      return (
-        <a
-          href={href}
-          target={linkType === 'url' ? '_blank' : undefined}
-          rel={linkType === 'url' ? 'noopener noreferrer' : undefined}
-          className="text-primary hover:underline"
-        >
-          {displayValue}
-        </a>
-      )
-    }
-
-    return (
-      <div className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-        <Icon className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <dt className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">{label}</dt>
-          <dd className="text-sm sm:text-base font-medium break-words">{renderLink()}</dd>
-        </div>
-      </div>
-    )
-  }
+  const notAvailableText = t('common.notAvailable')
 
   return (
     <div className="space-y-4">
@@ -156,11 +159,13 @@ const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
           icon={Hash}
           label={t('sections.organization.fields.orgCode')}
           value={extension.org_code}
+          notAvailableText={notAvailableText}
         />
         <ProfileField
           icon={Building2}
           label={t('sections.organization.fields.orgType')}
           value={getOrgTypeLabel(extension.org_type)}
+          notAvailableText={notAvailableText}
         />
       </div>
 
@@ -170,6 +175,7 @@ const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
           icon={Calendar}
           label={t('sections.organization.fields.establishedDate')}
           value={formatDate(extension.established_date)}
+          notAvailableText={notAvailableText}
         />
         <ProfileField
           icon={Globe}
@@ -177,6 +183,7 @@ const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
           value={extension.website}
           link={extension.website}
           linkType="url"
+          notAvailableText={notAvailableText}
         />
       </div>
 
@@ -188,6 +195,7 @@ const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
           value={extension.email}
           link={extension.email}
           linkType="email"
+          notAvailableText={notAvailableText}
         />
         <ProfileField
           icon={Phone}
@@ -195,6 +203,7 @@ const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
           value={extension.phone}
           link={extension.phone}
           linkType="phone"
+          notAvailableText={notAvailableText}
         />
       </div>
 
@@ -204,11 +213,13 @@ const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
           icon={MapPin}
           label={t('sections.organization.fields.address')}
           value={getAddress()}
+          notAvailableText={notAvailableText}
         />
         <ProfileField
           icon={Flag}
           label={t('sections.organization.fields.headquarters')}
           value={getHeadquartersName()}
+          notAvailableText={notAvailableText}
         />
       </div>
 
@@ -219,6 +230,7 @@ const extension = (dossier.extension ?? {}) as Partial<OrganizationExtension>
             icon={Network}
             label={t('sections.organization.fields.parentOrganization')}
             value={extension.parent_org_id}
+            notAvailableText={notAvailableText}
           />
         </div>
       )}

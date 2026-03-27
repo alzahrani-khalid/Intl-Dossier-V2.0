@@ -31,6 +31,47 @@ import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
+function CommitmentCustomTooltip({ active, payload, label, isRTL }: any) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-background border rounded-lg shadow-lg p-3">
+        <p className="font-medium mb-2">{label}</p>
+        {payload.map((entry: any, index: number) => (
+          <div key={index} className="flex items-center gap-2 text-sm">
+            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
+            <span className="text-muted-foreground">{entry.name}:</span>
+            <span className="font-medium">
+              {entry.dataKey === 'value'
+                ? `${entry.value.toFixed(1)}%`
+                : entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  return null
+}
+
+function CommitmentPieTooltip({ active, payload, isRTL }: any) {
+  if (active && payload && payload.length) {
+    const item = payload[0]
+    return (
+      <div className="bg-background border rounded-lg shadow-lg p-3">
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
+          <span className="font-medium">{item.name}</span>
+        </div>
+        <div className="text-sm text-muted-foreground mt-1">
+          {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
+          {item.payload.percentage?.toFixed(1)}%)
+        </div>
+      </div>
+    )
+  }
+  return null
+}
+
 interface CommitmentFulfillmentChartProps {
   data?: CommitmentFulfillment
   isLoading?: boolean
@@ -154,47 +195,6 @@ const trendData = useMemo(() => {
     )
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-background border rounded-lg shadow-lg p-3">
-          <p className="font-medium mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
-              <span className="text-muted-foreground">{entry.name}:</span>
-              <span className="font-medium">
-                {entry.dataKey === 'value'
-                  ? `${entry.value.toFixed(1)}%`
-                  : entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
-              </span>
-            </div>
-          ))}
-        </div>
-      )
-    }
-    return null
-  }
-
-  const PieTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const item = payload[0]
-      return (
-        <div className="bg-background border rounded-lg shadow-lg p-3">
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
-            <span className="font-medium">{item.name}</span>
-          </div>
-          <div className="text-sm text-muted-foreground mt-1">
-            {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
-            {item.payload.percentage?.toFixed(1)}%)
-          </div>
-        </div>
-      )
-    }
-    return null
-  }
-
   return (
     <Card className={cn('col-span-full lg:col-span-2', className)}>
       <CardHeader>
@@ -234,7 +234,7 @@ const trendData = useMemo(() => {
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
-                <Tooltip content={<PieTooltip />} />
+                <Tooltip content={<CommitmentPieTooltip isRTL={isRTL} />} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer></LtrIsolate>
@@ -262,7 +262,7 @@ const trendData = useMemo(() => {
                   tickFormatter={(value) => `${value}%`}
                   orientation={isRTL ? 'right' : 'left'}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CommitmentCustomTooltip isRTL={isRTL} />} />
                 <Legend />
                 <Line
                   type="monotone"
@@ -291,7 +291,7 @@ const trendData = useMemo(() => {
                   axisLine={false}
                   orientation={isRTL ? 'right' : 'left'}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CommitmentCustomTooltip isRTL={isRTL} />} />
                 <Legend />
                 <Bar
                   dataKey="total"

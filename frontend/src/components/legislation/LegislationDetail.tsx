@@ -115,7 +115,6 @@ const [activeTab, setActiveTab] = useState('overview')
   }
 
   if (error || !legislation) {
-  const { isRTL } = useDirection()
     return (
       <Card className="border-destructive">
         <CardContent className="p-8">

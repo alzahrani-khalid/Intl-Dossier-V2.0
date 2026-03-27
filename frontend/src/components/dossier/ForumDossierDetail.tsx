@@ -54,6 +54,16 @@ import { CommentList } from '@/components/comments'
 import type { ForumDossier } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
 
+function ForumTabSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-1/3" />
+      <Skeleton className="h-32 w-full" />
+      <Skeleton className="h-32 w-full" />
+    </div>
+  )
+}
+
 interface ForumDossierDetailProps {
   dossier: ForumDossier
   initialTab?: string
@@ -104,15 +114,6 @@ const navigate = useNavigate()
       replace: true,
     })
   }
-
-  // Tab panel loading skeleton
-  const TabSkeleton = () => (
-    <div className="space-y-4">
-      <Skeleton className="h-8 w-1/3" />
-      <Skeleton className="h-32 w-full" />
-      <Skeleton className="h-32 w-full" />
-    </div>
-  )
 
   return (
     <div className="space-y-6">
@@ -211,7 +212,7 @@ const navigate = useNavigate()
           {activeTab === 'members' && (
             <div id="members-panel" role="tabpanel" aria-labelledby="members-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <MemberOrganizations dossier={dossier} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -222,7 +223,7 @@ const navigate = useNavigate()
           {activeTab === 'schedule' && (
             <div id="schedule-panel" role="tabpanel" aria-labelledby="schedule-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <MeetingSchedule dossier={dossier} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -233,7 +234,7 @@ const navigate = useNavigate()
           {activeTab === 'deliverables' && (
             <div id="deliverables-panel" role="tabpanel" aria-labelledby="deliverables-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <DeliverablesTracker dossier={dossier} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -244,7 +245,7 @@ const navigate = useNavigate()
           {activeTab === 'decisions' && (
             <div id="decisions-panel" role="tabpanel" aria-labelledby="decisions-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <DecisionLogs dossier={dossier} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -255,7 +256,7 @@ const navigate = useNavigate()
           {activeTab === 'relationships' && (
             <div id="relationships-panel" role="tabpanel" aria-labelledby="relationships-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <RelationshipGraph dossierId={dossier.id} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -266,7 +267,7 @@ const navigate = useNavigate()
           {activeTab === 'mous' && (
             <div id="mous-panel" role="tabpanel" aria-labelledby="mous-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <DossierMoUsTab dossierId={dossier.id} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -304,7 +305,7 @@ const navigate = useNavigate()
           {activeTab === 'timeline' && (
             <div id="timeline-panel" role="tabpanel" aria-labelledby="timeline-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <DossierTimeline dossierId={dossier.id} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -315,7 +316,7 @@ const navigate = useNavigate()
           {activeTab === 'activity' && (
             <div id="activity-panel" role="tabpanel" aria-labelledby="activity-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <DossierActivityTimeline dossierId={dossier.id} />
                 </Suspense>
               </QueryErrorBoundary>
@@ -326,7 +327,7 @@ const navigate = useNavigate()
           {activeTab === 'comments' && (
             <div id="comments-panel" role="tabpanel" aria-labelledby="comments-tab">
               <QueryErrorBoundary>
-                <Suspense fallback={<TabSkeleton />}>
+                <Suspense fallback={<ForumTabSkeleton />}>
                   <CommentList
                     entityType="forum"
                     entityId={dossier.id}
