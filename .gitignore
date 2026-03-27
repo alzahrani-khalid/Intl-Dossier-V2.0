@@ -128,6 +128,7 @@ frontend/dist-test/
 .auto-claude-status
 .claude_settings.json
 .worktrees/
+.claude/worktrees/
 .security-key
 logs/security/
 .playwright-mcp/
