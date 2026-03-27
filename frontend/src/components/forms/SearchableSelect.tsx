@@ -194,10 +194,11 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
   ) => {
     const { t } = useTranslation(['smart-input', 'common'])
     const { isRTL } = useDirection()
-const uniqueId = useId()
+    const uniqueId = useId()
 
     // State
     const [open, setOpen] = useState(false)
+    const listboxId = useId()
     const [searchQuery, setSearchQuery] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -431,6 +432,7 @@ const uniqueId = useId()
               type="button"
               variant="outline"
               role="combobox"
+              aria-controls={listboxId}
               aria-expanded={open}
               aria-haspopup="listbox"
               aria-labelledby={label ? labelId : undefined}
@@ -484,7 +486,7 @@ const uniqueId = useId()
                 {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground ms-2" />}
               </div>
 
-              <CommandList className="max-h-[300px] overflow-y-auto">
+              <CommandList id={listboxId} className="max-h-[300px] overflow-y-auto">
                 {/* Empty state */}
                 {filteredOptions.length === 0 && !canCreate && (
                   <CommandEmpty className="py-6 text-center text-sm">

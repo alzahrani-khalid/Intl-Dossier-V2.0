@@ -8,7 +8,7 @@
  * Mobile-first, RTL support, WCAG 2.1 AA compliant.
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Search,
@@ -135,7 +135,8 @@ export function DossierSelector({
 }: DossierSelectorProps) {
   const { t } = useTranslation('dossier-context')
   const { isRTL } = useDirection()
-const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false)
+  const listboxId = useId()
   const [searchQuery, setSearchQuery] = useState('')
   const [internalSelectedDossiers, setInternalSelectedDossiers] = useState<SelectedDossier[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
@@ -321,6 +322,7 @@ const [open, setOpen] = useState(false)
             type="button"
             variant="outline"
             role="combobox"
+            aria-controls={listboxId}
             aria-expanded={open}
             aria-required={required}
             aria-invalid={!!error}
@@ -341,10 +343,7 @@ const [open, setOpen] = useState(false)
             </span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          className="w-[var(--radix-popover-trigger-width)] p-0"
-          align="start"
-        >
+        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
           <Command shouldFilter={false}>
             <div className="flex items-center border-b px-3">
               <Search className="size-4 shrink-0 opacity-50" />
@@ -368,7 +367,7 @@ const [open, setOpen] = useState(false)
                 </Button>
               )}
             </div>
-            <CommandList>
+            <CommandList id={listboxId}>
               <CommandEmpty>
                 {isLoading || isSearching ? (
                   <div className="flex items-center justify-center gap-2 py-6">

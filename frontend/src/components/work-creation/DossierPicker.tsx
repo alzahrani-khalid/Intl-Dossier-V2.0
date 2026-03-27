@@ -8,7 +8,7 @@
  * - RTL and mobile-first support
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Check,
@@ -123,7 +123,8 @@ export function DossierPicker({
 }: DossierPickerProps) {
   const { t } = useTranslation('work-creation')
   const { isRTL } = useDirection()
-const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false)
+  const listboxId = useId()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<DossierOption[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -207,9 +208,7 @@ const [open, setOpen] = useState(false)
     <div className={cn('w-full', className)}>
       {/* Selected dossier display */}
       {selectedDossier && (
-        <div
-          className="flex items-center gap-2 p-3 mb-2 rounded-lg border bg-muted/50"
-        >
+        <div className="flex items-center gap-2 p-3 mb-2 rounded-lg border bg-muted/50">
           {Icon && <Icon className="size-4 text-muted-foreground shrink-0" />}
           <span className="flex-1 text-sm font-medium truncate">{displayName}</span>
           <Badge variant="outline" className="text-xs">
@@ -236,6 +235,7 @@ const [open, setOpen] = useState(false)
             type="button"
             variant="outline"
             role="combobox"
+            aria-controls={listboxId}
             aria-expanded={open}
             className={cn(
               'w-full min-h-11 justify-between font-normal',
@@ -252,17 +252,14 @@ const [open, setOpen] = useState(false)
             <ChevronsUpDown className={cn('size-4 shrink-0 opacity-50', isRTL && 'rotate-180')} />
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          className="w-[var(--radix-popover-trigger-width)] p-0"
-          align="start"
-        >
+        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
           <Command shouldFilter={false}>
             <CommandInput
               placeholder={t('form.searchDossiers', 'Search dossiers...')}
               value={searchQuery}
               onValueChange={setSearchQuery}
             />
-            <CommandList>
+            <CommandList id={listboxId}>
               <CommandEmpty>
                 {isSearching ? (
                   t('form.searching', 'Searching...')
