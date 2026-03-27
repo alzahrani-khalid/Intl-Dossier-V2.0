@@ -113,7 +113,7 @@ const entityDefaults: Record<OnboardingEntityType, { titleKey: string; descripti
  * Displays a contextual empty state with an integrated onboarding checklist
  * that guides users through essential setup steps for their role.
  */
-function OnboardingEmptyState({
+export function OnboardingEmptyState({
   entityType,
   showChecklist = true,
   checklistVariant = 'compact',
@@ -122,7 +122,7 @@ function OnboardingEmptyState({
 }: OnboardingEmptyStateProps) {
   const { t } = useTranslation('onboarding')
   const { isRTL } = useDirection()
-const {
+  const {
     isLoading,
     isDismissed,
     isFullyCompleted,
@@ -149,10 +149,7 @@ const {
   const shouldShowOnboarding = showChecklist && !isFullyCompleted && !isDismissed && !isLoading
 
   return (
-    <div
-      className={cn('w-full', className)}
-      data-testid="onboarding-empty-state"
-    >
+    <div className={cn('w-full', className)} data-testid="onboarding-empty-state">
       {/* Milestone celebration overlay */}
       {activeCelebration && (
         <MilestonesCelebration

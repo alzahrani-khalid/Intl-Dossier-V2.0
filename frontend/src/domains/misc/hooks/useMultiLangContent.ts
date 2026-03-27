@@ -15,10 +15,14 @@ export const multiLangKeys = {
     [...multiLangKeys.all, entityType, entityId] as const,
 }
 
-export function useMultiLangContent(entityType: string, entityId: string, params?: {
-  language?: string
-  enabled?: boolean
-}): ReturnType<typeof useQuery> {
+export function useMultiLangContent(
+  entityType: string,
+  entityId: string,
+  params?: {
+    language?: string
+    enabled?: boolean
+  },
+): ReturnType<typeof useQuery> {
   const searchParams = new URLSearchParams()
   searchParams.set('entity_type', entityType)
   searchParams.set('entity_id', entityId)
@@ -36,6 +40,22 @@ export function useSaveTranslation(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => saveTranslationApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: multiLangKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: multiLangKeys.all })
+    },
+  })
+}
+
+/* Stub hook – removed during refactoring, still imported by components */
+
+export function useSupportedLanguages(): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...multiLangKeys.all, 'supported-languages'],
+    queryFn: () =>
+      Promise.resolve([
+        { code: 'ar', name: 'العربية', direction: 'rtl' },
+        { code: 'en', name: 'English', direction: 'ltr' },
+      ]),
+    staleTime: 30 * 60 * 1000,
   })
 }

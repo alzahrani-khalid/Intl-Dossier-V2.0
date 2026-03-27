@@ -1182,5 +1182,3 @@ function FieldForm({ values, onChange, isRTL, t }: FieldFormProps) {
     </div>
   )
 }
-
-export default PreviewLayoutsPage

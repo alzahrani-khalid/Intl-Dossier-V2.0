@@ -1,4 +1,4 @@
 /**
  * @deprecated Import from '@/domains/tags' instead.
  */
-export { suggestionKeys, useContextualSuggestions } from '@/domains/tags'
+export { suggestionKeys, hasUrgentSuggestions, useContextualSuggestions } from '@/domains/tags'

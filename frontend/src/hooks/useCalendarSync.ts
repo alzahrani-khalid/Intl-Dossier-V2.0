@@ -9,4 +9,7 @@ export {
   useConnectCalendar,
   useDisconnectCalendar,
   useUpdateCalendarSettings,
+  useCalendarSync,
+  useExternalCalendars,
+  useCompleteOAuthCallback,
 } from '@/domains/briefings'

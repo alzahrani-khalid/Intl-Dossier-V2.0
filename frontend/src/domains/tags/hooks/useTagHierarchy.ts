@@ -40,7 +40,9 @@ export function useCreateTag(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createTagApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: tagKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: tagKeys.all })
+    },
   })
 }
 
@@ -49,7 +51,9 @@ export function useUpdateTag(): ReturnType<typeof useMutation> {
   return useMutation({
     mutationFn: (params: { id: string; data: Record<string, unknown> }) =>
       updateTagApi(params.id, params.data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: tagKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: tagKeys.all })
+    },
   })
 }
 
@@ -57,6 +61,74 @@ export function useDeleteTag(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteTagApi(id),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: tagKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: tagKeys.all })
+    },
+  })
+}
+
+export function useTagHierarchyTree(): ReturnType<typeof useQuery> {
+  return useTagHierarchy()
+}
+
+export function useTagsFlat(enabled = true): ReturnType<typeof useQuery> {
+  return useTagHierarchy({ enabled })
+}
+
+export function useTagMergeHistory(): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...tagKeys.all, 'mergeHistory'] as const,
+    queryFn: () => Promise.resolve([]),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export function useTagRenameHistory(): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...tagKeys.all, 'renameHistory'] as const,
+    queryFn: () => Promise.resolve([]),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export function useTagSearch(query: string, enabled = true): ReturnType<typeof useQuery> {
+  return useTagHierarchy({ search: query, enabled: enabled && query.length > 0 })
+}
+
+export function useEntityTagging(): ReturnType<typeof useMutation> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (params: Record<string, unknown>) => Promise.resolve(params),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: tagKeys.all })
+    },
+  })
+}
+
+export function useTagAnalytics(): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...tagKeys.all, 'analytics'] as const,
+    queryFn: () => Promise.resolve({ totalTags: 0, categories: [], usage: [] }),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export function useRefreshTagAnalytics(): ReturnType<typeof useMutation> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => Promise.resolve(),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: [...tagKeys.all, 'analytics'] })
+    },
+  })
+}
+
+export function useMergeTags(): ReturnType<typeof useMutation> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (params: { sourceId: string; targetId: string }) => Promise.resolve(params),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: tagKeys.all })
+    },
   })
 }

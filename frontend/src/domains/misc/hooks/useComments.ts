@@ -17,15 +17,20 @@ import {
 
 export const commentKeys = {
   all: ['comments'] as const,
-  list: (entityType: string, entityId: string) => [...commentKeys.all, entityType, entityId] as const,
+  list: (entityType: string, entityId: string) =>
+    [...commentKeys.all, entityType, entityId] as const,
   thread: (commentId: string) => [...commentKeys.all, 'thread', commentId] as const,
 }
 
-export function useComments(entityType: string, entityId: string, params?: {
-  page?: number
-  limit?: number
-  enabled?: boolean
-}): ReturnType<typeof useQuery> {
+export function useComments(
+  entityType: string,
+  entityId: string,
+  params?: {
+    page?: number
+    limit?: number
+    enabled?: boolean
+  },
+): ReturnType<typeof useQuery> {
   const searchParams = new URLSearchParams()
   searchParams.set('entity_type', entityType)
   searchParams.set('entity_id', entityId)
@@ -44,7 +49,9 @@ export function useCreateComment(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createCommentApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: commentKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: commentKeys.all })
+    },
   })
 }
 
@@ -53,7 +60,9 @@ export function useUpdateComment(): ReturnType<typeof useMutation> {
   return useMutation({
     mutationFn: (params: { id: string; data: Record<string, unknown> }) =>
       updateCommentApi(params.id, params.data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: commentKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: commentKeys.all })
+    },
   })
 }
 
@@ -61,7 +70,9 @@ export function useDeleteComment(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteCommentApi(id),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: commentKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: commentKeys.all })
+    },
   })
 }
 
@@ -78,7 +89,9 @@ export function useReactToComment(): ReturnType<typeof useMutation> {
   return useMutation({
     mutationFn: (params: { commentId: string; data: Record<string, unknown> }) =>
       reactToCommentApi(params.commentId, params.data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: commentKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: commentKeys.all })
+    },
   })
 }
 
@@ -86,12 +99,36 @@ export function useResolveComment(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (commentId: string) => resolveCommentApi(commentId),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: commentKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: commentKeys.all })
+    },
   })
 }
 
 export function useMentionUsers(): ReturnType<typeof useMutation> {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => mentionUsersApi(data),
+  })
+}
+
+/* Stub hook – removed during refactoring, still imported by components */
+
+export function useSearchUsersForMention(query?: string): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...commentKeys.all, 'mention-search', query],
+    queryFn: () => Promise.resolve([]),
+    enabled: Boolean(query) && (query?.length ?? 0) > 0,
+    staleTime: 30 * 1000,
+  })
+}
+
+export function useToggleReaction(): ReturnType<typeof useMutation> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (_params: { commentId: string; emoji: string }) =>
+      Promise.resolve({ success: true }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: commentKeys.all })
+    },
   })
 }

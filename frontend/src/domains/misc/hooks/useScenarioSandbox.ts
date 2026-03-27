@@ -36,7 +36,9 @@ export function useCreateScenario(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createScenarioApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: scenarioKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: scenarioKeys.all })
+    },
   })
 }
 
@@ -52,5 +54,47 @@ export function useScenarioResults(scenarioId: string | null): ReturnType<typeof
     queryKey: scenarioId ? scenarioKeys.results(scenarioId) : ['scenario', 'disabled'],
     queryFn: () => (scenarioId ? getScenarioResults(scenarioId) : Promise.resolve(null)),
     enabled: Boolean(scenarioId),
+  })
+}
+
+/* Stub hooks – removed during refactoring, still imported by routes */
+
+export function useUpdateScenario(): ReturnType<typeof useMutation> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (_params: { scenarioId: string; data: Record<string, unknown> }) =>
+      Promise.resolve({ success: true }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: scenarioKeys.all })
+    },
+  })
+}
+
+export function useDeleteScenario(): ReturnType<typeof useMutation> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (_scenarioId: string) => Promise.resolve({ success: true }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: scenarioKeys.all })
+    },
+  })
+}
+
+export function useCloneScenario(): ReturnType<typeof useMutation> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (_scenarioId: string) => Promise.resolve({ success: true }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: scenarioKeys.all })
+    },
+  })
+}
+
+export function useCompareScenarios(scenarioIds?: string[]): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...scenarioKeys.all, 'compare', scenarioIds],
+    queryFn: () => Promise.resolve([]),
+    enabled: Boolean(scenarioIds) && (scenarioIds?.length ?? 0) > 1,
+    staleTime: 5 * 60 * 1000,
   })
 }

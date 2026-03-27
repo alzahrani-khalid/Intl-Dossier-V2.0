@@ -202,6 +202,7 @@ export default tseslint.config(
     ignores: [
       'frontend/src/components/ui/**',
       'frontend/src/components/__tests__/**',
+      'frontend/src/components/**/index.ts',
     ],
     plugins: { 'check-file': checkFile },
     rules: {

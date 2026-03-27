@@ -59,7 +59,7 @@ function ChartContainer({
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
-        <LtrIsolate>
+        <LtrIsolate className="h-full w-full">
           <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
         </LtrIsolate>
       </div>

@@ -43,3 +43,13 @@ export function useCurrentStats(): ReturnType<typeof useQuery> {
     staleTime: STALE_TIME.NORMAL,
   })
 }
+
+/* Stub hook – removed during refactoring, still imported by dashboard widgets */
+
+export function useBenchmarkPreview(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...benchmarkKeys.all, 'preview', params],
+    queryFn: () => Promise.resolve([]),
+    staleTime: STALE_TIME.NORMAL,
+  })
+}

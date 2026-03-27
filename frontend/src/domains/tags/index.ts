@@ -3,7 +3,22 @@
  * @module domains/tags
  */
 
-export { tagKeys, useTagHierarchy, useCreateTag, useUpdateTag, useDeleteTag } from './hooks/useTagHierarchy'
+export {
+  tagKeys,
+  useTagHierarchy,
+  useTagHierarchyTree,
+  useTagsFlat,
+  useTagSearch,
+  useEntityTagging,
+  useTagAnalytics,
+  useRefreshTagAnalytics,
+  useCreateTag,
+  useUpdateTag,
+  useDeleteTag,
+  useMergeTags,
+  useTagMergeHistory,
+  useTagRenameHistory,
+} from './hooks/useTagHierarchy'
 export {
   templateKeys,
   useEntityTemplates,
@@ -12,8 +27,15 @@ export {
   useUpdateEntityTemplate,
   useDeleteEntityTemplate,
   useApplyEntityTemplate,
+  useContextAwareTemplates,
+  useToggleFavorite,
+  useApplyTemplate,
 } from './hooks/useEntityTemplates'
-export { suggestionKeys, useContextualSuggestions } from './hooks/useContextualSuggestions'
+export {
+  suggestionKeys,
+  hasUrgentSuggestions,
+  useContextualSuggestions,
+} from './hooks/useContextualSuggestions'
 
 export * as tagsRepo from './repositories/tags.repository'
 export * from './types'

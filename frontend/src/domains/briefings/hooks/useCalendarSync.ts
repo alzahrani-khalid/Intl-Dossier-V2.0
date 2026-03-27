@@ -90,3 +90,31 @@ export function useUpdateCalendarSettings(): ReturnType<typeof useMutation> {
     },
   })
 }
+
+/* Stub hooks – removed during refactoring, still imported by components */
+
+export function useCalendarSync(): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...calendarKeys.all, 'sync'],
+    queryFn: () => Promise.resolve({ connected: false, providers: [] }),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export function useExternalCalendars(): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...calendarKeys.all, 'external'],
+    queryFn: () => Promise.resolve([]),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export function useCompleteOAuthCallback(): ReturnType<typeof useMutation> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ success: true }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: calendarKeys.all })
+    },
+  })
+}

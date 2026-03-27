@@ -13,6 +13,9 @@ export {
   useConnectCalendar,
   useDisconnectCalendar,
   useUpdateCalendarSettings,
+  useCalendarSync,
+  useExternalCalendars,
+  useCompleteOAuthCallback,
 } from './hooks/useCalendarSync'
 
 export * as briefingsRepo from './repositories/briefings.repository'

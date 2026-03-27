@@ -1418,5 +1418,3 @@ function ProcessorDialog({
     </Dialog>
   )
 }
-
-export default DataRetentionPage

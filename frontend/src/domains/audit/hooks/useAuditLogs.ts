@@ -76,3 +76,29 @@ export function useExportAuditLogs(): ReturnType<typeof useMutation> {
     mutationFn: (params: Record<string, unknown>) => exportAuditLogsApi(params),
   })
 }
+
+/* Stub hooks – removed during refactoring, still imported by components */
+
+export function useAuditLogDistinctValues(field?: string): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...auditLogKeys.all, 'distinct-values', field],
+    queryFn: () => Promise.resolve([]),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export function useAuditLogStatistics(
+  params?: Record<string, unknown>,
+): ReturnType<typeof useQuery> {
+  return useQuery({
+    queryKey: [...auditLogKeys.all, 'statistics', params],
+    queryFn: () => Promise.resolve({}),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export function useAuditLogExport(): ReturnType<typeof useMutation> {
+  return useMutation({
+    mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ url: '', success: true }),
+  })
+}

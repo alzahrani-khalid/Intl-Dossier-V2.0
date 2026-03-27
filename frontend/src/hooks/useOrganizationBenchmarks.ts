@@ -6,4 +6,5 @@ export {
   benchmarkKeys,
   useOrganizationBenchmarks,
   useCurrentStats,
+  useBenchmarkPreview,
 } from '@/domains/analytics'

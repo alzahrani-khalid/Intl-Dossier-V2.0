@@ -172,7 +172,7 @@ const DEFAULT_TUTORIALS: TutorialVideo[] = [
  *   onTutorialWatched={(id) => trackEvent('tutorial_completed', { id })}
  * />
  */
-function TutorialEmptyState({
+export function TutorialEmptyState({
   entityType,
   onCreate,
   onImport,
@@ -190,7 +190,7 @@ function TutorialEmptyState({
 }: TutorialEmptyStateProps) {
   const { t } = useTranslation('empty-states')
   const { isRTL } = useDirection()
-const [showTutorials, setShowTutorials] = useState(showTutorialsDefault)
+  const [showTutorials, setShowTutorials] = useState(showTutorialsDefault)
   const [activeTutorialIndex, setActiveTutorialIndex] = useState(0)
   const [expandedVideo, setExpandedVideo] = useState(false)
 

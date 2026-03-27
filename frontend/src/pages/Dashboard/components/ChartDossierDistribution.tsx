@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { DossierDashboardSummary } from '@/types/dossier-dashboard.types'
-import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 // Map dossier types to chart colors
 const typeColors: Record<string, string> = {
@@ -98,8 +97,7 @@ export function ChartDossierDistribution({
         {isLoading ? (
           <Skeleton className="mx-auto size-[200px] rounded-full" />
         ) : (
-          <LtrIsolate className="mx-auto aspect-square max-h-[250px]">
-          <ChartContainer config={chartConfig} className="h-full w-full">
+          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
             <PieChart>
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
               <Pie data={chartData} dataKey="count" nameKey="type" innerRadius={60} strokeWidth={5}>
@@ -136,7 +134,6 @@ export function ChartDossierDistribution({
               </Pie>
             </PieChart>
           </ChartContainer>
-          </LtrIsolate>
         )}
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">

@@ -24,7 +24,8 @@ export const webhookKeys = {
   all: ['webhooks'] as const,
   list: (params?: Record<string, unknown>) => [...webhookKeys.all, 'list', params] as const,
   detail: (id: string) => [...webhookKeys.all, 'detail', id] as const,
-  deliveries: (params?: Record<string, unknown>) => [...webhookKeys.all, 'deliveries', params] as const,
+  deliveries: (params?: Record<string, unknown>) =>
+    [...webhookKeys.all, 'deliveries', params] as const,
   stats: (webhookId: string) => [...webhookKeys.all, 'stats', webhookId] as const,
   templates: () => [...webhookKeys.all, 'templates'] as const,
 }
@@ -56,7 +57,9 @@ export function useCreateWebhook(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createWebhookApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: webhookKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: webhookKeys.all })
+    },
   })
 }
 
@@ -64,7 +67,9 @@ export function useUpdateWebhook(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => updateWebhookApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: webhookKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: webhookKeys.all })
+    },
   })
 }
 
@@ -72,7 +77,9 @@ export function useDeleteWebhook(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteWebhookApi(id),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: webhookKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: webhookKeys.all })
+    },
   })
 }
 
@@ -80,7 +87,9 @@ export function useToggleWebhook(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => toggleWebhookApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: webhookKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: webhookKeys.all })
+    },
   })
 }
 
@@ -90,7 +99,9 @@ export function useTestWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useWebhookDeliveries(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useWebhookDeliveries(
+  params?: Record<string, unknown>,
+): ReturnType<typeof useQuery> {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -121,3 +132,6 @@ export function useWebhookTemplates(): ReturnType<typeof useQuery> {
     staleTime: 30 * 60 * 1000,
   })
 }
+
+/* Alias – renamed during refactoring, still imported by pages */
+export const useToggleWebhookActive = useToggleWebhook

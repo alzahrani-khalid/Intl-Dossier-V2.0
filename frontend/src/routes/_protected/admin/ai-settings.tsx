@@ -674,5 +674,3 @@ function AISettingsPage() {
     </div>
   )
 }
-
-export default AISettingsPage

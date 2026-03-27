@@ -10,6 +10,9 @@ export {
   useAuditLogDetail,
   useAuditLogStats,
   useExportAuditLogs,
+  useAuditLogDistinctValues,
+  useAuditLogStatistics,
+  useAuditLogExport,
 } from './hooks/useAuditLogs'
 
 export {
@@ -20,6 +23,10 @@ export {
   useUpdateComplianceRule,
   useDeleteComplianceRule,
   useRunComplianceCheck,
+  useSignoffViolation,
+  useComplianceViolations,
+  useComplianceTemplates,
+  useAcknowledgeViolation,
 } from './hooks/useComplianceRules'
 
 export {

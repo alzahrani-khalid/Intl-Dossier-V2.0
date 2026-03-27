@@ -9,4 +9,7 @@ export {
   useUpdateEntityTemplate,
   useDeleteEntityTemplate,
   useApplyEntityTemplate,
+  useContextAwareTemplates,
+  useToggleFavorite,
+  useApplyTemplate,
 } from '@/domains/tags'

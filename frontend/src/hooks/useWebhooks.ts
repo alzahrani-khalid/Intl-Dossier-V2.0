@@ -13,4 +13,5 @@ export {
   useWebhookDeliveries,
   useWebhookStats,
   useWebhookTemplates,
+  useToggleWebhookActive,
 } from '@/domains/import'

@@ -46,9 +46,6 @@ export {
   type TutorialVideo,
 } from './TutorialEmptyState'
 
-// Re-export common icons for convenience
-export { Plus, Upload, Search, HelpCircle } from './EmptyState'
-
 // Re-export onboarding-integrated empty state
 export { OnboardingEmptyState } from '@/components/onboarding/OnboardingEmptyState'
 

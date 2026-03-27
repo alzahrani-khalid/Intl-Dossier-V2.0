@@ -37,7 +37,9 @@ export function useLoadSampleData(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => loadSampleDataApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: sampleDataKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: sampleDataKeys.all })
+    },
   })
 }
 
@@ -45,6 +47,24 @@ export function useClearSampleData(): ReturnType<typeof useMutation> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () => clearSampleDataApi(),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: sampleDataKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: sampleDataKeys.all })
+    },
   })
+}
+
+export function useSampleData(): {
+  populateSampleData: (data?: Record<string, unknown>) => void
+  isPopulating: boolean
+  removeSampleData: () => void
+  isRemoving: boolean
+} {
+  const loadMutation = useLoadSampleData()
+  const clearMutation = useClearSampleData()
+  return {
+    populateSampleData: (data?: Record<string, unknown>) => loadMutation.mutate(data ?? {}),
+    isPopulating: loadMutation.isPending,
+    removeSampleData: () => clearMutation.mutate(),
+    isRemoving: clearMutation.isPending,
+  }
 }

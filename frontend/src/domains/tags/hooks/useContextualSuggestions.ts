@@ -15,6 +15,12 @@ export const suggestionKeys = {
     [...suggestionKeys.all, entityType, entityId] as const,
 }
 
+import type { ContextualSuggestion } from '@/types/contextual-suggestion.types'
+
+export function hasUrgentSuggestions(suggestions: ContextualSuggestion[]): boolean {
+  return suggestions.some((s) => s.priority === 'high')
+}
+
 export function useContextualSuggestions(params: {
   entityType: string
   entityId: string

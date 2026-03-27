@@ -18,7 +18,7 @@ function ViewInfo() {
   )
 }
 
-export function DemoPage() {
+function DemoPage(): React.ReactElement {
   const items: NavItem[] = [
     { id: 'home', label: 'Home', href: '#' },
     { id: 'reports', label: 'Reports', href: '#', priority: 'high' },

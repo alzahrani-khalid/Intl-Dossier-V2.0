@@ -1,4 +1,11 @@
 /**
  * @deprecated Import from '@/domains/misc' instead.
  */
-export { timelineKeys, useStakeholderTimeline, useAddTimelineEvent, useTimelineCategories } from '@/domains/misc'
+export {
+  timelineKeys,
+  useStakeholderTimeline,
+  useAddTimelineEvent,
+  useTimelineCategories,
+  useStakeholderInteractionMutations,
+  getAvailableInteractionTypes,
+} from '@/domains/misc'

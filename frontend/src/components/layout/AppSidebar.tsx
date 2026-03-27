@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useResponsive } from '@/hooks/useResponsive'
 import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
-import { LanguageToggle } from '@/components/LanguageToggle'
+import { LanguageToggle } from '@/components/language-toggle/LanguageToggle'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {

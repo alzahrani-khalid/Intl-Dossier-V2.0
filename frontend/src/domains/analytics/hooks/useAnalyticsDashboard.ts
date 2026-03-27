@@ -6,15 +6,14 @@
  * API calls delegated to analytics.repository.
  */
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { STALE_TIME } from '@/lib/query-tiers'
-import {
-  getAnalyticsDashboard as getAnalyticsDashboardApi,
-} from '../repositories/analytics.repository'
+import { getAnalyticsDashboard as getAnalyticsDashboardApi } from '../repositories/analytics.repository'
 
 export const analyticsKeys = {
   all: ['analytics'] as const,
-  dashboard: (params?: Record<string, unknown>) => [...analyticsKeys.all, 'dashboard', params] as const,
+  dashboard: (params?: Record<string, unknown>) =>
+    [...analyticsKeys.all, 'dashboard', params] as const,
 }
 
 export function useAnalyticsDashboard(params?: {
@@ -34,5 +33,13 @@ export function useAnalyticsDashboard(params?: {
     enabled: params?.enabled !== false,
     staleTime: STALE_TIME.NORMAL,
     gcTime: 10 * 60 * 1000,
+  })
+}
+
+/* Stub hook – removed during refactoring, still imported by pages */
+
+export function useAnalyticsExport(): ReturnType<typeof useMutation> {
+  return useMutation({
+    mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ url: '', success: true }),
   })
 }

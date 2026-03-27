@@ -1,7 +1,6 @@
 import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
-import { NavigationShell } from '@/components/modern-nav/NavigationShell'
+import { MainLayout } from '@/components/layout/MainLayout'
 import { useAuthStore, supabase } from '../store/authStore'
-import { useAuth } from '@/hooks/useAuth'
 import { ChatDock } from '@/components/ai/ChatDock'
 import { ChatProvider } from '@/contexts/ChatContext'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
@@ -25,13 +24,10 @@ export const Route = createFileRoute('/_protected')({
   component: ProtectedLayout,
 })
 
-function ProtectedLayout() {
+function ProtectedLayout(): React.ReactElement {
   const navigate = useNavigate()
-  const { user, logout } = useAuth()
 
-  // Handle citation clicks from chat to navigate to entities
-  // Note: dossierType is optional - if not provided, defaults to 'countries'
-  const handleCitationClick = (type: string, id: string, dossierType?: string) => {
+  const handleCitationClick = (type: string, id: string, dossierType?: string): void => {
     switch (type) {
       case 'dossier':
         navigate({ to: getDossierDetailPath(id, dossierType) })
@@ -43,23 +39,16 @@ function ProtectedLayout() {
         navigate({ to: '/engagements/$engagementId', params: { engagementId: id } as any })
         break
       default:
-        // For other types, try a general search
         navigate({ to: '/search', search: { q: id } as any })
     }
   }
 
   return (
     <ChatProvider>
-      <NavigationShell
-        userName={user?.name ?? user?.email ?? ''}
-        userEmail={user?.email ?? ''}
-        onLogout={logout}
-      >
+      <MainLayout>
         <Outlet />
-      </NavigationShell>
-      {/* AI Chat Dock - available on all protected pages */}
+      </MainLayout>
       <ChatDock onCitationClick={handleCitationClick} />
-      {/* Onboarding Tour - triggers for new users */}
       <OnboardingTourTrigger
         autoStartDelay={1000}
         showReplayButton={true}
