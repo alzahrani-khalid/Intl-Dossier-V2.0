@@ -1,3 +1,7 @@
+// Audit (D-12): Context splitting not needed because LanguageProvider manages only
+// language + direction state with useCallback setters. Changes are infrequent (user
+// switching language). All consumers need both language and direction together.
+// Splitting would add complexity without measurable benefit.
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getDirection, type SupportedLanguage } from '../../i18n'

@@ -1,3 +1,7 @@
+// Audit (D-12): Context splitting not needed because ThemeProvider manages only
+// colorMode + theme state with useCallback setters. Changes are infrequent (user
+// toggling theme). All consumers need both values. Splitting would add overhead
+// without reducing re-renders.
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 
 // Theme type - extensible for future themes
