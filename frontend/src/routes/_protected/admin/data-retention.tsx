@@ -64,9 +64,9 @@ import {
 import {
   useRetentionPolicies,
   useRetentionStatistics,
-  usePendingRetentionActions,
-  useExpiringEntities,
-  useRetentionExecutionLog,
+  usePendingActions,
+  useExpiringRecords,
+  useExecutionLog,
   useLegalHolds,
   useRunRetentionProcessor,
   useCreateRetentionPolicy,
@@ -151,14 +151,14 @@ function DataRetentionPage() {
     status: 'active',
   })
   const { data: statistics = [], isLoading: statsLoading } = useRetentionStatistics()
-  const { data: pendingActions = [], isLoading: pendingLoading } = usePendingRetentionActions({
+  const { data: pendingActions = [], isLoading: pendingLoading } = usePendingActions({
     limit: 10,
   })
-  const { data: expiringEntities = [], isLoading: expiringLoading } = useExpiringEntities({
+  const { data: expiringEntities = [], isLoading: expiringLoading } = useExpiringRecords({
     days: 30,
     limit: 10,
   })
-  const { data: executionLog = [], isLoading: logLoading } = useRetentionExecutionLog()
+  const { data: executionLog = [], isLoading: logLoading } = useExecutionLog()
   const { data: legalHolds = [], isLoading: holdsLoading } = useLegalHolds({ status: 'active' })
 
   // Mutations
@@ -213,7 +213,10 @@ function DataRetentionPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>

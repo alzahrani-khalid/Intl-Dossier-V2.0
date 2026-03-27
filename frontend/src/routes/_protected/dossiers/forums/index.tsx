@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/dossiers/forums/')({
@@ -31,35 +31,43 @@ export const Route = createFileRoute('/_protected/dossiers/forums/')({
 function ForumsListPage() {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [page, setPage] = useState(1)
   const pageSize = 20
 
   // Fetch forum dossiers
   const { data, isLoading, error } = useDossiersByType('forum', page, pageSize)
 
-  // Filter by search query (client-side for now)
-  const filteredDossiers = data?.data.filter((dossier) => {
-    if (!searchQuery) return true
-    const searchLower = searchQuery.toLowerCase()
-    return (
-      dossier.name_en.toLowerCase().includes(searchLower) ||
-      dossier.name_ar?.toLowerCase().includes(searchLower) ||
-      dossier.description_en?.toLowerCase().includes(searchLower) ||
-      dossier.description_ar?.toLowerCase().includes(searchLower)
-    )
-  })
+  // Memo: prevents re-filtering entire list on every render; only recomputes when data or search changes
+  const filteredDossiers = useMemo(
+    () =>
+      data?.data.filter((dossier) => {
+        if (!searchQuery) return true
+        const searchLower = searchQuery.toLowerCase()
+        return (
+          dossier.name_en.toLowerCase().includes(searchLower) ||
+          dossier.name_ar?.toLowerCase().includes(searchLower) ||
+          dossier.description_en?.toLowerCase().includes(searchLower) ||
+          dossier.description_ar?.toLowerCase().includes(searchLower)
+        )
+      }),
+    [data?.data, searchQuery],
+  )
+
+  // Memo: stable reference for pagination button onClick props
+  const handlePrevPage = useCallback(() => setPage((p) => Math.max(1, p - 1)), [])
+  const handleNextPage = useCallback(() => setPage((p) => p + 1), [])
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       {/* Page Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div className="flex items-center gap-3">
           <MessageSquare className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
           <div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold text-start">{t('type.forum')}</h1>
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold text-start">
+              {t('type.forum')}
+            </h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-1">
               {t('typeDescription.forum')}
             </p>
@@ -210,7 +218,7 @@ const [searchQuery, setSearchQuery] = useState('')
               <Button
                 variant="outline"
                 disabled={page === 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={handlePrevPage}
                 className="min-h-11 min-w-11 w-full sm:w-auto"
               >
                 {t('action.back')}
@@ -224,7 +232,7 @@ const [searchQuery, setSearchQuery] = useState('')
               <Button
                 variant="outline"
                 disabled={page * pageSize >= data.total!}
-                onClick={() => setPage((p) => p + 1)}
+                onClick={handleNextPage}
                 className="min-h-11 min-w-11 w-full sm:w-auto"
               >
                 {t('action.next')}
