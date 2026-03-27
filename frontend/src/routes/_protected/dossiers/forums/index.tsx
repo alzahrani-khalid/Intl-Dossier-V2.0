@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 
 export const Route = createFileRoute('/_protected/dossiers/forums/')({
   component: ForumsListPage,
@@ -38,17 +38,25 @@ function ForumsListPage() {
   // Fetch forum dossiers
   const { data, isLoading, error } = useDossiersByType('forum', page, pageSize)
 
-  // Filter by search query (client-side for now)
-  const filteredDossiers = data?.data.filter((dossier) => {
-    if (!searchQuery) return true
-    const searchLower = searchQuery.toLowerCase()
-    return (
-      dossier.name_en.toLowerCase().includes(searchLower) ||
-      dossier.name_ar?.toLowerCase().includes(searchLower) ||
-      dossier.description_en?.toLowerCase().includes(searchLower) ||
-      dossier.description_ar?.toLowerCase().includes(searchLower)
-    )
-  })
+  // Memo: prevents re-filtering entire list on every render; only recomputes when data or search changes
+  const filteredDossiers = useMemo(
+    () =>
+      data?.data.filter((dossier) => {
+        if (!searchQuery) return true
+        const searchLower = searchQuery.toLowerCase()
+        return (
+          dossier.name_en.toLowerCase().includes(searchLower) ||
+          dossier.name_ar?.toLowerCase().includes(searchLower) ||
+          dossier.description_en?.toLowerCase().includes(searchLower) ||
+          dossier.description_ar?.toLowerCase().includes(searchLower)
+        )
+      }),
+    [data?.data, searchQuery],
+  )
+
+  // Memo: stable reference for pagination button onClick props
+  const handlePrevPage = useCallback(() => setPage((p) => Math.max(1, p - 1)), [])
+  const handleNextPage = useCallback(() => setPage((p) => p + 1), [])
 
   return (
     <div
@@ -211,7 +219,7 @@ function ForumsListPage() {
               <Button
                 variant="outline"
                 disabled={page === 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={handlePrevPage}
               >
                 {t('action.back')}
               </Button>
@@ -224,7 +232,7 @@ function ForumsListPage() {
               <Button
                 variant="outline"
                 disabled={page * pageSize >= data.total!}
-                onClick={() => setPage((p) => p + 1)}
+                onClick={handleNextPage}
               >
                 {t('action.next')}
               </Button>

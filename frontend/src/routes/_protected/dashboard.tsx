@@ -7,6 +7,11 @@
  * Performance: Lazy-loaded for code splitting.
  */
 
+// Perf (PERF-04): This route is a thin Suspense wrapper around lazy-loaded DashboardPage.
+// No memoization needed here — DashboardPage.tsx contains useMemo for trendRange and
+// date computations. Dashboard sub-components (DossierQuickStatsCard, RecentDossierActivity,
+// PendingWorkByDossier) are wrapped in React.memo per Plan 07-03.
+
 import { createFileRoute } from '@tanstack/react-router'
 import { lazy, Suspense } from 'react'
 
