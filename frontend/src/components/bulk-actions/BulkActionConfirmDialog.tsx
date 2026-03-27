@@ -86,7 +86,7 @@ const EXPORT_FORMAT_OPTIONS: ExportFormat[] = ['csv', 'xlsx', 'pdf', 'json']
  * - Mobile-first responsive design
  * - RTL support
  */
-function BulkActionConfirmDialog({
+export function BulkActionConfirmDialog({
   open,
   action,
   itemCount,

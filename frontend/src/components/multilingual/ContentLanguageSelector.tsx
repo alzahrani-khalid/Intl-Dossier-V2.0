@@ -257,7 +257,7 @@ export interface LanguageIndicatorProps {
   className?: string
 }
 
-function LanguageIndicator({
+export function LanguageIndicator({
   language,
   showRTLIndicator = true,
   size = 'default',

@@ -40,7 +40,7 @@ export interface EnhancedUndoToastProps {
  * - RTL support
  * - Pause countdown on hover (optional)
  */
-function EnhancedUndoToast({
+export function EnhancedUndoToast({
   visible,
   action,
   entityType: _entityType = 'entity',
