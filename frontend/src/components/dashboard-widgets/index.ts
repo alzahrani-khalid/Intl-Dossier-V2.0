@@ -7,7 +7,6 @@
 
 // Widget Container
 export { WidgetContainer } from './WidgetContainer'
-export type { default as WidgetContainerType } from './WidgetContainer'
 
 // Individual Widget Components
 export { KpiWidget } from './KpiWidget'

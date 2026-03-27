@@ -266,7 +266,7 @@ interface KanbanUrlState {
 /**
  * Realtime event for work item changes
  */
-type WorkItemRealtimeEvent =
+export type WorkItemRealtimeEvent =
   | { type: 'INSERT'; payload: WorkItem }
   | { type: 'UPDATE'; payload: Partial<WorkItem> & { id: string } }
   | { type: 'DELETE'; payload: { id: string } }
@@ -404,7 +404,7 @@ type StatusForSource<S extends WorkSource> = S extends 'task'
  * Extended status type for the unified work items view
  * Includes additional statuses not in the Kanban workflow
  */
-type UnifiedWorkStatus =
+export type UnifiedWorkStatus =
   | 'pending'
   | 'in_progress'
   | 'completed'
@@ -512,7 +512,7 @@ export interface PaginatedWorkItems {
 export type WorkItemSortBy = 'deadline' | 'created_at' | 'priority'
 
 /** Query parameters for fetching work items */
-interface WorkItemQueryParams extends UnifiedWorkItemFilters {
+export interface WorkItemQueryParams extends UnifiedWorkItemFilters {
   cursor?: WorkItemCursor
   limit?: number
   sortBy?: WorkItemSortBy
@@ -520,7 +520,7 @@ interface WorkItemQueryParams extends UnifiedWorkItemFilters {
 }
 
 /** URL state for the My Work dashboard */
-interface MyWorkUrlState {
+export interface MyWorkUrlState {
   tab?: 'all' | 'commitments' | 'tasks' | 'intake'
   filter?: 'active' | 'overdue' | 'due-today' | 'due-week'
   trackingType?: TrackingType

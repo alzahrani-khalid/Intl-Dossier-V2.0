@@ -11,7 +11,7 @@ type ColorMode = 'light' | 'dark' | 'system'
 export const AVAILABLE_THEMES = ['canvas', 'azure', 'lavender', 'bluesky'] as const
 
 // Available color modes for UI toggles
-const AVAILABLE_COLOR_MODES: ColorMode[] = ['light', 'dark', 'system'] as const
+export const AVAILABLE_COLOR_MODES: ColorMode[] = ['light', 'dark', 'system'] as const
 
 type ThemePreset = 'default' | 'underground' | 'rose-garden' | 'ocean-breeze'
 

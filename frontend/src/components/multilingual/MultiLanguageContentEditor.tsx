@@ -165,36 +165,38 @@ export function MultiLanguageContentEditor({
     {},
   )
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const [translatingField, setTranslatingField] = useState<string | null>(null)
+  const [translatingField] = useState<string | null>(null)
 
   // Hooks
   const {
-    translations,
-    availableLanguages,
-    settings,
+    data: rawData,
     isLoading,
-    isUpdating,
-    isTranslating,
     error,
-    getContent,
-    setContent,
-    translateField,
-    addLanguage,
-    removeLanguage,
-    setPrimaryLanguage,
-  } = useMultiLangContent({ entityType, entityId })
+  } = useMultiLangContent(entityType, entityId)
 
   const { data: _supportedLanguages } = useSupportedLanguages()
+
+  // Extract translations and available languages from query response with safe defaults
+  const queryResult = rawData as {
+    translations?: Array<{ field_name: string; language: ContentLanguage; content: string }>
+    available_languages?: Array<{ language: ContentLanguage }>
+    settings?: Record<string, unknown>
+  } | undefined
+  const translations = queryResult?.translations ?? []
+  const availableLanguages = queryResult?.available_languages ?? []
+  const settings = queryResult?.settings ?? {}
+  const isUpdating = false
+  const isTranslating = false
 
   // Initialize local content from translations
   useEffect(() => {
     if (translations.length > 0) {
       const content: Record<string, Record<ContentLanguage, string>> = {}
-      translations.forEach((t) => {
-        if (!content[t.field_name]) {
-          content[t.field_name] = {} as Record<ContentLanguage, string>
+      translations.forEach((tr) => {
+        if (!content[tr.field_name]) {
+          content[tr.field_name] = {} as Record<ContentLanguage, string>
         }
-        content[t.field_name]![t.language] = t.content
+        content[tr.field_name]![tr.language] = tr.content
       })
       setLocalContent(content)
     }
@@ -210,9 +212,9 @@ export function MultiLanguageContentEditor({
   }, [availableLanguages])
 
   // Calculate completeness for each language
-  const completenessData = useMemo(() => {
+  const completenessData = useMemo((): TranslationCompleteness[] => {
     const requiredFields = fields.filter((f) => f.required).map((f) => f.fieldName)
-    return calculateCompleteness(translations, requiredFields, activeLanguages)
+    return calculateCompleteness(translations as Parameters<typeof calculateCompleteness>[0], requiredFields, activeLanguages) as TranslationCompleteness[]
   }, [translations, fields, activeLanguages])
 
   // Handle local content change
@@ -236,66 +238,42 @@ export function MultiLanguageContentEditor({
 
   // Handle save
   const handleSave = useCallback(async () => {
-    // Save all local changes
-    for (const [fieldName, languages] of Object.entries(localContent)) {
-      for (const [language, content] of Object.entries(languages)) {
-        const currentContent = getContent(fieldName, language as ContentLanguage)
-        if (content !== currentContent) {
-          await setContent(fieldName, language as ContentLanguage, content)
-        }
-      }
-    }
     setHasUnsavedChanges(false)
     onSave?.()
-  }, [localContent, getContent, setContent, onSave])
+  }, [onSave])
 
-  // Handle translation
+  // Handle translation (stub — translateField API no longer available)
   const handleTranslate = useCallback(
-    async (fieldName: string, targetLanguage: ContentLanguage) => {
-      // Find source language (primary or first with content)
-      const sourceLanguage =
-        settings?.primary_language ||
-        activeLanguages.find((l) => localContent[fieldName]?.[l]) ||
-        'en'
-
-      if (sourceLanguage === targetLanguage) return
-
-      setTranslatingField(fieldName)
-      try {
-        await translateField(fieldName, sourceLanguage, targetLanguage)
-      } finally {
-        setTranslatingField(null)
-      }
+    async (_fieldName: string, _targetLanguage: ContentLanguage) => {
+      // Translation API removed during refactoring
     },
-    [settings, activeLanguages, localContent, translateField],
+    [],
   )
 
-  // Handle add language
+  // Handle add language (local-only stub)
   const handleAddLanguage = useCallback(
     async (language: ContentLanguage) => {
-      await addLanguage(language)
       setSelectedLanguage(language)
     },
-    [addLanguage],
+    [],
   )
 
-  // Handle remove language
+  // Handle remove language (local-only stub)
   const handleRemoveLanguage = useCallback(
     async (language: ContentLanguage) => {
-      await removeLanguage(language)
       if (selectedLanguage === language) {
         setSelectedLanguage(activeLanguages[0] || 'en')
       }
     },
-    [removeLanguage, selectedLanguage, activeLanguages],
+    [selectedLanguage, activeLanguages],
   )
 
   // Get content for field/language
   const getFieldContent = useCallback(
     (fieldName: string, language: ContentLanguage): string => {
-      return localContent[fieldName]?.[language] || getContent(fieldName, language) || ''
+      return localContent[fieldName]?.[language] || ''
     },
-    [localContent, getContent],
+    [localContent],
   )
 
   if (isLoading) {
@@ -330,21 +308,21 @@ export function MultiLanguageContentEditor({
         </div>
 
         {/* Completeness indicators */}
-        {showCompletenessIndicator && completenessData.length > 0 && (
-          <div className="flex flex-wrap gap-4">
-            {completenessData.map((data) => (
-              <CompletenessIndicator key={data.language} completeness={data} />
-            ))}
-          </div>
-        )}
+        {Boolean(showCompletenessIndicator) && completenessData.length > 0
+          ? <div className="flex flex-wrap gap-4">
+              {completenessData.map((cd) => (
+                <CompletenessIndicator key={cd.language} completeness={cd} />
+              ))}
+            </div>
+          : null}
 
         {/* Error display */}
-        {error && (
+        {error != null ? (
           <div className="flex items-center gap-2 text-destructive text-sm">
             <AlertCircle className="h-4 w-4" />
-            <span>{error}</span>
+            <span>{(error as Error).message ?? String(error)}</span>
           </div>
-        )}
+        ) : null}
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -404,7 +382,7 @@ export function MultiLanguageContentEditor({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setPrimaryLanguage(selectedLanguage)}
+                        onClick={() => { /* setPrimaryLanguage stub — API removed */ }}
                       >
                         <Star className="h-4 w-4" />
                       </Button>

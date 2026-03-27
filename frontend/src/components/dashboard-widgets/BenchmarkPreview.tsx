@@ -225,18 +225,20 @@ export function BenchmarkPreview({
 }: BenchmarkPreviewProps) {
   const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-const { data, isLoading, dismissPreview } = useBenchmarkPreview()
+const { data: rawData, isLoading } = useBenchmarkPreview()
+  const data = (rawData ?? {}) as { shouldShowPreview?: boolean; benchmarks?: Record<string, unknown>[] }
+  const dismissPreview = (): void => { window.dispatchEvent(new Event('benchmark-preview-dismissed')) }
   const [isVisible, setIsVisible] = useState(true)
 
   // Listen for dismiss events
   useEffect(() => {
-    const handleDismiss = () => setIsVisible(false)
+    const handleDismiss = (): void => setIsVisible(false)
     window.addEventListener('benchmark-preview-dismissed', handleDismiss)
     return () => window.removeEventListener('benchmark-preview-dismissed', handleDismiss)
   }, [])
 
   // Don't render if dismissed or shouldn't show
-  if (!isVisible || !data.shouldShowPreview) {
+  if (!isVisible || !data?.shouldShowPreview) {
     return null
   }
 
@@ -246,7 +248,7 @@ const { data, isLoading, dismissPreview } = useBenchmarkPreview()
   }
 
   // No benchmark data available
-  if (!data.benchmarks) {
+  if (!data?.benchmarks) {
     return null
   }
 

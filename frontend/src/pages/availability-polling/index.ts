@@ -1,1 +1,1 @@
-export { AvailabilityPollingPage, default } from './AvailabilityPollingPage'
+export { AvailabilityPollingPage } from './AvailabilityPollingPage'

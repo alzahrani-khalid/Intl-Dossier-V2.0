@@ -226,7 +226,7 @@ const RELATIONSHIP_STATUS_LABELS: Record<RelationshipStatus, { en: string; ar: s
 /**
  * Labels for dossier types
  */
-const DOSSIER_TYPE_LABELS: Record<DossierType, { en: string; ar: string }> = {
+export const DOSSIER_TYPE_LABELS: Record<DossierType, { en: string; ar: string }> = {
   country: { en: 'Country', ar: 'دولة' },
   organization: { en: 'Organization', ar: 'منظمة' },
   forum: { en: 'Forum', ar: 'منتدى' },

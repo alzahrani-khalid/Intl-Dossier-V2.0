@@ -103,7 +103,7 @@ const { toast } = useToast()
     useBulkSelection()
 
   // Bulk reminder action
-  const { sendBulk } = useBulkReminderAction()
+  const sendBulk = useBulkReminderAction()
 
   // Poll bulk job status
   const { data: bulkJobStatus, isLoading: _isJobLoading } = useBulkReminderJobStatus(

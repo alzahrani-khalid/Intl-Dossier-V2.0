@@ -246,7 +246,7 @@ interface CommentErrorResponse {
 }
 
 // Utility types for component props
-interface CommentFormProps {
+export interface CommentFormProps {
   entityType: CommentableEntityType
   entityId: string
   parentId?: string
@@ -258,7 +258,7 @@ interface CommentFormProps {
   maxLength?: number
 }
 
-interface CommentListProps {
+export interface CommentListProps {
   entityType: CommentableEntityType
   entityId: string
   showReplies?: boolean
@@ -267,7 +267,7 @@ interface CommentListProps {
   emptyMessage?: string
 }
 
-interface CommentItemProps {
+export interface CommentItemProps {
   comment: CommentWithDetails
   showReplies?: boolean
   maxDepth?: number
@@ -277,7 +277,7 @@ interface CommentItemProps {
   onDelete?: (commentId: string) => void
 }
 
-interface MentionInputProps {
+export interface MentionInputProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
@@ -287,7 +287,7 @@ interface MentionInputProps {
   className?: string
 }
 
-interface ReactionPickerProps {
+export interface ReactionPickerProps {
   commentId: string
   currentReactions: CommentReactions
   userReactions?: CommentReactionEmoji[]

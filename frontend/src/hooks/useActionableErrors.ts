@@ -416,7 +416,7 @@ export function useActionableErrors(
 /**
  * Creates an actionable error for API errors
  */
-function createApiActionableError(
+export function createApiActionableError(
   status: number,
   message: string,
   fieldErrors?: Record<string, { message: string; suggestion?: string; autoFix?: string }>,

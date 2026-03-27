@@ -228,7 +228,7 @@ export interface BulkActionConfirmationProps {
 /**
  * Progress indicator props
  */
-interface BulkActionProgressProps {
+export interface BulkActionProgressProps {
   /** Current status */
   status: BulkActionStatus
   /** Progress percentage */
@@ -248,7 +248,7 @@ interface BulkActionProgressProps {
 /**
  * Undo toast props
  */
-interface BulkActionUndoToastProps {
+export interface BulkActionUndoToastProps {
   /** Whether toast is visible */
   visible: boolean
   /** Action that was performed */
@@ -460,7 +460,7 @@ export const DEFAULT_BULK_ACTIONS: BulkActionDefinition[] = [
 /**
  * Entity-specific action configurations
  */
-const ENTITY_ACTIONS: Record<BulkActionEntityType, BulkActionType[]> = {
+export const ENTITY_ACTIONS: Record<BulkActionEntityType, BulkActionType[]> = {
   entity: ['update-status', 'assign', 'add-tags', 'export', 'delete'],
   document: ['add-tags', 'remove-tags', 'export', 'delete', 'archive'],
   ticket: ['update-status', 'assign', 'change-priority', 'escalate', 'export'],

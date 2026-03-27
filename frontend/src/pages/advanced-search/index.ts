@@ -1,1 +1,1 @@
-export { AdvancedSearchPage, default } from './AdvancedSearchPage'
+export { AdvancedSearchPage } from './AdvancedSearchPage'
