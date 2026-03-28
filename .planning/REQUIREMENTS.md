@@ -100,17 +100,61 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status          |
-| ----------- | ----- | --------------- |
-| —           | —     | Pending roadmap |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| NAV-01      | Phase 8  | Pending |
+| NAV-02      | Phase 8  | Pending |
+| NAV-03      | Phase 8  | Pending |
+| NAV-04      | Phase 8  | Pending |
+| NAV-05      | Phase 8  | Pending |
+| NAV-06      | Phase 8  | Pending |
+| LIFE-01     | Phase 9  | Pending |
+| LIFE-02     | Phase 9  | Pending |
+| LIFE-03     | Phase 9  | Pending |
+| LIFE-04     | Phase 9  | Pending |
+| LIFE-05     | Phase 9  | Pending |
+| LIFE-06     | Phase 9  | Pending |
+| OPS-01      | Phase 10 | Pending |
+| OPS-02      | Phase 10 | Pending |
+| OPS-03      | Phase 10 | Pending |
+| OPS-04      | Phase 10 | Pending |
+| OPS-05      | Phase 10 | Pending |
+| OPS-06      | Phase 10 | Pending |
+| OPS-07      | Phase 10 | Pending |
+| WORK-01     | Phase 11 | Pending |
+| WORK-02     | Phase 11 | Pending |
+| WORK-03     | Phase 11 | Pending |
+| WORK-04     | Phase 11 | Pending |
+| WORK-05     | Phase 11 | Pending |
+| WORK-06     | Phase 11 | Pending |
+| WORK-07     | Phase 11 | Pending |
+| WORK-08     | Phase 11 | Pending |
+| WORK-09     | Phase 11 | Pending |
+| WORK-10     | Phase 11 | Pending |
+| DOSS-01     | Phase 12 | Pending |
+| DOSS-02     | Phase 12 | Pending |
+| DOSS-03     | Phase 12 | Pending |
+| DOSS-04     | Phase 12 | Pending |
+| DOSS-05     | Phase 12 | Pending |
+| DOSS-06     | Phase 12 | Pending |
+| DOSS-07     | Phase 12 | Pending |
+| DOSS-08     | Phase 12 | Pending |
+| DOSS-09     | Phase 12 | Pending |
+| DOSS-10     | Phase 12 | Pending |
+| ABSORB-01   | Phase 13 | Pending |
+| ABSORB-02   | Phase 13 | Pending |
+| ABSORB-03   | Phase 13 | Pending |
+| ABSORB-04   | Phase 13 | Pending |
+| ABSORB-05   | Phase 13 | Pending |
+| ABSORB-06   | Phase 13 | Pending |
 
 **Coverage:**
 
-- v3.0 requirements: 39 total
-- Mapped to phases: 0
-- Unmapped: 39 (awaiting roadmap)
+- v3.0 requirements: 45 total
+- Mapped to phases: 45
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-03-28_
-_Last updated: 2026-03-28 after initial definition_
+_Last updated: 2026-03-28 after roadmap creation_
