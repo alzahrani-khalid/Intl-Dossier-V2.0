@@ -53,7 +53,18 @@ The codebase is production-ready after a 7-phase hardening milestone:
 
 ### Active
 
-(None — awaiting next milestone definition via `/gsd:new-milestone`)
+## Current Milestone: v3.0 Connected Workflow
+
+**Goal:** Transform disconnected pages into a connected hub-and-spoke architecture reflecting how diplomatic staff actually work — multiple entry points, engagement lifecycle, and operational overview.
+
+**Target features:**
+
+- Navigation & Route Consolidation (hub-based sidebar, eliminate duplicates, remove demos)
+- Operations Hub (dashboard redesign with attention zones, role-adaptive filters)
+- Engagement Workspace (lifecycle bar, tabbed workspace, scoped kanban/calendar)
+- Dossier Hub enriched detail pages (tier-specific views, RelationshipSidebar)
+- Feature Absorption (analytics, AI, network graph absorbed into contextual locations)
+- Lifecycle Engine (DB lifecycle_stage, stage transitions, forum sessions)
 
 ### Out of Scope
 
@@ -116,4 +127,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-28 after v2.0 milestone completion_
+_Last updated: 2026-03-28 after v3.0 milestone started_
