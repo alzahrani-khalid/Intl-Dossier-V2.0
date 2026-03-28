@@ -1,4 +1,4 @@
-# Intl-Dossier v2.0 — Production Quality Milestone
+# Intl-Dossier
 
 ## What This Is
 
@@ -6,13 +6,29 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 ## Core Value
 
-The codebase must be production-ready — clean, consistent, secure, performant, and fully responsive with proper RTL/LTR theming — before new features are built on top of it.
+Unified intelligence management for diplomatic operations — every relationship, commitment, and signal tracked in one secure, bilingual platform.
+
+## Current State
+
+**Shipped:** v2.0 Production Quality (2026-03-28)
+
+The codebase is production-ready after a 7-phase hardening milestone:
+
+- Unified toolchain (ESLint 9, Prettier, Knip, pre-commit hooks)
+- Consistent naming conventions enforced via ESLint
+- Security hardened (Supabase-first auth, RBAC, CSP, Zod validation, RLS on all tables)
+- RTL/LTR perfected (useDirection hook, LtrIsolate, logical properties, eslint-plugin-rtl-friendly)
+- Fully responsive (mobile-first, 44px touch targets, card view fallbacks)
+- Domain repository architecture (13 domains, zero raw fetch in hooks)
+- Performance optimized (200KB bundle budget, query tiers, deferred Sentry)
+
+**Tech debt (12 items):** See `.planning/milestones/v2.0-MILESTONE-AUDIT.md`
 
 ## Requirements
 
 ### Validated
 
-- ✓ 8 dossier types with CRUD (country, organization, forum, engagement, topic, working_group, person, elected_official) — existing
+- ✓ 8 dossier types with CRUD — existing
 - ✓ Dossier-to-dossier relationships and polymorphic documents — existing
 - ✓ Unified work items (tasks, commitments, intake) with Kanban workflow — existing
 - ✓ Dashboard with charts, widgets, and export — existing
@@ -27,52 +43,57 @@ The codebase must be production-ready — clean, consistent, secure, performant,
 - ✓ Code splitting with React.lazy() on all heavy routes — existing
 - ✓ Rate limiting consolidated to single middleware — existing
 - ✓ Error tracking via Sentry (frontend + backend) — existing
+- ✓ Dead code removal and unified toolchain — v2.0 Phase 1
+- ✓ Consistent naming conventions with ESLint enforcement — v2.0 Phase 2
+- ✓ Security hardening (auth, RBAC, CSP, Zod, RLS) — v2.0 Phase 3
+- ✓ RTL/LTR theming consistency — v2.0 Phase 4
+- ✓ Mobile/tablet responsiveness — v2.0 Phase 5
+- ✓ Domain repository architecture consolidation — v2.0 Phase 6
+- ✓ Performance optimization (bundle, query, render) — v2.0 Phase 7
 
 ### Active
 
-- ✓ Dead code removal — 691 unused files, 61 deps, 1330 exports removed; unified ESLint 9 + Knip + pre-commit hooks (Validated in Phase 1: dead-code-toolchain)
-- ✓ Naming & file structure — 18 hooks to camelCase, 12 component dirs to kebab-case, 35 standalone components into subdirs, 21 backend files renamed, ESLint filename enforcement added (Validated in Phase 2: naming-file-structure)
-- ✓ Code architecture consolidation — repository pattern for 13 domains, 6 backend service pairs deduplicated, shared patterns enforced (Validated in Phase 6: architecture-consolidation)
-- ✓ Performance optimization — bundle size budgets via size-limit, TanStack Query caching tiers, Redis reliability, re-render elimination with useMemo/useCallback, Core Web Vitals compliance (Validated in Phase 7: performance-optimization)
-- ✓ Security hardening — unified auth middleware (Supabase-first + JWT fallback), RBAC (role hierarchy, permissions, clearance), CSP hardened, Zod validation on all routes, RLS audit with org-scoped policies on all tables (Validated in Phase 3: security-hardening)
-- ✓ RTL/LTR theming consistency — useDirection() hook + LtrIsolate wrapper centralized, 787 per-component dir= removed, eslint-plugin-rtl-friendly enforces logical properties, all Recharts/React Flow wrapped (Validated in Phase 4: rtl-ltr-consistency)
-- ✓ Mobile/tablet responsiveness — full breakpoint audit, touch targets (44x44px min), mobile tables with card fallbacks, responsive navigation and forms (Validated in Phase 5: responsive-design)
+(None — awaiting next milestone definition via `/gsd:new-milestone`)
 
 ### Out of Scope
 
-- New features or dossier types — quality first, features later
 - Mobile native app — cancelled (code preserved in git history)
-- OAuth/social login — email/password sufficient for current phase
+- OAuth/social login — email/password sufficient; revisit if user base grows
 - Real-time chat — high complexity, not core to dossier management
 - Video content support — storage/bandwidth costs disproportionate to value
 
 ## Context
 
-- **Existing codebase:** ~60+ backend API endpoints, ~100+ frontend route files, 7 Supabase migrations, multiple Edge Functions
-- **Codebase map:** `.planning/codebase/` contains detailed analysis (STACK, ARCHITECTURE, STRUCTURE, CONVENTIONS, TESTING, INTEGRATIONS, CONCERNS)
-- **Known issues from CONCERNS.md:** Tech debt around inconsistent patterns, mixed RTL approaches, untested responsive breakpoints, potential RLS gaps
-- **Theming:** HeroUI v3 with oklch color system, dark/light/system modes, but theme switching has visual bugs
-- **RTL:** Phase 4 complete — centralized useDirection() hook, LtrIsolate for third-party libs, eslint-plugin-rtl-friendly enforcement, zero physical CSS properties, all 469 files migrated
-- **Responsive:** Mobile-first mandated in CLAUDE.md but not consistently implemented across all pages
-- **Dependencies:** Cleaned — 61 unused packages removed in Phase 1; AI/ML deps audited (kept anthropic, openai, mastra, xenova; removed langchain)
-- **Naming:** Phase 2 complete — all file/directory naming conventions enforced via ESLint `check-file` plugin; hooks (camelCase), component dirs (kebab-case), backend services/models (kebab-case with suffixes)
-- **Security:** Phase 3 complete — unified Supabase-first auth, RBAC with hierarchical roles, CSP hardened with explicit origins, all API routes use Zod validation (express-validator fully removed), RLS enabled on all tables with org-scoped policies, 50+ security tests
+- **Codebase:** 294 commits, 8732 files, ~60+ backend API endpoints, ~100+ frontend route files, 8 Supabase migrations
+- **Tech stack:** React 19, TypeScript 5.9, TanStack Router/Query v5, Express, Supabase (PostgreSQL 17), HeroUI v3, Tailwind v4, Vite
+- **Architecture:** Domain repository pattern across 13 domains, shared apiClient, backward-compat re-exports
+- **Quality gates:** ESLint 9 flat config, Prettier, Knip, pre-commit hooks (lint + format + build + dead-code), size-limit (200KB budget)
+- **Security:** Supabase-first auth with RBAC hierarchy, Zod validation on all routes, RLS on all tables, CSP hardened
+- **RTL:** useDirection() hook, LtrIsolate wrapper, eslint-plugin-rtl-friendly, zero physical CSS properties
+- **Responsive:** Mobile-first across all pages, 44px touch targets, card view fallbacks on tables
+- **Known tech debt:** 12 items documented in milestone audit (ESLint strict rules deferred, rtl-friendly at warn level, no automated breakpoint tests, 36 legacy hooks with literal staleTime)
 
 ## Constraints
 
-- **Tech stack**: Must stay within current stack (React 19, Express, Supabase, TanStack, HeroUI v3, Tailwind v4) — no framework migrations
-- **Backwards compatibility**: All existing features must continue working after cleanup — no regressions
+- **Tech stack**: React 19, Express, Supabase, TanStack, HeroUI v3, Tailwind v4 — no framework migrations
 - **Bilingual**: Arabic (RTL) and English (LTR) must both work correctly after every change
-- **Database**: Supabase managed PostgreSQL — migrations via Supabase MCP, no direct DB access changes
-- **Deployment**: DigitalOcean droplet with Docker Compose — changes must be deployable via existing pipeline
+- **Database**: Supabase managed PostgreSQL — migrations via Supabase MCP
+- **Deployment**: DigitalOcean droplet with Docker Compose
+- **Quality**: All v2.0 quality gates must remain green (ESLint, Prettier, Knip, size-limit, pre-commit hooks)
 
 ## Key Decisions
 
-| Decision                          | Rationale                                   | Outcome   |
-| --------------------------------- | ------------------------------------------- | --------- |
-| Full stack scope                  | Backend and frontend both need quality pass | — Pending |
-| Quality before features           | Fragile foundation makes new features risky | — Pending |
-| No new features in this milestone | Keeps scope focused on hardening            | — Pending |
+| Decision                          | Rationale                                     | Outcome    |
+| --------------------------------- | --------------------------------------------- | ---------- |
+| Full stack scope                  | Backend and frontend both need quality pass   | ✓ Good     |
+| Quality before features           | Fragile foundation makes new features risky   | ✓ Good     |
+| No new features in this milestone | Keeps scope focused on hardening              | ✓ Good     |
+| Supabase-first auth               | Unified auth strategy, JWT as fallback        | ✓ Good     |
+| Domain repository pattern         | Consistent data flow, zero raw fetch          | ✓ Good     |
+| useDirection() over prop drilling | Centralized RTL, no per-component dir=        | ✓ Good     |
+| size-limit as hard CI gate        | Bundle budget enforced, Lighthouse advisory   | ✓ Good     |
+| ESLint strict rules deferred      | 4500+ violations too large for this milestone | ⚠️ Revisit |
+| rtl-friendly at warn level        | Error-level no-restricted-syntax covers it    | ⚠️ Revisit |
 
 ## Evolution
 
@@ -95,4 +116,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-27 after Phase 7 completion — all 7 phases of Production Quality Milestone complete_
+_Last updated: 2026-03-28 after v2.0 milestone completion_
