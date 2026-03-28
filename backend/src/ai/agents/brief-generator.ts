@@ -11,7 +11,7 @@
  */
 
 import { llmRouter, LLMRouterConfig, StreamChunk } from '../llm-router.js'
-import { briefContextService, BriefContext } from '../../services/BriefService.js'
+import { briefContextService, BriefContext } from '../../services/brief.service.js'
 import { supabaseAdmin } from '../../config/supabase.js'
 import { defineAgent, createAgentTools } from '../mastra-config.js'
 import logger from '../../utils/logger.js'

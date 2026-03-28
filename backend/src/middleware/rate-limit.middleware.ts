@@ -3,7 +3,7 @@
 import rateLimit from 'express-rate-limit'
 import { Request, Response, NextFunction } from 'express'
 import { logWarn, logError } from '../utils/logger'
-import supabase from '../config/supabase'
+import { supabaseAdmin as supabase } from '../config/supabase'
 import { redis } from '../config/redis'
 import type Redis from 'ioredis'
 
