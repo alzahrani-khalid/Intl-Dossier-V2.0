@@ -1,465 +1,756 @@
 # Architecture Patterns
 
-**Domain:** Production-quality hardening of a React 19 + Express + Supabase diplomatic dossier monorepo
-**Researched:** 2026-03-23
+**Domain:** Hub-and-spoke navigation redesign for diplomatic dossier management system
+**Researched:** 2026-03-28
+**Confidence:** HIGH (based on direct codebase analysis of existing patterns)
 
-## Recommended Architecture
+## Current Architecture Snapshot
 
-### Target State: Cleaned Layered Monorepo
-
-The existing architecture (hexagonal backend, domain-driven frontend, TanStack Router/Query) is fundamentally sound. The problem is not the architecture itself but **inconsistent adherence** to it. The cleanup must enforce the patterns that already exist rather than introduce new ones.
+### Route Tree (TanStack Router v5, file-based)
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    MONOREPO (Turborepo)                  │
-├──────────────────────┬──────────────────────────────────┤
-│   BACKEND            │   FRONTEND                       │
-│                      │                                  │
-│   ┌──────────┐       │   ┌───────────────┐              │
-│   │ API      │       │   │ Routes        │              │
-│   │ (Express)│       │   │ (TanStack)    │              │
-│   └────┬─────┘       │   └──────┬────────┘              │
-│        │             │          │                       │
-│   ┌────┴─────┐       │   ┌──────┴────────┐              │
-│   │ Services │       │   │ Domains       │              │
-│   │ (kebab)  │       │   │ (repos+hooks) │              │
-│   └────┬─────┘       │   └──────┬────────┘              │
-│        │             │          │                       │
-│   ┌────┴─────┐       │   ┌──────┴────────┐              │
-│   │ Adapters │       │   │ Components    │              │
-│   │ (Supa/AI)│       │   │ (ui/ + feat/) │              │
-│   └────┬─────┘       │   └──────┬────────┘              │
-│        │             │          │                       │
-│   ┌────┴─────┐       │   ┌──────┴────────┐              │
-│   │ Core     │       │   │ Design System │              │
-│   │ (Domain) │       │   │ (tokens+RTL)  │              │
-│   └──────────┘       │   └───────────────┘              │
-├──────────────────────┴──────────────────────────────────┤
-│   SHARED: types, constants, validation schemas          │
-│   SUPABASE: migrations, Edge Functions, seed data       │
-└─────────────────────────────────────────────────────────┘
+__root.tsx                          # ErrorBoundary, KeyboardShortcutProvider, DossierContextProvider
+  _protected.tsx                    # Auth guard (Supabase session), MainLayout shell, ChatDock
+    dashboard.tsx                   # Lazy-loaded DashboardPage
+    dossiers/
+      index.tsx                     # All-dossiers hub
+      countries/index.tsx           # Country list
+      countries/$id.tsx             # Country detail
+      engagements/index.tsx         # Engagement list
+      engagements/$id.tsx           # Engagement detail (EngagementDossierPage)
+      forums/$id.tsx                # Forum detail
+      organizations/$id.tsx         # Org detail
+      persons/$id.tsx               # Person detail
+      topics/$id.tsx                # Topic detail
+      working_groups/$id.tsx        # Working group detail
+    engagements.tsx                 # DUPLICATE: flat engagement list
+    engagements/$engagementId.tsx   # DUPLICATE: flat engagement detail
+    engagements/$engagementId/after-action.tsx
+    calendar.tsx                    # Global calendar
+    kanban.tsx                      # Global kanban
+    intake/                         # Intake queue (index, new, queue, tickets.$id)
+    my-work/                        # My work (index, board, assignments, intake, waiting)
+    tasks/                          # Tasks (index, $id, escalations, queue)
+    ... ~40 more flat routes (analytics, briefs, intelligence, demos, etc.)
 ```
 
-### Component Boundaries
+**Key observations:**
 
-| Component                                       | Responsibility                                         | Communicates With                       |
-| ----------------------------------------------- | ------------------------------------------------------ | --------------------------------------- |
-| **API Layer** (backend/src/api/)                | HTTP routing, request validation, response formatting  | Services only (never adapters directly) |
-| **Services** (backend/src/services/)            | Business logic orchestration, transaction coordination | Adapters, Core Domain                   |
-| **Adapters** (backend/src/adapters/)            | External system integration (Supabase, AI, email)      | Core Domain types                       |
-| **Core Domain** (backend/src/core/)             | Business rules, entities, value objects                | Nothing (no external deps)              |
-| **Routes** (frontend/src/routes/)               | Page composition, URL state, data loading              | Domain hooks, Components                |
-| **Domains** (frontend/src/domains/)             | API clients, query hooks, domain logic                 | API layer via HTTP                      |
-| **Components** (frontend/src/components/)       | Reusable UI rendering                                  | Props only (no direct API calls)        |
-| **Design System** (frontend/src/components/ui/) | Primitives, tokens, RTL/responsive primitives          | Nothing (leaf layer)                    |
+- Dossier routes already live under `/dossiers/{type}/` -- aligns with spec
+- Duplicate routes exist: `/engagements.tsx` AND `/dossiers/engagements/` (both render same data)
+- `/persons.tsx` AND `/dossiers/persons/` are also duplicated
+- ~10 demo pages (`*-demo.tsx`) pollute production navigation
+- No `elected-officials` route or domain exists anywhere
+- `working_groups` uses underscore (spec wants `working-groups` with hyphen)
+- No nested layout routes under engagement detail (no `$id/tasks`, `$id/calendar`, etc.)
+
+### Domain Repository Pattern (20 domains)
+
+Each domain follows this exact structure:
+
+```
+frontend/src/domains/{name}/
+  types/index.ts          # Re-exports from @/types + domain-specific interfaces
+  repositories/{name}.repository.ts  # Plain function exports using apiGet/apiPost/apiPatch/apiDelete
+  hooks/use{Name}.ts      # TanStack Query hooks with query key factory
+  index.ts                # Barrel re-export
+```
+
+**Existing domains:** ai, analytics, audit, briefings, calendar, documents, dossiers, engagements, import, intake, misc, persons, positions, relationships, search, shared, tags, topics, work-items
+
+**NOT existing:** elected-officials (the 8th dossier type has no domain)
+
+### Navigation Structure (current)
+
+`navigation-config.ts` defines 6+ sections:
+
+1. **Dossiers Hub** -- All Dossiers, Recent Activity
+2. **My Work** -- List View, Board View
+3. **Requests** -- Incoming Requests (with badge), Awaiting Response (with badge)
+4. **Main** -- Dashboard, Custom Dashboard, Approvals, Positions, After Actions
+5. **Tools** -- Calendar, Briefs, Briefing Books, Intelligence, Analytics, Reports, SLA Monitoring
+6. **Documents** -- Data Library, Word Assistant
+7. **Admin** (conditional) -- System, Approvals, AI Usage/Settings, Users, Monitoring, Export, Tags, Webhooks, Workflow
+
+`AppSidebar.tsx` renders these via `NavMain` component with collapsible groups, plus SidebarSearch, QuickNavigationMenu, ThemeSelector, LanguageToggle, NavUser.
+
+### Component Architecture
+
+- **Pages:** `frontend/src/pages/dossiers/{Type}DossierPage.tsx` -- 7 type-specific pages exist (no elected officials)
+- **Detail components:** `frontend/src/components/dossier/{Type}DossierDetail.tsx` -- renders actual content
+- **Layout wrapper:** `DossierDetailLayout.tsx` -- shared header, grid layout, actions slot
+- **Route files:** thin wrappers that validate dossier type + lazy-load page component via `React.lazy`
+- **Dialog pattern:** Features like Kanban open as dialogs (`EngagementKanbanDialog`) from the detail page, not as separate routes
 
 ### Data Flow
 
 ```
-User Action
-  → Route Component (URL state via TanStack Router)
-    → Domain Hook (TanStack Query key + fetch fn)
-      → Domain Repository (API client, builds HTTP request)
-        → Backend API Controller (validates, authenticates)
-          → Service (orchestrates business logic)
-            → Adapter (Supabase query / AI call)
-              → Database / External Service
+Route ($id.tsx) --> useDossier(id) --> DossierPage.tsx --> DossierDetailLayout --> {Type}DossierDetail
+                                                       --> Feature dialogs (Kanban, AfterAction)
 ```
 
-**Critical rule:** Every frontend data fetch MUST go through a domain repository, never raw `fetch()` in hooks or components. Currently only 3 domain repositories exist (document, engagement, relationship) while 90+ hooks exist -- many bypass this pattern.
+Engagement domain already has: CRUD, participants, agenda, kanban, briefs, recommendations -- all as repository functions with corresponding TanStack Query hooks.
 
-## Recommended Cleanup Order
+---
 
-The cleanup has hard dependencies. Doing them out of order wastes effort.
+## Recommended Architecture for v3.0
 
-### Phase 1: Dead Code Elimination (no dependencies)
+### 1. Route Restructuring Strategy
 
-**Why first:** Removing dead code reduces the surface area for all subsequent work. Every pattern you enforce on dead code is wasted effort.
+#### Step A: Consolidation (prerequisite -- zero new features)
 
-**Strategy:**
+**Delete duplicate flat routes** that are superseded by `/dossiers/{type}/`:
 
-1. Install and configure **Knip** (`npx knip`) -- the standard tool for TypeScript dead code detection in monorepos. It finds unused exports, files, dependencies, and dev dependencies across workspaces.
-2. Run Knip with `--include files,exports,dependencies` to get a baseline report.
-3. **High-confidence removals** (Knip reports + manual verification):
-   - Mobile-era components: `bottom-sheet.tsx`, `swipeable-card.tsx`, `pull-to-refresh-*.tsx`, `thumb-zone-safe-area.tsx`, `floating-action-button.tsx`, `context-aware-fab.tsx`, `mobile-action-bar.tsx`, `useHapticFeedback.ts`
-   - `ChatContext.tsx` (real-time chat is out of scope)
-   - `heroui-forms.tsx`, `heroui-modal.tsx` (dead code per MEMORY.md -- import from `@heroui/react` which is not installed)
-   - Duplicate services: `contact-service.ts` vs `ContactService.ts` vs `contact-service-enhanced.ts`, `export.service.ts` vs `ExportService.ts`, `search.service.ts` vs `SearchService.ts`
-   - `service-stubs.ts` (leftover experiment)
-4. Run `pnpm build` after each batch to catch regressions.
+| Delete                                       | Canonical Route                      |
+| -------------------------------------------- | ------------------------------------ |
+| `engagements.tsx`                            | `/dossiers/engagements/index.tsx`    |
+| `engagements/$engagementId.tsx`              | `/dossiers/engagements/$id.tsx`      |
+| `engagements/$engagementId/after-action.tsx` | Absorbed into workspace              |
+| `persons.tsx`                                | `/dossiers/persons/index.tsx`        |
+| `persons/$personId.tsx`                      | `/dossiers/persons/$id.tsx`          |
+| `contacts.tsx`                               | Already served by persons            |
+| `countries.tsx`                              | `/dossiers/countries/index.tsx`      |
+| `organizations.tsx`                          | `/dossiers/organizations/index.tsx`  |
+| `forums.tsx`                                 | `/dossiers/forums/index.tsx`         |
+| `working-groups.tsx`                         | `/dossiers/working_groups/index.tsx` |
 
-**Tool:** Knip v5+ (HIGH confidence -- standard tool, 100+ framework plugins including Vite, Vitest, TanStack Router)
+**Rename `working_groups` to `working-groups`** in route directories for URL consistency.
 
-### Phase 2: Naming Convention Enforcement (depends on Phase 1)
+**Gate demo pages behind `VITE_DEV_MODE`:** Move 10+ `*-demo.tsx` routes to a `_dev` layout route that checks the env flag.
 
-**Why second:** Before enforcing patterns, all files must follow the same naming. Currently mixed:
+**Add redirect routes** from old paths to new canonical paths for any bookmarked URLs.
 
-- Backend services: PascalCase (`ContactService.ts`) AND kebab-case (`contact-service.ts`)
-- Frontend hooks: camelCase (`useAuth.ts`) AND kebab-case (`use-theme.ts`)
+#### Step B: Engagement Workspace -- Nested Layout Route
 
-**Target conventions:**
-| Layer | Convention | Example |
-|-------|-----------|---------|
-| Backend services | kebab-case.service.ts | `contact.service.ts` |
-| Backend API routes | kebab-case.ts | `task-contributors.ts` |
-| Frontend hooks | camelCase with use prefix | `useAuth.ts` |
-| Frontend components | PascalCase.tsx | `DossierCard.tsx` |
-| Frontend UI primitives | kebab-case.tsx | `button.tsx` |
-| Types | kebab-case.types.ts | `work-item.types.ts` |
+This is the most architecturally significant change. TanStack Router v5 supports nested layout routes perfectly -- the project already uses this pattern with `_protected.tsx` wrapping all authenticated routes via `<Outlet />`.
 
-**Tool:** ESLint with `eslint-plugin-filenames` or a custom Knip configuration for naming consistency. Rename via `git mv` to preserve history.
-
-### Phase 3: Domain Repository Consolidation (depends on Phase 2)
-
-**Why third:** This is the most impactful pattern enforcement. Currently hooks call APIs directly with raw fetch. All data access must go through domain repositories.
-
-**Target state for each domain:**
+**New route structure:**
 
 ```
-frontend/src/domains/{feature}/
-  ├── types/           # TypeScript types for this domain
-  ├── repositories/    # API clients (one per backend resource)
-  ├── hooks/           # TanStack Query hooks (call repositories, never fetch)
-  ├── services/        # Client-side business logic (rare)
-  └── index.ts         # Barrel export
+routes/_protected/dossiers/engagements/
+  index.tsx                     # Engagement list (existing, unchanged)
+  $id.tsx                       # BECOMES layout route with WorkspaceShell + Outlet
+  $id/
+    index.tsx                   # Overview tab (default)
+    context.tsx                 # Context tab (linked dossiers)
+    tasks.tsx                   # Tasks tab (scoped kanban)
+    calendar.tsx                # Calendar tab (scoped events)
+    docs.tsx                    # Docs tab (with AI briefing action)
+    audit.tsx                   # Audit tab (scoped timeline)
 ```
 
-**Current gap:** Only 3 domains exist (document, engagement, relationship). Need domains for: country, organization, forum, topic, working-group, person, elected-official, work-item, calendar, intelligence, position, search, ai-briefing.
-
-**Migration strategy:**
-
-1. For each backend API area, create matching frontend domain directory
-2. Extract `fetch()` calls from hooks into repository classes
-3. Hooks become thin wrappers: `useQuery({ queryKey: [...], queryFn: () => repo.get(id) })`
-4. Co-locate query key factories in each domain: `domains/{feature}/keys.ts`
-
-### Phase 4: Design System Architecture (depends on Phase 1)
-
-**Why here:** After dead code is removed, consolidate the UI layer.
-
-See detailed section below on RTL/Theming architecture.
-
-### Phase 5: Backend Service Deduplication (depends on Phase 1, 2)
-
-**Why last on backend:** Services are the most complex to refactor. Need naming conventions settled first.
-
-**Current problem:** 90+ services with overlapping responsibilities and inconsistent patterns.
-
-**Strategy:**
-
-1. Map service-to-route dependencies (which API routes use which services)
-2. Identify true duplicates (e.g., `contact-service.ts` vs `ContactService.ts`)
-3. Consolidate into domain-aligned services matching the hexagonal architecture
-4. Every service should be injectable via the existing `container/` DI setup
-
-## RTL/LTR Theming Architecture (System-Wide)
-
-### Problem Statement
-
-RTL support is currently handled per-component with `isRTL ? 'rtl' : 'ltr'` checks scattered everywhere. This is fragile and leads to inconsistency. The CLAUDE.md has React Native RTL rules that no longer apply (mobile cancelled), while web uses Tailwind logical properties inconsistently.
-
-### Recommended Architecture: Three-Layer RTL System
-
-```
-Layer 1: Document Direction (set ONCE at root)
-  ├── <html dir="rtl" lang="ar"> or <html dir="ltr" lang="en">
-  └── Set by LanguageProvider on language change
-
-Layer 2: CSS Logical Properties (enforced by linter)
-  ├── Tailwind: ms-*, me-*, ps-*, pe-*, text-start, text-end
-  ├── BANNED: ml-*, mr-*, pl-*, pr-*, text-left, text-right
-  └── ESLint rule: custom or tailwindcss/no-physical-properties
-
-Layer 3: Component-Level RTL (ONLY for exceptions)
-  ├── Directional icons: className={isRTL ? 'rotate-180' : ''}
-  ├── Third-party components without logical property support
-  └── Canvas/SVG rendering that needs manual flip
-```
-
-### Implementation Details
-
-**Layer 1 -- Root Direction Provider:**
+**Key pattern -- `$id.tsx` becomes a layout route:**
 
 ```typescript
-// frontend/src/providers/direction-provider.tsx
-// Single source of truth for document direction
-export function DirectionProvider({ children }: { children: React.ReactNode }) {
-  const { i18n } = useTranslation();
-  const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+// routes/_protected/dossiers/engagements/$id.tsx
+import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { WorkspaceShell } from '@/components/workspace/WorkspaceShell'
+import { LifecycleBar } from '@/components/workspace/LifecycleBar'
+import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
 
-  useEffect(() => {
-    document.documentElement.dir = dir;
-    document.documentElement.lang = i18n.language;
-  }, [dir, i18n.language]);
+export const Route = createFileRoute('/_protected/dossiers/engagements/$id')({
+  component: EngagementWorkspaceLayout,
+})
 
-  return <DirectionContext.Provider value={{ dir, isRTL: dir === 'rtl' }}>{children}</DirectionContext.Provider>;
+function EngagementWorkspaceLayout() {
+  const { id } = Route.useParams()
+  const { data: engagement, isLoading } = useEngagement(id)
+
+  if (isLoading) return <WorkspaceSkeleton />
+  if (!engagement) return <NotFound />
+
+  return (
+    <WorkspaceShell
+      engagement={engagement}
+      lifecycleBar={
+        <LifecycleBar stage={engagement.lifecycle_stage} engagementId={id} />
+      }
+      tabs={[
+        { id: 'overview', path: '.', label: 'Overview' },
+        { id: 'context', path: './context', label: 'Context' },
+        { id: 'tasks', path: './tasks', label: 'Tasks' },
+        { id: 'calendar', path: './calendar', label: 'Calendar' },
+        { id: 'docs', path: './docs', label: 'Docs' },
+        { id: 'audit', path: './audit', label: 'Audit' },
+      ]}
+    >
+      <Outlet />
+    </WorkspaceShell>
+  )
 }
 ```
 
-**Key principle:** Individual components should NEVER set `dir=` on their containers. Direction flows from the document root. The only exception is embedding LTR content inside RTL (e.g., code blocks, English quotes inside Arabic text).
+**Why this works:** TanStack Router v5 file-based routing treats `$id.tsx` as a layout when a `$id/` directory also exists. The layout component wraps `<Outlet />` which renders the child route. The workspace shell (header, lifecycle bar, tabs) persists across tab navigation with zero re-mount.
 
-**Layer 2 -- ESLint Enforcement:**
+**Same pattern applies to Forums:**
 
-```javascript
-// .eslintrc.js addition
-// Ban physical directional classes in Tailwind
-rules: {
-  'no-restricted-syntax': ['error', {
-    selector: 'Literal[value=/\\b(ml-|mr-|pl-|pr-|text-left|text-right|left-|right-|rounded-l-|rounded-r-)\\b/]',
-    message: 'Use logical properties (ms-*, me-*, ps-*, pe-*, text-start, text-end, start-*, end-*, rounded-s-*, rounded-e-*)'
-  }]
-}
+```
+routes/_protected/dossiers/forums/
+  $id.tsx                       # Forum workspace layout
+  $id/
+    index.tsx                   # Forum overview (sessions list)
+    sessions/$sessionId.tsx     # Session mini-workspace layout
+    sessions/$sessionId/
+      index.tsx                 # Session overview
+      tasks.tsx                 # Session tasks
 ```
 
-**Layer 3 -- RTL Utility Hook:**
+#### Step C: Enriched Dossier Detail Pages
+
+Non-workspace dossier types (countries, organizations, topics, working-groups, persons, elected-officials) keep the current `$id.tsx` pattern but add tab-based navigation within the page component (NOT nested routes).
+
+**Rationale for NOT using nested routes for non-workspace types:**
+
+- Workspace types (engagements, forums) have heavy tab content (kanban, calendar) worth code-splitting
+- Anchor/thread/contact types have lightweight tabs (overview, engagements list, docs) better served by client-side tab state
+- Keeps the route tree manageable (avoiding 8 types x 6 tabs = 48 route files)
+- Existing `DossierDetailLayout` already supports this with an actions slot
+
+**Add RelationshipSidebar** rendered inside `DossierDetailLayout`:
 
 ```typescript
-// frontend/src/hooks/useDirection.ts
-export function useDirection() {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
-  return {
-    isRTL,
-    dir: isRTL ? 'rtl' : 'ltr',
-    flipIcon: (className?: string) =>
-      isRTL ? `${className ?? ''} rotate-180`.trim() : (className ?? ''),
-  };
+interface DossierDetailLayoutProps {
+  dossier: Dossier
+  children: React.ReactNode
+  headerActions?: React.ReactNode
+  sidebar?: React.ReactNode // NEW: RelationshipSidebar slot
+  gridClassName?: string
 }
 ```
 
-### Theming Architecture
+#### Step D: Operations Hub Route Changes
 
-The existing HeroUI v3 theme system (oklch variables, dark/light/system modes) is correct. The cleanup should:
+The dashboard route stays at `/dashboard` (no change). The page component gets redesigned:
 
-1. **Consolidate CSS custom properties** in `index.css` under clear sections: colors, spacing, radius, typography
-2. **Remove duplicate theme logic** -- ensure `ThemeProvider` and `use-theme.ts` are the single source of truth
-3. **Design tokens as CSS variables** (already partially done with `--heroui-*`):
+```
+routes/_protected/
+  dashboard.tsx                 # Same route, new DashboardPage internals
+  tasks/index.tsx               # Already exists -- becomes "My Tasks"
+  calendar.tsx                  # Already exists -- unchanged
+  intake/index.tsx              # Already exists -- unchanged
+```
 
-```css
-/* frontend/src/index.css -- organized token sections */
-@layer base {
-  :root {
-    /* === Spacing Scale === */
-    --space-xs: 0.25rem;
-    --space-sm: 0.5rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
+No route restructuring needed for Operations Hub. The work is all in the page components.
 
-    /* === Radius (multiplicative via HeroUI) === */
-    --radius: 0.5rem;
+#### Step E: Admin Route Consolidation
 
-    /* === Colors (oklch via HeroUI) === */
-    /* Defined per-theme in existing system */
+```
+routes/_protected/admin/
+  audit-logs.tsx                # Move from top-level audit-logs.tsx
+  compliance.tsx                # Move/rename from existing compliance-demo.tsx
+  settings.tsx                  # Move from top-level settings.tsx
+```
+
+### 2. New Domain: `elected-officials`
+
+**Create the full domain structure:**
+
+```
+frontend/src/domains/elected-officials/
+  types/index.ts
+  repositories/elected-officials.repository.ts
+  hooks/useElectedOfficials.ts
+  index.ts
+```
+
+**Type definition extends the person pattern:**
+
+```typescript
+// domains/elected-officials/types/index.ts
+export interface ElectedOfficial {
+  id: string
+  dossier_id: string
+  person_id?: string
+  full_name_en: string
+  full_name_ar: string
+  title_en: string
+  title_ar: string
+  office: string
+  term_start: string
+  term_end?: string
+  party?: string
+  committees: Committee[]
+  contact_info?: ContactInfo
+  created_at: string
+  updated_at: string
+}
+
+export interface Committee {
+  id: string
+  name_en: string
+  name_ar: string
+  role: 'chair' | 'member' | 'observer'
+}
+```
+
+**Repository follows existing pattern exactly** (apiGet/apiPost/apiPatch/apiDelete).
+
+**Hook follows engagement hook pattern** (query key factory, CRUD mutations with toast).
+
+**Update `dossier-routes.ts`:**
+
+```typescript
+export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
+  // ... existing entries
+  elected_official: 'elected-officials', // ADD
+}
+```
+
+**Backend:** Needs new API routes at `/api/elected-official-dossiers` following existing dossier endpoint patterns. Must verify `elected_officials` table exists in Supabase via MCP -- if not, needs a migration.
+
+### 3. New Shared Components
+
+#### WorkspaceShell
+
+The core workspace layout component for engagements and forums.
+
+```
+frontend/src/components/workspace/
+  WorkspaceShell.tsx          # Layout: header + lifecycle bar + tabs + content area
+  LifecycleBar.tsx            # 6-stage progress indicator
+  WorkspaceHeader.tsx         # Engagement title, metadata, action buttons
+  WorkspaceTabs.tsx           # Tab navigation using TanStack Router Links
+  WorkspaceSkeleton.tsx       # Loading state
+```
+
+**WorkspaceShell architecture:**
+
+```typescript
+interface WorkspaceShellProps {
+  engagement: EngagementFullProfile
+  lifecycleBar: React.ReactNode
+  tabs: Array<{ id: string; path: string; label: string; badge?: number }>
+  children: React.ReactNode // Outlet content
+}
+```
+
+**Tab implementation uses TanStack Router `<Link>` components** with `activeProps` for active state, NOT client-side tab state. This gives:
+
+- URL-driven tab state (shareable, bookmarkable)
+- Browser back/forward works across tabs
+- Each tab content is its own route (code-split independently)
+
+#### LifecycleBar
+
+Horizontal stepper showing the 6 engagement stages.
+
+```typescript
+type LifecycleStage = 'intake' | 'preparation' | 'briefing' | 'execution' | 'follow_up' | 'closed'
+
+interface LifecycleBarProps {
+  stage: LifecycleStage
+  engagementId: string
+  onStageClick?: (stage: LifecycleStage) => void
+  canTransition?: boolean
+  suggestedNextStage?: LifecycleStage
+}
+```
+
+Build with HeroUI stepper or custom component. Each stage is clickable. Current stage is filled, completed stages have checkmarks, future stages are dimmed. Must be responsive (horizontal on desktop, vertical or compressed on mobile) and RTL-safe (stage flow direction reverses).
+
+#### RelationshipSidebar
+
+Collapsible right panel for all dossier detail pages.
+
+```typescript
+interface RelationshipSidebarProps {
+  dossierId: string
+  dossierType: string
+  isOpen: boolean
+  onToggle: () => void
+}
+```
+
+Uses existing `useRelationships` hook from the relationships domain. Groups linked dossiers by tier (anchors, activities, threads, contacts). Each linked dossier renders as a `DossierCard` (compact variant).
+
+**Integration point:** Add to `DossierDetailLayout` as an optional right panel. Use CSS grid for the two-column layout when sidebar is open.
+
+#### AttentionCard
+
+Used in Operations Hub for overdue/due-soon items.
+
+```typescript
+interface AttentionCardProps {
+  item: WorkItem | IntakeTicket | Commitment
+  severity: 'overdue' | 'due_soon' | 'at_risk'
+  onClick: () => void
+}
+```
+
+#### StageKanban
+
+Lifecycle-aware variant of the existing kanban that groups columns by lifecycle stage instead of workflow stage.
+
+```typescript
+interface StageKanbanProps {
+  engagementId: string
+  groupBy: 'workflow_stage' | 'lifecycle_stage'
+}
+```
+
+Extends existing `useEngagementKanban` hook. Adds `lifecycle_stage` as an optional grouping dimension.
+
+### 4. Sidebar Refactor
+
+**Replace `navigation-config.ts` contents** with new hub-based structure:
+
+```typescript
+export const createNavigationSections = (
+  counts: { intake: number; waiting: number; attention: number },
+  isAdmin: boolean,
+): NavigationSection[] => [
+  {
+    id: 'operations',
+    label: 'navigation.operations',
+    items: [
+      { id: 'dashboard', label: 'navigation.dashboard', path: '/dashboard', icon: LayoutDashboard },
+      { id: 'my-tasks', label: 'navigation.myTasks', path: '/tasks', icon: CheckSquare },
+      { id: 'calendar', label: 'navigation.calendar', path: '/calendar', icon: CalendarDays },
+      {
+        id: 'intake',
+        label: 'navigation.intake',
+        path: '/intake',
+        icon: Inbox,
+        badgeCount: counts.intake,
+      },
+    ],
+  },
+  {
+    id: 'dossiers',
+    label: 'navigation.dossiers',
+    items: [
+      // Anchors
+      { id: 'countries', path: '/dossiers/countries', icon: Globe },
+      { id: 'organizations', path: '/dossiers/organizations', icon: Building2 },
+      // Activities
+      { id: 'engagements', path: '/dossiers/engagements', icon: Handshake },
+      { id: 'forums', path: '/dossiers/forums', icon: Users },
+      // Threads
+      { id: 'topics', path: '/dossiers/topics', icon: Tag },
+      { id: 'working-groups', path: '/dossiers/working-groups', icon: Network },
+      // Contacts
+      { id: 'persons', path: '/dossiers/persons', icon: User },
+      { id: 'elected-officials', path: '/dossiers/elected-officials', icon: Crown },
+    ],
+  },
+  ...(isAdmin
+    ? [
+        {
+          id: 'administration',
+          label: 'navigation.administration',
+          items: [
+            { id: 'audit-logs', path: '/admin/audit-logs', icon: ScrollText },
+            { id: 'compliance', path: '/admin/compliance', icon: Shield },
+            { id: 'settings', path: '/admin/settings', icon: Settings },
+          ],
+        },
+      ]
+    : []),
+]
+```
+
+**What gets removed from sidebar:**
+
+- Custom Dashboard, Approvals, Positions, After Actions (absorbed into dossier context)
+- Briefs, Briefing Books, Intelligence (absorbed into workspace Docs tab)
+- Analytics, Reports, SLA Monitoring (absorbed into dashboard widgets)
+- Data Library, Word Assistant (moved to admin or contextual actions)
+
+**`AppSidebar.tsx` changes are minimal** -- it already delegates to `createNavigationSections` via `NavMain`. Add tier sub-labels within the Dossiers section (visual grouping). Keep Search, QuickNavigation, Theme/Language controls, NavUser unchanged.
+
+### 5. Lifecycle State Flow
+
+```
+                     +---------+
+                     | Supabase|
+                     | DB      |
+                     +----+----+
+                          |
+                  engagements.lifecycle_stage (enum)
+                          |
+              +-----------+-----------+
+              |                       |
+     Backend API                  Realtime
+     PATCH /engagement-dossiers/:id   subscription
+     { lifecycle_stage: 'preparation' }
+              |                       |
+              v                       v
+     engagements.repository.ts    Supabase channel
+     updateEngagement(id,          on('UPDATE')
+       { lifecycle_stage })           |
+              |                       |
+              v                       v
+     useUpdateEngagement()        queryClient.invalidateQueries
+     mutation                     (['engagements', 'detail', id])
+              |
+              v
+     LifecycleBar component
+     (reads from engagement.lifecycle_stage)
+     (onClick triggers useUpdateEngagement)
+```
+
+**Stage transition logic** lives in a new hook within the engagements domain:
+
+```typescript
+// domains/engagements/hooks/useLifecycleTransition.ts
+const STAGE_ORDER: LifecycleStage[] = [
+  'intake',
+  'preparation',
+  'briefing',
+  'execution',
+  'follow_up',
+  'closed',
+]
+
+export function useLifecycleTransition(engagementId: string) {
+  const { data: engagement } = useEngagement(engagementId)
+  const { data: kanban } = useEngagementKanban(engagementId)
+  const updateEngagement = useUpdateEngagement()
+
+  const canAdvance = useMemo(() => {
+    // Check if current stage tasks are complete
+    const currentIndex = STAGE_ORDER.indexOf(engagement?.lifecycle_stage ?? 'intake')
+    // All tasks tagged with current stage should be done
+    return true // Simplified -- real logic checks task completion
+  }, [kanban, engagement?.lifecycle_stage])
+
+  const advanceStage = () => {
+    const current = engagement?.lifecycle_stage ?? 'intake'
+    const nextStage = STAGE_ORDER[STAGE_ORDER.indexOf(current) + 1]
+    if (nextStage) {
+      updateEngagement.mutate({
+        id: engagementId,
+        updates: { lifecycle_stage: nextStage },
+      })
+    }
   }
+
+  return { currentStage: engagement?.lifecycle_stage, canAdvance, advanceStage }
 }
 ```
 
-## Responsive Design System Architecture
+**Database changes required:**
 
-### Problem Statement
-
-Mobile-first is mandated but not systematically enforced. Each component independently decides its responsive behavior, leading to inconsistent breakpoint usage and missing responsive states.
-
-### Recommended Architecture: Layout Primitives
-
-Instead of every component independently handling responsiveness, create layout primitives that encode responsive patterns:
-
-```typescript
-// frontend/src/components/layout/page-layout.tsx
-// Standard page wrapper with responsive padding and max-width
-export function PageLayout({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={cn('container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6', className)}>
-      {children}
-    </div>
-  );
-}
-
-// frontend/src/components/layout/responsive-grid.tsx
-// Standard responsive grid for card layouts
-export function ResponsiveGrid({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4', className)}>
-      {children}
-    </div>
-  );
-}
-
-// frontend/src/components/layout/split-layout.tsx
-// Sidebar + content pattern (stacks on mobile)
-export function SplitLayout({ sidebar, children }: { sidebar: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
-      <aside className="w-full lg:w-80 xl:w-96 shrink-0">{sidebar}</aside>
-      <main className="flex-1 min-w-0">{children}</main>
-    </div>
-  );
-}
-```
-
-### Touch Target Enforcement
-
-```typescript
-// frontend/src/components/ui/touch-target.tsx (already exists, needs enforcement)
-// All interactive elements must meet 44x44 minimum
-// Enforce via ESLint or code review checklist:
-// - Every <Button> inherits min-h-11 min-w-11 from heroui-button.tsx
-// - Every clickable <div> or <span> must use role="button" + min-h-11 min-w-11
-```
-
-### Responsive Breakpoint Contract
-
-| Breakpoint       | Layout                         | Navigation              | Content                     |
-| ---------------- | ------------------------------ | ----------------------- | --------------------------- |
-| base (0-639px)   | Single column, stacked         | Bottom nav or hamburger | Full-width cards            |
-| sm (640-767px)   | 2-column grid where applicable | Same as base            | 2-column cards              |
-| md (768-1023px)  | Sidebar appears as overlay     | Sidebar toggle          | Mixed layout                |
-| lg (1024-1279px) | Persistent sidebar + content   | Always visible sidebar  | 3-column grids              |
-| xl (1280px+)     | Same + wider sidebar           | Same                    | 4-column grids, data tables |
-
-## Patterns to Follow
-
-### Pattern 1: Query Key Factory
-
-**What:** Centralize TanStack Query keys per domain to prevent key collisions and enable precise cache invalidation.
-
-**When:** Every domain repository should have a companion key factory.
-
-**Example:**
-
-```typescript
-// frontend/src/domains/country/keys.ts
-export const countryKeys = {
-  all: ['countries'] as const,
-  lists: () => [...countryKeys.all, 'list'] as const,
-  list: (filters: CountryFilters) => [...countryKeys.lists(), filters] as const,
-  details: () => [...countryKeys.all, 'detail'] as const,
-  detail: (id: string) => [...countryKeys.details(), id] as const,
-};
-
-// frontend/src/domains/country/hooks/useCountry.ts
-export function useCountry(id: string) {
-  return useQuery({
-    queryKey: countryKeys.detail(id),
-    queryFn: () => countryRepo.getById(id),
-  });
-}
-```
-
-### Pattern 2: Backend Service Registration
-
-**What:** All services registered in DI container, never instantiated directly in route handlers.
-
-**When:** Every service should be created via the container.
-
-**Example:**
-
-```typescript
-// backend/src/container/index.ts
-container.register(
-  'countryService',
-  new CountryService(container.resolve('countryRepository'), container.resolve('cacheService'))
+```sql
+-- Migration 1: Add lifecycle_stage to engagements
+CREATE TYPE engagement_lifecycle_stage AS ENUM (
+  'intake', 'preparation', 'briefing', 'execution', 'follow_up', 'closed'
 );
+ALTER TABLE engagements
+  ADD COLUMN lifecycle_stage engagement_lifecycle_stage NOT NULL DEFAULT 'intake';
 
-// backend/src/api/countries.ts
-router.get('/:id', authenticateToken, async (req, res) => {
-  const service = container.resolve<CountryService>('countryService');
-  const country = await service.getById(req.params.id);
-  res.json(country);
-});
+-- Migration 2: Add lifecycle_stage reference to work_items
+ALTER TABLE work_items
+  ADD COLUMN lifecycle_stage engagement_lifecycle_stage;
+
+-- Migration 3: Verify/create elected_officials table with RLS
 ```
 
-### Pattern 3: Consistent Error Handling
+### 6. Data Flow Changes
 
-**What:** All API endpoints use the same error response shape.
+#### Operations Hub (Dashboard)
 
-**When:** Every route handler.
+New data requirements:
 
-**Example:**
+| Widget             | Data Source                                                                       | Query                                           |
+| ------------------ | --------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Attention Needed   | work_items WHERE deadline < NOW() + interval '48h' AND assignee_id = current_user | New: `useAttentionItems()`                      |
+| Active Engagements | engagements WHERE lifecycle_stage NOT IN ('closed') GROUP BY lifecycle_stage      | Extend: `useEngagements()` with groupBy         |
+| Timeline           | calendar_events WHERE date BETWEEN NOW() AND NOW() + interval '7d'                | Existing: `useCalendarEvents()` with date range |
+| Recent Activity    | audit_logs ORDER BY created_at DESC LIMIT 20                                      | Existing: `useAuditLogs()`                      |
+| Quick Stats        | COUNT queries across engagements, work_items, intake                              | New: `useDashboardStats()`                      |
 
-```typescript
-// backend/src/middleware/error-handler.ts
-interface ApiError {
-  error: {
-    code: string; // Machine-readable: 'COUNTRY_NOT_FOUND'
-    message: string; // Human-readable
-    details?: unknown; // Optional validation errors
-  };
-  status: number;
-}
+**New hooks needed:**
+
+- `useAttentionItems()` -- cross-entity overdue/at-risk query
+- `useDashboardStats()` -- aggregated counts
+- `useEngagementsByStage()` -- engagements grouped by lifecycle
+
+#### Engagement Workspace Tabs
+
+Each workspace tab uses existing domain hooks with engagement-scoped filters:
+
+| Tab      | Hook                                                   | Filter                                 |
+| -------- | ------------------------------------------------------ | -------------------------------------- |
+| Overview | `useEngagement(id)`                                    | Existing, no change                    |
+| Context  | `useRelationships(dossierId)`                          | Existing, no change                    |
+| Tasks    | `useEngagementKanban(id)`                              | Existing, add lifecycle_stage grouping |
+| Calendar | `useCalendarEvents({ engagementId })`                  | Extend with engagement filter          |
+| Docs     | `useDocuments({ entityId, entityType: 'engagement' })` | Existing filter                        |
+| Audit    | `useAuditLogs({ entityId, entityType: 'engagement' })` | Existing filter                        |
+
+**Most workspace data needs are already served by existing hooks.** The main new work is:
+
+1. Lifecycle stage grouping for kanban
+2. Calendar events filtered by engagement (verify backend API supports this)
+3. The WorkspaceShell layout component itself
+
+### 7. Suggested Build Order (Dependency-Aware)
+
+The spec orders phases as: Navigation -> Ops Hub -> Workspace -> Dossier Hub -> Feature Absorption -> Lifecycle Engine.
+
+**Problem:** The spec puts Lifecycle Engine last, but Ops Hub and Workspace both depend on `lifecycle_stage`. Pull the DB migration forward.
+
+**Recommended build order:**
+
+```
+Phase 1: Navigation & Route Consolidation      (no new features, pure cleanup)
+  |
+  +-- 1a: Delete duplicate routes, add redirects
+  +-- 1b: Gate demo pages behind VITE_DEV_MODE
+  +-- 1c: Rename working_groups -> working-groups
+  +-- 1d: Rewrite navigation-config.ts (3 hub sections)
+  |
+Phase 2: Lifecycle Engine (DB + types + hooks)  (small scope, prerequisite)
+  |
+  +-- 2a: Supabase migration (lifecycle_stage on engagements + work_items)
+  +-- 2b: Add LifecycleStage type to engagement types
+  +-- 2c: Add useLifecycleTransition hook
+  +-- 2d: Extend updateEngagement to handle lifecycle_stage
+  |
+Phase 3: Operations Hub                         (needs lifecycle_stage for grouping)
+  |
+  +-- 3a: New dashboard page components (AttentionZone, TimelineZone, EngagementsByStage)
+  +-- 3b: New hooks (useAttentionItems, useDashboardStats, useEngagementsByStage)
+  +-- 3c: Role-adaptive filter logic
+  |
+Phase 4: Engagement Workspace                   (needs lifecycle + route consolidation done)
+  |
+  +-- 4a: WorkspaceShell, LifecycleBar, WorkspaceTabs components
+  +-- 4b: Convert $id.tsx to layout route, create $id/ child routes
+  +-- 4c: Migrate existing EngagementDossierPage content to overview tab
+  +-- 4d: Build scoped tabs (tasks, calendar, docs, audit)
+  +-- 4e: Forum workspace (same pattern + sessions)
+  |
+Phase 5: Enriched Dossier Pages                 (reuses workspace patterns)
+  |
+  +-- 5a: RelationshipSidebar component
+  +-- 5b: DossierDetailLayout sidebar slot integration
+  +-- 5c: Type-specific enrichments (anchor, thread, contact tiers)
+  +-- 5d: Elected Officials domain + pages + routes
+  |
+Phase 6: Feature Absorption                     (must come last)
+  |
+  +-- 6a: Analytics -> dashboard widgets
+  +-- 6b: AI Briefings -> workspace Docs tab "Generate" action
+  +-- 6c: Network Graph -> RelationshipSidebar expandable view
+  +-- 6d: Search -> enhanced Cmd+K quick switcher
+  +-- 6e: Remove absorbed standalone pages
 ```
 
 ## Anti-Patterns to Avoid
 
-### Anti-Pattern 1: Per-Component Direction Setting
+### Anti-Pattern 1: Over-nesting Routes
 
-**What:** Components individually setting `dir={isRTL ? 'rtl' : 'ltr'}` on their root element.
+**What:** Creating nested route directories for every dossier type's tabs
+**Why bad:** 8 types x 6 tabs = 48 route files. Most tabs are lightweight.
+**Instead:** Use nested routes ONLY for workspace types (engagements, forums) where tabs have heavy, independently-splittable content (kanban, calendar). Other types use client-side tab state within the page component.
 
-**Why bad:** Creates nested direction contexts that can conflict. Every component becomes responsible for direction, leading to missed instances and visual bugs.
+### Anti-Pattern 2: Duplicating Data Fetching Across Tabs
 
-**Instead:** Set direction ONCE at `<html>` level via `DirectionProvider`. Components inherit direction automatically. Only override for explicit LTR-in-RTL embedding.
+**What:** Each workspace tab independently fetching the engagement
+**Why bad:** 6 tabs = 6 redundant queries for the same engagement
+**Instead:** Fetch engagement once in the layout route (`$id.tsx`). Child tab routes only fetch their specific data (tasks, calendar events, etc.). TanStack Query deduplication helps, but avoiding the calls entirely is better.
 
-### Anti-Pattern 2: Raw Fetch in Hooks
+### Anti-Pattern 3: Breaking Navigation During Migration
 
-**What:** Hooks calling `fetch('/api/...')` directly instead of going through a domain repository.
+**What:** Removing old routes before new ones are stable
+**Why bad:** Users lose bookmarks, notification links break, ChatDock citations break
+**Instead:** Phase 1 adds redirect stubs from old paths to new canonical paths. The `_protected.tsx` file already has `handleCitationClick` referencing `/engagements/$engagementId` -- this must be updated to `/dossiers/engagements/$id`. Old route files become redirect-only stubs. Remove stubs after confirming no external references.
 
-**Why bad:** Duplicates URL construction, header management, error handling. Makes it impossible to mock for tests or add middleware (logging, retry).
+### Anti-Pattern 4: Lifecycle State in Client Only
 
-**Instead:** Every API call goes through `domains/{feature}/repositories/{feature}.repository.ts`.
+**What:** Managing lifecycle transitions as client-side state or local storage
+**Why bad:** Multiple users on same engagement = state drift, no audit trail
+**Instead:** Lifecycle state lives in database. Transitions are API calls. Realtime subscription propagates changes to all connected clients. Client always reads server state.
 
-### Anti-Pattern 3: God Services
+### Anti-Pattern 5: Giant God Components
 
-**What:** Services like `ContactService.ts` + `contact-service.ts` + `contact-service-enhanced.ts` that overlap in responsibility.
+**What:** Building WorkspaceShell as a single 500+ line component
+**Why bad:** Hard to test, hard to code-split, RTL/responsive complexity compounds
+**Instead:** Compose from focused sub-components (WorkspaceHeader, LifecycleBar, WorkspaceTabs), each independently testable and memoizable.
 
-**Why bad:** Unclear which service to use, logic duplication, impossible to test in isolation.
+## Patterns to Follow
 
-**Instead:** One service per domain concept. If a service needs enhancement, refactor the existing one.
+### Pattern 1: Layout Route for Workspace Shell
 
-### Anti-Pattern 4: Naming Inconsistency
+**What:** TanStack Router `$id.tsx` renders persistent shell, child routes render in `<Outlet />`
+**When:** Engagement and forum detail pages
+**Why:** Workspace chrome (header, lifecycle bar, tabs) persists across tab navigation. No re-mount, no layout shift. Already proven by `_protected.tsx` in this codebase.
 
-**What:** Mixed PascalCase and kebab-case in the same directory (e.g., `ContactService.ts` alongside `contact-service.ts`).
+### Pattern 2: Domain Repository Extension (not new domain)
 
-**Why bad:** Makes autocomplete unreliable, grep results confusing, new developers uncertain which convention to follow.
+**What:** Add lifecycle methods to existing engagement repository, not a separate lifecycle domain
+**When:** Lifecycle is an engagement concern, not a cross-cutting domain
+**Example:**
 
-**Instead:** Enforce one convention per layer (see naming table above).
+```typescript
+// Add to engagements.repository.ts
+export async function transitionLifecycleStage(
+  id: string,
+  stage: LifecycleStage,
+): Promise<EngagementFullProfile> {
+  return apiPatch<EngagementFullProfile>(`/engagement-dossiers/${id}`, { lifecycle_stage: stage })
+}
+```
+
+### Pattern 3: Scoped Query Keys for Tab Data
+
+**What:** Engagement-scoped query keys enable targeted invalidation
+**When:** Workspace tabs fetch engagement-scoped data
+**Example:**
+
+```typescript
+export const workspaceKeys = {
+  tasks: (engagementId: string) => ['workspace', 'tasks', engagementId] as const,
+  calendar: (engagementId: string) => ['workspace', 'calendar', engagementId] as const,
+  docs: (engagementId: string) => ['workspace', 'docs', engagementId] as const,
+  audit: (engagementId: string) => ['workspace', 'audit', engagementId] as const,
+}
+```
+
+### Pattern 4: Sidebar Config as Single Source of Truth
+
+**What:** All navigation items defined in `navigation-config.ts`, sidebar renders declaratively
+**When:** Always -- this pattern already exists and should be preserved
+**Why:** Adding/removing nav items is a data change, not a component change.
 
 ## Scalability Considerations
 
-| Concern               | Current (small team)         | At 10K daily users                                                | At enterprise scale                                   |
-| --------------------- | ---------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------- |
-| **Bundle size**       | Acceptable with lazy loading | Add route-level code splitting audit, remove unused UI components | Consider module federation                            |
-| **API response time** | Adequate                     | Redis caching layer (partially done), database indexes            | Read replicas, query optimization                     |
-| **RTL consistency**   | Manual review                | ESLint enforcement catches physical properties at CI              | Automated visual regression testing (Chromatic/Percy) |
-| **Service coupling**  | Low impact                   | DI container enforces boundaries                                  | Service extraction to separate processes if needed    |
+| Concern               | At current scale          | At 100 engagements                | At 1000 engagements                        |
+| --------------------- | ------------------------- | --------------------------------- | ------------------------------------------ |
+| Dashboard queries     | Single query per widget   | Add pagination to Attention items | Virtual scrolling, server-side aggregation |
+| Lifecycle transitions | Direct API call           | Same                              | Add optimistic updates with rollback       |
+| RelationshipSidebar   | Fetch all linked dossiers | Same (usually <20 links)          | Paginate if >50 links                      |
+| Workspace tab data    | Fetch on tab mount        | Same                              | Prefetch adjacent tabs on hover            |
+| Route tree size       | ~80 routes                | ~90 routes (workspace tabs)       | Same (scale is in data, not routes)        |
 
-## Build Order Implications
+## Integration Points Summary
 
-```
-Phase 1: Dead Code → MUST be first (reduces scope for everything else)
-  ↓
-Phase 2: Naming → Depends on dead code removal (don't rename dead files)
-  ↓
-Phase 3: Domain Repos → Depends on naming (consistent file structure)
-  ↓
-Phase 4: Design System → Can parallel with Phase 3 (independent layer)
-  ↓
-Phase 5: Backend Services → Depends on naming, benefits from domain repos showing which services are actually used
-```
-
-**Critical dependency:** Phase 1 (dead code) MUST complete before Phase 2+ begins. Running Knip after removing mobile code and duplicate services will give a clean baseline.
-
-**Parallelizable:** Phase 3 (frontend domain repos) and Phase 5 (backend service dedup) can run in parallel once naming is settled, as they operate on different workspaces.
+| Integration Point     | Current State                            | Required Change                                     | Scope          |
+| --------------------- | ---------------------------------------- | --------------------------------------------------- | -------------- |
+| Route tree            | Flat + dossiers/ nesting                 | Add workspace nested routes, delete duplicates      | Major          |
+| navigation-config.ts  | 7 sections, tools-focused                | 3 sections, hub-focused                             | Rewrite        |
+| AppSidebar.tsx        | Renders NavMain                          | Minimal (tier sub-labels)                           | Small          |
+| \_protected.tsx       | MainLayout + ChatDock + citation handler | Update citation paths                               | Small          |
+| DossierDetailLayout   | Header + grid + actions                  | Add sidebar slot                                    | Small          |
+| dossier-routes.ts     | 7 types mapped                           | Add elected_official, rename working_groups         | Small          |
+| EngagementDossierPage | Dialog-based kanban                      | Becomes layout route with Outlet                    | Major refactor |
+| engagements domain    | CRUD + participants + kanban + briefs    | Add lifecycle types + hooks                         | Extension      |
+| work-items domain     | Standard CRUD                            | Add lifecycle_stage filter                          | Extension      |
+| calendar domain       | Global events                            | Add engagement scope filter                         | Extension      |
+| Dashboard page        | Metric cards                             | Full redesign to 3-zone ops hub                     | Rewrite        |
+| Backend API           | No lifecycle endpoints                   | lifecycle_stage on PATCH, new aggregation endpoints | Extension      |
+| Database              | No lifecycle_stage column                | 2-3 Supabase migrations                             | Migration      |
 
 ## Sources
 
-- [Knip - Dead code detection for TypeScript monorepos](https://knip.dev/) (HIGH confidence)
-- [Tailwind CSS v4 RTL with logical properties](https://flowbite.com/docs/customize/rtl/) (HIGH confidence)
-- [Tailwind CSS v4 Complete Guide](https://devtoolbox.dedyn.io/blog/tailwind-css-v4-complete-guide) (MEDIUM confidence)
-- [Clean Architecture in Express.js](https://merlino.agency/blog/clean-architecture-in-express-js-applications) (MEDIUM confidence)
-- [Hexagonal Architecture in 2026](https://dev.to/dev_tips/hexagonal-vs-clean-vs-onion-which-one-actually-survives-your-app-in-2026-273f) (MEDIUM confidence)
-- [React Design Patterns 2025](https://www.uxpin.com/studio/blog/react-design-patterns/) (MEDIUM confidence)
-
----
-
-_Architecture research: 2026-03-23_
+- Direct codebase analysis of TanStack Router v5 file-based routing patterns (verified `_protected.tsx` uses layout route + `<Outlet />` pattern)
+- Existing domain repository pattern verified across 20 domains in `frontend/src/domains/`
+- Navigation config inspected at `frontend/src/components/layout/navigation-config.ts` (301 lines)
+- AppSidebar inspected at `frontend/src/components/layout/AppSidebar.tsx` (189 lines)
+- Engagement domain inspected: repository (383 lines), types (190 lines), hooks (341 lines)
+- Route tree enumerated: 100+ route files under `routes/_protected/`
+- Dossier route utility inspected at `frontend/src/lib/dossier-routes.ts`
+- 7 type-specific dossier pages confirmed at `frontend/src/pages/dossiers/`
+- Backend API structure verified: no lifecycle or elected-official endpoints exist

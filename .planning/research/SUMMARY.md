@@ -1,249 +1,208 @@
 # Project Research Summary
 
-**Project:** Intl-Dossier v2.0 — Production Quality Milestone
-**Domain:** Production hardening of a bilingual (Arabic/English) diplomatic dossier management app
-**Researched:** 2026-03-23
+**Project:** Intl-Dossier v3.0 — "Connected Workflow" Hub-and-Spoke Architecture
+**Domain:** Diplomatic dossier management / enterprise CRM-style workflow redesign
+**Researched:** 2026-03-28
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This milestone is not a feature build — it is a hardening pass on an architecturally sound but inconsistently implemented codebase. The existing hexagonal backend, domain-driven frontend, and TanStack Router/Query data flow are fundamentally correct. The problem is that the patterns are not enforced: 90+ hooks bypass domain repositories, 3 naming conventions coexist in the same directories, mobile-era components were never cleaned up after the mobile app was cancelled, and critical security middleware (clearance checks, organization isolation) remains as placeholders. The recommended approach is to enforce the existing architecture rather than introduce new patterns.
+This milestone transforms Intl-Dossier from a collection of standalone feature pages into a cohesive hub-and-spoke system. The three architectural centers are: an Operations Hub (role-adaptive home screen surfacing what needs attention now), Engagement Workspaces (tabbed, lifecycle-aware detail pages replacing dialog-based navigation), and Enriched Dossier Detail Pages (consistent shell across all 8 entity types with a collapsible RelationshipSidebar). The approach is conservative on new dependencies — only one new package is required (`react-resizable-panels`, ~5KB) because the existing stack already covers every need. The recommended build order pulls the Lifecycle Engine DB migration forward (before the Operations Hub and Workspace phases) since both depend on the `lifecycle_stage` column, contradicting the original spec's sequencing which placed Lifecycle Engine last.
 
-The highest-risk gap is security: clearance-level middleware and organization isolation are unimplemented stubs, several Supabase tables lack proper RLS policies, and Express lacks Helmet/CSP hardening. These are blocking concerns for a diplomatic application handling classified data. The second-highest-risk area is the bilingual RTL/LTR implementation — physical CSS properties are scattered despite ESLint rules, `dir` attributes are set per-component instead of at the document root, and the four theme/direction combinations (dark/light x RTL/LTR) have no automated visual regression coverage.
+The feature set is deliberately restrained. Research across CRM and enterprise UX patterns confirms that 14 table-stakes features (grouped kanban, tabbed workspaces, scoped calendar/docs/audit, Cmd+K, hub navigation, audit tab) account for ~65% of milestone effort, while 4–5 differentiators (lifecycle-stage-grouped kanban columns, role-adaptive dashboard defaults, "What's Next" action card, tier-specific dossier enrichments) provide genuine domain value without requiring new infrastructure. Eight explicit anti-features are documented — most critically: no drag-to-rearrange dashboard, no real-time notification system, no rigid lifecycle stage-gating, and no AI suggestions beyond existing briefing generation.
 
-The recommended execution order is driven by dependency: dead code removal must happen first to reduce surface area, then naming convention enforcement to stabilize the file structure, then security hardening (the critical blocker), then RTL/responsive consistency, then performance optimization, and finally accessibility compliance. Attempting security or RTL work before dead code removal wastes effort on files that will be deleted anyway.
+The primary risks are infrastructure, not product: the existing codebase has 129 route files with duplicates and three competing navigation implementations that must be cleaned up before any new features land. The 200KB initial JS bundle is already at its limit, meaning every new workspace tab must use route-based code splitting. Lifecycle transitions must be server-side atomic operations with audit logging — client-only state will create ghost states across multi-user sessions.
+
+---
 
 ## Key Findings
 
 ### Recommended Stack
 
-The toolchain additions are targeted and conservative — no new frameworks, no bundler changes. The core additions are: ESLint 9 flat config (upgrade from v8) with typescript-eslint 8.x native config replacing the current `FlatCompat` shim; `eslint-plugin-security` for Node.js security patterns; `eslint-plugin-rtl-friendly` to replace the current fragile `no-restricted-syntax` regex approach; `prettier-plugin-tailwindcss` for class sorting; Knip v5 for dead code and dependency detection; `rollup-plugin-visualizer` for bundle analysis; `web-vitals` + Sentry Performance for real user metrics; and husky + lint-staged for pre-commit enforcement.
+The stack requires no significant additions. All major UI primitives (TanStack Router v5, HeroUI v3 Tabs, @dnd-kit, cmdk, motion, recharts, Zustand, react-hook-form+zod) are installed. The single new dependency is `react-resizable-panels` for the RelationshipSidebar — the only component requiring simultaneous resize, collapse-to-zero, and keyboard accessibility. XState was explicitly rejected (6 linear lifecycle stages do not warrant a statechart library, saving ~15KB). react-grid-layout was rejected (Operations Hub zones are fixed, not user-rearrangeable, saving ~25KB).
 
 **Core technologies:**
 
-- **ESLint 9 flat config**: Unified single root config — replace 3 separate workspace configs and all `.eslintrc.*` files
-- **typescript-eslint 8.x**: Native flat config; remove `FlatCompat` shim from backend config
-- **eslint-plugin-security 3.x**: 14 rules detecting eval, path injection, CSRF ordering — essential for Express backend
-- **eslint-plugin-rtl-friendly**: Dedicated Tailwind RTL plugin with auto-fix; replaces fragile regex rules
-- **prettier-plugin-tailwindcss**: Official Tailwind Labs class sorter; must be last in Prettier plugins array
-- **Knip 5.x**: Dead code, unused exports, unused dependencies — the standard tool (ts-prune is deprecated)
-- **rollup-plugin-visualizer 6.x**: Interactive bundle treemap for Vite; pin to v5 if Node < 22
-- **web-vitals 4.x**: ~2KB; measures LCP/CLS/INP; Sentry captures automatically when configured
-- **husky 9.x + lint-staged 15.x**: Pre-commit hooks; lint only staged files for fast feedback
-- **@vitest/coverage-v8**: Coverage provider; thresholds — 70% statements, 60% branches
-
-**Version alignment required:** ESLint 8.57 → 9.x in both frontend and backend workspaces.
-
-**Do not use:** Biome (plugin gaps for tailwindcss/security), eslint-plugin-tailwindcss for class sorting (Tailwind v4 support incomplete), source-map-explorer (needs prod source maps), Snyk paid tier.
+- `react-resizable-panels` v4.7.6: RelationshipSidebar — only library providing resize + collapse + min/max + a11y simultaneously (~5KB gzipped)
+- HeroUI v3 Tabs (installed): WorkspaceShell tab bar — React Aria accessible, compound components, RTL-aware
+- Zustand v5 (installed): lifecycle stage client state — sufficient for 6 linear stages, avoids XState overhead
+- TanStack Router v5 nested routes (installed): workspace tab routing — `$id.tsx` layout route + `$id/` child routes for code splitting
+- `@radix-ui/react-progress` (installed): LifecycleBar base primitive — accessible progress semantics
+- Tailwind CSS v4 grid (installed): Operations Hub 3-zone layout — zero JS overhead, no react-grid-layout needed
 
 ### Expected Features
 
-The feature landscape is organized by risk priority, not by category.
+**Must have (table stakes) — ~65% of milestone effort:**
 
-**Must have — security (highest risk):**
+- Operations Hub: Attention Needed zone (overdue/due-within-48h items) — every CRM surfaces this front-and-center
+- Operations Hub: Upcoming Timeline (next 7 days calendar events) — temporal orientation is standard
+- Operations Hub: Active Engagements by lifecycle stage — pipeline stage grouping is the defining CRM pattern
+- Engagement Workspace: Lifecycle Bar (6-stage horizontal stepper, clickable, non-gating)
+- Engagement Workspace: Tabbed shell (Overview, Context, Tasks, Calendar, Docs, Audit) with URL-driven tab state
+- Engagement Workspace: Scoped Kanban, Calendar, Documents, Audit (filter existing components by engagement)
+- Enriched Dossier Detail Pages: Shared DossierDetailShell + RelationshipSidebar across all 8 types
+- Quick Switcher (Cmd+K): search dossiers, engagements, work items, recent pages
+- Hub-based sidebar navigation: 3 sections (Operations, Dossiers, Admin) replacing 7 flat sections
 
-- RLS policy audit on all Supabase tables — missing policies deny all access; critical for classified diplomatic data
-- Clearance-level middleware implementation — current placeholder allows all access (CONCERNS.md)
-- Organization isolation enforcement — `organization-check.ts` not implemented; data leaks between orgs
-- Helmet with strict CSP — whitelist Supabase, Sentry, AnythingLLM origins
-- CORS explicit origin allowlist — replace wildcard `*` with frontend origin
-- Input validation on all endpoints — Zod schemas for every Express route handler
-- Secrets/env audit — 7+ `.env` files; verify gitignored, no committed secrets
-- Console.log audit — replace all with structured Winston logger; strip PII
+**Should have (differentiators) — ~25% of milestone effort:**
 
-**Must have — code quality:**
+- Lifecycle-stage-grouped Kanban columns (diplomatic workflow innovation — no off-the-shelf tool does this)
+- Role-adaptive dashboard defaults (Leadership/Officer/Analyst filter presets, not hard-gated)
+- "What's Next" action card on workspace Overview (highest-priority pending task in current stage, simple heuristic not AI)
+- Tier-specific dossier enrichments: Anchors first (Countries get bilateral summaries, Organizations get MoU trackers)
+- Intake-to-Engagement promotion flow (pre-populated fields, lifecycle starting at 'intake')
 
-- Dead code detection with Knip — run baseline, add to CI as zero-tolerance gate after cleanup
-- ESLint zero-warnings CI gate (`--max-warnings 0`)
-- Pre-commit hooks (husky + lint-staged)
+**Defer (post-v3.0 launch):**
 
-**Must have — RTL/responsive/accessibility:**
-
-- Full logical properties audit (Tailwind classes AND inline styles AND third-party overrides)
-- `dir` attribute at document root only via DirectionProvider, not per-component
-- Mobile-first audit at 320px, 640px, 768px, 1024px, 1280px — especially tables and data-heavy views
-- Touch target compliance — 44x44px minimum (`min-h-11 min-w-11`)
-- WCAG 2.2 Level AA — legally required since EAA June 2025
-
-**Should have (differentiators):**
-
-- Automated performance budgets in CI (Lighthouse CI + size-limit)
-- Sentry RUM with web-vitals integration (5 lines of code, Sentry already installed)
-- Visual regression tests for all 4 theme/direction combinations (dark/light x RTL/LTR)
-- Accessibility CI gate (axe-core in Playwright, already installed)
-- Authorization middleware tests before implementing real clearance checks
-- Dependency update automation (Renovate/Dependabot — important given HeroUI v3 beta status)
-
-**Defer to future milestones:**
-
-- Duplicate detection — new feature, not hardening; document stubs only
-- Notification system buildout — feature work; wire basic Sentry alerts only
-- WCAG AAA compliance — aspirational; AA is the legal requirement
-- Database migration rollback testing — important but lower risk than security gaps
+- Forum recurring sessions as mini-workspaces (highest complexity, most niche use case)
+- Network graph embedded in RelationshipSidebar (existing full-page graph works; relocate after sidebar ships)
+- Calendar conflict detection across engagements (convenience feature, add after scoped calendar is working)
+- Tier-specific enrichments for Thread + Contact tiers (do Anchors first, extend pattern to others)
+- Availability polling absorption (lowest priority absorbed feature)
 
 ### Architecture Approach
 
-The existing architecture is correct and must be enforced, not redesigned. The backend uses hexagonal architecture (API → Services → Adapters → Core Domain). The frontend uses domain-driven structure (Routes → Domain Hooks → Domain Repositories → HTTP). The critical enforcement gap is that only 3 frontend domain repositories exist (document, engagement, relationship) while 90+ hooks call the API directly with raw `fetch()`. Every data fetch must be routed through a domain repository in `frontend/src/domains/{feature}/repositories/`.
+The architecture reuses the existing TanStack Router layout route pattern (already proven by `_protected.tsx`) to build WorkspaceShell: `$id.tsx` becomes the layout route rendering the persistent shell (header, lifecycle bar, tabs), while `$id/index.tsx`, `$id/tasks.tsx`, `$id/calendar.tsx`, etc. render in `<Outlet />` as independently code-split chunks. Non-workspace dossier types (Countries, Organizations, Topics, etc.) use client-side tab state within the existing `DossierDetailLayout` — not nested routes — to avoid 8 types x 6 tabs = 48 unnecessary route files. Lifecycle state lives exclusively in the database with a dedicated `PATCH /api/engagements/:id/transition` endpoint for atomic transitions with audit logging.
 
 **Major components:**
 
-1. **DirectionProvider** — single `<html dir>` setter; eliminates per-component `dir` attribute duplication
-2. **Domain Repositories** — one repository class per backend resource; all hooks become thin `useQuery` wrappers
-3. **Query Key Factories** — `{domain}Keys` objects co-located in each domain; enables precise cache invalidation
-4. **Layout Primitives** — `PageLayout`, `ResponsiveGrid`, `SplitLayout` encode responsive breakpoint contracts
-5. **Unified Error Shape** — `{ error: { code, message, details } }` on all API endpoints; frontend maps to i18n keys
-6. **ESLint flat config** — single root `eslint.config.js` with workspace file-pattern overrides; delete all `.eslintrc.*`
-
-**Cleanup order (hard dependencies):**
-Phase 1 (dead code) → Phase 2 (naming) → Phase 3 (domain repos) || Phase 4 (design system) → Phase 5 (backend service dedup). Phases 3 and 5 can run in parallel once Phase 2 is complete.
+1. `WorkspaceShell` + `LifecycleBar` + `WorkspaceTabs` — engagement/forum layout, route-driven tabs, persistent across navigation
+2. `DossierDetailLayout` (extended) + `RelationshipSidebar` — shared shell for all 8 dossier types with sidebar slot using `react-resizable-panels`
+3. `DashboardPage` (redesigned) — 3-zone Tailwind grid: Action Bar (full-width), Left Column (Attention + Engagements by stage), Right Column (Timeline + Recent Activity)
+4. `navigation-config.ts` (rewritten) — 3 hub sections replacing 7 flat sections; AppSidebar.tsx needs minimal changes
+5. Lifecycle Engine — `engagement_lifecycle_stage` enum in DB, `useLifecycleTransition` hook, server-side transition endpoint with audit entries
+6. `elected-officials` domain — new domain following existing 20-domain pattern (types, repository, hooks, barrel)
 
 ### Critical Pitfalls
 
-1. **Dead code removal breaks re-export chains** — The shadcn re-export pattern (`button.tsx` → `heroui-button.tsx`) causes Knip to flag re-export files as "unused." Removing them breaks all 500+ consumers. Fix: add `components/ui/` to Knip allowlist; `grep -r` every candidate before deletion; `pnpm build` after every batch of 10-20 removals.
+1. **Route tree breaks on file moves** — TanStack Router auto-generates `routeTree.gen.ts` with hardcoded path strings. Moving files without running `pnpm tsr generate` causes silent 404s across 129 routes. Prevention: batch moves by tier, run generator after each batch, keep old routes as redirect stubs for one release cycle, audit all hardcoded route strings before deletion.
 
-2. **RLS policy changes cause silent data blackouts** — Supabase SQL Editor runs as postgres superuser, bypassing RLS. Policies that look correct in the editor silently return zero rows for real users. Fix: test every policy change via Supabase client SDK with a real authenticated token, never via SQL editor. Deploy to staging with 24-hour soak. Index all RLS policy columns.
+2. **Dual navigation system collision** — Three competing nav implementations exist (`Sidebar.tsx`, `AppSidebar.tsx`, `NavigationShell.tsx`). Adding a new hub sidebar without removing old ones causes double-render, broken active states, and ~30–50KB bundle bloat. Prevention: delete demo nav routes first, confirm AppSidebar.tsx is sole implementation, use Knip to catch dead imports.
 
-3. **RTL logical property migration breaks LTR layouts** — Replacing `ml-4` with `ms-4` fixes RTL but breaks LTR when `dir` is missing (portals, modals rendered at `<body>` level). Fix: set `<html dir>` at root via DirectionProvider; explicitly set `dir` on portal containers; test BOTH directions after every change.
+3. **Workspace tabs render all content eagerly** — Mounting all 6 tabs (including the 80KB Kanban chunk) on workspace load blows the 200KB initial JS budget. Prevention: route-based code splitting per tab via TanStack Router file-based routes; consider React 19.2 `<Activity>` component for hide/show without unmount.
 
-4. **Security middleware ordering breaks CORS/preflight** — Wrong middleware order causes OPTIONS preflight failures and drops Supabase Realtime websockets. Fix: enforce order Helmet → CORS → rate limiting → auth → routes. Whitelist `*.supabase.co` and `wss://*.supabase.co` in CSP. Dev CSP needs `'unsafe-eval'` for Vite HMR (strip in production).
+4. **Lifecycle ghost states from client-only transitions** — Optimistic stage transitions without server-side atomic writes cause state divergence between users and a missing audit trail. Prevention: dedicated `PATCH /api/engagements/:id/transition` endpoint with allowed-transitions validation and single-transaction audit log write; use `useMutation` with `onError` rollback, no optimistic updates for stage transitions.
 
-5. **Console.log removal silences error handling** — Many `console.*` in catch blocks are the only error signal for Redis fallbacks, vector embedding failures, and search timeouts. Fix: audit each removal for `catch.*console` pattern; replace with structured logger atomically (never in separate commits).
+5. **Feature absorption silently breaks absorbed components** — Standalone pages rely on route search params, full-page error boundaries, and standalone query keys that break when embedded in tabs/widgets. Prevention: create dedicated "embedded" variants (e.g., `AnalyticsWidget` vs `AnalyticsPage`), wrap each in its own `ErrorBoundary`, convert `useSearch()` dependencies to props, keep standalone pages until embedded variants are verified.
+
+---
 
 ## Implications for Roadmap
 
-Based on combined research, the suggested phase structure is risk-driven and dependency-ordered.
+Based on combined research, a 6-phase structure is recommended. The spec's original ordering placed Lifecycle Engine last — this is incorrect given the dependency chain and must be corrected.
 
-### Phase 1: Foundation — Dead Code and Toolchain
+### Phase 1: Navigation and Route Consolidation
 
-**Rationale:** Dead code removal is a hard prerequisite — every pattern enforced on dead code is wasted effort. ESLint/Knip toolchain must be in place before code quality gates can enforce anything.
-**Delivers:** Clean baseline with accurate dead code report; pre-commit hooks preventing new violations; single ESLint flat config replacing 3 separate configs.
-**Addresses:** Dead code detection (Knip), unused dependency removal, pre-commit hooks (husky + lint-staged), ESLint zero-warnings gate, mobile-era component removal.
-**Avoids:** Pitfall 1 (re-export chain breakage) — configure Knip allowlist for `ui/` wrappers before running; also Pitfall 12 (i18n key loss) — use `i18next-parser` before deleting any keys.
+**Rationale:** Pure cleanup with no new features. Must be done first because duplicate routes, three competing navigation implementations, and 10+ demo pages actively impede all subsequent phases. Adding workspace routes on top of existing chaos guarantees pitfalls 1 and 2.
+**Delivers:** Clean route tree, single navigation implementation, hub-based sidebar (3 sections), working redirects from old paths, demo pages gated behind VITE_DEV_MODE, working_groups renamed to working-groups.
+**Addresses:** Sidebar hub grouping (table stakes feature), route naming consistency.
+**Avoids:** Pitfall 1 (route tree breaks), Pitfall 2 (dual nav collision), Pitfall 6 (RTL sidebar direction — audit physical CSS properties now).
 
-### Phase 2: Naming Conventions and File Structure
+### Phase 2: Lifecycle Engine
 
-**Rationale:** Naming inconsistency (PascalCase vs kebab-case in same directories) must be resolved before domain repository consolidation can proceed — consistent names make the migration mechanical rather than ambiguous.
-**Delivers:** Uniform naming across all layers via `git mv` with history preservation; no more autocomplete ambiguity; duplicate services identified and merged.
-**Addresses:** Backend service naming (kebab-case.service.ts), frontend hook naming (camelCase), component naming (PascalCase), UI primitive naming (kebab-case).
-**Avoids:** Pitfall 8 (deduplication loses behavioral nuance) — diff line-by-line before merging any service pair.
+**Rationale:** A schema-only phase (~1–2 days) that unblocks both Operations Hub and Engagement Workspace. Both depend on `lifecycle_stage` on engagements and work_items. Doing this first keeps subsequent phases unblocked. Small scope reduces risk.
+**Delivers:** `engagement_lifecycle_stage` enum in DB (Supabase migration via MCP), `lifecycle_stage` columns on engagements + work_items, `LifecycleStage` TypeScript types, `useLifecycleTransition` hook, `transitionLifecycleStage` repository function, dedicated transition API endpoint with audit logging.
+**Uses:** Supabase MCP for migrations, Zustand for client stage state, existing audit log system.
+**Avoids:** Pitfall 4 (ghost states — server-side atomic transitions designed in from the start).
 
-### Phase 3: Security Hardening
+### Phase 3: Operations Hub
 
-**Rationale:** The highest-risk gap in the codebase. Clearance middleware and org isolation are placeholders. RLS gaps expose classified diplomatic data. This phase is non-negotiable before any production use.
-**Delivers:** Real clearance-level enforcement, org isolation, Helmet + CSP, CORS allowlist, input validation on all endpoints, secrets consolidation, eslint-plugin-security, structured logging replacing console.log.
-**Addresses:** RLS policy audit, Helmet/CSP, CORS, Zod input validation, clearance middleware, org isolation, console.log/PII audit, auth edge cases.
-**Avoids:** Pitfall 2 (RLS blackout — test via SDK, not SQL editor; staging soak) and Pitfall 4 (middleware ordering — Helmet first).
-**Research flag:** Authorization middleware tests MUST be written before implementing real clearance checks.
+**Rationale:** Delivers the new "home screen" that justifies the entire redesign. Requires lifecycle_stage (Phase 2) for engagement grouping. Three new hooks needed (useAttentionItems, useDashboardStats, useEngagementsByStage). Role-adaptive defaults ship with this phase.
+**Delivers:** Redesigned DashboardPage with 3-zone Tailwind grid, Attention Needed zone, Upcoming Timeline, Active Engagements by stage, Quick Stats, role-adaptive filter defaults.
+**Implements:** AttentionCard component, EngagementsByStage grouped list, role-to-filter-preset mapping.
+**Avoids:** Pitfall 8 (monolithic dashboard chunk — zone-based lazy loading, share existing charts-vendor chunk).
 
-### Phase 4: RTL/LTR Consistency
+### Phase 4: Engagement Workspace
 
-**Rationale:** Arabic is the primary user language. RTL inconsistencies cause daily friction. This phase consolidates all directional logic into the three-layer system (document root + logical properties + component exceptions only).
-**Delivers:** DirectionProvider at document root, all physical CSS properties replaced with logical equivalents, per-component `dir` removed, icon direction audit complete, `eslint-plugin-rtl-friendly` enforcing going forward.
-**Addresses:** Full logical properties audit, `dir` attribute consolidation, bidirectional text testing, icon direction audit (arrows/chevrons), theme switching visual regression (4 combinations).
-**Avoids:** Pitfall 3 (logical properties break LTR) — test both directions after every change; set `dir` on portal/modal containers explicitly.
+**Rationale:** The heart of the redesign. Requires route consolidation (Phase 1) for clean nested route structure, and lifecycle_stage (Phase 2) for LifecycleBar. WorkspaceShell pattern established here is reused for Forums and enriched dossier pages.
+**Delivers:** WorkspaceShell, LifecycleBar, WorkspaceTabs components; $id.tsx converted to layout route; $id/ child routes (index, context, tasks, calendar, docs, audit); scoped Kanban, Calendar, Documents, Audit views; "What's Next" action card; react-resizable-panels installed.
+**Uses:** TanStack Router nested routes, HeroUI v3 Tabs, motion for transitions, react-resizable-panels.
+**Avoids:** Pitfall 3 (eager tab rendering — route-split per tab), Pitfall 7 (LifecycleBar RTL — use LtrIsolate), Pitfall 9 (scoped vs global divergence — scope prop on existing components), Pitfall 10 (mobile tab bar conflict — scrollable pill bar on mobile).
 
-### Phase 5: Responsive Design and Touch Targets
+### Phase 5: Enriched Dossier Detail Pages
 
-**Rationale:** Mobile-first is mandated in CLAUDE.md but "not consistently implemented." Tables and data-heavy views are the hardest challenge and must be addressed systematically with layout primitives.
-**Delivers:** PageLayout/ResponsiveGrid/SplitLayout primitives; all pages tested at 320px, 640px, 768px, 1024px, 1280px; touch targets at 44x44px minimum; data tables collapse to cards or scroll on mobile.
-**Addresses:** Mobile-first audit, touch target compliance, breakpoint coverage for data tables, viewport meta verification.
-**Avoids:** Pitfall 7 (desktop breaks while fixing mobile) — audit top-down from `lg:`, verify all breakpoints after every change.
+**Rationale:** Reuses patterns from Phases 1–4. RelationshipSidebar uses react-resizable-panels installed in Phase 4. DossierDetailShell generalizes WorkspaceShell patterns. Elected Officials domain completes 8-type coverage.
+**Delivers:** DossierDetailLayout with sidebar slot, RelationshipSidebar (grouped by tier, collapsible), Elected Officials domain + page + route, tier-specific enrichments for Anchor types (Countries, Organizations), shared DossierDetailShell component.
+**Avoids:** Pitfall 14 (N+1 relationship queries — dedicated batch endpoint `GET /api/dossiers/:id/relationships`).
 
-### Phase 6: Domain Repository Consolidation
+### Phase 6: Feature Absorption and Quick Switcher
 
-**Rationale:** The most impactful architectural pattern enforcement. Currently 90+ hooks bypass the domain repository layer. This phase makes data flow consistent and testable across all 13 backend API areas.
-**Delivers:** Domain repositories for all 13 backend API areas (country, organization, forum, topic, working-group, person, elected-official, work-item, calendar, intelligence, position, search, ai-briefing); query key factories; all hooks become thin wrappers; raw `fetch()` eliminated from hooks.
-**Addresses:** Domain repository pattern, query key factories, TanStack Query hook standardization.
-**Avoids:** Pitfall 8 (deduplication loses nuance) — write tests for each call site before refactoring.
-
-### Phase 7: Performance Optimization
-
-**Rationale:** After the codebase is clean and architecture is enforced, performance optimization operates on a stable target. Bundle analysis is only meaningful after dead code is removed.
-**Delivers:** Bundle under 200KB gzipped initial; CWV compliance (LCP < 2.5s, INP < 200ms, CLS < 0.1); Lighthouse CI in pipeline; Sentry RUM with web-vitals; Redis cache reliability monitoring.
-**Addresses:** Core Web Vitals compliance, bundle size budget, route-level code splitting gaps, Redis cache reliability, database query optimization, image/asset optimization.
-**Avoids:** Pitfall 6 (bundle splitting waterfall — group related deps in `manualChunks`); Pitfall 10 (over-memoization — profile first, trust React 19 compiler); Pitfall 11 (Tailwind v4 purge removes dynamic classes).
-
-### Phase 8: Accessibility and WCAG AA
-
-**Rationale:** EAA compliance has been legally required since June 2025. HeroUI v3 is React Aria-based and handles most accessibility correctly if used via compound component APIs. This phase audits and enforces compliance.
-**Delivers:** WCAG 2.2 AA compliance, focus management on TanStack Router route changes, form error accessibility (`aria-describedby`, `aria-invalid`), Arabic screen reader testing (`lang="ar"` on Arabic content sections), accessibility CI gate (axe-core in Playwright).
-**Addresses:** WCAG AA baseline, focus management on route changes, form error a11y, Arabic screen reader testing, coverage thresholds in CI.
+**Rationale:** Must come last. Absorbed features (Analytics, AI Briefings, Network Graph, Search) depend on their destination locations (dashboard widgets, workspace tabs, sidebar panels) being stable. Building destinations first then moving features into them eliminates the absorption pitfall.
+**Delivers:** Analytics absorbed into dashboard widgets, AI Briefing generation moved into workspace Docs tab, Network Graph embedded as expandable RelationshipSidebar view, enhanced Cmd+K Quick Switcher (search across all 8 dossier types + work items + recent pages), removal of standalone absorbed pages.
+**Avoids:** Pitfall 5 (silent feature absorption regression — embedded variants + ErrorBoundary per absorbed component), Pitfall 11 (stale Quick Switcher index — derive from route tree).
 
 ### Phase Ordering Rationale
 
-- Phase 1 (dead code) before everything else — Knip baseline on clean codebase is accurate; enforcing patterns on dead code wastes effort
-- Phase 2 (naming) before Phase 6 (domain repos) — consistent names make repository migration mechanical
-- Phase 3 (security) as early as possible — placeholder middleware is a production blocker regardless of code cleanliness
-- Phase 4 (RTL) before Phase 5 (responsive) — direction system must be settled before layout primitives are built on top of it
-- Phase 6 (domain repos) after naming — scaffolding 13 domains requires stable file naming first
-- Phase 7 (performance) after dead code and domain repos — bundle analysis on clean, used code only
-- Phase 8 (accessibility) last — HeroUI handles most a11y natively; this is verification and gap-filling
+- Phases 1 then 2 are sequential prerequisites: route consolidation reveals the full scope of what needs updating; lifecycle schema must exist before any UI that references it is built.
+- Phase 2 (Lifecycle Engine) must precede Phases 3 and 4: both Operations Hub and Engagement Workspace query `lifecycle_stage`. Building the column after the UI that depends on it creates a broken intermediate state.
+- Phase 4 (Workspace) before Phase 5 (Dossier Pages): WorkspaceShell patterns established in Phase 4 are directly reused in Phase 5; react-resizable-panels is installed in Phase 4 for RelationshipSidebar use in Phase 5.
+- Phase 6 (Absorption) must be last: feature destinations must be stable before moving features into them.
 
 ### Research Flags
 
-Phases needing deeper research during planning:
+Phases likely needing extra validation during planning:
 
-- **Phase 3 (Security):** RLS audit requires a live Supabase dashboard review to enumerate tables without policies — this is a project-specific investigation, not researchable in advance
-- **Phase 6 (Domain Repos):** Need to map which backend API routes exist per domain before scaffolding; 13 domains to create
-- **Phase 8 (Accessibility):** Arabic screen reader behavior is under-documented; requires hands-on testing with VoiceOver in Arabic mode
+- **Phase 4 (Engagement Workspace):** RTL decision for LifecycleBar direction (LtrIsolate vs natural RTL flip) must be documented as an explicit product decision before implementation begins.
+- **Phase 4 (Engagement Workspace):** React 19.2 `<Activity>` component availability — verify it is stable in this project's React version before committing to it as the tab-hide solution.
+- **Phase 6 (Feature Absorption):** Each absorbed feature needs an "embedded variant audit" before absorption — identify all `useSearch()`, `useNavigate()`, and route-dependent calls in each component being absorbed.
 
-Phases with standard patterns (skip research-phase):
+Phases with standard, well-documented patterns (skip research-phase):
 
-- **Phase 1 (Dead Code):** Knip is well-documented; configuration is mechanical
-- **Phase 2 (Naming):** Pure rename operations via `git mv`
-- **Phase 5 (Responsive):** Tailwind breakpoint patterns are established; layout primitives are standard
-- **Phase 7 (Performance):** web-vitals + Sentry is 5 lines of code; Lighthouse CI is well-documented
+- **Phase 1 (Navigation):** File moves, redirects, and nav refactors are well-understood operations in this codebase.
+- **Phase 2 (Lifecycle Engine):** Supabase enum migrations + TanStack Query mutation pattern are established and documented.
+- **Phase 3 (Operations Hub):** Dashboard zone layout with Tailwind grid + recharts is the existing pattern.
+- **Phase 5 (Dossier Pages):** Follows Phase 4 patterns directly. Elected Officials domain follows 20 existing domain templates exactly.
+
+---
 
 ## Confidence Assessment
 
-| Area         | Confidence | Notes                                                                                                                                                                                          |
-| ------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Stack        | HIGH       | All tools are official/stable releases; ESLint 9 and typescript-eslint 8 are current release lines. One caveat: verify `eslint-plugin-rtl-friendly` Tailwind v4 compatibility before enabling. |
-| Features     | HIGH       | Feature list derived directly from CONCERNS.md audit + official Supabase production checklist. Security features are non-negotiable; responsive/a11y verified against EAA requirements.        |
-| Architecture | HIGH       | Existing architecture is documented and sound. Cleanup phases are dependency-ordered based on static analysis. Domain repository pattern is standard TanStack Query guidance.                  |
-| Pitfalls     | HIGH       | Sourced from real-world RLS exposure reports (170+ apps affected), official Express security guides, and known HeroUI re-export chain behavior documented in MEMORY.md.                        |
+| Area         | Confidence | Notes                                                                                                                                                                                                                      |
+| ------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stack        | HIGH       | All decisions verified against installed package.json. react-resizable-panels verified on npm (v4.7.6, published 2026-03-27). XState/react-grid-layout rejection is well-reasoned with bundle savings documented.          |
+| Features     | MEDIUM     | Table stakes derived from CRM industry patterns (HubSpot, Salesforce, Jira). Domain-specific features (lifecycle-stage kanban, forum sessions) are inferences about diplomatic workflow with no direct comparable product. |
+| Architecture | HIGH       | Based on direct codebase analysis of existing route tree (129 files), 20 domains, 3 navigation implementations, and existing TanStack Router layout route usage in `_protected.tsx`. No speculation.                       |
+| Pitfalls     | HIGH       | All 5 critical pitfalls are grounded in specific existing code artifacts: duplicate routes confirmed, three nav files confirmed, bundle budget confirmed at limit, no lifecycle endpoint confirmed in backend.             |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **eslint-plugin-rtl-friendly Tailwind v4 compatibility:** Verify the plugin works with Tailwind v4 CSS variable syntax before enabling. If incompatible, fall back to enhanced `no-restricted-syntax` rules until plugin is updated.
-- **rollup-plugin-visualizer Node version:** Requires Node >= 22 in v6+. Project runs Node 18+ LTS. Pin to v5.x if Node < 22, or use `vite-plugin-bundle-analyzer` as alternative.
-- **RLS policy current state:** Cannot enumerate which specific tables have RLS gaps without a live Supabase dashboard audit — Phase 3's first task.
-- **clearance_level column existence:** Assumes this column exists on users table per CONCERNS.md. Verify schema before implementing clearance middleware.
-- **i18n key audit:** Knip may flag Arabic-only keys as unused (Pitfall 12). Run `i18next-parser` to extract used keys before any i18n deletion.
+- **Elected Officials table existence:** Verify via Supabase MCP before Phase 5 planning — if the `elected_officials` table does not exist, a migration is needed alongside the Phase 2 lifecycle migration.
+- **Calendar engagement-scoped filter:** Verify `GET /api/calendar-events` supports engagement_id filtering before Phase 4 planning — if not, a backend extension is needed before the scoped calendar tab can be built.
+- **LifecycleBar RTL direction policy:** An explicit product decision (LtrIsolate vs natural RTL flip) is required before Phase 4 begins. This is not technical — make the decision during planning, not during implementation.
+- **Forum workspace scope:** The line between "forum workspace" (in scope for Phase 4) and "forum recurring sessions mini-workspace" (deferred) needs explicit definition before Phase 4 planning starts.
+
+---
 
 ## Sources
 
 ### Primary (HIGH confidence)
 
-- [ESLint flat config](https://eslint.org/blog/2025/03/flat-config-extends-define-config-global-ignores/) — ESLint 9 flat config API
-- [typescript-eslint getting started](https://typescript-eslint.io/getting-started/) — typescript-eslint 8.x native flat config
-- [Knip official site](https://knip.dev/) — dead code detection and monorepo configuration
-- [prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss) — official Tailwind Labs class sorting
-- [Supabase Production Checklist](https://supabase.com/docs/guides/deployment/going-into-prod) — RLS, security, performance
-- [Supabase RLS Best Practices](https://supabase.com/docs/guides/troubleshooting/rls-performance-and-best-practices-Z5Jjwv) — RLS performance and pitfalls
-- [Express Security Best Practices](https://expressjs.com/en/advanced/best-practice-security.html) — Helmet, CORS, middleware ordering
-- [Core Web Vitals](https://web.dev/articles/vitals) — LCP, INP, CLS thresholds
-- [web-vitals npm](https://www.npmjs.com/package/web-vitals) — RUM integration
-- [ESLint CSS support](https://eslint.org/blog/2025/02/eslint-css-support/) — @eslint/css plugin
-- [eslint-plugin-security GitHub](https://github.com/eslint-community/eslint-plugin-security) — Node.js security rules
+- Direct codebase analysis — route tree (129 files), 20 domain repositories, AppSidebar.tsx (189 lines), navigation-config.ts (301 lines), engagement domain (repository 383 lines, types 190 lines, hooks 341 lines)
+- [react-resizable-panels npm](https://www.npmjs.com/package/react-resizable-panels) — v4.7.6, published 2026-03-27, maintained by bvaughn
+- [TanStack Router File-Based Routing](https://tanstack.com/router/latest/docs/routing/file-based-routing) — layout route + Outlet pattern, routeTree.gen.ts generation
+- [HubSpot Lifecycle Stages](https://knowledge.hubspot.com/object-settings/create-and-customize-lifecycle-stages) — pipeline stage patterns
+- [Salesforce Lightning Page Layouts](https://trailhead.salesforce.com/content/learn/modules/lex_customization/lex_customization_page_layouts) — CRM record page patterns
+- [Notification UX Guidelines — Smashing Magazine](https://www.smashingmagazine.com/2025/07/design-guidelines-better-notifications-ux/) — anti-feature justification for no notification center
+- [shadcn/ui Resizable](https://ui.shadcn.com/docs/components/radix/resizable) — built on react-resizable-panels, validates choice
 
 ### Secondary (MEDIUM confidence)
 
-- [Tailwind CSS v4 RTL logical properties](https://flowbite.com/docs/customize/rtl/) — logical property migration
-- [Clean Architecture in Express.js](https://merlino.agency/blog/clean-architecture-in-express-js-applications) — hexagonal pattern validation
-- [React Design Patterns 2025](https://www.uxpin.com/studio/blog/react-design-patterns/) — domain repository pattern
-- [eslint-plugin-rtl-friendly npm](https://www.npmjs.com/package/eslint-plugin-rtl-friendly) — RTL enforcement plugin (Tailwind v4 compat unverified)
-- [Socket.dev](https://socket.dev/) — supply chain security
-- [WCAG 2.2 Compliance Checklist](https://www.allaccessible.org/blog/wcag-22-compliance-checklist-implementation-roadmap) — AA requirements
+- [CRM UX Design Best Practices — Aufait UX](https://www.aufaitux.com/blog/crm-ux-design-best-practices/) — table stakes feature validation
+- [Enterprise UX Design Guide 2026 — FuseLab](https://fuselabcreative.com/enterprise-ux-design-guide-2026-best-practices/) — workspace shell patterns
+- [Command Palette UX Patterns](https://medium.com/design-bootcamp/command-palette-ux-patterns-1-d6b6e68f30c1) — Cmd+K design decisions
+- [State Management in React 2026 — pkgpulse](https://www.pkgpulse.com/blog/state-of-react-state-management-2026) — Zustand vs XState analysis
+- [React Bundle Size Code Splitting — dev.to](https://dev.to/gouranga-das-khulna/how-we-cut-our-react-bundle-size-by-40-with-smart-code-splitting-2chi) — dashboard zone splitting strategy
+- [Tab Lazy Loading in React — learnersbucket](https://learnersbucket.com/examples/interview/tab-component-with-lazy-loading-in-react/) — render-on-first-visit pattern
+- [shadcn/ui Sidebar RTL Support](https://ui.shadcn.com/docs/components/radix/sidebar) — dir prop patterns for RTL sidebars
 
-### Tertiary (LOW confidence)
+### Tertiary (LOW confidence — validate during implementation)
 
-- [170+ Apps Exposed by Missing RLS](https://byteiota.com/supabase-security-flaw-170-apps-exposed-by-missing-rls/) — RLS failure severity context
-- [Supabase Security Retro 2025](https://supaexplorer.com/dev-notes/supabase-security-2025-whats-new-and-how-to-stay-secure.html) — general security posture
+- [React 19.2 Activity Component](https://react.dev/blog/2025/10/01/react-19-2) — tab hide/show without unmount; verify availability in project's React version before committing
+- [Stakeholder Engagement Software — Jambo](https://www.jambo.cloud/) — comparable product reference for diplomatic workflow features
 
 ---
 
-_Research completed: 2026-03-23_
+_Research completed: 2026-03-28_
 _Ready for roadmap: yes_

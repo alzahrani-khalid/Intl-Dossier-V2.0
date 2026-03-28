@@ -1,217 +1,399 @@
 # Domain Pitfalls
 
-**Domain:** Production hardening of React 19 + Express + Supabase diplomatic dossier app
-**Researched:** 2026-03-23
-
-## Critical Pitfalls
-
-Mistakes that cause regressions, security breaches, or require significant rework.
-
-### Pitfall 1: Dead Code Removal Breaks Re-Export Chains
-
-**What goes wrong:** The codebase uses a shadcn re-export pattern (`button.tsx` re-exports from `heroui-button.tsx`). Automated dead code tools (knip, ts-prune) flag intermediate re-export files as "unused" because no direct import targets them. Removing these breaks all 500+ consumers that import from the re-export path.
-
-**Why it happens:** Static analysis tools trace direct imports, not transitive re-exports. The HeroUI wrapper layer adds an indirection that confuses these tools.
-
-**Consequences:** Every component importing from `@/components/ui/button` breaks simultaneously. Build fails across the entire frontend.
-
-**Prevention:**
-
-1. Before removing ANY file flagged as dead code, trace its full import chain: `grep -r "from.*filename" frontend/src/`
-2. Create an allowlist for the `components/ui/` re-export layer in your dead code tool config
-3. Run `pnpm build` after every batch of removals (not just at the end)
-4. Remove in small commits (10-20 files max) so regressions are easy to bisect
-
-**Detection:** Build failures referencing `@/components/ui/*` imports. TypeScript errors about missing exports.
-
-**Phase:** Dead code removal phase. HIGH priority.
-
-### Pitfall 2: RLS Policy Audit Creates Data Access Blackouts
-
-**What goes wrong:** Tightening Supabase RLS policies locks out legitimate users. Tables with RLS enabled but no policies deny ALL access by default. Adding restrictive policies without testing through the actual Supabase client SDK (not the SQL editor, which runs as postgres superuser and bypasses RLS) means the app silently returns empty results.
-
-**Why it happens:** The Supabase SQL Editor bypasses RLS, so queries work there but fail for real users. Developers test in the wrong context and ship policies that block legitimate access. Per CONCERNS.md, clearance-check middleware is a placeholder -- tightening RLS without fixing this creates double-lockout.
-
-**Consequences:** Users see empty dossier lists, blank dashboards, zero search results. No error is thrown -- queries succeed but return zero rows. This is especially dangerous for diplomatic data where missing information could affect real decisions.
-
-**Prevention:**
-
-1. Test EVERY policy change through the Supabase client SDK with a real authenticated user token, never through the SQL editor
-2. Add integration tests that assert non-empty result sets for known test data with known user roles
-3. Create an RLS policy audit checklist: table name, current policies, proposed change, tested via SDK (yes/no)
-4. Index every column referenced in RLS policies (user_id, org_id, etc.) -- missing indexes cause timeouts on large tables
-5. Deploy RLS changes to staging first with a 24-hour soak period
-
-**Detection:** Empty API responses where data should exist. Dashboard widgets showing zero counts. Users reporting "everything disappeared."
-
-**Phase:** Security hardening phase. CRITICAL priority.
-
-### Pitfall 3: RTL Logical Property Migration Breaks Existing LTR Layout
-
-**What goes wrong:** Replacing physical CSS properties (`ml-4`, `mr-4`, `text-right`) with logical properties (`ms-4`, `me-4`, `text-end`) fixes Arabic RTL but breaks English LTR layouts when the `dir` attribute is missing or incorrectly inherited. Components that previously rendered correctly in English now have reversed spacing.
-
-**Why it happens:** Logical properties depend on the `dir` attribute being correctly set on the nearest ancestor. If a component is rendered outside a `dir="ltr"` context (e.g., in a portal, modal, or tooltip that renders at `<body>` level), logical properties default to LTR but may interact unexpectedly with parent direction contexts. The codebase has inconsistent RTL approaches per CONCERNS.md.
-
-**Consequences:** English layout regressions: icons on wrong side of buttons, text aligned to wrong edge, spacing flipped. These are visually obvious but only caught if someone actually tests in English after the RTL fixes.
-
-**Prevention:**
-
-1. Ensure `<html dir="ltr">` or `<html dir="rtl">` is always set at document root
-2. For portals/modals, explicitly set `dir` on the portal container
-3. After EVERY logical property conversion, test in BOTH `dir="ltr"` AND `dir="rtl"` -- not just RTL
-4. Use Stylelint `declaration-property-value-disallowed-list` to flag new physical property usage going forward
-5. Convert shared components first (buttons, cards, inputs), then page layouts -- never both at once
-
-**Detection:** Visual regression in English layouts. Spacing/alignment issues visible in screenshots. Directional icons pointing wrong way in LTR mode.
-
-**Phase:** RTL/LTR theming consistency phase. HIGH priority.
-
-### Pitfall 4: Security Middleware Ordering Breaks CORS/Preflight
-
-**What goes wrong:** Adding Helmet, stricter CORS, or CSP headers in the wrong middleware order causes preflight OPTIONS requests to fail. The frontend starts getting CORS errors on every API call. Supabase Realtime websocket connections may also break if CSP doesn't allow the websocket origin.
-
-**Why it happens:** Express middleware executes in registration order. If CORS middleware runs before Helmet, OPTIONS preflight requests don't get security headers. If Helmet runs with default CSP, it blocks inline scripts (breaking Vite HMR in dev), external API calls to Supabase, and websocket connections to Supabase Realtime.
-
-**Consequences:** Complete frontend-backend communication failure. Realtime subscriptions drop. Dev environment broken by CSP blocking Vite's hot module replacement.
-
-**Prevention:**
-
-1. Middleware order must be: Helmet -> CORS -> rate limiting -> auth -> routes
-2. Configure Helmet CSP to whitelist Supabase domains (`*.supabase.co`), Sentry DSN, and AnythingLLM endpoints
-3. Add `connectSrc` directive for websocket origins (`wss://*.supabase.co`)
-4. Test in development mode first -- Vite HMR requires `'unsafe-eval'` in dev CSP (but NOT production)
-5. Add a health check endpoint that verifies CORS headers are present in the response
-
-**Detection:** Browser console showing CORS errors. Realtime subscriptions disconnecting. `net::ERR_BLOCKED_BY_RESPONSE` errors. Vite HMR failing in dev.
-
-**Phase:** Security hardening phase. HIGH priority.
-
-### Pitfall 5: Console.log Removal Silences Error Handling
-
-**What goes wrong:** During cleanup, `console.log`/`console.warn` statements are removed for production hygiene (as flagged in CONCERNS.md). But some of these are the ONLY error handling in certain code paths -- particularly in Redis cache fallback, vector embedding failures, and search timeouts. Removing them without replacing with proper structured logging means errors vanish entirely.
-
-**Why it happens:** Developers treat "remove console.log" as a mechanical find-and-replace task. They don't audit whether each console statement is debug noise vs. the only error signal in a catch block.
-
-**Consequences:** Redis cache failures become completely silent. Vector embedding generation fails with no trace. Search timeouts return partial results with zero logging. Debugging production issues becomes impossible.
-
-**Prevention:**
-
-1. For each `console.*` removal, check: is this inside a `catch` block? Is there any other error handling here?
-2. Replace with structured logger (`logInfo`/`logError` already available per CONCERNS.md) before removing
-3. Never remove and replace in separate commits -- do both atomically
-4. Grep for the pattern `catch.*console` to find console-as-error-handling specifically
-
-**Detection:** Monitoring gaps -- errors that used to appear in logs stop appearing. Redis cache miss rate increases but no warnings logged.
-
-**Phase:** Code architecture consolidation phase. MEDIUM priority.
-
-## Moderate Pitfalls
-
-### Pitfall 6: Bundle Splitting Causes Waterfall Loading
-
-**What goes wrong:** Aggressive code splitting with `React.lazy()` (already applied to heavy routes per PROJECT.md) can create waterfall loading chains: route chunk -> component chunk -> library chunk. Each requires a separate network round-trip.
-
-**Prevention:**
-
-1. Use Vite's `build.rollupOptions.output.manualChunks` to group related dependencies (e.g., all TanStack libraries in one chunk, all chart libraries in another)
-2. Add `<link rel="prefetch">` hints for likely next routes
-3. Profile with Vite's `--report` flag to identify chunk size distribution
-4. Target chunks between 50KB-200KB -- smaller creates waterfall, larger defeats the purpose
-
-**Phase:** Performance optimization phase. MEDIUM priority.
-
-### Pitfall 7: Responsive Audit Breaks Desktop While Fixing Mobile
-
-**What goes wrong:** Fixing mobile layouts by adding `flex-col` on base breakpoint and `flex-row` on `sm:` accidentally removes desktop-specific spacing, alignment, or overflow handling that was previously implicit.
-
-**Prevention:**
-
-1. Audit top-down: start from `lg:` (desktop) and verify it still works, then check `md:`, `sm:`, and base
-2. Use browser DevTools responsive mode to test at exact breakpoints: 320px, 640px, 768px, 1024px, 1280px
-3. Test dashboards and data tables specifically -- they break most at tablet width (768-1024px)
-4. Never change a component's flex direction without checking all breakpoints
-
-**Phase:** Mobile/tablet responsiveness phase. MEDIUM priority.
-
-### Pitfall 8: Deduplicating Logic Breaks Subtle Behavioral Differences
-
-**What goes wrong:** Two similar-looking functions for different dossier types get merged into one "generic" version. But the original functions had intentional differences (different validation rules, different default values, different RLS implications) that are lost in the merge.
-
-**Prevention:**
-
-1. Before merging, diff the two implementations line-by-line -- document every difference
-2. If differences exist in validation, keep them separate or make the generic version configurable
-3. Write tests for each original call site BEFORE refactoring, then verify tests still pass after
-4. Pay special attention to the 8 dossier types -- each has unique fields and behaviors
-
-**Phase:** Code architecture consolidation phase. MEDIUM priority.
-
-### Pitfall 9: Removing "Unused" Environment Variables Breaks Deployment
-
-**What goes wrong:** CONCERNS.md flags `.env` files in 7 locations. Consolidation effort removes variables that appear unused in code but are consumed by Docker, Supabase Edge Functions, or deployment scripts.
-
-**Prevention:**
-
-1. Grep across ALL directories (not just `backend/` and `frontend/`) including `deploy/`, `docker/`, `supabase/functions/`
-2. Check `docker-compose.prod.yml` for `environment:` and `env_file:` references
-3. Check Supabase Edge Function deployment configs
-4. Never remove an env var without confirming it's absent from Docker configs and deployment scripts
-
-**Phase:** Code architecture consolidation phase. MEDIUM priority.
-
-## Minor Pitfalls
-
-### Pitfall 10: Over-Memoizing in React 19
-
-**What goes wrong:** Adding `useMemo`/`useCallback` everywhere during performance optimization. React 19's compiler automatically memoizes, making manual memoization redundant and adding overhead.
-
-**Prevention:** Profile first with React DevTools Profiler. Only add manual memoization where the compiler can't optimize (e.g., complex context patterns). Remove existing unnecessary `useMemo`/`useCallback` where the compiler handles it.
-
-**Phase:** Performance optimization phase. LOW priority.
-
-### Pitfall 11: Tailwind v4 Purge Removes Dynamic Classes
-
-**What goes wrong:** Tailwind v4's content scanning misses dynamically constructed class names (e.g., `` `text-${color}-500` ``). After cleanup, some runtime-generated classes disappear from the CSS bundle.
-
-**Prevention:** Use safelist in Tailwind config for any dynamic class patterns. Replace string interpolation with explicit class maps: `const colorMap = { red: 'text-red-500', blue: 'text-blue-500' }`.
-
-**Phase:** Code architecture consolidation phase. LOW priority.
-
-### Pitfall 12: i18n Key Cleanup Removes Keys Used Only in Arabic
-
-**What goes wrong:** Dead code tools flag i18n keys as unused because they only scan code for `t('key')` calls. Keys that exist only in `ar.json` (Arabic-specific formality variations, gender forms) get removed.
-
-**Prevention:** Compare both `en.json` and `ar.json` key sets before removing any key. Use `i18next-parser` to extract used keys rather than manual scanning.
-
-**Phase:** Dead code removal phase. LOW priority.
-
-## Phase-Specific Warnings
-
-| Phase Topic         | Likely Pitfall                           | Mitigation                                        |
-| ------------------- | ---------------------------------------- | ------------------------------------------------- |
-| Dead code removal   | Re-export chain breakage (#1)            | Build after every batch; allowlist `ui/` wrappers |
-| Dead code removal   | i18n key loss (#12)                      | Compare both locale files before deletion         |
-| Code consolidation  | Console.log removal silences errors (#5) | Replace with structured logger before removing    |
-| Code consolidation  | Logic deduplication loses nuance (#8)    | Diff line-by-line; test before and after          |
-| Code consolidation  | Env var removal breaks deploy (#9)       | Grep Docker and Edge Function configs             |
-| Performance         | Bundle waterfall (#6)                    | Manual chunks in Vite; prefetch hints             |
-| Performance         | Over-memoization (#10)                   | Profile first; trust React 19 compiler            |
-| Security hardening  | RLS blackout (#2)                        | Test via SDK not SQL editor; staging soak         |
-| Security hardening  | Middleware order breaks CORS (#4)        | Helmet -> CORS -> rate limit -> auth -> routes    |
-| RTL/LTR consistency | Logical properties break LTR (#3)        | Test both directions after every change           |
-| Responsive audit    | Desktop breaks while fixing mobile (#7)  | Test all breakpoints top-down                     |
-
-## Sources
-
-- [2025 Supabase Security Best Practices - Common Misconfigs](https://github.com/orgs/supabase/discussions/38690) -- RLS pitfalls from real pentests
-- [Supabase RLS Performance and Best Practices](https://supabase.com/docs/guides/troubleshooting/rls-performance-and-best-practices-Z5Jjwv) -- Official RLS guidance
-- [170+ Apps Exposed by Missing RLS](https://byteiota.com/supabase-security-flaw-170-apps-exposed-by-missing-rls/) -- Real-world RLS failure
-- [Express Security Best Practices](https://expressjs.com/en/advanced/best-practice-security.html) -- Official Express security guide
-- [Helmet + CORS Ordering Issue](https://github.com/expressjs/cors/issues/149) -- Middleware ordering bug
-- [CSS Logical Properties for RTL](https://dev.to/web_dev-usman/stop-fighting-rtl-layouts-use-css-logical-properties-for-better-design-5g3m) -- Logical properties migration
-- [React 19 Compiler Makes useMemo/useCallback Obsolete](https://isitdev.com/react-19-compiler-usememo-usecallback-dead-2025/) -- React 19 memoization
-- [Remove Unused Code - web.dev](https://web.dev/articles/remove-unused-code) -- Bundle optimization guidance
+**Domain:** Hub-and-spoke architecture redesign for existing diplomatic dossier management app
+**Researched:** 2026-03-28
+**Codebase:** 129 route files, 100+ protected routes, 8 dossier types, bilingual RTL/LTR, 200KB bundle budget
 
 ---
 
-_Concerns audit: 2026-03-23_
+## Critical Pitfalls
+
+Mistakes that cause rewrites, broken navigation, or major regressions.
+
+### Pitfall 1: Route Restructuring Breaks TanStack Router's Generated Route Tree
+
+**What goes wrong:** Moving route files from flat `_protected/countries.tsx` to nested `_protected/dossiers/countries/index.tsx` invalidates the auto-generated `routeTree.gen.ts`. Every `createFileRoute` call contains a hardcoded path string that TanStack Router's bundler plugin manages. Moving files without running the route generator creates mismatches between the path string in the file and the actual file location, causing silent 404s or build failures.
+
+**Why it happens:** The codebase currently has **duplicate routes** -- both `_protected/countries.tsx` AND `_protected/dossiers/countries/index.tsx` exist for countries, engagements, forums, organizations, persons, and working groups. The spec calls for consolidating under `/dossiers/{type}/`, but deleting the old flat routes while keeping the new nested ones requires careful coordination with the route tree generator.
+
+**Consequences:**
+
+- Build failures from route tree mismatches (129 route files to reconcile)
+- Broken deep links and bookmarks (users have saved `/countries/123`, now it is `/dossiers/countries/123`)
+- Navigation shell hardcoded links pointing to old paths
+- `_protected.tsx` has hardcoded navigation paths in `handleCitationClick` (lines 30-43) that will break
+
+**Prevention:**
+
+1. Run `pnpm tsr generate` (TanStack Router CLI) after every file move to regenerate `routeTree.gen.ts`
+2. Create redirect routes from old paths to new paths BEFORE removing old route files -- use TanStack Router's `redirect` in `beforeLoad`
+3. Audit all hardcoded route strings project-wide with `grep -r "to: '/" | grep -v node_modules` before removing old routes
+4. Move routes in batches by tier (anchors first, then activities, threads, contacts) -- not all at once
+5. Keep old route files as thin redirect stubs for one release cycle
+
+**Detection:** Build failures mentioning `routeTree.gen.ts`, 404s in navigation, broken sidebar links, Sentry errors with "Route not found"
+
+**Phase to address:** Phase 1 (Navigation & Route Consolidation)
+
+---
+
+### Pitfall 2: Dual Navigation System Collision
+
+**What goes wrong:** The codebase already has THREE navigation implementations: `components/layout/Sidebar.tsx`, `components/layout/AppSidebar.tsx`, and `components/modern-nav/NavigationShell/NavigationShell.tsx`. Adding a new hub-based sidebar without fully removing the old ones creates conflicts -- multiple sidebars rendering, inconsistent active-state highlighting, and competing mobile drawers.
+
+**Why it happens:** The existing `MainLayout.tsx` wraps the protected layout and uses one sidebar system. The `NavigationShell` was built as a demo/experiment (`modern-nav-demo.tsx`, `modern-nav-standalone.tsx`). Developers add the new hub-based sidebar to `MainLayout` but forget to remove or guard the old components, causing double-renders.
+
+**Consequences:**
+
+- Two sidebars visible on certain routes
+- Active route highlighting broken (each sidebar has its own route-matching logic)
+- Mobile bottom tab bar conflicts with sidebar drawer
+- Bundle bloat from shipping all three navigation implementations (~30-50KB wasted)
+- Accessibility issues: multiple `nav` landmarks confuse screen readers
+
+**Prevention:**
+
+1. Audit all three navigation components BEFORE starting: `Sidebar.tsx`, `AppSidebar.tsx`, `NavigationShell.tsx`
+2. Choose ONE as the base to modify (likely `AppSidebar.tsx` since it is the newest shadcn-compatible one)
+3. Delete demo routes (`modern-nav-demo.tsx`, `modern-nav-standalone.tsx`) as the very first commit
+4. Use Knip (already configured) to catch unused navigation component imports after deletion
+5. Single `MainLayout.tsx` should be the sole location where the sidebar renders
+
+**Detection:** Visual regression (two sidebars), Knip reporting unused exports from old nav components, bundle analysis showing dead navigation code
+
+**Phase to address:** Phase 1 (Navigation & Route Consolidation) -- must be first action
+
+---
+
+### Pitfall 3: Engagement Workspace Tabs Render All Content Eagerly
+
+**What goes wrong:** The `WorkspaceShell` component renders all 6 tabs (Overview, Context, Tasks, Calendar, Docs, Audit) on mount, even though only one is visible. Each tab contains heavy components -- Kanban board (80KB chunk), Calendar, React Flow graph, Document manager. Initial load of the engagement workspace becomes 300KB+, blowing through the 200KB budget.
+
+**Why it happens:** The natural React pattern `{activeTab === 'tasks' && <TasksTab />}` unmounts and remounts on tab switch, losing state. Developers avoid this by keeping all tabs mounted but hidden with CSS (`display: none`). This loads all tab JavaScript eagerly.
+
+**Consequences:**
+
+- Engagement workspace initial load exceeds 200KB budget (Tasks chunk alone is 80KB)
+- `size-limit` CI gate fails on `build:ci`
+- Slow Time-to-Interactive on engagement pages, especially on mobile
+- Memory pressure from 6 mounted-but-hidden heavy components
+
+**Prevention:**
+
+1. Use `React.lazy()` + `Suspense` for each tab content component -- TanStack Router already does this for routes, extend the pattern to workspace tabs
+2. Implement "render on first visit, keep mounted after" pattern:
+   ```tsx
+   const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set(['overview']))
+   // On tab change: setVisitedTabs(prev => new Set([...prev, newTab]))
+   // Render: visitedTabs.has(tabId) && <Suspense><LazyTabContent /></Suspense>
+   ```
+3. Consider using the React 19.2 `<Activity>` component which supports hide/show without unmount -- it is designed for exactly this pattern
+4. Split workspace tabs into separate route-based code-split chunks: `/dossiers/engagements/:id/tasks` already in the spec, use TanStack Router's file-based routing to auto-split each tab into its own chunk
+5. Run `pnpm build:ci` (which includes `size-limit`) after every workspace component addition
+
+**Detection:** `size-limit` CI failure, Lighthouse performance score drop, bundle analyzer showing workspace chunk > 100KB
+
+**Phase to address:** Phase 3 (Engagement Workspace) -- design decision needed before building any tabs
+
+---
+
+### Pitfall 4: Lifecycle State Machine Without Proper Persistence Creates Ghost States
+
+**What goes wrong:** The lifecycle engine (Intake -> Preparation -> Briefing -> Execution -> Follow-up -> Closed) is implemented as client-side state only, without atomic database transitions. If a user advances from "Preparation" to "Briefing" but the API call fails silently, the UI shows "Briefing" while the database says "Preparation". Other users see a different state. The engagement is in a "ghost state."
+
+**Why it happens:** The spec says stage transitions are "driven by task completion" and "not rigid -- staff can skip stages or move backward." This flexibility tempts developers to handle transitions purely in React state (or TanStack Query optimistic updates) without server-side validation. The `lifecycle_stage` enum on the `engagements` table becomes a dumb column that gets updated as an afterthought.
+
+**Consequences:**
+
+- State divergence between users viewing the same engagement
+- Lost audit trail (the spec requires stage transitions to be logged in the Audit tab)
+- Impossible to query "all engagements in Briefing stage" reliably for the Operations Hub
+- Optimistic UI updates that never reconcile on network failure
+- The "guide, not gate" philosophy is misinterpreted as "no validation" -- leading to invalid transitions (e.g., jumping from Intake to Closed)
+
+**Prevention:**
+
+1. Server-side transition validation: create a dedicated `PATCH /api/engagements/:id/transition` endpoint that validates allowed transitions, updates the column, and writes an audit log entry -- all in a single database transaction
+2. Define allowed transitions as a simple adjacency map (no XState needed for 6 linear stages):
+   ```typescript
+   const ALLOWED_TRANSITIONS: Record<Stage, Stage[]> = {
+     intake: ['preparation'],
+     preparation: ['briefing', 'intake'], // backward allowed
+     briefing: ['execution', 'preparation'],
+     execution: ['follow_up', 'briefing'],
+     follow_up: ['closed', 'execution'],
+     closed: ['follow_up'], // reopen allowed
+   }
+   ```
+3. Keep it simple: do NOT introduce XState for this. Six linear stages with backward allowed is a lookup table, not a state machine library. XState adds ~15KB to the bundle for no benefit here.
+4. Use TanStack Query's `useMutation` with `onError` rollback, NOT optimistic updates for stage transitions
+5. Add a `lifecycle_transitions` audit table or use the existing audit log system
+
+**Detection:** Different lifecycle stages shown to different users, audit tab missing transition entries, Operations Hub engagement counts do not match reality
+
+**Phase to address:** Phase 6 (Lifecycle Engine) -- but the DB schema must be designed in Phase 3 when the workspace is built
+
+---
+
+### Pitfall 5: Feature Absorption Breaks Existing Functionality Silently
+
+**What goes wrong:** When absorbing standalone pages (analytics, briefings, network graph, etc.) into contextual locations (dashboard widgets, workspace tabs, sidebar panels), the absorbed components lose their standalone data-fetching, routing, and state management. They were built to be full pages with their own query params, error boundaries, and loading states. Embedding them inside a tab strips all of that.
+
+**Why it happens:** The spec lists 10+ pages to absorb. Developers copy the page component into a tab or widget, remove the route wrapper, and the component breaks because it relied on:
+
+- Route search params (`useSearch()` from TanStack Router) that do not exist in a tab context
+- Full-page error boundaries that are now nested inside a workspace
+- Standalone TanStack Query keys that conflict with the parent workspace's queries
+- Page-level loading skeletons that look wrong inside a card/tab
+
+**Consequences:**
+
+- Analytics charts that worked standalone now show empty states inside dashboard widgets (lost query param context)
+- Network graph that expected full viewport now renders in a 300px sidebar panel (layout break)
+- AI briefing generation that navigated to `/briefings/:id` on success now has nowhere to navigate
+- Duplicated API calls (parent workspace and embedded component both fetch similar data)
+- Error in one absorbed component crashes the entire workspace (no granular error boundary)
+
+**Prevention:**
+
+1. Create "embedded" variants of each component, not just move the page component:
+   - `AnalyticsPage.tsx` (standalone, full page) vs `AnalyticsWidget.tsx` (embedded, card-sized)
+   - Each variant manages its own scope (props-driven, not route-driven)
+2. Wrap every absorbed component in its own `ErrorBoundary` -- a crash in the network graph sidebar must NOT crash the dossier detail page
+3. Replace `useSearch()` route dependencies with props: `<AnalyticsWidget dossierType="country" dossierId={id} />`
+4. Audit all `useNavigate()` calls in absorbed components -- they need to be converted to callbacks or removed
+5. Test each absorption in isolation: render the embedded variant without a route context and verify it works
+6. Do NOT delete standalone pages until the embedded variant is verified -- keep both for one release
+
+**Detection:** Empty states in embedded components, console errors about missing route context, workspace crashes on specific tabs, duplicate network requests in DevTools
+
+**Phase to address:** Phase 5 (Feature Absorption) -- but embedded variant interfaces should be designed during Phase 2 (dashboard widgets) and Phase 3 (workspace tabs)
+
+---
+
+## Moderate Pitfalls
+
+### Pitfall 6: RTL Sidebar and RelationshipSidebar Panel Direction Inversion
+
+**What goes wrong:** The new hub-based sidebar (left in LTR) must appear on the RIGHT in RTL. The `RelationshipSidebar` (right panel in LTR) must appear on the LEFT in RTL. If either uses physical CSS properties (`left`, `right`, `margin-left`) instead of logical properties (`inset-inline-start`, `ms-*`, `me-*`), the panels render on the wrong side in Arabic.
+
+**Why it happens:** The codebase has `eslint-plugin-rtl-friendly` but it is at WARN level (not ERROR). Developers can ship physical properties without build failure. The existing `Sidebar.tsx` and `AppSidebar.tsx` were built before the RTL hardening in v2.0 Phase 4 and may contain legacy physical properties.
+
+**Prevention:**
+
+1. Audit existing sidebar components for physical CSS properties before modifying them
+2. Use Tailwind logical properties exclusively: `ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`
+3. For collapsible panels, use `inset-inline-start` / `inset-inline-end` for positioning, NOT `left` / `right`
+4. The `RelationshipSidebar` must use `end-0` (not `right-0`) for positioning -- in RTL this resolves to physical left
+5. Test every sidebar state (expanded, collapsed, mobile drawer) in BOTH Arabic and English
+6. Consider promoting `eslint-plugin-rtl-friendly` to ERROR level for new files in `components/layout/`
+
+**Detection:** Sidebar on wrong side in Arabic, overlapping panels, `eslint-plugin-rtl-friendly` warnings in CI output
+
+**Phase to address:** Phase 1 (sidebar) and Phase 4 (RelationshipSidebar)
+
+---
+
+### Pitfall 7: LifecycleBar Stage Indicator Renders Backwards in RTL
+
+**What goes wrong:** The 6-stage lifecycle bar (Intake -> Preparation -> Briefing -> Execution -> Follow-up -> Closed) is a horizontal stepper. In LTR it flows left-to-right. In RTL with `dir="rtl"`, `flexDirection: "row"` reverses to right-to-left. If the JSX order is `[Intake, Preparation, ..., Closed]`, Arabic users see Closed on the right and Intake on the left -- the OPPOSITE of the intended temporal flow.
+
+**Why it happens:** The global RTL rules state "the FIRST JSX child in a row renders on the RIGHT" in RTL. For a lifecycle bar, Arabic readers should still see progression from right (start) to left (end). BUT -- if the lifecycle represents temporal progression (universally left-to-right in progress bars), then the RTL flip produces a confusing result. This is an ambiguous UX decision that gets decided wrong by default.
+
+**Prevention:**
+
+1. Make an explicit UX decision BEFORE building: should the lifecycle bar flip in RTL?
+   - **Option A (Recommended):** Use `dir="ltr"` on the lifecycle bar container and wrap with the existing `LtrIsolate` component. Progress bars are universally left-to-right. Arabic text labels still render RTL within each stage bubble.
+   - **Option B:** Let it flip naturally. First stage (Intake) on the right, last stage (Closed) on the left. Follows Arabic reading order.
+2. Document the decision in the component's JSDoc
+3. Test with both languages before merging
+4. Use CSS `direction: ltr` with `unicode-bidi: isolate` for the container, letting text inside each stage bubble inherit RTL
+
+**Detection:** Lifecycle bar looks "backwards" in one language, user confusion about which stage is first/current
+
+**Phase to address:** Phase 3 (Engagement Workspace) -- decision needed in planning, not during implementation
+
+---
+
+### Pitfall 8: Operations Hub Dashboard Becomes a Monolithic Chunk
+
+**What goes wrong:** The Operations Hub redesign adds 3 zones with 5+ widget types (AttentionCard, EngagementsByStage, Timeline, RecentActivity, QuickStats). Each widget imports its own charting library, date utilities, and data transformers. The existing `DashboardPage` chunk is already 72KB. Adding new widgets without code-splitting pushes it past the budget.
+
+**Why it happens:** The dashboard is the home screen -- developers assume it should load fast and therefore eagerly import everything. But "load fast" and "import everything" are contradictory. The existing `charts-vendor` chunk is already 152KB (gzipped); if dashboard widgets import charting libraries that are not in the shared vendor chunk, they create new separate chunks.
+
+**Prevention:**
+
+1. Each dashboard zone should be a separate lazy-loaded component with its own `Suspense` boundary
+2. "Above the fold" content (Action Bar + Attention Needed) loads eagerly; below-fold (Timeline, Activity) loads lazily
+3. Share the existing `charts-vendor` chunk -- do NOT import alternative charting libraries
+4. Use skeleton placeholders per zone (not one big skeleton for the whole page)
+5. Run `pnpm analyze` (Vite bundle analyzer, already configured) after adding each widget
+6. Widget data queries should use TanStack Query's `staleTime` tiers (already established in v2.0)
+
+**Detection:** `size-limit` CI failure on "Initial JS" entry, Lighthouse LCP regression, bundle analyzer showing new vendor chunks
+
+**Phase to address:** Phase 2 (Operations Hub)
+
+---
+
+### Pitfall 9: Scoped Kanban/Calendar Lose Global Functionality
+
+**What goes wrong:** The workspace Tasks and Calendar tabs show engagement-scoped views of the existing Kanban and Calendar components. Developers create scoped versions by filtering the existing query, but the scoped version loses features: bulk actions, cross-engagement drag-and-drop, export, and filter persistence that the global versions had.
+
+**Why it happens:** The global Kanban (`/tasks`) fetches all work items and has complex filter state in URL search params. The scoped workspace version needs to filter by engagement ID but still support the same interactions. If the scoped version is a copy-paste with a filter added, it diverges immediately. If it is a prop-based filter on the original, the original's assumptions about global scope break.
+
+**Prevention:**
+
+1. Refactor the Kanban component to accept an optional `scope` prop: `{ type: 'engagement', id: string } | { type: 'global' }`
+2. The scope prop controls the query filter, available columns, and which actions are shown
+3. Do NOT create a separate `ScopedKanban` component -- keep one component with scope awareness
+4. Same pattern for Calendar: `scope` prop controls the query
+5. URL search params for filters should be namespaced per scope to avoid conflicts
+6. Test both global (`/tasks`) and scoped (workspace tab) variants after every change
+
+**Detection:** Missing features in scoped view compared to global, filter state leaking between global and scoped views, drag-and-drop broken in scoped view
+
+**Phase to address:** Phase 3 (workspace tabs reference existing components)
+
+---
+
+### Pitfall 10: Mobile Bottom Tab Bar Conflicts with Workspace Tab Bar
+
+**What goes wrong:** The spec adds a mobile bottom tab bar (Dashboard, Dossiers, Tasks, More) AND workspace tabs (Overview, Context, Tasks, Calendar, Docs, Audit). On mobile, users see TWO horizontal tab bars -- the workspace tabs at the top and the bottom navigation. The "Tasks" label appears in both bars but navigates to different views. Confusion and wasted vertical space on small screens.
+
+**Why it happens:** Bottom tab bars and workspace tabs serve different purposes (app-level nav vs page-level nav) but look identical on a small screen. The spec does not address how they coexist on mobile.
+
+**Prevention:**
+
+1. On mobile, workspace tabs should become a scrollable horizontal pill bar (not a tab bar) with distinct styling from the bottom navigation
+2. Alternatively, workspace tabs could become a dropdown/select on mobile (< 640px breakpoint)
+3. The bottom tab bar's "Tasks" navigates to `/tasks` (global); workspace Tasks tab is clearly labeled "Engagement Tasks" or scoped with the engagement name
+4. Minimum 44px touch targets on both bars (already enforced in codebase)
+5. Test on 320px viewport width -- both bars must be usable simultaneously without overlapping
+
+**Detection:** User testing shows confusion between the two tab levels, vertical space complaints on mobile, touch target overlap
+
+**Phase to address:** Phase 3 (Engagement Workspace) mobile responsive design
+
+---
+
+## Minor Pitfalls
+
+### Pitfall 11: Cmd+K Quick Switcher Search Index Stale After Route Changes
+
+**What goes wrong:** If the Cmd+K quick switcher has a hardcoded list of navigable routes, it becomes stale after route consolidation. Users search for "Analytics" (absorbed page) and get a dead link or no result.
+
+**Prevention:**
+
+1. Quick switcher index should be derived from the route tree, not hardcoded
+2. Add entity search (dossiers, engagements by name) alongside route search
+3. Update the index in Phase 5 when pages are absorbed
+
+**Phase to address:** Phase 1 (initial), Phase 5 (update after absorption)
+
+---
+
+### Pitfall 12: Forum Sessions Create Deeply Nested Routes
+
+**What goes wrong:** Forums with sessions create routes like `/dossiers/forums/:forumId/sessions/:sessionId/tasks` which is 4 levels deep. TanStack Router handles this fine technically, but the breadcrumb, URL length, and mental model become unwieldy for users.
+
+**Prevention:**
+
+1. Sessions should be handled within the forum workspace as state/tabs, not as additional route nesting
+2. URL pattern: `/dossiers/forums/:forumId?session=sessionId&tab=tasks` (search params, not path params)
+3. This keeps the route tree flat while still being deep-linkable
+
+**Phase to address:** Phase 3 or Phase 6 (Forum workspace)
+
+---
+
+### Pitfall 13: i18n Namespace Explosion from New Components
+
+**What goes wrong:** Each new shared component (LifecycleBar, DossierCard, RelationshipSidebar, WorkspaceShell, AttentionCard, StageKanban) needs translation keys. If each creates its own i18n namespace, the number of translation files doubles and Arabic translations lag behind English.
+
+**Prevention:**
+
+1. Group new component translations under existing namespaces: `engagement-workspace`, `operations-hub`, `dossier-hub`
+2. Create all Arabic translation keys AT THE SAME TIME as English -- not as a follow-up task
+3. Use the existing `unified-kanban` namespace for scoped kanban translations
+4. Add a CI check that Arabic and English namespace files have the same keys
+
+**Phase to address:** All phases -- enforce from Phase 1
+
+---
+
+### Pitfall 14: Relationship Sidebar Causes N+1 Query Problem
+
+**What goes wrong:** The RelationshipSidebar appears on every dossier detail page and shows linked dossiers grouped by tier. If it fetches each linked dossier individually, a country with 20 linked engagements + 10 persons + 5 organizations triggers 35 API calls on page load.
+
+**Prevention:**
+
+1. Create a dedicated `GET /api/dossiers/:id/relationships` endpoint that returns all linked dossiers in one query with a JOIN
+2. Use TanStack Query's `staleTime` from the existing tier system (likely "reference data" tier with longer stale time)
+3. The sidebar should show compact cards with pre-joined data, not fetch full dossier objects
+4. Paginate if a dossier has more than 20 relationships per tier
+
+**Phase to address:** Phase 4 (Dossier Hub enriched detail pages)
+
+---
+
+## Phase-Specific Warnings
+
+| Phase                | Likely Pitfall                                 | Mitigation                                         | Severity |
+| -------------------- | ---------------------------------------------- | -------------------------------------------------- | -------- |
+| Phase 1: Navigation  | Route tree breaks on file moves (#1)           | Batch moves by tier, run `tsr generate` after each | Critical |
+| Phase 1: Navigation  | Dual sidebar collision (#2)                    | Delete old nav components first                    | Critical |
+| Phase 1: Navigation  | RTL sidebar direction (#6)                     | Logical properties only, test both languages       | Moderate |
+| Phase 2: Ops Hub     | Dashboard monolithic chunk (#8)                | Lazy-load zones, share charts-vendor               | Moderate |
+| Phase 3: Workspace   | Tab eager rendering (#3)                       | Route-based code splitting per tab                 | Critical |
+| Phase 3: Workspace   | Lifecycle bar RTL direction (#7)               | Explicit UX decision + LtrIsolate                  | Moderate |
+| Phase 3: Workspace   | Scoped vs global component divergence (#9)     | Scope prop pattern, one component                  | Moderate |
+| Phase 3: Workspace   | Mobile tab bar conflict (#10)                  | Distinct styling, scrollable pills                 | Moderate |
+| Phase 4: Dossier Hub | N+1 relationship queries (#14)                 | Dedicated batch endpoint                           | Minor    |
+| Phase 5: Absorption  | Silent feature regression (#5)                 | Embedded variants + ErrorBoundary                  | Critical |
+| Phase 5: Absorption  | Quick switcher stale index (#11)               | Derive from route tree                             | Minor    |
+| Phase 6: Lifecycle   | Ghost states from client-only transitions (#4) | Server-side transition endpoint                    | Critical |
+| Phase 6: Lifecycle   | Forum deep nesting (#12)                       | Search params instead of path nesting              | Minor    |
+| All Phases           | i18n namespace explosion (#13)                 | Grouped namespaces, simultaneous AR/EN             | Minor    |
+
+## Bundle Budget Risk Assessment
+
+Current state (gzipped, from size-limit config):
+
+- **Initial JS entry:** 200KB limit (currently at the limit)
+- **React vendor:** 50KB limit
+- **TanStack vendor:** 80KB limit
+- **Charts vendor:** 152KB (separate chunk, own budget)
+
+New components and their bundle risk:
+
+| Component                    | Estimated Size (gzipped)        | Mitigation                                |
+| ---------------------------- | ------------------------------- | ----------------------------------------- |
+| LifecycleBar                 | ~5KB                            | Small, safe to eagerly load               |
+| WorkspaceShell + 6 tabs      | ~80-120KB total                 | MUST be route-split per tab               |
+| RelationshipSidebar          | ~15KB                           | Lazy-load (collapsible panel)             |
+| Dashboard widgets (5 types)  | ~40-60KB total                  | Zone-based lazy loading                   |
+| StageKanban                  | ~10KB on top of existing Kanban | Scope prop on existing, not new component |
+| Quick Switcher (Cmd+K)       | ~20KB                           | Already exists, enhancement only          |
+| XState (if mistakenly added) | ~15KB                           | DO NOT ADD -- use lookup table instead    |
+
+**Total new JS:** ~170-230KB spread across lazy-loaded chunks.
+
+**Key risk:** The initial entry point budget (200KB) is already at the limit. ANY new code that lands in the entry chunk (not lazy-loaded) will break CI. Every new component MUST be behind `React.lazy()` or route-based code splitting. The only safe eager additions are tiny components (< 5KB) like LifecycleBar and the sidebar navigation structure itself.
+
+## Sources
+
+- [TanStack Router File-Based Routing](https://tanstack.com/router/latest/docs/routing/file-based-routing) -- route restructuring patterns, auto-generated path strings
+- [TanStack Router Routing Concepts](https://tanstack.com/router/latest/docs/routing/routing-concepts) -- layout routes, pathless routes
+- [Large App Route Migration Discussion](https://www.answeroverflow.com/m/1443596813851427007) -- strangler pattern for 250+ route migration
+- [React State Management 2025](https://www.developerway.com/posts/react-state-management-2025) -- XState complexity vs simpler alternatives
+- [XState Guidelines](https://kyleshevlin.com/guidelines-for-state-machines-and-xstate/) -- when state machines are overkill
+- [React 19.2 Activity Component](https://react.dev/blog/2025/10/01/react-19-2) -- hide/show without unmount for tab patterns
+- [shadcn/ui Sidebar RTL Support](https://ui.shadcn.com/docs/components/radix/sidebar) -- dir prop patterns for RTL sidebars
+- [React Bundle Size Code Splitting](https://dev.to/gouranga-das-khulna/how-we-cut-our-react-bundle-size-by-40-with-smart-code-splitting-2chi) -- dashboard widget splitting strategies
+- [Tab Lazy Loading in React](https://learnersbucket.com/examples/interview/tab-component-with-lazy-loading-in-react/) -- render-on-first-visit pattern
+- [FreeCodeCamp Tab Performance](https://www.freecodecamp.org/news/build-a-high-performance-tab-component/) -- tab component optimization patterns
+
+---
+
+_Researched: 2026-03-28 for v3.0 "Connected Workflow" milestone_

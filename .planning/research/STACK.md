@@ -1,199 +1,215 @@
-# Technology Stack: Quality Tooling
+# Technology Stack
 
-**Project:** Intl-Dossier v2.0 Production Quality Milestone
-**Researched:** 2026-03-23
+**Project:** Intl-Dossier v3.0 Hub-and-Spoke Architecture
+**Researched:** 2026-03-28
+**Scope:** Stack ADDITIONS only -- existing stack validated and not re-researched
 
-## Recommended Stack
+## TL;DR
 
-### Linting
+One new dependency: `react-resizable-panels`. Everything else is already installed or built with Tailwind CSS grid + existing components. Do NOT add XState, react-grid-layout, or any new animation/tab/stepper libraries.
 
-| Technology                   | Version               | Purpose                   | Why                                                                                                                                                             |
-| ---------------------------- | --------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ESLint                       | 9.x (already at root) | Unified linter            | Flat config is the default since v9; legacy `.eslintrc` is deprecated. Frontend/backend still on v8 -- must upgrade.                                            |
-| typescript-eslint            | 8.x                   | TypeScript parser + rules | Native flat config support via `tseslint.config()`. Backend currently uses `FlatCompat` shim -- replace with native.                                            |
-| eslint-plugin-react-hooks    | latest                | React hooks rules         | Already in use, keep.                                                                                                                                           |
-| eslint-plugin-react-refresh  | latest                | HMR correctness           | Already in use, keep.                                                                                                                                           |
-| eslint-plugin-unused-imports | latest                | Dead import removal       | Already in frontend, add to backend. Auto-fixable.                                                                                                              |
-| eslint-plugin-security       | 3.x                   | Node.js security patterns | 14 rules detecting eval, child_process, fs path injection. Essential for Express backend.                                                                       |
-| eslint-plugin-rtl-friendly   | latest                | RTL class enforcement     | Dedicated Tailwind RTL plugin -- reports and auto-fixes physical properties to logical counterparts. Better than current `no-restricted-syntax` regex approach. |
-| @eslint/css                  | latest                | CSS file linting          | Official ESLint CSS support (released Feb 2025). Lint standalone CSS files for logical property enforcement.                                                    |
+## New Dependency
 
-**Confidence:** HIGH -- ESLint 9 flat config is stable and well-documented. typescript-eslint 8.x is the current release line.
+### react-resizable-panels (RelationshipSidebar)
 
-### Formatting
+| Technology               | Version | Purpose                                                             | Why                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------------ | ------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `react-resizable-panels` | ^4.7.6  | Resizable + collapsible RelationshipSidebar on dossier detail pages | Users need to resize sidebar width AND collapse it. `@radix-ui/react-collapsible` (already installed) only toggles open/closed -- no drag-to-resize. This library is the foundation for shadcn/ui's Resizable component, has built-in keyboard accessibility, supports min/max constraints, and auto-collapses when dragged below threshold. ~5KB gzipped. |
 
-| Technology                  | Version                 | Purpose                   | Why                                                                                                                                          |
-| --------------------------- | ----------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Prettier                    | 3.x (already installed) | Code formatting           | Already configured with `.prettierrc`. Keep current config.                                                                                  |
-| eslint-config-prettier      | 10.x                    | Disable conflicting rules | Prevents ESLint formatting rules from conflicting with Prettier.                                                                             |
-| prettier-plugin-tailwindcss | latest                  | Class sorting             | Official Tailwind plugin for Prettier -- sorts utility classes in canonical order. More reliable than eslint-plugin-tailwindcss for sorting. |
+**Confidence:** HIGH -- verified via npm (v4.7.6 published 2026-03-27), active maintenance by bvaughn, used by shadcn/ui ecosystem.
 
-**Confidence:** HIGH -- Prettier 3 is stable. prettier-plugin-tailwindcss is the official recommendation from Tailwind Labs.
+## Existing Stack -- Already Sufficient
 
-### Dead Code & Dependency Analysis
+These are already installed and cover all v3.0 needs. No version bumps required.
 
-| Technology | Version | Purpose                     | Why                                                                                                                                                              |
-| ---------- | ------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Knip       | 5.x     | Unused files, exports, deps | Finds unused files, exports, dependencies, and devDependencies. 80+ built-in plugins (Vite, Vitest, TanStack, i18next). The standard tool for this in 2025/2026. |
+### Quick Switcher (Cmd+K)
 
-**Confidence:** HIGH -- Knip is the dominant tool for JS/TS dead code detection, actively maintained (last release Feb 2026).
+| Technology | Version | Purpose                                   | Status                                                                                                                                       |
+| ---------- | ------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cmdk`     | ^1.1.1  | Command palette for global quick switcher | INSTALLED. Wrapper exists at `components/ui/command.tsx`. Needs enhancement (search across dossiers, recent items, actions) but no new deps. |
 
-### Bundle Analysis
+### Workspace Tabs (Engagement/Forum Workspace)
 
-| Technology                  | Version | Purpose                | Why                                                                                                                           |
-| --------------------------- | ------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| rollup-plugin-visualizer    | 6.x     | Bundle treemap         | Generates interactive HTML treemap of bundle. Works natively with Vite (Rollup-based). Most popular Vite-compatible analyzer. |
-| vite-plugin-bundle-analyzer | latest  | Alternative/complement | Native Vite plugin with treemap. Use if rollup-plugin-visualizer has compatibility issues with Vite 7.                        |
+| Technology             | Version | Purpose                                                         | Status                                                                                                                                                                                                                   |
+| ---------------------- | ------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| HeroUI v3 Tabs         | beta.8  | Compound component tabs (`Tabs.List`, `Tabs.Tab`, `Tabs.Panel`) | INSTALLED via `@heroui/react`. Wrapper at `components/ui/heroui-tabs.tsx`. Supports React Aria accessibility, SSR-safe selection indicator. Use for workspace tab bar (Overview, Context, Tasks, Calendar, Docs, Audit). |
+| `@radix-ui/react-tabs` | ^1.1.13 | Fallback tab primitive                                          | INSTALLED. Available if HeroUI tabs have beta issues.                                                                                                                                                                    |
 
-**Confidence:** MEDIUM -- rollup-plugin-visualizer requires Node >= 22 in latest versions; verify compatibility with project's Node 20. May need to pin to v5.x for Node 20 support.
+### Lifecycle Bar (6-Stage Progress)
 
-### Performance Monitoring
+| Technology                 | Version  | Purpose                       | Status                                                                                                                                              |
+| -------------------------- | -------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@radix-ui/react-progress` | ^1.1.8   | Accessible progress primitive | INSTALLED. Use as base for LifecycleBar segments.                                                                                                   |
+| `motion`                   | ^12.38.0 | Stage transition animations   | INSTALLED (99 files using it). Animate stage indicator movement, collapse/expand transitions, tab switches. No additional animation library needed. |
 
-| Technology    | Version                  | Purpose                    | Why                                                                                                                                   |
-| ------------- | ------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| web-vitals    | 4.x                      | Real User Monitoring (RUM) | Official Google library (~2KB). Measures LCP, CLS, INP. Send to Sentry for field data.                                                |
-| @sentry/react | 10.x (already installed) | Error + perf monitoring    | Already in use. Enable Performance Monitoring and Web Vitals integration -- Sentry captures web-vitals automatically when configured. |
-| Lighthouse CI | 0.14.x                   | CI performance budgets     | Runs Lighthouse in CI, blocks PRs that regress performance. Configure budgets for LCP < 2.5s, CLS < 0.1.                              |
+### Dashboard Layout (Operations Hub)
 
-**Confidence:** HIGH for web-vitals and Sentry. MEDIUM for Lighthouse CI (requires CI pipeline setup).
+| Technology      | Version | Purpose                                     | Status                                                                                                                                                                   |
+| --------------- | ------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Tailwind CSS v4 | ^4.2.2  | Responsive grid layout for 3-zone dashboard | INSTALLED. Use `grid grid-cols-1 lg:grid-cols-12` with `col-span-*` for zone layout. No `react-grid-layout` needed -- dashboard zones are fixed, not user-rearrangeable. |
+| `recharts`      | ^3.8.1  | Quick Stats charts, engagement stage counts | INSTALLED. Already used for dashboard charts.                                                                                                                            |
 
-### Security Scanning
+### Collapsible Sidebar Navigation
 
-| Technology             | Version    | Purpose                       | Why                                                                                                                                                 |
-| ---------------------- | ---------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| npm audit / pnpm audit | built-in   | Dependency vulnerability scan | Free, zero-config. Run in CI. Catches known CVEs.                                                                                                   |
-| Socket.dev             | GitHub App | Supply chain attack detection | Detects behavioral threats (typosquatting, install scripts, telemetry). Complement to npm audit which only checks known CVEs. Free for open-source. |
-| eslint-plugin-security | 3.x        | Static code security          | (Listed above in Linting section.)                                                                                                                  |
+| Technology                    | Version | Purpose                                                         | Status                                                     |
+| ----------------------------- | ------- | --------------------------------------------------------------- | ---------------------------------------------------------- |
+| `@radix-ui/react-collapsible` | ^1.1.12 | Navigation sidebar group collapse (Operations, Dossiers, Admin) | INSTALLED. Wrapper at `components/ui/collapsible.tsx`.     |
+| Existing sidebar components   | --      | `sidebar.tsx` + `sidebar-collapsible.tsx`                       | INSTALLED. Refactor for hub-based grouping, don't rebuild. |
 
-**Confidence:** HIGH for pnpm audit. MEDIUM for Socket.dev (requires GitHub App install, but free tier is generous).
+### Lifecycle State Machine
 
-### Testing Quality (RTL & Responsive)
+| Technology | Version | Purpose                                         | Status                                                                                        |
+| ---------- | ------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `zustand`  | ^5.0.12 | Client-side lifecycle stage state + transitions | INSTALLED. Use a typed store with explicit transition guards. See Architecture section below. |
 
-| Technology           | Version                    | Purpose                   | Why                                                                                                                                     |
-| -------------------- | -------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Playwright           | 1.55.x (already installed) | E2E with device emulation | Already in use. Configure viewport presets for mobile (375px), tablet (768px), desktop (1280px). Test both `dir="rtl"` and `dir="ltr"`. |
-| @axe-core/playwright | 4.9.x (already installed)  | Accessibility in E2E      | Already in use. Add RTL-specific a11y checks.                                                                                           |
-| Vitest               | 4.x (already installed)    | Unit/component tests      | Already in use. Add coverage thresholds to enforce minimum coverage.                                                                    |
-| @vitest/coverage-v8  | 4.x                        | Coverage provider         | v8-based coverage for Vitest. Set thresholds: statements 70%, branches 60%.                                                             |
+### Drag-and-Drop (Stage Kanban)
 
-**Confidence:** HIGH -- all testing tools already installed. Configuration changes only.
+| Technology          | Version | Purpose                       | Status                                                               |
+| ------------------- | ------- | ----------------------------- | -------------------------------------------------------------------- |
+| `@dnd-kit/core`     | ^6.3.1  | Kanban board drag-and-drop    | INSTALLED. Already used. Extend for lifecycle-stage-grouped columns. |
+| `@dnd-kit/sortable` | ^10.0.0 | Sortable items within columns | INSTALLED.                                                           |
 
-### Pre-commit Hooks
+### Other Existing (No Changes)
 
-| Technology  | Version | Purpose                     | Why                                                                                           |
-| ----------- | ------- | --------------------------- | --------------------------------------------------------------------------------------------- |
-| husky       | 9.x     | Git hook management         | Standard for managing pre-commit hooks in JS projects.                                        |
-| lint-staged | 15.x    | Run linters on staged files | Only lint changed files -- fast feedback. Run ESLint + Prettier on staged `.ts`/`.tsx` files. |
+| Technology                | Version        | Purpose                                              |
+| ------------------------- | -------------- | ---------------------------------------------------- |
+| `@xyflow/react`           | ^12.10.2       | Network graph in RelationshipSidebar expandable view |
+| `react-day-picker`        | ^9.14.0        | Calendar in workspace Calendar tab                   |
+| `react-hook-form` + `zod` | ^7.72 / ^4.3.6 | Engagement create/edit forms                         |
+| `@tanstack/react-query`   | ^5.95.0        | Server state for all data fetching                   |
+| `@tanstack/react-router`  | ^1.168.7       | Nested routes for workspace tabs                     |
+| `@tanstack/react-table`   | ^8.21.3        | List views for dossier lists                         |
+| `sonner`                  | ^2.0.7         | Toast notifications for stage transitions            |
+| `date-fns`                | ^4.1.0         | Date formatting for timeline, calendar               |
 
-**Confidence:** HIGH -- husky + lint-staged is the standard pattern, widely adopted.
+## Alternatives Considered -- And Why NOT
 
-## Alternatives Considered
+| Category        | Rejected                             | Why Not                                                                                                                                                                                                                                                              |
+| --------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| State Machine   | XState v5 (~15KB)                    | Lifecycle has 6 linear stages with simple forward/backward. Zustand typed reducer is sufficient. XState adds complexity and bundle size for a problem that doesn't need statecharts. Revisit only if lifecycle rules become deeply conditional with parallel states. |
+| Dashboard Grid  | `react-grid-layout` (~25KB)          | Operations Hub has 3 fixed zones, not user-rearrangeable widgets. Tailwind grid handles this natively. Adding drag-to-rearrange dashboard widgets is out of scope.                                                                                                   |
+| Animation       | Any new library                      | `motion` v12.38 already installed across 99 files. Covers all needs: layout animations for LifecycleBar, `AnimatePresence` for tab transitions, `m.div` for sidebar collapse.                                                                                        |
+| Stepper         | `@mantine/core` Stepper, MUI Stepper | LifecycleBar is a custom horizontal stage indicator, not a form wizard. Build with `@radix-ui/react-progress` segments + motion for the indicator. Avoids importing a full component library for one component.                                                      |
+| Tabs            | Any new tab library                  | HeroUI v3 Tabs (compound components, React Aria) + Radix Tabs already cover this. Two implementations available for flexibility.                                                                                                                                     |
+| Resizable       | CSS-only resize                      | `resize: horizontal` CSS doesn't support collapse behavior, min/max constraints, keyboard accessibility, or programmatic control. `react-resizable-panels` is the standard.                                                                                          |
+| Command Palette | `kbar`, `react-cmdk`                 | `cmdk` by pacocoursey is already installed, actively maintained (v1.1.1), unstyled (works with Tailwind), and has a wrapper component. No reason to switch.                                                                                                          |
 
-| Category        | Recommended                | Alternative                 | Why Not                                                                                                                             |
-| --------------- | -------------------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Linting         | ESLint 9 flat config       | Biome                       | Biome is faster but ecosystem plugin support (tailwindcss, react-hooks, security) is not at parity. ESLint has the plugins we need. |
-| Formatting      | Prettier 3                 | Biome formatter             | Same reason -- Biome lacks tailwindcss class sorting plugin.                                                                        |
-| Dead code       | Knip                       | ts-prune                    | ts-prune is unmaintained; Knip is its spiritual successor with far broader scope.                                                   |
-| Bundle analysis | rollup-plugin-visualizer   | source-map-explorer         | source-map-explorer requires source maps in production; visualizer works with build output directly.                                |
-| Security        | pnpm audit + Socket.dev    | Snyk                        | Snyk free tier is limited (200 tests/month). pnpm audit + Socket covers the same ground for free.                                   |
-| Performance     | web-vitals + Sentry        | Datadog RUM                 | Sentry already installed; adding web-vitals integration is zero-cost. Datadog requires new vendor relationship.                     |
-| Pre-commit      | husky + lint-staged        | lefthook                    | husky is more widely adopted in JS ecosystem; lefthook is Go-based with less community support for JS tooling.                      |
-| RTL linting     | eslint-plugin-rtl-friendly | Custom no-restricted-syntax | Current regex approach is fragile and doesn't auto-fix. Dedicated plugin understands Tailwind class structure.                      |
+## Architecture Decisions for New Components
 
-## What NOT to Use
+### LifecycleBar -- Custom Component
 
-| Tool                                    | Why Avoid                                                                                                                                                                     |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| eslint-plugin-tailwindcss (for sorting) | Tailwind v4 support is beta/incomplete. Use prettier-plugin-tailwindcss instead for class sorting. Keep eslint-plugin-tailwindcss only for contradiction detection if stable. |
-| Biome (as full replacement)             | Plugin ecosystem gaps. Worth revisiting in 6 months.                                                                                                                          |
-| webpack-bundle-analyzer                 | Project uses Vite, not webpack.                                                                                                                                               |
-| Snyk (paid)                             | Free tier too limited. pnpm audit + Socket.dev covers needs.                                                                                                                  |
-| eslint-plugin-import                    | Slow with TypeScript. Use typescript-eslint's built-in module resolution instead.                                                                                             |
-| @eslint/eslintrc FlatCompat             | Backend currently uses this shim. Replace with native flat config -- the shim adds complexity and will be removed.                                                            |
+```
+Build with:
+- Semantic HTML: <ol role="tablist"> with <li role="tab"> per stage
+- @radix-ui/react-progress for accessible progress semantics
+- motion for animated stage indicator (layoutId for smooth transitions)
+- Tailwind for styling (flex, gap, colors per state)
+- Zustand store for current stage + transition logic
+```
+
+**Why custom:** No existing library matches the exact UX -- clickable completed stages showing summaries, current stage showing pending items, non-rigid forward/backward navigation. Building from accessible primitives (Radix + ARIA roles) gives full control.
+
+### RelationshipSidebar -- react-resizable-panels
+
+```
+Build with:
+- react-resizable-panels: PanelGroup + Panel + PanelResizeHandle
+- Main content in left Panel (flex: 1)
+- RelationshipSidebar in right Panel (defaultSize: 25, collapsedSize: 0, collapsible: true)
+- @radix-ui/react-collapsible for tier group accordion within sidebar
+- motion for expand/collapse animation
+```
+
+**Why react-resizable-panels:** The sidebar needs three behaviors simultaneously: (1) user-resizable width, (2) collapsible to zero, (3) min/max constraints. Only this library provides all three with accessibility.
+
+### WorkspaceShell -- TanStack Router Nested Routes
+
+```
+Build with:
+- TanStack Router: /dossiers/engagements/:id as parent layout route
+- Child routes: /tasks, /calendar, /docs, /audit render in Outlet
+- HeroUI v3 Tabs for the tab bar (synced to route via useNavigate/useMatch)
+- URL-driven tab state (no client state needed -- Router IS the state)
+```
+
+**Why Router-driven:** Tabs are routes. Deep-linking to `/engagements/123/tasks` must work. TanStack Router's nested layout routes are designed for exactly this pattern. Tab state lives in the URL, not Zustand.
+
+### Operations Hub Dashboard -- Tailwind Grid
+
+```
+Build with:
+- Tailwind CSS grid: grid grid-cols-1 lg:grid-cols-12
+- Zone 1 (Action Bar): col-span-full
+- Zone 2 (Left Column): col-span-full lg:col-span-7
+- Zone 3 (Right Column): col-span-full lg:col-span-5
+- recharts for Quick Stats visualizations
+- TanStack Query for data fetching with role-based query keys
+```
+
+**Why pure Tailwind:** Fixed layout, responsive breakpoints, zero JS overhead. The dashboard doesn't need drag-to-rearrange.
+
+### Quick Switcher (Cmd+K) -- Enhanced cmdk
+
+```
+Build with:
+- cmdk (already installed): Command.Dialog + Command.Input + Command.List
+- TanStack Query: search across dossiers, engagements, work items
+- Keyboard shortcuts: Cmd+K to open, recent items, type-ahead
+- motion for dialog entrance animation
+```
+
+**Why enhance, not replace:** The `command.tsx` wrapper already exists. Add search integration and action commands (New Engagement, New Request, Navigate to...).
 
 ## Installation
 
 ```bash
-# Linting (new additions)
-pnpm add -D -w eslint@^9 eslint-config-prettier eslint-plugin-security eslint-plugin-rtl-friendly @eslint/css
+# Single new dependency
+pnpm add react-resizable-panels
 
-# Formatting (new additions)
-pnpm add -D -w prettier-plugin-tailwindcss
-
-# Dead code analysis
-pnpm add -D -w knip
-
-# Bundle analysis
-pnpm add -D -w rollup-plugin-visualizer
-
-# Performance monitoring (frontend)
-cd frontend && pnpm add web-vitals
-
-# Pre-commit hooks
-pnpm add -D -w husky lint-staged
-
-# Coverage
-pnpm add -D -w @vitest/coverage-v8
+# That's it. Everything else is already installed.
 ```
 
-## Configuration Strategy
+## Bundle Impact Assessment
 
-### ESLint Consolidation
+| Package                      | Gzipped Size | Justification                                         |
+| ---------------------------- | ------------ | ----------------------------------------------------- |
+| `react-resizable-panels`     | ~5KB         | Only new addition. Well within 200KB budget headroom. |
+| XState (rejected)            | ~15KB        | Saved by using Zustand instead.                       |
+| react-grid-layout (rejected) | ~25KB        | Saved by using Tailwind grid.                         |
 
-**Current state:** 3 separate configs (root `.eslintrc.js`, frontend `eslint.config.js`, backend `eslint.config.js`) plus legacy `.eslintrc.json` files.
+**Current bundle budget:** 200KB (enforced by size-limit). Adding ~5KB for react-resizable-panels is safe.
 
-**Target state:** Single root `eslint.config.js` (flat config) that applies workspace-specific overrides via file patterns. Delete all `.eslintrc.*` files.
+## Integration Points
 
-```
-eslint.config.js (root)
-  ├── Base: js.configs.recommended + tseslint.configs.recommended
-  ├── Frontend: files: ["frontend/**/*.{ts,tsx}"] → react-hooks, react-refresh, rtl-friendly, tailwindcss
-  ├── Backend: files: ["backend/**/*.ts"] → security, no-console
-  └── Shared: unused-imports, prettier integration
-```
+### With Existing Patterns
 
-### Prettier Plugin Order
+| Pattern           | Integration                                                                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Domain repository | New `elected-officials` domain follows same pattern as 13 existing domains                                                      |
+| HeroUI re-export  | `react-resizable-panels` gets a `resizable.tsx` wrapper in `components/ui/` following shadcn re-export pattern                  |
+| RTL support       | `react-resizable-panels` supports `dir="rtl"` on PanelGroup -- sidebar appears on LEFT in RTL (correct for Arabic reading flow) |
+| Mobile-first      | Sidebar collapses to sheet/drawer on mobile (use existing `sheet.tsx` / `vaul` drawer)                                          |
+| Code splitting    | Workspace routes use `React.lazy()` -- each tab is a lazy-loaded route                                                          |
 
-```json
-{
-  "plugins": ["prettier-plugin-tailwindcss"]
-}
-```
+### RTL Considerations for New Components
 
-Tailwind plugin must be last in the plugins array.
-
-### Knip Configuration
-
-```json
-{
-  "workspaces": {
-    "frontend": { "entry": ["src/main.tsx"], "project": ["src/**/*.{ts,tsx}"] },
-    "backend": { "entry": ["src/index.ts"], "project": ["src/**/*.ts"] }
-  }
-}
-```
-
-## Version Alignment Required
-
-| Package           | Current (frontend) | Current (backend) | Target     | Action                  |
-| ----------------- | ------------------ | ----------------- | ---------- | ----------------------- |
-| ESLint            | 8.57.0             | 8.57.0            | 9.x        | Upgrade both workspaces |
-| typescript-eslint | mixed              | uses FlatCompat   | 8.x native | Rewrite backend config  |
-| Prettier          | 3.3.0              | 3.3.0             | 3.6.x      | Already at root, align  |
+| Component           | RTL Behavior                                                                                                                               |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| LifecycleBar        | Stages flow RIGHT-to-LEFT (first stage on right). Use `flex-row` -- `forceRTL` handles flip automatically via Tailwind logical properties. |
+| RelationshipSidebar | Appears on LEFT side in RTL (logical "end" position). `react-resizable-panels` respects `dir="rtl"`.                                       |
+| WorkspaceShell tabs | HeroUI Tabs already RTL-aware via React Aria. Tab order flows RTL automatically.                                                           |
+| Quick Switcher      | `cmdk` renders as dialog -- RTL handled by `dir` attribute on container.                                                                   |
+| Dashboard zones     | Tailwind grid + logical properties (`ms-*`, `me-*`, `ps-*`, `pe-*`). Left column maps to "start" column in RTL.                            |
 
 ## Sources
 
-- [ESLint flat config with extends and defineConfig](https://eslint.org/blog/2025/03/flat-config-extends-define-config-global-ignores/) - HIGH confidence
-- [typescript-eslint getting started](https://typescript-eslint.io/getting-started/) - HIGH confidence
-- [Knip official site](https://knip.dev/) - HIGH confidence
-- [rollup-plugin-visualizer GitHub](https://github.com/btd/rollup-plugin-visualizer) - HIGH confidence
-- [web-vitals npm](https://www.npmjs.com/package/web-vitals) - HIGH confidence
-- [eslint-plugin-security GitHub](https://github.com/eslint-community/eslint-plugin-security) - HIGH confidence
-- [eslint-plugin-rtl-friendly npm](https://www.npmjs.com/package/eslint-plugin-rtl-friendly) - MEDIUM confidence (verify Tailwind v4 compat)
-- [prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss) - HIGH confidence (official Tailwind Labs)
-- [ESLint CSS support announcement](https://eslint.org/blog/2025/02/eslint-css-support/) - HIGH confidence
-- [Socket.dev for supply chain security](https://socket.dev/) - MEDIUM confidence
-
----
-
-_Stack research: 2026-03-23_
+- [react-resizable-panels npm](https://www.npmjs.com/package/react-resizable-panels) -- v4.7.6, published 2026-03-27 (HIGH confidence)
+- [react-resizable-panels GitHub](https://github.com/bvaughn/react-resizable-panels) -- collapsible example (HIGH confidence)
+- [cmdk npm](https://www.npmjs.com/package/cmdk) -- v1.1.1 by pacocoursey (HIGH confidence)
+- [cmdk GitHub](https://github.com/pacocoursey/cmdk) -- React 19 compatible (HIGH confidence)
+- [HeroUI v3 Tabs migration](https://v3.heroui.com/docs/react/migration/tabs) -- compound component pattern (MEDIUM confidence, beta)
+- [HeroUI v3 beta.8 release](https://heroui.com/docs/react/releases/v3-0-0-beta-8) -- latest as of 2026-03 (MEDIUM confidence, beta)
+- [shadcn/ui Resizable](https://ui.shadcn.com/docs/components/radix/resizable) -- built on react-resizable-panels (HIGH confidence)
+- [Zustand GitHub](https://github.com/pmndrs/zustand) -- v5, middleware patterns (HIGH confidence)
+- [State Management in React 2026](https://www.pkgpulse.com/blog/state-of-react-state-management-2026) -- Zustand vs XState analysis (MEDIUM confidence)
+- [Tailwind CSS Grid](https://tailwindcss.com/docs/grid-template-columns) -- responsive dashboard layout (HIGH confidence)
