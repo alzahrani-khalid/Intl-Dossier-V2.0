@@ -19,7 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Loader2, Slack, MessageSquare, Link2, Unlink, Bell, Clock, Check } from 'lucide-react'
+import { Loader2, Hash, MessageSquare, Link2, Unlink, Bell, Clock, Check } from 'lucide-react'
 import { toast } from 'sonner'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -119,7 +119,7 @@ async function unlinkBotAccount(linkId: string): Promise<void> {
 export function BotIntegrationsSettings() {
   const { t } = useTranslation('integrations')
   const { isRTL } = useDirection()
-const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
 
   // Get URL search params
   const searchParams = useSearch({ strict: false }) as Record<string, string | undefined>
@@ -209,7 +209,7 @@ const queryClient = useQueryClient()
     },
   })
 
-  // Slack OAuth URL
+  // Hash OAuth URL
   const slackClientId = import.meta.env.VITE_SLACK_CLIENT_ID
   const slackRedirectUri = import.meta.env.VITE_SUPABASE_URL + '/functions/v1/slack-bot/oauth'
   const slackOAuthUrl = slackClientId
@@ -243,11 +243,11 @@ const queryClient = useQueryClient()
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Slack */}
+            {/* Hash */}
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[#4A154B] rounded-lg">
-                  <Slack className="h-6 w-6 text-white" />
+                  <Hash className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <h3 className="font-medium">{t('platforms.slack')}</h3>
@@ -363,7 +363,7 @@ function BotLinkCard({
   const { t } = useTranslation('integrations')
   const { isRTL } = useDirection()
 
-  const PlatformIcon = link.platform === 'slack' ? Slack : MessageSquare
+  const PlatformIcon = link.platform === 'slack' ? Hash : MessageSquare
   const platformColor = link.platform === 'slack' ? '#4A154B' : '#5558AF'
 
   return (

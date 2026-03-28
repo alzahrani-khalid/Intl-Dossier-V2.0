@@ -3,7 +3,7 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
-import tailwind from 'eslint-plugin-tailwindcss'
+
 import unusedImports from 'eslint-plugin-unused-imports'
 import rtlFriendly from 'eslint-plugin-rtl-friendly'
 
@@ -13,15 +13,7 @@ export default tseslint.config(
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  // TailwindCSS plugin recommended rules
-  {
-    name: 'tailwindcss:recommended',
-    plugins: { tailwindcss: tailwind },
-    rules: {
-      ...(tailwind.configs?.recommended?.rules ?? {}),
-    },
-  },
-  {
+{
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
@@ -30,12 +22,9 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      tailwindcss: tailwind,
       'unused-imports': unusedImports,
     },
     rules: {
-      // Include Tailwind class ordering and related rules
-      ...(tailwind.configs?.recommended?.rules ?? {}),
       ...reactHooks.configs.recommended.rules,
       // Type safety: Enforce no explicit any types
       '@typescript-eslint/no-explicit-any': 'error',

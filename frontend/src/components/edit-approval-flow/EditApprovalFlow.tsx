@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle, XCircle, Loader2, AlertCircle, Eye } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
-import * as diff from 'deep-diff'
+import microdiff from 'microdiff'
 import { useDirection } from '@/hooks/useDirection'
 
 interface EditRequest {
@@ -34,13 +34,26 @@ interface EditApprovalFlowProps {
   className?: string
 }
 
-type DiffKind = 'N' | 'D' | 'E' | 'A'
+type DiffKind = 'N' | 'D' | 'E'
 
 interface DiffItem {
   kind: DiffKind
   path: (string | number)[]
-  lhs?: any
-  rhs?: any
+  lhs?: unknown
+  rhs?: unknown
+}
+
+function toDeepDiffItems(
+  oldObj: Record<string, unknown>,
+  newObj: Record<string, unknown>,
+): DiffItem[] {
+  return microdiff(oldObj, newObj).map((d) => ({
+    kind:
+      d.type === 'CREATE' ? ('N' as const) : d.type === 'REMOVE' ? ('D' as const) : ('E' as const),
+    path: d.path,
+    lhs: d.type === 'CREATE' ? undefined : d.oldValue,
+    rhs: d.type === 'REMOVE' ? undefined : d.value,
+  }))
 }
 
 export function EditApprovalFlow({
@@ -52,15 +65,14 @@ export function EditApprovalFlow({
 }: EditApprovalFlowProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [action, setAction] = useState<'approve' | 'reject' | null>(null)
+  const [action, setAction] = useState<'approve' | 'reject' | null>(null)
   const [approvalNotes, setApprovalNotes] = useState('')
   const [rejectionReason, setRejectionReason] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showDiff, setShowDiff] = useState(true)
 
-  const changes = (diff.diff(editRequest.current_content, editRequest.proposed_changes) ||
-    []) as DiffItem[]
+  const changes = toDeepDiffItems(editRequest.current_content, editRequest.proposed_changes)
 
   const handleApprove = async () => {
     setLoading(true)

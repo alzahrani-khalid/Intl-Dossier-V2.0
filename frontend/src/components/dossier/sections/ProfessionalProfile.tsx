@@ -5,7 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { User, Mail, Phone, Globe, ExternalLink, Linkedin, Languages, Award } from 'lucide-react'
+import { User, Mail, Phone, Globe, ExternalLink, Link, Languages, Award } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -20,7 +20,7 @@ interface ProfessionalProfileProps {
 export function ProfessionalProfile({ dossier }: ProfessionalProfileProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { extension } = dossier
+  const { extension } = dossier
 
   // Get display values based on language
   const name = isRTL ? dossier.name_ar : dossier.name_en
@@ -129,7 +129,7 @@ const { extension } = dossier
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2"
                   >
-                    <Linkedin className="h-4 w-4" />
+                    <Link className="h-4 w-4" />
                     LinkedIn
                     <ExternalLink className="h-3 w-3" />
                   </a>

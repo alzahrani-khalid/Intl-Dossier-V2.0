@@ -23,7 +23,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { History, Eye, Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
-import * as diff from 'deep-diff'
+import microdiff from 'microdiff'
 import { useDirection } from '@/hooks/useDirection'
 
 interface Version {
@@ -46,15 +46,26 @@ interface VersionHistoryViewerProps {
   className?: string
 }
 
-type DiffKind = 'N' | 'D' | 'E' | 'A'
+type DiffKind = 'N' | 'D' | 'E'
 
 interface DiffItem {
   kind: DiffKind
   path: (string | number)[]
-  lhs?: any
-  rhs?: any
-  index?: number
-  item?: any
+  lhs?: unknown
+  rhs?: unknown
+}
+
+function toDeepDiffItems(
+  oldObj: Record<string, unknown>,
+  newObj: Record<string, unknown>,
+): DiffItem[] {
+  return microdiff(oldObj, newObj).map((d) => ({
+    kind:
+      d.type === 'CREATE' ? ('N' as const) : d.type === 'REMOVE' ? ('D' as const) : ('E' as const),
+    path: d.path,
+    lhs: d.type === 'CREATE' ? undefined : d.oldValue,
+    rhs: d.type === 'REMOVE' ? undefined : d.value,
+  }))
 }
 
 export function VersionHistoryViewer({
@@ -65,7 +76,7 @@ export function VersionHistoryViewer({
 }: VersionHistoryViewerProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [versions, setVersions] = useState<Version[]>([])
@@ -106,7 +117,7 @@ const [open, setOpen] = useState(false)
 
     if (!version1 || !version2) return []
 
-    return (diff.diff(version1.content, version2.content) || []) as DiffItem[]
+    return toDeepDiffItems(version1.content, version2.content)
   }
 
   const renderDiffValue = (value: any): string => {
@@ -123,8 +134,6 @@ const [open, setOpen] = useState(false)
         return 'text-red-600 bg-red-50'
       case 'E':
         return 'text-yellow-600 bg-yellow-50'
-      case 'A':
-        return 'text-blue-600 bg-blue-50'
       default:
         return ''
     }
@@ -138,8 +147,6 @@ const [open, setOpen] = useState(false)
         return t('afterActions.versions.deleted')
       case 'E':
         return t('afterActions.versions.modified')
-      case 'A':
-        return t('afterActions.versions.arrayChange')
       default:
         return ''
     }
@@ -166,9 +173,7 @@ const [open, setOpen] = useState(false)
 
     return (
       <Dialog open={showDiff} onOpenChange={setShowDiff}>
-        <DialogContent
-          className="max-h-[80vh] max-w-4xl overflow-y-auto"
-        >
+        <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t('afterActions.versions.diffTitle', { from: v1, to: v2 })}</DialogTitle>
             <DialogDescription>{t('afterActions.versions.diffDescription')}</DialogDescription>

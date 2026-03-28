@@ -15,8 +15,8 @@ import {
   Phone,
   Globe,
   ExternalLink,
-  Twitter,
-  Linkedin,
+  AtSign,
+  Link,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -33,7 +33,7 @@ interface ElectedOfficialProfileProps {
 export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { extension } = dossier
+  const { extension } = dossier
 
   // Get display values based on language
   const name = isRTL ? dossier.name_ar : dossier.name_en
@@ -238,7 +238,7 @@ const { extension } = dossier
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2"
                   >
-                    <Twitter className="h-4 w-4" />
+                    <AtSign className="h-4 w-4" />
                     {extension.social_media.twitter}
                   </a>
                 </Button>
@@ -251,7 +251,7 @@ const { extension } = dossier
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2"
                   >
-                    <Linkedin className="h-4 w-4" />
+                    <Link className="h-4 w-4" />
                     LinkedIn
                   </a>
                 </Button>
