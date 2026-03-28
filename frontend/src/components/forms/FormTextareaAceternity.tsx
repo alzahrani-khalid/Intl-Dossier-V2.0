@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { UseFormRegister, FieldError } from 'react-hook-form'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { useState } from 'react'
 
 interface FormTextareaAceternityProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -80,7 +80,7 @@ export function FormTextareaAceternity({
     <div className="space-y-2">
       {/* Label and char count */}
       <div className="flex items-center justify-between">
-        <motion.label
+        <m.label
           htmlFor={name}
           className={cn(
             'block font-medium text-start',
@@ -97,11 +97,11 @@ export function FormTextareaAceternity({
               *
             </span>
           )}
-        </motion.label>
+        </m.label>
 
         {/* Character count */}
         {showCharCount && maxLength && (
-          <motion.span
+          <m.span
             className={cn(
               'text-xs text-gray-500 dark:text-gray-400',
               charCount > maxLength && 'text-red-500 dark:text-red-400',
@@ -111,7 +111,7 @@ export function FormTextareaAceternity({
             transition={{ duration: 0.2, delay: 0.1 }}
           >
             {charCount}/{maxLength}
-          </motion.span>
+          </m.span>
         )}
       </div>
 
@@ -133,7 +133,7 @@ export function FormTextareaAceternity({
 
         {/* Focus ring indicator (aceternity variant) */}
         {variant === 'aceternity' && isFocused && (
-          <motion.div
+          <m.div
             className="absolute inset-0 rounded-lg pointer-events-none ring-2 ring-primary-500/30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -145,7 +145,7 @@ export function FormTextareaAceternity({
 
       {/* Help text */}
       {helpText && !error && (
-        <motion.p
+        <m.p
           id={`${name}-help`}
           className="text-sm text-gray-600 dark:text-gray-400 text-start"
           initial={{ opacity: 0 }}
@@ -153,13 +153,13 @@ export function FormTextareaAceternity({
           transition={{ duration: 0.2, delay: 0.15 }}
         >
           {helpText}
-        </motion.p>
+        </m.p>
       )}
 
       {/* Error message with animation */}
       <AnimatePresence>
         {error && (
-          <motion.p
+          <m.p
             id={`${name}-error`}
             className="text-sm text-red-600 dark:text-red-400 text-start"
             initial={{ opacity: 0, y: -5 }}
@@ -168,7 +168,7 @@ export function FormTextareaAceternity({
             transition={{ duration: 0.2 }}
           >
             {t(error.message || 'validation.required')}
-          </motion.p>
+          </m.p>
         )}
       </AnimatePresence>
     </div>

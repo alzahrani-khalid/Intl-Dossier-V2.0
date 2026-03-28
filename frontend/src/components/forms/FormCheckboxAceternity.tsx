@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { UseFormRegister, FieldError } from 'react-hook-form'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import { useDirection } from '@/hooks/useDirection'
@@ -73,7 +73,7 @@ const [isHovered, setIsHovered] = useState(false)
   return (
     <div className="space-y-2">
       {/* Checkbox and label */}
-      <motion.div
+      <m.div
         className={containerClasses}
         initial={variant === 'aceternity' ? { opacity: 0, x: isRTL ? 10 : -10 } : undefined}
         animate={variant === 'aceternity' ? { opacity: 1, x: 0 } : undefined}
@@ -104,11 +104,11 @@ const [isHovered, setIsHovered] = useState(false)
             </span>
           )}
         </label>
-      </motion.div>
+      </m.div>
 
       {/* Help text */}
       {helpText && !error && (
-        <motion.p
+        <m.p
           id={`${name}-help`}
           className={cn(
             'text-sm text-gray-600 dark:text-gray-400 text-start',
@@ -119,13 +119,13 @@ const [isHovered, setIsHovered] = useState(false)
           transition={{ duration: 0.2, delay: 0.15 }}
         >
           {helpText}
-        </motion.p>
+        </m.p>
       )}
 
       {/* Error message with animation */}
       <AnimatePresence>
         {error && (
-          <motion.p
+          <m.p
             id={`${name}-error`}
             className={cn(
               'text-sm text-red-600 dark:text-red-400 text-start',
@@ -137,7 +137,7 @@ const [isHovered, setIsHovered] = useState(false)
             transition={{ duration: 0.2 }}
           >
             {t(error.message || 'validation.required')}
-          </motion.p>
+          </m.p>
         )}
       </AnimatePresence>
     </div>

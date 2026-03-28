@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { UseFormRegister, FieldError } from 'react-hook-form'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'
@@ -80,7 +80,7 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
   return (
     <div className="space-y-3">
       {/* Group label */}
-      <motion.label
+      <m.label
         className={cn(
           'block font-medium text-start',
           'text-sm sm:text-base',
@@ -96,7 +96,7 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
             *
           </span>
         )}
-      </motion.label>
+      </m.label>
 
       {/* Radio group */}
       <RadioGroup
@@ -109,7 +109,7 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
         {...(register ? register(name) : {})}
       >
         {options.map((option, index) => (
-          <motion.div
+          <m.div
             key={option.value}
             className={
               variant === 'aceternity'
@@ -148,13 +148,13 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
                 </p>
               )}
             </div>
-          </motion.div>
+          </m.div>
         ))}
       </RadioGroup>
 
       {/* Help text */}
       {helpText && !error && (
-        <motion.p
+        <m.p
           id={`${name}-help`}
           className="text-sm text-gray-600 dark:text-gray-400 text-start"
           initial={{ opacity: 0 }}
@@ -162,13 +162,13 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
           transition={{ duration: 0.2, delay: 0.15 }}
         >
           {helpText}
-        </motion.p>
+        </m.p>
       )}
 
       {/* Error message with animation */}
       <AnimatePresence>
         {error && (
-          <motion.p
+          <m.p
             id={`${name}-error`}
             className="text-sm text-red-600 dark:text-red-400 text-start"
             initial={{ opacity: 0, y: -5 }}
@@ -177,7 +177,7 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
             transition={{ duration: 0.2 }}
           >
             {t(error.message || 'validation.required')}
-          </motion.p>
+          </m.p>
         )}
       </AnimatePresence>
     </div>

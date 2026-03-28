@@ -15,7 +15,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft,
   Edit,
@@ -471,7 +471,7 @@ const navigate = useNavigate()
               </CardHeader>
               <AnimatePresence>
                 {expandedSections.roles && (
-                  <motion.div
+                  <m.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -526,7 +526,7 @@ const navigate = useNavigate()
                         {t('actions.addRole', 'Add Role')}
                       </Button>
                     </CardContent>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </Card>
@@ -553,7 +553,7 @@ const navigate = useNavigate()
               </CardHeader>
               <AnimatePresence>
                 {expandedSections.affiliations && (
-                  <motion.div
+                  <m.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -598,7 +598,7 @@ const navigate = useNavigate()
                         {t('actions.addAffiliation', 'Add Affiliation')}
                       </Button>
                     </CardContent>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </Card>

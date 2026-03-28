@@ -15,7 +15,7 @@ import {
   type ChangeEvent,
   type FocusEvent,
 } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { Phone, Mail, Globe, Calendar, Hash, CreditCard, DollarSign, Lock } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
@@ -504,7 +504,7 @@ const uniqueId = useId()
       <div className={cn('space-y-2', containerClassName)}>
         {/* Label */}
         {label && (
-          <motion.label
+          <m.label
             htmlFor={inputId}
             className={cn(
               'block font-medium text-start',
@@ -522,14 +522,14 @@ const uniqueId = useId()
                 *
               </span>
             )}
-          </motion.label>
+          </m.label>
         )}
 
         {/* Input container */}
         <div className="relative">
           {/* Leading icon */}
           {Icon && (
-            <motion.div
+            <m.div
               className={cn(
                 'absolute top-1/2 -translate-y-1/2',
                 'text-gray-400 dark:text-gray-500',
@@ -541,7 +541,7 @@ const uniqueId = useId()
               transition={{ duration: 0.2, delay: 0.1 }}
             >
               <Icon className="h-5 w-5" />
-            </motion.div>
+            </m.div>
           )}
 
           {/* Input */}
@@ -570,7 +570,7 @@ const uniqueId = useId()
         {/* Help text */}
         <AnimatePresence mode="wait">
           {helpText && !error && (
-            <motion.p
+            <m.p
               id={helpId}
               key="help-text"
               className="text-sm text-gray-600 dark:text-gray-400 text-start"
@@ -580,12 +580,12 @@ const uniqueId = useId()
               transition={{ duration: 0.2 }}
             >
               {helpText}
-            </motion.p>
+            </m.p>
           )}
 
           {/* Error message */}
           {error && (
-            <motion.p
+            <m.p
               id={errorId}
               key="error"
               className="text-sm text-red-600 dark:text-red-400 text-start"
@@ -596,7 +596,7 @@ const uniqueId = useId()
               role="alert"
             >
               {error}
-            </motion.p>
+            </m.p>
           )}
         </AnimatePresence>
       </div>

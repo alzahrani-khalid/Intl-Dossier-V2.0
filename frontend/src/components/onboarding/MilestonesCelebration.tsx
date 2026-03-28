@@ -8,7 +8,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Award, Zap, Star, Trophy, PartyPopper, Sparkles, Check, X, LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -39,7 +39,7 @@ function ConfettiParticle({
   startX: number
 }) {
   return (
-    <motion.div
+    <m.div
       className="absolute rounded-sm"
       style={{
         width: size,
@@ -77,7 +77,7 @@ function SparkleParticle({
   scale: number
 }) {
   return (
-    <motion.div
+    <m.div
       className="absolute"
       style={{ left: `${x}%`, top: `${y}%` }}
       initial={{ scale: 0, opacity: 0 }}
@@ -93,7 +93,7 @@ function SparkleParticle({
       }}
     >
       <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400" />
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -102,7 +102,7 @@ function FireworkBurst({ x, y, delay }: { x: number; y: number; delay: number })
   const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']
 
   return (
-    <motion.div
+    <m.div
       className="absolute"
       style={{ left: `${x}%`, top: `${y}%` }}
       initial={{ scale: 0, opacity: 0 }}
@@ -113,7 +113,7 @@ function FireworkBurst({ x, y, delay }: { x: number; y: number; delay: number })
         const angle = (n / 12) * Math.PI * 2
         const distance = 40 + Math.random() * 30
         return (
-          <motion.div
+          <m.div
             key={n}
             className="absolute w-2 h-2 rounded-full"
             style={{ backgroundColor: colors[n % colors.length] }}
@@ -131,27 +131,27 @@ function FireworkBurst({ x, y, delay }: { x: number; y: number; delay: number })
           />
         )
       })}
-    </motion.div>
+    </m.div>
   )
 }
 
 // Checkmark animation component
 function CheckmarkAnimation() {
   return (
-    <motion.div
+    <m.div
       className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-green-500 flex items-center justify-center"
       initial={{ scale: 0 }}
       animate={{ scale: [0, 1.2, 1] }}
       transition={{ duration: 0.5, times: [0, 0.6, 1] }}
     >
-      <motion.div
+      <m.div
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.4, delay: 0.3 }}
       >
         <Check className="w-10 h-10 sm:w-12 sm:h-12 text-white" strokeWidth={3} />
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   )
 }
 
@@ -255,14 +255,14 @@ export function MilestonesCelebration({
 
   return (
     <AnimatePresence>
-      <motion.div
+      <m.div
         className="fixed inset-0 z-50 flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
         {/* Backdrop */}
-        <motion.div
+        <m.div
           className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -278,7 +278,7 @@ export function MilestonesCelebration({
         </div>
 
         {/* Content card */}
-        <motion.div
+        <m.div
           className="relative z-10 bg-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 mx-4 max-w-sm w-full text-center shadow-2xl"
           initial={{ scale: 0.8, y: 20 }}
           animate={{ scale: 1, y: 0 }}
@@ -298,7 +298,7 @@ export function MilestonesCelebration({
             {celebration.animationType === 'checkmark' ? (
               <CheckmarkAnimation />
             ) : (
-              <motion.div
+              <m.div
                 className={cn(
                   'w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center',
                   celebration.percentage === 100
@@ -314,12 +314,12 @@ export function MilestonesCelebration({
                 transition={{ type: 'spring', damping: 12, stiffness: 200 }}
               >
                 <BadgeIcon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-              </motion.div>
+              </m.div>
             )}
           </div>
 
           {/* Badge text */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -327,30 +327,30 @@ export function MilestonesCelebration({
             <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium mb-3">
               {t(`milestones.badge.${celebration.percentage}`)}
             </span>
-          </motion.div>
+          </m.div>
 
           {/* Title */}
-          <motion.h2
+          <m.h2
             className="text-xl sm:text-2xl font-bold mb-2"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
             {t(celebration.titleKey)}
-          </motion.h2>
+          </m.h2>
 
           {/* Message */}
-          <motion.p
+          <m.p
             className="text-sm sm:text-base text-muted-foreground mb-6"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
             {t(celebration.messageKey)}
-          </motion.p>
+          </m.p>
 
           {/* Progress indicator */}
-          <motion.div
+          <m.div
             className="flex items-center justify-center gap-1.5 sm:gap-2 mb-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -365,10 +365,10 @@ export function MilestonesCelebration({
                 )}
               />
             ))}
-          </motion.div>
+          </m.div>
 
           {/* Action button */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
@@ -376,9 +376,9 @@ export function MilestonesCelebration({
             <Button onClick={handleDismiss} className="min-h-11 px-8">
               {celebration.percentage === 100 ? t('checklist.getStarted') : t('checklist.continue')}
             </Button>
-          </motion.div>
-        </motion.div>
-      </motion.div>
+          </m.div>
+        </m.div>
+      </m.div>
     </AnimatePresence>
   )
 }

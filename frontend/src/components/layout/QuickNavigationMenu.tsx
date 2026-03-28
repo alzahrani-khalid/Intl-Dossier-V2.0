@@ -12,7 +12,7 @@
 import { useState, useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import {
   Zap,
   Pin,
@@ -306,7 +306,7 @@ export function QuickNavigationMenu({
           </CollapsibleTrigger>
           <CollapsibleContent>
             <AnimatePresence mode="popLayout">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
@@ -360,7 +360,7 @@ export function QuickNavigationMenu({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-              </motion.div>
+              </m.div>
             </AnimatePresence>
           </CollapsibleContent>
         </Collapsible>
@@ -394,7 +394,7 @@ export function QuickNavigationMenu({
           </CollapsibleTrigger>
           <CollapsibleContent>
             <AnimatePresence mode="popLayout">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
@@ -448,7 +448,7 @@ export function QuickNavigationMenu({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-              </motion.div>
+              </m.div>
             </AnimatePresence>
           </CollapsibleContent>
         </Collapsible>

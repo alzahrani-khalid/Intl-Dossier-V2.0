@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 type Card = {
@@ -28,7 +28,7 @@ export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
     <div className="w-full h-full p-10 grid grid-cols-1 md:grid-cols-3  max-w-7xl mx-auto gap-4 relative">
       {cards.map((card, i) => (
         <div key={i} className={cn(card.className, '')}>
-          <motion.div
+          <m.div
             onClick={() => handleClick(card)}
             className={cn(
               card.className,
@@ -43,10 +43,10 @@ export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
           >
             {selected?.id === card.id && <SelectedCard selected={selected} />}
             <ImageComponent card={card} />
-          </motion.div>
+          </m.div>
         </div>
       ))}
-      <motion.div
+      <m.div
         onClick={handleOutsideClick}
         className={cn(
           'absolute h-full w-full start-0 top-0 bg-black opacity-0 z-10',
@@ -60,7 +60,7 @@ export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
 
 const ImageComponent = ({ card }: { card: Card }) => {
   return (
-    <motion.img
+    <m.img
       layoutId={`image-${card.id}-image`}
       src={card.thumbnail}
       height="500"
@@ -76,7 +76,7 @@ const ImageComponent = ({ card }: { card: Card }) => {
 const SelectedCard = ({ selected }: { selected: Card | null }) => {
   return (
     <div className="bg-transparent h-full w-full flex flex-col justify-end rounded-lg shadow-2xl relative z-[60]">
-      <motion.div
+      <m.div
         initial={{
           opacity: 0,
         }}
@@ -85,7 +85,7 @@ const SelectedCard = ({ selected }: { selected: Card | null }) => {
         }}
         className="absolute inset-0 h-full w-full bg-black opacity-60 z-10"
       />
-      <motion.div
+      <m.div
         layoutId={`content-${selected?.id}`}
         initial={{
           opacity: 0,
@@ -106,7 +106,7 @@ const SelectedCard = ({ selected }: { selected: Card | null }) => {
         className="relative px-8 pb-4 z-[70]"
       >
         {selected?.content}
-      </motion.div>
+      </m.div>
     </div>
   )
 }

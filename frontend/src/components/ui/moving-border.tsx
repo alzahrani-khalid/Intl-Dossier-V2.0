@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import {
-  motion,
+  m,
   useAnimationFrame,
   useMotionTemplate,
   useMotionValue,
@@ -107,7 +107,7 @@ export const MovingBorder = ({
       >
         <rect fill="none" width="100%" height="100%" rx={rx} ry={ry} ref={pathRef} />
       </svg>
-      <motion.div
+      <m.div
         style={{
           position: 'absolute',
           top: 0,
@@ -117,7 +117,7 @@ export const MovingBorder = ({
         }}
       >
         {children}
-      </motion.div>
+      </m.div>
     </>
   )
 }

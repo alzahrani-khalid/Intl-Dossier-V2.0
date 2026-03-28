@@ -6,7 +6,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useId, type ReactNode } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { CheckCircle2, AlertCircle, CircleDot, Info } from 'lucide-react'
 import type { FieldImportance, FieldStatus } from '@/types/progressive-form.types'
@@ -130,7 +130,7 @@ function StatusIndicator({ status, importance, className }: StatusIndicatorProps
   const config = statusConfig[status]
 
   return (
-    <motion.div
+    <m.div
       className={cn('flex items-center', config.color, className)}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -139,7 +139,7 @@ function StatusIndicator({ status, importance, className }: StatusIndicatorProps
       title={config.label}
     >
       {config.icon}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -201,7 +201,7 @@ export function ProgressiveFormField({
   )
 
   return (
-    <motion.div
+    <m.div
       className={containerClasses}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -244,7 +244,7 @@ export function ProgressiveFormField({
       {/* Help Text / Error Message */}
       <AnimatePresence mode="wait">
         {error ? (
-          <motion.p
+          <m.p
             key="error"
             id={errorId}
             className="mt-2 text-sm text-red-600 dark:text-red-400 text-start flex items-center gap-1"
@@ -256,9 +256,9 @@ export function ProgressiveFormField({
           >
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             {error}
-          </motion.p>
+          </m.p>
         ) : helpText ? (
-          <motion.p
+          <m.p
             key="help"
             id={helpId}
             className="mt-2 text-sm text-gray-500 dark:text-gray-400 text-start"
@@ -268,10 +268,10 @@ export function ProgressiveFormField({
             transition={{ duration: 0.2 }}
           >
             {helpText}
-          </motion.p>
+          </m.p>
         ) : null}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   )
 }
 

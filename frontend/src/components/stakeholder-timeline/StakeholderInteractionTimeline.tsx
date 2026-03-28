@@ -16,7 +16,7 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Search,
   Filter,
@@ -403,7 +403,7 @@ export function StakeholderInteractionTimeline({
       {/* Filters panel */}
       <AnimatePresence>
         {showFiltersPanel && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -416,7 +416,7 @@ export function StakeholderInteractionTimeline({
               availableEventTypes={getAvailableInteractionTypes(stakeholderType)}
               className="mb-6"
             />
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -433,7 +433,7 @@ export function StakeholderInteractionTimeline({
 
       {/* Timeline events */}
       {!isLoading && !error && events.length > 0 && (
-        <motion.div
+        <m.div
           className="space-y-0"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -476,7 +476,7 @@ export function StakeholderInteractionTimeline({
               <p className="text-sm text-muted-foreground">{t('end_of_timeline')}</p>
             </div>
           )}
-        </motion.div>
+        </m.div>
       )}
 
       {/* Create interaction dialog */}

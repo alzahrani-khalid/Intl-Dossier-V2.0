@@ -7,7 +7,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import {
   Users,
   FileText,
@@ -152,7 +152,7 @@ const [isExpanded, setIsExpanded] = useState(false)
   const activeReminders = milestone.reminders.filter((r) => r.enabled)
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -299,7 +299,7 @@ const [isExpanded, setIsExpanded] = useState(false)
                   </Button>
 
                   {isExpanded && (
-                    <motion.div
+                    <m.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
@@ -321,7 +321,7 @@ const [isExpanded, setIsExpanded] = useState(false)
                           <p className="text-xs sm:text-sm text-foreground">{expectedOutcome}</p>
                         </div>
                       )}
-                    </motion.div>
+                    </m.div>
                   )}
                 </>
               )}
@@ -329,6 +329,6 @@ const [isExpanded, setIsExpanded] = useState(false)
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </m.div>
   )
 }

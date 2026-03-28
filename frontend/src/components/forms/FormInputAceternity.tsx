@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { UseFormRegister, FieldError } from 'react-hook-form'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { useState, useEffect, type InputHTMLAttributes, type ReactNode } from 'react'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -82,7 +82,7 @@ const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
   return (
     <div className="space-y-2">
       {/* Label */}
-      <motion.label
+      <m.label
         htmlFor={name}
         className={cn(
           'block font-medium text-start',
@@ -99,13 +99,13 @@ const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
             *
           </span>
         )}
-      </motion.label>
+      </m.label>
 
       {/* Input field with optional animation */}
       <div className="relative">
         {/* Icon */}
         {icon && (
-          <motion.div
+          <m.div
             className={cn(
               'absolute top-1/2 -translate-y-1/2',
               'text-gray-400',
@@ -116,7 +116,7 @@ const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
             transition={{ duration: 0.2, delay: 0.1 }}
           >
             {icon}
-          </motion.div>
+          </m.div>
         )}
 
         {/* Input */}
@@ -141,7 +141,7 @@ const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
         {variant === 'aceternity' && placeholders.length > 0 && !rest.value && (
           <div className="absolute inset-0 flex items-center pointer-events-none px-4 sm:px-10">
             <AnimatePresence mode="wait">
-              <motion.p
+              <m.p
                 key={`placeholder-${currentPlaceholder}`}
                 initial={{ y: 5, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -155,7 +155,7 @@ const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
                 )}
               >
                 {placeholders[currentPlaceholder]}
-              </motion.p>
+              </m.p>
             </AnimatePresence>
           </div>
         )}
@@ -163,7 +163,7 @@ const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
 
       {/* Help text */}
       {helpText && !error && (
-        <motion.p
+        <m.p
           id={`${name}-help`}
           className="text-sm text-gray-600 dark:text-gray-400 text-start"
           initial={{ opacity: 0 }}
@@ -171,13 +171,13 @@ const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
           transition={{ duration: 0.2, delay: 0.15 }}
         >
           {helpText}
-        </motion.p>
+        </m.p>
       )}
 
       {/* Error message with animation */}
       <AnimatePresence>
         {error && (
-          <motion.p
+          <m.p
             id={`${name}-error`}
             className="text-sm text-red-600 dark:text-red-400 text-start"
             initial={{ opacity: 0, y: -5 }}
@@ -186,7 +186,7 @@ const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
             transition={{ duration: 0.2 }}
           >
             {t(error.message || 'validation.required')}
-          </motion.p>
+          </m.p>
         )}
       </AnimatePresence>
     </div>

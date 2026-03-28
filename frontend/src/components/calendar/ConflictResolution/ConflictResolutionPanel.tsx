@@ -7,7 +7,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   AlertTriangle,
   AlertCircle,
@@ -227,7 +227,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
   }
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
@@ -340,6 +340,6 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
           </TooltipProvider>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   )
 }

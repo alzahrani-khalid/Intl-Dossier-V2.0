@@ -13,7 +13,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -155,7 +155,7 @@ export function DossierTypeStatsCard({
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
 return (
-    <motion.div
+    <m.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
@@ -214,7 +214,7 @@ return (
                 }
               />
               {/* Count */}
-              <motion.div
+              <m.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.3 }}
@@ -225,7 +225,7 @@ return (
                 )}
               >
                 {totalCount}
-              </motion.div>
+              </m.div>
             </div>
           </div>
 
@@ -282,7 +282,7 @@ return (
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </m.div>
   )
 }
 

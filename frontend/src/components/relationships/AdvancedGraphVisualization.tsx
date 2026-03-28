@@ -33,7 +33,7 @@ import {
 } from '@xyflow/react'
 import type { NodeChange, EdgeChange } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
@@ -313,7 +313,7 @@ const name = isRTL ? data.name_ar : data.name_en
     const nodeColor = NODE_COLORS[data.type] || '#6b7280'
 
     return (
-      <motion.div
+      <m.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{
           scale: data.isOnPath ? 1.2 : 1,
@@ -387,7 +387,7 @@ const name = isRTL ? data.name_ar : data.name_en
             {name}
           </div>
         )}
-      </motion.div>
+      </m.div>
     )
   },
 )
@@ -408,7 +408,7 @@ const ClusterNode = memo(
     const { t } = useTranslation('graph')
 
     return (
-      <motion.div
+      <m.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         whileHover={{ scale: 1.05 }}
@@ -442,7 +442,7 @@ const ClusterNode = memo(
             {t('expand', 'Expand')}
           </Button>
         </div>
-      </motion.div>
+      </m.div>
     )
   },
 )
@@ -1705,7 +1705,7 @@ function AdvancedGraphVisualizationInner({
         <AnimatePresence>
           {showPathPanel && (
             <Panel position={isRTL ? 'top-right' : 'top-left'} className="w-64">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
@@ -1716,7 +1716,7 @@ function AdvancedGraphVisualizationInner({
                   onPathFound={handlePathFound}
                   onClearPath={handleClearPath}
                 />
-              </motion.div>
+              </m.div>
             </Panel>
           )}
         </AnimatePresence>
@@ -1725,13 +1725,13 @@ function AdvancedGraphVisualizationInner({
         <AnimatePresence>
           {showTimePanel && (
             <Panel position={isRTL ? 'bottom-right' : 'bottom-left'} className="w-72 mb-16">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
               >
                 <TimeAnimationPanel edges={rawEdges} onTimeChange={handleTimeChange} />
-              </motion.div>
+              </m.div>
             </Panel>
           )}
         </AnimatePresence>

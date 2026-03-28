@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { cn } from '@/lib/utils'
 import type { FieldErrorHighlightProps } from '@/types/actionable-error.types'
 
@@ -106,13 +106,13 @@ export function FieldErrorHighlight({
   }
 
   return (
-    <motion.div
+    <m.div
       className={cn('relative rounded-md transition-all duration-200', styles.ring, className)}
       initial={shouldAnimate ? animationConfig.initial : undefined}
       animate={shouldAnimate ? animationConfig.animate : undefined}
       transition={animationConfig.transition}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }

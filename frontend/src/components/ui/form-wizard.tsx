@@ -17,7 +17,7 @@
 
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Check, ChevronLeft, ChevronRight, Save, Loader2, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -298,7 +298,7 @@ const [isValidating, setIsValidating] = React.useState(false)
 
         {/* Step content */}
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={currentStep}
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -307,7 +307,7 @@ const [isValidating, setIsValidating] = React.useState(false)
             className="min-h-[200px]"
           >
             {children}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
 
         {/* Spacer for sticky action bar mode */}
@@ -611,7 +611,7 @@ export function ConditionalField({
   return (
     <AnimatePresence>
       {show && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
@@ -619,7 +619,7 @@ export function ConditionalField({
           className={cn('overflow-hidden', className)}
         >
           {children}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

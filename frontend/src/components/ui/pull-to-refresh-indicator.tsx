@@ -22,7 +22,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { RefreshCw, Check, WifiOff, Clock, Package } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { PullToRefreshState } from '@/hooks/usePullToRefresh'
@@ -137,7 +137,7 @@ export function PullToRefreshIndicator({
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
+        <m.div
           initial={{ height: 0, opacity: 0 }}
           animate={{
             height: status === 'refreshing' || status === 'complete' ? 80 : indicatorHeight,
@@ -167,7 +167,7 @@ export function PullToRefreshIndicator({
                   className="text-muted-foreground/20"
                 />
                 {/* Progress ring */}
-                <motion.circle
+                <m.circle
                   cx="20"
                   cy="20"
                   r={ringRadius}
@@ -188,7 +188,7 @@ export function PullToRefreshIndicator({
 
             {/* Status text */}
             <div className="flex flex-col">
-              <motion.span
+              <m.span
                 key={status}
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -196,7 +196,7 @@ export function PullToRefreshIndicator({
                 className="text-sm font-medium text-foreground"
               >
                 {statusContent.text}
-              </motion.span>
+              </m.span>
 
               {/* Last sync time */}
               {lastSyncTime && status !== 'refreshing' && (
@@ -210,7 +210,7 @@ export function PullToRefreshIndicator({
 
           {/* Offline queue badge */}
           {offlineQueueCount > 0 && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               className="mt-2 flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 dark:bg-amber-900/30"
@@ -221,9 +221,9 @@ export function PullToRefreshIndicator({
                   count: offlineQueueCount,
                 })}
               </span>
-            </motion.div>
+            </m.div>
           )}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

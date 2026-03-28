@@ -9,7 +9,7 @@
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileText, Plus, ArrowLeft } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 
 import { Button } from '@/components/ui/button'
 import { BriefingBookBuilder, BriefingBooksList } from '@/components/briefing-books'
@@ -40,7 +40,7 @@ const [viewMode, setViewMode] = useState<ViewMode>('list')
     >
       <AnimatePresence mode="wait">
         {viewMode === 'list' ? (
-          <motion.div
+          <m.div
             key="list"
             initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -66,9 +66,9 @@ const [viewMode, setViewMode] = useState<ViewMode>('list')
 
             {/* Briefing books list */}
             <BriefingBooksList onCreateNew={handleCreateNew} />
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div
+          <m.div
             key="builder"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -98,7 +98,7 @@ const [viewMode, setViewMode] = useState<ViewMode>('list')
 
             {/* Builder */}
             <BriefingBookBuilder onSuccess={handleBuilderSuccess} onCancel={handleBuilderCancel} />
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

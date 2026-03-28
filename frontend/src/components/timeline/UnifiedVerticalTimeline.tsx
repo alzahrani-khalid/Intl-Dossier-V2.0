@@ -12,7 +12,7 @@
 
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { Loader2, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -158,7 +158,7 @@ export function UnifiedVerticalTimeline({
   }
 
   return (
-    <motion.div
+    <m.div
       ref={containerRef}
       className={cn('w-full relative', className)}
       initial={{ opacity: 0, y: 20 }}
@@ -199,6 +199,6 @@ export function UnifiedVerticalTimeline({
           <p className="text-sm text-muted-foreground">{t('timeline.end')}</p>
         </div>
       )}
-    </motion.div>
+    </m.div>
   )
 }

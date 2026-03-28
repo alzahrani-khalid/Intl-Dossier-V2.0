@@ -8,7 +8,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
@@ -250,7 +250,7 @@ const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, co
         aria-label={t('common.tourDialog')}
       >
         {/* Backdrop with spotlight cutout */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -263,7 +263,7 @@ const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, co
 
           {/* Spotlight cutout for target element */}
           {targetRect && currentStep.highlightTarget && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="absolute"
@@ -278,10 +278,10 @@ const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, co
               }}
             />
           )}
-        </motion.div>
+        </m.div>
 
         {/* Tooltip Card */}
-        <motion.div
+        <m.div
           ref={tooltipRef}
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -415,11 +415,11 @@ const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, co
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </m.div>
 
         {/* Target highlight ring (optional visual enhancement) */}
         {targetRect && currentStep.highlightTarget && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
@@ -432,7 +432,7 @@ const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, co
             }}
           >
             <div className="absolute inset-0 rounded-lg border-2 border-primary animate-pulse" />
-          </motion.div>
+          </m.div>
         )}
       </div>
     </AnimatePresence>

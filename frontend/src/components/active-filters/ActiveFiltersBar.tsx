@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { X, AlertTriangle, Filter, Eye, EyeOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useDirection } from '@/hooks/useDirection'
 
 /**
@@ -82,7 +82,7 @@ function FilterChip({ filter, onRemove }: { filter: FilterChipConfig; onRemove: 
   }
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
@@ -116,7 +116,7 @@ function FilterChip({ filter, onRemove }: { filter: FilterChipConfig; onRemove: 
           <X className="size-3 sm:size-3.5" />
         </button>
       </Badge>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -140,7 +140,7 @@ function HiddenResultsWarning({
   if (hiddenCount <= 0) return null
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -160,7 +160,7 @@ function HiddenResultsWarning({
             total: unfilteredTotal,
           })}
       </span>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -264,7 +264,7 @@ export function ActiveFiltersBar({
         {/* Filter chips container */}
         <AnimatePresence>
           {!collapsed && (
-            <motion.div
+            <m.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
@@ -296,7 +296,7 @@ export function ActiveFiltersBar({
                   </div>
                 )}
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>

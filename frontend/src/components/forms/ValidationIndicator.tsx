@@ -4,7 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import {
   CheckCircle2,
@@ -46,13 +46,13 @@ export function ValidationIcon({
   // Loading state
   if (isValidating) {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1, rotate: 360 }}
         transition={{ rotate: { duration: 1, repeat: Infinity, ease: 'linear' } }}
       >
         <Loader2 className={cn(sizeClass, 'text-muted-foreground', className)} />
-      </motion.div>
+      </m.div>
     )
   }
 
@@ -64,47 +64,47 @@ export function ValidationIcon({
   // Valid state
   if (result.isValid && result.severity !== 'warning') {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: 'spring', stiffness: 500, damping: 25 }}
       >
         <CheckCircle2 className={cn(sizeClass, 'text-emerald-500', className)} />
-      </motion.div>
+      </m.div>
     )
   }
 
   // Warning state
   if (result.severity === 'warning') {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: 'spring', stiffness: 500, damping: 25 }}
       >
         <AlertCircle className={cn(sizeClass, 'text-amber-500', className)} />
-      </motion.div>
+      </m.div>
     )
   }
 
   // Error state
   if (!result.isValid) {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: 'spring', stiffness: 500, damping: 25 }}
       >
         <XCircle className={cn(sizeClass, 'text-red-500', className)} />
-      </motion.div>
+      </m.div>
     )
   }
 
   // Info state
   return (
-    <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}>
+    <m.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}>
       <Info className={cn(sizeClass, 'text-blue-500', className)} />
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -167,7 +167,7 @@ if (!result || (!result.messageKey && !result.suggestion)) {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         key={result.messageKey}
         initial={{ opacity: 0, y: -8, height: 0 }}
         animate={{ opacity: 1, y: 0, height: 'auto' }}
@@ -190,7 +190,7 @@ if (!result || (!result.messageKey && !result.suggestion)) {
 
           {/* Suggestion */}
           {showSuggestion && (result.suggestionKey || result.suggestion) && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -213,10 +213,10 @@ if (!result || (!result.messageKey && !result.suggestion)) {
                   </button>
                 )}
               </div>
-            </motion.div>
+            </m.div>
           )}
         </div>
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 }
@@ -267,7 +267,7 @@ export function ValidationHint({ result, className }: ValidationHintProps) {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.p
+      <m.p
         key={result.messageKey}
         initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
         animate={{ opacity: 1, x: 0 }}
@@ -276,7 +276,7 @@ export function ValidationHint({ result, className }: ValidationHintProps) {
         className={cn('text-sm text-start', severityStyles[result.severity], className)}
       >
         {t(messageKey, allParams)}
-      </motion.p>
+      </m.p>
     </AnimatePresence>
   )
 }
@@ -306,7 +306,7 @@ export function CharacterCount({ current, max, className }: CharacterCountProps)
   }
 
   return (
-    <motion.span
+    <m.span
       className={cn('text-xs tabular-nums', colorClass, className)}
       animate={{
         scale: percentage >= 100 ? [1, 1.1, 1] : 1,
@@ -315,7 +315,7 @@ export function CharacterCount({ current, max, className }: CharacterCountProps)
     >
       {current}/{max}
       {remaining < 0 && <span className="ms-1">({Math.abs(remaining)} over)</span>}
-    </motion.span>
+    </m.span>
   )
 }
 
@@ -362,7 +362,7 @@ export function PasswordStrength({
       {/* Strength bar */}
       <div className="flex items-center gap-3">
         <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-          <motion.div
+          <m.div
             className={cn('h-full rounded-full', strengthColors[level])}
             initial={{ width: 0 }}
             animate={{ width: `${score}%` }}
@@ -376,7 +376,7 @@ export function PasswordStrength({
 
       {/* Improvement suggestions */}
       {showImprovements && improvements.length > 0 && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           transition={{ duration: 0.2 }}
@@ -393,7 +393,7 @@ export function PasswordStrength({
               </li>
             ))}
           </ul>
-        </motion.div>
+        </m.div>
       )}
     </div>
   )
@@ -420,7 +420,7 @@ export function ValidationSummary({ errors, className, onFieldClick }: Validatio
   }
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
@@ -475,7 +475,7 @@ export function ValidationSummary({ errors, className, onFieldClick }: Validatio
           )
         })}
       </ul>
-    </motion.div>
+    </m.div>
   )
 }
 

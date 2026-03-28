@@ -14,7 +14,7 @@
 
 import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, m } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -245,7 +245,7 @@ const id = useId()
       onMouseEnter={onMouseEnter}
     >
       {/* Collapsed State - Clickable Card */}
-      <motion.div
+      <m.div
         layoutId={`card-${dossier.id}-${id}`}
         onClick={onActivate}
         className={cn(
@@ -312,29 +312,29 @@ const id = useId()
 
         {/* Content section */}
         <div className="text-content z-10">
-          <motion.h1
+          <m.h1
             layoutId={`title-${dossier.id}-${id}`}
             className="font-bold text-xl sm:text-2xl md:text-3xl text-white relative line-clamp-2 text-start mb-2"
           >
             {displayName || t('untitled')}
-          </motion.h1>
+          </m.h1>
           {displayDescription && (
-            <motion.p
+            <m.p
               layoutId={`description-${dossier.id}-${id}`}
               className="font-normal text-sm sm:text-base text-white/90 relative line-clamp-2 text-start"
             >
               {displayDescription}
-            </motion.p>
+            </m.p>
           )}
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Expanded State - Full Overlay */}
       <AnimatePresence>
         {isActive && (
           <>
             {/* Backdrop */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -343,13 +343,13 @@ const id = useId()
 
             {/* Expanded Card */}
             <div className="fixed inset-0 grid place-items-center z-[101] p-4">
-              <motion.div
+              <m.div
                 ref={ref}
                 layoutId={`card-${dossier.id}-${id}`}
                 className="w-full max-w-2xl h-full md:h-fit md:max-h-[90vh] flex flex-col bg-white dark:bg-neutral-900 rounded-3xl overflow-hidden shadow-2xl"
               >
                 {/* Close Button */}
-                <motion.button
+                <m.button
                   key={`button-${dossier.id}-${id}`}
                   layout
                   initial={{ opacity: 0 }}
@@ -369,10 +369,10 @@ const id = useId()
                   aria-label={t('action.close')}
                 >
                   <X className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-700 dark:text-neutral-200" />
-                </motion.button>
+                </m.button>
 
                 {/* Header Image/Map */}
-                <motion.div
+                <m.div
                   layoutId={`image-${dossier.id}-${id}`}
                   className={cn(
                     'relative w-full h-48 sm:h-64 md:h-72',
@@ -413,7 +413,7 @@ const id = useId()
                       </div>
                     )}
                   </div>
-                </motion.div>
+                </m.div>
 
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto">
@@ -439,19 +439,19 @@ const id = useId()
                           </div>
                         </div>
 
-                        <motion.h3
+                        <m.h3
                           layoutId={`title-${dossier.id}-${id}`}
                           className="font-bold text-2xl sm:text-3xl md:text-4xl text-start mb-2"
                         >
                           {displayName || t('untitled')}
-                        </motion.h3>
+                        </m.h3>
 
-                        <motion.p
+                        <m.p
                           layoutId={`description-${dossier.id}-${id}`}
                           className="text-sm sm:text-base text-muted-foreground text-start"
                         >
                           {displayDescription}
-                        </motion.p>
+                        </m.p>
                       </div>
 
                       {/* Tags */}
@@ -488,7 +488,7 @@ const id = useId()
                       </div>
 
                       {/* Actions */}
-                      <motion.div
+                      <m.div
                         layout
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -513,11 +513,11 @@ const id = useId()
                             {t('action.edit')}
                           </Button>
                         )}
-                      </motion.div>
+                      </m.div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             </div>
           </>
         )}

@@ -4,7 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import {
   XCircle,
@@ -116,7 +116,7 @@ function ActionButton({
     : actionIcons[action.type] || Wand2
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.15 }}
@@ -135,12 +135,12 @@ function ActionButton({
         )}
       >
         {isExecuting ? (
-          <motion.div
+          <m.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
           >
             <RotateCcw className="h-4 w-4" />
-          </motion.div>
+          </m.div>
         ) : isCompleted ? (
           <CheckCircle2 className="h-4 w-4" />
         ) : (
@@ -151,7 +151,7 @@ function ActionButton({
           <ChevronRight className={cn('h-3 w-3', isRTL && 'rotate-180')} />
         )}
       </Button>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -215,7 +215,7 @@ const [executingActions, setExecutingActions] = useState<Set<string>>(new Set())
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         key={error.code}
         initial={{ opacity: 0, y: -8, height: 0 }}
         animate={{ opacity: 1, y: 0, height: 'auto' }}
@@ -280,7 +280,7 @@ const [executingActions, setExecutingActions] = useState<Set<string>>(new Set())
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 }

@@ -30,7 +30,7 @@ import {
   Position,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -144,7 +144,7 @@ const name = isRTL ? data.name_ar || data.name_en : data.name_en
   const size = data.isCenter ? 50 : 36
 
   return (
-    <motion.div
+    <m.div
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       whileHover={{ scale: 1.1 }}
@@ -203,7 +203,7 @@ const name = isRTL ? data.name_ar || data.name_en : data.name_en
           {name}
         </div>
       )}
-    </motion.div>
+    </m.div>
   )
 })
 MiniDossierNode.displayName = 'MiniDossierNode'
@@ -464,7 +464,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
       {/* Hover Preview */}
       <AnimatePresence>
         {hoveredNodeData && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
@@ -475,7 +475,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
             style={{ maxWidth: '200px' }}
           >
             <DossierQuickPreview node={hoveredNodeData} isRTL={isRTL} t={t} />
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

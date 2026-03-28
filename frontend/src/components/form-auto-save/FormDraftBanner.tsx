@@ -17,7 +17,7 @@
 
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { FileText, RotateCcw, Trash2, X, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -50,7 +50,7 @@ export function FormDraftBanner({
 
   return (
     <AnimatePresence>
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -20, height: 0 }}
         animate={{ opacity: 1, y: 0, height: 'auto' }}
         exit={{ opacity: 0, y: -20, height: 0 }}
@@ -133,7 +133,7 @@ export function FormDraftBanner({
             </Button>
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 }

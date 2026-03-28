@@ -5,7 +5,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { XCircle, ChevronDown, ChevronUp, Wand2, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -40,7 +40,7 @@ function ErrorItem({ error, onAction, onFieldFocus, isRTL, index }: ErrorItemPro
   }
 
   return (
-    <motion.li
+    <m.li
       initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
@@ -82,7 +82,7 @@ function ErrorItem({ error, onAction, onFieldFocus, isRTL, index }: ErrorItemPro
           <span className="sm:hidden">{t('fix')}</span>
         </Button>
       )}
-    </motion.li>
+    </m.li>
   )
 }
 
@@ -128,7 +128,7 @@ const [isExpanded, setIsExpanded] = useState(false)
   }
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -231,15 +231,15 @@ const [isExpanded, setIsExpanded] = useState(false)
 
       {/* Success state when all fixed */}
       {errorItems.length === 0 && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400"
         >
           <CheckCircle2 className="h-5 w-5" />
           <span className="text-sm font-medium">{t('allFixed')}</span>
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+    </m.div>
   )
 }

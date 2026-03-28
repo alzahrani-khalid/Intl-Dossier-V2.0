@@ -18,7 +18,7 @@
 
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Cloud, CloudOff, Check, Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
@@ -104,7 +104,7 @@ const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = 
         aria-live={ariaLive}
       >
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={state}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -113,7 +113,7 @@ const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = 
             className="flex items-center"
           >
             <Icon className={cn('size-4', config.iconClass)} />
-          </motion.div>
+          </m.div>
         </AnimatePresence>
         <span className="sr-only">{config.text}</span>
       </div>
@@ -127,7 +127,7 @@ const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = 
       aria-live={ariaLive}
     >
       <AnimatePresence mode="wait">
-        <motion.div
+        <m.div
           key={state}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -137,7 +137,7 @@ const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = 
         >
           <Icon className={cn('size-4 shrink-0', config.iconClass)} />
           <span className="truncate">{config.text}</span>
-        </motion.div>
+        </m.div>
       </AnimatePresence>
     </div>
   )

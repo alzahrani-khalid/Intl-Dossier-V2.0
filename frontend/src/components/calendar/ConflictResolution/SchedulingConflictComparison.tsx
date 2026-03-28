@@ -13,7 +13,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   AlertTriangle,
   Calendar,
@@ -544,7 +544,7 @@ function ConflictComparisonItem({
       </CollapsibleTrigger>
 
       <CollapsibleContent>
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
@@ -613,7 +613,7 @@ function ConflictComparisonItem({
               </div>
             </div>
           )}
-        </motion.div>
+        </m.div>
       </CollapsibleContent>
     </Collapsible>
   )

@@ -3,7 +3,7 @@ import { IconLayoutNavbarCollapse } from '@tabler/icons-react'
 import {
   AnimatePresence,
   MotionValue,
-  motion,
+  m,
   useMotionValue,
   useSpring,
   useTransform,
@@ -40,12 +40,12 @@ const FloatingDockMobile = ({
     <div className={cn('relative block md:hidden', className)}>
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             layoutId="nav"
             className="absolute inset-x-0 bottom-full mb-2 flex flex-col gap-2"
           >
             {items.map((item, idx) => (
-              <motion.div
+              <m.div
                 key={item.title}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{
@@ -68,9 +68,9 @@ const FloatingDockMobile = ({
                 >
                   <div className="h-4 w-4">{item.icon}</div>
                 </a>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
       <button
@@ -92,7 +92,7 @@ const FloatingDockDesktop = ({
 }) => {
   const mouseX = useMotionValue(Infinity)
   return (
-    <motion.div
+    <m.div
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
@@ -103,7 +103,7 @@ const FloatingDockDesktop = ({
       {items.map((item) => (
         <IconContainer mouseX={mouseX} key={item.title} {...item} />
       ))}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -158,7 +158,7 @@ function IconContainer({
 
   return (
     <a href={href}>
-      <motion.div
+      <m.div
         ref={ref}
         style={{ width, height }}
         onMouseEnter={() => setHovered(true)}
@@ -167,23 +167,23 @@ function IconContainer({
       >
         <AnimatePresence>
           {hovered && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10, x: '-50%' }}
               animate={{ opacity: 1, y: 0, x: '-50%' }}
               exit={{ opacity: 0, y: 2, x: '-50%' }}
               className="absolute -top-8 left-1/2 w-fit rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs whitespace-pre text-neutral-700 dark:border-neutral-900 dark:bg-neutral-800 dark:text-white"
             >
               {title}
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
-        <motion.div
+        <m.div
           style={{ width: widthIcon, height: heightIcon }}
           className="flex items-center justify-center"
         >
           {icon}
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </a>
   )
 }

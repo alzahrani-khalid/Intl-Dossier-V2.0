@@ -22,7 +22,7 @@
 
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   ZoomIn,
   ZoomOut,
@@ -108,7 +108,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
     <div
       className={cn('absolute z-20', getPositionClasses(), className)}
     >
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -117,7 +117,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
         {/* Gesture Indicator - Shows during active gestures */}
         <AnimatePresence>
           {isGestureActive && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
@@ -139,7 +139,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
                   </span>
                 </>
               )}
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -147,7 +147,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
         <div className="bg-card/95 backdrop-blur-md rounded-xl shadow-xl border border-border p-2 sm:p-3">
           {/* Zoom Level Indicator */}
           <div className="flex items-center justify-center mb-2 pb-2 border-b border-border">
-            <motion.div
+            <m.div
               key={displayPercentage}
               initial={{ scale: 1.1 }}
               animate={{ scale: 1 }}
@@ -159,13 +159,13 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               <span className="text-lg sm:text-xl font-bold text-foreground min-w-[52px] text-center">
                 {displayPercentage}
               </span>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* Zoom Slider Visual */}
           <div className="mb-3 px-1">
             <div className="relative h-2 bg-muted rounded-full overflow-hidden">
-              <motion.div
+              <m.div
                 className="absolute inset-y-0 start-0 bg-gradient-to-r from-primary to-primary/70 rounded-full"
                 style={{ width: `${((zoomLevel - minZoom) / (maxZoom - minZoom)) * 100}%` }}
                 layout
@@ -246,7 +246,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
 
         {/* Gesture Hint - Shows on mobile */}
         {showGestureHint && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -264,9 +264,9 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               <ChevronUp className="h-3.5 w-3.5" />
               <span>{t('graph.hints.doubleTap', 'Double-tap to expand')}</span>
             </div>
-          </motion.div>
+          </m.div>
         )}
-      </motion.div>
+      </m.div>
     </div>
   )
 })
@@ -290,7 +290,7 @@ export const FloatingZoomIndicator = memo(function FloatingZoomIndicator({
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
@@ -303,7 +303,7 @@ export const FloatingZoomIndicator = memo(function FloatingZoomIndicator({
           <span className="text-3xl sm:text-4xl font-bold tabular-nums">
             {Math.round(zoomLevel * 100)}%
           </span>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

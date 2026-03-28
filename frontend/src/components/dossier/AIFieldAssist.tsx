@@ -26,7 +26,7 @@ import {
   Check,
   Wand2,
 } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -161,7 +161,7 @@ const { isRTL } = useDirection()
       {/* Expandable Content */}
       <AnimatePresence initial={false}>
         {isExpanded && (
-          <motion.div
+          <m.div
             id="ai-field-assist-content"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -260,7 +260,7 @@ const { isRTL } = useDirection()
 
               {/* Generated Fields Preview */}
               {generatedFields && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-3 p-3 sm:p-4 bg-background rounded-lg border border-primary/20"
@@ -350,10 +350,10 @@ const { isRTL } = useDirection()
                       </>
                     )}
                   </Button>
-                </motion.div>
+                </m.div>
               )}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

@@ -25,7 +25,7 @@
  */
 
 import * as React from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button, type ButtonProps } from '@/components/ui/button'
@@ -157,7 +157,7 @@ const [isScrollingDown, setIsScrollingDown] = React.useState(false)
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -185,7 +185,7 @@ const [isScrollingDown, setIsScrollingDown] = React.useState(false)
             <Icon className={cn(iconSizeClasses, 'shrink-0')} />
             <AnimatePresence mode="wait">
               {showLabel && (
-                <motion.span
+                <m.span
                   initial={{ opacity: 0, width: 0 }}
                   animate={{ opacity: 1, width: 'auto' }}
                   exit={{ opacity: 0, width: 0 }}
@@ -193,11 +193,11 @@ const [isScrollingDown, setIsScrollingDown] = React.useState(false)
                   className="overflow-hidden whitespace-nowrap font-medium"
                 >
                   {label}
-                </motion.span>
+                </m.span>
               )}
             </AnimatePresence>
           </Button>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

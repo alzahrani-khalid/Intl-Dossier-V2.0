@@ -9,7 +9,7 @@
 import { useRef, useCallback } from 'react'
 import { Link, useLocation } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import {
   Globe,
   Building2,
@@ -86,7 +86,7 @@ function EntityBreadcrumbItem({ entry, isRTL, isActive, onRemove, t }: EntityBre
   const truncatedName = displayName.length > 20 ? `${displayName.slice(0, 18)}...` : displayName
 
   return (
-    <motion.div
+    <m.div
       layout
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -142,7 +142,7 @@ function EntityBreadcrumbItem({ entry, isRTL, isActive, onRemove, t }: EntityBre
       >
         <X className="h-3 w-3" />
       </button>
-    </motion.div>
+    </m.div>
   )
 }
 

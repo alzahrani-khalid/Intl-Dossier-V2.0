@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
@@ -33,9 +33,9 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
       {...rest}
     >
       {rows.map((i) => (
-        <motion.div key={`row` + i} className="relative h-8 w-16 border-l border-slate-700">
+        <m.div key={`row` + i} className="relative h-8 w-16 border-l border-slate-700">
           {cols.map((j) => (
-            <motion.div
+            <m.div
               whileHover={{
                 backgroundColor: `${getRandomColor()}`,
                 transition: { duration: 0 },
@@ -58,9 +58,9 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                 </svg>
               ) : null}
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
       ))}
     </div>
   )

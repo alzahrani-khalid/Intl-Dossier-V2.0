@@ -33,7 +33,7 @@ import {
 } from '@xyflow/react'
 import type { NodeChange, EdgeChange } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
@@ -159,7 +159,7 @@ const name = isRTL ? data.name_ar : data.name_en
     const nodeColor = NODE_COLORS[data.type] || '#6b7280'
 
     return (
-      <motion.div
+      <m.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{
           scale: 1,
@@ -221,7 +221,7 @@ const name = isRTL ? data.name_ar : data.name_en
             {name}
           </div>
         )}
-      </motion.div>
+      </m.div>
     )
   },
 )
@@ -242,7 +242,7 @@ const ClusterNode = memo(
     const { t } = useTranslation('graph')
 
     return (
-      <motion.div
+      <m.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         whileHover={{ scale: 1.05 }}
@@ -276,7 +276,7 @@ const ClusterNode = memo(
             {t('expand', 'Expand')}
           </Button>
         </div>
-      </motion.div>
+      </m.div>
     )
   },
 )

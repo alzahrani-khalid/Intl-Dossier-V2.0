@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { motion, useTransform, AnimatePresence, useMotionValue, useSpring } from 'motion/react'
+import { m, useTransform, AnimatePresence, useMotionValue, useSpring } from 'motion/react'
 
 export const AnimatedTooltip = ({
   items,
@@ -43,7 +43,7 @@ export const AnimatedTooltip = ({
         >
           <AnimatePresence>
             {hoveredIndex === item.id && (
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 20, scale: 0.6 }}
                 animate={{
                   opacity: 1,
@@ -67,7 +67,7 @@ export const AnimatedTooltip = ({
                 <div className="absolute -bottom-px left-10 z-30 h-px w-[40%] bg-gradient-to-r from-transparent via-sky-500 to-transparent" />
                 <div className="relative z-30 text-base font-bold text-white">{item.name}</div>
                 <div className="text-xs text-white">{item.designation}</div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
           <img

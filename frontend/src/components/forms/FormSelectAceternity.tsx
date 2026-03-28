@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { UseFormRegister, FieldError } from 'react-hook-form'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { useDirection } from '@/hooks/useDirection'
@@ -69,7 +69,7 @@ const [isFocused, setIsFocused] = useState(false)
   return (
     <div className="space-y-2">
       {/* Label */}
-      <motion.label
+      <m.label
         htmlFor={name}
         className={cn(
           'block font-medium text-start',
@@ -86,7 +86,7 @@ const [isFocused, setIsFocused] = useState(false)
             *
           </span>
         )}
-      </motion.label>
+      </m.label>
 
       {/* Select field */}
       <div className="relative">
@@ -113,7 +113,7 @@ const [isFocused, setIsFocused] = useState(false)
         </select>
 
         {/* Chevron icon */}
-        <motion.div
+        <m.div
           className={cn(
             'absolute top-1/2 -translate-y-1/2 pointer-events-none',
             isRTL ? 'start-3' : 'end-3',
@@ -129,12 +129,12 @@ const [isFocused, setIsFocused] = useState(false)
               isRTL && 'rotate-180', // Additional flip for RTL
             )}
           />
-        </motion.div>
+        </m.div>
       </div>
 
       {/* Help text */}
       {helpText && !error && (
-        <motion.p
+        <m.p
           id={`${name}-help`}
           className="text-sm text-gray-600 dark:text-gray-400 text-start"
           initial={{ opacity: 0 }}
@@ -142,13 +142,13 @@ const [isFocused, setIsFocused] = useState(false)
           transition={{ duration: 0.2, delay: 0.15 }}
         >
           {helpText}
-        </motion.p>
+        </m.p>
       )}
 
       {/* Error message with animation */}
       <AnimatePresence>
         {error && (
-          <motion.p
+          <m.p
             id={`${name}-error`}
             className="text-sm text-red-600 dark:text-red-400 text-start"
             initial={{ opacity: 0, y: -5 }}
@@ -157,7 +157,7 @@ const [isFocused, setIsFocused] = useState(false)
             transition={{ duration: 0.2 }}
           >
             {t(error.message || 'validation.required')}
-          </motion.p>
+          </m.p>
         )}
       </AnimatePresence>
     </div>

@@ -3,7 +3,7 @@
  * Demonstrates the real-time form validation system with contextual errors
  */
 import { useState, useCallback } from 'react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { FormFieldWithValidation } from '@/components/forms/FormFieldWithValidation'
 import { ValidationSummary } from '@/components/forms/ValidationIndicator'
@@ -88,7 +88,7 @@ const { isRTL } = useDirection()
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
     >
       {/* Page Header */}
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+      <m.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
           {isRTL ? 'عرض التحقق في الوقت الحقيقي' : 'Real-time Validation Demo'}
         </h1>
@@ -97,10 +97,10 @@ const { isRTL } = useDirection()
             ? 'تجربة رسائل الخطأ السياقية مع اقتراحات الإصلاح'
             : 'Experience contextual error messages with recovery suggestions'}
         </p>
-      </motion.div>
+      </m.div>
 
       {/* Feature Badges */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
@@ -113,7 +113,7 @@ const { isRTL } = useDirection()
         <Badge variant="secondary">{isRTL ? 'مؤشرات مرئية' : 'Visual Indicators'}</Badge>
         <Badge variant="secondary">{isRTL ? 'اقتراحات الإصلاح' : 'Recovery Suggestions'}</Badge>
         <Badge variant="secondary">{isRTL ? 'دعم RTL' : 'RTL Support'}</Badge>
-      </motion.div>
+      </m.div>
 
       <Tabs defaultValue="demo" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3 max-w-lg">
@@ -374,7 +374,7 @@ const { isRTL } = useDirection()
                 icon: '🌍',
               },
             ].map((feature, index) => (
-              <motion.div
+              <m.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -393,7 +393,7 @@ const { isRTL } = useDirection()
                     </p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </TabsContent>

@@ -30,7 +30,7 @@
 
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion'
+import { m, AnimatePresence, useMotionValue, useTransform } from 'framer-motion'
 import {
   LucideIcon,
   Plus,
@@ -227,7 +227,7 @@ function SpeedDialItem({
   }
 
   return (
-    <motion.div
+    <m.div
       className="absolute flex items-center gap-2"
       style={{
         bottom: distanceFromMain,
@@ -248,7 +248,7 @@ function SpeedDialItem({
       }}
     >
       {/* Label - positioned before button in RTL, after in LTR */}
-      <motion.span
+      <m.span
         className={cn(
           'rounded-md bg-popover px-2 py-1 text-sm font-medium text-popover-foreground shadow-md',
           'whitespace-nowrap',
@@ -262,7 +262,7 @@ function SpeedDialItem({
         transition={{ duration: 0.15, delay: delay + 0.05 }}
       >
         {action.label}
-      </motion.span>
+      </m.span>
 
       {/* Mini FAB */}
       <Button
@@ -279,7 +279,7 @@ function SpeedDialItem({
       >
         <Icon className={iconSizeClasses} />
       </Button>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -447,7 +447,7 @@ export function ContextAwareFAB({
       {/* Backdrop overlay when speed dial is open */}
       <AnimatePresence>
         {isSpeedDialOpen && (
-          <motion.div
+          <m.div
             className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -462,7 +462,7 @@ export function ContextAwareFAB({
       {/* Main FAB container */}
       <AnimatePresence>
         {isVisible && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -487,7 +487,7 @@ export function ContextAwareFAB({
             </AnimatePresence>
 
             {/* Long-press progress ring */}
-            <motion.div
+            <m.div
               className="absolute inset-0 rounded-full border-2 border-primary pointer-events-none"
               style={{
                 opacity: ringOpacity,
@@ -520,17 +520,17 @@ export function ContextAwareFAB({
               aria-expanded={isSpeedDialOpen}
               aria-haspopup={speedDialActions.length > 0 ? 'menu' : undefined}
             >
-              <motion.div
+              <m.div
                 animate={{ rotate: isSpeedDialOpen ? 45 : 0 }}
                 transition={{ duration: 0.2 }}
               >
                 <CurrentIcon className={cn(iconSizeClasses, 'shrink-0')} />
-              </motion.div>
+              </m.div>
             </Button>
 
             {/* Long-press hint (shows briefly for first-time users) */}
             {speedDialActions.length > 0 && !isSpeedDialOpen && (
-              <motion.div
+              <m.div
                 className={cn(
                   'absolute bottom-full mb-2 whitespace-nowrap',
                   'rounded-md bg-popover px-2 py-1 text-xs text-muted-foreground shadow-sm',
@@ -543,9 +543,9 @@ export function ContextAwareFAB({
                 transition={{ duration: 0.2 }}
               >
                 {t('longPressHint')}
-              </motion.div>
+              </m.div>
             )}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

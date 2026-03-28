@@ -8,7 +8,7 @@
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Check,
   ChevronRight,
@@ -180,7 +180,7 @@ function ChecklistItem({
 
   // Full variant (default)
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
@@ -305,7 +305,7 @@ function ChecklistItem({
           </p>
         </div>
       )}
-    </motion.div>
+    </m.div>
   )
 }
 

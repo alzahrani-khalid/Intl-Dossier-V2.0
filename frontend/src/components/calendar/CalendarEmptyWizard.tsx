@@ -15,7 +15,7 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Calendar,
   Users,
@@ -222,7 +222,7 @@ const { user } = useAuth()
     <Card className={cn('overflow-hidden', className)}>
       <AnimatePresence mode="wait">
         {step === 'welcome' && (
-          <motion.div
+          <m.div
             key="welcome"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -309,11 +309,11 @@ const { user } = useAuth()
                 </div>
               )}
             </CardContent>
-          </motion.div>
+          </m.div>
         )}
 
         {step === 'templates' && (
-          <motion.div
+          <m.div
             key="templates"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -403,11 +403,11 @@ const { user } = useAuth()
                 )
               })}
             </CardContent>
-          </motion.div>
+          </m.div>
         )}
 
         {step === 'quick-create' && selectedTemplate && (
-          <motion.div
+          <m.div
             key="quick-create"
             initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -518,7 +518,7 @@ const { user } = useAuth()
                 </Button>
               </div>
             </CardContent>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </Card>

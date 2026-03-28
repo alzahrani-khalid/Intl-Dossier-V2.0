@@ -22,7 +22,7 @@
 
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import {
   Plus,
   X,
@@ -370,7 +370,7 @@ export function AddToDossierFAB({
       {/* Backdrop */}
       <AnimatePresence>
         {isExpanded && (
-          <motion.div
+          <m.div
             className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -398,7 +398,7 @@ export function AddToDossierFAB({
               const delay = index * 0.04
 
               return (
-                <motion.div
+                <m.div
                   key={action.type}
                   className="absolute flex items-center gap-2"
                   style={{
@@ -411,7 +411,7 @@ export function AddToDossierFAB({
                   transition={{ duration: 0.2, delay }}
                 >
                   {/* Label */}
-                  <motion.span
+                  <m.span
                     className={cn(
                       'rounded-md bg-popover px-2 py-1 text-sm font-medium text-popover-foreground shadow-md',
                       'whitespace-nowrap',
@@ -422,7 +422,7 @@ export function AddToDossierFAB({
                     transition={{ duration: 0.15, delay: delay + 0.05 }}
                   >
                     {action.label}
-                  </motion.span>
+                  </m.span>
 
                   {/* Mini FAB */}
                   <Button
@@ -438,7 +438,7 @@ export function AddToDossierFAB({
                   >
                     {action.icon}
                   </Button>
-                </motion.div>
+                </m.div>
               )
             })}
         </AnimatePresence>
@@ -451,13 +451,13 @@ export function AddToDossierFAB({
           aria-label={isExpanded ? t('addToDossier.close') : t('addToDossier.title')}
           aria-expanded={isExpanded}
         >
-          <motion.div animate={{ rotate: isExpanded ? 45 : 0 }} transition={{ duration: 0.2 }}>
+          <m.div animate={{ rotate: isExpanded ? 45 : 0 }} transition={{ duration: 0.2 }}>
             {isExpanded ? (
               <X className={size === 'sm' ? 'h-5 w-5' : 'h-6 w-6'} />
             ) : (
               <Plus className={size === 'sm' ? 'h-5 w-5' : 'h-6 w-6'} />
             )}
-          </motion.div>
+          </m.div>
         </Button>
       </div>
     </>

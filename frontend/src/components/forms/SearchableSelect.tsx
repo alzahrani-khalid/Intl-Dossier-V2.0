@@ -6,7 +6,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { forwardRef, useCallback, useState, useId, useMemo, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { Check, ChevronDown, Search, X, Loader2 } from 'lucide-react'
 import {
@@ -403,7 +403,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
       <div className={cn('space-y-2', containerClassName)}>
         {/* Label */}
         {label && (
-          <motion.label
+          <m.label
             id={labelId}
             className={cn(
               'block font-medium text-start',
@@ -421,7 +421,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
                 *
               </span>
             )}
-          </motion.label>
+          </m.label>
         )}
 
         {/* Select trigger */}
@@ -538,7 +538,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
         {/* Help text */}
         <AnimatePresence mode="wait">
           {helpText && !error && (
-            <motion.p
+            <m.p
               id={helpId}
               key="help-text"
               className="text-sm text-gray-600 dark:text-gray-400 text-start"
@@ -548,12 +548,12 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
               transition={{ duration: 0.2 }}
             >
               {helpText}
-            </motion.p>
+            </m.p>
           )}
 
           {/* Error message */}
           {error && (
-            <motion.p
+            <m.p
               id={errorId}
               key="error"
               className="text-sm text-red-600 dark:text-red-400 text-start"
@@ -564,7 +564,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
               role="alert"
             >
               {error}
-            </motion.p>
+            </m.p>
           )}
         </AnimatePresence>
       </div>

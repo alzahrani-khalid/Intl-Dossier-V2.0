@@ -12,7 +12,7 @@ import {
   type InputHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { useFieldValidation, type UseFieldValidationOptions } from '@/hooks/useFieldValidation'
 import { calculatePasswordStrength } from '@/lib/validation-rules'
@@ -236,7 +236,7 @@ const uniqueId = useId()
     <div className={cn('space-y-2', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <motion.label
+        <m.label
           htmlFor={inputId}
           className={cn(
             'block font-medium text-start',
@@ -254,7 +254,7 @@ const uniqueId = useId()
               *
             </span>
           )}
-        </motion.label>
+        </m.label>
 
         {/* Character count (shown in label row on desktop) */}
         {showCharCount && maxLength && (
@@ -266,7 +266,7 @@ const uniqueId = useId()
       <div className="relative">
         {/* Leading icon */}
         {icon && (
-          <motion.div
+          <m.div
             className={cn(
               'absolute top-1/2 -translate-y-1/2',
               'text-gray-400',
@@ -277,7 +277,7 @@ const uniqueId = useId()
             transition={{ duration: 0.2, delay: 0.1 }}
           >
             {icon}
-          </motion.div>
+          </m.div>
         )}
 
         {/* Input or Textarea */}
@@ -317,7 +317,7 @@ const uniqueId = useId()
         {/* Validation icon (trailing) */}
         <AnimatePresence>
           {(shouldShowValidation || isValidating) && (
-            <motion.div
+            <m.div
               className={cn('absolute top-1/2 -translate-y-1/2', isRTL ? 'start-3' : 'end-3')}
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -325,7 +325,7 @@ const uniqueId = useId()
               transition={{ duration: 0.15 }}
             >
               <ValidationIcon result={displayResult} isValidating={isValidating} />
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>
@@ -340,7 +340,7 @@ const uniqueId = useId()
       {/* Help text (only when no validation message) */}
       <AnimatePresence mode="wait">
         {helpText && !shouldShowValidation && (
-          <motion.p
+          <m.p
             id={helpId}
             key="help-text"
             className="text-sm text-gray-600 dark:text-gray-400 text-start"
@@ -350,12 +350,12 @@ const uniqueId = useId()
             transition={{ duration: 0.2 }}
           >
             {helpText}
-          </motion.p>
+          </m.p>
         )}
 
         {/* Validation feedback */}
         {shouldShowValidation && displayResult && !displayResult.isValid && (
-          <motion.div
+          <m.div
             key="validation"
             id={errorId}
             initial={{ opacity: 0, height: 0 }}
@@ -379,14 +379,14 @@ const uniqueId = useId()
                 <ValidationHint result={displayResult} />
               </div>
             )}
-          </motion.div>
+          </m.div>
         )}
 
         {/* Warning state (when valid but has warning) */}
         {shouldShowValidation &&
           displayResult?.isValid &&
           displayResult?.severity === 'warning' && (
-            <motion.div
+            <m.div
               key="warning"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -394,7 +394,7 @@ const uniqueId = useId()
               transition={{ duration: 0.2 }}
             >
               <ValidationHint result={displayResult} />
-            </motion.div>
+            </m.div>
           )}
       </AnimatePresence>
 

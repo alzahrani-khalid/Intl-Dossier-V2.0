@@ -14,7 +14,7 @@
 
 import { useState, useCallback, useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { StickyNote, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -370,7 +370,7 @@ export function InteractiveTimeline({
       )}
 
       {/* Timeline Content */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+      <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
         <UnifiedVerticalTimeline
           events={events}
           isLoading={isLoading}
@@ -380,7 +380,7 @@ export function InteractiveTimeline({
           error={error}
           emptyMessage={t(`timeline.empty.${dossierType.toLowerCase()}`)}
         />
-      </motion.div>
+      </m.div>
 
       {/* Annotation Dialog */}
       <TimelineAnnotationDialog

@@ -12,7 +12,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -197,7 +197,7 @@ const [showDraftBanner, setShowDraftBanner] = useState(false)
       className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
     >
       {/* Page Header */}
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+      <m.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
@@ -213,11 +213,11 @@ const [showDraftBanner, setShowDraftBanner] = useState(false)
             {isRTL ? 'الحفظ التلقائي مفعّل' : 'Auto-save enabled'}
           </Badge>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Draft Restoration Banner */}
       {showDraftBanner && draft && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
@@ -229,7 +229,7 @@ const [showDraftBanner, setShowDraftBanner] = useState(false)
             onDiscard={handleDiscard}
             isRestoring={isRestoring}
           />
-        </motion.div>
+        </m.div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

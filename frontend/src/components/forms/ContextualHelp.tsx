@@ -13,7 +13,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { HelpCircle, ChevronDown, ChevronUp, ExternalLink, Lightbulb, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -183,7 +183,7 @@ export function ContextualHelp({
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -196,7 +196,7 @@ export function ContextualHelp({
               links={links}
               isRTL={isRTL}
             />
-          </motion.div>
+          </m.div>
         </CollapsibleContent>
       </Collapsible>
     )

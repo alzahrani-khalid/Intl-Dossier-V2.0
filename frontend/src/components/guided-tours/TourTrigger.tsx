@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -84,7 +84,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
     return (
       <AnimatePresence>
         {isVisible && !isDismissing && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -149,7 +149,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
                 </div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     )
@@ -160,7 +160,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
     return (
       <AnimatePresence>
         {isVisible && !isDismissing && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -186,7 +186,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
                 )}
               />
             </button>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     )
@@ -196,7 +196,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
   return (
     <AnimatePresence>
       {isVisible && !isDismissing && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
@@ -238,7 +238,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
               </Button>
             </CardContent>
           </Card>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

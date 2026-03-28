@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { useRef, useState } from 'react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { IconUpload } from '@tabler/icons-react'
 import { useDropzone } from 'react-dropzone'
 
@@ -49,7 +49,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
 
   return (
     <div className="w-full" {...getRootProps()}>
-      <motion.div
+      <m.div
         onClick={handleClick}
         whileHover="animate"
         className="p-10 group/file block rounded-lg cursor-pointer w-full relative overflow-hidden"
@@ -74,7 +74,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
           <div className="relative w-full mt-10 max-w-xl mx-auto">
             {files.length > 0 &&
               files.map((file, idx) => (
-                <motion.div
+                <m.div
                   key={'file' + idx}
                   layoutId={idx === 0 ? 'file-upload' : 'file-upload-' + idx}
                   className={cn(
@@ -83,42 +83,42 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
                   )}
                 >
                   <div className="flex justify-between w-full items-center gap-4">
-                    <motion.p
+                    <m.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       layout
                       className="text-base text-neutral-700 dark:text-neutral-300 truncate max-w-xs"
                     >
                       {file.name}
-                    </motion.p>
-                    <motion.p
+                    </m.p>
+                    <m.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       layout
                       className="rounded-lg px-2 py-1 w-fit shrink-0 text-sm text-neutral-600 dark:bg-neutral-800 dark:text-white shadow-input"
                     >
                       {(file.size / (1024 * 1024)).toFixed(2)} MB
-                    </motion.p>
+                    </m.p>
                   </div>
 
                   <div className="flex text-sm md:flex-row flex-col items-start md:items-center w-full mt-2 justify-between text-neutral-600 dark:text-neutral-400">
-                    <motion.p
+                    <m.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       layout
                       className="px-1 py-0.5 rounded-md bg-gray-100 dark:bg-neutral-800 "
                     >
                       {file.type}
-                    </motion.p>
+                    </m.p>
 
-                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} layout>
+                    <m.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} layout>
                       modified {new Date(file.lastModified).toLocaleDateString()}
-                    </motion.p>
+                    </m.p>
                   </div>
-                </motion.div>
+                </m.div>
               ))}
             {!files.length && (
-              <motion.div
+              <m.div
                 layoutId="file-upload"
                 variants={mainVariant}
                 transition={{
@@ -132,29 +132,29 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
                 )}
               >
                 {isDragActive ? (
-                  <motion.p
+                  <m.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="text-neutral-600 flex flex-col items-center"
                   >
                     Drop it
                     <IconUpload className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
-                  </motion.p>
+                  </m.p>
                 ) : (
                   <IconUpload className="h-4 w-4 text-neutral-600 dark:text-neutral-300" />
                 )}
-              </motion.div>
+              </m.div>
             )}
 
             {!files.length && (
-              <motion.div
+              <m.div
                 variants={secondaryVariant}
                 className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
-              ></motion.div>
+              ></m.div>
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   )
 }

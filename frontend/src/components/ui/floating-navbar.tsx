@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'motion/react'
+import { m, AnimatePresence, useScroll, useMotionValueEvent } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 export const FloatingNav = ({
@@ -37,7 +37,7 @@ export const FloatingNav = ({
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         initial={{
           opacity: 1,
           y: -100,
@@ -70,7 +70,7 @@ export const FloatingNav = ({
           <span>Login</span>
           <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
         </button>
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 }

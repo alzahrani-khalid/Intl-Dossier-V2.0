@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { Link, type LinkProps } from '@tanstack/react-router'
 import React, { useState, createContext, useContext } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, m } from 'motion/react'
 import { IconArrowNarrowLeft, IconMenu2, IconX } from '@tabler/icons-react'
 
 interface Links {
@@ -58,7 +58,7 @@ export const Sidebar = ({
   )
 }
 
-export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => {
+export const SidebarBody = (props: React.ComponentProps<typeof m.div>) => {
   return (
     <>
       <DesktopSidebar {...props} />
@@ -71,10 +71,10 @@ export const DesktopSidebar = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof motion.div>) => {
+}: React.ComponentProps<typeof m.div>) => {
   const { open, setOpen } = useSidebar()
   return (
-    <motion.div
+    <m.div
       className={cn(
         'group/sidebar-btn relative m-2 hidden h-full w-[300px] flex-shrink-0 rounded-xl bg-white px-4 py-4 md:flex md:flex-col dark:bg-neutral-900',
         className,
@@ -92,7 +92,7 @@ export const DesktopSidebar = ({
         <IconArrowNarrowLeft className="text-black dark:text-white" />
       </button>
       {children as React.ReactNode}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -100,10 +100,10 @@ export const MobileSidebar = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof motion.div>) => {
+}: React.ComponentProps<typeof m.div>) => {
   const { open, setOpen } = useSidebar()
   return (
-    <motion.div
+    <m.div
       className={cn(
         'flex h-10 w-full flex-row items-center justify-between bg-neutral-100 px-4 py-4 md:hidden dark:bg-neutral-800',
       )}
@@ -117,7 +117,7 @@ export const MobileSidebar = ({
       </div>
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             initial={{ x: '-100%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '-100%', opacity: 0 }}
@@ -134,10 +134,10 @@ export const MobileSidebar = ({
               <IconX />
             </div>
             {children as React.ReactNode}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -162,7 +162,7 @@ export const SidebarLink = ({
     >
       {link.icon}
 
-      <motion.span
+      <m.span
         animate={{
           display: open ? 'inline-block' : 'none',
           opacity: open ? 1 : 0,
@@ -170,7 +170,7 @@ export const SidebarLink = ({
         className="!m-0 inline-block whitespace-pre !p-0 text-sm text-neutral-700 transition duration-150 dark:text-neutral-200"
       >
         {link.label}
-      </motion.span>
+      </m.span>
     </Link>
   )
 }

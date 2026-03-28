@@ -11,7 +11,7 @@
 import { memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
 import { FolderOpen, X, RefreshCw, ExternalLink, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
@@ -180,7 +180,7 @@ const { activeDossier, activeInheritance, hasDossierContext, reset, setActiveDos
   // Empty state
   if (!hasDossierContext && !activeDossier) {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
@@ -221,14 +221,14 @@ const { activeDossier, activeInheritance, hasDossierContext, reset, setActiveDos
             </PopoverContent>
           </Popover>
         )}
-      </motion.div>
+      </m.div>
     )
   }
 
   // Active context indicator
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         key={activeDossier?.id || 'context'}
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -408,7 +408,7 @@ const { activeDossier, activeInheritance, hasDossierContext, reset, setActiveDos
             </TooltipProvider>
           )}
         </div>
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 })

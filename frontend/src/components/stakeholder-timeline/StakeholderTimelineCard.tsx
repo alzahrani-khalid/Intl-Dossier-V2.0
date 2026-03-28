@@ -13,7 +13,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import {
   Mail,
   Users,
@@ -189,7 +189,7 @@ export function StakeholderTimelineCard({
   }>
 
   return (
-    <motion.div
+    <m.div
       className="flex gap-4"
       initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -423,6 +423,6 @@ export function StakeholderTimelineCard({
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </m.div>
   )
 }
