@@ -31,13 +31,11 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Link } from '@tanstack/react-router'
-import { createNavigationSections } from './navigation-config'
+import { createNavigationGroups } from './navigation-config'
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
-import { SidebarSearch } from './SidebarSearch'
-import { QuickNavigationMenu } from './QuickNavigationMenu'
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>): React.ReactElement {
   const { t, i18n } = useTranslation('common')
   const isRTL = i18n.language === 'ar'
   const { user } = useAuth()
@@ -48,11 +46,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const isAdmin = user?.role === 'admin' || user?.role === 'super_admin'
 
-  // Build navigation sections from config
-  const sections = useMemo(
+  // Build navigation groups from config
+  const groups = useMemo(
     () =>
-      createNavigationSections(
-        { intake: workCounts?.intake ?? 0, waiting: workCounts?.waiting ?? 0 },
+      createNavigationGroups(
+        {
+          tasks: workCounts?.intake ?? 0,
+          approvals: workCounts?.waiting ?? 0,
+          engagements: 0,
+        },
         isAdmin,
       ),
     [workCounts?.intake, workCounts?.waiting, isAdmin],
@@ -85,7 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" side="left" variant="inset" {...props}>
-      {/* Logo / Brand */}
+      {/* Logo / Brand + User Avatar (per D-05) */}
       <SidebarHeader className="relative pb-1">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -109,6 +111,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+
+        {/* User avatar in header (per D-05) */}
+        <div className="mt-1 px-2">
+          <NavUser />
+        </div>
+
         <Button
           variant="ghost"
           size="icon"
@@ -125,20 +133,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {/* Main scrollable content */}
       <SidebarContent>
         <ScrollArea className="flex-1">
-          {/* Search */}
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarSearch />
-          </SidebarGroup>
-
-          {/* Quick Navigation (Pinned + Recent) */}
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <QuickNavigationMenu />
-          </SidebarGroup>
-
-          <SidebarSeparator />
-
-          {/* Main Navigation */}
-          <NavMain sections={sections} />
+          {/* Main Navigation — 3 groups */}
+          <NavMain groups={groups} />
 
           <SidebarSeparator />
 
@@ -174,13 +170,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </ScrollArea>
       </SidebarContent>
 
-      {/* Footer: Theme/Language controls + User menu */}
+      {/* Footer: Theme/Language controls only (user moved to header) */}
       <SidebarFooter className="border-t border-sidebar-border/70 pt-2">
         <div className="flex items-center gap-1 group-data-[collapsible=icon]:hidden">
           <ThemeSelector />
           <LanguageToggle compact />
         </div>
-        <NavUser />
       </SidebarFooter>
 
       <SidebarRail />
