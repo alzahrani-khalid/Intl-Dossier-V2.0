@@ -51,6 +51,8 @@ The codebase is production-ready after a 7-phase hardening milestone:
 - ✓ Domain repository architecture consolidation — v2.0 Phase 6
 - ✓ Performance optimization (bundle, query, render) — v2.0 Phase 7
 
+- ✓ Navigation & route consolidation (3-group sidebar, mobile tab bar, Cmd+K, route dedup) — v3.0 Phase 8
+
 ### Active
 
 ## Current Milestone: v3.0 Connected Workflow
@@ -127,4 +129,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-28 after v3.0 milestone started_
+_Last updated: 2026-03-29 after Phase 8 (Navigation & Route Consolidation) complete_
