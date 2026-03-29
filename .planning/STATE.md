@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
-status: planning
-stopped_at: Phase 8 context gathered
-last_updated: '2026-03-29T02:44:08.666Z'
-last_activity: 2026-03-28 — Roadmap created for v3.0 Connected Workflow (6 phases, 45 requirements)
+status: executing
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-03-29T03:33:00.514Z"
+last_activity: 2026-03-29
 progress:
   total_phases: 6
   completed_phases: 0
-  total_plans: 0
+  total_plans: 4
   completed_plans: 0
   percent: 0
 ---
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 8 — Navigation & Route Consolidation
+**Current focus:** Phase 08 — navigation-route-consolidation
 
 ## Current Position
 
-Phase: 8 of 13 (Navigation & Route Consolidation) — first phase of v3.0
-Plan: Not yet planned
-Status: Ready to plan
-Last activity: 2026-03-28 — Roadmap created for v3.0 Connected Workflow (6 phases, 45 requirements)
+Phase: 08 (navigation-route-consolidation) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
+Last activity: 2026-03-29
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -50,6 +50,8 @@ Progress: [░░░░░░░░░░] 0%
 
 - Fresh milestone — no v3.0 data yet
 
+| Phase 08 P02 | 4min | 2 tasks | 20 files |
+
 ## Accumulated Context
 
 ### Decisions
@@ -61,6 +63,8 @@ Recent decisions affecting current work:
 - [v3.0 Roadmap]: 200KB bundle budget constraint — all new workspace tabs and dashboard zones must be lazy-loaded
 - [v3.0 Roadmap]: LifecycleBar needs LtrIsolate wrapper (progress indicators read left-to-right in all languages)
 - [v3.0 Roadmap]: RelationshipSidebar hidden on mobile, sheet/drawer on small screens
+- [Phase 08]: Used import.meta.env.DEV as fallback in devModeGuard so demos are never blocked during local development
+- [Phase 08]: Only converted simple leaf entity routes to redirects; left engagements and persons untouched (have child routes)
 
 ### Pending Todos
 
@@ -74,6 +78,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-29T02:44:08.663Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-navigation-route-consolidation/08-CONTEXT.md
+Last session: 2026-03-29T03:33:00.506Z
+Stopped at: Completed 08-02-PLAN.md
+Resume file: None
