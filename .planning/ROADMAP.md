@@ -73,7 +73,18 @@ Plans:
 3. Promoting an intake request creates a new engagement starting at the "intake" lifecycle stage with pre-populated fields
 4. Work items can reference a lifecycle stage, enabling stage-grouped display
 5. Forum sessions support independent lifecycle tracking per recurring session
-   **Plans**: TBD
+
+**Plans:** 5 plans
+
+Plans:
+
+- [ ] 09-PLAN-01.md — Schema + types + i18n: DB migrations, frontend types, locale files, test stubs (LIFE-01, LIFE-02, LIFE-03, LIFE-04, LIFE-05, LIFE-06)
+- [ ] 09-PLAN-02.md — Backend API + hooks: Edge Function lifecycle/promotion endpoints, repository functions, TanStack Query hooks (LIFE-02, LIFE-03, LIFE-04, LIFE-06)
+- [ ] 09-PLAN-03.md — Stepper + Timeline UI: LifecycleStepperBar and LifecycleTimeline components (LIFE-01, LIFE-02, LIFE-03, LIFE-06)
+- [ ] 09-PLAN-04.md — Promotion + Forum UI: IntakePromotionDialog, ForumSessionCreator, ConvertedTicketBanner (LIFE-04, LIFE-05, LIFE-06)
+- [ ] 09-PLAN-05.md — Integration wiring: Wire all components into host pages + human verification (LIFE-01, LIFE-02, LIFE-03, LIFE-04, LIFE-05, LIFE-06)
+
+**UI hint**: yes
 
 ### Phase 10: Operations Hub
 
@@ -150,8 +161,8 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 5. Responsive Design                | v2.0      | 5/5            | Complete    | 2026-03-26 |
 | 6. Architecture Consolidation       | v2.0      | 5/5            | Complete    | 2026-03-27 |
 | 7. Performance Optimization         | v2.0      | 4/4            | Complete    | 2026-03-28 |
-| 8. Navigation & Route Consolidation | v3.0      | 0/4            | Planned     | -          |
-| 9. Lifecycle Engine                 | v3.0      | 0/TBD          | Not started | -          |
+| 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete    | 2026-03-28 |
+| 9. Lifecycle Engine                 | v3.0      | 0/5            | Planned     | -          |
 | 10. Operations Hub                  | v3.0      | 0/TBD          | Not started | -          |
 | 11. Engagement Workspace            | v3.0      | 0/TBD          | Not started | -          |
 | 12. Enriched Dossier Pages          | v3.0      | 0/TBD          | Not started | -          |
