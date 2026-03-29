@@ -26,17 +26,24 @@ Command.displayName = CommandPrimitive.displayName
 interface CommandDialogProps extends DialogProps {
   /** Prevent closing when clicking outside the dialog */
   preventCloseOnOutsideClick?: boolean
+  /** Render as full-screen overlay on mobile (D-16) */
+  mobileFullScreen?: boolean
 }
 
 const CommandDialog = ({
   children,
   preventCloseOnOutsideClick = false,
+  mobileFullScreen = false,
   ...props
 }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent
-        className="overflow-hidden p-0"
+        className={cn(
+          'overflow-hidden p-0',
+          mobileFullScreen &&
+            'max-sm:fixed max-sm:inset-0 max-sm:h-full max-sm:max-h-full max-sm:w-full max-sm:max-w-full max-sm:rounded-none max-sm:translate-x-0 max-sm:translate-y-0 max-sm:border-0',
+        )}
         aria-describedby={undefined}
         onInteractOutside={(e) => {
           if (preventCloseOnOutsideClick) {

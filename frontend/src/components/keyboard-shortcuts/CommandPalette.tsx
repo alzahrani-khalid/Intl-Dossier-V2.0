@@ -829,19 +829,15 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   const isSearching = searchQuery.trim().length >= 2
   const showCacheIndicator = isSearching && isSearchLoading && (dossiers.length > 0 || relatedWork.length > 0)
 
-  // Mobile full-screen dialog class overrides (D-16)
-  const mobileDialogClass = isMobile
-    ? '[&_.dialog-content]:fixed [&_.dialog-content]:inset-0 [&_.dialog-content]:h-full [&_.dialog-content]:max-h-full [&_.dialog-content]:rounded-none [&_.dialog-content]:translate-x-0 [&_.dialog-content]:translate-y-0'
-    : ''
-
   return (
     <CommandDialog
       open={isCommandPaletteOpen}
       onOpenChange={(open) => {
         if (!open) closeCommandPalette()
       }}
+      mobileFullScreen={isMobile}
     >
-      <div className={cn('flex flex-col', mobileDialogClass, className)}>
+      <div className={cn('flex flex-col', className)}>
         <CommandInput
           ref={inputRef}
           placeholder={t('searchPlaceholder', 'Type a command or search...')}
