@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { ForumsPage } from '@/pages/forums/ForumsPage'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/forums')({
- component: ForumsPage
+  beforeLoad: () => {
+    throw redirect({ to: '/dossiers/forums' })
+  },
 })

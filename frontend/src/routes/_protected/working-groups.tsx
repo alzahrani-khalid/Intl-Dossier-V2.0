@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import WorkingGroupsPage from '../../pages/WorkingGroupsPage'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/working-groups')({
-  component: WorkingGroupsPage,
+  beforeLoad: () => {
+    throw redirect({ to: '/dossiers/working_groups' })
+  },
 })
