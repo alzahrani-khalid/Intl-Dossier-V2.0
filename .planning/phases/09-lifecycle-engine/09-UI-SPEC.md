@@ -48,17 +48,17 @@ Exceptions: Stepper bar buttons use `min-h-11 min-w-11` (44px) for touch targets
 
 Uses project-established compact UI scale from `--text-*` CSS custom properties.
 
-| Role                         | Size                 | Weight                  | Line Height              |
-| ---------------------------- | -------------------- | ----------------------- | ------------------------ |
-| Stage label (stepper)        | 11px (`--text-xs`)   | 500 (`--font-medium`)   | 1.25 (`--leading-tight`) |
-| Stage label mobile (stepper) | 11px (`--text-xs`)   | 500 (`--font-medium`)   | 1.25 (`--leading-tight`) |
-| Tooltip text                 | 12px (`--text-sm`)   | 400 (`--font-normal`)   | 1.5 (`--leading-normal`) |
-| Timeline entry heading       | 13px (`--text-base`) | 600 (`--font-semibold`) | 1.375 (`--leading-snug`) |
-| Timeline entry body          | 12px (`--text-sm`)   | 400 (`--font-normal`)   | 1.5 (`--leading-normal`) |
-| Timeline duration badge      | 11px (`--text-xs`)   | 400 (`--font-normal`)   | 1.25 (`--leading-tight`) |
-| Dialog title                 | 18px (`--text-2xl`)  | 600 (`--font-semibold`) | 1.25 (`--leading-tight`) |
-| Dialog body / field labels   | 13px (`--text-base`) | 400 (`--font-normal`)   | 1.5 (`--leading-normal`) |
-| Forum session card title     | 14px (`--text-lg`)   | 500 (`--font-medium`)   | 1.375 (`--leading-snug`) |
+| Role                         | Size                | Weight                  | Line Height              |
+| ---------------------------- | ------------------- | ----------------------- | ------------------------ |
+| Stage label (stepper)        | 11px (`--text-xs`)  | 600 (`--font-semibold`) | 1.25 (`--leading-tight`) |
+| Stage label mobile (stepper) | 11px (`--text-xs`)  | 600 (`--font-semibold`) | 1.25 (`--leading-tight`) |
+| Tooltip text                 | 12px (`--text-sm`)  | 400 (`--font-normal`)   | 1.5 (`--leading-normal`) |
+| Timeline entry heading       | 14px (`--text-lg`)  | 600 (`--font-semibold`) | 1.375 (`--leading-snug`) |
+| Timeline entry body          | 12px (`--text-sm`)  | 400 (`--font-normal`)   | 1.5 (`--leading-normal`) |
+| Timeline duration badge      | 11px (`--text-xs`)  | 400 (`--font-normal`)   | 1.25 (`--leading-tight`) |
+| Dialog title                 | 18px (`--text-2xl`) | 600 (`--font-semibold`) | 1.25 (`--leading-tight`) |
+| Dialog body / field labels   | 14px (`--text-lg`)  | 400 (`--font-normal`)   | 1.5 (`--leading-normal`) |
+| Forum session card title     | 14px (`--text-lg`)  | 600 (`--font-semibold`) | 1.375 (`--leading-snug`) |
 
 ---
 
@@ -84,6 +84,12 @@ Single accent progression using primary color with opacity tiers (not per-stage 
 | Upcoming    | `base-100`                           | `base-200`                | `base-400`    |
 
 Accent reserved for: current lifecycle stage indicator border, "Advance Stage" suggestion chip, primary CTA buttons in promotion dialog, active timeline dot.
+
+---
+
+## Visual Hierarchy
+
+**Primary focal point:** The `LifecycleStepperBar` is the visual anchor of the engagement detail page. Positioned below the page header and above the tab navigation, it draws the eye through the `border-2 border-primary` treatment on the current stage and the accent-tinted background. All other lifecycle UI (timeline, promotion, forum sessions) is secondary to this bar.
 
 ---
 
@@ -361,6 +367,9 @@ All copy is bilingual. English shown here; Arabic equivalents in `locales/ar/lif
 | Forum session confirm      | "Create Session"                                                      |
 | Forum session cancel       | "Cancel"                                                              |
 | Stage badge (work item)    | Stage name (e.g., "Briefing")                                         |
+| Transition error           | "Failed to update stage. Try again."                                  |
+| Promotion error            | "Could not create engagement. Check your connection and try again."   |
+| Session creation error     | "Session could not be created. Try again."                            |
 
 No destructive actions in this phase. Stage transitions are reversible (D-02, D-03). Promotion creates new data rather than deleting existing data (D-07: ticket becomes read-only, not deleted).
 
