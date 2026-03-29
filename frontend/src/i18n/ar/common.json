@@ -166,7 +166,17 @@
     "requests": "الطلبات",
     "incomingRequests": "الطلبات الواردة",
     "awaitingResponse": "بانتظار الرد",
-    "main": "الرئيسية"
+    "main": "الرئيسية",
+    "operations": "العمليات",
+    "tasks": "المهام",
+    "activity": "النشاط",
+    "advancedSearch": "البحث المتقدم",
+    "availabilityPolling": "استطلاع التوفر",
+    "administration": "الإدارة",
+    "systemSettings": "إعدادات النظام",
+    "fieldPermissions": "صلاحيات الحقول",
+    "auditLogs": "سجلات التدقيق",
+    "dataRetention": "الاحتفاظ بالبيانات"
   },
   "search": {
     "title": "البحث",

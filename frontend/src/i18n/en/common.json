@@ -166,7 +166,17 @@
     "requests": "Requests",
     "incomingRequests": "Incoming Requests",
     "awaitingResponse": "Awaiting Response",
-    "main": "Main"
+    "main": "Main",
+    "operations": "Operations",
+    "tasks": "Tasks",
+    "activity": "Activity",
+    "advancedSearch": "Advanced Search",
+    "availabilityPolling": "Availability Polling",
+    "administration": "Administration",
+    "systemSettings": "System Settings",
+    "fieldPermissions": "Field Permissions",
+    "auditLogs": "Audit Logs",
+    "dataRetention": "Data Retention"
   },
   "search": {
     "title": "Search",
