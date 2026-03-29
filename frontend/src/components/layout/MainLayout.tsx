@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 
+import { cn } from '@/lib/utils'
 import { useResponsive } from '@/hooks/useResponsive'
 import { useContextAwareFAB } from '@/hooks/useContextAwareFAB'
 import { useEntityHistoryStore } from '@/store/entityHistoryStore'
@@ -12,6 +13,7 @@ import { EntityBreadcrumbTrail } from './EntityBreadcrumbTrail'
 import { DossierContextIndicator } from '@/components/dossier/DossierContextIndicator'
 import { AppSidebar } from './AppSidebar'
 import { SiteHeader } from './SiteHeader'
+import { MobileBottomTabBar } from './MobileBottomTabBar'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -69,7 +71,7 @@ export function MainLayout({
         <AppSidebar />
         <SidebarInset>
           <SiteHeader />
-          <div className="bg-muted/40 flex flex-1 flex-col overflow-y-auto">
+          <div className={cn('bg-muted/40 flex flex-1 flex-col overflow-y-auto', isMobile && 'pb-16')}>
             {displayBreadcrumbTrail && (
               <EntityBreadcrumbTrail
                 maxDisplay={isMobile ? 3 : 5}
@@ -92,12 +94,15 @@ export function MainLayout({
         </SidebarInset>
       </SidebarProvider>
 
+      <MobileBottomTabBar />
+
       {displayFAB && (
         <ContextAwareFAB
           contextActions={contextActions}
           speedDialActions={speedDialActions}
           defaultAction={defaultAction}
           hideOnScroll
+          className={isMobile ? 'bottom-[calc(3.5rem+max(0.5rem,env(safe-area-inset-bottom)))]' : undefined}
         />
       )}
 
