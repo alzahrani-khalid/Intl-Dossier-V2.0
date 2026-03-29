@@ -5,10 +5,12 @@
  * - Global entity search across dossiers and work items
  * - Quick navigation shortcuts to any page
  * - Action shortcuts (create task, new intake, new dossier)
- * - Recent items from localStorage
+ * - Recent page navigation from localStorage (useRecentNavigation)
+ * - Recent entity items from useQuickSwitcherSearch
+ * - Grouped results: Recents, Dossiers, Pages, Work Items, Commands
+ * - Hybrid cache-first search (TanStack Query cache + API)
+ * - Mobile full-screen overlay
  * - Context-aware suggestions based on current page
- * - Grouped shortcuts by category
- * - Mobile-first responsive design
  * - Full RTL support with logical properties
  * - Visual shortcut hints
  *
@@ -23,6 +25,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useLocation } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import {
   CommandDialog,
   CommandEmpty,
@@ -90,6 +93,12 @@ import {
 } from '@/hooks/useQuickSwitcherSearch'
 import type { DossierType } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
+import { useRecentNavigation } from '@/hooks/useRecentNavigation'
+import {
+  createNavigationGroups,
+  type NavigationItem,
+} from '@/components/layout/navigation-config'
+import { useResponsive } from '@/hooks/useResponsive'
 
 interface CommandPaletteProps {
   /** Additional class names */
@@ -149,23 +158,23 @@ const workTypeIcons: Record<string, React.ElementType> = {
 
 // Labels for dossier types
 const dossierTypeLabels: Record<DossierType, { en: string; ar: string }> = {
-  country: { en: 'Country', ar: 'دولة' },
-  organization: { en: 'Organization', ar: 'منظمة' },
-  person: { en: 'Person', ar: 'شخص' },
-  engagement: { en: 'Engagement', ar: 'مشاركة' },
-  forum: { en: 'Forum', ar: 'منتدى' },
-  working_group: { en: 'Working Group', ar: 'مجموعة عمل' },
-  topic: { en: 'Topic', ar: 'موضوع' },
+  country: { en: 'Country', ar: '\u062F\u0648\u0644\u0629' },
+  organization: { en: 'Organization', ar: '\u0645\u0646\u0638\u0645\u0629' },
+  person: { en: 'Person', ar: '\u0634\u062E\u0635' },
+  engagement: { en: 'Engagement', ar: '\u0645\u0634\u0627\u0631\u0643\u0629' },
+  forum: { en: 'Forum', ar: '\u0645\u0646\u062A\u062F\u0649' },
+  working_group: { en: 'Working Group', ar: '\u0645\u062C\u0645\u0648\u0639\u0629 \u0639\u0645\u0644' },
+  topic: { en: 'Topic', ar: '\u0645\u0648\u0636\u0648\u0639' },
 }
 
 // Labels for work item types
 const workTypeLabels: Record<string, { en: string; ar: string }> = {
-  position: { en: 'Position', ar: 'موقف' },
-  task: { en: 'Task', ar: 'مهمة' },
-  commitment: { en: 'Commitment', ar: 'التزام' },
-  intake: { en: 'Request', ar: 'طلب' },
-  mou: { en: 'MoU', ar: 'مذكرة تفاهم' },
-  document: { en: 'Document', ar: 'وثيقة' },
+  position: { en: 'Position', ar: '\u0645\u0648\u0642\u0641' },
+  task: { en: 'Task', ar: '\u0645\u0647\u0645\u0629' },
+  commitment: { en: 'Commitment', ar: '\u0627\u0644\u062A\u0632\u0627\u0645' },
+  intake: { en: 'Request', ar: '\u0637\u0644\u0628' },
+  mou: { en: 'MoU', ar: '\u0645\u0630\u0643\u0631\u0629 \u062A\u0641\u0627\u0647\u0645' },
+  document: { en: 'Document', ar: '\u0648\u062B\u064A\u0642\u0629' },
 }
 
 // Badge colors for dossier types
@@ -276,23 +285,81 @@ const routeContexts: RouteContext[] = [
   },
 ]
 
-export function CommandPalette({ className }: CommandPaletteProps) {
+/**
+ * Search TanStack Query cache for dossier/work-item matches
+ */
+function searchQueryCache(
+  queryClient: ReturnType<typeof useQueryClient>,
+  query: string,
+): { cachedDossiers: QuickSwitcherDossier[]; cachedWorkItems: QuickSwitcherWorkItem[] } {
+  const lowerQuery = query.toLowerCase()
+  const cachedDossiers: QuickSwitcherDossier[] = []
+  const cachedWorkItems: QuickSwitcherWorkItem[] = []
+
+  try {
+    const allQueries = queryClient.getQueriesData<{
+      dossiers?: QuickSwitcherDossier[]
+      work_items?: QuickSwitcherWorkItem[]
+    }>({ queryKey: ['quickswitcher-search'] })
+
+    for (const [, data] of allQueries) {
+      if (data == null) continue
+
+      if (Array.isArray(data.dossiers)) {
+        for (const d of data.dossiers) {
+          const matchesEn = d.name_en?.toLowerCase().includes(lowerQuery) === true
+          const matchesAr = d.name_ar?.toLowerCase().includes(lowerQuery) === true
+          if (matchesEn || matchesAr) {
+            // Avoid duplicates
+            if (!cachedDossiers.some((existing) => existing.id === d.id)) {
+              cachedDossiers.push(d)
+            }
+          }
+        }
+      }
+
+      if (Array.isArray(data.work_items)) {
+        for (const w of data.work_items) {
+          const matchesEn = w.title_en?.toLowerCase().includes(lowerQuery) === true
+          const matchesAr = w.title_ar?.toLowerCase().includes(lowerQuery) === true
+          if (matchesEn || matchesAr) {
+            if (!cachedWorkItems.some((existing) => existing.id === w.id)) {
+              cachedWorkItems.push(w)
+            }
+          }
+        }
+      }
+    }
+  } catch {
+    // Cache search failed — return empty
+  }
+
+  return { cachedDossiers: cachedDossiers.slice(0, 5), cachedWorkItems: cachedWorkItems.slice(0, 3) }
+}
+
+export function CommandPalette({ className }: CommandPaletteProps): React.ReactElement | null {
   const { t } = useTranslation('keyboard-shortcuts')
   const { t: tQs } = useTranslation('quickswitcher')
+  const { t: tCommon } = useTranslation('common')
   const navigate = useNavigate()
   const location = useLocation()
   const { isRTL } = useDirection()
-const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortcut, isMac } =
+  const { isMobile } = useResponsive()
+  const queryClient = useQueryClient()
+  const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortcut, isMac } =
     useKeyboardShortcutContext()
 
   const [searchQuery, setSearchQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // Recent page-level navigation
+  const { recentItems: recentNavItems, addRecent: addRecentNav } = useRecentNavigation()
+
   // Get current route context for suggestions
   const currentContext = useMemo((): RouteContext => {
     const pathname = location.pathname
     for (const ctx of routeContexts) {
-      if (ctx.pattern && ctx.pattern.test(pathname)) {
+      if (ctx.pattern != null && ctx.pattern.test(pathname)) {
         return ctx
       }
     }
@@ -302,14 +369,77 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
   // Use the QuickSwitcher search hook for dossier/work item search
   const {
     setQuery: setDossierQuery,
-    dossiers,
-    relatedWork,
-    recentItems,
+    dossiers: apiDossiers,
+    relatedWork: apiRelatedWork,
+    recentItems: entityRecentItems,
     isLoading: isSearchLoading,
     handleDossierSelect,
     handleWorkItemSelect,
     getDisplayTitle,
   } = useQuickSwitcherSearch({ enabled: isCommandPaletteOpen, debounceMs: 200 })
+
+  // Cache-first hybrid search (D-15)
+  const cachedResults = useMemo(() => {
+    if (searchQuery.trim().length < 2) {
+      return { cachedDossiers: [], cachedWorkItems: [] }
+    }
+    return searchQueryCache(queryClient, searchQuery)
+  }, [queryClient, searchQuery])
+
+  // Merge API results with cache results, deduplicate by ID
+  const dossiers = useMemo((): QuickSwitcherDossier[] => {
+    if (apiDossiers.length > 0) {
+      // API results arrived — merge with cache, preferring API
+      const seen = new Set(apiDossiers.map((d) => d.id))
+      const extra = cachedResults.cachedDossiers.filter((d) => !seen.has(d.id))
+      return [...apiDossiers, ...extra].slice(0, 5)
+    }
+    // Only cache results during debounce wait
+    return cachedResults.cachedDossiers
+  }, [apiDossiers, cachedResults.cachedDossiers])
+
+  const relatedWork = useMemo((): QuickSwitcherWorkItem[] => {
+    if (apiRelatedWork.length > 0) {
+      const seen = new Set(apiRelatedWork.map((w) => w.id))
+      const extra = cachedResults.cachedWorkItems.filter((w) => !seen.has(w.id))
+      return [...apiRelatedWork, ...extra].slice(0, 3)
+    }
+    return cachedResults.cachedWorkItems
+  }, [apiRelatedWork, cachedResults.cachedWorkItems])
+
+  // Navigation pages from config for "Pages" group
+  const allNavPages = useMemo((): NavigationItem[] => {
+    const groups = createNavigationGroups({ tasks: 0, approvals: 0, engagements: 0 }, true)
+    return groups.flatMap((g) => g.items)
+  }, [])
+
+  // Filtered pages matching search query
+  const filteredPages = useMemo((): NavigationItem[] => {
+    if (searchQuery.trim().length < 2) return []
+    const query = searchQuery.toLowerCase()
+    return allNavPages
+      .filter(
+        (page) =>
+          page.label.toLowerCase().includes(query) ||
+          page.id.toLowerCase().includes(query) ||
+          page.path.toLowerCase().includes(query),
+      )
+      .slice(0, 5)
+  }, [allNavPages, searchQuery])
+
+  // Filter recent navigation items matching query
+  const filteredRecents = useMemo(() => {
+    if (searchQuery.trim().length < 2) {
+      return recentNavItems.slice(0, 5)
+    }
+    const query = searchQuery.toLowerCase()
+    return recentNavItems
+      .filter(
+        (item) =>
+          item.title.toLowerCase().includes(query) || item.path.toLowerCase().includes(query),
+      )
+      .slice(0, 3)
+  }, [recentNavItems, searchQuery])
 
   // Group shortcuts by category
   const groupedShortcuts = useMemo(() => {
@@ -324,7 +454,7 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
 
     shortcuts.forEach((shortcut) => {
       const categoryArray = categories[shortcut.category]
-      if (categoryArray) {
+      if (categoryArray != null) {
         categoryArray.push(shortcut)
       }
     })
@@ -333,30 +463,25 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
     return Object.entries(categories).filter(([_, items]) => items.length > 0)
   }, [getAllShortcuts])
 
-  // Filter shortcuts based on search query
-  const filteredGroups = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return groupedShortcuts
-    }
-
+  // Filter shortcuts based on search query — only shown when searching (as "Commands" group)
+  const filteredCommands = useMemo(() => {
+    if (searchQuery.trim().length < 2) return []
     const query = searchQuery.toLowerCase()
-    return groupedShortcuts
-      .map(([category, shortcuts]) => {
-        const filtered = shortcuts.filter(
-          (s) =>
-            s.description.toLowerCase().includes(query) ||
-            s.id.toLowerCase().includes(query) ||
-            s.key.toLowerCase().includes(query),
-        )
-        return [category, filtered] as [string, KeyboardShortcut[]]
-      })
-      .filter(([_, items]) => items.length > 0)
+    const allShortcuts = groupedShortcuts.flatMap(([_, shortcuts]) => shortcuts)
+    return allShortcuts
+      .filter(
+        (s) =>
+          s.description.toLowerCase().includes(query) ||
+          s.id.toLowerCase().includes(query) ||
+          s.key.toLowerCase().includes(query),
+      )
+      .slice(0, 3)
   }, [groupedShortcuts, searchQuery])
 
   // Helper to navigate - uses type assertion for routes that may not be in the router yet
   const navigateTo = useCallback(
     (path: string) => {
-      navigate({ to: path as any })
+      navigate({ to: path as string & {} })
       closeCommandPalette()
     },
     [navigate, closeCommandPalette],
@@ -566,7 +691,7 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
     for (const actionId of currentContext.suggestedActions) {
       // Find in create actions
       const createAction = createActions.find((a) => a.id === actionId)
-      if (createAction) {
+      if (createAction != null) {
         suggestions.push({
           id: createAction.id,
           label: createAction.label,
@@ -578,7 +703,7 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
 
       // Find in quick actions
       const quickAction = quickActions.find((a) => a.id === `nav-${actionId.replace('view-', '')}`)
-      if (quickAction) {
+      if (quickAction != null) {
         suggestions.push({
           id: quickAction.id,
           label: quickAction.label,
@@ -591,32 +716,27 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
     return suggestions
   }, [currentContext, createActions, quickActions])
 
-  // Filter quick actions
+  // Filter quick actions — only for non-search (empty query) state
   const filteredQuickActions = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return quickActions
-    }
-
-    const query = searchQuery.toLowerCase()
-    return quickActions.filter(
-      (action) =>
-        action.label.toLowerCase().includes(query) || action.id.toLowerCase().includes(query),
-    )
+    if (searchQuery.trim().length >= 2) return []
+    return quickActions
   }, [quickActions, searchQuery])
 
   // Filter create actions
   const filteredCreateActions = useMemo(() => {
-    if (!searchQuery.trim()) {
+    if (searchQuery.trim().length < 2) {
       // Show only primary create actions when not searching
       return createActions.filter((a) => a.category === 'create')
     }
 
     const query = searchQuery.toLowerCase()
-    // When searching, include all create actions
-    return createActions.filter(
-      (action) =>
-        action.label.toLowerCase().includes(query) || action.id.toLowerCase().includes(query),
-    )
+    // When searching, include all create actions that match
+    return createActions
+      .filter(
+        (action) =>
+          action.label.toLowerCase().includes(query) || action.id.toLowerCase().includes(query),
+      )
+      .slice(0, 3)
   }, [createActions, searchQuery])
 
   // Handle shortcut item selection
@@ -633,10 +753,15 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
     (dossier: QuickSwitcherDossier) => {
       const url = handleDossierSelect(dossier)
       navigate({ to: url })
+      addRecentNav({
+        path: url,
+        title: isRTL ? (dossier.name_ar || dossier.name_en) : (dossier.name_en || dossier.name_ar),
+        type: 'dossier',
+      })
       closeCommandPalette()
       setSearchQuery('')
     },
-    [handleDossierSelect, navigate, closeCommandPalette],
+    [handleDossierSelect, navigate, closeCommandPalette, addRecentNav, isRTL],
   )
 
   // Handle work item selection
@@ -644,21 +769,26 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
     (item: QuickSwitcherWorkItem) => {
       const url = handleWorkItemSelect(item)
       navigate({ to: url })
+      addRecentNav({
+        path: url,
+        title: isRTL ? (item.title_ar || item.title_en) : (item.title_en || item.title_ar),
+        type: 'work-item',
+      })
       closeCommandPalette()
       setSearchQuery('')
     },
-    [handleWorkItemSelect, navigate, closeCommandPalette],
+    [handleWorkItemSelect, navigate, closeCommandPalette, addRecentNav, isRTL],
   )
 
   // Get dossier badge info
-  const getDossierBadge = (type: DossierType) => {
+  const getDossierBadge = (type: DossierType): { label: string | undefined; color: string } => {
     const label = isRTL ? dossierTypeLabels[type]?.ar : dossierTypeLabels[type]?.en
     const color = dossierTypeBadgeColors[type]
     return { label, color }
   }
 
   // Get work item badge info
-  const getWorkItemBadge = (type: string) => {
+  const getWorkItemBadge = (type: string): { label: string | undefined; color: string } => {
     const label = isRTL ? workTypeLabels[type]?.ar : workTypeLabels[type]?.en
     const color = workTypeBadgeColors[type] || 'bg-gray-100 text-gray-700'
     return { label, color }
@@ -673,7 +803,7 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
 
   // Focus input when dialog opens
   useEffect(() => {
-    if (isCommandPaletteOpen && inputRef.current) {
+    if (isCommandPaletteOpen && inputRef.current != null) {
       setTimeout(() => inputRef.current?.focus(), 0)
     }
   }, [isCommandPaletteOpen])
@@ -695,6 +825,15 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
     return shortcutIcons[shortcut.id] || categoryIcons[shortcut.category] || HelpCircle
   }
 
+  // Determine if we are in search mode
+  const isSearching = searchQuery.trim().length >= 2
+  const showCacheIndicator = isSearching && isSearchLoading && (dossiers.length > 0 || relatedWork.length > 0)
+
+  // Mobile full-screen dialog class overrides (D-16)
+  const mobileDialogClass = isMobile
+    ? '[&_.dialog-content]:fixed [&_.dialog-content]:inset-0 [&_.dialog-content]:h-full [&_.dialog-content]:max-h-full [&_.dialog-content]:rounded-none [&_.dialog-content]:translate-x-0 [&_.dialog-content]:translate-y-0'
+    : ''
+
   return (
     <CommandDialog
       open={isCommandPaletteOpen}
@@ -702,7 +841,7 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
         if (!open) closeCommandPalette()
       }}
     >
-      <div className={cn('flex flex-col', className)}>
+      <div className={cn('flex flex-col', mobileDialogClass, className)}>
         <CommandInput
           ref={inputRef}
           placeholder={t('searchPlaceholder', 'Type a command or search...')}
@@ -711,9 +850,12 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
             setSearchQuery(value)
             setDossierQuery(value)
           }}
-          className="border-0"
+          className={cn('border-0', isMobile && 'text-base py-4')}
         />
-        <CommandList className="max-h-[60vh] overflow-y-auto sm:max-h-[400px]">
+        <CommandList className={cn(
+          'max-h-[60vh] overflow-y-auto sm:max-h-[400px]',
+          isMobile && 'max-h-[calc(100vh-8rem)]',
+        )}>
           <CommandEmpty>
             <div className="flex flex-col items-center justify-center py-6 text-center">
               <Search className="mb-2 size-8 text-muted-foreground opacity-50" />
@@ -724,237 +866,363 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
             </div>
           </CommandEmpty>
 
-          {/* Loading indicator for search */}
-          {isSearchLoading && searchQuery.trim().length >= 2 && (
+          {/* Loading indicator for search (with cache-first hint) */}
+          {isSearchLoading && isSearching && (
             <div className="flex items-center justify-center py-4 text-sm text-muted-foreground">
               <Loader2 className="me-2 size-4 animate-spin" />
-              {tQs('searching', 'Searching...')}
+              {showCacheIndicator
+                ? tQs('searchingMore', 'Searching for more results...')
+                : tQs('searching', 'Searching...')}
             </div>
           )}
 
-          {/* Context-Aware Suggestions (when no search query and context exists) */}
-          {searchQuery.trim().length < 2 && contextSuggestions.length > 0 && (
+          {/* ===== EMPTY QUERY STATE ===== */}
+          {!isSearching && (
             <>
-              <CommandGroup heading={t('contextSuggestions.title', 'Suggested')}>
-                {contextSuggestions.map((suggestion) => {
-                  const SuggestionIcon = suggestion.icon
-                  return (
-                    <CommandItem
-                      key={`ctx-${suggestion.id}`}
-                      value={`ctx-${suggestion.id}`}
-                      onSelect={suggestion.action}
-                      className="flex items-center gap-3"
-                    >
-                      <Sparkles className="size-3 shrink-0 text-amber-500" />
-                      <SuggestionIcon className="size-4 shrink-0" />
-                      <span className="flex-1">{suggestion.label}</span>
-                      <Badge
-                        variant="secondary"
-                        className="shrink-0 text-xs bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
-                      >
-                        {t('contextSuggestions.suggested', 'Suggested')}
-                      </Badge>
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-              <CommandSeparator />
-            </>
-          )}
+              {/* Context-Aware Suggestions */}
+              {contextSuggestions.length > 0 && (
+                <>
+                  <CommandGroup heading={t('contextSuggestions.title', 'Suggested')}>
+                    {contextSuggestions.map((suggestion) => {
+                      const SuggestionIcon = suggestion.icon
+                      return (
+                        <CommandItem
+                          key={`ctx-${suggestion.id}`}
+                          value={`ctx-${suggestion.id}`}
+                          onSelect={suggestion.action}
+                          className="flex items-center gap-3"
+                        >
+                          <Sparkles className="size-3 shrink-0 text-amber-500" />
+                          <SuggestionIcon className="size-4 shrink-0" />
+                          <span className="flex-1">{suggestion.label}</span>
+                          <Badge
+                            variant="secondary"
+                            className="shrink-0 text-xs bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                          >
+                            {t('contextSuggestions.suggested', 'Suggested')}
+                          </Badge>
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
 
-          {/* Recent Items (when no search query) */}
-          {searchQuery.trim().length < 2 && recentItems.length > 0 && (
-            <>
-              <CommandGroup heading={tQs('recent', 'Recent')}>
-                {recentItems.slice(0, 5).map((item) => {
-                  let RecentIcon: React.ElementType = Clock
-                  if (item.dossierType && item.dossierType in dossierTypeIcons) {
-                    RecentIcon = dossierTypeIcons[item.dossierType as DossierType]
-                  } else if (item.type in workTypeIcons) {
-                    RecentIcon = workTypeIcons[item.type] || Clock
-                  }
-                  const displayTitle = isRTL
-                    ? item.title_ar || item.title_en
-                    : item.title_en || item.title_ar
-                  return (
-                    <CommandItem
-                      key={`recent-${item.id}`}
-                      value={`recent-${item.id}`}
-                      onSelect={() => {
-                        navigate({ to: item.url as any })
-                        closeCommandPalette()
-                        setSearchQuery('')
-                      }}
-                      className="flex items-center gap-3"
-                    >
-                      <RecentIcon className="size-4 shrink-0" />
-                      <span className="flex-1 truncate">{displayTitle}</span>
-                      {item.dossierType && (
+              {/* Recent Navigation (page-level recents from useRecentNavigation) */}
+              {recentNavItems.length > 0 && (
+                <>
+                  <CommandGroup heading={tQs('recent', 'Recent')}>
+                    {recentNavItems.slice(0, 5).map((item) => (
+                      <CommandItem
+                        key={`recent-nav-${item.path}`}
+                        value={`recent-nav-${item.path}`}
+                        onSelect={() => {
+                          navigateTo(item.path)
+                          setSearchQuery('')
+                        }}
+                        className="flex items-center gap-3"
+                      >
+                        <Clock className="size-4 shrink-0 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <span className="truncate text-start">{item.title}</span>
+                          <p className="truncate text-xs text-muted-foreground text-start">
+                            {item.path}
+                          </p>
+                        </div>
                         <Badge
                           variant="secondary"
-                          className={`shrink-0 text-xs ${dossierTypeBadgeColors[item.dossierType as DossierType] || ''}`}
+                          className="shrink-0 text-xs bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                         >
-                          {isRTL
-                            ? dossierTypeLabels[item.dossierType as DossierType]?.ar
-                            : dossierTypeLabels[item.dossierType as DossierType]?.en}
+                          {item.type === 'dossier'
+                            ? tQs('typeDossier', 'Dossier')
+                            : item.type === 'work-item'
+                              ? tQs('typeWorkItem', 'Work Item')
+                              : tQs('typePage', 'Page')}
                         </Badge>
-                      )}
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-              <CommandSeparator />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* Entity Recent Items (from useQuickSwitcherSearch localStorage) */}
+              {entityRecentItems.length > 0 && (
+                <>
+                  <CommandGroup heading={tQs('recentEntities', 'Recent Entities')}>
+                    {entityRecentItems.slice(0, 5).map((item) => {
+                      let RecentIcon: React.ElementType = Clock
+                      if (item.dossierType != null && item.dossierType in dossierTypeIcons) {
+                        RecentIcon = dossierTypeIcons[item.dossierType as DossierType]
+                      } else if (item.type in workTypeIcons) {
+                        RecentIcon = workTypeIcons[item.type] || Clock
+                      }
+                      const displayTitle = isRTL
+                        ? item.title_ar || item.title_en
+                        : item.title_en || item.title_ar
+                      return (
+                        <CommandItem
+                          key={`recent-${item.id}`}
+                          value={`recent-${item.id}`}
+                          onSelect={() => {
+                            navigate({ to: item.url as string & {} })
+                            closeCommandPalette()
+                            setSearchQuery('')
+                          }}
+                          className="flex items-center gap-3"
+                        >
+                          <RecentIcon className="size-4 shrink-0" />
+                          <span className="flex-1 truncate">{displayTitle}</span>
+                          {item.dossierType != null && (
+                            <Badge
+                              variant="secondary"
+                              className={`shrink-0 text-xs ${dossierTypeBadgeColors[item.dossierType as DossierType] || ''}`}
+                            >
+                              {isRTL
+                                ? dossierTypeLabels[item.dossierType as DossierType]?.ar
+                                : dossierTypeLabels[item.dossierType as DossierType]?.en}
+                            </Badge>
+                          )}
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* Create Actions (empty query) */}
+              {filteredCreateActions.length > 0 && (
+                <>
+                  <CommandGroup heading={t('createActions.title', 'Create New')}>
+                    {filteredCreateActions.map((action) => {
+                      const CreateIcon = action.icon
+                      return (
+                        <CommandItem
+                          key={action.id}
+                          value={action.id}
+                          onSelect={action.action}
+                          className="flex items-center gap-3"
+                        >
+                          <PlusCircle className="size-3 shrink-0 text-green-500" />
+                          <CreateIcon className="size-4 shrink-0" />
+                          <span className="flex-1">{action.label}</span>
+                          {action.shortcut != null && <CommandShortcut>{action.shortcut}</CommandShortcut>}
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* Quick Navigation (empty query) */}
+              {filteredQuickActions.length > 0 && (
+                <>
+                  <CommandGroup heading={t('quickActions.title', 'Quick Navigation')}>
+                    {filteredQuickActions.map((action) => {
+                      const QuickIcon = action.icon
+                      return (
+                        <CommandItem
+                          key={action.id}
+                          value={action.id}
+                          onSelect={action.action}
+                          className="flex items-center gap-3"
+                        >
+                          <QuickIcon className="size-4 shrink-0" />
+                          <span className="flex-1">{action.label}</span>
+                          {action.shortcut != null && <CommandShortcut>{action.shortcut}</CommandShortcut>}
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                </>
+              )}
             </>
           )}
 
-          {/* DOSSIERS Section (when searching) */}
-          {searchQuery.trim().length >= 2 && dossiers.length > 0 && (
+          {/* ===== SEARCH RESULTS (grouped by type, VS Code/Raycast style) ===== */}
+          {isSearching && (
             <>
-              <CommandGroup heading={tQs('dossiers_section', 'Dossiers')}>
-                {dossiers.map((dossier) => {
-                  const DossierIcon: React.ElementType = dossierTypeIcons[dossier.type] || Folder
-                  const badge = getDossierBadge(dossier.type)
-                  return (
-                    <CommandItem
-                      key={`dossier-${dossier.id}`}
-                      value={`dossier-${dossier.id}-${dossier.name_en}`}
-                      onSelect={() => handleDossierClick(dossier)}
-                      className="flex items-center gap-3"
-                    >
-                      <DossierIcon className="size-4 shrink-0" />
-                      <div className="min-w-0 flex-1">
-                        <span className="truncate">
-                          {getDisplayTitle({ name_en: dossier.name_en, name_ar: dossier.name_ar })}
-                        </span>
-                        {(isRTL ? dossier.description_ar : dossier.description_en) && (
-                          <p className="truncate text-xs text-muted-foreground">
-                            {isRTL ? dossier.description_ar : dossier.description_en}
-                          </p>
-                        )}
-                      </div>
-                      <Badge variant="secondary" className={`shrink-0 text-xs ${badge.color}`}>
-                        {badge.label}
-                      </Badge>
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-              {relatedWork.length > 0 && <CommandSeparator />}
+              {/* Group 1: Recents matching query */}
+              {filteredRecents.length > 0 && (
+                <>
+                  <CommandGroup heading={tQs('recent', 'Recent')}>
+                    {filteredRecents.map((item) => (
+                      <CommandItem
+                        key={`search-recent-${item.path}`}
+                        value={`search-recent-${item.path}`}
+                        onSelect={() => {
+                          navigateTo(item.path)
+                          setSearchQuery('')
+                        }}
+                        className="flex items-center gap-3"
+                      >
+                        <Clock className="size-4 shrink-0 text-muted-foreground" />
+                        <span className="flex-1 truncate text-start">{item.title}</span>
+                        <span className="truncate text-xs text-muted-foreground">{item.path}</span>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* Group 2: Dossiers */}
+              {dossiers.length > 0 && (
+                <>
+                  <CommandGroup heading={tQs('dossiers_section', 'Dossiers')}>
+                    {dossiers.map((dossier) => {
+                      const DossierIcon: React.ElementType = dossierTypeIcons[dossier.type] || Folder
+                      const badge = getDossierBadge(dossier.type)
+                      return (
+                        <CommandItem
+                          key={`dossier-${dossier.id}`}
+                          value={`dossier-${dossier.id}-${dossier.name_en}`}
+                          onSelect={() => handleDossierClick(dossier)}
+                          className="flex items-center gap-3"
+                        >
+                          <DossierIcon className="size-4 shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <span className="truncate">
+                              {getDisplayTitle({ name_en: dossier.name_en, name_ar: dossier.name_ar })}
+                            </span>
+                            {(isRTL ? dossier.description_ar : dossier.description_en) != null &&
+                              (isRTL ? dossier.description_ar : dossier.description_en) !== '' && (
+                              <p className="truncate text-xs text-muted-foreground">
+                                {isRTL ? dossier.description_ar : dossier.description_en}
+                              </p>
+                            )}
+                          </div>
+                          <Badge variant="secondary" className={`shrink-0 text-xs ${badge.color}`}>
+                            {badge.label}
+                          </Badge>
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* Group 3: Pages */}
+              {filteredPages.length > 0 && (
+                <>
+                  <CommandGroup heading={tQs('pages_section', 'Pages')}>
+                    {filteredPages.map((page) => {
+                      const PageIcon = page.icon
+                      return (
+                        <CommandItem
+                          key={`page-${page.id}`}
+                          value={`page-${page.id}-${page.label}`}
+                          onSelect={() => {
+                            navigateTo(page.path)
+                            addRecentNav({ path: page.path, title: tCommon(page.label, page.id), type: 'page' })
+                            setSearchQuery('')
+                          }}
+                          className="flex items-center gap-3"
+                        >
+                          <PageIcon className="size-4 shrink-0" />
+                          <span className="flex-1 truncate">{tCommon(page.label, page.id)}</span>
+                          <span className="truncate text-xs text-muted-foreground">{page.path}</span>
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* Group 4: Work Items */}
+              {relatedWork.length > 0 && (
+                <>
+                  <CommandGroup heading={tQs('related_work_section', 'Work Items')}>
+                    {relatedWork.map((item) => {
+                      const WorkIcon: React.ElementType = workTypeIcons[item.type] || FileText
+                      const badge = getWorkItemBadge(item.type)
+                      return (
+                        <CommandItem
+                          key={`work-${item.id}`}
+                          value={`work-${item.id}-${item.title_en}`}
+                          onSelect={() => handleWorkItemClick(item)}
+                          className="flex items-center gap-3"
+                        >
+                          <WorkIcon className="size-4 shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <span className="truncate">
+                              {getDisplayTitle({ title_en: item.title_en, title_ar: item.title_ar })}
+                            </span>
+                            {item.dossier_context != null && (
+                              <p className="truncate text-xs text-muted-foreground">
+                                {isRTL
+                                  ? item.dossier_context.name_ar || item.dossier_context.name_en
+                                  : item.dossier_context.name_en || item.dossier_context.name_ar}
+                              </p>
+                            )}
+                          </div>
+                          <Badge variant="secondary" className={`shrink-0 text-xs ${badge.color}`}>
+                            {badge.label}
+                          </Badge>
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* Group 5: Commands (keyboard shortcuts matching query) */}
+              {filteredCommands.length > 0 && (
+                <>
+                  <CommandGroup heading={t('commands.title', 'Commands')}>
+                    {filteredCommands.map((shortcut) => {
+                      const ShortcutIcon = getShortcutIcon(shortcut)
+                      return (
+                        <CommandItem
+                          key={`cmd-${shortcut.id}`}
+                          value={`cmd-${shortcut.id}`}
+                          onSelect={() => handleSelect(shortcut)}
+                          className="flex items-center gap-3"
+                        >
+                          <ShortcutIcon className="size-4 shrink-0" />
+                          <span className="flex-1">{shortcut.description}</span>
+                          <CommandShortcut>
+                            {formatShortcut(shortcut.key, shortcut.modifiers)}
+                          </CommandShortcut>
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                </>
+              )}
+
+              {/* Create actions matching search */}
+              {filteredCreateActions.length > 0 && (
+                <>
+                  <CommandSeparator />
+                  <CommandGroup heading={t('createActions.title', 'Create New')}>
+                    {filteredCreateActions.map((action) => {
+                      const CreateIcon = action.icon
+                      return (
+                        <CommandItem
+                          key={action.id}
+                          value={action.id}
+                          onSelect={action.action}
+                          className="flex items-center gap-3"
+                        >
+                          <PlusCircle className="size-3 shrink-0 text-green-500" />
+                          <CreateIcon className="size-4 shrink-0" />
+                          <span className="flex-1">{action.label}</span>
+                          {action.shortcut != null && <CommandShortcut>{action.shortcut}</CommandShortcut>}
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                </>
+              )}
             </>
           )}
-
-          {/* RELATED WORK Section (when searching) */}
-          {searchQuery.trim().length >= 2 && relatedWork.length > 0 && (
-            <>
-              <CommandGroup heading={tQs('related_work_section', 'Related Work')}>
-                {relatedWork.map((item) => {
-                  const WorkIcon: React.ElementType = workTypeIcons[item.type] || FileText
-                  const badge = getWorkItemBadge(item.type)
-                  return (
-                    <CommandItem
-                      key={`work-${item.id}`}
-                      value={`work-${item.id}-${item.title_en}`}
-                      onSelect={() => handleWorkItemClick(item)}
-                      className="flex items-center gap-3"
-                    >
-                      <WorkIcon className="size-4 shrink-0" />
-                      <div className="min-w-0 flex-1">
-                        <span className="truncate">
-                          {getDisplayTitle({ title_en: item.title_en, title_ar: item.title_ar })}
-                        </span>
-                        {item.dossier_context && (
-                          <p className="truncate text-xs text-muted-foreground">
-                            {isRTL
-                              ? item.dossier_context.name_ar || item.dossier_context.name_en
-                              : item.dossier_context.name_en || item.dossier_context.name_ar}
-                          </p>
-                        )}
-                      </div>
-                      <Badge variant="secondary" className={`shrink-0 text-xs ${badge.color}`}>
-                        {badge.label}
-                      </Badge>
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-              <CommandSeparator />
-            </>
-          )}
-
-          {/* Create Actions */}
-          {filteredCreateActions.length > 0 && (
-            <>
-              <CommandGroup heading={t('createActions.title', 'Create New')}>
-                {filteredCreateActions.map((action) => {
-                  const CreateIcon = action.icon
-                  return (
-                    <CommandItem
-                      key={action.id}
-                      value={action.id}
-                      onSelect={action.action}
-                      className="flex items-center gap-3"
-                    >
-                      <PlusCircle className="size-3 shrink-0 text-green-500" />
-                      <CreateIcon className="size-4 shrink-0" />
-                      <span className="flex-1">{action.label}</span>
-                      {action.shortcut && <CommandShortcut>{action.shortcut}</CommandShortcut>}
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-              <CommandSeparator />
-            </>
-          )}
-
-          {/* Quick Actions */}
-          {filteredQuickActions.length > 0 && (
-            <>
-              <CommandGroup heading={t('quickActions.title', 'Quick Navigation')}>
-                {filteredQuickActions.map((action) => {
-                  const QuickIcon = action.icon
-                  return (
-                    <CommandItem
-                      key={action.id}
-                      value={action.id}
-                      onSelect={action.action}
-                      className="flex items-center gap-3"
-                    >
-                      <QuickIcon className="size-4 shrink-0" />
-                      <span className="flex-1">{action.label}</span>
-                      {action.shortcut && <CommandShortcut>{action.shortcut}</CommandShortcut>}
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-              <CommandSeparator />
-            </>
-          )}
-
-          {/* Grouped Shortcuts */}
-          {filteredGroups.map(([category, shortcuts], index) => (
-            <React.Fragment key={category}>
-              <CommandGroup heading={getCategoryLabel(category)}>
-                {shortcuts.map((shortcut) => {
-                  const ShortcutIcon = getShortcutIcon(shortcut)
-                  return (
-                    <CommandItem
-                      key={shortcut.id}
-                      value={shortcut.id}
-                      onSelect={() => handleSelect(shortcut)}
-                      className="flex items-center gap-3"
-                    >
-                      <ShortcutIcon className="size-4 shrink-0" />
-                      <span className="flex-1">{shortcut.description}</span>
-                      <CommandShortcut>
-                        {formatShortcut(shortcut.key, shortcut.modifiers)}
-                      </CommandShortcut>
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-              {index < filteredGroups.length - 1 && <CommandSeparator />}
-            </React.Fragment>
-          ))}
         </CommandList>
 
         {/* Footer with keyboard hints */}
@@ -962,11 +1230,11 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
             <div className="flex items-center gap-3 sm:gap-4">
               <span className="flex items-center gap-1">
-                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">↑↓</kbd>
+                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">\u2191\u2193</kbd>
                 <span className="hidden sm:inline">{t('footer.navigate', 'Navigate')}</span>
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">↵</kbd>
+                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">\u21B5</kbd>
                 <span className="hidden sm:inline">{t('footer.select', 'Select')}</span>
               </span>
               <span className="flex items-center gap-1">
@@ -977,7 +1245,7 @@ const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortc
             <div className="flex items-center gap-1">
               <Keyboard className="size-3" />
               <span>
-                {isMac ? '⌘K' : 'Ctrl+K'} {t('footer.toOpen', 'to open')}
+                {isMac ? '\u2318K' : 'Ctrl+K'} {t('footer.toOpen', 'to open')}
               </span>
             </div>
           </div>
@@ -996,8 +1264,8 @@ interface ShortcutHintProps {
   className?: string
 }
 
-export function ShortcutHint({ shortcutKey, modifiers, className }: ShortcutHintProps) {
-  const { formatShortcut, isRTL } = useKeyboardShortcutContext()
+export function ShortcutHint({ shortcutKey, modifiers, className }: ShortcutHintProps): React.ReactElement {
+  const { formatShortcut } = useKeyboardShortcutContext()
 
   return (
     <kbd
@@ -1020,13 +1288,12 @@ interface ShortcutGuideProps {
   className?: string
 }
 
-export function ShortcutGuide({ category, maxItems = 5, className }: ShortcutGuideProps) {
+export function ShortcutGuide({ category, maxItems = 5, className }: ShortcutGuideProps): React.ReactElement | null {
   const { t } = useTranslation('keyboard-shortcuts')
-  const { isRTL } = useDirection()
   const { getShortcutsByCategory, getAllShortcuts, formatShortcut } = useKeyboardShortcutContext()
 
   const shortcuts = useMemo(() => {
-    const items = category ? getShortcutsByCategory(category) : getAllShortcuts()
+    const items = category != null ? getShortcutsByCategory(category) : getAllShortcuts()
     return items.slice(0, maxItems)
   }, [category, getShortcutsByCategory, getAllShortcuts, maxItems])
 
