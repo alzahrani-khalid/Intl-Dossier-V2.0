@@ -14,7 +14,7 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 - [x] **NAV-03**: User does not encounter duplicate or orphan routes — ~15 duplicates eliminated, single route per entity
 - [x] **NAV-04**: User does not see demo pages in production — 10+ demo pages moved behind `VITE_DEV_MODE` flag
 - [ ] **NAV-05**: User on mobile sees bottom tab bar with 4 items (Dashboard, Dossiers, Tasks, More) replacing sidebar
-- [ ] **NAV-06**: User can access Cmd+K quick switcher from any page to search and navigate globally
+- [x] **NAV-06**: User can access Cmd+K quick switcher from any page to search and navigate globally
 
 ### Lifecycle Engine
 
@@ -107,7 +107,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAV-03      | Phase 8  | Complete |
 | NAV-04      | Phase 8  | Complete |
 | NAV-05      | Phase 8  | Pending |
-| NAV-06      | Phase 8  | Pending |
+| NAV-06      | Phase 8  | Complete |
 | LIFE-01     | Phase 9  | Pending |
 | LIFE-02     | Phase 9  | Pending |
 | LIFE-03     | Phase 9  | Pending |

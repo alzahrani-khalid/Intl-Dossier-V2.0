@@ -55,9 +55,9 @@ Full details: [v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 Plans:
 
 - [x] 08-01-PLAN.md — Sidebar restructure: 3-group nav config + AppSidebar refactor (NAV-01, NAV-02)
-- [ ] 08-02-PLAN.md — Route cleanup: demo page gating + duplicate route redirects (NAV-03, NAV-04)
+- [x] 08-02-PLAN.md — Route cleanup: demo page gating + duplicate route redirects (NAV-03, NAV-04)
 - [ ] 08-03-PLAN.md — Mobile bottom tab bar with scroll-aware auto-hide (NAV-05)
-- [ ] 08-04-PLAN.md — Enhanced Cmd+K command palette with recents + grouped search (NAV-06)
+- [x] 08-04-PLAN.md — Enhanced Cmd+K command palette with recents + grouped search (NAV-06)
 
 **UI hint**: yes
 

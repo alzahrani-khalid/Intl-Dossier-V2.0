@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
 status: executing
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-03-29T03:34:26.710Z"
+stopped_at: Completed 08-04-PLAN.md
+last_updated: "2026-03-29T03:46:32.561Z"
 last_activity: 2026-03-29
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 3
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 08 (navigation-route-consolidation) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-03-29
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 
 | Phase 08 P02 | 4min | 2 tasks | 20 files |
 | Phase 08 P01 | 8min | 2 tasks | 4 files |
+| Phase 08 P04 | 9min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,7 @@ Recent decisions affecting current work:
 - [Phase 08]: Only converted simple leaf entity routes to redirects; left engagements and persons untouched (have child routes)
 - [Phase 08]: Mapped useWorkQueueCounts intake/waiting to tasks/approvals until hook extended
 - [Phase 08]: Kept backward-compat createNavigationSections wrapper for transition safety
+- [Phase 08]: Separated page-level recents (useRecentNavigation) from entity-level recents (useQuickSwitcherSearch) for cleaner concerns
 
 ### Pending Todos
 
@@ -81,6 +83,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-29T03:34:26.707Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-03-29T03:46:32.557Z
+Stopped at: Completed 08-04-PLAN.md
 Resume file: None
