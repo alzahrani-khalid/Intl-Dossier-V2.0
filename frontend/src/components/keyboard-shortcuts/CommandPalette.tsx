@@ -1226,11 +1226,11 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
             <div className="flex items-center gap-3 sm:gap-4">
               <span className="flex items-center gap-1">
-                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">\u2191\u2193</kbd>
+                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">{'\u2191\u2193'}</kbd>
                 <span className="hidden sm:inline">{t('footer.navigate', 'Navigate')}</span>
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">\u21B5</kbd>
+                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">{'\u21B5'}</kbd>
                 <span className="hidden sm:inline">{t('footer.select', 'Select')}</span>
               </span>
               <span className="flex items-center gap-1">
