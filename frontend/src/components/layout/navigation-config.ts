@@ -1,35 +1,29 @@
 import type { LucideIcon } from 'lucide-react'
 import {
   LayoutDashboard,
-  LayoutGrid,
-  CalendarDays,
-  Brain,
-  Database,
-  CheckSquare,
-  Inbox,
-  Clock,
-  Settings,
-  HelpCircle,
-  FolderOpen,
-  MessageSquare,
+  Briefcase,
   ClipboardList,
+  CheckSquare,
+  CalendarDays,
   ScrollText,
-  TrendingUp,
-  BarChart3,
-  Activity,
-  Download,
-  UserCog,
-  PenTool,
-  Shield,
-  Wrench,
-  Sparkles,
-  Sliders,
-  Gauge,
-  Tag,
-  Webhook,
-  Workflow,
   BookOpen,
+  TrendingUp,
+  Activity,
+  Search,
+  Clock,
+  Globe,
+  Building2,
+  Users,
+  MessageSquare,
+  Tag,
+  UsersRound,
+  FolderOpen,
+  Settings,
+  Sparkles,
+  Wrench,
+  Shield,
   History,
+  Database,
 } from 'lucide-react'
 
 export interface NavigationItem {
@@ -38,84 +32,41 @@ export interface NavigationItem {
   path: string
   icon: LucideIcon
   badgeCount?: number
-  adminOnly?: boolean
+  secondary?: boolean
 }
 
+export interface NavigationGroup {
+  id: 'operations' | 'dossiers' | 'administration'
+  label: string
+  icon: LucideIcon
+  items: NavigationItem[]
+  collapsible?: boolean
+  defaultOpen?: boolean
+}
+
+/**
+ * Legacy type alias — kept for backward compatibility during transition.
+ * Can be removed after Phase 8 is fully verified.
+ */
 export interface NavigationSection {
   id: string
   label: string
   items: NavigationItem[]
 }
 
-export const createNavigationSections = (
-  counts: { intake: number; waiting: number },
+export const createNavigationGroups = (
+  counts: { tasks: number; approvals: number; engagements: number },
   isAdmin: boolean,
-): NavigationSection[] => {
-  const sections: NavigationSection[] = [
-    // DOSSIERS - Primary Hub (First-class citizen)
+): NavigationGroup[] => {
+  const groups: NavigationGroup[] = [
+    // GROUP 1: Operations — day-to-day workflows
     {
-      id: 'dossiers-hub',
-      label: 'navigation.dossiersHub',
+      id: 'operations',
+      label: 'navigation.operations',
+      icon: LayoutDashboard,
+      defaultOpen: true,
       items: [
-        {
-          id: 'all-dossiers',
-          label: 'navigation.allDossiers',
-          path: '/dossiers',
-          icon: FolderOpen,
-        },
-        {
-          id: 'recent-activity',
-          label: 'navigation.recentActivity',
-          path: '/activity',
-          icon: History,
-        },
-      ],
-    },
-    // MY WORK - personal productivity
-    {
-      id: 'my-work',
-      label: 'navigation.myWork',
-      items: [
-        {
-          id: 'my-work-list',
-          label: 'navigation.listView',
-          path: '/my-work',
-          icon: LayoutDashboard,
-        },
-        {
-          id: 'my-work-board',
-          label: 'navigation.boardView',
-          path: '/my-work/board',
-          icon: CheckSquare,
-        },
-      ],
-    },
-    // REQUESTS - queue management
-    {
-      id: 'requests',
-      label: 'navigation.requests',
-      items: [
-        {
-          id: 'incoming-requests',
-          label: 'navigation.incomingRequests',
-          path: '/my-work/intake',
-          icon: Inbox,
-          badgeCount: counts.intake,
-        },
-        {
-          id: 'awaiting-response',
-          label: 'navigation.awaitingResponse',
-          path: '/my-work/waiting',
-          icon: Clock,
-          badgeCount: counts.waiting,
-        },
-      ],
-    },
-    // Main Section (Dashboard, Approvals, etc.)
-    {
-      id: 'main',
-      label: 'navigation.main',
-      items: [
+        // Primary items
         {
           id: 'dashboard',
           label: 'navigation.dashboard',
@@ -123,22 +74,11 @@ export const createNavigationSections = (
           icon: LayoutDashboard,
         },
         {
-          id: 'custom-dashboard',
-          label: 'navigation.customDashboard',
-          path: '/custom-dashboard',
-          icon: LayoutGrid,
-        },
-        {
-          id: 'approvals',
-          label: 'navigation.approvals',
-          path: '/approvals',
-          icon: CheckSquare,
-        },
-        {
-          id: 'positions',
-          label: 'navigation.positions',
-          path: '/positions',
-          icon: MessageSquare,
+          id: 'engagements',
+          label: 'navigation.engagements',
+          path: '/engagements',
+          icon: Briefcase,
+          badgeCount: counts.engagements,
         },
         {
           id: 'after-actions',
@@ -146,12 +86,13 @@ export const createNavigationSections = (
           path: '/after-actions',
           icon: ClipboardList,
         },
-      ],
-    },
-    {
-      id: 'tools',
-      label: 'Tools',
-      items: [
+        {
+          id: 'tasks',
+          label: 'navigation.tasks',
+          path: '/my-work',
+          icon: CheckSquare,
+          badgeCount: counts.tasks,
+        },
         {
           id: 'calendar',
           label: 'navigation.calendar',
@@ -170,146 +111,159 @@ export const createNavigationSections = (
           path: '/briefing-books',
           icon: BookOpen,
         },
-        {
-          id: 'intelligence',
-          label: 'navigation.intelligence',
-          path: '/intelligence',
-          icon: Brain,
-        },
+        // Secondary items (per D-02)
         {
           id: 'analytics',
           label: 'navigation.analytics',
           path: '/analytics',
           icon: TrendingUp,
+          secondary: true,
         },
         {
-          id: 'reports',
-          label: 'navigation.reports',
-          path: '/reports',
-          icon: BarChart3,
+          id: 'activity',
+          label: 'navigation.activity',
+          path: '/activity',
+          icon: Activity,
+          secondary: true,
         },
         {
-          id: 'sla-monitoring',
-          label: 'navigation.slaMonitoring',
-          path: '/sla-monitoring',
-          icon: Gauge,
+          id: 'advanced-search',
+          label: 'navigation.advancedSearch',
+          path: '/search',
+          icon: Search,
+          secondary: true,
+        },
+        {
+          id: 'availability-polling',
+          label: 'navigation.availabilityPolling',
+          path: '/availability-polling',
+          icon: Clock,
+          secondary: true,
         },
       ],
     },
+    // GROUP 2: Dossiers — entity browsing
     {
-      id: 'documents',
-      label: 'Documents',
+      id: 'dossiers',
+      label: 'navigation.dossiers',
+      icon: FolderOpen,
+      defaultOpen: true,
       items: [
         {
-          id: 'data-library',
-          label: 'navigation.dataLibrary',
-          path: '/data-library',
-          icon: Database,
+          id: 'dossier-countries',
+          label: 'navigation.countries',
+          path: '/dossiers/countries',
+          icon: Globe,
         },
         {
-          id: 'word-assistant',
-          label: 'navigation.wordAssistant',
-          path: '/word-assistant',
-          icon: PenTool,
+          id: 'dossier-organizations',
+          label: 'navigation.organizations',
+          path: '/dossiers/organizations',
+          icon: Building2,
+        },
+        {
+          id: 'dossier-persons',
+          label: 'navigation.persons',
+          path: '/dossiers/persons',
+          icon: Users,
+        },
+        {
+          id: 'dossier-forums',
+          label: 'navigation.forums',
+          path: '/dossiers/forums',
+          icon: MessageSquare,
+        },
+        {
+          id: 'dossier-topics',
+          label: 'navigation.topics',
+          path: '/dossiers/topics',
+          icon: Tag,
+        },
+        {
+          id: 'dossier-working-groups',
+          label: 'navigation.workingGroups',
+          path: '/dossiers/working_groups',
+          icon: UsersRound,
+        },
+        // Engagements cross-link (per D-03)
+        {
+          id: 'dossier-engagements',
+          label: 'navigation.engagements',
+          path: '/dossiers/engagements',
+          icon: Briefcase,
         },
       ],
     },
   ]
 
-  // Add admin section if user is admin
+  // GROUP 3: Administration — admin-only
   if (isAdmin) {
-    sections.push({
-      id: 'admin',
-      label: 'navigation.admin',
+    groups.push({
+      id: 'administration',
+      label: 'navigation.administration',
+      icon: Settings,
+      collapsible: true,
+      defaultOpen: false,
       items: [
         {
+          id: 'admin-ai-settings',
+          label: 'navigation.aiSettings',
+          path: '/admin/ai-settings',
+          icon: Sparkles,
+        },
+        {
           id: 'admin-system',
-          label: 'navigation.adminSystem',
+          label: 'navigation.systemSettings',
           path: '/admin/system',
           icon: Wrench,
-          adminOnly: true,
+        },
+        {
+          id: 'admin-field-permissions',
+          label: 'navigation.fieldPermissions',
+          path: '/admin/field-permissions',
+          icon: Shield,
+        },
+        {
+          id: 'admin-audit-logs',
+          label: 'navigation.auditLogs',
+          path: '/audit-logs',
+          icon: History,
+        },
+        {
+          id: 'admin-data-retention',
+          label: 'navigation.dataRetention',
+          path: '/admin/data-retention',
+          icon: Database,
         },
         {
           id: 'admin-approvals',
-          label: 'navigation.adminApprovals',
-          path: '/admin/approvals',
-          icon: Shield,
-          adminOnly: true,
-        },
-        {
-          id: 'ai-usage',
-          label: 'navigation.aiUsage',
-          path: '/admin/ai-usage',
-          icon: Sparkles,
-          adminOnly: true,
-        },
-        {
-          id: 'ai-settings',
-          label: 'navigation.aiSettings',
-          path: '/admin/ai-settings',
-          icon: Sliders,
-          adminOnly: true,
-        },
-        {
-          id: 'users',
-          label: 'navigation.users',
-          path: '/users',
-          icon: UserCog,
-          adminOnly: true,
-        },
-        {
-          id: 'monitoring',
-          label: 'navigation.monitoring',
-          path: '/monitoring',
-          icon: Activity,
-          adminOnly: true,
-        },
-        {
-          id: 'export',
-          label: 'navigation.export',
-          path: '/export',
-          icon: Download,
-          adminOnly: true,
-        },
-        {
-          id: 'tags',
-          label: 'navigation.tags',
-          path: '/tags',
-          icon: Tag,
-          adminOnly: true,
-        },
-        {
-          id: 'webhooks',
-          label: 'navigation.webhooks',
-          path: '/settings/webhooks',
-          icon: Webhook,
-          adminOnly: true,
-        },
-        {
-          id: 'workflow-automation',
-          label: 'navigation.workflowAutomation',
-          path: '/workflow-automation',
-          icon: Workflow,
-          adminOnly: true,
+          label: 'navigation.approvals',
+          path: '/approvals',
+          icon: CheckSquare,
+          badgeCount: counts.approvals,
         },
       ],
     })
   }
 
-  return sections
+  return groups
 }
 
-const bottomNavigationItems: NavigationItem[] = [
-  {
-    id: 'settings',
-    label: 'navigation.settings',
-    path: '/settings',
-    icon: Settings,
-  },
-  {
-    id: 'help',
-    label: 'navigation.getHelp',
-    path: '/help',
-    icon: HelpCircle,
-  },
-]
+/**
+ * Legacy wrapper — maps new 3-group structure to old section format.
+ * Prevents breaking imports during transition. Remove after Phase 8 verified.
+ */
+export const createNavigationSections = (
+  counts: { intake: number; waiting: number },
+  isAdmin: boolean,
+): NavigationSection[] => {
+  const groups = createNavigationGroups(
+    { tasks: counts.intake, approvals: counts.waiting, engagements: 0 },
+    isAdmin,
+  )
+  return groups.map((group) => ({
+    id: group.id,
+    label: group.label,
+    items: group.items,
+  }))
+}
