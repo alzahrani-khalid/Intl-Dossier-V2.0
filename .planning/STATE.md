@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
 status: executing
-stopped_at: Completed 08-02-PLAN.md
-last_updated: "2026-03-29T03:33:00.514Z"
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-03-29T03:34:26.710Z"
 last_activity: 2026-03-29
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 4
-  completed_plans: 0
+  completed_plans: 1
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 08 (navigation-route-consolidation) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-03-29
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 0%
 - Fresh milestone — no v3.0 data yet
 
 | Phase 08 P02 | 4min | 2 tasks | 20 files |
+| Phase 08 P01 | 8min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,8 @@ Recent decisions affecting current work:
 - [v3.0 Roadmap]: RelationshipSidebar hidden on mobile, sheet/drawer on small screens
 - [Phase 08]: Used import.meta.env.DEV as fallback in devModeGuard so demos are never blocked during local development
 - [Phase 08]: Only converted simple leaf entity routes to redirects; left engagements and persons untouched (have child routes)
+- [Phase 08]: Mapped useWorkQueueCounts intake/waiting to tasks/approvals until hook extended
+- [Phase 08]: Kept backward-compat createNavigationSections wrapper for transition safety
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-29T03:33:00.506Z
-Stopped at: Completed 08-02-PLAN.md
+Last session: 2026-03-29T03:34:26.707Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None
