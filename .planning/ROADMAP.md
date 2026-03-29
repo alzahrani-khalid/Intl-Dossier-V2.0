@@ -49,8 +49,17 @@ Full details: [v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 3. All 8 dossier types are accessible under `/dossiers/{type}/` with consistent URL structure
 4. No duplicate or orphan routes exist — navigating old paths redirects to canonical routes
 5. Demo pages are invisible in production (only accessible with `VITE_DEV_MODE` flag)
-   **Plans**: TBD
-   **UI hint**: yes
+
+**Plans:** 4 plans
+
+Plans:
+
+- [ ] 08-01-PLAN.md — Sidebar restructure: 3-group nav config + AppSidebar refactor (NAV-01, NAV-02)
+- [ ] 08-02-PLAN.md — Route cleanup: demo page gating + duplicate route redirects (NAV-03, NAV-04)
+- [ ] 08-03-PLAN.md — Mobile bottom tab bar with scroll-aware auto-hide (NAV-05)
+- [ ] 08-04-PLAN.md — Enhanced Cmd+K command palette with recents + grouped search (NAV-06)
+
+**UI hint**: yes
 
 ### Phase 9: Lifecycle Engine
 
@@ -141,7 +150,7 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 5. Responsive Design                | v2.0      | 5/5            | Complete    | 2026-03-26 |
 | 6. Architecture Consolidation       | v2.0      | 5/5            | Complete    | 2026-03-27 |
 | 7. Performance Optimization         | v2.0      | 4/4            | Complete    | 2026-03-28 |
-| 8. Navigation & Route Consolidation | v3.0      | 0/TBD          | Not started | -          |
+| 8. Navigation & Route Consolidation | v3.0      | 0/4            | Planned     | -          |
 | 9. Lifecycle Engine                 | v3.0      | 0/TBD          | Not started | -          |
 | 10. Operations Hub                  | v3.0      | 0/TBD          | Not started | -          |
 | 11. Engagement Workspace            | v3.0      | 0/TBD          | Not started | -          |
