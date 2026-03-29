@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 import { useTranslation } from 'react-i18next'
 import { FolderKanban, CheckCircle, XCircle, AlertCircle, Settings, RefreshCw } from 'lucide-react'
 
@@ -30,6 +31,7 @@ import type { EntityPlugin, ExtensionFieldDefinition } from '@/lib/plugin-system
 
 // Route definition
 export const Route = createFileRoute('/_protected/plugin-demo')({
+  beforeLoad: devModeGuard,
   component: PluginDemoPage,
 })
 

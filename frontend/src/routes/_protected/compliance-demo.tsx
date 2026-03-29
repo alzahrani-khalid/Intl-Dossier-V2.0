@@ -6,10 +6,12 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 import { useTranslation } from 'react-i18next'
 import { ComplianceRulesManager } from '@/components/compliance/ComplianceRulesManager'
 
 export const Route = createFileRoute('/_protected/compliance-demo')({
+  beforeLoad: devModeGuard,
   component: ComplianceDemo,
 })
 
