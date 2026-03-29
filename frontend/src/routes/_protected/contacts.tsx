@@ -1,14 +1,7 @@
-/**
- * Contacts Directory Route - Main Index
- * Part of: 027-contact-directory implementation
- *
- * Route: /contacts
- * Displays the contact directory with search and filtering
- */
-
-import { createFileRoute } from '@tanstack/react-router'
-import { ContactsDirectory } from '@/pages/contacts/ContactsDirectory'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/contacts')({
-  component: ContactsDirectory,
+  beforeLoad: () => {
+    throw redirect({ to: '/dossiers/persons' })
+  },
 })

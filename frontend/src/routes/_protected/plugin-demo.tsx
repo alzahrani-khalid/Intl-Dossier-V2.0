@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 import { FolderKanban, CheckCircle, XCircle, AlertCircle, Settings, RefreshCw } from 'lucide-react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,6 +31,7 @@ import { useDirection } from '@/hooks/useDirection'
 
 // Route definition
 export const Route = createFileRoute('/_protected/plugin-demo')({
+  beforeLoad: devModeGuard,
   component: PluginDemoPage,
 })
 

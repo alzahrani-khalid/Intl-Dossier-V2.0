@@ -4,6 +4,7 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { m } from 'motion/react'
@@ -23,6 +24,7 @@ import toast from 'react-hot-toast'
 import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/actionable-errors-demo')({
+  beforeLoad: devModeGuard,
   component: ActionableErrorsDemo,
 })
 

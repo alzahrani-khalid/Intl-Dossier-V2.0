@@ -6,6 +6,7 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileText, Users, CheckSquare, Sparkles, Mic } from 'lucide-react'
@@ -24,6 +25,7 @@ import type {
 import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/meeting-minutes-demo')({
+  beforeLoad: devModeGuard,
   component: MeetingMinutesDemo,
 })
 

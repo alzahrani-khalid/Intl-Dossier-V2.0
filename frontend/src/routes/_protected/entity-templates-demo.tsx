@@ -7,6 +7,7 @@
 
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 import { useTranslation } from 'react-i18next'
 import { TemplateSelector, QuickEntryDialog } from '@/components/entity-templates'
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,7 @@ import type { EntityTemplate, TemplateEntityType } from '@/types/entity-template
 import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/entity-templates-demo')({
+  beforeLoad: devModeGuard,
   component: EntityTemplatesDemoPage,
 })
 

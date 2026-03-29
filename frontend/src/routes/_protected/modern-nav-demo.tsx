@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 import { useTranslation } from 'react-i18next'
 import { NavigationShell, MetricCard, ExecutionsTabs } from '@/components/modern-nav'
 
@@ -14,6 +15,7 @@ import { NavigationShell, MetricCard, ExecutionsTabs } from '@/components/modern
  * - RTL support for Arabic
  */
 export const Route = createFileRoute('/_protected/modern-nav-demo')({
+  beforeLoad: devModeGuard,
   component: ModernNavDemo,
 })
 

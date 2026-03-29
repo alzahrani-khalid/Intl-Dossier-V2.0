@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 import { ResponsiveCard } from '@/components/responsive/responsive-card'
 import { ResponsiveCardGrid } from '@/components/responsive/responsive-card'
 import { ResponsiveTable } from '@/components/responsive/responsive-table'
@@ -70,4 +71,7 @@ function DemoPage(): React.ReactElement {
   )
 }
 
-export const Route = createFileRoute('/_protected/responsive-demo')({ component: DemoPage })
+export const Route = createFileRoute('/_protected/responsive-demo')({
+  beforeLoad: devModeGuard,
+  component: DemoPage,
+})
