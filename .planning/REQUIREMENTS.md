@@ -22,7 +22,7 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 - [x] **LIFE-02**: User can transition an engagement between lifecycle stages — system suggests advancing when stage tasks complete (guide, not gate)
 - [x] **LIFE-03**: User can skip stages or move backward — lifecycle is flexible, not rigid
 - [x] **LIFE-04**: User can promote an approved intake request into a new engagement at the "intake" lifecycle stage
-- [ ] **LIFE-05**: Work items can optionally reference a lifecycle stage for stage-grouped kanban display
+- [x] **LIFE-05**: Work items can optionally reference a lifecycle stage for stage-grouped kanban display
 - [x] **LIFE-06**: Forums support recurring sessions — each session has its own lifecycle and mini-workspace
 
 ### Operations Hub (Dashboard)
@@ -112,7 +112,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LIFE-02     | Phase 9  | Complete |
 | LIFE-03     | Phase 9  | Complete |
 | LIFE-04     | Phase 9  | Complete |
-| LIFE-05     | Phase 9  | Pending |
+| LIFE-05     | Phase 9  | Complete |
 | LIFE-06     | Phase 9  | Complete |
 | OPS-01      | Phase 10 | Pending |
 | OPS-02      | Phase 10 | Pending |
