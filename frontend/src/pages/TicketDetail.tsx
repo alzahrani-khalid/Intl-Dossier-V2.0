@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense, useMemo } from 'react'
+import { useState, lazy, Suspense, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { SLACountdown } from '../components/sla-countdown/SLACountdown'
@@ -14,6 +14,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { IntakePromotionDialog } from '@/components/engagements/IntakePromotionDialog'
+import { ConvertedTicketBanner } from '@/components/engagements/ConvertedTicketBanner'
+import { usePromoteIntake } from '@/domains/engagements/hooks/useLifecycle'
+import type { IntakePromotionRequest } from '@/types/lifecycle.types'
 
 // Lazy load EntityLinkManager for performance (Task T049)
 const EntityLinkManager = lazy(() => import('../components/entity-links/EntityLinkManager'))
@@ -44,6 +48,25 @@ const { id } = useParams({ strict: false })
   // Dialog states for replacing browser prompts
   const [convertDialogOpen, setConvertDialogOpen] = useState(false)
   const [closeDialogOpen, setCloseDialogOpen] = useState(false)
+  const [promoteOpen, setPromoteOpen] = useState(false)
+
+  // Lifecycle promotion hook
+  const { mutate: promoteIntake, isPending: isPromoting } = usePromoteIntake()
+
+  const handlePromote = useCallback(
+    (data: IntakePromotionRequest): void => {
+      promoteIntake(data, {
+        onSuccess: (result) => {
+          setPromoteOpen(false)
+          void navigate({
+            to: '/engagements/$engagementId',
+            params: { engagementId: result.engagement_id },
+          })
+        },
+      })
+    },
+    [promoteIntake, navigate],
+  )
 
   // Get current user for permission checks
   const user = useAuthStore((state) => state.user)
@@ -90,6 +113,13 @@ const { id } = useParams({ strict: false })
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Converted Ticket Banner — shown when ticket was promoted to engagement */}
+      {ticket.convertedToId != null && ticket.convertedToId !== '' && (
+        <div className="mb-4">
+          <ConvertedTicketBanner convertedToId={ticket.convertedToId} />
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-6">
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -270,7 +300,16 @@ const { id } = useParams({ strict: false })
 
               {/* Actions */}
               {ticket.status !== 'closed' && ticket.status !== 'converted' && (
-                <div className="flex gap-3 border-t border-border pt-4">
+                <div className="flex flex-wrap gap-3 border-t border-border pt-4">
+                  {ticket.requestType === 'engagement' && (
+                    <Button
+                      onClick={() => setPromoteOpen(true)}
+                      disabled={isPromoting}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    >
+                      {t('ticketDetail.promoteToEngagement', 'Promote to Engagement')}
+                    </Button>
+                  )}
                   {ticket.status === 'triaged' && (
                     <Button
                       onClick={() => setConvertDialogOpen(true)}
@@ -345,6 +384,17 @@ const { id } = useParams({ strict: false })
                   )
                 }}
               />
+
+              {/* Intake Promotion Dialog */}
+              {ticket.requestType === 'engagement' && (
+                <IntakePromotionDialog
+                  ticket={ticket}
+                  open={promoteOpen}
+                  onOpenChange={setPromoteOpen}
+                  onPromote={handlePromote}
+                  isPending={isPromoting}
+                />
+              )}
             </div>
           )}
 

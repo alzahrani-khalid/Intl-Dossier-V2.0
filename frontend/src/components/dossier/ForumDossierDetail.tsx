@@ -29,14 +29,17 @@
  * Feature: 028-type-specific-dossier-pages (Phase 2)
  */
 
-import { useState, Suspense } from 'react'
+import { useState, Suspense, useCallback } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
 import QueryErrorBoundary from '@/components/query-error-boundary/QueryErrorBoundary'
-import { Building2, CalendarDays, Target, FileText, Files, Upload } from 'lucide-react'
+import { Building2, CalendarDays, Target, FileText, Files, Upload, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 
 // Section components (existing forum sections)
 import { MemberOrganizations } from './sections/MemberOrganizations'
@@ -53,6 +56,13 @@ import { CommentList } from '@/components/comments'
 
 import type { ForumDossier } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
+import { ForumSessionCreator } from '@/components/engagements/ForumSessionCreator'
+import {
+  useCreateForumSession,
+  useForumSessions,
+} from '@/domains/engagements/hooks/useLifecycle'
+import type { ForumSessionCreateRequest } from '@/types/lifecycle.types'
+import { ENGAGEMENT_STATUS_LABELS } from '@/types/engagement.types'
 
 function ForumTabSkeleton() {
   return (
@@ -85,7 +95,25 @@ type ForumTabType =
 export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
+
+  // Forum session hooks
+  const [sessionOpen, setSessionOpen] = useState(false)
+  const { mutate: createSession, isPending: isCreating } = useCreateForumSession()
+  const { data: forumSessionsData, isLoading: sessionsLoading } = useForumSessions(dossier.id)
+  const forumSessions = forumSessionsData?.data ?? []
+
+  const handleCreateSession = useCallback(
+    (data: ForumSessionCreateRequest): void => {
+      createSession(data, {
+        onSuccess: () => {
+          setSessionOpen(false)
+        },
+      })
+    },
+    [createSession],
+  )
+
   // Active tab state with URL persistence
   const [activeTab, setActiveTab] = useState<ForumTabType>(
     (initialTab as ForumTabType) || 'overview',
@@ -219,14 +247,80 @@ const navigate = useNavigate()
             </div>
           )}
 
-          {/* Schedule Tab */}
+          {/* Schedule / Sessions Tab */}
           {activeTab === 'schedule' && (
-            <div id="schedule-panel" role="tabpanel" aria-labelledby="schedule-tab">
+            <div id="schedule-panel" role="tabpanel" aria-labelledby="schedule-tab" className="space-y-6">
+              {/* New Session button + ForumSessionCreator */}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-start">
+                  {t('tabs.forum.sessions', 'Sessions')}
+                </h3>
+                <Button variant="outline" size="sm" onClick={() => setSessionOpen(true)}>
+                  <Plus className="h-4 w-4 me-2" />
+                  {t('forum.newSession', 'New Session')}
+                </Button>
+              </div>
+
+              {/* Forum Sessions list */}
+              {sessionsLoading ? (
+                <ForumTabSkeleton />
+              ) : forumSessions.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {forumSessions.map((session) => (
+                    <Link
+                      key={session.id}
+                      to="/engagements/$engagementId"
+                      params={{ engagementId: session.id }}
+                      className="block"
+                    >
+                      <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                        <CardContent className="p-4 space-y-2">
+                          <h4 className="text-sm font-semibold text-start line-clamp-2">
+                            {isRTL
+                              ? (session.name_ar ?? session.name_en)
+                              : session.name_en}
+                          </h4>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <Badge variant="outline" className="text-xs">
+                              {isRTL
+                                ? ENGAGEMENT_STATUS_LABELS[session.engagement_status]?.ar ?? session.engagement_status
+                                : ENGAGEMENT_STATUS_LABELS[session.engagement_status]?.en ?? session.engagement_status}
+                            </Badge>
+                            {session.start_date != null && (
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(session.start_date).toLocaleDateString(
+                                  isRTL ? 'ar-SA' : 'en-US',
+                                  { month: 'short', day: 'numeric', year: 'numeric' },
+                                )}
+                              </span>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-start">
+                  {t('forum.noSessions', 'No sessions created yet')}
+                </p>
+              )}
+
+              {/* Existing meeting schedule content */}
               <QueryErrorBoundary>
                 <Suspense fallback={<ForumTabSkeleton />}>
                   <MeetingSchedule dossier={dossier} />
                 </Suspense>
               </QueryErrorBoundary>
+
+              {/* ForumSessionCreator sheet */}
+              <ForumSessionCreator
+                forum={dossier as any}
+                open={sessionOpen}
+                onOpenChange={setSessionOpen}
+                onCreateSession={handleCreateSession}
+                isPending={isCreating}
+              />
             </div>
           )}
 

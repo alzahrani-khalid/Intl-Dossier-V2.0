@@ -18,6 +18,7 @@ import { Separator } from '@/components/ui/separator'
 import type { WorkItem } from '@/types/work-item.types'
 import { getSourceBadgeColors, getPriorityColor } from './utils/column-definitions'
 import { useDirection } from '@/hooks/useDirection'
+import { LIFECYCLE_STAGE_LABELS, type LifecycleStage } from '@/types/lifecycle.types'
 
 interface CardContentProps {
   item: WorkItem
@@ -94,9 +95,21 @@ const sourceClasses = getSourceBadgeColors(item.source)
       </div>
 
       {/* Title */}
-      <h4 className="text-sm font-semibold line-clamp-2 text-start mb-3">
+      <h4 className="text-sm font-semibold line-clamp-2 text-start mb-2">
         {isRTL && item.title_ar ? item.title_ar : item.title}
       </h4>
+
+      {/* Lifecycle Stage Badge (optional) */}
+      {item.lifecycle_stage != null && (
+        <Badge
+          variant="secondary"
+          className="text-xs bg-primary/10 text-primary-700 rounded-full px-2 py-0.5 mb-2"
+        >
+          {LIFECYCLE_STAGE_LABELS[item.lifecycle_stage as LifecycleStage]?.[
+            isRTL ? 'ar' : 'en'
+          ] ?? item.lifecycle_stage}
+        </Badge>
+      )}
 
       <Separator className="mb-3" />
 

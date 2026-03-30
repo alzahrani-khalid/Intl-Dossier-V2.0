@@ -11,7 +11,7 @@
  * Mobile-first design with RTL support.
  */
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
@@ -64,6 +64,13 @@ import {
   AGENDA_ITEM_STATUS_LABELS,
 } from '@/types/engagement.types'
 import { useDirection } from '@/hooks/useDirection'
+import { LifecycleStepperBar } from '@/components/engagements/LifecycleStepperBar'
+import { LifecycleTimeline } from '@/components/engagements/LifecycleTimeline'
+import {
+  useLifecycleTransition,
+  useLifecycleHistory,
+} from '@/domains/engagements/hooks/useLifecycle'
+import type { LifecycleStage } from '@/types/lifecycle.types'
 
 function EngagementDetailPage() {
   const { engagementId } = useParams({ from: '/_protected/engagements/$engagementId' })
@@ -79,6 +86,19 @@ const navigate = useNavigate()
 
   // Track this engagement in navigation history
   useEngagementNavigation(engagementId, engagementData?.engagement, { skip: isLoading })
+
+  // Lifecycle hooks
+  const { data: lifecycleTransitions = [], isLoading: transitionsLoading } =
+    useLifecycleHistory(engagementId)
+  const { mutate: transitionStage, isPending: isTransitioning } =
+    useLifecycleTransition(engagementId)
+
+  const handleLifecycleTransition = useCallback(
+    (toStage: LifecycleStage, note?: string): void => {
+      transitionStage({ to_stage: toStage, note })
+    },
+    [transitionStage],
+  )
 
   // Navigation handlers
   const handleBack = () => {
@@ -304,6 +324,16 @@ const navigate = useNavigate()
 
       {/* Content */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Lifecycle Stepper Bar — below header, above tabs */}
+        <div className="mb-6">
+          <LifecycleStepperBar
+            currentStage={(engagement.lifecycle_stage as LifecycleStage) ?? 'intake'}
+            transitions={lifecycleTransitions}
+            onTransition={handleLifecycleTransition}
+            disabled={isTransitioning}
+          />
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="w-full sm:w-auto">
             <TabsTrigger value="overview" className="flex-1 sm:flex-none">
@@ -769,6 +799,14 @@ const navigate = useNavigate()
             />
           </TabsContent>
         </Tabs>
+
+        {/* Lifecycle Audit Trail — collapsible section */}
+        <div className="mt-6">
+          <LifecycleTimeline
+            transitions={lifecycleTransitions}
+            isLoading={transitionsLoading}
+          />
+        </div>
       </main>
     </div>
   )
