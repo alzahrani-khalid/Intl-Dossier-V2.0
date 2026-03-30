@@ -14,6 +14,17 @@ import { corsHeaders } from '../_shared/cors.ts';
 // Types
 // ============================================================================
 
+type LifecycleStage = 'intake' | 'preparation' | 'briefing' | 'execution' | 'follow_up' | 'closed';
+
+const VALID_LIFECYCLE_STAGES: LifecycleStage[] = [
+  'intake',
+  'preparation',
+  'briefing',
+  'execution',
+  'follow_up',
+  'closed',
+];
+
 type EngagementType =
   | 'bilateral_meeting'
   | 'mission'
@@ -23,6 +34,7 @@ type EngagementType =
   | 'roundtable'
   | 'official_visit'
   | 'consultation'
+  | 'forum_session'
   | 'other';
 
 type EngagementCategory =
@@ -74,6 +86,19 @@ interface EngagementExtension {
   notes_en?: string;
   notes_ar?: string;
   engagement_status?: EngagementStatus;
+  lifecycle_stage?: LifecycleStage;
+  parent_forum_id?: string;
+}
+
+interface IntakePromotionBody {
+  ticket_id: string;
+  title_en: string;
+  title_ar: string;
+  objectives_en?: string;
+  objectives_ar?: string;
+  engagement_type: EngagementType;
+  engagement_category: EngagementCategory;
+  dossier_links?: string[];
 }
 
 interface EngagementRequest {
@@ -222,6 +247,14 @@ serve(async (req: Request) => {
     if (id && subResource === 'agenda') {
       return handleAgenda(req, supabaseClient, user, id, url);
     }
+    if (id && subResource === 'lifecycle') {
+      return handleLifecycle(req, supabaseClient, user, id);
+    }
+
+    // Top-level action routes (no ID required)
+    if (!id && url.pathname.endsWith('/promote-intake') && req.method === 'POST') {
+      return handlePromoteIntake(req, supabaseClient, user);
+    }
 
     // Main engagement CRUD
     switch (req.method) {
@@ -268,11 +301,45 @@ async function listEngagements(supabaseClient: any, url: URL) {
   const engagementCategory = searchParams.get('engagement_category');
   const engagementStatus = searchParams.get('engagement_status');
   const hostCountryId = searchParams.get('host_country_id');
+  const parentForumId = searchParams.get('parent_forum_id');
   const startDate = searchParams.get('start_date');
   const endDate = searchParams.get('end_date');
   const page = parseInt(searchParams.get('page') || '1');
   const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
   const offset = (page - 1) * limit;
+
+  // If filtering by parent_forum_id, use direct query instead of RPC
+  if (parentForumId) {
+    const { data: sessionData, error: sessionError } = await supabaseClient
+      .from('engagement_dossiers')
+      .select(`
+        *,
+        dossier:id (id, name_en, name_ar, type, status, description_en, description_ar, created_at, updated_at)
+      `)
+      .eq('parent_forum_id', parentForumId)
+      .eq('engagement_type', 'forum_session')
+      .order('start_date', { ascending: true })
+      .range(offset, offset + limit - 1);
+
+    if (sessionError) {
+      console.error('Error listing forum sessions:', sessionError);
+      throw sessionError;
+    }
+
+    return new Response(
+      JSON.stringify({
+        data: sessionData || [],
+        pagination: {
+          page,
+          limit,
+          total: sessionData?.length || 0,
+          totalPages: 1,
+          has_more: false,
+        },
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
 
   // Use RPC function for advanced search
   const { data, error } = await supabaseClient.rpc('search_engagements_advanced', {
@@ -426,6 +493,8 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
     notes_en: ext.notes_en,
     notes_ar: ext.notes_ar,
     engagement_status: ext.engagement_status || 'planned',
+    lifecycle_stage: ext.lifecycle_stage || 'preparation',
+    parent_forum_id: ext.parent_forum_id || null,
   });
 
   if (extError) {
@@ -506,6 +575,8 @@ async function updateEngagement(req: Request, supabaseClient: any, user: any, id
     if (ext.notes_en !== undefined) extUpdate.notes_en = ext.notes_en;
     if (ext.notes_ar !== undefined) extUpdate.notes_ar = ext.notes_ar;
     if (ext.engagement_status !== undefined) extUpdate.engagement_status = ext.engagement_status;
+    if (ext.lifecycle_stage !== undefined) extUpdate.lifecycle_stage = ext.lifecycle_stage;
+    if (ext.parent_forum_id !== undefined) extUpdate.parent_forum_id = ext.parent_forum_id;
 
     if (Object.keys(extUpdate).length > 0) {
       await supabaseClient.from('engagement_dossiers').update(extUpdate).eq('id', id);
@@ -856,4 +927,349 @@ async function removeAgendaItem(supabaseClient: any, user: any, agendaId: string
   return new Response(JSON.stringify({ success: true }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
+}
+
+// ============================================================================
+// Lifecycle Sub-Resource Handlers
+// ============================================================================
+
+async function handleLifecycle(
+  req: Request,
+  supabaseClient: any,
+  user: any,
+  engagementId: string
+) {
+  switch (req.method) {
+    case 'GET':
+      return getLifecycleHistory(supabaseClient, engagementId);
+    case 'POST':
+      return transitionLifecycleStage(req, supabaseClient, user, engagementId);
+    default:
+      return errorResponse(
+        405,
+        'METHOD_NOT_ALLOWED',
+        'Method not allowed',
+        'الطريقة غير مسموح بها'
+      );
+  }
+}
+
+/**
+ * GET /engagement-dossiers/:id/lifecycle
+ * Returns the transition history for an engagement.
+ */
+async function getLifecycleHistory(supabaseClient: any, engagementId: string) {
+  const { data, error } = await supabaseClient
+    .from('lifecycle_transitions')
+    .select(`
+      id,
+      engagement_id,
+      from_stage,
+      to_stage,
+      user_id,
+      note,
+      transitioned_at,
+      duration_in_stage_seconds,
+      created_at
+    `)
+    .eq('engagement_id', engagementId)
+    .order('transitioned_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching lifecycle history:', error);
+    throw error;
+  }
+
+  // Enrich with user names from profiles
+  const userIds = [...new Set((data || []).map((t: any) => t.user_id).filter(Boolean))];
+  let userMap: Record<string, string> = {};
+
+  if (userIds.length > 0) {
+    const { data: profiles } = await supabaseClient
+      .from('profiles')
+      .select('user_id, full_name_en, full_name_ar')
+      .in('user_id', userIds);
+
+    if (profiles) {
+      for (const p of profiles) {
+        userMap[p.user_id] = p.full_name_en || p.full_name_ar || 'Unknown';
+      }
+    }
+  }
+
+  const enriched = (data || []).map((t: any) => ({
+    ...t,
+    user_name: userMap[t.user_id] || null,
+  }));
+
+  return new Response(JSON.stringify({ data: enriched }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+/**
+ * POST /engagement-dossiers/:id/lifecycle
+ * Transitions an engagement's lifecycle stage and records an audit trail.
+ */
+async function transitionLifecycleStage(
+  req: Request,
+  supabaseClient: any,
+  user: any,
+  engagementId: string
+) {
+  const body = await req.json();
+  const toStage = body.to_stage as string;
+  const note = body.note as string | undefined;
+
+  // Validate to_stage
+  if (!toStage || !VALID_LIFECYCLE_STAGES.includes(toStage as LifecycleStage)) {
+    return errorResponse(
+      400,
+      'VALIDATION_ERROR',
+      `Invalid lifecycle stage. Must be one of: ${VALID_LIFECYCLE_STAGES.join(', ')}`,
+      `مرحلة دورة الحياة غير صالحة. يجب أن تكون واحدة من: ${VALID_LIFECYCLE_STAGES.join(', ')}`
+    );
+  }
+
+  // Get current lifecycle_stage from engagement_dossiers
+  const { data: engagement, error: fetchError } = await supabaseClient
+    .from('engagement_dossiers')
+    .select('lifecycle_stage')
+    .eq('id', engagementId)
+    .single();
+
+  if (fetchError || !engagement) {
+    return errorResponse(
+      404,
+      'NOT_FOUND',
+      'Engagement not found',
+      'المشاركة غير موجودة'
+    );
+  }
+
+  const currentStage = engagement.lifecycle_stage as string;
+
+  // Check if already at the target stage
+  if (toStage === currentStage) {
+    return errorResponse(
+      400,
+      'VALIDATION_ERROR',
+      'Engagement is already at this stage',
+      'المشاركة في هذه المرحلة بالفعل'
+    );
+  }
+
+  // Insert transition record (duration trigger handles duration_in_stage_seconds)
+  const { data: transition, error: transitionError } = await supabaseClient
+    .from('lifecycle_transitions')
+    .insert({
+      engagement_id: engagementId,
+      from_stage: currentStage,
+      to_stage: toStage,
+      user_id: user.id,
+      note: note || null,
+    })
+    .select('id')
+    .single();
+
+  if (transitionError) {
+    console.error('Error inserting lifecycle transition:', transitionError);
+    return errorResponse(
+      500,
+      'TRANSITION_ERROR',
+      'Failed to record lifecycle transition',
+      'فشل في تسجيل انتقال دورة الحياة'
+    );
+  }
+
+  // Update engagement_dossiers lifecycle_stage
+  const { error: updateError } = await supabaseClient
+    .from('engagement_dossiers')
+    .update({ lifecycle_stage: toStage })
+    .eq('id', engagementId);
+
+  if (updateError) {
+    console.error('Error updating lifecycle stage:', updateError);
+    return errorResponse(
+      500,
+      'UPDATE_ERROR',
+      'Failed to update lifecycle stage',
+      'فشل في تحديث مرحلة دورة الحياة'
+    );
+  }
+
+  return new Response(
+    JSON.stringify({
+      data: {
+        lifecycle_stage: toStage,
+        transition_id: transition.id,
+      },
+    }),
+    { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  );
+}
+
+// ============================================================================
+// Intake Promotion Handler
+// ============================================================================
+
+/**
+ * POST /engagement-dossiers/promote-intake
+ * Creates a new engagement from an intake ticket and marks ticket as converted.
+ */
+async function handlePromoteIntake(req: Request, supabaseClient: any, user: any) {
+  const body: IntakePromotionBody = await req.json();
+
+  // Validate required fields
+  if (!body.ticket_id) {
+    return errorResponse(400, 'VALIDATION_ERROR', 'ticket_id is required', 'معرف التذكرة مطلوب');
+  }
+  if (!body.title_en || !body.title_ar) {
+    return errorResponse(
+      400,
+      'VALIDATION_ERROR',
+      'title_en and title_ar are required',
+      'العنوان بالعربية والإنجليزية مطلوب'
+    );
+  }
+  if (!body.engagement_type) {
+    return errorResponse(400, 'VALIDATION_ERROR', 'engagement_type is required', 'نوع المشاركة مطلوب');
+  }
+  if (!body.engagement_category) {
+    return errorResponse(400, 'VALIDATION_ERROR', 'engagement_category is required', 'فئة المشاركة مطلوبة');
+  }
+
+  // Validate ticket exists and is promotable
+  const { data: ticket, error: ticketError } = await supabaseClient
+    .from('intake_tickets')
+    .select('id, request_type, status')
+    .eq('id', body.ticket_id)
+    .single();
+
+  if (ticketError || !ticket) {
+    return errorResponse(404, 'NOT_FOUND', 'Intake ticket not found', 'تذكرة الاستقبال غير موجودة');
+  }
+
+  if (ticket.request_type !== 'engagement') {
+    return errorResponse(
+      400,
+      'VALIDATION_ERROR',
+      'Ticket request_type must be "engagement" to promote',
+      'يجب أن يكون نوع طلب التذكرة "engagement" للترقية'
+    );
+  }
+
+  if (ticket.status === 'converted') {
+    return errorResponse(
+      400,
+      'VALIDATION_ERROR',
+      'Ticket has already been converted',
+      'التذكرة تم تحويلها بالفعل'
+    );
+  }
+
+  // Create base dossier
+  const { data: dossier, error: dossierError } = await supabaseClient
+    .from('dossiers')
+    .insert({
+      type: 'engagement_dossier',
+      name_en: body.title_en,
+      name_ar: body.title_ar,
+      status: 'active',
+      sensitivity_level: 1,
+      tags: [],
+      metadata: { promoted_from_ticket: body.ticket_id },
+      created_by: user.id,
+      updated_by: user.id,
+    })
+    .select()
+    .single();
+
+  if (dossierError) {
+    console.error('Error creating dossier for intake promotion:', dossierError);
+    return errorResponse(
+      500,
+      'CREATE_ERROR',
+      'Failed to create engagement dossier',
+      'فشل في إنشاء ملف المشاركة'
+    );
+  }
+
+  // Create engagement extension with lifecycle_stage = 'intake'
+  const { error: extError } = await supabaseClient.from('engagement_dossiers').insert({
+    id: dossier.id,
+    engagement_type: body.engagement_type,
+    engagement_category: body.engagement_category,
+    objectives_en: body.objectives_en || null,
+    objectives_ar: body.objectives_ar || null,
+    lifecycle_stage: 'intake',
+    engagement_status: 'planned',
+    start_date: new Date().toISOString(),
+    end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+  });
+
+  if (extError) {
+    console.error('Error creating engagement extension for intake promotion:', extError);
+    // Clean up orphan dossier
+    await supabaseClient.from('dossiers').delete().eq('id', dossier.id);
+    return errorResponse(
+      500,
+      'CREATE_ERROR',
+      'Failed to create engagement details',
+      'فشل في إنشاء تفاصيل المشاركة'
+    );
+  }
+
+  // Link dossiers if provided
+  if (body.dossier_links && body.dossier_links.length > 0) {
+    const links = body.dossier_links.map((targetId: string) => ({
+      source_dossier_id: dossier.id,
+      target_dossier_id: targetId,
+      relationship_type: 'related',
+      created_by: user.id,
+    }));
+
+    const { error: linkError } = await supabaseClient
+      .from('dossier_relationships')
+      .insert(links);
+
+    if (linkError) {
+      console.error('Error linking dossiers during intake promotion:', linkError);
+      // Non-critical: log but don't fail
+    }
+  }
+
+  // Update intake ticket to converted
+  const { error: ticketUpdateError } = await supabaseClient
+    .from('intake_tickets')
+    .update({
+      status: 'converted',
+      converted_to_type: 'engagement',
+      converted_to_id: dossier.id,
+    })
+    .eq('id', body.ticket_id);
+
+  if (ticketUpdateError) {
+    console.error('Error updating intake ticket status:', ticketUpdateError);
+    // Non-critical: engagement was created, just log the ticket update failure
+  }
+
+  // Record initial lifecycle transition
+  await supabaseClient.from('lifecycle_transitions').insert({
+    engagement_id: dossier.id,
+    from_stage: null,
+    to_stage: 'intake',
+    user_id: user.id,
+    note: `Promoted from intake ticket ${body.ticket_id}`,
+  });
+
+  return new Response(
+    JSON.stringify({
+      data: {
+        engagement_id: dossier.id,
+        dossier_id: dossier.id,
+      },
+    }),
+    { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  );
 }
