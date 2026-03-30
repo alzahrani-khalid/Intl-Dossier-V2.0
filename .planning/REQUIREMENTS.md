@@ -18,7 +18,7 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 
 ### Lifecycle Engine
 
-- [ ] **LIFE-01**: Engagements have a `lifecycle_stage` field with 6 stages: intake, preparation, briefing, execution, follow_up, closed
+- [x] **LIFE-01**: Engagements have a `lifecycle_stage` field with 6 stages: intake, preparation, briefing, execution, follow_up, closed
 - [x] **LIFE-02**: User can transition an engagement between lifecycle stages — system suggests advancing when stage tasks complete (guide, not gate)
 - [x] **LIFE-03**: User can skip stages or move backward — lifecycle is flexible, not rigid
 - [x] **LIFE-04**: User can promote an approved intake request into a new engagement at the "intake" lifecycle stage
@@ -108,7 +108,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAV-04      | Phase 8  | Complete |
 | NAV-05      | Phase 8  | Complete |
 | NAV-06      | Phase 8  | Complete |
-| LIFE-01     | Phase 9  | Pending |
+| LIFE-01     | Phase 9  | Complete |
 | LIFE-02     | Phase 9  | Complete |
 | LIFE-03     | Phase 9  | Complete |
 | LIFE-04     | Phase 9  | Complete |
