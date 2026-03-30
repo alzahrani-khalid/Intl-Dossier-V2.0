@@ -6,7 +6,10 @@
  * - Bilateral meetings, missions, delegations
  * - Participants and attendance tracking
  * - Agenda items and outcomes
+ * - Lifecycle stage tracking (Phase 09)
  */
+
+import type { LifecycleStage } from './lifecycle.types'
 
 // ============================================================================
 // Engagement Classification Types
@@ -24,6 +27,7 @@ export type EngagementType =
   | 'roundtable'
   | 'official_visit'
   | 'consultation'
+  | 'forum_session'
   | 'other'
 
 /**
@@ -243,6 +247,8 @@ export interface EngagementExtension {
   notes_en?: string
   notes_ar?: string
   engagement_status: EngagementStatus
+  lifecycle_stage?: LifecycleStage
+  parent_forum_id?: string | null
   created_at?: string
   updated_at?: string
 }
@@ -291,6 +297,8 @@ export interface EngagementDossier {
   notes_en?: string
   notes_ar?: string
   engagement_status: EngagementStatus
+  lifecycle_stage?: LifecycleStage
+  parent_forum_id?: string | null
 }
 
 /**
@@ -359,6 +367,8 @@ export interface EngagementCreate {
     notes_en?: string
     notes_ar?: string
     engagement_status?: EngagementStatus
+    lifecycle_stage?: LifecycleStage
+    parent_forum_id?: string
   }
 }
 
@@ -442,6 +452,7 @@ export const ENGAGEMENT_TYPE_LABELS: Record<EngagementType, { en: string; ar: st
   roundtable: { en: 'Roundtable', ar: 'طاولة مستديرة' },
   official_visit: { en: 'Official Visit', ar: 'زيارة رسمية' },
   consultation: { en: 'Consultation', ar: 'استشارة' },
+  forum_session: { en: 'Forum Session', ar: 'جلسة منتدى' },
   other: { en: 'Other', ar: 'أخرى' },
 }
 

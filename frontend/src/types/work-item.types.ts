@@ -7,7 +7,10 @@
  * - My Work dashboard
  * - Work item mutations
  * - API responses
+ * - Lifecycle stage grouping (Phase 09)
  */
+
+import type { LifecycleStage } from './lifecycle.types'
 
 // ============================================
 // Enum Constants (Single Source of Truth)
@@ -73,6 +76,7 @@ export interface WorkItem {
   assignee: WorkItemAssignee | null
   dossier_id: string | null
   engagement_id: string | null
+  lifecycle_stage?: LifecycleStage | null
   created_at: string
   updated_at: string
   metadata: WorkItemMetadata
@@ -431,6 +435,7 @@ export interface UnifiedWorkItem {
   created_at: string
   updated_at: string
   dossier_id: string | null
+  lifecycle_stage?: LifecycleStage | null
   tracking_type: TrackingType
   is_overdue: boolean
   days_until_due: number | null
