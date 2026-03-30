@@ -55,20 +55,23 @@ Exceptions:
 
 Uses existing project CSS custom property scale. Phase 10 uses 4 sizes and 2 weights:
 
-| Role    | Size                   | Weight                  | Line Height              | Usage in this phase                                                 |
-| ------- | ---------------------- | ----------------------- | ------------------------ | ------------------------------------------------------------------- |
-| Body    | `--text-base` (13px)   | `--font-normal` (400)   | `--leading-normal` (1.5) | Attention item descriptions, activity feed text, timeline details   |
-| Label   | `--text-sm` (12px)     | `--font-medium` (500)   | `--leading-snug` (1.375) | Zone section headers (Today/Tomorrow), severity badges, role labels |
-| Heading | `--text-xl` (16px)     | `--font-semibold` (600) | `--leading-tight` (1.25) | Zone titles (Attention Needed, Timeline, etc.), card titles         |
-| Display | `--text-metric` (56px) | `--font-semibold` (600) | `--leading-tight` (1.25) | Quick Stats metric numbers only                                     |
+| Role    | Size                   | Weight                  | Line Height              | Usage in this phase                                               |
+| ------- | ---------------------- | ----------------------- | ------------------------ | ----------------------------------------------------------------- |
+| Body    | `--text-base` (13px)   | `--font-normal` (400)   | `--leading-normal` (1.5) | Attention item descriptions, activity feed text, timeline details |
+| Label   | `--text-sm` (12px)     | `--font-normal` (400)   | `--leading-snug` (1.375) | Zone section headers (Today/Tomorrow), date subtext, role labels  |
+| Heading | `--text-xl` (16px)     | `--font-semibold` (600) | `--leading-tight` (1.25) | Zone titles (Attention Needed, Timeline, etc.), card titles       |
+| Display | `--text-metric` (56px) | `--font-semibold` (600) | `--leading-tight` (1.25) | Quick Stats metric numbers only                                   |
 
-Additional text usage (within declared sizes):
+Additional text usage (within declared sizes and weights):
 
 - Greeting text in ActionBar: `--text-xl` (16px) at `--font-normal` (400)
 - Date subtext in ActionBar: `--text-sm` (12px) at `--font-normal` (400), `--muted-foreground` color
-- "Show all" links: `--text-sm` (12px) at `--font-medium` (500), primary color
+- "Show all events" / "Show all engagements" links: `--text-sm` (12px) at `--font-semibold` (600), primary color
 - Engagement names in stage groups: `--text-base` (13px) at `--font-normal` (400)
-- Stage count badges: `--text-xs` (11px) at `--font-medium` (500)
+- Stage count badges: `--text-sm` (12px) at `--font-semibold` (600)
+- Severity badges: `--text-sm` (12px) at `--font-semibold` (600)
+
+**Weight rationale:** Two weights only -- `--font-normal` (400) for body text, secondary labels, and date subtexts; `--font-semibold` (600) for headings, badges, emphasized links, and metric numbers. The visual difference between 500 and 600 at 12px is negligible, so all former `--font-medium` (500) usages are mapped to either 400 (passive labels, date subtext, greeting) or 600 (badges, action links, section headers that need emphasis).
 
 **Source:** `frontend/src/index.css` CSS custom properties (lines 74-93)
 
@@ -106,7 +109,7 @@ Exact Tailwind classes for each severity level in `AttentionItem`:
 | --------- | ------------------------------------------------------ |
 | Container | `border-success/50 bg-success/5 rounded-lg p-3 sm:p-4` |
 | Icon      | `text-success` (lucide `CircleCheck`, 20px)            |
-| Text      | `text-success font-medium text-sm`                     |
+| Text      | `text-success font-semibold text-sm`                   |
 
 **Source:** `frontend/src/index.css` semantic tokens (lines 297-326), RESEARCH.md severity cva example
 
@@ -155,17 +158,17 @@ Exact Tailwind classes for each severity level in `AttentionItem`:
 
 ```
 +----------------------------------------------------------+
-| ActionBar: [Greeting + Date]     [+New Eng] [+New Req] [Cmd+K] [Role ▼] |
+| ActionBar: [Greeting + Date]     [+New Eng] [+New Req] [Cmd+K] [Role v] |
 +----------------------------------------------------------+
 | AttentionZone (full width, spans 2 cols)                 |
 +----------------------------------------------------------+
 | TimelineZone (1 col)       | EngagementsZone (1 col)    |
-| ─────────────────────────  | ─────────────────────────  |
-| Today                      | ▾ Intake (3)               |
-| Tomorrow                   | ▾ Preparation (5)          |
-| This Week                  | ▾ Execution (8)            |
-| Next Week                  | ▸ Follow Up (2)            |
-|                            | ▸ Closed (12)              |
+| --------------------------   --------------------------  |
+| Today                      | > Intake (3)               |
+| Tomorrow                   | > Preparation (5)          |
+| This Week                  | > Execution (8)            |
+| Next Week                  | > Follow Up (2)            |
+|                            | > Closed (12)              |
 +----------------------------------------------------------+
 | QuickStatsBar (4 cards in row, full width)               |
 +----------------------------------------------------------+
@@ -220,19 +223,19 @@ On mobile, the first zone in the role order is `defaultExpanded: true`, others `
 
 Every data item in the dashboard is clickable and navigates to its entity:
 
-| Element                        | Click Destination                                                  |
-| ------------------------------ | ------------------------------------------------------------------ |
-| Attention item (work item)     | `/tasks/{id}` or `/intake/{id}` based on `entity_type`             |
-| Attention item (engagement)    | `/engagements/{id}` (future: workspace in Phase 11)                |
-| Timeline event card            | `/engagements/{engagement_id}`                                     |
-| Engagement in stage group      | `/engagements/{id}`                                                |
-| Quick Stat: Active Engagements | `/engagements` (list, filtered to active)                          |
-| Quick Stat: Open Tasks         | `/tasks` (list, filtered to open)                                  |
-| Quick Stat: SLA At Risk        | `/intake` (list, filtered to SLA at risk)                          |
-| Quick Stat: Upcoming Week      | `/calendar` (week view)                                            |
-| Activity feed item             | Entity route based on `entity_type` + `entity_id`                  |
-| "Show all" (Timeline)          | Inline expand: removes max-5 limit, shows all items in section     |
-| "Show all" (Engagements)       | Inline expand: removes top-5 limit, shows all engagements in stage |
+| Element                              | Click Destination                                                  |
+| ------------------------------------ | ------------------------------------------------------------------ |
+| Attention item (work item)           | `/tasks/{id}` or `/intake/{id}` based on `entity_type`             |
+| Attention item (engagement)          | `/engagements/{id}` (future: workspace in Phase 11)                |
+| Timeline event card                  | `/engagements/{engagement_id}`                                     |
+| Engagement in stage group            | `/engagements/{id}`                                                |
+| Quick Stat: Active Engagements       | `/engagements` (list, filtered to active)                          |
+| Quick Stat: Open Tasks               | `/tasks` (list, filtered to open)                                  |
+| Quick Stat: SLA At Risk              | `/intake` (list, filtered to SLA at risk)                          |
+| Quick Stat: Upcoming Week            | `/calendar` (week view)                                            |
+| Activity feed item                   | Entity route based on `entity_type` + `entity_id`                  |
+| "Show all events" (Timeline)         | Inline expand: removes max-5 limit, shows all items in section     |
+| "Show all engagements" (Engagements) | Inline expand: removes top-5 limit, shows all engagements in stage |
 
 ### Collapsible Zones (Mobile)
 
@@ -300,10 +303,10 @@ All copy uses i18n namespace `operations-hub`. Values below are English defaults
 | Timeline day: Tomorrow   | "Tomorrow"                                                    | `zones.timeline.tomorrow`        |
 | Timeline day: This Week  | "This Week"                                                   | `zones.timeline.this_week`       |
 | Timeline day: Next Week  | "Next Week"                                                   | `zones.timeline.next_week`       |
-| Timeline "Show all"      | "Show all"                                                    | `zones.timeline.show_all`        |
+| Timeline "Show all"      | "Show all events"                                             | `zones.timeline.show_all`        |
 | Engagements zone title   | "Active Engagements"                                          | `zones.engagements.title`        |
 | Engagements empty state  | "No active engagements"                                       | `zones.engagements.empty`        |
-| Engagements "Show all"   | "Show all"                                                    | `zones.engagements.show_all`     |
+| Engagements "Show all"   | "Show all engagements"                                        | `zones.engagements.show_all`     |
 | Stat: Active Engagements | "Active Engagements"                                          | `zones.stats.active_engagements` |
 | Stat: Open Tasks         | "Open Tasks"                                                  | `zones.stats.open_tasks`         |
 | Stat: SLA At Risk        | "SLA At Risk"                                                 | `zones.stats.sla_at_risk`        |
