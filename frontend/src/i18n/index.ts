@@ -176,7 +176,9 @@ import enCommittees from './en/committees.json'
 import arCommittees from './ar/committees.json'
 import enMyWork from './en/my-work.json'
 import arMyWork from './ar/my-work.json'
-// Force reload - updated 2026-02-10 - v109 - Added my-work namespace
+import enLifecycle from './en/lifecycle.json'
+import arLifecycle from './ar/lifecycle.json'
+// Force reload - updated 2026-03-30 - v110 - Added lifecycle namespace
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -271,6 +273,7 @@ const resources = {
     settings: enSettings,
     committees: enCommittees,
     'my-work': enMyWork,
+    lifecycle: enLifecycle,
   },
   ar: {
     translation: arCommon,
@@ -361,6 +364,7 @@ const resources = {
     settings: arSettings,
     committees: arCommittees,
     'my-work': arMyWork,
+    lifecycle: arLifecycle,
   },
 }
 

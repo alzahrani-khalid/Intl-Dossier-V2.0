@@ -1,0 +1,58 @@
+{
+  "stages": {
+    "intake": "Intake",
+    "preparation": "Preparation",
+    "briefing": "Briefing",
+    "execution": "Execution",
+    "follow_up": "Follow-up",
+    "closed": "Closed"
+  },
+  "stepper": {
+    "ariaLabel": "Lifecycle stages",
+    "entered": "Entered: {{date}}",
+    "nextSuggestion": "Next: {{stage}}"
+  },
+  "transition": {
+    "notePlaceholder": "Optional note for this transition...",
+    "confirm": "Confirm Transition",
+    "cancel": "Cancel",
+    "error": "Failed to update stage. Try again.",
+    "success": "Stage updated to {{stage}}."
+  },
+  "promotion": {
+    "cta": "Promote to Engagement",
+    "title": "Promote to Engagement",
+    "description": "Review and adjust the mapped fields before creating the engagement.",
+    "confirm": "Create Engagement",
+    "cancel": "Cancel",
+    "error": "Could not create engagement. Check your connection and try again.",
+    "success": "Engagement created successfully."
+  },
+  "converted": {
+    "banner": "This request was promoted to an engagement.",
+    "link": "View Engagement"
+  },
+  "timeline": {
+    "heading": "Lifecycle History",
+    "empty": "No transitions recorded yet.",
+    "duration": "{{duration}} in {{stage}}",
+    "initial": "Initial stage"
+  },
+  "forumSession": {
+    "cta": "New Session",
+    "title": "New Forum Session",
+    "description": "Create a new session for {{forumName}}.",
+    "confirm": "Create Session",
+    "cancel": "Cancel",
+    "error": "Session could not be created. Try again.",
+    "success": "Forum session created successfully."
+  },
+  "stageBadge": {
+    "label": "{{stage}}"
+  },
+  "workItem": {
+    "stageLabel": "Lifecycle Stage",
+    "noStage": "No lifecycle stage",
+    "groupByStage": "Group by Lifecycle Stage"
+  }
+}
