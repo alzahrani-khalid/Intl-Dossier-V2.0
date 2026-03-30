@@ -221,7 +221,7 @@ const navigate = useNavigate()
   }
 
   // Error state
-  if (isError || !engagementData) {
+  if (isError || !engagementData?.engagement) {
     return (
       <div className="flex min-h-96 flex-col items-center justify-center gap-4">
         <ShieldAlert className="size-12 text-destructive" />
