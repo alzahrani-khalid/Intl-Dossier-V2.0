@@ -64,49 +64,45 @@ EXECUTE FUNCTION compute_lifecycle_duration();
 -- 7. Enable RLS on lifecycle_transitions
 ALTER TABLE lifecycle_transitions ENABLE ROW LEVEL SECURITY;
 
--- 8. RLS Policies following engagement_participants pattern
--- SELECT: authenticated users can read transitions for engagements in their org
+-- 8. RLS Policies (matching engagement_dossiers pattern)
+-- SELECT: authenticated users can read transitions for non-archived engagements
 CREATE POLICY lifecycle_transitions_select ON lifecycle_transitions
 FOR SELECT TO authenticated
 USING (
   EXISTS (
     SELECT 1 FROM engagement_dossiers ed
-    JOIN dossiers d ON d.id = ed.dossier_id
+    JOIN dossiers d ON d.id = ed.id
     WHERE ed.id = lifecycle_transitions.engagement_id
-    AND d.org_id = (SELECT org_id FROM profiles WHERE user_id = auth.uid())
+    AND d.status <> 'archived'
   )
 );
 
--- INSERT: authenticated users can create transitions
+-- INSERT: authenticated users can create transitions (user_id must be self)
 CREATE POLICY lifecycle_transitions_insert ON lifecycle_transitions
 FOR INSERT TO authenticated
 WITH CHECK (
   user_id = auth.uid()
   AND EXISTS (
     SELECT 1 FROM engagement_dossiers ed
-    JOIN dossiers d ON d.id = ed.dossier_id
+    JOIN dossiers d ON d.id = ed.id
     WHERE ed.id = lifecycle_transitions.engagement_id
-    AND d.org_id = (SELECT org_id FROM profiles WHERE user_id = auth.uid())
+    AND d.created_by = auth.uid()
   )
 );
 
--- UPDATE: only the transition creator or admin
+-- UPDATE: only the transition creator
 CREATE POLICY lifecycle_transitions_update ON lifecycle_transitions
 FOR UPDATE TO authenticated
-USING (
-  user_id = auth.uid()
-  OR EXISTS (
-    SELECT 1 FROM profiles
-    WHERE user_id = auth.uid() AND role IN ('admin', 'super_admin')
-  )
-);
+USING (user_id = auth.uid());
 
--- DELETE: only admin
+-- DELETE: only the engagement creator
 CREATE POLICY lifecycle_transitions_delete ON lifecycle_transitions
 FOR DELETE TO authenticated
 USING (
   EXISTS (
-    SELECT 1 FROM profiles
-    WHERE user_id = auth.uid() AND role IN ('admin', 'super_admin')
+    SELECT 1 FROM engagement_dossiers ed
+    JOIN dossiers d ON d.id = ed.id
+    WHERE ed.id = lifecycle_transitions.engagement_id
+    AND d.created_by = auth.uid()
   )
 );
