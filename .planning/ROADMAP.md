@@ -98,8 +98,17 @@ Plans:
 3. User sees Active Engagements grouped by lifecycle stage with counts per stage
 4. Dashboard defaults adapt to user role (leadership sees strategic overview, officers see workload, analysts see research queue) with a dropdown to switch views
 5. User can click any dashboard item to navigate directly to the relevant entity or workspace
-   **Plans**: TBD
-   **UI hint**: yes
+
+**Plans:** 4 plans
+
+Plans:
+
+- [ ] 10-01-PLAN.md — Data foundation: Supabase RPC migrations, TypeScript types, domain repository, TanStack Query hooks, role preference, i18n (OPS-01, OPS-02, OPS-03, OPS-04, OPS-05, OPS-07)
+- [ ] 10-02-PLAN.md — Zone components: AttentionZone, TimelineZone, EngagementsZone, QuickStatsBar, ActivityFeed (OPS-01, OPS-02, OPS-03, OPS-04)
+- [ ] 10-03-PLAN.md — Page assembly: ActionBar, RoleSwitcher, ZoneCollapsible, OperationsHub page, route wiring (OPS-05, OPS-06, OPS-07)
+- [ ] 10-04-PLAN.md — Realtime subscriptions, old dashboard cleanup, human verification (OPS-01, OPS-06)
+
+**UI hint**: yes
 
 ### Phase 11: Engagement Workspace
 
@@ -163,7 +172,7 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 7. Performance Optimization         | v2.0      | 4/4            | Complete    | 2026-03-28 |
 | 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete    | 2026-03-28 |
 | 9. Lifecycle Engine                 | v3.0      | 0/5            | Planned     | -          |
-| 10. Operations Hub                  | v3.0      | 0/TBD          | Not started | -          |
+| 10. Operations Hub                  | v3.0      | 0/4            | Planned     | -          |
 | 11. Engagement Workspace            | v3.0      | 0/TBD          | Not started | -          |
 | 12. Enriched Dossier Pages          | v3.0      | 0/TBD          | Not started | -          |
 | 13. Feature Absorption              | v3.0      | 0/TBD          | Not started | -          |
