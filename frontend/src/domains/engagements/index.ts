@@ -24,6 +24,16 @@ export {
   engagementKeys,
 } from './hooks/useEngagements'
 
+// Hooks - Lifecycle
+export {
+  useLifecycleHistory,
+  useLifecycleTransition,
+  usePromoteIntake,
+  useCreateForumSession,
+  useForumSessions,
+  lifecycleKeys,
+} from './hooks/useLifecycle'
+
 // Hooks - Kanban
 export {
   useEngagementKanban,

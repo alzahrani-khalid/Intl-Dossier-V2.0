@@ -20,6 +20,13 @@ import type {
   EngagementAgendaItemUpdate,
 } from '@/types/engagement.types'
 import type {
+  LifecycleTransition,
+  LifecycleTransitionRequest,
+  IntakePromotionRequest,
+  IntakePromotionResponse,
+  ForumSessionCreateRequest,
+} from '@/types/lifecycle.types'
+import type {
   RecommendationListParams,
   RecommendationListResponse,
   EngagementRecommendationSummary,
@@ -379,4 +386,82 @@ export async function generateRecommendations(
     '/engagement-recommendations/generate',
     params,
   )
+}
+
+// ============================================================================
+// Lifecycle
+// ============================================================================
+
+/**
+ * Transition an engagement's lifecycle stage.
+ */
+export async function transitionLifecycleStage(
+  engagementId: string,
+  data: LifecycleTransitionRequest,
+): Promise<{ lifecycle_stage: string; transition_id: string }> {
+  const response = await apiPost<{ data: { lifecycle_stage: string; transition_id: string } }>(
+    `/engagement-dossiers/${engagementId}/lifecycle`,
+    data,
+  )
+  return response.data
+}
+
+/**
+ * Fetch lifecycle transition history for an engagement.
+ */
+export async function getLifecycleHistory(
+  engagementId: string,
+): Promise<LifecycleTransition[]> {
+  const response = await apiGet<{ data: LifecycleTransition[] }>(
+    `/engagement-dossiers/${engagementId}/lifecycle`,
+  )
+  return response.data
+}
+
+/**
+ * Promote an intake ticket to a new engagement.
+ */
+export async function promoteIntakeToEngagement(
+  data: IntakePromotionRequest,
+): Promise<IntakePromotionResponse> {
+  const response = await apiPost<{ data: IntakePromotionResponse }>(
+    '/engagement-dossiers/promote-intake',
+    data,
+  )
+  return response.data
+}
+
+/**
+ * Create a forum session engagement (child of a parent forum).
+ */
+export async function createForumSession(
+  data: ForumSessionCreateRequest,
+): Promise<EngagementFullProfile> {
+  const engagementData: EngagementCreate = {
+    name_en: data.title_en,
+    name_ar: data.title_ar,
+    description_en: data.description_en,
+    description_ar: data.description_ar,
+    extension: {
+      engagement_type: 'forum_session',
+      engagement_category: 'diplomatic',
+      start_date: data.start_date,
+      end_date: data.end_date,
+      location_en: data.location_en,
+      location_ar: data.location_ar,
+      parent_forum_id: data.parent_forum_id,
+    },
+  }
+  return createEngagement(engagementData)
+}
+
+/**
+ * Fetch all forum sessions for a given parent forum.
+ */
+export async function getForumSessions(
+  forumId: string,
+): Promise<EngagementListResponse> {
+  const searchParams = new URLSearchParams()
+  searchParams.set('parent_forum_id', forumId)
+  return apiGet<EngagementListResponse>(`/engagement-dossiers?${searchParams}`)
 }
