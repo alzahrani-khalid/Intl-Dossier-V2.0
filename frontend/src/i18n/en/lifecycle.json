@@ -26,7 +26,17 @@
     "confirm": "Create Engagement",
     "cancel": "Cancel",
     "error": "Could not create engagement. Check your connection and try again.",
-    "success": "Engagement created successfully."
+    "success": "Engagement created successfully.",
+    "titleEn": "Title (English)",
+    "titleAr": "Title (Arabic)",
+    "objectivesEn": "Objectives (English)",
+    "objectivesAr": "Objectives (Arabic)",
+    "engagementType": "Engagement Type",
+    "engagementCategory": "Engagement Category",
+    "selectType": "Select type...",
+    "selectCategory": "Select category...",
+    "linkedDossiers": "Linked Dossiers",
+    "requiredField": "This field is required"
   },
   "converted": {
     "banner": "This request was promoted to an engagement.",
@@ -45,7 +55,16 @@
     "confirm": "Create Session",
     "cancel": "Cancel",
     "error": "Session could not be created. Try again.",
-    "success": "Forum session created successfully."
+    "success": "Forum session created successfully.",
+    "titleEn": "Session Title (English)",
+    "titleAr": "Session Title (Arabic)",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "locationEn": "Location (English)",
+    "locationAr": "Location (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "endDateError": "End date must be on or after start date"
   },
   "stageBadge": {
     "label": "{{stage}}"
