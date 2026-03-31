@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
 status: executing
-stopped_at: Completed 10-01-PLAN.md
-last_updated: "2026-03-31T01:14:01.007Z"
+stopped_at: Completed 10-03-PLAN.md
+last_updated: "2026-03-31T01:38:20.524Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 13
-  completed_plans: 10
+  completed_phases: 1
+  total_plans: 8
+  completed_plans: 12
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 10 (operations-hub) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-03-31
 
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 09 P04 | 7min | 2 tasks | 5 files |
 | Phase 09 P05 | 10min | 1 tasks | 4 files |
 | Phase 10 P01 | 6min | 2 tasks | 12 files |
+| Phase 10 P03 | 8min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 10]: SECURITY DEFINER on all RPC functions for consistent access control
 - [Phase 10]: Stalled engagements detected via LATERAL join on lifecycle_transitions
 - [Phase 10]: Query key factory centralized in useAttentionItems.ts, shared across all hooks
+- [Phase 10]: Officer 2-column pairing only for Timeline+Engagements; Leadership/Analyst use full-width for all zones
+- [Phase 10]: ZoneCollapsible pass-through on desktop (no wrapper div) to avoid DOM nesting
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31T01:13:51.232Z
-Stopped at: Completed 10-01-PLAN.md
+Last session: 2026-03-31T01:38:20.521Z
+Stopped at: Completed 10-03-PLAN.md
 Resume file: None

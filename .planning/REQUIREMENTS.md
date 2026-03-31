@@ -32,7 +32,7 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 - [x] **OPS-03**: User sees Active Engagements grouped by lifecycle stage with counts
 - [x] **OPS-04**: User sees Quick Stats (active engagements, open tasks, SLA at risk) and Recent Activity feed
 - [x] **OPS-05**: Dashboard defaults adapt to user role (leadership: strategic overview, officers: my workload, analysts: research queue) with dropdown to switch
-- [ ] **OPS-06**: User can click any dashboard item to navigate directly to the relevant entity or workspace
+- [x] **OPS-06**: User can click any dashboard item to navigate directly to the relevant entity or workspace
 - [x] **OPS-07**: User sees action bar with [+ New Engagement], [+ New Request], and [Cmd+K] always visible
 
 ### Engagement Workspace
@@ -119,7 +119,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPS-03      | Phase 10 | Complete |
 | OPS-04      | Phase 10 | Complete |
 | OPS-05      | Phase 10 | Complete |
-| OPS-06      | Phase 10 | Pending |
+| OPS-06      | Phase 10 | Complete |
 | OPS-07      | Phase 10 | Complete |
 | WORK-01     | Phase 11 | Pending |
 | WORK-02     | Phase 11 | Pending |
