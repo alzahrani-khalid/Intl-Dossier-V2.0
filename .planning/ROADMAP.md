@@ -32,7 +32,7 @@ Full details: [v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 - [ ] **Phase 9: Lifecycle Engine** - DB schema for engagement lifecycle stages, transition API, forum sessions
 - [x] **Phase 10: Operations Hub** - Redesigned dashboard with attention zones, timeline, and role-adaptive defaults (completed 2026-03-31)
 - [x] **Phase 11: Engagement Workspace** - Tabbed workspace shell with lifecycle bar, scoped views, and URL-driven tabs (completed 2026-03-31)
-- [ ] **Phase 12: Enriched Dossier Pages** - Shared detail shell, RelationshipSidebar, tier-specific enrichments, Elected Officials domain
+- [x] **Phase 12: Enriched Dossier Pages** - Shared detail shell, RelationshipSidebar, tier-specific enrichments, Elected Officials domain (completed 2026-03-31)
 - [ ] **Phase 13: Feature Absorption** - Absorb standalone pages into contextual locations, Cmd+K quick switcher
 
 ## Phase Details
@@ -148,15 +148,15 @@ Plans:
 4. Elected Officials has a full list page, detail page with term/office metadata and committee memberships
 5. Dossier detail tabs (Engagements, Docs, Tasks, Timeline, Audit) behave consistently across all 8 types
 
-**Plans:** 3/5 plans executed
+**Plans:** 5/5 plans complete
 
 Plans:
 
 - [x] 12-01-PLAN.md — DossierShell + DossierTabNav + RelationshipSidebar + i18n + dossier-routes update (DOSS-01, DOSS-02, DOSS-09, DOSS-10)
 - [x] 12-02-PLAN.md — Convert all 7 existing dossier types to nested tab routes with DossierShell layout (DOSS-01, DOSS-10)
 - [x] 12-03-PLAN.md — Elected Officials domain: backend API, list page, detail routes, types, hooks, i18n, nav config (DOSS-08)
-- [ ] 12-04-PLAN.md — Country, Organization, Topic enrichment cards + overview tab pages (DOSS-03, DOSS-04, DOSS-05)
-- [ ] 12-05-PLAN.md — Working Group, Person, Forum, Elected Official enrichment cards + human verification (DOSS-06, DOSS-07, DOSS-08, DOSS-09, DOSS-10)
+- [x] 12-04-PLAN.md — Country, Organization, Topic enrichment cards + overview tab pages (DOSS-03, DOSS-04, DOSS-05)
+- [x] 12-05-PLAN.md — Working Group, Person, Forum, Elected Official enrichment cards + human verification (DOSS-06, DOSS-07, DOSS-08, DOSS-09, DOSS-10)
 
 **UI hint**: yes
 
@@ -194,5 +194,5 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 9. Lifecycle Engine                 | v3.0      | 0/5            | Planned     | -          |
 | 10. Operations Hub                  | v3.0      | 4/4            | Complete    | 2026-03-31 |
 | 11. Engagement Workspace            | v3.0      | 5/5            | Complete    | 2026-03-31 |
-| 12. Enriched Dossier Pages          | v3.0      | 3/5 | In Progress|  |
+| 12. Enriched Dossier Pages          | v3.0      | 5/5 | Complete   | 2026-03-31 |
 | 13. Feature Absorption              | v3.0      | 0/TBD          | Not started | -          |

@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
-status: executing
-stopped_at: Completed 12-04-PLAN.md
-last_updated: "2026-03-31T21:47:19.208Z"
+status: verifying
+stopped_at: Completed 12-05-PLAN.md (awaiting human verification)
+last_updated: "2026-03-31T22:01:35.202Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 23
-  completed_plans: 21
+  completed_plans: 23
   percent: 0
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 Phase: 12 (enriched-dossier-pages) — EXECUTING
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-31
 
 Progress: [░░░░░░░░░░] 0%
@@ -67,6 +67,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 12 P03 | 9min | 2 tasks | 19 files |
 | Phase 12 P02 | 15min | 2 tasks | 53 files |
 | Phase 12 P04 | 9min | 2 tasks | 16 files |
+| Phase 12 P05 | 8min | 1 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,7 @@ Recent decisions affecting current work:
 - [Phase 12]: Overview tabs use useDossier hook (TanStack Query deduplicates with DossierShell fetch)
 - [Phase 12]: Integrated overview tabs into existing detail components instead of separate route files (route structure uses $id.tsx not $id/overview.tsx)
 - [Phase 12]: Country default tab changed from intelligence to overview for enriched first impression
+- [Phase 12]: Route files simplified to pass dossierId prop instead of full dossier object
 
 ### Pending Todos
 
@@ -122,6 +124,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31T21:47:19.205Z
-Stopped at: Completed 12-04-PLAN.md
+Last session: 2026-03-31T22:01:35.199Z
+Stopped at: Completed 12-05-PLAN.md (awaiting human verification)
 Resume file: None
