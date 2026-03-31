@@ -1,106 +1,95 @@
-import { FileText, Calendar, Users, Globe2 } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
+/**
+ * ActivityFeed — Recent activity list
+ * Phase 10: Operations Hub Dashboard
+ *
+ * Shows recent actions in reverse chronological order.
+ * Max 10 items displayed. Handles loading, error, and empty states.
+ */
 
-interface Activity {
- id: string
- type: 'mou' | 'event' | 'meeting' | 'country'
- title: string
- description: string
- timestamp: Date
- user: string
+import { useTranslation } from 'react-i18next'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
+import { ActivityFeedItem } from './ActivityFeedItem'
+import type { ActivityItemData } from '@/domains/operations-hub/types/operations-hub.types'
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const MAX_VISIBLE_ITEMS = 10
+
+// ============================================================================
+// Component
+// ============================================================================
+
+interface ActivityFeedProps {
+  items: ActivityItemData[]
+  isLoading: boolean
+  isError: boolean
+  onRetry: () => void
 }
 
-export function ActivityFeed() {
- const activities: Activity[] = [
- {
- id: '1',
- type: 'mou',
- title: 'New MoU Signed',
- description: 'MoU with UNESCO for statistical cooperation',
- timestamp: new Date(Date.now() - 1000 * 60 * 30),
- user: 'Ahmad Al-Rashid',
- },
- {
- id: '2',
- type: 'event',
- title: 'Conference Registration',
- description: 'Registered for UN Statistical Commission 2025',
- timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
- user: 'Fatima Al-Zahrani',
- },
- {
- id: '3',
- type: 'meeting',
- title: 'Bilateral Meeting Scheduled',
- description: 'Meeting with Japan Statistical Bureau',
- timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5),
- user: 'Mohammed Al-Qahtani',
- },
- {
- id: '4',
- type: 'country',
- title: 'Country Dossier Updated',
- description: 'Updated economic indicators for Germany',
- timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
- user: 'Sara Al-Mutairi',
- },
- ]
+export function ActivityFeed({
+  items,
+  isLoading,
+  isError,
+  onRetry,
+}: ActivityFeedProps): React.ReactElement {
+  const { t } = useTranslation('operations-hub')
 
- const getIcon = (type: Activity['type']) => {
- switch (type) {
- case 'mou':
- return FileText
- case 'event':
- return Calendar
- case 'meeting':
- return Users
- case 'country':
- return Globe2
- }
- }
+  // Loading state
+  if (isLoading) {
+    return (
+      <div role="region" aria-label={t('zones.activity.title')} className="space-y-3">
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={i} className="flex items-start gap-3 py-2">
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-20" />
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
 
- const getIconColor = (type: Activity['type']) => {
- // Use theme-aware colors instead of hardcoded ones
- switch (type) {
- case 'mou':
- return 'text-primary bg-primary/10'
- case 'event':
- return 'text-primary bg-primary/10'
- case 'meeting':
- return 'text-primary bg-primary/10'
- case 'country':
- return 'text-primary bg-primary/10'
- }
- }
+  // Error state
+  if (isError) {
+    return (
+      <div
+        role="region"
+        aria-label={t('zones.activity.title')}
+        className="rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+      >
+        <p className="text-sm text-destructive mb-2">
+          {t('error.load_failed', { zone: t('zones.activity.title') })}
+        </p>
+        <Button variant="outline" size="sm" onClick={onRetry}>
+          {t('error.retry')}
+        </Button>
+      </div>
+    )
+  }
 
- return (
- <div className="space-y-4">
- {activities.map((activity) => {
- const Icon = getIcon(activity.type)
- const iconColor = getIconColor(activity.type)
+  // Empty state
+  if (items.length === 0) {
+    return (
+      <div role="region" aria-label={t('zones.activity.title')}>
+        <p className="text-sm text-muted-foreground py-4">
+          {t('zones.activity.empty')}
+        </p>
+      </div>
+    )
+  }
 
- return (
- <div
- key={activity.id}
- className="flex gap-3 p-3 rounded-lg hover:bg-accent transition-colors"
- >
- <div className={`p-2 rounded-lg ${iconColor} flex-shrink-0`}>
- <Icon className="h-5 w-5" />
- </div>
- <div className="flex-1 min-w-0">
- <p className="font-medium text-foreground">
- {activity.title}
- </p>
- <p className="text-sm text-muted-foreground truncate">
- {activity.description}
- </p>
- <p className="text-xs text-muted-foreground mt-1">
- {activity.user} • {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
- </p>
- </div>
- </div>
- )
- })}
- </div>
- )
+  // Data state — max 10 items
+  const visibleItems = items.slice(0, MAX_VISIBLE_ITEMS)
+
+  return (
+    <div role="region" aria-label={t('zones.activity.title')} className="divide-y">
+      {visibleItems.map((item) => (
+        <ActivityFeedItem key={item.id} item={item} />
+      ))}
+    </div>
+  )
 }
