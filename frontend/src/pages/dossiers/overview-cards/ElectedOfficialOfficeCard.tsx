@@ -63,19 +63,18 @@ export function ElectedOfficialOfficeCard({
     { label: t('columns.office'), value: officeName },
     {
       label: t('columns.officeType'),
-      value: official?.office_type != null
-        ? t(`officeTypes.${official.office_type}`)
-        : '-',
+      value: official?.office_type != null ? t(`officeTypes.${official.office_type}`) : '-',
     },
     {
       label: t('columns.party'),
-      value: official?.party_abbreviation != null
-        ? `${partyName} (${official.party_abbreviation})`
-        : partyName,
+      value:
+        official?.party_abbreviation != null
+          ? `${partyName} (${official.party_abbreviation})`
+          : partyName,
     },
     { label: t('columns.district'), value: districtName },
-    { label: 'Term Start', value: formatDate(official?.term_start) },
-    { label: 'Term End', value: formatDate(official?.term_end) },
+    { label: t('columns.termStart'), value: formatDate(official?.term_start) },
+    { label: t('columns.termEnd'), value: formatDate(official?.term_end) },
   ]
 
   // Filter out empty rows
@@ -99,9 +98,7 @@ export function ElectedOfficialOfficeCard({
                 : 'bg-muted text-muted-foreground'
             }`}
           >
-            {official.is_current_term === true
-              ? t('termStatus.current')
-              : t('termStatus.expired')}
+            {official.is_current_term === true ? t('termStatus.current') : t('termStatus.expired')}
           </span>
         )}
       </div>
@@ -114,22 +111,16 @@ export function ElectedOfficialOfficeCard({
         <dl className="space-y-3">
           {displayRows.map((row) => (
             <div key={row.label} className="flex items-center gap-3">
-              <dt className="text-sm text-muted-foreground flex-1 min-w-0">
-                {row.label}
-              </dt>
-              <dd className="text-sm font-medium truncate max-w-[50%] text-end">
-                {row.value}
-              </dd>
+              <dt className="text-sm text-muted-foreground flex-1 min-w-0">{row.label}</dt>
+              <dd className="text-sm font-medium truncate max-w-[50%] text-end">{row.value}</dd>
             </div>
           ))}
           {official?.term_number != null && (
             <div className="flex items-center gap-3">
               <dt className="text-sm text-muted-foreground flex-1 min-w-0">
-                Term Number
+                {t('columns.termNumber')}
               </dt>
-              <dd className="text-sm font-medium text-end">
-                {official.term_number}
-              </dd>
+              <dd className="text-sm font-medium text-end">{official.term_number}</dd>
             </div>
           )}
         </dl>

@@ -13,6 +13,9 @@
     "party": "Party",
     "district": "District",
     "termStatus": "Term Status",
+    "termStart": "Term Start",
+    "termEnd": "Term End",
+    "termNumber": "Term Number",
     "country": "Country"
   },
   "termStatus": {

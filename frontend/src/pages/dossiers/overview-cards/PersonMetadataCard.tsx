@@ -56,21 +56,27 @@ export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): Reac
     {
       icon: <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
       label: t('overview.person.organization', { defaultValue: 'Organization' }),
-      value: primaryOrg != null
-        ? (isRTL ? (primaryOrg.name_ar ?? primaryOrg.name_en) : primaryOrg.name_en)
-        : '-',
+      value:
+        primaryOrg != null
+          ? isRTL
+            ? (primaryOrg.name_ar ?? primaryOrg.name_en)
+            : primaryOrg.name_en
+          : '-',
     },
     {
       icon: <Briefcase className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
       label: t('overview.person.role', { defaultValue: 'Role / Title' }),
-      value: data?.dossier?.description_en ?? '-',
+      value: isRTL
+        ? (data?.dossier?.description_ar ?? data?.dossier?.description_en ?? '-')
+        : (data?.dossier?.description_en ?? '-'),
     },
     {
       icon: <CalendarCheck className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
       label: t('overview.person.lastEngagement', { defaultValue: 'Last Engagement' }),
-      value: lastEvent != null
-        ? format(new Date(lastEvent.start_datetime), 'PP', { locale: dateLocale })
-        : t('overview.person.noEngagement', { defaultValue: 'None recorded' }),
+      value:
+        lastEvent != null
+          ? format(new Date(lastEvent.start_datetime), 'PP', { locale: dateLocale })
+          : t('overview.person.noEngagement', { defaultValue: 'None recorded' }),
     },
   ]
 
@@ -90,9 +96,7 @@ export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): Reac
             <div className="flex-1 min-w-0">
               <span className="text-sm text-muted-foreground">{row.label}</span>
             </div>
-            <span className="text-sm font-medium truncate max-w-[50%] text-end">
-              {row.value}
-            </span>
+            <span className="text-sm font-medium truncate max-w-[50%] text-end">{row.value}</span>
           </div>
         ))}
       </div>
