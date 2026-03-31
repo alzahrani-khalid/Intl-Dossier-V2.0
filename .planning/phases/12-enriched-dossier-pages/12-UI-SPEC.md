@@ -35,7 +35,7 @@ Declared values (must be multiples of 4):
 | Token | Value                 | Usage                                                                      |
 | ----- | --------------------- | -------------------------------------------------------------------------- |
 | xs    | 4px (`gap-1`)         | Icon gaps, inline badge padding                                            |
-| sm    | 8px (`gap-2`)         | Compact element spacing, icon-to-text gap in tabs                          |
+| sm    | 8px (`gap-2`)         | Compact element spacing, icon-to-text gap in tabs, enrichment card items   |
 | md    | 16px (`gap-4`, `p-4`) | Default element spacing, card internal padding, tab nav horizontal padding |
 | lg    | 24px (`gap-6`, `p-6`) | Section padding on sm+ breakpoints, card grid gap                          |
 | xl    | 32px (`gap-8`, `p-8`) | Layout gaps on lg+ breakpoints                                             |
@@ -54,14 +54,15 @@ Exceptions:
 
 ## Typography
 
-This phase uses the project's existing compact type scale. Phase 12 declares **4 size roles**:
+This phase uses the project's existing compact type scale. Phase 12 declares **3 size roles** and **2 weights**:
 
 | Role                 | Size Token            | Pixel   | Weight Token    | Weight | Line Height            |
 | -------------------- | --------------------- | ------- | --------------- | ------ | ---------------------- |
-| Body                 | `text-base`           | 13px    | `font-normal`   | 400    | `leading-normal` (1.5) |
-| Label / Tab          | `text-sm`             | 12px    | `font-medium`   | 500    | `leading-snug` (1.375) |
-| Heading (card title) | `text-lg`             | 14px    | `font-semibold` | 600    | `leading-tight` (1.25) |
+| Body / Label / Tab   | `text-sm`             | 12px    | `font-normal`   | 400    | `leading-normal` (1.5) |
+| Heading (card title) | `text-base`           | 14px    | `font-semibold` | 600    | `leading-tight` (1.25) |
 | Page title           | `text-xl sm:text-2xl` | 16-18px | `font-semibold` | 600    | `leading-tight` (1.25) |
+
+**Weights used (2 only):** `font-normal` (400) for body text, labels, and tab items; `font-semibold` (600) for headings and page titles.
 
 **RTL rule:** All Arabic text uses `font-family: var(--text-family-rtl)` (Readex Pro). Applied via existing `useDirection` hook + `dir` attribute on DossierShell root.
 
@@ -101,7 +102,7 @@ This phase uses the project's semantic token system. Colors adapt to all 4 theme
 | Component                      | Location                                                        | Visual Contract                                                                                                                                                                                                                                                                                                |
 | ------------------------------ | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `DossierShell`                 | `components/dossier/DossierShell.tsx`                           | Mirrors WorkspaceShell: `sticky top-0 z-20 border-b bg-background/95 backdrop-blur` header. Flex container with main + sidebar. Root has `dir={direction}`. Mobile: full-width main, no sidebar.                                                                                                               |
-| `DossierTabNav`                | `components/dossier/DossierTabNav.tsx`                          | Mirrors WorkspaceTabNav: `sticky top-[57px] z-10 bg-muted/50 border-b overflow-x-auto snap-x`. Each tab link: `min-h-11 min-w-11 px-3 py-2 text-sm font-medium`. Active: `border-b-2 border-primary text-foreground`. Inactive: `text-muted-foreground hover:text-foreground`.                                 |
+| `DossierTabNav`                | `components/dossier/DossierTabNav.tsx`                          | Mirrors WorkspaceTabNav: `sticky top-[57px] z-10 bg-muted/50 border-b overflow-x-auto snap-x`. Each tab link: `min-h-11 min-w-11 px-3 py-2 text-sm font-normal`. Active: `border-b-2 border-primary text-foreground`. Inactive: `text-muted-foreground hover:text-foreground`.                                 |
 | `RelationshipSidebar`          | `components/dossier/RelationshipSidebar.tsx`                    | Desktop (`lg:flex`): `w-[280px] border-s` expanded, `w-12` collapsed (icon strip). Toggle button: PanelRightClose/PanelRightOpen icon, `min-h-11 min-w-11`. Tier sections: collapsible with `ChevronDown` rotate animation. Quick-add: popover with DossierSelector. Mobile: hidden, replaced by bottom Sheet. |
 | `MobileRelationshipSheet`      | Inside RelationshipSidebar                                      | Uses existing `sheet.tsx` or `bottom-sheet.tsx`. Trigger: "Relationships" button in DossierShell header on `lg:hidden`. Sheet opens from bottom, half-screen default, draggable to full. Contains same tier-grouped content as sidebar.                                                                        |
 | `ElectedOfficialListTable`     | `components/elected-officials/ElectedOfficialListTable.tsx`     | Data table with columns: Name, Office/Title, Party, Constituency, Term Status, Organization. Uses existing table patterns. Row height: `min-h-11`. Filterable header chips.                                                                                                                                    |
@@ -114,11 +115,11 @@ All enrichment cards follow a shared visual pattern:
 | Property            | Value                                                          |
 | ------------------- | -------------------------------------------------------------- |
 | Container           | `bg-card rounded-lg border p-4 sm:p-6` (uses `--radius` token) |
-| Title               | `text-lg font-semibold leading-tight text-start`               |
+| Title               | `text-base font-semibold leading-tight text-start`             |
 | Subtitle / metadata | `text-sm text-muted-foreground`                                |
 | Grid                | `grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6`               |
 | Card actions        | Ghost button, `min-h-11`, icon + text label                    |
-| Internal spacing    | `gap-3` between card items, `gap-2` between label/value pairs  |
+| Internal spacing    | `gap-2` between card items, `gap-2` between label/value pairs  |
 
 **Type-Specific Cards:**
 
@@ -222,7 +223,7 @@ All enrichment cards follow a shared visual pattern:
 | Empty state body (tab - audit)       | "No audit events recorded for this dossier."                                                                         | (i18n key: `dossier.tabs.audit.emptyBody`)              |
 | Empty state (elected officials list) | "No elected officials have been added yet."                                                                          | (i18n key: `dossier.electedOfficials.emptyBody`)        |
 | Error state                          | "Failed to load dossier data. Check your connection and try again."                                                  | (i18n key: `dossier.error.loadFailed`)                  |
-| Error retry CTA                      | "Retry"                                                                                                              | (i18n key: `common.retry`)                              |
+| Error retry CTA                      | "Try Again"                                                                                                          | (i18n key: `common.tryAgain`)                           |
 | Destructive: Remove relationship     | "Remove link to {name}?" / "This will remove the relationship between these dossiers. This action cannot be undone." | Confirmation via `AlertDialog` with destructive button. |
 | Destructive: Delete elected official | "Delete {name}?" / "This will permanently remove this elected official and their committee memberships."             | Confirmation via `AlertDialog` with destructive button. |
 
