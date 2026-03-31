@@ -31,7 +31,7 @@ Full details: [v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 - [ ] **Phase 8: Navigation & Route Consolidation** - Clean route tree, hub-based sidebar, eliminate duplicates and demo pages
 - [ ] **Phase 9: Lifecycle Engine** - DB schema for engagement lifecycle stages, transition API, forum sessions
 - [x] **Phase 10: Operations Hub** - Redesigned dashboard with attention zones, timeline, and role-adaptive defaults (completed 2026-03-31)
-- [ ] **Phase 11: Engagement Workspace** - Tabbed workspace shell with lifecycle bar, scoped views, and URL-driven tabs
+- [x] **Phase 11: Engagement Workspace** - Tabbed workspace shell with lifecycle bar, scoped views, and URL-driven tabs (completed 2026-03-31)
 - [ ] **Phase 12: Enriched Dossier Pages** - Shared detail shell, RelationshipSidebar, tier-specific enrichments, Elected Officials domain
 - [ ] **Phase 13: Feature Absorption** - Absorb standalone pages into contextual locations, Cmd+K quick switcher
 
@@ -123,7 +123,7 @@ Plans:
 4. Workspace tabs are URL-driven via nested routes — sharing a URL like `/engagements/123/tasks` opens directly to the Tasks tab
 5. All workspace tabs are lazy-loaded via route-based code splitting (no tab renders until visited)
 
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans complete
 
 Plans:
 
@@ -131,7 +131,7 @@ Plans:
 - [x] 11-02-PLAN.md — LifecycleBar popover enhancement + transition interaction (WORK-02, WORK-03)
 - [x] 11-03-PLAN.md — Overview tab + Context tab content (WORK-04, WORK-05)
 - [x] 11-04-PLAN.md — Tasks tab (kanban) + Calendar tab + Docs tab content (WORK-06, WORK-07, WORK-08)
-- [ ] 11-05-PLAN.md — Audit tab + dossier redirect + human verification (WORK-09, WORK-10)
+- [x] 11-05-PLAN.md — Audit tab + dossier redirect + human verification (WORK-09, WORK-10)
 
 **UI hint**: yes
 
@@ -183,6 +183,6 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete    | 2026-03-28 |
 | 9. Lifecycle Engine                 | v3.0      | 0/5            | Planned     | -          |
 | 10. Operations Hub                  | v3.0      | 4/4            | Complete    | 2026-03-31 |
-| 11. Engagement Workspace            | v3.0      | 4/5            | In Progress |            |
+| 11. Engagement Workspace            | v3.0      | 5/5 | Complete   | 2026-03-31 |
 | 12. Enriched Dossier Pages          | v3.0      | 0/TBD          | Not started | -          |
 | 13. Feature Absorption              | v3.0      | 0/TBD          | Not started | -          |
