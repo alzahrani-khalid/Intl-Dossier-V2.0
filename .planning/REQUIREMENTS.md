@@ -52,9 +52,9 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 
 - [x] **DOSS-01**: All 8 dossier types share a consistent detail page structure: header bar, tab bar, and collapsible RelationshipSidebar
 - [x] **DOSS-02**: RelationshipSidebar shows linked dossiers grouped by tier with quick-add, relationship type labels, and click-to-navigate
-- [ ] **DOSS-03**: Country detail pages show bilateral relationship summary, key contacts at a glance, and engagements grouped by lifecycle stage
-- [ ] **DOSS-04**: Organization detail pages show membership structure, key representatives, and MoU/agreements tracker
-- [ ] **DOSS-05**: Topic detail pages show cross-cutting view (connected anchors and activities) and position tracker (our stance vs counterpart stances)
+- [x] **DOSS-03**: Country detail pages show bilateral relationship summary, key contacts at a glance, and engagements grouped by lifecycle stage
+- [x] **DOSS-04**: Organization detail pages show membership structure, key representatives, and MoU/agreements tracker
+- [x] **DOSS-05**: Topic detail pages show cross-cutting view (connected anchors and activities) and position tracker (our stance vs counterpart stances)
 - [ ] **DOSS-06**: Working Group detail pages show member list with roles, meeting schedule, and deliverables tracker
 - [ ] **DOSS-07**: Person detail pages show engagement history chronologically with organization affiliation
 - [x] **DOSS-08**: Elected Officials implemented as full domain — list page, detail page with term/office metadata and committee memberships
@@ -133,9 +133,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WORK-10     | Phase 11 | Complete |
 | DOSS-01     | Phase 12 | Complete |
 | DOSS-02     | Phase 12 | Complete |
-| DOSS-03     | Phase 12 | Pending |
-| DOSS-04     | Phase 12 | Pending |
-| DOSS-05     | Phase 12 | Pending |
+| DOSS-03     | Phase 12 | Complete |
+| DOSS-04     | Phase 12 | Complete |
+| DOSS-05     | Phase 12 | Complete |
 | DOSS-06     | Phase 12 | Pending |
 | DOSS-07     | Phase 12 | Pending |
 | DOSS-08     | Phase 12 | Complete |
