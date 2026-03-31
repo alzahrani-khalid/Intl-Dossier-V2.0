@@ -40,8 +40,8 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 - [x] **WORK-01**: User sees WorkspaceShell with persistent tab navigation (Overview, Context, Tasks, Calendar, Docs, Audit) when viewing an engagement
 - [ ] **WORK-02**: User sees LifecycleBar at top of workspace showing all 6 stages with current stage highlighted
 - [ ] **WORK-03**: User can click completed lifecycle stages to see their summary; click current stage to see pending items
-- [ ] **WORK-04**: Overview tab shows engagement summary, participants, key decisions, and "what's next" action card
-- [ ] **WORK-05**: Context tab shows linked dossiers organized by tier (anchors, activities, threads, contacts) with [+ Link Dossier] action
+- [x] **WORK-04**: Overview tab shows engagement summary, participants, key decisions, and "what's next" action card
+- [x] **WORK-05**: Context tab shows linked dossiers organized by tier (anchors, activities, threads, contacts) with [+ Link Dossier] action
 - [ ] **WORK-06**: Tasks tab shows scoped kanban filtered to this engagement, with columns grouped by lifecycle stage
 - [ ] **WORK-07**: Calendar tab shows events for this engagement only, with conflict detection and [+ Add Event] pre-linked
 - [ ] **WORK-08**: Docs tab shows documents organized by stage with upload capability and "Generate Briefing" AI action
@@ -124,8 +124,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WORK-01     | Phase 11 | Complete |
 | WORK-02     | Phase 11 | Pending |
 | WORK-03     | Phase 11 | Pending |
-| WORK-04     | Phase 11 | Pending |
-| WORK-05     | Phase 11 | Pending |
+| WORK-04     | Phase 11 | Complete |
+| WORK-05     | Phase 11 | Complete |
 | WORK-06     | Phase 11 | Pending |
 | WORK-07     | Phase 11 | Pending |
 | WORK-08     | Phase 11 | Pending |
