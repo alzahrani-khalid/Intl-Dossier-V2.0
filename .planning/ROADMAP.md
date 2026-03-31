@@ -147,8 +147,18 @@ Plans:
 3. Country and Organization detail pages show tier-specific enrichments (bilateral summary, MoU tracker) beyond the shared shell
 4. Elected Officials has a full list page, detail page with term/office metadata and committee memberships
 5. Dossier detail tabs (Engagements, Docs, Tasks, Timeline, Audit) behave consistently across all 8 types
-   **Plans**: TBD
-   **UI hint**: yes
+
+**Plans:** 5 plans
+
+Plans:
+
+- [ ] 12-01-PLAN.md — DossierShell + DossierTabNav + RelationshipSidebar + i18n + dossier-routes update (DOSS-01, DOSS-02, DOSS-09, DOSS-10)
+- [ ] 12-02-PLAN.md — Convert all 7 existing dossier types to nested tab routes with DossierShell layout (DOSS-01, DOSS-10)
+- [ ] 12-03-PLAN.md — Elected Officials domain: backend API, list page, detail routes, types, hooks, i18n, nav config (DOSS-08)
+- [ ] 12-04-PLAN.md — Country, Organization, Topic enrichment cards + overview tab pages (DOSS-03, DOSS-04, DOSS-05)
+- [ ] 12-05-PLAN.md — Working Group, Person, Forum, Elected Official enrichment cards + human verification (DOSS-06, DOSS-07, DOSS-08, DOSS-09, DOSS-10)
+
+**UI hint**: yes
 
 ### Phase 13: Feature Absorption
 
@@ -183,6 +193,6 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete    | 2026-03-28 |
 | 9. Lifecycle Engine                 | v3.0      | 0/5            | Planned     | -          |
 | 10. Operations Hub                  | v3.0      | 4/4            | Complete    | 2026-03-31 |
-| 11. Engagement Workspace            | v3.0      | 5/5 | Complete    | 2026-03-31 |
-| 12. Enriched Dossier Pages          | v3.0      | 0/TBD          | Not started | -          |
+| 11. Engagement Workspace            | v3.0      | 5/5            | Complete    | 2026-03-31 |
+| 12. Enriched Dossier Pages          | v3.0      | 0/5            | Planned     | -          |
 | 13. Feature Absorption              | v3.0      | 0/TBD          | Not started | -          |
