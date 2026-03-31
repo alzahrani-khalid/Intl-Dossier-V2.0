@@ -1,31 +1,26 @@
 /**
  * Dashboard Route
  *
- * Dossier-centric landing page that shows user's dossiers,
- * recent activity, and pending work grouped by dossier.
+ * Operations Hub — role-adaptive dashboard showing attention items,
+ * timeline, engagements, stats, and activity feed.
  *
- * Performance: Lazy-loaded for code splitting.
+ * Performance: Lazy-loaded for code splitting (D-16).
  */
-
-// Perf (PERF-04): This route is a thin Suspense wrapper around lazy-loaded DashboardPage.
-// No memoization needed here — DashboardPage.tsx contains useMemo for trendRange and
-// date computations. Dashboard sub-components (DossierQuickStatsCard, RecentDossierActivity,
-// PendingWorkByDossier) are wrapped in React.memo per Plan 07-03.
 
 import { createFileRoute } from '@tanstack/react-router'
 import { lazy, Suspense } from 'react'
 
-const DashboardPage = lazy(() =>
-  import('@/pages/Dashboard/DashboardPage').then((m) => ({
-    default: m.DashboardPage,
+const OperationsHub = lazy(() =>
+  import('@/pages/Dashboard/OperationsHub').then((m) => ({
+    default: m.OperationsHub,
   })),
 )
 
 export const Route = createFileRoute('/_protected/dashboard')({
-  component: DossierDashboardPage,
+  component: OperationsHubRoute,
 })
 
-function DossierDashboardPage() {
+function OperationsHubRoute(): React.ReactElement {
   return (
     <Suspense
       fallback={
@@ -34,7 +29,7 @@ function DossierDashboardPage() {
         </div>
       }
     >
-      <DashboardPage />
+      <OperationsHub />
     </Suspense>
   )
 }
