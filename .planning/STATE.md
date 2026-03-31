@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
 status: executing
-stopped_at: Completed 12-01-PLAN.md
-last_updated: "2026-03-31T21:11:55.761Z"
+stopped_at: Completed 12-03-PLAN.md
+last_updated: "2026-03-31T21:24:27.067Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 23
-  completed_plans: 19
+  completed_plans: 20
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 12 (enriched-dossier-pages) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-03-31
 
@@ -64,6 +64,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 11 P03 | 10min | 2 tasks | 2 files |
 | Phase 11 P04 | 4min | 2 tasks | 3 files |
 | Phase 12 P01 | 11min | 3 tasks | 11 files |
+| Phase 12 P03 | 9min | 2 tasks | 19 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,7 @@ Recent decisions affecting current work:
 - [Phase 11]: CalendarTab uses engagement own dates since Events API lacks engagement_id filter
 - [Phase 12]: Used AdaptiveDialog (not AlertDialog) and BottomSheet (not Sheet) for RelationshipSidebar -- project component availability
 - [Phase 12]: Relationship tier classification: Strategic (bilateral/partnership/cooperation), Operational (member/participant/host), Informational (related/discusses/affiliate)
+- [Phase 12]: Elected officials query persons table with person_subtype=elected_official -- no separate table
 
 ### Pending Todos
 
@@ -115,6 +117,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31T21:11:45.460Z
-Stopped at: Completed 12-01-PLAN.md
+Last session: 2026-03-31T21:24:27.064Z
+Stopped at: Completed 12-03-PLAN.md
 Resume file: None

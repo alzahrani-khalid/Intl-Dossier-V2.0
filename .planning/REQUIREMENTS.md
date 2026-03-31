@@ -57,7 +57,7 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 - [ ] **DOSS-05**: Topic detail pages show cross-cutting view (connected anchors and activities) and position tracker (our stance vs counterpart stances)
 - [ ] **DOSS-06**: Working Group detail pages show member list with roles, meeting schedule, and deliverables tracker
 - [ ] **DOSS-07**: Person detail pages show engagement history chronologically with organization affiliation
-- [ ] **DOSS-08**: Elected Officials implemented as full domain — list page, detail page with term/office metadata and committee memberships
+- [x] **DOSS-08**: Elected Officials implemented as full domain — list page, detail page with term/office metadata and committee memberships
 - [x] **DOSS-09**: RelationshipSidebar is hidden on mobile, replaced by sheet/drawer pattern
 - [x] **DOSS-10**: Dossier detail tabs include Engagements, Docs, Tasks, Timeline, and Audit with consistent behavior across types
 
@@ -138,7 +138,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DOSS-05     | Phase 12 | Pending |
 | DOSS-06     | Phase 12 | Pending |
 | DOSS-07     | Phase 12 | Pending |
-| DOSS-08     | Phase 12 | Pending |
+| DOSS-08     | Phase 12 | Complete |
 | DOSS-09     | Phase 12 | Complete |
 | DOSS-10     | Phase 12 | Complete |
 | ABSORB-01   | Phase 13 | Pending |
