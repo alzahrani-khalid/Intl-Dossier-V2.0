@@ -116,10 +116,10 @@ export interface DashboardStats {
 
 export interface ActivityItemData {
   id: string
-  action: string
+  action_type: string
   entity_type: string
   entity_id: string
-  entity_name: string
+  entity_name_en: string
   entity_name_ar: string | null
   actor_name: string
   created_at: string

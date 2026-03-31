@@ -72,9 +72,7 @@ export async function getUpcomingEvents(
 /**
  * Fetch engagement counts grouped by lifecycle stage with top 5 per stage.
  */
-export async function getEngagementStageCounts(
-  userId: string | null,
-): Promise<StageGroup[]> {
+export async function getEngagementStageCounts(userId: string | null): Promise<StageGroup[]> {
   const { data, error } = await supabase.rpc('get_engagement_stage_counts', {
     p_user_id: userId,
   })
@@ -95,9 +93,7 @@ export async function getEngagementStageCounts(
  * Returns a single row with active engagements, open tasks, SLA at risk,
  * and upcoming events this week.
  */
-export async function getDashboardStats(
-  userId: string | null,
-): Promise<DashboardStats> {
+export async function getDashboardStats(userId: string | null): Promise<DashboardStats> {
   const { data, error } = await supabase.rpc('get_dashboard_stats', {
     p_user_id: userId,
   })
@@ -108,12 +104,14 @@ export async function getDashboardStats(
 
   const row = Array.isArray(data) ? data[0] : data
 
-  return (row as DashboardStats) ?? {
-    active_engagements: 0,
-    open_tasks: 0,
-    sla_at_risk: 0,
-    upcoming_week: 0,
-  }
+  return (
+    (row as DashboardStats) ?? {
+      active_engagements: 0,
+      open_tasks: 0,
+      sla_at_risk: 0,
+      upcoming_week: 0,
+    }
+  )
 }
 
 // ============================================================================
@@ -124,12 +122,12 @@ export async function getDashboardStats(
  * Fetch recent activity items from the activity log.
  * Uses direct table query rather than RPC.
  */
-export async function getRecentActivity(
-  limit: number = 10,
-): Promise<ActivityItemData[]> {
+export async function getRecentActivity(limit: number = 10): Promise<ActivityItemData[]> {
   const { data, error } = await supabase
-    .from('activity_log')
-    .select('id, action, entity_type, entity_id, entity_name, entity_name_ar, actor_name, created_at, metadata')
+    .from('activity_stream')
+    .select(
+      'id, action_type, entity_type, entity_id, entity_name_en, entity_name_ar, actor_name, created_at, metadata',
+    )
     .order('created_at', { ascending: false })
     .limit(limit)
 

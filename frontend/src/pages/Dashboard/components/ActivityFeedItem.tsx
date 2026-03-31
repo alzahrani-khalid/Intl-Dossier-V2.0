@@ -44,9 +44,10 @@ export function ActivityFeedItem({ item }: ActivityFeedItemProps): React.ReactEl
   const navigate = useNavigate()
   const isArabic = i18n.language === 'ar'
 
-  const entityName = isArabic && item.entity_name_ar != null && item.entity_name_ar !== ''
-    ? item.entity_name_ar
-    : item.entity_name
+  const entityName =
+    isArabic && item.entity_name_ar != null && item.entity_name_ar !== ''
+      ? item.entity_name_ar
+      : item.entity_name_en
 
   const relativeTime = formatDistanceToNow(parseISO(item.created_at), {
     addSuffix: true,
@@ -68,10 +69,8 @@ export function ActivityFeedItem({ item }: ActivityFeedItemProps): React.ReactEl
     <div className="flex items-start gap-3 py-2">
       <div className="flex-1 min-w-0">
         <p className="text-sm">
-          <span className="font-semibold">{item.actor_name}</span>
-          {' '}
-          <span className="text-muted-foreground">{item.action}</span>
-          {' '}
+          <span className="font-semibold">{item.actor_name}</span>{' '}
+          <span className="text-muted-foreground">{item.action_type}</span>{' '}
           <span
             className="font-semibold text-primary cursor-pointer hover:underline"
             role="link"
@@ -83,9 +82,7 @@ export function ActivityFeedItem({ item }: ActivityFeedItemProps): React.ReactEl
           </span>
         </p>
         <LtrIsolate className="inline">
-          <span className="text-xs text-muted-foreground">
-            {relativeTime}
-          </span>
+          <span className="text-xs text-muted-foreground">{relativeTime}</span>
         </LtrIsolate>
       </div>
     </div>
