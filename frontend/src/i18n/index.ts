@@ -184,7 +184,8 @@ import enWorkspace from './en/workspace.json'
 import arWorkspace from './ar/workspace.json'
 import enDossierShell from './en/dossier-shell.json'
 import arDossierShell from './ar/dossier-shell.json'
-// Force reload - updated 2026-04-01 - v113 - Added dossier-shell namespace
+import enElectedOfficials from './en/elected-officials.json'
+import arElectedOfficials from './ar/elected-officials.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -283,6 +284,7 @@ const resources = {
     'operations-hub': enOperationsHub,
     workspace: enWorkspace,
     'dossier-shell': enDossierShell,
+    'elected-officials': enElectedOfficials,
   },
   ar: {
     translation: arCommon,
@@ -377,6 +379,7 @@ const resources = {
     'operations-hub': arOperationsHub,
     workspace: arWorkspace,
     'dossier-shell': arDossierShell,
+    'elected-officials': arElectedOfficials,
   },
 }
 
