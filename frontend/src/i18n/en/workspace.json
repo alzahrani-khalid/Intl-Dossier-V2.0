@@ -1,0 +1,80 @@
+{
+  "tabs": {
+    "overview": "Overview",
+    "context": "Context",
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "docs": "Docs",
+    "audit": "Audit",
+    "ariaLabel": "Engagement workspace tabs"
+  },
+  "header": {
+    "engagement": "Engagement",
+    "loading": "Loading engagement..."
+  },
+  "actions": {
+    "transitionStage": "Advance Stage",
+    "generateBriefing": "Generate Briefing",
+    "addEvent": "Add Event",
+    "linkDossier": "Link Dossier",
+    "logAfterAction": "Log After-Action",
+    "createTask": "Create Task"
+  },
+  "overview": {
+    "whatsNext": "What's Next",
+    "keyMetrics": "Key Metrics",
+    "participants": "Participants",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions",
+    "currentStage": "Current Stage",
+    "daysInStage": "Days in Stage",
+    "taskProgress": "Task Progress",
+    "upcomingEvent": "Next Event",
+    "deadline": "Deadline"
+  },
+  "empty": {
+    "tasks": {
+      "heading": "No tasks yet",
+      "body": "Create your first task for this engagement to start tracking work.",
+      "action": "+ Create Task"
+    },
+    "calendar": {
+      "heading": "No events scheduled",
+      "body": "Add events to track meetings, deadlines, and milestones for this engagement.",
+      "action": "+ Add Event"
+    },
+    "docs": {
+      "heading": "No documents yet",
+      "body": "Upload documents or generate an AI briefing to get started.",
+      "action": "Generate Briefing"
+    },
+    "audit": {
+      "heading": "No activity recorded",
+      "body": "Activity will appear here as the engagement progresses through lifecycle stages."
+    },
+    "context": {
+      "heading": "No linked dossiers",
+      "body": "Link relevant countries, organizations, and topics to build the engagement context.",
+      "action": "+ Link Dossier"
+    }
+  },
+  "error": {
+    "tabLoad": "Failed to load tab content. Check your connection and try again.",
+    "transition": "Stage transition failed. The engagement may have been updated by another user. Refresh and try again.",
+    "generateBrief": "Briefing generation failed. The AI service may be temporarily unavailable. Try again in a few minutes."
+  },
+  "mobile": {
+    "stageAbbrev": {
+      "intake": "Int",
+      "preparation": "Prep",
+      "briefing": "Brf",
+      "execution": "Exec",
+      "follow_up": "F/U",
+      "closed": "Cls"
+    }
+  },
+  "destructive": {
+    "deleteEngagement": "This will permanently delete the engagement and all associated tasks, events, and documents. This action cannot be undone.",
+    "backwardTransition": "Moving backward to {{stage}} will not remove any completed work items. A note is recommended to explain the reason."
+  }
+}
