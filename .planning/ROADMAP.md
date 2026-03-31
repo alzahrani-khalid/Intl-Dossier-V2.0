@@ -30,7 +30,7 @@ Full details: [v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 
 - [ ] **Phase 8: Navigation & Route Consolidation** - Clean route tree, hub-based sidebar, eliminate duplicates and demo pages
 - [ ] **Phase 9: Lifecycle Engine** - DB schema for engagement lifecycle stages, transition API, forum sessions
-- [ ] **Phase 10: Operations Hub** - Redesigned dashboard with attention zones, timeline, and role-adaptive defaults
+- [x] **Phase 10: Operations Hub** - Redesigned dashboard with attention zones, timeline, and role-adaptive defaults (completed 2026-03-31)
 - [ ] **Phase 11: Engagement Workspace** - Tabbed workspace shell with lifecycle bar, scoped views, and URL-driven tabs
 - [ ] **Phase 12: Enriched Dossier Pages** - Shared detail shell, RelationshipSidebar, tier-specific enrichments, Elected Officials domain
 - [ ] **Phase 13: Feature Absorption** - Absorb standalone pages into contextual locations, Cmd+K quick switcher
@@ -99,14 +99,14 @@ Plans:
 4. Dashboard defaults adapt to user role (leadership sees strategic overview, officers see workload, analysts see research queue) with a dropdown to switch views
 5. User can click any dashboard item to navigate directly to the relevant entity or workspace
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 
 - [x] 10-01-PLAN.md — Data foundation: Supabase RPC migrations, TypeScript types, domain repository, TanStack Query hooks, role preference, i18n (OPS-01, OPS-02, OPS-03, OPS-04, OPS-05, OPS-07)
 - [x] 10-02-PLAN.md — Zone components: AttentionZone, TimelineZone, EngagementsZone, QuickStatsBar, ActivityFeed (OPS-01, OPS-02, OPS-03, OPS-04)
 - [x] 10-03-PLAN.md — Page assembly: ActionBar, RoleSwitcher, ZoneCollapsible, OperationsHub page, route wiring (OPS-05, OPS-06, OPS-07)
-- [ ] 10-04-PLAN.md — Realtime subscriptions, old dashboard cleanup, human verification (OPS-01, OPS-06)
+- [x] 10-04-PLAN.md — Realtime subscriptions, old dashboard cleanup, human verification (OPS-01, OPS-06)
 
 **UI hint**: yes
 
@@ -172,7 +172,7 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 7. Performance Optimization         | v2.0      | 4/4            | Complete    | 2026-03-28 |
 | 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete    | 2026-03-28 |
 | 9. Lifecycle Engine                 | v3.0      | 0/5            | Planned     | -          |
-| 10. Operations Hub                  | v3.0      | 3/4 | In Progress|  |
+| 10. Operations Hub                  | v3.0      | 4/4 | Complete   | 2026-03-31 |
 | 11. Engagement Workspace            | v3.0      | 0/TBD          | Not started | -          |
 | 12. Enriched Dossier Pages          | v3.0      | 0/TBD          | Not started | -          |
 | 13. Feature Absorption              | v3.0      | 0/TBD          | Not started | -          |
