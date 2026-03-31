@@ -1,17 +1,16 @@
 /**
  * Person Overview Tab Route
- * Lazy-loads the existing PersonDossierPage as overview content.
+ * Lazy-loads PersonOverviewTab with enrichment cards.
  */
 
 import { createFileRoute } from '@tanstack/react-router'
 import type { ReactElement } from 'react'
 import { lazy, Suspense } from 'react'
 import { TabSkeleton } from '@/components/workspace/TabSkeleton'
-import { useDossier } from '@/domains/dossiers/hooks/useDossier'
 
 const PersonOverviewTab = lazy(() =>
-  import('@/pages/dossiers/PersonDossierPage').then((m) => ({
-    default: m.PersonDossierPage,
+  import('@/pages/dossiers/PersonOverviewTab').then((m) => ({
+    default: m.PersonOverviewTab,
   })),
 )
 
@@ -21,17 +20,10 @@ export const Route = createFileRoute('/_protected/dossiers/persons/$id/overview'
 
 function PersonOverviewRoute(): ReactElement {
   const { id } = Route.useParams()
-  const { data: dossier, isLoading } = useDossier(id)
-
-  if (isLoading || dossier == null) {
-    return <TabSkeleton type="cards" />
-  }
 
   return (
     <Suspense fallback={<TabSkeleton type="cards" />}>
-      <PersonOverviewTab
-        dossier={dossier as Parameters<typeof PersonOverviewTab>[0]['dossier']}
-      />
+      <PersonOverviewTab dossierId={id} />
     </Suspense>
   )
 }
