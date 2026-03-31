@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
 status: executing
-stopped_at: Completed 11-03-PLAN.md
-last_updated: "2026-03-31T05:45:45.034Z"
+stopped_at: Completed 11-04-PLAN.md
+last_updated: '2026-03-31T05:54:00Z'
 last_activity: 2026-03-31
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 16
+  completed_plans: 17
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 11 (engagement-workspace) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-03-31
 
@@ -62,6 +62,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 11 P01 | 8min | 2 tasks | 20 files |
 | Phase 11 P02 | 3min | 1 tasks | 3 files |
 | Phase 11 P03 | 10min | 2 tasks | 2 files |
+| Phase 11 P04 | 4min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Recent decisions affecting current work:
 - [Phase 11]: OverviewTab uses useEngagementKanban stats.progressPercentage for task progress display
 - [Phase 11]: ContextTab extracts linked dossiers from profile host_country, host_organization, and participant dossier_info
 - [Phase 11]: Dossier tier classification: Anchors, Activities, Threads, Contacts
+- [Phase 11]: Used Kibo-UI KanbanProvider for TasksTab instead of raw @dnd-kit/core
+- [Phase 11]: Extracted brief card pattern from EngagementBriefsSection for DocsTab inline use
+- [Phase 11]: CalendarTab uses engagement own dates since Events API lacks engagement_id filter
 
 ### Pending Todos
 
@@ -108,6 +112,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31T05:45:45.031Z
-Stopped at: Completed 11-03-PLAN.md
+Last session: 2026-03-31T05:54:00Z
+Stopped at: Completed 11-04-PLAN.md
 Resume file: None
