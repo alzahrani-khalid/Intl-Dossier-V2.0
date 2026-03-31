@@ -123,13 +123,13 @@ Plans:
 4. Workspace tabs are URL-driven via nested routes — sharing a URL like `/engagements/123/tasks` opens directly to the Tasks tab
 5. All workspace tabs are lazy-loaded via route-based code splitting (no tab renders until visited)
 
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 Plans:
 
 - [x] 11-01-PLAN.md — WorkspaceShell + TabNav + TabSkeleton + i18n + route restructure (WORK-01, WORK-10)
 - [x] 11-02-PLAN.md — LifecycleBar popover enhancement + transition interaction (WORK-02, WORK-03)
-- [ ] 11-03-PLAN.md — Overview tab + Context tab content (WORK-04, WORK-05)
+- [x] 11-03-PLAN.md — Overview tab + Context tab content (WORK-04, WORK-05)
 - [ ] 11-04-PLAN.md — Tasks tab (kanban) + Calendar tab + Docs tab content (WORK-06, WORK-07, WORK-08)
 - [ ] 11-05-PLAN.md — Audit tab + dossier redirect + human verification (WORK-09, WORK-10)
 
@@ -183,6 +183,6 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete    | 2026-03-28 |
 | 9. Lifecycle Engine                 | v3.0      | 0/5            | Planned     | -          |
 | 10. Operations Hub                  | v3.0      | 4/4            | Complete    | 2026-03-31 |
-| 11. Engagement Workspace            | v3.0      | 2/5            | In Progress | -          |
+| 11. Engagement Workspace            | v3.0      | 3/5 | In Progress|  |
 | 12. Enriched Dossier Pages          | v3.0      | 0/TBD          | Not started | -          |
 | 13. Feature Absorption              | v3.0      | 0/TBD          | Not started | -          |
