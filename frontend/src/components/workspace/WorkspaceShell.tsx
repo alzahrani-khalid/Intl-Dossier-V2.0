@@ -116,12 +116,9 @@ export function WorkspaceShell({ engagementId, children }: WorkspaceShellProps):
       <div className="sticky top-[73px] z-[15] border-b bg-background px-4 sm:px-6 lg:px-8 py-2">
         <LtrIsolate className="w-full">
           <LifecycleStepperBar
+            engagementId={engagementId}
             currentStage={currentStage}
-            transitions={[]}
-            onTransition={(): void => {
-              // Transition handler — wired in Plan 02
-            }}
-            disabled={isLoading}
+            compact={false}
           />
         </LtrIsolate>
       </div>
