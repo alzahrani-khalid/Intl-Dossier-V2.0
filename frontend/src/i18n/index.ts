@@ -182,7 +182,9 @@ import enOperationsHub from './en/operations-hub.json'
 import arOperationsHub from './ar/operations-hub.json'
 import enWorkspace from './en/workspace.json'
 import arWorkspace from './ar/workspace.json'
-// Force reload - updated 2026-03-31 - v112 - Added workspace namespace
+import enDossierShell from './en/dossier-shell.json'
+import arDossierShell from './ar/dossier-shell.json'
+// Force reload - updated 2026-04-01 - v113 - Added dossier-shell namespace
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -280,6 +282,7 @@ const resources = {
     lifecycle: enLifecycle,
     'operations-hub': enOperationsHub,
     workspace: enWorkspace,
+    'dossier-shell': enDossierShell,
   },
   ar: {
     translation: arCommon,
@@ -373,6 +376,7 @@ const resources = {
     lifecycle: arLifecycle,
     'operations-hub': arOperationsHub,
     workspace: arWorkspace,
+    'dossier-shell': arDossierShell,
   },
 }
 

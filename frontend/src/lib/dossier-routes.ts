@@ -17,6 +17,7 @@ export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
   forum: 'forums',
   working_group: 'working_groups',
   topic: 'topics',
+  elected_official: 'elected-officials',
 }
 
 /**
@@ -51,7 +52,7 @@ export function getDossierDetailPath(dossierId: string, type: string | undefined
  * @param type - The type string to validate
  * @returns True if the type is a known dossier type
  */
-function isValidDossierType(type: string | undefined | null): boolean {
+export function isValidDossierType(type: string | undefined | null): boolean {
   if (!type) {
     return false
   }

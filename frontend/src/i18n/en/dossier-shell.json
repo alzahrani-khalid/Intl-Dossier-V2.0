@@ -1,0 +1,56 @@
+{
+  "tabs": {
+    "overview": "Overview",
+    "engagements": "Engagements",
+    "docs": "Documents",
+    "tasks": "Tasks",
+    "timeline": "Timeline",
+    "audit": "Audit Log",
+    "positions": "Positions",
+    "mous": "MOUs",
+    "committees": "Committees",
+    "ariaLabel": "Dossier navigation tabs"
+  },
+  "header": {
+    "relationships": "Relationships",
+    "loading": "Loading dossier..."
+  },
+  "sidebar": {
+    "linkDossier": "Link Dossier",
+    "emptyTitle": "No linked dossiers",
+    "emptyBody": "Link related dossiers to see connections and navigate between them.",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "removeConfirmTitle": "Remove link to {{name}}?",
+    "removeConfirmBody": "This will remove the relationship between these dossiers. This action cannot be undone."
+  },
+  "empty": {
+    "overview": {
+      "title": "No overview yet",
+      "body": "Overview information will appear once dossier data is populated."
+    },
+    "engagements": {
+      "title": "No engagements yet",
+      "body": "Link or create engagements to track diplomatic interactions involving this dossier."
+    },
+    "docs": {
+      "title": "No documents yet",
+      "body": "Upload documents or generate an AI briefing to get started."
+    },
+    "tasks": {
+      "title": "No tasks yet",
+      "body": "Create tasks to track work items related to this dossier."
+    },
+    "timeline": {
+      "title": "No timeline entries",
+      "body": "Activity will appear here as the dossier progresses and events are recorded."
+    },
+    "audit": {
+      "title": "No activity recorded",
+      "body": "Changes and actions on this dossier will be logged here automatically."
+    }
+  },
+  "error": {
+    "loadFailed": "Failed to load dossier data. Check your connection and try again."
+  }
+}
