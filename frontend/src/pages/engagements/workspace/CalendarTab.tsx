@@ -10,6 +10,7 @@ import { useParams } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useDirection } from '@/hooks/useDirection'
 import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
+import { useLifecycleHistory } from '@/domains/engagements/hooks/useLifecycle'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -38,6 +39,7 @@ export default function CalendarTab(): ReactElement {
   const { isRTL } = useDirection()
 
   const { data: engagement, isLoading } = useEngagement(engagementId)
+  const { data: lifecycleHistory } = useLifecycleHistory(engagementId)
 
   const locale = i18n.language === 'ar' ? 'ar-SA' : 'en-US'
   const dateFormatter = useMemo(
@@ -47,6 +49,7 @@ export default function CalendarTab(): ReactElement {
         month: 'long',
         day: 'numeric',
         weekday: 'short',
+        timeZone: 'UTC',
       }),
     [locale],
   )
@@ -79,7 +82,9 @@ export default function CalendarTab(): ReactElement {
       })
     }
 
-    if (eng.lifecycle_stage) {
+    // Use lifecycle transition timestamp, not eng.updated_at (Codex P2 fix)
+    if (eng.lifecycle_stage && lifecycleHistory?.length) {
+      const latestTransition = lifecycleHistory[lifecycleHistory.length - 1]
       const stageLabel =
         i18n.language === 'ar'
           ? `مرحلة: ${eng.lifecycle_stage}`
@@ -87,7 +92,7 @@ export default function CalendarTab(): ReactElement {
       items.push({
         id: 'lifecycle',
         title: stageLabel,
-        date: eng.updated_at,
+        date: latestTransition.transitioned_at,
         type: 'lifecycle',
         icon: Milestone,
         badgeLabel: eng.lifecycle_stage,
@@ -100,27 +105,23 @@ export default function CalendarTab(): ReactElement {
     )
 
     return items
-  }, [engagement, i18n.language])
+  }, [engagement, lifecycleHistory, i18n.language])
 
-  // Categorize events by relative date
+  // Categorize events by relative date using UTC to avoid timezone drift (Codex P2 fix)
   const categorized = useMemo(() => {
     const now = new Date()
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const todayKey = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`
     const past: CalendarEvent[] = []
     const todayEvents: CalendarEvent[] = []
     const upcoming: CalendarEvent[] = []
 
     for (const event of events) {
-      const eventDate = new Date(event.date)
-      const eventDay = new Date(
-        eventDate.getFullYear(),
-        eventDate.getMonth(),
-        eventDate.getDate(),
-      )
+      const d = new Date(event.date)
+      const eventKey = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
 
-      if (eventDay.getTime() === today.getTime()) {
+      if (eventKey === todayKey) {
         todayEvents.push(event)
-      } else if (eventDay < today) {
+      } else if (eventKey < todayKey) {
         past.push(event)
       } else {
         upcoming.push(event)
