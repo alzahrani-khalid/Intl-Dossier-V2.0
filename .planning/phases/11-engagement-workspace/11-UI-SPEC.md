@@ -53,17 +53,14 @@ Exceptions:
 
 ## Typography
 
-| Role       | Size Token  | Pixel Size | Weight         | Line Height  | Usage in this phase                                                 |
-| ---------- | ----------- | ---------- | -------------- | ------------ | ------------------------------------------------------------------- |
-| Body       | `text-base` | 13px       | 400 (normal)   | 1.5 (normal) | Tab content body text, popover descriptions, audit entries          |
-| Label      | `text-sm`   | 12px       | 500 (medium)   | 1.375 (snug) | Tab labels, stage chip labels, metadata labels (date, assignee)     |
-| Heading    | `text-xl`   | 16px       | 600 (semibold) | 1.25 (tight) | Tab section headings (Participants, Recent Activity, Key Decisions) |
-| Page Title | `text-3xl`  | 20px       | 600 (semibold) | 1.25 (tight) | Engagement name in WorkspaceShell header                            |
+| Role       | Size Token  | Pixel Size | Weight         | Line Height  | Usage in this phase                                                                                           |
+| ---------- | ----------- | ---------- | -------------- | ------------ | ------------------------------------------------------------------------------------------------------------- |
+| Label      | `text-sm`   | 12px       | 400 (normal)   | 1.375 (snug) | Tab labels, stage chip labels, metadata labels (date, assignee), stage popover metadata, kanban card metadata |
+| Body       | `text-base` | 13px       | 400 (normal)   | 1.5 (normal) | Tab content body text, popover descriptions, audit entries                                                    |
+| Heading    | `text-xl`   | 16px       | 600 (semibold) | 1.25 (tight) | Tab section headings (Participants, Recent Activity, Key Decisions), overview metric card values              |
+| Page Title | `text-3xl`  | 20px       | 600 (semibold) | 1.25 (tight) | Engagement name in WorkspaceShell header                                                                      |
 
-Additional size used:
-
-- `text-xs` (11px) at weight 400 -- stage popover metadata (transition date, time spent), kanban card metadata
-- `text-2xl` (18px) at weight 600 -- overview metric card values (task count, days in stage)
+**Weight system:** 2 weights only -- 400 (normal) for body and label text, 600 (semibold) for headings, metric values, and page title. No intermediate weights.
 
 **Source:** `frontend/src/index.css` CSS custom properties, existing Operations Hub patterns
 
@@ -144,7 +141,7 @@ Additional size used:
 - **Trigger:** Click a completed stage chip in LifecycleBar
 - **Content:** Who transitioned, when (formatted date), transition note (if any), time spent in stage
 - **Behavior:** Radix `Popover` opens below the stage chip, `w-64 p-3`, dismisses on outside click or Escape
-- **Typography:** Stage name in `text-sm font-medium`, metadata in `text-xs text-muted-foreground`, note in `text-xs italic`
+- **Typography:** Stage name in `text-sm font-semibold`, metadata in `text-sm text-muted-foreground`, note in `text-sm italic`
 - **Current stage click:** No popover, stage is non-interactive (cursor-default)
 - **Upcoming stage click:** Opens transition confirmation dialog (I-03)
 
