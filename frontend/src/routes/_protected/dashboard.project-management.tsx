@@ -1,10 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { DashboardPage } from '@/pages/Dashboard/DashboardPage'
+import { createFileRoute, Navigate } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/dashboard/project-management')({
-  component: ProjectManagementDashboardAlias,
+  component: ProjectManagementRedirect,
 })
 
-function ProjectManagementDashboardAlias() {
-  return <DashboardPage />
+/**
+ * Legacy project-management dashboard route.
+ * The old DashboardPage was replaced by OperationsHub in Phase 10.
+ * Redirect to the main dashboard (OperationsHub) to avoid 404s.
+ */
+function ProjectManagementRedirect(): React.ReactElement {
+  return <Navigate to="/dashboard" />
 }

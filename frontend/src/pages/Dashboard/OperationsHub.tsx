@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useResponsive } from '@/hooks/useResponsive'
 import { useRolePreference } from '@/domains/operations-hub/hooks/useRolePreference'
 import { useDashboardScope } from '@/domains/operations-hub/hooks/useDashboardScope'
+import { useAttentionRealtime } from '@/domains/operations-hub/hooks/useAttentionRealtime'
 import { useAttentionItems } from '@/domains/operations-hub/hooks/useAttentionItems'
 import { useGroupedEvents, useUpcomingEvents } from '@/domains/operations-hub/hooks/useUpcomingEvents'
 import { useEngagementStages } from '@/domains/operations-hub/hooks/useEngagementStages'
@@ -76,6 +77,9 @@ export function OperationsHub(): ReactElement {
   const { isMobile } = useResponsive()
   const { role, setRole } = useRolePreference()
   const { userId } = useDashboardScope()
+
+  // Realtime subscription for Attention zone — invalidates query on task/lifecycle changes
+  useAttentionRealtime(userId ?? undefined)
 
   // Zone data hooks — each fetches independently (progressive loading)
   const attention = useAttentionItems(userId ?? undefined)

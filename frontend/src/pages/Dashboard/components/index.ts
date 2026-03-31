@@ -1,13 +1,31 @@
 /**
- * Dashboard Components — Phase 4
+ * Dashboard Components — Phase 10 Operations Hub
  *
- * New dashboard sub-components for the redesigned dashboard page.
+ * Zone components and shared dashboard UI for the Operations Hub.
  */
 
-export { DashboardMetricCards } from './DashboardMetricCards'
-export { ChartWorkItemTrends } from './ChartWorkItemTrends'
-export { ChartDossierDistribution } from './ChartDossierDistribution'
-export { DossierSuccessMetrics } from './DossierSuccessMetrics'
-export { DashboardDateRangePicker } from './DashboardDateRangePicker'
-export { DashboardExportButton } from './DashboardExportButton'
-export { RecentDossiersTable } from './RecentDossiersTable'
+// Action Bar & Controls
+export { ActionBar } from './ActionBar'
+export { RoleSwitcher } from './RoleSwitcher'
+export { ZoneCollapsible } from './ZoneCollapsible'
+
+// Attention Zone
+export { AttentionZone } from './AttentionZone'
+export { AttentionItem } from './AttentionItem'
+export { EmptyAttention } from './EmptyAttention'
+
+// Timeline Zone
+export { TimelineZone } from './TimelineZone'
+export { TimelineEventCard } from './TimelineEventCard'
+
+// Engagements Zone
+export { EngagementsZone } from './EngagementsZone'
+export { EngagementStageGroup } from './EngagementStageGroup'
+
+// Quick Stats
+export { QuickStatsBar } from './QuickStatsBar'
+export { QuickStatCard } from './QuickStatCard'
+
+// Activity Feed
+export { ActivityFeed } from './ActivityFeed'
+export { ActivityFeedItem } from './ActivityFeedItem'
