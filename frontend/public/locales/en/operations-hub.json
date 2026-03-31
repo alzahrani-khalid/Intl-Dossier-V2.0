@@ -1,0 +1,58 @@
+{
+  "title": "Operations Hub",
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "actions": {
+    "new_engagement": "New Engagement",
+    "new_request": "New Request"
+  },
+  "zones": {
+    "attention": {
+      "title": "Attention Needed",
+      "empty": "All clear -- nothing needs attention"
+    },
+    "timeline": {
+      "title": "Upcoming",
+      "empty": "No upcoming events this week",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "this_week": "This Week",
+      "next_week": "Next Week",
+      "show_all": "Show all events"
+    },
+    "engagements": {
+      "title": "Active Engagements",
+      "empty": "No active engagements",
+      "show_all": "Show all engagements"
+    },
+    "stats": {
+      "active_engagements": "Active Engagements",
+      "open_tasks": "Open Tasks",
+      "sla_at_risk": "SLA At Risk",
+      "upcoming_week": "Upcoming This Week"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "empty": "No recent activity"
+    }
+  },
+  "roles": {
+    "leadership": "Leadership",
+    "officer": "Officer",
+    "analyst": "Analyst"
+  },
+  "severity": {
+    "overdue": "Overdue",
+    "due_soon": "Due Soon",
+    "sla_at_risk": "SLA At Risk",
+    "stalled": "Stalled",
+    "stalled_detail": "{{days}} days in {{stage}}"
+  },
+  "error": {
+    "load_failed": "Could not load {{zone}}. Check your connection and try again.",
+    "retry": "Retry"
+  }
+}
