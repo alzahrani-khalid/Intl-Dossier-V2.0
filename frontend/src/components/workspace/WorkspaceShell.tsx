@@ -112,15 +112,19 @@ export function WorkspaceShell({ engagementId, children }: WorkspaceShellProps):
         </div>
       </header>
 
-      {/* LifecycleBar — sticky below header */}
+      {/* LifecycleBar — sticky below header, hidden until engagement loads */}
       <div className="sticky top-[73px] z-[15] border-b bg-background px-4 sm:px-6 lg:px-8 py-2">
-        <LtrIsolate className="w-full">
-          <LifecycleStepperBar
-            engagementId={engagementId}
-            currentStage={currentStage}
-            compact={false}
-          />
-        </LtrIsolate>
+        {isLoading ? (
+          <Skeleton className="h-10 w-full rounded-md" />
+        ) : (
+          <LtrIsolate className="w-full">
+            <LifecycleStepperBar
+              engagementId={engagementId}
+              currentStage={currentStage}
+              compact={false}
+            />
+          </LtrIsolate>
+        )}
       </div>
 
       {/* Tab navigation — hidden on after-action */}
