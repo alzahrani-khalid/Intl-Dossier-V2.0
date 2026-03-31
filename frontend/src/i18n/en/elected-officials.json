@@ -1,0 +1,73 @@
+{
+  "list": {
+    "title": "Elected Officials",
+    "empty": "No elected officials have been added yet.",
+    "add": "Add Elected Official",
+    "loading": "Loading elected officials...",
+    "error": "Failed to load elected officials"
+  },
+  "columns": {
+    "name": "Name",
+    "office": "Office/Title",
+    "officeType": "Office Type",
+    "party": "Party",
+    "district": "District",
+    "termStatus": "Term Status",
+    "country": "Country"
+  },
+  "termStatus": {
+    "current": "Current",
+    "expired": "Expired"
+  },
+  "detail": {
+    "committees": "Committees",
+    "officeInfo": "Office Information",
+    "termInfo": "Term Information",
+    "contactInfo": "Contact Information"
+  },
+  "delete": {
+    "title": "Delete {{name}}?",
+    "body": "This will permanently remove this elected official record."
+  },
+  "filters": {
+    "party": "Party",
+    "officeType": "Office Type",
+    "termStatus": "Term Status",
+    "country": "Country",
+    "allParties": "All Parties",
+    "allOfficeTypes": "All Office Types",
+    "allCountries": "All Countries",
+    "currentTerm": "Current Term",
+    "expiredTerm": "Expired Term",
+    "allTerms": "All Terms"
+  },
+  "officeTypes": {
+    "head_of_state": "Head of State",
+    "head_of_government": "Head of Government",
+    "cabinet_minister": "Cabinet Minister",
+    "legislature_upper": "Upper House",
+    "legislature_lower": "Lower House",
+    "regional_executive": "Regional Executive",
+    "regional_legislature": "Regional Legislature",
+    "local_executive": "Local Executive",
+    "local_legislature": "Local Legislature",
+    "judiciary": "Judiciary",
+    "ambassador": "Ambassador",
+    "international_org": "International Organization",
+    "other": "Other"
+  },
+  "committees": {
+    "title": "Committee Assignments",
+    "empty": "No committee assignments",
+    "name": "Committee",
+    "role": "Role",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "roles": {
+      "chair": "Chair",
+      "vice_chair": "Vice Chair",
+      "member": "Member"
+    }
+  }
+}

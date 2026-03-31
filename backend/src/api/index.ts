@@ -21,6 +21,7 @@ import signaturesRouter from './signatures'
 // Voice router disabled in production due to ONNX Runtime incompatibility with Alpine Linux
 // import voiceRouter from './voice'
 import afterActionRouter from './after-action'
+import electedOfficialsRouter from './elected-officials'
 import intakeEntityLinksRouter from './intake-entity-links'
 import entitySearchRouter from './entity-search'
 import cacheMetricsRouter from './cache-metrics'
@@ -84,6 +85,7 @@ apiRouter.use('/signatures', signaturesRouter)
 // Voice routes disabled in production due to ONNX Runtime incompatibility
 // apiRouter.use('/voice', voiceRouter)
 apiRouter.use('/after-action', afterActionRouter)
+apiRouter.use('/elected-officials', electedOfficialsRouter)
 
 // Intake Entity Linking routes
 apiRouter.use(intakeEntityLinksRouter)

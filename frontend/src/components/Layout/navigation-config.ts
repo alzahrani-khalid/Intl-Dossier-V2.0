@@ -19,6 +19,7 @@ import {
   Activity,
   Download,
   UserCog,
+  UserCheck,
   PenTool,
   Shield,
   Wrench,
@@ -62,6 +63,12 @@ export const createNavigationSections = (
           label: 'navigation.allDossiers',
           path: '/dossiers',
           icon: FolderOpen,
+        },
+        {
+          id: 'elected-officials',
+          label: 'navigation.electedOfficials',
+          path: '/dossiers/elected-officials',
+          icon: UserCheck,
         },
         {
           id: 'recent-activity',

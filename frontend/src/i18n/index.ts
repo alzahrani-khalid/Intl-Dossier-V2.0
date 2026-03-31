@@ -242,7 +242,9 @@ import enContactsExtended from './en/contacts-extended.json'
 import arContactsExtended from './ar/contacts-extended.json'
 import enMyWork from './en/my-work.json'
 import arMyWork from './ar/my-work.json'
-// Force reload - updated 2026-02-10 - v109 - Added my-work namespace
+import enElectedOfficials from './en/elected-officials.json'
+import arElectedOfficials from './ar/elected-officials.json'
+// Force reload - updated 2026-04-01 - v110 - Added elected-officials namespace
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -370,6 +372,7 @@ const resources = {
     terminology: enTerminology,
     'contacts-extended': enContactsExtended,
     'my-work': enMyWork,
+    'elected-officials': enElectedOfficials,
   },
   ar: {
     translation: arCommon,
@@ -493,6 +496,7 @@ const resources = {
     terminology: arTerminology,
     'contacts-extended': arContactsExtended,
     'my-work': arMyWork,
+    'elected-officials': arElectedOfficials,
   },
 }
 
