@@ -178,7 +178,9 @@ import enMyWork from './en/my-work.json'
 import arMyWork from './ar/my-work.json'
 import enLifecycle from './en/lifecycle.json'
 import arLifecycle from './ar/lifecycle.json'
-// Force reload - updated 2026-03-30 - v110 - Added lifecycle namespace
+import enOperationsHub from './en/operations-hub.json'
+import arOperationsHub from './ar/operations-hub.json'
+// Force reload - updated 2026-03-31 - v111 - Added operations-hub namespace
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -274,6 +276,7 @@ const resources = {
     committees: enCommittees,
     'my-work': enMyWork,
     lifecycle: enLifecycle,
+    'operations-hub': enOperationsHub,
   },
   ar: {
     translation: arCommon,
@@ -365,6 +368,7 @@ const resources = {
     committees: arCommittees,
     'my-work': arMyWork,
     lifecycle: arLifecycle,
+    'operations-hub': arOperationsHub,
   },
 }
 
