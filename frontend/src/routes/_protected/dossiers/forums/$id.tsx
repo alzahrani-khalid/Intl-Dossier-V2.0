@@ -1,163 +1,23 @@
 /**
- * Forum Dossier Detail Route (Feature 028 - User Story 6)
- * Updated for: Phase 2 Tab-Based Layout with URL state persistence
+ * Forum Dossier Layout Route
  *
- * Component Library Decision:
- * - Checked: Aceternity UI > Aceternity Pro > Kibo-UI
- * - Selected: Tab-based layout with horizontal scroll (mobile)
- * - Reason: Consistent UX with other dossier types, URL state persistence
- *
- * Responsive Strategy:
- * - Base: Horizontal scrollable tabs with fade indicators
- * - lg: Full-width tabs without scroll
- * - Content: Responsive padding (p-4 sm:p-6)
- *
- * RTL Support:
- * - Logical properties: Container uses ps-*, pe-*, text-start
- * - Gradient directions: bg-gradient-to-e, bg-gradient-to-s
- * - Text alignment: text-start for all text content
- *
- * Accessibility:
- * - ARIA: role="tablist", role="tab", aria-selected, aria-controls
- * - Keyboard: Tab navigation through tabs, Enter/Space to select
- * - Focus: Focus management in tab navigation
- *
- * Performance:
- * - Lazy loading: Tab content loaded on demand with Suspense
- * - Memoization: Type guard validation memoized via TanStack Query
- *
- * @example
- * <Route path="/dossiers/forums/:id?tab=overview" />
+ * Renders DossierShell with Outlet for nested tab routes.
+ * Forum has no extra tabs (shared tabs only per D-03).
  */
 
-import { createFileRoute } from '@tanstack/react-router'
-import { z } from 'zod'
-
-// Search params schema for tab state
-const forumSearchSchema = z.object({
-  tab: z
-    .enum([
-      'overview',
-      'members',
-      'schedule',
-      'deliverables',
-      'decisions',
-      'relationships',
-      'mous',
-      'documents',
-      'timeline',
-      'activity',
-      'comments',
-    ])
-    .optional()
-    .default('overview'),
-})
-import { lazy, Suspense } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Loader2, AlertCircle } from 'lucide-react'
-import { useTypedDossier } from '@/hooks/useDossier'
-import { Button } from '@/components/ui/button'
-import { Link } from '@tanstack/react-router'
-
-const ForumDossierPage = lazy(() =>
-  import('@/pages/dossiers/ForumDossierPage').then((m) => ({
-    default: m.ForumDossierPage,
-  })),
-)
+import { createFileRoute, Outlet } from '@tanstack/react-router'
+import type { ReactElement } from 'react'
+import { DossierShell } from '@/components/dossier/DossierShell'
 
 export const Route = createFileRoute('/_protected/dossiers/forums/$id')({
-  component: ForumDossierDetailRoute,
-  validateSearch: forumSearchSchema,
+  component: ForumDossierLayout,
 })
 
-function ForumDossierDetailRoute() {
+function ForumDossierLayout(): ReactElement {
   const { id } = Route.useParams()
-  const { tab } = Route.useSearch()
-  const { t } = useTranslation('dossier')
-  // Fetch forum dossier with type validation
-  const { data: dossier, isLoading, error } = useTypedDossier(id, 'forum')
-
-  // Loading State
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin text-primary" />
-          <p className="text-sm sm:text-base text-muted-foreground">{t('detail.loading')}</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Error State
-  if (error || !dossier) {
-    return (
-      <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
-      >
-        <div className="max-w-2xl mx-auto">
-          <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-6 sm:p-8">
-            <div className="flex items-start gap-4">
-              <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-destructive shrink-0 mt-1" />
-              <div className="flex-1">
-                <h2 className="text-lg sm:text-xl font-semibold text-destructive mb-2">
-                  {t('detail.error')}
-                </h2>
-                <p className="text-sm sm:text-base text-destructive/90 mb-4">
-                  {error?.message || t('detail.errorGeneric')}
-                </p>
-                <Button asChild variant="outline" className="min-h-11">
-                  <Link to="/dossiers">{t('action.backToHub')}</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Type Mismatch Error
-  if (dossier.type !== 'forum') {
-    return (
-      <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
-      >
-        <div className="max-w-2xl mx-auto">
-          <div className="rounded-lg border border-warning/20 bg-warning/10 p-6 sm:p-8">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">{t('detail.wrongType')}</h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4">
-              {t('detail.wrongTypeDescription', {
-                actualType: t(`type.${dossier.type}` as any),
-                expectedType: t('type.forum' as any),
-              })}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button asChild className="min-h-11">
-                <Link to={`/dossiers/${dossier.type}s/${id}`}>
-                  {t('action.viewCorrectType', { type: t(`type.${dossier.type}` as any) })}
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="min-h-11">
-                <Link to="/dossiers">{t('action.backToHub')}</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Success - Render Forum Dossier Page with tab from URL
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      }
-    >
-      <ForumDossierPage dossier={dossier} initialTab={tab} />
-    </Suspense>
+    <DossierShell dossierId={id} dossierType="forum">
+      <Outlet />
+    </DossierShell>
   )
 }
