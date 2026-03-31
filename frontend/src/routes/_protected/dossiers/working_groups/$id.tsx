@@ -1,139 +1,23 @@
 /**
- * Working Group Dossier Detail Route (Feature 028 - User Story 6)
+ * Working Group Dossier Layout Route
  *
- * Component Library Decision:
- * - Checked: Aceternity UI > Aceternity Pro > Kibo-UI
- * - Selected: CollapsibleSection (already implemented), DossierDetailLayout (shared wrapper)
- * - Reason: Reusing shared components for consistency, type-specific layout via gridClassName
- *
- * Responsive Strategy:
- * - Base: Single column (grid-cols-1)
- * - md: 2-column grid (md:grid-cols-2)
- * - lg: 3-column bento grid (lg:grid-cols-3) for collaboration visualization
- *
- * RTL Support:
- * - Logical properties: Container uses ps-*, pe-*, text-start
- * - Icon flipping: None needed (no directional icons)
- * - Text alignment: text-start for all text content
- *
- * Accessibility:
- * - ARIA: Page title as h1, proper semantic structure
- * - Keyboard: Collapsible sections support keyboard navigation
- * - Focus: Focus management in CollapsibleSection component
- *
- * Performance:
- * - Lazy loading: Component will be code-split via React.lazy in polish phase
- * - Memoization: Type guard validation memoized via TanStack Query
- *
- * @example
- * <Route path="/dossiers/working-groups/:id" />
+ * Renders DossierShell with Outlet for nested tab routes.
+ * Working Group has no extra tabs (shared tabs only per D-03).
  */
 
-import { createFileRoute } from '@tanstack/react-router'
-import { lazy, Suspense } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Loader2, AlertCircle } from 'lucide-react'
-import { useTypedDossier } from '@/hooks/useDossier'
-import { Button } from '@/components/ui/button'
-import { Link } from '@tanstack/react-router'
-
-const WorkingGroupDossierPage = lazy(() =>
-  import('@/pages/dossiers/WorkingGroupDossierPage').then((m) => ({
-    default: m.WorkingGroupDossierPage,
-  })),
-)
+import { createFileRoute, Outlet } from '@tanstack/react-router'
+import type { ReactElement } from 'react'
+import { DossierShell } from '@/components/dossier/DossierShell'
 
 export const Route = createFileRoute('/_protected/dossiers/working_groups/$id')({
-  component: WorkingGroupDossierDetailRoute,
+  component: WorkingGroupDossierLayout,
 })
 
-function WorkingGroupDossierDetailRoute() {
+function WorkingGroupDossierLayout(): ReactElement {
   const { id } = Route.useParams()
-  const { t } = useTranslation('dossier')
-  // Fetch working group dossier with type validation
-  const { data: dossier, isLoading, error } = useTypedDossier(id, 'working_group')
-
-  // Loading State
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin text-primary" />
-          <p className="text-sm sm:text-base text-muted-foreground">{t('detail.loading')}</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Error State
-  if (error || !dossier) {
-    return (
-      <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
-      >
-        <div className="max-w-2xl mx-auto">
-          <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-6 sm:p-8">
-            <div className="flex items-start gap-4">
-              <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-destructive shrink-0 mt-1" />
-              <div className="flex-1">
-                <h2 className="text-lg sm:text-xl font-semibold text-destructive mb-2">
-                  {t('detail.error')}
-                </h2>
-                <p className="text-sm sm:text-base text-destructive/90 mb-4">
-                  {error?.message || t('detail.errorGeneric')}
-                </p>
-                <Button asChild variant="outline" className="min-h-11">
-                  <Link to="/dossiers">{t('action.backToHub')}</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Type Mismatch Error
-  if (dossier.type !== 'working_group') {
-    return (
-      <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
-      >
-        <div className="max-w-2xl mx-auto">
-          <div className="rounded-lg border border-warning/20 bg-warning/10 p-6 sm:p-8">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">{t('detail.wrongType')}</h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4">
-              {t('detail.wrongTypeDescription', {
-                actualType: t(`type.${dossier.type}` as any),
-                expectedType: t('type.working_group' as any),
-              })}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button asChild className="min-h-11">
-                <Link to={`/dossiers/${dossier.type}s/${id}`}>
-                  {t('action.viewCorrectType', { type: t(`type.${dossier.type}` as any) })}
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="min-h-11">
-                <Link to="/dossiers">{t('action.backToHub')}</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Success - Render Working Group Dossier Page
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      }
-    >
-      <WorkingGroupDossierPage dossier={dossier} />
-    </Suspense>
+    <DossierShell dossierId={id} dossierType="working_group">
+      <Outlet />
+    </DossierShell>
   )
 }
