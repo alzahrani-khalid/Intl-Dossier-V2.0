@@ -4,32 +4,35 @@
  *
  * Features:
  * - 6 stages with completed/current/upcoming visual states
- * - Click any stage to transition (adjacent = immediate, non-adjacent = note prompt)
- * - Tooltips on completed stages showing entry date
+ * - Popover summaries on completed stages (who transitioned, when, note, time in stage)
+ * - Click upcoming stages to transition (adjacent = immediate, non-adjacent = note prompt)
+ * - "Revert to this stage" button inside completed stage popovers
  * - "Next" suggestion chip below current stage
  * - LtrIsolate wrapper for consistent LTR rendering in both LTR/RTL
  * - Mobile horizontal scroll with snap, desktop flex fill
  * - Full keyboard and screen reader accessibility
  */
 
-import { type ReactElement, useCallback, useEffect, useRef, useState } from 'react'
+import { type ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cva } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import type { LifecycleStage, LifecycleTransition } from '@/types/lifecycle.types'
 import { LIFECYCLE_STAGES } from '@/types/lifecycle.types'
+import { useLifecycleHistory, useLifecycleTransition } from '@/domains/engagements/hooks/useLifecycle'
 
 // ============================================================================
 // Props
 // ============================================================================
 
 export interface LifecycleStepperBarProps {
+  engagementId: string
   currentStage: LifecycleStage
-  transitions: LifecycleTransition[]
-  onTransition: (toStage: LifecycleStage, note?: string) => void
+  onTransition?: (stage: LifecycleStage) => void
+  compact?: boolean
   disabled?: boolean
 }
 
@@ -42,9 +45,11 @@ const stageButtonVariants = cva(
   {
     variants: {
       state: {
-        completed: 'bg-primary/15 border border-primary-300 text-primary-700 cursor-pointer hover:bg-primary/25',
+        completed:
+          'bg-primary/15 border border-primary-300 text-primary-700 cursor-pointer hover:bg-primary/25',
         current: 'bg-primary/15 border-2 border-primary text-primary-600 cursor-default',
-        upcoming: 'bg-base-100 border border-base-200 text-base-400 cursor-pointer hover:bg-base-200/50',
+        upcoming:
+          'bg-base-100 border border-base-200 text-base-400 cursor-pointer hover:bg-base-200/50',
       },
       disabled: {
         true: 'opacity-50 pointer-events-none cursor-not-allowed',
@@ -83,6 +88,20 @@ function formatEntryDate(dateStr: string): string {
   })
 }
 
+function formatDuration(seconds: number): string {
+  const days = Math.floor(seconds / 86400)
+  const hours = Math.floor((seconds % 86400) / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+
+  if (days > 0) {
+    return hours > 0 ? `${String(days)}d ${String(hours)}h` : `${String(days)}d`
+  }
+  if (hours > 0) {
+    return minutes > 0 ? `${String(hours)}h ${String(minutes)}m` : `${String(hours)}h`
+  }
+  return `${String(minutes)}m`
+}
+
 function getStageState(
   stageIndex: number,
   currentIndex: number,
@@ -97,17 +116,41 @@ function getStageState(
 // ============================================================================
 
 export function LifecycleStepperBar({
+  engagementId,
   currentStage,
-  transitions,
   onTransition,
+  compact = false,
   disabled = false,
 }: LifecycleStepperBarProps): ReactElement {
   const { t } = useTranslation('lifecycle')
   const [pendingStage, setPendingStage] = useState<LifecycleStage | null>(null)
   const [noteValue, setNoteValue] = useState('')
+  const [isRevert, setIsRevert] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const currentIndex = LIFECYCLE_STAGES.indexOf(currentStage)
+
+  // Fetch lifecycle history for popover data
+  const { data: historyData } = useLifecycleHistory(engagementId)
+
+  // Transition mutation
+  const transitionMutation = useLifecycleTransition(engagementId)
+
+  // Build lookup map: stage -> most recent transition TO that stage
+  const transitionMap = useMemo((): Map<LifecycleStage, LifecycleTransition> => {
+    const map = new Map<LifecycleStage, LifecycleTransition>()
+    if (historyData == null) return map
+    for (const tr of historyData) {
+      const existing = map.get(tr.to_stage)
+      if (
+        existing == null ||
+        new Date(tr.transitioned_at) > new Date(existing.transitioned_at)
+      ) {
+        map.set(tr.to_stage, tr)
+      }
+    }
+    return map
+  }, [historyData])
 
   // Auto-focus textarea when note prompt opens
   useEffect(() => {
@@ -117,53 +160,75 @@ export function LifecycleStepperBar({
   }, [pendingStage])
 
   // Escape key cancels note prompt
-  const handleNoteKeyDown = useCallback(
-    (e: React.KeyboardEvent): void => {
-      if (e.key === 'Escape') {
-        setPendingStage(null)
-        setNoteValue('')
-      }
-    },
-    [],
-  )
+  const handleNoteKeyDown = useCallback((e: React.KeyboardEvent): void => {
+    if (e.key === 'Escape') {
+      setPendingStage(null)
+      setNoteValue('')
+      setIsRevert(false)
+    }
+  }, [])
 
   const handleStageClick = useCallback(
     (stage: LifecycleStage, stageIndex: number): void => {
       if (disabled) return
       if (stageIndex === currentIndex) return
+      // Completed stages use popover — click is handled by popover trigger
+      if (stageIndex < currentIndex) return
 
       const diff = Math.abs(stageIndex - currentIndex)
       if (diff === 1) {
-        // Adjacent transition — immediate
-        onTransition(stage)
+        // Adjacent transition -- immediate
+        transitionMutation.mutate(
+          { to_stage: stage },
+          {
+            onSuccess: () => {
+              onTransition?.(stage)
+            },
+          },
+        )
       } else {
-        // Non-adjacent — show note prompt
+        // Non-adjacent -- show note prompt
         setPendingStage(stage)
         setNoteValue('')
+        setIsRevert(false)
       }
     },
-    [currentIndex, disabled, onTransition],
+    [currentIndex, disabled, onTransition, transitionMutation],
+  )
+
+  const handleRevertClick = useCallback(
+    (stage: LifecycleStage): void => {
+      if (disabled) return
+      setPendingStage(stage)
+      setNoteValue('')
+      setIsRevert(true)
+    },
+    [disabled],
   )
 
   const handleConfirmTransition = useCallback((): void => {
     if (pendingStage === null) return
-    onTransition(pendingStage, noteValue.trim() !== '' ? noteValue.trim() : undefined)
-    setPendingStage(null)
-    setNoteValue('')
-  }, [pendingStage, noteValue, onTransition])
+    transitionMutation.mutate(
+      {
+        to_stage: pendingStage,
+        note: noteValue.trim() !== '' ? noteValue.trim() : undefined,
+      },
+      {
+        onSuccess: () => {
+          onTransition?.(pendingStage)
+          setPendingStage(null)
+          setNoteValue('')
+          setIsRevert(false)
+        },
+      },
+    )
+  }, [pendingStage, noteValue, onTransition, transitionMutation])
 
   const handleCancelTransition = useCallback((): void => {
     setPendingStage(null)
     setNoteValue('')
+    setIsRevert(false)
   }, [])
-
-  // Find the transition entry for a completed stage (to get entry date)
-  const getTransitionForStage = useCallback(
-    (stage: LifecycleStage): LifecycleTransition | undefined => {
-      return transitions.find((tr) => tr.to_stage === stage)
-    },
-    [transitions],
-  )
 
   // Next stage for suggestion chip
   const nextStage: LifecycleStage | null =
@@ -184,7 +249,7 @@ export function LifecycleStepperBar({
             const state = getStageState(index, currentIndex)
             const isCompleted = state === 'completed'
             const isCurrent = state === 'current'
-            const transition = isCompleted ? getTransitionForStage(stage) : undefined
+            const transition = transitionMap.get(stage)
 
             const stageButton = (
               <button
@@ -199,7 +264,7 @@ export function LifecycleStepperBar({
                 onClick={(): void => handleStageClick(stage, index)}
               >
                 <span className="truncate text-center">
-                  {t(`stages.${stage}`)}
+                  {compact ? t(`stages.${stage}`).slice(0, 3) : t(`stages.${stage}`)}
                 </span>
               </button>
             )
@@ -216,18 +281,51 @@ export function LifecycleStepperBar({
                   />
                 )}
 
-                {/* Stage button with optional tooltip for completed stages */}
+                {/* Completed stages: Popover with transition summary */}
                 {isCompleted && transition != null ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      {stageButton}
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {t('stepper.entered', {
-                        date: formatEntryDate(transition.transitioned_at),
-                      })}
-                    </TooltipContent>
-                  </Tooltip>
+                  <Popover>
+                    <PopoverTrigger asChild>{stageButton}</PopoverTrigger>
+                    <PopoverContent className="w-64 p-3">
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold">
+                          {t(`stages.${stage}`)}
+                        </p>
+                        {transition.user_name != null &&
+                          transition.user_name !== '' && (
+                            <p className="text-sm text-muted-foreground">
+                              {t('stepper.transitionedBy', {
+                                name: transition.user_name,
+                              })}
+                            </p>
+                          )}
+                        <p className="text-sm text-muted-foreground">
+                          {formatEntryDate(transition.transitioned_at)}
+                        </p>
+                        {transition.note != null && transition.note !== '' && (
+                          <p className="text-sm italic">{transition.note}</p>
+                        )}
+                        {transition.duration_in_stage_seconds != null &&
+                          transition.duration_in_stage_seconds > 0 && (
+                            <p className="text-sm text-muted-foreground">
+                              {t('stepper.timeInStage', {
+                                duration: formatDuration(
+                                  transition.duration_in_stage_seconds,
+                                ),
+                              })}
+                            </p>
+                          )}
+                        {/* Revert button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full min-h-11 mt-1 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={(): void => handleRevertClick(stage)}
+                        >
+                          {t('stepper.revertToStage')}
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 ) : (
                   stageButton
                 )}
@@ -250,7 +348,7 @@ export function LifecycleStepperBar({
         </div>
       )}
 
-      {/* Inline note prompt for non-adjacent transitions */}
+      {/* Inline note prompt for non-adjacent / backward transitions */}
       {pendingStage !== null && (
         <div
           className={cn(
@@ -259,11 +357,21 @@ export function LifecycleStepperBar({
           )}
           onKeyDown={handleNoteKeyDown}
         >
+          {isRevert && (
+            <p className="text-sm text-destructive font-medium">
+              {t('stepper.backwardWarning')}
+            </p>
+          )}
+          <label className="sr-only" htmlFor="lifecycle-transition-note">
+            {t('stepper.transitionNote')}
+          </label>
           <textarea
+            id="lifecycle-transition-note"
             ref={textareaRef}
             value={noteValue}
             onChange={(e): void => setNoteValue(e.target.value)}
             placeholder={t('transition.notePlaceholder')}
+            aria-label={t('stepper.transitionNote')}
             className="w-full min-h-[60px] rounded-md border border-base-200 bg-background px-3 py-2 text-sm placeholder:text-base-400 focus:outline-none focus:ring-2 focus:ring-ring resize-y"
           />
           <div className="flex items-center gap-2 justify-end">
@@ -276,12 +384,16 @@ export function LifecycleStepperBar({
               {t('transition.cancel')}
             </Button>
             <Button
-              variant="default"
+              variant={isRevert ? 'destructive' : 'default'}
               size="sm"
               className="min-h-11"
+              disabled={transitionMutation.isPending}
               onClick={handleConfirmTransition}
             >
-              {t('transition.confirm')}
+              {transitionMutation.isPending && (
+                <span className="me-2 inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              )}
+              {t('stepper.confirmTransition')}
             </Button>
           </div>
         </div>

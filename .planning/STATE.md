@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
 status: executing
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-03-31T05:31:12.275Z"
+stopped_at: Completed Wave 1 (11-01, 11-02)
+last_updated: "2026-03-31T05:35:00.000Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 14
+  completed_plans: 15
   percent: 0
 ---
 
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 10 P03 | 8min | 2 tasks | 5 files |
 | Phase 10 P04 | 6min | 1 tasks | 22 files |
 | Phase 11 P01 | 8min | 2 tasks | 20 files |
+| Phase 11 P02 | 3min | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,7 @@ Recent decisions affecting current work:
 - [Phase 10]: Attention zone realtime uses 1s debounce on tasks+lifecycle_transitions tables
 - [Phase 10]: Legacy project-management route redirects to /dashboard instead of being deleted
 - [Phase 11]: LifecycleStepperBar transitions array passed empty in WorkspaceShell -- wired in Plan 02
+- [Phase 11]: Completed stages use Popover (not Tooltip) for rich transition summaries with revert action
 
 ### Pending Todos
 
@@ -102,6 +104,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31T05:31:12.272Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-03-31T05:35:00.000Z
+Stopped at: Completed Wave 1 (11-01, 11-02)
 Resume file: None

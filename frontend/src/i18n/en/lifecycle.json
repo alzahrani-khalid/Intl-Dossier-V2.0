@@ -10,7 +10,13 @@
   "stepper": {
     "ariaLabel": "Lifecycle stages",
     "entered": "Entered: {{date}}",
-    "nextSuggestion": "Next: {{stage}}"
+    "nextSuggestion": "Next: {{stage}}",
+    "transitionedBy": "Transitioned by {{name}}",
+    "timeInStage": "Time in stage: {{duration}}",
+    "revertToStage": "Revert to this stage",
+    "transitionNote": "Add a note (optional)",
+    "confirmTransition": "Confirm",
+    "backwardWarning": "This will revert the engagement to a previous stage. Any progress in later stages may need to be repeated."
   },
   "transition": {
     "notePlaceholder": "Optional note for this transition...",
