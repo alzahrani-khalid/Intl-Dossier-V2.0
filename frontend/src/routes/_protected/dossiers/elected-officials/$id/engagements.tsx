@@ -1,0 +1,28 @@
+/**
+ * Elected Official Engagements Tab
+ * Shared tab stub -- renders engagements linked to this dossier.
+ */
+
+import type { ReactElement } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import { Skeleton } from '@/components/ui/skeleton'
+
+export const Route = createFileRoute(
+  '/_protected/dossiers/elected-officials/$id/engagements',
+)({
+  component: ElectedOfficialEngagementsTab,
+})
+
+function ElectedOfficialEngagementsTab(): ReactElement {
+  const { t } = useTranslation('dossier-shell')
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">{t('tabs.engagements')}</h2>
+      <p className="text-sm text-muted-foreground">
+        Engagements linked to this elected official will appear here.
+      </p>
+    </div>
+  )
+}
