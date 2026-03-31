@@ -50,16 +50,16 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 
 ### Enriched Dossier Pages
 
-- [ ] **DOSS-01**: All 8 dossier types share a consistent detail page structure: header bar, tab bar, and collapsible RelationshipSidebar
-- [ ] **DOSS-02**: RelationshipSidebar shows linked dossiers grouped by tier with quick-add, relationship type labels, and click-to-navigate
+- [x] **DOSS-01**: All 8 dossier types share a consistent detail page structure: header bar, tab bar, and collapsible RelationshipSidebar
+- [x] **DOSS-02**: RelationshipSidebar shows linked dossiers grouped by tier with quick-add, relationship type labels, and click-to-navigate
 - [ ] **DOSS-03**: Country detail pages show bilateral relationship summary, key contacts at a glance, and engagements grouped by lifecycle stage
 - [ ] **DOSS-04**: Organization detail pages show membership structure, key representatives, and MoU/agreements tracker
 - [ ] **DOSS-05**: Topic detail pages show cross-cutting view (connected anchors and activities) and position tracker (our stance vs counterpart stances)
 - [ ] **DOSS-06**: Working Group detail pages show member list with roles, meeting schedule, and deliverables tracker
 - [ ] **DOSS-07**: Person detail pages show engagement history chronologically with organization affiliation
 - [ ] **DOSS-08**: Elected Officials implemented as full domain — list page, detail page with term/office metadata and committee memberships
-- [ ] **DOSS-09**: RelationshipSidebar is hidden on mobile, replaced by sheet/drawer pattern
-- [ ] **DOSS-10**: Dossier detail tabs include Engagements, Docs, Tasks, Timeline, and Audit with consistent behavior across types
+- [x] **DOSS-09**: RelationshipSidebar is hidden on mobile, replaced by sheet/drawer pattern
+- [x] **DOSS-10**: Dossier detail tabs include Engagements, Docs, Tasks, Timeline, and Audit with consistent behavior across types
 
 ### Feature Absorption
 
@@ -131,16 +131,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WORK-08     | Phase 11 | Pending |
 | WORK-09     | Phase 11 | Pending |
 | WORK-10     | Phase 11 | Complete |
-| DOSS-01     | Phase 12 | Pending |
-| DOSS-02     | Phase 12 | Pending |
+| DOSS-01     | Phase 12 | Complete |
+| DOSS-02     | Phase 12 | Complete |
 | DOSS-03     | Phase 12 | Pending |
 | DOSS-04     | Phase 12 | Pending |
 | DOSS-05     | Phase 12 | Pending |
 | DOSS-06     | Phase 12 | Pending |
 | DOSS-07     | Phase 12 | Pending |
 | DOSS-08     | Phase 12 | Pending |
-| DOSS-09     | Phase 12 | Pending |
-| DOSS-10     | Phase 12 | Pending |
+| DOSS-09     | Phase 12 | Complete |
+| DOSS-10     | Phase 12 | Complete |
 | ABSORB-01   | Phase 13 | Pending |
 | ABSORB-02   | Phase 13 | Pending |
 | ABSORB-03   | Phase 13 | Pending |
