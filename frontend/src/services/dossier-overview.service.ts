@@ -744,8 +744,8 @@ async function fetchCalendarEvents(
 
   const allEvents: DossierCalendarEvent[] = ((events || []) as CalendarEventRow[]).map((e) => ({
     id: e.id,
-    title_en: e.title_en || '',
-    title_ar: e.title_ar || null,
+    title_en: e.title_en || e.title_ar || '',
+    title_ar: e.title_ar || e.title_en || null,
     event_type: (e.event_type || 'meeting') as DossierCalendarEvent['event_type'],
     start_datetime: e.start_datetime,
     end_datetime: e.end_datetime,
