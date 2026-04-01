@@ -178,10 +178,16 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
 }: EntityComparisonSelectorProps) {
   const { t } = useTranslation('entity-comparison')
   const { isRTL } = useDirection()
-// Fetch entities when type is selected
-  const { data: entitiesData, isLoading } = useDossiersByType(selectedType || 'country', 1, 50, {
-    enabled: !!selectedType,
-  })
+  // Fetch entities when type is selected
+  const { data: entitiesData, isLoading } = useDossiersByType(
+    selectedType || 'country',
+    1,
+    50,
+    undefined,
+    {
+      enabled: !!selectedType,
+    },
+  )
 
   const entities = entitiesData?.data || []
 

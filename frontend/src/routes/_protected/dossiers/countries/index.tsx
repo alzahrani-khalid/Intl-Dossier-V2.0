@@ -20,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/dossiers/countries/')({
@@ -31,27 +31,31 @@ function CountriesListPage() {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [page, setPage] = useState(1)
   const pageSize = 20
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
 
-  // Fetch country dossiers
-  const { data, isLoading, error } = useDossiersByType('country', page, pageSize)
+  // Debounce search input (300ms) to avoid excessive API calls
+  useEffect(() => {
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(searchQuery)
+      setPage(1)
+    }, 300)
+    return (): void => {
+      if (debounceRef.current != null) clearTimeout(debounceRef.current)
+    }
+  }, [searchQuery])
 
-  // Memo: prevents re-filtering entire list on every render; only recomputes when data or search changes
-  const filteredDossiers = useMemo(
-    () =>
-      data?.data.filter((dossier) => {
-        if (!searchQuery) return true
-        const searchLower = searchQuery.toLowerCase()
-        return (
-          dossier.name_en.toLowerCase().includes(searchLower) ||
-          dossier.name_ar?.toLowerCase().includes(searchLower) ||
-          dossier.description_en?.toLowerCase().includes(searchLower) ||
-          dossier.description_ar?.toLowerCase().includes(searchLower)
-        )
-      }),
-    [data?.data, searchQuery],
+  // Fetch country dossiers with server-side search
+  const { data, isLoading, error } = useDossiersByType(
+    'country',
+    page,
+    pageSize,
+    debouncedSearch || undefined,
   )
+
+  const filteredDossiers = data?.data
 
   // Memo: stable reference for pagination button onClick props
   const handlePrevPage = useCallback(() => setPage((p) => Math.max(1, p - 1)), [])

@@ -181,11 +181,12 @@ export function useDossiersByType(
   type: DossierType,
   page?: number,
   page_size?: number,
+  search?: string,
   options?: Omit<UseQueryOptions<DossiersListResponse, DossierAPIError>, 'queryKey' | 'queryFn'>,
 ) {
   return useQuery({
-    queryKey: dossierKeys.byType(type, page, page_size),
-    queryFn: () => getDossiersByType(type, page, page_size),
+    queryKey: [...dossierKeys.byType(type, page, page_size), search],
+    queryFn: () => getDossiersByType(type, page, page_size, search),
     ...options,
   })
 }

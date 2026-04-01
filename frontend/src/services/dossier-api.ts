@@ -531,8 +531,9 @@ export async function getDossiersByType(
   type: DossierType,
   page?: number,
   page_size?: number,
+  search?: string,
 ): Promise<DossiersListResponse> {
-  return listDossiers({ type, page, page_size })
+  return listDossiers({ type, page, page_size, search })
 }
 
 /**
