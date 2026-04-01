@@ -71,10 +71,10 @@ export const COMMITMENTS_COLUMNS = {
 // =============================================================================
 export const CALENDAR_EVENTS_COLUMNS = {
   /** List view columns */
-  LIST: 'id, title_en, title_ar, title, event_type, start_datetime, end_datetime, is_all_day, location_en, location_ar, location, is_virtual, meeting_link, description_en, description_ar, description, dossier_id, created_at',
+  LIST: 'id, title_en, title_ar, event_type, start_datetime, end_datetime, location_en, location_ar, is_virtual, virtual_link, description_en, description_ar, dossier_id, created_at',
   /** Detail view */
   DETAIL:
-    'id, title_en, title_ar, title, event_type, start_datetime, end_datetime, is_all_day, location_en, location_ar, location, is_virtual, meeting_link, description_en, description_ar, description, dossier_id, created_at, updated_at',
+    'id, title_en, title_ar, event_type, start_datetime, end_datetime, location_en, location_ar, is_virtual, virtual_link, description_en, description_ar, dossier_id, created_at, updated_at',
 } as const
 
 // =============================================================================

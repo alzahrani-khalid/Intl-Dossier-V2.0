@@ -205,19 +205,15 @@ interface IntakeTicketRow {
 interface CalendarEventRow {
   id: string
   title_en?: string
-  title?: string
   title_ar?: string
   event_type: string | null
   start_datetime: string
   end_datetime: string | null
-  is_all_day: boolean | null
   location_en?: string
-  location?: string
   location_ar?: string
   is_virtual: boolean | null
-  meeting_link: string | null
+  virtual_link: string | null
   description_en?: string
-  description?: string
   description_ar?: string
   created_at: string
 }
@@ -748,17 +744,17 @@ async function fetchCalendarEvents(
 
   const allEvents: DossierCalendarEvent[] = ((events || []) as CalendarEventRow[]).map((e) => ({
     id: e.id,
-    title_en: e.title_en || e.title || '',
+    title_en: e.title_en || '',
     title_ar: e.title_ar || null,
     event_type: (e.event_type || 'meeting') as DossierCalendarEvent['event_type'],
     start_datetime: e.start_datetime,
     end_datetime: e.end_datetime,
-    is_all_day: e.is_all_day || false,
-    location_en: e.location_en || e.location || null,
+    is_all_day: false,
+    location_en: e.location_en || null,
     location_ar: e.location_ar || null,
     is_virtual: e.is_virtual || false,
-    meeting_link: e.meeting_link,
-    description_en: e.description_en || e.description || null,
+    meeting_link: e.virtual_link,
+    description_en: e.description_en || null,
     description_ar: e.description_ar || null,
     created_at: e.created_at,
   }))

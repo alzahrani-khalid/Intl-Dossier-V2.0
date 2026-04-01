@@ -48,6 +48,10 @@ export class UnifiedActivityAPIError extends Error {
  * Helper function to get auth headers
  */
 async function getAuthHeaders(): Promise<Record<string, string>> {
+  // getUser() validates and refreshes the token if expired, ensuring
+  // edge functions that call getUser() server-side won't reject stale tokens
+  await supabase.auth.getUser()
+
   const {
     data: { session },
   } = await supabase.auth.getSession()
