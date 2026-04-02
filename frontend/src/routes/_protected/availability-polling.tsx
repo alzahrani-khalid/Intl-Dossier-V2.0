@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { AvailabilityPollingPage } from '@/pages/availability-polling'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/availability-polling')({
-  component: AvailabilityPollingPage,
+  beforeLoad: () => {
+    throw redirect({ to: '/dashboard' })
+  },
 })

@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import ExportDialog from '@/components/export/ExportDialog'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/export')({
-  component: ExportDialog,
+  beforeLoad: () => {
+    throw redirect({ to: '/dossiers' })
+  },
 })
