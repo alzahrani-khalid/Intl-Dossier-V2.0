@@ -22,7 +22,23 @@
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar",
     "removeConfirmTitle": "Remove link to {{name}}?",
-    "removeConfirmBody": "This will remove the relationship between these dossiers. This action cannot be undone."
+    "removeConfirmBody": "This will remove the relationship between these dossiers. This action cannot be undone.",
+    "relationshipMap": "Relationship Map",
+    "expandGraph": "Expand Graph"
+  },
+  "graph": {
+    "fullScreen": "Relationship Network",
+    "empty": "No relationships linked yet. Add connections in the sidebar.",
+    "loading": "Loading relationship map...",
+    "close": "Close",
+    "degree": "degree",
+    "degrees": "degrees",
+    "allTypes": "All Types",
+    "memberOf": "Member Of",
+    "partner": "Partner",
+    "hostedBy": "Hosted By",
+    "nodes": "entities",
+    "edges": "relationships"
   },
   "empty": {
     "overview": {
