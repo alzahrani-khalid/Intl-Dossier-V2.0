@@ -15,7 +15,7 @@
  * RTL-compatible, logical properties only.
  */
 
-import { type ReactElement, useCallback, useMemo, useState } from 'react'
+import { type ReactElement, lazy, Suspense, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { useDirection } from '@/hooks/useDirection'
@@ -23,6 +23,9 @@ import { useRelationshipsForDossier } from '@/domains/relationships/hooks/useRel
 import { useDeleteRelationship } from '@/domains/relationships/hooks/useRelationships'
 import { DossierSelector, type SelectedDossier } from '@/components/dossier/DossierSelector'
 import { useCreateRelationship } from '@/domains/relationships/hooks/useRelationships'
+import { useDossier } from '@/domains/dossiers/hooks/useDossier'
+import { MiniRelationshipGraph } from './MiniRelationshipGraph'
+import type { Dossier } from '@/lib/dossier-type-guards'
 import {
   BottomSheet,
   BottomSheetContent,
@@ -42,6 +45,7 @@ import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { cn } from '@/lib/utils'
 import {
   ChevronDown,
+  Expand,
   Flag,
   Building2,
   Globe,
@@ -57,6 +61,9 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
+
+// Lazy-load FullScreenGraphModal to maintain 200KB bundle budget
+const FullScreenGraphModal = lazy(() => import('../graph/FullScreenGraphModal'))
 
 // ============================================================================
 // Constants
@@ -152,11 +159,15 @@ export function RelationshipSidebar({
 
   // Data fetching
   const { data: relationshipsData, isLoading } = useRelationshipsForDossier(dossierId)
+  const { data: dossier } = useDossier(dossierId)
   const createRelationship = useCreateRelationship()
   const deleteRelationship = useDeleteRelationship()
 
   // Quick-add popover state
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false)
+
+  // Full-screen graph modal state
+  const [graphModalOpen, setGraphModalOpen] = useState(false)
 
   // Remove confirmation state
   const [removeTarget, setRemoveTarget] = useState<LinkedDossier | null>(null)
@@ -263,6 +274,32 @@ export function RelationshipSidebar({
           </PopoverContent>
         </Popover>
       </div>
+
+      {/* Mini relationship graph -- desktop only (not shown in mobile sheet) */}
+      {open && dossier != null && (
+        <div className="px-2 pb-2 border-b">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">
+            {t('sidebar.relationshipMap')}
+          </h3>
+          {/* useDossier returns DossierWithExtension; MiniRelationshipGraph expects Dossier
+              from dossier-type-guards. Both share the same structural shape. */}
+          <MiniRelationshipGraph
+            dossier={dossier as unknown as Dossier}
+            maxHeight="160px"
+            className="rounded-md border"
+            key={String(open)}
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full mt-2 min-h-11"
+            onClick={() => setGraphModalOpen(true)}
+          >
+            <Expand className="me-2 h-4 w-4" />
+            {t('sidebar.expandGraph')}
+          </Button>
+        </div>
+      )}
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-2 py-2">
@@ -512,6 +549,18 @@ export function RelationshipSidebar({
           </div>
         </AdaptiveDialogBody>
       </AdaptiveDialog>
+
+      {/* Full-screen graph modal -- lazy-loaded */}
+      {graphModalOpen && (
+        <Suspense fallback={null}>
+          <FullScreenGraphModal
+            open={graphModalOpen}
+            onOpenChange={setGraphModalOpen}
+            dossierId={dossierId}
+            dossierType={dossier?.type ?? 'country'}
+          />
+        </Suspense>
+      )}
     </>
   )
 }
