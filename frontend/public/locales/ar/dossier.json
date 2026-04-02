@@ -793,5 +793,32 @@
       "error": "فشل تحميل القسم",
       "empty": "لا توجد بيانات متاحة"
     }
+  },
+  "overview": {
+    "summary": "ملخص",
+    "noData": "لا توجد بيانات متاحة",
+    "analytics": "التحليلات",
+    "analyticsError": "تعذر تحميل التحليلات",
+    "stats": {
+      "linkedDossiers": "الملفات المرتبطة",
+      "openWorkItems": "عناصر العمل المفتوحة",
+      "upcomingEvents": "الأحداث القادمة",
+      "recentActivity": "النشاط الأخير"
+    }
+  },
+  "analytics": {
+    "engagementCount": "الارتباطات",
+    "activeTopics": "المواضيع النشطة",
+    "memberCountries": "الدول الأعضاء",
+    "openWorkItems": "عناصر العمل المفتوحة",
+    "sessionCount": "الجلسات",
+    "linkedDossiers": "الملفات المرتبطة",
+    "connectedAnchors": "الركائز المتصلة",
+    "memberCount": "الأعضاء",
+    "deliverableCount": "المخرجات",
+    "interactionCount": "التفاعلات",
+    "affiliationCount": "الانتماءات",
+    "committeeCount": "اللجان",
+    "recentActivity": "النشاط الأخير"
   }
 }

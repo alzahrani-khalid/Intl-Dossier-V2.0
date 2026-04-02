@@ -10,6 +10,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { SharedSummaryStatsCard } from './overview-cards/SharedSummaryStatsCard'
+import { DossierAnalyticsCard } from '@/components/analytics/DossierAnalyticsCard'
 import { ElectedOfficialOfficeCard } from './overview-cards/ElectedOfficialOfficeCard'
 import { ElectedOfficialCommitteesCard } from './overview-cards/ElectedOfficialCommitteesCard'
 import { SharedRecentActivityCard } from './overview-cards/SharedRecentActivityCard'
@@ -30,6 +31,7 @@ export function ElectedOfficialOverviewTab({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <SharedSummaryStatsCard dossierId={dossierId} />
+      <DossierAnalyticsCard dossierId={dossierId} dossierType="elected_official" />
       <ElectedOfficialOfficeCard dossierId={dossierId} />
       <ElectedOfficialCommitteesCard dossierId={dossierId} />
       <SharedRecentActivityCard dossierId={dossierId} />

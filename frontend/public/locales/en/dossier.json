@@ -791,5 +791,32 @@
       "error": "Failed to load section",
       "empty": "No data available"
     }
+  },
+  "overview": {
+    "summary": "Summary",
+    "noData": "No data available",
+    "analytics": "Analytics",
+    "analyticsError": "Unable to load analytics",
+    "stats": {
+      "linkedDossiers": "Linked Dossiers",
+      "openWorkItems": "Open Work Items",
+      "upcomingEvents": "Upcoming Events",
+      "recentActivity": "Recent Activity"
+    }
+  },
+  "analytics": {
+    "engagementCount": "Engagements",
+    "activeTopics": "Active Topics",
+    "memberCountries": "Member Countries",
+    "openWorkItems": "Open Work Items",
+    "sessionCount": "Sessions",
+    "linkedDossiers": "Linked Dossiers",
+    "connectedAnchors": "Connected Anchors",
+    "memberCount": "Members",
+    "deliverableCount": "Deliverables",
+    "interactionCount": "Interactions",
+    "affiliationCount": "Affiliations",
+    "committeeCount": "Committees",
+    "recentActivity": "Recent Activity"
   }
 }

@@ -11,6 +11,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { SharedSummaryStatsCard } from './overview-cards/SharedSummaryStatsCard'
+import { DossierAnalyticsCard } from '@/components/analytics/DossierAnalyticsCard'
 import { ForumMetadataCard } from './overview-cards/ForumMetadataCard'
 import { ForumSessionsCard } from './overview-cards/ForumSessionsCard'
 import { SharedRecentActivityCard } from './overview-cards/SharedRecentActivityCard'
@@ -29,6 +30,7 @@ export function ForumOverviewTab({ dossierId }: ForumOverviewTabProps): React.Re
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <SharedSummaryStatsCard dossierId={dossierId} />
+      <DossierAnalyticsCard dossierId={dossierId} dossierType="forum" />
       <ForumMetadataCard dossierId={dossierId} />
       <ForumSessionsCard dossierId={dossierId} />
       <SharedRecentActivityCard dossierId={dossierId} />

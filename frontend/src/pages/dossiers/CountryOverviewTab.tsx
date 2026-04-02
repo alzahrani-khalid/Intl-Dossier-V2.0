@@ -9,6 +9,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { SharedSummaryStatsCard } from './overview-cards/SharedSummaryStatsCard'
+import { DossierAnalyticsCard } from '@/components/analytics/DossierAnalyticsCard'
 import { BilateralSummaryCard } from './overview-cards/BilateralSummaryCard'
 import { KeyContactsCard } from './overview-cards/KeyContactsCard'
 import { EngagementsByStageCard } from './overview-cards/EngagementsByStageCard'
@@ -28,6 +29,7 @@ export function CountryOverviewTab({ dossierId }: CountryOverviewTabProps): Reac
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <SharedSummaryStatsCard dossierId={dossierId} />
+      <DossierAnalyticsCard dossierId={dossierId} dossierType="country" />
       <BilateralSummaryCard dossierId={dossierId} />
       <KeyContactsCard dossierId={dossierId} />
       <EngagementsByStageCard dossierId={dossierId} />

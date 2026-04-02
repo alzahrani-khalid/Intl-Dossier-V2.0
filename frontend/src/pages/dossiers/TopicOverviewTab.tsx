@@ -9,6 +9,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { SharedSummaryStatsCard } from './overview-cards/SharedSummaryStatsCard'
+import { DossierAnalyticsCard } from '@/components/analytics/DossierAnalyticsCard'
 import { ConnectedAnchorsCard } from './overview-cards/ConnectedAnchorsCard'
 import { PositionTrackerCard } from './overview-cards/PositionTrackerCard'
 import { SharedRecentActivityCard } from './overview-cards/SharedRecentActivityCard'
@@ -27,6 +28,7 @@ export function TopicOverviewTab({ dossierId }: TopicOverviewTabProps): React.Re
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <SharedSummaryStatsCard dossierId={dossierId} />
+      <DossierAnalyticsCard dossierId={dossierId} dossierType="topic" />
       <ConnectedAnchorsCard dossierId={dossierId} />
       <PositionTrackerCard dossierId={dossierId} />
       <SharedRecentActivityCard dossierId={dossierId} />

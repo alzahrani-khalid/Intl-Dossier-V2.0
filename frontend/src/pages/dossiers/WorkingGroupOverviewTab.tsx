@@ -10,6 +10,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { SharedSummaryStatsCard } from './overview-cards/SharedSummaryStatsCard'
+import { DossierAnalyticsCard } from '@/components/analytics/DossierAnalyticsCard'
 import { MemberListCard } from './overview-cards/MemberListCard'
 import { MeetingScheduleCard } from './overview-cards/MeetingScheduleCard'
 import { DeliverablesTrackerCard } from './overview-cards/DeliverablesTrackerCard'
@@ -31,6 +32,7 @@ export function WorkingGroupOverviewTab({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <SharedSummaryStatsCard dossierId={dossierId} />
+      <DossierAnalyticsCard dossierId={dossierId} dossierType="working_group" />
       <MemberListCard dossierId={dossierId} />
       <MeetingScheduleCard dossierId={dossierId} />
       <DeliverablesTrackerCard dossierId={dossierId} />

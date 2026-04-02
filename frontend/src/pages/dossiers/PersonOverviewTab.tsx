@@ -11,6 +11,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { SharedSummaryStatsCard } from './overview-cards/SharedSummaryStatsCard'
+import { DossierAnalyticsCard } from '@/components/analytics/DossierAnalyticsCard'
 import { PersonMetadataCard } from './overview-cards/PersonMetadataCard'
 import { EngagementHistoryCard } from './overview-cards/EngagementHistoryCard'
 import { SharedRecentActivityCard } from './overview-cards/SharedRecentActivityCard'
@@ -29,6 +30,7 @@ export function PersonOverviewTab({ dossierId }: PersonOverviewTabProps): React.
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <SharedSummaryStatsCard dossierId={dossierId} />
+      <DossierAnalyticsCard dossierId={dossierId} dossierType="person" />
       <PersonMetadataCard dossierId={dossierId} />
       <EngagementHistoryCard dossierId={dossierId} />
       <SharedRecentActivityCard dossierId={dossierId} />
