@@ -220,7 +220,9 @@
     "showActiveOnly": "Show only active dossiers (with relations)",
     "default": "Default",
     "withRelations": "with data",
-    "statusFilterHint": "Select one or more statuses. Active filter shows only dossiers with relations by default."
+    "statusFilterHint": "Select one or more statuses. Active filter shows only dossiers with relations by default.",
+    "exportDossiers": "Export Dossiers",
+    "importDossiers": "Import Dossiers"
   },
   "stats": {
     "ofTotal": "of Total",

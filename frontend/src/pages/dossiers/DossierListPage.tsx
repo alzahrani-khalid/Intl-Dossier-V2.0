@@ -59,6 +59,8 @@ import {
   Check,
   AlertCircle,
   RotateCcw,
+  Download,
+  Upload,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { DossierType, DossierStatus, DossierFilters } from '@/services/dossier-api'
@@ -66,6 +68,8 @@ import { getDossierDetailPath } from '@/lib/dossier-routes'
 import type { ViewConfig, DossierViewConfig } from '@/types/view-preferences.types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useDirection } from '@/hooks/useDirection'
+import { ExportDialog } from '@/components/export-import/ExportDialog'
+import { ImportDialog } from '@/components/export-import/ImportDialog'
 
 const DOSSIER_TYPES: DossierType[] = [
   'country',
@@ -184,6 +188,10 @@ const navigate = useNavigate()
 
   // Track status filter popover state
   const [statusFilterOpen, setStatusFilterOpen] = useState(false)
+
+  // Export/Import dialog states (ABSORB-06, D-16)
+  const [exportDialogOpen, setExportDialogOpen] = useState(false)
+  const [importDialogOpen, setImportDialogOpen] = useState(false)
 
   // Initialize filters from saved preferences
   useEffect(() => {
@@ -459,18 +467,42 @@ const navigate = useNavigate()
             {t('list.subtitle')}
           </p>
         </div>
-        <Link to="/dossiers/create">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          {/* Import Dossiers -- ABSORB-06, D-16 */}
           <Button
-            className={cn(
-              'w-full sm:w-auto',
-              'shadow-md hover:shadow-lg',
-              'transition-all duration-200',
-            )}
+            variant="ghost"
+            size="sm"
+            className="min-h-11 min-w-11 gap-2"
+            onClick={() => setImportDialogOpen(true)}
           >
-            <Plus className={cn('h-5 w-5', isRTL ? 'ms-2' : 'me-2')} />
-            {t('list.createNew')}
+            <Upload className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('list.importDossiers')}</span>
           </Button>
-        </Link>
+
+          {/* Export Dossiers -- ABSORB-06, D-16 */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="min-h-11 min-w-11 gap-2"
+            onClick={() => setExportDialogOpen(true)}
+          >
+            <Download className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('list.exportDossiers')}</span>
+          </Button>
+
+          <Link to="/dossiers/create">
+            <Button
+              className={cn(
+                'w-full sm:w-auto',
+                'shadow-md hover:shadow-lg',
+                'transition-all duration-200',
+              )}
+            >
+              <Plus className={cn('h-5 w-5', isRTL ? 'ms-2' : 'me-2')} />
+              {t('list.createNew')}
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Type Stats Header Cards */}
@@ -932,6 +964,26 @@ const navigate = useNavigate()
           </>
         )}
       </div>
+
+      {/* Export Dialog -- ABSORB-06 */}
+      <ExportDialog
+        open={exportDialogOpen}
+        onOpenChange={setExportDialogOpen}
+        entityType="dossier"
+        onExportComplete={() => setExportDialogOpen(false)}
+      />
+
+      {/* Import Dialog -- ABSORB-06 */}
+      <ImportDialog
+        open={importDialogOpen}
+        onOpenChange={setImportDialogOpen}
+        entityType="dossier"
+        onImportComplete={() => {
+          setImportDialogOpen(false)
+          void refetch()
+          void refetchCounts()
+        }}
+      />
     </div>
   )
 }

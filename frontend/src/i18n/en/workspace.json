@@ -16,6 +16,7 @@
     "transitionStage": "Advance Stage",
     "generateBriefing": "Generate Briefing",
     "addEvent": "Add Event",
+    "schedulePoll": "Schedule Poll",
     "linkDossier": "Link Dossier",
     "logAfterAction": "Log After-Action",
     "createTask": "Create Task"
