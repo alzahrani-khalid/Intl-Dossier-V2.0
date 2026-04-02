@@ -65,7 +65,7 @@ Requirements for hub-and-spoke architecture redesign. Each maps to roadmap phase
 
 - [ ] **ABSORB-01**: Analytics content absorbed into dashboard widgets and dossier overview cards — standalone analytics page removed
 - [ ] **ABSORB-02**: AI Briefings absorbed into workspace Docs tab "Generate" action — standalone briefing pages removed
-- [ ] **ABSORB-03**: Search enhanced into Cmd+K quick switcher with entity search, recent items, and command palette — advanced search page removed
+- [x] **ABSORB-03**: Search enhanced into Cmd+K quick switcher with entity search, recent items, and command palette — advanced search page removed
 - [ ] **ABSORB-04**: Network graph absorbed into RelationshipSidebar expandable visualization view — standalone network pages removed
 - [ ] **ABSORB-05**: Availability polling absorbed into Calendar tab "Schedule" action — standalone polling page removed
 - [ ] **ABSORB-06**: Export/Import absorbed into action buttons on list views — standalone export page removed
@@ -143,7 +143,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DOSS-10     | Phase 12 | Complete |
 | ABSORB-01   | Phase 13 | Pending |
 | ABSORB-02   | Phase 13 | Pending |
-| ABSORB-03   | Phase 13 | Pending |
+| ABSORB-03   | Phase 13 | Complete |
 | ABSORB-04   | Phase 13 | Pending |
 | ABSORB-05   | Phase 13 | Pending |
 | ABSORB-06   | Phase 13 | Pending |
