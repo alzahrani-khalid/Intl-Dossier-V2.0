@@ -5,7 +5,7 @@
  * Uses the engagement's own dates as primary content per research recommendation.
  */
 
-import { type ReactElement, useMemo } from 'react'
+import { type ReactElement, useMemo, useState } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useDirection } from '@/hooks/useDirection'
@@ -13,6 +13,8 @@ import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
 import { useLifecycleHistory } from '@/domains/engagements/hooks/useLifecycle'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
+import { AvailabilityPollCreator } from '@/components/availability-polling/AvailabilityPollCreator'
 import {
   CalendarDays,
   Plus,
@@ -37,6 +39,7 @@ export default function CalendarTab(): ReactElement {
   })
   const { t, i18n } = useTranslation('workspace')
   const { isRTL } = useDirection()
+  const [pollDialogOpen, setPollDialogOpen] = useState(false)
 
   const { data: engagement, isLoading } = useEngagement(engagementId)
   const { data: lifecycleHistory } = useLifecycleHistory(engagementId)
@@ -188,12 +191,39 @@ export default function CalendarTab(): ReactElement {
             {dateRange}
           </span>
         </div>
-        {/* TODO: Link to event creation when events API supports engagement_id filter */}
-        <Button variant="outline" size="sm" className="min-h-8 self-start sm:self-auto">
-          <Plus className="h-4 w-4" />
-          {t('actions.addEvent')}
-        </Button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          {/* Schedule Poll -- ABSORB-05, D-15 */}
+          <Button
+            variant="default"
+            size="sm"
+            className="min-h-11 min-w-11 gap-2"
+            onClick={() => setPollDialogOpen(true)}
+          >
+            <CalendarClock className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('actions.schedulePoll')}</span>
+          </Button>
+
+          {/* TODO: Link to event creation when events API supports engagement_id filter */}
+          <Button variant="outline" size="sm" className="min-h-8">
+            <Plus className="h-4 w-4" />
+            {t('actions.addEvent')}
+          </Button>
+        </div>
       </div>
+
+      {/* Schedule Poll Dialog */}
+      <AdaptiveDialog
+        open={pollDialogOpen}
+        onOpenChange={setPollDialogOpen}
+        title={t('actions.schedulePoll')}
+        snapPreset="large"
+      >
+        <AvailabilityPollCreator
+          dossierId={engagementId}
+          onSuccess={() => setPollDialogOpen(false)}
+          onCancel={() => setPollDialogOpen(false)}
+        />
+      </AdaptiveDialog>
 
       {/* Event sections by date group */}
       {categorized.today.length > 0 && (
