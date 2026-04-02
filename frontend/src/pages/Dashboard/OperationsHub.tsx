@@ -32,6 +32,7 @@ import { TimelineZone } from './components/TimelineZone'
 import { EngagementsZone } from './components/EngagementsZone'
 import { QuickStatsBar } from './components/QuickStatsBar'
 import { ActivityFeed } from './components/ActivityFeed'
+import { AnalyticsWidget } from './components/AnalyticsWidget'
 
 // ============================================================================
 // Layout Helpers
@@ -174,6 +175,13 @@ export function OperationsHub(): ReactElement {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 sm:px-6 lg:px-8 pb-8">
+        {/* Analytics KPI overview -- always first zone (Phase 13) */}
+        <div className="col-span-1 md:col-span-2">
+          <ZoneCollapsible title={t('zones.overview')} defaultExpanded={true}>
+            <AnalyticsWidget />
+          </ZoneCollapsible>
+        </div>
+
         {orderedZones.map((zoneKey, index) => {
           const colSpan = isMobile ? '' : getZoneColSpan(role, zoneKey, index)
 
