@@ -172,8 +172,18 @@ Plans:
 3. Cmd+K quick switcher searches across all entity types, recent items, and commands from any page
 4. Network graph visualization is accessible via expandable view in RelationshipSidebar — no standalone network page exists
 5. Standalone pages for analytics, briefings, network graph, search, polling, and export are removed; their functionality lives in contextual locations
-   **Plans**: TBD
-   **UI hint**: yes
+
+**Plans:** 5 plans
+
+Plans:
+
+- [ ] 13-01-PLAN.md — Analytics absorption: dashboard KPI widgets + dossier overview analytics cards (ABSORB-01)
+- [ ] 13-02-PLAN.md — Cmd+K quick switcher enhancement: empty state, grouped entity results, full-text search (ABSORB-03)
+- [ ] 13-03-PLAN.md — Network graph absorption: sidebar mini-graph + full-screen modal (ABSORB-04)
+- [ ] 13-04-PLAN.md — Briefing, polling, export absorption into workspace tabs + list views + Cmd+K commands (ABSORB-02, ABSORB-05, ABSORB-06)
+- [ ] 13-05-PLAN.md — Route redirects + navigation config cleanup + human verification (ABSORB-01 thru ABSORB-06)
+
+**UI hint**: yes
 
 ## Progress
 
@@ -194,5 +204,5 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 9. Lifecycle Engine                 | v3.0      | 0/5            | Planned     | -          |
 | 10. Operations Hub                  | v3.0      | 4/4            | Complete    | 2026-03-31 |
 | 11. Engagement Workspace            | v3.0      | 5/5            | Complete    | 2026-03-31 |
-| 12. Enriched Dossier Pages          | v3.0      | 5/5 | Complete   | 2026-03-31 |
-| 13. Feature Absorption              | v3.0      | 0/TBD          | Not started | -          |
+| 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete    | 2026-03-31 |
+| 13. Feature Absorption              | v3.0      | 0/5            | Planned     | -          |
