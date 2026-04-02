@@ -29,7 +29,7 @@
  * Feature: 028-type-specific-dossier-pages (Phase 2)
  */
 
-import { useState, Suspense } from 'react'
+import { useState, Suspense, lazy } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -52,6 +52,13 @@ import { FileText, Upload, ChevronDown, Network } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import type { OrganizationDossier } from '@/lib/dossier-type-guards'
+
+// Lazy load overview tab for code splitting
+const OrganizationOverviewTab = lazy(() =>
+  import('@/pages/dossiers/OrganizationOverviewTab').then((module) => ({
+    default: module.OrganizationOverviewTab,
+  })),
+)
 
 interface OrganizationDossierDetailProps {
   dossier: OrganizationDossier
@@ -152,7 +159,7 @@ export function OrganizationDossierDetail({ dossier, initialTab }: OrganizationD
 
         {/* Tab Panels - Responsive Padding */}
         <div className="p-4 sm:p-6">
-          {/* Overview Tab - Institutional Profile Only */}
+          {/* Overview Tab - Enrichment Cards + Institutional Profile */}
           {activeTab === 'overview' && (
             <div
               id="overview-panel"
@@ -160,6 +167,17 @@ export function OrganizationDossierDetail({ dossier, initialTab }: OrganizationD
               aria-labelledby="overview-tab"
               className="space-y-6"
             >
+              <Suspense
+                fallback={
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Skeleton key={i} className="h-48" />
+                    ))}
+                  </div>
+                }
+              >
+                <OrganizationOverviewTab dossierId={dossier.id} />
+              </Suspense>
               <InstitutionalProfile dossier={dossier} />
             </div>
           )}

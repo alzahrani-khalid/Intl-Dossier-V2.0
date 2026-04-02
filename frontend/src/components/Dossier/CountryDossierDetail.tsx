@@ -29,6 +29,13 @@ const IntelligenceTabContent = lazy(() =>
     default: module.IntelligenceTabContent,
   })),
 )
+
+// Lazy load overview tab for code splitting
+const CountryOverviewTab = lazy(() =>
+  import('@/pages/dossiers/CountryOverviewTab').then((module) => ({
+    default: module.CountryOverviewTab,
+  })),
+)
 import { CountryTimeline } from '@/components/timeline/CountryTimeline'
 import { DossierActivityTimeline } from '@/components/Dossier/DossierActivityTimeline'
 import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph'
@@ -56,6 +63,7 @@ interface CountryDossierDetailProps {
 }
 
 type CountryTabType =
+  | 'overview'
   | 'intelligence'
   | 'activity'
   | 'timeline'
@@ -73,13 +81,17 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
 
   // Active tab state
   const [activeTab, setActiveTab] = useState<CountryTabType>(
-    (initialTab as CountryTabType) || 'intelligence',
+    (initialTab as CountryTabType) || 'overview',
   )
 
   // Extension data is optional - dossier still works without it
 
   // Tab definitions for country dossier
   const tabs: Array<{ id: CountryTabType; label: string; disabled?: boolean }> = [
+    {
+      id: 'overview',
+      label: t('tabs.overview', 'Overview'),
+    },
     {
       id: 'intelligence',
       label: t('intelligence.title', 'Intelligence Reports'),
@@ -158,6 +170,23 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
 
         {/* Tab Panels - Responsive Padding */}
         <div className="p-4 sm:p-6">
+          {/* Overview Tab — enrichment cards grid */}
+          {activeTab === 'overview' && (
+            <div id="overview-panel" role="tabpanel" aria-labelledby="overview-tab">
+              <Suspense
+                fallback={
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Skeleton key={i} className="h-48" />
+                    ))}
+                  </div>
+                }
+              >
+                <CountryOverviewTab dossierId={dossier.id} />
+              </Suspense>
+            </div>
+          )}
+
           {/* Intelligence Tab (Feature 029 - Comprehensive Dashboard with Filtering) */}
           {activeTab === 'intelligence' && (
             <div id="intelligence-panel" role="tabpanel" aria-labelledby="intelligence-tab">

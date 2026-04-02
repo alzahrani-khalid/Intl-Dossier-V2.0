@@ -7,6 +7,7 @@
  * Mobile-first design with RTL support.
  */
 
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { useSessionStorage } from '@/hooks/useSessionStorage'
@@ -21,6 +22,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Target, FileText, Network, FolderTree, ExternalLink } from 'lucide-react'
 import type { DossierWithExtension, TopicExtension } from '@/services/dossier-api'
 import type { RelationshipWithDossiers, DossierReference } from '@/services/relationship-api'
+
+// Lazy load overview tab for code splitting
+const TopicOverviewTab = lazy(() =>
+  import('@/pages/dossiers/TopicOverviewTab').then((module) => ({
+    default: module.TopicOverviewTab,
+  })),
+)
 
 interface TopicDossierDetailProps {
   dossier: DossierWithExtension & { type: 'topic' }
@@ -463,6 +471,19 @@ export function TopicDossierDetail({ dossier }: TopicDossierDetailProps) {
 
   return (
     <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Overview Cards — enrichment grid */}
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-48" />
+            ))}
+          </div>
+        }
+      >
+        <TopicOverviewTab dossierId={dossier.id} />
+      </Suspense>
+
       {/* Policy Overview Section */}
       <CollapsibleSection
         id={`topic-${dossier.id}-policy`}
