@@ -195,4 +195,4 @@ Decimal phases (if inserted) execute between their surrounding integers.
 | 10. Operations Hub                  | v3.0      | 4/4            | Complete    | 2026-03-31 |
 | 11. Engagement Workspace            | v3.0      | 5/5            | Complete    | 2026-03-31 |
 | 12. Enriched Dossier Pages          | v3.0      | 5/5 | Complete   | 2026-03-31 |
-| 13. Feature Absorption              | v3.0      | 0/TBD          | Not started | -          |
+| 13. Feature Absorption              | v3.0      | 1/5 | In Progress|  |
