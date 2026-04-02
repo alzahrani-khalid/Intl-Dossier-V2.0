@@ -5,6 +5,7 @@ status: draft
 shadcn_initialized: true
 preset: new-york
 created: 2026-04-02
+revised: 2026-04-02
 ---
 
 # Phase 13 — UI Design Contract
@@ -49,17 +50,19 @@ Uses existing project compact UI scale from `index.css` CSS variables. Phase 13 
 
 | Role | Size | Weight | Line Height | CSS Variable |
 |------|------|--------|-------------|--------------|
+| Label | 11px (0.6875rem) | 600 (semibold) | 1.25 (tight) | `--text-xs` / `--font-semibold` / `--leading-tight` |
 | Body | 13px (0.8125rem) | 400 (normal) | 1.5 (normal) | `--text-base` / `--font-normal` / `--leading-normal` |
-| Label | 11px (0.6875rem) | 500 (medium) | 1.25 (tight) | `--text-xs` / `--font-medium` / `--leading-tight` |
 | Heading | 16px (1rem) | 600 (semibold) | 1.25 (tight) | `--text-xl` / `--font-semibold` / `--leading-tight` |
 | KPI Metric | 24px (1.5rem) | 600 (semibold) | 1.25 (tight) | `--text-4xl` / `--font-semibold` / `--leading-tight` |
 
-Additional phase-specific usage:
+**Weights used (2 only):** 400 (normal) for body text and result items; 600 (semibold) for labels, headings, KPI metrics, group headings, shortcut badges, and node labels.
+
+Phase-specific usage mapping:
 - Cmd+K group headings: `--text-xs` (11px) at `--font-semibold` (600), uppercase, `--tracking-wider` (0.05em)
 - Cmd+K result items: `--text-base` (13px) at `--font-normal` (400)
-- Cmd+K shortcut badges: `--text-2xs` (10px) at `--font-medium` (500), monospace
-- KPI card labels: `--text-xs` (11px) at `--font-medium` (500), `--tracking-wide` (0.025em)
-- Mini-graph node labels: `--text-2xs` (10px) at `--font-medium` (500)
+- Cmd+K shortcut badges: `--text-xs` (11px) at `--font-semibold` (600), monospace
+- KPI card labels: `--text-xs` (11px) at `--font-semibold` (600), `--tracking-wide` (0.025em)
+- Mini-graph node labels: `--text-xs` (11px) at `--font-semibold` (600)
 
 ---
 
@@ -71,14 +74,14 @@ Uses existing project Canvas (Eucalyptus) theme tokens. Phase 13 introduces no n
 |------|-------|-------|
 | Dominant (60%) | `--heroui-background` oklch(97.02% 0.0015 155) | Page backgrounds, modal backdrops |
 | Secondary (30%) | `--heroui-surface` oklch(100% 0.0008 155) | KPI widget cards, Cmd+K dialog, graph modal body, list action dropdowns |
-| Accent (10%) | `--heroui-accent` oklch(82% 0.12 155) | Primary CTA buttons ("Generate Briefing", "Expand Graph", "Schedule", "Export"), active Cmd+K result highlight, KPI trend-up indicators, active graph node ring |
+| Accent (10%) | `--heroui-accent` oklch(82% 0.12 155) | Primary CTA buttons ("Generate Briefing", "Expand Graph", "Schedule", "Export Dossiers"), active Cmd+K result highlight, KPI trend-up indicators, active graph node ring |
 | Destructive | `--heroui-danger` oklch(65.32% 0.2335 31.88) | Route removal confirmation only (not user-facing in this phase) |
 
 Accent reserved for:
 - "Generate Briefing" button in DocsTab
 - "Expand" button on mini-graph in RelationshipSidebar
 - "Schedule" action in CalendarTab
-- "Export" / "Import" action buttons on list views
+- "Export Dossiers" / "Import Dossiers" action buttons on list views
 - Active/selected result highlight in Cmd+K
 - KPI trend-up arrow indicators on dashboard widgets
 
@@ -86,6 +89,12 @@ Semantic colors already in use (no changes):
 - `--heroui-success` oklch(73.29% 0.1941 156.95) -- positive KPI trends, completed items
 - `--heroui-warning` oklch(78.19% 0.159 78.47) -- due-soon indicators (existing from Phase 10)
 - `--heroui-danger` -- overdue indicators (existing from Phase 10)
+
+---
+
+## Focal Point
+
+The **KPI widget grid** in the "Overview" zone is the declared focal point of the dashboard on first render. It occupies the top of the Operations Hub content area, uses the largest type size in the phase (24px KPI Metric), and is the first content block the user's eye encounters below the page header. The 2x2 (mobile) / 4-column (sm+) grid of KPI cards with accent-colored trend indicators anchors visual attention before the user scrolls to other dashboard zones.
 
 ---
 
@@ -143,8 +152,8 @@ Semantic colors already in use (no changes):
 
 | Element | Copy (EN) | Copy (AR) |
 |---------|-----------|-----------|
-| Export CTA | "Export" | "تصدير" |
-| Import CTA | "Import" | "استيراد" |
+| Export CTA | "Export Dossiers" | "تصدير الملفات" |
+| Import CTA | "Import Dossiers" | "استيراد الملفات" |
 
 ### Destructive Actions
 
@@ -175,7 +184,7 @@ Phase 13 extends existing components and creates targeted new ones. All follow p
 | `RelationshipSidebar.tsx` | Add MiniRelationshipGraph section above tier groups. Add "Expand Graph" button opening FullScreenGraphModal. Render graph only when sidebar is expanded (`open === true`). | ABSORB-04 |
 | `DocsTab.tsx` | Already has "Generate Briefing" action via `useGenerateEngagementBrief`. Minimal changes: verify Cmd+K command registration. | ABSORB-02 |
 | `CalendarTab.tsx` | Add "Schedule Poll" action button. Embed polling UI from AvailabilityPollingPage. | ABSORB-05 |
-| `DossierListPage.tsx` (or equivalent list views) | Add Export/Import action buttons to list view headers. Embed ExportDialog trigger. | ABSORB-06 |
+| `DossierListPage.tsx` (or equivalent list views) | Add "Export Dossiers" / "Import Dossiers" action buttons to list view headers. Embed ExportDialog trigger. | ABSORB-06 |
 | `OperationsHub.tsx` | Add analytics ZoneCollapsible after existing zones. | ABSORB-01 |
 | `navigation-config.ts` | Remove nav items: analytics, briefing-books, advanced-search, availability-polling. | All ABSORB |
 
@@ -245,8 +254,8 @@ Phase 13 extends existing components and creates targeted new ones. All follow p
 | Interaction | Behavior |
 |-------------|----------|
 | Location | Action bar area of list view headers (alongside existing filter/sort controls). |
-| Export click | Opens ExportDialog (existing component) pre-filtered to current list view context. |
-| Import click | Opens file picker dialog for CSV/JSON upload. |
+| "Export Dossiers" click | Opens ExportDialog (existing component) pre-filtered to current list view context. |
+| "Import Dossiers" click | Opens file picker dialog for CSV/JSON upload. |
 | Touch target | Minimum 44x44px. Icon-only on mobile with tooltip, icon+label on sm+. |
 
 ---
