@@ -77,11 +77,12 @@ import {
   Sparkles,
   Network,
   History,
-  BookOpen,
   ScrollText,
   Brain,
   BarChart3,
   Gauge,
+  CalendarClock,
+  Download,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useKeyboardShortcutContext } from './KeyboardShortcutProvider'
@@ -281,7 +282,7 @@ const routeContexts: RouteContext[] = [
   {
     pattern: /^\/briefs/,
     contextType: 'general',
-    suggestedActions: ['create-brief', 'view-briefing-books'],
+    suggestedActions: ['create-brief'],
   },
 ]
 
@@ -623,7 +624,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
         id: 'nav-analytics',
         label: t('quickActions.analytics', 'Go to Analytics'),
         icon: TrendingUp,
-        action: () => navigateTo('/analytics'),
+        action: () => navigateTo('/dashboard'),
         shortcut: formatShortcut('a', ['alt']),
       },
       {
@@ -634,10 +635,17 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
         shortcut: formatShortcut('s', ['alt']),
       },
       {
-        id: 'nav-relationships',
-        label: t('quickActions.relationships', 'View Relationship Graph'),
+        id: 'cmd-view-network',
+        label: t('quickActions.viewNetwork', 'View Network'),
         icon: Network,
-        action: () => navigateTo('/relationships'),
+        action: (): void => {
+          const pathname = location.pathname
+          if (pathname.startsWith('/dossiers/')) {
+            navigateTo(pathname)
+          } else {
+            navigateTo('/dossiers')
+          }
+        },
       },
       {
         id: 'nav-activity',
@@ -652,10 +660,38 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
         action: () => navigateTo('/briefs'),
       },
       {
-        id: 'nav-briefing-books',
-        label: t('quickActions.briefingBooks', 'Go to Briefing Books'),
-        icon: BookOpen,
-        action: () => navigateTo('/briefing-books'),
+        id: 'cmd-generate-briefing',
+        label: t('quickActions.generateBriefing', 'Generate Briefing'),
+        icon: FileText,
+        action: (): void => {
+          const engagementMatch = /\/engagements\/([^/]+)/.exec(location.pathname)
+          if (engagementMatch != null) {
+            navigateTo(`/engagements/${engagementMatch[1]}/docs`)
+          } else {
+            navigateTo('/dossiers/engagements')
+          }
+        },
+      },
+      {
+        id: 'cmd-schedule-poll',
+        label: t('quickActions.schedulePoll', 'Schedule Poll'),
+        icon: CalendarClock,
+        action: (): void => {
+          const engagementMatch = /\/engagements\/([^/]+)/.exec(location.pathname)
+          if (engagementMatch != null) {
+            navigateTo(`/engagements/${engagementMatch[1]}/calendar`)
+          } else {
+            navigateTo('/dossiers/engagements')
+          }
+        },
+      },
+      {
+        id: 'cmd-export-dossiers',
+        label: t('quickActions.exportDossiers', 'Export Dossiers'),
+        icon: Download,
+        action: (): void => {
+          navigateTo('/dossiers?action=export')
+        },
       },
       {
         id: 'nav-intelligence',
@@ -676,7 +712,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
         action: () => navigateTo('/sla-monitoring'),
       },
     ],
-    [t, formatShortcut, navigateTo],
+    [t, formatShortcut, navigateTo, location.pathname],
   )
 
   // Context-aware suggestions based on current page

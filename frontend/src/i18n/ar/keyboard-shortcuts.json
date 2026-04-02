@@ -44,9 +44,13 @@
     "analytics": "الانتقال إلى التحليلات",
     "settings": "الانتقال إلى الإعدادات",
     "relationships": "عرض رسم العلاقات",
+    "viewNetwork": "عرض الشبكة",
     "recentActivity": "النشاط الأخير",
     "briefs": "الانتقال إلى الموجزات",
     "briefingBooks": "الانتقال إلى كتب الإحاطة",
+    "generateBriefing": "انشاء ايجاز",
+    "schedulePoll": "جدولة استطلاع",
+    "exportDossiers": "تصدير الملفات",
     "intelligence": "الانتقال إلى الاستخبارات",
     "reports": "الانتقال إلى التقارير",
     "slaMonitoring": "مراقبة اتفاقية مستوى الخدمة"
