@@ -136,7 +136,7 @@ const shortcutIcons: Record<string, React.ElementType> = {
 }
 
 // Icons for dossier types
-const dossierTypeIcons: Record<DossierType, React.ElementType> = {
+const dossierTypeIcons: Record<string, React.ElementType> = {
   country: Globe,
   organization: Building2,
   person: Users,
@@ -144,6 +144,7 @@ const dossierTypeIcons: Record<DossierType, React.ElementType> = {
   forum: MessageSquare,
   working_group: UsersRound,
   topic: Tag,
+  elected_official: UserPlus,
 }
 
 // Icons for work item types
@@ -157,7 +158,7 @@ const workTypeIcons: Record<string, React.ElementType> = {
 }
 
 // Labels for dossier types
-const dossierTypeLabels: Record<DossierType, { en: string; ar: string }> = {
+const dossierTypeLabels: Record<string, { en: string; ar: string }> = {
   country: { en: 'Country', ar: '\u062F\u0648\u0644\u0629' },
   organization: { en: 'Organization', ar: '\u0645\u0646\u0638\u0645\u0629' },
   person: { en: 'Person', ar: '\u0634\u062E\u0635' },
@@ -165,6 +166,7 @@ const dossierTypeLabels: Record<DossierType, { en: string; ar: string }> = {
   forum: { en: 'Forum', ar: '\u0645\u0646\u062A\u062F\u0649' },
   working_group: { en: 'Working Group', ar: '\u0645\u062C\u0645\u0648\u0639\u0629 \u0639\u0645\u0644' },
   topic: { en: 'Topic', ar: '\u0645\u0648\u0636\u0648\u0639' },
+  elected_official: { en: 'Elected Official', ar: '\u0645\u0633\u0624\u0648\u0644 \u0645\u0646\u062A\u062E\u0628' },
 }
 
 // Labels for work item types
@@ -178,7 +180,7 @@ const workTypeLabels: Record<string, { en: string; ar: string }> = {
 }
 
 // Badge colors for dossier types
-const dossierTypeBadgeColors: Record<DossierType, string> = {
+const dossierTypeBadgeColors: Record<string, string> = {
   country: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   organization: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
   person: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
@@ -186,6 +188,7 @@ const dossierTypeBadgeColors: Record<DossierType, string> = {
   forum: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
   working_group: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
   topic: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  elected_official: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
 }
 
 // Badge colors for work item types
@@ -284,6 +287,80 @@ const routeContexts: RouteContext[] = [
     suggestedActions: ['create-brief', 'view-briefing-books'],
   },
 ]
+
+// Ordered list of all 8 dossier types for entity sub-grouping
+const DOSSIER_TYPE_ORDER: string[] = [
+  'country',
+  'organization',
+  'forum',
+  'engagement',
+  'topic',
+  'working_group',
+  'person',
+  'elected_official',
+]
+
+// i18n keys for dossier type group headings (maps to quickswitcher.groups.*)
+const dossierTypeGroupKeys: Record<string, string> = {
+  country: 'groups.countries',
+  organization: 'groups.organizations',
+  forum: 'groups.forums',
+  engagement: 'groups.engagements',
+  topic: 'groups.topics',
+  working_group: 'groups.workingGroups',
+  person: 'groups.persons',
+  elected_official: 'groups.electedOfficials',
+}
+
+// ---- Command usage frequency tracking (localStorage) ----
+const CMDK_USAGE_KEY = 'cmdkUsageFrequency'
+
+function getCommandUsageCounts(): Record<string, number> {
+  try {
+    const raw = localStorage.getItem(CMDK_USAGE_KEY)
+    if (raw != null) {
+      return JSON.parse(raw) as Record<string, number>
+    }
+  } catch {
+    // corrupted data — reset
+  }
+  return {}
+}
+
+function incrementCommandUsage(commandId: string): void {
+  try {
+    const counts = getCommandUsageCounts()
+    counts[commandId] = (counts[commandId] ?? 0) + 1
+    localStorage.setItem(CMDK_USAGE_KEY, JSON.stringify(counts))
+  } catch {
+    // localStorage full or unavailable — silently fail
+  }
+}
+
+interface QuickActionItem {
+  id: string
+  label: string
+  icon: React.ElementType
+  action: () => void
+  shortcut?: string
+  category?: string
+}
+
+function getMostUsedCommands(
+  commands: QuickActionItem[],
+  limit: number,
+): QuickActionItem[] {
+  const counts = getCommandUsageCounts()
+  const hasUsageData = Object.keys(counts).length > 0
+
+  if (!hasUsageData) {
+    return commands.slice(0, limit)
+  }
+
+  return [...commands]
+    .sort((a, b) => (counts[b.id] ?? 0) - (counts[a.id] ?? 0))
+    .slice(0, limit)
+}
 
 /**
  * Search TanStack Query cache for dossier/work-item matches
@@ -477,6 +554,35 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       )
       .slice(0, 3)
   }, [groupedShortcuts, searchQuery])
+
+  // Most-used commands for empty state (D-03)
+  const mostUsedCommands = useMemo((): QuickActionItem[] => {
+    // Combine quickActions + createActions as the pool
+    const allCommands: QuickActionItem[] = [
+      ...quickActions.map((a) => ({ ...a })),
+      ...createActions.filter((a) => a.category === 'create').map((a) => ({ ...a })),
+    ]
+    return getMostUsedCommands(allCommands, 5)
+  }, [quickActions, createActions])
+
+  // Group dossier search results by type for entity sub-grouping (D-02)
+  const dossiersByType = useMemo((): Array<{ type: string; items: QuickSwitcherDossier[] }> => {
+    if (searchQuery.trim().length < 2 || dossiers.length === 0) return []
+
+    const grouped: Record<string, QuickSwitcherDossier[]> = {}
+    for (const d of dossiers) {
+      const type = d.type || 'unknown'
+      if (grouped[type] == null) {
+        grouped[type] = []
+      }
+      grouped[type].push(d)
+    }
+
+    // Return in defined order, limiting to 5 per type
+    return DOSSIER_TYPE_ORDER
+      .filter((type) => grouped[type] != null && grouped[type].length > 0)
+      .map((type) => ({ type, items: grouped[type].slice(0, 5) }))
+  }, [dossiers, searchQuery])
 
   // Helper to navigate - uses type assertion for routes that may not be in the router yet
   const navigateTo = useCallback(
@@ -781,9 +887,9 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   )
 
   // Get dossier badge info
-  const getDossierBadge = (type: DossierType): { label: string | undefined; color: string } => {
+  const getDossierBadge = (type: string): { label: string | undefined; color: string } => {
     const label = isRTL ? dossierTypeLabels[type]?.ar : dossierTypeLabels[type]?.en
-    const color = dossierTypeBadgeColors[type]
+    const color = dossierTypeBadgeColors[type] || 'bg-gray-100 text-gray-700'
     return { label, color }
   }
 
@@ -855,9 +961,8 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
           <CommandEmpty>
             <div className="flex flex-col items-center justify-center py-6 text-center">
               <Search className="mb-2 size-8 text-muted-foreground opacity-50" />
-              <p className="text-sm text-muted-foreground">{t('noResults', 'No results found.')}</p>
-              <p className="text-xs text-muted-foreground">
-                {t('tryDifferentSearch', 'Try a different search term.')}
+              <p className="text-sm text-muted-foreground">
+                {tQs('noResults', 'No results found. Try a different search.')}
               </p>
             </div>
           </CommandEmpty>
@@ -872,9 +977,16 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
             </div>
           )}
 
-          {/* ===== EMPTY QUERY STATE ===== */}
+          {/* ===== EMPTY QUERY STATE (D-03: Quick Access) ===== */}
           {!isSearching && (
             <>
+              {/* Quick Access heading */}
+              <div className="px-3 pt-2 pb-1">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {tQs('quickAccess', 'Quick Access')}
+                </p>
+              </div>
+
               {/* Context-Aware Suggestions */}
               {contextSuggestions.length > 0 && (
                 <>
@@ -885,7 +997,10 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                         <CommandItem
                           key={`ctx-${suggestion.id}`}
                           value={`ctx-${suggestion.id}`}
-                          onSelect={suggestion.action}
+                          onSelect={() => {
+                            suggestion.action()
+                            incrementCommandUsage(`ctx-${suggestion.id}`)
+                          }}
                           className="flex items-center gap-3"
                         >
                           <Sparkles className="size-3 shrink-0 text-amber-500" />
@@ -905,10 +1020,10 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                 </>
               )}
 
-              {/* Recent Navigation (page-level recents from useRecentNavigation) */}
+              {/* 5 Most Recent Dossiers (D-03) */}
               {recentNavItems.length > 0 && (
                 <>
-                  <CommandGroup heading={tQs('recent', 'Recent')}>
+                  <CommandGroup heading={tQs('groups.recent', 'Recent')}>
                     {recentNavItems.slice(0, 5).map((item) => (
                       <CommandItem
                         key={`recent-nav-${item.path}`}
@@ -919,7 +1034,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                         }}
                         className="flex items-center gap-3"
                       >
-                        <Clock className="size-4 shrink-0 text-muted-foreground" />
+                        <Clock className="me-2 size-4 shrink-0 text-muted-foreground" />
                         <div className="min-w-0 flex-1">
                           <span className="truncate text-start">{item.title}</span>
                           <p className="truncate text-xs text-muted-foreground text-start">
@@ -938,6 +1053,35 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                         </Badge>
                       </CommandItem>
                     ))}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* 5 Most-Used Commands (D-03) */}
+              {mostUsedCommands.length > 0 && (
+                <>
+                  <CommandGroup heading={tQs('groups.commands', 'Commands')}>
+                    {mostUsedCommands.slice(0, 5).map((cmd) => {
+                      const CmdIcon = cmd.icon
+                      return (
+                        <CommandItem
+                          key={`mostused-${cmd.id}`}
+                          value={`mostused-${cmd.id}`}
+                          onSelect={() => {
+                            cmd.action()
+                            incrementCommandUsage(cmd.id)
+                          }}
+                          className="flex items-center gap-3"
+                        >
+                          <CmdIcon className="me-2 size-4 shrink-0" />
+                          <span className="flex-1">{cmd.label}</span>
+                          {cmd.shortcut != null && (
+                            <CommandShortcut>{cmd.shortcut}</CommandShortcut>
+                          )}
+                        </CommandItem>
+                      )
+                    })}
                   </CommandGroup>
                   <CommandSeparator />
                 </>
@@ -998,7 +1142,10 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                         <CommandItem
                           key={action.id}
                           value={action.id}
-                          onSelect={action.action}
+                          onSelect={() => {
+                            action.action()
+                            incrementCommandUsage(action.id)
+                          }}
                           className="flex items-center gap-3"
                         >
                           <PlusCircle className="size-3 shrink-0 text-green-500" />
@@ -1023,7 +1170,10 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                         <CommandItem
                           key={action.id}
                           value={action.id}
-                          onSelect={action.action}
+                          onSelect={() => {
+                            action.action()
+                            incrementCommandUsage(action.id)
+                          }}
                           className="flex items-center gap-3"
                         >
                           <QuickIcon className="size-4 shrink-0" />
@@ -1035,6 +1185,13 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                   </CommandGroup>
                 </>
               )}
+
+              {/* Keyboard hint (D-03) */}
+              <div className="px-3 py-2 text-center">
+                <p className="text-xs text-muted-foreground">
+                  {tQs('keyboardHint', 'Navigate with arrow keys, Enter to select, Esc to close')}
+                </p>
+              </div>
             </>
           )}
 
@@ -1065,72 +1222,52 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                 </>
               )}
 
-              {/* Group 2: Dossiers */}
-              {dossiers.length > 0 && (
+              {/* Group 2: Entities sub-grouped by dossier type (D-02) */}
+              {dossiersByType.length > 0 && (
                 <>
-                  <CommandGroup heading={tQs('dossiers_section', 'Dossiers')}>
-                    {dossiers.map((dossier) => {
-                      const DossierIcon: React.ElementType = dossierTypeIcons[dossier.type] || Folder
-                      const badge = getDossierBadge(dossier.type)
-                      return (
-                        <CommandItem
-                          key={`dossier-${dossier.id}`}
-                          value={`dossier-${dossier.id}-${dossier.name_en}`}
-                          onSelect={() => handleDossierClick(dossier)}
-                          className="flex items-center gap-3"
-                        >
-                          <DossierIcon className="size-4 shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <span className="truncate">
-                              {getDisplayTitle({ name_en: dossier.name_en, name_ar: dossier.name_ar })}
-                            </span>
-                            {(isRTL ? dossier.description_ar : dossier.description_en) != null &&
-                              (isRTL ? dossier.description_ar : dossier.description_en) !== '' && (
-                              <p className="truncate text-xs text-muted-foreground">
-                                {isRTL ? dossier.description_ar : dossier.description_en}
-                              </p>
-                            )}
-                          </div>
-                          <Badge variant="secondary" className={`shrink-0 text-xs ${badge.color}`}>
-                            {badge.label}
-                          </Badge>
-                        </CommandItem>
-                      )
-                    })}
-                  </CommandGroup>
+                  {dossiersByType.map((group) => {
+                    const groupKey = dossierTypeGroupKeys[group.type] || group.type
+                    const GroupIcon: React.ElementType = dossierTypeIcons[group.type] || Folder
+                    return (
+                      <CommandGroup
+                        key={`entity-group-${group.type}`}
+                        heading={tQs(groupKey, dossierTypeLabels[group.type]?.en || group.type)}
+                      >
+                        {group.items.slice(0, 5).map((dossier) => {
+                          const badge = getDossierBadge(dossier.type)
+                          return (
+                            <CommandItem
+                              key={`dossier-${dossier.id}`}
+                              value={`dossier-${dossier.id}-${dossier.name_en}`}
+                              onSelect={() => handleDossierClick(dossier)}
+                              className="flex items-center gap-3"
+                            >
+                              <GroupIcon className="size-4 shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <span className="truncate">
+                                  {getDisplayTitle({ name_en: dossier.name_en, name_ar: dossier.name_ar })}
+                                </span>
+                                {(isRTL ? dossier.description_ar : dossier.description_en) != null &&
+                                  (isRTL ? dossier.description_ar : dossier.description_en) !== '' && (
+                                  <p className="truncate text-xs text-muted-foreground">
+                                    {isRTL ? dossier.description_ar : dossier.description_en}
+                                  </p>
+                                )}
+                              </div>
+                              <Badge variant="secondary" className={`shrink-0 text-xs ${badge.color}`}>
+                                {badge.label}
+                              </Badge>
+                            </CommandItem>
+                          )
+                        })}
+                      </CommandGroup>
+                    )
+                  })}
                   <CommandSeparator />
                 </>
               )}
 
-              {/* Group 3: Pages */}
-              {filteredPages.length > 0 && (
-                <>
-                  <CommandGroup heading={tQs('pages_section', 'Pages')}>
-                    {filteredPages.map((page) => {
-                      const PageIcon = page.icon
-                      return (
-                        <CommandItem
-                          key={`page-${page.id}`}
-                          value={`page-${page.id}-${page.label}`}
-                          onSelect={() => {
-                            navigateTo(page.path)
-                            addRecentNav({ path: page.path, title: tCommon(page.label, page.id), type: 'page' })
-                            setSearchQuery('')
-                          }}
-                          className="flex items-center gap-3"
-                        >
-                          <PageIcon className="size-4 shrink-0" />
-                          <span className="flex-1 truncate">{tCommon(page.label, page.id)}</span>
-                          <span className="truncate text-xs text-muted-foreground">{page.path}</span>
-                        </CommandItem>
-                      )
-                    })}
-                  </CommandGroup>
-                  <CommandSeparator />
-                </>
-              )}
-
-              {/* Group 4: Work Items */}
+              {/* Group 3: Work Items (search results) */}
               {relatedWork.length > 0 && (
                 <>
                   <CommandGroup heading={tQs('related_work_section', 'Work Items')}>
@@ -1168,17 +1305,20 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                 </>
               )}
 
-              {/* Group 5: Commands (keyboard shortcuts matching query) */}
-              {filteredCommands.length > 0 && (
+              {/* Group 5: Commands (keyboard shortcuts + create actions matching query) */}
+              {(filteredCommands.length > 0 || filteredCreateActions.length > 0) && (
                 <>
-                  <CommandGroup heading={t('commands.title', 'Commands')}>
-                    {filteredCommands.map((shortcut) => {
+                  <CommandGroup heading={tQs('groups.commands', 'Commands')}>
+                    {filteredCommands.slice(0, 5).map((shortcut) => {
                       const ShortcutIcon = getShortcutIcon(shortcut)
                       return (
                         <CommandItem
                           key={`cmd-${shortcut.id}`}
                           value={`cmd-${shortcut.id}`}
-                          onSelect={() => handleSelect(shortcut)}
+                          onSelect={() => {
+                            handleSelect(shortcut)
+                            incrementCommandUsage(shortcut.id)
+                          }}
                           className="flex items-center gap-3"
                         >
                           <ShortcutIcon className="size-4 shrink-0" />
@@ -1189,28 +1329,50 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                         </CommandItem>
                       )
                     })}
-                  </CommandGroup>
-                </>
-              )}
-
-              {/* Create actions matching search */}
-              {filteredCreateActions.length > 0 && (
-                <>
-                  <CommandSeparator />
-                  <CommandGroup heading={t('createActions.title', 'Create New')}>
                     {filteredCreateActions.map((action) => {
                       const CreateIcon = action.icon
                       return (
                         <CommandItem
                           key={action.id}
                           value={action.id}
-                          onSelect={action.action}
+                          onSelect={() => {
+                            action.action()
+                            incrementCommandUsage(action.id)
+                          }}
                           className="flex items-center gap-3"
                         >
                           <PlusCircle className="size-3 shrink-0 text-green-500" />
                           <CreateIcon className="size-4 shrink-0" />
                           <span className="flex-1">{action.label}</span>
                           {action.shortcut != null && <CommandShortcut>{action.shortcut}</CommandShortcut>}
+                        </CommandItem>
+                      )
+                    })}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </>
+              )}
+
+              {/* Group 6: Search Results (full-text — pages matching query as a fallback) */}
+              {filteredPages.length > 0 && (
+                <>
+                  <CommandGroup heading={tQs('groups.searchResults', 'Search Results')}>
+                    {filteredPages.slice(0, 10).map((page) => {
+                      const PageIcon = page.icon
+                      return (
+                        <CommandItem
+                          key={`search-page-${page.id}`}
+                          value={`search-page-${page.id}-${page.label}`}
+                          onSelect={() => {
+                            navigateTo(page.path)
+                            addRecentNav({ path: page.path, title: tCommon(page.label, page.id), type: 'page' })
+                            setSearchQuery('')
+                          }}
+                          className="flex items-center gap-3"
+                        >
+                          <PageIcon className="size-4 shrink-0" />
+                          <span className="flex-1 truncate">{tCommon(page.label, page.id)}</span>
+                          <span className="truncate text-xs text-muted-foreground">{page.path}</span>
                         </CommandItem>
                       )
                     })}
