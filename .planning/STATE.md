@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Connected Workflow
-status: verifying
-stopped_at: Completed 13-03-PLAN.md
-last_updated: "2026-04-02T18:22:59.953Z"
+status: executing
+stopped_at: Completed 13-04-PLAN.md
+last_updated: "2026-04-02T18:39:33.929Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 28
-  completed_plans: 24
+  completed_plans: 27
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 12 — enriched-dossier-pages
+**Current focus:** Phase 13 — feature-absorption
 
 ## Current Position
 
-Phase: 12 (enriched-dossier-pages) — EXECUTING
-Plan: 5 of 5
-Status: Phase complete — ready for verification
+Phase: 13 (feature-absorption) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute
 Last activity: 2026-04-02
 
 Progress: [░░░░░░░░░░] 0%
@@ -68,7 +68,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 12 P02 | 15min | 2 tasks | 53 files |
 | Phase 12 P04 | 9min | 2 tasks | 16 files |
 | Phase 12 P05 | 8min | 1 tasks | 17 files |
-| Phase 13 P03 | 6min | 1 tasks | 4 files |
+| Phase 13 P04 | 4min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -112,8 +112,8 @@ Recent decisions affecting current work:
 - [Phase 12]: Integrated overview tabs into existing detail components instead of separate route files (route structure uses $id.tsx not $id/overview.tsx)
 - [Phase 12]: Country default tab changed from intelligence to overview for enriched first impression
 - [Phase 12]: Route files simplified to pass dossierId prop instead of full dossier object
-- [Phase 13]: i18n keys added to dossier-shell namespace (not dossier) matching RelationshipSidebar translation context
-- [Phase 13]: Used useDossier inside RelationshipSidebar for MiniRelationshipGraph; TanStack Query deduplicates with DossierShell
+- [Phase 13]: Context-aware Cmd+K commands use URL regex to detect engagement/dossier context
+- [Phase 13]: nav-analytics redirected to /dashboard; nav-briefing-books replaced with cmd-generate-briefing
 
 ### Pending Todos
 
@@ -127,6 +127,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02T18:22:59.950Z
-Stopped at: Completed 13-03-PLAN.md
+Last session: 2026-04-02T18:39:33.926Z
+Stopped at: Completed 13-04-PLAN.md
 Resume file: None
