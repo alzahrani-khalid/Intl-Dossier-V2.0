@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Connected Workflow
-status: complete
-stopped_at: Milestone v3.0 shipped 2026-04-06
-last_updated: "2026-04-06T08:44:00.000Z"
+milestone: v4.0
+milestone_name: Live Operations
+status: defining_requirements
+stopped_at: Defining requirements for v4.0
+last_updated: "2026-04-06T09:00:00.000Z"
 last_activity: 2026-04-06
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 28
-  completed_plans: 28
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -21,15 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Planning next milestone
+**Current focus:** v4.0 Live Operations — defining requirements
 
 ## Current Position
 
-Milestone: v3.0 Connected Workflow — SHIPPED 2026-04-06
-Status: Complete — 6 phases, 28 plans, 45 requirements verified
-Last activity: 2026-04-06
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-06 — Milestone v4.0 started
 
-Progress: [██████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 

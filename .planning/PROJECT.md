@@ -63,7 +63,19 @@ The system now operates as a connected hub-and-spoke architecture:
 
 ### Active
 
-(No active requirements — planning next milestone)
+## Current Milestone: v4.0 Live Operations
+
+**Goal:** Make the system operational for daily use with notifications, reliable deployment, automated E2E testing, and realistic seed data.
+
+**Target features:**
+
+- Notification system (in-app bell + center, email alerts + digest, browser push)
+- Notification triggers (assignments, deadlines, stage transitions, attention items)
+- User notification preferences (per-channel, per-type controls)
+- Production deployment (HTTPS, CI/CD, monitoring, backups)
+- Playwright E2E tests for critical user flows
+- Realistic seed data and first-run experience
+- v3.0 tech debt cleanup (OPS-03/07, stale metadata)
 
 ### Out of Scope
 
@@ -133,4 +145,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-06 after v3.0 milestone_
+_Last updated: 2026-04-06 after v4.0 milestone start_
