@@ -3,6 +3,7 @@ import type { Job } from 'bullmq'
 import { queueConnection } from './queue-connection'
 import { processNotificationJob } from './notification.processor'
 import { processDeadlineCheck } from './deadline-scheduler'
+import { processDigestJob } from './digest-scheduler'
 
 export interface NotificationJobData {
   userId: string
@@ -32,6 +33,10 @@ export const notificationWorker = new Worker<NotificationJobData>(
   async (job: Job<NotificationJobData>) => {
     if (job.name === 'check-deadlines') {
       await processDeadlineCheck()
+      return
+    }
+    if (job.name === 'process-daily-digests' || job.name === 'process-weekly-digests') {
+      await processDigestJob(job.name)
       return
     }
     await processNotificationJob(job)
