@@ -25,9 +25,25 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
   const [direction, setDirection] = useState<'ltr' | 'rtl'>('ltr')
 
   // Load language preference from localStorage on mount
-  // Priority: ui-storage (Zustand) > i18nextLng > browser detection
+  // Priority: user-preferences > ui-storage (Zustand) > i18nextLng > browser detection
   useEffect(() => {
-    // First check ui-storage (Zustand persisted store) - this is the primary source
+    // First check user-preferences (set by setLanguage)
+    const userPrefs = localStorage.getItem('user-preferences')
+    if (userPrefs) {
+      try {
+        const parsed = JSON.parse(userPrefs)
+        const storedLang = parsed?.language
+        if (storedLang && (storedLang === 'en' || storedLang === 'ar')) {
+          setLanguageState(storedLang)
+          i18n.changeLanguage(storedLang)
+          return
+        }
+      } catch (e) {
+        // Silently ignore parse errors
+      }
+    }
+
+    // Fallback: ui-storage (Zustand persisted store)
     const uiStorage = localStorage.getItem('ui-storage')
     if (uiStorage) {
       try {
@@ -102,6 +118,7 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
         }
       }
       localStorage.setItem('user-preferences', JSON.stringify(prefs))
+      localStorage.setItem('i18nextLng', newLanguage)
 
       // Dispatch custom event for cross-component sync
       window.dispatchEvent(
