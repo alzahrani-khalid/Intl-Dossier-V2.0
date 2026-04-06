@@ -81,8 +81,8 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 15-01-PLAN.md — BullMQ queue infrastructure, notification service extension, preference checking
-- [ ] 15-02-PLAN.md — Wire three notification triggers (assignment, deadline, lifecycle)
+- [x] 15-01-PLAN.md — BullMQ queue infrastructure, notification service extension, preference checking
+- [x] 15-02-PLAN.md — Wire three notification triggers (assignment, deadline, lifecycle)
 - [ ] 15-03-PLAN.md — Frontend toast wiring, i18n strings, end-to-end verification
 
 ### Phase 16: Email & Push Channels
@@ -168,7 +168,7 @@ Phase 17 and 19 can run in parallel after their dependencies are met.
 | 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete    | 2026-03-31 |
 | 13. Feature Absorption              | v3.0      | 5/5            | Complete    | 2026-04-02 |
 | 14. Production Deployment           | v4.0      | 3/3 | Complete    | 2026-04-06 |
-| 15. Notification Backend & In-App   | v4.0      | 0/3            | Planning    | -          |
+| 15. Notification Backend & In-App   | v4.0      | 2/3 | In Progress|  |
 | 16. Email & Push Channels           | v4.0      | 0/TBD          | Not started | -          |
 | 17. Seed Data & First Run           | v4.0      | 0/TBD          | Not started | -          |
 | 18. E2E Test Suite                  | v4.0      | 0/TBD          | Not started | -          |
