@@ -1,6 +1,9 @@
 {
   "title": "Notifications",
   "notificationCenter": "Notification Center",
+  "panel": {
+    "title": "Notifications"
+  },
   "viewAll": "View All",
   "markAllRead": "Mark All as Read",
   "clearAll": "Clear All",
@@ -44,6 +47,8 @@
     "markUnread": "Mark as unread",
     "delete": "Delete",
     "viewDetails": "View Details",
+    "markAllRead": "Mark all as read",
+    "deleteConfirm": "Delete this notification?",
     "dismiss": "Dismiss",
     "snooze": "Snooze",
     "snoozeOptions": {
@@ -141,7 +146,16 @@
     "markedAsRead": "Notification marked as read",
     "markedAllAsRead": "All notifications marked as read",
     "deleted": "Notification deleted",
-    "snoozed": "Notification snoozed"
+    "snoozed": "Notification snoozed",
+    "taskAssigned": "New task assigned: {{taskTitle}}",
+    "deadlineApproaching": "Deadline approaching: {{taskTitle}}",
+    "deadlineOverdue": "Overdue: {{taskTitle}}",
+    "lifecycleChange": "Stage changed to {{stage}}",
+    "view": "View"
+  },
+
+  "error": {
+    "loadFailed": "Could not load notifications. Pull down to retry."
   },
 
   "errors": {

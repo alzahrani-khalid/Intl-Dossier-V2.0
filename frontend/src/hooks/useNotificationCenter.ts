@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { RealtimeChannel } from '@supabase/supabase-js'
+import { toast } from 'sonner'
 
 // Types
 export type NotificationCategory =
@@ -424,14 +425,66 @@ export function usePushDevices() {
   }
 }
 
+// Dispatch a category-aware Sonner toast for a new notification
+function dispatchNotificationToast(notification: Notification): void {
+  const toastOptions: {
+    description?: string
+    action?: { label: string; onClick: () => void }
+  } = {}
+
+  if (notification.message) {
+    toastOptions.description = notification.message
+  }
+
+  if (notification.action_url) {
+    toastOptions.action = {
+      label: 'View',
+      onClick: (): void => {
+        window.location.href = notification.action_url as string
+      },
+    }
+  }
+
+  // Use category-aware toast variants per UI-SPEC
+  if (notification.type === 'deadline_overdue') {
+    toast.error(notification.title, toastOptions)
+  } else if (notification.type === 'deadline_approaching') {
+    toast.warning(notification.title, toastOptions)
+  } else {
+    toast(notification.title, toastOptions)
+  }
+}
+
 // Hook for real-time notification updates
 export function useNotificationRealtime(onNewNotification?: (notification: Notification) => void) {
   const queryClient = useQueryClient()
 
+  const handleInsert = useCallback(
+    (payload: { new: Record<string, unknown> }): void => {
+      // Invalidate queries to refetch
+      void queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.all })
+
+      const notification = payload.new as Notification
+
+      // Fire category-aware toast
+      dispatchNotificationToast(notification)
+
+      // Call callback if provided
+      if (onNewNotification) {
+        onNewNotification(notification)
+      }
+    },
+    [queryClient, onNewNotification],
+  )
+
+  const handleUpdate = useCallback((): void => {
+    void queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.all })
+  }, [queryClient])
+
   useEffect(() => {
     let channel: RealtimeChannel | null = null
 
-    const setupRealtime = async () => {
+    const setupRealtime = async (): Promise<void> => {
       const {
         data: { user },
       } = await supabase.auth.getUser()
@@ -447,15 +500,7 @@ export function useNotificationRealtime(onNewNotification?: (notification: Notif
             table: 'notifications',
             filter: `user_id=eq.${user.id}`,
           },
-          (payload) => {
-            // Invalidate queries to refetch
-            queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.all })
-
-            // Call callback if provided
-            if (onNewNotification && payload.new) {
-              onNewNotification(payload.new as Notification)
-            }
-          },
+          handleInsert,
         )
         .on(
           'postgres_changes',
@@ -465,21 +510,19 @@ export function useNotificationRealtime(onNewNotification?: (notification: Notif
             table: 'notifications',
             filter: `user_id=eq.${user.id}`,
           },
-          () => {
-            queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.all })
-          },
+          handleUpdate,
         )
         .subscribe()
     }
 
-    setupRealtime()
+    void setupRealtime()
 
     return () => {
       if (channel) {
-        supabase.removeChannel(channel)
+        void supabase.removeChannel(channel)
       }
     }
-  }, [queryClient, onNewNotification])
+  }, [handleInsert, handleUpdate])
 }
 
 // Combined hook for notification center
