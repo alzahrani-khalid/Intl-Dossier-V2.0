@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import {
   renderDailyDigestTemplate,
   renderWeeklyDigestTemplate,
-} from '../services/digest-template.service'
-import type { DigestContent } from '../services/digest-template.service'
+} from '../src/services/digest-template.service'
+import type { DigestContent } from '../src/services/digest-template.service'
 
 const sampleContent: DigestContent = {
   watchlist_items: [
@@ -67,7 +67,7 @@ describe('Digest Template Service', () => {
     it('renders empty state for English when no content', () => {
       const result = renderDailyDigestTemplate('en', '2026-04-06', emptyContent)
       expect(result.bodyHtml).toContain('No pending items this period')
-      expect(result.bodyHtml).toContain("You're all caught up!")
+      expect(result.bodyHtml).toContain("You&#39;re all caught up!")
     })
 
     it('renders empty state for Arabic when no content', () => {
