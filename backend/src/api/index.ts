@@ -25,6 +25,7 @@ import electedOfficialsRouter from './elected-officials'
 import intakeEntityLinksRouter from './intake-entity-links'
 import entitySearchRouter from './entity-search'
 import cacheMetricsRouter from './cache-metrics'
+import pushSubscriptionsRouter from './push-subscriptions'
 import { authenticateToken } from '../middleware/auth'
 import { apiLimiter } from '../middleware/rate-limit.middleware'
 import { logApiRequest, logError } from '../utils/logger'
@@ -63,6 +64,10 @@ apiRouter.use('/auth', authRouter)
 
 // AI routes - mounted before authenticateToken as they use supabaseAuth
 apiRouter.use('/ai', aiRouter)
+
+// Push subscriptions - mounted before global authenticateToken
+// because /vapid-public-key is public; other routes use internal auth
+apiRouter.use('/push-subscriptions', pushSubscriptionsRouter)
 
 // Protected routes (require authentication)
 apiRouter.use(authenticateToken)
