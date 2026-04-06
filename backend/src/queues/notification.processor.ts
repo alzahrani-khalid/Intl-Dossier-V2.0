@@ -3,6 +3,7 @@ import type { Job } from 'bullmq'
 import type { NotificationJobData } from './notification.queue'
 import { logInfo, logError } from '../utils/logger'
 import { renderAlertEmailTemplate, mapNotificationTypeToTemplate } from '../services/email-template.service'
+import { sendPushNotification, getUserPushSubscriptions } from '../services/push.service'
 
 const supabase = createClient(
   process.env.SUPABASE_URL || '',
@@ -118,6 +119,68 @@ export async function processNotificationJob(job: Job<NotificationJobData>): Pro
     logError(
       `Email dispatch failed for user ${userId} [job=${job.id}]`,
       emailError instanceof Error ? emailError : new Error(String(emailError)),
+    )
+  }
+
+  // --- Push notification channel dispatch ---
+  // Fire-and-forget: push failure must not block in-app or email notifications
+  try {
+    // Check if user has push_enabled for this category
+    const { data: pushPref, error: pushPrefError } = await supabase
+      .from('notification_category_preferences')
+      .select('push_enabled')
+      .eq('user_id', userId)
+      .eq('category', category)
+      .single()
+
+    if (pushPrefError !== null && pushPrefError.code !== 'PGRST116') {
+      logError(
+        `Failed to check push preferences for user ${userId}`,
+        pushPrefError as unknown as Error,
+      )
+    }
+
+    // Default to enabled if no preference row exists
+    if (pushPref !== null && pushPref.push_enabled === false) {
+      logInfo(`Push skipped: user ${userId} has push_enabled=false for category ${category}`)
+      return
+    }
+
+    // Get user language for RTL-aware push payloads (reuse from email or fetch fresh)
+    let userLanguage: 'ar' | 'en' = 'en'
+    try {
+      const result = await getUserEmailAndLanguage(userId)
+      userLanguage = result.language
+    } catch {
+      // Language fetch failure is non-fatal for push; default to 'en'
+    }
+
+    const subscriptions = await getUserPushSubscriptions(userId)
+
+    if (subscriptions.length > 0) {
+      const pushPayload = {
+        title,
+        body: message,
+        url: actionUrl ?? '/',
+        dir: userLanguage === 'ar' ? 'rtl' as const : 'ltr' as const,
+        lang: userLanguage,
+      }
+
+      await Promise.allSettled(
+        subscriptions.map((sub) =>
+          sendPushNotification(
+            { endpoint: sub.endpoint, keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth } },
+            pushPayload,
+          ),
+        ),
+      )
+
+      logInfo(`Push notifications sent to ${subscriptions.length} subscription(s) for user ${userId} [job=${job.id}]`)
+    }
+  } catch (pushError) {
+    logError(
+      `Push dispatch failed for user ${userId} [job=${job.id}]`,
+      pushError instanceof Error ? pushError : new Error(String(pushError)),
     )
   }
 }
