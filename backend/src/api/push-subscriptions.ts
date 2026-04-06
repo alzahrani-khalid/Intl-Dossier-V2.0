@@ -144,4 +144,46 @@ router.delete('/', async (req: Request, res: Response): Promise<void> => {
   }
 })
 
+/**
+ * POST /api/push-subscriptions/unsubscribe
+ * Deactivate a push subscription (POST alternative for clients that cannot send DELETE with body).
+ */
+router.post('/unsubscribe', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.id
+    if (userId == null) {
+      res.status(401).json({ error: 'Authentication required' })
+      return
+    }
+
+    const { endpoint } = req.body as { endpoint?: string }
+
+    if (endpoint == null || typeof endpoint !== 'string' || endpoint === '') {
+      res.status(400).json({ error: 'Missing required field: endpoint' })
+      return
+    }
+
+    const { error } = await supabase
+      .from('push_subscriptions')
+      .update({ is_active: false, updated_at: new Date().toISOString() })
+      .eq('user_id', userId)
+      .eq('endpoint', endpoint)
+
+    if (error != null) {
+      logError('Failed to deactivate push subscription', error as unknown as Error)
+      res.status(500).json({ error: 'Failed to remove push subscription' })
+      return
+    }
+
+    logInfo(`Push subscription deactivated for user ${userId}`)
+    res.json({ success: true })
+  } catch (err) {
+    logError(
+      'Push subscription unsubscribe error',
+      err instanceof Error ? err : new Error(String(err)),
+    )
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 export default router
