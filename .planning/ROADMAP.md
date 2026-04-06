@@ -41,7 +41,7 @@ Full details: [v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 
 **Milestone Goal:** Make the system operational for daily use with notifications, reliable deployment, automated E2E testing, and realistic seed data.
 
-- [ ] **Phase 14: Production Deployment** - HTTPS, CI/CD pipeline, monitoring, backups, and rollback
+- [x] **Phase 14: Production Deployment** - HTTPS, CI/CD pipeline, monitoring, backups, and rollback (completed 2026-04-06)
 - [ ] **Phase 15: Notification Backend & In-App** - Dispatcher, triggers, bell icon, notification center, preferences
 - [ ] **Phase 16: Email & Push Channels** - Resend email alerts, digest emails, browser push with soft-ask
 - [ ] **Phase 17: Seed Data & First Run** - Realistic diplomatic scenario data and first-run experience
@@ -63,9 +63,9 @@ Full details: [v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 **Plans**: 3 plans
 
 Plans:
-- [ ] 14-01-PLAN.md — Fix nginx HTTPS config bugs and certbot cert path mounting
-- [ ] 14-02-PLAN.md — Rewrite CI/CD deploy pipeline with rollback mechanism
-- [ ] 14-03-PLAN.md — External monitoring, Redis backup, and restore documentation
+- [x] 14-01-PLAN.md — Fix nginx HTTPS config bugs and certbot cert path mounting
+- [x] 14-02-PLAN.md — Rewrite CI/CD deploy pipeline with rollback mechanism
+- [x] 14-03-PLAN.md — External monitoring, Redis backup, and restore documentation
 
 ### Phase 15: Notification Backend & In-App
 **Goal**: Users receive timely in-app notifications for assignments, deadlines, and lifecycle events, with full control over their preferences
@@ -167,7 +167,7 @@ Phase 17 and 19 can run in parallel after their dependencies are met.
 | 11. Engagement Workspace            | v3.0      | 5/5            | Complete    | 2026-03-31 |
 | 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete    | 2026-03-31 |
 | 13. Feature Absorption              | v3.0      | 5/5            | Complete    | 2026-04-02 |
-| 14. Production Deployment           | v4.0      | 0/3            | Planning    | -          |
+| 14. Production Deployment           | v4.0      | 3/3 | Complete    | 2026-04-06 |
 | 15. Notification Backend & In-App   | v4.0      | 0/TBD          | Not started | -          |
 | 16. Email & Push Channels           | v4.0      | 0/TBD          | Not started | -          |
 | 17. Seed Data & First Run           | v4.0      | 0/TBD          | Not started | -          |
