@@ -85,45 +85,45 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status  |
-| ----------- | ----- | ------- |
-| DEPLOY-01   | TBD   | Pending |
-| DEPLOY-02   | TBD   | Pending |
-| DEPLOY-03   | TBD   | Pending |
-| DEPLOY-04   | TBD   | Pending |
-| DEPLOY-05   | TBD   | Pending |
-| NOTIF-01    | TBD   | Pending |
-| NOTIF-02    | TBD   | Pending |
-| NOTIF-03    | TBD   | Pending |
-| NOTIF-04    | TBD   | Pending |
-| NOTIF-05    | TBD   | Pending |
-| NOTIF-06    | TBD   | Pending |
-| NOTIF-07    | TBD   | Pending |
-| NOTIF-08    | TBD   | Pending |
-| NOTIF-09    | TBD   | Pending |
-| TEST-01     | TBD   | Pending |
-| TEST-02     | TBD   | Pending |
-| TEST-03     | TBD   | Pending |
-| TEST-04     | TBD   | Pending |
-| TEST-05     | TBD   | Pending |
-| TEST-06     | TBD   | Pending |
-| TEST-07     | TBD   | Pending |
-| TEST-08     | TBD   | Pending |
-| TEST-09     | TBD   | Pending |
-| TEST-10     | TBD   | Pending |
-| TEST-11     | TBD   | Pending |
-| SEED-01     | TBD   | Pending |
-| SEED-02     | TBD   | Pending |
-| SEED-03     | TBD   | Pending |
-| DEBT-01     | TBD   | Pending |
-| DEBT-02     | TBD   | Pending |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| DEPLOY-01   | Phase 14 | Pending |
+| DEPLOY-02   | Phase 14 | Pending |
+| DEPLOY-03   | Phase 14 | Pending |
+| DEPLOY-04   | Phase 14 | Pending |
+| DEPLOY-05   | Phase 14 | Pending |
+| NOTIF-01    | Phase 15 | Pending |
+| NOTIF-02    | Phase 15 | Pending |
+| NOTIF-03    | Phase 16 | Pending |
+| NOTIF-04    | Phase 16 | Pending |
+| NOTIF-05    | Phase 16 | Pending |
+| NOTIF-06    | Phase 15 | Pending |
+| NOTIF-07    | Phase 15 | Pending |
+| NOTIF-08    | Phase 15 | Pending |
+| NOTIF-09    | Phase 16 | Pending |
+| TEST-01     | Phase 18 | Pending |
+| TEST-02     | Phase 18 | Pending |
+| TEST-03     | Phase 18 | Pending |
+| TEST-04     | Phase 18 | Pending |
+| TEST-05     | Phase 18 | Pending |
+| TEST-06     | Phase 18 | Pending |
+| TEST-07     | Phase 18 | Pending |
+| TEST-08     | Phase 18 | Pending |
+| TEST-09     | Phase 18 | Pending |
+| TEST-10     | Phase 18 | Pending |
+| TEST-11     | Phase 18 | Pending |
+| SEED-01     | Phase 17 | Pending |
+| SEED-02     | Phase 17 | Pending |
+| SEED-03     | Phase 17 | Pending |
+| DEBT-01     | Phase 19 | Pending |
+| DEBT-02     | Phase 19 | Pending |
 
 **Coverage:**
 
 - v4.0 requirements: 30 total
-- Mapped to phases: 0
-- Unmapped: 30 ⚠️
+- Mapped to phases: 30
+- Unmapped: 0
 
 ---
 _Requirements defined: 2026-04-06_
-_Last updated: 2026-04-06 after initial definition_
+_Last updated: 2026-04-06 after roadmap creation_
