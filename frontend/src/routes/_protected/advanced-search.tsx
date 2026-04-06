@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { AdvancedSearchPage } from '@/pages/advanced-search'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/advanced-search')({
-  component: AdvancedSearchPage,
+  beforeLoad: () => {
+    throw redirect({ to: '/dashboard' })
+  },
 })
