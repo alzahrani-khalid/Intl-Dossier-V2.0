@@ -42,7 +42,7 @@ Full details: [v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 **Milestone Goal:** Make the system operational for daily use with notifications, reliable deployment, automated E2E testing, and realistic seed data.
 
 - [x] **Phase 14: Production Deployment** - HTTPS, CI/CD pipeline, monitoring, backups, and rollback (completed 2026-04-06)
-- [ ] **Phase 15: Notification Backend & In-App** - Dispatcher, triggers, bell icon, notification center, preferences
+- [x] **Phase 15: Notification Backend & In-App** - Dispatcher, triggers, bell icon, notification center, preferences (completed 2026-04-06)
 - [ ] **Phase 16: Email & Push Channels** - Resend email alerts, digest emails, browser push with soft-ask
 - [ ] **Phase 17: Seed Data & First Run** - Realistic diplomatic scenario data and first-run experience
 - [ ] **Phase 18: E2E Test Suite** - Playwright tests for all critical flows with CI integration
@@ -83,7 +83,7 @@ Plans:
 Plans:
 - [x] 15-01-PLAN.md — BullMQ queue infrastructure, notification service extension, preference checking
 - [x] 15-02-PLAN.md — Wire three notification triggers (assignment, deadline, lifecycle)
-- [ ] 15-03-PLAN.md — Frontend toast wiring, i18n strings, end-to-end verification
+- [x] 15-03-PLAN.md — Frontend toast wiring, i18n strings, end-to-end verification
 
 ### Phase 16: Email & Push Channels
 **Goal**: Users receive notifications outside the application via email alerts, email digests, and browser push notifications
@@ -168,7 +168,7 @@ Phase 17 and 19 can run in parallel after their dependencies are met.
 | 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete    | 2026-03-31 |
 | 13. Feature Absorption              | v3.0      | 5/5            | Complete    | 2026-04-02 |
 | 14. Production Deployment           | v4.0      | 3/3 | Complete    | 2026-04-06 |
-| 15. Notification Backend & In-App   | v4.0      | 2/3 | In Progress|  |
+| 15. Notification Backend & In-App   | v4.0      | 3/3 | Complete   | 2026-04-06 |
 | 16. Email & Push Channels           | v4.0      | 0/TBD          | Not started | -          |
 | 17. Seed Data & First Run           | v4.0      | 0/TBD          | Not started | -          |
 | 18. E2E Test Suite                  | v4.0      | 0/TBD          | Not started | -          |
