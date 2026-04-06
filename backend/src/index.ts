@@ -13,6 +13,7 @@ import { scheduleHealthScoresRefreshJob } from './jobs/refresh-health-scores.job
 import { scheduleOverdueCommitmentsDetectionJob } from './jobs/detect-overdue-commitments.job.js'
 import { cacheMetrics } from './services/cache-metrics.service'
 import { notificationWorker, notificationQueue } from './queues/notification.queue'
+import { registerDeadlineChecker } from './queues/deadline-scheduler'
 import {
   initSentry,
   sentryRequestHandler,
@@ -133,6 +134,9 @@ async function startServer(): Promise<void> {
       logError(`Notification job ${job?.id} failed: ${err.message}`)
     })
     logInfo('Notification queue initialized')
+
+    // Register deadline checker (repeatable every 15 minutes)
+    await registerDeadlineChecker()
   } else {
     logInfo('Redis unavailable - cache operations will fail gracefully to direct DB queries')
   }

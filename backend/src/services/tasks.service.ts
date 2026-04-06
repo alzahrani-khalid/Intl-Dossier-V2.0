@@ -14,6 +14,8 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '../types/database.types'
 import { Commitment } from '../types/after-action.types'
 import logger from '../utils/logger'
+import { enqueueNotification } from './notification.service'
+import { logError } from '../utils/logger'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 type TaskInsert = Database['public']['Tables']['tasks']['Insert']
@@ -141,6 +143,26 @@ export class TasksService {
 
     if (error) {
       throw new Error(`Failed to create task: ${error.message}`)
+    }
+
+    // Dispatch assignment notification (D-05: AFTER successful DB write, outside transaction)
+    if (data.assignee_id && data.assignee_id !== input.created_by) {
+      try {
+        await enqueueNotification({
+          userId: data.assignee_id,
+          type: 'task_assigned',
+          title: 'New task assigned',
+          message: `You have been assigned: ${data.title}`,
+          category: 'assignments',
+          priority: data.priority === 'urgent' ? 'high' : 'normal',
+          actionUrl: `/tasks/${data.id}`,
+          sourceType: 'task',
+          sourceId: data.id,
+          data: { taskId: data.id },
+        }, 'task-assigned')
+      } catch (err) {
+        logError('Failed to enqueue assignment notification', err as Error)
+      }
     }
 
     return data
@@ -305,6 +327,18 @@ export class TasksService {
    * Update a task with optimistic locking
    */
   async updateTask(taskId: string, input: UpdateTaskInput): Promise<Task> {
+    // Read previous assignee before update (for reassignment detection)
+    let previousAssigneeId: string | null = null
+    if (input.assignee_id) {
+      const { data: existing } = await this.supabase
+        .from('tasks')
+        .select('assignee_id')
+        .eq('id', taskId)
+        .eq('is_deleted', false)
+        .single()
+      previousAssigneeId = existing?.assignee_id ?? null
+    }
+
     const updateData: TaskUpdate = {
       ...(input.title && { title: input.title }),
       ...(input.description !== undefined && { description: input.description }),
@@ -340,6 +374,30 @@ export class TasksService {
 
     if (error) {
       throw new Error(`Failed to update task: ${error.message}`)
+    }
+
+    // Dispatch reassignment notification (D-05: AFTER successful DB write)
+    if (
+      data.assignee_id &&
+      data.assignee_id !== previousAssigneeId &&
+      data.assignee_id !== input.updated_by
+    ) {
+      try {
+        await enqueueNotification({
+          userId: data.assignee_id,
+          type: 'task_assigned',
+          title: 'Task assigned to you',
+          message: `You have been assigned: ${data.title}`,
+          category: 'assignments',
+          priority: data.priority === 'urgent' ? 'high' : 'normal',
+          actionUrl: `/tasks/${data.id}`,
+          sourceType: 'task',
+          sourceId: data.id,
+          data: { taskId: data.id },
+        }, 'task-reassigned')
+      } catch (err) {
+        logError('Failed to enqueue reassignment notification', err as Error)
+      }
     }
 
     return data
@@ -591,6 +649,26 @@ export class TaskCreationService {
     if (!data) {
       logger.error('Task insert returned no data', { commitmentId: commitment.id })
       throw new Error('Task insert returned no data')
+    }
+
+    // Dispatch assignment notification for commitment-created task (D-05: AFTER successful DB write)
+    if (data.assignee_id && data.assignee_id !== createdBy) {
+      try {
+        await enqueueNotification({
+          userId: data.assignee_id,
+          type: 'task_assigned',
+          title: 'New task assigned',
+          message: `You have been assigned: ${data.title}`,
+          category: 'assignments',
+          priority: data.priority === 'urgent' ? 'high' : 'normal',
+          actionUrl: `/tasks/${data.id}`,
+          sourceType: 'task',
+          sourceId: data.id,
+          data: { taskId: data.id },
+        }, 'task-assigned')
+      } catch (err) {
+        logError('Failed to enqueue commitment task notification', err as Error)
+      }
     }
 
     return data

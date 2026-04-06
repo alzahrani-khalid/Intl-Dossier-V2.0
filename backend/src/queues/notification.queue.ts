@@ -1,6 +1,8 @@
 import { Queue, Worker } from 'bullmq'
+import type { Job } from 'bullmq'
 import { queueConnection } from './queue-connection'
 import { processNotificationJob } from './notification.processor'
+import { processDeadlineCheck } from './deadline-scheduler'
 
 export interface NotificationJobData {
   userId: string
@@ -27,7 +29,13 @@ export const notificationQueue = new Queue<NotificationJobData>('notifications',
 
 export const notificationWorker = new Worker<NotificationJobData>(
   'notifications',
-  processNotificationJob,
+  async (job: Job<NotificationJobData>) => {
+    if (job.name === 'check-deadlines') {
+      await processDeadlineCheck()
+      return
+    }
+    await processNotificationJob(job)
+  },
   {
     connection: queueConnection,
     concurrency: 5,
