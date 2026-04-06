@@ -48,11 +48,11 @@ Exceptions: 44px minimum touch targets for banner CTA buttons and dismiss action
 | Role    | Size           | Weight              | Line Height |
 | ------- | -------------- | ------------------- | ----------- |
 | Body    | 14px (text-sm) | 400 (font-normal)   | 1.5         |
-| Label   | 12px (text-xs) | 500 (font-medium)   | 1.4         |
+| Label   | 12px (text-xs) | 400 (font-normal)   | 1.4         |
 | Heading | 18px (text-lg) | 600 (font-semibold) | 1.2         |
 | Display | 14px (text-sm) | 600 (font-semibold) | 1.2         |
 
-Note: This phase has no new page-level headings. "Display" role is used for the soft-ask banner headline. Email templates use inline styles: body 16px/1.5, heading 20px/1.3 for email client compatibility.
+Note: This phase uses exactly 2 font weights: 400 (font-normal) for body and label text, 600 (font-semibold) for headings and display text. Labels are distinguished from body by size (12px vs 14px), not weight. Email templates use inline styles: body 16px/1.5, heading 20px/1.3 for email client compatibility.
 
 ### Email Template Typography (inline styles, not Tailwind)
 
@@ -184,7 +184,7 @@ This phase has no destructive actions requiring confirmation. Unsubscribe links 
 - Icon: `Bell` from lucide-react, `h-5 w-5 text-primary-600`
 - Headline: `text-sm font-semibold text-foreground`
 - Body: `text-xs text-muted-foreground`
-- CTA button: `h-9 px-4 bg-primary text-primary-foreground rounded-md text-sm font-medium` (min-w-11 min-h-11 touch target via padding)
+- CTA button: `h-9 px-4 bg-primary text-primary-foreground rounded-md text-sm font-normal` (min-w-11 min-h-11 touch target via padding)
 - Dismiss: `text-xs text-muted-foreground hover:text-foreground` as ghost button, `min-h-11 min-w-11`
 - RTL: Uses `ms-*`, `me-*`, `ps-*`, `pe-*` logical properties. `dir` set via `isRTL` from `useTranslation`
 - Mobile: Full-width stack on base, inline row on sm+
