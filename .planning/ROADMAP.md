@@ -60,12 +60,12 @@ Full details: [v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
   3. An external monitor alerts when the application goes down (healthcheck endpoint responds)
   4. Database backups can be restored following a documented procedure
   5. A failed deployment can be rolled back to the previous Docker image with zero downtime
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 14-01: TBD
-- [ ] 14-02: TBD
-- [ ] 14-03: TBD
+- [ ] 14-01-PLAN.md — Fix nginx HTTPS config bugs and certbot cert path mounting
+- [ ] 14-02-PLAN.md — Rewrite CI/CD deploy pipeline with rollback mechanism
+- [ ] 14-03-PLAN.md — External monitoring, Redis backup, and restore documentation
 
 ### Phase 15: Notification Backend & In-App
 **Goal**: Users receive timely in-app notifications for assignments, deadlines, and lifecycle events, with full control over their preferences
@@ -167,7 +167,7 @@ Phase 17 and 19 can run in parallel after their dependencies are met.
 | 11. Engagement Workspace            | v3.0      | 5/5            | Complete    | 2026-03-31 |
 | 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete    | 2026-03-31 |
 | 13. Feature Absorption              | v3.0      | 5/5            | Complete    | 2026-04-02 |
-| 14. Production Deployment           | v4.0      | 0/TBD          | Not started | -          |
+| 14. Production Deployment           | v4.0      | 0/3            | Planning    | -          |
 | 15. Notification Backend & In-App   | v4.0      | 0/TBD          | Not started | -          |
 | 16. Email & Push Channels           | v4.0      | 0/TBD          | Not started | -          |
 | 17. Seed Data & First Run           | v4.0      | 0/TBD          | Not started | -          |
