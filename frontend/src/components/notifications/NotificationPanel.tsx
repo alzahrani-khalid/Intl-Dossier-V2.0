@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { NotificationBadge } from './NotificationBadge'
 import { NotificationList } from './NotificationList'
+import PushOptInBanner from './PushOptInBanner'
 import {
   useNotificationCenter,
   useNotificationRealtime,
@@ -51,6 +52,14 @@ const navigate = useNavigate()
     isMarkingAsRead,
     deleteNotification,
   } = useNotificationCenter(filters)
+
+  // Determine if user has actionable notifications (assignments, deadlines)
+  const hasActionableNotification = notifications.some(
+    (n) =>
+      n.type === 'assignment' ||
+      n.type === 'deadline_overdue' ||
+      n.type === 'deadline_approaching',
+  )
 
   // Real-time updates
   const handleNewNotification = useCallback(
@@ -182,6 +191,9 @@ const navigate = useNavigate()
               </Button>
             </div>
           </div>
+
+          {/* Push opt-in banner */}
+          <PushOptInBanner hasActionableNotification={hasActionableNotification} />
 
           {/* Category tabs */}
           <Tabs
