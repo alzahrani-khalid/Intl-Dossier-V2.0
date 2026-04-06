@@ -1,756 +1,475 @@
 # Architecture Patterns
 
-**Domain:** Hub-and-spoke navigation redesign for diplomatic dossier management system
-**Researched:** 2026-03-28
-**Confidence:** HIGH (based on direct codebase analysis of existing patterns)
+**Domain:** Notifications, Production Deployment, and E2E Testing for Diplomatic Dossier System
+**Researched:** 2026-04-06
+**Confidence:** HIGH (based on direct codebase analysis of existing patterns and infrastructure)
 
-## Current Architecture Snapshot
+## Recommended Architecture
 
-### Route Tree (TanStack Router v5, file-based)
-
-```
-__root.tsx                          # ErrorBoundary, KeyboardShortcutProvider, DossierContextProvider
-  _protected.tsx                    # Auth guard (Supabase session), MainLayout shell, ChatDock
-    dashboard.tsx                   # Lazy-loaded DashboardPage
-    dossiers/
-      index.tsx                     # All-dossiers hub
-      countries/index.tsx           # Country list
-      countries/$id.tsx             # Country detail
-      engagements/index.tsx         # Engagement list
-      engagements/$id.tsx           # Engagement detail (EngagementDossierPage)
-      forums/$id.tsx                # Forum detail
-      organizations/$id.tsx         # Org detail
-      persons/$id.tsx               # Person detail
-      topics/$id.tsx                # Topic detail
-      working_groups/$id.tsx        # Working group detail
-    engagements.tsx                 # DUPLICATE: flat engagement list
-    engagements/$engagementId.tsx   # DUPLICATE: flat engagement detail
-    engagements/$engagementId/after-action.tsx
-    calendar.tsx                    # Global calendar
-    kanban.tsx                      # Global kanban
-    intake/                         # Intake queue (index, new, queue, tickets.$id)
-    my-work/                        # My work (index, board, assignments, intake, waiting)
-    tasks/                          # Tasks (index, $id, escalations, queue)
-    ... ~40 more flat routes (analytics, briefs, intelligence, demos, etc.)
-```
-
-**Key observations:**
-
-- Dossier routes already live under `/dossiers/{type}/` -- aligns with spec
-- Duplicate routes exist: `/engagements.tsx` AND `/dossiers/engagements/` (both render same data)
-- `/persons.tsx` AND `/dossiers/persons/` are also duplicated
-- ~10 demo pages (`*-demo.tsx`) pollute production navigation
-- No `elected-officials` route or domain exists anywhere
-- `working_groups` uses underscore (spec wants `working-groups` with hyphen)
-- No nested layout routes under engagement detail (no `$id/tasks`, `$id/calendar`, etc.)
-
-### Domain Repository Pattern (20 domains)
-
-Each domain follows this exact structure:
+### High-Level Integration Map
 
 ```
-frontend/src/domains/{name}/
-  types/index.ts          # Re-exports from @/types + domain-specific interfaces
-  repositories/{name}.repository.ts  # Plain function exports using apiGet/apiPost/apiPatch/apiDelete
-  hooks/use{Name}.ts      # TanStack Query hooks with query key factory
-  index.ts                # Barrel re-export
+┌─────────────────────────────────────────────────────────────────────┐
+│                        EXISTING SYSTEM                              │
+│                                                                     │
+│  Frontend (React 19 + TanStack)     Backend (Express)               │
+│  ┌──────────────────────┐           ┌──────────────────────┐        │
+│  │ useNotificationCenter│           │ notification.service  │        │
+│  │ NotificationList     │           │ (basic insert only)   │        │
+│  │ NotificationPanel    │           └──────────┬───────────┘        │
+│  │ NotificationBadge    │                      │                    │
+│  │ NotificationPrefs    │                      │                    │
+│  └──────────┬───────────┘                      │                    │
+│             │                                  │                    │
+│  ┌──────────▼───────────┐           ┌──────────▼───────────┐        │
+│  │ Supabase Realtime    │◄──────────│ Supabase PostgreSQL   │        │
+│  │ (notifications tbl)  │           │ notifications table   │        │
+│  │ (already subscribed) │           │ push_device_tokens    │        │
+│  └──────────────────────┘           │ notif_category_prefs  │        │
+│                                     └──────────────────────┘        │
+│                                                                     │
+│  Deploy: Docker Compose on DigitalOcean (nginx + certbot ready)     │
+│  CI/CD: GitHub Actions (ci.yml + deploy.yml exist but incomplete)   │
+│  Tests: Playwright config exists, E2E jobs in CI, minimal specs     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-**Existing domains:** ai, analytics, audit, briefings, calendar, documents, dossiers, engagements, import, intake, misc, persons, positions, relationships, search, shared, tags, topics, work-items
+### What Already Exists (Do NOT Rebuild)
 
-**NOT existing:** elected-officials (the 8th dossier type has no domain)
+| Component | Location | Status |
+|-----------|----------|--------|
+| `notifications` table | Supabase migration `20260111100001` | Schema exists with categories, priorities, expiry |
+| `push_device_tokens` table | Same migration | Schema exists with platform, provider, failure tracking |
+| `notification_category_preferences` | Same migration | Schema exists with per-channel toggles |
+| `useNotificationCenter` hook | `frontend/src/hooks/useNotificationCenter.ts` | Full CRUD: list, counts, mark-read, delete, preferences, device registration |
+| `useNotificationRealtime` hook | Same file | Supabase Realtime subscription on INSERT/UPDATE |
+| `NotificationList` component | `frontend/src/components/notifications/NotificationList.tsx` | Paginated list with date grouping, RTL support |
+| `NotificationItem` component | Same directory | Individual notification rendering |
+| `NotificationBadge` component | Same directory | Unread count badge |
+| `NotificationPanel` component | Same directory | Slide-out panel |
+| `NotificationPreferences` component | Same directory | Per-category channel toggles |
+| `NotificationsSettingsSection` | `frontend/src/components/settings/sections/` | Settings page integration |
+| `notification.service.ts` | `backend/src/services/notification.service.ts` | Basic `sendInAppNotification` + health score drop |
+| Docker Compose | `deploy/docker-compose.prod.yml` | nginx + frontend + backend + redis + anythingllm + certbot |
+| nginx prod config | `deploy/nginx/nginx.prod.conf` | HTTPS, WebSocket proxy, rate limiting, security headers |
+| CI workflow | `.github/workflows/ci.yml` | Lint, unit tests, E2E job, RTL tests, a11y tests, bundle size, Lighthouse, Docker build, security scan |
+| Deploy workflow | `.github/workflows/deploy.yml` | Docker push + SSH deploy to droplet |
+| Playwright configs | Root + `frontend/playwright.config.ts` | Both exist |
+| Supabase Edge Functions | `supabase/functions/push-notification*/` | Push notification stubs from mobile era |
+| Realtime service | `frontend/src/services/realtime.ts` | Zustand-based subscription manager with reconnection |
 
-### Navigation Structure (current)
-
-`navigation-config.ts` defines 6+ sections:
-
-1. **Dossiers Hub** -- All Dossiers, Recent Activity
-2. **My Work** -- List View, Board View
-3. **Requests** -- Incoming Requests (with badge), Awaiting Response (with badge)
-4. **Main** -- Dashboard, Custom Dashboard, Approvals, Positions, After Actions
-5. **Tools** -- Calendar, Briefs, Briefing Books, Intelligence, Analytics, Reports, SLA Monitoring
-6. **Documents** -- Data Library, Word Assistant
-7. **Admin** (conditional) -- System, Approvals, AI Usage/Settings, Users, Monitoring, Export, Tags, Webhooks, Workflow
-
-`AppSidebar.tsx` renders these via `NavMain` component with collapsible groups, plus SidebarSearch, QuickNavigationMenu, ThemeSelector, LanguageToggle, NavUser.
-
-### Component Architecture
-
-- **Pages:** `frontend/src/pages/dossiers/{Type}DossierPage.tsx` -- 7 type-specific pages exist (no elected officials)
-- **Detail components:** `frontend/src/components/dossier/{Type}DossierDetail.tsx` -- renders actual content
-- **Layout wrapper:** `DossierDetailLayout.tsx` -- shared header, grid layout, actions slot
-- **Route files:** thin wrappers that validate dossier type + lazy-load page component via `React.lazy`
-- **Dialog pattern:** Features like Kanban open as dialogs (`EngagementKanbanDialog`) from the detail page, not as separate routes
-
-### Data Flow
+### What Needs to Be Built
 
 ```
-Route ($id.tsx) --> useDossier(id) --> DossierPage.tsx --> DossierDetailLayout --> {Type}DossierDetail
-                                                       --> Feature dialogs (Kanban, AfterAction)
+NEW COMPONENTS (integrate with existing, don't replace)
+
+1. NOTIFICATION TRIGGERS (Backend)
+   ┌─────────────────────────────────────────┐
+   │  backend/src/services/                   │
+   │  notification-dispatcher.service.ts      │ ← NEW: Central dispatch
+   │                                          │    Routes to: in-app, email, push
+   │  notification-email.service.ts           │ ← NEW: Resend adapter
+   │  notification-push.service.ts            │ ← NEW: Web Push (VAPID) adapter
+   │  notification-triggers.service.ts        │ ← NEW: Event → notification mapping
+   └─────────────────────────────────────────┘
+
+2. DATABASE ADDITIONS (Supabase)
+   ┌─────────────────────────────────────────┐
+   │  New migration:                          │
+   │  - Add missing columns to notifications  │ ← Verify schema completeness
+   │  - Email digest preferences/schedule     │ ← digest_frequency, last_digest_at
+   │  - Notification templates table          │ ← Optional: bilingual templates
+   └─────────────────────────────────────────┘
+
+3. FRONTEND ADDITIONS
+   ┌─────────────────────────────────────────┐
+   │  frontend/public/sw.js                   │ ← NEW: Service worker for Web Push
+   │  frontend/src/lib/push-registration.ts   │ ← NEW: VAPID key registration
+   │  frontend/src/components/notifications/  │
+   │    NotificationToast.tsx                  │ ← NEW: Toast on new notification
+   └─────────────────────────────────────────┘
+
+4. PRODUCTION DEPLOYMENT
+   ┌─────────────────────────────────────────┐
+   │  deploy/                                 │
+   │    setup-ssl.sh                          │ ← NEW: Certbot initial setup script
+   │    backup.sh                             │ ← NEW: Redis + volume backup
+   │    docker-compose.prod.yml               │ ← MODIFY: Add env for email/push
+   │  .github/workflows/                      │
+   │    deploy.yml                            │ ← MODIFY: Fix SSH deploy, rollback
+   │    ci.yml                                │ ← MODIFY: Add E2E with Supabase
+   └─────────────────────────────────────────┘
+
+5. E2E TESTS (Playwright)
+   ┌─────────────────────────────────────────┐
+   │  tests/e2e/                              │
+   │    auth.spec.ts                          │ ← NEW: Login/logout/session
+   │    dossier-crud.spec.ts                  │ ← NEW: Create/edit/delete dossier
+   │    work-items.spec.ts                    │ ← NEW: Kanban workflow
+   │    engagement-lifecycle.spec.ts          │ ← NEW: Stage transitions
+   │    notifications.spec.ts                 │ ← NEW: Bell, panel, mark-read
+   │    navigation.spec.ts                    │ ← NEW: Sidebar, Cmd+K, routing
+   │  tests/fixtures/                         │
+   │    auth.fixture.ts                       │ ← NEW: Authenticated page fixture
+   │    seed.fixture.ts                       │ ← NEW: Test data seeding
+   └─────────────────────────────────────────┘
 ```
 
-Engagement domain already has: CRUD, participants, agenda, kanban, briefs, recommendations -- all as repository functions with corresponding TanStack Query hooks.
+## Component Boundaries
 
----
+| Component | Responsibility | Communicates With |
+|-----------|---------------|-------------------|
+| **NotificationDispatcher** (new) | Routes notification to correct channels based on user preferences | notification.service (in-app), email service, push service, Supabase (preferences lookup) |
+| **NotificationTriggers** (new) | Maps domain events to notification payloads | Express route handlers (called after mutations), NotificationDispatcher |
+| **EmailAdapter** (new) | Sends transactional + digest emails | Resend API |
+| **WebPushAdapter** (new) | Sends browser push via VAPID | Web Push protocol, push_device_tokens table |
+| **ServiceWorker** (new) | Receives push events, shows browser notifications | Browser Push API, frontend notification handlers |
+| **NotificationToast** (new) | Shows in-app toast when Realtime delivers new notification | useNotificationRealtime (existing), Sonner toast library |
+| **E2E Test Suite** (new) | Validates critical user flows | Playwright, Supabase test instance, frontend dev server |
 
-## Recommended Architecture for v3.0
+## Data Flow
 
-### 1. Route Restructuring Strategy
-
-#### Step A: Consolidation (prerequisite -- zero new features)
-
-**Delete duplicate flat routes** that are superseded by `/dossiers/{type}/`:
-
-| Delete                                       | Canonical Route                      |
-| -------------------------------------------- | ------------------------------------ |
-| `engagements.tsx`                            | `/dossiers/engagements/index.tsx`    |
-| `engagements/$engagementId.tsx`              | `/dossiers/engagements/$id.tsx`      |
-| `engagements/$engagementId/after-action.tsx` | Absorbed into workspace              |
-| `persons.tsx`                                | `/dossiers/persons/index.tsx`        |
-| `persons/$personId.tsx`                      | `/dossiers/persons/$id.tsx`          |
-| `contacts.tsx`                               | Already served by persons            |
-| `countries.tsx`                              | `/dossiers/countries/index.tsx`      |
-| `organizations.tsx`                          | `/dossiers/organizations/index.tsx`  |
-| `forums.tsx`                                 | `/dossiers/forums/index.tsx`         |
-| `working-groups.tsx`                         | `/dossiers/working_groups/index.tsx` |
-
-**Rename `working_groups` to `working-groups`** in route directories for URL consistency.
-
-**Gate demo pages behind `VITE_DEV_MODE`:** Move 10+ `*-demo.tsx` routes to a `_dev` layout route that checks the env flag.
-
-**Add redirect routes** from old paths to new canonical paths for any bookmarked URLs.
-
-#### Step B: Engagement Workspace -- Nested Layout Route
-
-This is the most architecturally significant change. TanStack Router v5 supports nested layout routes perfectly -- the project already uses this pattern with `_protected.tsx` wrapping all authenticated routes via `<Outlet />`.
-
-**New route structure:**
+### Notification Flow: Event to All Channels
 
 ```
-routes/_protected/dossiers/engagements/
-  index.tsx                     # Engagement list (existing, unchanged)
-  $id.tsx                       # BECOMES layout route with WorkspaceShell + Outlet
-  $id/
-    index.tsx                   # Overview tab (default)
-    context.tsx                 # Context tab (linked dossiers)
-    tasks.tsx                   # Tasks tab (scoped kanban)
-    calendar.tsx                # Calendar tab (scoped events)
-    docs.tsx                    # Docs tab (with AI briefing action)
-    audit.tsx                   # Audit tab (scoped timeline)
+1. Domain Event Occurs
+   (e.g., work item assigned, engagement stage changed)
+   │
+   ▼
+2. Express Route Handler / Service calls NotificationTriggers
+   triggers.onWorkItemAssigned(workItemId, assigneeId)
+   │
+   ▼
+3. NotificationTriggers builds payload
+   { type: 'assignment', title, message, category: 'assignments',
+     action_url: '/work-items/{id}', priority: 'high' }
+   │
+   ▼
+4. NotificationDispatcher checks user preferences
+   SELECT * FROM notification_category_preferences
+   WHERE user_id = $1 AND category = 'assignments'
+   │
+   ├─── in_app_enabled? ──► notification.service.sendInAppNotification()
+   │                         (INSERT into notifications table)
+   │                         │
+   │                         ▼ Supabase Realtime fires
+   │                         │
+   │                         ▼ useNotificationRealtime receives INSERT
+   │                         │
+   │                         ▼ NotificationToast shows + badge count updates
+   │
+   ├─── email_enabled? ──► EmailAdapter.send(user.email, template, data)
+   │                        (Resend API)
+   │
+   └─── push_enabled? ──► WebPushAdapter.sendToDevices(userId, payload)
+                           (SELECT tokens FROM push_device_tokens
+                            WHERE user_id = $1 AND is_active = true
+                            AND platform = 'web')
+                           │
+                           ▼ Service Worker receives push event
+                           │
+                           ▼ Browser shows system notification
 ```
 
-**Key pattern -- `$id.tsx` becomes a layout route:**
-
-```typescript
-// routes/_protected/dossiers/engagements/$id.tsx
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { WorkspaceShell } from '@/components/workspace/WorkspaceShell'
-import { LifecycleBar } from '@/components/workspace/LifecycleBar'
-import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
-
-export const Route = createFileRoute('/_protected/dossiers/engagements/$id')({
-  component: EngagementWorkspaceLayout,
-})
-
-function EngagementWorkspaceLayout() {
-  const { id } = Route.useParams()
-  const { data: engagement, isLoading } = useEngagement(id)
-
-  if (isLoading) return <WorkspaceSkeleton />
-  if (!engagement) return <NotFound />
-
-  return (
-    <WorkspaceShell
-      engagement={engagement}
-      lifecycleBar={
-        <LifecycleBar stage={engagement.lifecycle_stage} engagementId={id} />
-      }
-      tabs={[
-        { id: 'overview', path: '.', label: 'Overview' },
-        { id: 'context', path: './context', label: 'Context' },
-        { id: 'tasks', path: './tasks', label: 'Tasks' },
-        { id: 'calendar', path: './calendar', label: 'Calendar' },
-        { id: 'docs', path: './docs', label: 'Docs' },
-        { id: 'audit', path: './audit', label: 'Audit' },
-      ]}
-    >
-      <Outlet />
-    </WorkspaceShell>
-  )
-}
-```
-
-**Why this works:** TanStack Router v5 file-based routing treats `$id.tsx` as a layout when a `$id/` directory also exists. The layout component wraps `<Outlet />` which renders the child route. The workspace shell (header, lifecycle bar, tabs) persists across tab navigation with zero re-mount.
-
-**Same pattern applies to Forums:**
+### Email Digest Flow
 
 ```
-routes/_protected/dossiers/forums/
-  $id.tsx                       # Forum workspace layout
-  $id/
-    index.tsx                   # Forum overview (sessions list)
-    sessions/$sessionId.tsx     # Session mini-workspace layout
-    sessions/$sessionId/
-      index.tsx                 # Session overview
-      tasks.tsx                 # Session tasks
+1. Cron job runs (backend/src/jobs/ or Supabase pg_cron)
+   Every 24h for daily digest, every 7d for weekly
+   │
+   ▼
+2. Query undigested notifications per user
+   SELECT * FROM notifications
+   WHERE digest_included = false AND email_sent = false
+   AND created_at > NOW() - INTERVAL '24 hours'
+   GROUP BY user_id
+   │
+   ▼
+3. For each user with digest preference:
+   EmailAdapter.sendDigest(user.email, notifications[], user.language)
+   │
+   ▼
+4. Mark notifications as digest_included = true
 ```
 
-#### Step C: Enriched Dossier Detail Pages
-
-Non-workspace dossier types (countries, organizations, topics, working-groups, persons, elected-officials) keep the current `$id.tsx` pattern but add tab-based navigation within the page component (NOT nested routes).
-
-**Rationale for NOT using nested routes for non-workspace types:**
-
-- Workspace types (engagements, forums) have heavy tab content (kanban, calendar) worth code-splitting
-- Anchor/thread/contact types have lightweight tabs (overview, engagements list, docs) better served by client-side tab state
-- Keeps the route tree manageable (avoiding 8 types x 6 tabs = 48 route files)
-- Existing `DossierDetailLayout` already supports this with an actions slot
-
-**Add RelationshipSidebar** rendered inside `DossierDetailLayout`:
-
-```typescript
-interface DossierDetailLayoutProps {
-  dossier: Dossier
-  children: React.ReactNode
-  headerActions?: React.ReactNode
-  sidebar?: React.ReactNode // NEW: RelationshipSidebar slot
-  gridClassName?: string
-}
-```
-
-#### Step D: Operations Hub Route Changes
-
-The dashboard route stays at `/dashboard` (no change). The page component gets redesigned:
+### Deployment Flow (Target State)
 
 ```
-routes/_protected/
-  dashboard.tsx                 # Same route, new DashboardPage internals
-  tasks/index.tsx               # Already exists -- becomes "My Tasks"
-  calendar.tsx                  # Already exists -- unchanged
-  intake/index.tsx              # Already exists -- unchanged
+1. Developer pushes to main
+   │
+   ▼
+2. GitHub Actions CI runs
+   ├── Lint + TypeCheck (parallel)
+   ├── Unit Tests (parallel)
+   ├── E2E Tests with Supabase (parallel)
+   └── Bundle Size Check
+   │
+   ▼ (all pass)
+3. Docker Build + Push to GHCR
+   │
+   ▼
+4. SSH to DigitalOcean droplet (138.197.195.242)
+   ├── docker compose pull
+   ├── docker compose up -d --remove-orphans
+   └── Health check: curl https://domain/health
+   │
+   ▼ (health check fails?)
+5. Rollback: docker compose up -d --force-recreate (previous images cached)
 ```
-
-No route restructuring needed for Operations Hub. The work is all in the page components.
-
-#### Step E: Admin Route Consolidation
-
-```
-routes/_protected/admin/
-  audit-logs.tsx                # Move from top-level audit-logs.tsx
-  compliance.tsx                # Move/rename from existing compliance-demo.tsx
-  settings.tsx                  # Move from top-level settings.tsx
-```
-
-### 2. New Domain: `elected-officials`
-
-**Create the full domain structure:**
-
-```
-frontend/src/domains/elected-officials/
-  types/index.ts
-  repositories/elected-officials.repository.ts
-  hooks/useElectedOfficials.ts
-  index.ts
-```
-
-**Type definition extends the person pattern:**
-
-```typescript
-// domains/elected-officials/types/index.ts
-export interface ElectedOfficial {
-  id: string
-  dossier_id: string
-  person_id?: string
-  full_name_en: string
-  full_name_ar: string
-  title_en: string
-  title_ar: string
-  office: string
-  term_start: string
-  term_end?: string
-  party?: string
-  committees: Committee[]
-  contact_info?: ContactInfo
-  created_at: string
-  updated_at: string
-}
-
-export interface Committee {
-  id: string
-  name_en: string
-  name_ar: string
-  role: 'chair' | 'member' | 'observer'
-}
-```
-
-**Repository follows existing pattern exactly** (apiGet/apiPost/apiPatch/apiDelete).
-
-**Hook follows engagement hook pattern** (query key factory, CRUD mutations with toast).
-
-**Update `dossier-routes.ts`:**
-
-```typescript
-export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
-  // ... existing entries
-  elected_official: 'elected-officials', // ADD
-}
-```
-
-**Backend:** Needs new API routes at `/api/elected-official-dossiers` following existing dossier endpoint patterns. Must verify `elected_officials` table exists in Supabase via MCP -- if not, needs a migration.
-
-### 3. New Shared Components
-
-#### WorkspaceShell
-
-The core workspace layout component for engagements and forums.
-
-```
-frontend/src/components/workspace/
-  WorkspaceShell.tsx          # Layout: header + lifecycle bar + tabs + content area
-  LifecycleBar.tsx            # 6-stage progress indicator
-  WorkspaceHeader.tsx         # Engagement title, metadata, action buttons
-  WorkspaceTabs.tsx           # Tab navigation using TanStack Router Links
-  WorkspaceSkeleton.tsx       # Loading state
-```
-
-**WorkspaceShell architecture:**
-
-```typescript
-interface WorkspaceShellProps {
-  engagement: EngagementFullProfile
-  lifecycleBar: React.ReactNode
-  tabs: Array<{ id: string; path: string; label: string; badge?: number }>
-  children: React.ReactNode // Outlet content
-}
-```
-
-**Tab implementation uses TanStack Router `<Link>` components** with `activeProps` for active state, NOT client-side tab state. This gives:
-
-- URL-driven tab state (shareable, bookmarkable)
-- Browser back/forward works across tabs
-- Each tab content is its own route (code-split independently)
-
-#### LifecycleBar
-
-Horizontal stepper showing the 6 engagement stages.
-
-```typescript
-type LifecycleStage = 'intake' | 'preparation' | 'briefing' | 'execution' | 'follow_up' | 'closed'
-
-interface LifecycleBarProps {
-  stage: LifecycleStage
-  engagementId: string
-  onStageClick?: (stage: LifecycleStage) => void
-  canTransition?: boolean
-  suggestedNextStage?: LifecycleStage
-}
-```
-
-Build with HeroUI stepper or custom component. Each stage is clickable. Current stage is filled, completed stages have checkmarks, future stages are dimmed. Must be responsive (horizontal on desktop, vertical or compressed on mobile) and RTL-safe (stage flow direction reverses).
-
-#### RelationshipSidebar
-
-Collapsible right panel for all dossier detail pages.
-
-```typescript
-interface RelationshipSidebarProps {
-  dossierId: string
-  dossierType: string
-  isOpen: boolean
-  onToggle: () => void
-}
-```
-
-Uses existing `useRelationships` hook from the relationships domain. Groups linked dossiers by tier (anchors, activities, threads, contacts). Each linked dossier renders as a `DossierCard` (compact variant).
-
-**Integration point:** Add to `DossierDetailLayout` as an optional right panel. Use CSS grid for the two-column layout when sidebar is open.
-
-#### AttentionCard
-
-Used in Operations Hub for overdue/due-soon items.
-
-```typescript
-interface AttentionCardProps {
-  item: WorkItem | IntakeTicket | Commitment
-  severity: 'overdue' | 'due_soon' | 'at_risk'
-  onClick: () => void
-}
-```
-
-#### StageKanban
-
-Lifecycle-aware variant of the existing kanban that groups columns by lifecycle stage instead of workflow stage.
-
-```typescript
-interface StageKanbanProps {
-  engagementId: string
-  groupBy: 'workflow_stage' | 'lifecycle_stage'
-}
-```
-
-Extends existing `useEngagementKanban` hook. Adds `lifecycle_stage` as an optional grouping dimension.
-
-### 4. Sidebar Refactor
-
-**Replace `navigation-config.ts` contents** with new hub-based structure:
-
-```typescript
-export const createNavigationSections = (
-  counts: { intake: number; waiting: number; attention: number },
-  isAdmin: boolean,
-): NavigationSection[] => [
-  {
-    id: 'operations',
-    label: 'navigation.operations',
-    items: [
-      { id: 'dashboard', label: 'navigation.dashboard', path: '/dashboard', icon: LayoutDashboard },
-      { id: 'my-tasks', label: 'navigation.myTasks', path: '/tasks', icon: CheckSquare },
-      { id: 'calendar', label: 'navigation.calendar', path: '/calendar', icon: CalendarDays },
-      {
-        id: 'intake',
-        label: 'navigation.intake',
-        path: '/intake',
-        icon: Inbox,
-        badgeCount: counts.intake,
-      },
-    ],
-  },
-  {
-    id: 'dossiers',
-    label: 'navigation.dossiers',
-    items: [
-      // Anchors
-      { id: 'countries', path: '/dossiers/countries', icon: Globe },
-      { id: 'organizations', path: '/dossiers/organizations', icon: Building2 },
-      // Activities
-      { id: 'engagements', path: '/dossiers/engagements', icon: Handshake },
-      { id: 'forums', path: '/dossiers/forums', icon: Users },
-      // Threads
-      { id: 'topics', path: '/dossiers/topics', icon: Tag },
-      { id: 'working-groups', path: '/dossiers/working-groups', icon: Network },
-      // Contacts
-      { id: 'persons', path: '/dossiers/persons', icon: User },
-      { id: 'elected-officials', path: '/dossiers/elected-officials', icon: Crown },
-    ],
-  },
-  ...(isAdmin
-    ? [
-        {
-          id: 'administration',
-          label: 'navigation.administration',
-          items: [
-            { id: 'audit-logs', path: '/admin/audit-logs', icon: ScrollText },
-            { id: 'compliance', path: '/admin/compliance', icon: Shield },
-            { id: 'settings', path: '/admin/settings', icon: Settings },
-          ],
-        },
-      ]
-    : []),
-]
-```
-
-**What gets removed from sidebar:**
-
-- Custom Dashboard, Approvals, Positions, After Actions (absorbed into dossier context)
-- Briefs, Briefing Books, Intelligence (absorbed into workspace Docs tab)
-- Analytics, Reports, SLA Monitoring (absorbed into dashboard widgets)
-- Data Library, Word Assistant (moved to admin or contextual actions)
-
-**`AppSidebar.tsx` changes are minimal** -- it already delegates to `createNavigationSections` via `NavMain`. Add tier sub-labels within the Dossiers section (visual grouping). Keep Search, QuickNavigation, Theme/Language controls, NavUser unchanged.
-
-### 5. Lifecycle State Flow
-
-```
-                     +---------+
-                     | Supabase|
-                     | DB      |
-                     +----+----+
-                          |
-                  engagements.lifecycle_stage (enum)
-                          |
-              +-----------+-----------+
-              |                       |
-     Backend API                  Realtime
-     PATCH /engagement-dossiers/:id   subscription
-     { lifecycle_stage: 'preparation' }
-              |                       |
-              v                       v
-     engagements.repository.ts    Supabase channel
-     updateEngagement(id,          on('UPDATE')
-       { lifecycle_stage })           |
-              |                       |
-              v                       v
-     useUpdateEngagement()        queryClient.invalidateQueries
-     mutation                     (['engagements', 'detail', id])
-              |
-              v
-     LifecycleBar component
-     (reads from engagement.lifecycle_stage)
-     (onClick triggers useUpdateEngagement)
-```
-
-**Stage transition logic** lives in a new hook within the engagements domain:
-
-```typescript
-// domains/engagements/hooks/useLifecycleTransition.ts
-const STAGE_ORDER: LifecycleStage[] = [
-  'intake',
-  'preparation',
-  'briefing',
-  'execution',
-  'follow_up',
-  'closed',
-]
-
-export function useLifecycleTransition(engagementId: string) {
-  const { data: engagement } = useEngagement(engagementId)
-  const { data: kanban } = useEngagementKanban(engagementId)
-  const updateEngagement = useUpdateEngagement()
-
-  const canAdvance = useMemo(() => {
-    // Check if current stage tasks are complete
-    const currentIndex = STAGE_ORDER.indexOf(engagement?.lifecycle_stage ?? 'intake')
-    // All tasks tagged with current stage should be done
-    return true // Simplified -- real logic checks task completion
-  }, [kanban, engagement?.lifecycle_stage])
-
-  const advanceStage = () => {
-    const current = engagement?.lifecycle_stage ?? 'intake'
-    const nextStage = STAGE_ORDER[STAGE_ORDER.indexOf(current) + 1]
-    if (nextStage) {
-      updateEngagement.mutate({
-        id: engagementId,
-        updates: { lifecycle_stage: nextStage },
-      })
-    }
-  }
-
-  return { currentStage: engagement?.lifecycle_stage, canAdvance, advanceStage }
-}
-```
-
-**Database changes required:**
-
-```sql
--- Migration 1: Add lifecycle_stage to engagements
-CREATE TYPE engagement_lifecycle_stage AS ENUM (
-  'intake', 'preparation', 'briefing', 'execution', 'follow_up', 'closed'
-);
-ALTER TABLE engagements
-  ADD COLUMN lifecycle_stage engagement_lifecycle_stage NOT NULL DEFAULT 'intake';
-
--- Migration 2: Add lifecycle_stage reference to work_items
-ALTER TABLE work_items
-  ADD COLUMN lifecycle_stage engagement_lifecycle_stage;
-
--- Migration 3: Verify/create elected_officials table with RLS
-```
-
-### 6. Data Flow Changes
-
-#### Operations Hub (Dashboard)
-
-New data requirements:
-
-| Widget             | Data Source                                                                       | Query                                           |
-| ------------------ | --------------------------------------------------------------------------------- | ----------------------------------------------- |
-| Attention Needed   | work_items WHERE deadline < NOW() + interval '48h' AND assignee_id = current_user | New: `useAttentionItems()`                      |
-| Active Engagements | engagements WHERE lifecycle_stage NOT IN ('closed') GROUP BY lifecycle_stage      | Extend: `useEngagements()` with groupBy         |
-| Timeline           | calendar_events WHERE date BETWEEN NOW() AND NOW() + interval '7d'                | Existing: `useCalendarEvents()` with date range |
-| Recent Activity    | audit_logs ORDER BY created_at DESC LIMIT 20                                      | Existing: `useAuditLogs()`                      |
-| Quick Stats        | COUNT queries across engagements, work_items, intake                              | New: `useDashboardStats()`                      |
-
-**New hooks needed:**
-
-- `useAttentionItems()` -- cross-entity overdue/at-risk query
-- `useDashboardStats()` -- aggregated counts
-- `useEngagementsByStage()` -- engagements grouped by lifecycle
-
-#### Engagement Workspace Tabs
-
-Each workspace tab uses existing domain hooks with engagement-scoped filters:
-
-| Tab      | Hook                                                   | Filter                                 |
-| -------- | ------------------------------------------------------ | -------------------------------------- |
-| Overview | `useEngagement(id)`                                    | Existing, no change                    |
-| Context  | `useRelationships(dossierId)`                          | Existing, no change                    |
-| Tasks    | `useEngagementKanban(id)`                              | Existing, add lifecycle_stage grouping |
-| Calendar | `useCalendarEvents({ engagementId })`                  | Extend with engagement filter          |
-| Docs     | `useDocuments({ entityId, entityType: 'engagement' })` | Existing filter                        |
-| Audit    | `useAuditLogs({ entityId, entityType: 'engagement' })` | Existing filter                        |
-
-**Most workspace data needs are already served by existing hooks.** The main new work is:
-
-1. Lifecycle stage grouping for kanban
-2. Calendar events filtered by engagement (verify backend API supports this)
-3. The WorkspaceShell layout component itself
-
-### 7. Suggested Build Order (Dependency-Aware)
-
-The spec orders phases as: Navigation -> Ops Hub -> Workspace -> Dossier Hub -> Feature Absorption -> Lifecycle Engine.
-
-**Problem:** The spec puts Lifecycle Engine last, but Ops Hub and Workspace both depend on `lifecycle_stage`. Pull the DB migration forward.
-
-**Recommended build order:**
-
-```
-Phase 1: Navigation & Route Consolidation      (no new features, pure cleanup)
-  |
-  +-- 1a: Delete duplicate routes, add redirects
-  +-- 1b: Gate demo pages behind VITE_DEV_MODE
-  +-- 1c: Rename working_groups -> working-groups
-  +-- 1d: Rewrite navigation-config.ts (3 hub sections)
-  |
-Phase 2: Lifecycle Engine (DB + types + hooks)  (small scope, prerequisite)
-  |
-  +-- 2a: Supabase migration (lifecycle_stage on engagements + work_items)
-  +-- 2b: Add LifecycleStage type to engagement types
-  +-- 2c: Add useLifecycleTransition hook
-  +-- 2d: Extend updateEngagement to handle lifecycle_stage
-  |
-Phase 3: Operations Hub                         (needs lifecycle_stage for grouping)
-  |
-  +-- 3a: New dashboard page components (AttentionZone, TimelineZone, EngagementsByStage)
-  +-- 3b: New hooks (useAttentionItems, useDashboardStats, useEngagementsByStage)
-  +-- 3c: Role-adaptive filter logic
-  |
-Phase 4: Engagement Workspace                   (needs lifecycle + route consolidation done)
-  |
-  +-- 4a: WorkspaceShell, LifecycleBar, WorkspaceTabs components
-  +-- 4b: Convert $id.tsx to layout route, create $id/ child routes
-  +-- 4c: Migrate existing EngagementDossierPage content to overview tab
-  +-- 4d: Build scoped tabs (tasks, calendar, docs, audit)
-  +-- 4e: Forum workspace (same pattern + sessions)
-  |
-Phase 5: Enriched Dossier Pages                 (reuses workspace patterns)
-  |
-  +-- 5a: RelationshipSidebar component
-  +-- 5b: DossierDetailLayout sidebar slot integration
-  +-- 5c: Type-specific enrichments (anchor, thread, contact tiers)
-  +-- 5d: Elected Officials domain + pages + routes
-  |
-Phase 6: Feature Absorption                     (must come last)
-  |
-  +-- 6a: Analytics -> dashboard widgets
-  +-- 6b: AI Briefings -> workspace Docs tab "Generate" action
-  +-- 6c: Network Graph -> RelationshipSidebar expandable view
-  +-- 6d: Search -> enhanced Cmd+K quick switcher
-  +-- 6e: Remove absorbed standalone pages
-```
-
-## Anti-Patterns to Avoid
-
-### Anti-Pattern 1: Over-nesting Routes
-
-**What:** Creating nested route directories for every dossier type's tabs
-**Why bad:** 8 types x 6 tabs = 48 route files. Most tabs are lightweight.
-**Instead:** Use nested routes ONLY for workspace types (engagements, forums) where tabs have heavy, independently-splittable content (kanban, calendar). Other types use client-side tab state within the page component.
-
-### Anti-Pattern 2: Duplicating Data Fetching Across Tabs
-
-**What:** Each workspace tab independently fetching the engagement
-**Why bad:** 6 tabs = 6 redundant queries for the same engagement
-**Instead:** Fetch engagement once in the layout route (`$id.tsx`). Child tab routes only fetch their specific data (tasks, calendar events, etc.). TanStack Query deduplication helps, but avoiding the calls entirely is better.
-
-### Anti-Pattern 3: Breaking Navigation During Migration
-
-**What:** Removing old routes before new ones are stable
-**Why bad:** Users lose bookmarks, notification links break, ChatDock citations break
-**Instead:** Phase 1 adds redirect stubs from old paths to new canonical paths. The `_protected.tsx` file already has `handleCitationClick` referencing `/engagements/$engagementId` -- this must be updated to `/dossiers/engagements/$id`. Old route files become redirect-only stubs. Remove stubs after confirming no external references.
-
-### Anti-Pattern 4: Lifecycle State in Client Only
-
-**What:** Managing lifecycle transitions as client-side state or local storage
-**Why bad:** Multiple users on same engagement = state drift, no audit trail
-**Instead:** Lifecycle state lives in database. Transitions are API calls. Realtime subscription propagates changes to all connected clients. Client always reads server state.
-
-### Anti-Pattern 5: Giant God Components
-
-**What:** Building WorkspaceShell as a single 500+ line component
-**Why bad:** Hard to test, hard to code-split, RTL/responsive complexity compounds
-**Instead:** Compose from focused sub-components (WorkspaceHeader, LifecycleBar, WorkspaceTabs), each independently testable and memoizable.
 
 ## Patterns to Follow
 
-### Pattern 1: Layout Route for Workspace Shell
+### Pattern 1: Notification Dispatcher (Strategy Pattern)
 
-**What:** TanStack Router `$id.tsx` renders persistent shell, child routes render in `<Outlet />`
-**When:** Engagement and forum detail pages
-**Why:** Workspace chrome (header, lifecycle bar, tabs) persists across tab navigation. No re-mount, no layout shift. Already proven by `_protected.tsx` in this codebase.
-
-### Pattern 2: Domain Repository Extension (not new domain)
-
-**What:** Add lifecycle methods to existing engagement repository, not a separate lifecycle domain
-**When:** Lifecycle is an engagement concern, not a cross-cutting domain
-**Example:**
+**What:** Central dispatcher that routes notifications to channels based on user preferences.
+**When:** Every domain event that should notify a user.
+**Why:** The existing `notification.service.ts` only does in-app inserts. Extend with dispatcher, do not replace.
 
 ```typescript
-// Add to engagements.repository.ts
-export async function transitionLifecycleStage(
-  id: string,
-  stage: LifecycleStage,
-): Promise<EngagementFullProfile> {
-  return apiPatch<EngagementFullProfile>(`/engagement-dossiers/${id}`, { lifecycle_stage: stage })
+// backend/src/services/notification-dispatcher.service.ts
+interface NotificationPayload {
+  userId: string
+  type: string
+  category: NotificationCategory
+  title: string
+  titleAr?: string
+  message: string
+  messageAr?: string
+  priority: NotificationPriority
+  actionUrl?: string
+  sourceType?: string
+  sourceId?: string
+  data?: Record<string, unknown>
+}
+
+interface NotificationChannel {
+  send(payload: NotificationPayload, user: UserProfile): Promise<void>
+}
+
+class NotificationDispatcher {
+  private channels: Map<string, NotificationChannel> = new Map()
+
+  register(name: string, channel: NotificationChannel): void {
+    this.channels.set(name, channel)
+  }
+
+  async dispatch(payload: NotificationPayload): Promise<void> {
+    const preferences = await this.getUserPreferences(
+      payload.userId,
+      payload.category,
+    )
+    const user = await this.getUser(payload.userId)
+
+    const dispatches: Promise<void>[] = []
+
+    if (preferences.in_app_enabled !== false) {
+      // In-app defaults to enabled
+      dispatches.push(this.channels.get('in_app')!.send(payload, user))
+    }
+    if (preferences.email_enabled) {
+      dispatches.push(this.channels.get('email')!.send(payload, user))
+    }
+    if (preferences.push_enabled) {
+      dispatches.push(this.channels.get('push')!.send(payload, user))
+    }
+
+    // Fire-and-forget with error isolation per channel
+    await Promise.allSettled(dispatches)
+  }
 }
 ```
 
-### Pattern 3: Scoped Query Keys for Tab Data
+### Pattern 2: Trigger Registration (Observer Pattern)
 
-**What:** Engagement-scoped query keys enable targeted invalidation
-**When:** Workspace tabs fetch engagement-scoped data
-**Example:**
+**What:** Register notification triggers at service call sites, not in route handlers.
+**When:** After mutations that should notify users.
+**Why:** Keeps route handlers clean, centralizes notification logic.
 
 ```typescript
-export const workspaceKeys = {
-  tasks: (engagementId: string) => ['workspace', 'tasks', engagementId] as const,
-  calendar: (engagementId: string) => ['workspace', 'calendar', engagementId] as const,
-  docs: (engagementId: string) => ['workspace', 'docs', engagementId] as const,
-  audit: (engagementId: string) => ['workspace', 'audit', engagementId] as const,
+// backend/src/services/notification-triggers.service.ts
+export class NotificationTriggers {
+  constructor(private dispatcher: NotificationDispatcher) {}
+
+  async onWorkItemAssigned(
+    workItem: WorkItem,
+    assigneeId: string,
+    assignedBy: string,
+  ): Promise<void> {
+    await this.dispatcher.dispatch({
+      userId: assigneeId,
+      type: 'work_item_assigned',
+      category: 'assignments',
+      title: `New assignment: ${workItem.title}`,
+      message: `You have been assigned a ${workItem.source} work item`,
+      priority: workItem.priority === 'urgent' ? 'urgent' : 'normal',
+      actionUrl: `/work-items/${workItem.id}`,
+      sourceType: 'work_item',
+      sourceId: workItem.id,
+    })
+  }
+
+  async onDeadlineApproaching(
+    workItem: WorkItem,
+    hoursRemaining: number,
+  ): Promise<void> { /* ... */ }
+
+  async onEngagementStageChanged(
+    engagement: Engagement,
+    newStage: string,
+    changedBy: string,
+  ): Promise<void> { /* ... */ }
+
+  async onAttentionItemCreated(
+    item: AttentionItem,
+    targetUserId: string,
+  ): Promise<void> { /* ... */ }
 }
 ```
 
-### Pattern 4: Sidebar Config as Single Source of Truth
+### Pattern 3: E2E Test Fixtures with Authenticated State
 
-**What:** All navigation items defined in `navigation-config.ts`, sidebar renders declaratively
-**When:** Always -- this pattern already exists and should be preserved
-**Why:** Adding/removing nav items is a data change, not a component change.
+**What:** Reusable Playwright fixtures that handle auth + seed data.
+**When:** Every E2E test that needs a logged-in user.
+**Why:** Avoid repeating login flow in every test; use storage state.
+
+```typescript
+// tests/fixtures/auth.fixture.ts
+import { test as base } from '@playwright/test'
+import type { Page } from '@playwright/test'
+
+type AuthFixtures = {
+  authenticatedPage: Page
+}
+
+export const test = base.extend<AuthFixtures>({
+  authenticatedPage: async ({ browser }, use) => {
+    const context = await browser.newContext({
+      storageState: 'tests/.auth/user.json',
+    })
+    const page = await context.newPage()
+    await use(page)
+    await context.close()
+  },
+})
+
+// Global setup: login once, save state
+// tests/global-setup.ts
+async function globalSetup(): Promise<void> {
+  const browser = await chromium.launch()
+  const page = await browser.newPage()
+  await page.goto(process.env.BASE_URL + '/login')
+  await page.fill('[name="email"]', process.env.TEST_USER_EMAIL!)
+  await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD!)
+  await page.click('button[type="submit"]')
+  await page.waitForURL('**/dashboard')
+  await page.context().storageState({ path: 'tests/.auth/user.json' })
+  await browser.close()
+}
+```
+
+### Pattern 4: Email via Resend
+
+**What:** Use Resend for transactional email.
+**Why over alternatives:**
+- Nodemailer + SMTP: Requires SMTP server, deliverability issues
+- SendGrid: Overcomplicated for this scale
+- AWS SES: Requires separate AWS account
+- Resend: Simple API, 100 emails/day free, good DX, React Email for templates
+
+### Pattern 5: Web Push via VAPID (No Firebase)
+
+**What:** Use `web-push` npm package with VAPID keys for browser push.
+**Why:** No Firebase dependency, works with all modern browsers, free, open standard.
+**Existing support:** `push_device_tokens` table already has `platform = 'web'` and `provider = 'web_push'` options.
+
+## Anti-Patterns to Avoid
+
+### Anti-Pattern 1: Notification in Route Handlers
+**What:** Calling notification dispatch directly in Express route handlers.
+**Why bad:** Mixes HTTP concerns with notification logic; hard to test; easy to forget.
+**Instead:** Call `NotificationTriggers` methods from service layer after successful mutation.
+
+### Anti-Pattern 2: Synchronous Notification Dispatch
+**What:** Awaiting all notification channels before responding to the HTTP request.
+**Why bad:** Email/push failures slow down or break the API response.
+**Instead:** Use `Promise.allSettled()` with fire-and-forget for email/push. In-app insert can be awaited since it is a fast DB write.
+
+### Anti-Pattern 3: Rebuilding Existing Notification UI
+**What:** Creating new notification components from scratch.
+**Why bad:** `useNotificationCenter`, `NotificationList`, `NotificationPanel`, `NotificationBadge`, and `NotificationPreferences` already exist and work with Supabase Realtime. The hook already supports categories, pagination, mark-as-read, preferences, and device registration.
+**Instead:** Add `NotificationToast` for real-time alerts. Audit and fix existing components. Wire the bell icon into the sidebar/header.
+
+### Anti-Pattern 4: Database Triggers for Complex Routing Logic
+**What:** Using PostgreSQL triggers for notification channel routing.
+**Why bad:** Hard to debug, hard to test, mixes data layer with business logic.
+**Instead:** Keep all routing logic in the backend NotificationDispatcher. Database should only store notifications.
+
+### Anti-Pattern 5: Monolithic E2E Tests
+**What:** Single long test that does login, create, edit, delete, navigate all in one flow.
+**Why bad:** Flaky, hard to debug, one failure blocks everything.
+**Instead:** Independent test files per feature with shared auth fixtures.
 
 ## Scalability Considerations
 
-| Concern               | At current scale          | At 100 engagements                | At 1000 engagements                        |
-| --------------------- | ------------------------- | --------------------------------- | ------------------------------------------ |
-| Dashboard queries     | Single query per widget   | Add pagination to Attention items | Virtual scrolling, server-side aggregation |
-| Lifecycle transitions | Direct API call           | Same                              | Add optimistic updates with rollback       |
-| RelationshipSidebar   | Fetch all linked dossiers | Same (usually <20 links)          | Paginate if >50 links                      |
-| Workspace tab data    | Fetch on tab mount        | Same                              | Prefetch adjacent tabs on hover            |
-| Route tree size       | ~80 routes                | ~90 routes (workspace tabs)       | Same (scale is in data, not routes)        |
+| Concern | Current (1-10 users) | At 100 users | At 1000 users |
+|---------|---------------------|--------------|---------------|
+| Notification volume | Direct DB insert + Realtime | Same pattern works | Add Redis queue (BullMQ) for async dispatch |
+| Email sending | Resend free tier (100/day) | Resend paid ($20/mo) | Resend or migrate to SES |
+| Push delivery | web-push direct send | Same | Batch sends with retry queue |
+| E2E test speed | Serial, ~2 min | Same | Parallelize with Playwright sharding |
+| Database connections | Supabase pooler | Same | Review connection pooling config |
+| Deployment | Single DigitalOcean droplet | Same with bigger droplet | Docker Swarm or managed k8s |
 
-## Integration Points Summary
+## Suggested Build Order (Dependencies)
 
-| Integration Point     | Current State                            | Required Change                                     | Scope          |
-| --------------------- | ---------------------------------------- | --------------------------------------------------- | -------------- |
-| Route tree            | Flat + dossiers/ nesting                 | Add workspace nested routes, delete duplicates      | Major          |
-| navigation-config.ts  | 7 sections, tools-focused                | 3 sections, hub-focused                             | Rewrite        |
-| AppSidebar.tsx        | Renders NavMain                          | Minimal (tier sub-labels)                           | Small          |
-| \_protected.tsx       | MainLayout + ChatDock + citation handler | Update citation paths                               | Small          |
-| DossierDetailLayout   | Header + grid + actions                  | Add sidebar slot                                    | Small          |
-| dossier-routes.ts     | 7 types mapped                           | Add elected_official, rename working_groups         | Small          |
-| EngagementDossierPage | Dialog-based kanban                      | Becomes layout route with Outlet                    | Major refactor |
-| engagements domain    | CRUD + participants + kanban + briefs    | Add lifecycle types + hooks                         | Extension      |
-| work-items domain     | Standard CRUD                            | Add lifecycle_stage filter                          | Extension      |
-| calendar domain       | Global events                            | Add engagement scope filter                         | Extension      |
-| Dashboard page        | Metric cards                             | Full redesign to 3-zone ops hub                     | Rewrite        |
-| Backend API           | No lifecycle endpoints                   | lifecycle_stage on PATCH, new aggregation endpoints | Extension      |
-| Database              | No lifecycle_stage column                | 2-3 Supabase migrations                             | Migration      |
+```
+Phase A: Notification Backend Infrastructure
+  ├── NotificationDispatcher service (routes to channels)
+  ├── NotificationTriggers service (event-to-payload mapping)
+  ├── Extend existing notification.service.ts (add category, priority, action_url)
+  └── Verify/fix existing DB schema (ensure notifications table matches hook types)
+  
+Phase B: Notification Channels (depends on A)
+  ├── Email channel via Resend
+  ├── Web Push channel via VAPID + web-push
+  ├── Service worker (frontend/public/sw.js)
+  └── Push permission + registration flow in frontend
+  
+Phase C: Frontend Notification Wiring (depends on A, partially B)
+  ├── NotificationToast component (uses existing useNotificationRealtime)
+  ├── Wire NotificationTriggers calls into backend route handlers
+  ├── Audit/fix existing notification UI components
+  └── Notification preferences UI for new email/push channels
+  
+Phase D: Production Deployment Hardening (independent)
+  ├── SSL setup script for certbot
+  ├── Fix deploy.yml (SSH deploy, health check, rollback)
+  ├── Monitoring (uptime checks, error alerting)
+  └── Backup scripts (Redis volumes)
+  
+Phase E: E2E Testing (depends on working app, ideally after D)
+  ├── Auth fixture + global setup
+  ├── Seed data fixture
+  ├── Critical flow specs (auth, dossier CRUD, work items, engagement lifecycle)
+  ├── Notification E2E tests
+  └── CI integration (update ci.yml E2E job with proper env)
+  
+Phase F: Seed Data + First-Run (depends on final schema)
+  ├── Comprehensive realistic seed data
+  └── First-run onboarding hints
+```
+
+**Phase ordering rationale:**
+1. Backend notification infrastructure must exist before channels can be added
+2. Email and push channels are independent of each other but both depend on dispatcher
+3. Frontend wiring connects backend triggers to existing UI components
+4. Deployment hardening is independent and can run in parallel with notification work
+5. E2E tests validate everything built in prior phases
+6. Seed data comes last because it needs the final schema stabilized
 
 ## Sources
 
-- Direct codebase analysis of TanStack Router v5 file-based routing patterns (verified `_protected.tsx` uses layout route + `<Outlet />` pattern)
-- Existing domain repository pattern verified across 20 domains in `frontend/src/domains/`
-- Navigation config inspected at `frontend/src/components/layout/navigation-config.ts` (301 lines)
-- AppSidebar inspected at `frontend/src/components/layout/AppSidebar.tsx` (189 lines)
-- Engagement domain inspected: repository (383 lines), types (190 lines), hooks (341 lines)
-- Route tree enumerated: 100+ route files under `routes/_protected/`
-- Dossier route utility inspected at `frontend/src/lib/dossier-routes.ts`
-- 7 type-specific dossier pages confirmed at `frontend/src/pages/dossiers/`
-- Backend API structure verified: no lifecycle or elected-official endpoints exist
+- Existing codebase analysis (HIGH confidence): `useNotificationCenter.ts`, `notification.service.ts`, migration `20260111100001`, `realtime.ts`, Docker/nginx/CI configs
+- Supabase Realtime patterns already in use: `useAttentionRealtime.ts`, `useUnifiedWorkRealtime.ts`, `useDossierPresence.ts`
+- GitHub Actions CI/CD: `.github/workflows/ci.yml` (comprehensive), `.github/workflows/deploy.yml` (basic SSH deploy)
+- Playwright: configs at root and frontend level, existing RTL+a11y test jobs in CI

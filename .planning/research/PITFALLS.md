@@ -1,399 +1,248 @@
 # Domain Pitfalls
 
-**Domain:** Hub-and-spoke architecture redesign for existing diplomatic dossier management app
-**Researched:** 2026-03-28
-**Codebase:** 129 route files, 100+ protected routes, 8 dossier types, bilingual RTL/LTR, 200KB bundle budget
+**Domain:** Notification system, production deployment, and E2E testing for existing Supabase/Express/React diplomatic app
+**Researched:** 2026-04-06
+**Milestone:** v4.0 Live Operations
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites, broken navigation, or major regressions.
+Mistakes that cause rewrites, outages, or major user trust issues.
 
-### Pitfall 1: Route Restructuring Breaks TanStack Router's Generated Route Tree
+### Pitfall 1: Database Trigger Coupling for Notification Delivery
 
-**What goes wrong:** Moving route files from flat `_protected/countries.tsx` to nested `_protected/dossiers/countries/index.tsx` invalidates the auto-generated `routeTree.gen.ts`. Every `createFileRoute` call contains a hardcoded path string that TanStack Router's bundler plugin manages. Moving files without running the route generator creates mismatches between the path string in the file and the actual file location, causing silent 404s or build failures.
-
-**Why it happens:** The codebase currently has **duplicate routes** -- both `_protected/countries.tsx` AND `_protected/dossiers/countries/index.tsx` exist for countries, engagements, forums, organizations, persons, and working groups. The spec calls for consolidating under `/dossiers/{type}/`, but deleting the old flat routes while keeping the new nested ones requires careful coordination with the route tree generator.
-
-**Consequences:**
-
-- Build failures from route tree mismatches (129 route files to reconcile)
-- Broken deep links and bookmarks (users have saved `/countries/123`, now it is `/dossiers/countries/123`)
-- Navigation shell hardcoded links pointing to old paths
-- `_protected.tsx` has hardcoded navigation paths in `handleCitationClick` (lines 30-43) that will break
-
+**What goes wrong:** Using PostgreSQL triggers directly to send push notifications or emails. If the external service (FCM, Resend, etc.) times out or fails, the trigger fails and **rolls back the entire transaction** -- the original data write (e.g., task assignment) is lost.
+**Why it happens:** Seems elegant to fire notifications from a trigger on the `notifications` table insert. Developers underestimate external service latency and failure rates.
+**Consequences:** Lost data writes, inconsistent state, silent failures where users think they assigned a task but nothing was saved.
 **Prevention:**
+1. Decouple notification delivery from the transaction. Insert a row into `notifications` table (status: `pending`) -- this is the only thing the trigger does.
+2. Use a Supabase Database Webhook to trigger an Edge Function for actual delivery (email, push, in-app via Realtime).
+3. The Edge Function handles retries independently of the original transaction.
+4. Add `status` (`pending`, `sent`, `failed`), `retry_count`, and `last_attempt_at` columns to the notifications table.
+5. Use `pg_cron` to sweep `failed` notifications every 5 minutes for retry.
+6. For in-app notifications, use Supabase Realtime subscriptions on the `notifications` table -- the client listens, no trigger-based delivery needed.
+**Detection:** Monitor notifications stuck in `pending` or `failed` status. Alert if delivery rate drops below 95%.
 
-1. Run `pnpm tsr generate` (TanStack Router CLI) after every file move to regenerate `routeTree.gen.ts`
-2. Create redirect routes from old paths to new paths BEFORE removing old route files -- use TanStack Router's `redirect` in `beforeLoad`
-3. Audit all hardcoded route strings project-wide with `grep -r "to: '/" | grep -v node_modules` before removing old routes
-4. Move routes in batches by tier (anchors first, then activities, threads, contacts) -- not all at once
-5. Keep old route files as thin redirect stubs for one release cycle
+### Pitfall 2: HTTPS Bootstrap Chicken-and-Egg with Docker + Nginx
 
-**Detection:** Build failures mentioning `routeTree.gen.ts`, 404s in navigation, broken sidebar links, Sentry errors with "Route not found"
-
-**Phase to address:** Phase 1 (Navigation & Route Consolidation)
-
----
-
-### Pitfall 2: Dual Navigation System Collision
-
-**What goes wrong:** The codebase already has THREE navigation implementations: `components/layout/Sidebar.tsx`, `components/layout/AppSidebar.tsx`, and `components/modern-nav/NavigationShell/NavigationShell.tsx`. Adding a new hub-based sidebar without fully removing the old ones creates conflicts -- multiple sidebars rendering, inconsistent active-state highlighting, and competing mobile drawers.
-
-**Why it happens:** The existing `MainLayout.tsx` wraps the protected layout and uses one sidebar system. The `NavigationShell` was built as a demo/experiment (`modern-nav-demo.tsx`, `modern-nav-standalone.tsx`). Developers add the new hub-based sidebar to `MainLayout` but forget to remove or guard the old components, causing double-renders.
-
-**Consequences:**
-
-- Two sidebars visible on certain routes
-- Active route highlighting broken (each sidebar has its own route-matching logic)
-- Mobile bottom tab bar conflicts with sidebar drawer
-- Bundle bloat from shipping all three navigation implementations (~30-50KB wasted)
-- Accessibility issues: multiple `nav` landmarks confuse screen readers
-
+**What goes wrong:** Nginx container fails to start because SSL certificate files don't exist yet, but Certbot can't obtain certificates because Nginx isn't serving the ACME challenge on port 80.
+**Why it happens:** Production `nginx.conf` references certificate paths that don't exist on first deploy. Certbot needs a running web server to verify domain ownership.
+**Consequences:** Deploy is completely blocked on first run. Manual SSH intervention required, defeating the purpose of CI/CD.
 **Prevention:**
+1. Use a two-phase Nginx config: (a) Start with HTTP-only config that serves `.well-known/acme-challenge/`. (b) Run Certbot to obtain certs. (c) Switch to HTTPS config and reload Nginx.
+2. Automate this in an `entrypoint.sh` script or use `docker-nginx-certbot` image that handles the bootstrap.
+3. Store certs in a named Docker volume (not bind mount) so they survive container recreation.
+4. Add a Certbot renewal cron that runs every 12 hours and reloads Nginx via `nginx -s reload` after renewal.
+5. Let's Encrypt requires a domain name -- bare IP addresses are not supported. Ensure DNS is configured before attempting cert issuance.
+**Detection:** CI/CD pipeline should verify HTTPS responds with valid cert post-deploy (`curl --fail https://domain.com/health`).
 
-1. Audit all three navigation components BEFORE starting: `Sidebar.tsx`, `AppSidebar.tsx`, `NavigationShell.tsx`
-2. Choose ONE as the base to modify (likely `AppSidebar.tsx` since it is the newest shadcn-compatible one)
-3. Delete demo routes (`modern-nav-demo.tsx`, `modern-nav-standalone.tsx`) as the very first commit
-4. Use Knip (already configured) to catch unused navigation component imports after deletion
-5. Single `MainLayout.tsx` should be the sole location where the sidebar renders
+### Pitfall 3: Notification Fatigue Destroys User Trust
 
-**Detection:** Visual regression (two sidebars), Knip reporting unused exports from old nav components, bundle analysis showing dead navigation code
-
-**Phase to address:** Phase 1 (Navigation & Route Consolidation) -- must be first action
-
----
-
-### Pitfall 3: Engagement Workspace Tabs Render All Content Eagerly
-
-**What goes wrong:** The `WorkspaceShell` component renders all 6 tabs (Overview, Context, Tasks, Calendar, Docs, Audit) on mount, even though only one is visible. Each tab contains heavy components -- Kanban board (80KB chunk), Calendar, React Flow graph, Document manager. Initial load of the engagement workspace becomes 300KB+, blowing through the 200KB budget.
-
-**Why it happens:** The natural React pattern `{activeTab === 'tasks' && <TasksTab />}` unmounts and remounts on tab switch, losing state. Developers avoid this by keeping all tabs mounted but hidden with CSS (`display: none`). This loads all tab JavaScript eagerly.
-
-**Consequences:**
-
-- Engagement workspace initial load exceeds 200KB budget (Tasks chunk alone is 80KB)
-- `size-limit` CI gate fails on `build:ci`
-- Slow Time-to-Interactive on engagement pages, especially on mobile
-- Memory pressure from 6 mounted-but-hidden heavy components
-
+**What goes wrong:** Users get bombarded with notifications for every minor event -- every status change, comment, assignment. They disable notifications entirely or stop checking the app.
+**Why it happens:** Developers implement notifications for all event types by default without frequency analysis. Diplomatic staff managing dozens of engagements could receive 50+ notifications per day.
+**Consequences:** Users disable push permissions permanently (Chrome cannot re-ask after "Block"), email notifications go to spam due to volume, the notification center becomes useless noise.
 **Prevention:**
+1. Default to conservative notification settings: only assignments to you, approaching deadlines (24h and 1h), and stage transitions on engagements you own.
+2. Implement email digest mode: batch non-urgent notifications into a daily summary email rather than individual emails per event.
+3. Never notify a user about their own actions.
+4. Add per-type, per-channel granular preferences from day one (in-app/email/push toggles per notification type).
+5. Cap notification rate: max 1 notification per entity per hour for non-urgent types (coalesce "5 tasks updated on Engagement X" into one notification).
+6. Separate notification types into urgency tiers: `immediate` (deadline in 1h, direct assignment), `standard` (stage transitions, new comments), `batch` (activity summaries, weekly digests).
+**Detection:** Track notification dismiss-without-action rate. If >80%, the signal-to-noise ratio is wrong. Track push permission grant/revoke rates.
 
-1. Use `React.lazy()` + `Suspense` for each tab content component -- TanStack Router already does this for routes, extend the pattern to workspace tabs
-2. Implement "render on first visit, keep mounted after" pattern:
-   ```tsx
-   const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set(['overview']))
-   // On tab change: setVisitedTabs(prev => new Set([...prev, newTab]))
-   // Render: visitedTabs.has(tabId) && <Suspense><LazyTabContent /></Suspense>
-   ```
-3. Consider using the React 19.2 `<Activity>` component which supports hide/show without unmount -- it is designed for exactly this pattern
-4. Split workspace tabs into separate route-based code-split chunks: `/dossiers/engagements/:id/tasks` already in the spec, use TanStack Router's file-based routing to auto-split each tab into its own chunk
-5. Run `pnpm build:ci` (which includes `size-limit`) after every workspace component addition
+### Pitfall 4: Flaky E2E Tests That Block CI/CD
 
-**Detection:** `size-limit` CI failure, Lighthouse performance score drop, bundle analyzer showing workspace chunk > 100KB
-
-**Phase to address:** Phase 3 (Engagement Workspace) -- design decision needed before building any tabs
-
----
-
-### Pitfall 4: Lifecycle State Machine Without Proper Persistence Creates Ghost States
-
-**What goes wrong:** The lifecycle engine (Intake -> Preparation -> Briefing -> Execution -> Follow-up -> Closed) is implemented as client-side state only, without atomic database transitions. If a user advances from "Preparation" to "Briefing" but the API call fails silently, the UI shows "Briefing" while the database says "Preparation". Other users see a different state. The engagement is in a "ghost state."
-
-**Why it happens:** The spec says stage transitions are "driven by task completion" and "not rigid -- staff can skip stages or move backward." This flexibility tempts developers to handle transitions purely in React state (or TanStack Query optimistic updates) without server-side validation. The `lifecycle_stage` enum on the `engagements` table becomes a dumb column that gets updated as an afterthought.
-
-**Consequences:**
-
-- State divergence between users viewing the same engagement
-- Lost audit trail (the spec requires stage transitions to be logged in the Audit tab)
-- Impossible to query "all engagements in Briefing stage" reliably for the Operations Hub
-- Optimistic UI updates that never reconcile on network failure
-- The "guide, not gate" philosophy is misinterpreted as "no validation" -- leading to invalid transitions (e.g., jumping from Intake to Closed)
-
+**What goes wrong:** Playwright tests pass locally but fail intermittently in CI, blocking every deploy. Team starts ignoring test failures or skipping tests.
+**Why it happens:** Tests depend on timing (`waitForTimeout`), use brittle CSS selectors, share state between tests, or hit real Supabase where network latency varies. The app has Supabase Realtime subscriptions that race with test assertions.
+**Consequences:** CI pipeline becomes unreliable. Developers merge with failing tests. E2E suite is abandoned within weeks.
 **Prevention:**
+1. Use Playwright's auto-waiting (`.click()`, `.fill()`, `.toBeVisible()`) -- never `waitForTimeout()`.
+2. Use role-based and text-based locators (`getByRole`, `getByText`, `getByTestId`), not CSS class selectors.
+3. Each test must be fully isolated: reset database state via API call in `beforeEach`, not shared global setup.
+4. Mock external services (email provider, AI briefing) in E2E -- use Playwright's `route.fulfill()` for API mocking.
+5. For Supabase Realtime, wait for specific DOM changes (`expect(locator).toBeVisible()`) rather than arbitrary timeouts.
+6. Run tests with `--retries=2` in CI but investigate any test that needs retries frequently.
+7. Set explicit viewport, locale, and `dir` in `playwright.config.ts` for RTL consistency.
+8. Start with 5-10 critical flow tests, not 50. Cover: login, create dossier, assign task, view notifications, engagement lifecycle transition.
+**Detection:** Track flaky test rate weekly. Any test failing >5% of runs gets flagged for rewrite.
 
-1. Server-side transition validation: create a dedicated `PATCH /api/engagements/:id/transition` endpoint that validates allowed transitions, updates the column, and writes an audit log entry -- all in a single database transaction
-2. Define allowed transitions as a simple adjacency map (no XState needed for 6 linear stages):
-   ```typescript
-   const ALLOWED_TRANSITIONS: Record<Stage, Stage[]> = {
-     intake: ['preparation'],
-     preparation: ['briefing', 'intake'], // backward allowed
-     briefing: ['execution', 'preparation'],
-     execution: ['follow_up', 'briefing'],
-     follow_up: ['closed', 'execution'],
-     closed: ['follow_up'], // reopen allowed
-   }
-   ```
-3. Keep it simple: do NOT introduce XState for this. Six linear stages with backward allowed is a lookup table, not a state machine library. XState adds ~15KB to the bundle for no benefit here.
-4. Use TanStack Query's `useMutation` with `onError` rollback, NOT optimistic updates for stage transitions
-5. Add a `lifecycle_transitions` audit table or use the existing audit log system
+### Pitfall 5: Backup Restore Never Actually Tested
 
-**Detection:** Different lifecycle stages shown to different users, audit tab missing transition entries, Operations Hub engagement counts do not match reality
-
-**Phase to address:** Phase 6 (Lifecycle Engine) -- but the DB schema must be designed in Phase 3 when the workspace is built
-
----
-
-### Pitfall 5: Feature Absorption Breaks Existing Functionality Silently
-
-**What goes wrong:** When absorbing standalone pages (analytics, briefings, network graph, etc.) into contextual locations (dashboard widgets, workspace tabs, sidebar panels), the absorbed components lose their standalone data-fetching, routing, and state management. They were built to be full pages with their own query params, error boundaries, and loading states. Embedding them inside a tab strips all of that.
-
-**Why it happens:** The spec lists 10+ pages to absorb. Developers copy the page component into a tab or widget, remove the route wrapper, and the component breaks because it relied on:
-
-- Route search params (`useSearch()` from TanStack Router) that do not exist in a tab context
-- Full-page error boundaries that are now nested inside a workspace
-- Standalone TanStack Query keys that conflict with the parent workspace's queries
-- Page-level loading skeletons that look wrong inside a card/tab
-
-**Consequences:**
-
-- Analytics charts that worked standalone now show empty states inside dashboard widgets (lost query param context)
-- Network graph that expected full viewport now renders in a 300px sidebar panel (layout break)
-- AI briefing generation that navigated to `/briefings/:id` on success now has nowhere to navigate
-- Duplicated API calls (parent workspace and embedded component both fetch similar data)
-- Error in one absorbed component crashes the entire workspace (no granular error boundary)
-
+**What goes wrong:** Supabase daily backups run automatically, but nobody has ever tested restoring one. When disaster strikes, restore fails due to missing role passwords, Storage object gaps, or extension conflicts.
+**Why it happens:** "We have backups" feels safe. Testing restore requires a separate Supabase project and deliberate effort.
+**Consequences:** Supabase daily backups do NOT include Storage API objects (uploaded files), only database metadata. Custom role passwords are not preserved. Extensions like `pg_net` and `pg_cron` may fire unintended actions during restore (e.g., cron jobs sending notifications from restored data). The project is inaccessible during restoration -- downtime scales with database size.
 **Prevention:**
-
-1. Create "embedded" variants of each component, not just move the page component:
-   - `AnalyticsPage.tsx` (standalone, full page) vs `AnalyticsWidget.tsx` (embedded, card-sized)
-   - Each variant manages its own scope (props-driven, not route-driven)
-2. Wrap every absorbed component in its own `ErrorBoundary` -- a crash in the network graph sidebar must NOT crash the dossier detail page
-3. Replace `useSearch()` route dependencies with props: `<AnalyticsWidget dossierType="country" dossierId={id} />`
-4. Audit all `useNavigate()` calls in absorbed components -- they need to be converted to callbacks or removed
-5. Test each absorption in isolation: render the embedded variant without a route context and verify it works
-6. Do NOT delete standalone pages until the embedded variant is verified -- keep both for one release
-
-**Detection:** Empty states in embedded components, console errors about missing route context, workspace crashes on specific tabs, duplicate network requests in DevTools
-
-**Phase to address:** Phase 5 (Feature Absorption) -- but embedded variant interfaces should be designed during Phase 2 (dashboard widgets) and Phase 3 (workspace tabs)
+1. Test restore to a staging Supabase project at least once before going live, then quarterly thereafter.
+2. Document the restore procedure: (a) disable `pg_net`/`pg_cron` post-restore, (b) reset custom role passwords, (c) verify Storage objects separately, (d) drop and recreate Realtime subscriptions if needed.
+3. Back up Storage objects independently (Supabase Storage API export or sync to external S3).
+4. Keep a restore runbook in the repo at `deploy/RESTORE_RUNBOOK.md`.
+5. Supabase Realtime replication slot is handled automatically on restore, but custom subscriptions/slots must be recreated.
+**Detection:** Calendar reminder for quarterly restore drill. Log the result. If restore hasn't been tested in 90 days, flag it.
 
 ---
 
 ## Moderate Pitfalls
 
-### Pitfall 6: RTL Sidebar and RelationshipSidebar Panel Direction Inversion
+### Pitfall 6: Email Deliverability Killed by Missing DNS Records
 
-**What goes wrong:** The new hub-based sidebar (left in LTR) must appear on the RIGHT in RTL. The `RelationshipSidebar` (right panel in LTR) must appear on the LEFT in RTL. If either uses physical CSS properties (`left`, `right`, `margin-left`) instead of logical properties (`inset-inline-start`, `ms-*`, `me-*`), the panels render on the wrong side in Arabic.
-
-**Why it happens:** The codebase has `eslint-plugin-rtl-friendly` but it is at WARN level (not ERROR). Developers can ship physical properties without build failure. The existing `Sidebar.tsx` and `AppSidebar.tsx` were built before the RTL hardening in v2.0 Phase 4 and may contain legacy physical properties.
-
+**What goes wrong:** Transactional emails (assignment notifications, deadline reminders, digests) land in spam or never arrive.
+**Why it happens:** Missing or misconfigured SPF, DKIM, and DMARC DNS records. Using the email provider's shared sending domain instead of a verified custom domain.
+**Consequences:** Users miss critical deadline notifications. Password reset emails fail. Users lose trust in the system entirely.
 **Prevention:**
+1. Set up SPF, DKIM, and DMARC on your sending domain before sending a single production email.
+2. Use a dedicated subdomain for transactional email (e.g., `notify.yourdomain.com`) to isolate sender reputation from any future marketing email.
+3. Never mix marketing and transactional email on the same domain or subdomain.
+4. Disable link tracking and open tracking on transactional emails -- they make messages look suspicious to spam filters and are unnecessary for notifications.
+5. Test deliverability with mail-tester.com before launch.
+6. Validate recipient email addresses on signup to reduce bounces from typos and fake addresses.
+**Detection:** Monitor bounce rate and delivery rate in your email provider dashboard. Alert if delivery rate drops below 98%.
 
-1. Audit existing sidebar components for physical CSS properties before modifying them
-2. Use Tailwind logical properties exclusively: `ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`
-3. For collapsible panels, use `inset-inline-start` / `inset-inline-end` for positioning, NOT `left` / `right`
-4. The `RelationshipSidebar` must use `end-0` (not `right-0`) for positioning -- in RTL this resolves to physical left
-5. Test every sidebar state (expanded, collapsed, mobile drawer) in BOTH Arabic and English
-6. Consider promoting `eslint-plugin-rtl-friendly` to ERROR level for new files in `components/layout/`
+### Pitfall 7: Push Notification Permission Prompt on First Visit
 
-**Detection:** Sidebar on wrong side in Arabic, overlapping panels, `eslint-plugin-rtl-friendly` warnings in CI output
-
-**Phase to address:** Phase 1 (sidebar) and Phase 4 (RelationshipSidebar)
-
----
-
-### Pitfall 7: LifecycleBar Stage Indicator Renders Backwards in RTL
-
-**What goes wrong:** The 6-stage lifecycle bar (Intake -> Preparation -> Briefing -> Execution -> Follow-up -> Closed) is a horizontal stepper. In LTR it flows left-to-right. In RTL with `dir="rtl"`, `flexDirection: "row"` reverses to right-to-left. If the JSX order is `[Intake, Preparation, ..., Closed]`, Arabic users see Closed on the right and Intake on the left -- the OPPOSITE of the intended temporal flow.
-
-**Why it happens:** The global RTL rules state "the FIRST JSX child in a row renders on the RIGHT" in RTL. For a lifecycle bar, Arabic readers should still see progression from right (start) to left (end). BUT -- if the lifecycle represents temporal progression (universally left-to-right in progress bars), then the RTL flip produces a confusing result. This is an ambiguous UX decision that gets decided wrong by default.
-
+**What goes wrong:** Browser shows the native "Allow notifications?" prompt immediately when the user logs in. User clicks "Block" reflexively with no context.
+**Why it happens:** Developers call `Notification.requestPermission()` in app initialization without context.
+**Consequences:** Once blocked in Chrome, the user must manually navigate to `chrome://settings/content/notifications` to re-enable. Most users never will. That notification channel is permanently lost for that user.
 **Prevention:**
+1. Use a "soft ask" pattern: show a custom in-app dialog first explaining what notifications they'll receive ("Get notified about task assignments and approaching deadlines").
+2. Only trigger the native browser prompt after the user clicks "Enable" on your custom dialog.
+3. Best timing: after the user performs a relevant action (assigns a task, sets a deadline) -- "Want to be notified about updates to this engagement?"
+4. Provide a notification preferences page where users can enable/disable push later.
+5. Never auto-prompt on page load, login, or first visit.
+6. Contextual prompts achieve 70-85% opt-in rates vs 40-60% for cold first-load prompts.
+**Detection:** Track permission grant rate. If below 50%, the prompt timing is wrong.
 
-1. Make an explicit UX decision BEFORE building: should the lifecycle bar flip in RTL?
-   - **Option A (Recommended):** Use `dir="ltr"` on the lifecycle bar container and wrap with the existing `LtrIsolate` component. Progress bars are universally left-to-right. Arabic text labels still render RTL within each stage bubble.
-   - **Option B:** Let it flip naturally. First stage (Intake) on the right, last stage (Closed) on the left. Follows Arabic reading order.
-2. Document the decision in the component's JSDoc
-3. Test with both languages before merging
-4. Use CSS `direction: ltr` with `unicode-bidi: isolate` for the container, letting text inside each stage bubble inherit RTL
+### Pitfall 8: Docker Compose Production Anti-Patterns
 
-**Detection:** Lifecycle bar looks "backwards" in one language, user confusion about which stage is first/current
-
-**Phase to address:** Phase 3 (Engagement Workspace) -- decision needed in planning, not during implementation
-
----
-
-### Pitfall 8: Operations Hub Dashboard Becomes a Monolithic Chunk
-
-**What goes wrong:** The Operations Hub redesign adds 3 zones with 5+ widget types (AttentionCard, EngagementsByStage, Timeline, RecentActivity, QuickStats). Each widget imports its own charting library, date utilities, and data transformers. The existing `DashboardPage` chunk is already 72KB. Adding new widgets without code-splitting pushes it past the budget.
-
-**Why it happens:** The dashboard is the home screen -- developers assume it should load fast and therefore eagerly import everything. But "load fast" and "import everything" are contradictory. The existing `charts-vendor` chunk is already 152KB (gzipped); if dashboard widgets import charting libraries that are not in the shared vendor chunk, they create new separate chunks.
-
+**What goes wrong:** Development Docker Compose config used in production without hardening. Secrets exposed, no health checks, no resource limits, no log rotation.
+**Why it happens:** `docker-compose.yml` works in dev, so it ships. The project already has `docker-compose.prod.yml` but it may lack production hardening.
+**Consequences:** Security vulnerabilities, disk fills from unbounded logs, OOM kills from unconstrained containers, data loss from anonymous volumes.
 **Prevention:**
+1. Verify `docker-compose.prod.yml` has: health checks on all services, resource limits (CPU + memory), restart policies (`unless-stopped`), named volumes (not anonymous), and log rotation (`json-file` driver with `max-size: 10m`, `max-file: 3`).
+2. Never hardcode secrets in Compose files -- use `.env` files excluded from git or Docker secrets.
+3. Create dedicated Docker networks -- database container should not be on the same network as the reverse proxy.
+4. Set `NODE_ENV=production` explicitly in the container environment.
+5. Pin Docker image versions (not `latest` tag) for reproducible builds.
+6. Review the existing `deploy/docker-compose.prod.yml` against this checklist before adding new services (Nginx, Certbot).
+**Detection:** Run `docker compose -f docker-compose.prod.yml config` to verify no secrets exposed. Periodic `docker stats` monitoring.
 
-1. Each dashboard zone should be a separate lazy-loaded component with its own `Suspense` boundary
-2. "Above the fold" content (Action Bar + Attention Needed) loads eagerly; below-fold (Timeline, Activity) loads lazily
-3. Share the existing `charts-vendor` chunk -- do NOT import alternative charting libraries
-4. Use skeleton placeholders per zone (not one big skeleton for the whole page)
-5. Run `pnpm analyze` (Vite bundle analyzer, already configured) after adding each widget
-6. Widget data queries should use TanStack Query's `staleTime` tiers (already established in v2.0)
+### Pitfall 9: CI/CD Pipeline That Blocks All Deploys
 
-**Detection:** `size-limit` CI failure on "Initial JS" entry, Lighthouse LCP regression, bundle analyzer showing new vendor chunks
-
-**Phase to address:** Phase 2 (Operations Hub)
-
----
-
-### Pitfall 9: Scoped Kanban/Calendar Lose Global Functionality
-
-**What goes wrong:** The workspace Tasks and Calendar tabs show engagement-scoped views of the existing Kanban and Calendar components. Developers create scoped versions by filtering the existing query, but the scoped version loses features: bulk actions, cross-engagement drag-and-drop, export, and filter persistence that the global versions had.
-
-**Why it happens:** The global Kanban (`/tasks`) fetches all work items and has complex filter state in URL search params. The scoped workspace version needs to filter by engagement ID but still support the same interactions. If the scoped version is a copy-paste with a filter added, it diverges immediately. If it is a prop-based filter on the original, the original's assumptions about global scope break.
-
+**What goes wrong:** A strict CI pipeline with lint + typecheck + test + build + deploy stages blocks every deploy when any check fails. With 4500+ ESLint violations deferred from v2.0 and ESLint strict rules at warn level, enabling strict enforcement breaks everything.
+**Why it happens:** Desire for quality gates conflicts with existing tech debt. Pipeline is all-or-nothing.
+**Consequences:** Team bypasses CI entirely, removes checks, or deploys manually via SSH -- negating the entire CI/CD investment.
 **Prevention:**
+1. Phase CI checks: start with `build` + critical E2E only as required gates. Add lint/typecheck as informational (non-blocking) initially.
+2. Use GitHub Actions with separate jobs: `build` (required), `e2e-critical` (required), `lint` (optional/informational), `deploy` (manual trigger initially, auto on main later).
+3. Gate on new violations only: use ESLint baseline comparison so existing 4500+ violations don't block CI.
+4. Keep deploy fast: build Docker image in CI, push to registry, SSH to droplet to pull and restart. Target: under 5 minutes total.
+5. Add manual deploy override for emergencies (with audit log of who triggered it).
+6. Store SSH deploy key as GitHub Actions secret, not in the workflow file.
+**Detection:** Track mean deploy time and deploy frequency. If deploys slow to less than 1 per week, pipeline is too strict.
 
-1. Refactor the Kanban component to accept an optional `scope` prop: `{ type: 'engagement', id: string } | { type: 'global' }`
-2. The scope prop controls the query filter, available columns, and which actions are shown
-3. Do NOT create a separate `ScopedKanban` component -- keep one component with scope awareness
-4. Same pattern for Calendar: `scope` prop controls the query
-5. URL search params for filters should be namespaced per scope to avoid conflicts
-6. Test both global (`/tasks`) and scoped (workspace tab) variants after every change
+### Pitfall 10: Seed Data Violates Foreign Key Constraints or Feels Fake
 
-**Detection:** Missing features in scoped view compared to global, filter state leaking between global and scoped views, drag-and-drop broken in scoped view
-
-**Phase to address:** Phase 3 (workspace tabs reference existing components)
-
----
-
-### Pitfall 10: Mobile Bottom Tab Bar Conflicts with Workspace Tab Bar
-
-**What goes wrong:** The spec adds a mobile bottom tab bar (Dashboard, Dossiers, Tasks, More) AND workspace tabs (Overview, Context, Tasks, Calendar, Docs, Audit). On mobile, users see TWO horizontal tab bars -- the workspace tabs at the top and the bottom navigation. The "Tasks" label appears in both bars but navigates to different views. Confusion and wasted vertical space on small screens.
-
-**Why it happens:** Bottom tab bars and workspace tabs serve different purposes (app-level nav vs page-level nav) but look identical on a small screen. The spec does not address how they coexist on mobile.
-
+**What goes wrong:** Seed script fails because tables are inserted in wrong order, violating foreign key constraints. Or seed data is obviously fake ("Test Country 1", "Lorem ipsum") and doesn't help users understand the system.
+**Why it happens:** Complex schema with 8 dossier types, work items, relationships, junction tables (`work_item_dossiers`), and polymorphic documents. Insertion order matters and is non-obvious. Creating realistic diplomatic data requires domain knowledge.
+**Consequences:** Seed script fails on fresh setup, new developers can't run the app locally, demo environments are empty or unconvincing.
 **Prevention:**
-
-1. On mobile, workspace tabs should become a scrollable horizontal pill bar (not a tab bar) with distinct styling from the bottom navigation
-2. Alternatively, workspace tabs could become a dropdown/select on mobile (< 640px breakpoint)
-3. The bottom tab bar's "Tasks" navigates to `/tasks` (global); workspace Tasks tab is clearly labeled "Engagement Tasks" or scoped with the engagement name
-4. Minimum 44px touch targets on both bars (already enforced in codebase)
-5. Test on 320px viewport width -- both bars must be usable simultaneously without overlapping
-
-**Detection:** User testing shows confusion between the two tab levels, vertical space complaints on mobile, touch target overlap
-
-**Phase to address:** Phase 3 (Engagement Workspace) mobile responsive design
+1. Map the dependency graph of all tables before writing seed scripts. Insert in topological order: profiles -> dossiers (countries first, then orgs/forums) -> engagements -> work items -> junction tables -> documents.
+2. Use Supabase's `supabase db seed` with a single `seed.sql` file that inserts in correct order.
+3. Generate deterministic UUIDs (e.g., `uuid_generate_v5` with a namespace) so seeds are idempotent and can be referenced across tables.
+4. Temporarily disable RLS during seeding (`SET session_replication_role = 'replica'`), re-enable after.
+5. Include realistic Arabic and English content -- actual country names, plausible engagement titles, realistic diplomatic scenarios. This seed data doubles as a demo environment.
+6. Make seed script idempotent: use `INSERT ... ON CONFLICT DO NOTHING` or truncate first.
+7. Run seed script in CI on a fresh database to catch ordering issues immediately.
+**Detection:** CI job that runs `supabase db reset` + seed on every PR touching migration or seed files.
 
 ---
 
 ## Minor Pitfalls
 
-### Pitfall 11: Cmd+K Quick Switcher Search Index Stale After Route Changes
+### Pitfall 11: Let's Encrypt Rate Limiting During Testing
 
-**What goes wrong:** If the Cmd+K quick switcher has a hardcoded list of navigable routes, it becomes stale after route consolidation. Users search for "Analytics" (absorbed page) and get a dead link or no result.
+**What goes wrong:** Repeatedly requesting certificates during setup/testing hits Let's Encrypt's rate limit (50 certificates per registered domain per week). Locked out for up to 7 days.
+**Why it happens:** Running Certbot without `--dry-run` during development/debugging.
+**Consequences:** Cannot obtain production certificates for up to a week. Production launch blocked.
+**Prevention:** Always use `--dry-run` flag during testing. Use Let's Encrypt staging environment (`--staging`) for development. Only run production Certbot once, after dry-run succeeds. Document this in the deploy runbook.
+**Detection:** Check Certbot logs for rate limit errors before reporting "HTTPS doesn't work."
 
+### Pitfall 12: Realtime Subscription Leak in Notification Center
+
+**What goes wrong:** Notification center component subscribes to Supabase Realtime on mount but doesn't unsubscribe on unmount. Multiple subscriptions accumulate as user navigates.
+**Why it happens:** Missing cleanup in `useEffect`. React 19 Strict Mode double-mounts in development, exposing the issue early if developers are paying attention.
+**Consequences:** Memory leaks, duplicate notifications displayed, hitting Supabase's concurrent connection limit (200 on free tier, higher on Pro).
 **Prevention:**
+1. Always return cleanup function from `useEffect` that calls `supabase.removeChannel()`.
+2. Use a single shared subscription for notifications at the app level (in `_protected.tsx` layout), not per-component.
+3. The project already uses Supabase Realtime with 1s debounce for the Operations Hub dashboard -- follow the exact same pattern for notifications.
+4. The notification subscription should be established once on login and torn down on logout.
+**Detection:** Monitor active Realtime connections in Supabase dashboard. Log subscription count in development. If count grows on navigation, there's a leak.
 
-1. Quick switcher index should be derived from the route tree, not hardcoded
-2. Add entity search (dossiers, engagements by name) alongside route search
-3. Update the index in Phase 5 when pages are absorbed
+### Pitfall 13: E2E Tests Coupled to Arabic Translation Strings
 
-**Phase to address:** Phase 1 (initial), Phase 5 (update after absorption)
-
----
-
-### Pitfall 12: Forum Sessions Create Deeply Nested Routes
-
-**What goes wrong:** Forums with sessions create routes like `/dossiers/forums/:forumId/sessions/:sessionId/tasks` which is 4 levels deep. TanStack Router handles this fine technically, but the breadcrumb, URL length, and mental model become unwieldy for users.
-
+**What goes wrong:** Tests use hardcoded Arabic strings for assertions. When translations change, tests break. Text-based locators fail due to Unicode normalization differences between environments.
+**Why it happens:** Using `getByText('المهام')` seems correct for an Arabic-first app, and the project rules emphasize Arabic-first development.
+**Consequences:** Translation updates break E2E tests. False negatives from Unicode normalization issues across OS/CI environments.
 **Prevention:**
+1. Use `data-testid` attributes for critical interaction points (buttons, navigation items, form fields).
+2. For text assertions, use translation keys via a shared helper that loads the same i18n JSON files the app uses.
+3. Prefer partial text matching (`{ exact: false }`) where text locators are used.
+4. Test both Arabic and English locales explicitly -- create a test matrix in Playwright config.
+5. Keep `data-testid` attributes even in production (they have negligible performance impact and are invisible to users).
+**Detection:** If >3 tests break on a translation-only PR, locators are too tightly coupled to specific text.
 
-1. Sessions should be handled within the forum workspace as state/tabs, not as additional route nesting
-2. URL pattern: `/dossiers/forums/:forumId?session=sessionId&tab=tasks` (search params, not path params)
-3. This keeps the route tree flat while still being deep-linkable
+### Pitfall 14: Monitoring Gaps -- No Alerting Until Users Report Outage
 
-**Phase to address:** Phase 3 or Phase 6 (Forum workspace)
-
----
-
-### Pitfall 13: i18n Namespace Explosion from New Components
-
-**What goes wrong:** Each new shared component (LifecycleBar, DossierCard, RelationshipSidebar, WorkspaceShell, AttentionCard, StageKanban) needs translation keys. If each creates its own i18n namespace, the number of translation files doubles and Arabic translations lag behind English.
-
+**What goes wrong:** Production runs fine for weeks, then Docker logs fill the disk, a memory leak causes OOM kill, or the SSL cert expires silently. Users discover the outage before the team.
+**Why it happens:** Monitoring is deferred as "nice to have." DigitalOcean droplets have no alerting by default.
+**Consequences:** Reputation damage, data loss during unmonitored outages, cert expiry causing HTTPS errors for all users.
 **Prevention:**
-
-1. Group new component translations under existing namespaces: `engagement-workspace`, `operations-hub`, `dossier-hub`
-2. Create all Arabic translation keys AT THE SAME TIME as English -- not as a follow-up task
-3. Use the existing `unified-kanban` namespace for scoped kanban translations
-4. Add a CI check that Arabic and English namespace files have the same keys
-
-**Phase to address:** All phases -- enforce from Phase 1
-
----
-
-### Pitfall 14: Relationship Sidebar Causes N+1 Query Problem
-
-**What goes wrong:** The RelationshipSidebar appears on every dossier detail page and shows linked dossiers grouped by tier. If it fetches each linked dossier individually, a country with 20 linked engagements + 10 persons + 5 organizations triggers 35 API calls on page load.
-
-**Prevention:**
-
-1. Create a dedicated `GET /api/dossiers/:id/relationships` endpoint that returns all linked dossiers in one query with a JOIN
-2. Use TanStack Query's `staleTime` from the existing tier system (likely "reference data" tier with longer stale time)
-3. The sidebar should show compact cards with pre-joined data, not fetch full dossier objects
-4. Paginate if a dossier has more than 20 relationships per tier
-
-**Phase to address:** Phase 4 (Dossier Hub enriched detail pages)
+1. Enable DigitalOcean Monitoring (free) for CPU, memory, and disk alerts with thresholds (CPU >80% for 5min, disk >85%, memory >90%).
+2. Configure Docker log rotation in `docker-compose.prod.yml`: `logging: { driver: "json-file", options: { max-size: "10m", max-file: "3" } }` on every service.
+3. Add uptime monitoring (UptimeRobot free tier or DigitalOcean uptime checks) for the HTTPS health endpoint.
+4. Set cert expiry alert at 14 days before expiration (Certbot renewal failures are often silent).
+5. Sentry is already configured -- verify it captures backend unhandled promise rejections and uncaught exceptions.
+6. Add a `/health` endpoint that checks database connectivity, not just HTTP 200.
+**Detection:** Monthly review of monitoring coverage. If any outage happens without an alert firing first, add the missing monitor immediately.
 
 ---
 
 ## Phase-Specific Warnings
 
-| Phase                | Likely Pitfall                                 | Mitigation                                         | Severity |
-| -------------------- | ---------------------------------------------- | -------------------------------------------------- | -------- |
-| Phase 1: Navigation  | Route tree breaks on file moves (#1)           | Batch moves by tier, run `tsr generate` after each | Critical |
-| Phase 1: Navigation  | Dual sidebar collision (#2)                    | Delete old nav components first                    | Critical |
-| Phase 1: Navigation  | RTL sidebar direction (#6)                     | Logical properties only, test both languages       | Moderate |
-| Phase 2: Ops Hub     | Dashboard monolithic chunk (#8)                | Lazy-load zones, share charts-vendor               | Moderate |
-| Phase 3: Workspace   | Tab eager rendering (#3)                       | Route-based code splitting per tab                 | Critical |
-| Phase 3: Workspace   | Lifecycle bar RTL direction (#7)               | Explicit UX decision + LtrIsolate                  | Moderate |
-| Phase 3: Workspace   | Scoped vs global component divergence (#9)     | Scope prop pattern, one component                  | Moderate |
-| Phase 3: Workspace   | Mobile tab bar conflict (#10)                  | Distinct styling, scrollable pills                 | Moderate |
-| Phase 4: Dossier Hub | N+1 relationship queries (#14)                 | Dedicated batch endpoint                           | Minor    |
-| Phase 5: Absorption  | Silent feature regression (#5)                 | Embedded variants + ErrorBoundary                  | Critical |
-| Phase 5: Absorption  | Quick switcher stale index (#11)               | Derive from route tree                             | Minor    |
-| Phase 6: Lifecycle   | Ghost states from client-only transitions (#4) | Server-side transition endpoint                    | Critical |
-| Phase 6: Lifecycle   | Forum deep nesting (#12)                       | Search params instead of path nesting              | Minor    |
-| All Phases           | i18n namespace explosion (#13)                 | Grouped namespaces, simultaneous AR/EN             | Minor    |
-
-## Bundle Budget Risk Assessment
-
-Current state (gzipped, from size-limit config):
-
-- **Initial JS entry:** 200KB limit (currently at the limit)
-- **React vendor:** 50KB limit
-- **TanStack vendor:** 80KB limit
-- **Charts vendor:** 152KB (separate chunk, own budget)
-
-New components and their bundle risk:
-
-| Component                    | Estimated Size (gzipped)        | Mitigation                                |
-| ---------------------------- | ------------------------------- | ----------------------------------------- |
-| LifecycleBar                 | ~5KB                            | Small, safe to eagerly load               |
-| WorkspaceShell + 6 tabs      | ~80-120KB total                 | MUST be route-split per tab               |
-| RelationshipSidebar          | ~15KB                           | Lazy-load (collapsible panel)             |
-| Dashboard widgets (5 types)  | ~40-60KB total                  | Zone-based lazy loading                   |
-| StageKanban                  | ~10KB on top of existing Kanban | Scope prop on existing, not new component |
-| Quick Switcher (Cmd+K)       | ~20KB                           | Already exists, enhancement only          |
-| XState (if mistakenly added) | ~15KB                           | DO NOT ADD -- use lookup table instead    |
-
-**Total new JS:** ~170-230KB spread across lazy-loaded chunks.
-
-**Key risk:** The initial entry point budget (200KB) is already at the limit. ANY new code that lands in the entry chunk (not lazy-loaded) will break CI. Every new component MUST be behind `React.lazy()` or route-based code splitting. The only safe eager additions are tiny components (< 5KB) like LifecycleBar and the sidebar navigation structure itself.
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|---------------|------------|
+| Notification schema design | Trigger coupling (#1), subscription leaks (#12) | Decouple delivery via webhooks + Edge Functions, shared Realtime channel |
+| Notification preferences | Notification fatigue (#3) | Conservative defaults, per-type/per-channel controls, urgency tiers, digest mode |
+| Email notifications | Deliverability (#6) | SPF/DKIM/DMARC on dedicated subdomain before first send |
+| Browser push notifications | Permission UX (#7) | Soft-ask pattern, contextual timing after relevant user action |
+| HTTPS setup | Bootstrap chicken-and-egg (#2), rate limiting (#11) | Two-phase Nginx config, always --dry-run first |
+| CI/CD pipeline | Blocking deploys (#9) | Phase checks progressively, baseline ESLint comparison, manual override |
+| Docker production hardening | Anti-patterns (#8), monitoring gaps (#14) | Audit docker-compose.prod.yml, health checks, log rotation, DO alerts |
+| E2E test suite | Flaky tests (#4), Arabic text coupling (#13) | Auto-waiting, isolated state, data-testid, mock externals, both locales |
+| Backup strategy | Untested restores (#5) | Test restore before launch, quarterly drills, separate Storage backup |
+| Seed data | Foreign key ordering (#10) | Dependency graph, topological insert order, idempotent, realistic content |
+| Realtime notifications | Subscription leaks (#12) | Single app-level channel, cleanup on unmount, connection count monitoring |
 
 ## Sources
 
-- [TanStack Router File-Based Routing](https://tanstack.com/router/latest/docs/routing/file-based-routing) -- route restructuring patterns, auto-generated path strings
-- [TanStack Router Routing Concepts](https://tanstack.com/router/latest/docs/routing/routing-concepts) -- layout routes, pathless routes
-- [Large App Route Migration Discussion](https://www.answeroverflow.com/m/1443596813851427007) -- strangler pattern for 250+ route migration
-- [React State Management 2025](https://www.developerway.com/posts/react-state-management-2025) -- XState complexity vs simpler alternatives
-- [XState Guidelines](https://kyleshevlin.com/guidelines-for-state-machines-and-xstate/) -- when state machines are overkill
-- [React 19.2 Activity Component](https://react.dev/blog/2025/10/01/react-19-2) -- hide/show without unmount for tab patterns
-- [shadcn/ui Sidebar RTL Support](https://ui.shadcn.com/docs/components/radix/sidebar) -- dir prop patterns for RTL sidebars
-- [React Bundle Size Code Splitting](https://dev.to/gouranga-das-khulna/how-we-cut-our-react-bundle-size-by-40-with-smart-code-splitting-2chi) -- dashboard widget splitting strategies
-- [Tab Lazy Loading in React](https://learnersbucket.com/examples/interview/tab-component-with-lazy-loading-in-react/) -- render-on-first-visit pattern
-- [FreeCodeCamp Tab Performance](https://www.freecodecamp.org/news/build-a-high-performance-tab-component/) -- tab component optimization patterns
+- [Supabase Push Notifications Docs](https://supabase.com/docs/guides/functions/examples/push-notifications) - HIGH confidence
+- [Supabase Database Backups](https://supabase.com/docs/guides/platform/backups) - HIGH confidence
+- [Supabase Production Checklist](https://supabase.com/docs/guides/deployment/going-into-prod) - HIGH confidence
+- [Supabase Realtime Database Changes](https://supabase.com/docs/guides/realtime/subscribing-to-database-changes) - HIGH confidence
+- [Supabase Notification Strategy Discussion](https://github.com/orgs/supabase/discussions/13930) - MEDIUM confidence
+- [Playwright Best Practices 2026 - BrowserStack](https://www.browserstack.com/guide/playwright-best-practices) - MEDIUM confidence
+- [Playwright Flaky Tests Guide - BrowserStack](https://www.browserstack.com/guide/playwright-flaky-tests) - MEDIUM confidence
+- [Push Notification Permission UX - web.dev](https://web.dev/articles/push-notifications-permissions-ux) - HIGH confidence
+- [Push Notification Permission UX - Web Push Book](https://web-push-book.gauntface.com/permission-ux/) - MEDIUM confidence
+- [Email Deliverability Tips - Resend](https://resend.com/blog/top-10-email-deliverability-tips) - MEDIUM confidence
+- [Transactional Email Best Practices 2026 - Postmark](https://postmarkapp.com/guides/transactional-email-best-practices) - HIGH confidence
+- [Docker Nginx Certbot Auto-Renewal](https://github.com/JonasAlfredsson/docker-nginx-certbot) - MEDIUM confidence
+- [SSL in Docker Containers - DEV Community](https://dev.to/marrouchi/the-challenge-about-ssl-in-docker-containers-no-one-talks-about-32gh) - MEDIUM confidence
+- [Supabase Realtime I/O Management](https://dev.to/vitorbrangioni/effective-real-time-database-monitoring-with-supabase-and-postgresql-a-guide-to-minimizing-overhead-and-managing-io-f0b) - MEDIUM confidence
+- [Deploying to DigitalOcean with GitHub Actions](https://www.digitalocean.com/community/tech-talks/deploying-to-digitalocean-with-github-actions) - MEDIUM confidence
+- [Supabase Restore Documentation](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore) - HIGH confidence
 
 ---
 
-_Researched: 2026-03-28 for v3.0 "Connected Workflow" milestone_
+_Researched: 2026-04-06 for v4.0 "Live Operations" milestone_
