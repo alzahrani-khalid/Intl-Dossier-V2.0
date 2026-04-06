@@ -10,19 +10,22 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ## Current State
 
-**Shipped:** v2.0 Production Quality (2026-03-28)
+**Shipped:** v3.0 Connected Workflow (2026-04-06)
 
-The codebase is production-ready after a 7-phase hardening milestone:
+The system now operates as a connected hub-and-spoke architecture:
 
-- Unified toolchain (ESLint 9, Prettier, Knip, pre-commit hooks)
-- Consistent naming conventions enforced via ESLint
-- Security hardened (Supabase-first auth, RBAC, CSP, Zod validation, RLS on all tables)
-- RTL/LTR perfected (useDirection hook, LtrIsolate, logical properties, eslint-plugin-rtl-friendly)
-- Fully responsive (mobile-first, 44px touch targets, card view fallbacks)
-- Domain repository architecture (13 domains, zero raw fetch in hooks)
-- Performance optimized (200KB bundle budget, query tiers, deferred Sentry)
+- Hub-based 3-group sidebar (Operations, Dossiers, Administration) with mobile bottom tab bar
+- Engagement lifecycle engine (6 stages, flexible transitions, audit logging, forum sessions)
+- Role-adaptive Operations Hub dashboard with 5 attention zones and Supabase Realtime
+- Persistent engagement workspace with lifecycle stepper, kanban, calendar, docs, audit tabs
+- DossierShell architecture with RelationshipSidebar (tier grouping, mobile sheet) across all 8 types
+- Elected Officials as full domain (list + detail + committees)
+- Feature absorption: analytics, AI briefings, network graph, polling, export all in contextual locations
+- Cmd+K quick switcher replaces standalone search with entity search, recents, and command palette
 
-**Tech debt (12 items):** See `.planning/milestones/v2.0-MILESTONE-AUDIT.md`
+**Previous:** v2.0 Production Quality (2026-03-28) — 7-phase hardening (toolchain, security, RTL, responsive, architecture, performance)
+
+**Tech debt:** See `.planning/milestones/v2.0-MILESTONE-AUDIT.md` (v2.0) and `.planning/milestones/v3.0-MILESTONE-AUDIT.md` (v3.0)
 
 ## Requirements
 
@@ -52,21 +55,15 @@ The codebase is production-ready after a 7-phase hardening milestone:
 - ✓ Performance optimization (bundle, query, render) — v2.0 Phase 7
 
 - ✓ Navigation & route consolidation (3-group sidebar, mobile tab bar, Cmd+K, route dedup) — v3.0 Phase 8
+- ✓ Engagement lifecycle engine (6 stages, flexible transitions, audit logging, forum sessions) — v3.0 Phase 9
+- ✓ Operations Hub dashboard (5 attention zones, role-adaptive, Supabase Realtime) — v3.0 Phase 10
+- ✓ Engagement workspace (lifecycle stepper, kanban, calendar, docs, audit tabs) — v3.0 Phase 11
+- ✓ Enriched dossier pages (DossierShell, RelationshipSidebar, 8 types with tabs, Elected Officials domain) — v3.0 Phase 12
+- ✓ Feature absorption (analytics, AI, graph, polling, export absorbed; Cmd+K replaces search) — v3.0 Phase 13
 
 ### Active
 
-## Current Milestone: v3.0 Connected Workflow
-
-**Goal:** Transform disconnected pages into a connected hub-and-spoke architecture reflecting how diplomatic staff actually work — multiple entry points, engagement lifecycle, and operational overview.
-
-**Target features:**
-
-- Navigation & Route Consolidation (hub-based sidebar, eliminate duplicates, remove demos)
-- Operations Hub (dashboard redesign with attention zones, role-adaptive filters)
-- Engagement Workspace (lifecycle bar, tabbed workspace, scoped kanban/calendar)
-- Dossier Hub enriched detail pages (tier-specific views, RelationshipSidebar)
-- Feature Absorption (analytics, AI, network graph absorbed into contextual locations)
-- Lifecycle Engine (DB lifecycle_stage, stage transitions, forum sessions)
+(No active requirements — planning next milestone)
 
 ### Out of Scope
 
@@ -77,14 +74,14 @@ The codebase is production-ready after a 7-phase hardening milestone:
 
 ## Context
 
-- **Codebase:** 294 commits, 8732 files, ~60+ backend API endpoints, ~100+ frontend route files, 8 Supabase migrations
+- **Codebase:** 454 commits, 525+ files changed in v3.0, ~60+ backend API endpoints, ~150+ frontend route files, 11 Supabase migrations, 437K lines TypeScript
 - **Tech stack:** React 19, TypeScript 5.9, TanStack Router/Query v5, Express, Supabase (PostgreSQL 17), HeroUI v3, Tailwind v4, Vite
-- **Architecture:** Domain repository pattern across 13 domains, shared apiClient, backward-compat re-exports
-- **Quality gates:** ESLint 9 flat config, Prettier, Knip, pre-commit hooks (lint + format + build + dead-code), size-limit (200KB budget)
+- **Architecture:** Hub-and-spoke with DossierShell/WorkspaceShell patterns, domain repository across 13 domains, shared apiClient
+- **Quality gates:** ESLint 9 flat config, Prettier, Knip, pre-commit hooks, size-limit (200KB budget)
 - **Security:** Supabase-first auth with RBAC hierarchy, Zod validation on all routes, RLS on all tables, CSP hardened
 - **RTL:** useDirection() hook, LtrIsolate wrapper, eslint-plugin-rtl-friendly, zero physical CSS properties
-- **Responsive:** Mobile-first across all pages, 44px touch targets, card view fallbacks on tables
-- **Known tech debt:** 12 items documented in milestone audit (ESLint strict rules deferred, rtl-friendly at warn level, no automated breakpoint tests, 36 legacy hooks with literal staleTime)
+- **Responsive:** Mobile-first across all pages, 44px touch targets, card view fallbacks, RelationshipSidebar → BottomSheet on mobile
+- **Known tech debt:** v2.0 (12 items) + v3.0 tech debt (see milestone audit files)
 
 ## Constraints
 
@@ -107,6 +104,13 @@ The codebase is production-ready after a 7-phase hardening milestone:
 | size-limit as hard CI gate        | Bundle budget enforced, Lighthouse advisory   | ✓ Good     |
 | ESLint strict rules deferred      | 4500+ violations too large for this milestone | ⚠️ Revisit |
 | rtl-friendly at warn level        | Error-level no-restricted-syntax covers it    | ⚠️ Revisit |
+| Lifecycle guides, not gates       | Diplomatic work is non-linear; skip/revert OK | ✓ Good     |
+| Hub-and-spoke architecture        | Matches how diplomatic staff actually work    | ✓ Good     |
+| DossierShell shared layout        | Consistent UX across all 8 dossier types      | ✓ Good     |
+| Feature absorption over deletion  | Redirect old routes, absorb into context       | ✓ Good     |
+| Elected Officials via persons     | Query persons with subtype filter, no new table| ✓ Good     |
+| Kibo-UI KanbanProvider            | Better DX than raw @dnd-kit/core for kanban   | ✓ Good     |
+| Supabase Realtime for dashboard   | 1s debounce on tasks+transitions tables       | ✓ Good     |
 
 ## Evolution
 
@@ -129,4 +133,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-29 after Phase 8 (Navigation & Route Consolidation) complete_
+_Last updated: 2026-04-06 after v3.0 milestone_

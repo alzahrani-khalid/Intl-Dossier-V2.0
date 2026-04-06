@@ -1,25 +1,23 @@
 # Milestones
 
-## v3.0 Connected Workflow (In Progress)
+## v3.0 Connected Workflow (Shipped: 2026-04-06)
 
-**Started:** 2026-03-28
-**Phases:** 8-13 (6 phases, 45 requirements)
-**Goal:** Transform disconnected pages into a connected hub-and-spoke architecture reflecting how diplomatic staff actually work — multiple entry points, engagement lifecycle, and operational overview.
+**Phases completed:** 6 phases, 28 plans, 45 requirements
+**Timeline:** 9 days (2026-03-28 → 2026-04-06)
+**Commits:** 160 | **Files changed:** 525 | **Lines:** +43,480 / -7,323
 
-**Phases:**
+**Key accomplishments:**
 
-1. Phase 8: Navigation & Route Consolidation (NAV-01–06)
-2. Phase 9: Lifecycle Engine (LIFE-01–06)
-3. Phase 10: Operations Hub (OPS-01–07)
-4. Phase 11: Engagement Workspace (WORK-01–10)
-5. Phase 12: Enriched Dossier Pages (DOSS-01–10)
-6. Phase 13: Feature Absorption (ABSORB-01–06)
+1. Hub-based 3-group sidebar (Operations, Dossiers, Administration) with mobile bottom tab bar and Cmd+K quick switcher
+2. Engagement lifecycle engine with 6-stage progression, flexible transitions, audit logging, intake promotion, and forum sessions
+3. Role-adaptive Operations Hub dashboard with 5 attention zones, Supabase Realtime subscriptions, and 3,743 lines dead code removed
+4. Persistent engagement workspace with lifecycle stepper, inline kanban, calendar, document management, and AI briefing generation
+5. DossierShell architecture with RelationshipSidebar (tier grouping, mobile sheet), 52 nested tab routes across all 8 dossier types
+6. Elected Officials as full domain with Express API, list page, detail page with committees tab
+7. Feature absorption: analytics, AI briefings, network graph, polling, export absorbed into contextual locations; all standalone routes redirect
 
-**Key decisions:**
-
-- Lifecycle Engine ordered before Ops Hub/Workspace (both depend on `lifecycle_stage`)
-- 1 new dependency: `react-resizable-panels` (~5KB) for RelationshipSidebar
-- 200KB bundle budget maintained via lazy-loaded tabs and route-based code splitting
+**Tech debt:** See `.planning/milestones/v3.0-MILESTONE-AUDIT.md`
+**Archive:** `.planning/milestones/v3.0-ROADMAP.md`, `.planning/milestones/v3.0-REQUIREMENTS.md`
 
 ---
 
