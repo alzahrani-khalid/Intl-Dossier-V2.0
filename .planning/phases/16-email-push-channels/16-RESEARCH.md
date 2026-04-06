@@ -419,22 +419,19 @@ IS 'Timestamp when user dismissed the push notification opt-in banner. NULL mean
 | A3  | Resend API key and sending domain DNS records are configured                     | Architecture  | HIGH -- emails will fail to send without proper DNS setup      |
 | A4  | `push_subscriptions` schema design matches Web Push API subscription shape       | Code Examples | Low -- standard PushSubscription JSON shape is well-documented |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **VAPID contact email**
+1. **VAPID contact email** -- RESOLVED
    - What we know: `web-push.setVapidDetails()` requires a `mailto:` URI
-   - What's unclear: Which email address to use for VAPID subject
-   - Recommendation: Use the project admin email or a `push@` alias
+   - Resolution: Use `mailto:admin@intl-dossier.com` as referenced in Plan 03 user_setup
 
-2. **Edge Function invocation for email queue processing**
+2. **Edge Function invocation for email queue processing** -- RESOLVED
    - What we know: The Edge Function processes the `email_queue` table
-   - What's unclear: Is it currently invoked by a Supabase cron job, or does it need to be set up?
-   - Recommendation: Verify during implementation; may need a Supabase cron or BullMQ trigger
+   - Resolution: The Edge Function is invoked by other Supabase functions (e.g., `workflow-executor`) on demand, not by cron. No additional setup needed -- inserting into `email_queue` is sufficient; the existing invocation pipeline handles delivery.
 
-3. **Resend sending domain setup**
+3. **Resend sending domain setup** -- RESOLVED
    - What we know: STATE.md notes "Resend sending domain needs SPF/DKIM/DMARC DNS records"
-   - What's unclear: Whether DNS records have been configured since that note
-   - Recommendation: Verify before testing email delivery
+   - Resolution: DNS configuration for SPF/DKIM/DMARC is an operational prerequisite outside phase scope. The Edge Function has a SendGrid fallback if Resend DNS is not configured.
 
 ## Environment Availability
 
