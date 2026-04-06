@@ -23,13 +23,9 @@ interface NotificationPanelProps {
 
 const CATEGORIES: NotificationCategory[] = [
   'assignments',
-  'intake',
-  'calendar',
-  'signals',
-  'mentions',
   'deadlines',
-  'system',
   'workflow',
+  'system',
 ]
 
 export function NotificationPanel({ className }: NotificationPanelProps) {
@@ -193,16 +189,16 @@ const navigate = useNavigate()
             onValueChange={(v) => setActiveCategory(v as NotificationCategory | 'all')}
             className="w-full"
           >
-            <div className="border-b px-2">
-              <TabsList className="h-10 w-full justify-start gap-1 overflow-x-auto bg-transparent p-0">
+            <div className="border-b px-3">
+              <TabsList className="h-10 w-full justify-start gap-0.5 rounded-none border-none bg-transparent p-0 shadow-none">
                 <TabsTrigger
                   value="all"
-                  className="relative px-3 py-1.5 text-xs data-[state=active]:bg-muted"
+                  className="rounded-md border-none px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-none data-[state=active]:bg-muted data-[state=active]:text-foreground"
                 >
                   {t('categories.all')}
                   {unreadCount > 0 && (
                     <span className="ms-1.5 text-[10px] text-muted-foreground">
-                      ({unreadCount})
+                      {unreadCount}
                     </span>
                   )}
                 </TabsTrigger>
@@ -212,11 +208,11 @@ const navigate = useNavigate()
                     <TabsTrigger
                       key={category}
                       value={category}
-                      className="relative px-3 py-1.5 text-xs data-[state=active]:bg-muted"
+                      className="rounded-md border-none px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-none data-[state=active]:bg-muted data-[state=active]:text-foreground"
                     >
                       {t(`categories.${category}`)}
                       {count > 0 && (
-                        <span className="ms-1.5 text-[10px] text-muted-foreground">({count})</span>
+                        <span className="ms-1.5 text-[10px] text-muted-foreground">{count}</span>
                       )}
                     </TabsTrigger>
                   )
