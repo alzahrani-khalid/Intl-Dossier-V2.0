@@ -12,6 +12,7 @@ import auditContractRouter from './api/contract/audit'
 import { scheduleHealthScoresRefreshJob } from './jobs/refresh-health-scores.job.js'
 import { scheduleOverdueCommitmentsDetectionJob } from './jobs/detect-overdue-commitments.job.js'
 import { cacheMetrics } from './services/cache-metrics.service'
+import { notificationWorker, notificationQueue } from './queues/notification.queue'
 import {
   initSentry,
   sentryRequestHandler,
@@ -123,6 +124,15 @@ async function startServer(): Promise<void> {
   const redisAvailable = await initializeRedis()
   if (redisAvailable) {
     await warmCriticalCaches()
+
+    // Initialize notification queue worker
+    notificationWorker.on('ready', () => {
+      logInfo('Notification worker ready')
+    })
+    notificationWorker.on('failed', (job, err) => {
+      logError(`Notification job ${job?.id} failed: ${err.message}`)
+    })
+    logInfo('Notification queue initialized')
   } else {
     logInfo('Redis unavailable - cache operations will fail gracefully to direct DB queries')
   }
@@ -143,6 +153,8 @@ startServer().catch((err) => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   logInfo('SIGTERM received, shutting down gracefully')
+  await notificationWorker.close()
+  await notificationQueue.close()
   cacheMetrics.stop()
   await flushSentry()
   process.exit(0)
@@ -150,6 +162,8 @@ process.on('SIGTERM', async () => {
 
 process.on('SIGINT', async () => {
   logInfo('SIGINT received, shutting down gracefully')
+  await notificationWorker.close()
+  await notificationQueue.close()
   cacheMetrics.stop()
   await flushSentry()
   process.exit(0)

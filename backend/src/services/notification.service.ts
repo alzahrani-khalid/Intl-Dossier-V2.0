@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
+import { notificationQueue } from '../queues/notification.queue'
+import type { NotificationJobData } from '../queues/notification.queue'
 
 const supabase = createClient(
   process.env.SUPABASE_URL || '',
@@ -102,6 +104,18 @@ export async function sendHealthScoreDropNotification(
   console.warn(
     `[HEALTH-NOTIFICATION] Sent notification to user ${ownerId} for dossier ${dossierId}`,
   )
+}
+
+/**
+ * Enqueue a notification for async delivery via BullMQ.
+ * Preferred path for all new trigger points (per D-07).
+ * The worker checks user category preferences before inserting.
+ */
+export async function enqueueNotification(
+  data: NotificationJobData,
+  jobName = 'send-notification',
+): Promise<void> {
+  await notificationQueue.add(jobName, data)
 }
 
 /**
