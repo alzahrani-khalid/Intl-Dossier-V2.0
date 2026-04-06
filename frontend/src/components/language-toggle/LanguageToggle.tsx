@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { switchLanguage, type SupportedLanguage } from '@/i18n'
+import { type SupportedLanguage } from '@/i18n'
 import { useUIStore } from '@/store/uiStore'
+import { useLanguage } from '@/components/language-provider/language-provider'
 import { cn } from '@/lib/utils'
 
 interface LanguageToggleProps {
@@ -10,13 +11,16 @@ interface LanguageToggleProps {
 
 export function LanguageToggle({ compact = false }: LanguageToggleProps) {
   const { i18n } = useTranslation()
-  const { language, setLanguage } = useUIStore()
+  const { language: uiLanguage, setLanguage: setUILanguage } = useUIStore()
+  const { language, setLanguage: setProviderLanguage } = useLanguage()
 
   const handleToggle = useCallback(async () => {
     const nextLang: SupportedLanguage = language === 'en' ? 'ar' : 'en'
-    await switchLanguage(nextLang)
-    setLanguage(nextLang)
-  }, [language, setLanguage])
+    // LanguageProvider is the single source of truth — handles i18n, dir, localStorage
+    await setProviderLanguage(nextLang)
+    // Keep Zustand in sync for components that read from useUIStore
+    setUILanguage(nextLang)
+  }, [language, setProviderLanguage, setUILanguage])
 
   const isRTL = language === 'ar'
 

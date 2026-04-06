@@ -8,8 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
-import { switchLanguage, type SupportedLanguage } from '@/i18n'
+import { type SupportedLanguage } from '@/i18n'
 import { useUIStore } from '@/store/uiStore'
+import { useLanguage } from '@/components/language-provider/language-provider'
 
 interface LanguageSwitcherProps {
   compact?: boolean
@@ -17,15 +18,16 @@ interface LanguageSwitcherProps {
 
 export function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
   const { i18n } = useTranslation()
-  const { language, setLanguage } = useUIStore()
+  const { setLanguage: setUILanguage } = useUIStore()
+  const { language, setLanguage: setProviderLanguage } = useLanguage()
 
   const handleChange = useCallback(
     async (next: SupportedLanguage) => {
       if (next === language) return
-      await switchLanguage(next)
-      setLanguage(next)
+      await setProviderLanguage(next)
+      setUILanguage(next)
     },
-    [language, setLanguage],
+    [language, setProviderLanguage, setUILanguage],
   )
 
   const labelMap: Record<SupportedLanguage, string> = {
