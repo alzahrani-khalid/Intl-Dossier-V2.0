@@ -1,86 +1,79 @@
 name: Deploy
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
     branches: [main]
+    types: [completed]
   workflow_dispatch:
 
-env:
-  NODE_VERSION: '20.19.0'
-  # pnpm version must match packageManager field in package.json
-  PNPM_VERSION: '10.18.3'
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
 
 jobs:
-  deploy-production:
+  deploy:
     name: Deploy to Production
     runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     environment: production
-    if: github.ref == 'refs/heads/main'
+    timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Deploy via SSH
+        id: deploy
+        uses: appleboy/ssh-action@v1
         with:
-          version: ${{ env.PNPM_VERSION }}
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          command_timeout: 10m
+          script: |
+            set -e
+            cd /opt/intl-dossier
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+            echo "=== Tagging current images for rollback ==="
+            docker tag intl-dossier-frontend:latest intl-dossier-frontend:rollback 2>/dev/null || true
+            docker tag intl-dossier-backend:latest intl-dossier-backend:rollback 2>/dev/null || true
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+            echo "=== Pulling latest code ==="
+            git pull origin main
 
-      - name: Build application
-        run: pnpm run build
-        env:
-          NODE_ENV: production
+            echo "=== Building and deploying ==="
+            cd deploy
+            docker compose -f docker-compose.prod.yml build --parallel
+            docker compose -f docker-compose.prod.yml up -d
 
-      # Database backups are handled by Supabase managed backups
+            echo "=== Waiting for services to be healthy ==="
+            sleep 15
 
-      - name: Deploy with Docker
-        env:
-          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          echo $DOCKER_PASSWORD | docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME --password-stdin
-          docker build -t $DOCKER_REGISTRY/gastat-dossier:${{ github.sha }} .
-          docker push $DOCKER_REGISTRY/gastat-dossier:${{ github.sha }}
-          docker tag $DOCKER_REGISTRY/gastat-dossier:${{ github.sha }} $DOCKER_REGISTRY/gastat-dossier:latest
-          docker push $DOCKER_REGISTRY/gastat-dossier:latest
+            echo "=== Health check ==="
+            curl -f http://localhost/health || exit 1
+            curl -f http://localhost/api/health || exit 1
 
-      - name: Update production deployment
-        env:
-          DEPLOY_KEY: ${{ secrets.PROD_DEPLOY_KEY }}
-          DEPLOY_HOST: ${{ secrets.PROD_HOST }}
-          DEPLOY_USER: ${{ secrets.PROD_USER }}
-        run: |
-          echo "$DEPLOY_KEY" > deploy_key
-          chmod 600 deploy_key
-          ssh -i deploy_key -o StrictHostKeyChecking=no \
-            ${DEPLOY_USER}@${DEPLOY_HOST} \
-            "docker-compose pull && docker-compose up -d --remove-orphans"
-
-      - name: Health check
-        run: |
-          sleep 30
-          curl -f https://dossier.gastat.gov.sa/health || exit 1
-
-      - name: Notify deployment
-        if: success()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: success
-          text: 'Production deployment successful!'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+            echo "=== Deployment successful ==="
 
       - name: Rollback on failure
-        if: failure()
-        run: |
-          ssh -i deploy_key -o StrictHostKeyChecking=no \
-            ${DEPLOY_USER}@${DEPLOY_HOST} \
-            "docker-compose down && docker-compose up -d --force-recreate"
+        if: failure() && steps.deploy.outcome == 'failure'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          command_timeout: 5m
+          script: |
+            set -e
+            echo "=== ROLLING BACK ==="
+
+            docker tag intl-dossier-frontend:rollback intl-dossier-frontend:latest 2>/dev/null || true
+            docker tag intl-dossier-backend:rollback intl-dossier-backend:latest 2>/dev/null || true
+
+            cd /opt/intl-dossier/deploy
+            docker compose -f docker-compose.prod.yml up -d --no-deps frontend backend
+
+            sleep 10
+            curl -f http://localhost/health || echo "WARNING: Rollback health check failed"
+
+            echo "=== Rollback complete ==="
