@@ -399,22 +399,25 @@ await notificationQueue.add('check-deadlines', {}, {
 | A3 | `dossiers.created_by` is the correct user to notify for lifecycle changes | Architecture Pattern 4 | May need to notify all participants instead of just the creator |
 | A4 | `jobId` deduplication prevents duplicate deadline notifications | Code Examples | If jobId collision logic is wrong, could still send duplicates |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Who gets lifecycle notifications?**
    - What we know: Engagement dossiers have a `created_by` field in the `dossiers` table.
    - What's unclear: Should ALL engagement participants be notified, or just the creator/owner?
    - Recommendation: Start with creator only, extend to participants in future iteration.
+   - **(RESOLVED):** Adopting recommendation — notify `dossiers.created_by` only. Participant notification deferred.
 
 2. **Deadline notification thresholds**
    - What we know: Tasks have `sla_deadline` column.
    - What's unclear: At what intervals should we notify? (48h, 24h, 1h before? On overdue?)
    - Recommendation: Two thresholds -- 24 hours before and on overdue. Use `jobId` dedup.
+   - **(RESOLVED):** Adopting recommendation — two thresholds: 24h approaching + overdue. Dedup via `jobId`.
 
 3. **Task reassignment notification**
    - What we know: `updateTask` can change `assignee_id`.
    - What's unclear: Should the old assignee be notified of unassignment?
    - Recommendation: Notify new assignee only (D-06 scope). Old assignee notification is a future enhancement.
+   - **(RESOLVED):** Adopting recommendation — notify new assignee only per D-06. Old assignee unassignment notification deferred.
 
 ## Environment Availability
 
