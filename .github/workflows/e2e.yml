@@ -1,0 +1,85 @@
+name: E2E Tests
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  e2e:
+    name: E2E (shard ${{ matrix.shard }}/${{ matrix.total }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+        total: [2]
+    env:
+      CI: true
+      E2E_BASE_URL: ${{ secrets.E2E_BASE_URL }}
+      E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
+      E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+      E2E_ANALYST_EMAIL: ${{ secrets.E2E_ANALYST_EMAIL }}
+      E2E_ANALYST_PASSWORD: ${{ secrets.E2E_ANALYST_PASSWORD }}
+      E2E_INTAKE_EMAIL: ${{ secrets.E2E_INTAKE_EMAIL }}
+      E2E_INTAKE_PASSWORD: ${{ secrets.E2E_INTAKE_PASSWORD }}
+      SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.E2E_SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Run Playwright tests (shard ${{ matrix.shard }})
+        run: pnpm exec playwright test --shard=${{ matrix.shard }}/${{ matrix.total }} --project=chromium-en --project=chromium-ar-smoke
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report
+          retention-days: 90
+      - name: Upload traces & screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-${{ matrix.shard }}
+          path: |
+            test-results/**/*.zip
+            test-results/**/*.png
+            test-results/**/*.webm
+          retention-days: 90
+
+  merge-reports:
+    name: Merge Playwright reports
+    if: always()
+    needs: [e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+      - run: pnpm exec playwright merge-reports --reporter=html ./all-blob-reports
+      - uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright-report
+          retention-days: 90
