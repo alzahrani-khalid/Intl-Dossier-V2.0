@@ -13,7 +13,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI
-    ? [['blob'], ['github']]
+    ? [['blob'], ['github'], ['./tests/e2e/support/flake-reporter.ts']]
     : [['html', { open: 'never' }], ['list']],
   use: {
     baseURL,
