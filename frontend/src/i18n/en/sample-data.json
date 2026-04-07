@@ -63,5 +63,23 @@
   },
   "badge": {
     "sampleData": "Sample Data"
+  },
+  "firstRun": {
+    "title": "Welcome to Intl-Dossier",
+    "subtitle": "Your workspace is empty. Explore the app with realistic sample data.",
+    "adminBody": "We can populate your database with a curated GASTAT diplomatic scenario: 10 countries, 10 organizations, 10 forums, 10 engagements, plus topics, working groups, persons, and tasks across every status and priority. You can delete this data at any time.",
+    "nonAdminBody": "Your workspace is empty. Ask an administrator to populate sample data so you can explore the app.",
+    "populate": "Populate sample data",
+    "skip": "Start empty",
+    "close": "Close",
+    "loading": "Populating sample data…",
+    "successTitle": "Sample data ready",
+    "successBody": "Created {{dossiers}} dossiers, {{tasks}} tasks, {{persons}} persons.",
+    "alreadySeededTitle": "Sample data already exists",
+    "alreadySeededBody": "Your database already contains sample data. Nothing was changed.",
+    "errorTitle": "Could not populate sample data",
+    "errorBody": "Something went wrong. Please try again or contact support.",
+    "forbiddenTitle": "Permission required",
+    "forbiddenBody": "Only administrators can populate sample data."
   }
 }
