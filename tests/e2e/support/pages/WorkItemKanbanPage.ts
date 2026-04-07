@@ -34,13 +34,37 @@ export default class WorkItemKanbanPage {
   }
 
   /**
-   * Drag a card to a target column.
+   * Drag a card to a target column using a manual pointer sequence.
    *
-   * NOTE: Wave 3 will replace this stub with a manual mouse sequence
-   * (mouse.move + down + up) because @dnd-kit does not respond reliably
-   * to `locator.dragTo()`. Keeping the stub here so spec waves compile.
+   * @dnd-kit listens for `pointermove` events with a minimum activation
+   * distance (8px by default) and does NOT respond to Playwright's
+   * `locator.dragTo()` (which emits HTML5 drag events). The documented
+   * workaround is a manual `mouse.down` → small move (to cross activation
+   * distance) → large move (to destination) → `mouse.up` sequence.
    */
-  async dragCardToColumn(_cardTitle: string, _targetColumn: KanbanColumn): Promise<void> {
-    throw new Error('dragCardToColumn: not implemented — see Wave 3 manual-mouse implementation')
+  async dragCardToColumn(cardTitle: string, targetColumn: KanbanColumn): Promise<void> {
+    const card = this.card(cardTitle)
+    const target = this.column(targetColumn)
+    const cardBox = await card.boundingBox()
+    const targetBox = await target.boundingBox()
+    if (!cardBox || !targetBox) {
+      throw new Error(
+        `dragCardToColumn: missing bounding box (card=${cardBox != null}, target=${targetBox != null})`,
+      )
+    }
+    const startX = cardBox.x + cardBox.width / 2
+    const startY = cardBox.y + cardBox.height / 2
+    const endX = targetBox.x + targetBox.width / 2
+    const endY = targetBox.y + targetBox.height / 2
+
+    await this.page.mouse.move(startX, startY)
+    await this.page.mouse.down()
+    // Small nudge to cross @dnd-kit's 8px activation distance.
+    await this.page.mouse.move(startX + 10, startY + 10, { steps: 5 })
+    // Large, smoothly-stepped move to the destination.
+    await this.page.mouse.move(endX, endY, { steps: 20 })
+    await this.page.mouse.up()
+    // @dnd-kit drop animation / state settle.
+    await this.page.waitForTimeout(200)
   }
 }
