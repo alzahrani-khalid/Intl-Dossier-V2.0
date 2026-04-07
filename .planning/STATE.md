@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Live Operations
 status: executing
-stopped_at: Phase 16 context gathered (assumptions mode)
-last_updated: '2026-04-06T18:34:35.741Z'
-last_activity: 2026-04-06
+stopped_at: Phase 18 execution complete (structural pass; live run gated on Phase 17 seed accounts)
+last_updated: '2026-04-07T00:00:00.000Z'
+last_activity: 2026-04-07
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
-  percent: 100
+  completed_phases: 5
+  total_plans: 20
+  completed_plans: 20
+  percent: 83
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 15 — notification-backend-in-app
+**Current focus:** Phase 19 — pending (phase 18 e2e-test-suite execution complete)
 
 ## Current Position
 
-Phase: 16
-Plan: Not started
-Status: Executing Phase 15
-Last activity: 2026-04-06
+Phase: 18 (complete, structural pass)
+Plan: 18-04 done
+Status: Phase 18 shipped — awaiting Phase 17 seed accounts + CI secrets for live E2E run
+Last activity: 2026-04-07
 
-Progress: [█████████████░░░░░░░] 0% of v4.0 (0/6 phases)
+Progress: [█████████████████░░░] 83% of v4.0 (5/6 phases)
 
 ## Performance Metrics
 
@@ -38,17 +38,18 @@ Progress: [█████████████░░░░░░░] 0% of v
 
 - v2.0: 29 plans in 185 days
 - v3.0: 28 plans in 9 days (2026-03-28 → 2026-04-06)
+- v4.0: 20 plans so far (phases 14–18)
 
 **By Phase:**
 
-| Phase            | Plans | Duration | Files      |
-| ---------------- | ----- | -------- | ---------- |
-| 08 Navigation    | 4     | ~1 day   | ~32 files  |
-| 09 Lifecycle     | 5     | ~1 day   | ~17 files  |
-| 10 Ops Hub       | 4     | ~2 days  | ~39 files  |
-| 11 Workspace     | 5     | ~1 day   | ~28 files  |
-| 12 Dossier Pages | 5     | ~2 days  | ~116 files |
-| 13 Absorption    | 5     | ~2 days  | ~30 files  |
+| Phase                    | Plans | Status                         |
+| ------------------------ | ----- | ------------------------------ |
+| 14 Production Deployment | 5     | Shipped                        |
+| 15 Notification Backend  | 5     | Shipped                        |
+| 16 Email + Push Channels | 3     | Shipped                        |
+| 17 Seed Data + First Run | 5     | Shipped (UAT recovery applied) |
+| 18 E2E Test Suite        | 4     | Shipped (structural pass)      |
+| 19 —                     | ?     | Pending                        |
 
 ## Accumulated Context
 
@@ -58,18 +59,23 @@ Progress: [█████████████░░░░░░░] 0% of v
 - [v4.0]: Keep nginx+certbot over Caddy (existing config, lower migration risk)
 - [v4.0]: BullMQ for async notification dispatch (existing Redis instance)
 - [v4.0]: Wire existing notification UI components, don't rebuild
+- [18]: Single root `playwright.config.ts`; auth.setup + storageState; POM pattern; 2-shard CI matrix with retry + flake logging
 
 ### Pending Todos
 
-None.
+- Provision 9 GitHub repo secrets for E2E workflow (see 18-VERIFICATION.md)
+- Seed E2E role accounts (admin/analyst/intake) — blocks first live Playwright run
+- Configure `main` branch protection to require E2E shard checks
+- Trigger one deliberately failing run to confirm artifact upload + flake logging
 
 ### Blockers/Concerns
 
 - DNS domain required for HTTPS (current droplet is bare IP 138.197.195.242)
 - Resend sending domain needs SPF/DKIM/DMARC DNS records before production email
+- Phase 14 + 15 still have pending human UAT
 
 ## Session Continuity
 
-Last session: 2026-04-06T18:34:35.739Z
-Stopped at: Phase 16 context gathered (assumptions mode)
-Resume file: .planning/phases/16-email-push-channels/16-CONTEXT.md
+Last session: 2026-04-07T00:00:00.000Z
+Stopped at: Phase 18 execution complete — cleanup of pre-existing dirty working tree done
+Resume file: .planning/phases/18-e2e-test-suite/18-VERIFICATION.md
