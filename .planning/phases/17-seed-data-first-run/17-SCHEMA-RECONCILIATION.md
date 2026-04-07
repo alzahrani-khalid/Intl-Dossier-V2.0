@@ -112,6 +112,44 @@ If `v_tenant_id` is null (e.g. legacy admin with no tenant), the RPC should rais
 
 None blocking — the decisions above are unambiguous given the live schema. Ready to resume execution.
 
+## 10. Addendum 2026-04-07 — Live Schema Probe Before 17-02 Authoring
+
+Parent session probed the live staging schema (`zkrcjzdemdmwhearhfgg`) before authoring Plan 17-02 and found three material deviations from the earlier reconciliation. These supersede conflicting guidance in §§3–7 above.
+
+### 10.1 Typed-Dossier 1:1 PK Inheritance
+
+`countries`, `organizations`, `forums`, `engagements`, `topics`, `persons`, `working_groups` do **NOT** carry `name_en` / `name_ar` columns. They are specialization tables whose `id` is identical to the parent `dossiers.id` (verified: every existing row joins 1:1). The canonical bilingual name lives in `dossiers.name_en` / `dossiers.name_ar` (both `NOT NULL`). The typed tables hold only type-specific metadata (iso*code, org_type, location*\*, theme_category, etc).
+
+**Implication for 17-02:** every seeded entity is a pair: `INSERT INTO dossiers (id, type, name_en, name_ar, …)` followed by `INSERT INTO <typed_table> (id, …)` using the same UUID.
+
+**Dossier.type values observed on staging:** `country, organization, forum, engagement, topic, person, working_group`. An eighth type for `elected_official` is not present yet — elected officials are encoded as `dossiers.type='person'` with a corresponding `persons` row where `person_subtype='elected_official'`. The "8 dossier types" requirement is satisfied by the existing 7 `dossiers.type` values + the `person_subtype='elected_official'` discriminator rather than a distinct dossier type.
+
+### 10.2 No `users.tenant_id` — Default Tenant Constant
+
+`public.users` has no `tenant_id` column. There is no `tenants` table. `tasks.tenant_id` is NOT NULL; every existing `tasks` row (30 rows) uses the same default tenant constant: `'00000000-0000-0000-0000-000000000001'::uuid`. Plan 17-02's "resolve tenant_id from auth.uid()" guidance is obsolete.
+
+**Implication for 17-02:** hardcode `v_tenant_id CONSTANT UUID := '00000000-0000-0000-0000-000000000001'` and use it for every `tasks` INSERT. No `RAISE EXCEPTION` path — the default tenant always exists.
+
+### 10.3 Staging Coexistence Policy
+
+Staging is NOT empty: 250 real `countries`, 7 `organizations`, 1 `forum`, 2 `engagements`, 1 `topic`, 5 `persons`, 1 `working_group`, 30 `tasks`. None carry `is_seed_data=true`, so the idempotency gate `EXISTS (… WHERE is_seed_data=true)` remains effective.
+
+**Policy decision:** install the `populate_diplomatic_seed()` function via migration on staging **but do not call it**. Phase 17's first-run experience targets fresh deploys; calling the RPC on a staging DB with real data would create duplicates (e.g., a seed "Saudi Arabia" beside the real one). The function is available on staging for future test environments and for 17-04/17-05 type-regeneration.
+
+### 10.4 Enum Verification
+
+Confirmed enum coverage (staging):
+
+- `task_status` (5): pending, in_progress, review, completed, cancelled ✓
+- `task_type` (5): action_item, follow_up, preparation, analysis, other ✓
+- `urgent_priority` (4): low, medium, high, urgent ✓
+- `dossiers.type` — text, not enum, values listed above
+- `persons.person_subtype` — text with default 'standard', values include 'elected_official'
+
+### 10.5 Admin Gate Alignment
+
+Plan 17-03's shipped `check_first_run` uses the stricter admin gate: `role IN ('admin','super_admin') AND COALESCE(is_active,true) AND (expires_at IS NULL OR expires_at > now())`. Plan 17-02's `populate_diplomatic_seed` uses the SAME admin gate for consistency, not the simpler `role='admin'` baseline in §§5/6 above.
+
 ## 9. Execution Restart Plan
 
 1. Rewrite `supabase/migrations/20260407000001_add_is_seed_data_columns.sql` per §7 (swap tables).
