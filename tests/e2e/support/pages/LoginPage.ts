@@ -4,19 +4,19 @@ export default class LoginPage {
   constructor(public readonly page: Page) {}
 
   get emailInput(): Locator {
-    return this.page.getByLabel(/email/i)
+    return this.page.getByLabel(/email|البريد/i)
   }
 
   get passwordInput(): Locator {
-    return this.page.getByLabel(/password/i)
+    return this.page.getByLabel(/password|كلمة المرور/i)
   }
 
   get submitButton(): Locator {
-    return this.page.getByRole('button', { name: /sign in|login/i })
+    return this.page.getByRole('button', { name: /sign in|login|تسجيل الدخول|دخول/i })
   }
 
   get signOutButton(): Locator {
-    return this.page.getByRole('button', { name: /sign out|logout/i })
+    return this.page.getByRole('button', { name: /sign out|logout|تسجيل الخروج|خروج/i })
   }
 
   async goto(): Promise<void> {
