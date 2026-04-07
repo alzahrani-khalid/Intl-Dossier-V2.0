@@ -95,10 +95,7 @@ import {
 import type { DossierType } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
 import { useRecentNavigation } from '@/hooks/useRecentNavigation'
-import {
-  createNavigationGroups,
-  type NavigationItem,
-} from '@/components/layout/navigation-config'
+import { createNavigationGroups, type NavigationItem } from '@/components/layout/navigation-config'
 import { useResponsive } from '@/hooks/useResponsive'
 
 interface CommandPaletteProps {
@@ -165,9 +162,15 @@ const dossierTypeLabels: Record<string, { en: string; ar: string }> = {
   person: { en: 'Person', ar: '\u0634\u062E\u0635' },
   engagement: { en: 'Engagement', ar: '\u0645\u0634\u0627\u0631\u0643\u0629' },
   forum: { en: 'Forum', ar: '\u0645\u0646\u062A\u062F\u0649' },
-  working_group: { en: 'Working Group', ar: '\u0645\u062C\u0645\u0648\u0639\u0629 \u0639\u0645\u0644' },
+  working_group: {
+    en: 'Working Group',
+    ar: '\u0645\u062C\u0645\u0648\u0639\u0629 \u0639\u0645\u0644',
+  },
   topic: { en: 'Topic', ar: '\u0645\u0648\u0636\u0648\u0639' },
-  elected_official: { en: 'Elected Official', ar: '\u0645\u0633\u0624\u0648\u0644 \u0645\u0646\u062A\u062E\u0628' },
+  elected_official: {
+    en: 'Elected Official',
+    ar: '\u0645\u0633\u0624\u0648\u0644 \u0645\u0646\u062A\u062E\u0628',
+  },
 }
 
 // Labels for work item types
@@ -347,10 +350,7 @@ interface QuickActionItem {
   category?: string
 }
 
-function getMostUsedCommands(
-  commands: QuickActionItem[],
-  limit: number,
-): QuickActionItem[] {
+function getMostUsedCommands(commands: QuickActionItem[], limit: number): QuickActionItem[] {
   const counts = getCommandUsageCounts()
   const hasUsageData = Object.keys(counts).length > 0
 
@@ -358,9 +358,7 @@ function getMostUsedCommands(
     return commands.slice(0, limit)
   }
 
-  return [...commands]
-    .sort((a, b) => (counts[b.id] ?? 0) - (counts[a.id] ?? 0))
-    .slice(0, limit)
+  return [...commands].sort((a, b) => (counts[b.id] ?? 0) - (counts[a.id] ?? 0)).slice(0, limit)
 }
 
 /**
@@ -412,7 +410,10 @@ function searchQueryCache(
     // Cache search failed — return empty
   }
 
-  return { cachedDossiers: cachedDossiers.slice(0, 5), cachedWorkItems: cachedWorkItems.slice(0, 3) }
+  return {
+    cachedDossiers: cachedDossiers.slice(0, 5),
+    cachedWorkItems: cachedWorkItems.slice(0, 3),
+  }
 }
 
 export function CommandPalette({ className }: CommandPaletteProps): React.ReactElement | null {
@@ -556,16 +557,6 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       .slice(0, 3)
   }, [groupedShortcuts, searchQuery])
 
-  // Most-used commands for empty state (D-03)
-  const mostUsedCommands = useMemo((): QuickActionItem[] => {
-    // Combine quickActions + createActions as the pool
-    const allCommands: QuickActionItem[] = [
-      ...quickActions.map((a) => ({ ...a })),
-      ...createActions.filter((a) => a.category === 'create').map((a) => ({ ...a })),
-    ]
-    return getMostUsedCommands(allCommands, 5)
-  }, [quickActions, createActions])
-
   // Group dossier search results by type for entity sub-grouping (D-02)
   const dossiersByType = useMemo((): Array<{ type: string; items: QuickSwitcherDossier[] }> => {
     if (searchQuery.trim().length < 2 || dossiers.length === 0) return []
@@ -580,9 +571,9 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
     }
 
     // Return in defined order, limiting to 5 per type
-    return DOSSIER_TYPE_ORDER
-      .filter((type) => grouped[type] != null && grouped[type].length > 0)
-      .map((type) => ({ type, items: grouped[type].slice(0, 5) }))
+    return DOSSIER_TYPE_ORDER.filter(
+      (type) => grouped[type] != null && grouped[type].length > 0,
+    ).map((type) => ({ type, items: grouped[type].slice(0, 5) }))
   }, [dossiers, searchQuery])
 
   // Helper to navigate - uses type assertion for routes that may not be in the router yet
@@ -821,6 +812,16 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
     [t, formatShortcut, navigateTo, location.pathname],
   )
 
+  // Most-used commands for empty state (D-03)
+  const mostUsedCommands = useMemo((): QuickActionItem[] => {
+    // Combine quickActions + createActions as the pool
+    const allCommands: QuickActionItem[] = [
+      ...quickActions.map((a) => ({ ...a })),
+      ...createActions.filter((a) => a.category === 'create').map((a) => ({ ...a })),
+    ]
+    return getMostUsedCommands(allCommands, 5)
+  }, [quickActions, createActions])
+
   // Context-aware suggestions based on current page
   const contextSuggestions = useMemo(() => {
     const suggestions: Array<{
@@ -897,7 +898,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       navigate({ to: url })
       addRecentNav({
         path: url,
-        title: isRTL ? (dossier.name_ar || dossier.name_en) : (dossier.name_en || dossier.name_ar),
+        title: isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en || dossier.name_ar,
         type: 'dossier',
       })
       closeCommandPalette()
@@ -913,7 +914,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       navigate({ to: url })
       addRecentNav({
         path: url,
-        title: isRTL ? (item.title_ar || item.title_en) : (item.title_en || item.title_ar),
+        title: isRTL ? item.title_ar || item.title_en : item.title_en || item.title_ar,
         type: 'work-item',
       })
       closeCommandPalette()
@@ -969,7 +970,8 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
 
   // Determine if we are in search mode
   const isSearching = searchQuery.trim().length >= 2
-  const showCacheIndicator = isSearching && isSearchLoading && (dossiers.length > 0 || relatedWork.length > 0)
+  const showCacheIndicator =
+    isSearching && isSearchLoading && (dossiers.length > 0 || relatedWork.length > 0)
 
   return (
     <CommandDialog
@@ -990,10 +992,12 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
           }}
           className={cn('border-0', isMobile && 'text-base py-4')}
         />
-        <CommandList className={cn(
-          'max-h-[60vh] overflow-y-auto sm:max-h-[400px]',
-          isMobile && 'max-h-[calc(100vh-8rem)]',
-        )}>
+        <CommandList
+          className={cn(
+            'max-h-[60vh] overflow-y-auto sm:max-h-[400px]',
+            isMobile && 'max-h-[calc(100vh-8rem)]',
+          )}
+        >
           <CommandEmpty>
             <div className="flex flex-col items-center justify-center py-6 text-center">
               <Search className="mb-2 size-8 text-muted-foreground opacity-50" />
@@ -1187,7 +1191,9 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           <PlusCircle className="size-3 shrink-0 text-green-500" />
                           <CreateIcon className="size-4 shrink-0" />
                           <span className="flex-1">{action.label}</span>
-                          {action.shortcut != null && <CommandShortcut>{action.shortcut}</CommandShortcut>}
+                          {action.shortcut != null && (
+                            <CommandShortcut>{action.shortcut}</CommandShortcut>
+                          )}
                         </CommandItem>
                       )
                     })}
@@ -1214,7 +1220,9 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                         >
                           <QuickIcon className="size-4 shrink-0" />
                           <span className="flex-1">{action.label}</span>
-                          {action.shortcut != null && <CommandShortcut>{action.shortcut}</CommandShortcut>}
+                          {action.shortcut != null && (
+                            <CommandShortcut>{action.shortcut}</CommandShortcut>
+                          )}
                         </CommandItem>
                       )
                     })}
@@ -1281,16 +1289,24 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                               <GroupIcon className="size-4 shrink-0" />
                               <div className="min-w-0 flex-1">
                                 <span className="truncate">
-                                  {getDisplayTitle({ name_en: dossier.name_en, name_ar: dossier.name_ar })}
+                                  {getDisplayTitle({
+                                    name_en: dossier.name_en,
+                                    name_ar: dossier.name_ar,
+                                  })}
                                 </span>
-                                {(isRTL ? dossier.description_ar : dossier.description_en) != null &&
-                                  (isRTL ? dossier.description_ar : dossier.description_en) !== '' && (
-                                  <p className="truncate text-xs text-muted-foreground">
-                                    {isRTL ? dossier.description_ar : dossier.description_en}
-                                  </p>
-                                )}
+                                {(isRTL ? dossier.description_ar : dossier.description_en) !=
+                                  null &&
+                                  (isRTL ? dossier.description_ar : dossier.description_en) !==
+                                    '' && (
+                                    <p className="truncate text-xs text-muted-foreground">
+                                      {isRTL ? dossier.description_ar : dossier.description_en}
+                                    </p>
+                                  )}
                               </div>
-                              <Badge variant="secondary" className={`shrink-0 text-xs ${badge.color}`}>
+                              <Badge
+                                variant="secondary"
+                                className={`shrink-0 text-xs ${badge.color}`}
+                              >
                                 {badge.label}
                               </Badge>
                             </CommandItem>
@@ -1320,7 +1336,10 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           <WorkIcon className="size-4 shrink-0" />
                           <div className="min-w-0 flex-1">
                             <span className="truncate">
-                              {getDisplayTitle({ title_en: item.title_en, title_ar: item.title_ar })}
+                              {getDisplayTitle({
+                                title_en: item.title_en,
+                                title_ar: item.title_ar,
+                              })}
                             </span>
                             {item.dossier_context != null && (
                               <p className="truncate text-xs text-muted-foreground">
@@ -1380,7 +1399,9 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           <PlusCircle className="size-3 shrink-0 text-green-500" />
                           <CreateIcon className="size-4 shrink-0" />
                           <span className="flex-1">{action.label}</span>
-                          {action.shortcut != null && <CommandShortcut>{action.shortcut}</CommandShortcut>}
+                          {action.shortcut != null && (
+                            <CommandShortcut>{action.shortcut}</CommandShortcut>
+                          )}
                         </CommandItem>
                       )
                     })}
@@ -1401,14 +1422,20 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           value={`search-page-${page.id}-${page.label}`}
                           onSelect={() => {
                             navigateTo(page.path)
-                            addRecentNav({ path: page.path, title: tCommon(page.label, page.id), type: 'page' })
+                            addRecentNav({
+                              path: page.path,
+                              title: tCommon(page.label, page.id),
+                              type: 'page',
+                            })
                             setSearchQuery('')
                           }}
                           className="flex items-center gap-3"
                         >
                           <PageIcon className="size-4 shrink-0" />
                           <span className="flex-1 truncate">{tCommon(page.label, page.id)}</span>
-                          <span className="truncate text-xs text-muted-foreground">{page.path}</span>
+                          <span className="truncate text-xs text-muted-foreground">
+                            {page.path}
+                          </span>
                         </CommandItem>
                       )
                     })}
@@ -1424,11 +1451,15 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
             <div className="flex items-center gap-3 sm:gap-4">
               <span className="flex items-center gap-1">
-                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">{'\u2191\u2193'}</kbd>
+                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">
+                  {'\u2191\u2193'}
+                </kbd>
                 <span className="hidden sm:inline">{t('footer.navigate', 'Navigate')}</span>
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">{'\u21B5'}</kbd>
+                <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">
+                  {'\u21B5'}
+                </kbd>
                 <span className="hidden sm:inline">{t('footer.select', 'Select')}</span>
               </span>
               <span className="flex items-center gap-1">
@@ -1458,7 +1489,11 @@ interface ShortcutHintProps {
   className?: string
 }
 
-export function ShortcutHint({ shortcutKey, modifiers, className }: ShortcutHintProps): React.ReactElement {
+export function ShortcutHint({
+  shortcutKey,
+  modifiers,
+  className,
+}: ShortcutHintProps): React.ReactElement {
   const { formatShortcut } = useKeyboardShortcutContext()
 
   return (
@@ -1482,7 +1517,11 @@ interface ShortcutGuideProps {
   className?: string
 }
 
-export function ShortcutGuide({ category, maxItems = 5, className }: ShortcutGuideProps): React.ReactElement | null {
+export function ShortcutGuide({
+  category,
+  maxItems = 5,
+  className,
+}: ShortcutGuideProps): React.ReactElement | null {
   const { t } = useTranslation('keyboard-shortcuts')
   const { getShortcutsByCategory, getAllShortcuts, formatShortcut } = useKeyboardShortcutContext()
 
@@ -1496,9 +1535,7 @@ export function ShortcutGuide({ category, maxItems = 5, className }: ShortcutGui
   }
 
   return (
-    <div
-      className={cn('flex flex-col gap-1 text-xs text-muted-foreground', className)}
-    >
+    <div className={cn('flex flex-col gap-1 text-xs text-muted-foreground', className)}>
       <div className="mb-1 font-medium text-foreground">
         {t('guide.title', 'Keyboard Shortcuts')}
       </div>
