@@ -105,6 +105,10 @@ uploads/
 test-results/
 playwright-report/
 
+# Playwright E2E storageState (session tokens for test roles — never commit)
+tests/e2e/support/storage/*.json
+!tests/e2e/support/storage/.gitkeep
+
 # Chrome DevTools screenshots
 .devtools-screenshots/
 .factory/
