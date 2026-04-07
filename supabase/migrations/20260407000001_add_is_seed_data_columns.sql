@@ -92,14 +92,9 @@ CREATE INDEX IF NOT EXISTS idx_persons_is_seed_data
 COMMENT ON COLUMN public.persons.is_seed_data IS
   'Phase 17: marks rows inserted by populate_diplomatic_seed RPC for idempotency.';
 
--- elected_officials
-ALTER TABLE public.elected_officials
-  ADD COLUMN IF NOT EXISTS is_seed_data BOOLEAN NOT NULL DEFAULT false;
-CREATE INDEX IF NOT EXISTS idx_elected_officials_is_seed_data
-  ON public.elected_officials (is_seed_data)
-  WHERE is_seed_data = true;
-COMMENT ON COLUMN public.elected_officials.is_seed_data IS
-  'Phase 17: marks rows inserted by populate_diplomatic_seed RPC for idempotency.';
+-- NOTE: elected_officials is NOT a separate table on this deployment.
+-- Elected officials are stored as persons with person_subtype='elected_official'
+-- (see 17-SCHEMA-RECONCILIATION.md §5). The persons table above covers them.
 
 -- topics
 ALTER TABLE public.topics
@@ -119,13 +114,13 @@ CREATE INDEX IF NOT EXISTS idx_dossier_relationships_is_seed_data
 COMMENT ON COLUMN public.dossier_relationships.is_seed_data IS
   'Phase 17: marks rows inserted by populate_diplomatic_seed RPC for idempotency.';
 
--- work_items
-ALTER TABLE public.work_items
+-- tasks (canonical work-item storage; work_items does not exist on this deployment)
+ALTER TABLE public.tasks
   ADD COLUMN IF NOT EXISTS is_seed_data BOOLEAN NOT NULL DEFAULT false;
-CREATE INDEX IF NOT EXISTS idx_work_items_is_seed_data
-  ON public.work_items (is_seed_data)
+CREATE INDEX IF NOT EXISTS idx_tasks_is_seed_data
+  ON public.tasks (is_seed_data)
   WHERE is_seed_data = true;
-COMMENT ON COLUMN public.work_items.is_seed_data IS
+COMMENT ON COLUMN public.tasks.is_seed_data IS
   'Phase 17: marks rows inserted by populate_diplomatic_seed RPC for idempotency.';
 
 -- work_item_dossiers
