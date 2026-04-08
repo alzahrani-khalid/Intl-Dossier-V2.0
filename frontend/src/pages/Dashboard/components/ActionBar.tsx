@@ -35,23 +35,27 @@ function getGreetingKey(): string {
   return 'greeting.evening'
 }
 
+// DEBT-01 / OPS-07 verified 2026-04-08:
+// This ActionBar intentionally contains NO TanStack Router navigate() calls.
+// - New Engagement / New Request open the WorkCreation palette (modal) via useWorkCreation().openPalette(...).
+// - Cmd+K dispatches a synthetic KeyboardEvent consumed by the global listener in CommandPalette.tsx.
+// Do not "modernize" these to navigate({ to, params }) — they are not navigations.
 export function ActionBar({ role, onRoleChange }: ActionBarProps): React.ReactElement {
   const { t, i18n } = useTranslation('operations-hub')
   const isRTL = i18n.language === 'ar'
   const displayName = useAuthStore((s) => s.user?.name)
   const { openPalette } = useWorkCreation()
 
-  const greetingText = displayName != null && displayName !== ''
-    ? `${t(getGreetingKey())}, ${displayName}`
-    : t(getGreetingKey())
+  const greetingText =
+    displayName != null && displayName !== ''
+      ? `${t(getGreetingKey())}, ${displayName}`
+      : t(getGreetingKey())
 
   const dateLocale = isRTL ? ar : enUS
   const formattedDate = format(new Date(), 'EEEE, MMMM d, yyyy', { locale: dateLocale })
 
   const handleCmdK = (): void => {
-    document.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }),
-    )
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }))
   }
 
   return (
@@ -62,12 +66,8 @@ export function ActionBar({ role, onRoleChange }: ActionBarProps): React.ReactEl
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 py-4 md:py-0">
         {/* Greeting + Date */}
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-normal text-foreground">
-            {greetingText}
-          </h1>
-          <p className="text-sm font-normal text-muted-foreground">
-            {formattedDate}
-          </p>
+          <h1 className="text-xl font-normal text-foreground">{greetingText}</h1>
+          <p className="text-sm font-normal text-muted-foreground">{formattedDate}</p>
         </div>
 
         {/* Actions + Role Switcher */}
