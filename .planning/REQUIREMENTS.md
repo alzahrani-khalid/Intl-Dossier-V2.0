@@ -50,7 +50,7 @@ Requirements for making the system operational for daily use. Each maps to roadm
 ### Tech Debt
 
 - [x] **DEBT-01**: OPS-03 and OPS-07 fixed to use TanStack Router params instead of string navigation
-- [ ] **DEBT-02**: ROADMAP progress table auto-updates during plan execution (not manual)
+- [x] **DEBT-02**: ROADMAP progress table auto-updates during plan execution (not manual)
 
 ## Future Requirements
 
@@ -116,7 +116,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEED-02     | Phase 17 | Pending  |
 | SEED-03     | Phase 17 | Pending  |
 | DEBT-01     | Phase 19 | Complete |
-| DEBT-02     | Phase 19 | Pending  |
+| DEBT-02     | Phase 19 | Complete |
 
 **Coverage:**
 
