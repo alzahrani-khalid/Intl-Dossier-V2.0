@@ -1,0 +1,28 @@
+# Evidence 05b — Post-reseed seed row snapshot
+# Phase 20-01 / Criterion 3 / SEED-04 (verified end-to-end via live UI)
+# Captured: 2026-04-09 (after clicking "تعبئة البيانات النموذجية" in FirstRunModal AR)
+# Source: Supabase project zkrcjzdemdmwhearhfgg
+
+The re-seed was triggered by clicking the FirstRunModal "Populate sample data"
+button in the Arabic locale, under the live admin session of
+kazahrani@stats.gov.sa. This exercises the production RPC path end-to-end:
+
+  Browser → POST /rpc/populate_diplomatic_seed (admin JWT) → SECURITY DEFINER fn → seed rows
+
+Counts after reseed:
+  countries              | 10  ✓ matches pre-wipe baseline
+  organizations          | 10  ✓
+  forums                 | 10  ✓
+  engagements            | 10  ✓
+  dossiers               | 62  ✓
+  topics                 |  6  ✓
+  working_groups         |  4  ✓
+  persons                | 12  ✓
+
+  check_first_run() → { "can_seed": false, "is_empty": false }
+  (DB no longer empty; modal will not re-render — expected)
+
+Verdict: Criterion 3 (`populate_diplomatic_seed()` invocation, SEED-01/02/03 row
+shape) is SATISFIED via the in-app live admin flow. Closes 17-UAT.md Test 4
+(SEED-04) with stronger evidence than the plan required (live UI invocation
+rather than SQL editor).

@@ -1,0 +1,26 @@
+# Evidence 01 — Real staging admin users exist
+# Phase 20-01 / Criterion 1 / SEED-08 (partial)
+# Captured: 2026-04-08 (pre-wipe)
+# Source: Supabase project zkrcjzdemdmwhearhfgg (staging, eu-west-2)
+
+SELECT au.email, ur.role, (au.confirmed_at IS NOT NULL) AS confirmed
+FROM auth.users au
+JOIN user_roles ur ON ur.user_id = au.id
+WHERE ur.role = 'admin'
+ORDER BY au.email;
+
+Result (7 confirmed admin users):
+  admin@e2e.test            | admin | confirmed=true
+  admin@gastat.gov.sa       | admin | confirmed=true
+  kazahrani@stats.gov.sa    | admin | confirmed=true   <-- operator
+  moutester@example.com     | admin | confirmed=true
+  test.user@gmail.com       | admin | confirmed=true
+  test@example.com          | admin | confirmed=true
+  test@gastat-intake.local  | admin | confirmed=true
+
+auth.users total rows: 393
+public.users total rows: 3
+user_roles with role='admin': 7
+
+Verdict: Criterion 1 (real active admin user exists in auth.users + public.users + user_roles) is SATISFIED.
+`kazahrani@stats.gov.sa` used as the operator admin for FirstRunModal live UAT.

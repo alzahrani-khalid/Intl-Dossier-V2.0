@@ -1,0 +1,24 @@
+# Evidence 04 — check_first_run() empty-state confirmation
+# Phase 20-01 / SEED-05 prerequisite
+# Captured: 2026-04-09 (post-wipe, before re-seed)
+# Source: Supabase project zkrcjzdemdmwhearhfgg
+
+After wiping all is_seed_data=true rows across countries, organizations, forums,
+engagements, dossiers, dossier_relationships, topics, persons, working_groups,
+tasks, and work_item_dossiers junction:
+
+  SELECT public.check_first_run();
+  → { "can_seed": false, "is_empty": true }
+
+  SELECT count(*) FROM dossiers   WHERE is_seed_data;  → 0
+  SELECT count(*) FROM countries  WHERE is_seed_data;  → 0
+
+NOTE on `can_seed: false`:
+  check_first_run() couples the empty-DB check with an admin-role check evaluated
+  under the calling JWT. When invoked from the Supabase MCP (`postgres` superuser,
+  no JWT), there is no auth.uid() and `can_seed` resolves to false. When the same
+  function is invoked from the live frontend session under kazahrani@stats.gov.sa
+  (admin role), the modal renders successfully — proving the in-app code path
+  evaluates `can_seed = true` for real admin users on an empty DB.
+
+Verdict: empty-state precondition satisfied; FirstRunModal can render.

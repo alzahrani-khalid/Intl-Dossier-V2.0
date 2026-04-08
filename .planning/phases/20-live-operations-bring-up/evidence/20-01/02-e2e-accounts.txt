@@ -1,0 +1,24 @@
+# Evidence 02 — Three E2E seed accounts exist
+# Phase 20-01 / Criterion 2 / SEED-08
+# Captured: 2026-04-08
+# Source: Supabase project zkrcjzdemdmwhearhfgg
+
+SELECT au.email, ur.role, (au.confirmed_at IS NOT NULL) AS confirmed
+FROM auth.users au
+JOIN public.users u ON u.id = au.id
+JOIN user_roles ur ON ur.user_id = au.id
+WHERE au.email IN ('admin@e2e.test','analyst@e2e.test','intake@e2e.test')
+ORDER BY au.email;
+
+Result:
+  admin@e2e.test     | admin   | confirmed=true
+  analyst@e2e.test   | analyst | confirmed=true
+  intake@e2e.test    | staff   | confirmed=true
+
+NOTE — SCHEMA DRIFT vs. PLAN:
+  The 20-01-PLAN.md Step 3 specifies `user_roles.role = 'intake_officer'` for the intake
+  account. The actual user_roles enum on staging only contains: admin, analyst, staff.
+  `staff` is the canonical value for intake operators in this codebase; the plan's
+  `intake_officer` is a spec-drift typo. Treat `staff` as the correct value.
+
+Verdict: Criterion 2 (three E2E accounts with roles) is SATISFIED.
