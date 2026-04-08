@@ -164,35 +164,80 @@ Plans:
 
 - [ ] 19-01: TBD
 
+### Phase 20: Live Operations Bring-Up
+
+**Goal**: Complete every human verification checkpoint for v4.0 and provision the staging actors required to run them, so v4.0 can be audited `passed` and archived.
+**Depends on**: Phase 14, Phase 17, Phase 18
+**Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03, DEPLOY-04, DEPLOY-05, NOTIF-01, NOTIF-02, NOTIF-03, NOTIF-04, NOTIF-05, NOTIF-06, NOTIF-07, NOTIF-08, NOTIF-09, SEED-01, SEED-02, SEED-03, TEST-01, TEST-02, TEST-03, TEST-04, TEST-05, TEST-06, TEST-07, TEST-08, TEST-09, TEST-10, TEST-11
+**Scope**: Verification + bring-up only. No new product code. This phase closes the 24 `human_needed` checkpoints recorded across 14-VERIFICATION, 15-VERIFICATION, 16-VERIFICATION, 18-VERIFICATION and the 17-UAT blockers.
+**Success Criteria** (what must be TRUE):
+
+1. Staging has a real, active admin user (`auth.users` + `public.users` + `user_roles` all populated) usable for manual UAT sessions
+2. Three E2E seed accounts exist on staging — `admin@e2e.test`, `analyst@e2e.test`, `intake@e2e.test` — with known passwords stored as GitHub Actions secrets
+3. `populate_diplomatic_seed()` has been invoked once against an empty staging DB under a real admin JWT; resulting scenario matches SEED-01/02/03 (bilingual names, enum coverage, `is_seed_data = true` on every seeded row)
+4. FirstRunModal has been manually UAT'd in a live browser: renders, dismisses (localStorage persists), RTL correct in Arabic
+5. Production domain DNS points at droplet, certbot has obtained a valid TLS certificate, `verify-deployment.sh` passes with the real domain
+6. `DROPLET_HOST` + `DROPLET_SSH_KEY` GitHub Actions secrets are configured; at least one successful live deploy has run through `.github/workflows/deploy.yml`
+7. External uptime monitor (UptimeRobot or Betterstack) is watching `/health` and has fired at least one test alert
+8. Redis backup cron is installed on the droplet and has produced at least one verified non-empty `.rdb` file under `/opt/intl-dossier/backups/redis/`
+9. Supabase restore procedure from `deploy/BACKUP_RESTORE.md` has been rehearsed against staging and verified to produce a data-consistent restore
+10. `deploy/rollback.sh` has been exercised live on the droplet (rollback tags exist, health checks pass before + after)
+11. Bell icon + unread badge + notification center panel + category tabs render correctly in both EN and AR
+12. Task assignment produces a Sonner toast within ~5s of dispatch; notification appears in the Assignments tab
+13. Mark-as-read (individual + bulk) updates badge and persists across reloads
+14. Backend logs confirm async dispatch via BullMQ worker (`Notification worker ready`, `Notification queue initialized` on startup)
+15. NOTIF-06 preference toggle is respected end-to-end (toggle OFF → no toast; toggle ON → toast appears)
+16. RTL rendering of notification panel + toast is correct in Arabic
+17. Triggering an overdue-deadline notification for `email_enabled=true` user produces a bilingual HTML `email_queue` row
+18. A daily-digest-processor job produces a digest `email_queue` row matching the user's locale (`dir=rtl` for Arabic users)
+19. PushOptInBanner renders inside NotificationPanel (soft-ask) on first visit; Enable + Dismiss buttons are tappable (44px targets)
+20. VAPID push delivery works end-to-end: enabling push + triggering an urgent notification produces a real browser push event with correct bilingual title/body
+21. GitHub Actions E2E secrets exist: `E2E_BASE_URL`, `E2E_ADMIN_EMAIL/PASSWORD`, `E2E_ANALYST_EMAIL/PASSWORD`, `E2E_INTAKE_EMAIL/PASSWORD`, `E2E_SUPABASE_URL`, `E2E_SUPABASE_SERVICE_ROLE_KEY`
+22. Full Playwright suite has run against staging: `pnpm exec playwright test --project=chromium-en --project=chromium-ar-smoke` produced a clean green run (or env-gated specs skipped cleanly)
+23. A deliberately-failing E2E run has been triggered in CI; screenshot PNG + Playwright trace zip appear under `playwright-failure-N` artifacts; merged HTML report appears under `playwright-report`
+24. GitHub branch protection on `main` requires `E2E (shard 1/2)`, `E2E (shard 2/2)`, and `Merge Playwright reports` status checks before merging
+
+**Plans**: TBD
+
+Plans:
+
+- [ ] 20-01: TBD (staging auth bring-up — admin user + 3 E2E seed accounts)
+- [ ] 20-02: TBD (Ph17 data UAT — populate_diplomatic_seed invocation + FirstRunModal browser UAT)
+- [ ] 20-03: TBD (Ph14 production infra — DNS, certbot, GH secrets, monitor, backups, rollback)
+- [ ] 20-04: TBD (Ph15/16 notification runtime — 10 browser checkpoints)
+- [ ] 20-05: TBD (Ph18 E2E pipeline bring-up — secrets, live run, branch protection)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 14 → 15 → 16 → 17 → 18 → 19
+Phases execute in numeric order: 14 → 15 → 16 → 17 → 18 → 19 → 20
 Decimal phases (if inserted) execute between their surrounding integers.
 Phase 17 and 19 can run in parallel after their dependencies are met.
+Phase 20 is a pure verification phase — it runs after all other v4.0 phases are code-complete.
 
 <!-- gsd:progress:start -->
 
-| Phase                               | Milestone | Plans Complete | Status   | Completed  |
-| ----------------------------------- | --------- | -------------- | -------- | ---------- |
-| 1. Dead Code & Toolchain            | v2.0      | 3/3            | Complete | 2026-03-23 |
-| 2. Naming & File Structure          | v2.0      | 3/3            | Complete | 2026-03-23 |
-| 3. Security Hardening               | v2.0      | 3/3            | Complete | 2026-03-24 |
-| 4. RTL/LTR Consistency              | v2.0      | 6/6            | Complete | 2026-03-25 |
-| 5. Responsive Design                | v2.0      | 5/5            | Complete | 2026-03-26 |
-| 6. Architecture Consolidation       | v2.0      | 5/5            | Complete | 2026-03-27 |
-| 7. Performance Optimization         | v2.0      | 4/4            | Complete | 2026-03-28 |
-| 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete | 2026-03-28 |
-| 9. Lifecycle Engine                 | v3.0      | 5/5            | Complete | 2026-03-29 |
-| 10. Operations Hub                  | v3.0      | 4/4            | Complete | 2026-03-31 |
-| 11. Engagement Workspace            | v3.0      | 5/5            | Complete | 2026-03-31 |
-| 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete | 2026-03-31 |
-| 13. Feature Absorption              | v3.0      | 5/5            | Complete | 2026-04-02 |
-| 14. Production Deployment           | v4.0      | 3/3            | Complete | 2026-04-06 |
-| 15. Notification Backend & In-App   | v4.0      | 3/3            | Complete | 2026-04-06 |
-| 16. Email & Push Channels           | v4.0      | 4/4            | Complete | 2026-04-06 |
-| 17. Seed Data & First Run           | v4.0      | 5/5            | Complete | 2026-04-06 |
-| 18. E2E Test Suite                  | v4.0      | 4/4            | Complete | 2026-04-07 |
-| 19. Tech Debt Cleanup               | v4.0      | 2/2            | Complete | 2026-04-08 |
+| Phase                               | Milestone | Plans Complete | Status      | Completed  |
+| ----------------------------------- | --------- | -------------- | ----------- | ---------- |
+| 1. Dead Code & Toolchain            | v2.0      | 3/3            | Complete    | 2026-03-23 |
+| 2. Naming & File Structure          | v2.0      | 3/3            | Complete    | 2026-03-23 |
+| 3. Security Hardening               | v2.0      | 3/3            | Complete    | 2026-03-24 |
+| 4. RTL/LTR Consistency              | v2.0      | 6/6            | Complete    | 2026-03-25 |
+| 5. Responsive Design                | v2.0      | 5/5            | Complete    | 2026-03-26 |
+| 6. Architecture Consolidation       | v2.0      | 5/5            | Complete    | 2026-03-27 |
+| 7. Performance Optimization         | v2.0      | 4/4            | Complete    | 2026-03-28 |
+| 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete    | 2026-03-28 |
+| 9. Lifecycle Engine                 | v3.0      | 5/5            | Complete    | 2026-03-29 |
+| 10. Operations Hub                  | v3.0      | 4/4            | Complete    | 2026-03-31 |
+| 11. Engagement Workspace            | v3.0      | 5/5            | Complete    | 2026-03-31 |
+| 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete    | 2026-03-31 |
+| 13. Feature Absorption              | v3.0      | 5/5            | Complete    | 2026-04-02 |
+| 14. Production Deployment           | v4.0      | 3/3            | Complete    | 2026-04-06 |
+| 15. Notification Backend & In-App   | v4.0      | 3/3            | Complete    | 2026-04-06 |
+| 16. Email & Push Channels           | v4.0      | 4/4            | Complete    | 2026-04-06 |
+| 17. Seed Data & First Run           | v4.0      | 5/5            | Complete    | 2026-04-06 |
+| 18. E2E Test Suite                  | v4.0      | 4/4            | Complete    | 2026-04-07 |
+| 19. Tech Debt Cleanup               | v4.0      | 2/2            | Complete    | 2026-04-08 |
+| 20. Live Operations Bring Up        | TBD       | 0/TBD          | Not started | -          |
 
 <!-- gsd:progress:end -->
