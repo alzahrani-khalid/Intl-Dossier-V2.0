@@ -482,16 +482,21 @@ export function useNotificationRealtime(onNewNotification?: (notification: Notif
   }, [queryClient])
 
   useEffect(() => {
+    let cancelled = false
     let channel: RealtimeChannel | null = null
+    // Unique channel name per effect instance avoids Supabase's channel cache
+    // returning an already-subscribed channel on React Strict Mode double-mounts,
+    // which would cause ".on() after .subscribe()" errors.
+    const channelName = `notifications-realtime-${crypto.randomUUID()}`
 
     const setupRealtime = async (): Promise<void> => {
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      if (!user) return
+      if (!user || cancelled) return
 
-      channel = supabase
-        .channel('notifications-realtime')
+      const newChannel = supabase
+        .channel(channelName)
         .on(
           'postgres_changes',
           {
@@ -513,11 +518,18 @@ export function useNotificationRealtime(onNewNotification?: (notification: Notif
           handleUpdate,
         )
         .subscribe()
+
+      if (cancelled) {
+        void supabase.removeChannel(newChannel)
+        return
+      }
+      channel = newChannel
     }
 
     void setupRealtime()
 
     return () => {
+      cancelled = true
       if (channel) {
         void supabase.removeChannel(channel)
       }
