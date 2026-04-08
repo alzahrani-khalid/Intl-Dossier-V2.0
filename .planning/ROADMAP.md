@@ -171,6 +171,8 @@ Phases execute in numeric order: 14 → 15 → 16 → 17 → 18 → 19
 Decimal phases (if inserted) execute between their surrounding integers.
 Phase 17 and 19 can run in parallel after their dependencies are met.
 
+<!-- gsd:progress:start -->
+
 | Phase                               | Milestone | Plans Complete | Status      | Completed  |
 | ----------------------------------- | --------- | -------------- | ----------- | ---------- |
 | 1. Dead Code & Toolchain            | v2.0      | 3/3            | Complete    | 2026-03-23 |
@@ -188,7 +190,9 @@ Phase 17 and 19 can run in parallel after their dependencies are met.
 | 13. Feature Absorption              | v3.0      | 5/5            | Complete    | 2026-04-02 |
 | 14. Production Deployment           | v4.0      | 3/3            | Complete    | 2026-04-06 |
 | 15. Notification Backend & In-App   | v4.0      | 3/3            | Complete    | 2026-04-06 |
-| 16. Email & Push Channels           | v4.0      | 3/3            | Complete    | 2026-04-06 |
+| 16. Email & Push Channels           | v4.0      | 4/4            | Complete    | 2026-04-06 |
 | 17. Seed Data & First Run           | v4.0      | 5/5            | Complete    | 2026-04-06 |
 | 18. E2E Test Suite                  | v4.0      | 4/4            | Complete    | 2026-04-07 |
 | 19. Tech Debt Cleanup               | v4.0      | 0/TBD          | Not started | -          |
+
+<!-- gsd:progress:end -->
