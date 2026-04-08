@@ -46,9 +46,7 @@ export function EngagementStageGroup({
   const isRTL = i18n.language === 'ar'
 
   const stageLabel = LIFECYCLE_STAGE_LABELS[stage][isRTL ? 'ar' : 'en']
-  const visibleEngagements = showAll
-    ? engagements
-    : engagements.slice(0, MAX_VISIBLE_ENGAGEMENTS)
+  const visibleEngagements = showAll ? engagements : engagements.slice(0, MAX_VISIBLE_ENGAGEMENTS)
   const hasMore = count > MAX_VISIBLE_ENGAGEMENTS
   const contentId = `stage-content-${stage}`
 
@@ -60,9 +58,7 @@ export function EngagementStageGroup({
           aria-expanded={isOpen}
           aria-controls={contentId}
         >
-          <span className="text-sm font-semibold flex-1 text-start">
-            {stageLabel}
-          </span>
+          <span className="text-sm font-semibold flex-1 text-start">{stageLabel}</span>
           <Badge variant="secondary" className="text-sm font-semibold shrink-0">
             {count}
           </Badge>
@@ -80,9 +76,10 @@ export function EngagementStageGroup({
       <CollapsibleContent id={contentId}>
         <div className="ps-3 space-y-1 pt-1">
           {visibleEngagements.map((engagement) => {
-            const engName = isRTL && engagement.name_ar != null && engagement.name_ar !== ''
-              ? engagement.name_ar
-              : engagement.name_en
+            const engName =
+              isRTL && engagement.name_ar != null && engagement.name_ar !== ''
+                ? engagement.name_ar
+                : engagement.name_en
 
             return (
               <div
@@ -91,19 +88,23 @@ export function EngagementStageGroup({
                 role="button"
                 tabIndex={0}
                 onClick={(): void => {
-                  void navigate({ to: `/engagements/${engagement.id}` })
+                  void navigate({
+                    to: '/engagements/$engagementId',
+                    params: { engagementId: engagement.id },
+                  })
                 }}
                 onKeyDown={(e: React.KeyboardEvent): void => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault()
-                    void navigate({ to: `/engagements/${engagement.id}` })
+                    void navigate({
+                      to: '/engagements/$engagementId',
+                      params: { engagementId: engagement.id },
+                    })
                   }
                 }}
                 aria-label={engName}
               >
-                <span className="text-sm font-normal flex-1 truncate">
-                  {engName}
-                </span>
+                <span className="text-sm font-normal flex-1 truncate">{engName}</span>
                 <Badge variant="outline" className="text-xs shrink-0">
                   {engagement.engagement_type}
                 </Badge>
