@@ -487,7 +487,9 @@ export function useNotificationRealtime(onNewNotification?: (notification: Notif
     // Unique channel name per effect instance avoids Supabase's channel cache
     // returning an already-subscribed channel on React Strict Mode double-mounts,
     // which would cause ".on() after .subscribe()" errors.
-    const channelName = `notifications-realtime-${crypto.randomUUID()}`
+    // NOTE: crypto.randomUUID() requires a secure context (HTTPS/localhost),
+    // so we fall back to a timestamp + Math.random suffix for plain-HTTP prod.
+    const channelName = `notifications-realtime-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
 
     const setupRealtime = async (): Promise<void> => {
       const {
