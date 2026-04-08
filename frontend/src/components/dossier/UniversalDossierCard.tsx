@@ -48,7 +48,7 @@ import { cn } from '@/lib/utils'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import type { DossierWithExtension, DossierType, DossierStatus } from '@/services/dossier-api'
 import { Link } from '@tanstack/react-router'
-import { WorldMapHighlight } from '@/components/Dossier/WorldMapHighlight'
+import { WorldMapHighlight } from '@/components/dossier/WorldMapHighlight'
 
 interface UniversalDossierCardProps {
   dossier: DossierWithExtension
