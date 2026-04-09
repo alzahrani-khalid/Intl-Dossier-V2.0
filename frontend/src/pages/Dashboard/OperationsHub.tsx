@@ -19,7 +19,10 @@ import { useRolePreference } from '@/domains/operations-hub/hooks/useRolePrefere
 import { useDashboardScope } from '@/domains/operations-hub/hooks/useDashboardScope'
 import { useAttentionRealtime } from '@/domains/operations-hub/hooks/useAttentionRealtime'
 import { useAttentionItems } from '@/domains/operations-hub/hooks/useAttentionItems'
-import { useGroupedEvents, useUpcomingEvents } from '@/domains/operations-hub/hooks/useUpcomingEvents'
+import {
+  useGroupedEvents,
+  useUpcomingEvents,
+} from '@/domains/operations-hub/hooks/useUpcomingEvents'
 import { useEngagementStages } from '@/domains/operations-hub/hooks/useEngagementStages'
 import { useDashboardStats } from '@/domains/operations-hub/hooks/useDashboardStats'
 import { useActivityFeed } from '@/domains/operations-hub/hooks/useActivityFeed'
@@ -104,7 +107,9 @@ export function OperationsHub(): ReactElement {
             items={attention.data ?? []}
             isLoading={attention.isLoading}
             isError={attention.isError}
-            onRetry={(): void => { void attention.refetch() }}
+            onRetry={(): void => {
+              void attention.refetch()
+            }}
           />
         )
       case 'timeline':
@@ -113,7 +118,9 @@ export function OperationsHub(): ReactElement {
             events={events.data ?? { today: [], tomorrow: [], this_week: [], next_week: [] }}
             isLoading={events.isLoading}
             isError={events.isError}
-            onRetry={(): void => { void eventsQuery.refetch() }}
+            onRetry={(): void => {
+              void eventsQuery.refetch()
+            }}
           />
         )
       case 'engagements':
@@ -122,13 +129,22 @@ export function OperationsHub(): ReactElement {
             stages={stages.data ?? []}
             isLoading={stages.isLoading}
             isError={stages.isError}
-            onRetry={(): void => { void stages.refetch() }}
+            onRetry={(): void => {
+              void stages.refetch()
+            }}
           />
         )
       case 'stats':
         return (
           <QuickStatsBar
-            stats={stats.data ?? { active_engagements: 0, open_tasks: 0, sla_at_risk: 0, upcoming_week: 0 }}
+            stats={
+              stats.data ?? {
+                active_engagements: 0,
+                open_tasks: 0,
+                sla_at_risk: 0,
+                upcoming_week: 0,
+              }
+            }
             isLoading={stats.isLoading}
           />
         )
@@ -138,7 +154,9 @@ export function OperationsHub(): ReactElement {
             items={activity.data ?? []}
             isLoading={activity.isLoading}
             isError={activity.isError}
-            onRetry={(): void => { void activity.refetch() }}
+            onRetry={(): void => {
+              void activity.refetch()
+            }}
           />
         )
       default:
@@ -165,11 +183,7 @@ export function OperationsHub(): ReactElement {
   }
 
   return (
-    <div
-      dir={isRTL ? 'rtl' : 'ltr'}
-      role="main"
-      className="min-h-screen"
-    >
+    <div dir={isRTL ? 'rtl' : 'ltr'} role="main" className="min-h-screen">
       <div className="px-4 sm:px-6 lg:px-8">
         <ActionBar role={role} onRoleChange={setRole} />
       </div>
@@ -186,7 +200,11 @@ export function OperationsHub(): ReactElement {
           const colSpan = isMobile ? '' : getZoneColSpan(role, zoneKey, index)
 
           return (
-            <div key={zoneKey} className={`col-span-1 ${colSpan}`}>
+            <div
+              key={zoneKey}
+              className={`col-span-1 ${colSpan}`}
+              data-testid={`ops-zone-${zoneKey}`}
+            >
               <ZoneCollapsible
                 title={t(ZONE_TITLE_KEY[zoneKey] ?? zoneKey)}
                 defaultExpanded={index === 0}
