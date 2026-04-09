@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { apiGet } from '@/lib/api-client'
 import { useEffect, useCallback } from 'react'
 import { RealtimeChannel } from '@supabase/supabase-js'
 import { toast } from 'sonner'
@@ -88,22 +89,22 @@ export function useNotifications(filters: NotificationFilters = {}) {
   return useInfiniteQuery({
     queryKey: NOTIFICATION_KEYS.list(filters),
     queryFn: async ({ pageParam }) => {
-      const params = new URLSearchParams()
-      if (filters.category) params.set('category', filters.category)
-      if (filters.unreadOnly) params.set('unreadOnly', 'true')
-      if (pageParam) params.set('cursor', pageParam)
-      params.set('limit', '20')
+      const expressParams = new URLSearchParams()
+      if (filters.category) expressParams.set('category', filters.category)
+      if (filters.unreadOnly) expressParams.set('unreadOnly', 'true')
+      if (pageParam) expressParams.set('cursor', pageParam)
+      expressParams.set('limit', '20')
 
-      const response = await supabase.functions.invoke('notifications-center', {
-        body: undefined,
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      try {
+        const result = await apiGet<{
+          notifications: Notification[]
+          nextCursor: string | null
+          hasMore: boolean
+        }>(`/notifications-center?${expressParams.toString()}`, { baseUrl: 'express' })
 
-      // Fallback to direct query if Edge Function not available
-      if (response.error) {
+        return result
+      } catch {
+        // Fallback: query notifications table directly when Express route is unavailable
         const {
           data: { user },
         } = await supabase.auth.getUser()
@@ -139,12 +140,6 @@ export function useNotifications(filters: NotificationFilters = {}) {
           nextCursor,
           hasMore: data?.length === 20,
         }
-      }
-
-      return response.data as {
-        notifications: Notification[]
-        nextCursor: string | null
-        hasMore: boolean
       }
     },
     initialPageParam: null as string | null,
