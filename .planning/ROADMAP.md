@@ -220,7 +220,11 @@ Plans:
 
 1. `registerDigestScheduler()` is called during backend startup in `backend/src/index.ts`
 2. Backend logs show digest BullMQ repeatable jobs registered on startup
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 21-01-PLAN.md — Wire registerDigestScheduler() into backend startup
 
 ### Phase 22: E2E Test Fixes
 
