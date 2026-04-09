@@ -43,14 +43,14 @@ Requirements for making the system operational for daily use. Each maps to roadm
 
 ### Seed Data & First Run
 
-- [ ] **SEED-01**: Seed script creates realistic diplomatic scenario with 5-10 countries, organizations, forums, and engagements at various lifecycle stages
-- [ ] **SEED-02**: Seed data includes dossier relationships across tiers (strategic, operational, informational) and work items in different states
-- [ ] **SEED-03**: First-run experience detects empty database and offers to populate seed data
+- [x] **SEED-01**: Seed script creates realistic diplomatic scenario with 5-10 countries, organizations, forums, and engagements at various lifecycle stages
+- [x] **SEED-02**: Seed data includes dossier relationships across tiers (strategic, operational, informational) and work items in different states
+- [x] **SEED-03**: First-run experience detects empty database and offers to populate seed data
 
 ### Tech Debt
 
-- [ ] **DEBT-01**: OPS-03 and OPS-07 fixed to use TanStack Router params instead of string navigation
-- [ ] **DEBT-02**: ROADMAP progress table auto-updates during plan execution (not manual)
+- [x] **DEBT-01**: OPS-03 and OPS-07 fixed to use TanStack Router params instead of string navigation
+- [x] **DEBT-02**: ROADMAP progress table auto-updates during plan execution (not manual)
 
 ## Future Requirements
 
@@ -112,11 +112,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEST-09     | Phase 18 | Pending |
 | TEST-10     | Phase 22 | Pending |
 | TEST-11     | Phase 18 | Pending |
-| SEED-01     | Phase 23 | Pending |
-| SEED-02     | Phase 23 | Pending |
-| SEED-03     | Phase 23 | Pending |
-| DEBT-01     | Phase 23 | Pending |
-| DEBT-02     | Phase 23 | Pending |
+| SEED-01     | Phase 17 | Verified |
+| SEED-02     | Phase 17 | Verified |
+| SEED-03     | Phase 17 | Verified |
+| DEBT-01     | Phase 19 | Verified |
+| DEBT-02     | Phase 19 | Verified |
 
 **Coverage:**
 
