@@ -59,7 +59,7 @@ Full details: [v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 
 **Milestone Goal:** Fix runtime issues discovered during post-v4.0 browser inspection.
 
-- [ ] **Phase 24: Browser Inspection Fixes** - Fix calendar i18n missing keys, settings page 406 errors, and Supabase direct-call DNS failures
+- [x] **Phase 24: Browser Inspection Fixes** - Fix calendar i18n missing keys, settings page 406 errors, and Supabase direct-call DNS failures
 
 #### Phase 24: Browser Inspection Fixes
 
