@@ -616,7 +616,7 @@ async function fetchNotifications(): Promise<NotificationData[]> {
 
     const { data } = await supabase
       .from('notifications')
-      .select('id, title, message, category, is_read, created_at, action_url')
+      .select('id, title, message, category, read, created_at, action_url')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(10)
@@ -626,7 +626,7 @@ async function fetchNotifications(): Promise<NotificationData[]> {
       title: n.title,
       message: n.message,
       category: n.category || 'general',
-      isRead: n.is_read || false,
+      isRead: n.read || false,
       createdAt: n.created_at,
       actionUrl: n.action_url,
     }))

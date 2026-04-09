@@ -223,7 +223,7 @@ export function useMarkAsRead() {
       if (params.notificationIds && params.notificationIds.length > 0) {
         const { error } = await supabase
           .from('notifications')
-          .update({ read: true, read_at: new Date().toISOString() })
+          .update({ read_at: new Date().toISOString() })
           .eq('user_id', user.id)
           .in('id', params.notificationIds)
 
