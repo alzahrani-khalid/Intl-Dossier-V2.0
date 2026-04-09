@@ -382,6 +382,10 @@
       "createEvent": "Create Event"
     }
   },
+  "page": {
+    "title": "Calendar",
+    "description": "Manage and view your scheduled events and engagements"
+  },
   "more": "more",
   "upcoming_events": "Upcoming Events"
 }

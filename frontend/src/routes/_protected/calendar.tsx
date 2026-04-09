@@ -17,7 +17,7 @@ export const Route = createFileRoute('/_protected/calendar')({
 })
 
 function CalendarPage() {
-  const { t } = useTranslation('dossiers')
+  const { t } = useTranslation('calendar')
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month')
 
   return (
@@ -28,10 +28,10 @@ function CalendarPage() {
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-start flex items-center gap-2">
               <CalendarIcon className="h-6 w-6 sm:h-7 sm:w-7" />
-              {t('calendar.page.title')}
+              {t('page.title')}
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
-              {t('calendar.page.description')}
+              {t('page.description')}
             </p>
           </div>
 
@@ -39,7 +39,7 @@ function CalendarPage() {
             <Link to="/calendar/new">
               <Button className="w-full sm:w-auto">
                 <Plus className="h-4 w-4 me-2" />
-                {t('calendar.page.create_event')}
+                {t('form.create_event')}
               </Button>
             </Link>
           </div>
@@ -55,21 +55,21 @@ function CalendarPage() {
               size="sm"
               onClick={() => setViewMode('month')}
             >
-              {t('calendar.view_mode.month')}
+              {t('view.month')}
             </Button>
             <Button
               variant={viewMode === 'week' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setViewMode('week')}
             >
-              {t('calendar.view_mode.week')}
+              {t('view.week')}
             </Button>
             <Button
               variant={viewMode === 'day' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setViewMode('day')}
             >
-              {t('calendar.view_mode.day')}
+              {t('view.day')}
             </Button>
           </div>
         </CardContent>
