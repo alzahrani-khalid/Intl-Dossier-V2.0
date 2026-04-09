@@ -92,9 +92,14 @@ export function SettingsPage() {
     queryFn: async () => {
       if (!user?.id) throw new Error('Not authenticated')
 
-      const { data, error } = await supabase.from('users').select('*').eq('id', user.id).single()
+      const { data, error } = await supabase.from('users').select('*').eq('id', user.id).maybeSingle()
 
       if (error) throw error
+
+      // Row doesn't exist yet — return defaults, form will create on first save
+      if (data === null) {
+        return defaultUserSettings as SettingsFormValues
+      }
 
       // Map database fields to form fields with defaults
       return {
@@ -159,7 +164,9 @@ export function SettingsPage() {
 
       const { error } = await supabase
         .from('users')
-        .update({
+        .upsert({
+          id: user.id,
+
           // Profile
           display_name: values.display_name,
           job_title: values.job_title,
@@ -203,7 +210,6 @@ export function SettingsPage() {
 
           updated_at: new Date().toISOString(),
         })
-        .eq('id', user.id)
 
       if (error) throw error
 
