@@ -136,3 +136,8 @@ frontend/dist-test/
 .security-key
 logs/security/
 .playwright-mcp/
+.planning/phases/**/evidence/**/*.secret.md
+
+# Browser inspection screenshots
+*.png
+dashboard-snapshot.yml
