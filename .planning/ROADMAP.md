@@ -44,7 +44,7 @@ Full details: [v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 - [x] Phase 15: Notification Backend & In-App (3/3 plans) — BullMQ, triggers, bell icon, preferences
 - [x] Phase 16: Email & Push Channels (4/4 plans) — Resend email, digest, browser push, soft-ask
 - [x] Phase 17: Seed Data & First Run (5/5 plans) — 40+ entities, first-run modal, bilingual
-- [x] Phase 18: E2E Test Suite (4/4 plans) — Playwright POM, CI sharding, failure artifacts
+- [x] Phase 18: E2E Test Suite (4/4 plans) — Playwright POM, CI sharding, auth hardening, failure artifacts
 - [x] Phase 19: Tech Debt Cleanup (2/2 plans) — typed router params, roadmap auto-sync
 - [x] Phase 20: Live Operations Bring-Up (1/1 plan) — seed accounts provisioned
 - [x] Phase 21: Digest Scheduler Wiring Fix (1/1 plan) — registerDigestScheduler() wired
@@ -55,21 +55,46 @@ Full details: [v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 
 </details>
 
+### 🚧 v4.1 Post-Launch Fixes
+
+**Milestone Goal:** Fix runtime issues discovered during post-v4.0 browser inspection.
+
+- [ ] **Phase 24: Browser Inspection Fixes** - Fix calendar i18n missing keys, settings page 406 errors, and Supabase direct-call DNS failures
+
+#### Phase 24: Browser Inspection Fixes
+
+**Goal**: Fix runtime issues discovered during post-v4.0 deployment browser inspection
+**Depends on**: Phase 23
+**Requirements**: FIX-01, FIX-02, FIX-03
+**Success Criteria** (what must be TRUE):
+
+1. Calendar page shows translated labels (not raw i18n keys) in both English and Arabic
+2. Settings page loads without 406 errors on the users Supabase query
+3. Dashboard Supabase Edge Function calls (notifications-center, analytics-dashboard) go through the backend proxy instead of direct browser-to-Supabase calls, eliminating ERR_NAME_NOT_RESOLVED errors
+
+**Plans:** 2 plans
+
+Plans:
+
+- [ ] 24-01-PLAN.md — Fix calendar i18n, settings 406, and analytics DNS errors
+- [ ] 24-02-PLAN.md — Gap closure: notifications-center proxy routing + code quality fixes
+
 ## Progress
 
 <!-- gsd:progress:start -->
 
-| Phase                             | Milestone | Plans Complete | Status   | Completed  |
-| --------------------------------- | --------- | -------------- | -------- | ---------- |
-| 14. Production Deployment         | v4.0      | 3/3            | Complete | 2026-04-06 |
-| 15. Notification Backend & In-App | v4.0      | 3/3            | Complete | 2026-04-06 |
-| 16. Email & Push Channels         | v4.0      | 4/4            | Complete | 2026-04-06 |
-| 17. Seed Data & First Run         | v4.0      | 5/5            | Complete | 2026-04-06 |
-| 18. E2E Test Suite                | v4.0      | 4/4            | Complete | 2026-04-07 |
-| 19. Tech Debt Cleanup             | v4.0      | 2/2            | Complete | 2026-04-08 |
-| 20. Live Operations Bring Up      | v4.0      | 1/1            | Complete | 2026-04-09 |
-| 21. Digest Scheduler Wiring Fix   | v4.0      | 1/1            | Complete | 2026-04-09 |
-| 22. E2E Test Fixes                | v4.0      | 1/1            | Complete | 2026-04-09 |
-| 23. Missing Verifications         | v4.0      | 2/2            | Complete | 2026-04-09 |
+| Phase                             | Milestone | Plans Complete | Status      | Completed  |
+| --------------------------------- | --------- | -------------- | ----------- | ---------- |
+| 14. Production Deployment         | v4.0      | 3/3            | Complete    | 2026-04-06 |
+| 15. Notification Backend & In-App | v4.0      | 3/3            | Complete    | 2026-04-06 |
+| 16. Email & Push Channels         | v4.0      | 4/4            | Complete    | 2026-04-06 |
+| 17. Seed Data & First Run         | v4.0      | 5/5            | Complete    | 2026-04-06 |
+| 18. E2E Test Suite                | v4.0      | 4/4            | Complete    | 2026-04-07 |
+| 19. Tech Debt Cleanup             | v4.0      | 2/2            | Complete    | 2026-04-08 |
+| 20. Live Operations Bring Up      | v4.0      | 1/1            | Complete    | 2026-04-09 |
+| 21. Digest Scheduler Wiring Fix   | v4.0      | 1/1            | Complete    | 2026-04-09 |
+| 22. E2E Test Fixes                | v4.0      | 1/1            | Complete    | 2026-04-09 |
+| 23. Missing Verifications         | v4.0      | 2/2            | Complete    | 2026-04-09 |
+| 24. Browser Inspection Fixes      | TBD       | 0/TBD          | Not started | -          |
 
 <!-- gsd:progress:end -->
