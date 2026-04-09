@@ -4,7 +4,7 @@
 
 - ✅ **v2.0 Production Quality** — Phases 1-7 (shipped 2026-03-28) — [archive](milestones/v2.0-ROADMAP.md)
 - ✅ **v3.0 Connected Workflow** — Phases 8-13 (shipped 2026-04-06) — [archive](milestones/v3.0-ROADMAP.md)
-- 🚧 **v4.0 Live Operations** — Phases 14-19 (in progress)
+- 🚧 **v4.0 Live Operations** — Phases 14-23 (in progress)
 
 ## Phases
 
@@ -47,6 +47,9 @@ Full details: [v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 - [x] **Phase 17: Seed Data & First Run** - Realistic diplomatic scenario data and first-run experience (completed 2026-04-06, UAT recovery applied)
 - [x] **Phase 18: E2E Test Suite** - Playwright tests for all critical flows with CI integration (completed 2026-04-07, live run gated on Phase 17 seed accounts)
 - [ ] **Phase 19: Tech Debt Cleanup** - v3.0 router params fix and roadmap auto-update
+- [ ] **Phase 21: Digest Scheduler Wiring Fix** - Wire registerDigestScheduler() call at backend startup
+- [ ] **Phase 22: E2E Test Fixes** - Fix notification spec endpoint and ops-hub testid mismatches
+- [ ] **Phase 23: Missing Verifications** - Create VERIFICATION.md for phases 17 and 19
 
 ## Phase Details
 
@@ -207,6 +210,43 @@ Plans:
 - [x] 20-04: TBD (Ph15/16 notification runtime — 10 browser checkpoints)
 - [x] 20-05: TBD (Ph18 E2E pipeline bring-up — secrets, live run, branch protection)
 
+### Phase 21: Digest Scheduler Wiring Fix
+
+**Goal**: Daily/weekly email digest dispatches at runtime by wiring the scheduler startup call
+**Depends on**: Phase 16
+**Requirements**: NOTIF-04
+**Gap Closure**: Closes NOTIF-04 (unsatisfied), integration gap Phase 16→14, flow "Digest email dispatch"
+**Success Criteria** (what must be TRUE):
+
+1. `registerDigestScheduler()` is called during backend startup in `backend/src/index.ts`
+2. Backend logs show digest BullMQ repeatable jobs registered on startup
+   **Plans**: TBD
+
+### Phase 22: E2E Test Fixes
+
+**Goal**: Fix E2E test specs that target nonexistent endpoints or missing data-testids so they pass against the running app
+**Depends on**: Phase 18, Phase 21
+**Requirements**: TEST-05, TEST-10
+**Gap Closure**: Closes TEST-05, TEST-10, integration gaps Phase 18→15 and Phase 18→17/19, flows "Notification bell E2E" and "Operations Hub zone E2E"
+**Success Criteria** (what must be TRUE):
+
+1. `/api/notifications/test-trigger` endpoint exists and returns a test notification, or the E2E spec uses a valid trigger path
+2. `ops-zone-*` data-testids are present in OperationsHub component source
+3. Both `05-notifications.spec.ts` and `10-operations-hub.spec.ts` pass against a seeded database
+   **Plans**: TBD
+
+### Phase 23: Missing Verifications
+
+**Goal**: Create formal VERIFICATION.md for phases 17 and 19 to close partial requirement gaps
+**Depends on**: Phase 17, Phase 19
+**Requirements**: SEED-01, SEED-02, SEED-03, DEBT-01, DEBT-02
+**Gap Closure**: Closes SEED-01/02/03 and DEBT-01/02 partial status (code complete, verification missing)
+**Success Criteria** (what must be TRUE):
+
+1. Phase 17 has a VERIFICATION.md confirming SEED-01, SEED-02, SEED-03 are satisfied with evidence
+2. Phase 19 has a VERIFICATION.md confirming DEBT-01, DEBT-02 are satisfied with evidence
+   **Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
@@ -239,5 +279,8 @@ Phase 20 is a pure verification phase — it runs after all other v4.0 phases ar
 | 18. E2E Test Suite                  | v4.0      | 4/4            | Complete | 2026-04-07 |
 | 19. Tech Debt Cleanup               | v4.0      | 2/2            | Complete | 2026-04-08 |
 | 20. Live Operations Bring Up        | TBD       | 5/5            | Complete | 2026-04-09 |
+| 21. Digest Scheduler Wiring Fix     | v4.0      | 0/0            | Pending  |            |
+| 22. E2E Test Fixes                  | v4.0      | 0/0            | Pending  |            |
+| 23. Missing Verifications           | v4.0      | 0/0            | Pending  |            |
 
 <!-- gsd:progress:end -->

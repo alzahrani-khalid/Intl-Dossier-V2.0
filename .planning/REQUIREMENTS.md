@@ -49,8 +49,8 @@ Requirements for making the system operational for daily use. Each maps to roadm
 
 ### Tech Debt
 
-- [x] **DEBT-01**: OPS-03 and OPS-07 fixed to use TanStack Router params instead of string navigation
-- [x] **DEBT-02**: ROADMAP progress table auto-updates during plan execution (not manual)
+- [ ] **DEBT-01**: OPS-03 and OPS-07 fixed to use TanStack Router params instead of string navigation
+- [ ] **DEBT-02**: ROADMAP progress table auto-updates during plan execution (not manual)
 
 ## Future Requirements
 
@@ -85,38 +85,38 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase    | Status   |
-| ----------- | -------- | -------- |
-| DEPLOY-01   | Phase 14 | Pending  |
-| DEPLOY-02   | Phase 14 | Pending  |
-| DEPLOY-03   | Phase 14 | Pending  |
-| DEPLOY-04   | Phase 14 | Pending  |
-| DEPLOY-05   | Phase 14 | Pending  |
-| NOTIF-01    | Phase 15 | Pending  |
-| NOTIF-02    | Phase 15 | Pending  |
-| NOTIF-03    | Phase 16 | Pending  |
-| NOTIF-04    | Phase 16 | Pending  |
-| NOTIF-05    | Phase 16 | Pending  |
-| NOTIF-06    | Phase 15 | Pending  |
-| NOTIF-07    | Phase 15 | Pending  |
-| NOTIF-08    | Phase 15 | Pending  |
-| NOTIF-09    | Phase 16 | Pending  |
-| TEST-01     | Phase 18 | Pending  |
-| TEST-02     | Phase 18 | Pending  |
-| TEST-03     | Phase 18 | Pending  |
-| TEST-04     | Phase 18 | Pending  |
-| TEST-05     | Phase 18 | Pending  |
-| TEST-06     | Phase 18 | Pending  |
-| TEST-07     | Phase 18 | Pending  |
-| TEST-08     | Phase 18 | Pending  |
-| TEST-09     | Phase 18 | Pending  |
-| TEST-10     | Phase 18 | Pending  |
-| TEST-11     | Phase 18 | Pending  |
-| SEED-01     | Phase 17 | Pending  |
-| SEED-02     | Phase 17 | Pending  |
-| SEED-03     | Phase 17 | Pending  |
-| DEBT-01     | Phase 19 | Complete |
-| DEBT-02     | Phase 19 | Complete |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| DEPLOY-01   | Phase 14 | Pending |
+| DEPLOY-02   | Phase 14 | Pending |
+| DEPLOY-03   | Phase 14 | Pending |
+| DEPLOY-04   | Phase 14 | Pending |
+| DEPLOY-05   | Phase 14 | Pending |
+| NOTIF-01    | Phase 15 | Pending |
+| NOTIF-02    | Phase 15 | Pending |
+| NOTIF-03    | Phase 16 | Pending |
+| NOTIF-04    | Phase 21 | Pending |
+| NOTIF-05    | Phase 16 | Pending |
+| NOTIF-06    | Phase 15 | Pending |
+| NOTIF-07    | Phase 15 | Pending |
+| NOTIF-08    | Phase 15 | Pending |
+| NOTIF-09    | Phase 16 | Pending |
+| TEST-01     | Phase 18 | Pending |
+| TEST-02     | Phase 18 | Pending |
+| TEST-03     | Phase 18 | Pending |
+| TEST-04     | Phase 18 | Pending |
+| TEST-05     | Phase 22 | Pending |
+| TEST-06     | Phase 18 | Pending |
+| TEST-07     | Phase 18 | Pending |
+| TEST-08     | Phase 18 | Pending |
+| TEST-09     | Phase 18 | Pending |
+| TEST-10     | Phase 22 | Pending |
+| TEST-11     | Phase 18 | Pending |
+| SEED-01     | Phase 23 | Pending |
+| SEED-02     | Phase 23 | Pending |
+| SEED-03     | Phase 23 | Pending |
+| DEBT-01     | Phase 23 | Pending |
+| DEBT-02     | Phase 23 | Pending |
 
 **Coverage:**
 
