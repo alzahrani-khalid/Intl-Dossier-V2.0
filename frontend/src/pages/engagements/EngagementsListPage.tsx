@@ -55,7 +55,7 @@ import { useDirection } from '@/hooks/useDirection'
 function EngagementsListPage() {
   const { t } = useTranslation('engagements')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   // Search & filter state
   const [searchTerm, setSearchTerm] = useState('')
@@ -92,7 +92,7 @@ const navigate = useNavigate()
 
   // Navigation handlers
   const handleCreateEngagement = () => {
-    navigate({ to: '/engagements/create' })
+    navigate({ to: '/dossiers/create' })
   }
 
   const handleEngagementClick = (engagementId: string) => {
