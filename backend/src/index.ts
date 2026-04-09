@@ -14,6 +14,7 @@ import { scheduleOverdueCommitmentsDetectionJob } from './jobs/detect-overdue-co
 import { cacheMetrics } from './services/cache-metrics.service'
 import { notificationWorker, notificationQueue } from './queues/notification.queue'
 import { registerDeadlineChecker } from './queues/deadline-scheduler'
+import { registerDigestScheduler } from './queues/digest-scheduler'
 import {
   initSentry,
   sentryRequestHandler,
@@ -137,6 +138,9 @@ async function startServer(): Promise<void> {
 
     // Register deadline checker (repeatable every 15 minutes)
     await registerDeadlineChecker()
+
+    // Register digest scheduler (daily + weekly email digests)
+    await registerDigestScheduler()
   } else {
     logInfo('Redis unavailable - cache operations will fail gracefully to direct DB queries')
   }
