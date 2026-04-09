@@ -71,10 +71,10 @@ test.describe('TEST-05 notifications', () => {
     const notifications = new NotificationsPage(adminPage)
     await notifications.openPreferences()
 
-    await notifications.togglePreference('work_item', 'email', false)
+    await notifications.togglePreference('assignments', 'email', false)
     await adminPage.reload()
 
-    const toggle = adminPage.getByTestId('notification-pref-work_item-email')
+    const toggle = adminPage.getByTestId('notification-pref-assignments-email')
     await expect(toggle).toHaveAttribute('aria-checked', 'false')
   })
 })

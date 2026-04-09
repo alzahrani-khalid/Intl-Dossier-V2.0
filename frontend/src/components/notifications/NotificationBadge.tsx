@@ -40,6 +40,7 @@ export function NotificationBadge({
         className,
       )}
       aria-label={`${count} unread notifications`}
+      data-testid="notification-unread-count"
     >
       {displayCount}
     </span>

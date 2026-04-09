@@ -219,24 +219,28 @@ export function NotificationPreferences() {
                     <Switch
                       checked={pref.email_enabled}
                       onCheckedChange={(v) => handleToggle(category, 'email_enabled', v)}
+                      data-testid={`notification-pref-${category}-email`}
                     />
                   </div>
                   <div className="flex justify-center">
                     <Switch
                       checked={pref.push_enabled}
                       onCheckedChange={(v) => handleToggle(category, 'push_enabled', v)}
+                      data-testid={`notification-pref-${category}-push`}
                     />
                   </div>
                   <div className="flex justify-center">
                     <Switch
                       checked={pref.in_app_enabled}
                       onCheckedChange={(v) => handleToggle(category, 'in_app_enabled', v)}
+                      data-testid={`notification-pref-${category}-in_app`}
                     />
                   </div>
                   <div className="flex justify-center">
                     <Switch
                       checked={pref.sound_enabled}
                       onCheckedChange={(v) => handleToggle(category, 'sound_enabled', v)}
+                      data-testid={`notification-pref-${category}-sound`}
                     />
                   </div>
                 </div>

@@ -1,7 +1,15 @@
 import type { Locator, Page } from '@playwright/test'
 
-export type NotificationCategory = 'work_item' | 'mention' | 'system'
-export type NotificationChannel = 'in_app' | 'email' | 'push'
+export type NotificationCategory =
+  | 'assignments'
+  | 'intake'
+  | 'calendar'
+  | 'signals'
+  | 'mentions'
+  | 'deadlines'
+  | 'system'
+  | 'workflow'
+export type NotificationChannel = 'in_app' | 'email' | 'push' | 'sound'
 
 export default class NotificationsPage {
   constructor(public readonly page: Page) {}

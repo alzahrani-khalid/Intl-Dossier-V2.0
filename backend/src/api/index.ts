@@ -26,6 +26,7 @@ import intakeEntityLinksRouter from './intake-entity-links'
 import entitySearchRouter from './entity-search'
 import cacheMetricsRouter from './cache-metrics'
 import pushSubscriptionsRouter from './push-subscriptions'
+import notificationsRouter from './notifications'
 import { authenticateToken } from '../middleware/auth'
 import { apiLimiter } from '../middleware/rate-limit.middleware'
 import { logApiRequest, logError } from '../utils/logger'
@@ -98,6 +99,9 @@ apiRouter.use(entitySearchRouter)
 
 // Cache metrics routes
 apiRouter.use('/cache', cacheMetricsRouter)
+
+// Notification routes (includes test-trigger endpoint gated to non-production)
+apiRouter.use('/notifications', notificationsRouter)
 
 // API 404 handler
 apiRouter.use((req, res) => {
