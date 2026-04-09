@@ -138,7 +138,45 @@ export const cacheHelpers = {
  */
 export async function initializeRedis(): Promise<boolean> {
   try {
-    await redis.connect()
+    const status = redis.status
+
+    if (status === 'ready') {
+      // Another import already triggered auto-connect and it succeeded
+      const start = Date.now()
+      await redis.ping()
+      const latency = Date.now() - start
+      logInfo(`Redis already connected and healthy (latency: ${latency}ms)`)
+      return true
+    }
+
+    if (status === 'connecting' || status === 'reconnecting') {
+      // Another import triggered auto-connect — wait for it instead of fighting it
+      await new Promise<void>((resolve, reject) => {
+        const onReady = (): void => {
+          cleanup()
+          resolve()
+        }
+        const onError = (e: Error): void => {
+          cleanup()
+          reject(e)
+        }
+        const cleanup = (): void => {
+          redis.off('ready', onReady)
+          redis.off('error', onError)
+        }
+        redis.once('ready', onReady)
+        redis.once('error', onError)
+        // Safety timeout: don't hang forever
+        setTimeout(() => {
+          cleanup()
+          reject(new Error('Redis connection timed out after 10s'))
+        }, 10_000)
+      })
+    } else {
+      // status === 'wait' (lazyConnect not yet started) — normal path
+      await redis.connect()
+    }
+
     const start = Date.now()
     await redis.ping()
     const latency = Date.now() - start
