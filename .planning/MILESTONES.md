@@ -1,5 +1,30 @@
 # Milestones
 
+## v4.0 Live Operations (Shipped: 2026-04-09)
+
+**Phases completed:** 10 phases, 30 plans, 30 tasks
+
+**Key accomplishments:**
+
+- Fixed nginx proxy_pass trailing-slash bug and certbot cert path mounting for production HTTPS with auto-renewing TLS
+- deploy/backup-redis.sh
+- 1. [Rule 3 - Blocking] Copied Plan 01 prerequisite files into worktree
+- Category-aware Sonner toast on Realtime arrivals with full bilingual i18n strings for notification center
+- 1. [Rule 3 - Blocking] Test directory mismatch
+- 1. [Rule 3 - Blocking] Test directory mismatch
+- Added is_seed_data tagging infrastructure across all seeded tables, unblocking idempotent populate RPC and tag-based cleanup.
+- Installed the GASTAT diplomatic seed RPC on staging — deterministic, idempotent, admin-gated, bilingual across all native columns, covering every task enum value and five inheritance_source variants. Function is available but intentionally uninvoked on staging to avoid colliding with existing real data.
+- Lightweight first-run detection RPC and regenerated database types — frontend can now type-safely query whether the database is empty and whether the caller is allowed to seed it.
+- Built the bilingual, RTL-safe, mobile-first first-run modal with admin/non-admin variants. All four populate_diplomatic_seed response paths covered by passing Vitest tests.
+- Closed the SEED-03 loop end-to-end. The dashboard now mounts FirstRunModal automatically when check_first_run reports an empty DB and the user has not previously dismissed it. All automated tests green; manual UAT (Task 3) is still pending and must run against a fresh empty database.
+- One-liner:
+- Commit:
+- 1. [Rule 1 - Bug] Fixed POM NotificationCategory mismatch
+- 1. [Rule 3 - Blocking] No unit tests exist for FirstRunModal/useFirstRunCheck
+- 1. [Rule 1 - Bug] Fixed traceability phase mapping for SEED-01/02/03
+
+---
+
 ## v3.0 Connected Workflow (Shipped: 2026-04-06)
 
 **Phases completed:** 6 phases, 28 plans, 45 requirements

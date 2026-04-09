@@ -10,22 +10,22 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ## Current State
 
-**Shipped:** v3.0 Connected Workflow (2026-04-06)
+**Shipped:** v4.0 Live Operations (2026-04-09)
 
-The system now operates as a connected hub-and-spoke architecture:
+The system is now operational for daily use with full notification stack, production deployment, and automated testing:
 
-- Hub-based 3-group sidebar (Operations, Dossiers, Administration) with mobile bottom tab bar
-- Engagement lifecycle engine (6 stages, flexible transitions, audit logging, forum sessions)
-- Role-adaptive Operations Hub dashboard with 5 attention zones and Supabase Realtime
-- Persistent engagement workspace with lifecycle stepper, kanban, calendar, docs, audit tabs
-- DossierShell architecture with RelationshipSidebar (tier grouping, mobile sheet) across all 8 types
-- Elected Officials as full domain (list + detail + committees)
-- Feature absorption: analytics, AI briefings, network graph, polling, export all in contextual locations
-- Cmd+K quick switcher replaces standalone search with entity search, recents, and command palette
+- Production deployment: Docker Compose + nginx HTTPS + CI/CD pipeline + Redis backups + rollback
+- In-app notifications: bell icon, unread badge, notification center, category tabs, BullMQ async dispatch
+- Email notifications: Resend integration, bilingual alert templates, daily/weekly digest scheduling
+- Browser push: VAPID push delivery, soft-ask opt-in pattern, service worker
+- Seed data: 40+ bilingual diplomatic entities, first-run detection modal, admin-gated population
+- E2E testing: Playwright suite with POM pattern, CI sharding, auth hardening, failure artifacts
+- Tech debt resolved: typed TanStack Router params, roadmap auto-sync
 
+**Previous:** v3.0 Connected Workflow (2026-04-06) — hub-and-spoke architecture, engagement lifecycle, Operations Hub, DossierShell
 **Previous:** v2.0 Production Quality (2026-03-28) — 7-phase hardening (toolchain, security, RTL, responsive, architecture, performance)
 
-**Tech debt:** See `.planning/milestones/v2.0-MILESTONE-AUDIT.md` (v2.0) and `.planning/milestones/v3.0-MILESTONE-AUDIT.md` (v3.0)
+**Tech debt:** See `.planning/milestones/v4.0-MILESTONE-AUDIT.md` for known gaps (NOTIF-04 digest scheduler, TEST-05/10/11 E2E coverage, corporate infra items)
 
 ## Requirements
 
@@ -61,21 +61,17 @@ The system now operates as a connected hub-and-spoke architecture:
 - ✓ Enriched dossier pages (DossierShell, RelationshipSidebar, 8 types with tabs, Elected Officials domain) — v3.0 Phase 12
 - ✓ Feature absorption (analytics, AI, graph, polling, export absorbed; Cmd+K replaces search) — v3.0 Phase 13
 
+- ✓ Production deployment (HTTPS, CI/CD, monitoring, backups, rollback) — v4.0 Phase 14
+- ✓ In-app notification system (bell, center, triggers, preferences, BullMQ) — v4.0 Phases 15-16
+- ✓ Email notifications (Resend alerts, digest scheduling) — v4.0 Phase 16
+- ✓ Browser push notifications (VAPID, soft-ask opt-in) — v4.0 Phase 16
+- ✓ Realistic seed data and first-run experience — v4.0 Phase 17
+- ✓ Playwright E2E test suite with CI integration — v4.0 Phase 18
+- ✓ Tech debt cleanup (typed router params, roadmap auto-sync) — v4.0 Phase 19
+
 ### Active
 
-## Current Milestone: v4.0 Live Operations
-
-**Goal:** Make the system operational for daily use with notifications, reliable deployment, automated E2E testing, and realistic seed data.
-
-**Target features:**
-
-- Notification system (in-app bell + center, email alerts + digest, browser push)
-- Notification triggers (assignments, deadlines, stage transitions, attention items)
-- User notification preferences (per-channel, per-type controls)
-- Production deployment (HTTPS, CI/CD, monitoring, backups)
-- Playwright E2E tests for critical user flows
-- Realistic seed data and first-run experience
-- v3.0 tech debt cleanup (OPS-03/07, stale metadata)
+(No active requirements — next milestone not yet defined)
 
 ### Out of Scope
 
@@ -86,14 +82,14 @@ The system now operates as a connected hub-and-spoke architecture:
 
 ## Context
 
-- **Codebase:** 454 commits, 525+ files changed in v3.0, ~60+ backend API endpoints, ~150+ frontend route files, 11 Supabase migrations, 437K lines TypeScript
+- **Codebase:** ~580 commits, ~60+ backend API endpoints, ~150+ frontend route files, Supabase migrations, TypeScript monorepo
 - **Tech stack:** React 19, TypeScript 5.9, TanStack Router/Query v5, Express, Supabase (PostgreSQL 17), HeroUI v3, Tailwind v4, Vite
 - **Architecture:** Hub-and-spoke with DossierShell/WorkspaceShell patterns, domain repository across 13 domains, shared apiClient
 - **Quality gates:** ESLint 9 flat config, Prettier, Knip, pre-commit hooks, size-limit (200KB budget)
 - **Security:** Supabase-first auth with RBAC hierarchy, Zod validation on all routes, RLS on all tables, CSP hardened
 - **RTL:** useDirection() hook, LtrIsolate wrapper, eslint-plugin-rtl-friendly, zero physical CSS properties
 - **Responsive:** Mobile-first across all pages, 44px touch targets, card view fallbacks, RelationshipSidebar → BottomSheet on mobile
-- **Known tech debt:** v2.0 (12 items) + v3.0 tech debt (see milestone audit files)
+- **Known tech debt:** See milestone audit files in `.planning/milestones/` (v2.0, v3.0, v4.0)
 
 ## Constraints
 
@@ -105,24 +101,30 @@ The system now operates as a connected hub-and-spoke architecture:
 
 ## Key Decisions
 
-| Decision                          | Rationale                                     | Outcome    |
-| --------------------------------- | --------------------------------------------- | ---------- |
-| Full stack scope                  | Backend and frontend both need quality pass   | ✓ Good     |
-| Quality before features           | Fragile foundation makes new features risky   | ✓ Good     |
-| No new features in this milestone | Keeps scope focused on hardening              | ✓ Good     |
-| Supabase-first auth               | Unified auth strategy, JWT as fallback        | ✓ Good     |
-| Domain repository pattern         | Consistent data flow, zero raw fetch          | ✓ Good     |
-| useDirection() over prop drilling | Centralized RTL, no per-component dir=        | ✓ Good     |
-| size-limit as hard CI gate        | Bundle budget enforced, Lighthouse advisory   | ✓ Good     |
-| ESLint strict rules deferred      | 4500+ violations too large for this milestone | ⚠️ Revisit |
-| rtl-friendly at warn level        | Error-level no-restricted-syntax covers it    | ⚠️ Revisit |
-| Lifecycle guides, not gates       | Diplomatic work is non-linear; skip/revert OK | ✓ Good     |
-| Hub-and-spoke architecture        | Matches how diplomatic staff actually work    | ✓ Good     |
-| DossierShell shared layout        | Consistent UX across all 8 dossier types      | ✓ Good     |
-| Feature absorption over deletion  | Redirect old routes, absorb into context       | ✓ Good     |
-| Elected Officials via persons     | Query persons with subtype filter, no new table| ✓ Good     |
-| Kibo-UI KanbanProvider            | Better DX than raw @dnd-kit/core for kanban   | ✓ Good     |
-| Supabase Realtime for dashboard   | 1s debounce on tasks+transitions tables       | ✓ Good     |
+| Decision                          | Rationale                                       | Outcome    |
+| --------------------------------- | ----------------------------------------------- | ---------- |
+| Full stack scope                  | Backend and frontend both need quality pass     | ✓ Good     |
+| Quality before features           | Fragile foundation makes new features risky     | ✓ Good     |
+| No new features in this milestone | Keeps scope focused on hardening                | ✓ Good     |
+| Supabase-first auth               | Unified auth strategy, JWT as fallback          | ✓ Good     |
+| Domain repository pattern         | Consistent data flow, zero raw fetch            | ✓ Good     |
+| useDirection() over prop drilling | Centralized RTL, no per-component dir=          | ✓ Good     |
+| size-limit as hard CI gate        | Bundle budget enforced, Lighthouse advisory     | ✓ Good     |
+| ESLint strict rules deferred      | 4500+ violations too large for this milestone   | ⚠️ Revisit |
+| rtl-friendly at warn level        | Error-level no-restricted-syntax covers it      | ⚠️ Revisit |
+| Lifecycle guides, not gates       | Diplomatic work is non-linear; skip/revert OK   | ✓ Good     |
+| Hub-and-spoke architecture        | Matches how diplomatic staff actually work      | ✓ Good     |
+| DossierShell shared layout        | Consistent UX across all 8 dossier types        | ✓ Good     |
+| Feature absorption over deletion  | Redirect old routes, absorb into context        | ✓ Good     |
+| Elected Officials via persons     | Query persons with subtype filter, no new table | ✓ Good     |
+| Kibo-UI KanbanProvider            | Better DX than raw @dnd-kit/core for kanban     | ✓ Good     |
+| Supabase Realtime for dashboard   | 1s debounce on tasks+transitions tables         | ✓ Good     |
+| BullMQ for async notification     | Decouple dispatch from triggering action        | ✓ Good     |
+| Resend for transactional email    | Simple API, bilingual HTML templates            | ✓ Good     |
+| nginx + certbot over Caddy        | Existing config, lower migration risk           | ✓ Good     |
+| VAPID push with soft-ask pattern  | Better UX than cold browser permission dialog   | ✓ Good     |
+| Playwright POM + CI sharding      | Maintainable E2E with parallelized CI runs      | ✓ Good     |
+| Plans 20-02–05 deferred to corp   | Corporate infra migration pending               | — Pending  |
 
 ## Evolution
 
