@@ -253,7 +253,12 @@ Plans:
 
 1. Phase 17 has a VERIFICATION.md confirming SEED-01, SEED-02, SEED-03 are satisfied with evidence
 2. Phase 19 has a VERIFICATION.md confirming DEBT-01, DEBT-02 are satisfied with evidence
-   **Plans**: TBD
+   **Plans**: 2 plans
+
+Plans:
+
+- [ ] 23-01-PLAN.md — Create Phase 17 VERIFICATION.md with SEED-01/02/03 evidence
+- [ ] 23-02-PLAN.md — Create Phase 19 VERIFICATION.md with DEBT-01/02 evidence + update tracking docs
 
 ## Progress
 
@@ -289,6 +294,6 @@ Phase 20 is a pure verification phase — it runs after all other v4.0 phases ar
 | 20. Live Operations Bring Up        | TBD       | 5/5            | Complete    | 2026-04-09 |
 | 21. Digest Scheduler Wiring Fix     | v4.0      | 1/1            | Complete    | 2026-04-09 |
 | 22. E2E Test Fixes                  | v4.0      | 0/1            | Not started | -          |
-| 23. Missing Verifications           | v4.0      | 0/TBD          | Not started | -          |
+| 23. Missing Verifications           | v4.0      | 0/2            | Not started | -          |
 
 <!-- gsd:progress:end -->
