@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-06)
 Phase: 18 (complete, structural pass)
 Plan: 18-04 done
 Status: Phase 18 shipped — awaiting Phase 17 seed accounts + CI secrets for live E2E run
-Last activity: 2026-04-07
+Last activity: 2026-04-09 - Completed quick task 260409-dgf: Fix Redis initialization race + maxmemory-policy
 
 Progress: [█████████████████░░░] 83% of v4.0 (5/6 phases)
 
@@ -67,6 +67,12 @@ Progress: [█████████████████░░░] 83% of 
 - Seed E2E role accounts (admin/analyst/intake) — blocks first live Playwright run
 - Configure `main` branch protection to require E2E shard checks
 - Trigger one deliberately failing run to confirm artifact upload + flake logging
+
+### Quick Tasks Completed
+
+| #          | Description                                                  | Date       | Commit   | Directory                                                                  |
+| ---------- | ------------------------------------------------------------ | ---------- | -------- | -------------------------------------------------------------------------- |
+| 260409-dgf | Fix Redis initialization race + maxmemory-policy persistence | 2026-04-09 | 75759a9d | [260409-dgf](./quick/260409-dgf-fix-redis-initialization-race-maxmemory-/) |
 
 ### Blockers/Concerns
 
