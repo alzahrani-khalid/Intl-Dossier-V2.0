@@ -201,11 +201,11 @@ Plans:
 
 Plans:
 
-- [ ] 20-01: TBD (staging auth bring-up — admin user + 3 E2E seed accounts)
-- [ ] 20-02: TBD (Ph17 data UAT — populate_diplomatic_seed invocation + FirstRunModal browser UAT)
-- [ ] 20-03: TBD (Ph14 production infra — DNS, certbot, GH secrets, monitor, backups, rollback)
-- [ ] 20-04: TBD (Ph15/16 notification runtime — 10 browser checkpoints)
-- [ ] 20-05: TBD (Ph18 E2E pipeline bring-up — secrets, live run, branch protection)
+- [x] 20-01: TBD (staging auth bring-up — admin user + 3 E2E seed accounts)
+- [x] 20-02: TBD (Ph17 data UAT — populate_diplomatic_seed invocation + FirstRunModal browser UAT)
+- [x] 20-03: TBD (Ph14 production infra — DNS, certbot, GH secrets, monitor, backups, rollback)
+- [x] 20-04: TBD (Ph15/16 notification runtime — 10 browser checkpoints)
+- [x] 20-05: TBD (Ph18 E2E pipeline bring-up — secrets, live run, branch protection)
 
 ## Progress
 
@@ -217,27 +217,27 @@ Phase 20 is a pure verification phase — it runs after all other v4.0 phases ar
 
 <!-- gsd:progress:start -->
 
-| Phase                               | Milestone | Plans Complete | Status      | Completed  |
-| ----------------------------------- | --------- | -------------- | ----------- | ---------- |
-| 1. Dead Code & Toolchain            | v2.0      | 3/3            | Complete    | 2026-03-23 |
-| 2. Naming & File Structure          | v2.0      | 3/3            | Complete    | 2026-03-23 |
-| 3. Security Hardening               | v2.0      | 3/3            | Complete    | 2026-03-24 |
-| 4. RTL/LTR Consistency              | v2.0      | 6/6            | Complete    | 2026-03-25 |
-| 5. Responsive Design                | v2.0      | 5/5            | Complete    | 2026-03-26 |
-| 6. Architecture Consolidation       | v2.0      | 5/5            | Complete    | 2026-03-27 |
-| 7. Performance Optimization         | v2.0      | 4/4            | Complete    | 2026-03-28 |
-| 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete    | 2026-03-28 |
-| 9. Lifecycle Engine                 | v3.0      | 5/5            | Complete    | 2026-03-29 |
-| 10. Operations Hub                  | v3.0      | 4/4            | Complete    | 2026-03-31 |
-| 11. Engagement Workspace            | v3.0      | 5/5            | Complete    | 2026-03-31 |
-| 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete    | 2026-03-31 |
-| 13. Feature Absorption              | v3.0      | 5/5            | Complete    | 2026-04-02 |
-| 14. Production Deployment           | v4.0      | 3/3            | Complete    | 2026-04-06 |
-| 15. Notification Backend & In-App   | v4.0      | 3/3            | Complete    | 2026-04-06 |
-| 16. Email & Push Channels           | v4.0      | 4/4            | Complete    | 2026-04-06 |
-| 17. Seed Data & First Run           | v4.0      | 5/5            | Complete    | 2026-04-06 |
-| 18. E2E Test Suite                  | v4.0      | 4/4            | Complete    | 2026-04-07 |
-| 19. Tech Debt Cleanup               | v4.0      | 2/2            | Complete    | 2026-04-08 |
-| 20. Live Operations Bring Up        | TBD       | 0/TBD          | Not started | -          |
+| Phase                               | Milestone | Plans Complete | Status   | Completed  |
+| ----------------------------------- | --------- | -------------- | -------- | ---------- |
+| 1. Dead Code & Toolchain            | v2.0      | 3/3            | Complete | 2026-03-23 |
+| 2. Naming & File Structure          | v2.0      | 3/3            | Complete | 2026-03-23 |
+| 3. Security Hardening               | v2.0      | 3/3            | Complete | 2026-03-24 |
+| 4. RTL/LTR Consistency              | v2.0      | 6/6            | Complete | 2026-03-25 |
+| 5. Responsive Design                | v2.0      | 5/5            | Complete | 2026-03-26 |
+| 6. Architecture Consolidation       | v2.0      | 5/5            | Complete | 2026-03-27 |
+| 7. Performance Optimization         | v2.0      | 4/4            | Complete | 2026-03-28 |
+| 8. Navigation & Route Consolidation | v3.0      | 4/4            | Complete | 2026-03-28 |
+| 9. Lifecycle Engine                 | v3.0      | 5/5            | Complete | 2026-03-29 |
+| 10. Operations Hub                  | v3.0      | 4/4            | Complete | 2026-03-31 |
+| 11. Engagement Workspace            | v3.0      | 5/5            | Complete | 2026-03-31 |
+| 12. Enriched Dossier Pages          | v3.0      | 5/5            | Complete | 2026-03-31 |
+| 13. Feature Absorption              | v3.0      | 5/5            | Complete | 2026-04-02 |
+| 14. Production Deployment           | v4.0      | 3/3            | Complete | 2026-04-06 |
+| 15. Notification Backend & In-App   | v4.0      | 3/3            | Complete | 2026-04-06 |
+| 16. Email & Push Channels           | v4.0      | 4/4            | Complete | 2026-04-06 |
+| 17. Seed Data & First Run           | v4.0      | 5/5            | Complete | 2026-04-06 |
+| 18. E2E Test Suite                  | v4.0      | 4/4            | Complete | 2026-04-07 |
+| 19. Tech Debt Cleanup               | v4.0      | 2/2            | Complete | 2026-04-08 |
+| 20. Live Operations Bring Up        | TBD       | 5/5            | Complete | 2026-04-09 |
 
 <!-- gsd:progress:end -->
