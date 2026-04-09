@@ -92,7 +92,11 @@ export function SettingsPage() {
     queryFn: async () => {
       if (!user?.id) throw new Error('Not authenticated')
 
-      const { data, error } = await supabase.from('users').select('*').eq('id', user.id).maybeSingle()
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle()
 
       if (error) throw error
 
@@ -162,54 +166,52 @@ export function SettingsPage() {
     mutationFn: async (values: SettingsFormValues) => {
       if (!user?.id) throw new Error('Not authenticated')
 
-      const { error } = await supabase
-        .from('users')
-        .upsert({
-          id: user.id,
+      const { error } = await supabase.from('users').upsert({
+        id: user.id,
 
-          // Profile
-          display_name: values.display_name,
-          job_title: values.job_title,
-          department: values.department,
-          phone: values.phone,
-          bio: values.bio,
-          avatar_url: values.avatar_url,
+        // Profile
+        display_name: values.display_name,
+        job_title: values.job_title,
+        department: values.department,
+        phone: values.phone,
+        bio: values.bio,
+        avatar_url: values.avatar_url,
 
-          // General
-          language_preference: values.language_preference,
-          timezone: values.timezone,
-          date_format: values.date_format,
-          start_of_week: values.start_of_week,
+        // General
+        language_preference: values.language_preference,
+        timezone: values.timezone,
+        date_format: values.date_format,
+        start_of_week: values.start_of_week,
 
-          // Appearance
-          color_mode: values.color_mode,
-          theme: values.theme,
-          display_density: values.display_density,
+        // Appearance
+        color_mode: values.color_mode,
+        theme: values.theme,
+        display_density: values.display_density,
 
-          // Notifications
-          notifications_push: values.notifications_push,
-          notifications_email: values.notifications_email,
-          notifications_mou_expiry: values.notifications_mou_expiry,
-          notifications_event_reminders: values.notifications_event_reminders,
-          notifications_report_generation: values.notifications_report_generation,
-          notifications_assignment_updates: values.notifications_assignment_updates,
-          notifications_commitment_deadlines: values.notifications_commitment_deadlines,
-          notifications_mentions: values.notifications_mentions,
+        // Notifications
+        notifications_push: values.notifications_push,
+        notifications_email: values.notifications_email,
+        notifications_mou_expiry: values.notifications_mou_expiry,
+        notifications_event_reminders: values.notifications_event_reminders,
+        notifications_report_generation: values.notifications_report_generation,
+        notifications_assignment_updates: values.notifications_assignment_updates,
+        notifications_commitment_deadlines: values.notifications_commitment_deadlines,
+        notifications_mentions: values.notifications_mentions,
 
-          // Accessibility
-          high_contrast: values.high_contrast,
-          large_text: values.large_text,
-          reduce_motion: values.reduce_motion,
-          keyboard_only: values.keyboard_only,
-          focus_indicators: values.focus_indicators,
-          screen_reader: values.screen_reader,
+        // Accessibility
+        high_contrast: values.high_contrast,
+        large_text: values.large_text,
+        reduce_motion: values.reduce_motion,
+        keyboard_only: values.keyboard_only,
+        focus_indicators: values.focus_indicators,
+        screen_reader: values.screen_reader,
 
-          // Security
-          mfa_enabled: values.mfa_enabled,
-          session_timeout: values.session_timeout,
+        // Security
+        mfa_enabled: values.mfa_enabled,
+        session_timeout: values.session_timeout,
 
-          updated_at: new Date().toISOString(),
-        })
+        updated_at: new Date().toISOString(),
+      })
 
       if (error) throw error
 
@@ -266,7 +268,7 @@ export function SettingsPage() {
 
   // Handle save
   const handleSave = useCallback(() => {
-    form.handleSubmit((values) => {
+    void form.handleSubmit((values) => {
       saveMutation.mutate(values)
     })()
   }, [form, saveMutation])
