@@ -237,7 +237,11 @@ Plans:
 1. `/api/notifications/test-trigger` endpoint exists and returns a test notification, or the E2E spec uses a valid trigger path
 2. `ops-zone-*` data-testids are present in OperationsHub component source
 3. Both `05-notifications.spec.ts` and `10-operations-hub.spec.ts` pass against a seeded database
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 22-01-PLAN.md — Fix notification test-trigger endpoint, add testids, realign ops-hub spec
 
 ### Phase 23: Missing Verifications
 
@@ -284,7 +288,7 @@ Phase 20 is a pure verification phase — it runs after all other v4.0 phases ar
 | 19. Tech Debt Cleanup               | v4.0      | 2/2            | Complete    | 2026-04-08 |
 | 20. Live Operations Bring Up        | TBD       | 5/5            | Complete    | 2026-04-09 |
 | 21. Digest Scheduler Wiring Fix     | v4.0      | 1/1            | Complete    | 2026-04-09 |
-| 22. E2E Test Fixes                  | v4.0      | 0/TBD          | Not started | -          |
+| 22. E2E Test Fixes                  | v4.0      | 0/1            | Not started | -          |
 | 23. Missing Verifications           | v4.0      | 0/TBD          | Not started | -          |
 
 <!-- gsd:progress:end -->
