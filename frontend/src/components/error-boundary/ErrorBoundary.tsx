@@ -156,17 +156,15 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="max-w-md w-full bg-card border border-border rounded-lg shadow-lg p-6 text-center">
         <div className="flex justify-center mb-4">
-          <AlertTriangle className="h-16 w-16 text-red-500" />
+          <AlertTriangle className="h-16 w-16 text-destructive" />
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          {t('errorBoundary.title')}
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground mb-2">{t('errorBoundary.title')}</h1>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-6">{t('errorBoundary.description')}</p>
+        <p className="text-muted-foreground mb-6">{t('errorBoundary.description')}</p>
 
         <div className="space-y-3">
           <Button onClick={resetError} className="w-full">
@@ -192,16 +190,16 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
             </Button>
 
             {showDetails && (
-              <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded text-start text-xs overflow-auto max-h-64">
+              <div className="mt-4 p-4 bg-muted rounded text-start text-xs overflow-auto max-h-64">
                 <div className="font-mono">
-                  <div className="font-bold text-red-600 mb-2">Error:</div>
-                  <div className="mb-4 text-red-500">{error?.message}</div>
+                  <div className="font-bold text-destructive mb-2">Error:</div>
+                  <div className="mb-4 text-destructive/80">{error?.message}</div>
 
-                  <div className="font-bold text-red-600 mb-2">Stack Trace:</div>
-                  <pre className="whitespace-pre-wrap text-red-500 mb-4">{error?.stack}</pre>
+                  <div className="font-bold text-destructive mb-2">Stack Trace:</div>
+                  <pre className="whitespace-pre-wrap text-destructive/80 mb-4">{error?.stack}</pre>
 
-                  <div className="font-bold text-red-600 mb-2">Component Stack:</div>
-                  <pre className="whitespace-pre-wrap text-red-500">
+                  <div className="font-bold text-destructive mb-2">Component Stack:</div>
+                  <pre className="whitespace-pre-wrap text-destructive/80">
                     {errorInfo?.componentStack}
                   </pre>
                 </div>

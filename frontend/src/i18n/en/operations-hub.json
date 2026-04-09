@@ -10,6 +10,7 @@
     "new_request": "New Request"
   },
   "zones": {
+    "overview": "Overview",
     "attention": {
       "title": "Attention Needed",
       "empty": "All clear -- nothing needs attention"
@@ -29,6 +30,7 @@
       "show_all": "Show all engagements"
     },
     "stats": {
+      "title": "Quick Stats",
       "active_engagements": "Active Engagements",
       "open_tasks": "Open Tasks",
       "sla_at_risk": "SLA At Risk",
@@ -50,6 +52,16 @@
     "sla_at_risk": "SLA At Risk",
     "stalled": "Stalled",
     "stalled_detail": "{{days}} days in {{stage}}"
+  },
+  "kpi": {
+    "totalDossiers": "Total Dossiers",
+    "activeEngagements": "Active Engagements",
+    "upcomingDeadlines": "Upcoming Deadlines",
+    "openWorkItems": "Open Work Items"
+  },
+  "analytics": {
+    "empty": "No analytics data available yet. Start by creating dossiers and engagements.",
+    "error": "Unable to load analytics. Check your connection and try again."
   },
   "error": {
     "load_failed": "Could not load {{zone}}. Check your connection and try again.",

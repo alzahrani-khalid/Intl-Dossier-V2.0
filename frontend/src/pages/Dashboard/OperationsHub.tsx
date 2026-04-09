@@ -67,7 +67,7 @@ const ZONE_TITLE_KEY: Record<string, string> = {
   attention: 'zones.attention.title',
   timeline: 'zones.timeline.title',
   engagements: 'zones.engagements.title',
-  stats: 'zones.stats.active_engagements',
+  stats: 'zones.stats.title',
   activity: 'zones.activity.title',
 }
 

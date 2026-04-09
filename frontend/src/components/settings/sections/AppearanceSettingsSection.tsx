@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { SettingsSectionCard, SettingsGroup } from '../SettingsSectionCard'
 import { cn } from '@/lib/utils'
+import { useTheme } from '@/hooks/useTheme'
 
 interface AppearanceSettingsSectionProps {
   form: UseFormReturn<any>
@@ -17,6 +18,7 @@ interface AppearanceSettingsSectionProps {
  */
 export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionProps) {
   const { t } = useTranslation('settings')
+  const { setColorMode, setTheme: applyTheme } = useTheme()
   const colorMode = form.watch('color_mode')
   const theme = form.watch('theme')
   const displayDensity = form.watch('display_density')
@@ -128,7 +130,10 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
                     'min-h-[88px]',
                     isSelected && 'ring-2 ring-primary',
                   )}
-                  onClick={() => form.setValue('color_mode', mode.value, { shouldDirty: true })}
+                  onClick={() => {
+                    form.setValue('color_mode', mode.value, { shouldDirty: true })
+                    setColorMode(mode.value as 'light' | 'dark' | 'system')
+                  }}
                 >
                   <CardContent className="p-4 flex flex-col items-center justify-center h-full">
                     <Icon className={cn('h-8 w-8 mb-2', mode.color)} />
@@ -157,7 +162,10 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
                     'cursor-pointer transition-all hover:shadow-md relative',
                     isSelected && 'ring-2 ring-primary',
                   )}
-                  onClick={() => form.setValue('theme', themeOption.value, { shouldDirty: true })}
+                  onClick={() => {
+                    form.setValue('theme', themeOption.value, { shouldDirty: true })
+                    applyTheme(themeOption.value as 'canvas' | 'azure' | 'lavender' | 'bluesky')
+                  }}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-center gap-2 mb-3">

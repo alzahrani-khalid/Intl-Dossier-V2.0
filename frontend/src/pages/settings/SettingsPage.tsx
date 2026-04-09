@@ -223,16 +223,10 @@ export function SettingsPage() {
         await switchLanguage(values.language_preference)
       }
 
-      // Apply color mode change
+      // Apply color mode change — pass 'system' directly so ThemeProvider
+      // can track OS preference changes, instead of resolving it here.
       if (values.color_mode !== settings?.color_mode) {
-        // Map 'system' to the actual system preference
-        const effectiveMode =
-          values.color_mode === 'system'
-            ? window.matchMedia('(prefers-color-scheme: dark)').matches
-              ? 'dark'
-              : 'light'
-            : values.color_mode
-        setColorMode(effectiveMode as 'light' | 'dark')
+        setColorMode(values.color_mode as 'light' | 'dark' | 'system')
       }
 
       // Apply accessibility settings

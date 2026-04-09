@@ -30,6 +30,7 @@
       "show_all": "Show all engagements"
     },
     "stats": {
+      "title": "Quick Stats",
       "active_engagements": "Active Engagements",
       "open_tasks": "Open Tasks",
       "sla_at_risk": "SLA At Risk",
