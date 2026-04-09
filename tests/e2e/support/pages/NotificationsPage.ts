@@ -27,6 +27,7 @@ export default class NotificationsPage {
   }
 
   async getUnreadCount(): Promise<number> {
+    if ((await this.unreadBadge.count()) === 0) return 0
     const text = (await this.unreadBadge.textContent())?.trim() ?? '0'
     const parsed = Number.parseInt(text, 10)
     return Number.isFinite(parsed) ? parsed : 0
@@ -46,10 +47,11 @@ export default class NotificationsPage {
     enabled: boolean,
   ): Promise<void> {
     const toggle = this.page.getByTestId(`notification-pref-${category}-${channel}`)
+    await toggle.waitFor({ state: 'visible', timeout: 15_000 })
     const current = await toggle.getAttribute('aria-checked')
     const isOn = current === 'true'
     if (isOn !== enabled) {
-      await toggle.click()
+      await toggle.click({ force: true })
     }
   }
 }

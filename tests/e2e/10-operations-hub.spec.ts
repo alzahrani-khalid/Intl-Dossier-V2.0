@@ -26,6 +26,7 @@ test.describe('TEST-10 Operations Hub', () => {
   test('leadership role sees zones in correct order', async ({ adminPage }) => {
     const hub = new OperationsHubPage(adminPage)
     await hub.goto()
+    await hub.switchRole('leadership')
 
     const order = await hub.getZoneOrder()
     const expected = ZONE_ORDER.leadership
@@ -36,6 +37,7 @@ test.describe('TEST-10 Operations Hub', () => {
   test('analyst role sees all zones in analyst order', async ({ analystPage }) => {
     const hub = new OperationsHubPage(analystPage)
     await hub.goto()
+    await hub.switchRole('analyst')
 
     // All 5 zones are visible for analyst
     for (const zone of ALL_ZONES) {

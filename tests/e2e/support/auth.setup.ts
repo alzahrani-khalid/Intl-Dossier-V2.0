@@ -23,7 +23,7 @@ for (const role of roles) {
 
     await page.goto('/login')
     await page.getByLabel(/email/i).fill(role.email)
-    await page.getByLabel(/password/i).fill(role.password)
+    await page.locator('#password').fill(role.password)
     await page.getByRole('button', { name: /sign in|login/i }).click()
     await expect(page).toHaveURL(/dashboard|operations|home/, { timeout: 15_000 })
 

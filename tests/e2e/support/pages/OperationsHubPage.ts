@@ -26,6 +26,7 @@ export default class OperationsHubPage {
 
   async getZoneOrder(): Promise<string[]> {
     const zones = this.page.locator('[data-testid^="ops-zone-"]')
+    await zones.first().waitFor({ state: 'visible', timeout: 15_000 })
     const count = await zones.count()
     const order: string[] = []
     for (let i = 0; i < count; i++) {
@@ -38,8 +39,10 @@ export default class OperationsHubPage {
   }
 
   async switchRole(role: DashboardRole): Promise<void> {
-    await this.page.getByRole('button', { name: /role|الدور/i }).click()
-    await this.page.getByRole('option', { name: new RegExp(role, 'i') }).click()
+    await this.page.getByTestId('role-switcher').click()
+    await this.page.getByRole('menuitem', { name: new RegExp(role, 'i') }).click()
+    // Wait for zones to re-render after role switch
+    await this.page.locator('[data-testid^="ops-zone-"]').first().waitFor({ state: 'visible' })
   }
 
   async clickItem(zone: OperationsZone, itemTitle: string): Promise<void> {

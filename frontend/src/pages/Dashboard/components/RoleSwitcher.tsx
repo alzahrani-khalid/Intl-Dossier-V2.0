@@ -35,6 +35,7 @@ export function RoleSwitcher({ role, onChange }: RoleSwitcherProps): React.React
           variant="outline"
           className="min-h-11 min-w-11 gap-2"
           aria-label={t('roles.leadership', 'Role selection')}
+          data-testid="role-switcher"
         >
           <span className="text-sm">{t(`roles.${role}`)}</span>
           <ChevronDown className="size-4 opacity-50" />
@@ -42,16 +43,8 @@ export function RoleSwitcher({ role, onChange }: RoleSwitcherProps): React.React
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[140px]">
         {ROLES.map((r) => (
-          <DropdownMenuItem
-            key={r}
-            className="min-h-11 gap-2"
-            onSelect={() => onChange(r)}
-          >
-            {role === r ? (
-              <Check className="size-4" />
-            ) : (
-              <span className="size-4" />
-            )}
+          <DropdownMenuItem key={r} className="min-h-11 gap-2" onSelect={() => onChange(r)}>
+            {role === r ? <Check className="size-4" /> : <span className="size-4" />}
             <span>{t(`roles.${r}`)}</span>
           </DropdownMenuItem>
         ))}
