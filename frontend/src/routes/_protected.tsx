@@ -8,13 +8,25 @@ import { OnboardingTourTrigger } from '@/components/guided-tours'
 
 export const Route = createFileRoute('/_protected')({
   beforeLoad: async () => {
-    // Check actual Supabase session, not just localStorage
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
+    try {
+      // Check actual Supabase session, not just localStorage
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
 
-    if (!session) {
-      // Clear stale auth state and redirect to login
+      if (!session) {
+        // Clear stale auth state and redirect to login
+        useAuthStore.setState({ user: null, isAuthenticated: false })
+        throw redirect({
+          to: '/login',
+        })
+      }
+    } catch (error) {
+      // If it's already a redirect, re-throw it
+      if (error instanceof Error && 'to' in error) {
+        throw error
+      }
+      // Any other error (network, corrupt token) → treat as unauthenticated
       useAuthStore.setState({ user: null, isAuthenticated: false })
       throw redirect({
         to: '/login',
