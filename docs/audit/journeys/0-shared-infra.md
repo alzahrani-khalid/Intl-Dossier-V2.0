@@ -428,3 +428,65 @@
 4. **i18n / RTL (3 findings):** R-01, R-04, R-05
 5. **Data flow / state (9 findings):** D-01 through D-11
 6. **Navigation (4 findings):** N-01, N-02, N-03, N-04
+
+---
+
+## Browser Verification
+
+**Date:** 2026-04-10
+**Viewport tested:** Desktop (1440x900), Mobile (375x812)
+**Modes tested:** Light AR, Dark AR, Dark EN
+**Screenshots:** audit-screenshots/01-12
+
+### New Findings (Browser-Only)
+
+#### [CRITICAL] B-01: API calls hitting wrong port (5001 instead of 3000)
+
+- **Agent:** browser-verification
+- **Journey:** 0-shared-infra
+- **Issue:** `notifications-center` and `analytics-dashboard` API calls go to port 5001 (401 Unauthorized). Backend runs on port 3000. This error repeats on EVERY page load — 10+ errors accumulated in a single session.
+- **Expected:** API calls should use the Express proxy on port 3000
+- **Fix:** Check frontend API config for notifications-center and analytics-dashboard endpoints. Likely a hardcoded base URL or missing proxy config for these routes.
+- **Affects:** [all journeys — notifications and analytics broken]
+
+#### [WARNING] B-02: Supabase auth lock contention (NavigatorLockAcquireTimeoutError)
+
+- **Agent:** browser-verification
+- **Journey:** 0-shared-infra
+- **Issue:** Console shows `NavigatorLockAcquireTimeoutError: Lock "lock:sb-*-auth-token" was released because another request stole it` followed by 8+ "Lock broken by another request" messages. Multiple auth listeners competing for the same lock.
+- **Expected:** Single auth listener, no lock contention
+- **Fix:** Confirms D-01 (auth listener no cleanup). Fix the auth listener to prevent duplicate subscriptions.
+- **Affects:** [all journeys — auth stability, especially during HMR]
+
+#### [WARNING] B-03: Untranslated English strings visible in Arabic mode
+
+- **Agent:** browser-verification
+- **Journey:** 0-shared-infra
+- **Issue:** Dossier type cards show "of total active dossiers %" in English while rest of page is Arabic. Confirms R-01/R-13 translation gap findings.
+- **Expected:** All text should be Arabic when in Arabic mode
+- **Fix:** Add missing translation keys for dossier statistics
+- **Affects:** [2-dossier-browse, all dossier pages]
+
+### Visual Verification Results
+
+| Check                        | Light AR | Dark AR       | Dark EN | Mobile AR              |
+| ---------------------------- | -------- | ------------- | ------- | ---------------------- |
+| Layout direction (RTL/LTR)   | PASS     | PASS          | PASS    | PASS                   |
+| Sidebar collapse on mobile   | -        | -             | PASS    | PASS                   |
+| Bottom tab bar on mobile     | -        | -             | PASS    | PASS                   |
+| Theme colors consistent      | PASS     | PASS          | PASS    | PASS                   |
+| No invisible text            | PASS     | PASS          | PASS    | PASS                   |
+| Card backgrounds themed      | PASS     | PASS          | PASS    | PASS                   |
+| Font correct (Readex Pro AR) | PASS     | PASS          | -       | PASS                   |
+| 404 page styled              | -        | PASS (/admin) | -       | -                      |
+| FAB position                 | -        | -             | PASS    | PASS (tight with chat) |
+
+### Confirmed Code Audit Findings
+
+- **N-02 CONFIRMED:** /admin shows 404 page (screenshot 08)
+- **R-01/R-13 CONFIRMED:** English text visible in Arabic mode (screenshot 11)
+- **D-01 CONFIRMED:** Auth lock contention from duplicate listeners (console errors)
+
+### Corrected Code Audit Findings
+
+- **N-03 PARTIAL CORRECTION:** 404 page DOES exist and IS styled (Arabic "الصفحة غير موجودة" with navigation buttons). Code audit said no 404 handler — there IS one, but it could be more helpful (show search, suggest pages).

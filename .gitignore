@@ -141,3 +141,4 @@ logs/security/
 # Browser inspection screenshots
 *.png
 dashboard-snapshot.yml
+audit-screenshots/

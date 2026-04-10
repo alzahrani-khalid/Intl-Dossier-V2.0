@@ -23,10 +23,10 @@
 
 | Severity  | Count  | Fixed | Remaining |
 | --------- | ------ | ----- | --------- |
-| CRITICAL  | 7      | 0     | 7         |
-| WARNING   | 40     | 0     | 40        |
+| CRITICAL  | 8      | 0     | 8         |
+| WARNING   | 42     | 0     | 42        |
 | INFO      | 33     | 0     | 33        |
-| **Total** | **80** | **0** | **80**    |
+| **Total** | **83** | **0** | **83**    |
 
 ---
 
@@ -187,12 +187,40 @@ _Isolated impact — fix last._
 | 4   | D-03      | Floating promise in main.tsx        | Silent error swallowing          | main.tsx                      |
 | 5   | R-01+R-10 | Missing 500+ Arabic translations    | Raw keys shown to Arabic users   | ar/translation.json           |
 | 6   | N-02      | Missing /admin index route          | 404 on /admin navigation         | admin/index.tsx (create)      |
+| 7   | B-01      | API calls hitting port 5001 (wrong) | Notifications + analytics broken | API config / proxy setup      |
+
+---
+
+## Browser Verification Findings (NEW)
+
+3 new findings from browser walkthrough (2026-04-10):
+
+| ID   | Sev      | Description                                                                                                                                        |
+| ---- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-01 | **CRIT** | API calls to notifications-center and analytics-dashboard hitting port 5001 (401). Should use Express proxy on port 3000. Repeats every page load. |
+| B-02 | WARN     | Supabase auth lock contention — NavigatorLockAcquireTimeoutError with 8+ "lock stolen" messages. Confirms D-01.                                    |
+| B-03 | WARN     | "of total active dossiers %" visible in English on Arabic dossier page. Confirms R-01/R-13.                                                        |
+
+### Visual Verification Summary
+
+| Check                | Result                                          |
+| -------------------- | ----------------------------------------------- |
+| RTL layout (Arabic)  | PASS — sidebar, content, bottom nav all correct |
+| LTR layout (English) | PASS — sidebar flips to left correctly          |
+| Dark mode            | PASS — no invisible text, cards/sidebar themed  |
+| Light mode           | PASS — clean, readable, good contrast           |
+| Mobile (375px)       | PASS — sidebar collapses, bottom tab bar shows  |
+| 404 page             | PASS — styled, Arabic text, navigation buttons  |
+| Theme persistence    | PASS — survives page refresh                    |
+
+### Corrected Findings
+
+- **N-03 (no 404 handler):** PARTIAL CORRECTION — 404 page exists and is styled. Issue is no notFoundComponent in root route config, but a catch-all 404 page does render.
 
 ---
 
 ## Next Steps
 
-1. **Browser verification** — Walk each journey visually (dark/light, RTL, mobile) to catch runtime-only issues
-2. **Create FIX-PLAN.md** — Batched fix plan following Layer 1→7 order
-3. **Execute fixes** — Layer by layer with atomic commits
-4. **Re-verify** — Re-walk Journey 0 + Journey 1 to confirm fixes hold
+1. **Create FIX-PLAN.md** — Batched fix plan following Layer 1→7 order
+2. **Execute fixes** — Layer by layer with atomic commits
+3. **Re-verify** — Re-walk Journey 0 + Journey 1 to confirm fixes hold
