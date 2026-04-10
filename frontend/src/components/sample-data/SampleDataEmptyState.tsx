@@ -15,7 +15,7 @@ import type { SampleDataTemplate } from '@/types/sample-data.types'
 import { useDirection } from '@/hooks/useDirection'
 
 interface SampleDataEmptyStateProps {
-  templates: SampleDataTemplate[]
+  templates?: SampleDataTemplate[]
   isLoadingTemplates?: boolean
   onPopulate: (templateSlug: string) => void
   isPopulating?: boolean

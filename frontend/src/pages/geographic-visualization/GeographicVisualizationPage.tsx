@@ -173,7 +173,7 @@ const navigate = useNavigate()
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto scrollbar-thin">
                 <Table>
                   <TableHeader>
                     <TableRow>

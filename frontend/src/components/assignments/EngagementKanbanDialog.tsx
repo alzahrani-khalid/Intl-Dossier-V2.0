@@ -157,7 +157,7 @@ export function EngagementKanbanDialog({
         </DialogHeader>
 
         {/* Kanban Board */}
-        <div className="px-4 sm:px-6 pb-4 sm:pb-6 overflow-x-auto">
+        <div className="px-4 sm:px-6 pb-4 sm:pb-6 overflow-x-auto scrollbar-thin">
           <KanbanProvider
             columns={kanbanColumns}
             data={kanbanData}

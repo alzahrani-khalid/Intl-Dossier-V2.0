@@ -185,7 +185,7 @@ export default function Themes() {
         </CardContent>
       </Card>
 
-      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+      <div className="overflow-x-auto scrollbar-thin rounded-xl border border-border bg-card shadow-sm">
         <table className="min-w-full divide-y divide-border text-sm">
           <thead>
             <tr className="bg-muted/50 text-start text-xs font-semibold uppercase tracking-wide text-muted-foreground">

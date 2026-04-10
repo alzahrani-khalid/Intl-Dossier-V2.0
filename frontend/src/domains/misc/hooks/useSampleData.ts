@@ -10,6 +10,11 @@ import {
   clearSampleData as clearSampleDataApi,
   getSampleDataStatus,
 } from '../repositories/misc.repository'
+import type {
+  SampleDataTemplate,
+  SampleDataInstance,
+  SampleDataStatus,
+} from '@/types/sample-data.types'
 
 export const sampleDataKeys = {
   all: ['sample-data'] as const,
@@ -22,6 +27,7 @@ export function useSampleDataSets(): ReturnType<typeof useQuery> {
     queryKey: sampleDataKeys.sets(),
     queryFn: () => getSampleDataSets(),
     staleTime: 10 * 60 * 1000,
+    retry: 1,
   })
 }
 
@@ -30,6 +36,7 @@ export function useSampleDataStatus(): ReturnType<typeof useQuery> {
     queryKey: sampleDataKeys.status(),
     queryFn: () => getSampleDataStatus(),
     staleTime: 30 * 1000,
+    retry: 1,
   })
 }
 
@@ -53,16 +60,36 @@ export function useClearSampleData(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useSampleData(): {
-  populateSampleData: (data?: Record<string, unknown>) => void
+interface UseSampleDataReturn {
+  templates: SampleDataTemplate[]
+  isLoadingTemplates: boolean
+  hasSampleData: boolean
+  activeInstances: SampleDataInstance[]
+  populateSampleData: (templateSlug: string) => void
   isPopulating: boolean
   removeSampleData: () => void
   isRemoving: boolean
-} {
+}
+
+export function useSampleData(): UseSampleDataReturn {
+  const setsQuery = useSampleDataSets()
+  const statusQuery = useSampleDataStatus()
   const loadMutation = useLoadSampleData()
   const clearMutation = useClearSampleData()
+
+  const setsResponse = setsQuery.data as { templates?: SampleDataTemplate[] } | SampleDataTemplate[] | undefined
+  const templates = Array.isArray(setsResponse)
+    ? setsResponse
+    : setsResponse?.templates ?? []
+  const status = statusQuery.data as SampleDataStatus | undefined
+
   return {
-    populateSampleData: (data?: Record<string, unknown>) => loadMutation.mutate(data ?? {}),
+    templates,
+    isLoadingTemplates: setsQuery.isLoading,
+    hasSampleData: status?.has_sample_data ?? false,
+    activeInstances: status?.instances ?? [],
+    populateSampleData: (templateSlug: string) =>
+      loadMutation.mutate({ template_slug: templateSlug }),
     isPopulating: loadMutation.isPending,
     removeSampleData: () => clearMutation.mutate(),
     isRemoving: clearMutation.isPending,

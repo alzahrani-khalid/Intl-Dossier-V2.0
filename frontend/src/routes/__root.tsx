@@ -1,5 +1,4 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import ErrorBoundary from '@/components/app-error-boundary/ErrorBoundary'
 import { WorkCreationProvider } from '@/components/work-creation'
 import { KeyboardShortcutProvider, CommandPalette } from '@/components/keyboard-shortcuts'
@@ -20,7 +19,6 @@ export const Route = createRootRoute({
           <TourOverlay />
         </TourProvider>
       </KeyboardShortcutProvider>
-      <TanStackRouterDevtools position="bottom-right" />
     </ErrorBoundary>
   ),
 })

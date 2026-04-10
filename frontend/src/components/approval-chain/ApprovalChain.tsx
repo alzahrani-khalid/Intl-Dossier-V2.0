@@ -141,7 +141,7 @@ export function ApprovalChain({
       <div className="relative">
         {/* Stages */}
         <div
-          className={cn('flex items-start gap-2 overflow-x-auto pb-4', isRTL && 'flex-row-reverse')}
+          className={cn('flex items-start gap-2 overflow-x-auto scrollbar-hide pb-4', isRTL && 'flex-row-reverse')}
         >
           {stages.map((stage, index) => {
             const stageStatus = getStageStatus(stage.order, currentStage, status)

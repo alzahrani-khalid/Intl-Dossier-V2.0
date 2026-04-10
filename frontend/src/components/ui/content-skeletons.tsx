@@ -392,7 +392,7 @@ const { isRTL } = useDirection()
   return (
     <div className={cn('space-y-6', className)}>
       {/* Tab list */}
-      <div className="flex items-center gap-1 border-b pb-1 overflow-x-auto">
+      <div className="flex items-center gap-1 border-b pb-1 overflow-x-auto scrollbar-hide">
         {Array.from({ length: tabs }, (_, n) => n).map((n) => (
           <Skeleton
             key={n}
@@ -468,7 +468,7 @@ export function KanbanBoardSkeleton({
 const { isRTL } = useDirection()
 
   return (
-    <div className={cn('flex gap-4 overflow-x-auto pb-4', className)}>
+    <div className={cn('flex gap-4 overflow-x-auto scrollbar-thin pb-4', className)}>
       {Array.from({ length: columns }, (_, n) => n).map((n) => (
         <KanbanColumnSkeleton key={n} cards={cardsPerColumn} />
       ))}

@@ -1007,7 +1007,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
       </div>
 
       {/* Step indicators */}
-      <div className="flex items-center justify-between gap-2 overflow-x-auto pb-2">
+      <div className="flex items-center justify-between gap-2 overflow-x-auto scrollbar-hide pb-2">
         {STEPS.map((step, idx) => {
           const isActive = step === currentStep
           const isCompleted = idx < currentStepIndex

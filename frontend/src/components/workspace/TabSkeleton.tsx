@@ -41,7 +41,7 @@ function SummarySkeleton(): ReactElement {
 
 function KanbanSkeleton(): ReactElement {
   return (
-    <div className="flex gap-4 overflow-x-auto p-4 sm:p-6">
+    <div className="flex gap-4 overflow-x-auto scrollbar-hide p-4 sm:p-6">
       {Array.from({ length: 4 }, (_, col) => (
         <div key={col} className="min-w-[250px] flex-1 space-y-3">
           {/* Column header */}

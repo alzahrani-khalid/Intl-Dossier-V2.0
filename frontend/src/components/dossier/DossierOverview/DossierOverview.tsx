@@ -373,7 +373,7 @@ const [activeTab, setActiveTab] = useState('related')
 
       {/* Tabbed Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full justify-start overflow-x-auto flex-nowrap mb-4 sm:mb-6 h-auto p-1">
+        <TabsList className="w-full justify-start overflow-x-auto scrollbar-hide flex-nowrap mb-4 sm:mb-6 h-auto p-1">
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.id}

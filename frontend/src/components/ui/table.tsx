@@ -13,7 +13,7 @@ export function TableContainer({
   return (
     <div
       data-slot="table-container"
-      className={cn('w-full overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0', className)}
+      className={cn('w-full overflow-x-auto scrollbar-thin -mx-4 px-4 sm:mx-0 sm:px-0', className)}
       data-testid="table-container"
       {...props}
     >

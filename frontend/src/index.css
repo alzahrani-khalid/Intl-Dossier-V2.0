@@ -1016,6 +1016,26 @@
     @apply border-border;
   }
 
+  /* Global thin scrollbar for all scrollable containers */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+
   /* Apply theme font to ALL elements */
   html {
     font-family: var(--text-family);
@@ -1278,5 +1298,47 @@ html[dir='rtl'] .font-text {
       color var(--transition-base),
       border-color var(--transition-base),
       box-shadow var(--transition-base);
+  }
+
+  /* ============================================
+     SCROLLBAR UTILITIES
+     ============================================ */
+
+  /* Hide scrollbar completely — for tab bars, breadcrumbs, navigation pills */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Alias used in some components */
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Thin themed scrollbar — for data tables, kanban, content areas */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
   }
 }

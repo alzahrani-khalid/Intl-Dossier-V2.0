@@ -241,7 +241,7 @@ const [activeTab, setActiveTab] = useState('overview')
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full justify-start overflow-x-auto">
+        <TabsList className="w-full justify-start overflow-x-auto scrollbar-hide">
           <TabsTrigger value="overview" className="min-h-10">
             <FileText className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
             {t('tabs.overview')}

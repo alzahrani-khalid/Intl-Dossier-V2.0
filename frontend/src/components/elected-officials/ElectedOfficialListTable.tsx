@@ -187,7 +187,7 @@ export function ElectedOfficialListTable(): ReactElement {
       </div>
 
       {/* Desktop Table */}
-      <div className="hidden md:block rounded-lg border overflow-x-auto">
+      <div className="hidden md:block rounded-lg border overflow-x-auto scrollbar-thin">
         <Table>
           <TableHeader>
             <TableRow>

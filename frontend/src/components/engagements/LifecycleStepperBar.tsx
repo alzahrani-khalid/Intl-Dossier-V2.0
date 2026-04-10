@@ -239,7 +239,7 @@ export function LifecycleStepperBar({
   return (
     <div className="w-full space-y-2">
       {/* Stepper bar wrapped in LtrIsolate for consistent LTR rendering */}
-      <LtrIsolate className="w-full overflow-x-auto pb-2 sm:overflow-x-visible sm:pb-0">
+      <LtrIsolate className="w-full overflow-x-auto scrollbar-hide pb-2 sm:overflow-x-visible sm:pb-0">
         <div
           role="group"
           aria-label={t('stepper.ariaLabel')}

@@ -180,7 +180,7 @@ const { id } = useParams({ strict: false })
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)}>
           <div className="px-4 sm:px-6 pt-3">
             <TabsList
-              className="w-full justify-start overflow-x-auto flex-nowrap h-auto"
+              className="w-full justify-start overflow-x-auto scrollbar-hide flex-nowrap h-auto"
               aria-label={t('ticketDetail.tabsLabel', 'Ticket sections')}
             >
               {(['details', 'triage', 'duplicates', 'history', 'links'] as const).map((tab) => (

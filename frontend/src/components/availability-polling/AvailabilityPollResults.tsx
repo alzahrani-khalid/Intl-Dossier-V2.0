@@ -379,7 +379,7 @@ const dateLocale = isRTL ? ar : enUS
             <CardTitle className="text-base">{t('matrix.title')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-thin">
               <Table>
                 <TableHeader>
                   <TableRow>

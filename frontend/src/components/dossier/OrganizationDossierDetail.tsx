@@ -136,7 +136,7 @@ const navigate = useNavigate()
         >
           <div className="px-4 sm:px-6 pt-3">
             <TabsList
-              className="w-full justify-start overflow-x-auto flex-nowrap h-auto"
+              className="w-full justify-start overflow-x-auto scrollbar-hide flex-nowrap h-auto"
               aria-label={t('detail.tabs_label', 'Organization dossier sections')}
             >
               {tabs.map((tab) => (

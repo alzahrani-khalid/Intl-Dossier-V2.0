@@ -22,6 +22,7 @@ import { ChatMessage, type Citation, type ToolCall } from './ChatMessage'
 import { ChatInput } from './ChatInput'
 import { useAIChat } from '@/hooks/useAIChat'
 import { useDirection } from '@/hooks/useDirection'
+import { useResponsive } from '@/hooks/useResponsive'
 
 export interface ChatDockProps {
   onCitationClick?: (type: string, id: string) => void
@@ -31,7 +32,8 @@ export interface ChatDockProps {
 export function ChatDock({ onCitationClick, className }: ChatDockProps) {
   const { t } = useTranslation('ai-chat')
   const { isRTL } = useDirection()
-const [isOpen, setIsOpen] = useState(false)
+  const { isMobile } = useResponsive()
+  const [isOpen, setIsOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -67,15 +69,25 @@ const [isOpen, setIsOpen] = useState(false)
   }
 
   return (
-    <div className={cn('fixed z-50', isRTL ? 'start-4' : 'end-4', 'bottom-4', className)}>
+    <div className={cn(
+      'fixed z-50',
+      isRTL ? 'start-4' : 'end-4',
+      isMobile
+        ? 'bottom-[calc(3.5rem+max(0.75rem,env(safe-area-inset-bottom)))]'
+        : 'bottom-4',
+      className,
+    )}>
       {/* Chat Panel */}
       {isOpen && (
         <Card
           className={cn(
-            'mb-4 flex flex-col shadow-xl border',
+            'mb-3 flex flex-col shadow-xl border',
             'transition-all duration-300 ease-in-out',
             isExpanded ? 'w-[480px] h-[600px]' : 'w-[360px] h-[480px]',
-            'max-w-[calc(100vw-2rem)] max-h-[calc(100vh-6rem)]',
+            'max-w-[calc(100vw-2rem)]',
+            isMobile
+              ? 'max-h-[calc(100vh-10rem)]'
+              : 'max-h-[calc(100vh-6rem)]',
           )}
         >
           {/* Header */}

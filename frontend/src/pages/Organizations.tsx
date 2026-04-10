@@ -236,7 +236,7 @@ export default function Organizations() {
         </CardContent>
       </Card>
 
-      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+      <div className="overflow-x-auto scrollbar-thin rounded-xl border border-border bg-card shadow-sm">
         <table className="min-w-full divide-y divide-border text-sm">
           <thead>
             <tr className="bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

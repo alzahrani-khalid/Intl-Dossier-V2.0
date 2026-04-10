@@ -236,7 +236,7 @@ const { toast } = useToast()
       {/* Board */}
       <div
         className={cn(
-          'flex-1 overflow-x-auto overflow-y-hidden',
+          'flex-1 overflow-x-auto scrollbar-thin overflow-y-hidden',
           'px-4 sm:px-6 py-4',
           'bg-background',
         )}

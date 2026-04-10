@@ -80,7 +80,7 @@ if (isLoading) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto scrollbar-thin">
           <table className="w-full">
             <thead>
               <tr className="border-b">

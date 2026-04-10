@@ -201,7 +201,7 @@ export default function TasksTab(): ReactElement {
 
       {/* Desktop Kanban Board (md+) */}
       <div className="hidden md:block">
-        <div className="overflow-x-auto pb-2">
+        <div className="overflow-x-auto scrollbar-thin pb-2">
           <KanbanProvider
             columns={kanbanColumns}
             data={kanbanData}

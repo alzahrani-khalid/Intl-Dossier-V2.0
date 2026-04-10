@@ -311,7 +311,7 @@ export function CalendarEventsSection({
 
       <CardContent className="p-4 sm:p-6 pt-0">
         <Tabs defaultValue={data.today.length > 0 ? 'today' : 'upcoming'} className="w-full">
-          <TabsList className="w-full justify-start overflow-x-auto flex-nowrap mb-4 h-auto p-1">
+          <TabsList className="w-full justify-start overflow-x-auto scrollbar-hide flex-nowrap mb-4 h-auto p-1">
             <TabsTrigger value="today" className="text-xs sm:text-sm shrink-0">
               <CalendarCheck className="h-4 w-4 me-1" />
               {t('calendarEvents.tabs.today')} ({data.today.length})

@@ -102,7 +102,7 @@ export function MainLayout({
           speedDialActions={speedDialActions}
           defaultAction={defaultAction}
           hideOnScroll
-          className={isMobile ? 'bottom-[calc(3.5rem+max(0.5rem,env(safe-area-inset-bottom)))]' : undefined}
+          className={isMobile ? 'bottom-[calc(3.5rem+max(0.75rem,env(safe-area-inset-bottom))+4rem)]' : undefined}
         />
       )}
 

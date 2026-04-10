@@ -201,7 +201,7 @@ export function NotificationsPage() {
           onValueChange={(v) => setActiveCategory(v as NotificationCategory | 'all')}
           className="w-full sm:w-auto"
         >
-          <TabsList className="h-10 w-full sm:w-auto overflow-x-auto">
+          <TabsList className="h-10 w-full sm:w-auto overflow-x-auto scrollbar-hide">
             <TabsTrigger value="all" className="px-4">
               {t('categories.all')}
               {unreadCount > 0 && (

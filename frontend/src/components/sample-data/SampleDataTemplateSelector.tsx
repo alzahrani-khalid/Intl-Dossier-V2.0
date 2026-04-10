@@ -43,7 +43,7 @@ const iconMap: Record<string, React.ElementType> = {
 interface SampleDataTemplateSelectorProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  templates: SampleDataTemplate[]
+  templates?: SampleDataTemplate[]
   onSelect: (templateSlug: string) => void
   isLoading?: boolean
   isPopulating?: boolean
@@ -52,7 +52,7 @@ interface SampleDataTemplateSelectorProps {
 export function SampleDataTemplateSelector({
   open,
   onOpenChange,
-  templates,
+  templates = [],
   onSelect,
   isLoading = false,
   isPopulating = false,

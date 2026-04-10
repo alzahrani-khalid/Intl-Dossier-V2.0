@@ -150,7 +150,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
         <Tabs value={activeTab} onValueChange={(value) => handleTabChange(value as ForumTabType)}>
           <div className="px-4 sm:px-6 pt-3">
             <TabsList
-              className="w-full justify-start overflow-x-auto flex-nowrap h-auto"
+              className="w-full justify-start overflow-x-auto scrollbar-hide flex-nowrap h-auto"
               aria-label={t('detail.tabs_label', 'Forum dossier sections')}
             >
               {tabs.map((tab) => (

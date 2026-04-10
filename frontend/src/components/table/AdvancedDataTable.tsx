@@ -395,7 +395,7 @@ export function AdvancedDataTable<TData, TValue>({
       {/* Table View */}
       {viewMode === 'table' && (
         <div className="rounded-lg border border-border overflow-hidden">
-          <div className="overflow-x-auto touch-pan-x">
+          <div className="overflow-x-auto scrollbar-thin touch-pan-x">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (

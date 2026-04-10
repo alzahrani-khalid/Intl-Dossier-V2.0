@@ -585,7 +585,7 @@ const { toast } = useToast()
 
         {/* Swimlane content */}
         {!isCollapsed && (
-          <div className="px-2 pb-2 overflow-x-auto">
+          <div className="px-2 pb-2 overflow-x-auto scrollbar-thin">
             <div className="flex gap-4 min-w-max">
               {columnOrder.map((columnKey) => {
                 const columnDef = columnDefinitions.find((c) => c.key === columnKey)
@@ -687,7 +687,7 @@ const { toast } = useToast()
       {/* Board content */}
       <div
         className={cn(
-          'flex-1 overflow-x-auto overflow-y-auto',
+          'flex-1 overflow-x-auto scrollbar-thin overflow-y-auto',
           'px-4 sm:px-6 py-4',
           'bg-background',
         )}

@@ -177,19 +177,19 @@ export async function saveTranslation(data: Record<string, unknown>): Promise<un
 // ============================================================================
 
 export async function getSampleDataSets(): Promise<unknown> {
-  return apiGet('/sample-data')
+  return apiGet('/sample-data?action=list-templates')
 }
 
 export async function loadSampleData(data: Record<string, unknown>): Promise<unknown> {
-  return apiPost('/sample-data/load', data)
+  return apiPost('/sample-data?action=populate', data)
 }
 
 export async function clearSampleData(): Promise<unknown> {
-  return apiDelete('/sample-data')
+  return apiPost('/sample-data?action=remove', {})
 }
 
 export async function getSampleDataStatus(): Promise<unknown> {
-  return apiGet('/sample-data/status')
+  return apiGet('/sample-data?action=status')
 }
 
 // ============================================================================

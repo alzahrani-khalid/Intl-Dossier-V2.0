@@ -203,7 +203,7 @@ export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps
       <div className="space-y-4 px-4 sm:px-6 lg:px-8">
         {/* Mobile View: Stacked columns (base to sm:), Tablet: horizontal scroll (sm: to lg:) */}
         <div className="block lg:hidden">
-          <div className="space-y-4 sm:flex sm:gap-4 sm:overflow-x-auto sm:pb-4 sm:space-y-0 sm:-webkit-overflow-scrolling-touch">
+          <div className="space-y-4 sm:flex sm:gap-4 sm:overflow-x-auto scrollbar-thin sm:pb-4 sm:space-y-0 sm:-webkit-overflow-scrolling-touch">
             {WORKFLOW_STAGES.map((stage) => {
               const stageTasks = tasksByStage[stage] ?? []
               return (

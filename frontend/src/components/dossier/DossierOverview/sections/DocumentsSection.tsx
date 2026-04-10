@@ -224,7 +224,7 @@ export function DocumentsSection({
 
       <CardContent className="p-4 sm:p-6 pt-0">
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="w-full justify-start overflow-x-auto flex-nowrap mb-4 h-auto p-1">
+          <TabsList className="w-full justify-start overflow-x-auto scrollbar-hide flex-nowrap mb-4 h-auto p-1">
             <TabsTrigger value="all" className="text-xs sm:text-sm shrink-0">
               {t('documents.tabs.all')} ({allDocuments.length})
             </TabsTrigger>

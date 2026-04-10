@@ -82,7 +82,7 @@ if (isLoading) {
 
           <TabsContent value="type">
             {typeData && typeData.length > 0 ? (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto scrollbar-thin">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -140,7 +140,7 @@ if (isLoading) {
 
           <TabsContent value="assignee">
             {assigneeData && assigneeData.length > 0 ? (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto scrollbar-thin">
                 <Table>
                   <TableHeader>
                     <TableRow>

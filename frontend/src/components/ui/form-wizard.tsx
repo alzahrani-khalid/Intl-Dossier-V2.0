@@ -251,7 +251,7 @@ const [isValidating, setIsValidating] = React.useState(false)
 
         {/* Step indicators */}
         {showStepNumbers && (
-          <div className="flex items-center justify-between gap-1 sm:gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1">
             {steps.map((step, index) => (
               <React.Fragment key={step.id}>
                 <StepIndicator

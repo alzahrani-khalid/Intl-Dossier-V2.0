@@ -359,7 +359,7 @@ export function WorkItemsSection({
 
         {/* Tabs by Source */}
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="w-full justify-start overflow-x-auto flex-nowrap mb-4 h-auto p-1">
+          <TabsList className="w-full justify-start overflow-x-auto scrollbar-hide flex-nowrap mb-4 h-auto p-1">
             <TabsTrigger value="all" className="text-xs sm:text-sm shrink-0">
               {t('workItems.tabs.all')} ({allWorkItems.length})
             </TabsTrigger>
