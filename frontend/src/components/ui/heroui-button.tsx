@@ -67,6 +67,8 @@ export interface HeroUIButtonProps
   fullWidth?: boolean
   /** Slot for HeroUI Modal close behavior */
   slot?: string
+  /** React 19 ref prop */
+  ref?: React.Ref<HTMLButtonElement>
 }
 
 // Keep backward-compat alias
@@ -87,7 +89,7 @@ function HeroUIButton({
   children,
   ref,
   ...props
-}: HeroUIButtonProps & { ref?: React.Ref<HTMLButtonElement> }) {
+}: HeroUIButtonProps) {
   const Comp = asChild ? Slot : 'button'
 
   return (
