@@ -85,10 +85,27 @@ export default defineConfig({
       usePolling: false,
     },
     proxy: {
+      // Express backend routes (port 5000)
+      // Edge Functions use full VITE_SUPABASE_URL so don't need a proxy
       '/api': {
-        target: 'http://localhost:54321',
+        target: 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+      '/ai': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+      '/analytics-dashboard': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+      '/organization-benchmarks': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+      '/notifications-center': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
       },
     },
     // Add cache-busting headers for HTML in dev mode
