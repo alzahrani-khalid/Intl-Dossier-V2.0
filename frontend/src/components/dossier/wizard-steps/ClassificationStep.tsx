@@ -22,12 +22,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import type { StepProps } from './shared'
+import type { StepProps } from './Shared'
 
-export default function ClassificationStep({
-  form,
-  updateDraft,
-}: StepProps): ReactElement {
+export default function ClassificationStep({ form, updateDraft }: StepProps): ReactElement {
   const { t } = useTranslation(['dossier', 'contextual-help'])
 
   return (

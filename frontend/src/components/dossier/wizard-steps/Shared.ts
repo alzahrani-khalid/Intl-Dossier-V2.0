@@ -161,15 +161,7 @@ export interface ReviewStepProps extends StepProps {
   organizingBodyName: string
 }
 
-import {
-  Globe,
-  Building2,
-  Users,
-  Calendar,
-  UserCircle,
-  Briefcase,
-  FileText,
-} from 'lucide-react'
+import { Globe, Building2, Users, Calendar, UserCircle, Briefcase, FileText } from 'lucide-react'
 
 /** Type icons mapping for display purposes */
 export const typeIcons: Partial<Record<DossierType, typeof Globe>> = {

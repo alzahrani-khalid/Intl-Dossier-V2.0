@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import type { ForumFieldProps } from '../shared'
+import type { ForumFieldProps } from '../Shared'
 
 export default function ForumFields({
   form,
@@ -34,9 +34,7 @@ export default function ForumFields({
                   field.onChange(dossierId || '')
                   if (dossier) {
                     form.setValue('extension_data.organizing_body_id', dossier.id)
-                    const displayName = isRTL
-                      ? dossier.name_ar || dossier.name_en
-                      : dossier.name_en
+                    const displayName = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en
                     setOrganizingBodyName(displayName)
                   } else {
                     setOrganizingBodyName('')

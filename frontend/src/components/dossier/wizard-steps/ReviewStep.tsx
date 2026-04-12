@@ -6,8 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import type { DossierType } from '@/services/dossier-api'
-import type { ReviewStepProps } from './shared'
-import { typeIcons } from './shared'
+import type { ReviewStepProps } from './Shared'
+import { typeIcons } from './Shared'
 export default function ReviewStep({
   formValues,
   selectedType,
@@ -29,9 +29,7 @@ export default function ReviewStep({
               })()}
             <CardTitle className="text-lg">
               {formValues.abbreviation && (
-                <span className="text-muted-foreground me-2">
-                  ({formValues.abbreviation})
-                </span>
+                <span className="text-muted-foreground me-2">({formValues.abbreviation})</span>
               )}
               {isRTL ? formValues.name_ar : formValues.name_en}
             </CardTitle>
@@ -87,9 +85,7 @@ export default function ReviewStep({
                 </div>
                 {formValues.extension_data.title_ar && (
                   <div>
-                    <p className="text-muted-foreground">
-                      {t('dossier:form.person.titleAr')}
-                    </p>
+                    <p className="text-muted-foreground">{t('dossier:form.person.titleAr')}</p>
                     <p className="font-medium" dir={direction}>
                       {formValues.extension_data.title_ar}
                     </p>
@@ -107,8 +103,7 @@ export default function ReviewStep({
                 <div>
                   <p className="text-muted-foreground">{t('dossier:field.isoCode')}</p>
                   <p className="font-medium uppercase">
-                    {formValues.extension_data.iso_code_2} /{' '}
-                    {formValues.extension_data.iso_code_3}
+                    {formValues.extension_data.iso_code_2} / {formValues.extension_data.iso_code_3}
                   </p>
                 </div>
                 {formValues.extension_data.region && (
@@ -133,18 +128,14 @@ export default function ReviewStep({
               <Separator />
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                 <div>
-                  <p className="text-muted-foreground">
-                    {t('dossier:form.organization.type')}
-                  </p>
+                  <p className="text-muted-foreground">{t('dossier:form.organization.type')}</p>
                   <Badge variant="outline" className="capitalize">
                     {formValues.extension_data.org_type}
                   </Badge>
                 </div>
                 {formValues.extension_data.org_code && (
                   <div>
-                    <p className="text-muted-foreground">
-                      {t('dossier:form.organization.code')}
-                    </p>
+                    <p className="text-muted-foreground">{t('dossier:form.organization.code')}</p>
                     <p className="font-medium">{formValues.extension_data.org_code}</p>
                   </div>
                 )}
@@ -174,16 +165,13 @@ export default function ReviewStep({
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">
-                    {t('dossier:form.engagement.category')}
-                  </p>
+                  <p className="text-muted-foreground">{t('dossier:form.engagement.category')}</p>
                   <Badge variant="outline" className="capitalize">
                     {formValues.extension_data.engagement_category}
                   </Badge>
                 </div>
               </div>
-              {(formValues.extension_data.location_en ||
-                formValues.extension_data.location_ar) && (
+              {(formValues.extension_data.location_en || formValues.extension_data.location_ar) && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-4">
                   {formValues.extension_data.location_en && (
                     <div>
@@ -215,9 +203,7 @@ export default function ReviewStep({
               <>
                 <Separator />
                 <div className="text-sm">
-                  <p className="text-muted-foreground">
-                    {t('dossier:form.forum.organizingBody')}
-                  </p>
+                  <p className="text-muted-foreground">{t('dossier:form.forum.organizingBody')}</p>
                   <p className="font-medium">{organizingBodyName}</p>
                 </div>
               </>
@@ -230,9 +216,7 @@ export default function ReviewStep({
               <div className="text-sm">
                 <p className="text-muted-foreground">{t('dossier:form.topic.category')}</p>
                 <Badge variant="outline">
-                  {t(
-                    `dossier:form.topic.categories.${formValues.extension_data.theme_category}`,
-                  )}
+                  {t(`dossier:form.topic.categories.${formValues.extension_data.theme_category}`)}
                 </Badge>
               </div>
             </>
@@ -245,9 +229,7 @@ export default function ReviewStep({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 {formValues.extension_data?.wg_status && (
                   <div>
-                    <p className="text-muted-foreground">
-                      {t('dossier:form.workingGroup.status')}
-                    </p>
+                    <p className="text-muted-foreground">{t('dossier:form.workingGroup.status')}</p>
                     <Badge variant="outline" className="capitalize">
                       {t(
                         `dossier:form.workingGroup.statuses.${formValues.extension_data.wg_status}`,
@@ -260,14 +242,11 @@ export default function ReviewStep({
                     <p className="text-muted-foreground">
                       {t('dossier:form.workingGroup.establishedDate')}
                     </p>
-                    <p className="font-medium">
-                      {formValues.extension_data.established_date}
-                    </p>
+                    <p className="font-medium">{formValues.extension_data.established_date}</p>
                   </div>
                 )}
               </div>
-              {(formValues.extension_data?.mandate_en ||
-                formValues.extension_data?.mandate_ar) && (
+              {(formValues.extension_data?.mandate_en || formValues.extension_data?.mandate_ar) && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-4">
                   {formValues.extension_data.mandate_en && (
                     <div>

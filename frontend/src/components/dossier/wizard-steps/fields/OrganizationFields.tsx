@@ -1,16 +1,16 @@
 /** Organization extension fields for the dossier wizard. */
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import type { ExtensionFieldProps } from '../shared'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import type { ExtensionFieldProps } from '../Shared'
 
 export default function OrganizationFields({ form }: ExtensionFieldProps): ReactElement {
   const { t } = useTranslation(['dossier'])
@@ -24,7 +24,11 @@ export default function OrganizationFields({ form }: ExtensionFieldProps): React
             <FormItem>
               <FormLabel>{t('dossier:form.organization.code')}</FormLabel>
               <FormControl>
-                <Input {...field} placeholder={t('dossier:form.organization.codePlaceholder')} className="min-h-11" />
+                <Input
+                  {...field}
+                  placeholder={t('dossier:form.organization.codePlaceholder')}
+                  className="min-h-11"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -35,7 +39,9 @@ export default function OrganizationFields({ form }: ExtensionFieldProps): React
           name="extension_data.org_type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('dossier:form.organization.type')} <span className="text-destructive">*</span></FormLabel>
+              <FormLabel>
+                {t('dossier:form.organization.type')} <span className="text-destructive">*</span>
+              </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="min-h-11">
@@ -43,11 +49,19 @@ export default function OrganizationFields({ form }: ExtensionFieldProps): React
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="government">{t('dossier:form.organization.types.government')}</SelectItem>
+                  <SelectItem value="government">
+                    {t('dossier:form.organization.types.government')}
+                  </SelectItem>
                   <SelectItem value="ngo">{t('dossier:form.organization.types.ngo')}</SelectItem>
-                  <SelectItem value="private">{t('dossier:form.organization.types.private')}</SelectItem>
-                  <SelectItem value="international">{t('dossier:form.organization.types.international')}</SelectItem>
-                  <SelectItem value="academic">{t('dossier:form.organization.types.academic')}</SelectItem>
+                  <SelectItem value="private">
+                    {t('dossier:form.organization.types.private')}
+                  </SelectItem>
+                  <SelectItem value="international">
+                    {t('dossier:form.organization.types.international')}
+                  </SelectItem>
+                  <SelectItem value="academic">
+                    {t('dossier:form.organization.types.academic')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -62,7 +76,12 @@ export default function OrganizationFields({ form }: ExtensionFieldProps): React
           <FormItem>
             <FormLabel>{t('dossier:form.organization.website')}</FormLabel>
             <FormControl>
-              <Input {...field} type="url" placeholder={t('dossier:form.organization.websitePlaceholder')} className="min-h-11" />
+              <Input
+                {...field}
+                type="url"
+                placeholder={t('dossier:form.organization.websitePlaceholder')}
+                className="min-h-11"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

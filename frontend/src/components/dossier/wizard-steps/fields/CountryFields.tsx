@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import type { ExtensionFieldProps } from '../shared'
+import type { ExtensionFieldProps } from '../Shared'
 
 export default function CountryFields({ form, direction }: ExtensionFieldProps): ReactElement {
   const { t } = useTranslation(['dossier'])
@@ -22,9 +22,17 @@ export default function CountryFields({ form, direction }: ExtensionFieldProps):
           name="extension_data.iso_code_2"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('dossier:form.country.isoCode2')} <span className="text-destructive">*</span></FormLabel>
+              <FormLabel>
+                {t('dossier:form.country.isoCode2')} <span className="text-destructive">*</span>
+              </FormLabel>
               <FormControl>
-                <Input {...field} placeholder={t('dossier:form.country.isoCode2Placeholder')} maxLength={2} className="min-h-11 uppercase" required />
+                <Input
+                  {...field}
+                  placeholder={t('dossier:form.country.isoCode2Placeholder')}
+                  maxLength={2}
+                  className="min-h-11 uppercase"
+                  required
+                />
               </FormControl>
               <FormDescription>{t('dossier:form.country.isoCode2Description')}</FormDescription>
               <FormMessage />
@@ -36,9 +44,17 @@ export default function CountryFields({ form, direction }: ExtensionFieldProps):
           name="extension_data.iso_code_3"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('dossier:form.country.isoCode3')} <span className="text-destructive">*</span></FormLabel>
+              <FormLabel>
+                {t('dossier:form.country.isoCode3')} <span className="text-destructive">*</span>
+              </FormLabel>
               <FormControl>
-                <Input {...field} placeholder={t('dossier:form.country.isoCode3Placeholder')} maxLength={3} className="min-h-11 uppercase" required />
+                <Input
+                  {...field}
+                  placeholder={t('dossier:form.country.isoCode3Placeholder')}
+                  maxLength={3}
+                  className="min-h-11 uppercase"
+                  required
+                />
               </FormControl>
               <FormDescription>{t('dossier:form.country.isoCode3Description')}</FormDescription>
               <FormMessage />
@@ -52,7 +68,11 @@ export default function CountryFields({ form, direction }: ExtensionFieldProps):
             <FormItem>
               <FormLabel>{t('dossier:form.country.region')}</FormLabel>
               <FormControl>
-                <Input {...field} placeholder={t('dossier:form.country.regionPlaceholder')} className="min-h-11" />
+                <Input
+                  {...field}
+                  placeholder={t('dossier:form.country.regionPlaceholder')}
+                  className="min-h-11"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -67,7 +87,11 @@ export default function CountryFields({ form, direction }: ExtensionFieldProps):
             <FormItem>
               <FormLabel>{t('dossier:form.country.capitalEn')}</FormLabel>
               <FormControl>
-                <Input {...field} placeholder={t('dossier:form.country.capitalEnPlaceholder')} className="min-h-11" />
+                <Input
+                  {...field}
+                  placeholder={t('dossier:form.country.capitalEnPlaceholder')}
+                  className="min-h-11"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -80,7 +104,12 @@ export default function CountryFields({ form, direction }: ExtensionFieldProps):
             <FormItem>
               <FormLabel>{t('dossier:form.country.capitalAr')}</FormLabel>
               <FormControl>
-                <Input {...field} placeholder={t('dossier:form.country.capitalArPlaceholder')} className="min-h-11" dir={direction} />
+                <Input
+                  {...field}
+                  placeholder={t('dossier:form.country.capitalArPlaceholder')}
+                  className="min-h-11"
+                  dir={direction}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

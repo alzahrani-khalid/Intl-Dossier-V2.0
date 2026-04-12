@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import type { ExtensionFieldProps } from '../shared'
+import type { ExtensionFieldProps } from '../Shared'
 
 export default function PersonFields({ form, direction }: ExtensionFieldProps): ReactElement {
   const { t } = useTranslation(['dossier'])
@@ -25,7 +25,11 @@ export default function PersonFields({ form, direction }: ExtensionFieldProps): 
             <FormItem>
               <FormLabel>{t('dossier:form.person.titleEn')}</FormLabel>
               <FormControl>
-                <Input {...field} placeholder={t('dossier:form.person.titleEnPlaceholder')} className="min-h-11" />
+                <Input
+                  {...field}
+                  placeholder={t('dossier:form.person.titleEnPlaceholder')}
+                  className="min-h-11"
+                />
               </FormControl>
               <FormDescription>{t('dossier:form.person.titleDescription')}</FormDescription>
               <FormMessage />
@@ -39,7 +43,12 @@ export default function PersonFields({ form, direction }: ExtensionFieldProps): 
             <FormItem>
               <FormLabel>{t('dossier:form.person.titleAr')}</FormLabel>
               <FormControl>
-                <Input {...field} placeholder={t('dossier:form.person.titleArPlaceholder')} className="min-h-11" dir={direction} />
+                <Input
+                  {...field}
+                  placeholder={t('dossier:form.person.titleArPlaceholder')}
+                  className="min-h-11"
+                  dir={direction}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -53,7 +62,12 @@ export default function PersonFields({ form, direction }: ExtensionFieldProps): 
           <FormItem>
             <FormLabel>{t('dossier:form.person.photoUrl')}</FormLabel>
             <FormControl>
-              <Input {...field} type="url" placeholder={t('dossier:form.person.photoUrlPlaceholder')} className="min-h-11" />
+              <Input
+                {...field}
+                type="url"
+                placeholder={t('dossier:form.person.photoUrlPlaceholder')}
+                className="min-h-11"
+              />
             </FormControl>
             <FormDescription>{t('dossier:form.person.photoUrlDescription')}</FormDescription>
             <FormMessage />
@@ -68,7 +82,12 @@ export default function PersonFields({ form, direction }: ExtensionFieldProps): 
             <FormItem>
               <FormLabel>{t('dossier:form.person.biographyEn')}</FormLabel>
               <FormControl>
-                <Textarea {...field} placeholder={t('dossier:form.person.biographyEnPlaceholder')} className="min-h-[120px]" rows={5} />
+                <Textarea
+                  {...field}
+                  placeholder={t('dossier:form.person.biographyEnPlaceholder')}
+                  className="min-h-[120px]"
+                  rows={5}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -81,7 +100,13 @@ export default function PersonFields({ form, direction }: ExtensionFieldProps): 
             <FormItem>
               <FormLabel>{t('dossier:form.person.biographyAr')}</FormLabel>
               <FormControl>
-                <Textarea {...field} placeholder={t('dossier:form.person.biographyArPlaceholder')} className="min-h-[120px]" dir={direction} rows={5} />
+                <Textarea
+                  {...field}
+                  placeholder={t('dossier:form.person.biographyArPlaceholder')}
+                  className="min-h-[120px]"
+                  dir={direction}
+                  rows={5}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

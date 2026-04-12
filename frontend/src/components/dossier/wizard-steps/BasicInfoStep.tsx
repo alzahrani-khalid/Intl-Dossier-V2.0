@@ -1,11 +1,7 @@
 /** BasicInfoStep — Step 1: names, abbreviation, descriptions, duplicate detection. */
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  AlertTriangle,
-  ExternalLink,
-  Loader2,
-} from 'lucide-react'
+import { AlertTriangle, ExternalLink, Loader2 } from 'lucide-react'
 
 import { FormWizardStep } from '@/components/ui/form-wizard'
 import { AIFieldAssist } from '@/components/dossier/AIFieldAssist'
@@ -24,7 +20,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
 import { useDossierNameSimilarity } from '@/hooks/useDossierNameSimilarity'
 import type { DossierType } from '@/services/dossier-api'
-import type { BasicInfoStepProps } from './shared'
+import type { BasicInfoStepProps } from './Shared'
 
 export default function BasicInfoStep({
   form,

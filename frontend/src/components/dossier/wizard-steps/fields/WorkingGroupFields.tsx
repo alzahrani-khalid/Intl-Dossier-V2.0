@@ -11,8 +11,14 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import type { ExtensionFieldProps } from '../shared'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import type { ExtensionFieldProps } from '../Shared'
 
 export default function WorkingGroupFields({ form, direction }: ExtensionFieldProps): ReactElement {
   const { t } = useTranslation(['dossier'])
@@ -31,9 +37,15 @@ export default function WorkingGroupFields({ form, direction }: ExtensionFieldPr
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="active">{t('dossier:form.workingGroup.statuses.active')}</SelectItem>
-                <SelectItem value="suspended">{t('dossier:form.workingGroup.statuses.suspended')}</SelectItem>
-                <SelectItem value="disbanded">{t('dossier:form.workingGroup.statuses.disbanded')}</SelectItem>
+                <SelectItem value="active">
+                  {t('dossier:form.workingGroup.statuses.active')}
+                </SelectItem>
+                <SelectItem value="suspended">
+                  {t('dossier:form.workingGroup.statuses.suspended')}
+                </SelectItem>
+                <SelectItem value="disbanded">
+                  {t('dossier:form.workingGroup.statuses.disbanded')}
+                </SelectItem>
               </SelectContent>
             </Select>
             <FormMessage />
@@ -61,7 +73,12 @@ export default function WorkingGroupFields({ form, direction }: ExtensionFieldPr
             <FormItem>
               <FormLabel>{t('dossier:form.workingGroup.mandateEn')}</FormLabel>
               <FormControl>
-                <Textarea {...field} placeholder={t('dossier:form.workingGroup.mandateEnPlaceholder')} className="min-h-[100px]" rows={4} />
+                <Textarea
+                  {...field}
+                  placeholder={t('dossier:form.workingGroup.mandateEnPlaceholder')}
+                  className="min-h-[100px]"
+                  rows={4}
+                />
               </FormControl>
               <FormDescription>{t('dossier:form.workingGroup.mandateDescription')}</FormDescription>
               <FormMessage />
@@ -75,7 +92,13 @@ export default function WorkingGroupFields({ form, direction }: ExtensionFieldPr
             <FormItem>
               <FormLabel>{t('dossier:form.workingGroup.mandateAr')}</FormLabel>
               <FormControl>
-                <Textarea {...field} placeholder={t('dossier:form.workingGroup.mandateArPlaceholder')} className="min-h-[100px]" dir={direction} rows={4} />
+                <Textarea
+                  {...field}
+                  placeholder={t('dossier:form.workingGroup.mandateArPlaceholder')}
+                  className="min-h-[100px]"
+                  dir={direction}
+                  rows={4}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

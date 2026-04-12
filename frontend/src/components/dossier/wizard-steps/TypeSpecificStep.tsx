@@ -1,7 +1,7 @@
 /** TypeSpecificStep — Step 3: dispatches to per-type extension field components. */
 import type { ReactElement } from 'react'
 import { FormWizardStep, ConditionalField } from '@/components/ui/form-wizard'
-import type { TypeSpecificStepProps } from './shared'
+import type { TypeSpecificStepProps } from './Shared'
 import PersonFields from './fields/PersonFields'
 import CountryFields from './fields/CountryFields'
 import OrganizationFields from './fields/OrganizationFields'
