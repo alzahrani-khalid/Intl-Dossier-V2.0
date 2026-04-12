@@ -95,7 +95,8 @@ Plans:
 | 21. Digest Scheduler Wiring Fix   | v4.0      | 1/1            | Complete    | 2026-04-09 |
 | 22. E2E Test Fixes                | v4.0      | 1/1            | Complete    | 2026-04-09 |
 | 23. Missing Verifications         | v4.0      | 2/2            | Complete    | 2026-04-09 |
-| 24. Browser Inspection Fixes      | TBD       | 0/TBD          | Not started | -          |
+| 24. Browser Inspection Fixes      | TBD       | 2/1            | Complete    | 2026-04-12 |
+| 25. Deferred Audit Fixes          | TBD       | 1/5            | In Progress | -          |
 
 <!-- gsd:progress:end -->
 
