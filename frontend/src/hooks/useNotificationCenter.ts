@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { apiGet } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { useEffect, useCallback } from 'react'
 import { RealtimeChannel } from '@supabase/supabase-js'
 import { toast } from 'sonner'
@@ -152,44 +152,50 @@ export function useNotificationCounts() {
   return useQuery({
     queryKey: NOTIFICATION_KEYS.counts(),
     queryFn: async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
+      try {
+        const result = await apiGet<NotificationCounts>('/notifications/counts', {
+          baseUrl: 'express',
+        })
+        return result
+      } catch {
+        // Fallback: query Supabase directly when Express route is unavailable
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        if (!user) throw new Error('Not authenticated')
 
-      // Try RPC function first
-      const { data, error } = await supabase.rpc('get_notification_counts', {
-        p_user_id: user.id,
-      })
+        const { data, error } = await supabase.rpc('get_notification_counts', {
+          p_user_id: user.id,
+        })
 
-      if (error) {
-        // Fallback to simple count
-        const { count } = await supabase
-          .from('notifications')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.id)
-          .eq('read', false)
-          .or('expires_at.is.null,expires_at.gt.now()')
+        if (error) {
+          const { count } = await supabase
+            .from('notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('read', false)
+            .or('expires_at.is.null,expires_at.gt.now()')
 
-        return {
-          total: count || 0,
-          byCategory: {} as Record<NotificationCategory, { total: number; unread: number }>,
+          return {
+            total: count || 0,
+            byCategory: {} as Record<NotificationCategory, { total: number; unread: number }>,
+          }
         }
-      }
 
-      // Transform data
-      const byCategory: Record<NotificationCategory, { total: number; unread: number }> = {} as any
-      let total = 0
+        const byCategory: Record<NotificationCategory, { total: number; unread: number }> =
+          {} as any
+        let total = 0
 
-      for (const row of data || []) {
-        byCategory[row.category as NotificationCategory] = {
-          total: row.total_count,
-          unread: row.unread_count,
+        for (const row of data || []) {
+          byCategory[row.category as NotificationCategory] = {
+            total: row.total_count,
+            unread: row.unread_count,
+          }
+          total += row.unread_count
         }
-        total += row.unread_count
-      }
 
-      return { total, byCategory }
+        return { total, byCategory }
+      }
     },
     refetchInterval: 30000, // Refetch every 30 seconds
   })
@@ -205,33 +211,41 @@ export function useMarkAsRead() {
       category?: NotificationCategory
       markAll?: boolean
     }) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      if (params.markAll) {
-        const { data, error } = await supabase.rpc('mark_category_as_read', {
-          p_user_id: user.id,
-          p_category: params.category || null,
+      try {
+        const result = await apiPost<{ marked: number }>('/notifications/mark-read', params, {
+          baseUrl: 'express',
         })
+        return result
+      } catch {
+        // Fallback: call Supabase directly when Express route is unavailable
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        if (!user) throw new Error('Not authenticated')
 
-        if (error) throw error
-        return { marked: data }
+        if (params.markAll) {
+          const { data, error } = await supabase.rpc('mark_category_as_read', {
+            p_user_id: user.id,
+            p_category: params.category || null,
+          })
+
+          if (error) throw error
+          return { marked: data }
+        }
+
+        if (params.notificationIds && params.notificationIds.length > 0) {
+          const { error } = await supabase
+            .from('notifications')
+            .update({ read_at: new Date().toISOString() })
+            .eq('user_id', user.id)
+            .in('id', params.notificationIds)
+
+          if (error) throw error
+          return { marked: params.notificationIds.length }
+        }
+
+        throw new Error('No notifications specified')
       }
-
-      if (params.notificationIds && params.notificationIds.length > 0) {
-        const { error } = await supabase
-          .from('notifications')
-          .update({ read_at: new Date().toISOString() })
-          .eq('user_id', user.id)
-          .in('id', params.notificationIds)
-
-        if (error) throw error
-        return { marked: params.notificationIds.length }
-      }
-
-      throw new Error('No notifications specified')
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.all })

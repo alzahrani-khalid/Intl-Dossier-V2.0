@@ -53,4 +53,6 @@ function Button({ className, variant, size, asChild = false, ref, ...props }: Bu
   )
 }
 
+Button.displayName = 'Button'
+
 export { Button, buttonVariants }

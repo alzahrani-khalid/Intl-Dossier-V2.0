@@ -113,5 +113,7 @@ function HeroUIButton({
 // Exports
 // ============================================================================
 
+HeroUIButton.displayName = 'HeroUIButton'
+
 export { HeroUIButton, buttonVariants }
 export default HeroUIButton
