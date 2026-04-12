@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-06)
 Phase: 24 (browser-inspection-fixes) — EXECUTING
 Plan: 1 of 1
 Status: Executing Phase 24
-Last activity: 2026-04-12 - Completed quick task 260412-jkp: Fix Batch 6 Navigation & Routing
+Last activity: 2026-04-12 - Completed quick task 260412-jth: Fix Batch 7 Per-Journey Route Fixes
 
 Progress: [█████████████████░░░] 83% of v4.0 (5/6 phases)
 
@@ -75,6 +75,7 @@ Progress: [█████████████████░░░] 83% of 
 | 260409-dgf | Fix Redis initialization race + maxmemory-policy persistence | 2026-04-09 | 75759a9d | [260409-dgf](./quick/260409-dgf-fix-redis-initialization-race-maxmemory-/) |
 | 260412-hlb | Fix Batch 5: Data Flow & State Management (D-04..D-72)       | 2026-04-12 | 931a6cc6 | [260412-hlb](./quick/260412-hlb-fix-batch-5-data-flow-state-management-d/) |
 | 260412-jkp | Fix Batch 6: Navigation & Routing (N-21,N-50,D-60,D-61)      | 2026-04-12 | c2cfae2e | [260412-jkp](./quick/260412-jkp-fix-batch-6-navigation-routing-n-20-n-21/) |
+| 260412-jth | Fix Batch 7: Per-Journey Route Fixes (18 of 28 findings)     | 2026-04-12 | 5817f528 | [260412-jth](./quick/260412-jth-fix-batch-7-per-journey-route-fixes-28-f/) |
 
 ### Blockers/Concerns
 
