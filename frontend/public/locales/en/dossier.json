@@ -229,6 +229,60 @@
     "working_groupFields": "Working Group-Specific Information",
     "personFields": "Person-Specific Information",
     "typeSpecificFieldsPlaceholder": "Additional fields for {{type}} will be displayed here",
+    "country": {
+      "isoCode2": "ISO Code (2)",
+      "isoCode2Placeholder": "SA",
+      "isoCode2Description": "2-letter country code (required)",
+      "isoCode3": "ISO Code (3)",
+      "isoCode3Placeholder": "SAU",
+      "isoCode3Description": "3-letter country code (required)",
+      "region": "Region",
+      "regionPlaceholder": "Middle East",
+      "capitalEn": "Capital (English)",
+      "capitalEnPlaceholder": "Riyadh",
+      "capitalAr": "Capital (Arabic)",
+      "capitalArPlaceholder": "الرياض"
+    },
+    "organization": {
+      "code": "Organization Code",
+      "codePlaceholder": "ORG-001",
+      "type": "Organization Type",
+      "typePlaceholder": "Select type (required)",
+      "types": {
+        "government": "Government",
+        "ngo": "NGO",
+        "private": "Private Sector",
+        "international": "International",
+        "academic": "Academic"
+      },
+      "website": "Website",
+      "websitePlaceholder": "https://example.org"
+    },
+    "engagement": {
+      "type": "Engagement Type",
+      "typePlaceholder": "Select type (required)",
+      "types": {
+        "meeting": "Meeting",
+        "consultation": "Consultation",
+        "coordination": "Coordination",
+        "workshop": "Workshop",
+        "conference": "Conference",
+        "site_visit": "Site Visit",
+        "ceremony": "Ceremony"
+      },
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "categories": {
+        "bilateral": "Bilateral",
+        "multilateral": "Multilateral",
+        "regional": "Regional",
+        "internal": "Internal"
+      },
+      "locationEn": "Location (English)",
+      "locationEnPlaceholder": "Riyadh, Saudi Arabia",
+      "locationAr": "Location (Arabic)",
+      "locationArPlaceholder": "الرياض، المملكة العربية السعودية"
+    },
     "person": {
       "titleEn": "Title (English)",
       "titleAr": "Title (Arabic)",
@@ -334,7 +388,14 @@
     "helpText": "Select the appropriate dossier type based on the entity you're tracking. Required fields are marked with an asterisk (*). You can always edit the dossier later.",
     "success": "Dossier created successfully",
     "error": "Failed to create dossier",
-    "duplicate": "{{defaultValue}}"
+    "duplicate": "{{defaultValue}}",
+    "basicInfoDescription": "Enter the basic information in both languages",
+    "classificationTitle": "Classification",
+    "classificationDescription": "Set status and sensitivity level",
+    "typeDetailsTitle": "Type Details",
+    "typeDetailsDescription": "Additional fields specific to this type",
+    "reviewTitle": "Review",
+    "reviewDescription": "Review your information before creating"
   },
   "update": {
     "title": "Edit Dossier",

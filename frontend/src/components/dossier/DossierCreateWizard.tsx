@@ -318,8 +318,8 @@ export function DossierCreateWizard({
   recommendedTags,
 }: DossierCreateWizardProps) {
   const { t } = useTranslation(['dossier', 'form-wizard', 'contextual-help'])
-  const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const { direction, isRTL } = useDirection()
+  const navigate = useNavigate()
   const createMutation = useCreateDossier()
 
   // Draft management - use template-specific key if using a template
@@ -480,18 +480,14 @@ const navigate = useNavigate()
       {
         id: 'type',
         title: t('dossier:create.step1'),
-        titleAr: 'اختيار النوع',
         description: t('dossier:create.selectTypeDescription'),
-        descriptionAr: 'اختر نوع الملف الذي تريد إنشاءه',
         icon: FileText,
         validate: () => !!selectedType,
       },
       {
         id: 'basic',
         title: t('dossier:form.basicInformation'),
-        titleAr: 'المعلومات الأساسية',
-        description: 'Enter the basic information in both languages',
-        descriptionAr: 'أدخل المعلومات الأساسية باللغتين',
+        description: t('dossier:create.basicInfoDescription'),
         icon: FileText,
         validate: () => {
           const { name_en, name_ar } = form.getValues()
@@ -500,18 +496,16 @@ const navigate = useNavigate()
       },
       {
         id: 'classification',
-        title: 'Classification',
-        titleAr: 'التصنيف',
-        description: 'Set status and sensitivity level',
-        descriptionAr: 'حدد الحالة ومستوى الحساسية',
+        title: t('dossier:create.classificationTitle'),
+        description: t('dossier:create.classificationDescription'),
         icon: Shield,
       },
       {
         id: 'type-specific',
-        title: selectedType ? t(`dossier:form.${selectedType}Fields`) : 'Type Details',
-        titleAr: selectedType ? `معلومات ${t(`dossier:type.${selectedType}`)}` : 'تفاصيل إضافية',
-        description: 'Additional fields specific to this type',
-        descriptionAr: 'حقول إضافية خاصة بهذا النوع',
+        title: selectedType
+          ? t(`dossier:form.${selectedType}Fields`)
+          : t('dossier:create.typeDetailsTitle'),
+        description: t('dossier:create.typeDetailsDescription'),
         icon: typeIcons[selectedType as DossierType] || FileText,
         // Types with required extension fields are NOT optional
         isOptional: !['country', 'organization', 'engagement', 'topic'].includes(
@@ -539,10 +533,8 @@ const navigate = useNavigate()
       },
       {
         id: 'review',
-        title: 'Review',
-        titleAr: 'مراجعة',
-        description: 'Review your information before creating',
-        descriptionAr: 'راجع المعلومات قبل الإنشاء',
+        title: t('dossier:create.reviewTitle'),
+        description: t('dossier:create.reviewDescription'),
         icon: CheckCircle2,
       },
     ],
@@ -695,7 +687,7 @@ const navigate = useNavigate()
                         {...field}
                         placeholder={t('dossier:form.nameArPlaceholder')}
                         className="min-h-11"
-                        dir="rtl"
+                        dir={direction}
                         onChange={(e) => {
                           field.onChange(e)
                           updateDraft({ name_ar: e.target.value })
@@ -853,7 +845,7 @@ const navigate = useNavigate()
                         {...field}
                         placeholder={t('dossier:form.descriptionArPlaceholder')}
                         className="min-h-[88px]"
-                        dir="rtl"
+                        dir={direction}
                         rows={3}
                         onChange={(e) => {
                           field.onChange(e)
@@ -995,7 +987,7 @@ const navigate = useNavigate()
                             {...field}
                             placeholder={t('dossier:form.person.titleArPlaceholder')}
                             className="min-h-11"
-                            dir="rtl"
+                            dir={direction}
                           />
                         </FormControl>
                         <FormMessage />
@@ -1057,7 +1049,7 @@ const navigate = useNavigate()
                             {...field}
                             placeholder={t('dossier:form.person.biographyArPlaceholder')}
                             className="min-h-[120px]"
-                            dir="rtl"
+                            dir={direction}
                             rows={5}
                           />
                         </FormControl>
@@ -1079,18 +1071,21 @@ const navigate = useNavigate()
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          ISO Code (2) <span className="text-destructive">*</span>
+                          {t('dossier:form.country.isoCode2')}{' '}
+                          <span className="text-destructive">*</span>
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="SA"
+                            placeholder={t('dossier:form.country.isoCode2Placeholder')}
                             maxLength={2}
                             className="min-h-11 uppercase"
                             required
                           />
                         </FormControl>
-                        <FormDescription>2-letter country code (required)</FormDescription>
+                        <FormDescription>
+                          {t('dossier:form.country.isoCode2Description')}
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -1102,18 +1097,21 @@ const navigate = useNavigate()
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          ISO Code (3) <span className="text-destructive">*</span>
+                          {t('dossier:form.country.isoCode3')}{' '}
+                          <span className="text-destructive">*</span>
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="SAU"
+                            placeholder={t('dossier:form.country.isoCode3Placeholder')}
                             maxLength={3}
                             className="min-h-11 uppercase"
                             required
                           />
                         </FormControl>
-                        <FormDescription>3-letter country code (required)</FormDescription>
+                        <FormDescription>
+                          {t('dossier:form.country.isoCode3Description')}
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -1124,9 +1122,13 @@ const navigate = useNavigate()
                     name="extension_data.region"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Region</FormLabel>
+                        <FormLabel>{t('dossier:form.country.region')}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Middle East" className="min-h-11" />
+                          <Input
+                            {...field}
+                            placeholder={t('dossier:form.country.regionPlaceholder')}
+                            className="min-h-11"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1140,9 +1142,13 @@ const navigate = useNavigate()
                     name="extension_data.capital_en"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Capital (English)</FormLabel>
+                        <FormLabel>{t('dossier:form.country.capitalEn')}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Riyadh" className="min-h-11" />
+                          <Input
+                            {...field}
+                            placeholder={t('dossier:form.country.capitalEnPlaceholder')}
+                            className="min-h-11"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1154,9 +1160,14 @@ const navigate = useNavigate()
                     name="extension_data.capital_ar"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Capital (Arabic)</FormLabel>
+                        <FormLabel>{t('dossier:form.country.capitalAr')}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="الرياض" className="min-h-11" dir="rtl" />
+                          <Input
+                            {...field}
+                            placeholder={t('dossier:form.country.capitalArPlaceholder')}
+                            className="min-h-11"
+                            dir={direction}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1175,9 +1186,13 @@ const navigate = useNavigate()
                     name="extension_data.org_code"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Organization Code</FormLabel>
+                        <FormLabel>{t('dossier:form.organization.code')}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="ORG-001" className="min-h-11" />
+                          <Input
+                            {...field}
+                            placeholder={t('dossier:form.organization.codePlaceholder')}
+                            className="min-h-11"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1190,20 +1205,33 @@ const navigate = useNavigate()
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Organization Type <span className="text-destructive">*</span>
+                          {t('dossier:form.organization.type')}{' '}
+                          <span className="text-destructive">*</span>
                         </FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="min-h-11">
-                              <SelectValue placeholder="Select type (required)" />
+                              <SelectValue
+                                placeholder={t('dossier:form.organization.typePlaceholder')}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="government">Government</SelectItem>
-                            <SelectItem value="ngo">NGO</SelectItem>
-                            <SelectItem value="private">Private Sector</SelectItem>
-                            <SelectItem value="international">International</SelectItem>
-                            <SelectItem value="academic">Academic</SelectItem>
+                            <SelectItem value="government">
+                              {t('dossier:form.organization.types.government')}
+                            </SelectItem>
+                            <SelectItem value="ngo">
+                              {t('dossier:form.organization.types.ngo')}
+                            </SelectItem>
+                            <SelectItem value="private">
+                              {t('dossier:form.organization.types.private')}
+                            </SelectItem>
+                            <SelectItem value="international">
+                              {t('dossier:form.organization.types.international')}
+                            </SelectItem>
+                            <SelectItem value="academic">
+                              {t('dossier:form.organization.types.academic')}
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -1217,12 +1245,12 @@ const navigate = useNavigate()
                   name="extension_data.website"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Website</FormLabel>
+                      <FormLabel>{t('dossier:form.organization.website')}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           type="url"
-                          placeholder="https://example.org"
+                          placeholder={t('dossier:form.organization.websitePlaceholder')}
                           className="min-h-11"
                         />
                       </FormControl>
@@ -1243,22 +1271,39 @@ const navigate = useNavigate()
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Engagement Type <span className="text-destructive">*</span>
+                          {t('dossier:form.engagement.type')}{' '}
+                          <span className="text-destructive">*</span>
                         </FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="min-h-11">
-                              <SelectValue placeholder="Select type (required)" />
+                              <SelectValue
+                                placeholder={t('dossier:form.engagement.typePlaceholder')}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="meeting">Meeting</SelectItem>
-                            <SelectItem value="consultation">Consultation</SelectItem>
-                            <SelectItem value="coordination">Coordination</SelectItem>
-                            <SelectItem value="workshop">Workshop</SelectItem>
-                            <SelectItem value="conference">Conference</SelectItem>
-                            <SelectItem value="site_visit">Site Visit</SelectItem>
-                            <SelectItem value="ceremony">Ceremony</SelectItem>
+                            <SelectItem value="meeting">
+                              {t('dossier:form.engagement.types.meeting')}
+                            </SelectItem>
+                            <SelectItem value="consultation">
+                              {t('dossier:form.engagement.types.consultation')}
+                            </SelectItem>
+                            <SelectItem value="coordination">
+                              {t('dossier:form.engagement.types.coordination')}
+                            </SelectItem>
+                            <SelectItem value="workshop">
+                              {t('dossier:form.engagement.types.workshop')}
+                            </SelectItem>
+                            <SelectItem value="conference">
+                              {t('dossier:form.engagement.types.conference')}
+                            </SelectItem>
+                            <SelectItem value="site_visit">
+                              {t('dossier:form.engagement.types.site_visit')}
+                            </SelectItem>
+                            <SelectItem value="ceremony">
+                              {t('dossier:form.engagement.types.ceremony')}
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -1272,19 +1317,30 @@ const navigate = useNavigate()
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Category <span className="text-destructive">*</span>
+                          {t('dossier:form.engagement.category')}{' '}
+                          <span className="text-destructive">*</span>
                         </FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="min-h-11">
-                              <SelectValue placeholder="Select category" />
+                              <SelectValue
+                                placeholder={t('dossier:form.engagement.categoryPlaceholder')}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="bilateral">Bilateral</SelectItem>
-                            <SelectItem value="multilateral">Multilateral</SelectItem>
-                            <SelectItem value="regional">Regional</SelectItem>
-                            <SelectItem value="internal">Internal</SelectItem>
+                            <SelectItem value="bilateral">
+                              {t('dossier:form.engagement.categories.bilateral')}
+                            </SelectItem>
+                            <SelectItem value="multilateral">
+                              {t('dossier:form.engagement.categories.multilateral')}
+                            </SelectItem>
+                            <SelectItem value="regional">
+                              {t('dossier:form.engagement.categories.regional')}
+                            </SelectItem>
+                            <SelectItem value="internal">
+                              {t('dossier:form.engagement.categories.internal')}
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -1299,11 +1355,11 @@ const navigate = useNavigate()
                     name="extension_data.location_en"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Location (English)</FormLabel>
+                        <FormLabel>{t('dossier:form.engagement.locationEn')}</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Riyadh, Saudi Arabia"
+                            placeholder={t('dossier:form.engagement.locationEnPlaceholder')}
                             className="min-h-11"
                           />
                         </FormControl>
@@ -1317,13 +1373,13 @@ const navigate = useNavigate()
                     name="extension_data.location_ar"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Location (Arabic)</FormLabel>
+                        <FormLabel>{t('dossier:form.engagement.locationAr')}</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="الرياض، المملكة العربية السعودية"
+                            placeholder={t('dossier:form.engagement.locationArPlaceholder')}
                             className="min-h-11"
-                            dir="rtl"
+                            dir={direction}
                           />
                         </FormControl>
                         <FormMessage />
@@ -1396,7 +1452,7 @@ const navigate = useNavigate()
                         <FormControl>
                           <SelectTrigger className="min-h-11">
                             <SelectValue
-                              placeholder={`${t('dossier:form.topic.categoryPlaceholder')} (required)`}
+                              placeholder={t('dossier:form.topic.categoryPlaceholder')}
                             />
                           </SelectTrigger>
                         </FormControl>
@@ -1416,7 +1472,7 @@ const navigate = useNavigate()
                         </SelectContent>
                       </Select>
                       <FormDescription>
-                        {t('dossier:form.topic.categoryDescription')} (required)
+                        {t('dossier:form.topic.categoryDescription')}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -1507,7 +1563,7 @@ const navigate = useNavigate()
                             {...field}
                             placeholder={t('dossier:form.workingGroup.mandateArPlaceholder')}
                             className="min-h-[100px]"
-                            dir="rtl"
+                            dir={direction}
                             rows={4}
                           />
                         </FormControl>
@@ -1560,7 +1616,7 @@ const navigate = useNavigate()
                   </div>
                   <div>
                     <p className="text-muted-foreground">{t('dossier:form.nameAr')}</p>
-                    <p className="font-medium" dir="rtl">
+                    <p className="font-medium" dir={direction}>
                       {formValues.name_ar || '-'}
                     </p>
                   </div>
@@ -1595,7 +1651,7 @@ const navigate = useNavigate()
                           <p className="text-muted-foreground">
                             {t('dossier:form.person.titleAr')}
                           </p>
-                          <p className="font-medium" dir="rtl">
+                          <p className="font-medium" dir={direction}>
                             {formValues.extension_data.title_ar}
                           </p>
                         </div>
@@ -1609,7 +1665,7 @@ const navigate = useNavigate()
                     <Separator />
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                       <div>
-                        <p className="text-muted-foreground">ISO Code</p>
+                        <p className="text-muted-foreground">{t('dossier:field.isoCode')}</p>
                         <p className="font-medium uppercase">
                           {formValues.extension_data.iso_code_2} /{' '}
                           {formValues.extension_data.iso_code_3}
@@ -1617,13 +1673,13 @@ const navigate = useNavigate()
                       </div>
                       {formValues.extension_data.region && (
                         <div>
-                          <p className="text-muted-foreground">Region</p>
+                          <p className="text-muted-foreground">{t('dossier:field.region')}</p>
                           <p className="font-medium">{formValues.extension_data.region}</p>
                         </div>
                       )}
                       {formValues.extension_data.capital_en && (
                         <div>
-                          <p className="text-muted-foreground">Capital</p>
+                          <p className="text-muted-foreground">{t('dossier:field.capital')}</p>
                           <p className="font-medium">{formValues.extension_data.capital_en}</p>
                         </div>
                       )}
@@ -1637,20 +1693,26 @@ const navigate = useNavigate()
                     <Separator />
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                       <div>
-                        <p className="text-muted-foreground">Organization Type</p>
+                        <p className="text-muted-foreground">
+                          {t('dossier:form.organization.type')}
+                        </p>
                         <Badge variant="outline" className="capitalize">
                           {formValues.extension_data.org_type}
                         </Badge>
                       </div>
                       {formValues.extension_data.org_code && (
                         <div>
-                          <p className="text-muted-foreground">Code</p>
+                          <p className="text-muted-foreground">
+                            {t('dossier:form.organization.code')}
+                          </p>
                           <p className="font-medium">{formValues.extension_data.org_code}</p>
                         </div>
                       )}
                       {formValues.extension_data.website && (
                         <div>
-                          <p className="text-muted-foreground">Website</p>
+                          <p className="text-muted-foreground">
+                            {t('dossier:form.organization.website')}
+                          </p>
                           <p className="font-medium text-primary truncate">
                             {formValues.extension_data.website}
                           </p>
@@ -1666,13 +1728,15 @@ const navigate = useNavigate()
                     <Separator />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="text-muted-foreground">Engagement Type</p>
+                        <p className="text-muted-foreground">{t('dossier:form.engagement.type')}</p>
                         <Badge variant="outline" className="capitalize">
                           {formValues.extension_data.engagement_type?.replace('_', ' ')}
                         </Badge>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Category</p>
+                        <p className="text-muted-foreground">
+                          {t('dossier:form.engagement.category')}
+                        </p>
                         <Badge variant="outline" className="capitalize">
                           {formValues.extension_data.engagement_category}
                         </Badge>
@@ -1683,14 +1747,18 @@ const navigate = useNavigate()
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-4">
                         {formValues.extension_data.location_en && (
                           <div>
-                            <p className="text-muted-foreground">Location (EN)</p>
+                            <p className="text-muted-foreground">
+                              {t('dossier:form.engagement.locationEn')}
+                            </p>
                             <p className="font-medium">{formValues.extension_data.location_en}</p>
                           </div>
                         )}
                         {formValues.extension_data.location_ar && (
                           <div>
-                            <p className="text-muted-foreground">Location (AR)</p>
-                            <p className="font-medium" dir="rtl">
+                            <p className="text-muted-foreground">
+                              {t('dossier:form.engagement.locationAr')}
+                            </p>
+                            <p className="font-medium" dir={direction}>
                               {formValues.extension_data.location_ar}
                             </p>
                           </div>
@@ -1776,7 +1844,7 @@ const navigate = useNavigate()
                             <p className="text-muted-foreground">
                               {t('dossier:form.workingGroup.mandateAr')}
                             </p>
-                            <p className="font-medium line-clamp-3" dir="rtl">
+                            <p className="font-medium line-clamp-3" dir={direction}>
                               {formValues.extension_data.mandate_ar}
                             </p>
                           </div>
@@ -1816,7 +1884,6 @@ const navigate = useNavigate()
                 (formValues.name_ar?.length ?? 0) >= 2
               }
               completeButtonText={t('dossier:form.create')}
-              completeButtonTextAr="إنشاء الملف"
               allowStepNavigation={true}
               namespace="form-wizard"
               actionBarMode="auto"

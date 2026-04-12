@@ -231,6 +231,60 @@
     "working_groupFields": "معلومات خاصة بفريق العمل",
     "personFields": "معلومات خاصة بالشخص",
     "typeSpecificFieldsPlaceholder": "سيتم عرض الحقول الإضافية لـ {{type}} هنا",
+    "country": {
+      "isoCode2": "رمز ISO (2)",
+      "isoCode2Placeholder": "SA",
+      "isoCode2Description": "رمز الدولة المكون من حرفين (مطلوب)",
+      "isoCode3": "رمز ISO (3)",
+      "isoCode3Placeholder": "SAU",
+      "isoCode3Description": "رمز الدولة المكون من 3 أحرف (مطلوب)",
+      "region": "المنطقة",
+      "regionPlaceholder": "الشرق الأوسط",
+      "capitalEn": "العاصمة (بالإنجليزية)",
+      "capitalEnPlaceholder": "Riyadh",
+      "capitalAr": "العاصمة (بالعربية)",
+      "capitalArPlaceholder": "الرياض"
+    },
+    "organization": {
+      "code": "رمز المنظمة",
+      "codePlaceholder": "ORG-001",
+      "type": "نوع المنظمة",
+      "typePlaceholder": "اختر النوع (مطلوب)",
+      "types": {
+        "government": "حكومية",
+        "ngo": "منظمة غير حكومية",
+        "private": "قطاع خاص",
+        "international": "دولية",
+        "academic": "أكاديمية"
+      },
+      "website": "الموقع الإلكتروني",
+      "websitePlaceholder": "https://example.org"
+    },
+    "engagement": {
+      "type": "نوع المشاركة",
+      "typePlaceholder": "اختر النوع (مطلوب)",
+      "types": {
+        "meeting": "اجتماع",
+        "consultation": "استشارة",
+        "coordination": "تنسيق",
+        "workshop": "ورشة عمل",
+        "conference": "مؤتمر",
+        "site_visit": "زيارة ميدانية",
+        "ceremony": "حفل"
+      },
+      "category": "الفئة",
+      "categoryPlaceholder": "اختر الفئة",
+      "categories": {
+        "bilateral": "ثنائية",
+        "multilateral": "متعددة الأطراف",
+        "regional": "إقليمية",
+        "internal": "داخلية"
+      },
+      "locationEn": "الموقع (بالإنجليزية)",
+      "locationEnPlaceholder": "Riyadh, Saudi Arabia",
+      "locationAr": "الموقع (بالعربية)",
+      "locationArPlaceholder": "الرياض، المملكة العربية السعودية"
+    },
     "person": {
       "titleEn": "المسمى الوظيفي (بالإنجليزية)",
       "titleAr": "المسمى الوظيفي (بالعربية)",
@@ -336,7 +390,14 @@
     "helpText": "اختر نوع الدوسيه المناسب بناءً على الكيان الذي تتتبعه. الحقول المطلوبة مميزة بعلامة نجمة (*). يمكنك دائمًا تحرير الدوسيه لاحقًا.",
     "success": "تم إنشاء الدوسيه بنجاح",
     "error": "فشل إنشاء الدوسيه",
-    "duplicate": "يوجد دوسيه بهذا الاسم بالفعل."
+    "duplicate": "يوجد دوسيه بهذا الاسم بالفعل.",
+    "basicInfoDescription": "أدخل المعلومات الأساسية باللغتين",
+    "classificationTitle": "التصنيف",
+    "classificationDescription": "حدد الحالة ومستوى الحساسية",
+    "typeDetailsTitle": "تفاصيل إضافية",
+    "typeDetailsDescription": "حقول إضافية خاصة بهذا النوع",
+    "reviewTitle": "مراجعة",
+    "reviewDescription": "راجع المعلومات قبل الإنشاء"
   },
   "update": {
     "title": "تحرير الدوسيه",
