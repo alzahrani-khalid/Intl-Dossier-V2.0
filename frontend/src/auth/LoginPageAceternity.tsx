@@ -40,7 +40,7 @@ export function LoginPageAceternity() {
     try {
       await login(data.email, data.password, showMfaInput ? mfaCode : undefined)
       // Redirect without showing toast - successful login is indicated by redirect
-      navigate({ to: '/' })
+      navigate({ to: '/dashboard' })
     } catch (error) {
       // Check if MFA is required
       if (error instanceof Error && error.message.includes('MFA')) {

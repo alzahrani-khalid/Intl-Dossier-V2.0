@@ -7,7 +7,7 @@
  * Includes inherited permissions from entity relationships and field-level audit trails.
  */
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -95,7 +95,7 @@ export const Route = createFileRoute('/_protected/admin/field-permissions')({
     const role = user?.user_metadata?.role || user?.app_metadata?.role
     const isAdmin = role === 'admin' || role === 'super_admin'
     if (!isAdmin) {
-      throw new Error('Admin access required')
+      throw redirect({ to: '/dashboard' })
     }
   },
 })

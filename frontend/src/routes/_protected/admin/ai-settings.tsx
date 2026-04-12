@@ -188,10 +188,10 @@ function AISettingsPage() {
         description: t('settings.savedDesc', 'AI settings have been updated successfully.'),
       })
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: t('settings.error', 'Error'),
-        description: error.message,
+        description: t('settings.errorDesc', 'Failed to save AI settings. Please try again.'),
         variant: 'destructive',
       })
     },
