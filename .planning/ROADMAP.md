@@ -98,3 +98,24 @@ Plans:
 | 24. Browser Inspection Fixes      | TBD       | 0/TBD          | Not started | -          |
 
 <!-- gsd:progress:end -->
+
+- [ ] **Phase 25: Deferred Audit Fixes** — Resolve 12 deferred findings from FIX-PLAN audit plus breadcrumb/skeleton rollout
+
+#### Phase 25: Deferred Audit Fixes
+
+**Goal:** Close remaining deferred audit findings: component decomposition, architectural state management, URL-driven state, data quality hardening, and UI pattern rollout
+**Depends on:** Phase 24
+**Requirements**: C-12, D-10, D-11, C-20, D-41, D-32, D-33, D-34, N-20, N-04, breadcrumb/skeleton rollout
+**Success Criteria** (what must be TRUE):
+
+1. DossierCreateWizard split into step components (each < 300 LOC)
+2. Query key factory per domain prevents stale invalidation bugs
+3. Dossier context split into focused sub-contexts (no unnecessary re-renders)
+4. Pagination state in URL params (`?page=2`) — refresh preserves page
+5. Kanban filter state in URL params — shareable filtered URLs work
+6. After-action version conflict detection prevents silent overwrites
+7. All 8 dossier type list pages have breadcrumbs and loading skeletons
+8. Type tab active state visually highlighted on dossier navigation
+9. URL naming conventions standardized with redirects for old paths
+
+**Plans:** 0 plans (run /gsd-plan-phase 25 to break down)

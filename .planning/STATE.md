@@ -61,6 +61,10 @@ Progress: [█████████████████░░░] 83% of 
 - [v4.0]: Wire existing notification UI components, don't rebuild
 - [18]: Single root `playwright.config.ts`; auth.setup + storageState; POM pattern; 2-shard CI matrix with retry + flake logging
 
+### Roadmap Evolution
+
+- Phase 25 added: Deferred Audit Fixes (12 findings from FIX-PLAN + breadcrumb rollout)
+
 ### Pending Todos
 
 - Provision 9 GitHub repo secrets for E2E workflow (see 18-VERIFICATION.md)
