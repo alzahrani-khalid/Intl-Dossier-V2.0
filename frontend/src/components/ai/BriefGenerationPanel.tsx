@@ -30,6 +30,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { briefSuccessColors, briefManualColors } from '@/lib/semantic-colors'
 
 export interface BriefGenerationPanelProps {
   engagementId?: string
@@ -269,13 +270,13 @@ const [customPrompt, setCustomPrompt] = useState('')
 
         {/* Success Display */}
         {phase === 'success' && brief && (
-          <Alert className="bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            <AlertTitle className="text-green-800 dark:text-green-200">
+          <Alert className={briefSuccessColors.alert}>
+            <CheckCircle className={`h-4 w-4 ${briefSuccessColors.icon}`} />
+            <AlertTitle className={briefSuccessColors.title}>
               {t('success', 'Brief generated successfully!')}
             </AlertTitle>
             <AlertDescription className="mt-3">
-              <p className="text-sm text-green-700 dark:text-green-300 mb-3">{brief.title}</p>
+              <p className={`text-sm ${briefSuccessColors.description} mb-3`}>{brief.title}</p>
               <div className="flex items-center gap-2">
                 <Button variant="default" size="sm" onClick={handleViewBrief} className="gap-1">
                   <Eye className="h-3 w-3" />
@@ -354,12 +355,12 @@ const [customPrompt, setCustomPrompt] = useState('')
         {/* Manual Fallback UI */}
         {phase === 'manual' && (
           <div className="space-y-4">
-            <Alert className="bg-amber-50 border-amber-200 dark:bg-amber-950 dark:border-amber-800">
-              <PenLine className="h-4 w-4 text-amber-600" />
-              <AlertTitle className="text-amber-800 dark:text-amber-200">
+            <Alert className={briefManualColors.alert}>
+              <PenLine className={`h-4 w-4 ${briefManualColors.icon}`} />
+              <AlertTitle className={briefManualColors.title}>
                 {t('fallback.title', 'Manual Brief Entry')}
               </AlertTitle>
-              <AlertDescription className="text-amber-700 dark:text-amber-300">
+              <AlertDescription className={briefManualColors.description}>
                 {t(
                   'fallback.description',
                   'AI service is unavailable. You can enter the brief details manually.',

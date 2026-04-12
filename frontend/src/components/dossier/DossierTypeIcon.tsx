@@ -9,6 +9,7 @@
 
 import { Globe, Building2, Users, Target, FileText, UserCog, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { getDossierTypeTextClass } from '@/lib/semantic-colors'
 import type { DossierType } from '@/types/relationship.types'
 
 // ============================================================================
@@ -29,14 +30,14 @@ const dossierTypeIcons: Record<DossierType, React.ElementType> = {
 // Type to Color Mapping
 // ============================================================================
 
-const dossierTypeColors: Record<DossierType, string> = {
-  country: 'text-blue-500',
-  organization: 'text-purple-500',
-  forum: 'text-green-500',
-  engagement: 'text-orange-500',
-  topic: 'text-pink-500',
-  working_group: 'text-cyan-500',
-  person: 'text-indigo-500',
+const dossierTypeColorMap: Record<DossierType, string> = {
+  country: getDossierTypeTextClass('country'),
+  organization: getDossierTypeTextClass('organization'),
+  forum: getDossierTypeTextClass('forum'),
+  engagement: getDossierTypeTextClass('engagement'),
+  topic: getDossierTypeTextClass('topic'),
+  working_group: getDossierTypeTextClass('working_group'),
+  person: getDossierTypeTextClass('person'),
 }
 
 // ============================================================================
@@ -86,7 +87,7 @@ export function DossierTypeIcon({
   className,
 }: DossierTypeIconProps) {
   const Icon = dossierTypeIcons[type] || FileText
-  const colorClass = colored ? dossierTypeColors[type] : ''
+  const colorClass = colored ? dossierTypeColorMap[type] : ''
 
   return <Icon className={cn(sizeClasses[size], colorClass, className)} aria-hidden="true" />
 }

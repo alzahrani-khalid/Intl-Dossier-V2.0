@@ -85,6 +85,11 @@ import { cn } from '@/lib/utils'
 import { toPng, toSvg } from 'html-to-image'
 import { toast } from 'sonner'
 import { useDirection } from '@/hooks/useDirection'
+import {
+  graphNodeColors as SEMANTIC_NODE_COLORS,
+  graphEdgeColors as SEMANTIC_EDGE_COLORS,
+  graphDefaultColor,
+} from '@/lib/semantic-colors'
 
 // ============================================
 // Types
@@ -150,31 +155,9 @@ export interface AdvancedGraphVisualizationProps {
 // Constants
 // ============================================
 
-const NODE_COLORS: Record<string, string> = {
-  country: '#3b82f6',
-  organization: '#8b5cf6',
-  individual: '#10b981',
-  forum: '#f59e0b',
-  engagement: '#ec4899',
-  mou: '#14b8a6',
-  position: '#6366f1',
-  person: '#f97316',
-  topic: '#84cc16',
-  working_group: '#06b6d4',
-}
+const NODE_COLORS: Record<string, string> = SEMANTIC_NODE_COLORS
 
-const EDGE_COLORS: Record<string, string> = {
-  member_of: '#3b82f6',
-  partner: '#10b981',
-  parent_org: '#8b5cf6',
-  hosted_by: '#f59e0b',
-  participant: '#ec4899',
-  signatory: '#14b8a6',
-  cooperates_with: '#6366f1',
-  bilateral_relation: '#f97316',
-  participates_in: '#84cc16',
-  related_to: '#6b7280',
-}
+const EDGE_COLORS: Record<string, string> = SEMANTIC_EDGE_COLORS
 
 // ============================================
 // Utility Functions
@@ -310,7 +293,7 @@ const name = isRTL ? data.name_ar : data.name_en
     const influenceBonus = data.showInfluence ? (data.influenceScore || 0) * 20 : 0
     const size = (baseSize + connectionBonus + influenceBonus) * (data.sizeMultiplier || 1)
 
-    const nodeColor = NODE_COLORS[data.type] || '#6b7280'
+    const nodeColor = NODE_COLORS[data.type] || graphDefaultColor
 
     return (
       <m.div
@@ -335,18 +318,18 @@ const name = isRTL ? data.name_ar : data.name_en
           className={cn(
             'absolute inset-0 rounded-full border-2 shadow-md transition-all duration-200',
             data.dimmed && 'opacity-50',
-            data.isOnPath && 'border-amber-400 shadow-amber-200',
+            data.isOnPath && 'border-warning shadow-warning/20',
           )}
           style={{
-            backgroundColor: data.isOnPath ? '#fef3c7' : `${nodeColor}20`,
-            borderColor: data.isOnPath ? '#fbbf24' : nodeColor,
+            backgroundColor: data.isOnPath ? 'var(--heroui-warning)' : `${nodeColor}20`,
+            borderColor: data.isOnPath ? 'var(--heroui-warning)' : nodeColor,
           }}
         />
 
         {/* Type icon/indicator */}
         <div
           className="absolute inset-0 flex items-center justify-center font-bold text-xs"
-          style={{ color: data.isOnPath ? '#b45309' : nodeColor }}
+          style={{ color: data.isOnPath ? 'var(--heroui-warning)' : nodeColor }}
         >
           {data.type?.[0]?.toUpperCase() || '?'}
         </div>
@@ -369,7 +352,7 @@ const name = isRTL ? data.name_ar : data.name_en
         {data.showInfluence && data.influenceScore && data.influenceScore > 0.5 && (
           <div className="absolute -top-2 -start-2">
             <Star
-              className="h-4 w-4 text-amber-500 fill-amber-500"
+              className="h-4 w-4 text-warning fill-warning"
               style={{ opacity: data.influenceScore }}
             />
           </div>
@@ -680,7 +663,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
                     <div
                       className="h-2 w-2 rounded-full"
                       style={{
-                        backgroundColor: NODE_COLORS[node.type] || '#6b7280',
+                        backgroundColor: NODE_COLORS[node.type] || graphDefaultColor,
                       }}
                     />
                     {getName(node)}
@@ -710,7 +693,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
                       <div
                         className="h-2 w-2 rounded-full"
                         style={{
-                          backgroundColor: NODE_COLORS[node.type] || '#6b7280',
+                          backgroundColor: NODE_COLORS[node.type] || graphDefaultColor,
                         }}
                       />
                       {getName(node)}
@@ -747,8 +730,8 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
             className={cn(
               'p-2 rounded-lg text-xs',
               pathResult.found
-                ? 'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300'
-                : 'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300',
+                ? 'bg-success/5 text-success'
+                : 'bg-warning/5 text-warning',
             )}
           >
             {pathResult.found ? (
@@ -1263,7 +1246,7 @@ function AdvancedGraphVisualizationInner({
               data: {
                 clusterType: type,
                 count: cluster.count,
-                color: NODE_COLORS[type] || '#6b7280',
+                color: NODE_COLORS[type] || graphDefaultColor,
                 onExpand: () => {
                   setCollapsedClusters((prev) => {
                     const next = new Set(prev)
@@ -1300,7 +1283,7 @@ function AdvancedGraphVisualizationInner({
           },
           position,
           style: {
-            borderColor: NODE_COLORS[node.type] || '#6b7280',
+            borderColor: NODE_COLORS[node.type] || graphDefaultColor,
           },
         })
       }
@@ -1347,20 +1330,20 @@ function AdvancedGraphVisualizationInner({
           animated: isConnectedToFocused || isOnPath,
           label: showEdgeLabels ? edge.relationship_type.replace(/_/g, ' ') : undefined,
           style: {
-            stroke: isOnPath ? '#fbbf24' : EDGE_COLORS[edge.relationship_type] || '#9ca3af',
+            stroke: isOnPath ? 'var(--heroui-warning)' : EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
             strokeWidth: isOnPath ? 4 : isConnectedToFocused ? 3 : 2,
             opacity: dimmed && !isOnPath ? 0.2 : 1,
           },
           labelStyle: {
             fontSize: 10,
             fontWeight: 500,
-            fill: dimmed ? '#9ca3af' : '#000',
+            fill: dimmed ? graphDefaultColor : 'var(--heroui-foreground)',
           },
           markerEnd: {
             type: MarkerType.ArrowClosed,
             width: 15,
             height: 15,
-            color: isOnPath ? '#fbbf24' : EDGE_COLORS[edge.relationship_type] || '#9ca3af',
+            color: isOnPath ? 'var(--heroui-warning)' : EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
           },
         }
       })
@@ -1482,7 +1465,7 @@ function AdvancedGraphVisualizationInner({
           <MiniMap
             position={isRTL ? 'bottom-left' : 'bottom-right'}
             nodeColor={(node) =>
-              NODE_COLORS[node.data?.type as keyof typeof NODE_COLORS] || '#6b7280'
+              NODE_COLORS[node.data?.type as keyof typeof NODE_COLORS] || graphDefaultColor
             }
             nodeBorderRadius={8}
             maskColor="rgba(0, 0, 0, 0.1)"
@@ -1644,7 +1627,7 @@ function AdvancedGraphVisualizationInner({
                     <div
                       className="h-2.5 w-2.5 rounded-full"
                       style={{
-                        backgroundColor: NODE_COLORS[type] || '#6b7280',
+                        backgroundColor: NODE_COLORS[type] || graphDefaultColor,
                       }}
                     />
                     <span className="capitalize">{t(`type.${type}`, type)}</span>
@@ -1696,7 +1679,7 @@ function AdvancedGraphVisualizationInner({
             {filteredNodes.length} {t('nodesShown', 'nodes')} · {filteredEdges.length}{' '}
             {t('edgesShown', 'edges')}
             {highlightedPath.length > 0 && (
-              <span className="text-amber-600 ms-2">· {t('pathActive', 'Path highlighted')}</span>
+              <span className="text-warning ms-2">· {t('pathActive', 'Path highlighted')}</span>
             )}
           </div>
         </Panel>
@@ -1857,7 +1840,7 @@ function AdvancedGraphVisualizationInner({
 
           {highlightedPath.length > 0 && (
             <div className="mt-3 pt-2 border-t">
-              <div className="flex items-center gap-2 text-xs text-amber-600">
+              <div className="flex items-center gap-2 text-xs text-warning">
                 <Route className="h-3 w-3" />
                 {t('pathHighlighted', 'Path highlighted')}
                 <Button

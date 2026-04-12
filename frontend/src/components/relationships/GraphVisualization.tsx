@@ -35,6 +35,7 @@ import {
 import { ZoomIn, ZoomOut, Maximize2, Filter } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { getGraphNodeColor, getGraphEdgeColor } from '@/lib/semantic-colors'
 
 // Node data structure
 interface NodeData {
@@ -97,32 +98,11 @@ const customNodeTypes: NodeTypes = {
   dossier: DossierNode,
 }
 
-// Node color mapping by type
-const getNodeColor = (type: string): string => {
-  const colorMap: Record<string, string> = {
-    country: '#3b82f6', // blue
-    organization: '#8b5cf6', // purple
-    individual: '#10b981', // green
-    forum: '#f59e0b', // amber
-    engagement: '#ec4899', // pink
-    mou: '#14b8a6', // teal
-    position: '#6366f1', // indigo
-  }
-  return colorMap[type] || '#6b7280' // default gray
-}
+// Node color mapping by type — uses CSS variables for theme awareness
+const getNodeColor = (type: string): string => getGraphNodeColor(type)
 
-// Edge color by relationship type
-const getEdgeColor = (relationshipType: string): string => {
-  const colorMap: Record<string, string> = {
-    member_of: '#3b82f6',
-    partner: '#10b981',
-    parent_org: '#8b5cf6',
-    hosted_by: '#f59e0b',
-    participant: '#ec4899',
-    signatory: '#14b8a6',
-  }
-  return colorMap[relationshipType] || '#9ca3af' // default gray
-}
+// Edge color by relationship type — uses CSS variables for theme awareness
+const getEdgeColor = (relationshipType: string): string => getGraphEdgeColor(relationshipType)
 
 // Inner component for zoom controls - uses useReactFlow() which requires being inside ReactFlow
 const ZoomControls = memo(({ isRTL }: { isRTL: boolean }) => {
@@ -366,19 +346,19 @@ function GraphVisualizationInner({
             <div className="text-sm font-semibold">{t('graph.legend', 'Legend')}</div>
             <div className="flex flex-col gap-1 text-xs">
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: '#3b82f6' }} />
+                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: getNodeColor('country') }} />
                 <span>{t('graph.country', 'Country')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: '#8b5cf6' }} />
+                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: getNodeColor('organization') }} />
                 <span>{t('graph.organization', 'Organization')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: '#10b981' }} />
+                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: getNodeColor('individual') }} />
                 <span>{t('graph.individual', 'Individual')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: '#f59e0b' }} />
+                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: getNodeColor('forum') }} />
                 <span>{t('graph.forum', 'Forum')}</span>
               </div>
             </div>

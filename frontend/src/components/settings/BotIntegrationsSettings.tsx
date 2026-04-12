@@ -22,6 +22,7 @@ import {
 import { Loader2, Hash, MessageSquare, Link2, Unlink, Bell, Clock, Check } from 'lucide-react'
 import { toast } from 'sonner'
 import { useDirection } from '@/hooks/useDirection'
+import { verifiedBadgeClass, pendingBadgeClass } from '@/lib/semantic-colors'
 
 // Types
 interface BotLink {
@@ -378,12 +379,12 @@ function BotLinkCard({
             <div className="flex items-center gap-2">
               <h3 className="font-medium">{link.workspace_name}</h3>
               {link.is_verified ? (
-                <Badge variant="outline" className="text-green-600 border-green-600">
+                <Badge variant="outline" className={verifiedBadgeClass}>
                   <Check className="h-3 w-3 me-1" />
                   {t('connected.verified')}
                 </Badge>
               ) : (
-                <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+                <Badge variant="outline" className={pendingBadgeClass}>
                   {t('connected.pending')}
                 </Badge>
               )}

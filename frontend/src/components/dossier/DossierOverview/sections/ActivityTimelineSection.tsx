@@ -35,6 +35,10 @@ import type {
   UnifiedActivityType,
   UnifiedActivityAction,
 } from '@/types/unified-dossier-activity.types'
+import {
+  getActivityTypeBadgeClass,
+  getActivityActionTextClass,
+} from '@/lib/semantic-colors'
 
 /**
  * Get icon for activity type
@@ -72,34 +76,15 @@ function getActionIcon(action: UnifiedActivityAction) {
 /**
  * Get activity type color
  */
-function getActivityTypeColor(type: UnifiedActivityType) {
-  const colors: Record<UnifiedActivityType, string> = {
-    task: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    commitment: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-    intake: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-    position: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    event: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
-    relationship: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
-    document: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-    comment: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-  }
-  return colors[type] || colors.task
+function getActivityTypeColor(type: UnifiedActivityType): string {
+  return getActivityTypeBadgeClass(type)
 }
 
 /**
  * Get action color
  */
-function getActionColor(action: UnifiedActivityAction) {
-  const colors: Record<UnifiedActivityAction, string> = {
-    created: 'text-green-600',
-    updated: 'text-blue-600',
-    completed: 'text-green-600',
-    linked: 'text-purple-600',
-    commented: 'text-yellow-600',
-    status_change: 'text-orange-600',
-    assigned: 'text-cyan-600',
-  }
-  return colors[action] || 'text-gray-600'
+function getActionColor(action: UnifiedActivityAction): string {
+  return getActivityActionTextClass(action)
 }
 
 /**

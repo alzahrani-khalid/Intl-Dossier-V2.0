@@ -50,6 +50,7 @@ import { KeyContactsSection } from './sections/KeyContactsSection'
 import { ActivityTimelineSection } from './sections/ActivityTimelineSection'
 import type { DossierOverviewProps, ExportFormat } from '@/types/dossier-overview.types'
 import { useDirection } from '@/hooks/useDirection'
+import { statVariantStyles } from '@/lib/semantic-colors'
 
 /**
  * Stat card component for the overview header
@@ -68,15 +69,15 @@ function StatCard({
   isRTL: boolean
 }) {
   const variantStyles = {
-    default: 'bg-card',
-    warning: 'bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800',
-    success: 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800',
+    default: statVariantStyles.default.card,
+    warning: statVariantStyles.warning.card,
+    success: statVariantStyles.success.card,
   }
 
   const iconStyles = {
-    default: 'text-primary',
-    warning: 'text-amber-600 dark:text-amber-400',
-    success: 'text-green-600 dark:text-green-400',
+    default: statVariantStyles.default.icon,
+    warning: statVariantStyles.warning.icon,
+    success: statVariantStyles.success.icon,
   }
 
   return (

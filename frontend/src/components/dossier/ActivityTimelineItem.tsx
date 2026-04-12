@@ -19,6 +19,11 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  statusColors as semanticStatusColors,
+  priorityColors as semanticPriorityColors,
+  activityTypeColors,
+} from '@/lib/semantic-colors'
 import { p, s } from '@/lib/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
@@ -39,29 +44,15 @@ const typeIcons = {
 // Status Colors
 // ============================================================================
 
-const statusColors: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-  in_progress: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-  todo: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
-  review: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
-  completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-  done: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-  cancelled: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500',
-  open: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-  closed: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500',
-}
+const statusColorMap: Record<string, string> = Object.fromEntries(
+  Object.entries(semanticStatusColors).map(([key, val]) => [key, `${val.bg} ${val.text}`]),
+)
 
 // ============================================================================
 // Priority Colors
 // ============================================================================
 
-const priorityColors: Record<string, string> = {
-  low: 'text-gray-500',
-  medium: 'text-blue-500',
-  high: 'text-orange-500',
-  urgent: 'text-red-500',
-  critical: 'text-red-600',
-}
+const priorityColorMap: Record<string, string> = semanticPriorityColors
 
 // ============================================================================
 // Props
@@ -183,16 +174,14 @@ export function ActivityTimelineItem({
             className={cn(
               'flex items-center justify-center size-10 rounded-full shrink-0',
               'bg-muted border-2',
-              activity.is_overdue && 'border-red-500',
+              activity.is_overdue && 'border-destructive',
               !activity.is_overdue && 'border-transparent',
             )}
           >
             <TypeIcon
               className={cn(
                 'size-5',
-                activity.work_item_type === 'task' && 'text-blue-500',
-                activity.work_item_type === 'commitment' && 'text-purple-500',
-                activity.work_item_type === 'intake' && 'text-green-500',
+                activityTypeColors[activity.work_item_type]?.text,
               )}
             />
           </div>
@@ -222,12 +211,12 @@ export function ActivityTimelineItem({
             </Badge>
             <Badge
               variant="secondary"
-              className={cn('text-xs', statusColors[activity.status] || '')}
+              className={cn('text-xs', statusColorMap[activity.status] || '')}
             >
               {t(`timeline.status.${activity.status}`, activity.status)}
             </Badge>
             {activity.priority && activity.priority !== 'medium' && (
-              <span className={cn('text-xs', priorityColors[activity.priority])}>
+              <span className={cn('text-xs', priorityColorMap[activity.priority])}>
                 {t(`timeline.priority.${activity.priority}`, activity.priority)}
               </span>
             )}
@@ -237,7 +226,7 @@ export function ActivityTimelineItem({
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {/* Overdue Warning */}
             {activity.is_overdue && (
-              <span className="flex items-center gap-1 text-red-500">
+              <span className="flex items-center gap-1 text-destructive">
                 <AlertTriangle className="size-3" />
                 {t('timeline.overdue', 'Overdue')}
               </span>

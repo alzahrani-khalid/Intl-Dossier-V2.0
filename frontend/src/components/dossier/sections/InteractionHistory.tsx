@@ -15,6 +15,7 @@ import { usePerson } from '@/hooks/usePersons'
 import { ENGAGEMENT_ROLE_LABELS } from '@/types/person.types'
 import type { PersonEngagementWithDetails, EngagementRole } from '@/types/person.types'
 import { useDirection } from '@/hooks/useDirection'
+import { getInteractionTypeBadgeClass } from '@/lib/semantic-colors'
 
 interface InteractionHistoryProps {
   dossierId: string
@@ -37,14 +38,8 @@ const { data: personData, isLoading, isError } = usePerson(dossierId)
   }
 
   // Get engagement type badge color
-  const getEngagementTypeBadgeClass = (type: string): string => {
-    const types: Record<string, string> = {
-      meeting: 'bg-blue-100 text-blue-800',
-      conference: 'bg-purple-100 text-purple-800',
-      visit: 'bg-green-100 text-green-800',
-      negotiation: 'bg-orange-100 text-orange-800',
-    }
-    return types[type] || 'bg-gray-100 text-gray-800'
+  const getEngagementTypeBadgeClassFn = (type: string): string => {
+    return getInteractionTypeBadgeClass(type)
   }
 
   if (isLoading) {
@@ -140,12 +135,12 @@ const { data: personData, isLoading, isError } = usePerson(dossierId)
                 <div className="flex items-start gap-3">
                   <div
                     className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      link.attended ? 'bg-green-100' : 'bg-muted'
+                      link.attended ? 'bg-success/10' : 'bg-muted'
                     }`}
                   >
                     <Users
                       className={`h-5 w-5 ${
-                        link.attended ? 'text-green-600' : 'text-muted-foreground'
+                        link.attended ? 'text-success' : 'text-muted-foreground'
                       }`}
                     />
                   </div>
@@ -165,7 +160,7 @@ const { data: personData, isLoading, isError } = usePerson(dossierId)
 
                         <div className="flex flex-wrap items-center gap-2 mt-1">
                           <Badge
-                            className={getEngagementTypeBadgeClass(engagement.engagement_type)}
+                            className={getEngagementTypeBadgeClassFn(engagement.engagement_type)}
                           >
                             {engagement.engagement_type}
                           </Badge>
@@ -178,7 +173,7 @@ const { data: personData, isLoading, isError } = usePerson(dossierId)
                       <div className="flex items-center gap-2 flex-shrink-0">
                         <Badge variant="secondary">{getEngagementRoleLabel(link.role)}</Badge>
                         {link.attended ? (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <CheckCircle className="h-4 w-4 text-success" />
                         ) : (
                           <XCircle className="h-4 w-4 text-muted-foreground" />
                         )}

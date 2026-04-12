@@ -46,6 +46,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { getDossierTypeBadgeClass, getStatusBadgeClass } from '@/lib/semantic-colors'
 import type { DossierWithExtension, DossierType, DossierStatus } from '@/services/dossier-api'
 import { Link } from '@tanstack/react-router'
 import { WorldMapHighlight } from '@/components/dossier/WorldMapHighlight'
@@ -88,42 +89,14 @@ function getTypeIcon(type: DossierType) {
  * Get type-specific color classes
  */
 function getTypeColor(type: DossierType): string {
-  switch (type) {
-    case 'country':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-    case 'organization':
-      return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
-    case 'forum':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-    case 'engagement':
-      return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300'
-    case 'topic':
-      return 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300'
-    case 'working_group':
-      return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300'
-    case 'person':
-      return 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300'
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
-  }
+  return getDossierTypeBadgeClass(type)
 }
 
 /**
  * Get status color classes
  */
 function getStatusColor(status: DossierStatus): string {
-  switch (status) {
-    case 'active':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-    case 'inactive':
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-    case 'archived':
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
-    case 'deleted':
-      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
-  }
+  return getStatusBadgeClass(status)
 }
 
 /**
@@ -177,7 +150,7 @@ export function UniversalDossierCard({
             {/* Avatar */}
             <Avatar className="h-14 w-14 sm:h-16 sm:w-16 shrink-0">
               <AvatarImage src={(dossier.extension as any).photo_url} alt={displayName || ''} />
-              <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300 text-base font-semibold">
+              <AvatarFallback className="bg-muted text-muted-foreground text-base font-semibold">
                 {displayName ? getInitials(displayName) : 'VIP'}
               </AvatarFallback>
             </Avatar>
@@ -352,7 +325,7 @@ export function UniversalDossierCardCompact({
       {dossier.type === 'person' ? (
         <Avatar className="h-10 w-10 sm:h-12 sm:w-12 shrink-0">
           <AvatarImage src={(dossier.extension as any)?.photo_url} alt={displayName || ''} />
-          <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300 text-sm font-semibold">
+          <AvatarFallback className="bg-muted text-muted-foreground text-sm font-semibold">
             {displayName ? getInitials(displayName) : 'VIP'}
           </AvatarFallback>
         </Avatar>

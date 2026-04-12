@@ -68,6 +68,11 @@ import {
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import {
+  graphNodeColors as SEMANTIC_NODE_COLORS,
+  graphEdgeColors as SEMANTIC_EDGE_COLORS,
+  graphDefaultColor,
+} from '@/lib/semantic-colors'
 
 // ============================================
 // Types
@@ -111,24 +116,9 @@ interface EnhancedGraphVisualizationProps {
 // Constants
 // ============================================
 
-const NODE_COLORS: Record<string, string> = {
-  country: '#3b82f6',
-  organization: '#8b5cf6',
-  individual: '#10b981',
-  forum: '#f59e0b',
-  engagement: '#ec4899',
-  mou: '#14b8a6',
-  position: '#6366f1',
-}
+const NODE_COLORS: Record<string, string> = SEMANTIC_NODE_COLORS
 
-const EDGE_COLORS: Record<string, string> = {
-  member_of: '#3b82f6',
-  partner: '#10b981',
-  parent_org: '#8b5cf6',
-  hosted_by: '#f59e0b',
-  participant: '#ec4899',
-  signatory: '#14b8a6',
-}
+const EDGE_COLORS: Record<string, string> = SEMANTIC_EDGE_COLORS
 
 // ============================================
 // Custom Node Components
@@ -156,7 +146,7 @@ const name = isRTL ? data.name_ar : data.name_en
     const connectionBonus = Math.min((data.connectionCount || 0) * 2, 30)
     const size = baseSize + connectionBonus * (data.sizeMultiplier || 1)
 
-    const nodeColor = NODE_COLORS[data.type] || '#6b7280'
+    const nodeColor = NODE_COLORS[data.type] || graphDefaultColor
 
     return (
       <m.div
@@ -560,7 +550,7 @@ function EnhancedGraphVisualizationInner({
               data: {
                 clusterType: type,
                 count: cluster.count,
-                color: NODE_COLORS[type] || '#6b7280',
+                color: NODE_COLORS[type] || graphDefaultColor,
                 onExpand: () => {
                   setCollapsedClusters((prev) => {
                     const next = new Set(prev)
@@ -592,7 +582,7 @@ function EnhancedGraphVisualizationInner({
           },
           position,
           style: {
-            borderColor: NODE_COLORS[node.type] || '#6b7280',
+            borderColor: NODE_COLORS[node.type] || graphDefaultColor,
           },
         })
       }
@@ -633,20 +623,20 @@ function EnhancedGraphVisualizationInner({
           animated: isConnectedToFocused,
           label: showEdgeLabels ? edge.relationship_type.replace(/_/g, ' ') : undefined,
           style: {
-            stroke: EDGE_COLORS[edge.relationship_type] || '#9ca3af',
+            stroke: EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
             strokeWidth: isConnectedToFocused ? 3 : 2,
             opacity: dimmed ? 0.2 : 1,
           },
           labelStyle: {
             fontSize: 10,
             fontWeight: 500,
-            fill: dimmed ? '#9ca3af' : '#000',
+            fill: dimmed ? graphDefaultColor : 'var(--heroui-foreground)',
           },
           markerEnd: {
             type: MarkerType.ArrowClosed,
             width: 15,
             height: 15,
-            color: EDGE_COLORS[edge.relationship_type] || '#9ca3af',
+            color: EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
           },
         }
       })
@@ -743,7 +733,7 @@ function EnhancedGraphVisualizationInner({
           <MiniMap
             position={isRTL ? 'bottom-left' : 'bottom-right'}
             nodeColor={(node) =>
-              NODE_COLORS[node.data?.type as keyof typeof NODE_COLORS] || '#6b7280'
+              NODE_COLORS[node.data?.type as keyof typeof NODE_COLORS] || graphDefaultColor
             }
             nodeBorderRadius={8}
             maskColor="rgba(0, 0, 0, 0.1)"
@@ -874,7 +864,7 @@ function EnhancedGraphVisualizationInner({
                   <span className="flex items-center gap-2">
                     <div
                       className="h-2.5 w-2.5 rounded-full"
-                      style={{ backgroundColor: NODE_COLORS[type] || '#6b7280' }}
+                      style={{ backgroundColor: NODE_COLORS[type] || graphDefaultColor }}
                     />
                     <span className="capitalize">{t(type, type)}</span>
                     <Badge variant="secondary" className="text-[10px] h-4 px-1">

@@ -88,20 +88,20 @@ export function LoginPageAceternity() {
 
             {/* Password field with custom show/hide toggle */}
             <div className="space-y-2">
-              <label className="block text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 text-start">
+              <label className="block text-sm sm:text-base font-medium text-foreground text-start">
                 {t('auth.password')}
-                <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+                <span className="text-destructive ms-1" aria-label={t('validation.required')}>
                   *
                 </span>
               </label>
               <div className="relative">
-                <Lock className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Lock className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="current-password"
-                  className="w-full min-h-11 sm:min-h-10 md:min-h-12 text-sm sm:text-base px-4 ps-12 pe-12 py-2 border border-input dark:border-gray-600 rounded-lg focus:ring-2 focus:border-transparent focus:ring-primary-500 dark:bg-zinc-800 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] focus:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.2),_0px_1px_0px_0px_rgba(25,28,33,0.04),_0px_0px_0px_2px_rgba(var(--primary),0.3)]"
+                  className="w-full min-h-11 sm:min-h-10 md:min-h-12 text-sm sm:text-base px-4 ps-12 pe-12 py-2 border border-input rounded-lg focus:ring-2 focus:border-transparent focus:ring-ring bg-background text-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm focus:shadow-md"
                 />
                 <button
                   type="button"
@@ -118,7 +118,7 @@ export function LoginPageAceternity() {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-600 dark:text-red-400 text-start">
+                <p className="text-sm text-destructive text-start">
                   {t(errors.password.message || '', { min: 6 })}
                 </p>
               )}
