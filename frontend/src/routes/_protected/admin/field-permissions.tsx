@@ -834,7 +834,9 @@ function PermissionDialog({
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select entity type" />
+                  <SelectValue
+                    placeholder={t('permissions.selectEntityType', 'Select entity type')}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {ENTITY_TYPE_CONFIG.map((type) => (
@@ -912,7 +914,10 @@ function PermissionDialog({
             <div className="space-y-2">
               <Label>{t('permissions.fields.description_en')}</Label>
               <Textarea
-                placeholder="Enter description in English"
+                placeholder={t(
+                  'permissions.descriptionPlaceholder',
+                  'Enter description in English',
+                )}
                 value={formData.description_en || ''}
                 onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
               />
