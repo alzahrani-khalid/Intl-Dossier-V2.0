@@ -50,9 +50,9 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
       label: t('appearance.canvas'),
       description: t('appearance.canvasDesc'),
       colors: [
-        'oklch(0.141 0.004 285.83)',
-        'oklch(0.871 0.008 286.29)',
-        'oklch(0.92 0.0053 286.32)',
+        'oklch(14.1% 0.004 285.83)',
+        'oklch(87.1% 0.008 286.29)',
+        'oklch(92% 0.0053 286.32)',
       ],
     },
     {
@@ -60,9 +60,9 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
       label: t('appearance.azure'),
       description: t('appearance.azureDesc'),
       colors: [
-        'oklch(0.5315 0.0694 156.19)',
-        'oklch(0.5211 0.0755 338.14)',
-        'oklch(0.929 0.0095 255.53)',
+        'oklch(53.15% 0.0694 156.19)',
+        'oklch(52.11% 0.0755 338.14)',
+        'oklch(92.9% 0.0095 255.53)',
       ],
     },
     {
@@ -70,9 +70,9 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
       label: t('appearance.lavender'),
       description: t('appearance.lavenderDesc'),
       colors: [
-        'oklch(0.5827 0.2418 12.23)',
-        'oklch(0.8938 0.0563 3.77)',
-        'oklch(0.9567 0.0021 34.31)',
+        'oklch(58.27% 0.2418 12.23)',
+        'oklch(89.38% 0.0563 3.77)',
+        'oklch(95.67% 0.0021 34.31)',
       ],
     },
     {
@@ -80,9 +80,9 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
       label: t('appearance.bluesky'),
       description: t('appearance.blueskyDesc'),
       colors: [
-        'oklch(0.59 0.2 277.12)',
-        'oklch(0.9342 0.0187 285.12)',
-        'oklch(0.9112 0.035 281.21)',
+        'oklch(59% 0.2 277.12)',
+        'oklch(93.42% 0.0187 285.12)',
+        'oklch(91.12% 0.035 281.21)',
       ],
     },
   ]
