@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast'
 
 import { cn } from '@/lib/utils'
 import { useResponsive } from '@/hooks/useResponsive'
+import { useDirection } from '@/hooks/useDirection'
 import { useContextAwareFAB } from '@/hooks/useContextAwareFAB'
 import { useEntityHistoryStore } from '@/store/entityHistoryStore'
 import { useDossierContextSafe } from '@/contexts/dossier-context'
@@ -39,6 +40,7 @@ export function MainLayout({
   showDossierContext = true,
 }: MainLayoutProps): React.ReactElement {
   const { isMobile } = useResponsive()
+  const { direction } = useDirection()
 
   const { contextActions, speedDialActions, defaultAction, shouldShowFAB } = useContextAwareFAB()
   const displayFAB = (showFAB ?? isMobile) && shouldShowFAB
@@ -56,22 +58,22 @@ export function MainLayout({
   return (
     <>
       <SidebarProvider
+        dir={direction}
         defaultOpen={getStoredSidebarOpen()}
         style={
           {
             '--sidebar-width': '16rem',
             '--header-height': '3.5rem',
-            '--content-padding': '1rem',
             '--content-margin': '0.375rem',
-            '--content-full-height':
-              'calc(100vh - var(--header-height) - (var(--content-padding) * 2) - (var(--content-margin) * 2))',
           } as React.CSSProperties
         }
       >
         <AppSidebar />
         <SidebarInset>
           <SiteHeader />
-          <div className={cn('bg-muted/40 flex flex-1 flex-col overflow-y-auto', isMobile && 'pb-16')}>
+          <div
+            className={cn('bg-muted/40 flex flex-1 flex-col overflow-y-auto', isMobile && 'pb-16')}
+          >
             {displayBreadcrumbTrail && (
               <EntityBreadcrumbTrail
                 maxDisplay={isMobile ? 3 : 5}
@@ -87,7 +89,7 @@ export function MainLayout({
               />
             )}
 
-            <div className="@container/main flex-1 p-[var(--content-padding)] xl:mx-auto xl:w-full xl:max-w-[1600px]">
+            <div className="@container/main flex-1 p-4 sm:p-6 lg:p-8 xl:mx-auto xl:w-full xl:max-w-[1600px]">
               {children}
             </div>
           </div>
@@ -102,7 +104,11 @@ export function MainLayout({
           speedDialActions={speedDialActions}
           defaultAction={defaultAction}
           hideOnScroll
-          className={isMobile ? 'bottom-[calc(3.5rem+max(0.75rem,env(safe-area-inset-bottom))+4rem)]' : undefined}
+          className={
+            isMobile
+              ? 'bottom-[calc(3.5rem+max(0.75rem,env(safe-area-inset-bottom))+4rem)]'
+              : undefined
+          }
         />
       )}
 
