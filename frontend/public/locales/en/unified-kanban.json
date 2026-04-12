@@ -41,7 +41,8 @@
     "dueIn_plural": "Due in {{count}} days",
     "noDueDate": "No due date",
     "assignedTo": "Assigned to",
-    "unassigned": "Unassigned"
+    "unassigned": "Unassigned",
+    "dragCard": "Draggable card: {{title}}"
   },
   "filters": {
     "title": "Filters",

@@ -63,7 +63,9 @@ function ProtectedLayout(): React.ReactElement {
           <Outlet />
         </ErrorBoundary>
       </MainLayout>
-      <ChatDock onCitationClick={handleCitationClick} />
+      <ErrorBoundary>
+        <ChatDock onCitationClick={handleCitationClick} />
+      </ErrorBoundary>
       <OnboardingTourTrigger
         autoStartDelay={1000}
         showReplayButton={true}

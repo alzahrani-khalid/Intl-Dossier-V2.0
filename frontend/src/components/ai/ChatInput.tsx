@@ -35,7 +35,7 @@ export function ChatInput({
 }: ChatInputProps) {
   const { t } = useTranslation('ai-chat')
   const { isRTL } = useDirection()
-const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Auto-resize textarea
@@ -66,14 +66,13 @@ const [message, setMessage] = useState('')
   }
 
   return (
-    <div
-      className={cn('flex items-end gap-2 p-3 border-t bg-background', className)}
-    >
+    <div className={cn('flex items-end gap-2 p-3 border-t bg-background', className)}>
       <Textarea
         ref={textareaRef}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
+        aria-label={t('messageInput', 'Type your message')}
         placeholder={placeholder || t('inputPlaceholder', 'Ask a question...')}
         disabled={disabled || isLoading}
         className={cn(

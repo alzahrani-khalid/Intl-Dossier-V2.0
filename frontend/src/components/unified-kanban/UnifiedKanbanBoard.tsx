@@ -317,6 +317,10 @@ export function UnifiedKanbanBoard({
                               'border-0 p-3 cursor-grab active:cursor-grabbing',
                               item.is_overdue && 'ring-1 ring-destructive/30',
                             )}
+                            aria-label={t('card.dragCard', {
+                              title: isRTL && item.title_ar ? item.title_ar : item.title,
+                              defaultValue: `Draggable card: ${item.title}`,
+                            })}
                             onClick={() => handleItemClick(item)}
                           >
                             <UnifiedKanbanCardContent item={item} />

@@ -69,14 +69,14 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
   }
 
   return (
-    <div className={cn(
-      'fixed z-50',
-      isRTL ? 'start-4' : 'end-4',
-      isMobile
-        ? 'bottom-[calc(3.5rem+max(0.75rem,env(safe-area-inset-bottom)))]'
-        : 'bottom-4',
-      className,
-    )}>
+    <div
+      className={cn(
+        'fixed z-50',
+        isRTL ? 'start-4' : 'end-4',
+        isMobile ? 'bottom-[calc(3.5rem+max(0.75rem,env(safe-area-inset-bottom)))]' : 'bottom-4',
+        className,
+      )}
+    >
       {/* Chat Panel */}
       {isOpen && (
         <Card
@@ -85,9 +85,7 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
             'transition-all duration-300 ease-in-out',
             isExpanded ? 'w-[480px] h-[600px]' : 'w-[360px] h-[480px]',
             'max-w-[calc(100vw-2rem)]',
-            isMobile
-              ? 'max-h-[calc(100vh-10rem)]'
-              : 'max-h-[calc(100vh-6rem)]',
+            isMobile ? 'max-h-[calc(100vh-10rem)]' : 'max-h-[calc(100vh-6rem)]',
           )}
         >
           {/* Header */}
@@ -175,7 +173,10 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
                 <div className="pb-4">
                   {messages.map((message, index) => (
                     <ChatMessage
-                      key={index}
+                      key={
+                        message.runId ??
+                        `msg-${message.role}-${message.timestamp.getTime()}-${index}`
+                      }
                       role={message.role as 'user' | 'assistant'}
                       content={message.content}
                       toolCalls={message.toolCalls as ToolCall[]}

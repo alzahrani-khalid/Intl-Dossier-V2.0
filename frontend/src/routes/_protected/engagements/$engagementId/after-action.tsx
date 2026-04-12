@@ -18,7 +18,7 @@ function AfterActionFormPage() {
   const { engagementId } = Route.useParams()
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const { data: engagement, isLoading: loadingEngagement } = useEngagement(engagementId)
   const createAfterAction = useCreateAfterAction()
@@ -65,10 +65,12 @@ const navigate = useNavigate()
   }
 
   return (
-    <div className={`container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div
+      className={`container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}
+    >
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
+        <Button variant="ghost" size="icon" asChild aria-label={t('common.goBack', 'Go back')}>
           <Link to={'/engagements/$engagementId' as any} params={{ engagementId } as any}>
             <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
           </Link>

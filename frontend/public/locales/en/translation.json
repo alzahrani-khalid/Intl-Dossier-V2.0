@@ -17,6 +17,7 @@
     "import": "Import",
     "refresh": "Refresh",
     "back": "Back",
+    "goBack": "Go back",
     "next": "Next",
     "previous": "Previous",
     "submit": "Submit",
@@ -797,58 +798,14 @@
     "maxFileSize": "50MB",
     "totalFiles": "Total Files",
     "searchPlaceholder": "Search files...",
-    "categories": {
-      "document": "Document",
-      "dataset": "Dataset",
-      "image": "Image",
-      "video": "Video",
-      "other": "Other"
-    },
+    "dragAndDrop": "Drag and drop files here or click to browse",
     "filter": "Filter",
     "category": "Category",
-    "all": "All"
-  },
-  "reports": {
-    "title": "Reports",
-    "generateReport": "Generate Report",
-    "reportType": "Report Type",
-    "format": "Format",
-    "filters": "Filters",
-    "dateRange": "Date Range",
-    "from": "From",
-    "to": "To",
-    "generate": "Generate",
-    "download": "Download",
-    "reportStatus": "Report Status",
-    "generating": "Generating...",
-    "completed": "Completed",
-    "failed": "Failed",
-    "reportTypes": {
-      "countryOverview": "Country Overview",
-      "organizationSummary": "Organization Summary",
-      "mouStatus": "MoU Status",
-      "eventCalendar": "Event Calendar",
-      "intelligenceDigest": "Intelligence Digest"
-    },
-    "formats": {
-      "pdf": "PDF",
-      "excel": "Excel",
-      "csv": "CSV"
-    },
-    "statuses": {
-      "pending": "Pending",
-      "processing": "Processing",
-      "completed": "Completed",
-      "failed": "Failed"
-    }
-  },
-  "dataLibrary": {
-    "title": "Data Library",
+    "all": "All",
     "uploadFile": "Upload File",
     "fileDetails": "File Details",
-    "title": "Title",
+    "titleLabel": "Title",
     "description": "Description",
-    "category": "Category",
     "tags": "Tags",
     "file": "File",
     "fileType": "File Type",
@@ -872,17 +829,45 @@
     "uploadError": "Upload failed",
     "fileTooLarge": "File too large (max 50MB)",
     "invalidFileType": "Invalid file type",
-    "dragAndDrop": "Drag and drop files here or click to browse"
+    "downloads": "Downloads"
   },
   "reports": {
     "title": "Reports",
+    "generateReport": "Generate Report",
+    "reportType": "Report Type",
+    "filters": "Filters",
+    "dateRange": "Date Range",
+    "from": "From",
+    "to": "To",
+    "generate": "Generate",
+    "download": "Download",
+    "reportStatus": "Report Status",
+    "completed": "Completed",
+    "failed": "Failed",
+    "reportTypes": {
+      "countryOverview": "Country Overview",
+      "organizationSummary": "Organization Summary",
+      "mouStatus": "MoU Status",
+      "eventCalendar": "Event Calendar",
+      "intelligenceDigest": "Intelligence Digest"
+    },
+    "formats": {
+      "pdf": "PDF",
+      "excel": "Excel",
+      "csv": "CSV"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "failed": "Failed"
+    },
     "selectTemplate": "Select Report Template",
     "selectTemplateDesc": "Choose a report template to generate",
     "recentReports": "Recent Reports",
     "noRecentReports": "No recent reports",
-    "generateReport": "Generate Report",
     "generating": "Generating...",
-    "parameters": "Report Parameters",
+    "parametersTitle": "Report Parameters",
     "parametersDesc": "Configure the report parameters",
     "format": "Output Format",
     "templates": {
@@ -1691,11 +1676,20 @@
       "currentVersion": "Current version (in database)",
       "yourVersion": "Your changes",
       "reload": "Reload",
-      "forceS ave": "Force Save",
+      "forceSave": "Force Save",
       "cancel": "Cancel",
       "reloadDesc": "Discard your changes and reload the latest version",
       "forceSaveDesc": "Overwrite the database with your changes (use with caution)",
-      "cancelDesc": "Close this dialog and continue editing"
+      "cancelDesc": "Close this dialog and continue editing",
+      "conflictingFields": "Conflicting fields:",
+      "yourChange": "Your change:",
+      "theirChange": "Their change:",
+      "reloadOption": "Reload (Recommended)",
+      "reloadOptionDescription": "Discard your changes and load the latest version. You can then re-apply your changes.",
+      "forceSaveOption": "Force Save",
+      "forceSaveOptionDescription": "Overwrite their changes with yours. Use with caution - you'll lose their updates.",
+      "cancelOption": "Cancel",
+      "cancelOptionDescription": "Stay on this page and manually review the conflicts before deciding."
     },
     "sla": {
       "safe": "Safe",

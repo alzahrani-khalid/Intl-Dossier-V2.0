@@ -41,7 +41,8 @@
     "dueIn_plural": "مستحق خلال {{count}} أيام",
     "noDueDate": "بدون موعد استحقاق",
     "assignedTo": "مسند إلى",
-    "unassigned": "غير مسند"
+    "unassigned": "غير مسند",
+    "dragCard": "بطاقة قابلة للسحب: {{title}}"
   },
   "filters": {
     "title": "التصفية",

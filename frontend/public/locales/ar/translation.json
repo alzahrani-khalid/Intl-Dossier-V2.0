@@ -17,6 +17,7 @@
     "import": "استيراد",
     "refresh": "تحديث",
     "back": "رجوع",
+    "goBack": "الرجوع",
     "next": "التالي",
     "previous": "السابق",
     "submit": "إرسال",
@@ -789,7 +790,16 @@
     "findings": "نتائج"
   },
   "dataLibrary": {
-    "title": "العنوان",
+    "title": "مكتبة البيانات",
+    "dragDropFiles": "اسحب وأفلت الملفات هنا",
+    "or": "أو",
+    "browseFiles": "تصفح الملفات",
+    "maxFileSize": "الحد الأقصى لحجم الملف",
+    "totalFiles": "إجمالي الملفات",
+    "searchPlaceholder": "البحث في الملفات...",
+    "filter": "تصفية",
+    "all": "الكل",
+    "titleLabel": "العنوان",
     "uploadFile": "رفع ملف",
     "fileDetails": "تفاصيل الملف",
     "description": "الوصف",
@@ -817,16 +827,46 @@
     "uploadError": "فشل الرفع",
     "fileTooLarge": "الملف كبير جداً (الحد الأقصى 50 ميجابايت)",
     "invalidFileType": "نوع ملف غير صحيح",
-    "dragAndDrop": "اسحب وأفلت الملفات هنا أو انقر للتصفح"
+    "dragAndDrop": "اسحب وأفلت الملفات هنا أو انقر للتصفح",
+    "downloads": "التحميلات"
   },
   "reports": {
     "title": "التقارير",
+    "generateReport": "إنشاء التقرير",
+    "reportType": "نوع التقرير",
+    "filters": "عوامل التصفية",
+    "dateRange": "النطاق الزمني",
+    "from": "من",
+    "to": "إلى",
+    "generate": "إنشاء",
+    "download": "تنزيل",
+    "reportStatus": "حالة التقرير",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "reportTypes": {
+      "countryOverview": "نظرة عامة على الدولة",
+      "organizationSummary": "ملخص المنظمة",
+      "mouStatus": "حالة مذكرة التفاهم",
+      "eventCalendar": "تقويم الفعاليات",
+      "intelligenceDigest": "موجز المعلومات الاستخباراتية"
+    },
+    "formats": {
+      "pdf": "PDF",
+      "excel": "Excel",
+      "csv": "CSV"
+    },
+    "statuses": {
+      "pending": "قيد الانتظار",
+      "processing": "قيد المعالجة",
+      "completed": "مكتمل",
+      "failed": "فشل"
+    },
     "selectTemplate": "اختر قالب التقرير",
     "selectTemplateDesc": "اختر قالب تقرير للإنشاء",
     "recentReports": "التقارير الأخيرة",
     "noRecentReports": "لا توجد تقارير حديثة",
-    "generateReport": "إنشاء التقرير",
     "generating": "جاري الإنشاء...",
+    "parametersTitle": "معاملات التقرير",
     "parameters": {
       "country": "الدولة",
       "dateRange": "النطاق الزمني",
@@ -1391,12 +1431,20 @@
       "currentVersion": "النسخة الحالية (في قاعدة البيانات)",
       "yourVersion": "تغييراتك",
       "reload": "إعادة التحميل",
-      "forceSave": "الحفظ القسري",
+      "forceSave": "فرض الحفظ",
       "cancel": "إلغاء",
       "reloadDesc": "تجاهل تغييراتك وإعادة تحميل أحدث إصدار",
       "forceSaveDesc": "استبدال قاعدة البيانات بتغييراتك (استخدم بحذر)",
       "cancelDesc": "إغلاق هذا الحوار ومتابعة التحرير",
-      "forceS ave": "فرض الحفظ"
+      "conflictingFields": "الحقول المتعارضة:",
+      "yourChange": "تغييرك:",
+      "theirChange": "تغييرهم:",
+      "reloadOption": "إعادة التحميل (موصى به)",
+      "reloadOptionDescription": "تجاهل تغييراتك وتحميل أحدث إصدار. يمكنك بعدها إعادة تطبيق تغييراتك.",
+      "forceSaveOption": "فرض الحفظ",
+      "forceSaveOptionDescription": "استبدال تغييراتهم بتغييراتك. استخدم بحذر — ستفقد تحديثاتهم.",
+      "cancelOption": "إلغاء",
+      "cancelOptionDescription": "البقاء في هذه الصفحة ومراجعة التعارضات يدوياً قبل اتخاذ القرار."
     },
     "sla": {
       "safe": "آمن",
