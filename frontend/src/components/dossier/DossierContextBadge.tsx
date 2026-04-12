@@ -13,7 +13,7 @@ import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { Badge } from '@/components/ui/badge'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { DossierTypeIcon } from './DossierTypeIcon'
 import type { DossierType } from '@/types/relationship.types'
 import type { InheritanceSource } from '@/types/dossier-context.types'
@@ -103,7 +103,7 @@ export function DossierContextBadge({
 }: DossierContextBadgeProps) {
   const { t } = useTranslation('dossier-context')
   const { isRTL } = useDirection()
-// Get display name based on language
+  // Get display name based on language
   const displayName = isRTL ? nameAr || nameEn : nameEn
 
   // Get inheritance label
@@ -155,20 +155,16 @@ export function DossierContextBadge({
 
   // Wrap with tooltip for long names
   const badgeWithTooltip = (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>{badgeContent}</TooltipTrigger>
-        <TooltipContent side={isRTL ? 'left' : 'right'}>
-          <div className="space-y-1">
-            <p className="font-medium">{displayName}</p>
-            <p className="text-xs text-muted-foreground">{t(`type.${dossierType}`, dossierType)}</p>
-            {inheritanceLabel && (
-              <p className="text-xs text-muted-foreground">{inheritanceLabel}</p>
-            )}
-          </div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>{badgeContent}</TooltipTrigger>
+      <TooltipContent side={isRTL ? 'left' : 'right'}>
+        <div className="space-y-1">
+          <p className="font-medium">{displayName}</p>
+          <p className="text-xs text-muted-foreground">{t(`type.${dossierType}`, dossierType)}</p>
+          {inheritanceLabel && <p className="text-xs text-muted-foreground">{inheritanceLabel}</p>}
+        </div>
+      </TooltipContent>
+    </Tooltip>
   )
 
   // Wrap with link if clickable
