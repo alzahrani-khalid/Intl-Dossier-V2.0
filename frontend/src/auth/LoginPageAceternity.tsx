@@ -60,7 +60,7 @@ export function LoginPageAceternity() {
         </div>
 
         {/* Login card */}
-        <div className="rounded-2xl bg-card p-8 shadow-xl">
+        <div className="rounded-2xl bg-card p-4 sm:p-6 lg:p-8 shadow-xl">
           {/* Logo and title */}
           <div className="mb-8 text-center">
             <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-primary/10">
