@@ -17,7 +17,7 @@ import { UserMenu } from './header/UserMenu'
 import { useDirection } from '@/hooks/useDirection'
 
 export function SiteHeader() {
-  const { isRTL } = useDirection()
+  const { isRTL, direction } = useDirection()
   const { toggleSidebar, open, openMobile, isMobile } = useSidebar()
 
   const isExpanded = isMobile ? openMobile : open
@@ -31,7 +31,10 @@ export function SiteHeader() {
   const toggleLabel = isExpanded ? 'Collapse sidebar' : 'Expand sidebar'
 
   return (
-    <header className="bg-background/40 sticky top-0 z-50 flex h-[var(--header-height)] w-full shrink-0 items-center gap-2 border-b backdrop-blur-md md:rounded-ss-xl md:rounded-se-xl">
+    <header
+      dir={direction}
+      className="bg-background/40 sticky top-0 z-50 flex h-14 sm:h-[var(--header-height)] w-full shrink-0 items-center gap-2 border-b backdrop-blur-md md:rounded-ss-xl md:rounded-se-xl"
+    >
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2">
         {/* Sidebar trigger */}
         <Tooltip>
