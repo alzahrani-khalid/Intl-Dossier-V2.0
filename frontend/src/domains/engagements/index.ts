@@ -6,6 +6,9 @@
  * Canonical import path for consumers: `@/domains/engagements`
  */
 
+// Query Key Factory (canonical source)
+export { engagementKeys as engagementDomainKeys } from './keys'
+
 // Hooks - Main engagement CRUD
 export {
   useEngagements,
@@ -35,9 +38,7 @@ export {
 } from './hooks/useLifecycle'
 
 // Hooks - Kanban
-export {
-  useEngagementKanban,
-} from './hooks/useEngagementKanban'
+export { useEngagementKanban } from './hooks/useEngagementKanban'
 
 // Hooks - Briefs
 export {

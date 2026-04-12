@@ -6,8 +6,11 @@
  * Canonical import path for consumers: `@/domains/dossiers`
  */
 
+// Query Key Factory (canonical source)
+export { dossierKeys } from './keys'
+
 // Hooks
-export { useDossiers, dossierKeys } from './hooks/useDossiers'
+export { useDossiers } from './hooks/useDossiers'
 export {
   useDossier,
   useDossiers as useDossiersFromDetail,
@@ -23,7 +26,7 @@ export {
   useTypedDossier,
   useDossierCounts,
   useDossierCountByType,
-  dossierKeys as dossierDetailKeys,
+  dossierKeys as dossierDetailKeys, // legacy alias from useDossier hook
   documentLinksKeys,
   dossierCountsKeys,
 } from './hooks/useDossier'

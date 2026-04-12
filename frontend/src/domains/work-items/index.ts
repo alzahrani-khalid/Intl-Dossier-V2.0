@@ -6,6 +6,9 @@
  * Canonical import path for consumers: `@/domains/work-items`
  */
 
+// Query Key Factory (canonical source)
+export { workItemKeys } from './keys'
+
 // Hooks — Work Item Dossier Links
 export {
   useWorkItemDossierLinks,
