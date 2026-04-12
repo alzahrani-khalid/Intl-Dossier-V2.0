@@ -24,16 +24,28 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useDirection } from '@/hooks/useDirection'
 
+// URL search params type for dossier list pagination
+interface DossierListSearch {
+  page: number
+  search?: string
+}
+
 export const Route = createFileRoute('/_protected/dossiers/countries/')({
   component: CountriesListPage,
+  validateSearch: (search: Record<string, unknown>): DossierListSearch => ({
+    page: Math.max(1, Number(search.page) || 1),
+    search:
+      typeof search.search === 'string' && search.search.length > 0 ? search.search : undefined,
+  }),
 })
 
 function CountriesListPage() {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
-  const [page, setPage] = useState(1)
+  const { page, search: urlSearch } = Route.useSearch()
+  const navigate = Route.useNavigate()
+  const [searchQuery, setSearchQuery] = useState(urlSearch ?? '')
+  const [debouncedSearch, setDebouncedSearch] = useState(urlSearch ?? '')
   const pageSize = 20
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
 
@@ -41,12 +53,20 @@ function CountriesListPage() {
   useEffect(() => {
     debounceRef.current = setTimeout(() => {
       setDebouncedSearch(searchQuery)
-      setPage(1)
+      // Reset to page 1 on new search and sync to URL
+      void navigate({
+        search: (prev: DossierListSearch) => ({
+          ...prev,
+          search: searchQuery.length > 0 ? searchQuery : undefined,
+          page: 1,
+        }),
+        replace: true,
+      })
     }, 300)
     return (): void => {
       if (debounceRef.current != null) clearTimeout(debounceRef.current)
     }
-  }, [searchQuery])
+  }, [searchQuery, navigate])
 
   // Fetch country dossiers with server-side search
   const { data, isLoading, error } = useDossiersByType(
@@ -58,9 +78,15 @@ function CountriesListPage() {
 
   const filteredDossiers = data?.data
 
-  // Memo: stable reference for pagination button onClick props
-  const handlePrevPage = useCallback(() => setPage((p) => Math.max(1, p - 1)), [])
-  const handleNextPage = useCallback(() => setPage((p) => p + 1), [])
+  // URL-driven pagination handlers
+  const handlePrevPage = useCallback((): void => {
+    void navigate({
+      search: (prev: DossierListSearch) => ({ ...prev, page: Math.max(1, page - 1) }),
+    })
+  }, [navigate, page])
+  const handleNextPage = useCallback((): void => {
+    void navigate({ search: (prev: DossierListSearch) => ({ ...prev, page: page + 1 }) })
+  }, [navigate, page])
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">

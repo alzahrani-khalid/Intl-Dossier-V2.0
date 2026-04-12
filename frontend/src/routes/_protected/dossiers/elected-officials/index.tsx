@@ -10,8 +10,19 @@ import { UserCheck, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ElectedOfficialListTable } from '@/components/elected-officials/ElectedOfficialListTable'
 
+// URL search params type for dossier list pagination
+interface DossierListSearch {
+  page: number
+  search?: string
+}
+
 export const Route = createFileRoute('/_protected/dossiers/elected-officials/')({
   component: ElectedOfficialsListPage,
+  validateSearch: (search: Record<string, unknown>): DossierListSearch => ({
+    page: Math.max(1, Number(search.page) || 1),
+    search:
+      typeof search.search === 'string' && search.search.length > 0 ? search.search : undefined,
+  }),
 })
 
 function ElectedOfficialsListPage(): ReactElement {

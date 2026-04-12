@@ -45,8 +45,6 @@ const kanbanSearchSchema = z.object({
   wipReview: z.coerce.number().optional().default(3),
 })
 
-type KanbanSearchParams = z.infer<typeof kanbanSearchSchema>
-
 export const Route = createFileRoute('/_protected/kanban')({
   component: KanbanTaskBoardPage,
   validateSearch: (search) => kanbanSearchSchema.parse(search),
@@ -56,6 +54,7 @@ function KanbanTaskBoardPage() {
   const { t } = useTranslation('unified-kanban')
   const { user } = useAuth()
   const { mode, sources, swimlane, wipInProgress, wipReview } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   // Parse sources from URL
   const sourceFilter = sources as WorkSource[] | undefined
@@ -102,17 +101,14 @@ function KanbanTaskBoardPage() {
   // Real-time updates
   useUnifiedKanbanRealtime('personal', null, user?.id || '', !!user)
 
-  // Handle swimlane mode change
+  // Handle swimlane mode change via URL state (no full-page reload)
   const handleSwimlaneChange = useCallback(
     (newSwimlane: SwimlaneMode) => {
-      const params = new URLSearchParams()
-      params.set('mode', mode)
-      params.set('swimlane', newSwimlane)
-      params.set('wipInProgress', String(wipInProgress))
-      params.set('wipReview', String(wipReview))
-      window.location.href = `/kanban?${params.toString()}`
+      void navigate({
+        search: { mode, swimlane: newSwimlane, wipInProgress, wipReview },
+      })
     },
-    [mode, wipInProgress, wipReview],
+    [navigate, mode, wipInProgress, wipReview],
   )
 
   // Handle status change from drag and drop
@@ -129,25 +125,27 @@ function KanbanTaskBoardPage() {
   )
 
   // Handle item click - navigate to detail page
-  const handleItemClick = useCallback((item: WorkItem) => {
-    switch (item.source) {
-      case 'task':
-        // Navigate using window.location for cross-route navigation
-        window.location.href = `/tasks/${item.id}`
-        break
-      case 'commitment':
-        window.location.href = '/commitments'
-        break
-      case 'intake':
-        window.location.href = `/intake/tickets/${item.id}`
-        break
-    }
-  }, [])
+  const handleItemClick = useCallback(
+    (item: WorkItem) => {
+      switch (item.source) {
+        case 'task':
+          void navigate({ to: `/tasks/${item.id}` })
+          break
+        case 'commitment':
+          void navigate({ to: '/commitments' })
+          break
+        case 'intake':
+          void navigate({ to: `/intake/tickets/${item.id}` })
+          break
+      }
+    },
+    [navigate],
+  )
 
   // Navigate to list view
   const handleSwitchToList = useCallback(() => {
-    window.location.href = '/my-work'
-  }, [])
+    void navigate({ to: '/my-work' })
+  }, [navigate])
 
   return (
     <div className="flex flex-col h-full">
