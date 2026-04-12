@@ -91,7 +91,6 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             isAuthenticated: false,
           })
-          throw error
         }
       },
 
@@ -119,7 +118,6 @@ export const useAuthStore = create<AuthState>()(
             error: error instanceof Error ? error.message : 'Logout failed',
             isLoading: false,
           })
-          throw error
         }
       },
 
@@ -203,7 +201,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
+      partialize: (state) => ({ user: state.user }),
     },
   ),
 )

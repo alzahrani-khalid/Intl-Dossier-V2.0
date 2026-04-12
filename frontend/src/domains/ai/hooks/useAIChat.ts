@@ -42,6 +42,10 @@ export function useAIChat(): UseAIChatReturn {
   const [currentToolCalls, setCurrentToolCalls] = useState<ToolCall[]>([])
   const abortControllerRef = useRef<AbortController | null>(null)
   const lastUserMessageRef = useRef<string>('')
+  const messagesRef = useRef<ChatMessage[]>([])
+
+  // Keep messagesRef in sync with state
+  messagesRef.current = messages
 
   const sendMessage = useCallback(
     async (content: string) => {
@@ -60,7 +64,7 @@ export function useAIChat(): UseAIChatReturn {
       }
       setMessages((prev) => [...prev, userMessage])
 
-      const conversationHistory = messages.map((m) => ({
+      const conversationHistory = messagesRef.current.map((m) => ({
         role: m.role,
         content: m.content,
       }))
@@ -158,7 +162,7 @@ export function useAIChat(): UseAIChatReturn {
         abortControllerRef.current = null
       }
     },
-    [token, messages, isLoading],
+    [token, isLoading],
   )
 
   const clearMessages = useCallback(() => {

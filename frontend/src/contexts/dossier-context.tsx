@@ -384,6 +384,11 @@ export function DossierContextProvider({
 
     // No context available - require manual selection
     dispatch({ type: 'SET_REQUIRES_SELECTION', payload: true })
+
+    // Cleanup: reset context state when dependencies change or unmount
+    return () => {
+      dispatch({ type: 'RESET' })
+    }
   }, [
     autoResolve,
     urlDossierId,

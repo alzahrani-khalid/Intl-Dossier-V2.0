@@ -5,6 +5,7 @@ import { ChatDock } from '@/components/ai/ChatDock'
 import { ChatProvider } from '@/contexts/ChatContext'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { OnboardingTourTrigger } from '@/components/guided-tours'
+import { ErrorBoundary } from '@/components/error-boundary'
 
 export const Route = createFileRoute('/_protected')({
   beforeLoad: async () => {
@@ -58,7 +59,9 @@ function ProtectedLayout(): React.ReactElement {
   return (
     <ChatProvider>
       <MainLayout>
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </MainLayout>
       <ChatDock onCitationClick={handleCitationClick} />
       <OnboardingTourTrigger

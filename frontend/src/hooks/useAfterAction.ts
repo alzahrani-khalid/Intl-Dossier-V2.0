@@ -211,6 +211,8 @@ export function useCreateAfterAction() {
     onSuccess: (data) => {
       // Invalidate after-actions list for the dossier
       queryClient.invalidateQueries({ queryKey: ['after-actions', data.dossier_id] })
+      // Invalidate engagement so its detail page reflects the new after-action
+      queryClient.invalidateQueries({ queryKey: ['engagement', data.engagement_id] })
       // Set the single after-action in cache
       queryClient.setQueryData(['after-action', data.id], data)
     },

@@ -68,7 +68,7 @@ export function UnifiedKanbanBoard({
 }: BoardProps) {
   const { t } = useTranslation('unified-kanban')
   const { isRTL } = useDirection()
-const { toast } = useToast()
+  const { toast } = useToast()
 
   // State
   const [columnMode, setColumnMode] = useState<KanbanColumnMode>(initialColumnMode)
@@ -172,6 +172,9 @@ const { toast } = useToast()
       // Get the update payload
       const { status, workflow_stage } = getUpdatePayload(item.source, targetColumnKey)
 
+      // Snapshot current columns state before mutation for reliable revert
+      const snapshotColumns = { ...columns }
+
       try {
         await onStatusChange(item.id, item.source, status!, workflow_stage)
         toast({
@@ -184,8 +187,8 @@ const { toast } = useToast()
           description: t('errors.updateFailedDescription'),
           variant: 'destructive',
         })
-        // Revert the columns state
-        setColumns(columnsRecord)
+        // Revert to snapshot taken before mutation
+        setColumns(snapshotColumns)
       }
     },
     [onStatusChange, filteredItems, columns, isRTL, toast, t, columnsRecord],
