@@ -118,4 +118,12 @@ Plans:
 8. Type tab active state visually highlighted on dossier navigation
 9. URL naming conventions standardized with redirects for old paths
 
-**Plans:** 0 plans (run /gsd-plan-phase 25 to break down)
+**Plans:** 5 plans
+
+Plans:
+
+- [ ] 25-01-PLAN.md — Wizard decomposition (C-12)
+- [ ] 25-02-PLAN.md — Query key factories + context split (D-10, D-11, C-20)
+- [ ] 25-03-PLAN.md — After-action conflict detection (D-41)
+- [ ] 25-04-PLAN.md — URL-driven pagination + kanban filters (D-33, D-34)
+- [ ] 25-05-PLAN.md — Breadcrumb/skeleton rollout + route naming (D-32, N-20, N-04, breadcrumb/skeleton)
