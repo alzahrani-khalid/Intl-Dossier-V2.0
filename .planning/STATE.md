@@ -93,13 +93,6 @@ Progress: [████████████████████] 100% of
 
 ## Session Continuity
 
-<<<<<<< HEAD
-Last session: 2026-04-12T19:23:02.546Z
-Stopped at: Completed 25-02-PLAN.md
-Resume file: None
-=======
-Last session: 2026-04-12T19:31:12.000Z
-Stopped at: Completed 25-01-PLAN.md
-Resume file: .planning/phases/25-deferred-audit-fixes/25-02-PLAN.md
-
-> > > > > > > worktree-agent-a47b16d1
+Last session: 2026-04-12T19:35:00.000Z
+Stopped at: Wave 1 complete (25-01 + 25-02)
+Resume file: .planning/phases/25-deferred-audit-fixes/25-03-PLAN.md
