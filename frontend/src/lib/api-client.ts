@@ -36,6 +36,17 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
 function resolveUrl(path: string, options?: ApiClientOptions): string {
   if (options?.baseUrl === 'express') {
     const expressBase = import.meta.env.VITE_API_URL || ''
+    if (
+      import.meta.env.DEV &&
+      expressBase !== '' &&
+      !expressBase.includes('localhost:5000') &&
+      !expressBase.startsWith('/')
+    ) {
+      console.warn(
+        '[api-client] VITE_API_URL may bypass Vite proxy. Expected empty or localhost:5000, got:',
+        expressBase,
+      )
+    }
     return `${expressBase}${path}`
   }
   const edgeBase = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
