@@ -1,4 +1,3 @@
-
 import {
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
@@ -11,15 +10,15 @@ import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useSidebar } from '@/components/ui/sidebar'
 import { NotificationPanel } from '@/components/notifications'
-import { ThemeSelector } from '@/components/theme-selector/theme-selector'
+import { ThemeSelector } from '@/components/theme-selector/ThemeSelector'
 import { LanguageToggle } from '@/components/language-toggle/LanguageToggle'
 import { HeaderSearch } from './header/Search'
 import { UserMenu } from './header/UserMenu'
 import { useDirection } from '@/hooks/useDirection'
 
 export function SiteHeader() {
-const { isRTL } = useDirection()
-const { toggleSidebar, open, openMobile, isMobile } = useSidebar()
+  const { isRTL } = useDirection()
+  const { toggleSidebar, open, openMobile, isMobile } = useSidebar()
 
   const isExpanded = isMobile ? openMobile : open
   const ToggleIcon = isRTL
@@ -32,7 +31,7 @@ const { toggleSidebar, open, openMobile, isMobile } = useSidebar()
   const toggleLabel = isExpanded ? 'Collapse sidebar' : 'Expand sidebar'
 
   return (
-    <header className="bg-background/40 sticky top-0 z-50 flex h-[var(--header-height)] w-full shrink-0 items-center gap-2 border-b backdrop-blur-md md:rounded-tl-xl md:rounded-tr-xl">
+    <header className="bg-background/40 sticky top-0 z-50 flex h-[var(--header-height)] w-full shrink-0 items-center gap-2 border-b backdrop-blur-md md:rounded-ss-xl md:rounded-se-xl">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2">
         {/* Sidebar trigger */}
         <Tooltip>
