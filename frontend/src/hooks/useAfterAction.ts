@@ -133,6 +133,13 @@ export interface CreateAfterActionRequest {
 
 export interface UpdateAfterActionRequest extends CreateAfterActionRequest {
   version: number
+  updated_at?: string
+}
+
+export interface ConflictError {
+  error: 'CONFLICT'
+  message: string
+  serverUpdatedAt: string | null
 }
 
 export interface AfterActionVersion {
@@ -219,20 +226,59 @@ export function useCreateAfterAction() {
   })
 }
 
-// Update after-action mutation with optimistic locking
-function useUpdateAfterAction(id: string) {
+// Update after-action mutation with optimistic locking via updated_at (D-41)
+export function useUpdateAfterAction(id: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (request: UpdateAfterActionRequest) => {
+    mutationFn: async (request: UpdateAfterActionRequest): Promise<AfterActionRecord> => {
       const { data, error } = await supabase.functions.invoke('after-actions-update', {
         body: { id, ...request },
       })
 
-      if (error) {
-        // Check for version conflict
-        if (error.message?.includes('version') || error.message?.includes('conflict')) {
-          throw new Error('Record was modified by another user. Please refresh.')
+      if (error != null) {
+        // Check for 409 conflict response
+        const parsed =
+          typeof error.message === 'string'
+            ? (() => {
+                try {
+                  return JSON.parse(error.message) as Record<string, unknown>
+                } catch {
+                  return null
+                }
+              })()
+            : null
+        if (
+          parsed != null &&
+          typeof parsed === 'object' &&
+          'error' in parsed &&
+          parsed.error === 'CONFLICT'
+        ) {
+          const conflictData: ConflictError = {
+            error: 'CONFLICT',
+            message: String(
+              (parsed as Record<string, unknown>).message ??
+                'This record was modified by another user.',
+            ),
+            serverUpdatedAt:
+              ((parsed as Record<string, unknown>).serverUpdatedAt as string | null) ?? null,
+          }
+          const conflictErr = new Error(conflictData.message)
+          ;(conflictErr as Error & { conflict: ConflictError }).conflict = conflictData
+          throw conflictErr
+        }
+        // Check legacy conflict pattern
+        if (
+          typeof error.message === 'string' &&
+          (error.message.includes('version') || error.message.includes('conflict'))
+        ) {
+          const conflictErr = new Error('Record was modified by another user. Please refresh.')
+          ;(conflictErr as Error & { conflict: ConflictError }).conflict = {
+            error: 'CONFLICT',
+            message: 'Record was modified by another user.',
+            serverUpdatedAt: null,
+          }
+          throw conflictErr
         }
         throw error
       }
@@ -246,7 +292,7 @@ function useUpdateAfterAction(id: string) {
       const previousAfterAction = queryClient.getQueryData<AfterActionRecord>(['after-action', id])
 
       // Optimistically update
-      if (previousAfterAction) {
+      if (previousAfterAction != null) {
         queryClient.setQueryData(['after-action', id], {
           ...previousAfterAction,
           ...newData,
@@ -259,7 +305,7 @@ function useUpdateAfterAction(id: string) {
     },
     onError: (_err, _newData, context) => {
       // Rollback on error
-      if (context?.previousAfterAction) {
+      if (context?.previousAfterAction != null) {
         queryClient.setQueryData(['after-action', id], context.previousAfterAction)
       }
     },
