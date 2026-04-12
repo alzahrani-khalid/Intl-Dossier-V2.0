@@ -20,7 +20,6 @@ import {
   Switch as HeroUISwitch,
 } from '@heroui/react'
 import { cn } from '@/lib/utils'
-import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // HeroUITextField - Full form field with label, input, description, error
@@ -72,8 +71,7 @@ export function HeroUIFormTextField({
   className,
   inputClassName,
 }: HeroUITextFieldProps) {
-const { isRTL } = useDirection()
-return (
+  return (
     <HeroUITextField
       name={name}
       type={type}
@@ -86,21 +84,15 @@ return (
       isInvalid={!!error}
       className={cn('w-full', className)}
     >
-      <HeroUILabel className={cn(isRTL && 'text-end')}>{label}</HeroUILabel>
+      <HeroUILabel>{label}</HeroUILabel>
       <HeroUIInput
         placeholder={placeholder}
-        className={cn(
-          // Mobile-first touch targets
-          'min-h-11 sm:min-h-10',
-          // RTL support
-          isRTL && 'text-end',
-          inputClassName,
-        )}
+        className={cn('min-h-11 sm:min-h-10', inputClassName)}
       />
       {error ? (
         <HeroUIFieldError>{error}</HeroUIFieldError>
       ) : description ? (
-        <HeroUIDescription className={cn(isRTL && 'text-end')}>{description}</HeroUIDescription>
+        <HeroUIDescription>{description}</HeroUIDescription>
       ) : null}
     </HeroUITextField>
   )
@@ -130,8 +122,6 @@ export function HeroUIFormTextArea({
   inputClassName,
   rows = 4,
 }: HeroUITextAreaFieldProps) {
-const { isRTL } = useDirection()
-
   return (
     <HeroUITextField
       name={name}
@@ -144,22 +134,16 @@ const { isRTL } = useDirection()
       isInvalid={!!error}
       className={cn('w-full', className)}
     >
-      <HeroUILabel className={cn(isRTL && 'text-end')}>{label}</HeroUILabel>
+      <HeroUILabel>{label}</HeroUILabel>
       <HeroUITextArea
         placeholder={placeholder}
         rows={rows}
-        className={cn(
-          // Mobile-first
-          'min-h-[100px]',
-          // RTL support
-          isRTL && 'text-end',
-          inputClassName,
-        )}
+        className={cn('min-h-[100px]', inputClassName)}
       />
       {error ? (
         <HeroUIFieldError>{error}</HeroUIFieldError>
       ) : description ? (
-        <HeroUIDescription className={cn(isRTL && 'text-end')}>{description}</HeroUIDescription>
+        <HeroUIDescription>{description}</HeroUIDescription>
       ) : null}
     </HeroUITextField>
   )
@@ -203,8 +187,6 @@ export function HeroUIFormCheckbox({
   isIndeterminate = false,
   className,
 }: HeroUICheckboxFieldProps) {
-const { isRTL } = useDirection()
-
   return (
     <HeroUICheckbox
       name={name}
@@ -214,19 +196,12 @@ const { isRTL } = useDirection()
       isRequired={isRequired}
       isDisabled={isDisabled}
       isIndeterminate={isIndeterminate}
-      className={cn(
-        'flex items-start gap-3',
-        // Mobile-first touch targets
-        'min-h-11 sm:min-h-10',
-        // RTL support
-        isRTL && 'flex-row-reverse',
-        className,
-      )}
+      className={cn('flex items-start gap-3', 'min-h-11 sm:min-h-10', className)}
     >
       <HeroUICheckbox.Control className="mt-0.5">
         <HeroUICheckbox.Indicator />
       </HeroUICheckbox.Control>
-      <div className={cn('flex flex-col', isRTL && 'text-end')}>
+      <div className="flex flex-col">
         <HeroUILabel>{label}</HeroUILabel>
         {description && <HeroUIDescription className="text-xs">{description}</HeroUIDescription>}
       </div>
@@ -266,8 +241,6 @@ export function HeroUIFormSwitch({
   isDisabled = false,
   className,
 }: HeroUISwitchFieldProps) {
-const { isRTL } = useDirection()
-
   return (
     <HeroUISwitch
       name={name}
@@ -275,16 +248,9 @@ const { isRTL } = useDirection()
       defaultSelected={defaultSelected}
       onChange={onChange}
       isDisabled={isDisabled}
-      className={cn(
-        'flex items-center justify-between gap-3',
-        // Mobile-first touch targets
-        'min-h-11 sm:min-h-10',
-        // RTL support
-        isRTL && 'flex-row-reverse',
-        className,
-      )}
+      className={cn('flex items-center justify-between gap-3', 'min-h-11 sm:min-h-10', className)}
     >
-      <div className={cn('flex flex-col', isRTL && 'text-end items-end')}>
+      <div className="flex flex-col">
         <HeroUILabel>{label}</HeroUILabel>
         {description && <HeroUIDescription className="text-xs">{description}</HeroUIDescription>}
       </div>
