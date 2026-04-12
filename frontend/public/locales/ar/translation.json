@@ -204,10 +204,10 @@
   },
   "search": {
     "globalSearch": "البحث الشامل",
-    "searchPlaceholder": "البحث عن الدول، المنظمات، مذكرات التفاهم...",
+    "searchPlaceholder": "ابحث عن الدول، المنظمات، مذكرات التفاهم...",
     "placeholder": "البحث عن الدوسيهات، الأشخاص، المواقف...",
     "label": "البحث الشامل",
-    "filters": "الفلاتر",
+    "filters": "المرشحات",
     "searchIn": "البحث في",
     "dateRange": "النطاق الزمني",
     "sortBy": "ترتيب حسب",
@@ -215,7 +215,12 @@
     "dateModified": "تاريخ التعديل",
     "alphabetical": "أبجدي",
     "results": "النتائج",
-    "noResults": "لم يتم العثور على نتائج",
+    "noResults": {
+      "title": "لم يتم العثور على نتائج",
+      "description": "حاول تعديل البحث أو المرشحات",
+      "didYouMean": "هل تقصد:",
+      "tips": "نصائح البحث"
+    },
     "showingResults": "عرض {{count}} نتيجة",
     "quickSearch": "بحث سريع...",
     "searchLabel": "البحث عن الدوسيهات، الأشخاص، المواقف...",
@@ -225,7 +230,80 @@
     "forCommands": "للأوامر",
     "clear": "مسح البحث",
     "loading": "جاري التحميل...",
-    "search": "بحث"
+    "search": "بحث",
+    "title": "البحث",
+    "description": "البحث في جميع الدوسيهات والأشخاص والوثائق",
+    "modes": {
+      "keyword": "كلمة مفتاحية",
+      "semantic": "دلالي"
+    },
+    "includeArchived": "تضمين المؤرشف",
+    "loadMore": "تحميل المزيد",
+    "sections": {
+      "exactMatches": "التطابقات الدقيقة",
+      "related": "النتائج ذات الصلة"
+    },
+    "tabs": {
+      "label": "تصفية حسب نوع الكيان",
+      "countLabel": "{{count}} نتيجة",
+      "keyboardHint": "استخدم مفاتيح الأسهم للتنقل بين علامات التبويب"
+    },
+    "entityTypes": {
+      "all": "الكل",
+      "country": "الدول",
+      "organization": "المنظمات",
+      "forum": "المنتديات",
+      "engagement": "المشاركات",
+      "theme": "المواضيع",
+      "working_group": "مجموعات العمل",
+      "person": "الأشخاص",
+      "positions": "المواقف",
+      "documents": "الوثائق",
+      "mou": "مذكرات التفاهم"
+    },
+    "entityDescriptions": {
+      "country": "ملف دولة شريكة",
+      "organization": "ملف تعريف المنظمة",
+      "forum": "منتدى أو مؤتمر",
+      "engagement": "سجل اجتماع أو فعالية",
+      "theme": "ملف موضوعي",
+      "working_group": "سجل مجموعة عمل",
+      "person": "جهة اتصال أو مندوب",
+      "position": "وثيقة موقف",
+      "document": "وثيقة مرفقة",
+      "mou": "مذكرة تفاهم"
+    },
+    "matchReasons": {
+      "title": "تطابق العنوان",
+      "description": "تطابق الوصف",
+      "content": "تطابق المحتوى",
+      "tags": "تطابق الوسم",
+      "metadata": "تطابق البيانات الوصفية",
+      "related_entity": "كيان مرتبط",
+      "parent_dossier": "الدوسيه الأم",
+      "semantic": "تطابق دلالي"
+    },
+    "filterChips": {
+      "filterBy": "تصفية:",
+      "results": "نتيجة",
+      "clearAll": "مسح الكل",
+      "loading": "جاري التحميل..."
+    },
+    "groupedView": {
+      "grouped": "مجمع",
+      "list": "قائمة",
+      "expandAll": "توسيع الكل",
+      "collapseAll": "طي الكل",
+      "resultsIn": "نتيجة في",
+      "categories": "فئات"
+    },
+    "relationships": {
+      "from": "من",
+      "linkedTo": "مرتبط بـ",
+      "andMore": "و {{count}} أخرى",
+      "relationshipPath": "مسار العلاقة",
+      "dossiers": "ملفات"
+    }
   },
   "dashboard": {
     "title": "نظرة عامة على العمليات",
@@ -418,8 +496,25 @@
     "dates": "التواريخ"
   },
   "forums": {
+    "title": "المنتديات والمؤتمرات",
+    "addForum": "إضافة منتدى",
+    "editForum": "تعديل المنتدى",
+    "forumDetails": "تفاصيل المنتدى",
+    "dates": "التواريخ",
+    "location": "الموقع",
+    "venue": "المكان",
+    "organizer": "المنظم",
+    "participants": "المشاركون",
+    "sessions": "الجلسات",
+    "status": "الحالة",
+    "virtual": "افتراضي",
     "statuses": {
-      "scheduled": "مجدول"
+      "planning": "قيد التخطيط",
+      "upcoming": "قادم",
+      "scheduled": "مجدول",
+      "ongoing": "جاري",
+      "completed": "منتهي",
+      "cancelled": "ملغي"
     }
   },
   "events": {
@@ -470,28 +565,6 @@
     "fri": "الجمعة",
     "sat": "السبت"
   },
-  "forums": {
-    "title": "المنتديات والمؤتمرات",
-    "addForum": "إضافة منتدى",
-    "editForum": "تعديل المنتدى",
-    "forumDetails": "تفاصيل المنتدى",
-    "dates": "التواريخ",
-    "location": "الموقع",
-    "venue": "المكان",
-    "organizer": "المنظم",
-    "participants": "المشاركون",
-    "sessions": "الجلسات",
-    "status": "الحالة",
-    "virtual": "افتراضي",
-    "statuses": {
-      "planning": "قيد التخطيط",
-      "upcoming": "قادم",
-      "scheduled": "مجدول",
-      "ongoing": "جاري",
-      "completed": "منتهي",
-      "cancelled": "ملغي"
-    }
-  },
   "briefs": {
     "title": "الملخصات",
     "referenceNumber": "الرقم المرجعي",
@@ -521,110 +594,6 @@
       "conference": "مؤتمر",
       "workshop": "ورشة عمل",
       "visit": "زيارة رسمية"
-    }
-  },
-  "search": {
-    "globalSearch": "البحث الشامل",
-    "searchPlaceholder": "ابحث عن الدول، المنظمات، مذكرات التفاهم...",
-    "placeholder": "البحث عن الدوسيهات، الأشخاص، المواقف...",
-    "label": "البحث الشامل",
-    "filters": "المرشحات",
-    "searchIn": "البحث في",
-    "dateRange": "النطاق الزمني",
-    "sortBy": "ترتيب حسب",
-    "relevance": "الصلة",
-    "dateModified": "تاريخ التعديل",
-    "alphabetical": "أبجدي",
-    "results": "النتائج",
-    "noResults": "لم يتم العثور على نتائج",
-    "showingResults": "عرض {{count}} نتيجة",
-    "quickSearch": "بحث سريع...",
-    "searchLabel": "البحث عن الدوسيهات، الأشخاص، المواقف...",
-    "openSearch": "فتح البحث",
-    "openCommandPalette": "فتح لوحة الأوامر",
-    "hint": "اضغط Enter للبحث أو",
-    "forCommands": "للأوامر",
-    "clear": "مسح البحث",
-    "loading": "جاري التحميل...",
-    "search": "بحث",
-    "title": "البحث",
-    "description": "البحث في جميع الدوسيهات والأشخاص والوثائق",
-    "modes": {
-      "keyword": "كلمة مفتاحية",
-      "semantic": "دلالي"
-    },
-    "includeArchived": "تضمين المؤرشف",
-    "loadMore": "تحميل المزيد",
-    "noResults": {
-      "title": "لم يتم العثور على نتائج",
-      "description": "حاول تعديل البحث أو المرشحات",
-      "didYouMean": "هل تقصد:",
-      "tips": "نصائح البحث"
-    },
-    "sections": {
-      "exactMatches": "التطابقات الدقيقة",
-      "related": "النتائج ذات الصلة"
-    },
-    "tabs": {
-      "label": "تصفية حسب نوع الكيان",
-      "countLabel": "{{count}} نتيجة",
-      "keyboardHint": "استخدم مفاتيح الأسهم للتنقل بين علامات التبويب"
-    },
-    "entityTypes": {
-      "all": "الكل",
-      "country": "الدول",
-      "organization": "المنظمات",
-      "forum": "المنتديات",
-      "engagement": "المشاركات",
-      "theme": "المواضيع",
-      "working_group": "مجموعات العمل",
-      "person": "الأشخاص",
-      "positions": "المواقف",
-      "documents": "الوثائق",
-      "mou": "مذكرات التفاهم"
-    },
-    "entityDescriptions": {
-      "country": "ملف دولة شريكة",
-      "organization": "ملف تعريف المنظمة",
-      "forum": "منتدى أو مؤتمر",
-      "engagement": "سجل اجتماع أو فعالية",
-      "theme": "ملف موضوعي",
-      "working_group": "سجل مجموعة عمل",
-      "person": "جهة اتصال أو مندوب",
-      "position": "وثيقة موقف",
-      "document": "وثيقة مرفقة",
-      "mou": "مذكرة تفاهم"
-    },
-    "matchReasons": {
-      "title": "تطابق العنوان",
-      "description": "تطابق الوصف",
-      "content": "تطابق المحتوى",
-      "tags": "تطابق الوسم",
-      "metadata": "تطابق البيانات الوصفية",
-      "related_entity": "كيان مرتبط",
-      "parent_dossier": "الدوسيه الأم",
-      "semantic": "تطابق دلالي"
-    },
-    "filterChips": {
-      "filterBy": "تصفية:",
-      "results": "نتيجة",
-      "clearAll": "مسح الكل",
-      "loading": "جاري التحميل..."
-    },
-    "groupedView": {
-      "grouped": "مجمع",
-      "list": "قائمة",
-      "expandAll": "توسيع الكل",
-      "collapseAll": "طي الكل",
-      "resultsIn": "نتيجة في",
-      "categories": "فئات"
-    },
-    "relationships": {
-      "from": "من",
-      "linkedTo": "مرتبط بـ",
-      "andMore": "و {{count}} أخرى",
-      "relationshipPath": "مسار العلاقة",
-      "dossiers": "ملفات"
     }
   },
   "validation": {
@@ -820,63 +789,9 @@
     "findings": "نتائج"
   },
   "dataLibrary": {
-    "title": "مكتبة البيانات",
-    "dragDropFiles": "اسحب وأفلت الملفات هنا",
-    "or": "أو",
-    "browseFiles": "تصفح الملفات",
-    "maxFileSize": "50 ميجابايت",
-    "totalFiles": "إجمالي الملفات",
-    "searchPlaceholder": "البحث عن الملفات...",
-    "categories": {
-      "document": "مستند",
-      "dataset": "مجموعة بيانات",
-      "image": "صورة",
-      "video": "فيديو",
-      "other": "أخرى"
-    },
-    "filter": "تصفية",
-    "category": "الفئة",
-    "all": "الكل"
-  },
-  "reports": {
-    "title": "التقارير",
-    "generateReport": "إنشاء تقرير",
-    "reportType": "نوع التقرير",
-    "format": "التنسيق",
-    "filters": "المرشحات",
-    "dateRange": "النطاق الزمني",
-    "from": "من",
-    "to": "إلى",
-    "generate": "إنشاء",
-    "download": "تحميل",
-    "reportStatus": "حالة التقرير",
-    "generating": "جاري الإنشاء...",
-    "completed": "مكتمل",
-    "failed": "فشل",
-    "reportTypes": {
-      "countryOverview": "نظرة عامة على الدولة",
-      "organizationSummary": "ملخص المنظمة",
-      "mouStatus": "حالة مذكرات التفاهم",
-      "eventCalendar": "تقويم الفعاليات",
-      "intelligenceDigest": "ملخص المعلومات الاستخباراتية"
-    },
-    "formats": {
-      "pdf": "PDF",
-      "excel": "Excel",
-      "csv": "CSV"
-    },
-    "statuses": {
-      "pending": "معلق",
-      "processing": "قيد المعالجة",
-      "completed": "مكتمل",
-      "failed": "فشل"
-    }
-  },
-  "dataLibrary": {
-    "title": "مكتبة البيانات",
+    "title": "العنوان",
     "uploadFile": "رفع ملف",
     "fileDetails": "تفاصيل الملف",
-    "title": "العنوان",
     "description": "الوصف",
     "category": "الفئة",
     "tags": "العلامات",
@@ -912,7 +827,17 @@
     "noRecentReports": "لا توجد تقارير حديثة",
     "generateReport": "إنشاء التقرير",
     "generating": "جاري الإنشاء...",
-    "parameters": "معاملات التقرير",
+    "parameters": {
+      "country": "الدولة",
+      "dateRange": "النطاق الزمني",
+      "status": "الحالة",
+      "includeExpiring": "تضمين المنتهية",
+      "period": "الفترة",
+      "reportPeriod": "فترة التقرير",
+      "confidenceLevel": "مستوى الثقة",
+      "classification": "التصنيف",
+      "organization": "المنظمة"
+    },
     "parametersDesc": "تكوين معاملات التقرير",
     "format": "تنسيق الإخراج",
     "templates": {
@@ -928,17 +853,6 @@
       "organizationProfileDesc": "معلومات تفصيلية عن المنظمة",
       "executiveDashboard": "لوحة المعلومات التنفيذية",
       "executiveDashboardDesc": "ملخص تنفيذي عالي المستوى"
-    },
-    "parameters": {
-      "country": "الدولة",
-      "dateRange": "النطاق الزمني",
-      "status": "الحالة",
-      "includeExpiring": "تضمين المنتهية",
-      "period": "الفترة",
-      "reportPeriod": "فترة التقرير",
-      "confidenceLevel": "مستوى الثقة",
-      "classification": "التصنيف",
-      "organization": "المنظمة"
     },
     "periods": {
       "thisMonth": "هذا الشهر",
@@ -959,7 +873,7 @@
     "welcomeMessage": "يمكنني مساعدتك في صياغة المستندات وترجمة النصوص وتلخيص المحتوى وتحسين كتابتك.",
     "inputPlaceholder": "اكتب رسالتك هنا...",
     "errorMessage": "عذرًا، لم أتمكن من معالجة طلبك. يرجى المحاولة مرة أخرى.",
-    "fallbackContent": "الرد غير متاح",
+    "fallbackContent": "استخدام المحتوى الاحتياطي",
     "capabilities": "القدرات",
     "capability1": "صياغة المستندات الرسمية",
     "capability2": "الترجمة بين العربية والإنجليزية",
@@ -1002,7 +916,6 @@
     },
     "suggestions": "الاقتراحات",
     "aiUnavailable": "خدمة الذكاء الاصطناعي غير متاحة حالياً",
-    "fallbackContent": "استخدام المحتوى الاحتياطي",
     "generationError": "فشل في إنشاء المستند"
   },
   "errorBoundary": {
@@ -1482,7 +1395,8 @@
       "cancel": "إلغاء",
       "reloadDesc": "تجاهل تغييراتك وإعادة تحميل أحدث إصدار",
       "forceSaveDesc": "استبدال قاعدة البيانات بتغييراتك (استخدم بحذر)",
-      "cancelDesc": "إغلاق هذا الحوار ومتابعة التحرير"
+      "cancelDesc": "إغلاق هذا الحوار ومتابعة التحرير",
+      "forceS ave": "فرض الحفظ"
     },
     "sla": {
       "safe": "آمن",
@@ -1570,6 +1484,326 @@
       "medium": "متوسط",
       "high": "عالي",
       "critical": "حرج"
+    }
+  },
+  "dossierTypes": {
+    "dossier": "ملف",
+    "country": "ملف دولة",
+    "organization": "ملف منظمة",
+    "person": "ملف شخص",
+    "engagement": "ملف لقاء",
+    "position": "موقف",
+    "forum": "ملف منتدى",
+    "working_group": "ملف مجموعة عمل",
+    "topic": "ملف موضوع"
+  },
+  "error": {
+    "boundary": {
+      "title": "حدث خطأ ما",
+      "description": "حدث خطأ غير متوقع. يرجى تحديث الصفحة أو العودة إلى الصفحة الرئيسية.",
+      "tryAgain": "حاول مرة أخرى",
+      "goHome": "العودة إلى الرئيسية",
+      "technicalDetails": "التفاصيل التقنية",
+      "unknownError": "خطأ غير معروف"
+    },
+    "query": {
+      "generic": "فشل تحميل البيانات",
+      "genericDescription": "تعذر تحميل البيانات المطلوبة. يرجى المحاولة مرة أخرى.",
+      "network": "خطأ في الاتصال",
+      "networkDescription": "تعذر الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت.",
+      "auth": "خطأ في المصادقة",
+      "authDescription": "ربما انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.",
+      "server": "خطأ في الخادم",
+      "serverDescription": "واجه الخادم خطأ. يرجى المحاولة لاحقًا.",
+      "retry": "إعادة المحاولة",
+      "reload": "إعادة تحميل الصفحة",
+      "signIn": "تسجيل الدخول"
+    }
+  },
+  "waitingQueue": {
+    "title": "قائمة الانتظار",
+    "subtitle": "إدارة التكليفات المعلقة وإجراءات المتابعة",
+    "viewDetails": "عرض التفاصيل",
+    "sendReminder": "إرسال تذكير",
+    "escalate": "تصعيد",
+    "selectAll": "تحديد الكل",
+    "clearSelection": "مسح التحديد",
+    "selectedCount": "{{count}} محدد",
+    "showingResults": "عرض {{count}} من {{total}} عنصر",
+    "noAssignments": "لا توجد تكليفات تطابق عوامل التصفية",
+    "bulkActions": {
+      "toolbar": "إجراءات جماعية",
+      "sendReminders": "إرسال تذكيرات",
+      "sending": "جاري إرسال التذكيرات...",
+      "clear": "مسح",
+      "clearSelection": "مسح التحديد",
+      "selectedCount": "{{count}} محدد",
+      "maxItems": "(حد أقصى {{max}})",
+      "maxReached": "تم بلوغ الحد الأقصى للتحديد",
+      "maxReachedDesc": "يمكنك تحديد ما يصل إلى 100 عنصر في المرة الواحدة",
+      "selectItem": "تحديد {{id}}",
+      "processing": "قيد المعالجة",
+      "jobCreated": "تم إنشاء مهمة تذكير جماعية لـ {{count}} عنصر",
+      "skippedSome": "تم جدولة {{sent}} تذكير، تم تخطي {{skipped}} (بدون مكلف)",
+      "completed": "مكتمل",
+      "summary": "{{success}} أُرسلت بنجاح، {{failed}} فشلت ({{total}} إجمالي)",
+      "failed": "فشل",
+      "failedDesc": "واجهت عملية التذكير الجماعية خطأ",
+      "selectionCleared": "تم مسح التحديد",
+      "selectionClearedDesc": "تم إلغاء تحديد جميع العناصر",
+      "noAssignees": "لا يوجد مكلفون صالحون",
+      "noAssigneesDesc": "جميع العناصر المحددة بدون مكلفين. لا يمكن إرسال تذكيرات.",
+      "error": "فشل الإجراء الجماعي",
+      "errorDesc": "حدث خطأ أثناء معالجة طلبك",
+      "escalate": "تصعيد",
+      "cancel": "إلغاء",
+      "maxSelectionExceeded": "الحد الأقصى للتحديد هو {{max}} عنصر",
+      "jobStatus": "حالة المهمة",
+      "queued": "في قائمة الانتظار",
+      "progress": "التقدم: {{processed}}/{{total}}",
+      "viewResults": "عرض النتائج",
+      "successfulIds": "ناجحة",
+      "failedIds": "فاشلة",
+      "skippedIds": "تم تخطيها"
+    },
+    "filters": {
+      "title": "عوامل التصفية",
+      "priority": "الأولوية",
+      "aging": "التقادم",
+      "type": "نوع عنصر العمل",
+      "assignee": "المكلف",
+      "status": "الحالة",
+      "sortBy": "ترتيب حسب",
+      "clearFilters": "مسح عوامل التصفية",
+      "clearAll": "مسح الكل",
+      "applyFilters": "تطبيق عوامل التصفية",
+      "openFilters": "فتح عوامل التصفية",
+      "active": "عوامل تصفية نشطة",
+      "appliedCount": "{{count}} عوامل تصفية مطبقة",
+      "showingResults": "عرض {{count}} نتيجة",
+      "noResults": "لا توجد عناصر انتظار تطابق عوامل التصفية",
+      "noResultsDesc": "حاول تعديل عوامل التصفية أو مسحها لعرض جميع العناصر",
+      "emptyState": "حدد عوامل التصفية لتضييق النتائج",
+      "myAssignments": "تكليفاتي",
+      "priorities": {
+        "low": "منخفضة",
+        "medium": "متوسطة",
+        "high": "عالية",
+        "urgent": "عاجلة"
+      },
+      "agingBuckets": {
+        "0-2": {
+          "label": "0-2 يوم",
+          "description": "حديث"
+        },
+        "3-6": {
+          "label": "3-6 أيام",
+          "description": "متوسط"
+        },
+        "7+": {
+          "label": "+7 أيام",
+          "description": "متأخر"
+        }
+      },
+      "types": {
+        "dossier": "ملف",
+        "ticket": "تذكرة",
+        "position": "موقف",
+        "task": "مهمة"
+      },
+      "sort": {
+        "oldestFirst": "الأقدم أولاً",
+        "newestFirst": "الأحدث أولاً",
+        "highPriorityFirst": "الأولوية العالية أولاً",
+        "lowPriorityFirst": "الأولوية المنخفضة أولاً"
+      }
+    },
+    "priorities": {
+      "low": "منخفضة",
+      "medium": "متوسطة",
+      "high": "عالية",
+      "urgent": "عاجلة"
+    },
+    "agingRanges": {
+      "all": "الكل",
+      "0-2": "0-2 يوم",
+      "3-6": "3-6 أيام",
+      "7+": "+7 أيام"
+    },
+    "workItemTypes": {
+      "dossier": "ملف",
+      "ticket": "تذكرة",
+      "position": "موقف"
+    },
+    "statuses": {
+      "pending": "معلق",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتمل",
+      "cancelled": "ملغي"
+    },
+    "sortOptions": {
+      "assigned_at_asc": "التكليف (الأقدم أولاً)",
+      "assigned_at_desc": "التكليف (الأحدث أولاً)",
+      "priority_high_low": "الأولوية (من الأعلى إلى الأدنى)",
+      "priority_low_high": "الأولوية (من الأدنى إلى الأعلى)"
+    },
+    "assignmentDetails": {
+      "title": "تفاصيل التكليف",
+      "workItemId": "معرف عنصر العمل",
+      "assignee": "المكلف",
+      "assignedAt": "تاريخ التكليف",
+      "status": "الحالة",
+      "priority": "الأولوية",
+      "workflowStage": "مرحلة سير العمل",
+      "lastReminderSent": "آخر تذكير أُرسل",
+      "aging": "التقادم",
+      "viewWorkItem": "عرض عنصر العمل",
+      "close": "إغلاق"
+    },
+    "agingIndicator": {
+      "days": "{{count}} يوم",
+      "days_plural": "{{count}} أيام",
+      "fresh": "حديث",
+      "moderate": "متوسط",
+      "overdue": "متأخر"
+    },
+    "reminder": {
+      "sendReminder": "إرسال تذكير",
+      "sendBulkReminders": "إرسال تذكيرات",
+      "sending": "جاري الإرسال...",
+      "success": "تم إرسال التذكير بنجاح",
+      "successBulk": "تم إرسال {{count}} تذكير",
+      "error": "فشل إرسال التذكير",
+      "cooldownActive": "تم إرسال تذكير خلال آخر 24 ساعة",
+      "cooldownMessage": "آخر تذكير أُرسل {{time}}. يرجى الانتظار {{remaining}} قبل إرسال آخر.",
+      "rateLimitExceeded": "تم تجاوز الحد الأقصى للإرسال",
+      "rateLimitMessage": "لقد بلغت الحد الأقصى للتذكيرات ({{limit}}) في {{window}}. يرجى المحاولة مرة أخرى بعد {{retryAfter}}.",
+      "noAssignee": "لا يمكن إرسال تذكير - لا يوجد مكلف",
+      "confirmBulk": "إرسال تذكيرات إلى {{count}} مكلف؟",
+      "processing": "جاري معالجة {{current}} من {{total}}",
+      "partialSuccess": "{{successful}} أُرسلت، {{failed}} فشلت، {{skipped}} تم تخطيها"
+    },
+    "escalation": {
+      "escalate": "تصعيد",
+      "escalateBulk": "تصعيد المحددة",
+      "escalateAssignment": "تصعيد التكليف",
+      "selectRecipient": "اختيار المستلم",
+      "reason": "السبب (اختياري)",
+      "reasonPlaceholder": "لماذا تقوم بتصعيد هذا التكليف؟",
+      "autoResolve": "حل تلقائي من التسلسل الهرمي التنظيمي",
+      "escalating": "جاري التصعيد...",
+      "success": "تم تصعيد التكليف بنجاح",
+      "successBulk": "تم تصعيد {{count}} تكليف",
+      "error": "فشل تصعيد التكليف",
+      "noEscalationPath": "لا يوجد مسار تصعيد",
+      "noEscalationPathMessage": "تعذر العثور على مدير لـ {{user}} في التسلسل الهرمي التنظيمي.",
+      "completedAssignment": "لا يمكن تصعيد تكليف مكتمل",
+      "escalatedBadge": "تم التصعيد إلى {{name}} بتاريخ {{date}}",
+      "confirmEscalation": "تصعيد إلى {{name}}؟",
+      "confirmBulk": "تصعيد {{count}} تكليف؟",
+      "acknowledge": "إقرار",
+      "acknowledged": "تم الإقرار بتاريخ {{date}}",
+      "resolve": "حل",
+      "resolved": "تم الحل بتاريخ {{date}}"
+    },
+    "errors": {
+      "loadFailed": "فشل تحميل التكليفات",
+      "actionFailed": "فشل الإجراء",
+      "invalidSelection": "تحديد غير صالح",
+      "networkError": "خطأ في الشبكة - يرجى المحاولة مرة أخرى",
+      "serverError": "خطأ في الخادم - يرجى التواصل مع الدعم"
+    }
+  },
+  "dossierLinks": {
+    "manager": "إدارة روابط الملفات",
+    "title": "روابط الملفات",
+    "addLink": "إضافة رابط",
+    "add": "إضافة",
+    "activeLinks": "الروابط النشطة",
+    "deletedLinks": "الروابط المحذوفة",
+    "noLinks": "لا توجد روابط ملفات",
+    "noDeletedLinks": "لا توجد روابط محذوفة",
+    "linksList": "قائمة الروابط",
+    "linkCard": "رابط إلى {{dossier}}",
+    "dragHandle": "اسحب لإعادة الترتيب",
+    "editNotes": "تعديل الملاحظات",
+    "deleteLink": "حذف الرابط",
+    "restoreLink": "استعادة الرابط",
+    "restore": "استعادة",
+    "deleteConfirmTitle": "حذف الرابط",
+    "deleteConfirmDescription": "هل أنت متأكد من حذف هذا الرابط؟ يمكن التراجع عن هذا الإجراء بواسطة المشرف.",
+    "notesPlaceholder": "أضف ملاحظات حول هذا الرابط...",
+    "notesInput": "ملاحظات الرابط",
+    "reorderHint": "اسحب وأفلت لإعادة ترتيب الروابط",
+    "linkCount": "عرض {{count}} من {{total}} رابط",
+    "loadError": "فشل تحميل روابط الكيانات",
+    "searchDialogTitle": "البحث في الملفات",
+    "searchDialogDescription": "البحث عن ملفات وربطها بهذه التذكرة",
+    "searchPlaceholder": "البحث بالاسم...",
+    "searchInput": "البحث عن ملف",
+    "searchEmptyState": "اكتب حرفين على الأقل للبحث",
+    "noResults": "لم يتم العثور على ملفات",
+    "searchError": "فشل البحث في الملفات",
+    "selectEntity": "تحديد {{name}}",
+    "confidence": "الثقة",
+    "lastLinked": "آخر ربط",
+    "entityTypes": {
+      "dossier": "ملف",
+      "position": "موقف",
+      "mou": "مذكرة تفاهم",
+      "engagement": "لقاء",
+      "assignment": "تكليف",
+      "commitment": "التزام",
+      "intelligence_signal": "إشارة استخباراتية",
+      "organization": "منظمة",
+      "country": "دولة",
+      "forum": "منتدى",
+      "working_group": "مجموعة عمل",
+      "topic": "موضوع"
+    },
+    "linkTypes": {
+      "primary": "أساسي",
+      "related": "ذو صلة",
+      "mentioned": "مذكور",
+      "requested": "مطلوب",
+      "assigned_to": "مكلف إلى"
+    },
+    "createSuccess": "تم إنشاء الرابط بنجاح",
+    "createSuccessDescription": "تم ربط الملف بهذه التذكرة",
+    "createError": "فشل إنشاء الرابط",
+    "createErrorDescription": "حدث خطأ أثناء إنشاء الرابط",
+    "updateSuccess": "تم تحديث الرابط بنجاح",
+    "updateSuccessDescription": "تم تحديث الرابط",
+    "updateError": "فشل تحديث الرابط",
+    "updateErrorDescription": "حدث خطأ أثناء تحديث الرابط",
+    "deleteSuccess": "تم حذف الرابط بنجاح",
+    "deleteSuccessDescription": "تم حذف الرابط",
+    "deleteError": "فشل حذف الرابط",
+    "deleteErrorDescription": "حدث خطأ أثناء حذف الرابط",
+    "restoreSuccess": "تم استعادة الرابط بنجاح",
+    "restoreSuccessDescription": "تم استعادة الرابط",
+    "restoreError": "فشل استعادة الرابط",
+    "restoreErrorDescription": "حدث خطأ أثناء استعادة الرابط",
+    "conflictError": "تم اكتشاف تعارض في الرابط",
+    "conflictErrorDescription": "تم تعديل هذا الرابط بواسطة مستخدم آخر. يرجى التحديث والمحاولة مرة أخرى.",
+    "aiSuggestions": {
+      "title": "اقتراحات مدعومة بالذكاء الاصطناعي",
+      "description": "دع الذكاء الاصطناعي يحلل محتوى التذكرة ويقترح كيانات ذات صلة للربط",
+      "getButton": "الحصول على اقتراحات الذكاء الاصطناعي",
+      "loading": "جاري تحليل محتوى التذكرة...",
+      "loadingDescription": "يستغرق هذا عادةً 2-3 ثوانٍ",
+      "error": "خدمة الذكاء الاصطناعي غير متاحة",
+      "errorDescription": "تعذر إنشاء اقتراحات الذكاء الاصطناعي في الوقت الحالي",
+      "noResults": "لم يتم العثور على اقتراحات",
+      "noResultsDescription": "تعذر على الذكاء الاصطناعي إيجاد كيانات ذات صلة. جرب البحث اليدوي.",
+      "resultsTitle": "اقتراحات الذكاء الاصطناعي",
+      "resultsDescription": "تم العثور على {{count}} كيان ذي صلة. انقر لإنشاء رابط.",
+      "confidence": "الثقة",
+      "accept": "إنشاء رابط",
+      "accepting": "جاري الإنشاء...",
+      "manualSearch": "استخدام البحث اليدوي",
+      "stillUseManualSearch": "أو استخدم البحث اليدوي",
+      "retry": "إعادة المحاولة"
     }
   }
 }
