@@ -5,6 +5,25 @@ import { supabaseAdmin } from '../config/supabase.js'
 
 const router = Router()
 
+/** Coerce RPC / PostgREST numeric fields to a non-negative integer (avoids NaN in JSON responses). */
+const nonNegativeCount = (value: unknown): number => {
+  if (typeof value === 'bigint') {
+    const n = Number(value)
+    return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 0
+  }
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return Math.max(0, Math.trunc(value))
+  }
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? Math.max(0, Math.trunc(parsed)) : 0
+  }
+  return 0
+}
+
+/** `mark_category_as_read` returns INTEGER; PostgREST may surface null, string, or bigint. */
+const markedCountFromRpc = (value: unknown): number => nonNegativeCount(value)
+
 // GET /counts — proxy for get_notification_counts RPC
 router.get('/counts', async (req: Request, res: Response) => {
   try {
@@ -19,30 +38,44 @@ router.get('/counts', async (req: Request, res: Response) => {
     })
 
     if (error) {
-      // Fallback to simple unread count
-      const { count } = await supabaseAdmin
+      // Fallback to simple unread count when RPC is unavailable
+      const { count, error: fallbackError } = await supabaseAdmin
         .from('notifications')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('read', false)
         .or('expires_at.is.null,expires_at.gt.now()')
 
-      res.json({ total: count || 0, byCategory: {} })
+      if (fallbackError) {
+        res.status(500).json({ error: 'Failed to fetch notification counts' })
+        return
+      }
+
+      res.json({ total: nonNegativeCount(count ?? 0), byCategory: {} })
       return
     }
 
     const byCategory: Record<string, { total: number; unread: number }> = {}
     let total = 0
 
-    for (const row of data || []) {
-      byCategory[row.category as string] = {
-        total: row.total_count,
-        unread: row.unread_count,
-      }
-      total += row.unread_count
+    for (const raw of data || []) {
+      const row = raw as Record<string, unknown>
+      const categoryRaw = row.category
+      const categoryKey =
+        typeof categoryRaw === 'string' && categoryRaw.length > 0
+          ? categoryRaw
+          : typeof categoryRaw === 'number' && Number.isFinite(categoryRaw)
+            ? String(Math.trunc(categoryRaw))
+            : 'unknown'
+
+      const rowTotal = nonNegativeCount(row.total_count)
+      const rowUnread = nonNegativeCount(row.unread_count)
+
+      byCategory[categoryKey] = { total: rowTotal, unread: rowUnread }
+      total += rowUnread
     }
 
-    res.json({ total, byCategory })
+    res.json({ total: Number.isFinite(total) ? total : 0, byCategory })
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch notification counts' })
   }
@@ -73,22 +106,23 @@ router.post('/mark-read', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to mark as read' })
         return
       }
-      res.json({ marked: data })
+      res.json({ marked: markedCountFromRpc(data) })
       return
     }
 
     if (notificationIds && notificationIds.length > 0) {
-      const { error } = await supabaseAdmin
+      const { data: updatedRows, error } = await supabaseAdmin
         .from('notifications')
-        .update({ read_at: new Date().toISOString() })
+        .update({ read: true, read_at: new Date().toISOString() })
         .eq('user_id', userId)
         .in('id', notificationIds)
+        .select('id')
 
       if (error) {
         res.status(500).json({ error: 'Failed to mark notifications as read' })
         return
       }
-      res.json({ marked: notificationIds.length })
+      res.json({ marked: updatedRows?.length ?? 0 })
       return
     }
 
@@ -98,8 +132,12 @@ router.post('/mark-read', async (req: Request, res: Response) => {
   }
 })
 
-// T-22-01: Test-only endpoint -- MUST NOT be available in production
-if (process.env.NODE_ENV !== 'production') {
+// T-22-01: Test-only endpoint — register only when NODE_ENV is explicitly `development` or `test`.
+// `NODE_ENV !== 'production'` is unsafe: undefined (common in misconfigured deploys) would expose this route.
+const notificationTestTriggerEnabled =
+  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
+
+if (notificationTestTriggerEnabled) {
   router.post('/test-trigger', async (req: Request, res: Response) => {
     try {
       const userId = (req as any).user?.id

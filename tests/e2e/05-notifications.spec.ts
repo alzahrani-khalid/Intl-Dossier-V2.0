@@ -5,8 +5,8 @@ import NotificationsPage from './support/pages/NotificationsPage'
 /**
  * Trigger an in-app notification for the currently authenticated user.
  *
- * The backend exposes a test-only trigger endpoint (gated on
- * `NODE_ENV !== 'production'`, per threat T-18-10). We POST using the
+ * The backend exposes a test-only trigger endpoint (registered only when
+ * `NODE_ENV` is `development` or `test`, per threat T-18-10 / T-22-01). We POST using the
  * page's own request context so the user's JWT cookie is attached
  * automatically — no need to mint a separate admin token here.
  */

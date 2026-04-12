@@ -60,7 +60,7 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: 'pnpm dev',
+        command: 'NODE_ENV=development pnpm dev',
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,

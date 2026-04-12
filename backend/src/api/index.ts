@@ -100,7 +100,7 @@ apiRouter.use(entitySearchRouter)
 // Cache metrics routes
 apiRouter.use('/cache', cacheMetricsRouter)
 
-// Notification routes (includes test-trigger endpoint gated to non-production)
+// Notification routes (includes test-trigger only when NODE_ENV is development or test)
 apiRouter.use('/notifications', notificationsRouter)
 
 // API 404 handler

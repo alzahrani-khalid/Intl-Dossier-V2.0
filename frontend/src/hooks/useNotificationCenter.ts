@@ -201,6 +201,18 @@ export function useNotificationCounts() {
   })
 }
 
+/** INTEGER from `mark_category_as_read`; normalize for a stable `{ marked: number }`. */
+const markedCountFromRpc = (value: unknown): number => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return Math.max(0, Math.trunc(value))
+  }
+  if (typeof value === 'string' && value.trim() !== '') {
+    const n = Number(value)
+    return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 0
+  }
+  return 0
+}
+
 // Hook for marking notifications as read
 export function useMarkAsRead() {
   const queryClient = useQueryClient()
@@ -230,18 +242,19 @@ export function useMarkAsRead() {
           })
 
           if (error) throw error
-          return { marked: data }
+          return { marked: markedCountFromRpc(data) }
         }
 
         if (params.notificationIds && params.notificationIds.length > 0) {
-          const { error } = await supabase
+          const { data: updatedRows, error } = await supabase
             .from('notifications')
-            .update({ read_at: new Date().toISOString() })
+            .update({ read: true, read_at: new Date().toISOString() })
             .eq('user_id', user.id)
             .in('id', params.notificationIds)
+            .select('id')
 
           if (error) throw error
-          return { marked: params.notificationIds.length }
+          return { marked: updatedRows?.length ?? 0 }
         }
 
         throw new Error('No notifications specified')
