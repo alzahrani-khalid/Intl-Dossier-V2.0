@@ -386,7 +386,7 @@ router.post(
 
 /**
  * T053: PUT /after-action/:id
- * Update draft after-action record with optimistic locking
+ * Update draft after-action record with optimistic locking via updated_at comparison
  */
 router.put(
   '/:id',
@@ -400,6 +400,7 @@ router.put(
       }
 
       const { id } = req.params
+      const clientUpdatedAt = req.body.updated_at as string | undefined
 
       logger.info('Updating after-action record', { id, userId })
 
@@ -421,31 +422,80 @@ router.put(
         })
       }
 
-      // Validate optimistic locking
+      // Validate optimistic locking via _version (legacy)
       if (currentRecord._version !== req.body._version) {
         return res.status(409).json({
-          error: 'Version conflict - record has been modified by another user',
+          error: 'CONFLICT',
+          message: 'This record was modified by another user.',
+          serverUpdatedAt: currentRecord.updated_at,
           currentVersion: currentRecord._version,
           providedVersion: req.body._version,
         })
       }
 
-      // Update main record
-      const updateData = {
-        ...req.body,
-        _version: currentRecord._version + 1,
-        updated_by: userId,
-        updated_at: new Date().toISOString(),
+      // Validate optimistic locking via updated_at timestamp (D-41)
+      if (
+        typeof clientUpdatedAt === 'string' &&
+        clientUpdatedAt.length > 0 &&
+        currentRecord.updated_at != null
+      ) {
+        const clientTime = new Date(clientUpdatedAt).getTime()
+        const serverTime = new Date(currentRecord.updated_at as string).getTime()
+        if (clientTime !== serverTime) {
+          logger.warn('Optimistic lock conflict via updated_at', {
+            id,
+            userId,
+            clientUpdatedAt,
+            serverUpdatedAt: currentRecord.updated_at,
+          })
+          return res.status(409).json({
+            error: 'CONFLICT',
+            message: 'This record was modified by another user.',
+            serverUpdatedAt: currentRecord.updated_at,
+          })
+        }
       }
 
-      const { data: updatedRecord, error: updateError } = await supabase
-        .from('after_action_records')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single()
+      // Build update payload
+      const now = new Date().toISOString()
+      const { updated_at: _clientTs, ...bodyWithoutTimestamp } = req.body
+      const updateData = {
+        ...bodyWithoutTimestamp,
+        _version: currentRecord._version + 1,
+        updated_by: userId,
+        updated_at: now,
+      }
 
-      if (updateError || !updatedRecord) {
+      // Server-side WHERE clause for TOCTOU protection (D-41)
+      // Even if the pre-check above passed, another request could have
+      // modified the record between our SELECT and this UPDATE.
+      let updateQuery = supabase.from('after_action_records').update(updateData).eq('id', id)
+
+      // Add updated_at guard to close TOCTOU gap
+      if (currentRecord.updated_at != null) {
+        updateQuery = updateQuery.eq('updated_at', currentRecord.updated_at as string)
+      }
+
+      const { data: updatedRecord, error: updateError } = await updateQuery.select().single()
+
+      // If no rows matched, another concurrent write slipped through
+      if (updateError?.code === 'PGRST116' || (!updateError && !updatedRecord)) {
+        // Re-fetch to get current server state
+        const { data: freshRecord } = await supabase
+          .from('after_action_records')
+          .select('updated_at')
+          .eq('id', id)
+          .single()
+
+        logger.warn('TOCTOU conflict detected during UPDATE', { id, userId })
+        return res.status(409).json({
+          error: 'CONFLICT',
+          message: 'This record was modified by another user.',
+          serverUpdatedAt: freshRecord?.updated_at ?? null,
+        })
+      }
+
+      if (updateError) {
         logger.error('Failed to update after-action record', {
           error: updateError?.message,
           id,

@@ -1,6 +1,8 @@
+import React, { useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { useAfterAction } from '@/hooks/useAfterAction'
+import type { ConflictError } from '@/hooks/useAfterAction'
 import { usePublishAfterAction } from '@/hooks/usePublishAfterAction'
 import { useRequestEdit } from '@/hooks/useEditWorkflow'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +19,7 @@ import {
   ArrowLeft,
   CheckCircle,
   AlertCircle,
+  AlertTriangle,
   Lock,
   Edit,
   History,
@@ -31,12 +34,13 @@ export const Route = createFileRoute('/_protected/after-actions/$afterActionId')
   component: AfterActionDetailPage,
 })
 
-function AfterActionDetailPage() {
+function AfterActionDetailPage(): React.ReactNode {
   const { afterActionId } = Route.useParams()
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
   const { user } = useAuth()
+  const [conflict, setConflict] = useState<ConflictError | null>(null)
 
   const { data: afterAction, isLoading, error } = useAfterAction(afterActionId)
   const publishMutation = usePublishAfterAction()
@@ -86,15 +90,22 @@ const locale = isRTL ? ar : enUS
   const isReadOnly = afterAction.publication_status === 'published'
   const isEditRequested = afterAction.publication_status === 'edit_requested'
 
-  const handlePublish = async () => {
+  const handlePublish = async (): Promise<void> => {
     try {
       await publishMutation.mutateAsync({
         afterActionId,
         isConfidential: afterAction.is_confidential,
       })
       toast.success(t('afterActions.publishSuccess'))
-    } catch (error: any) {
-      toast.error(error.message || t('afterActions.publishFailed'))
+    } catch (err: unknown) {
+      // Check for conflict error from optimistic locking (D-41)
+      const maybeConflict = err as Error & { conflict?: ConflictError }
+      if (maybeConflict.conflict != null) {
+        setConflict(maybeConflict.conflict)
+        toast.error(t('afterActions.conflict.warning', 'This record was modified by another user.'))
+        return
+      }
+      toast.error((err instanceof Error ? err.message : null) ?? t('afterActions.publishFailed'))
     }
   }
 
@@ -115,7 +126,9 @@ const locale = isRTL ? ar : enUS
   }
 
   return (
-    <div className={`container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div
+      className={`container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -141,6 +154,31 @@ const locale = isRTL ? ar : enUS
           )}
         </div>
       </div>
+
+      {/* Conflict Warning Banner (D-41 optimistic locking) */}
+      {conflict != null && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive shrink-0" />
+            <p className="text-sm text-destructive">
+              {t(
+                'afterActions.conflict.warning',
+                'This record was modified by another user. Review changes before saving.',
+              )}
+            </p>
+          </div>
+          <Button
+            variant="destructive"
+            size="sm"
+            className="min-h-11 min-w-11"
+            onClick={(): void => {
+              window.location.reload()
+            }}
+          >
+            {t('afterActions.conflict.reviewChanges', 'Review Changes')}
+          </Button>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex items-center gap-2 justify-end flex-wrap">
