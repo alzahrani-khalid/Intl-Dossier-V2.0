@@ -9,6 +9,7 @@ import { ErrorBoundary } from './components/error-boundary'
 import { OfflineIndicator } from './components/offline-indicator/OfflineIndicator'
 import { RealtimeStatus } from './components/realtime-status/RealtimeStatus'
 import { AuthProvider, useAuth } from './contexts/auth.context'
+import { AuthListenerManager } from './components/auth/AuthListenerManager'
 import { RTLWrapper } from './components/rtl-wrapper/RTLWrapper'
 import { ThemeProvider } from './components/theme-provider/theme-provider'
 import { LanguageProvider } from './components/language-provider/language-provider'
@@ -25,6 +26,7 @@ function App() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
+          <AuthListenerManager />
           <ThemeErrorBoundary
             fallbackTheme="canvas"
             fallbackColorMode="light"

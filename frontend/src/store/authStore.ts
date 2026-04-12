@@ -206,17 +206,16 @@ export const useAuthStore = create<AuthState>()(
   ),
 )
 
-// Set up auth state change listener with cleanup for HMR
-const {
-  data: { subscription: _authSubscription },
-} = supabase.auth.onAuthStateChange((event, session) => {
-  useAuthStore.getState().handleAuthStateChange(event, session)
-})
-
-// Clean up listener on HMR to prevent duplicate subscriptions
-// and NavigatorLockAcquireTimeoutError
-if (import.meta.hot) {
-  import.meta.hot.dispose(() => {
-    _authSubscription.unsubscribe()
+/**
+ * Subscribe to Supabase auth state changes.
+ * Returns an unsubscribe function for cleanup.
+ * Used by AuthListenerManager to tie the listener to the React lifecycle.
+ */
+export function subscribeToAuthChanges(): () => void {
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((event, session) => {
+    useAuthStore.getState().handleAuthStateChange(event, session)
   })
+  return () => subscription.unsubscribe()
 }
