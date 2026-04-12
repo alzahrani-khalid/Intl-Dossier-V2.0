@@ -1494,7 +1494,7 @@
       "lastModified": "Last modified"
     }
   },
-  "dossierLinks": {
+  "entityLinks": {
     "manager": "Dossier Link Manager",
     "title": "Dossier Links",
     "addLink": "Add Link",
