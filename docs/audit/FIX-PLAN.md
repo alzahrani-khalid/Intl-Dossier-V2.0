@@ -601,15 +601,15 @@ Every MASTER-AUDIT finding mapped to its batch:
 
 ## Execution Summary
 
-| Batch            | Findings               | Est. Files            | Priority  |
-| ---------------- | ---------------------- | --------------------- | --------- |
-| 0: True Critical | 8 CRITICAL + 3 browser | ~10                   | Immediate |
-| 1: Theme         | 15                     | ~15                   | High      |
-| 2: Shared UI     | 5                      | ~8                    | High      |
-| 3: Layout        | 7                      | ~6                    | Medium    |
-| 4: i18n/RTL      | 8                      | ~5 (high volume text) | High      |
-| 5: Data flow     | 11                     | ~10                   | Medium    |
-| 6: Navigation    | 7                      | ~7                    | Medium    |
-| 7: Per-route     | 28                     | ~20                   | Low       |
+| Batch            | Findings               | Est. Files            | Priority  | Status   |
+| ---------------- | ---------------------- | --------------------- | --------- | -------- |
+| 0: True Critical | 8 CRITICAL + 3 browser | ~10                   | Immediate | COMPLETE |
+| 1: Theme         | 15                     | ~15                   | High      | COMPLETE |
+| 2: Shared UI     | 5                      | ~8                    | High      | COMPLETE |
+| 3: Layout        | 7                      | ~6                    | Medium    | COMPLETE |
+| 4: i18n/RTL      | 8                      | ~5 (high volume text) | High      | COMPLETE |
+| 5: Data flow     | 11                     | ~10                   | Medium    | COMPLETE |
+| 6: Navigation    | 7                      | ~7                    | Medium    | COMPLETE |
+| 7: Per-route     | 28                     | ~20                   | Low       | COMPLETE |
 
-**Recommended execution:** Batch 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7
+**All 87 findings resolved across 8 batches (2026-04-12).**
