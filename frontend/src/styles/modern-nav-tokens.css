@@ -10,13 +10,7 @@
        ICON RAIL (Left Sidebar - 56px width)
        ============================================ */
 
-    /* Icon Rail - Light Mode (if needed) */
-    --icon-rail-bg-light: hsl(0 0% 100%);
-    --icon-rail-hover-light: hsl(240 5% 96%);
-    --icon-rail-icon-light: hsl(220 9% 46%);
-    --icon-rail-icon-active-light: hsl(220 13% 18%);
-
-    /* Icon Rail - Dark Mode (Primary from reference) */
+    /* Icon Rail (Primary from reference) */
     --icon-rail-bg: hsl(220 15% 10%); /* #1A1D26 */
     --icon-rail-hover: hsl(220 15% 15%); /* #23262F */
     --icon-rail-active-bg: hsl(220 15% 13%); /* #1E2129 */
