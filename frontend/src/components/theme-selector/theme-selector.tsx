@@ -18,36 +18,36 @@ const themes: ThemeOption[] = [
     id: 'canvas',
     name: { en: 'Canvas', ar: 'كانفس' },
     preview: {
-      primary: 'oklch(0.141 0.004 285.83)',
-      secondary: 'oklch(0.871 0.008 286.29)',
-      accent: 'oklch(0.92 0.0053 286.32)',
+      primary: 'oklch(14.1% 0.004 285.83)',
+      secondary: 'oklch(87.1% 0.008 286.29)',
+      accent: 'oklch(92% 0.0053 286.32)',
     },
   },
   {
     id: 'azure',
     name: { en: 'Azure', ar: 'أزور' },
     preview: {
-      primary: 'oklch(0.5315 0.0694 156.19)',
-      secondary: 'oklch(0.5211 0.0755 338.14)',
-      accent: 'oklch(0.929 0.0095 255.53)',
+      primary: 'oklch(53.15% 0.0694 156.19)',
+      secondary: 'oklch(52.11% 0.0755 338.14)',
+      accent: 'oklch(92.9% 0.0095 255.53)',
     },
   },
   {
     id: 'lavender',
     name: { en: 'Lavender', ar: 'لافندر' },
     preview: {
-      primary: 'oklch(0.5827 0.2418 12.23)',
-      secondary: 'oklch(0.8938 0.0563 3.77)',
-      accent: 'oklch(0.9567 0.0021 34.31)',
+      primary: 'oklch(58.27% 0.2418 12.23)',
+      secondary: 'oklch(89.38% 0.0563 3.77)',
+      accent: 'oklch(95.67% 0.0021 34.31)',
     },
   },
   {
     id: 'bluesky',
     name: { en: 'Bluesky', ar: 'بلوسكاي' },
     preview: {
-      primary: 'oklch(0.59 0.2 277.12)',
-      secondary: 'oklch(0.9342 0.0187 285.12)',
-      accent: 'oklch(0.9112 0.035 281.21)',
+      primary: 'oklch(59% 0.2 277.12)',
+      secondary: 'oklch(93.42% 0.0187 285.12)',
+      accent: 'oklch(91.12% 0.035 281.21)',
     },
   },
 ]
