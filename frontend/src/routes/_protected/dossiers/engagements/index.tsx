@@ -20,18 +20,29 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { useState, useMemo, useCallback } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useDirection } from '@/hooks/useDirection'
+
+// URL search params type for dossier list pagination
+interface DossierListSearch {
+  page: number
+  search?: string
+}
 
 export const Route = createFileRoute('/_protected/dossiers/engagements/')({
   component: EngagementsListPage,
+  validateSearch: (search: Record<string, unknown>): DossierListSearch => ({
+    page: Math.max(1, Number(search.page) || 1),
+    search:
+      typeof search.search === 'string' && search.search.length > 0 ? search.search : undefined,
+  }),
 })
 
 function EngagementsListPage() {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [page, setPage] = useState(1)
+  const { page, search: searchQuery } = Route.useSearch()
+  const navigate = Route.useNavigate()
   const pageSize = 20
 
   // Fetch engagement dossiers
@@ -41,7 +52,7 @@ function EngagementsListPage() {
   const filteredDossiers = useMemo(
     () =>
       data?.data.filter((dossier) => {
-        if (!searchQuery) return true
+        if (searchQuery == null || searchQuery.length === 0) return true
         const searchLower = searchQuery.toLowerCase()
         return (
           dossier.name_en.toLowerCase().includes(searchLower) ||
@@ -53,9 +64,15 @@ function EngagementsListPage() {
     [data?.data, searchQuery],
   )
 
-  // Memo: stable reference for pagination button onClick props
-  const handlePrevPage = useCallback(() => setPage((p) => Math.max(1, p - 1)), [])
-  const handleNextPage = useCallback(() => setPage((p) => p + 1), [])
+  // URL-driven pagination handlers
+  const handlePrevPage = useCallback((): void => {
+    void navigate({
+      search: (prev: DossierListSearch) => ({ ...prev, page: Math.max(1, page - 1) }),
+    })
+  }, [navigate, page])
+  const handleNextPage = useCallback((): void => {
+    void navigate({ search: (prev: DossierListSearch) => ({ ...prev, page: page + 1 }) })
+  }, [navigate, page])
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
@@ -85,8 +102,17 @@ function EngagementsListPage() {
         <Input
           type="text"
           placeholder={t('filter.search')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={searchQuery ?? ''}
+          onChange={(e): void => {
+            void navigate({
+              search: (prev: DossierListSearch) => ({
+                ...prev,
+                search: e.target.value.length > 0 ? e.target.value : undefined,
+                page: 1,
+              }),
+              replace: true,
+            })
+          }}
           className="max-w-md min-h-11"
         />
       </div>
