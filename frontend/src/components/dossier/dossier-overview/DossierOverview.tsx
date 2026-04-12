@@ -136,7 +136,7 @@ export function DossierOverview({
 }: DossierOverviewProps) {
   const { t } = useTranslation('dossier-overview')
   const { isRTL } = useDirection()
-const [activeTab, setActiveTab] = useState('related')
+  const [activeTab, setActiveTab] = useState('related')
 
   // Fetch dossier overview
   const { data, isLoading, isError, error, refetch } = useDossierOverview(dossierId)
@@ -247,9 +247,7 @@ const [activeTab, setActiveTab] = useState('related')
   const { dossier, stats } = data
 
   return (
-    <div
-      className={`container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 ${className}`}
-    >
+    <div className={`container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 ${className}`}>
       {/* Breadcrumbs */}
       <nav
         className="flex items-center gap-2 text-sm sm:text-base mb-4 sm:mb-6"

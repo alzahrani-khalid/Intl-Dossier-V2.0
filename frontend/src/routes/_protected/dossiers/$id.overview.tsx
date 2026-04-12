@@ -28,7 +28,7 @@ import { useDirection } from '@/hooks/useDirection'
 
 // Lazy load the DossierOverview component for code splitting
 const DossierOverview = lazy(() =>
-  import('@/components/dossier/DossierOverview').then((module) => ({
+  import('@/components/dossier/dossier-overview').then((module) => ({
     default: module.DossierOverview,
   })),
 )
@@ -80,9 +80,7 @@ function ErrorState({ message, isRTL }: { message: string; isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div
         className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"
         role="alert"
@@ -117,7 +115,7 @@ function ErrorState({ message, isRTL }: { message: string; isRTL: boolean }) {
 function DossierOverviewRoute() {
   const { t } = useTranslation('dossier-overview')
   const { isRTL } = useDirection()
-const { id } = Route.useParams()
+  const { id } = Route.useParams()
 
   // Validate dossier ID
   if (!id) {

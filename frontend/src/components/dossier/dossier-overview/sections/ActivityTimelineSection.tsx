@@ -35,10 +35,7 @@ import type {
   UnifiedActivityType,
   UnifiedActivityAction,
 } from '@/types/unified-dossier-activity.types'
-import {
-  getActivityTypeBadgeClass,
-  getActivityActionTextClass,
-} from '@/lib/semantic-colors'
+import { getActivityTypeBadgeClass, getActivityActionTextClass } from '@/lib/semantic-colors'
 
 /**
  * Get icon for activity type
