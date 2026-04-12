@@ -176,12 +176,43 @@ export function getStatusBadgeClass(status: string): string {
 // Priority Colors (Tailwind classes)
 // ============================================================================
 
-export const priorityColors: Record<string, string> = {
-  low: 'text-muted-foreground',
-  medium: 'text-primary',
-  high: 'text-warning',
-  urgent: 'text-destructive',
-  critical: 'text-destructive',
+/**
+ * Maps work-item priorities to theme-aware bg + text (aligned with {@link statusColors}).
+ */
+export const priorityColors: Record<string, ColorSet> = {
+  low: {
+    bg: 'bg-muted',
+    text: 'text-muted-foreground',
+    border: 'border-muted',
+  },
+  medium: {
+    bg: 'bg-primary/10',
+    text: 'text-primary',
+    border: 'border-primary/30',
+  },
+  high: {
+    bg: 'bg-warning/10',
+    text: 'text-warning',
+    border: 'border-warning/30',
+  },
+  urgent: {
+    bg: 'bg-destructive/10',
+    text: 'text-destructive',
+    border: 'border-destructive/30',
+  },
+  critical: {
+    bg: 'bg-destructive/10',
+    text: 'text-destructive',
+    border: 'border-destructive/30',
+  },
+}
+
+/**
+ * Returns a combined badge class string for a priority value (bg + text).
+ */
+export function getPriorityBadgeClass(priority: string): string {
+  const colors = priorityColors[priority] ?? priorityColors.medium
+  return `${colors.bg} ${colors.text}`
 }
 
 // ============================================================================

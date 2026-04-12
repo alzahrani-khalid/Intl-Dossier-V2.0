@@ -507,7 +507,6 @@
     "dateModified": "Date Modified",
     "alphabetical": "Alphabetical",
     "results": "Results",
-    "noResults": "No results found",
     "showingResults": "Showing {{count}} results",
     "quickSearch": "Quick search...",
     "searchLabel": "Search dossiers, people, positions...",

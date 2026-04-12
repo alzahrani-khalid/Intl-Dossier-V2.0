@@ -7,6 +7,7 @@ import { KeyboardShortcutProvider, CommandPalette } from '@/components/keyboard-
 import { TourProvider, TourOverlay } from '@/components/guided-tours'
 import { DossierContextProvider } from '@/contexts/dossier-context'
 import { Button } from '@/components/ui/button'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 function NotFoundPage() {
   const { t } = useTranslation()
@@ -51,17 +52,19 @@ function NotFoundPage() {
 export const Route = createRootRoute({
   component: () => (
     <ErrorBoundary>
-      <KeyboardShortcutProvider>
-        <TourProvider>
-          <DossierContextProvider>
-            <WorkCreationProvider>
-              <Outlet />
-            </WorkCreationProvider>
-          </DossierContextProvider>
-          <CommandPalette />
-          <TourOverlay />
-        </TourProvider>
-      </KeyboardShortcutProvider>
+      <TooltipProvider delayDuration={0}>
+        <KeyboardShortcutProvider>
+          <TourProvider>
+            <DossierContextProvider>
+              <WorkCreationProvider>
+                <Outlet />
+              </WorkCreationProvider>
+            </DossierContextProvider>
+            <CommandPalette />
+            <TourOverlay />
+          </TourProvider>
+        </KeyboardShortcutProvider>
+      </TooltipProvider>
     </ErrorBoundary>
   ),
   notFoundComponent: NotFoundPage,

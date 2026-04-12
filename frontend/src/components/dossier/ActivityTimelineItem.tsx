@@ -21,8 +21,8 @@ import {
 import { cn } from '@/lib/utils'
 import {
   statusColors as semanticStatusColors,
-  priorityColors as semanticPriorityColors,
   activityTypeColors,
+  getPriorityBadgeClass,
 } from '@/lib/semantic-colors'
 import { p, s } from '@/lib/navigation'
 import { Badge } from '@/components/ui/badge'
@@ -47,12 +47,6 @@ const typeIcons = {
 const statusColorMap: Record<string, string> = Object.fromEntries(
   Object.entries(semanticStatusColors).map(([key, val]) => [key, `${val.bg} ${val.text}`]),
 )
-
-// ============================================================================
-// Priority Colors
-// ============================================================================
-
-const priorityColorMap: Record<string, string> = semanticPriorityColors
 
 // ============================================================================
 // Props
@@ -90,7 +84,7 @@ export function ActivityTimelineItem({
   const { t, i18n } = useTranslation('dossier-context')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
-// Get icon for type
+  // Get icon for type
   const TypeIcon = typeIcons[activity.work_item_type] || CheckSquare
 
   // Format date
@@ -178,12 +172,7 @@ export function ActivityTimelineItem({
               !activity.is_overdue && 'border-transparent',
             )}
           >
-            <TypeIcon
-              className={cn(
-                'size-5',
-                activityTypeColors[activity.work_item_type]?.text,
-              )}
-            />
+            <TypeIcon className={cn('size-5', activityTypeColors[activity.work_item_type]?.text)} />
           </div>
 
           {/* Vertical line below */}
@@ -216,9 +205,12 @@ export function ActivityTimelineItem({
               {t(`timeline.status.${activity.status}`, activity.status)}
             </Badge>
             {activity.priority && activity.priority !== 'medium' && (
-              <span className={cn('text-xs', priorityColorMap[activity.priority])}>
+              <Badge
+                variant="secondary"
+                className={cn('text-xs', getPriorityBadgeClass(activity.priority))}
+              >
                 {t(`timeline.priority.${activity.priority}`, activity.priority)}
-              </span>
+              </Badge>
             )}
           </div>
 

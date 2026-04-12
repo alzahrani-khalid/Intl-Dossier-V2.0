@@ -5,12 +5,12 @@ import { cn } from '@/lib/utils'
 
 const TooltipProvider = TooltipPrimitive.Provider
 
+/**
+ * Tooltip root only — use a single {@link TooltipProvider} high in the tree
+ * (see `routes/__root.tsx`) so nested providers are not duplicated per tooltip.
+ */
 function Tooltip({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return (
-    <TooltipProvider delayDuration={0}>
-      <TooltipPrimitive.Root data-slot="tooltip" {...props} />
-    </TooltipProvider>
-  )
+  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
 }
 
 function TooltipTrigger({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {

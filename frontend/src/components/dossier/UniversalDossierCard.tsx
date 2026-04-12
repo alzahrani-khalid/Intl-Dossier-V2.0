@@ -128,11 +128,19 @@ export function UniversalDossierCard({
       className={cn(
         'flex flex-col gap-2 sm:gap-4',
         'transition-shadow hover:shadow-lg',
-        'relative overflow-hidden',
+        'relative overflow-hidden group',
         className,
       )}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
+      {/* Stretched link for card-level navigation (supports middle-click) */}
+      <Link
+        to={getDossierDetailPath(dossier.id, dossier.type)}
+        className="absolute inset-0 z-0"
+        aria-label={displayName || t('untitled')}
+        tabIndex={-1}
+      />
+
       {/* Country type: Show map as background */}
       {dossier.type === 'country' && (dossier.extension as any)?.iso_code_2 && (
         <div className="absolute inset-0 pointer-events-none opacity-10">
@@ -248,7 +256,7 @@ export function UniversalDossierCard({
       )}
 
       {/* Actions */}
-      <CardFooter className="flex items-center justify-between gap-2 p-4 sm:p-6 pt-2 sm:pt-4">
+      <CardFooter className="flex items-center justify-between gap-2 p-4 sm:p-6 pt-2 sm:pt-4 relative z-10">
         {/* Primary actions - touch-friendly */}
         <div className="flex gap-2">
           {onView && (

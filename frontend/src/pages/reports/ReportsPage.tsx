@@ -275,7 +275,7 @@ export function ReportsPage() {
           {selectedTemplate && template && (
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>{t('reports.parameters')}</CardTitle>
+                <CardTitle>{t('reports.parametersTitle')}</CardTitle>
                 <CardDescription>{t('reports.parametersDesc')}</CardDescription>
               </CardHeader>
               <CardContent>

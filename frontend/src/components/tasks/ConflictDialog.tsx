@@ -62,9 +62,7 @@ export function ConflictDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent
-        className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]"
-      >
+      <AlertDialogContent className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]">
         <AlertDialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
@@ -72,13 +70,10 @@ export function ConflictDialog({
             </div>
             <div className="flex flex-col gap-1 text-start">
               <AlertDialogTitle className="text-xl sm:text-2xl">
-                {t('tasks.conflictTitle', 'Task was modified by another user')}
+                {t('tasks.conflict.title')}
               </AlertDialogTitle>
               <AlertDialogDescription className="text-start">
-                {t(
-                  'tasks.conflictDescription',
-                  'Someone else made changes while you were editing. Choose how to proceed:',
-                )}
+                {t('tasks.conflict.description')}
               </AlertDialogDescription>
             </div>
           </div>
@@ -88,18 +83,18 @@ export function ConflictDialog({
         {conflictingFields.length > 0 && serverData && (
           <div className="my-4 rounded-lg border bg-muted/50 p-4">
             <h4 className="text-sm font-semibold mb-3 text-start">
-              {t('tasks.conflictingFields', 'Conflicting fields:')}
+              {t('tasks.conflict.conflictingFields')}
             </h4>
             <div className="flex flex-col gap-2">
               {conflictingFields.map((field) => (
                 <div key={field} className="flex flex-col gap-1 rounded-md bg-background p-3">
                   <span className="text-xs font-medium text-muted-foreground uppercase text-start">
-                    {t(`tasks.field.${field}`, field)}
+                    {t(`tasks.field.${field}`, { defaultValue: field })}
                   </span>
                   <div className="flex flex-col sm:flex-row sm:gap-4">
                     <div className="flex-1">
                       <span className="text-xs text-muted-foreground text-start block">
-                        {t('tasks.yourChange', 'Your change:')}
+                        {t('tasks.conflict.yourChange')}
                       </span>
                       <span className="text-sm font-medium text-start block truncate">
                         {formatFieldValue(localChanges[field as keyof Task])}
@@ -107,7 +102,7 @@ export function ConflictDialog({
                     </div>
                     <div className="flex-1">
                       <span className="text-xs text-muted-foreground text-start block">
-                        {t('tasks.theirChange', 'Their change:')}
+                        {t('tasks.conflict.theirChange')}
                       </span>
                       <span className="text-sm font-medium text-start block truncate">
                         {formatFieldValue(serverData[field as keyof Task])}
@@ -125,12 +120,9 @@ export function ConflictDialog({
           <div className="flex items-start gap-3 rounded-md border p-3">
             <RefreshCw className="size-5 mt-0.5 shrink-0 text-primary" />
             <div className="flex flex-col gap-1 text-start">
-              <span className="font-medium">{t('tasks.reloadOption', 'Reload (Recommended)')}</span>
+              <span className="font-medium">{t('tasks.conflict.reloadOption')}</span>
               <span className="text-muted-foreground text-xs">
-                {t(
-                  'tasks.reloadOptionDescription',
-                  'Discard your changes and load the latest version. You can then re-apply your changes.',
-                )}
+                {t('tasks.conflict.reloadOptionDescription')}
               </span>
             </div>
           </div>
@@ -138,12 +130,9 @@ export function ConflictDialog({
           <div className="flex items-start gap-3 rounded-md border p-3">
             <Save className="size-5 mt-0.5 shrink-0 text-warning" />
             <div className="flex flex-col gap-1 text-start">
-              <span className="font-medium">{t('tasks.forceSaveOption', 'Force Save')}</span>
+              <span className="font-medium">{t('tasks.conflict.forceSaveOption')}</span>
               <span className="text-muted-foreground text-xs">
-                {t(
-                  'tasks.forceSaveOptionDescription',
-                  "Overwrite their changes with yours. Use with caution - you'll lose their updates.",
-                )}
+                {t('tasks.conflict.forceSaveOptionDescription')}
               </span>
             </div>
           </div>
@@ -151,12 +140,9 @@ export function ConflictDialog({
           <div className="flex items-start gap-3 rounded-md border p-3">
             <X className="size-5 mt-0.5 shrink-0 text-muted-foreground" />
             <div className="flex flex-col gap-1 text-start">
-              <span className="font-medium">{t('tasks.cancelOption', 'Cancel')}</span>
+              <span className="font-medium">{t('tasks.conflict.cancelOption')}</span>
               <span className="text-muted-foreground text-xs">
-                {t(
-                  'tasks.cancelOptionDescription',
-                  'Stay on this page and manually review the conflicts before deciding.',
-                )}
+                {t('tasks.conflict.cancelOptionDescription')}
               </span>
             </div>
           </div>
@@ -185,7 +171,7 @@ export function ConflictDialog({
             className="h-11 w-full sm:w-auto order-2"
           >
             <Save className="me-2 size-4" />
-            {t('tasks.forceSave', 'Force Save')}
+            {t('tasks.conflict.forceSave')}
           </Button>
 
           <AlertDialogAction
@@ -196,7 +182,7 @@ export function ConflictDialog({
             className="h-11 w-full sm:w-auto order-1 sm:order-3"
           >
             <RefreshCw className="me-2 size-4" />
-            {t('tasks.reload', 'Reload')}
+            {t('tasks.conflict.reload')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

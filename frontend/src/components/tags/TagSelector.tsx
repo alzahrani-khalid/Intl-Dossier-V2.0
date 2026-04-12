@@ -56,7 +56,7 @@ export function TagSelector({
 }: TagSelectorProps) {
   const { t } = useTranslation('tags')
   const { isRTL } = useDirection()
-const { toast } = useToast()
+  const { toast } = useToast()
   const inputRef = useRef<HTMLInputElement>(null)
 
   // State
@@ -258,7 +258,7 @@ const { toast } = useToast()
                       </div>
                     ) : (
                       <div className="py-4 text-center text-sm text-muted-foreground">
-                        {t('search.noResults')}
+                        {t('search.noResults.title')}
                       </div>
                     )}
                   </CommandEmpty>
