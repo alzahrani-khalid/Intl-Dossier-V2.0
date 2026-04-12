@@ -7,7 +7,7 @@
 
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { Loader2, Plus, Globe2 } from 'lucide-react'
+import { Plus, Globe2, ChevronRight, Home, X } from 'lucide-react'
 import { useDossiersByType } from '@/hooks/useDossier'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -63,6 +64,29 @@ function CountriesListPage() {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      {/* Breadcrumb */}
+      <nav
+        aria-label={t('nav.breadcrumb', 'Breadcrumb')}
+        className="flex items-center gap-1 text-sm text-muted-foreground mb-4"
+      >
+        <Link
+          to="/dashboard"
+          className="hover:text-foreground transition-colors flex items-center gap-1 min-h-11 min-w-11 justify-center sm:min-h-0 sm:min-w-0"
+        >
+          <Home className="h-4 w-4" />
+          <span className="hidden sm:inline">{t('nav.home', 'Home')}</span>
+        </Link>
+        <ChevronRight className={`h-3 w-3 shrink-0 ${isRTL ? 'rotate-180' : ''}`} />
+        <Link
+          to="/dossiers"
+          className="hover:text-foreground transition-colors min-h-11 flex items-center sm:min-h-0"
+        >
+          {t('nav.dossiers', 'Dossiers')}
+        </Link>
+        <ChevronRight className={`h-3 w-3 shrink-0 ${isRTL ? 'rotate-180' : ''}`} />
+        <span className="text-foreground font-medium">{t('type.country')}</span>
+      </nav>
+
       {/* Page Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div className="flex items-center gap-3">
@@ -85,23 +109,55 @@ function CountriesListPage() {
       </header>
 
       {/* Search Bar */}
-      <div className="mb-6">
+      <div className="mb-6 relative w-full sm:max-w-md">
         <Input
           type="text"
           placeholder={t('filter.search')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-md min-h-11"
+          className="w-full min-h-11 pe-10"
         />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            className="absolute end-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-muted transition-colors min-h-8 min-w-8 flex items-center justify-center"
+            aria-label={t('filter.clearSearch', 'Clear search')}
+          >
+            <X className="h-4 w-4 text-muted-foreground" />
+          </button>
+        )}
       </div>
 
-      {/* Loading State */}
+      {/* Loading State - Skeleton */}
       {isLoading && (
-        <div className="flex items-center justify-center py-12 sm:py-16 lg:py-20">
-          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin text-muted-foreground" />
-          <span className="ms-3 text-muted-foreground text-sm sm:text-base">
-            {t('list.loading')}
-          </span>
+        <div className="space-y-4">
+          {/* Table skeleton for desktop */}
+          <div className="hidden md:block rounded-lg border overflow-hidden">
+            <div className="p-4 space-y-3">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <Skeleton className="h-5 w-40" />
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-5 w-20" />
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-5 w-16 ms-auto" />
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Card skeleton for mobile */}
+          <div className="md:hidden space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="p-4 rounded-lg border space-y-3">
+                <div className="flex items-start justify-between">
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-5 w-16" />
+                </div>
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

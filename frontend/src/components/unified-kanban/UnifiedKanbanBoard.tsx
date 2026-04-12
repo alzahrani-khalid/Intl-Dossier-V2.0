@@ -221,25 +221,28 @@ export function UnifiedKanbanBoard({
 
   return (
     <div className={cn('flex flex-col h-full', className)}>
-      {/* Header */}
-      <UnifiedKanbanHeader
-        columnMode={columnMode}
-        onColumnModeChange={setColumnMode}
-        sourceFilter={sourceFilter}
-        onSourceFilterChange={setSourceFilter}
-        showFilters={showFilters}
-        showModeSwitch={showModeSwitch}
-        showViewToggle={false}
-        isRefreshing={isRefreshing}
-        onRefresh={onRefresh}
-        totalCount={totalCount}
-        overdueCount={overdueCount}
-      />
+      {/* Header - sticky on mobile */}
+      <div className="sticky top-0 z-10 bg-background">
+        <UnifiedKanbanHeader
+          columnMode={columnMode}
+          onColumnModeChange={setColumnMode}
+          sourceFilter={sourceFilter}
+          onSourceFilterChange={setSourceFilter}
+          showFilters={showFilters}
+          showModeSwitch={showModeSwitch}
+          showViewToggle={false}
+          isRefreshing={isRefreshing}
+          onRefresh={onRefresh}
+          totalCount={totalCount}
+          overdueCount={overdueCount}
+        />
+      </div>
 
       {/* Board */}
       <div
         className={cn(
           'flex-1 overflow-x-auto scrollbar-thin overflow-y-hidden',
+          'snap-x snap-mandatory md:snap-none',
           'px-4 sm:px-6 py-4',
           'bg-background',
         )}
@@ -283,7 +286,7 @@ export function UnifiedKanbanBoard({
                   <Kanban.Column
                     key={columnKey}
                     value={columnKey}
-                    className="w-full sm:w-[320px] sm:min-w-[320px] shrink-0"
+                    className="w-full sm:w-[320px] sm:min-w-[320px] shrink-0 snap-start"
                   >
                     {/* Column header */}
                     <div className="flex items-center justify-between px-1 mb-1">
