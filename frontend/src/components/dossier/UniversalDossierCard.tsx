@@ -233,8 +233,8 @@ export function UniversalDossierCard({
       {dossier.tags && dossier.tags.length > 0 && (
         <CardContent className="px-4 sm:px-6 py-0">
           <div className="flex flex-wrap gap-2">
-            {dossier.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs">
+            {dossier.tags.slice(0, 3).map((tag, index) => (
+              <Badge key={`${tag}-${index}`} variant="secondary" className="text-xs">
                 {tag}
               </Badge>
             ))}
@@ -280,7 +280,12 @@ export function UniversalDossierCard({
         {onDelete && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="min-h-11 min-w-11" aria-label={t('action.more')}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="min-h-11 min-w-11"
+                aria-label={t('action.more')}
+              >
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
