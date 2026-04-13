@@ -7,7 +7,7 @@
 
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { Plus, Globe, ChevronRight, Home, X } from 'lucide-react'
+import { Plus, Globe, X } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { useDossiersByType } from '@/hooks/useDossier'
 import { Button } from '@/components/ui/button'
@@ -91,29 +91,6 @@ function CountriesListPage() {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <nav
-        aria-label={t('nav.breadcrumb', 'Breadcrumb')}
-        className="flex items-center gap-1 text-sm text-muted-foreground mb-4"
-      >
-        <Link
-          to="/dashboard"
-          className="hover:text-foreground transition-colors flex items-center gap-1 min-h-11 min-w-11 justify-center sm:min-h-0 sm:min-w-0"
-        >
-          <Home className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('nav.home', 'Home')}</span>
-        </Link>
-        <ChevronRight className={`h-3 w-3 shrink-0 ${isRTL ? 'rotate-180' : ''}`} />
-        <Link
-          to="/dossiers"
-          className="hover:text-foreground transition-colors min-h-11 flex items-center sm:min-h-0"
-        >
-          {t('nav.dossiers', 'Dossiers')}
-        </Link>
-        <ChevronRight className={`h-3 w-3 shrink-0 ${isRTL ? 'rotate-180' : ''}`} />
-        <span className="text-foreground font-medium">{t('type.country')}</span>
-      </nav>
-
       <PageHeader
         icon={<Globe className="h-6 w-6" />}
         title={t('type.country')}
