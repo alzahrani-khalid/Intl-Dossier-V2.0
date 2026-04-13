@@ -6,7 +6,7 @@
  * Wraps the app and handles ⌘K shortcut registration.
  */
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react'
 import { WorkCreationPalette, type WorkItemType } from './WorkCreationPalette'
 import { useGlobalKeyboard } from './hooks/useGlobalKeyboard'
 import { toast } from 'sonner'
@@ -66,7 +66,12 @@ export function WorkCreationProvider({
   })
 
   return (
-    <WorkCreationContext.Provider value={{ openPalette, closePalette, isOpen }}>
+    <WorkCreationContext.Provider
+      value={useMemo(
+        () => ({ openPalette, closePalette, isOpen }),
+        [openPalette, closePalette, isOpen],
+      )}
+    >
       {children}
       <WorkCreationPalette
         open={isOpen}
