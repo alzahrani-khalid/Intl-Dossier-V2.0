@@ -8,6 +8,7 @@
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Settings, RefreshCw, Calendar, Plus } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -187,40 +188,41 @@ function SLADashboardPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <Select value={dateRange} onValueChange={(v) => setDateRange(v as DateRangeOption)}>
-            <SelectTrigger className="w-[140px]">
-              <Calendar className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7d">{t('filters.last7Days')}</SelectItem>
-              <SelectItem value="30d">{t('filters.last30Days')}</SelectItem>
-              <SelectItem value="90d">{t('filters.last90Days')}</SelectItem>
-            </SelectContent>
-          </Select>
+      <PageHeader
+        icon={<Settings className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('subtitle')}
+        actions={
+          <>
+            <Select value={dateRange} onValueChange={(v) => setDateRange(v as DateRangeOption)}>
+              <SelectTrigger className="w-[140px]">
+                <Calendar className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7d">{t('filters.last7Days')}</SelectItem>
+                <SelectItem value="30d">{t('filters.last30Days')}</SelectItem>
+                <SelectItem value="90d">{t('filters.last90Days')}</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <Select value={entityType} onValueChange={(v) => setEntityType(v as SLAEntityType)}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ticket">{t('filters.ticket')}</SelectItem>
-              <SelectItem value="commitment">{t('filters.commitment')}</SelectItem>
-              <SelectItem value="task">{t('filters.task')}</SelectItem>
-            </SelectContent>
-          </Select>
+            <Select value={entityType} onValueChange={(v) => setEntityType(v as SLAEntityType)}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ticket">{t('filters.ticket')}</SelectItem>
+                <SelectItem value="commitment">{t('filters.commitment')}</SelectItem>
+                <SelectItem value="task">{t('filters.task')}</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <Button variant="outline" size="icon" onClick={handleRefresh}>
-            <RefreshCw className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+            <Button variant="outline" size="icon" onClick={handleRefresh}>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          </>
+        }
+      />
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>

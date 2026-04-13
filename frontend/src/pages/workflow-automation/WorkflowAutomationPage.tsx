@@ -5,6 +5,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   WorkflowRulesList,
@@ -68,16 +69,16 @@ export function WorkflowAutomationPage() {
   return (
     <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold">{t('title')}</h1>
-            <p className="text-muted-foreground">{t('subtitle')}</p>
-          </div>
-          <TabsList>
-            <TabsTrigger value="rules">{t('navigation.rules')}</TabsTrigger>
-            <TabsTrigger value="executions">{t('navigation.executions')}</TabsTrigger>
-          </TabsList>
-        </div>
+        <PageHeader
+          title={t('title')}
+          subtitle={t('subtitle')}
+          actions={
+            <TabsList>
+              <TabsTrigger value="rules">{t('navigation.rules')}</TabsTrigger>
+              <TabsTrigger value="executions">{t('navigation.executions')}</TabsTrigger>
+            </TabsList>
+          }
+        />
 
         <TabsContent value="rules" className="mt-0">
           <WorkflowRulesList

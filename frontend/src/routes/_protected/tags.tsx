@@ -12,6 +12,7 @@ import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Tag, BarChart3, History } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { TagHierarchyManager, TagAnalytics } from '@/components/tags'
@@ -29,17 +30,16 @@ export const Route = createFileRoute('/_protected/tags')({
 function TagsPage() {
   const { t } = useTranslation('tags')
   const { isRTL } = useDirection()
-const [activeTab, setActiveTab] = useState('hierarchy')
+  const [activeTab, setActiveTab] = useState('hierarchy')
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t('management.title')}</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">{t('management.description')}</p>
-      </div>
+      <PageHeader
+        icon={<Tag className="h-6 w-6" />}
+        title={t('management.title')}
+        subtitle={t('management.description')}
+      />
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">

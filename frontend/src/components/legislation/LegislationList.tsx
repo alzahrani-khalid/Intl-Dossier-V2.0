@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -53,7 +54,7 @@ interface LegislationListProps {
 export function LegislationList({ dossierId, onCreateClick, className }: LegislationListProps) {
   const { t } = useTranslation('legislation')
   const { isRTL } = useDirection()
-// Filter state
+  // Filter state
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<LegislationType | 'all'>('all')
   const [statusFilter, setStatusFilter] = useState<LegislationStatus | 'all'>('all')
@@ -129,18 +130,19 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
   return (
     <div className={cn('space-y-4', className)}>
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-start sm:text-3xl">{t('title')}</h1>
-          <p className="text-muted-foreground text-sm text-start">{t('subtitle')}</p>
-        </div>
-        {onCreateClick && (
-          <Button onClick={onCreateClick} className="min-h-11 min-w-11">
-            <Plus className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-            {t('actions.create')}
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        icon={<FileText className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('subtitle')}
+        actions={
+          onCreateClick != null ? (
+            <Button onClick={onCreateClick} className="min-h-11 min-w-11">
+              <Plus className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
+              {t('actions.create')}
+            </Button>
+          ) : undefined
+        }
+      />
 
       {/* Search and Filters */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -337,8 +339,7 @@ interface LegislationCardProps {
 
 function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: LegislationCardProps) {
   const { t } = useTranslation('legislation')
-  const title =
-    isRTL && legislation.title_ar ? legislation.title_ar : legislation.title_en
+  const title = isRTL && legislation.title_ar ? legislation.title_ar : legislation.title_en
 
   const statusColors = STATUS_COLORS[legislation.status]
   const priorityColors = PRIORITY_COLORS[legislation.priority]

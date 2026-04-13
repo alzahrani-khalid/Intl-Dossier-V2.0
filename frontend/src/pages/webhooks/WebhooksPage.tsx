@@ -30,6 +30,7 @@ import {
   Loader2,
 } from 'lucide-react'
 
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -189,16 +190,17 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
-        </div>
-        <Button onClick={() => setCreateDialogOpen(true)} className="min-h-11 min-w-11">
-          <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-          {t('actions.create')}
-        </Button>
-      </div>
+      <PageHeader
+        icon={<Settings className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('subtitle')}
+        actions={
+          <Button onClick={() => setCreateDialogOpen(true)} className="min-h-11 min-w-11">
+            <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            {t('actions.create')}
+          </Button>
+        }
+      />
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'list' | 'templates')}>

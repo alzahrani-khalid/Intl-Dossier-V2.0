@@ -9,6 +9,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Loader2, Plus, CalendarDays } from 'lucide-react'
 import { useDossiersByType } from '@/hooks/useDossier'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -77,25 +78,19 @@ function EngagementsListPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       {/* Page Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-        <div className="flex items-center gap-3">
-          <CalendarDays className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-          <div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold text-start">
-              {t('type.engagement')}
-            </h1>
-            <p className="text-sm sm:text-base text-muted-foreground mt-1">
-              {t('typeDescription.engagement')}
-            </p>
-          </div>
-        </div>
-        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
-          <Link to="/dossiers/create">
-            <Plus className="h-4 w-4 me-2" />
-            {t('action.create')}
-          </Link>
-        </Button>
-      </header>
+      <PageHeader
+        icon={<CalendarDays className="h-6 w-6" />}
+        title={t('type.engagement')}
+        subtitle={t('typeDescription.engagement')}
+        actions={
+          <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
+            <Link to="/dossiers/create">
+              <Plus className="h-4 w-4 me-2" />
+              {t('action.create')}
+            </Link>
+          </Button>
+        }
+      />
 
       {/* Search Bar */}
       <div className="mb-6">

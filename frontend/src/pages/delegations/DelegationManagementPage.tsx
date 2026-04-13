@@ -19,6 +19,7 @@ import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -103,25 +104,20 @@ export function DelegationManagementPage() {
       <DelegationExpiryBanner />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-start flex items-center gap-3">
-            <Shield className={`h-7 w-7 sm:h-8 sm:w-8 ${isRTL ? 'ms-0' : 'me-0'}`} />
-            {t('title')}
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground text-start mt-1">
-            {t('description')}
-          </p>
-        </div>
-
-        <Button
-          onClick={() => setCreateDialogOpen(true)}
-          className={`w-full sm:w-auto min-h-11 ${isRTL ? 'flex-row-reverse' : ''}`}
-        >
-          <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-          {t('actions.create')}
-        </Button>
-      </div>
+      <PageHeader
+        icon={<Shield className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('description')}
+        actions={
+          <Button
+            onClick={() => setCreateDialogOpen(true)}
+            className={`w-full sm:w-auto min-h-11 ${isRTL ? 'flex-row-reverse' : ''}`}
+          >
+            <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            {t('actions.create')}
+          </Button>
+        }
+      />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

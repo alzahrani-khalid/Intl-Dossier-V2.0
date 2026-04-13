@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import { useCallback, useMemo } from 'react'
 import { LayoutGrid } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { useMyWorkDashboard, useTeamWorkload } from '@/hooks/useUnifiedWork'
 import { useUnifiedWorkRealtime, useCurrentUserId } from '@/hooks/useUnifiedWorkRealtime'
 import type {
@@ -164,23 +165,21 @@ export default function MyWorkDashboard() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
       {/* Page Header */}
-      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('title', 'My Work')}</h1>
-          <p className="text-muted-foreground text-sm sm:text-base mt-1 text-start">
-            {t('subtitle', 'Track your commitments, tasks, and intake tickets in one place')}
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => navigate({ to: '/my-work/board', search: { mode: 'status' } as any })}
-          className="flex items-center gap-2 self-start sm:self-auto"
-        >
-          <LayoutGrid className="h-4 w-4" />
-          <span>{t('viewBoard', 'Board View')}</span>
-        </Button>
-      </div>
+      <PageHeader
+        title={t('title', 'My Work')}
+        subtitle={t('subtitle', 'Track your commitments, tasks, and intake tickets in one place')}
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate({ to: '/my-work/board', search: { mode: 'status' } as any })}
+            className="flex items-center gap-2 self-start sm:self-auto"
+          >
+            <LayoutGrid className="h-4 w-4" />
+            <span>{t('viewBoard', 'Board View')}</span>
+          </Button>
+        }
+      />
 
       {/* Summary Header with Stats */}
       <WorkSummaryHeader

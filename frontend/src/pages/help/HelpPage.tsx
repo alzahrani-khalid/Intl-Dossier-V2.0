@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import {
   Accordion,
@@ -171,14 +172,16 @@ export function HelpPage() {
               <Sparkles className="size-4" />
               <span className="text-sm font-medium">{isRTL ? 'مركز المساعدة' : 'Help Center'}</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              {isRTL ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?'}
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8">
-              {isRTL
-                ? 'ابحث في المقالات أو تصفح الأدلة أدناه'
-                : 'Search articles or browse guides below'}
-            </p>
+            <PageHeader
+              icon={<HelpCircle className="h-6 w-6" />}
+              title={isRTL ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?'}
+              subtitle={
+                isRTL
+                  ? 'ابحث في المقالات أو تصفح الأدلة أدناه'
+                  : 'Search articles or browse guides below'
+              }
+              className="justify-center pb-8"
+            />
 
             {/* Search Bar */}
             <div className="relative max-w-xl mx-auto">

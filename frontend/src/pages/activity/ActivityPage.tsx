@@ -11,6 +11,7 @@
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Activity, BarChart3, RefreshCcw, Loader2, Settings } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
@@ -42,56 +43,46 @@ export function ActivityPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10">
-            <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold">{t('title')}</h1>
-            <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Statistics Toggle */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowStatistics(!showStatistics)}
-            className="gap-2 min-h-11 sm:min-h-9"
-          >
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('statistics.title')}</span>
-          </Button>
-
-          {/* Settings Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsSettingsOpen(true)}
-            className="gap-2 min-h-11 sm:min-h-9"
-          >
-            <Settings className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('buttons.settings')}</span>
-          </Button>
-
-          {/* Refresh Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="min-h-11 sm:min-h-9"
-          >
-            {isRefreshing ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <RefreshCcw className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        icon={<Activity className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('subtitle')}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowStatistics(!showStatistics)}
+              className="gap-2 min-h-11 sm:min-h-9"
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('statistics.title')}</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsSettingsOpen(true)}
+              className="gap-2 min-h-11 sm:min-h-9"
+            >
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('buttons.settings')}</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="min-h-11 sm:min-h-9"
+            >
+              {isRefreshing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCcw className="h-4 w-4" />
+              )}
+            </Button>
+          </>
+        }
+      />
 
       {/* Statistics Panel (Collapsible) */}
       <Collapsible open={showStatistics} onOpenChange={setShowStatistics}>

@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { FileText, Plus } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '../../../components/ui/button'
 import {
   Card,
@@ -20,21 +21,18 @@ function AfterActionsIndexPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="space-y-1">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                <FileText className="h-8 w-8" />
-                After Action Records
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400">
-                Manage engagement outcomes and commitments
-              </p>
-            </div>
-            <Button className="gap-2" onClick={() => navigate({ to: '/engagements' })}>
-              <Plus className="h-5 w-5" />
-              Create After Action
-            </Button>
-          </div>
+          <PageHeader
+            icon={<FileText className="h-6 w-6" />}
+            title="After Action Records"
+            subtitle="Manage engagement outcomes and commitments"
+            className="pb-0"
+            actions={
+              <Button className="gap-2" onClick={() => navigate({ to: '/engagements' })}>
+                <Plus className="h-5 w-5" />
+                Create After Action
+              </Button>
+            }
+          />
         </div>
       </div>
 

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { Card, CardContent } from '@/components/ui/card'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
@@ -183,14 +184,11 @@ export function RelationshipGraphPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">
-          {t('graph.title', 'Relationship Graph')}
-        </h1>
-        <p className="text-muted-foreground">
-          {t('graph.description', 'Explore connections between entities')}
-        </p>
-      </div>
+      <PageHeader
+        icon={<Network className="h-6 w-6" />}
+        title={t('graph.title', 'Relationship Graph')}
+        subtitle={t('graph.description', 'Explore connections between entities')}
+      />
 
       {/* Controls */}
       <Card className="mb-6">

@@ -9,6 +9,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -18,7 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ContactSearch } from '@/components/contacts/ContactSearch'
 import { ContactList } from '@/components/contacts/ContactList'
-import { Plus, Download, FileText, CreditCard, Check } from 'lucide-react'
+import { Plus, Download, FileText, CreditCard, Check, Users } from 'lucide-react'
 import {
   useSearchPersonDossiers,
   type PersonSearchParams,
@@ -160,94 +161,89 @@ export function ContactsDirectory() {
       {/* Header */}
       <div className="border-b bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-start">
-                {t('contactDirectory.title')}
-              </h1>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
-                {t('contactDirectory.subtitle')}
-              </p>
-            </div>
+          <PageHeader
+            icon={<Users className="h-6 w-6" />}
+            title={t('contactDirectory.title')}
+            subtitle={t('contactDirectory.subtitle')}
+            className="pb-0"
+            actions={
+              <>
+                {/* Export Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      disabled={isExporting || (searchResults?.total || 0) === 0}
+                      className="px-4"
+                    >
+                      <Download className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      {t('contactDirectory.buttons.export')}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="min-w-[200px]">
+                    <div className="px-2 py-1.5 text-sm font-medium">
+                      {t('contactDirectory.export.exportAll')}
+                    </div>
+                    <DropdownMenuItem
+                      onClick={() => handleExportAll('csv')}
+                      disabled={isExporting}
+                      className=""
+                    >
+                      <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      {t('contactDirectory.export.csv')}
+                      <span className="ms-auto text-xs text-muted-foreground">
+                        Excel {t('contactDirectory.export.compatible')}
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleExportAll('vcard')}
+                      disabled={isExporting}
+                      className=""
+                    >
+                      <CreditCard className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      {t('contactDirectory.export.vcard')}
+                      <span className="ms-auto text-xs text-muted-foreground">
+                        Outlook {t('contactDirectory.export.compatible')}
+                      </span>
+                    </DropdownMenuItem>
 
-            <div className="flex gap-2 sm:gap-3">
-              {/* Export Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    disabled={isExporting || (searchResults?.total || 0) === 0}
-                    className="px-4"
-                  >
-                    <Download className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                    {t('contactDirectory.buttons.export')}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="min-w-[200px]">
-                  {/* Export All Section */}
-                  <div className="px-2 py-1.5 text-sm font-medium">
-                    {t('contactDirectory.export.exportAll')}
-                  </div>
-                  <DropdownMenuItem
-                    onClick={() => handleExportAll('csv')}
-                    disabled={isExporting}
-                    className=""
-                  >
-                    <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                    {t('contactDirectory.export.csv')}
-                    <span className="ms-auto text-xs text-muted-foreground">
-                      Excel {t('contactDirectory.export.compatible')}
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handleExportAll('vcard')}
-                    disabled={isExporting}
-                    className=""
-                  >
-                    <CreditCard className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                    {t('contactDirectory.export.vcard')}
-                    <span className="ms-auto text-xs text-muted-foreground">
-                      Outlook {t('contactDirectory.export.compatible')}
-                    </span>
-                  </DropdownMenuItem>
+                    {selectedContacts.length > 0 && (
+                      <>
+                        <div className="my-2 border-t" />
+                        <div className="px-2 py-1.5 text-sm font-medium">
+                          {t('contactDirectory.export.exportSelected', {
+                            count: selectedContacts.length,
+                          })}
+                        </div>
+                        <DropdownMenuItem
+                          onClick={() => handleExportSelected('csv')}
+                          disabled={isExporting}
+                          className=""
+                        >
+                          <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                          {t('contactDirectory.export.selectedCsv')}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleExportSelected('vcard')}
+                          disabled={isExporting}
+                          className=""
+                        >
+                          <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                          {t('contactDirectory.export.selectedVCard')}
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
-                  {/* Export Selected Section (if any selected) */}
-                  {selectedContacts.length > 0 && (
-                    <>
-                      <div className="my-2 border-t" />
-                      <div className="px-2 py-1.5 text-sm font-medium">
-                        {t('contactDirectory.export.exportSelected', {
-                          count: selectedContacts.length,
-                        })}
-                      </div>
-                      <DropdownMenuItem
-                        onClick={() => handleExportSelected('csv')}
-                        disabled={isExporting}
-                        className=""
-                      >
-                        <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                        {t('contactDirectory.export.selectedCsv')}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleExportSelected('vcard')}
-                        disabled={isExporting}
-                        className=""
-                      >
-                        <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                        {t('contactDirectory.export.selectedVCard')}
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Create Contact Button */}
-              <Button onClick={handleCreateContact} className="px-4 sm:px-6">
-                <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('contactDirectory.buttons.createContact')}
-              </Button>
-            </div>
-          </div>
+                {/* Create Contact Button */}
+                <Button onClick={handleCreateContact} className="px-4 sm:px-6">
+                  <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  {t('contactDirectory.buttons.createContact')}
+                </Button>
+              </>
+            }
+          />
 
           {/* Search & Filters */}
           <div className="mt-6">

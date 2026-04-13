@@ -20,6 +20,7 @@ import {
   Calendar,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -212,26 +213,25 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground text-sm sm:text-base mt-1">{t('subtitle')}</p>
-        </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          <Select value={timeRange} onValueChange={handleTimeRangeChange}>
-            <SelectTrigger className="w-full sm:w-40">
-              <Calendar className="h-4 w-4 me-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {TIME_RANGE_OPTIONS.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {t(option.labelKey)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <div className="flex items-center gap-2">
+      <PageHeader
+        icon={<BarChart3 className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('subtitle')}
+        actions={
+          <>
+            <Select value={timeRange} onValueChange={handleTimeRangeChange}>
+              <SelectTrigger className="w-full sm:w-40">
+                <Calendar className="h-4 w-4 me-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {TIME_RANGE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {t(option.labelKey)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button
               variant="outline"
               size="icon"
@@ -249,9 +249,9 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
             >
               <Download className="h-4 w-4" />
             </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Sample Data Banner */}
       {showingSampleData && (

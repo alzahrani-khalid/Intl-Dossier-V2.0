@@ -6,6 +6,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useQuery } from '@tanstack/react-query'
@@ -63,38 +64,36 @@ function MyApprovalsPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">{t('approvals.myApprovals', 'My Approvals')}</h1>
-          <p className="text-muted-foreground">
-            {t('approvals.subtitle', 'Positions pending your review and approval')}
-          </p>
-        </div>
-
-        <div className="flex gap-2">
-          <Badge
-            variant={filter === 'all' ? 'default' : 'outline'}
-            className="cursor-pointer"
-            onClick={() => setFilter('all')}
-          >
-            {t('approvals.filter.all', 'All')}
-          </Badge>
-          <Badge
-            variant={filter === 'pending' ? 'default' : 'outline'}
-            className="cursor-pointer"
-            onClick={() => setFilter('pending')}
-          >
-            {t('approvals.filter.pending', 'Pending')}
-          </Badge>
-          <Badge
-            variant={filter === 'completed' ? 'default' : 'outline'}
-            className="cursor-pointer"
-            onClick={() => setFilter('completed')}
-          >
-            {t('approvals.filter.completed', 'Completed')}
-          </Badge>
-        </div>
-      </div>
+      <PageHeader
+        icon={<CheckCircle className="h-6 w-6" />}
+        title={t('approvals.myApprovals', 'My Approvals')}
+        subtitle={t('approvals.subtitle', 'Positions pending your review and approval')}
+        actions={
+          <>
+            <Badge
+              variant={filter === 'all' ? 'default' : 'outline'}
+              className="cursor-pointer"
+              onClick={() => setFilter('all')}
+            >
+              {t('approvals.filter.all', 'All')}
+            </Badge>
+            <Badge
+              variant={filter === 'pending' ? 'default' : 'outline'}
+              className="cursor-pointer"
+              onClick={() => setFilter('pending')}
+            >
+              {t('approvals.filter.pending', 'Pending')}
+            </Badge>
+            <Badge
+              variant={filter === 'completed' ? 'default' : 'outline'}
+              className="cursor-pointer"
+              onClick={() => setFilter('completed')}
+            >
+              {t('approvals.filter.completed', 'Completed')}
+            </Badge>
+          </>
+        }
+      />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

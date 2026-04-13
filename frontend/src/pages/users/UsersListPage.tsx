@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,7 +31,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { Search, UserPlus, Eye, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
+import { Search, UserPlus, Users, Eye, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -220,26 +221,24 @@ export function UsersListPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('usersList.title')}</h1>
-          <p className="text-sm sm:text-base text-muted-foreground text-start mt-1">
-            {t('usersList.showing', {
-              from: (currentPage - 1) * pageSize + 1,
-              to: Math.min(currentPage * pageSize, usersData?.total || 0),
-              total: usersData?.total || 0,
-            })}
-          </p>
-        </div>
-
-        <Button
-          onClick={handleCreateUser}
-          className={`w-full sm:w-auto min-h-11 ${isRTL ? 'flex-row-reverse' : ''}`}
-        >
-          <UserPlus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-          {t('userOnboarding.createUser')}
-        </Button>
-      </div>
+      <PageHeader
+        icon={<Users className="h-6 w-6" />}
+        title={t('usersList.title')}
+        subtitle={t('usersList.showing', {
+          from: (currentPage - 1) * pageSize + 1,
+          to: Math.min(currentPage * pageSize, usersData?.total || 0),
+          total: usersData?.total || 0,
+        })}
+        actions={
+          <Button
+            onClick={handleCreateUser}
+            className={`w-full sm:w-auto min-h-11 ${isRTL ? 'flex-row-reverse' : ''}`}
+          >
+            <UserPlus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            {t('userOnboarding.createUser')}
+          </Button>
+        }
+      />
 
       {/* Search & Filters */}
       <Card className="mb-6">

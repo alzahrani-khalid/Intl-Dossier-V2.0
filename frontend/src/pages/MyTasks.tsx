@@ -15,6 +15,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useMyTasks, useContributedTasks } from '../hooks/useTasks'
 import { TaskCard } from '../components/tasks/TaskCard'
 import { Alert, AlertDescription } from '../components/ui/alert'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import {
@@ -133,24 +134,17 @@ export function MyTasksPage() {
   return (
     <div className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8">
       {/* Page Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1
-            className={`text-2xl font-bold sm:text-3xl md:text-4xl ${isRTL ? 'text-end' : 'text-start'}`}
-          >
-            {t('my_tasks', 'My Tasks')}
-          </h1>
-          <p
-            className={`mt-1 text-sm text-muted-foreground sm:text-base ${isRTL ? 'text-end' : 'text-start'}`}
-          >
-            {t('my_tasks_description', 'View and manage tasks assigned to you')}
-          </p>
-        </div>
-        <Button onClick={() => openPalette('task')} className="min-h-11 w-full sm:w-auto">
-          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-          {t('create_task', 'Create Task')}
-        </Button>
-      </div>
+      <PageHeader
+        icon={<CheckCircle2 className="h-6 w-6" />}
+        title={t('my_tasks', 'My Tasks')}
+        subtitle={t('my_tasks_description', 'View and manage tasks assigned to you')}
+        actions={
+          <Button onClick={() => openPalette('task')} className="min-h-11 w-full sm:w-auto">
+            <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            {t('create_task', 'Create Task')}
+          </Button>
+        }
+      />
 
       {/* View Type Tabs (US2 - T049) */}
       <Tabs

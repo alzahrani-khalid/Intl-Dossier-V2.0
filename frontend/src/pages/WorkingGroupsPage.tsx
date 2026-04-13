@@ -28,6 +28,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -247,12 +248,11 @@ export default function WorkingGroupsPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
       {/* Header */}
-      <header className="flex flex-col gap-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-            <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
-          </div>
+      <PageHeader
+        icon={<Users className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('subtitle')}
+        actions={
           <Button
             className="w-full sm:w-auto min-h-11 gap-2"
             onClick={() => setCreateDialogOpen(true)}
@@ -260,8 +260,8 @@ export default function WorkingGroupsPage() {
             <Plus className="size-4" />
             {t('actions.add')}
           </Button>
-        </div>
-      </header>
+        }
+      />
 
       {/* Metrics Cards */}
       <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

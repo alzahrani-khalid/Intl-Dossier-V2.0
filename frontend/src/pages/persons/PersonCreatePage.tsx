@@ -23,6 +23,7 @@ import {
   Star,
   Loader2,
 } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -134,14 +135,12 @@ function PersonCreatePage() {
             <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
               <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
             </Button>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold">
-                {t('create.title', 'Add New Person')}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                {t('create.subtitle', 'Create a new contact profile')}
-              </p>
-            </div>
+            <PageHeader
+              icon={<User className="h-6 w-6" />}
+              title={t('create.title', 'Add New Person')}
+              subtitle={t('create.subtitle', 'Create a new contact profile')}
+              className="pb-0"
+            />
           </div>
         </div>
       </header>

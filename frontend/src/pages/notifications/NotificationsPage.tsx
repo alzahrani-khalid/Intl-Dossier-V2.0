@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Bell, Settings, CheckCheck, Filter } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -162,34 +163,27 @@ export function NotificationsPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Bell className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">{t('notificationCenter')}</h1>
-            <p className="text-muted-foreground">
-              {unreadCount > 0 ? `${unreadCount} ${t('badge.unread')}` : t('empty.title')}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={handleMarkAllAsRead}
-            disabled={unreadCount === 0 || isMarkingAsRead}
-          >
-            <CheckCheck className="h-4 w-4 me-2" />
-            {t('markAllRead')}
-          </Button>
-          <Button variant="outline" onClick={handleSettingsClick}>
-            <Settings className="h-4 w-4 me-2" />
-            {t('preferences.title')}
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        icon={<Bell className="h-6 w-6" />}
+        title={t('notificationCenter')}
+        subtitle={unreadCount > 0 ? `${unreadCount} ${t('badge.unread')}` : t('empty.title')}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              onClick={handleMarkAllAsRead}
+              disabled={unreadCount === 0 || isMarkingAsRead}
+            >
+              <CheckCheck className="h-4 w-4 me-2" />
+              {t('markAllRead')}
+            </Button>
+            <Button variant="outline" onClick={handleSettingsClick}>
+              <Settings className="h-4 w-4 me-2" />
+              {t('preferences.title')}
+            </Button>
+          </>
+        }
+      />
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">

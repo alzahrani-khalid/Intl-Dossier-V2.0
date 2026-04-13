@@ -24,6 +24,7 @@ import {
   SlidersHorizontal,
   X,
 } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -154,21 +155,18 @@ function PersonsListPage() {
       {/* Header */}
       <header className="border-b bg-background sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-start">
-                {t('title', 'Key Contacts')}
-              </h1>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
-                {t('subtitle', 'Manage your network of key contacts and stakeholders')}
-              </p>
-            </div>
-
-            <Button onClick={handleCreatePerson} className="w-full sm:w-auto">
-              <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-              {t('actions.createPerson', 'Add Person')}
-            </Button>
-          </div>
+          <PageHeader
+            icon={<Users className="h-6 w-6" />}
+            title={t('title', 'Key Contacts')}
+            subtitle={t('subtitle', 'Manage your network of key contacts and stakeholders')}
+            className="pb-0"
+            actions={
+              <Button onClick={handleCreatePerson} className="w-full sm:w-auto">
+                <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                {t('actions.createPerson', 'Add Person')}
+              </Button>
+            }
+          />
 
           {/* Search and Filters */}
           <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">

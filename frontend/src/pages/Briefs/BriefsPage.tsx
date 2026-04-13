@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, FileText, Calendar, Eye, Download, Sparkles } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -364,13 +365,16 @@ export function BriefsPage() {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t('navigation.briefs')}</h1>
-        <Button onClick={() => setShowGenerateDialog(true)}>
-          <Plus className="h-4 w-4 me-2" />
-          {t('briefs.generateBrief')}
-        </Button>
-      </div>
+      <PageHeader
+        icon={<FileText className="h-6 w-6" />}
+        title={t('navigation.briefs')}
+        actions={
+          <Button onClick={() => setShowGenerateDialog(true)}>
+            <Plus className="h-4 w-4 me-2" />
+            {t('briefs.generateBrief')}
+          </Button>
+        }
+      />
 
       <div className="grid gap-4 md:grid-cols-4 mb-6">
         <Card>

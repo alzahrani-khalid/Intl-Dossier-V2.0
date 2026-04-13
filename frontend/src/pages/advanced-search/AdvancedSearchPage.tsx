@@ -23,6 +23,7 @@ import {
   Clock,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -220,12 +221,11 @@ export function AdvancedSearchPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Page Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
-          {t('title')}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">{t('description')}</p>
-      </div>
+      <PageHeader
+        icon={<Search className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('description')}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Filters Panel */}

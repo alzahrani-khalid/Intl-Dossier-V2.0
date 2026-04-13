@@ -23,6 +23,7 @@ import {
   BarChart3,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
@@ -91,37 +92,32 @@ export function AuditLogsPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
-            <Shield className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold">{t('title')}</h1>
-            <p className="text-sm text-muted-foreground">{t('description')}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowStatistics(!showStatistics)}
-            className="gap-2"
-          >
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('statistics.title')}</span>
-          </Button>
-          <AuditLogExport filters={filters} disabled={isLoading || logs.length === 0} />
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <RefreshCcw className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        icon={<Shield className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('description')}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowStatistics(!showStatistics)}
+              className="gap-2"
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('statistics.title')}</span>
+            </Button>
+            <AuditLogExport filters={filters} disabled={isLoading || logs.length === 0} />
+            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCcw className="h-4 w-4" />
+              )}
+            </Button>
+          </>
+        }
+      />
 
       {/* Statistics Panel (Collapsible) */}
       <Collapsible open={showStatistics} onOpenChange={setShowStatistics}>

@@ -18,6 +18,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { supabase } from '../lib/supabase'
 import { Clock, AlertTriangle, Mail, UserCheck, Zap, Loader2, ArrowUpDown } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Card } from '../components/ui/card'
@@ -360,64 +361,56 @@ function WaitingQueuePageInner() {
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="container mx-auto p-4 sm:p-6 lg:px-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-orange-500/10 sm:size-12">
-                <Clock className="size-5 text-orange-600 sm:size-6" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
-                  {t('navigation.waitingQueue', 'Waiting Queue')}
-                </h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {t('waiting.description', 'Items pending or assigned but not yet started')}
-                </p>
-              </div>
-            </div>
-            {/* T086: Filter button and count, T088: Sorting controls */}
-            <div className="flex items-center gap-2">
-              {/* Sort selector (desktop) */}
-              <Select
-                value={filters.sort_by || 'assigned_at_desc'}
-                onValueChange={(value) => updateFilters({ sort_by: value as any })}
-              >
-                <SelectTrigger
-                  className="hidden min-h-9 w-[180px] sm:flex"
-                  aria-label={t('waitingQueue.filters.sortBy')}
+          <PageHeader
+            icon={<Clock className="h-6 w-6" />}
+            title={t('navigation.waitingQueue', 'Waiting Queue')}
+            subtitle={t('waiting.description', 'Items pending or assigned but not yet started')}
+            className="pb-0"
+            actions={
+              <>
+                {/* Sort selector (desktop) */}
+                <Select
+                  value={filters.sort_by || 'assigned_at_desc'}
+                  onValueChange={(value) => updateFilters({ sort_by: value as any })}
                 >
-                  <ArrowUpDown className="me-2 size-4" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="assigned_at_desc">
-                    {t('waitingQueue.filters.sort.oldestFirst')}
-                  </SelectItem>
-                  <SelectItem value="assigned_at_asc">
-                    {t('waitingQueue.filters.sort.newestFirst')}
-                  </SelectItem>
-                  <SelectItem value="priority_desc">
-                    {t('waitingQueue.filters.sort.highPriorityFirst')}
-                  </SelectItem>
-                  <SelectItem value="priority_asc">
-                    {t('waitingQueue.filters.sort.lowPriorityFirst')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                  <SelectTrigger
+                    className="hidden min-h-9 w-[180px] sm:flex"
+                    aria-label={t('waitingQueue.filters.sortBy')}
+                  >
+                    <ArrowUpDown className="me-2 size-4" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="assigned_at_desc">
+                      {t('waitingQueue.filters.sort.oldestFirst')}
+                    </SelectItem>
+                    <SelectItem value="assigned_at_asc">
+                      {t('waitingQueue.filters.sort.newestFirst')}
+                    </SelectItem>
+                    <SelectItem value="priority_desc">
+                      {t('waitingQueue.filters.sort.highPriorityFirst')}
+                    </SelectItem>
+                    <SelectItem value="priority_asc">
+                      {t('waitingQueue.filters.sort.lowPriorityFirst')}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
 
-              {/* Filter button with popover (T084) */}
-              <FilterPanel
-                filters={filters}
-                onFiltersChange={updateFilters}
-                onClearFilters={clearFilters}
-                isOpen={isFilterPanelOpen}
-                onOpenChange={setIsFilterPanelOpen}
-                resultCount={pagination?.total_count}
-                isLoading={isLoading}
-                hasFilters={hasFilters}
-                filterCount={filterCount}
-              />
-            </div>
-          </div>
+                {/* Filter button with popover */}
+                <FilterPanel
+                  filters={filters}
+                  onFiltersChange={updateFilters}
+                  onClearFilters={clearFilters}
+                  isOpen={isFilterPanelOpen}
+                  onOpenChange={setIsFilterPanelOpen}
+                  resultCount={pagination?.total_count}
+                  isLoading={isLoading}
+                  hasFilters={hasFilters}
+                  filterCount={filterCount}
+                />
+              </>
+            }
+          />
         </div>
       </div>
 

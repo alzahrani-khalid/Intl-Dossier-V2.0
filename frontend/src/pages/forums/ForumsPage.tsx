@@ -13,6 +13,7 @@ import {
   Pencil,
   Trash2,
 } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { FloatingActionButton, useShowMobileFAB } from '@/components/ui/floating-action-button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -215,14 +216,11 @@ export function ForumsPage() {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
-      {/* Header - Mobile First */}
-      <header className="flex flex-col gap-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">{t('pageTitle')}</h1>
-            <p className="text-sm sm:text-base text-muted-foreground">{t('pageSubtitle')}</p>
-          </div>
-          {/* Hide button on mobile where FAB is used */}
+      {/* Header */}
+      <PageHeader
+        title={t('pageTitle')}
+        subtitle={t('pageSubtitle')}
+        actions={
           <Button
             className="hidden sm:flex sm:w-auto min-h-11"
             onClick={() => setCreateDialogOpen(true)}
@@ -230,8 +228,8 @@ export function ForumsPage() {
             <Plus className="h-4 w-4 me-2" />
             {t('addForum')}
           </Button>
-        </div>
-      </header>
+        }
+      />
 
       {/* Metrics Cards */}
       <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

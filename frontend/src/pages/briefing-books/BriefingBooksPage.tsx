@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { FileText, Plus, ArrowLeft } from 'lucide-react'
 import { m, AnimatePresence } from 'framer-motion'
 
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { BriefingBookBuilder, BriefingBooksList } from '@/components/briefing-books'
 import { useDirection } from '@/hooks/useDirection'
@@ -46,21 +47,17 @@ function BriefingBooksPage() {
             transition={{ duration: 0.2 }}
           >
             {/* Page header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
-              <div className="flex items-center gap-3">
-                <div className="p-2 sm:p-3 bg-primary/10 rounded-lg">
-                  <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-                </div>
-                <div>
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{t('title')}</h1>
-                  <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
-                </div>
-              </div>
-              <Button onClick={handleCreateNew} className="w-full sm:w-auto min-h-[44px]">
-                <Plus className="h-4 w-4 me-2" />
-                {t('newBriefingBook')}
-              </Button>
-            </div>
+            <PageHeader
+              icon={<FileText className="h-6 w-6" />}
+              title={t('title')}
+              subtitle={t('subtitle')}
+              actions={
+                <Button onClick={handleCreateNew} className="w-full sm:w-auto min-h-[44px]">
+                  <Plus className="h-4 w-4 me-2" />
+                  {t('newBriefingBook')}
+                </Button>
+              }
+            />
 
             {/* Briefing books list */}
             <BriefingBooksList onCreateNew={handleCreateNew} />

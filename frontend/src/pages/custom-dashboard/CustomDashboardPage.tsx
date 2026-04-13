@@ -8,6 +8,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { LayoutDashboard, Plus, Settings, RotateCcw, Save, GripVertical } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import {
@@ -52,94 +53,89 @@ function DashboardHeader({
   t: (key: string) => string
 }) {
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-primary/10">
-          <LayoutDashboard className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold">{t('customDashboard')}</h1>
-          <p className="text-sm text-muted-foreground hidden sm:block">
-            {isEditMode ? t('widgetLibrary.description') : t('title')}
-          </p>
-        </div>
-        {isEditMode && (
-          <Badge variant="secondary" className="ms-2">
-            {t('editMode')}
-          </Badge>
-        )}
-      </div>
+    <PageHeader
+      icon={<LayoutDashboard className="h-6 w-6" />}
+      title={t('customDashboard')}
+      subtitle={isEditMode ? t('widgetLibrary.description') : t('title')}
+      className="mb-6"
+      actions={
+        <>
+          {isEditMode && (
+            <Badge variant="secondary" className="ms-2">
+              {t('editMode')}
+            </Badge>
+          )}
 
-      <div className="flex items-center gap-2">
-        {/* Add Widget Button - Only in edit mode */}
-        {isEditMode && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="sm" onClick={onAddWidget} className="h-9">
-                  <Plus className="h-4 w-4 me-1" />
-                  <span className="hidden sm:inline">{t('addWidget')}</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{t('addWidget')}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
-
-        {/* Reset Layout Button - Only in edit mode */}
-        {isEditMode && (
-          <AlertDialog>
+          {/* Add Widget Button - Only in edit mode */}
+          {isEditMode && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-9">
-                      <RotateCcw className="h-4 w-4 me-1" />
-                      <span className="hidden sm:inline">{t('resetLayout')}</span>
-                    </Button>
-                  </AlertDialogTrigger>
+                  <Button variant="outline" size="sm" onClick={onAddWidget} className="h-9">
+                    <Plus className="h-4 w-4 me-1" />
+                    <span className="hidden sm:inline">{t('addWidget')}</span>
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{t('resetLayout')}</p>
+                  <p>{t('addWidget')}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{t('resetLayout')}</AlertDialogTitle>
-                <AlertDialogDescription>{t('confirmations.resetLayout')}</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
-                <AlertDialogAction onClick={onResetLayout}>{t('resetLayout')}</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
-
-        {/* Edit/Done Button */}
-        <Button
-          variant={isEditMode ? 'default' : 'outline'}
-          size="sm"
-          onClick={onToggleEditMode}
-          className="h-9"
-        >
-          {isEditMode ? (
-            <>
-              <Save className="h-4 w-4 me-1" />
-              <span>{t('exitEditMode')}</span>
-            </>
-          ) : (
-            <>
-              <Settings className="h-4 w-4 me-1" />
-              <span className="hidden sm:inline">{t('editMode')}</span>
-            </>
           )}
-        </Button>
-      </div>
-    </header>
+
+          {/* Reset Layout Button - Only in edit mode */}
+          {isEditMode && (
+            <AlertDialog>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-9">
+                        <RotateCcw className="h-4 w-4 me-1" />
+                        <span className="hidden sm:inline">{t('resetLayout')}</span>
+                      </Button>
+                    </AlertDialogTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t('resetLayout')}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>{t('resetLayout')}</AlertDialogTitle>
+                  <AlertDialogDescription>{t('confirmations.resetLayout')}</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
+                  <AlertDialogAction onClick={onResetLayout}>{t('resetLayout')}</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+
+          {/* Edit/Done Button */}
+          <Button
+            variant={isEditMode ? 'default' : 'outline'}
+            size="sm"
+            onClick={onToggleEditMode}
+            className="h-9"
+          >
+            {isEditMode ? (
+              <>
+                <Save className="h-4 w-4 me-1" />
+                <span>{t('exitEditMode')}</span>
+              </>
+            ) : (
+              <>
+                <Settings className="h-4 w-4 me-1" />
+                <span className="hidden sm:inline">{t('editMode')}</span>
+              </>
+            )}
+          </Button>
+        </>
+      }
+    />
   )
 }
 

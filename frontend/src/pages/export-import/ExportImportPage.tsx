@@ -9,6 +9,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -85,12 +86,11 @@ function ExportImportPage() {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground mt-1">
-          {t('export.description')} / {t('import.description')}
-        </p>
-      </div>
+      <PageHeader
+        icon={<FileSpreadsheet className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={`${t('export.description')} / ${t('import.description')}`}
+      />
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Export Card */}
