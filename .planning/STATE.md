@@ -5,7 +5,7 @@ milestone_name: Post-Launch Fixes
 status: Executing Phase 25 plans
 stopped_at: Completed 25-01 and 25-02 (Wave 1)
 last_updated: '2026-04-12T19:35:00.000Z'
-last_activity: 2026-04-12 - Wave 1 complete (25-01 wizard decomposition + 25-02 query keys/context split)
+last_activity: 2026-04-13 - Completed quick task 260413-tuf: Unified PageHeader component + rollout across 31 pages
 progress:
   total_phases: 2
   completed_phases: 1
@@ -84,6 +84,9 @@ Progress: [████████████████████] 100% of
 | 260412-jth | Fix Batch 7: Per-Journey Route Fixes (18 of 28 findings)     | 2026-04-12 | 5817f528 | [260412-jth](./quick/260412-jth-fix-batch-7-per-journey-route-fixes-28-f/) |
 | 260412-kot | Route notifications-center through Express proxy             | 2026-04-12 | 8619b431 | [260412-kot](./quick/260412-kot-route-notifications-center-through-expre/) |
 | 260412-kmh | Batch 0 critical audit fixes (B-01,C-01,C-02,D-01)           | 2026-04-12 | a119406e | [260412-kmh](./quick/260412-kmh-fix-batch-0-critical-audit-findings-b-01/) |
+| 260413-d6h | Fix UI consistency: double padding, raw grays, ThemeProvider | 2026-04-13 | 59c06366 | [260413-d6h](./quick/260413-d6h-fix-ui-consistency-remove-double-padding/) |
+| 260413-djy | Fix UI consistency part 2: pages/ padding + raw grays        | 2026-04-13 | ccee13f0 | [260413-djy](./quick/260413-djy-fix-ui-consistency-part-2-remove-double-/) |
+| 260413-tuf | Unified PageHeader component + rollout across 31 pages       | 2026-04-13 | 6b1f7036 | [260413-tuf](./quick/260413-tuf-create-unified-pageheader-component-and-/) |
 
 ### Blockers/Concerns
 
