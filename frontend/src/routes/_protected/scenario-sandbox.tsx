@@ -60,7 +60,7 @@ export const Route = createFileRoute('/_protected/scenario-sandbox')({
 function ScenarioSandboxPage() {
   const { t } = useTranslation('scenario-sandbox')
   const { isRTL } = useDirection()
-  // State
+// State
   const [activeTab, setActiveTab] = useState('scenarios')
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<ScenarioStatus | 'all'>('all')
@@ -166,7 +166,7 @@ function ScenarioSandboxPage() {
   }
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -223,7 +223,7 @@ function ScenarioSandboxPage() {
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
                 <TrendingDown className="h-5 w-5" />
               </div>
               <div>

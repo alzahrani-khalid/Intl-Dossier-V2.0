@@ -159,7 +159,7 @@ const navigate = useNavigate()
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <div className="border-b bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="py-4 sm:py-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-start">
@@ -191,7 +191,7 @@ const navigate = useNavigate()
                   <DropdownMenuItem
                     onClick={() => handleExportAll('csv')}
                     disabled={isExporting}
-                    className=""
+                   
                   >
                     <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('contactDirectory.export.csv')}
@@ -202,7 +202,7 @@ const navigate = useNavigate()
                   <DropdownMenuItem
                     onClick={() => handleExportAll('vcard')}
                     disabled={isExporting}
-                    className=""
+                   
                   >
                     <CreditCard className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('contactDirectory.export.vcard')}
@@ -223,7 +223,7 @@ const navigate = useNavigate()
                       <DropdownMenuItem
                         onClick={() => handleExportSelected('csv')}
                         disabled={isExporting}
-                        className=""
+                       
                       >
                         <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('contactDirectory.export.selectedCsv')}
@@ -231,7 +231,7 @@ const navigate = useNavigate()
                       <DropdownMenuItem
                         onClick={() => handleExportSelected('vcard')}
                         disabled={isExporting}
-                        className=""
+                       
                       >
                         <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('contactDirectory.export.selectedVCard')}
@@ -262,7 +262,7 @@ const navigate = useNavigate()
       </div>
 
       {/* Contact List */}
-      <div className="flex-1 container mx-auto py-6">
+      <div className="flex-1 py-6">
         <ContactList
           contacts={searchResults?.contacts || []}
           tags={searchResults?.tags || []}

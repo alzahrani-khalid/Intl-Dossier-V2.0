@@ -246,7 +246,7 @@ export default function WorkingGroupsPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6"
+      className="py-4 sm:py-6 space-y-6"
     >
       {/* Header */}
       <header className="flex flex-col gap-2">

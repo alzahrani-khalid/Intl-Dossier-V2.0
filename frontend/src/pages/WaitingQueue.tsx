@@ -359,7 +359,7 @@ const { toast } = useToast()
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border bg-card">
-        <div className="container mx-auto p-4 sm:p-6 lg:px-8">
+        <div className="py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex size-10 items-center justify-center rounded-lg bg-orange-500/10 sm:size-12">
@@ -434,7 +434,7 @@ const { toast } = useToast()
         <div
           className="border-b border-border bg-blue-50 dark:bg-blue-950"
         >
-          <div className="container mx-auto px-4 py-3 sm:px-6 lg:px-8">
+          <div className="py-3">
             <div className="flex items-center gap-3">
               <Loader2 className="size-4 animate-spin text-blue-600" />
               <div className="flex-1">
@@ -455,7 +455,7 @@ const { toast } = useToast()
       )}
 
       {/* Main Content (T084) */}
-      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <div className="py-6">
         <main className="w-full">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
             {/* Tabs Navigation */}

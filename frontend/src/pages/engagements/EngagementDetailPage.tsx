@@ -255,7 +255,7 @@ const navigate = useNavigate()
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
@@ -323,7 +323,7 @@ const navigate = useNavigate()
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="py-6">
         {/* Lifecycle Stepper Bar — below header, above tabs */}
         <div className="mb-6">
           <LifecycleStepperBar

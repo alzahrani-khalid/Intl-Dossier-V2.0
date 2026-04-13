@@ -240,8 +240,9 @@ const location = useLocation()
           'rounded-e-[12px]',
         )}
         style={{
+          backgroundColor: '#f7f9fa',
           backgroundImage:
-            'linear-gradient(hsl(var(--muted) / 0.85), hsl(var(--muted) / 0.85)), url(/white-texture.jpg)',
+            'linear-gradient(rgba(247, 249, 250, 0.85), rgba(247, 249, 250, 0.85)), url(/white-texture.jpg)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundPosition: 'center',

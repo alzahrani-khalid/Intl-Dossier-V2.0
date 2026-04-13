@@ -161,7 +161,7 @@ const navigate = useNavigate()
 
   return (
     <div
-      className={cn('container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8', className)}
+      className={cn('py-4 sm:py-6 lg:py-8', className)}
     >
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">

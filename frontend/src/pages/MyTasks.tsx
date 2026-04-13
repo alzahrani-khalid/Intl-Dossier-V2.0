@@ -119,7 +119,7 @@ const navigate = useNavigate()
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <div className="py-6">
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertDescription>
@@ -132,7 +132,7 @@ const navigate = useNavigate()
 
   return (
     <div
-      className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8"
+      className="space-y-6 py-6"
     >
       {/* Page Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

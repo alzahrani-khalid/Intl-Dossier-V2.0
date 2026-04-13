@@ -19,7 +19,7 @@ export const Route = createFileRoute('/_protected/tasks/$id')({
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <h1 className="text-2xl font-bold text-red-600">Error Loading Task</h1>
-        <p className="text-muted-foreground">{error.message}</p>
+        <p className="text-gray-600">{error.message}</p>
       </div>
     )
   },

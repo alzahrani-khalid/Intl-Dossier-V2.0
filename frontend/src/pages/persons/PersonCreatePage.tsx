@@ -129,7 +129,7 @@ const navigate = useNavigate()
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="py-4">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
               <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
@@ -147,7 +147,7 @@ const navigate = useNavigate()
       </header>
 
       {/* Form */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="py-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl mx-auto">
             {/* Basic Information */}

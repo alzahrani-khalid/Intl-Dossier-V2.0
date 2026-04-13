@@ -39,7 +39,7 @@ export function AssignmentQueuePage() {
 
   if (error) {
     return (
-      <div className="container mx-auto p-6">
+      <div>
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertDescription>
@@ -51,7 +51,7 @@ export function AssignmentQueuePage() {
   }
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
+    <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Assignment Queue</h1>
         <p className="mt-1 text-muted-foreground">Manage queued work items awaiting capacity</p>

@@ -84,7 +84,7 @@ const [entityType, setEntityType] = useState<ExportableEntityType>('dossier')
   const selectedEntity = ENTITY_OPTIONS.find((e) => e.value === entityType)
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="py-6">
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground mt-1">

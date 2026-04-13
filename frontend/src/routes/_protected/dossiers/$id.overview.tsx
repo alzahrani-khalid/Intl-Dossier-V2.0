@@ -42,7 +42,7 @@ export const Route = createFileRoute('/_protected/dossiers/$id/overview')({
  */
 function OverviewLoadingSkeleton() {
   return (
-    <div className="container mx-auto py-4 sm:py-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
       <div className="space-y-6">
         {/* Breadcrumb skeleton */}
         <Skeleton className="h-5 w-48" />
@@ -80,7 +80,7 @@ function ErrorState({ message, isRTL }: { message: string; isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="container mx-auto py-8 sm:py-12">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div
         className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"
         role="alert"

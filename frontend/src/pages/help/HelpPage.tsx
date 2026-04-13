@@ -167,7 +167,7 @@ const [searchQuery, setSearchQuery] = useState('')
     >
       {/* Hero Section */}
       <div className="bg-primary/5 border-b">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        <div className="py-8 sm:py-12 lg:py-16">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-4">
               <Sparkles className="size-4" />
@@ -200,7 +200,7 @@ const [searchQuery, setSearchQuery] = useState('')
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="py-8 sm:py-12">
         {/* Feature Guides Section */}
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">

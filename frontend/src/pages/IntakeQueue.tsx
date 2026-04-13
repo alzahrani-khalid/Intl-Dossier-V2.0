@@ -270,7 +270,7 @@ const navigate = useNavigate()
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border bg-card">
-        <div className="container mx-auto p-4 sm:p-6 lg:px-8">
+        <div className="py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 sm:size-12">
@@ -396,7 +396,7 @@ const navigate = useNavigate()
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto space-y-4 px-4 py-6 sm:px-6 lg:px-8">
+      <main className="space-y-4 py-6">
         {/* Sync Status Bar */}
         <SyncStatusBar
           lastSyncTime={lastSyncTime}

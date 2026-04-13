@@ -58,7 +58,7 @@ export function WorkflowAutomationPage() {
   // Render builder view
   if (viewMode === 'create' || viewMode === 'edit') {
     return (
-      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <div className="py-6">
         <WorkflowBuilder rule={selectedRule} onSave={handleSave} onCancel={handleCancel} />
       </div>
     )
@@ -66,7 +66,7 @@ export function WorkflowAutomationPage() {
 
   // Render list view with tabs
   return (
-    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+    <div className="py-6">
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>

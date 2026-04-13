@@ -46,7 +46,7 @@ function PositionDetailPage() {
   const navigate = useNavigate()
   const { t } = useTranslation(['positions', 'common'])
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
+const locale = isRTL ? ar : enUS
 
   // Fetch position data
   const { data: position, isLoading, error } = usePosition(positionId)
@@ -60,7 +60,7 @@ function PositionDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-6 space-y-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-96 w-full" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -73,7 +73,7 @@ function PositionDetailPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto py-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="border-destructive">
           <CardHeader>
             <CardTitle className="text-destructive flex items-center gap-2">
@@ -100,7 +100,7 @@ function PositionDetailPage() {
   if (!position) return null
 
   const statusColors: Record<string, string> = {
-    draft: 'bg-muted text-muted-foreground',
+    draft: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
     under_review: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200',
     approved: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-200',
     published: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-200',
@@ -108,10 +108,10 @@ function PositionDetailPage() {
   }
 
   return (
-    <div className={`min-h-screen bg-muted ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
-      <div className="bg-card border-b border">
-        <div className="max-w-7xl mx-auto py-6">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               {/* Back Button */}
@@ -128,7 +128,7 @@ function PositionDetailPage() {
               {/* Title and Metadata */}
               <div className="space-y-2">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-3xl font-bold text-foreground">
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                     {isRTL ? position.title_ar : position.title_en}
                   </h1>
                   <Badge className={statusColors[position.status]}>
@@ -138,7 +138,7 @@ function PositionDetailPage() {
                     {t(`positions:type.${position.position_type_id}`)}
                   </Badge>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
                     {format(new Date(position.updated_at), 'PPP', { locale })}
@@ -173,7 +173,7 @@ function PositionDetailPage() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Column - Position Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -219,7 +219,7 @@ function PositionDetailPage() {
               </CardHeader>
               <CardContent>
                 {/* This would be populated with actual engagement data */}
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                   <Building className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p className="text-sm">{t('positions:detail.no_related_engagements')}</p>
                 </div>
@@ -239,7 +239,7 @@ function PositionDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                     {t('positions:detail.dossier')}
                   </p>
                   {(position as any).dossier_id ? (
@@ -253,26 +253,28 @@ function PositionDetailPage() {
                       {t('positions:detail.view_dossier')}
                     </Link>
                   ) : (
-                    <p className="text-sm text-foreground">{t('positions:detail.no_dossier')}</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                      {t('positions:detail.no_dossier')}
+                    </p>
                   )}
                 </div>
 
                 <Separator />
 
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                     {t('positions:detail.created')}
                   </p>
-                  <p className="text-sm text-foreground">
+                  <p className="text-sm text-gray-900 dark:text-gray-100">
                     {format(new Date(position.created_at), 'PPP', { locale })}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                     {t('positions:detail.last_updated')}
                   </p>
-                  <p className="text-sm text-foreground">
+                  <p className="text-sm text-gray-900 dark:text-gray-100">
                     {format(new Date(position.updated_at), 'PPP', { locale })}
                   </p>
                 </div>
@@ -281,10 +283,12 @@ function PositionDetailPage() {
                   <>
                     <Separator />
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">
+                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                         {t('positions:detail.version')}
                       </p>
-                      <p className="text-sm text-foreground">v{position.version}</p>
+                      <p className="text-sm text-gray-900 dark:text-gray-100">
+                        v{position.version}
+                      </p>
                     </div>
                   </>
                 )}

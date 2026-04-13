@@ -195,7 +195,7 @@ export function UsersListPage() {
   if (isLoading) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+        className="py-4 sm:py-6"
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -208,7 +208,7 @@ export function UsersListPage() {
   if (isError) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+        className="py-4 sm:py-6"
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <AlertCircle className="h-12 w-12 text-destructive" />
@@ -223,7 +223,7 @@ export function UsersListPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+      className="py-4 sm:py-6"
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -270,7 +270,7 @@ export function UsersListPage() {
             {/* Role Filter */}
             <div>
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="">
+                <SelectTrigger>
                   <SelectValue placeholder={t('usersList.filterByRole')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -286,7 +286,7 @@ export function UsersListPage() {
             {/* Status Filter */}
             <div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="">
+                <SelectTrigger>
                   <SelectValue placeholder={t('usersList.filterByStatus')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -302,7 +302,7 @@ export function UsersListPage() {
             {/* Type Filter */}
             <div>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="">
+                <SelectTrigger>
                   <SelectValue placeholder={t('usersList.filterByType')} />
                 </SelectTrigger>
                 <SelectContent>

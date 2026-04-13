@@ -16,7 +16,7 @@ export function CountryDossierSkeleton() {
 const { isRTL } = useDirection()
 return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="py-6 sm:py-8"
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -75,7 +75,7 @@ const { isRTL } = useDirection()
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="py-6 sm:py-8"
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -124,7 +124,7 @@ const { isRTL } = useDirection()
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="py-6 sm:py-8"
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -181,7 +181,7 @@ const { isRTL } = useDirection()
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="py-6 sm:py-8"
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -229,7 +229,7 @@ const { isRTL } = useDirection()
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="py-6 sm:py-8"
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
@@ -288,7 +288,7 @@ const { isRTL } = useDirection()
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="py-6 sm:py-8"
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8">

@@ -153,7 +153,7 @@ const navigate = useNavigate()
     <div className="min-h-screen">
       {/* Header */}
       <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="py-4 sm:py-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-start">
@@ -298,7 +298,7 @@ const navigate = useNavigate()
       </header>
 
       {/* Persons List */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="py-6">
         {data?.data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">

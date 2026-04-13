@@ -13,8 +13,10 @@ export const Route = createFileRoute('/_protected/reports/$reportId')({
 
 function ReportDetailPage() {
   const { reportId } = Route.useParams()
-  return (
-    <div className="container mx-auto py-4 sm:py-6 h-[calc(100vh-4rem)]">
+return (
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 h-[calc(100vh-4rem)]"
+    >
       <ReportBuilder initialReportId={reportId} />
     </div>
   )

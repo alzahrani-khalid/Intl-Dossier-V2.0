@@ -163,7 +163,7 @@ export default function MyWorkDashboard() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+      className="py-4 sm:py-6"
     >
       {/* Page Header */}
       <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

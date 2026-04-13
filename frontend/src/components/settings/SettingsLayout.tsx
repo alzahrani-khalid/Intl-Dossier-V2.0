@@ -39,7 +39,7 @@ export function SettingsLayout({
   const { isRTL } = useDirection()
 return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8"
+      className="py-4 sm:py-6 lg:py-8"
     >
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">

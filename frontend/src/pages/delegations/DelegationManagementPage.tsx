@@ -99,7 +99,7 @@ export function DelegationManagementPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6"
+      className="py-4 sm:py-6 space-y-6"
     >
       {/* Expiring Soon Banner */}
       <DelegationExpiryBanner />

@@ -209,7 +209,7 @@ const locale = isRTL ? ar : enUS
 
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="py-6">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-start">

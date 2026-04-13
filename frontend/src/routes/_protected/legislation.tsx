@@ -44,7 +44,7 @@ export const Route = createFileRoute('/_protected/legislation')({
 function LegislationPage() {
   const { t } = useTranslation('legislation')
   const { isRTL } = useDirection()
-  const navigate = useNavigate({ from: Route.fullPath })
+const navigate = useNavigate({ from: Route.fullPath })
   const searchParams = Route.useSearch()
 
   const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -65,7 +65,7 @@ function LegislationPage() {
   )
 
   return (
-    <div className="container mx-auto py-6 sm:py-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <LegislationList dossierId={searchParams.dossierId} onCreateClick={handleCreateClick} />
 
       {/* Create Legislation Sheet */}

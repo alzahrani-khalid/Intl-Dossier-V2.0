@@ -200,7 +200,7 @@ export function BulkActionsDemo() {
 
   return (
     <div
-      className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-6"
+      className="py-6 space-y-6"
     >
       {/* Page Header */}
       <div className="space-y-2">

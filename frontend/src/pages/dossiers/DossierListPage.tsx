@@ -446,7 +446,7 @@ const navigate = useNavigate()
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10"
+      className="py-6 sm:py-8 lg:py-10"
     >
       {/* Sample Data Banner - shows when sample data is active */}
       {hasSampleData && activeInstances.length > 0 && (

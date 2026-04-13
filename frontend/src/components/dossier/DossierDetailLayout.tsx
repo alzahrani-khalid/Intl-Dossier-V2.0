@@ -150,7 +150,7 @@ export function DossierDetailLayout({
   )
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+    <div className="py-4 sm:py-6 lg:py-8">
       {/* Breadcrumbs */}
       <nav
         className="flex items-center gap-2 text-sm sm:text-base mb-4 sm:mb-6"
