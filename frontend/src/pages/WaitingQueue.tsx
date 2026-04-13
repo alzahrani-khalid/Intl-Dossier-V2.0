@@ -85,7 +85,7 @@ interface WaitingItem {
 function WaitingQueuePageInner() {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const { toast } = useToast()
+  const { toast } = useToast()
   const queryClient = useQueryClient()
 
   const [activeTab, setActiveTab] = useState<string>('all')
@@ -356,9 +356,9 @@ const { toast } = useToast()
   })
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       {/* Header */}
-      <div className="border-b border-border bg-card">
+      <div className="border-b border-border">
         <div className="py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
@@ -431,9 +431,7 @@ const { toast } = useToast()
 
       {/* Bulk Job Progress Indicator */}
       {bulkJobId && bulkJobStatus && (
-        <div
-          className="border-b border-border bg-blue-50 dark:bg-blue-950"
-        >
+        <div className="border-b border-border bg-blue-50 dark:bg-blue-950">
           <div className="py-3">
             <div className="flex items-center gap-3">
               <Loader2 className="size-4 animate-spin text-blue-600" />

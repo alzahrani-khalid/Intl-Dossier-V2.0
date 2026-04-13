@@ -229,10 +229,10 @@ function EngagementsListPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
-        <div className="py-4 sm:py-6">
+      <header className="border-b pb-4 sm:pb-6">
+        <div>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-start">

@@ -111,7 +111,7 @@ interface QueueFilters {
 export function IntakeQueuePage() {
   const { t } = useTranslation(['common', 'intake'])
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [selectedTickets, setSelectedTickets] = useState<string[]>([])
   const [classifyDialogOpen, setClassifyDialogOpen] = useState(false)
@@ -267,9 +267,9 @@ const navigate = useNavigate()
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       {/* Header */}
-      <div className="border-b border-border bg-card">
+      <div className="border-b border-border">
         <div className="py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
@@ -569,9 +569,7 @@ const navigate = useNavigate()
 
       {/* Classify Dialog */}
       <Dialog open={classifyDialogOpen} onOpenChange={setClassifyDialogOpen}>
-        <DialogContent
-          className="max-h-[90vh] max-w-3xl overflow-y-auto"
-        >
+        <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl sm:text-2xl">
               {t('intake.classifyTicket', 'Classify Ticket')}

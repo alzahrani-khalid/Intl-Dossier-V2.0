@@ -33,7 +33,7 @@ import { useDirection } from '@/hooks/useDirection'
 export function ContactsDirectory() {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const { toast } = useToast()
 
   const [searchParams, setSearchParams] = useState<PersonSearchParams>({})
@@ -158,7 +158,7 @@ const navigate = useNavigate()
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <div className="border-b bg-background">
+      <div className="border-b">
         <div className="py-4 sm:py-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -188,22 +188,14 @@ const navigate = useNavigate()
                   <div className="px-2 py-1.5 text-sm font-medium">
                     {t('contactDirectory.export.exportAll')}
                   </div>
-                  <DropdownMenuItem
-                    onClick={() => handleExportAll('csv')}
-                    disabled={isExporting}
-                   
-                  >
+                  <DropdownMenuItem onClick={() => handleExportAll('csv')} disabled={isExporting}>
                     <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('contactDirectory.export.csv')}
                     <span className="ms-auto text-xs text-muted-foreground">
                       Excel {t('contactDirectory.export.compatible')}
                     </span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handleExportAll('vcard')}
-                    disabled={isExporting}
-                   
-                  >
+                  <DropdownMenuItem onClick={() => handleExportAll('vcard')} disabled={isExporting}>
                     <CreditCard className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('contactDirectory.export.vcard')}
                     <span className="ms-auto text-xs text-muted-foreground">
@@ -223,7 +215,6 @@ const navigate = useNavigate()
                       <DropdownMenuItem
                         onClick={() => handleExportSelected('csv')}
                         disabled={isExporting}
-                       
                       >
                         <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('contactDirectory.export.selectedCsv')}
@@ -231,7 +222,6 @@ const navigate = useNavigate()
                       <DropdownMenuItem
                         onClick={() => handleExportSelected('vcard')}
                         disabled={isExporting}
-                       
                       >
                         <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('contactDirectory.export.selectedVCard')}

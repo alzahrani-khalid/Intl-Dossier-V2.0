@@ -71,7 +71,7 @@ type PersonFormValues = z.infer<typeof personFormSchema>
 function PersonCreatePage() {
   const { t } = useTranslation('persons')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const createPerson = useCreatePerson()
 
@@ -126,9 +126,9 @@ const navigate = useNavigate()
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
+      <header className="border-b sticky top-0 z-10 backdrop-blur">
         <div className="py-4">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">

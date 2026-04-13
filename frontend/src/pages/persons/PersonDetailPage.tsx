@@ -177,9 +177,9 @@ function PersonDetailPage() {
   const biography = isRTL ? person.biography_ar : person.biography_en
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
+      <header className="border-b sticky top-0 z-10 backdrop-blur">
         <div className="py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
