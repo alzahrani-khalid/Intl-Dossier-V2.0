@@ -1,5 +1,25 @@
 # Milestones
 
+## v4.1 Post-Launch Fixes (Shipped: 2026-04-12)
+
+**Phases completed:** 2 phases (24-25), 7 plans, 6 quick tasks
+**Commits:** 89 | **Files changed:** 206 | **Lines:** +13,953 / -3,910
+**Timeline:** 4 days (2026-04-09 to 2026-04-12)
+
+**Key accomplishments:**
+
+- Fixed runtime issues from v4.0 deployment (calendar i18n, settings 406, analytics DNS routing)
+- Completed full 87-finding audit across 8 user journeys with 6 specialized auditor agents
+- Resolved all theme token hardcoding with centralized semantic-colors system
+- Moved auth listener to React lifecycle (memory leak + lock contention fix)
+- Achieved 100% Arabic translation parity (1464 EN / 1473 AR keys)
+- Hardened notification endpoints with type-safe count coercion
+
+**Tech debt:** None — all 87 findings resolved
+**Archive:** `.planning/milestones/v4.1-ROADMAP.md`
+
+---
+
 ## v4.0 Live Operations (Shipped: 2026-04-09)
 
 **Phases completed:** 10 phases, 30 plans, 30 tasks

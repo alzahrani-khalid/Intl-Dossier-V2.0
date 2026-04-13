@@ -5,6 +5,7 @@
 - ✅ **v2.0 Production Quality** — Phases 1-7 (shipped 2026-03-28) — [archive](milestones/v2.0-ROADMAP.md)
 - ✅ **v3.0 Connected Workflow** — Phases 8-13 (shipped 2026-04-06) — [archive](milestones/v3.0-ROADMAP.md)
 - ✅ **v4.0 Live Operations** — Phases 14-23 (shipped 2026-04-09) — [archive](milestones/v4.0-ROADMAP.md)
+- ✅ **v4.1 Post-Launch Fixes** — Phases 24-25 (shipped 2026-04-12) — [archive](milestones/v4.1-ROADMAP.md)
 
 ## Phases
 
@@ -55,76 +56,33 @@ Full details: [v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 
 </details>
 
-### 🚧 v4.1 Post-Launch Fixes
+<details>
+<summary>✅ v4.1 Post-Launch Fixes (Phases 24-25) — SHIPPED 2026-04-12</summary>
 
-**Milestone Goal:** Fix runtime issues discovered during post-v4.0 browser inspection.
+- [x] Phase 24: Browser Inspection Fixes (2/2 plans) — calendar i18n, settings 406, analytics DNS
+- [x] Phase 25: Deferred Audit Fixes (5 plans + 6 quick tasks) — 87/87 audit findings resolved
 
-- [x] **Phase 24: Browser Inspection Fixes** - Fix calendar i18n missing keys, settings page 406 errors, and Supabase direct-call DNS failures
+Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 
-#### Phase 24: Browser Inspection Fixes
-
-**Goal**: Fix runtime issues discovered during post-v4.0 deployment browser inspection
-**Depends on**: Phase 23
-**Requirements**: FIX-01, FIX-02, FIX-03
-**Success Criteria** (what must be TRUE):
-
-1. Calendar page shows translated labels (not raw i18n keys) in both English and Arabic
-2. Settings page loads without 406 errors on the users Supabase query
-3. Dashboard Supabase Edge Function calls (notifications-center, analytics-dashboard) go through the backend proxy instead of direct browser-to-Supabase calls, eliminating ERR_NAME_NOT_RESOLVED errors
-
-**Plans:** 2 plans
-
-Plans:
-
-- [ ] 24-01-PLAN.md — Fix calendar i18n, settings 406, and analytics DNS errors
-- [ ] 24-02-PLAN.md — Gap closure: notifications-center proxy routing + code quality fixes
+</details>
 
 ## Progress
 
 <!-- gsd:progress:start -->
 
-| Phase                             | Milestone | Plans Complete | Status      | Completed  |
-| --------------------------------- | --------- | -------------- | ----------- | ---------- |
-| 14. Production Deployment         | v4.0      | 3/3            | Complete    | 2026-04-06 |
-| 15. Notification Backend & In-App | v4.0      | 3/3            | Complete    | 2026-04-06 |
-| 16. Email & Push Channels         | v4.0      | 4/4            | Complete    | 2026-04-06 |
-| 17. Seed Data & First Run         | v4.0      | 5/5            | Complete    | 2026-04-06 |
-| 18. E2E Test Suite                | v4.0      | 4/4            | Complete    | 2026-04-07 |
-| 19. Tech Debt Cleanup             | v4.0      | 2/2            | Complete    | 2026-04-08 |
-| 20. Live Operations Bring Up      | v4.0      | 1/1            | Complete    | 2026-04-09 |
-| 21. Digest Scheduler Wiring Fix   | v4.0      | 1/1            | Complete    | 2026-04-09 |
-| 22. E2E Test Fixes                | v4.0      | 1/1            | Complete    | 2026-04-09 |
-| 23. Missing Verifications         | v4.0      | 2/2            | Complete    | 2026-04-09 |
-| 24. Browser Inspection Fixes      | TBD       | 2/1            | Complete    | 2026-04-12 |
-| 25. Deferred Audit Fixes          | TBD       | 1/5            | In Progress | -          |
+| Phase                             | Milestone | Plans Complete | Status   | Completed  |
+| --------------------------------- | --------- | -------------- | -------- | ---------- |
+| 14. Production Deployment         | v4.0      | 3/3            | Complete | 2026-04-06 |
+| 15. Notification Backend & In-App | v4.0      | 3/3            | Complete | 2026-04-06 |
+| 16. Email & Push Channels         | v4.0      | 4/4            | Complete | 2026-04-06 |
+| 17. Seed Data & First Run         | v4.0      | 5/5            | Complete | 2026-04-06 |
+| 18. E2E Test Suite                | v4.0      | 4/4            | Complete | 2026-04-07 |
+| 19. Tech Debt Cleanup             | v4.0      | 2/2            | Complete | 2026-04-08 |
+| 20. Live Operations Bring Up      | v4.0      | 1/1            | Complete | 2026-04-09 |
+| 21. Digest Scheduler Wiring Fix   | v4.0      | 1/1            | Complete | 2026-04-09 |
+| 22. E2E Test Fixes                | v4.0      | 1/1            | Complete | 2026-04-09 |
+| 23. Missing Verifications         | v4.0      | 2/2            | Complete | 2026-04-09 |
+| 24. Browser Inspection Fixes      | v4.1      | 2/2            | Complete | 2026-04-12 |
+| 25. Deferred Audit Fixes          | v4.1      | 5/5            | Complete | 2026-04-12 |
 
 <!-- gsd:progress:end -->
-
-- [ ] **Phase 25: Deferred Audit Fixes** — Resolve 12 deferred findings from FIX-PLAN audit plus breadcrumb/skeleton rollout
-
-#### Phase 25: Deferred Audit Fixes
-
-**Goal:** Close remaining deferred audit findings: component decomposition, architectural state management, URL-driven state, data quality hardening, and UI pattern rollout
-**Depends on:** Phase 24
-**Requirements**: C-12, D-10, D-11, C-20, D-41, D-32, D-33, D-34, N-20, N-04, breadcrumb/skeleton rollout
-**Success Criteria** (what must be TRUE):
-
-1. DossierCreateWizard split into step components (each < 300 LOC)
-2. Query key factory per domain prevents stale invalidation bugs
-3. Dossier context split into focused sub-contexts (no unnecessary re-renders)
-4. Pagination state in URL params (`?page=2`) — refresh preserves page
-5. Kanban filter state in URL params — shareable filtered URLs work
-6. After-action version conflict detection prevents silent overwrites
-7. All 8 dossier type list pages have breadcrumbs and loading skeletons
-8. Type tab active state visually highlighted on dossier navigation
-9. URL naming conventions standardized with redirects for old paths
-
-**Plans:** 5 plans
-
-Plans:
-
-- [ ] 25-01-PLAN.md — Wizard decomposition (C-12)
-- [ ] 25-02-PLAN.md — Query key factories + context split (D-10, D-11, C-20)
-- [ ] 25-03-PLAN.md — After-action conflict detection (D-41)
-- [ ] 25-04-PLAN.md — URL-driven pagination + kanban filters (D-33, D-34)
-- [ ] 25-05-PLAN.md — Breadcrumb/skeleton rollout + route naming (D-32, N-20, N-04, breadcrumb/skeleton)
