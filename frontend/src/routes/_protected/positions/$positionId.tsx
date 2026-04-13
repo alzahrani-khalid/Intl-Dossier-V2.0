@@ -100,7 +100,7 @@ const locale = isRTL ? ar : enUS
   if (!position) return null
 
   const statusColors: Record<string, string> = {
-    draft: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
+    draft: 'bg-muted text-muted-foreground',
     under_review: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200',
     approved: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-200',
     published: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-200',
@@ -108,9 +108,9 @@ const locale = isRTL ? ar : enUS
   }
 
   return (
-    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`min-h-screen bg-muted ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-card border-b border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
@@ -128,7 +128,7 @@ const locale = isRTL ? ar : enUS
               {/* Title and Metadata */}
               <div className="space-y-2">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  <h1 className="text-3xl font-bold text-foreground">
                     {isRTL ? position.title_ar : position.title_en}
                   </h1>
                   <Badge className={statusColors[position.status]}>
@@ -138,7 +138,7 @@ const locale = isRTL ? ar : enUS
                     {t(`positions:type.${position.position_type_id}`)}
                   </Badge>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
                     {format(new Date(position.updated_at), 'PPP', { locale })}
@@ -219,7 +219,7 @@ const locale = isRTL ? ar : enUS
               </CardHeader>
               <CardContent>
                 {/* This would be populated with actual engagement data */}
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <div className="text-center py-8 text-muted-foreground">
                   <Building className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p className="text-sm">{t('positions:detail.no_related_engagements')}</p>
                 </div>
@@ -239,7 +239,7 @@ const locale = isRTL ? ar : enUS
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <p className="text-sm font-medium text-muted-foreground">
                     {t('positions:detail.dossier')}
                   </p>
                   {(position as any).dossier_id ? (
@@ -253,7 +253,7 @@ const locale = isRTL ? ar : enUS
                       {t('positions:detail.view_dossier')}
                     </Link>
                   ) : (
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                    <p className="text-sm text-foreground">
                       {t('positions:detail.no_dossier')}
                     </p>
                   )}
@@ -262,19 +262,19 @@ const locale = isRTL ? ar : enUS
                 <Separator />
 
                 <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <p className="text-sm font-medium text-muted-foreground">
                     {t('positions:detail.created')}
                   </p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100">
+                  <p className="text-sm text-foreground">
                     {format(new Date(position.created_at), 'PPP', { locale })}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <p className="text-sm font-medium text-muted-foreground">
                     {t('positions:detail.last_updated')}
                   </p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100">
+                  <p className="text-sm text-foreground">
                     {format(new Date(position.updated_at), 'PPP', { locale })}
                   </p>
                 </div>
@@ -283,10 +283,10 @@ const locale = isRTL ? ar : enUS
                   <>
                     <Separator />
                     <div>
-                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      <p className="text-sm font-medium text-muted-foreground">
                         {t('positions:detail.version')}
                       </p>
-                      <p className="text-sm text-gray-900 dark:text-gray-100">
+                      <p className="text-sm text-foreground">
                         v{position.version}
                       </p>
                     </div>
