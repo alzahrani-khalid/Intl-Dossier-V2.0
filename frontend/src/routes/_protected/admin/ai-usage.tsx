@@ -24,6 +24,7 @@ import {
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
+import { PageHeader } from '@/components/layout/PageHeader'
 import {
   BarChart3,
   TrendingUp,
@@ -198,38 +199,30 @@ function AIUsageDashboard() {
   }
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <BarChart3 className="h-7 w-7 text-primary" />
-            {t('usage.title', 'AI Usage Dashboard')}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {t('usage.description', 'Monitor AI feature usage, costs, and performance')}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Select value={dateRange} onValueChange={(v) => setDateRange(v as typeof dateRange)}>
-            <SelectTrigger className="w-32">
-              <Calendar className="h-4 w-4 me-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7d">{t('usage.dateRange.7d', 'Last 7 days')}</SelectItem>
-              <SelectItem value="30d">{t('usage.dateRange.30d', 'Last 30 days')}</SelectItem>
-              <SelectItem value="90d">{t('usage.dateRange.90d', 'Last 90 days')}</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isRefetching}>
-            <RefreshCw className={cn('h-4 w-4', isRefetching && 'animate-spin')} />
-          </Button>
-        </div>
-      </div>
+    <div className="py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <PageHeader
+        icon={<BarChart3 className="h-6 w-6" />}
+        title={t('usage.title', 'AI Usage Dashboard')}
+        subtitle={t('usage.description', 'Monitor AI feature usage, costs, and performance')}
+        actions={
+          <div className="flex items-center gap-3">
+            <Select value={dateRange} onValueChange={(v) => setDateRange(v as typeof dateRange)}>
+              <SelectTrigger className="w-32">
+                <Calendar className="h-4 w-4 me-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7d">{t('usage.dateRange.7d', 'Last 7 days')}</SelectItem>
+                <SelectItem value="30d">{t('usage.dateRange.30d', 'Last 30 days')}</SelectItem>
+                <SelectItem value="90d">{t('usage.dateRange.90d', 'Last 90 days')}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isRefetching}>
+              <RefreshCw className={cn('h-4 w-4', isRefetching && 'animate-spin')} />
+            </Button>
+          </div>
+        }
+      />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

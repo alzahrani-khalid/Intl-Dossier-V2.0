@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PageHeader } from '@/components/layout/PageHeader'
+import { Workflow } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   WorkflowRulesList,
@@ -59,7 +60,7 @@ export function WorkflowAutomationPage() {
   // Render builder view
   if (viewMode === 'create' || viewMode === 'edit') {
     return (
-      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <div className="py-6">
         <WorkflowBuilder rule={selectedRule} onSave={handleSave} onCancel={handleCancel} />
       </div>
     )
@@ -67,9 +68,10 @@ export function WorkflowAutomationPage() {
 
   // Render list view with tabs
   return (
-    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+    <div className="py-6">
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
         <PageHeader
+          icon={<Workflow className="h-6 w-6" />}
           title={t('title')}
           subtitle={t('subtitle')}
           actions={

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { usePositions } from '../../hooks/usePositions'
 import { PositionList } from '../../components/positions/PositionList'
 import { AttachPositionDialog } from '../../components/positions/AttachPositionDialog'
+import { PageHeader } from '../../components/layout/PageHeader'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import {
@@ -104,80 +105,71 @@ export function PositionsLibraryPage() {
     searchQuery || statusFilter !== 'all' || typeFilter !== 'all' || sortBy !== 'updated_at'
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Page Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="space-y-1">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                <FileText className="h-8 w-8" />
-                {t('positions:library.title')}
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400">
-                {t('positions:library.subtitle', { count: totalCount })}
-              </p>
-            </div>
-            <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
-              <Plus className="h-5 w-5" />
-              {t('positions:library.create_position')}
-            </Button>
-          </div>
+    <div>
+      <PageHeader
+        icon={<FileText className="h-6 w-6" />}
+        title={t('positions:library.title')}
+        subtitle={t('positions:library.subtitle', { count: totalCount })}
+        actions={
+          <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
+            <Plus className="h-5 w-5" />
+            {t('positions:library.create_position')}
+          </Button>
+        }
+      />
 
-          {/* Quick Stats */}
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription className="text-xs">
-                  {t('positions:library.stats.total')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.total}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription className="text-xs">
-                  {t('positions:library.stats.published')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                  {stats.byStatus?.published || 0}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription className="text-xs">
-                  {t('positions:library.stats.in_review')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                  {stats.byStatus?.review || 0}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription className="text-xs">
-                  {t('positions:library.stats.drafts')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
-                  {stats.byStatus?.draft || 0}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+      {/* Quick Stats */}
+      <div className="mt-6">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription className="text-xs">
+                {t('positions:library.stats.total')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.total}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription className="text-xs">
+                {t('positions:library.stats.published')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                {stats.byStatus?.published || 0}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription className="text-xs">
+                {t('positions:library.stats.in_review')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                {stats.byStatus?.review || 0}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription className="text-xs">
+                {t('positions:library.stats.drafts')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
+                {stats.byStatus?.draft || 0}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="py-8">
         {/* Search and Filters */}
         <Card className="mb-6">
           <CardHeader>

@@ -12,6 +12,7 @@ import {
   Eye,
   Pencil,
   Trash2,
+  MessageSquare,
 } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
@@ -215,9 +216,10 @@ export function ForumsPage() {
   ]
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
+    <div className="py-4 sm:py-6 space-y-6">
       {/* Header */}
       <PageHeader
+        icon={<MessageSquare className="h-6 w-6" />}
         title={t('pageTitle')}
         subtitle={t('pageSubtitle')}
         actions={

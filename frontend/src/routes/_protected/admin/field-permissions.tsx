@@ -44,6 +44,7 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { supabase } from '@/lib/supabase'
+import { PageHeader } from '@/components/layout/PageHeader'
 import {
   Shield,
   FileText,
@@ -218,30 +219,24 @@ function FieldPermissionsPage() {
   }
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Shield className="h-7 w-7 text-primary" />
-            {t('title')}
-          </h1>
-          <p className="text-muted-foreground mt-1">{t('description')}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" onClick={() => refetchPermissions()}>
-            <RefreshCw className="h-4 w-4 me-2" />
-            {t('actions.refresh')}
-          </Button>
-          <Button onClick={() => setShowPermissionDialog(true)}>
-            <Plus className="h-4 w-4 me-2" />
-            {t('permissions.create')}
-          </Button>
-        </div>
-      </div>
+    <div className="py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <PageHeader
+        icon={<Shield className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={t('description')}
+        actions={
+          <div className="flex items-center gap-3">
+            <Button variant="outline" onClick={() => refetchPermissions()}>
+              <RefreshCw className="h-4 w-4 me-2" />
+              {t('actions.refresh')}
+            </Button>
+            <Button onClick={() => setShowPermissionDialog(true)}>
+              <Plus className="h-4 w-4 me-2" />
+              {t('permissions.create')}
+            </Button>
+          </div>
+        }
+      />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">

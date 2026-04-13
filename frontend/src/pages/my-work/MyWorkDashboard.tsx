@@ -5,7 +5,7 @@
 import { useTranslation } from 'react-i18next'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import { useCallback, useMemo } from 'react'
-import { LayoutGrid } from 'lucide-react'
+import { LayoutGrid, LayoutDashboard } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { useMyWorkDashboard, useTeamWorkload } from '@/hooks/useUnifiedWork'
 import { useUnifiedWorkRealtime, useCurrentUserId } from '@/hooks/useUnifiedWorkRealtime'
@@ -163,9 +163,10 @@ export default function MyWorkDashboard() {
   }, [items.data])
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div className="py-4 sm:py-6">
       {/* Page Header */}
       <PageHeader
+        icon={<LayoutDashboard className="h-6 w-6" />}
         title={t('title', 'My Work')}
         subtitle={t('subtitle', 'Track your commitments, tasks, and intake tickets in one place')}
         actions={

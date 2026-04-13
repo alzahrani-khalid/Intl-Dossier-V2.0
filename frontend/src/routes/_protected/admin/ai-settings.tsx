@@ -27,8 +27,9 @@ import {
 } from '@/components/ui/select'
 // cn utility available if needed for conditional classes
 import { supabase } from '@/lib/supabase'
+import { PageHeader } from '@/components/layout/PageHeader'
 import {
-  Settings,
+  Bot,
   Brain,
   DollarSign,
   Shield,
@@ -253,24 +254,14 @@ function AISettingsPage() {
   }
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Settings className="h-7 w-7 text-primary" />
-            {t('settings.title', 'AI Settings')}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {t('settings.description', 'Configure AI features, models, and spending limits')}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          {hasChanges && (
-            <>
+    <div className="py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <PageHeader
+        icon={<Bot className="h-6 w-6" />}
+        title={t('settings.title', 'AI Settings')}
+        subtitle={t('settings.description', 'Configure AI features, models, and spending limits')}
+        actions={
+          hasChanges ? (
+            <div className="flex items-center gap-3">
               <Button variant="outline" onClick={handleReset}>
                 <RotateCcw className="h-4 w-4 me-2" />
                 {t('settings.reset', 'Reset')}
@@ -279,10 +270,10 @@ function AISettingsPage() {
                 <Save className="h-4 w-4 me-2" />
                 {t('settings.save', 'Save Changes')}
               </Button>
-            </>
-          )}
-        </div>
-      </div>
+            </div>
+          ) : undefined
+        }
+      />
 
       {/* Unsaved Changes Warning */}
       {hasChanges && (

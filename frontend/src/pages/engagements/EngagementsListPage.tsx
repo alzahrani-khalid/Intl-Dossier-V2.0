@@ -24,6 +24,7 @@ import {
   Video,
   Building2,
   Globe,
+  Handshake,
 } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
@@ -235,6 +236,7 @@ function EngagementsListPage() {
       <header className="border-b bg-background sticky top-0 z-10">
         <div className="py-4 sm:py-6">
           <PageHeader
+            icon={<Handshake className="h-6 w-6" />}
             title={t('title', 'Engagements')}
             subtitle={t('subtitle', 'Manage bilateral meetings, missions, and delegations')}
             actions={

@@ -45,6 +45,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { supabase } from '@/lib/supabase'
+import { PageHeader } from '@/components/layout/PageHeader'
 import {
   Shield,
   Database,
@@ -213,32 +214,24 @@ function DataRetentionPage() {
   }
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Database className="h-7 w-7 text-primary" />
-            {t('title', 'Data Retention Policies')}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {t('description', 'Configure data lifecycle, retention periods, and legal holds')}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" onClick={() => setShowProcessorDialog(true)}>
-            <Play className="h-4 w-4 me-2" />
-            {t('actions.runProcessor', 'Run Processor')}
-          </Button>
-          <Button onClick={() => setShowPolicyDialog(true)}>
-            <Plus className="h-4 w-4 me-2" />
-            {t('actions.newPolicy', 'New Policy')}
-          </Button>
-        </div>
-      </div>
+    <div className="py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <PageHeader
+        icon={<Database className="h-6 w-6" />}
+        title={t('title', 'Data Retention Policies')}
+        subtitle={t('description', 'Configure data lifecycle, retention periods, and legal holds')}
+        actions={
+          <div className="flex items-center gap-3">
+            <Button variant="outline" onClick={() => setShowProcessorDialog(true)}>
+              <Play className="h-4 w-4 me-2" />
+              {t('actions.runProcessor', 'Run Processor')}
+            </Button>
+            <Button onClick={() => setShowPolicyDialog(true)}>
+              <Plus className="h-4 w-4 me-2" />
+              {t('actions.newPolicy', 'New Policy')}
+            </Button>
+          </div>
+        }
+      />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">

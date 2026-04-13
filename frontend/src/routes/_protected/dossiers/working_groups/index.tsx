@@ -7,7 +7,8 @@
 
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { Loader2, Plus, Briefcase } from 'lucide-react'
+import { Loader2, Plus, Users } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { useDossiersByType } from '@/hooks/useDossier'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { Button } from '@/components/ui/button'
@@ -76,27 +77,20 @@ function WorkingGroupsListPage() {
   }, [navigate, page])
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-      {/* Page Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-        <div className="flex items-center gap-3">
-          <Briefcase className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-          <div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold text-start">
-              {t('type.working_group')}
-            </h1>
-            <p className="text-sm sm:text-base text-muted-foreground mt-1">
-              {t('typeDescription.working_group')}
-            </p>
-          </div>
-        </div>
-        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
-          <Link to="/dossiers/create">
-            <Plus className="h-4 w-4 me-2" />
-            {t('action.create')}
-          </Link>
-        </Button>
-      </header>
+    <div className="py-4 sm:py-6 lg:py-8">
+      <PageHeader
+        icon={<Users className="h-6 w-6" />}
+        title={t('type.working_group')}
+        subtitle={t('typeDescription.working_group')}
+        actions={
+          <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
+            <Link to="/dossiers/create">
+              <Plus className="h-4 w-4 me-2" />
+              {t('action.create')}
+            </Link>
+          </Button>
+        }
+      />
 
       {/* Search Bar */}
       <div className="mb-6">
@@ -144,7 +138,7 @@ function WorkingGroupsListPage() {
       {/* Empty State */}
       {!isLoading && !error && filteredDossiers?.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 sm:py-16 lg:py-20 text-center">
-          <Briefcase className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mb-4" />
+          <Users className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mb-4" />
           <h3 className="text-base sm:text-lg font-semibold mb-2">
             {searchQuery ? t('list.emptyFiltered') : t('list.empty')}
           </h3>

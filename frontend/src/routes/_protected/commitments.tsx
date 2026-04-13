@@ -19,7 +19,8 @@ import { PersonalCommitmentsDashboard } from '@/components/commitments/PersonalC
 import { useDossier } from '@/hooks/useDossier'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Home } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { ArrowLeft, Home, CheckSquare } from 'lucide-react'
 import type {
   CommitmentStatus,
   CommitmentPriority,
@@ -64,7 +65,7 @@ function CommitmentsPage() {
   const searchParams = Route.useSearch()
   const navigate = Route.useNavigate()
   const { isRTL } = useDirection()
-// Fetch dossier details when dossierId is present (for type-specific navigation)
+  // Fetch dossier details when dossierId is present (for type-specific navigation)
   const { data: dossier } = useDossier(searchParams.dossierId ?? '', undefined, {
     enabled: !!searchParams.dossierId,
   })
@@ -137,53 +138,41 @@ function CommitmentsPage() {
 
   // List view with optional dossier context
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div>
       {/* Page Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            {/* Navigation */}
-            <div className="flex items-center gap-2">
-              {searchParams.dossierId ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="min-h-11"
-                  onClick={() => {
-                    // Navigate to type-specific dossier route
-                    navigate({
-                      to: getDossierDetailPath(searchParams.dossierId!, dossier?.type),
-                    })
-                  }}
-                >
-                  <ArrowLeft className={`size-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
-                  {t('detail.dossier')}
-                </Button>
-              ) : (
-                <Link to="/commitments" search={{ view: 'dashboard' } as any}>
-                  <Button variant="ghost" size="sm" className="min-h-11">
-                    <Home className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                    {t('pageTitle')}
-                  </Button>
-                </Link>
-              )}
-            </div>
-
-            {/* Title */}
-            <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground text-start">
-                {t('title')}
-              </h1>
-              {searchParams.dossierId && (
-                <p className="mt-1 text-sm text-muted-foreground text-start">{t('subtitle')}</p>
-              )}
-            </div>
-          </div>
-        </div>
+      <div className="flex items-center gap-2 mb-4">
+        {searchParams.dossierId ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="min-h-11"
+            onClick={() => {
+              navigate({
+                to: getDossierDetailPath(searchParams.dossierId!, dossier?.type),
+              })
+            }}
+          >
+            <ArrowLeft className={`size-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
+            {t('detail.dossier')}
+          </Button>
+        ) : (
+          <Link to="/commitments" search={{ view: 'dashboard' } as any}>
+            <Button variant="ghost" size="sm" className="min-h-11">
+              <Home className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+              {t('pageTitle')}
+            </Button>
+          </Link>
+        )}
       </div>
 
+      <PageHeader
+        icon={<CheckSquare className="h-6 w-6" />}
+        title={t('title')}
+        subtitle={searchParams.dossierId ? t('subtitle') : undefined}
+      />
+
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="py-6 sm:py-8">
         <CommitmentsList
           dossierId={searchParams.dossierId}
           status={statusArray}

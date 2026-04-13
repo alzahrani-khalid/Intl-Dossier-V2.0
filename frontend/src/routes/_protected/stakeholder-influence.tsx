@@ -83,6 +83,7 @@ import {
 import type { InfluenceTier, InfluenceReportType } from '@/types/stakeholder-influence.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { PageHeader } from '@/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_protected/stakeholder-influence')({
   component: StakeholderInfluencePage,
@@ -95,7 +96,7 @@ export const Route = createFileRoute('/_protected/stakeholder-influence')({
 function StakeholderInfluencePage() {
   const { t } = useTranslation('stakeholder-influence')
   const { isRTL } = useDirection()
-// State
+  // State
   const [activeTab, setActiveTab] = useState('network')
   const [selectedDossierId, setSelectedDossierId] = useState<string | null>(null)
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null)
@@ -160,117 +161,111 @@ function StakeholderInfluencePage() {
   })
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Network className="h-6 w-6 sm:h-8 sm:w-8" />
-            {t('title', 'Stakeholder Influence')}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {t(
-              'description',
-              'Analyze influence and identify key connectors for strategic planning',
-            )}
-          </p>
-        </div>
-
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={handleCalculateScores}
-            disabled={calculateScores.isPending}
-          >
-            {calculateScores.isPending ? (
-              <Loader2 className="h-4 w-4 me-2 animate-spin" />
-            ) : (
-              <RefreshCw className="h-4 w-4 me-2" />
-            )}
-            {t('recalculate', 'Recalculate')}
-          </Button>
-          <Dialog open={showCreateReport} onOpenChange={setShowCreateReport}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 me-2" />
-                {t('new_report', 'New Report')}
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t('create_report', 'Create Influence Report')}</DialogTitle>
-                <DialogDescription>
-                  {t('create_report_desc', 'Generate a strategic analysis report')}
-                </DialogDescription>
-              </DialogHeader>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  const formData = new FormData(e.currentTarget)
-                  handleCreateReport({
-                    title_en: formData.get('title_en') as string,
-                    title_ar: formData.get('title_ar') as string,
-                    report_type: formData.get('report_type') as InfluenceReportType,
-                    description_en: formData.get('description_en') as string,
-                    description_ar: formData.get('description_ar') as string,
-                  })
-                }}
-              >
-                <div className="space-y-4 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="title_en">{t('title_en', 'Title (English)')}</Label>
-                      <Input id="title_en" name="title_en" required />
+    <div className="py-6">
+      <PageHeader
+        icon={<Network className="h-6 w-6" />}
+        title={t('title', 'Stakeholder Influence')}
+        subtitle={t(
+          'description',
+          'Analyze influence and identify key connectors for strategic planning',
+        )}
+        actions={
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={handleCalculateScores}
+              disabled={calculateScores.isPending}
+            >
+              {calculateScores.isPending ? (
+                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4 me-2" />
+              )}
+              {t('recalculate', 'Recalculate')}
+            </Button>
+            <Dialog open={showCreateReport} onOpenChange={setShowCreateReport}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 me-2" />
+                  {t('new_report', 'New Report')}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{t('create_report', 'Create Influence Report')}</DialogTitle>
+                  <DialogDescription>
+                    {t('create_report_desc', 'Generate a strategic analysis report')}
+                  </DialogDescription>
+                </DialogHeader>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    const formData = new FormData(e.currentTarget)
+                    handleCreateReport({
+                      title_en: formData.get('title_en') as string,
+                      title_ar: formData.get('title_ar') as string,
+                      report_type: formData.get('report_type') as InfluenceReportType,
+                      description_en: formData.get('description_en') as string,
+                      description_ar: formData.get('description_ar') as string,
+                    })
+                  }}
+                >
+                  <div className="space-y-4 py-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="title_en">{t('title_en', 'Title (English)')}</Label>
+                        <Input id="title_en" name="title_en" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="title_ar">{t('title_ar', 'Title (Arabic)')}</Label>
+                        <Input id="title_ar" name="title_ar" dir="rtl" required />
+                      </div>
                     </div>
                     <div>
-                      <Label htmlFor="title_ar">{t('title_ar', 'Title (Arabic)')}</Label>
-                      <Input id="title_ar" name="title_ar" dir="rtl" required />
+                      <Label htmlFor="report_type">{t('report_type', 'Report Type')}</Label>
+                      <Select name="report_type" defaultValue="full_network_analysis">
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(REPORT_TYPE_LABELS).map(([key, labels]) => (
+                            <SelectItem key={key} value={key}>
+                              {isRTL ? labels.ar : labels.en}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="report_type">{t('report_type', 'Report Type')}</Label>
-                    <Select name="report_type" defaultValue="full_network_analysis">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(REPORT_TYPE_LABELS).map(([key, labels]) => (
-                          <SelectItem key={key} value={key}>
-                            {isRTL ? labels.ar : labels.en}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="description_en">
-                        {t('description_en', 'Description (EN)')}
-                      </Label>
-                      <Textarea id="description_en" name="description_en" rows={2} />
-                    </div>
-                    <div>
-                      <Label htmlFor="description_ar">
-                        {t('description_ar', 'Description (AR)')}
-                      </Label>
-                      <Textarea id="description_ar" name="description_ar" dir="rtl" rows={2} />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="description_en">
+                          {t('description_en', 'Description (EN)')}
+                        </Label>
+                        <Textarea id="description_en" name="description_en" rows={2} />
+                      </div>
+                      <div>
+                        <Label htmlFor="description_ar">
+                          {t('description_ar', 'Description (AR)')}
+                        </Label>
+                        <Textarea id="description_ar" name="description_ar" dir="rtl" rows={2} />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">{t('cancel', 'Cancel')}</Button>
-                  </DialogClose>
-                  <Button type="submit" disabled={createReport.isPending}>
-                    {createReport.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-                    {t('generate', 'Generate Report')}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="outline">{t('cancel', 'Cancel')}</Button>
+                    </DialogClose>
+                    <Button type="submit" disabled={createReport.isPending}>
+                      {createReport.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+                      {t('generate', 'Generate Report')}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        }
+      />
 
       {/* Statistics Overview */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">

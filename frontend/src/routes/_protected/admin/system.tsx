@@ -23,6 +23,7 @@ import {
   Database,
   Download,
 } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_protected/admin/system')({
   component: AdminSystemPage,
@@ -204,19 +205,12 @@ function AdminSystemPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="p-3 bg-primary/10 rounded-lg">
-          <Settings className="h-6 w-6 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">{t('system.title', 'System Utilities')}</h1>
-          <p className="text-muted-foreground">
-            {t('system.subtitle', 'Maintenance and data management tools')}
-          </p>
-        </div>
-      </div>
+    <div className="py-6 space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+      <PageHeader
+        icon={<Settings className="h-6 w-6" />}
+        title={t('system.title', 'System Utilities')}
+        subtitle={t('system.subtitle', 'Maintenance and data management tools')}
+      />
 
       {/* Warning Banner */}
       <Alert variant="default" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
