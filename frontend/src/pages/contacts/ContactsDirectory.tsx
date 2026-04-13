@@ -157,10 +157,10 @@ export function ContactsDirectory() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col">
       {/* Header */}
       <div className="border-b">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="py-4 sm:py-6">
           <PageHeader
             icon={<Users className="h-6 w-6" />}
             title={t('contactDirectory.title')}
@@ -258,7 +258,7 @@ export function ContactsDirectory() {
       </div>
 
       {/* Contact List */}
-      <div className="flex-1 container mx-auto py-6">
+      <div className="flex-1 py-6">
         <ContactList
           contacts={searchResults?.contacts || []}
           tags={searchResults?.tags || []}

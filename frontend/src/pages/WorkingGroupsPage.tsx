@@ -217,9 +217,9 @@ export default function WorkingGroupsPage() {
       case 'suspended':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
       case 'disbanded':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+        return 'bg-muted text-muted-foreground'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-muted text-muted-foreground'
     }
   }
 
@@ -246,7 +246,7 @@ export default function WorkingGroupsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
+    <div className="py-4 sm:py-6 space-y-6">
       {/* Header */}
       <PageHeader
         icon={<Users className="h-6 w-6" />}

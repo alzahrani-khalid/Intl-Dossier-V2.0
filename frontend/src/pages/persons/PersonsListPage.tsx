@@ -108,7 +108,7 @@ function PersonsListPage() {
       case 2:
         return 'bg-blue-500/10 text-blue-600 border-blue-200'
       default:
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted text-muted-foreground border'
     }
   }
 
@@ -151,10 +151,10 @@ function PersonsListPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Header */}
       <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="py-4 sm:py-6">
           <PageHeader
             icon={<Users className="h-6 w-6" />}
             title={t('title', 'Key Contacts')}
@@ -296,7 +296,7 @@ function PersonsListPage() {
       </header>
 
       {/* Persons List */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="py-6">
         {data?.data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">

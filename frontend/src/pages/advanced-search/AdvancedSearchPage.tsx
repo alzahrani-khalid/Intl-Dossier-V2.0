@@ -67,7 +67,7 @@ const entityIcons: Record<SearchableEntityType, React.ComponentType<{ className?
 // Status badge colors
 const statusColors: Record<string, string> = {
   active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
+  inactive: 'bg-muted text-muted-foreground',
   archived: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
   draft: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
   published: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
@@ -144,8 +144,8 @@ export function AdvancedSearchPage() {
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3 min-w-0">
-              <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 shrink-0">
-                <IconComponent className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              <div className="p-2 rounded-lg bg-muted shrink-0">
+                <IconComponent className="h-5 w-5 text-muted-foreground" />
               </div>
               <div className="min-w-0">
                 <CardTitle className="text-base line-clamp-1">
@@ -173,12 +173,12 @@ export function AdvancedSearchPage() {
         {(result.snippet_en || result.snippet_ar) && (
           <CardContent className="pt-0">
             <p
-              className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
+              className="text-sm text-muted-foreground line-clamp-2"
               dangerouslySetInnerHTML={{
                 __html: isRTL ? result.snippet_ar : result.snippet_en,
               }}
             />
-            <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+            <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
                 {new Date(result.updated_at).toLocaleDateString()}
@@ -219,7 +219,7 @@ export function AdvancedSearchPage() {
   )
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="py-6">
       {/* Page Header */}
       <PageHeader
         icon={<Search className="h-6 w-6" />}
@@ -247,7 +247,7 @@ export function AdvancedSearchPage() {
                   {t('results.title')}
                 </CardTitle>
                 {searchMutation.data && (
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span>{t('results.found', { count: searchMutation.data.count })}</span>
                     <span className="text-xs">
                       ({t('results.took', { ms: searchMutation.data.took_ms })})
@@ -263,9 +263,7 @@ export function AdvancedSearchPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    <span className="ms-3 text-gray-600 dark:text-gray-400">
-                      {t('results.loading')}
-                    </span>
+                    <span className="ms-3 text-muted-foreground">{t('results.loading')}</span>
                   </div>
                   {renderSkeletons()}
                 </div>
@@ -376,7 +374,7 @@ export function AdvancedSearchPage() {
             <div className="flex items-center justify-between py-2">
               <div className="space-y-0.5">
                 <Label>{t('templates.makePublic')}</Label>
-                <p className="text-xs text-gray-500">{t('templates.publicDescription')}</p>
+                <p className="text-xs text-muted-foreground">{t('templates.publicDescription')}</p>
               </div>
               <Switch checked={templateIsPublic} onCheckedChange={setTemplateIsPublic} />
             </div>
