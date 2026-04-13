@@ -76,7 +76,7 @@ function getTypeColor(type: string): string {
     case 'conference':
       return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
     default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
+      return 'bg-muted text-foreground'
   }
 }
 
@@ -173,7 +173,7 @@ function SearchResultItem({ note, isRTL, locale, onNavigate }: SearchResultItemP
 export function NotesSearch() {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
   const navigate = useNavigate()
 
   const [searchQuery, setSearchQuery] = useState('')

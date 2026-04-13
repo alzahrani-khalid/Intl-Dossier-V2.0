@@ -27,7 +27,7 @@ export function AssignmentQueuePage() {
       urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
       high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
       normal: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      low: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
+      low: 'bg-muted text-foreground',
     }
     return colors[priority as keyof typeof colors] || colors.normal
   }
@@ -70,7 +70,7 @@ export function AssignmentQueuePage() {
           </CardContent>
         </Card>
 
-        <Card className="border-red-200 dark:border-red-800">
+        <Card className="border-red-200-red-800">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-red-700 dark:text-red-300">
               Urgent
@@ -83,7 +83,7 @@ export function AssignmentQueuePage() {
           </CardContent>
         </Card>
 
-        <Card className="border-orange-200 dark:border-orange-800">
+        <Card className="border-orange-200-orange-800">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-orange-700 dark:text-orange-300">
               High

@@ -115,7 +115,7 @@ function EngagementsListPage() {
       case 'cancelled':
         return 'bg-red-500/10 text-red-600 border-red-200'
       default:
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted0/10 text-foreground border'
     }
   }
 

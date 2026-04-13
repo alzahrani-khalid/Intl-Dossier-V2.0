@@ -88,7 +88,7 @@ export function BriefsPage() {
   const [briefViewerOpen, setBriefViewerOpen] = useState(false)
   const [generatedBrief, setGeneratedBrief] = useState<BriefContent | null>(null)
   const { isRTL } = useDirection()
-const { toast } = useToast()
+  const { toast } = useToast()
   const queryClient = useQueryClient()
 
   // Fetch dossiers for selection
@@ -396,7 +396,7 @@ const { toast } = useToast()
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('briefs.drafts')}</CardTitle>
-            <FileText className="h-4 w-4 text-gray-400" />
+            <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -564,9 +564,7 @@ const { toast } = useToast()
 
       {/* Brief Viewer Dialog */}
       <Dialog open={briefViewerOpen} onOpenChange={setBriefViewerOpen}>
-        <DialogContent
-          className="sm:max-w-4xl max-h-[90vh] overflow-hidden"
-        >
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>{t('briefs.viewBrief', 'View Brief')}</DialogTitle>
             <DialogDescription>

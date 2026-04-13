@@ -70,7 +70,7 @@ function PersonDetailPage() {
   const { personId } = useParams({ from: '/_protected/persons/$personId' })
   const { t } = useTranslation('persons')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState('overview')
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
@@ -127,7 +127,7 @@ const navigate = useNavigate()
       case 2:
         return 'bg-blue-500/10 text-blue-600 border-blue-200'
       default:
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted0/10 text-foreground border'
     }
   }
 

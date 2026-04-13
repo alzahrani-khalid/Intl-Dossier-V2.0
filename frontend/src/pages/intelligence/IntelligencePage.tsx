@@ -22,7 +22,7 @@ import { useDirection } from '@/hooks/useDirection'
 
 function ConfidenceIndicator({ level, t }: { level: string; t: (key: string) => string }) {
   const configs = {
-    low: { color: 'text-gray-600', bgColor: 'bg-gray-100', icon: '25%' },
+    low: { color: 'text-foreground', bgColor: 'bg-muted', icon: '25%' },
     medium: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: '50%' },
     high: { color: 'text-blue-600', bgColor: 'bg-blue-100', icon: '75%' },
     verified: { color: 'text-green-600', bgColor: 'bg-green-100', icon: '100%' },
@@ -39,7 +39,13 @@ function ConfidenceIndicator({ level, t }: { level: string; t: (key: string) => 
   )
 }
 
-function ClassificationBadge({ classification, t }: { classification: string; t: (key: string) => string }) {
+function ClassificationBadge({
+  classification,
+  t,
+}: {
+  classification: string
+  t: (key: string) => string
+}) {
   const configs = {
     public: { color: 'text-green-800', bgColor: 'bg-green-100' },
     internal: { color: 'text-blue-800', bgColor: 'bg-blue-100' },
@@ -69,10 +75,7 @@ function AnalysisTypeBadges({ types, t }: { types: string[]; t: (key: string) =>
   return (
     <div className="flex flex-wrap gap-1">
       {types?.map((type, i) => (
-        <span
-          key={i}
-          className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs"
-        >
+        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded text-xs">
           {typeIcons[type as keyof typeof typeIcons]}
           {t(`intelligence.analysisTypes.${type}`)}
         </span>
@@ -146,7 +149,7 @@ export function IntelligencePage() {
   const [filterClassification, setFilterClassification] = useState<string>('all')
   const [similaritySearch, setSimilaritySearch] = useState('')
   const { isRTL } = useDirection()
-const { data: reports, isLoading } = useQuery({
+  const { data: reports, isLoading } = useQuery({
     queryKey: ['intelligence', searchTerm, filterConfidence, filterClassification],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -322,7 +325,7 @@ const { data: reports, isLoading } = useQuery({
             <span
               className={`
  inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
- ${report.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
+ ${report.status === 'draft' ? 'bg-muted text-foreground' : ''}
  ${report.status === 'review' ? 'bg-yellow-100 text-yellow-800' : ''}
  ${report.status === 'approved' ? 'bg-blue-100 text-blue-800' : ''}
  ${report.status === 'published' ? 'bg-green-100 text-green-800' : ''}

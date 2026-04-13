@@ -76,7 +76,7 @@ function EngagementDetailPage() {
   const { engagementId } = useParams({ from: '/_protected/engagements/$engagementId' })
   const { t } = useTranslation('engagements')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -130,7 +130,7 @@ const navigate = useNavigate()
       case 'cancelled':
         return 'bg-red-500/10 text-red-600 border-red-200'
       default:
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted0/10 text-foreground border'
     }
   }
 
@@ -142,13 +142,13 @@ const navigate = useNavigate()
       case 'in_progress':
         return 'bg-blue-500/10 text-blue-600 border-blue-200'
       case 'planned':
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted0/10 text-foreground border'
       case 'skipped':
         return 'bg-orange-500/10 text-orange-600 border-orange-200'
       case 'postponed':
         return 'bg-yellow-500/10 text-yellow-600 border-yellow-200'
       default:
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted0/10 text-foreground border'
     }
   }
 
@@ -166,9 +166,9 @@ const navigate = useNavigate()
       case 'no_show':
         return 'bg-red-500/10 text-red-600'
       case 'cancelled':
-        return 'bg-gray-500/10 text-gray-600'
+        return 'bg-muted0/10 text-foreground'
       default:
-        return 'bg-gray-500/10 text-gray-600'
+        return 'bg-muted0/10 text-foreground'
     }
   }
 
@@ -802,10 +802,7 @@ const navigate = useNavigate()
 
         {/* Lifecycle Audit Trail — collapsible section */}
         <div className="mt-6">
-          <LifecycleTimeline
-            transitions={lifecycleTransitions}
-            isLoading={transitionsLoading}
-          />
+          <LifecycleTimeline transitions={lifecycleTransitions} isLoading={transitionsLoading} />
         </div>
       </main>
     </div>

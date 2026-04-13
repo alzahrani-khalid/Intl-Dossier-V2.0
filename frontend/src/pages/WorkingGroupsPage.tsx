@@ -107,7 +107,7 @@ const MEETING_FREQUENCIES: MeetingFrequency[] = [
 export default function WorkingGroupsPage() {
   const { t } = useTranslation('working-groups')
   const { isRTL } = useDirection()
-// State
+  // State
   const [filters, setFilters] = useState<WorkingGroupFilters>({
     page: 1,
     limit: 20,
@@ -216,9 +216,9 @@ export default function WorkingGroupsPage() {
       case 'suspended':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
       case 'disbanded':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+        return 'bg-muted text-foreground'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-muted text-foreground'
     }
   }
 
@@ -245,9 +245,7 @@ export default function WorkingGroupsPage() {
   }
 
   return (
-    <div
-      className="py-4 sm:py-6 space-y-6"
-    >
+    <div className="py-4 sm:py-6 space-y-6">
       {/* Header */}
       <header className="flex flex-col gap-2">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">

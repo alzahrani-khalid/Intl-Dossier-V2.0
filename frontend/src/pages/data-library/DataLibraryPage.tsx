@@ -45,7 +45,7 @@ export function DataLibraryPage() {
   const [uploadProgress, setUploadProgress] = useState<Record<string, UploadProgress>>({})
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const { isRTL } = useDirection()
-const {
+  const {
     data: items,
     isLoading,
     refetch,
@@ -257,7 +257,7 @@ const {
         <CardContent className="p-6">
           <div
             className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              dragActive ? 'border-primary bg-primary/5' : 'border-gray-300'
+              dragActive ? 'border-primary bg-primary/5' : 'border'
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -288,7 +288,7 @@ const {
           {Object.keys(uploadProgress).length > 0 && (
             <div className="mt-4 space-y-2">
               {Object.entries(uploadProgress).map(([id, progress]) => (
-                <div key={id} className="flex items-center gap-4 p-3 bg-gray-50 rounded">
+                <div key={id} className="flex items-center gap-4 p-3 bg-muted rounded">
                   <FileText className="h-5 w-5 text-muted-foreground" />
                   <div className="flex-1">
                     <div className="flex justify-between mb-1">
@@ -440,7 +440,7 @@ const {
                     {item.tags.map((tag, i) => (
                       <span
                         key={i}
-                        className="inline-flex items-center px-2 py-0.5 bg-gray-100 rounded text-xs"
+                        className="inline-flex items-center px-2 py-0.5 bg-muted rounded text-xs"
                       >
                         {tag}
                       </span>

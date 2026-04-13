@@ -111,7 +111,7 @@ interface WebhooksPageProps {
 export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: WebhooksPageProps) {
   const { t } = useTranslation('webhooks')
   const { isRTL } = useDirection()
-// State
+  // State
   const [activeTab, setActiveTab] = useState(initialTab)
   const [search, setSearch] = useState(initialSearch)
   const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'inactive'>('all')
@@ -187,9 +187,7 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
   }
 
   return (
-    <div
-      className="py-6 sm:py-8"
-    >
+    <div className="py-6 sm:py-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -366,7 +364,7 @@ function WebhookCard({
     ? webhook.auto_disabled_at
       ? 'bg-yellow-500'
       : 'bg-green-500'
-    : 'bg-gray-400'
+    : 'bg-muted-foreground'
 
   const statusText = webhook.is_active
     ? webhook.auto_disabled_at
@@ -619,9 +617,7 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
-      >
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>{mode === 'create' ? t('headings.create') : t('headings.edit')}</DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>
@@ -924,9 +920,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
-      >
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>{name}</DialogTitle>
           <DialogDescription>{t('headings.deliveries')}</DialogDescription>
