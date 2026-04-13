@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { RouterProvider } from '@tanstack/react-router'
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -18,7 +19,8 @@ import './i18n'
 
 function AppRouter() {
   const auth = useAuth()
-  return <RouterProvider router={router} context={{ auth }} />
+  const routerContext = useMemo(() => ({ auth }), [auth])
+  return <RouterProvider router={router} context={routerContext} />
 }
 
 function App() {

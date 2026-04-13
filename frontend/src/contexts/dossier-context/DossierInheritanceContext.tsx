@@ -7,7 +7,7 @@
  * This is derived/computed state that bridges navigation and store.
  */
 
-import { createContext, useContext, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
 import { useSearch, useLocation } from '@tanstack/react-router'
 import type { ContextEntityType } from '@/types/dossier-context.types'
 import { useDossierStore, type DossierEntry, type InheritanceContext } from '@/store/dossierStore'
@@ -135,13 +135,22 @@ export function DossierInheritanceProvider({
     actions,
   ])
 
-  const value: DossierInheritanceContextValue = {
-    activeDossier,
-    activeInheritance,
-    resolveContextFromUrl,
-    inheritContextFromParent,
-    setActiveDossier: storeSetActiveDossier,
-  }
+  const value: DossierInheritanceContextValue = useMemo(
+    () => ({
+      activeDossier,
+      activeInheritance,
+      resolveContextFromUrl,
+      inheritContextFromParent,
+      setActiveDossier: storeSetActiveDossier,
+    }),
+    [
+      activeDossier,
+      activeInheritance,
+      resolveContextFromUrl,
+      inheritContextFromParent,
+      storeSetActiveDossier,
+    ],
+  )
 
   return <InheritanceCtx.Provider value={value}>{children}</InheritanceCtx.Provider>
 }
