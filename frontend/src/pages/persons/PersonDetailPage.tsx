@@ -127,7 +127,7 @@ function PersonDetailPage() {
       case 2:
         return 'bg-blue-500/10 text-blue-600 border-blue-200'
       default:
-        return 'bg-muted0/10 text-foreground border'
+        return 'bg-gray-500/10 text-gray-600 border-gray-200'
     }
   }
 
@@ -177,10 +177,10 @@ function PersonDetailPage() {
   const biography = isRTL ? person.biography_ar : person.biography_en
 
   return (
-    <div>
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b sticky top-0 z-10 backdrop-blur">
-        <div className="py-4">
+      <header className="border-b bg-background sticky top-0 z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
@@ -243,7 +243,7 @@ function PersonDetailPage() {
       </header>
 
       {/* Content */}
-      <main className="py-6">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="w-full sm:w-auto">
             <TabsTrigger value="overview" className="flex-1 sm:flex-none">

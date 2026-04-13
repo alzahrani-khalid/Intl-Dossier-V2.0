@@ -20,7 +20,7 @@ type ViewMode = 'list' | 'builder'
 function BriefingBooksPage() {
   const { t } = useTranslation('briefing-books')
   const { isRTL } = useDirection()
-const [viewMode, setViewMode] = useState<ViewMode>('list')
+  const [viewMode, setViewMode] = useState<ViewMode>('list')
 
   const handleCreateNew = useCallback(() => {
     setViewMode('builder')
@@ -35,9 +35,7 @@ const [viewMode, setViewMode] = useState<ViewMode>('list')
   }, [])
 
   return (
-    <div
-      className="py-6 sm:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <AnimatePresence mode="wait">
         {viewMode === 'list' ? (
           <m.div

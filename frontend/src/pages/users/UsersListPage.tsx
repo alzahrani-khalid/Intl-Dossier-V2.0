@@ -68,7 +68,7 @@ export function UsersListPage() {
   const { t } = useTranslation('user-management')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
-// Filter & Search State
+  // Filter & Search State
   const [searchQuery, setSearchQuery] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
@@ -194,9 +194,7 @@ export function UsersListPage() {
 
   if (isLoading) {
     return (
-      <div
-        className="py-4 sm:py-6"
-      >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="text-muted-foreground">{t('translation:loading', 'Loading...')}</p>
@@ -207,9 +205,7 @@ export function UsersListPage() {
 
   if (isError) {
     return (
-      <div
-        className="py-4 sm:py-6"
-      >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <AlertCircle className="h-12 w-12 text-destructive" />
           <p className="text-destructive font-medium">{t('errors.loadFailed')}</p>
@@ -222,9 +218,7 @@ export function UsersListPage() {
   }
 
   return (
-    <div
-      className="py-4 sm:py-6"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -270,7 +264,7 @@ export function UsersListPage() {
             {/* Role Filter */}
             <div>
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="">
                   <SelectValue placeholder={t('usersList.filterByRole')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -286,7 +280,7 @@ export function UsersListPage() {
             {/* Status Filter */}
             <div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="">
                   <SelectValue placeholder={t('usersList.filterByStatus')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -302,7 +296,7 @@ export function UsersListPage() {
             {/* Type Filter */}
             <div>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="">
                   <SelectValue placeholder={t('usersList.filterByType')} />
                 </SelectTrigger>
                 <SelectContent>

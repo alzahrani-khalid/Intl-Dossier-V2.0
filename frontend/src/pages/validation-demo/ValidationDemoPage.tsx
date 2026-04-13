@@ -35,8 +35,8 @@ interface DemoFormData {
 // =============================================================================
 
 export function ValidationDemoPage() {
-const { isRTL } = useDirection()
-// Form state
+  const { isRTL } = useDirection()
+  // Form state
   const [formValues, setFormValues] = useState<Partial<DemoFormData>>({})
   const [validationErrors, setValidationErrors] = useState<Record<string, ValidationResult>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -84,9 +84,7 @@ const { isRTL } = useDirection()
   }, [])
 
   return (
-    <div
-      className="py-6 sm:py-8 lg:py-12"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
       {/* Page Header */}
       <m.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">

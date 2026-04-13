@@ -6,7 +6,7 @@
  * This state changes frequently (on every navigation).
  */
 
-import { createContext, useContext, useReducer, useCallback, useMemo, type ReactNode } from 'react'
+import { createContext, useContext, useReducer, useCallback, type ReactNode } from 'react'
 import type {
   DossierReference,
   ResolvedDossierContext,
@@ -257,34 +257,20 @@ export function DossierNavigationProvider({ children }: DossierNavigationProvide
     dispatch({ type: 'RESET' })
   }, [])
 
-  const actions: DossierNavigationActions = useMemo(
-    () => ({
-      setLoading,
-      setError,
-      setResolvedContext,
-      selectDossier,
-      deselectDossier,
-      setPrimaryDossier,
-      setRequiresSelection,
-      setInheritanceSource,
-      setInheritedFrom,
-      reset,
-    }),
-    [
-      setLoading,
-      setError,
-      setResolvedContext,
-      selectDossier,
-      deselectDossier,
-      setPrimaryDossier,
-      setRequiresSelection,
-      setInheritanceSource,
-      setInheritedFrom,
-      reset,
-    ],
-  )
+  const actions: DossierNavigationActions = {
+    setLoading,
+    setError,
+    setResolvedContext,
+    selectDossier,
+    deselectDossier,
+    setPrimaryDossier,
+    setRequiresSelection,
+    setInheritanceSource,
+    setInheritedFrom,
+    reset,
+  }
 
-  const value: DossierNavigationContextValue = useMemo(() => ({ state, actions }), [state, actions])
+  const value: DossierNavigationContextValue = { state, actions }
 
   return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>
 }

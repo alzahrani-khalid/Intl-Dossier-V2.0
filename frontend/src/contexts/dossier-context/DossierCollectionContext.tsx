@@ -6,7 +6,7 @@
  * Backed by Zustand store with localStorage persistence.
  */
 
-import { createContext, useContext, useMemo, type ReactNode } from 'react'
+import { createContext, useContext, type ReactNode } from 'react'
 import { useDossierStore, type DossierEntry } from '@/store/dossierStore'
 
 // ============================================================================
@@ -46,26 +46,15 @@ export function DossierCollectionProvider({ children }: DossierCollectionProvide
   const togglePinned = useDossierStore((s) => s.togglePinned)
   const isPinned = useDossierStore((s) => s.isPinned)
 
-  const value: DossierCollectionContextValue = useMemo(
-    () => ({
-      recentDossiers,
-      pinnedDossiers,
-      addToRecentDossiers,
-      pinDossier,
-      unpinDossier,
-      togglePinned,
-      isPinned,
-    }),
-    [
-      recentDossiers,
-      pinnedDossiers,
-      addToRecentDossiers,
-      pinDossier,
-      unpinDossier,
-      togglePinned,
-      isPinned,
-    ],
-  )
+  const value: DossierCollectionContextValue = {
+    recentDossiers,
+    pinnedDossiers,
+    addToRecentDossiers,
+    pinDossier,
+    unpinDossier,
+    togglePinned,
+    isPinned,
+  }
 
   return <CollectionContext.Provider value={value}>{children}</CollectionContext.Provider>
 }

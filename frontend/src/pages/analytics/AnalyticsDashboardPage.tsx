@@ -167,9 +167,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   // Loading skeleton - content-aware skeleton that mirrors analytics dashboard structure
   if (isLoading && !summary) {
     return (
-      <div
-        className="py-4 sm:py-6"
-      >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* Header skeleton */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
@@ -197,9 +195,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   // Error state
   if (isError) {
     return (
-      <div
-        className="py-4 sm:py-6"
-      >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>{t('errors.loadFailed')}</AlertTitle>
@@ -214,9 +210,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   }
 
   return (
-    <div
-      className="py-4 sm:py-6"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>

@@ -50,7 +50,7 @@ import { useDirection } from '@/hooks/useDirection'
 export function AuditLogsPage() {
   const { t } = useTranslation('audit-logs')
   const { isRTL } = useDirection()
-const [showStatistics, setShowStatistics] = useState(false)
+  const [showStatistics, setShowStatistics] = useState(false)
   const [_selectedLog, setSelectedLog] = useState<AuditLogEntry | null>(null)
 
   const {
@@ -89,9 +89,7 @@ const [showStatistics, setShowStatistics] = useState(false)
   const showingTo = Math.min(pagination.offset + pagination.limit, total)
 
   return (
-    <div
-      className="py-6 sm:py-8 space-y-6"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">

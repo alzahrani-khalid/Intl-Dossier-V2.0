@@ -115,7 +115,7 @@ function EngagementsListPage() {
       case 'cancelled':
         return 'bg-red-500/10 text-red-600 border-red-200'
       default:
-        return 'bg-muted0/10 text-foreground border'
+        return 'bg-gray-500/10 text-gray-600 border-gray-200'
     }
   }
 
@@ -229,10 +229,10 @@ function EngagementsListPage() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b pb-4 sm:pb-6">
-        <div>
+      <header className="border-b bg-background sticky top-0 z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-start">
@@ -443,7 +443,7 @@ function EngagementsListPage() {
       </header>
 
       {/* Engagements List */}
-      <main className="py-6">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {data?.data.length === 0 ? (
           searchTerm || hasActiveFilters ? (
             <SearchEmptyState

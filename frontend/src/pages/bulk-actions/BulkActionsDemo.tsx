@@ -127,7 +127,7 @@ export function BulkActionsDemo() {
               item.status === 'completed' && 'bg-green-100 text-green-800',
               item.status === 'in_progress' && 'bg-blue-100 text-blue-800',
               item.status === 'pending' && 'bg-yellow-100 text-yellow-800',
-              item.status === 'cancelled' && 'bg-muted text-foreground',
+              item.status === 'cancelled' && 'bg-gray-100 text-gray-800',
             )}
           >
             {t(`status.${item.status}`)}
@@ -199,7 +199,7 @@ export function BulkActionsDemo() {
   const allIds = useMemo(() => data.map((item) => item.id), [data])
 
   return (
-    <div className="py-6 space-y-6">
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-6">
       {/* Page Header */}
       <div className="space-y-2">
         <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>

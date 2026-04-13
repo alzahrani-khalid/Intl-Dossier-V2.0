@@ -25,7 +25,7 @@ import { useDirection } from '@/hooks/useDirection'
 export function TaskDetailPage() {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const { toast } = useToast()
   const { id } = useParams({ from: '/_protected/tasks/$id' })
 
@@ -60,7 +60,7 @@ const navigate = useNavigate()
 
   if (error) {
     return (
-      <div className="py-6">
+      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertDescription>
@@ -75,9 +75,7 @@ const navigate = useNavigate()
   }
 
   return (
-    <div
-      className="space-y-6 py-6"
-    >
+    <div className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8">
       {/* Loading State */}
       {isLoading && (
         <div className="space-y-6">

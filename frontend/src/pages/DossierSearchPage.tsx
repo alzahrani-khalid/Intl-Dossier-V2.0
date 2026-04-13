@@ -164,11 +164,13 @@ export function DossierSearchPage() {
   const hasQuery = query.trim().length > 0
 
   return (
-    <div className="mx-auto max-w-5xl py-6">
+    <div className="container mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="mb-2 text-2xl font-bold text-foreground sm:text-3xl">{t('page.title')}</h1>
-        <p className="text-foreground">{t('page.description')}</p>
+        <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl dark:text-gray-100">
+          {t('page.title')}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400">{t('page.description')}</p>
       </div>
 
       {/* Search Input */}
@@ -176,7 +178,7 @@ export function DossierSearchPage() {
         <div className="relative">
           <Search
             className={cn(
-              'absolute top-1/2 -translate-y-1/2 size-5 text-muted-foreground',
+              'absolute top-1/2 -translate-y-1/2 size-5 text-gray-400',
               isRTL ? 'end-3' : 'start-3',
             )}
           />
@@ -195,7 +197,7 @@ export function DossierSearchPage() {
               type="button"
               onClick={handleClear}
               className={cn(
-                'absolute top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground',
+                'absolute top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600',
                 isRTL ? 'start-3' : 'end-3',
               )}
               aria-label={t('search.clear')}
@@ -241,7 +243,7 @@ export function DossierSearchPage() {
         <>
           {/* Results summary */}
           {hasResults && !isLoading && (
-            <div className="mb-4 flex items-center justify-between text-sm text-muted-foreground">
+            <div className="mb-4 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
               <span>
                 {t('results.summary', {
                   dossiers: dossiersTotal,
@@ -273,8 +275,12 @@ export function DossierSearchPage() {
         /* Empty state - no query */
         <div className="py-12 text-center">
           <div className="mb-4 text-6xl">🔍</div>
-          <h3 className="mb-2 text-lg font-semibold text-foreground">{t('empty.noQuery.title')}</h3>
-          <p className="mx-auto max-w-md text-foreground">{t('empty.noQuery.description')}</p>
+          <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            {t('empty.noQuery.title')}
+          </h3>
+          <p className="mx-auto max-w-md text-gray-600 dark:text-gray-400">
+            {t('empty.noQuery.description')}
+          </p>
           {/* Quick action suggestions */}
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             {['Saudi Arabia', 'UN', 'G20', 'climate'].map((suggestion) => (
@@ -292,7 +298,9 @@ export function DossierSearchPage() {
       )}
 
       {/* Keyboard shortcut hint */}
-      <div className="mt-8 text-center text-xs text-muted-foreground">{t('hints.keyboard')}</div>
+      <div className="mt-8 text-center text-xs text-gray-400 dark:text-gray-500">
+        {t('hints.keyboard')}
+      </div>
     </div>
   )
 }

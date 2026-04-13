@@ -40,7 +40,7 @@ type TabValue = 'granted' | 'received'
 export function DelegationManagementPage() {
   const { t } = useTranslation('delegation')
   const { isRTL } = useDirection()
-// State
+  // State
   const [activeTab, setActiveTab] = useState<TabValue>('granted')
   const [showActiveOnly, setShowActiveOnly] = useState(true)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
@@ -98,9 +98,7 @@ export function DelegationManagementPage() {
   }, [delegations, expiringSoon])
 
   return (
-    <div
-      className="py-4 sm:py-6 space-y-6"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
       {/* Expiring Soon Banner */}
       <DelegationExpiryBanner />
 

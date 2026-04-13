@@ -184,11 +184,11 @@ export function OperationsHub(): ReactElement {
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} role="main" className="min-h-screen">
-      <div>
+      <div className="px-4 sm:px-6 lg:px-8">
         <ActionBar role={role} onRoleChange={setRole} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 sm:px-6 lg:px-8 pb-8">
         {/* Analytics KPI overview -- always first zone (Phase 13) */}
         <div className="col-span-1 md:col-span-2">
           <ZoneCollapsible title={t('zones.overview')} defaultExpanded={true}>

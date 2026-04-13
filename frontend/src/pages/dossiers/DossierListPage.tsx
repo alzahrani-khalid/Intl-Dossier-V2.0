@@ -145,7 +145,7 @@ function filtersToViewConfig(filters: DossierFilters): DossierViewConfig {
 export function DossierListPage() {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   // View preferences hook
   const viewPreferences = useViewPreferences('dossiers')
@@ -350,13 +350,16 @@ const navigate = useNavigate()
   const [filtersCollapsed, setFiltersCollapsed] = useState(false)
 
   // Memo: useCallback stabilizes reference for dependent callbacks (handleTypeCardClick)
-  const handleFilterChange = useCallback((key: keyof DossierFilters, value: unknown) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-      page: 1, // Reset to first page when filters change
-    }))
-  }, [setFilters])
+  const handleFilterChange = useCallback(
+    (key: keyof DossierFilters, value: unknown) => {
+      setFilters((prev) => ({
+        ...prev,
+        [key]: value,
+        page: 1, // Reset to first page when filters change
+      }))
+    },
+    [setFilters],
+  )
 
   const handleSearch = () => {
     setFilters((prev) => ({
@@ -399,24 +402,33 @@ const navigate = useNavigate()
   }
 
   // Memo: useCallback stabilizes handler reference for memoized ExpandableDossierCard
-  const handleViewDossier = useCallback((id: string, type?: DossierType) => {
-    // Route to type-specific detail page
-    navigate({ to: getDossierDetailPath(id, type) })
-  }, [navigate])
+  const handleViewDossier = useCallback(
+    (id: string, type?: DossierType) => {
+      // Route to type-specific detail page
+      navigate({ to: getDossierDetailPath(id, type) })
+    },
+    [navigate],
+  )
 
   // Memo: useCallback stabilizes handler reference for memoized ExpandableDossierCard
-  const handleEditDossier = useCallback((id: string) => {
-    navigate({ to: '/dossiers/$id/edit', params: { id } as any })
-  }, [navigate])
+  const handleEditDossier = useCallback(
+    (id: string) => {
+      navigate({ to: '/dossiers/$id/edit', params: { id } as any })
+    },
+    [navigate],
+  )
 
-  const handleTypeCardClick = useCallback((type: DossierType) => {
-    // Toggle filter: if already selected, clear it; otherwise set it
-    if (filters.type === type) {
-      handleFilterChange('type', undefined)
-    } else {
-      handleFilterChange('type', type)
-    }
-  }, [filters.type, handleFilterChange])
+  const handleTypeCardClick = useCallback(
+    (type: DossierType) => {
+      // Toggle filter: if already selected, clear it; otherwise set it
+      if (filters.type === type) {
+        handleFilterChange('type', undefined)
+      } else {
+        handleFilterChange('type', type)
+      }
+    },
+    [filters.type, handleFilterChange],
+  )
 
   const totalPages = data
     ? Math.ceil((data.pagination?.total_count ?? 0) / (filters.page_size || 12))
@@ -426,7 +438,10 @@ const navigate = useNavigate()
   const typeStatsMap = useMemo(() => {
     if (!counts) return null
     const totalActive = Object.values(counts).reduce((sum, val) => sum + val.active, 0)
-    const map: Record<string, { count: number; percentage: number; activeCount: number; inactiveCount: number }> = {}
+    const map: Record<
+      string,
+      { count: number; percentage: number; activeCount: number; inactiveCount: number }
+    > = {}
     for (const type of DOSSIER_TYPES) {
       const typeCount = counts[type]
       if (!typeCount) {
@@ -445,9 +460,7 @@ const navigate = useNavigate()
   }, [counts])
 
   return (
-    <div
-      className="py-6 sm:py-8 lg:py-10"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
       {/* Sample Data Banner - shows when sample data is active */}
       {hasSampleData && activeInstances.length > 0 && (
         <SampleDataBanner
@@ -519,7 +532,12 @@ const navigate = useNavigate()
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
             {DOSSIER_TYPES.map((type) => {
-              const stats = typeStatsMap?.[type] ?? { count: 0, percentage: 0, activeCount: 0, inactiveCount: 0 }
+              const stats = typeStatsMap?.[type] ?? {
+                count: 0,
+                percentage: 0,
+                activeCount: 0,
+                inactiveCount: 0,
+              }
               return (
                 <DossierTypeStatsCard
                   key={type}

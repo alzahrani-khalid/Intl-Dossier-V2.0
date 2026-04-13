@@ -158,8 +158,8 @@ export function ContactsDirectory() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <div className="border-b">
-        <div className="py-4 sm:py-6">
+      <div className="border-b bg-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-start">
@@ -188,14 +188,22 @@ export function ContactsDirectory() {
                   <div className="px-2 py-1.5 text-sm font-medium">
                     {t('contactDirectory.export.exportAll')}
                   </div>
-                  <DropdownMenuItem onClick={() => handleExportAll('csv')} disabled={isExporting}>
+                  <DropdownMenuItem
+                    onClick={() => handleExportAll('csv')}
+                    disabled={isExporting}
+                    className=""
+                  >
                     <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('contactDirectory.export.csv')}
                     <span className="ms-auto text-xs text-muted-foreground">
                       Excel {t('contactDirectory.export.compatible')}
                     </span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleExportAll('vcard')} disabled={isExporting}>
+                  <DropdownMenuItem
+                    onClick={() => handleExportAll('vcard')}
+                    disabled={isExporting}
+                    className=""
+                  >
                     <CreditCard className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('contactDirectory.export.vcard')}
                     <span className="ms-auto text-xs text-muted-foreground">
@@ -215,6 +223,7 @@ export function ContactsDirectory() {
                       <DropdownMenuItem
                         onClick={() => handleExportSelected('csv')}
                         disabled={isExporting}
+                        className=""
                       >
                         <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('contactDirectory.export.selectedCsv')}
@@ -222,6 +231,7 @@ export function ContactsDirectory() {
                       <DropdownMenuItem
                         onClick={() => handleExportSelected('vcard')}
                         disabled={isExporting}
+                        className=""
                       >
                         <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('contactDirectory.export.selectedVCard')}
@@ -252,7 +262,7 @@ export function ContactsDirectory() {
       </div>
 
       {/* Contact List */}
-      <div className="flex-1 py-6">
+      <div className="flex-1 container mx-auto py-6">
         <ContactList
           contacts={searchResults?.contacts || []}
           tags={searchResults?.tags || []}

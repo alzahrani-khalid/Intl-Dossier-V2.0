@@ -44,7 +44,7 @@ import { useDirection } from '@/hooks/useDirection'
 export function ContactCreate() {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState<'manual' | 'scan' | 'document'>('manual')
   const [pendingContact, setPendingContact] = useState<PersonFormData | null>(null)
@@ -258,7 +258,7 @@ const navigate = useNavigate()
   return (
     <>
       <div className="min-h-screen">
-        <div className="py-6">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {/* Header */}
           <div className="mb-6">
             <Button variant="ghost" onClick={handleBack} className="mb-4">
@@ -414,9 +414,7 @@ const navigate = useNavigate()
 
       {/* Batch Import Duplicate Warning Dialog */}
       <Dialog open={showBatchDuplicateDialog} onOpenChange={setShowBatchDuplicateDialog}>
-        <DialogContent
-          className="max-w-4xl max-h-[80vh] overflow-y-auto"
-        >
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-start">
               <AlertTriangle className="h-5 w-5 text-yellow-600" />

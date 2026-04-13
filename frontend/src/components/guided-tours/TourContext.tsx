@@ -5,14 +5,7 @@
  * Persists tour progress in localStorage.
  */
 
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useCallback,
-  useEffect,
-  useMemo,
-} from 'react'
+import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react'
 import type { TourState, TourContextValue, TourId, TourProgress } from './types'
 import { getTour } from './tour-definitions'
 
@@ -360,36 +353,20 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
     saveDismissedTour(tourId)
   }, [])
 
-  const value: TourContextValue = useMemo(
-    () => ({
-      ...state,
-      startTour,
-      nextStep,
-      prevStep,
-      skipTour,
-      completeTour,
-      goToStep,
-      resetTour,
-      resetAllTours,
-      setToursEnabled,
-      shouldShowTour,
-      dismissTourPrompt,
-    }),
-    [
-      state,
-      startTour,
-      nextStep,
-      prevStep,
-      skipTour,
-      completeTour,
-      goToStep,
-      resetTour,
-      resetAllTours,
-      setToursEnabled,
-      shouldShowTour,
-      dismissTourPrompt,
-    ],
-  )
+  const value: TourContextValue = {
+    ...state,
+    startTour,
+    nextStep,
+    prevStep,
+    skipTour,
+    completeTour,
+    goToStep,
+    resetTour,
+    resetAllTours,
+    setToursEnabled,
+    shouldShowTour,
+    dismissTourPrompt,
+  }
 
   return <TourContext.Provider value={value}>{children}</TourContext.Provider>
 }

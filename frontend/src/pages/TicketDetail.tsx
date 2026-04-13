@@ -39,7 +39,7 @@ const statusVariants: Record<string, string> = {
 export function TicketDetail() {
   const { t } = useTranslation('intake')
   const { isRTL } = useDirection()
-const { id } = useParams({ strict: false })
+  const { id } = useParams({ strict: false })
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<
     'details' | 'triage' | 'duplicates' | 'history' | 'links'
@@ -86,7 +86,7 @@ const { id } = useParams({ strict: false })
 
   if (isLoading) {
     return (
-      <div className="py-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="space-y-4">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-4 w-72" />
@@ -101,7 +101,7 @@ const { id } = useParams({ strict: false })
 
   if (error || !ticket) {
     return (
-      <div className="py-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="border-destructive">
           <CardContent className="p-4 text-destructive">
             {t('ticketDetail.error', 'Failed to load ticket. Please try again.')}
@@ -112,7 +112,7 @@ const { id } = useParams({ strict: false })
   }
 
   return (
-    <div className="py-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Converted Ticket Banner — shown when ticket was promoted to engagement */}
       {ticket.convertedToId != null && ticket.convertedToId !== '' && (
         <div className="mb-4">

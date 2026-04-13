@@ -46,8 +46,8 @@ import { useDirection } from '@/hooks/useDirection'
  * - RTL support for Arabic
  */
 export function HelpPage() {
-const { isRTL } = useDirection()
-const [searchQuery, setSearchQuery] = useState('')
+  const { isRTL } = useDirection()
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Feature guides configuration - easy to add new guides
   const featureGuides = [
@@ -162,12 +162,10 @@ const [searchQuery, setSearchQuery] = useState('')
   )
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-b from-background to-muted/20"
-    >
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       {/* Hero Section */}
       <div className="bg-primary/5 border-b">
-        <div className="py-8 sm:py-12 lg:py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-4">
               <Sparkles className="size-4" />
@@ -200,7 +198,7 @@ const [searchQuery, setSearchQuery] = useState('')
       </div>
 
       {/* Main Content */}
-      <div className="py-8 sm:py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Feature Guides Section */}
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">

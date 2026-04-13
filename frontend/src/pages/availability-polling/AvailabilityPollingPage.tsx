@@ -43,7 +43,7 @@ type TabValue = 'my-polls' | 'invited' | 'all'
 export function AvailabilityPollingPage() {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? ar : enUS
+  const dateLocale = isRTL ? ar : enUS
 
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
@@ -209,9 +209,7 @@ const dateLocale = isRTL ? ar : enUS
   }
 
   return (
-    <div
-      className="py-4 sm:py-6 space-y-6"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

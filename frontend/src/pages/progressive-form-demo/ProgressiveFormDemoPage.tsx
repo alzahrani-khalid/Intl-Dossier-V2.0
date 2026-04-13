@@ -315,7 +315,7 @@ export function ProgressiveFormDemoPage() {
               checked={!!value}
               onCheckedChange={(checked) => handleFieldChange(fieldName, checked)}
             />
-            <Label htmlFor={fieldName} className="text-sm text-foreground">
+            <Label htmlFor={fieldName} className="text-sm text-gray-600 dark:text-gray-400">
               {t(`demo.fields.${fieldName}Help`)}
             </Label>
           </div>
@@ -336,7 +336,7 @@ export function ProgressiveFormDemoPage() {
             {getFieldIcon(fieldName) && (
               <div
                 className={cn(
-                  'absolute top-1/2 -translate-y-1/2 text-muted-foreground',
+                  'absolute top-1/2 -translate-y-1/2 text-gray-400',
                   isRTL ? 'end-3' : 'start-3',
                 )}
               >
@@ -349,7 +349,7 @@ export function ProgressiveFormDemoPage() {
   }
 
   return (
-    <div className="py-6 sm:py-8 lg:py-12">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
       {/* Page Header */}
       <m.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
@@ -384,13 +384,13 @@ export function ProgressiveFormDemoPage() {
                   {showOptional ? (
                     <Eye className="w-5 h-5 text-primary-500" />
                   ) : (
-                    <EyeOff className="w-5 h-5 text-muted-foreground" />
+                    <EyeOff className="w-5 h-5 text-gray-400" />
                   )}
                   <div>
-                    <p className="font-medium text-foreground dark:text-white text-start">
+                    <p className="font-medium text-gray-900 dark:text-white text-start">
                       {showOptional ? t('toggle.hideOptional') : t('toggle.showOptional')}
                     </p>
-                    <p className="text-sm text-muted-foreground text-start">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-start">
                       {t('toggle.optionalFieldsCount', {
                         count: formConfig.fields.filter(
                           (f) => f.importance === 'optional' || f.importance === 'recommended',
@@ -510,23 +510,25 @@ export function ProgressiveFormDemoPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">
+                  <span className="text-gray-500 dark:text-gray-400">
                     {isRTL ? 'إجمالي الحقول' : 'Total Fields'}
                   </span>
                   <span className="font-medium">{formConfig.fields.length}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">
+                  <span className="text-gray-500 dark:text-gray-400">
                     {isRTL ? 'الحقول المرئية' : 'Visible Fields'}
                   </span>
                   <span className="font-medium">{completionState.totalFields}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{isRTL ? 'المجموعات' : 'Groups'}</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    {isRTL ? 'المجموعات' : 'Groups'}
+                  </span>
                   <span className="font-medium">{formConfig.groups?.length || 0}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">
+                  <span className="text-gray-500 dark:text-gray-400">
                     {isRTL ? 'الحقول المطلوبة' : 'Required Fields'}
                   </span>
                   <span className="font-medium text-red-600 dark:text-red-400">

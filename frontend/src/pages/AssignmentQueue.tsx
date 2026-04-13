@@ -27,7 +27,7 @@ export function AssignmentQueuePage() {
       urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
       high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
       normal: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      low: 'bg-muted text-foreground',
+      low: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
     }
     return colors[priority as keyof typeof colors] || colors.normal
   }
@@ -39,7 +39,7 @@ export function AssignmentQueuePage() {
 
   if (error) {
     return (
-      <div>
+      <div className="container mx-auto p-6">
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertDescription>
@@ -51,7 +51,7 @@ export function AssignmentQueuePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto space-y-6 p-6">
       <div>
         <h1 className="text-3xl font-bold">Assignment Queue</h1>
         <p className="mt-1 text-muted-foreground">Manage queued work items awaiting capacity</p>
@@ -70,7 +70,7 @@ export function AssignmentQueuePage() {
           </CardContent>
         </Card>
 
-        <Card className="border-red-200-red-800">
+        <Card className="border-red-200 dark:border-red-800">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-red-700 dark:text-red-300">
               Urgent
@@ -83,7 +83,7 @@ export function AssignmentQueuePage() {
           </CardContent>
         </Card>
 
-        <Card className="border-orange-200-orange-800">
+        <Card className="border-orange-200 dark:border-orange-800">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-orange-700 dark:text-orange-300">
               High

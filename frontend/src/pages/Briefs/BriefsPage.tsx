@@ -363,7 +363,7 @@ export function BriefsPage() {
   ]
 
   return (
-    <div className="py-6">
+    <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold">{t('navigation.briefs')}</h1>
         <Button onClick={() => setShowGenerateDialog(true)}>
@@ -396,7 +396,7 @@ export function BriefsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('briefs.drafts')}</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+            <FileText className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">

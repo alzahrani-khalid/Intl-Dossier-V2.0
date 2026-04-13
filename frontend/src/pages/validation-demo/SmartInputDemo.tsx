@@ -38,7 +38,7 @@ const countryOptions: SelectOption[] = [
 export function SmartInputDemo() {
   const { t } = useTranslation(['smart-input', 'common'])
   const { isRTL } = useDirection()
-// Form state
+  // Form state
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [url, setUrl] = useState('')
@@ -68,9 +68,7 @@ export function SmartInputDemo() {
   }
 
   return (
-    <div
-      className="py-6 sm:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">

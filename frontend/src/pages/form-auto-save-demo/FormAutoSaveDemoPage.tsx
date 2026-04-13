@@ -97,7 +97,7 @@ const DEFAULT_VALUES: DemoFormData = {
 export function FormAutoSaveDemoPage() {
   const { t } = useTranslation(['form-auto-save', 'common'])
   const { isRTL } = useDirection()
-const [showDraftBanner, setShowDraftBanner] = useState(false)
+  const [showDraftBanner, setShowDraftBanner] = useState(false)
   const [isRestoring, setIsRestoring] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -193,9 +193,7 @@ const [showDraftBanner, setShowDraftBanner] = useState(false)
   }, [clearDraft, form, isRTL])
 
   return (
-    <div
-      className="py-6 sm:py-8 lg:py-12"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
       {/* Page Header */}
       <m.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -217,11 +215,7 @@ const [showDraftBanner, setShowDraftBanner] = useState(false)
 
       {/* Draft Restoration Banner */}
       {showDraftBanner && draft && (
-        <m.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
+        <m.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <FormDraftBanner
             draft={draft}
             onRestore={handleRestore}

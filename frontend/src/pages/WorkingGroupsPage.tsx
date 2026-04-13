@@ -216,9 +216,9 @@ export default function WorkingGroupsPage() {
       case 'suspended':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
       case 'disbanded':
-        return 'bg-muted text-foreground'
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
       default:
-        return 'bg-muted text-foreground'
+        return 'bg-gray-100 text-gray-800'
     }
   }
 
@@ -245,7 +245,7 @@ export default function WorkingGroupsPage() {
   }
 
   return (
-    <div className="py-4 sm:py-6 space-y-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
       {/* Header */}
       <header className="flex flex-col gap-2">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">

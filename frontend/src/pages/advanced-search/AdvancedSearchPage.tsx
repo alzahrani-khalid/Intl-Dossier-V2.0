@@ -66,7 +66,7 @@ const entityIcons: Record<SearchableEntityType, React.ComponentType<{ className?
 // Status badge colors
 const statusColors: Record<string, string> = {
   active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  inactive: 'bg-muted text-foreground',
+  inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
   archived: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
   draft: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
   published: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
@@ -143,8 +143,8 @@ export function AdvancedSearchPage() {
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3 min-w-0">
-              <div className="p-2 rounded-lg bg-muted shrink-0">
-                <IconComponent className="h-5 w-5 text-foreground" />
+              <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 shrink-0">
+                <IconComponent className="h-5 w-5 text-gray-600 dark:text-gray-400" />
               </div>
               <div className="min-w-0">
                 <CardTitle className="text-base line-clamp-1">
@@ -172,12 +172,12 @@ export function AdvancedSearchPage() {
         {(result.snippet_en || result.snippet_ar) && (
           <CardContent className="pt-0">
             <p
-              className="text-sm text-foreground line-clamp-2"
+              className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
               dangerouslySetInnerHTML={{
                 __html: isRTL ? result.snippet_ar : result.snippet_en,
               }}
             />
-            <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
+            <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
                 {new Date(result.updated_at).toLocaleDateString()}
@@ -218,11 +218,13 @@ export function AdvancedSearchPage() {
   )
 
   return (
-    <div className="py-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('title')}</h1>
-        <p className="text-foreground mt-1">{t('description')}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+          {t('title')}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">{t('description')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -245,7 +247,7 @@ export function AdvancedSearchPage() {
                   {t('results.title')}
                 </CardTitle>
                 {searchMutation.data && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
                     <span>{t('results.found', { count: searchMutation.data.count })}</span>
                     <span className="text-xs">
                       ({t('results.took', { ms: searchMutation.data.took_ms })})
@@ -261,7 +263,9 @@ export function AdvancedSearchPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    <span className="ms-3 text-foreground">{t('results.loading')}</span>
+                    <span className="ms-3 text-gray-600 dark:text-gray-400">
+                      {t('results.loading')}
+                    </span>
                   </div>
                   {renderSkeletons()}
                 </div>
@@ -299,7 +303,7 @@ export function AdvancedSearchPage() {
 
               {/* Warnings */}
               {searchMutation.data?.warnings && searchMutation.data.warnings.length > 0 && (
-                <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200-yellow-800 rounded-lg">
+                <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="h-4 w-4 text-yellow-600 shrink-0 mt-0.5" />
                     <div className="text-sm text-yellow-800 dark:text-yellow-200">
@@ -372,7 +376,7 @@ export function AdvancedSearchPage() {
             <div className="flex items-center justify-between py-2">
               <div className="space-y-0.5">
                 <Label>{t('templates.makePublic')}</Label>
-                <p className="text-xs text-muted-foreground">{t('templates.publicDescription')}</p>
+                <p className="text-xs text-gray-500">{t('templates.publicDescription')}</p>
               </div>
               <Switch checked={templateIsPublic} onCheckedChange={setTemplateIsPublic} />
             </div>

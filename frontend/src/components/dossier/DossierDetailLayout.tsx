@@ -120,7 +120,7 @@ export function DossierDetailLayout({
 }: DossierDetailLayoutProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-// Get current user
+  // Get current user
   const { user } = useAuth()
 
   // Sidebar toggle state (for relationship widget visibility on smaller screens)
@@ -150,7 +150,7 @@ export function DossierDetailLayout({
   )
 
   return (
-    <div className="py-4 sm:py-6 lg:py-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       {/* Breadcrumbs */}
       <nav
         className="flex items-center gap-2 text-sm sm:text-base mb-4 sm:mb-6"
@@ -170,9 +170,7 @@ export function DossierDetailLayout({
       </nav>
 
       {/* Header */}
-      <header
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b"
-      >
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b">
         <div className="flex-1 min-w-0">
           <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-2 truncate text-start">
             {isRTL ? dossier.name_ar : dossier.name_en}
@@ -282,9 +280,7 @@ export function DossierDetailLayout({
       </header>
 
       {/* Main Content with Optional Sidebar */}
-      <div
-        className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8"
-      >
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
         {/* Main Content - Type-Specific Grid Layout */}
         <main className={`flex-1 min-w-0 grid ${gridClassName} gap-4 sm:gap-6 lg:gap-8`}>
           {children}

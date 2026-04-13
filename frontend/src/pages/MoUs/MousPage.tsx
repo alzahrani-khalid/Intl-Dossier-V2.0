@@ -81,7 +81,7 @@ export function MousPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterState, setFilterState] = useState<string>('all')
   const { isRTL } = useDirection()
-const { data: mous, isLoading } = useQuery({
+  const { data: mous, isLoading } = useQuery({
     queryKey: ['mous', searchTerm, filterState],
     queryFn: async () => {
       let query = supabase
@@ -194,7 +194,7 @@ const { data: mous, isLoading } = useQuery({
   const workflowStates = Object.keys(WORKFLOW_STATES)
 
   return (
-    <div className="py-6">
+    <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.mous')}</h1>
         <Button>

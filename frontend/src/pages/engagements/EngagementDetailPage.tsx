@@ -130,7 +130,7 @@ function EngagementDetailPage() {
       case 'cancelled':
         return 'bg-red-500/10 text-red-600 border-red-200'
       default:
-        return 'bg-muted0/10 text-foreground border'
+        return 'bg-gray-500/10 text-gray-600 border-gray-200'
     }
   }
 
@@ -142,13 +142,13 @@ function EngagementDetailPage() {
       case 'in_progress':
         return 'bg-blue-500/10 text-blue-600 border-blue-200'
       case 'planned':
-        return 'bg-muted0/10 text-foreground border'
+        return 'bg-gray-500/10 text-gray-600 border-gray-200'
       case 'skipped':
         return 'bg-orange-500/10 text-orange-600 border-orange-200'
       case 'postponed':
         return 'bg-yellow-500/10 text-yellow-600 border-yellow-200'
       default:
-        return 'bg-muted0/10 text-foreground border'
+        return 'bg-gray-500/10 text-gray-600 border-gray-200'
     }
   }
 
@@ -166,9 +166,9 @@ function EngagementDetailPage() {
       case 'no_show':
         return 'bg-red-500/10 text-red-600'
       case 'cancelled':
-        return 'bg-muted0/10 text-foreground'
+        return 'bg-gray-500/10 text-gray-600'
       default:
-        return 'bg-muted0/10 text-foreground'
+        return 'bg-gray-500/10 text-gray-600'
     }
   }
 
@@ -252,10 +252,10 @@ function EngagementDetailPage() {
   const notes = isRTL ? engagement.notes_ar : engagement.notes_en
 
   return (
-    <div>
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b sticky top-0 z-10 backdrop-blur">
-        <div className="py-4">
+      <header className="border-b bg-background sticky top-0 z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
@@ -323,7 +323,7 @@ function EngagementDetailPage() {
       </header>
 
       {/* Content */}
-      <main className="py-6">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Lifecycle Stepper Bar — below header, above tabs */}
         <div className="mb-6">
           <LifecycleStepperBar

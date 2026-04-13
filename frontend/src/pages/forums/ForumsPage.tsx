@@ -62,7 +62,7 @@ export function ForumsPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [page, setPage] = useState(1)
   const { isRTL } = useDirection()
-const showMobileFAB = useShowMobileFAB()
+  const showMobileFAB = useShowMobileFAB()
 
   // Form state for create dialog
   const [formData, setFormData] = useState<ForumCreateRequest>({
@@ -214,7 +214,7 @@ const showMobileFAB = useShowMobileFAB()
   ]
 
   return (
-    <div className="py-4 sm:py-6 space-y-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
       {/* Header - Mobile First */}
       <header className="flex flex-col gap-2">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">

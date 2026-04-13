@@ -22,7 +22,7 @@ import { useDirection } from '@/hooks/useDirection'
 
 function ConfidenceIndicator({ level, t }: { level: string; t: (key: string) => string }) {
   const configs = {
-    low: { color: 'text-foreground', bgColor: 'bg-muted', icon: '25%' },
+    low: { color: 'text-gray-600', bgColor: 'bg-gray-100', icon: '25%' },
     medium: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: '50%' },
     high: { color: 'text-blue-600', bgColor: 'bg-blue-100', icon: '75%' },
     verified: { color: 'text-green-600', bgColor: 'bg-green-100', icon: '100%' },
@@ -75,7 +75,10 @@ function AnalysisTypeBadges({ types, t }: { types: string[]; t: (key: string) =>
   return (
     <div className="flex flex-wrap gap-1">
       {types?.map((type, i) => (
-        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded text-xs">
+        <span
+          key={i}
+          className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs"
+        >
           {typeIcons[type as keyof typeof typeIcons]}
           {t(`intelligence.analysisTypes.${type}`)}
         </span>
@@ -325,7 +328,7 @@ export function IntelligencePage() {
             <span
               className={`
  inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
- ${report.status === 'draft' ? 'bg-muted text-foreground' : ''}
+ ${report.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
  ${report.status === 'review' ? 'bg-yellow-100 text-yellow-800' : ''}
  ${report.status === 'approved' ? 'bg-blue-100 text-blue-800' : ''}
  ${report.status === 'published' ? 'bg-green-100 text-green-800' : ''}
@@ -384,7 +387,7 @@ export function IntelligencePage() {
   const classifications = ['public', 'internal', 'confidential', 'restricted']
 
   return (
-    <div className="py-6">
+    <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.intelligence')}</h1>
         <Button>

@@ -31,7 +31,7 @@ const eventTypeColors: Record<string, string> = {
   workshop: 'bg-green-500',
   training: 'bg-yellow-500',
   ceremony: 'bg-pink-500',
-  other: 'bg-muted0',
+  other: 'bg-gray-500',
 }
 
 interface CalendarViewProps {
@@ -124,7 +124,7 @@ ${event.type === 'conference' ? 'bg-purple-100 text-purple-800' : ''}
 ${event.type === 'workshop' ? 'bg-green-100 text-green-800' : ''}
 ${event.type === 'training' ? 'bg-yellow-100 text-yellow-800' : ''}
 ${event.type === 'ceremony' ? 'bg-pink-100 text-pink-800' : ''}
-${event.type === 'other' ? 'bg-muted text-foreground' : ''}
+${event.type === 'other' ? 'bg-gray-100 text-gray-800' : ''}
 `}
         >
           {t(`events.types.${event.type}`)}
@@ -200,10 +200,10 @@ ${event.type === 'other' ? 'bg-muted text-foreground' : ''}
         <span
           className={`
 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-${event.status === 'draft' ? 'bg-muted text-foreground' : ''}
+${event.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
 ${event.status === 'scheduled' ? 'bg-blue-100 text-blue-800' : ''}
 ${event.status === 'ongoing' ? 'bg-green-100 text-green-800' : ''}
-${event.status === 'completed' ? 'bg-muted text-foreground' : ''}
+${event.status === 'completed' ? 'bg-gray-100 text-gray-800' : ''}
 ${event.status === 'cancelled' ? 'bg-red-100 text-red-800' : ''}
 `}
         >
@@ -292,7 +292,7 @@ export function EventsPage() {
   const eventTypes = ['all', 'meeting', 'conference', 'workshop', 'training', 'ceremony', 'other']
 
   return (
-    <div className="py-6">
+    <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.calendar')}</h1>
         <div className="flex gap-2">

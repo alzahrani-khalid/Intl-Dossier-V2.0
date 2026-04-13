@@ -37,10 +37,8 @@ export function SettingsLayout({
 }: SettingsLayoutProps) {
   const { t } = useTranslation('settings')
   const { isRTL } = useDirection()
-return (
-    <div
-      className="py-4 sm:py-6 lg:py-8"
-    >
+  return (
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
@@ -163,14 +161,17 @@ interface SettingsEmptyStateProps {
   action?: ReactNode
 }
 
-export function SettingsEmptyState({ icon: Icon, title, description, action }: SettingsEmptyStateProps) {
+export function SettingsEmptyState({
+  icon: Icon,
+  title,
+  description,
+  action,
+}: SettingsEmptyStateProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
 
   return (
-    <div
-      className="flex flex-col items-center justify-center py-12 text-center"
-    >
+    <div className="flex flex-col items-center justify-center py-12 text-center">
       {Icon && <Icon className="h-12 w-12 text-muted-foreground/50 mb-4" />}
       <h3 className="text-lg font-medium">{title}</h3>
       {description && <p className="text-sm text-muted-foreground mt-1 max-w-sm">{description}</p>}

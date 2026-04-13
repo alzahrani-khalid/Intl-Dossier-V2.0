@@ -139,7 +139,7 @@ function ConnectionCard({
 }: ConnectionCardProps) {
   const { t } = useTranslation('calendar-sync')
   const { isRTL } = useDirection()
-const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [showDisconnectDialog, setShowDisconnectDialog] = useState(false)
 
   const { data: calendars } = useExternalCalendars(isExpanded ? connection.id : undefined)
@@ -698,9 +698,7 @@ export function CalendarSyncSettings() {
   const pendingConflicts = conflicts.filter((c) => c.status === 'pending')
 
   return (
-    <div
-      className="py-6 space-y-6"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

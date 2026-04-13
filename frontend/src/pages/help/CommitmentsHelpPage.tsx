@@ -48,7 +48,7 @@ export function CommitmentsHelpPage() {
   const [activeSection, setActiveSection] = useState('overview')
 
   return (
-    <div className="py-4 sm:py-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
       {/* Header with Back Navigation */}
       <div className="mb-6">
         <Link to="/help">
@@ -204,7 +204,7 @@ export function CommitmentsHelpPage() {
                   {isRTL ? 'أنواع المالكين' : 'Owner Types'}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Card className="border-blue-200-blue-800">
+                  <Card className="border-blue-200 dark:border-blue-800">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
@@ -226,7 +226,7 @@ export function CommitmentsHelpPage() {
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-purple-200-purple-800">
+                  <Card className="border-purple-200 dark:border-purple-800">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
@@ -381,7 +381,7 @@ export function CommitmentsHelpPage() {
                         {isRTL ? 'سيتم التحديث فورًا!' : 'Update happens immediately!'}
                       </li>
                     </ol>
-                    <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200-amber-800">
+                    <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
                       <CardContent className="pt-4">
                         <p className="text-sm text-amber-800 dark:text-amber-200 text-start">
                           <strong>{isRTL ? 'ملاحظة:' : 'Note:'}</strong>{' '}
@@ -727,7 +727,7 @@ function StatusBadge({ status, isRTL }: { status: string; isRTL: boolean }) {
     pending: {
       label: 'Pending',
       arLabel: 'معلق',
-      className: 'bg-muted text-foreground',
+      className: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
     },
     in_progress: {
       label: 'In Progress',

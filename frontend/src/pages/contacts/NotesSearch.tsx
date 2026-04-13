@@ -76,7 +76,7 @@ function getTypeColor(type: string): string {
     case 'conference':
       return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
     default:
-      return 'bg-muted text-foreground'
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
   }
 }
 
@@ -209,7 +209,7 @@ export function NotesSearch() {
 
   return (
     <div className="min-h-screen">
-      <div className="py-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-start">

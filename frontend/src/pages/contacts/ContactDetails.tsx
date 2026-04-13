@@ -48,7 +48,7 @@ import { useDirection } from '@/hooks/useDirection'
 export function ContactDetails() {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const { contactId } = useParams({ from: '/contacts/$contactId' })
 
   const [isEditing, setIsEditing] = useState(false)
@@ -118,7 +118,7 @@ const navigate = useNavigate()
 
   return (
     <div className="min-h-screen">
-      <div className="py-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <Button variant="ghost" onClick={handleBack} className="self-start">

@@ -13,11 +13,9 @@ import { useDirection } from '@/hooks/useDirection'
  * Layout: 2-column asymmetric grid (lg:grid-cols-[2fr_1fr])
  */
 export function CountryDossierSkeleton() {
-const { isRTL } = useDirection()
-return (
-    <div
-      className="py-6 sm:py-8"
-    >
+  const { isRTL } = useDirection()
+  return (
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -71,12 +69,10 @@ return (
  * Layout: 1-column vertical (grid-cols-1)
  */
 function EngagementDossierSkeleton() {
-const { isRTL } = useDirection()
+  const { isRTL } = useDirection()
 
   return (
-    <div
-      className="py-6 sm:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -120,12 +116,10 @@ const { isRTL } = useDirection()
  * Layout: Sidebar + main content (md:grid-cols-[300px_1fr])
  */
 function PersonDossierSkeleton() {
-const { isRTL } = useDirection()
+  const { isRTL } = useDirection()
 
   return (
-    <div
-      className="py-6 sm:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -177,12 +171,10 @@ const { isRTL } = useDirection()
  * Layout: 3-column grid (lg:grid-cols-3)
  */
 function OrganizationDossierSkeleton() {
-const { isRTL } = useDirection()
+  const { isRTL } = useDirection()
 
   return (
-    <div
-      className="py-6 sm:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -225,12 +217,10 @@ const { isRTL } = useDirection()
  * Layout: Bento grid (md:grid-cols-2 lg:grid-cols-3)
  */
 export function ForumDossierSkeleton() {
-const { isRTL } = useDirection()
+  const { isRTL } = useDirection()
 
   return (
-    <div
-      className="py-6 sm:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -284,12 +274,10 @@ function WorkingGroupDossierSkeleton() {
  * Layout: BentoGrid with 6 type cards
  */
 function DossiersHubSkeleton() {
-const { isRTL } = useDirection()
+  const { isRTL } = useDirection()
 
   return (
-    <div
-      className="py-6 sm:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <Skeleton className="h-8 sm:h-10 w-1/2 mb-3" />

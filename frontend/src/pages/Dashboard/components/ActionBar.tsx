@@ -61,7 +61,7 @@ export function ActionBar({ role, onRoleChange }: ActionBarProps): React.ReactEl
   return (
     <div
       dir={isRTL ? 'rtl' : 'ltr'}
-      className="col-span-full md:sticky md:top-0 md:z-10 md:backdrop-blur md:py-4"
+      className="col-span-full md:sticky md:top-0 md:z-10 md:bg-background/95 md:backdrop-blur md:py-4"
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 py-4 md:py-0">
         {/* Greeting + Date */}
