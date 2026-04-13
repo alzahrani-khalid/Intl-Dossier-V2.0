@@ -357,9 +357,9 @@ function WaitingQueuePageInner() {
   })
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       {/* Header */}
-      <div className="border-b border-border bg-card">
+      <div className="border-b border-border">
         <div className="container mx-auto p-4 sm:p-6 lg:px-8">
           <PageHeader
             icon={<Clock className="h-6 w-6" />}

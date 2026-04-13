@@ -252,9 +252,9 @@ function EngagementDetailPage() {
   const notes = isRTL ? engagement.notes_ar : engagement.notes_en
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
+      <header className="border-b sticky top-0 z-10 backdrop-blur">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
