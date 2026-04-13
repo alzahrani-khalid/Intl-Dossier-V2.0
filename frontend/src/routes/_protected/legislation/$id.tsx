@@ -18,7 +18,7 @@ export const Route = createFileRoute('/_protected/legislation/$id')({
 function LegislationDetailPage() {
   const { t } = useTranslation('legislation')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const { id } = Route.useParams()
 
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -38,7 +38,7 @@ const navigate = useNavigate()
   }, [refetch])
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div className="container mx-auto py-6 sm:py-8">
       <LegislationDetail id={id} onBack={handleBack} onEdit={handleEdit} />
 
       {/* Edit Legislation Sheet */}

@@ -19,16 +19,14 @@ function AfterActionsIndexPage() {
   return (
     <div className="min-h-screen bg-muted">
       <div className="bg-card border-b border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto py-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
               <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
                 <FileText className="h-8 w-8" />
                 After Action Records
               </h1>
-              <p className="text-muted-foreground">
-                Manage engagement outcomes and commitments
-              </p>
+              <p className="text-muted-foreground">Manage engagement outcomes and commitments</p>
             </div>
             <Button className="gap-2" onClick={() => navigate({ to: '/engagements' })}>
               <Plus className="h-5 w-5" />
@@ -38,7 +36,7 @@ function AfterActionsIndexPage() {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto py-8">
         <Card>
           <CardHeader>
             <CardTitle>After Actions</CardTitle>

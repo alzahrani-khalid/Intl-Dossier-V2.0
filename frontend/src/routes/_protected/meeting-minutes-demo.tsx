@@ -166,7 +166,7 @@ const sampleActionItems: MeetingActionItem[] = [
 function MeetingMinutesDemo() {
   const { t } = useTranslation('meeting-minutes')
   const { isRTL } = useDirection()
-const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
+  const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
   const [actionItems, setActionItems] = useState<MeetingActionItem[]>(sampleActionItems)
   const [extractText, setExtractText] = useState('')
   const [activeTab, setActiveTab] = useState('list')
@@ -229,7 +229,7 @@ const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="container mx-auto py-6">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">

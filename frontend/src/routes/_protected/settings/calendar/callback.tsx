@@ -101,9 +101,7 @@ function CalendarOAuthCallback() {
   }, [search, completeOAuth, navigate])
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex items-center justify-center min-h-[60vh]"
-    >
+    <div className="container mx-auto py-12 flex items-center justify-center min-h-[60vh]">
       <Card className="w-full max-w-md">
         <CardContent className="p-6 text-center space-y-4">
           {status === 'loading' && (

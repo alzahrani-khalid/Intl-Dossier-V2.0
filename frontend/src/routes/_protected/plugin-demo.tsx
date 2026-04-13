@@ -40,8 +40,8 @@ export const Route = createFileRoute('/_protected/plugin-demo')({
 // ============================================================================
 
 function PluginDemoPage() {
-const { isRTL } = useDirection()
-const [isInitialized, setIsInitialized] = useState(false)
+  const { isRTL } = useDirection()
+  const [isInitialized, setIsInitialized] = useState(false)
   const [plugins, setPlugins] = useState<EntityPlugin[]>([])
   const [entityTypes, setEntityTypes] = useState<string[]>([])
   const [selectedPlugin, setSelectedPlugin] = useState<EntityPlugin | null>(null)
@@ -106,9 +106,7 @@ const [isInitialized, setIsInitialized] = useState(false)
   void togglePlugin
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
-    >
+    <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

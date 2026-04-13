@@ -64,7 +64,7 @@ function CommitmentsPage() {
   const searchParams = Route.useSearch()
   const navigate = Route.useNavigate()
   const { isRTL } = useDirection()
-// Fetch dossier details when dossierId is present (for type-specific navigation)
+  // Fetch dossier details when dossierId is present (for type-specific navigation)
   const { data: dossier } = useDossier(searchParams.dossierId ?? '', undefined, {
     enabled: !!searchParams.dossierId,
   })
@@ -140,7 +140,7 @@ function CommitmentsPage() {
     <div className="min-h-screen bg-muted">
       {/* Page Header */}
       <div className="bg-card border-b border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="max-w-7xl mx-auto py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             {/* Navigation */}
             <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ function CommitmentsPage() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="max-w-7xl mx-auto py-6 sm:py-8">
         <CommitmentsList
           dossierId={searchParams.dossierId}
           status={statusArray}

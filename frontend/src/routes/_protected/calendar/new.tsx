@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_protected/calendar/new')({
 function NewCalendarEntryPage() {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleSuccess = () => {
     navigate({ to: '/calendar' })
@@ -24,9 +24,7 @@ const navigate = useNavigate()
   }
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-4xl"
-    >
+    <div className="container mx-auto py-6 max-w-4xl">
       {/* Breadcrumb */}
       <div className="mb-6">
         <Button variant="ghost" size="sm" onClick={handleCancel} className="mb-2">

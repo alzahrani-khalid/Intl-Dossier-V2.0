@@ -15,8 +15,8 @@ export const Route = createFileRoute('/_protected/compliance-demo')({
 })
 
 function ComplianceDemo() {
-return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  return (
+    <div className="container mx-auto py-6">
       <ComplianceRulesManager />
     </div>
   )

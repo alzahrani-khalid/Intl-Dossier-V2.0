@@ -39,7 +39,7 @@ function PositionDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="container mx-auto py-6 space-y-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-96" />
       </div>
@@ -48,7 +48,7 @@ function PositionDetailPage() {
 
   if (!position) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="container mx-auto py-6">
         <Card className="p-6 text-center">
           <p className="text-lg text-muted-foreground">{t('notFound', 'Position not found')}</p>
         </Card>
@@ -86,7 +86,7 @@ function PositionDetailPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-1">

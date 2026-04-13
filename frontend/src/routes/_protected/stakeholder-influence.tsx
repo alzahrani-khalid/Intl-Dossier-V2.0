@@ -95,7 +95,7 @@ export const Route = createFileRoute('/_protected/stakeholder-influence')({
 function StakeholderInfluencePage() {
   const { t } = useTranslation('stakeholder-influence')
   const { isRTL } = useDirection()
-// State
+  // State
   const [activeTab, setActiveTab] = useState('network')
   const [selectedDossierId, setSelectedDossierId] = useState<string | null>(null)
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null)
@@ -160,7 +160,7 @@ function StakeholderInfluencePage() {
   })
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="container mx-auto py-6">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>

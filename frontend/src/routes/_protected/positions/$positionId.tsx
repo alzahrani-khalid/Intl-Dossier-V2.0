@@ -46,7 +46,7 @@ function PositionDetailPage() {
   const navigate = useNavigate()
   const { t } = useTranslation(['positions', 'common'])
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   // Fetch position data
   const { data: position, isLoading, error } = usePosition(positionId)
@@ -60,7 +60,7 @@ const locale = isRTL ? ar : enUS
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="container mx-auto py-6 space-y-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-96 w-full" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -73,7 +73,7 @@ const locale = isRTL ? ar : enUS
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="container mx-auto py-6">
         <Card className="border-destructive">
           <CardHeader>
             <CardTitle className="text-destructive flex items-center gap-2">
@@ -111,7 +111,7 @@ const locale = isRTL ? ar : enUS
     <div className={`min-h-screen bg-muted ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
       <div className="bg-card border-b border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto py-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               {/* Back Button */}
@@ -173,7 +173,7 @@ const locale = isRTL ? ar : enUS
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Column - Position Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -253,9 +253,7 @@ const locale = isRTL ? ar : enUS
                       {t('positions:detail.view_dossier')}
                     </Link>
                   ) : (
-                    <p className="text-sm text-foreground">
-                      {t('positions:detail.no_dossier')}
-                    </p>
+                    <p className="text-sm text-foreground">{t('positions:detail.no_dossier')}</p>
                   )}
                 </div>
 
@@ -286,9 +284,7 @@ const locale = isRTL ? ar : enUS
                       <p className="text-sm font-medium text-muted-foreground">
                         {t('positions:detail.version')}
                       </p>
-                      <p className="text-sm text-foreground">
-                        v{position.version}
-                      </p>
+                      <p className="text-sm text-foreground">v{position.version}</p>
                     </div>
                   </>
                 )}
