@@ -364,7 +364,7 @@ export function BriefsPage() {
   ]
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="space-y-6">
       <PageHeader
         icon={<FileText className="h-6 w-6" />}
         title={t('navigation.briefs')}

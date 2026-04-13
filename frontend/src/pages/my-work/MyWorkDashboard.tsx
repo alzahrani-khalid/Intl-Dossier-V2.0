@@ -163,8 +163,7 @@ export default function MyWorkDashboard() {
   }, [items.data])
 
   return (
-    <div className="py-4 sm:py-6">
-      {/* Page Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<LayoutDashboard className="h-6 w-6" />}
         title={t('title', 'My Work')}

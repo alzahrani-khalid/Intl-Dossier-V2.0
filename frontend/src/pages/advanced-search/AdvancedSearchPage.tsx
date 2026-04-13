@@ -219,8 +219,7 @@ export function AdvancedSearchPage() {
   )
 
   return (
-    <div className="py-6">
-      {/* Page Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<Search className="h-6 w-6" />}
         title={t('title')}

@@ -144,7 +144,7 @@ function AdminApprovalsPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+      <div className="space-y-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-96" />
       </div>
@@ -152,7 +152,7 @@ function AdminApprovalsPage() {
   }
 
   return (
-    <div className="py-6 space-y-6">
+    <div className="space-y-6">
       <PageHeader
         icon={<CheckCircle className="h-6 w-6" />}
         title={t('admin.approvals.title', 'Admin: Approval Management')}

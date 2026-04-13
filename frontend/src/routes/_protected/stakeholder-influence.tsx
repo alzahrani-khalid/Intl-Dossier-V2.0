@@ -161,7 +161,7 @@ function StakeholderInfluencePage() {
   })
 
   return (
-    <div className="py-6">
+    <div className="space-y-6">
       <PageHeader
         icon={<Network className="h-6 w-6" />}
         title={t('title', 'Stakeholder Influence')}

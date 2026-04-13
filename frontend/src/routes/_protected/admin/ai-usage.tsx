@@ -199,7 +199,7 @@ function AIUsageDashboard() {
   }
 
   return (
-    <div className="py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <PageHeader
         icon={<BarChart3 className="h-6 w-6" />}
         title={t('usage.title', 'AI Usage Dashboard')}

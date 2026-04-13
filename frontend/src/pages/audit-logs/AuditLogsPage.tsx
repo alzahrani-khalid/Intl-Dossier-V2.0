@@ -90,8 +90,7 @@ export function AuditLogsPage() {
   const showingTo = Math.min(pagination.offset + pagination.limit, total)
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-      {/* Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<Shield className="h-6 w-6" />}
         title={t('title')}

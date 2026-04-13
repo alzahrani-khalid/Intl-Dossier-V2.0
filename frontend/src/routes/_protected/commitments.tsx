@@ -138,9 +138,8 @@ function CommitmentsPage() {
 
   // List view with optional dossier context
   return (
-    <div>
-      {/* Page Header */}
-      <div className="flex items-center gap-2 mb-4">
+    <div className="space-y-6">
+      <div className="flex items-center gap-2">
         {searchParams.dossierId ? (
           <Button
             variant="ghost"
@@ -172,7 +171,7 @@ function CommitmentsPage() {
       />
 
       {/* Main Content */}
-      <main className="py-6 sm:py-8">
+      <div>
         <CommitmentsList
           dossierId={searchParams.dossierId}
           status={statusArray}
@@ -185,7 +184,7 @@ function CommitmentsPage() {
           showCreateButton={!!searchParams.dossierId}
           onFiltersChange={handleFiltersChange}
         />
-      </main>
+      </div>
 
       {/* T061: Detail Drawer - opens when id is in URL */}
       <CommitmentDetailDrawer

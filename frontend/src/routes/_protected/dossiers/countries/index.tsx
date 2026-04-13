@@ -90,7 +90,7 @@ function CountriesListPage() {
   }, [navigate, page])
 
   return (
-    <div className="py-4 sm:py-6 lg:py-8">
+    <div className="space-y-6">
       {/* Breadcrumb */}
       <nav
         aria-label={t('nav.breadcrumb', 'Breadcrumb')}

@@ -188,8 +188,7 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
   }
 
   return (
-    <div className="py-6 sm:py-8">
-      {/* Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<Settings className="h-6 w-6" />}
         title={t('title')}

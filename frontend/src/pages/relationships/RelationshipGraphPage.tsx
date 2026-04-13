@@ -167,7 +167,7 @@ export function RelationshipGraphPage() {
 
   if (!startDossierId) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="space-y-6">
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -182,8 +182,7 @@ export function RelationshipGraphPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<Network className="h-6 w-6" />}
         title={t('graph.title', 'Relationship Graph')}

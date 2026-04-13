@@ -31,7 +31,6 @@ import {
   Briefcase,
   ListTodo,
   ArrowRight,
-  Sparkles,
 } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -163,45 +162,31 @@ export function HelpPage() {
   )
 
   return (
-    <div className="bg-gradient-to-b from-background to-muted/20">
-      {/* Hero Section */}
-      <div className="bg-primary/5 border-b">
-        <div className="py-8 sm:py-12 lg:py-16">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-4">
-              <Sparkles className="size-4" />
-              <span className="text-sm font-medium">{isRTL ? 'مركز المساعدة' : 'Help Center'}</span>
-            </div>
-            <PageHeader
-              icon={<HelpCircle className="h-6 w-6" />}
-              title={isRTL ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?'}
-              subtitle={
-                isRTL
-                  ? 'ابحث في المقالات أو تصفح الأدلة أدناه'
-                  : 'Search articles or browse guides below'
-              }
-              className="justify-center pb-8"
-            />
+    <div className="space-y-6">
+      <PageHeader
+        icon={<HelpCircle className="h-6 w-6" />}
+        title={isRTL ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?'}
+        subtitle={
+          isRTL ? 'ابحث في المقالات أو تصفح الأدلة أدناه' : 'Search articles or browse guides below'
+        }
+      />
 
-            {/* Search Bar */}
-            <div className="relative max-w-xl mx-auto">
-              <Search
-                className={`absolute top-1/2 -translate-y-1/2 size-5 text-muted-foreground ${isRTL ? 'end-4' : 'start-4'}`}
-              />
-              <Input
-                type="search"
-                placeholder={isRTL ? 'ابحث عن المساعدة...' : 'Search for help...'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={`h-14 text-lg rounded-full border-2 ${isRTL ? 'pe-12 ps-4' : 'ps-12 pe-4'}`}
-              />
-            </div>
-          </div>
-        </div>
+      {/* Search Bar */}
+      <div className="relative max-w-xl mx-auto">
+        <Search
+          className={`absolute top-1/2 -translate-y-1/2 size-5 text-muted-foreground ${isRTL ? 'end-4' : 'start-4'}`}
+        />
+        <Input
+          type="search"
+          placeholder={isRTL ? 'ابحث عن المساعدة...' : 'Search for help...'}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className={`h-14 text-lg rounded-full border-2 ${isRTL ? 'pe-12 ps-4' : 'ps-12 pe-4'}`}
+        />
       </div>
 
       {/* Main Content */}
-      <div className="py-8 sm:py-12">
+      <div>
         {/* Feature Guides Section */}
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">

@@ -127,26 +127,20 @@ function PersonCreatePage() {
   }
 
   return (
-    <div>
-      {/* Header */}
-      <header className="border-b sticky top-0 z-10 backdrop-blur">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
-              <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
-            </Button>
-            <PageHeader
-              icon={<User className="h-6 w-6" />}
-              title={t('create.title', 'Add New Person')}
-              subtitle={t('create.subtitle', 'Create a new contact profile')}
-              className="pb-0"
-            />
-          </div>
-        </div>
-      </header>
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
+          <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
+        </Button>
+        <PageHeader
+          icon={<User className="h-6 w-6" />}
+          title={t('create.title', 'Add New Person')}
+          subtitle={t('create.subtitle', 'Create a new contact profile')}
+        />
+      </div>
 
       {/* Form */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl mx-auto">
             {/* Basic Information */}
@@ -456,7 +450,7 @@ function PersonCreatePage() {
             </div>
           </form>
         </Form>
-      </main>
+      </div>
     </div>
   )
 }

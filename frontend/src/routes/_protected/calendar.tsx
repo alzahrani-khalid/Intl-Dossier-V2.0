@@ -22,7 +22,7 @@ function CalendarPage() {
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month')
 
   return (
-    <div className="py-6">
+    <div className="space-y-6">
       <PageHeader
         icon={<CalendarDays className="h-6 w-6" />}
         title={t('page.title')}

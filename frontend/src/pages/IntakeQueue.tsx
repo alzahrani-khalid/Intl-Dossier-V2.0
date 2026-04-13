@@ -268,133 +268,121 @@ export function IntakeQueuePage() {
   }
 
   return (
-    <div>
-      {/* Header */}
-      <div className="border-b border-border">
-        <div className="container mx-auto p-4 sm:p-6 lg:px-8">
-          <PageHeader
-            icon={<Inbox className="h-6 w-6" />}
-            title={t('navigation.intakeQueue', 'Intake Queue')}
-            subtitle={t('intake.description', 'Review and classify incoming requests')}
-            className="pb-0"
-            actions={
-              <>
-                <Button
-                  onClick={() => navigate({ to: '/intake/new' })}
-                  size="sm"
-                  className="min-h-9 gap-2"
-                >
-                  <Plus className="size-4" />
-                  <span className="hidden sm:inline">{t('intake.createNew', 'New Request')}</span>
-                  <span className="sm:hidden">+</span>
+    <div className="space-y-6">
+      <PageHeader
+        icon={<Inbox className="h-6 w-6" />}
+        title={t('navigation.intakeQueue', 'Intake Queue')}
+        subtitle={t('intake.description', 'Review and classify incoming requests')}
+        actions={
+          <>
+            <Button
+              onClick={() => navigate({ to: '/intake/new' })}
+              size="sm"
+              className="min-h-9 gap-2"
+            >
+              <Plus className="size-4" />
+              <span className="hidden sm:inline">{t('intake.createNew', 'New Request')}</span>
+              <span className="sm:hidden">+</span>
+            </Button>
+
+            {/* Status Category Filter Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="min-h-9 gap-2">
+                  <ListFilter className="size-4" />
+                  <span className="hidden sm:inline">
+                    {filters.statusCategory === 'pending'
+                      ? t('intake.filters.pendingTriage', 'Pending Triage')
+                      : filters.statusCategory === 'active'
+                        ? t('intake.filters.active', 'Active')
+                        : filters.statusCategory === 'completed'
+                          ? t('intake.filters.completed', 'Completed')
+                          : t('intake.filters.all', 'All')}
+                  </span>
+                  {activeFilterCount > 0 && (
+                    <Badge variant="secondary" className="size-5 justify-center p-0 text-xs">
+                      {activeFilterCount}
+                    </Badge>
+                  )}
                 </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-56">
+                <DropdownMenuLabel>
+                  {t('intake.filters.statusCategory', 'Status')}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem
+                  checked={filters.statusCategory === 'pending'}
+                  onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'pending' }))}
+                >
+                  {t('intake.filters.pendingTriage', 'Pending Triage')}
+                  <Badge variant="outline" className="ms-auto">
+                    submitted, triaged
+                  </Badge>
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={filters.statusCategory === 'active'}
+                  onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'active' }))}
+                >
+                  {t('intake.filters.active', 'Active')}
+                  <Badge variant="outline" className="ms-auto">
+                    assigned, in_progress
+                  </Badge>
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={filters.statusCategory === 'completed'}
+                  onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'completed' }))}
+                >
+                  {t('intake.filters.completed', 'Completed')}
+                  <Badge variant="outline" className="ms-auto">
+                    converted, closed
+                  </Badge>
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={filters.statusCategory === 'all'}
+                  onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'all' }))}
+                >
+                  {t('intake.filters.all', 'All Tickets')}
+                </DropdownMenuCheckboxItem>
 
-                {/* Status Category Filter Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="min-h-9 gap-2">
-                      <ListFilter className="size-4" />
-                      <span className="hidden sm:inline">
-                        {filters.statusCategory === 'pending'
-                          ? t('intake.filters.pendingTriage', 'Pending Triage')
-                          : filters.statusCategory === 'active'
-                            ? t('intake.filters.active', 'Active')
-                            : filters.statusCategory === 'completed'
-                              ? t('intake.filters.completed', 'Completed')
-                              : t('intake.filters.all', 'All')}
-                      </span>
-                      {activeFilterCount > 0 && (
-                        <Badge variant="secondary" className="size-5 justify-center p-0 text-xs">
-                          {activeFilterCount}
-                        </Badge>
-                      )}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-56">
-                    <DropdownMenuLabel>
-                      {t('intake.filters.statusCategory', 'Status')}
-                    </DropdownMenuLabel>
+                {activeFilterCount > 0 && (
+                  <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem
-                      checked={filters.statusCategory === 'pending'}
-                      onCheckedChange={() =>
-                        setFilters((f) => ({ ...f, statusCategory: 'pending' }))
-                      }
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start gap-2 text-muted-foreground"
+                      onClick={clearFilters}
                     >
-                      {t('intake.filters.pendingTriage', 'Pending Triage')}
-                      <Badge variant="outline" className="ms-auto">
-                        submitted, triaged
-                      </Badge>
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={filters.statusCategory === 'active'}
-                      onCheckedChange={() =>
-                        setFilters((f) => ({ ...f, statusCategory: 'active' }))
-                      }
-                    >
-                      {t('intake.filters.active', 'Active')}
-                      <Badge variant="outline" className="ms-auto">
-                        assigned, in_progress
-                      </Badge>
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={filters.statusCategory === 'completed'}
-                      onCheckedChange={() =>
-                        setFilters((f) => ({ ...f, statusCategory: 'completed' }))
-                      }
-                    >
-                      {t('intake.filters.completed', 'Completed')}
-                      <Badge variant="outline" className="ms-auto">
-                        converted, closed
-                      </Badge>
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={filters.statusCategory === 'all'}
-                      onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'all' }))}
-                    >
-                      {t('intake.filters.all', 'All Tickets')}
-                    </DropdownMenuCheckboxItem>
-
-                    {activeFilterCount > 0 && (
-                      <>
-                        <DropdownMenuSeparator />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start gap-2 text-muted-foreground"
-                          onClick={clearFilters}
-                        >
-                          <X className="size-4" />
-                          {t('intake.filters.clear', 'Clear filters')}
-                        </Button>
-                      </>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {selectedTickets.length > 0 && (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="min-h-9"
-                    onClick={() => {
-                      const firstTicket = selectedTickets[0]
-                      if (firstTicket) {
-                        handleOpenClassifyDialog(firstTicket)
-                      }
-                    }}
-                  >
-                    {t('intake.classifySelected', 'Classify')} ({selectedTickets.length})
-                  </Button>
+                      <X className="size-4" />
+                      {t('intake.filters.clear', 'Clear filters')}
+                    </Button>
+                  </>
                 )}
-              </>
-            }
-          />
-        </div>
-      </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {selectedTickets.length > 0 && (
+              <Button
+                variant="secondary"
+                size="sm"
+                className="min-h-9"
+                onClick={() => {
+                  const firstTicket = selectedTickets[0]
+                  if (firstTicket) {
+                    handleOpenClassifyDialog(firstTicket)
+                  }
+                }}
+              >
+                {t('intake.classifySelected', 'Classify')} ({selectedTickets.length})
+              </Button>
+            )}
+          </>
+        }
+      />
 
       {/* Main Content */}
-      <main className="container mx-auto space-y-4 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="space-y-4">
         {/* Sync Status Bar */}
         <SyncStatusBar
           lastSyncTime={lastSyncTime}
@@ -563,7 +551,7 @@ export function IntakeQueuePage() {
             })}
           </div>
         )}
-      </main>
+      </div>
 
       {/* Classify Dialog */}
       <Dialog open={classifyDialogOpen} onOpenChange={setClassifyDialogOpen}>

@@ -132,8 +132,7 @@ export function MyTasksPage() {
   }
 
   return (
-    <div className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8">
-      {/* Page Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<CheckCircle2 className="h-6 w-6" />}
         title={t('my_tasks', 'My Tasks')}

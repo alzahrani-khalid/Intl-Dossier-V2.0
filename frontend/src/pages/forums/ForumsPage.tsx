@@ -216,8 +216,7 @@ export function ForumsPage() {
   ]
 
   return (
-    <div className="py-4 sm:py-6 space-y-6">
-      {/* Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<MessageSquare className="h-6 w-6" />}
         title={t('pageTitle')}

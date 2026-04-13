@@ -205,7 +205,7 @@ function AdminSystemPage() {
   }
 
   return (
-    <div className="py-6 space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <PageHeader
         icon={<Settings className="h-6 w-6" />}
         title={t('system.title', 'System Utilities')}

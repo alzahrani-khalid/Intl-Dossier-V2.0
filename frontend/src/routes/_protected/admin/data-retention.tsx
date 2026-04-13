@@ -214,7 +214,7 @@ function DataRetentionPage() {
   }
 
   return (
-    <div className="py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <PageHeader
         icon={<Database className="h-6 w-6" />}
         title={t('title', 'Data Retention Policies')}

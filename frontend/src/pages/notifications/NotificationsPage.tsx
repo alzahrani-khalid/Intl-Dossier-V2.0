@@ -161,8 +161,7 @@ export function NotificationsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      {/* Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<Bell className="h-6 w-6" />}
         title={t('notificationCenter')}

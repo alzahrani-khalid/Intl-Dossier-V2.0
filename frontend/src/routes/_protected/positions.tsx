@@ -105,7 +105,7 @@ export function PositionsLibraryPage() {
     searchQuery || statusFilter !== 'all' || typeFilter !== 'all' || sortBy !== 'updated_at'
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader
         icon={<FileText className="h-6 w-6" />}
         title={t('positions:library.title')}

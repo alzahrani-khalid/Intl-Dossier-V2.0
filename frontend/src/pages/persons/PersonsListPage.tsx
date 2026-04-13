@@ -151,152 +151,142 @@ function PersonsListPage() {
   }
 
   return (
-    <div>
-      {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
-        <div className="py-4 sm:py-6">
-          <PageHeader
-            icon={<Users className="h-6 w-6" />}
-            title={t('title', 'Key Contacts')}
-            subtitle={t('subtitle', 'Manage your network of key contacts and stakeholders')}
-            className="pb-0"
-            actions={
-              <Button onClick={handleCreatePerson} className="w-full sm:w-auto">
-                <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('actions.createPerson', 'Add Person')}
-              </Button>
-            }
+    <div className="space-y-6">
+      <PageHeader
+        icon={<Users className="h-6 w-6" />}
+        title={t('title', 'Key Contacts')}
+        subtitle={t('subtitle', 'Manage your network of key contacts and stakeholders')}
+        actions={
+          <Button onClick={handleCreatePerson} className="w-full sm:w-auto">
+            <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            {t('actions.createPerson', 'Add Person')}
+          </Button>
+        }
+      />
+
+      {/* Search and Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Search Input */}
+        <div className="relative flex-1">
+          <Search
+            className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
           />
+          <Input
+            placeholder={t('search.placeholder', 'Search by name, title, email...')}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={`${isRTL ? 'pe-10' : 'ps-10'} h-11`}
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'start-3' : 'end-3'}`}
+            >
+              <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+            </button>
+          )}
+        </div>
 
-          {/* Search and Filters */}
-          <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
-            {/* Search Input */}
-            <div className="relative flex-1">
-              <Search
-                className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
-              />
-              <Input
-                placeholder={t('search.placeholder', 'Search by name, title, email...')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={`${isRTL ? 'pe-10' : 'ps-10'} h-11`}
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm('')}
-                  className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'start-3' : 'end-3'}`}
-                >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                </button>
-              )}
-            </div>
+        {/* Desktop Filters */}
+        <div className="hidden sm:flex gap-2">
+          <Select
+            value={importanceFilter === 'all' ? 'all' : String(importanceFilter)}
+            onValueChange={(value) =>
+              setImportanceFilter(value === 'all' ? 'all' : (Number(value) as ImportanceLevel))
+            }
+          >
+            <SelectTrigger className="w-[180px] h-11">
+              <Star className="h-4 w-4 me-2 text-muted-foreground" />
+              <SelectValue placeholder={t('filters.importance', 'Importance')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('filters.allImportance', 'All levels')}</SelectItem>
+              {([5, 4, 3, 2, 1] as ImportanceLevel[]).map((level) => (
+                <SelectItem key={level} value={String(level)}>
+                  {isRTL ? IMPORTANCE_LEVEL_LABELS[level].ar : IMPORTANCE_LEVEL_LABELS[level].en}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-            {/* Desktop Filters */}
-            <div className="hidden sm:flex gap-2">
-              <Select
-                value={importanceFilter === 'all' ? 'all' : String(importanceFilter)}
-                onValueChange={(value) =>
-                  setImportanceFilter(value === 'all' ? 'all' : (Number(value) as ImportanceLevel))
-                }
-              >
-                <SelectTrigger className="w-[180px] h-11">
-                  <Star className="h-4 w-4 me-2 text-muted-foreground" />
-                  <SelectValue placeholder={t('filters.importance', 'Importance')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('filters.allImportance', 'All levels')}</SelectItem>
-                  {([5, 4, 3, 2, 1] as ImportanceLevel[]).map((level) => (
-                    <SelectItem key={level} value={String(level)}>
-                      {isRTL
-                        ? IMPORTANCE_LEVEL_LABELS[level].ar
-                        : IMPORTANCE_LEVEL_LABELS[level].en}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4 me-1" />
+              {t('filters.clear', 'Clear')}
+            </Button>
+          )}
+        </div>
 
+        {/* Mobile Filters Sheet */}
+        <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+          <SheetTrigger asChild className="sm:hidden">
+            <Button variant="outline" className="h-11">
+              <SlidersHorizontal className="h-4 w-4 me-2" />
+              {t('filters.title', 'Filters')}
               {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  <X className="h-4 w-4 me-1" />
+                <Badge variant="secondary" className="ms-2">
+                  1
+                </Badge>
+              )}
+            </Button>
+          </SheetTrigger>
+          <SheetContent side={isRTL ? 'left' : 'right'}>
+            <SheetHeader>
+              <SheetTitle>{t('filters.title', 'Filters')}</SheetTitle>
+            </SheetHeader>
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  {t('filters.importance', 'Importance Level')}
+                </label>
+                <Select
+                  value={importanceFilter === 'all' ? 'all' : String(importanceFilter)}
+                  onValueChange={(value) =>
+                    setImportanceFilter(
+                      value === 'all' ? 'all' : (Number(value) as ImportanceLevel),
+                    )
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('filters.allImportance', 'All levels')}</SelectItem>
+                    {([5, 4, 3, 2, 1] as ImportanceLevel[]).map((level) => (
+                      <SelectItem key={level} value={String(level)}>
+                        {isRTL
+                          ? IMPORTANCE_LEVEL_LABELS[level].ar
+                          : IMPORTANCE_LEVEL_LABELS[level].en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <Button variant="outline" className="flex-1" onClick={clearFilters}>
                   {t('filters.clear', 'Clear')}
                 </Button>
-              )}
-            </div>
-
-            {/* Mobile Filters Sheet */}
-            <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-              <SheetTrigger asChild className="sm:hidden">
-                <Button variant="outline" className="h-11">
-                  <SlidersHorizontal className="h-4 w-4 me-2" />
-                  {t('filters.title', 'Filters')}
-                  {hasActiveFilters && (
-                    <Badge variant="secondary" className="ms-2">
-                      1
-                    </Badge>
-                  )}
+                <Button className="flex-1" onClick={() => setIsFiltersOpen(false)}>
+                  {t('filters.apply', 'Apply')}
                 </Button>
-              </SheetTrigger>
-              <SheetContent side={isRTL ? 'left' : 'right'}>
-                <SheetHeader>
-                  <SheetTitle>{t('filters.title', 'Filters')}</SheetTitle>
-                </SheetHeader>
-                <div className="mt-6 space-y-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      {t('filters.importance', 'Importance Level')}
-                    </label>
-                    <Select
-                      value={importanceFilter === 'all' ? 'all' : String(importanceFilter)}
-                      onValueChange={(value) =>
-                        setImportanceFilter(
-                          value === 'all' ? 'all' : (Number(value) as ImportanceLevel),
-                        )
-                      }
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">
-                          {t('filters.allImportance', 'All levels')}
-                        </SelectItem>
-                        {([5, 4, 3, 2, 1] as ImportanceLevel[]).map((level) => (
-                          <SelectItem key={level} value={String(level)}>
-                            {isRTL
-                              ? IMPORTANCE_LEVEL_LABELS[level].ar
-                              : IMPORTANCE_LEVEL_LABELS[level].en}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
 
-                  <div className="flex gap-2 pt-4">
-                    <Button variant="outline" className="flex-1" onClick={clearFilters}>
-                      {t('filters.clear', 'Clear')}
-                    </Button>
-                    <Button className="flex-1" onClick={() => setIsFiltersOpen(false)}>
-                      {t('filters.apply', 'Apply')}
-                    </Button>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-
-          {/* Stats Summary */}
-          <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Users className="h-4 w-4" />
-              {t('stats.total', '{{count}} persons', { count: totalPersons })}
-            </span>
-            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-          </div>
-        </div>
-      </header>
+      {/* Stats Summary */}
+      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <Users className="h-4 w-4" />
+          {t('stats.total', '{{count}} persons', { count: totalPersons })}
+        </span>
+        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+      </div>
 
       {/* Persons List */}
-      <main className="py-6">
+      <div>
         {data?.data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
@@ -414,7 +404,7 @@ function PersonsListPage() {
             </Button>
           </div>
         )}
-      </main>
+      </div>
     </div>
   )
 }

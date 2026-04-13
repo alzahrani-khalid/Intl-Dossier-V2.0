@@ -77,7 +77,7 @@ function ForumsListPage() {
   }, [navigate, page])
 
   return (
-    <div className="py-4 sm:py-6 lg:py-8">
+    <div className="space-y-6">
       <PageHeader
         icon={<MessageSquare className="h-6 w-6" />}
         title={t('type.forum')}

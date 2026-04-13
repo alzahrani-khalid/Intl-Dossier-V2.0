@@ -195,7 +195,7 @@ export function UsersListPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="space-y-6">
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="text-muted-foreground">{t('translation:loading', 'Loading...')}</p>
@@ -206,7 +206,7 @@ export function UsersListPage() {
 
   if (isError) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="space-y-6">
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <AlertCircle className="h-12 w-12 text-destructive" />
           <p className="text-destructive font-medium">{t('errors.loadFailed')}</p>
@@ -219,8 +219,7 @@ export function UsersListPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-      {/* Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<Users className="h-6 w-6" />}
         title={t('usersList.title')}

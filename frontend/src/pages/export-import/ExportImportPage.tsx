@@ -85,7 +85,7 @@ function ExportImportPage() {
   const selectedEntity = ENTITY_OPTIONS.find((e) => e.value === entityType)
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-6">
       <PageHeader
         icon={<FileSpreadsheet className="h-6 w-6" />}
         title={t('title')}

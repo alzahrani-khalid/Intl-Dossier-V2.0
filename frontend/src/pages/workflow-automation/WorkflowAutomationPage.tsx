@@ -60,7 +60,7 @@ export function WorkflowAutomationPage() {
   // Render builder view
   if (viewMode === 'create' || viewMode === 'edit') {
     return (
-      <div className="py-6">
+      <div className="space-y-6">
         <WorkflowBuilder rule={selectedRule} onSave={handleSave} onCancel={handleCancel} />
       </div>
     )
@@ -68,7 +68,7 @@ export function WorkflowAutomationPage() {
 
   // Render list view with tabs
   return (
-    <div className="py-6">
+    <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
         <PageHeader
           icon={<Workflow className="h-6 w-6" />}

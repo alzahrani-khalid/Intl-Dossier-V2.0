@@ -231,218 +231,206 @@ function EngagementsListPage() {
   }
 
   return (
-    <div>
-      {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
-        <div className="py-4 sm:py-6">
-          <PageHeader
-            icon={<Handshake className="h-6 w-6" />}
-            title={t('title', 'Engagements')}
-            subtitle={t('subtitle', 'Manage bilateral meetings, missions, and delegations')}
-            actions={
-              <Button onClick={handleCreateEngagement} className="w-full sm:w-auto">
-                <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('actions.createEngagement', 'New Engagement')}
-              </Button>
-            }
-            className="pb-0"
+    <div className="space-y-6">
+      <PageHeader
+        icon={<Handshake className="h-6 w-6" />}
+        title={t('title', 'Engagements')}
+        subtitle={t('subtitle', 'Manage bilateral meetings, missions, and delegations')}
+        actions={
+          <Button onClick={handleCreateEngagement} className="w-full sm:w-auto">
+            <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            {t('actions.createEngagement', 'New Engagement')}
+          </Button>
+        }
+      />
+
+      {/* Search and Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Search Input */}
+        <div className="relative flex-1">
+          <Search
+            className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
           />
+          <Input
+            placeholder={t('search.placeholder', 'Search engagements...')}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={`${isRTL ? 'pe-10' : 'ps-10'} h-11`}
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'start-3' : 'end-3'}`}
+            >
+              <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+            </button>
+          )}
+        </div>
 
-          {/* Search and Filters */}
-          <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
-            {/* Search Input */}
-            <div className="relative flex-1">
-              <Search
-                className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
-              />
-              <Input
-                placeholder={t('search.placeholder', 'Search engagements...')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={`${isRTL ? 'pe-10' : 'ps-10'} h-11`}
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm('')}
-                  className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'start-3' : 'end-3'}`}
-                >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                </button>
+        {/* Desktop Filters */}
+        <div className="hidden sm:flex gap-2">
+          <Select
+            value={typeFilter}
+            onValueChange={(value) => setTypeFilter(value as EngagementType | 'all')}
+          >
+            <SelectTrigger className="w-[180px] h-11">
+              <Calendar className="h-4 w-4 me-2 text-muted-foreground" />
+              <SelectValue placeholder={t('filters.type', 'Type')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('filters.allTypes', 'All types')}</SelectItem>
+              {engagementTypes.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {isRTL ? ENGAGEMENT_TYPE_LABELS[type].ar : ENGAGEMENT_TYPE_LABELS[type].en}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => setStatusFilter(value as EngagementStatus | 'all')}
+          >
+            <SelectTrigger className="w-[160px] h-11">
+              <SelectValue placeholder={t('filters.status', 'Status')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('filters.allStatuses', 'All statuses')}</SelectItem>
+              {engagementStatuses.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {isRTL
+                    ? ENGAGEMENT_STATUS_LABELS[status].ar
+                    : ENGAGEMENT_STATUS_LABELS[status].en}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4 me-1" />
+              {t('filters.clear', 'Clear')}
+            </Button>
+          )}
+        </div>
+
+        {/* Mobile Filters Sheet */}
+        <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+          <SheetTrigger asChild className="sm:hidden">
+            <Button variant="outline" className="h-11">
+              <SlidersHorizontal className="h-4 w-4 me-2" />
+              {t('filters.title', 'Filters')}
+              {activeFilterCount > 0 && (
+                <Badge variant="secondary" className="ms-2">
+                  {activeFilterCount}
+                </Badge>
               )}
-            </div>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side={isRTL ? 'left' : 'right'}>
+            <SheetHeader>
+              <SheetTitle>{t('filters.title', 'Filters')}</SheetTitle>
+            </SheetHeader>
+            <div className="mt-6 space-y-4">
+              {/* Type Filter */}
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  {t('filters.type', 'Engagement Type')}
+                </label>
+                <Select
+                  value={typeFilter}
+                  onValueChange={(value) => setTypeFilter(value as EngagementType | 'all')}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('filters.allTypes', 'All types')}</SelectItem>
+                    {engagementTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {isRTL ? ENGAGEMENT_TYPE_LABELS[type].ar : ENGAGEMENT_TYPE_LABELS[type].en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            {/* Desktop Filters */}
-            <div className="hidden sm:flex gap-2">
-              <Select
-                value={typeFilter}
-                onValueChange={(value) => setTypeFilter(value as EngagementType | 'all')}
-              >
-                <SelectTrigger className="w-[180px] h-11">
-                  <Calendar className="h-4 w-4 me-2 text-muted-foreground" />
-                  <SelectValue placeholder={t('filters.type', 'Type')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('filters.allTypes', 'All types')}</SelectItem>
-                  {engagementTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {isRTL ? ENGAGEMENT_TYPE_LABELS[type].ar : ENGAGEMENT_TYPE_LABELS[type].en}
+              {/* Category Filter */}
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  {t('filters.category', 'Category')}
+                </label>
+                <Select
+                  value={categoryFilter}
+                  onValueChange={(value) => setCategoryFilter(value as EngagementCategory | 'all')}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">
+                      {t('filters.allCategories', 'All categories')}
                     </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    {engagementCategories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {isRTL
+                          ? ENGAGEMENT_CATEGORY_LABELS[category].ar
+                          : ENGAGEMENT_CATEGORY_LABELS[category].en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Select
-                value={statusFilter}
-                onValueChange={(value) => setStatusFilter(value as EngagementStatus | 'all')}
-              >
-                <SelectTrigger className="w-[160px] h-11">
-                  <SelectValue placeholder={t('filters.status', 'Status')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('filters.allStatuses', 'All statuses')}</SelectItem>
-                  {engagementStatuses.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {isRTL
-                        ? ENGAGEMENT_STATUS_LABELS[status].ar
-                        : ENGAGEMENT_STATUS_LABELS[status].en}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Status Filter */}
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  {t('filters.status', 'Status')}
+                </label>
+                <Select
+                  value={statusFilter}
+                  onValueChange={(value) => setStatusFilter(value as EngagementStatus | 'all')}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('filters.allStatuses', 'All statuses')}</SelectItem>
+                    {engagementStatuses.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {isRTL
+                          ? ENGAGEMENT_STATUS_LABELS[status].ar
+                          : ENGAGEMENT_STATUS_LABELS[status].en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  <X className="h-4 w-4 me-1" />
+              <div className="flex gap-2 pt-4">
+                <Button variant="outline" className="flex-1" onClick={clearFilters}>
                   {t('filters.clear', 'Clear')}
                 </Button>
-              )}
-            </div>
-
-            {/* Mobile Filters Sheet */}
-            <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-              <SheetTrigger asChild className="sm:hidden">
-                <Button variant="outline" className="h-11">
-                  <SlidersHorizontal className="h-4 w-4 me-2" />
-                  {t('filters.title', 'Filters')}
-                  {activeFilterCount > 0 && (
-                    <Badge variant="secondary" className="ms-2">
-                      {activeFilterCount}
-                    </Badge>
-                  )}
+                <Button className="flex-1" onClick={() => setIsFiltersOpen(false)}>
+                  {t('filters.apply', 'Apply')}
                 </Button>
-              </SheetTrigger>
-              <SheetContent side={isRTL ? 'left' : 'right'}>
-                <SheetHeader>
-                  <SheetTitle>{t('filters.title', 'Filters')}</SheetTitle>
-                </SheetHeader>
-                <div className="mt-6 space-y-4">
-                  {/* Type Filter */}
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      {t('filters.type', 'Engagement Type')}
-                    </label>
-                    <Select
-                      value={typeFilter}
-                      onValueChange={(value) => setTypeFilter(value as EngagementType | 'all')}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">{t('filters.allTypes', 'All types')}</SelectItem>
-                        {engagementTypes.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {isRTL
-                              ? ENGAGEMENT_TYPE_LABELS[type].ar
-                              : ENGAGEMENT_TYPE_LABELS[type].en}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
 
-                  {/* Category Filter */}
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      {t('filters.category', 'Category')}
-                    </label>
-                    <Select
-                      value={categoryFilter}
-                      onValueChange={(value) =>
-                        setCategoryFilter(value as EngagementCategory | 'all')
-                      }
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">
-                          {t('filters.allCategories', 'All categories')}
-                        </SelectItem>
-                        {engagementCategories.map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {isRTL
-                              ? ENGAGEMENT_CATEGORY_LABELS[category].ar
-                              : ENGAGEMENT_CATEGORY_LABELS[category].en}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Status Filter */}
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      {t('filters.status', 'Status')}
-                    </label>
-                    <Select
-                      value={statusFilter}
-                      onValueChange={(value) => setStatusFilter(value as EngagementStatus | 'all')}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">
-                          {t('filters.allStatuses', 'All statuses')}
-                        </SelectItem>
-                        {engagementStatuses.map((status) => (
-                          <SelectItem key={status} value={status}>
-                            {isRTL
-                              ? ENGAGEMENT_STATUS_LABELS[status].ar
-                              : ENGAGEMENT_STATUS_LABELS[status].en}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex gap-2 pt-4">
-                    <Button variant="outline" className="flex-1" onClick={clearFilters}>
-                      {t('filters.clear', 'Clear')}
-                    </Button>
-                    <Button className="flex-1" onClick={() => setIsFiltersOpen(false)}>
-                      {t('filters.apply', 'Apply')}
-                    </Button>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-
-          {/* Stats Summary */}
-          <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {t('stats.total', '{{count}} engagements', { count: totalEngagements })}
-            </span>
-            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-          </div>
-        </div>
-      </header>
+      {/* Stats Summary */}
+      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <Calendar className="h-4 w-4" />
+          {t('stats.total', '{{count}} engagements', { count: totalEngagements })}
+        </span>
+        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+      </div>
 
       {/* Engagements List */}
-      <main className="py-6">
+      <div>
         {data?.data.length === 0 ? (
           searchTerm || hasActiveFilters ? (
             <SearchEmptyState
@@ -567,7 +555,7 @@ function EngagementsListPage() {
             </Button>
           </div>
         )}
-      </main>
+      </div>
     </div>
   )
 }

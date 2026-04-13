@@ -41,8 +41,7 @@ export function ActivityPage() {
   }, [])
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-      {/* Header */}
+    <div className="space-y-6">
       <PageHeader
         icon={<Activity className="h-6 w-6" />}
         title={t('title')}
