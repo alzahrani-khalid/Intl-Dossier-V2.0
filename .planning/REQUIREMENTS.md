@@ -101,54 +101,54 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status  |
-| ----------- | ----- | ------- |
-| INFRA-01    | —     | Pending |
-| INFRA-02    | —     | Pending |
-| INFRA-03    | —     | Pending |
-| INFRA-04    | —     | Pending |
-| INFRA-05    | —     | Pending |
-| INFRA-06    | —     | Pending |
-| INFRA-07    | —     | Pending |
-| CTRY-01     | —     | Pending |
-| CTRY-02     | —     | Pending |
-| CTRY-03     | —     | Pending |
-| ORG-01      | —     | Pending |
-| ORG-02      | —     | Pending |
-| ORG-03      | —     | Pending |
-| TOPC-01     | —     | Pending |
-| TOPC-02     | —     | Pending |
-| TOPC-03     | —     | Pending |
-| PRSN-01     | —     | Pending |
-| PRSN-02     | —     | Pending |
-| PRSN-03     | —     | Pending |
-| ELOF-01     | —     | Pending |
-| ELOF-02     | —     | Pending |
-| ELOF-03     | —     | Pending |
-| ELOF-04     | —     | Pending |
-| FORUM-01    | —     | Pending |
-| FORUM-02    | —     | Pending |
-| FORUM-03    | —     | Pending |
-| WG-01       | —     | Pending |
-| WG-02       | —     | Pending |
-| WG-03       | —     | Pending |
-| ENGM-01     | —     | Pending |
-| ENGM-02     | —     | Pending |
-| ENGM-03     | —     | Pending |
-| ENGM-04     | —     | Pending |
-| ENGM-05     | —     | Pending |
-| UX-01       | —     | Pending |
-| UX-02       | —     | Pending |
-| UX-03       | —     | Pending |
-| UX-04       | —     | Pending |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| INFRA-01    | Phase 26 | Pending |
+| INFRA-02    | Phase 26 | Pending |
+| INFRA-03    | Phase 26 | Pending |
+| INFRA-04    | Phase 26 | Pending |
+| INFRA-05    | Phase 26 | Pending |
+| INFRA-06    | Phase 26 | Pending |
+| INFRA-07    | Phase 26 | Pending |
+| CTRY-01     | Phase 27 | Pending |
+| CTRY-02     | Phase 27 | Pending |
+| CTRY-03     | Phase 27 | Pending |
+| ORG-01      | Phase 28 | Pending |
+| ORG-02      | Phase 28 | Pending |
+| ORG-03      | Phase 28 | Pending |
+| TOPC-01     | Phase 28 | Pending |
+| TOPC-02     | Phase 28 | Pending |
+| TOPC-03     | Phase 28 | Pending |
+| PRSN-01     | Phase 28 | Pending |
+| PRSN-02     | Phase 28 | Pending |
+| PRSN-03     | Phase 28 | Pending |
+| ELOF-01     | Phase 30 | Pending |
+| ELOF-02     | Phase 30 | Pending |
+| ELOF-03     | Phase 30 | Pending |
+| ELOF-04     | Phase 30 | Pending |
+| FORUM-01    | Phase 29 | Pending |
+| FORUM-02    | Phase 29 | Pending |
+| FORUM-03    | Phase 29 | Pending |
+| WG-01       | Phase 29 | Pending |
+| WG-02       | Phase 29 | Pending |
+| WG-03       | Phase 29 | Pending |
+| ENGM-01     | Phase 29 | Pending |
+| ENGM-02     | Phase 29 | Pending |
+| ENGM-03     | Phase 29 | Pending |
+| ENGM-04     | Phase 29 | Pending |
+| ENGM-05     | Phase 29 | Pending |
+| UX-01       | Phase 31 | Pending |
+| UX-02       | Phase 31 | Pending |
+| UX-03       | Phase 31 | Pending |
+| UX-04       | Phase 31 | Pending |
 
 **Coverage:**
 
 - v5.0 requirements: 38 total
-- Mapped to phases: 0
-- Unmapped: 38 ⚠️
+- Mapped to phases: 38
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-04-14_
-_Last updated: 2026-04-14 after initial definition_
+_Last updated: 2026-04-14 after roadmap creation_
