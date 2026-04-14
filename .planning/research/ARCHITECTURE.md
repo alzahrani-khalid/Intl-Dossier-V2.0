@@ -1,475 +1,399 @@
-# Architecture Patterns
+# Architecture Patterns: Type-Specific Dossier Creation Wizards
 
-**Domain:** Notifications, Production Deployment, and E2E Testing for Diplomatic Dossier System
-**Researched:** 2026-04-06
-**Confidence:** HIGH (based on direct codebase analysis of existing patterns and infrastructure)
+**Domain:** Diplomatic dossier management -- wizard refactoring
+**Researched:** 2026-04-14
+**Confidence:** HIGH (based on direct codebase analysis)
 
 ## Recommended Architecture
 
-### High-Level Integration Map
+**Strategy: Compositional Wizards with Shared Infrastructure**
+
+Keep the existing `FormWizard` shell and extract shared logic into a `useCreateDossierWizard` hook. Compose 8 type-specific wizard configurations that each declare their own steps, schema, defaults, and review sections. The type is known at route entry -- no more runtime type-selection step.
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        EXISTING SYSTEM                              │
-│                                                                     │
-│  Frontend (React 19 + TanStack)     Backend (Express)               │
-│  ┌──────────────────────┐           ┌──────────────────────┐        │
-│  │ useNotificationCenter│           │ notification.service  │        │
-│  │ NotificationList     │           │ (basic insert only)   │        │
-│  │ NotificationPanel    │           └──────────┬───────────┘        │
-│  │ NotificationBadge    │                      │                    │
-│  │ NotificationPrefs    │                      │                    │
-│  └──────────┬───────────┘                      │                    │
-│             │                                  │                    │
-│  ┌──────────▼───────────┐           ┌──────────▼───────────┐        │
-│  │ Supabase Realtime    │◄──────────│ Supabase PostgreSQL   │        │
-│  │ (notifications tbl)  │           │ notifications table   │        │
-│  │ (already subscribed) │           │ push_device_tokens    │        │
-│  └──────────────────────┘           │ notif_category_prefs  │        │
-│                                     └──────────────────────┘        │
-│                                                                     │
-│  Deploy: Docker Compose on DigitalOcean (nginx + certbot ready)     │
-│  CI/CD: GitHub Actions (ci.yml + deploy.yml exist but incomplete)   │
-│  Tests: Playwright config exists, E2E jobs in CI, minimal specs     │
-└─────────────────────────────────────────────────────────────────────┘
+/dossiers/countries/create     --> CountryCreateWizard (3 steps)
+/dossiers/organizations/create --> OrganizationCreateWizard (3 steps)
+/dossiers/forums/create        --> ForumCreateWizard (3 steps)
+/dossiers/engagements/create   --> EngagementCreateWizard (4 steps)
+/dossiers/topics/create        --> TopicCreateWizard (3 steps)
+/dossiers/working-groups/create --> WorkingGroupCreateWizard (3 steps)
+/dossiers/persons/create       --> PersonCreateWizard (3 steps)
+/dossiers/elected-officials/create --> ElectedOfficialCreateWizard (4 steps)
 ```
 
-### What Already Exists (Do NOT Rebuild)
+### Why Per-Type Routes (Not Search Params)
 
-| Component | Location | Status |
-|-----------|----------|--------|
-| `notifications` table | Supabase migration `20260111100001` | Schema exists with categories, priorities, expiry |
-| `push_device_tokens` table | Same migration | Schema exists with platform, provider, failure tracking |
-| `notification_category_preferences` | Same migration | Schema exists with per-channel toggles |
-| `useNotificationCenter` hook | `frontend/src/hooks/useNotificationCenter.ts` | Full CRUD: list, counts, mark-read, delete, preferences, device registration |
-| `useNotificationRealtime` hook | Same file | Supabase Realtime subscription on INSERT/UPDATE |
-| `NotificationList` component | `frontend/src/components/notifications/NotificationList.tsx` | Paginated list with date grouping, RTL support |
-| `NotificationItem` component | Same directory | Individual notification rendering |
-| `NotificationBadge` component | Same directory | Unread count badge |
-| `NotificationPanel` component | Same directory | Slide-out panel |
-| `NotificationPreferences` component | Same directory | Per-category channel toggles |
-| `NotificationsSettingsSection` | `frontend/src/components/settings/sections/` | Settings page integration |
-| `notification.service.ts` | `backend/src/services/notification.service.ts` | Basic `sendInAppNotification` + health score drop |
-| Docker Compose | `deploy/docker-compose.prod.yml` | nginx + frontend + backend + redis + anythingllm + certbot |
-| nginx prod config | `deploy/nginx/nginx.prod.conf` | HTTPS, WebSocket proxy, rate limiting, security headers |
-| CI workflow | `.github/workflows/ci.yml` | Lint, unit tests, E2E job, RTL tests, a11y tests, bundle size, Lighthouse, Docker build, security scan |
-| Deploy workflow | `.github/workflows/deploy.yml` | Docker push + SSH deploy to droplet |
-| Playwright configs | Root + `frontend/playwright.config.ts` | Both exist |
-| Supabase Edge Functions | `supabase/functions/push-notification*/` | Push notification stubs from mobile era |
-| Realtime service | `frontend/src/services/realtime.ts` | Zustand-based subscription manager with reconnection |
+1. **TanStack Router file-based routing** -- each `create.tsx` under the type directory is natural
+2. **Type is known before wizard starts** -- eliminates TypeSelectionStep entirely
+3. **Direct entry from list pages** -- `<Link to="/dossiers/countries/create">` instead of `/dossiers/create?type=country`
+4. **Code splitting** -- each wizard lazy-loaded only when that type's create route is visited
+5. **Backward compatibility** -- keep `/dossiers/create` as a redirect hub with type cards
 
-### What Needs to Be Built
+### Component Boundaries
 
-```
-NEW COMPONENTS (integrate with existing, don't replace)
+| Component                | Responsibility                                                                            | Location                                                                                 |
+| ------------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `useCreateDossierWizard` | Shared hook: form setup, draft persistence, submission, AI assist, navigation             | `hooks/useCreateDossierWizard.ts`                                                        |
+| `CreateWizardShell`      | Thin wrapper: renders `FormWizard` with common chrome (progress, nav, draft indicator)    | `components/dossier/create/CreateWizardShell.tsx`                                        |
+| `BasicInfoStep`          | Shared step: name_en, name_ar, abbreviation, descriptions, AI assist, duplicate detection | `components/dossier/create/steps/BasicInfoStep.tsx` (reuse existing with minor refactor) |
+| `ClassificationStep`     | Shared step: status + sensitivity_level                                                   | `components/dossier/create/steps/ClassificationStep.tsx` (reuse existing)                |
+| `ReviewStep`             | Per-type: each wizard provides its own review section renderer                            | `components/dossier/create/steps/Review{Type}Step.tsx`                                   |
+| `{Type}DetailsStep`      | Per-type: type-specific fields (replaces TypeSpecificStep dispatch)                       | `components/dossier/create/steps/{Type}DetailsStep.tsx`                                  |
+| `RelationshipStep`       | Per-type (engagement, forum, working_group): relationship pickers                         | `components/dossier/create/steps/{Type}RelationshipStep.tsx`                             |
+| `{Type}CreateWizard`     | Per-type orchestrator: composes steps, defines schema, provides to shell                  | `components/dossier/create/wizards/{Type}CreateWizard.tsx`                               |
+| `{Type}CreatePage`       | Route page: header + wizard + help text                                                   | `pages/dossiers/{Type}CreatePage.tsx`                                                    |
+| `CreateDossierHub`       | New `/dossiers/create` landing: type selector grid linking to per-type routes             | `pages/dossiers/CreateDossierHub.tsx`                                                    |
 
-1. NOTIFICATION TRIGGERS (Backend)
-   ┌─────────────────────────────────────────┐
-   │  backend/src/services/                   │
-   │  notification-dispatcher.service.ts      │ ← NEW: Central dispatch
-   │                                          │    Routes to: in-app, email, push
-   │  notification-email.service.ts           │ ← NEW: Resend adapter
-   │  notification-push.service.ts            │ ← NEW: Web Push (VAPID) adapter
-   │  notification-triggers.service.ts        │ ← NEW: Event → notification mapping
-   └─────────────────────────────────────────┘
-
-2. DATABASE ADDITIONS (Supabase)
-   ┌─────────────────────────────────────────┐
-   │  New migration:                          │
-   │  - Add missing columns to notifications  │ ← Verify schema completeness
-   │  - Email digest preferences/schedule     │ ← digest_frequency, last_digest_at
-   │  - Notification templates table          │ ← Optional: bilingual templates
-   └─────────────────────────────────────────┘
-
-3. FRONTEND ADDITIONS
-   ┌─────────────────────────────────────────┐
-   │  frontend/public/sw.js                   │ ← NEW: Service worker for Web Push
-   │  frontend/src/lib/push-registration.ts   │ ← NEW: VAPID key registration
-   │  frontend/src/components/notifications/  │
-   │    NotificationToast.tsx                  │ ← NEW: Toast on new notification
-   └─────────────────────────────────────────┘
-
-4. PRODUCTION DEPLOYMENT
-   ┌─────────────────────────────────────────┐
-   │  deploy/                                 │
-   │    setup-ssl.sh                          │ ← NEW: Certbot initial setup script
-   │    backup.sh                             │ ← NEW: Redis + volume backup
-   │    docker-compose.prod.yml               │ ← MODIFY: Add env for email/push
-   │  .github/workflows/                      │
-   │    deploy.yml                            │ ← MODIFY: Fix SSH deploy, rollback
-   │    ci.yml                                │ ← MODIFY: Add E2E with Supabase
-   └─────────────────────────────────────────┘
-
-5. E2E TESTS (Playwright)
-   ┌─────────────────────────────────────────┐
-   │  tests/e2e/                              │
-   │    auth.spec.ts                          │ ← NEW: Login/logout/session
-   │    dossier-crud.spec.ts                  │ ← NEW: Create/edit/delete dossier
-   │    work-items.spec.ts                    │ ← NEW: Kanban workflow
-   │    engagement-lifecycle.spec.ts          │ ← NEW: Stage transitions
-   │    notifications.spec.ts                 │ ← NEW: Bell, panel, mark-read
-   │    navigation.spec.ts                    │ ← NEW: Sidebar, Cmd+K, routing
-   │  tests/fixtures/                         │
-   │    auth.fixture.ts                       │ ← NEW: Authenticated page fixture
-   │    seed.fixture.ts                       │ ← NEW: Test data seeding
-   └─────────────────────────────────────────┘
-```
-
-## Component Boundaries
-
-| Component | Responsibility | Communicates With |
-|-----------|---------------|-------------------|
-| **NotificationDispatcher** (new) | Routes notification to correct channels based on user preferences | notification.service (in-app), email service, push service, Supabase (preferences lookup) |
-| **NotificationTriggers** (new) | Maps domain events to notification payloads | Express route handlers (called after mutations), NotificationDispatcher |
-| **EmailAdapter** (new) | Sends transactional + digest emails | Resend API |
-| **WebPushAdapter** (new) | Sends browser push via VAPID | Web Push protocol, push_device_tokens table |
-| **ServiceWorker** (new) | Receives push events, shows browser notifications | Browser Push API, frontend notification handlers |
-| **NotificationToast** (new) | Shows in-app toast when Realtime delivers new notification | useNotificationRealtime (existing), Sonner toast library |
-| **E2E Test Suite** (new) | Validates critical user flows | Playwright, Supabase test instance, frontend dev server |
-
-## Data Flow
-
-### Notification Flow: Event to All Channels
+### Data Flow
 
 ```
-1. Domain Event Occurs
-   (e.g., work item assigned, engagement stage changed)
-   │
-   ▼
-2. Express Route Handler / Service calls NotificationTriggers
-   triggers.onWorkItemAssigned(workItemId, assigneeId)
-   │
-   ▼
-3. NotificationTriggers builds payload
-   { type: 'assignment', title, message, category: 'assignments',
-     action_url: '/work-items/{id}', priority: 'high' }
-   │
-   ▼
-4. NotificationDispatcher checks user preferences
-   SELECT * FROM notification_category_preferences
-   WHERE user_id = $1 AND category = 'assignments'
-   │
-   ├─── in_app_enabled? ──► notification.service.sendInAppNotification()
-   │                         (INSERT into notifications table)
-   │                         │
-   │                         ▼ Supabase Realtime fires
-   │                         │
-   │                         ▼ useNotificationRealtime receives INSERT
-   │                         │
-   │                         ▼ NotificationToast shows + badge count updates
-   │
-   ├─── email_enabled? ──► EmailAdapter.send(user.email, template, data)
-   │                        (Resend API)
-   │
-   └─── push_enabled? ──► WebPushAdapter.sendToDevices(userId, payload)
-                           (SELECT tokens FROM push_device_tokens
-                            WHERE user_id = $1 AND is_active = true
-                            AND platform = 'web')
-                           │
-                           ▼ Service Worker receives push event
-                           │
-                           ▼ Browser shows system notification
-```
-
-### Email Digest Flow
-
-```
-1. Cron job runs (backend/src/jobs/ or Supabase pg_cron)
-   Every 24h for daily digest, every 7d for weekly
-   │
-   ▼
-2. Query undigested notifications per user
-   SELECT * FROM notifications
-   WHERE digest_included = false AND email_sent = false
-   AND created_at > NOW() - INTERVAL '24 hours'
-   GROUP BY user_id
-   │
-   ▼
-3. For each user with digest preference:
-   EmailAdapter.sendDigest(user.email, notifications[], user.language)
-   │
-   ▼
-4. Mark notifications as digest_included = true
-```
-
-### Deployment Flow (Target State)
-
-```
-1. Developer pushes to main
-   │
-   ▼
-2. GitHub Actions CI runs
-   ├── Lint + TypeCheck (parallel)
-   ├── Unit Tests (parallel)
-   ├── E2E Tests with Supabase (parallel)
-   └── Bundle Size Check
-   │
-   ▼ (all pass)
-3. Docker Build + Push to GHCR
-   │
-   ▼
-4. SSH to DigitalOcean droplet (138.197.195.242)
-   ├── docker compose pull
-   ├── docker compose up -d --remove-orphans
-   └── Health check: curl https://domain/health
-   │
-   ▼ (health check fails?)
-5. Rollback: docker compose up -d --force-recreate (previous images cached)
+Route (type known) --> {Type}CreatePage
+  --> {Type}CreateWizard
+    --> useCreateDossierWizard(type, schemaForType, defaultsForType)
+      returns: { form, steps, currentStep, handlers, draftState }
+    --> CreateWizardShell(steps, currentStep, handlers)
+      --> BasicInfoStep (shared)
+      --> {Type}DetailsStep (type-specific fields)
+      --> {Type}RelationshipStep (optional, type-specific)
+      --> Review{Type}Step (type-specific review)
+    --> QuickAddOrgDialog (if forum/working_group)
 ```
 
 ## Patterns to Follow
 
-### Pattern 1: Notification Dispatcher (Strategy Pattern)
+### Pattern 1: Wizard Configuration Object
 
-**What:** Central dispatcher that routes notifications to channels based on user preferences.
-**When:** Every domain event that should notify a user.
-**Why:** The existing `notification.service.ts` only does in-app inserts. Extend with dispatcher, do not replace.
+Each type-specific wizard declares a configuration object that drives the shared hook and shell.
 
 ```typescript
-// backend/src/services/notification-dispatcher.service.ts
-interface NotificationPayload {
-  userId: string
-  type: string
-  category: NotificationCategory
-  title: string
-  titleAr?: string
-  message: string
-  messageAr?: string
-  priority: NotificationPriority
-  actionUrl?: string
-  sourceType?: string
-  sourceId?: string
-  data?: Record<string, unknown>
+// types/wizard-config.types.ts
+interface WizardConfig<TSchema extends z.ZodType> {
+  type: DossierType
+  personSubtype?: PersonSubtype // 'elected_official' for that variant
+  schema: TSchema
+  defaultValues: z.infer<TSchema>
+  steps: WizardStepConfig[]
+  filterExtensionData: (data: unknown) => DossierExtensionData | undefined
+  draftKey: string
 }
 
-interface NotificationChannel {
-  send(payload: NotificationPayload, user: UserProfile): Promise<void>
-}
-
-class NotificationDispatcher {
-  private channels: Map<string, NotificationChannel> = new Map()
-
-  register(name: string, channel: NotificationChannel): void {
-    this.channels.set(name, channel)
-  }
-
-  async dispatch(payload: NotificationPayload): Promise<void> {
-    const preferences = await this.getUserPreferences(
-      payload.userId,
-      payload.category,
-    )
-    const user = await this.getUser(payload.userId)
-
-    const dispatches: Promise<void>[] = []
-
-    if (preferences.in_app_enabled !== false) {
-      // In-app defaults to enabled
-      dispatches.push(this.channels.get('in_app')!.send(payload, user))
-    }
-    if (preferences.email_enabled) {
-      dispatches.push(this.channels.get('email')!.send(payload, user))
-    }
-    if (preferences.push_enabled) {
-      dispatches.push(this.channels.get('push')!.send(payload, user))
-    }
-
-    // Fire-and-forget with error isolation per channel
-    await Promise.allSettled(dispatches)
-  }
+interface WizardStepConfig {
+  id: string
+  titleKey: string // i18n key
+  descriptionKey: string
+  icon: LucideIcon
+  isOptional?: boolean
+  validate?: (form: UseFormReturn) => boolean
+  component: React.ComponentType<StepProps>
 }
 ```
 
-### Pattern 2: Trigger Registration (Observer Pattern)
+**Why:** Declarative configs make each wizard self-documenting. The shared hook consumes the config without knowing type details. Adding a 9th type = adding one config + one details component.
 
-**What:** Register notification triggers at service call sites, not in route handlers.
-**When:** After mutations that should notify users.
-**Why:** Keeps route handlers clean, centralizes notification logic.
+### Pattern 2: Per-Type Zod Schemas (Discriminated)
 
-```typescript
-// backend/src/services/notification-triggers.service.ts
-export class NotificationTriggers {
-  constructor(private dispatcher: NotificationDispatcher) {}
-
-  async onWorkItemAssigned(
-    workItem: WorkItem,
-    assigneeId: string,
-    assignedBy: string,
-  ): Promise<void> {
-    await this.dispatcher.dispatch({
-      userId: assigneeId,
-      type: 'work_item_assigned',
-      category: 'assignments',
-      title: `New assignment: ${workItem.title}`,
-      message: `You have been assigned a ${workItem.source} work item`,
-      priority: workItem.priority === 'urgent' ? 'urgent' : 'normal',
-      actionUrl: `/work-items/${workItem.id}`,
-      sourceType: 'work_item',
-      sourceId: workItem.id,
-    })
-  }
-
-  async onDeadlineApproaching(
-    workItem: WorkItem,
-    hoursRemaining: number,
-  ): Promise<void> { /* ... */ }
-
-  async onEngagementStageChanged(
-    engagement: Engagement,
-    newStage: string,
-    changedBy: string,
-  ): Promise<void> { /* ... */ }
-
-  async onAttentionItemCreated(
-    item: AttentionItem,
-    targetUserId: string,
-  ): Promise<void> { /* ... */ }
-}
-```
-
-### Pattern 3: E2E Test Fixtures with Authenticated State
-
-**What:** Reusable Playwright fixtures that handle auth + seed data.
-**When:** Every E2E test that needs a logged-in user.
-**Why:** Avoid repeating login flow in every test; use storage state.
+Replace the single flat `dossierSchema` with per-type schemas that share a base.
 
 ```typescript
-// tests/fixtures/auth.fixture.ts
-import { test as base } from '@playwright/test'
-import type { Page } from '@playwright/test'
+// schemas/dossier-create.schemas.ts
 
-type AuthFixtures = {
-  authenticatedPage: Page
-}
-
-export const test = base.extend<AuthFixtures>({
-  authenticatedPage: async ({ browser }, use) => {
-    const context = await browser.newContext({
-      storageState: 'tests/.auth/user.json',
-    })
-    const page = await context.newPage()
-    await use(page)
-    await context.close()
-  },
+const baseFields = z.object({
+  name_en: z.string().min(2),
+  name_ar: z.string().min(2),
+  abbreviation: z.string().max(20).optional().or(z.literal('')),
+  description_en: z.string().optional(),
+  description_ar: z.string().optional(),
+  status: z.enum(['active', 'inactive', 'archived', 'deleted']).default('active'),
+  sensitivity_level: z.number().min(1).max(4).default(1),
+  tags: z.array(z.string()).optional(),
 })
 
-// Global setup: login once, save state
-// tests/global-setup.ts
-async function globalSetup(): Promise<void> {
-  const browser = await chromium.launch()
-  const page = await browser.newPage()
-  await page.goto(process.env.BASE_URL + '/login')
-  await page.fill('[name="email"]', process.env.TEST_USER_EMAIL!)
-  await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD!)
-  await page.click('button[type="submit"]')
-  await page.waitForURL('**/dashboard')
-  await page.context().storageState({ path: 'tests/.auth/user.json' })
-  await browser.close()
+export const countryCreateSchema = baseFields.extend({
+  extension_data: z.object({
+    iso_code_2: z.string().length(2),
+    iso_code_3: z.string().length(3),
+    capital_en: z.string().optional(),
+    capital_ar: z.string().optional(),
+    region: z.string().optional(),
+  }),
+})
+
+export const engagementCreateSchema = baseFields.extend({
+  extension_data: z.object({
+    engagement_type: z.enum([
+      'meeting',
+      'consultation',
+      'coordination',
+      'workshop',
+      'conference',
+      'site_visit',
+      'ceremony',
+    ]),
+    engagement_category: z.enum(['bilateral', 'multilateral', 'regional', 'internal']),
+    location_en: z.string().optional(),
+    location_ar: z.string().optional(),
+  }),
+  // Relationship fields (not in extension_data, handled post-create)
+  participant_ids: z.array(z.string().uuid()).optional(),
+})
+
+// ... one schema per type
+```
+
+**Why:** Per-type schemas give precise validation. No more carrying all 7 types' fields in one flat object. TypeScript inference gives exact form types per wizard. `filterExtensionDataByType()` becomes unnecessary -- each schema already contains only its fields.
+
+### Pattern 3: Shared Hook with Generic Type Parameter
+
+```typescript
+// hooks/useCreateDossierWizard.ts
+function useCreateDossierWizard<T extends z.ZodType>(
+  config: WizardConfig<T>,
+): {
+  form: UseFormReturn<z.infer<T>>
+  currentStep: number
+  setCurrentStep: (step: number) => void
+  steps: WizardStep[]
+  handleComplete: () => Promise<void>
+  handleCancel: () => void
+  handleSaveDraft: () => void
+  handleAIGenerate: (fields: GeneratedFields) => void
+  draftState: { hasDraft: boolean; isDraftSaving: boolean }
+  createMutation: UseMutationResult
+  direction: 'ltr' | 'rtl'
+  isRTL: boolean
 }
 ```
 
-### Pattern 4: Email via Resend
+**Why:** Extracts all the logic currently in `DossierCreateWizard.tsx` (lines 48-220) into a reusable hook. Each wizard component becomes ~30 LOC of step composition.
 
-**What:** Use Resend for transactional email.
-**Why over alternatives:**
-- Nodemailer + SMTP: Requires SMTP server, deliverability issues
-- SendGrid: Overcomplicated for this scale
-- AWS SES: Requires separate AWS account
-- Resend: Simple API, 100 emails/day free, good DX, React Email for templates
+### Pattern 4: Relationship Linking at Creation
 
-### Pattern 5: Web Push via VAPID (No Firebase)
+Some types need relationship pickers during creation:
 
-**What:** Use `web-push` npm package with VAPID keys for browser push.
-**Why:** No Firebase dependency, works with all modern browsers, free, open standard.
-**Existing support:** `push_device_tokens` table already has `platform = 'web'` and `provider = 'web_push'` options.
+| Type             | Relationship Step                       | Picker Component                      |
+| ---------------- | --------------------------------------- | ------------------------------------- |
+| engagement       | Participants (countries, orgs, persons) | Multi-select DossierPicker            |
+| forum            | Organizing body (org)                   | Single DossierPicker (already exists) |
+| working_group    | Parent body (org or forum)              | Single DossierPicker                  |
+| elected_official | Country, Organization                   | Two single DossierPickers             |
+| topic            | Related topics (self-ref)               | Multi-select DossierPicker (optional) |
+
+**Implementation:** Relationship IDs are collected in the form but linked via a **post-create API call** (not in the `createDossier` request itself). The submission handler:
+
+1. Creates the dossier
+2. If relationship IDs exist, calls `linkDossierRelationships(newId, relationships)`
+3. Navigates to detail page
+
+This avoids changing the existing `dossiers-create` Edge Function.
+
+### Pattern 5: Elected Official as Person Variant
+
+Elected official is NOT a separate dossier type -- it is `type: 'person'` with `person_subtype: 'elected_official'`. The wizard:
+
+1. Uses the person base schema extended with elected official fields
+2. Sets `person_subtype: 'elected_official'` in the `CreateDossierRequest`
+3. Has extra steps for office/term/party fields
+4. Routes from `/dossiers/elected-officials/create`
+
+```typescript
+export const electedOfficialCreateSchema = baseFields.extend({
+  extension_data: z.object({
+    // Person base fields
+    title_en: z.string().optional(),
+    title_ar: z.string().optional(),
+    biography_en: z.string().optional(),
+    biography_ar: z.string().optional(),
+    photo_url: z.string().url().optional().or(z.literal('')),
+    // Elected official specific
+    office_name_en: z.string().min(1),
+    office_name_ar: z.string().optional(),
+    office_type: z.enum([
+      /* ...officeTypes */
+    ]),
+    party_en: z.string().optional(),
+    term_start: z.string().optional(),
+    is_current_term: z.boolean().default(true),
+  }),
+  person_subtype: z.literal('elected_official'),
+})
+```
 
 ## Anti-Patterns to Avoid
 
-### Anti-Pattern 1: Notification in Route Handlers
-**What:** Calling notification dispatch directly in Express route handlers.
-**Why bad:** Mixes HTTP concerns with notification logic; hard to test; easy to forget.
-**Instead:** Call `NotificationTriggers` methods from service layer after successful mutation.
+### Anti-Pattern 1: Single Schema with Runtime Branching
 
-### Anti-Pattern 2: Synchronous Notification Dispatch
-**What:** Awaiting all notification channels before responding to the HTTP request.
-**Why bad:** Email/push failures slow down or break the API response.
-**Instead:** Use `Promise.allSettled()` with fire-and-forget for email/push. In-app insert can be awaited since it is a fast DB write.
+**What:** Keeping the current flat schema with all types' fields and `filterExtensionDataByType()`
+**Why bad:** TypeScript cannot narrow form types; validation is coarse; unused fields bloat the form
+**Instead:** Per-type schemas with a shared base, as described above
 
-### Anti-Pattern 3: Rebuilding Existing Notification UI
-**What:** Creating new notification components from scratch.
-**Why bad:** `useNotificationCenter`, `NotificationList`, `NotificationPanel`, `NotificationBadge`, and `NotificationPreferences` already exist and work with Supabase Realtime. The hook already supports categories, pagination, mark-as-read, preferences, and device registration.
-**Instead:** Add `NotificationToast` for real-time alerts. Audit and fix existing components. Wire the bell icon into the sidebar/header.
+### Anti-Pattern 2: Full Component Duplication
 
-### Anti-Pattern 4: Database Triggers for Complex Routing Logic
-**What:** Using PostgreSQL triggers for notification channel routing.
-**Why bad:** Hard to debug, hard to test, mixes data layer with business logic.
-**Instead:** Keep all routing logic in the backend NotificationDispatcher. Database should only store notifications.
+**What:** Copy-pasting BasicInfoStep, ClassificationStep, FormWizard into each wizard
+**Why bad:** 8x maintenance for shared logic (AI assist, duplicate detection, draft saving)
+**Instead:** Shared hook + shared steps + per-type config/details/review
 
-### Anti-Pattern 5: Monolithic E2E Tests
-**What:** Single long test that does login, create, edit, delete, navigate all in one flow.
-**Why bad:** Flaky, hard to debug, one failure blocks everything.
-**Instead:** Independent test files per feature with shared auth fixtures.
+### Anti-Pattern 3: Modal Wizards
 
-## Scalability Considerations
+**What:** Opening creation wizards in modal dialogs from list pages
+**Why bad:** Complex forms need full-page space, especially on mobile; draft persistence is awkward in modals
+**Instead:** Dedicated routes with full-page layout; use QuickAddDialog pattern only for inline creation (like existing QuickAddOrgDialog)
 
-| Concern | Current (1-10 users) | At 100 users | At 1000 users |
-|---------|---------------------|--------------|---------------|
-| Notification volume | Direct DB insert + Realtime | Same pattern works | Add Redis queue (BullMQ) for async dispatch |
-| Email sending | Resend free tier (100/day) | Resend paid ($20/mo) | Resend or migrate to SES |
-| Push delivery | web-push direct send | Same | Batch sends with retry queue |
-| E2E test speed | Serial, ~2 min | Same | Parallelize with Playwright sharding |
-| Database connections | Supabase pooler | Same | Review connection pooling config |
-| Deployment | Single DigitalOcean droplet | Same with bigger droplet | Docker Swarm or managed k8s |
+### Anti-Pattern 4: Single Route with Dynamic Steps
 
-## Suggested Build Order (Dependencies)
+**What:** `/dossiers/create?type=country` with runtime step composition
+**Why bad:** No code splitting, URL doesn't reflect intent, browser back is confusing
+**Instead:** Per-type routes that lazy-load only the needed wizard
+
+### Anti-Pattern 5: Relationship Creation in Single Transaction
+
+**What:** Extending createDossier API to also create relationships atomically
+**Why bad:** Requires Edge Function changes, complex rollback, blocks wizard progress
+**Instead:** Create dossier first, link relationships second (two API calls)
+
+## Step Composition Per Type
+
+| Type             | Step 1         | Step 2                                          | Step 3                                        | Step 4 |
+| ---------------- | -------------- | ----------------------------------------------- | --------------------------------------------- | ------ |
+| country          | BasicInfo + AI | Country Details (ISO, capital, region)          | Review                                        | -      |
+| organization     | BasicInfo + AI | Org Details (type, code, website)               | Review                                        | -      |
+| forum            | BasicInfo + AI | Forum Details (organizing body picker)          | Review                                        | -      |
+| engagement       | BasicInfo + AI | Engagement Details (type, category, location)   | Participants (relationship picker)            | Review |
+| topic            | BasicInfo + AI | Topic Details (category)                        | Review                                        | -      |
+| working_group    | BasicInfo + AI | WG Details (mandate, status, date, parent body) | Review                                        | -      |
+| person           | BasicInfo + AI | Person Details (title, bio, photo)              | Review                                        | -      |
+| elected_official | BasicInfo + AI | Person Details (title, bio)                     | Office Details (office, party, term, country) | Review |
+
+**Note:** ClassificationStep (status + sensitivity) is **merged into BasicInfo** as a collapsible "Advanced" section. Most users accept defaults (active, level 1). This reduces steps from 5 to 3-4 per type.
+
+## File Structure
 
 ```
-Phase A: Notification Backend Infrastructure
-  ├── NotificationDispatcher service (routes to channels)
-  ├── NotificationTriggers service (event-to-payload mapping)
-  ├── Extend existing notification.service.ts (add category, priority, action_url)
-  └── Verify/fix existing DB schema (ensure notifications table matches hook types)
-  
-Phase B: Notification Channels (depends on A)
-  ├── Email channel via Resend
-  ├── Web Push channel via VAPID + web-push
-  ├── Service worker (frontend/public/sw.js)
-  └── Push permission + registration flow in frontend
-  
-Phase C: Frontend Notification Wiring (depends on A, partially B)
-  ├── NotificationToast component (uses existing useNotificationRealtime)
-  ├── Wire NotificationTriggers calls into backend route handlers
-  ├── Audit/fix existing notification UI components
-  └── Notification preferences UI for new email/push channels
-  
-Phase D: Production Deployment Hardening (independent)
-  ├── SSL setup script for certbot
-  ├── Fix deploy.yml (SSH deploy, health check, rollback)
-  ├── Monitoring (uptime checks, error alerting)
-  └── Backup scripts (Redis volumes)
-  
-Phase E: E2E Testing (depends on working app, ideally after D)
-  ├── Auth fixture + global setup
-  ├── Seed data fixture
-  ├── Critical flow specs (auth, dossier CRUD, work items, engagement lifecycle)
-  ├── Notification E2E tests
-  └── CI integration (update ci.yml E2E job with proper env)
-  
-Phase F: Seed Data + First-Run (depends on final schema)
-  ├── Comprehensive realistic seed data
-  └── First-run onboarding hints
+frontend/src/
+  components/dossier/create/
+    CreateWizardShell.tsx           # FormWizard wrapper with common chrome
+    CreateDossierHub.tsx            # Type selector grid (replaces DossierCreatePage)
+    hooks/
+      useCreateDossierWizard.ts    # Shared hook: form, draft, submit, AI
+    schemas/
+      base.schema.ts               # Shared base Zod fields
+      country.schema.ts            # Country-specific schema
+      organization.schema.ts
+      forum.schema.ts
+      engagement.schema.ts
+      topic.schema.ts
+      working-group.schema.ts
+      person.schema.ts
+      elected-official.schema.ts
+      index.ts                     # Re-exports all
+    steps/
+      BasicInfoStep.tsx            # Shared (refactored from existing)
+      CountryDetailsStep.tsx       # From existing CountryFields
+      OrganizationDetailsStep.tsx  # From existing OrganizationFields
+      ForumDetailsStep.tsx         # From existing ForumFields
+      EngagementDetailsStep.tsx    # From existing EngagementFields
+      EngagementParticipantsStep.tsx  # NEW: relationship picker
+      TopicDetailsStep.tsx         # From existing TopicFields
+      WorkingGroupDetailsStep.tsx  # From existing WorkingGroupFields
+      PersonDetailsStep.tsx        # From existing PersonFields
+      ElectedOfficialOfficeStep.tsx # NEW: office/term/party fields
+      ReviewStep.tsx               # Shared shell with per-type review sections
+    reviews/
+      CountryReview.tsx            # Extracted from ReviewStep type branches
+      OrganizationReview.tsx
+      ForumReview.tsx
+      EngagementReview.tsx
+      TopicReview.tsx
+      WorkingGroupReview.tsx
+      PersonReview.tsx
+      ElectedOfficialReview.tsx
+    wizards/
+      CountryCreateWizard.tsx      # Config + composition (~40 LOC each)
+      OrganizationCreateWizard.tsx
+      ForumCreateWizard.tsx
+      EngagementCreateWizard.tsx
+      TopicCreateWizard.tsx
+      WorkingGroupCreateWizard.tsx
+      PersonCreateWizard.tsx
+      ElectedOfficialCreateWizard.tsx
+  pages/dossiers/
+    CreateDossierHub.tsx           # Landing page with type grid
+    CountryCreatePage.tsx          # Thin wrapper (~30 LOC each)
+    OrganizationCreatePage.tsx
+    ... (one per type)
+  routes/_protected/dossiers/
+    create.tsx                     # Shows CreateDossierHub (type grid)
+    countries/create.tsx           # NEW route files
+    organizations/create.tsx
+    forums/create.tsx
+    engagements/create.tsx
+    topics/create.tsx
+    working-groups/create.tsx
+    persons/create.tsx
+    elected-officials/create.tsx
 ```
 
-**Phase ordering rationale:**
-1. Backend notification infrastructure must exist before channels can be added
-2. Email and push channels are independent of each other but both depend on dispatcher
-3. Frontend wiring connects backend triggers to existing UI components
-4. Deployment hardening is independent and can run in parallel with notification work
-5. E2E tests validate everything built in prior phases
-6. Seed data comes last because it needs the final schema stabilized
+## Migration Strategy
+
+### Phase 1: Shared Infrastructure (build first)
+
+1. Extract `useCreateDossierWizard` hook from `DossierCreateWizard.tsx`
+2. Create `CreateWizardShell` wrapper
+3. Split `dossierSchema` into `base.schema.ts` + per-type schemas
+4. Refactor `BasicInfoStep` to accept type as prop (remove TypeSelectionStep dependency)
+
+### Phase 2: First Type-Specific Wizard (country -- simplest)
+
+1. Create `CountryCreateWizard` + `CountryCreatePage`
+2. Add route `countries/create.tsx`
+3. Extract `CountryReview` from `ReviewStep`
+4. Update countries list page link: `/dossiers/create` --> `/dossiers/countries/create`
+5. Validate: AI assist, draft persistence, duplicate detection all work
+
+### Phase 3: Simple Types (organization, topic, person)
+
+- Same pattern as country, parallel work possible
+- Person wizard establishes the base for elected official
+
+### Phase 4: Complex Types (engagement, forum, working_group)
+
+- Engagement adds participant relationship step
+- Forum already has DossierPicker for organizing body
+- Working group adds parent body picker
+
+### Phase 5: Elected Official Variant
+
+- Extends person wizard with office/term/party steps
+- Uses `person_subtype: 'elected_official'` in submission
+
+### Phase 6: Hub + Cleanup
+
+1. Convert `/dossiers/create` to `CreateDossierHub` (type grid linking to per-type routes)
+2. Delete old `DossierCreateWizard.tsx`, `TypeSelectionStep.tsx`, `TypeSpecificStep.tsx`
+3. Delete old flat `dossierSchema` from `Shared.ts`
+4. Update all remaining links across the app
+
+## Preserving Existing Features
+
+| Feature             | Current Location                              | New Location                                              | Changes Needed                            |
+| ------------------- | --------------------------------------------- | --------------------------------------------------------- | ----------------------------------------- |
+| AI Field Assist     | `BasicInfoStep` calls `AIFieldAssist`         | Same, no change                                           | None -- receives `dossierType` prop       |
+| Draft Persistence   | `useFormDraft` in `DossierCreateWizard`       | `useCreateDossierWizard` hook                             | Draft key becomes `dossier-create-{type}` |
+| Duplicate Detection | `useDossierNameSimilarity` in `BasicInfoStep` | Same, no change                                           | Type is now prop instead of watched value |
+| Quick Add Org       | `QuickAddOrgDialog` in `DossierCreateWizard`  | Moves into `ForumDetailsStep` + `WorkingGroupDetailsStep` | Localize state to the step that needs it  |
+| Form Validation     | `buildWizardSteps` validate functions         | Per-type config validate functions                        | More precise, type-specific validation    |
+| Step Navigation     | `FormWizard` allowStepNavigation              | Same, no change                                           | None                                      |
+| RTL Support         | `useDirection()` throughout                   | Same, no change                                           | None                                      |
 
 ## Sources
 
-- Existing codebase analysis (HIGH confidence): `useNotificationCenter.ts`, `notification.service.ts`, migration `20260111100001`, `realtime.ts`, Docker/nginx/CI configs
-- Supabase Realtime patterns already in use: `useAttentionRealtime.ts`, `useUnifiedWorkRealtime.ts`, `useDossierPresence.ts`
-- GitHub Actions CI/CD: `.github/workflows/ci.yml` (comprehensive), `.github/workflows/deploy.yml` (basic SSH deploy)
-- Playwright: configs at root and frontend level, existing RTL+a11y test jobs in CI
+- Direct codebase analysis of `DossierCreateWizard.tsx` (296 LOC)
+- `wizard-steps/Shared.ts` -- current schema and step builder
+- `wizard-steps/TypeSpecificStep.tsx` -- current dispatch pattern
+- `wizard-steps/fields/*.tsx` -- 7 existing field components
+- `wizard-steps/ReviewStep.tsx` -- current review with 7 type branches
+- `components/ui/form-wizard.tsx` -- FormWizard, useFormDraft, ConditionalField
+- `pages/dossiers/DossierCreatePage.tsx` -- current page wrapper
+- `routes/_protected/dossiers/create.tsx` -- current single route
+- `domains/elected-officials/types/elected-official.types.ts` -- person subtype pattern
+- `services/dossier-api.ts` -- DossierType, CreateDossierRequest
+- `lib/dossier-routes.ts` -- route segment helpers
