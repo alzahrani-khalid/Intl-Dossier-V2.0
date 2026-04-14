@@ -8,22 +8,28 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 Unified intelligence management for diplomatic operations — every relationship, commitment, and signal tracked in one secure, bilingual platform.
 
+## Current Milestone: v5.0 Dossier Creation UX
+
+**Goal:** Replace the generic 5-step wizard with type-specific creation flows that give each dossier type exactly the steps, fields, guidance, and relationships it needs.
+
+**Target features:**
+
+- Type-specific wizards — 8 tailored creation flows, each with only the steps that type needs
+- Direct entry from type pages — creation starts from each type's list page
+- Relationship linking at creation — engagements pick participants, forums link organizing bodies, etc.
+- Type-specific guidance — contextual hints tailored to each dossier type
+- Smart defaults per type — skip unnecessary fields, sensible defaults
+- Elected official creation path — variant of Person wizard with office/term/constituency
+- Progressive field design — essential fields upfront, optional details post-creation
+
 ## Current State
 
-**Shipped:** v4.0 Live Operations (2026-04-09)
+**Shipped:** v4.1 Post-Launch Fixes (2026-04-12)
 
-The system is now operational for daily use with full notification stack, production deployment, and automated testing:
-
-- Production deployment: Docker Compose + nginx HTTPS + CI/CD pipeline + Redis backups + rollback
-- In-app notifications: bell icon, unread badge, notification center, category tabs, BullMQ async dispatch
-- Email notifications: Resend integration, bilingual alert templates, daily/weekly digest scheduling
-- Browser push: VAPID push delivery, soft-ask opt-in pattern, service worker
-- Seed data: 40+ bilingual diplomatic entities, first-run detection modal, admin-gated population
-- E2E testing: Playwright suite with POM pattern, CI sharding, auth hardening, failure artifacts
-- Tech debt resolved: typed TanStack Router params, roadmap auto-sync
-
-**Previous:** v3.0 Connected Workflow (2026-04-06) — hub-and-spoke architecture, engagement lifecycle, Operations Hub, DossierShell
-**Previous:** v2.0 Production Quality (2026-03-28) — 7-phase hardening (toolchain, security, RTL, responsive, architecture, performance)
+- v4.0 Live Operations (2026-04-09): Production deployment, notifications (in-app + email + push), seed data, E2E testing
+- v3.0 Connected Workflow (2026-04-06): Hub-and-spoke architecture, engagement lifecycle, Operations Hub, DossierShell
+- v2.0 Production Quality (2026-03-28): 7-phase hardening (toolchain, security, RTL, responsive, architecture, performance)
+- v4.1 Post-Launch Fixes (2026-04-12): 87-finding audit, semantic colors, PageHeader unification, 100% Arabic parity
 
 **Tech debt:** See `.planning/milestones/v4.0-MILESTONE-AUDIT.md` for known gaps (NOTIF-04 digest scheduler, TEST-05/10/11 E2E coverage, corporate infra items)
 
@@ -71,7 +77,13 @@ The system is now operational for daily use with full notification stack, produc
 
 ### Active
 
-(No active requirements — next milestone not yet defined)
+- [ ] Type-specific creation wizards for all 8 dossier types
+- [ ] Direct creation entry from each type's list page
+- [ ] Relationship linking during creation (participants, organizing bodies, parent bodies)
+- [ ] Type-specific guidance and contextual hints
+- [ ] Smart defaults per type (status, sensitivity, optional fields)
+- [ ] Elected official creation path (Person variant with office/term/constituency)
+- [ ] Progressive field design (essential upfront, optional post-creation)
 
 ### Out of Scope
 
@@ -147,4 +159,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-06 after v4.0 milestone start_
+_Last updated: 2026-04-14 after v5.0 milestone start_

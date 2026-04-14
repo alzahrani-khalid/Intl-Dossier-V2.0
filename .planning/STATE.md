@@ -1,56 +1,34 @@
 ---
 gsd_state_version: 1.0
-milestone: v4.1
-milestone_name: Post-Launch Fixes
-status: Executing Phase 25 plans
-stopped_at: Completed 25-01 and 25-02 (Wave 1)
-last_updated: '2026-04-12T19:35:00.000Z'
-last_activity: 2026-04-13 - Completed quick task 260413-tuf: Unified PageHeader component + rollout across 31 pages
+milestone: v5.0
+milestone_name: Dossier Creation UX
+status: Defining requirements
+stopped_at: null
+last_updated: '2026-04-14T00:00:00.000Z'
+last_activity: 2026-04-14 - Milestone v5.0 started
 progress:
-  total_phases: 2
-  completed_phases: 1
-  total_plans: 6
-  completed_plans: 3
-  percent: 50
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-06)
+See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 25 — Deferred Audit Fixes (Plan 01 complete, 4 remaining)
+**Current focus:** Defining requirements for v5.0 Dossier Creation UX
 
 ## Current Position
 
-Phase: 25 (Deferred Audit Fixes)
-Plan: 25-01 complete (DossierCreateWizard decomposition), 25-02 through 25-05 remaining
-Status: Executing Phase 25 plans
-Last activity: 2026-04-12 - Completed 25-01 DossierCreateWizard decomposition (1979 -> 296 LOC)
-
-Progress: [████████████████████] 100% of v4.1 (2/2 phases) + Phase 25 plans 1/5
-
-## Performance Metrics
-
-**Velocity:**
-
-- v2.0: 29 plans in 185 days
-- v3.0: 28 plans in 9 days (2026-03-28 → 2026-04-06)
-- v4.0: 20 plans so far (phases 14–18)
-
-**By Phase:**
-
-| Phase                    | Plans | Status                         |
-| ------------------------ | ----- | ------------------------------ | -------- |
-| 14 Production Deployment | 5     | Shipped                        |
-| 15 Notification Backend  | 5     | Shipped                        |
-| 16 Email + Push Channels | 3     | Shipped                        |
-| 17 Seed Data + First Run | 5     | Shipped (UAT recovery applied) |
-| 18 E2E Test Suite        | 4     | Shipped (structural pass)      |
-| 19 —                     | ?     | Pending                        |
-| Phase 25 P02             | 9min  | 2 tasks                        | 11 files |
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-14 — Milestone v5.0 started
 
 ## Accumulated Context
 
@@ -63,16 +41,17 @@ Progress: [████████████████████] 100% of
 - [18]: Single root `playwright.config.ts`; auth.setup + storageState; POM pattern; 2-shard CI matrix with retry + flake logging
 - [Phase 25]: Query key factories created as canonical keys.ts files alongside existing inline keys for gradual migration
 
-### Roadmap Evolution
-
-- Phase 25 added: Deferred Audit Fixes (12 findings from FIX-PLAN + breadcrumb rollout)
-
 ### Pending Todos
 
 - Provision 9 GitHub repo secrets for E2E workflow (see 18-VERIFICATION.md)
 - Seed E2E role accounts (admin/analyst/intake) — blocks first live Playwright run
 - Configure `main` branch protection to require E2E shard checks
 - Trigger one deliberately failing run to confirm artifact upload + flake logging
+
+### Blockers/Concerns
+
+- DNS domain required for HTTPS (current droplet is bare IP 138.197.195.242)
+- Resend sending domain needs SPF/DKIM/DMARC DNS records before production email
 
 ### Quick Tasks Completed
 
@@ -88,14 +67,8 @@ Progress: [████████████████████] 100% of
 | 260413-djy | Fix UI consistency part 2: pages/ padding + raw grays        | 2026-04-13 | ccee13f0 | [260413-djy](./quick/260413-djy-fix-ui-consistency-part-2-remove-double-/) |
 | 260413-tuf | Unified PageHeader component + rollout across 31 pages       | 2026-04-13 | 6b1f7036 | [260413-tuf](./quick/260413-tuf-create-unified-pageheader-component-and-/) |
 
-### Blockers/Concerns
-
-- DNS domain required for HTTPS (current droplet is bare IP 138.197.195.242)
-- Resend sending domain needs SPF/DKIM/DMARC DNS records before production email
-- Phase 14 + 15 still have pending human UAT
-
 ## Session Continuity
 
-Last session: 2026-04-12T19:35:00.000Z
-Stopped at: Wave 1 complete (25-01 + 25-02)
-Resume file: .planning/phases/25-deferred-audit-fixes/25-03-PLAN.md
+Last session: 2026-04-14T00:00:00.000Z
+Stopped at: —
+Resume file: —
