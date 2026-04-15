@@ -35,5 +35,41 @@
   "submission_error": "Could not create dossier. Please try again.",
   "discard_draft": "Discard Draft",
   "discard_confirm": "This will permanently delete your saved progress. Continue?",
-  "draft_restored": "Draft restored"
+  "draft_restored": "Draft restored",
+  "steps": {
+    "basicInfo": "Basic Information",
+    "basicInfoDesc": "Enter the country's name and general details",
+    "countryDetails": "Country Details",
+    "countryDetailsDesc": "ISO codes, region, and capital information",
+    "review": "Review",
+    "reviewDesc": "Review and confirm details"
+  },
+  "country": {
+    "page_title": "New Country Dossier",
+    "back_to_list": "Back to Countries",
+    "iso_code_2": "ISO Alpha-2 Code",
+    "iso_code_2_ph": "SA",
+    "iso_code_3": "ISO Alpha-3 Code",
+    "iso_code_3_ph": "SAU",
+    "region": "Region",
+    "region_ph": "Select a region",
+    "capital_en": "Capital (English)",
+    "capital_ar": "Capital (Arabic)",
+    "capital_en_ph": "Riyadh",
+    "capital_ar_ph": "الرياض",
+    "auto_fill_toast": "Country details auto-filled from reference data"
+  },
+  "regions": {
+    "asia": "Asia",
+    "africa": "Africa",
+    "europe": "Europe",
+    "americas": "Americas",
+    "oceania": "Oceania",
+    "antarctic": "Antarctic"
+  },
+  "review": {
+    "edit": "Edit",
+    "basic_info": "Basic Information",
+    "country_details": "Country Details"
+  }
 }

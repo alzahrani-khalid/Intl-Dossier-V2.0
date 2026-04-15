@@ -35,5 +35,41 @@
   "submission_error": "تعذر إنشاء الملف. يرجى المحاولة مرة أخرى.",
   "discard_draft": "حذف المسودة",
   "discard_confirm": "سيؤدي هذا إلى حذف تقدمك المحفوظ نهائيًا. هل تريد المتابعة؟",
-  "draft_restored": "تم استعادة المسودة"
+  "draft_restored": "تم استعادة المسودة",
+  "steps": {
+    "basicInfo": "المعلومات الاساسية",
+    "basicInfoDesc": "ادخل اسم الدولة والتفاصيل العامة",
+    "countryDetails": "تفاصيل الدولة",
+    "countryDetailsDesc": "رموز الايزو والمنطقة والعاصمة",
+    "review": "المراجعة",
+    "reviewDesc": "مراجعة وتاكيد التفاصيل"
+  },
+  "country": {
+    "page_title": "ملف دولة جديد",
+    "back_to_list": "الرجوع للدول",
+    "iso_code_2": "رمز الايزو الثنائي",
+    "iso_code_2_ph": "SA",
+    "iso_code_3": "رمز الايزو الثلاثي",
+    "iso_code_3_ph": "SAU",
+    "region": "المنطقة",
+    "region_ph": "اختر المنطقة",
+    "capital_en": "العاصمة (انجليزي)",
+    "capital_ar": "العاصمة (عربي)",
+    "capital_en_ph": "Riyadh",
+    "capital_ar_ph": "الرياض",
+    "auto_fill_toast": "تم ملء تفاصيل الدولة تلقائيا من البيانات المرجعية"
+  },
+  "regions": {
+    "asia": "اسيا",
+    "africa": "افريقيا",
+    "europe": "اوروبا",
+    "americas": "الامريكتان",
+    "oceania": "اوقيانوسيا",
+    "antarctic": "القطب الجنوبي"
+  },
+  "review": {
+    "edit": "تعديل",
+    "basic_info": "المعلومات الاساسية",
+    "country_details": "تفاصيل الدولة"
+  }
 }
