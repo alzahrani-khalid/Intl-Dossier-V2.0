@@ -8,7 +8,6 @@ interface RestCountryResult {
   cca3: string
   region: string
   capital?: string[]
-  translations?: Record<string, { official: string; common: string }>
 }
 
 /** Region mapping from REST Countries regions to our region values */
@@ -25,11 +24,12 @@ async function fetchCountryReference(
   name: string,
 ): Promise<RestCountryResult | undefined> {
   const res = await fetch(
-    `https://restcountries.com/v3.1/name/${encodeURIComponent(name)}?fields=cca2,cca3,region,capital,translations`,
+    `https://restcountries.com/v3.1/name/${encodeURIComponent(name)}?fields=cca2,cca3,region,capital`,
   )
   if (!res.ok) return undefined
-  const data = (await res.json()) as RestCountryResult[]
-  return data.length > 0 ? data[0] : undefined
+  const data: unknown = await res.json()
+  if (!Array.isArray(data) || data.length === 0) return undefined
+  return data[0] as RestCountryResult
 }
 
 /**
@@ -66,9 +66,6 @@ export function useCountryAutoFill(
     }
     if (current.capital_en === '' && match.capital != null && match.capital.length > 0) {
       form.setValue('capital_en', match.capital[0])
-    }
-    if (current.capital_ar === '' && match.translations?.ara != null) {
-      // REST Countries doesn't provide capital in Arabic, but we can leave it for user
     }
   }, [match, form])
 }

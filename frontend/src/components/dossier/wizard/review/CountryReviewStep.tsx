@@ -125,7 +125,7 @@ export function CountryReviewStep({ form, onEditStep }: CountryReviewStepProps):
         />
         <ReviewField
           label={t('dossier:form.sensitivityLevel', 'Sensitivity')}
-          value={String(values.sensitivity_level)}
+          value={t(`dossier:sensitivityLevel.${values.sensitivity_level}`)}
         />
       </ReviewSection>
 
