@@ -1,44 +1,39 @@
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { UseFormReturn } from 'react-hook-form'
-import { apiGet } from '@/lib/api-client'
-import { STALE_TIME } from '@/lib/query-tiers'
 import type { CountryFormData } from '../schemas/country.schema'
 
-interface CountryReferenceResult {
-  code: string
-  code3: string
-  name_en: string
-  name_ar: string
+interface RestCountryResult {
+  cca2: string
+  cca3: string
   region: string
-  capital?: string
+  capital?: string[]
+  translations?: Record<string, { official: string; common: string }>
 }
 
-interface CountryListResponse {
-  data: CountryReferenceResult[]
-  pagination: {
-    page: number
-    pages: number
-    total: number
-  }
-  total: number
+/** Region mapping from REST Countries regions to our region values */
+const REGION_MAP: Record<string, string> = {
+  Asia: 'asia',
+  Africa: 'africa',
+  Europe: 'europe',
+  Americas: 'americas',
+  Oceania: 'oceania',
+  Antarctic: 'antarctic',
 }
 
 async function fetchCountryReference(
   name: string,
-): Promise<CountryReferenceResult | undefined> {
-  const response = await apiGet<CountryListResponse>(
-    `/api/countries?search=${encodeURIComponent(name)}&limit=1`,
-    { baseUrl: 'express' },
+): Promise<RestCountryResult | undefined> {
+  const res = await fetch(
+    `https://restcountries.com/v3.1/name/${encodeURIComponent(name)}?fields=cca2,cca3,region,capital,translations`,
   )
-  if (response.data.length > 0) {
-    return response.data[0]
-  }
-  return undefined
+  if (!res.ok) return undefined
+  const data = (await res.json()) as RestCountryResult[]
+  return data.length > 0 ? data[0] : undefined
 }
 
 /**
- * Auto-fills country form fields from reference data when name_en >= 3 characters.
+ * Auto-fills country form fields from REST Countries API when name_en >= 3 characters.
  * Only fills fields that are still empty -- never overwrites user edits.
  */
 export function useCountryAutoFill(
@@ -48,8 +43,8 @@ export function useCountryAutoFill(
   const { data: match } = useQuery({
     queryKey: ['country-reference', nameEn],
     queryFn: () => fetchCountryReference(nameEn),
-    enabled: nameEn.length >= 3,
-    staleTime: STALE_TIME.NORMAL,
+    enabled: (nameEn?.length ?? 0) >= 3,
+    staleTime: 5 * 60 * 1000,
   })
 
   useEffect(() => {
@@ -57,14 +52,23 @@ export function useCountryAutoFill(
 
     const current = form.getValues()
 
-    if (current.iso_code_2 === '' && match.code !== '') {
-      form.setValue('iso_code_2', match.code)
+    if (current.iso_code_2 === '' && match.cca2 !== '') {
+      form.setValue('iso_code_2', match.cca2)
     }
-    if (current.iso_code_3 === '' && match.code3 !== '') {
-      form.setValue('iso_code_3', match.code3)
+    if (current.iso_code_3 === '' && match.cca3 !== '') {
+      form.setValue('iso_code_3', match.cca3)
     }
     if (current.region === '' && match.region !== '') {
-      form.setValue('region', match.region)
+      const mapped = REGION_MAP[match.region] ?? ''
+      if (mapped !== '') {
+        form.setValue('region', mapped)
+      }
+    }
+    if (current.capital_en === '' && match.capital != null && match.capital.length > 0) {
+      form.setValue('capital_en', match.capital[0])
+    }
+    if (current.capital_ar === '' && match.translations?.ara != null) {
+      // REST Countries doesn't provide capital in Arabic, but we can leave it for user
     }
   }, [match, form])
 }

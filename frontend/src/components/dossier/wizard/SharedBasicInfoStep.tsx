@@ -284,10 +284,10 @@ export function SharedBasicInfoStep<T extends FieldValues>({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1">{t('dossier:sensitivity.1')}</SelectItem>
-                      <SelectItem value="2">{t('dossier:sensitivity.2')}</SelectItem>
-                      <SelectItem value="3">{t('dossier:sensitivity.3')}</SelectItem>
-                      <SelectItem value="4">{t('dossier:sensitivity.4')}</SelectItem>
+                      <SelectItem value="1">{t('dossier:sensitivityLevel.1')}</SelectItem>
+                      <SelectItem value="2">{t('dossier:sensitivityLevel.2')}</SelectItem>
+                      <SelectItem value="3">{t('dossier:sensitivityLevel.3')}</SelectItem>
+                      <SelectItem value="4">{t('dossier:sensitivityLevel.4')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>

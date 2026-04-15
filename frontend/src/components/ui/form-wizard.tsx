@@ -130,7 +130,7 @@ function StepIndicator({
       aria-current={isActive ? 'step' : undefined}
       aria-label={t('step', {
         number: index + 1,
-        title: isRTL && step.titleAr ? step.titleAr : step.title,
+        title: isRTL && step.titleAr ? step.titleAr : t(step.title),
       })}
     >
       <span
@@ -150,7 +150,7 @@ function StepIndicator({
         )}
       </span>
       <span className="hidden sm:inline truncate">
-        {isRTL && step.titleAr ? step.titleAr : step.title}
+        {isRTL && step.titleAr ? step.titleAr : t(step.title)}
       </span>
     </button>
   )
@@ -276,13 +276,13 @@ const [isValidating, setIsValidating] = React.useState(false)
             <h2 className="text-lg sm:text-xl font-semibold">
               {isRTL && steps[currentStep].titleAr
                 ? steps[currentStep].titleAr
-                : steps[currentStep].title}
+                : t(steps[currentStep].title)}
             </h2>
             {(steps[currentStep].description || steps[currentStep].descriptionAr) && (
               <p className="text-sm text-muted-foreground mt-1">
                 {isRTL && steps[currentStep].descriptionAr
                   ? steps[currentStep].descriptionAr
-                  : steps[currentStep].description}
+                  : t(steps[currentStep].description ?? '')}
               </p>
             )}
           </div>
@@ -296,7 +296,7 @@ const [isValidating, setIsValidating] = React.useState(false)
           </div>
         )}
 
-        {/* Step content */}
+        {/* Step content — render only the current step's child */}
         <AnimatePresence mode="wait">
           <m.div
             key={currentStep}
@@ -306,7 +306,7 @@ const [isValidating, setIsValidating] = React.useState(false)
             transition={{ duration: 0.2, ease: 'easeInOut' }}
             className="min-h-[200px]"
           >
-            {children}
+            {React.Children.toArray(children)[currentStep]}
           </m.div>
         </AnimatePresence>
 
