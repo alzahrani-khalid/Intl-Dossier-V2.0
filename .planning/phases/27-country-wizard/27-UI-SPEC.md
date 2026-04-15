@@ -49,17 +49,21 @@ Source: Phase 26 UI-SPEC (inherited).
 
 ## Typography
 
+Weights: 2 (`400 normal`, `600 semibold`). Sizes: 4 (`12px`, `13px`, `14px`, `18px`).
+
 | Role           | Size             | Weight         | Line Height | CSS Variable |
 | -------------- | ---------------- | -------------- | ----------- | ------------ |
+| Label          | 12px (0.75rem)   | 400 (normal)   | 1.375       | --text-sm    |
+| Review label   | 12px (0.75rem)   | 400 (normal)   | 1.375       | --text-sm    |
 | Body           | 13px (0.8125rem) | 400 (normal)   | 1.5         | --text-base  |
-| Label          | 12px (0.75rem)   | 500 (medium)   | 1.375       | --text-sm    |
-| Step title     | 14px (0.875rem)  | 600 (semibold) | 1.25        | --text-lg    |
-| Wizard heading | 18px (1.125rem)  | 600 (semibold) | 1.25        | --text-2xl   |
-| Review label   | 12px (0.75rem)   | 500 (medium)   | 1.375       | --text-sm    |
 | Review value   | 13px (0.8125rem) | 400 (normal)   | 1.5         | --text-base  |
+| Step title     | 14px (0.875rem)  | 600 (semibold) | 1.25        | --text-lg    |
 | Review heading | 14px (0.875rem)  | 600 (semibold) | 1.25        | --text-lg    |
+| Wizard heading | 18px (1.125rem)  | 600 (semibold) | 1.25        | --text-2xl   |
 
-Source: Phase 26 UI-SPEC (inherited) + review-specific roles added.
+Label and Review label use weight 400 (normal) -- the label/value distinction is carried by size (12px vs 13px) and color (`text-muted-foreground` vs `text-foreground`), making a separate weight unnecessary.
+
+Source: Phase 26 UI-SPEC (inherited) + review-specific roles added. Weight 500 removed per checker feedback.
 
 ---
 
@@ -146,7 +150,7 @@ Read-only summary of all form data with per-section Edit navigation. Step 2 (ind
 | Review card             | `rounded-lg border border-border p-4 space-y-3` on `--heroui-surface` background                               |
 | Card header             | Flex row: section title (14px semibold) at start, Edit button (ghost variant, accent text) at end. Min-h 44px. |
 | Card body               | `grid grid-cols-1 sm:grid-cols-2 gap-3` of label-value pairs                                                   |
-| Label-value pair        | Label: 12px medium `text-muted-foreground`. Value: 13px normal `text-foreground`. Stacked vertically.          |
+| Label-value pair        | Label: 12px normal `text-muted-foreground`. Value: 13px normal `text-foreground`. Stacked vertically.          |
 | Empty value display     | Show "--" in `text-muted-foreground` italic                                                                    |
 | Edit button             | `Button variant="ghost" size="sm"` with `Pencil` icon (16px) + "Edit" text. Touch target 44px.                 |
 | Edit navigation         | Clicking Edit calls `onEditStep(stepIndex)` to navigate back to that wizard step.                              |
