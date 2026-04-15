@@ -97,7 +97,7 @@ function CountriesListPage() {
         subtitle={t('typeDescription.country')}
         actions={
           <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
-            <Link to="/dossiers/create">
+            <Link to="/dossiers/countries/create">
               <Plus className="h-4 w-4 me-2" />
               {t('action.create')}
             </Link>
@@ -183,7 +183,7 @@ function CountriesListPage() {
           </p>
           {!searchQuery && (
             <Button asChild>
-              <Link to="/dossiers/create">{t('action.create')}</Link>
+              <Link to="/dossiers/countries/create">{t('action.create')}</Link>
             </Button>
           )}
         </div>
