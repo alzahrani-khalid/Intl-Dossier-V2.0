@@ -466,17 +466,19 @@ export function SharedBasicInfoStep({ form, onAIGenerate }: SharedBasicInfoStepP
 | A2  | Per-type schema fields should be at top level (not nested under `extension_data`) with a mapping callback at submission | Architecture Patterns / Anti-Patterns | Medium -- if kept nested, schema composition gets more complex but API mapping is simpler |
 | A3  | Old drafts without a `type` field should be left unmigrated (kept under old key)                                        | Pitfall 2 / Code Examples             | Low -- these drafts would be orphaned but no data loss                                    |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Duplicate detection API**
+1. **Duplicate detection API** (RESOLVED)
    - What we know: The hook should handle duplicate detection per INFRA-01. The existing wizard does not implement this.
    - What's unclear: Which API endpoint or Edge Function supports duplicate checking. The `createDossier` function may return duplicate warnings, or there may be a separate check endpoint.
    - Recommendation: Implement as a pre-submission check via a new query (e.g., `GET /dossiers?name_en=X&type=Y&limit=1`). If API returns matches, show inline warning. This is a soft check -- user can proceed.
+   - **Resolution:** The codebase already has `useDossierNameSimilarity` hook (in `frontend/src/hooks/useDossierNameSimilarity.ts`) which queries existing dossiers by name similarity with configurable threshold. The `useCreateDossierWizard` hook composes this hook directly -- no new API endpoint needed. The hook watches `name_en` and `name_ar` fields and provides `similarDossiers`, `hasHighSimilarity`, and `hasMediumSimilarity` state for inline warnings.
 
-2. **`elected_official` type handling in schemas**
+2. **`elected_official` type handling in schemas** (RESOLVED)
    - What we know: Elected officials use `person_subtype: 'elected_official'` on the person dossier type (not a separate dossier type). Phase 30 builds this.
    - What's unclear: Whether the base infrastructure needs a `person_subtype` discriminator in schemas now or if Phase 30 handles it.
    - Recommendation: Include `person_subtype` as optional field in person schema. Phase 30 extends with office/term fields.
+   - **Resolution:** `person_subtype` field (enum: `'standard' | 'elected_official'`, default `'standard'`) is included in `person.schema.ts` now. The `elected-official.schema.ts` extends `personSchema` (not `baseDossierSchema`) and overrides the default to `'elected_official'`. For defaults, `elected_official` is NOT a `DossierType` -- Phase 30 wizards use `getDefaultsForType('person')` and override `person_subtype` to `'elected_official'` via the wizard config's `defaultValues`.
 
 ## Validation Architecture
 

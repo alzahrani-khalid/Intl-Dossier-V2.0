@@ -92,7 +92,8 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 3. Per-type Zod schemas can extend a shared base schema and validate only their own fields
 4. Calling `getDefaultsForType('country')` (or any type) returns sensible defaults including status, sensitivity, and type-specific fields
 5. Existing localStorage drafts using the old format are migrated to per-type keys on first load without data loss
-   **Plans**: 3 plans
+   **Plans**: 4 plans
+   - [ ] 26-00-PLAN.md -- Wave 0 test stubs for Nyquist compliance
    - [ ] 26-01-PLAN.md -- Type contracts, Zod schemas, defaults factory
    - [ ] 26-02-PLAN.md -- useCreateDossierWizard hook and draft migration
    - [ ] 26-03-PLAN.md -- CreateWizardShell and SharedBasicInfoStep components
@@ -189,7 +190,7 @@ Phases execute in numeric order: 26 -> 27 -> 28 -> 29 / 30 (parallel after 28) -
 | 23. Missing Verifications         | v4.0      | 2/2            | Complete    | 2026-04-09 |
 | 24. Browser Inspection Fixes      | v4.1      | 2/2            | Complete    | 2026-04-12 |
 | 25. Deferred Audit Fixes          | v4.1      | 5/5            | Complete    | 2026-04-12 |
-| 26. Shared Wizard Infrastructure  | v5.0      | 0/TBD          | Not started | -          |
+| 26. Shared Wizard Infrastructure  | v5.0      | 0/4            | Not started | -          |
 | 27. Country Wizard                | v5.0      | 0/TBD          | Not started | -          |
 | 28. Simple Type Wizards           | v5.0      | 0/TBD          | Not started | -          |
 | 29. Complex Type Wizards          | v5.0      | 0/TBD          | Not started | -          |
