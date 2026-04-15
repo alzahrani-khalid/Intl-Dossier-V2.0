@@ -26,5 +26,14 @@
     "incomplete": "Incomplete"
   },
   "optional": "(Optional)",
-  "required": "Required"
+  "required": "Required",
+  "classificationTitle": "Classification",
+  "create_type": "Create {{type}}",
+  "empty_heading": "Start a new {{type}}",
+  "empty_body": "Fill in the details below to create a new {{type}} dossier.",
+  "validation_error": "Please fix the errors above before continuing.",
+  "submission_error": "Could not create dossier. Please try again.",
+  "discard_draft": "Discard Draft",
+  "discard_confirm": "This will permanently delete your saved progress. Continue?",
+  "draft_restored": "Draft restored"
 }

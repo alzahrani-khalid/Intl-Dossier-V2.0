@@ -26,5 +26,14 @@
     "incomplete": "غير مكتمل"
   },
   "optional": "(اختياري)",
-  "required": "مطلوب"
+  "required": "مطلوب",
+  "classificationTitle": "التصنيف",
+  "create_type": "إنشاء {{type}}",
+  "empty_heading": "ابدأ {{type}} جديد",
+  "empty_body": "املأ التفاصيل أدناه لإنشاء ملف {{type}} جديد.",
+  "validation_error": "يرجى تصحيح الأخطاء أعلاه قبل المتابعة.",
+  "submission_error": "تعذر إنشاء الملف. يرجى المحاولة مرة أخرى.",
+  "discard_draft": "حذف المسودة",
+  "discard_confirm": "سيؤدي هذا إلى حذف تقدمك المحفوظ نهائيًا. هل تريد المتابعة؟",
+  "draft_restored": "تم استعادة المسودة"
 }
