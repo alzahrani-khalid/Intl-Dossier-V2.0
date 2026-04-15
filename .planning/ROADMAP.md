@@ -111,7 +111,7 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 3. User reviews all entered data on the Review step and submits to create the country dossier
 4. Created country appears in the Countries list and navigates to the new dossier detail page
    **Plans**: 2 plans
-   - [ ] 27-01-PLAN.md -- Country wizard config, auto-fill hook, CountryDetailsStep, and i18n keys
+   - [x] 27-01-PLAN.md -- Country wizard config, auto-fill hook, CountryDetailsStep, and i18n keys
    - [ ] 27-02-PLAN.md -- CountryReviewStep, wizard route page, list page button update, and visual verification
          **UI hint**: yes
 
@@ -193,7 +193,7 @@ Phases execute in numeric order: 26 -> 27 -> 28 -> 29 / 30 (parallel after 28) -
 | 24. Browser Inspection Fixes      | v4.1      | 2/2            | Complete    | 2026-04-12 |
 | 25. Deferred Audit Fixes          | v4.1      | 5/5            | Complete    | 2026-04-12 |
 | 26. Shared Wizard Infrastructure  | v5.0      | 4/4            | Complete    | 2026-04-15 |
-| 27. Country Wizard                | v5.0      | 0/2            | Not started | -          |
+| 27. Country Wizard                | v5.0      | 1/2            | In Progress |            |
 | 28. Simple Type Wizards           | v5.0      | 0/TBD          | Not started | -          |
 | 29. Complex Type Wizards          | v5.0      | 0/TBD          | Not started | -          |
 | 30. Elected Official Wizard       | v5.0      | 0/TBD          | Not started | -          |
