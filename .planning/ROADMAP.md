@@ -92,8 +92,11 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 3. Per-type Zod schemas can extend a shared base schema and validate only their own fields
 4. Calling `getDefaultsForType('country')` (or any type) returns sensible defaults including status, sensitivity, and type-specific fields
 5. Existing localStorage drafts using the old format are migrated to per-type keys on first load without data loss
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 3 plans
+   - [ ] 26-01-PLAN.md -- Type contracts, Zod schemas, defaults factory
+   - [ ] 26-02-PLAN.md -- useCreateDossierWizard hook and draft migration
+   - [ ] 26-03-PLAN.md -- CreateWizardShell and SharedBasicInfoStep components
+         **UI hint**: yes
 
 ### Phase 27: Country Wizard
 
