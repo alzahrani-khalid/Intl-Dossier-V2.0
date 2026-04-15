@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest'
+import { baseDossierSchema } from '../base.schema'
+import { countrySchema } from '../country.schema'
+import { electedOfficialSchema } from '../elected-official.schema'
+import * as schemaIndex from '../index'
 
 describe('baseDossierSchema', () => {
   it('should validate a minimal valid dossier', () => {
-    // Will import from ../base.schema once Plan 01 creates it
-    const { baseDossierSchema } = require('../base.schema')
     const result = baseDossierSchema.safeParse({
       name_en: 'Test',
       name_ar: 'اختبار',
@@ -12,7 +14,6 @@ describe('baseDossierSchema', () => {
   })
 
   it('should reject name_en shorter than 2 characters', () => {
-    const { baseDossierSchema } = require('../base.schema')
     const result = baseDossierSchema.safeParse({
       name_en: 'X',
       name_ar: 'اختبار',
@@ -21,7 +22,6 @@ describe('baseDossierSchema', () => {
   })
 
   it('should default status to active', () => {
-    const { baseDossierSchema } = require('../base.schema')
     const result = baseDossierSchema.safeParse({
       name_en: 'Test',
       name_ar: 'اختبار',
@@ -35,7 +35,6 @@ describe('baseDossierSchema', () => {
 
 describe('countrySchema', () => {
   it('should include base fields and country-specific fields', () => {
-    const { countrySchema } = require('../country.schema')
     const result = countrySchema.safeParse({
       name_en: 'Saudi Arabia',
       name_ar: 'المملكة العربية السعودية',
@@ -48,7 +47,6 @@ describe('countrySchema', () => {
 
 describe('electedOfficialSchema', () => {
   it('should extend person schema (not base)', () => {
-    const { electedOfficialSchema } = require('../elected-official.schema')
     const result = electedOfficialSchema.safeParse({
       name_en: 'Minister Name',
       name_ar: 'اسم الوزير',
@@ -59,7 +57,6 @@ describe('electedOfficialSchema', () => {
   })
 
   it('should default person_subtype to elected_official', () => {
-    const { electedOfficialSchema } = require('../elected-official.schema')
     const result = electedOfficialSchema.safeParse({
       name_en: 'Minister Name',
       name_ar: 'اسم الوزير',
@@ -73,15 +70,14 @@ describe('electedOfficialSchema', () => {
 
 describe('schemas/index', () => {
   it('should re-export all 9 schemas', () => {
-    const index = require('../index')
-    expect(index.baseDossierSchema).toBeDefined()
-    expect(index.countrySchema).toBeDefined()
-    expect(index.organizationSchema).toBeDefined()
-    expect(index.topicSchema).toBeDefined()
-    expect(index.personSchema).toBeDefined()
-    expect(index.forumSchema).toBeDefined()
-    expect(index.workingGroupSchema).toBeDefined()
-    expect(index.engagementSchema).toBeDefined()
-    expect(index.electedOfficialSchema).toBeDefined()
+    expect(schemaIndex.baseDossierSchema).toBeDefined()
+    expect(schemaIndex.countrySchema).toBeDefined()
+    expect(schemaIndex.organizationSchema).toBeDefined()
+    expect(schemaIndex.topicSchema).toBeDefined()
+    expect(schemaIndex.personSchema).toBeDefined()
+    expect(schemaIndex.forumSchema).toBeDefined()
+    expect(schemaIndex.workingGroupSchema).toBeDefined()
+    expect(schemaIndex.engagementSchema).toBeDefined()
+    expect(schemaIndex.electedOfficialSchema).toBeDefined()
   })
 })
