@@ -72,7 +72,7 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 **Milestone Goal:** Replace the generic 5-step wizard with type-specific creation flows that give each dossier type exactly the steps, fields, guidance, and relationships it needs.
 
 - [x] **Phase 26: Shared Wizard Infrastructure** - Extract reusable hook, shell, schemas, and defaults powering all 8 type-specific wizards (completed 2026-04-15)
-- [ ] **Phase 27: Country Wizard** - First type-specific wizard validating the compositional pattern end-to-end
+- [x] **Phase 27: Country Wizard** - First type-specific wizard validating the compositional pattern end-to-end (completed 2026-04-15)
 - [ ] **Phase 28: Simple Type Wizards** - Organization, Topic, and Person wizards following the proven Country pattern
 - [ ] **Phase 29: Complex Type Wizards** - Forum, Working Group, and Engagement wizards with relationship linking steps
 - [ ] **Phase 30: Elected Official Wizard** - Person wizard variant adding office, term, and constituency steps
@@ -112,7 +112,7 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 4. Created country appears in the Countries list and navigates to the new dossier detail page
    **Plans**: 2 plans
    - [x] 27-01-PLAN.md -- Country wizard config, auto-fill hook, CountryDetailsStep, and i18n keys
-   - [ ] 27-02-PLAN.md -- CountryReviewStep, wizard route page, list page button update, and visual verification
+   - [x] 27-02-PLAN.md -- CountryReviewStep, wizard route page, list page button update, and visual verification
          **UI hint**: yes
 
 ### Phase 28: Simple Type Wizards
@@ -193,7 +193,7 @@ Phases execute in numeric order: 26 -> 27 -> 28 -> 29 / 30 (parallel after 28) -
 | 24. Browser Inspection Fixes      | v4.1      | 2/2            | Complete    | 2026-04-12 |
 | 25. Deferred Audit Fixes          | v4.1      | 5/5            | Complete    | 2026-04-12 |
 | 26. Shared Wizard Infrastructure  | v5.0      | 4/4            | Complete    | 2026-04-15 |
-| 27. Country Wizard                | v5.0      | 1/2            | In Progress |            |
+| 27. Country Wizard                | v5.0      | 2/2            | Complete    | 2026-04-15 |
 | 28. Simple Type Wizards           | v5.0      | 0/TBD          | Not started | -          |
 | 29. Complex Type Wizards          | v5.0      | 0/TBD          | Not started | -          |
 | 30. Elected Official Wizard       | v5.0      | 0/TBD          | Not started | -          |
