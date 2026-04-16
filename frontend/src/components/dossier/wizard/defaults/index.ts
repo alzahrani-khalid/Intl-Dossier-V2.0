@@ -26,6 +26,7 @@ const organizationDefaults: OrganizationFormData = {
   website: '',
   headquarters_en: '',
   headquarters_ar: '',
+  founding_date: '',
 }
 
 const topicDefaults: TopicFormData = {
