@@ -52,18 +52,26 @@ export interface DossierOption {
 
 export interface DossierPickerProps {
   value?: string
-  onChange: (dossierId: string | null, dossier?: DossierOption) => void
+  onChange?: (dossierId: string | null, dossier?: DossierOption) => void
   disabled?: boolean
   placeholder?: string
   className?: string
   /** Pre-selected dossier info (for display when value is set externally) */
   selectedDossier?: DossierOption
-  /** Filter results to a specific dossier type */
-  filterByDossierType?: DossierType
+  /** Filter results to a specific dossier type (or array of types) */
+  filterByDossierType?: DossierType | DossierType[]
   /** Allow quick-adding a new dossier if not found */
   allowQuickAdd?: boolean
   /** Callback when user wants to quick-add a new dossier */
   onQuickAdd?: (searchQuery: string) => void
+  /** Opt into multi-select mode (source of truth becomes `values` + `onValuesChange`) */
+  multiple?: boolean
+  /** Selected dossier ids (multi-select only) */
+  values?: string[]
+  /** Callback fired with the next (ids, dossiers) pair on add/remove (multi-select only) */
+  onValuesChange?: (ids: string[], dossiers: DossierOption[]) => void
+  /** Pre-selected dossier info for chip rendering (multi-select only) */
+  selectedDossiers?: DossierOption[]
 }
 
 /**
@@ -120,9 +128,14 @@ export function DossierPicker({
   filterByDossierType,
   allowQuickAdd = false,
   onQuickAdd,
+  multiple,
+  values,
+  onValuesChange,
+  selectedDossiers,
 }: DossierPickerProps) {
   const { t } = useTranslation('work-creation')
   const { isRTL } = useDirection()
+  const isMulti = Boolean(multiple)
   const [open, setOpen] = useState(false)
   const listboxId = useId()
   const [searchQuery, setSearchQuery] = useState('')
@@ -155,10 +168,13 @@ export function DossierPicker({
     const timeoutId = setTimeout(async () => {
       setIsSearching(true)
       try {
+        const typeForApi = Array.isArray(filterByDossierType)
+          ? filterByDossierType[0]
+          : filterByDossierType
         const response = await autocompleteDossiers({
           query: searchQuery,
           limit: 10,
-          dossierType: filterByDossierType,
+          dossierType: typeForApi,
         })
         const results: DossierOption[] = response.suggestions.map((s: AutocompleteResult) => ({
           id: s.id,
@@ -181,19 +197,39 @@ export function DossierPicker({
 
   const handleSelect = useCallback(
     (dossier: DossierOption) => {
+      if (isMulti) {
+        const current = values ?? []
+        if (current.includes(dossier.id)) return
+        const nextIds = [...current, dossier.id]
+        const nextDossiers = [...(selectedDossiers ?? []), dossier]
+        addRecentDossier(dossier)
+        setRecentDossiers(getRecentDossiers())
+        onValuesChange?.(nextIds, nextDossiers)
+        setSearchQuery('')
+        return
+      }
       setSelectedDossier(dossier)
       addRecentDossier(dossier)
       setRecentDossiers(getRecentDossiers())
-      onChange(dossier.id, dossier)
+      onChange?.(dossier.id, dossier)
       setOpen(false)
       setSearchQuery('')
     },
-    [onChange],
+    [isMulti, values, selectedDossiers, onValuesChange, onChange],
+  )
+
+  const handleRemove = useCallback(
+    (id: string) => {
+      const nextIds = (values ?? []).filter((v) => v !== id)
+      const nextDossiers = (selectedDossiers ?? []).filter((d) => d.id !== id)
+      onValuesChange?.(nextIds, nextDossiers)
+    },
+    [values, selectedDossiers, onValuesChange],
   )
 
   const handleClear = useCallback(() => {
     setSelectedDossier(undefined)
-    onChange(null)
+    onChange?.(null)
   }, [onChange])
 
   const displayName = selectedDossier
@@ -206,8 +242,8 @@ export function DossierPicker({
 
   return (
     <div className={cn('w-full', className)}>
-      {/* Selected dossier display */}
-      {selectedDossier && (
+      {/* Selected dossier display (single-select) */}
+      {!isMulti && selectedDossier && (
         <div className="flex items-center gap-2 p-3 mb-2 rounded-lg border bg-muted/50">
           {Icon && <Icon className="size-4 text-muted-foreground shrink-0" />}
           <span className="flex-1 text-sm font-medium truncate">{displayName}</span>
@@ -225,6 +261,38 @@ export function DossierPicker({
             <X className="size-3" />
             <span className="sr-only">{t('form.clear', 'Clear')}</span>
           </Button>
+        </div>
+      )}
+
+      {/* Selected dossier chips (multi-select) */}
+      {isMulti && (selectedDossiers ?? []).length > 0 && (
+        <div
+          className="flex flex-row flex-nowrap gap-2 overflow-x-auto overflow-y-hidden py-2 mb-2"
+          aria-live="polite"
+        >
+          {(selectedDossiers ?? []).map((d) => {
+            const ChipIcon = getDossierTypeIcon(d.type)
+            const chipName = isRTL ? d.name_ar || d.name_en : d.name_en
+            return (
+              <Badge
+                key={d.id}
+                variant="outline"
+                className="shrink-0 flex items-center gap-1 min-h-8 px-2"
+              >
+                {ChipIcon && <ChipIcon className="size-3" />}
+                <span className="truncate max-w-[120px]">{chipName}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemove(d.id)}
+                  className="min-h-6 min-w-6 inline-flex items-center justify-center"
+                  aria-label={t('chip.remove', { name: chipName, defaultValue: `Remove ${chipName}` })}
+                  disabled={disabled}
+                >
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            )
+          })}
         </div>
       )}
 
@@ -297,6 +365,9 @@ export function DossierPicker({
                   {searchResults.map((dossier) => {
                     const DossierIcon = getDossierTypeIcon(dossier.type)
                     const name = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en
+                    const isSelected = isMulti
+                      ? (values ?? []).includes(dossier.id)
+                      : value === dossier.id
                     return (
                       <CommandItem
                         key={dossier.id}
@@ -308,7 +379,7 @@ export function DossierPicker({
                           className={cn(
                             'size-4 shrink-0',
                             isRTL ? 'ms-2' : 'me-2',
-                            value === dossier.id ? 'opacity-100' : 'opacity-0',
+                            isSelected ? 'opacity-100' : 'opacity-0',
                           )}
                         />
                         <DossierIcon
@@ -354,10 +425,19 @@ export function DossierPicker({
               {searchQuery.length < MIN_SEARCH_CHARS && recentDossiers.length > 0 && (
                 <CommandGroup heading={t('form.recentDossiers', 'Recent Dossiers')}>
                   {recentDossiers
-                    .filter((d) => !filterByDossierType || d.type === filterByDossierType)
+                    .filter((d) => {
+                      if (!filterByDossierType) return true
+                      const types = Array.isArray(filterByDossierType)
+                        ? filterByDossierType
+                        : [filterByDossierType]
+                      return types.includes(d.type)
+                    })
                     .map((dossier) => {
                       const DossierIcon = getDossierTypeIcon(dossier.type)
                       const name = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en
+                      const isSelected = isMulti
+                        ? (values ?? []).includes(dossier.id)
+                        : value === dossier.id
                       return (
                         <CommandItem
                           key={dossier.id}
@@ -369,7 +449,7 @@ export function DossierPicker({
                             className={cn(
                               'size-4 shrink-0',
                               isRTL ? 'ms-2' : 'me-2',
-                              value === dossier.id ? 'opacity-100' : 'opacity-0',
+                              isSelected ? 'opacity-100' : 'opacity-0',
                             )}
                           />
                           <DossierIcon
