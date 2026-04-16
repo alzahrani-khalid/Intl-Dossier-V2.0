@@ -62,11 +62,11 @@ Requirements for the Dossier Creation UX milestone. Each maps to roadmap phases.
 
 ### Engagement Wizard
 
-- [ ] **ENGM-01**: User can create an engagement dossier via dedicated 4-step wizard (Basic Info → Engagement Details → Participants → Review)
-- [ ] **ENGM-02**: Engagement Details step captures engagement type, category, location (bilingual)
-- [ ] **ENGM-03**: Participants step allows multi-select of countries, organizations, and persons via DossierPicker
+- [x] **ENGM-01**: User can create an engagement dossier via dedicated 4-step wizard (Basic Info → Engagement Details → Participants → Review)
+- [x] **ENGM-02**: Engagement Details step captures engagement type, category, location (bilingual)
+- [x] **ENGM-03**: Participants step allows multi-select of countries, organizations, and persons via DossierPicker
 - [ ] **ENGM-04**: Multi-select DossierPicker variant supports filtering by dossier type
-- [ ] **ENGM-05**: Engagement wizard accessible directly from Engagements list page
+- [x] **ENGM-05**: Engagement wizard accessible directly from Engagements list page
 
 ### UX Polish
 
@@ -101,46 +101,46 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| INFRA-01    | Phase 26 | Pending |
-| INFRA-02    | Phase 26 | Pending |
-| INFRA-03    | Phase 26 | Pending |
-| INFRA-04    | Phase 26 | Pending |
-| INFRA-05    | Phase 26 | Pending |
-| INFRA-06    | Phase 26 | Pending |
-| INFRA-07    | Phase 26 | Pending |
-| CTRY-01     | Phase 27 | Pending |
-| CTRY-02     | Phase 27 | Pending |
-| CTRY-03     | Phase 27 | Pending |
-| ORG-01      | Phase 28 | Pending |
-| ORG-02      | Phase 28 | Pending |
-| ORG-03      | Phase 28 | Pending |
-| TOPC-01     | Phase 28 | Pending |
-| TOPC-02     | Phase 28 | Pending |
-| TOPC-03     | Phase 28 | Pending |
-| PRSN-01     | Phase 28 | Pending |
-| PRSN-02     | Phase 28 | Pending |
-| PRSN-03     | Phase 28 | Pending |
-| ELOF-01     | Phase 30 | Pending |
-| ELOF-02     | Phase 30 | Pending |
-| ELOF-03     | Phase 30 | Pending |
-| ELOF-04     | Phase 30 | Pending |
-| FORUM-01    | Phase 29 | Pending |
-| FORUM-02    | Phase 29 | Pending |
-| FORUM-03    | Phase 29 | Pending |
-| WG-01       | Phase 29 | Pending |
-| WG-02       | Phase 29 | Pending |
-| WG-03       | Phase 29 | Pending |
-| ENGM-01     | Phase 29 | Pending |
-| ENGM-02     | Phase 29 | Pending |
-| ENGM-03     | Phase 29 | Pending |
-| ENGM-04     | Phase 29 | Pending |
-| ENGM-05     | Phase 29 | Pending |
-| UX-01       | Phase 31 | Pending |
-| UX-02       | Phase 31 | Pending |
-| UX-03       | Phase 31 | Pending |
-| UX-04       | Phase 31 | Pending |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| INFRA-01    | Phase 26 | Pending  |
+| INFRA-02    | Phase 26 | Pending  |
+| INFRA-03    | Phase 26 | Pending  |
+| INFRA-04    | Phase 26 | Pending  |
+| INFRA-05    | Phase 26 | Pending  |
+| INFRA-06    | Phase 26 | Pending  |
+| INFRA-07    | Phase 26 | Pending  |
+| CTRY-01     | Phase 27 | Pending  |
+| CTRY-02     | Phase 27 | Pending  |
+| CTRY-03     | Phase 27 | Pending  |
+| ORG-01      | Phase 28 | Pending  |
+| ORG-02      | Phase 28 | Pending  |
+| ORG-03      | Phase 28 | Pending  |
+| TOPC-01     | Phase 28 | Pending  |
+| TOPC-02     | Phase 28 | Pending  |
+| TOPC-03     | Phase 28 | Pending  |
+| PRSN-01     | Phase 28 | Pending  |
+| PRSN-02     | Phase 28 | Pending  |
+| PRSN-03     | Phase 28 | Pending  |
+| ELOF-01     | Phase 30 | Pending  |
+| ELOF-02     | Phase 30 | Pending  |
+| ELOF-03     | Phase 30 | Pending  |
+| ELOF-04     | Phase 30 | Pending  |
+| FORUM-01    | Phase 29 | Pending  |
+| FORUM-02    | Phase 29 | Pending  |
+| FORUM-03    | Phase 29 | Pending  |
+| WG-01       | Phase 29 | Pending  |
+| WG-02       | Phase 29 | Pending  |
+| WG-03       | Phase 29 | Pending  |
+| ENGM-01     | Phase 29 | Complete |
+| ENGM-02     | Phase 29 | Complete |
+| ENGM-03     | Phase 29 | Complete |
+| ENGM-04     | Phase 29 | Pending  |
+| ENGM-05     | Phase 29 | Complete |
+| UX-01       | Phase 31 | Pending  |
+| UX-02       | Phase 31 | Pending  |
+| UX-03       | Phase 31 | Pending  |
+| UX-04       | Phase 31 | Pending  |
 
 **Coverage:**
 

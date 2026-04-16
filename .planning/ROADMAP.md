@@ -207,7 +207,7 @@ Phases execute in numeric order: 26 -> 27 -> 28 -> 29 / 30 (parallel after 28) -
 | 26. Shared Wizard Infrastructure  | v5.0      | 4/4            | Complete    | 2026-04-15 |
 | 27. Country Wizard                | v5.0      | 2/2            | Complete    | 2026-04-15 |
 | 28. Simple Type Wizards           | v5.0      | 4/4            | Complete    | 2026-04-16 |
-| 29. Complex Type Wizards          | v5.0      | 0/TBD          | Not started | -          |
+| 29. Complex Type Wizards          | v5.0      | 3/6            | In Progress | -          |
 | 30. Elected Official Wizard       | v5.0      | 0/TBD          | Not started | -          |
 | 31. Creation Hub and Cleanup      | v5.0      | 0/TBD          | Not started | -          |
 
