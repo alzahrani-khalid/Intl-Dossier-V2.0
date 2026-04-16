@@ -205,3 +205,60 @@ Users can create Forum, Working Group, and Engagement dossiers through type-spec
 
 _Phase: 29-complex-type-wizards_
 _Context gathered: 2026-04-16_
+
+---
+
+<amendments>
+
+## Research-Driven Amendments (2026-04-16, post-research)
+
+The research pass against the live Supabase schema surfaced three conflicts with decisions above. User confirmed the DB-aligned resolutions below — these OVERRIDE the earlier decisions where they conflict. Planner MUST treat the amended values as authoritative.
+
+### A-01 — Engagement `category` values (amends D-14)
+
+Live `engagement_dossiers` CHECK constraint defines: `diplomatic`, `statistical`, `technical`, `economic`, `cultural`, `educational`, `research`, `other`. The wizard adopts these 8 values verbatim (bilingual labels via i18n keys). The earlier D-14 list (`security`, `humanitarian`, etc.) is dropped — zero migration required; wizard aligns with already-seeded data.
+
+### A-02 — Engagement Details step adds required dates (amends D-19)
+
+`engagement_dossiers.start_date` and `engagement_dossiers.end_date` are NOT NULL in the live DB. EngagementDetailsStep must capture **both** as required fields:
+
+- `start_date` — ISO date picker, required
+- `end_date` — ISO date picker, required; Zod refinement enforces `end_date >= start_date`
+  Updated step contents: `engagement_type`, `category`, `location_en`, `location_ar`, `start_date`, `end_date`. Step count (4) is unchanged.
+
+### A-03 — Working Group `status` enum values (amends Claude's Discretion note)
+
+Live `working_groups.status` CHECK values are `active`, `inactive`, `pending`, `suspended`. Wizard dropdown uses these four values with bilingual i18n labels. Supersedes the earlier discretion-guess of `active/inactive/forming/dissolved`.
+
+### A-04 — `working_groups.parent_body_id` migration confirmed needed (reinforces D-09)
+
+Research confirmed the column does NOT exist in the live DB. Phase 29 MUST add:
+
+```sql
+ALTER TABLE public.working_groups
+  ADD COLUMN IF NOT EXISTS parent_body_id UUID NULL
+    REFERENCES public.dossiers(id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_working_groups_parent_body_id
+  ON public.working_groups(parent_body_id);
+```
+
+No NOT NULL — the wizard treats parent body as optional (D-11).
+
+### A-05 — `forums.organizing_body` column existence must be verified at execute-time (clarifies D-09)
+
+Research found the column referenced by view `033_update_forum_details_view.sql` but not present in the known `006_create_forums.sql` / `006_forums.sql` bootstrap. Planner ships a **conditional `DO $$` migration** that adds the column + FK + index ONLY IF it does not already exist. This is a safety net; execute-phase agent uses Supabase MCP to verify against staging before running the migration.
+
+### A-06 — Engagement participants persistence uses existing `engagement_participants` table (clarifies D-19)
+
+Research confirmed the `engagement_participants` table already exists (created in `20260110000006_create_engagement_dossiers.sql`). The wizard persists the three dossier-ID arrays by inserting N rows per participant with columns `engagement_id`, `participant_type` ∈ (`country`, `organization`, `person`), `participant_dossier_id`, `role='delegate'` (default). No schema migration needed for participants.
+
+### A-07 — i18n key convention (clarifies D-16 + list-page integration)
+
+Research found the `form-wizard` namespace uses a flat-key convention (Phase 27/28 precedent) — NOT a nested `wizard.{type}.*` wrapper. Planner emits new keys under existing top-level groupings (e.g., `forum.organizing_body_label`, `working_group.status_active`, `engagement.category_statistical`). All keys added to both `frontend/src/i18n/en/form-wizard.json` and `frontend/src/i18n/ar/form-wizard.json`.
+
+</amendments>
+
+---
+
+_Amendments recorded: 2026-04-16_
+_Source: 29-RESEARCH.md findings + user confirmation_
