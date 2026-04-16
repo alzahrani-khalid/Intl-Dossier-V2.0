@@ -14,6 +14,11 @@ export interface WizardConfig<T extends FieldValues> {
   steps: WizardStepConfig[]
   filterExtensionData: (data: T) => DossierExtensionData | undefined
   onSuccess?: (dossierId: string, type: DossierType) => void
+  // Optional post-create hook invoked AFTER the dossier is persisted and
+  // BEFORE navigation. Used by engagement wizard to batch-insert participant
+  // rows. Failures are swallowed by the hook (warning logged) so the dossier
+  // creation itself is never rolled back.
+  postCreate?: (newDossierId: string, data: T) => Promise<void>
 }
 
 // Return type of the hook -- defined here so Shell can type its props

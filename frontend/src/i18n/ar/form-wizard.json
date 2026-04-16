@@ -18,7 +18,8 @@
   "unsavedChangesMessage": "سيتم فقدان تقدمك إذا غادرت الآن. هل تريد حفظ مسودة؟",
   "validation": {
     "required": "يرجى إكمال جميع الحقول المطلوبة قبل المتابعة",
-    "invalid": "يرجى تصحيح الأخطاء قبل المتابعة"
+    "invalid": "يرجى تصحيح الأخطاء قبل المتابعة",
+    "end_after_start": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء أو مساوياً له"
   },
   "progress": {
     "title": "التقدم",
@@ -45,6 +46,12 @@
     "orgDetailsDesc": "أدخل معلومات المنظمة",
     "personDetails": "تفاصيل الشخص",
     "personDetailsDesc": "أدخل معلومات الشخص",
+    "workingGroupDetails": "تفاصيل فريق العمل",
+    "workingGroupDetailsDesc": "الحالة والتفويض والجهة الأم",
+    "engagementDetails": "تفاصيل الارتباط",
+    "engagementDetailsDesc": "النوع والفئة والموقع والتواريخ",
+    "participants": "المشاركون",
+    "participantsDesc": "اربط الدول والمنظمات والأشخاص",
     "review": "المراجعة",
     "reviewDesc": "مراجعة وتاكيد التفاصيل"
   },
@@ -123,12 +130,82 @@
     "photo_url": "رابط الصورة",
     "photo_url_ph": "https://example.com/photo.jpg"
   },
+  "workingGroup": {
+    "page_title": "ملف فريق عمل جديد",
+    "back_to_list": "العودة إلى فرق العمل",
+    "create_button": "إنشاء فريق عمل",
+    "status_label": "الحالة",
+    "status_placeholder": "اختر حالة",
+    "statuses": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "pending": "قيد الانتظار",
+      "suspended": "معلق"
+    },
+    "established_date_label": "تاريخ التأسيس",
+    "mandate_en_label": "التفويض (بالإنجليزية)",
+    "mandate_ar_label": "التفويض (بالعربية)",
+    "mandate_en_placeholder": "Describe the working group's mandate in English…",
+    "mandate_ar_placeholder": "صف تفويض فريق العمل بالعربية…",
+    "parent_body_label": "الجهة الأم",
+    "parent_body_placeholder": "ابحث عن المنظمات…",
+    "parent_body_help": "اختياري — اربط بالمنظمة التي تملك فريق العمل هذا. يمكن ضبطه لاحقاً."
+  },
+  "engagement": {
+    "page_title": "ملف ارتباط جديد",
+    "back_to_list": "العودة إلى الارتباطات",
+    "create_button": "إنشاء ارتباط",
+    "type_label": "نوع الارتباط",
+    "type_placeholder": "اختر نوعاً",
+    "types": {
+      "bilateral_meeting": "لقاء ثنائي",
+      "mission": "بعثة",
+      "delegation": "وفد",
+      "summit": "قمة",
+      "working_group": "فريق عمل",
+      "roundtable": "طاولة مستديرة",
+      "official_visit": "زيارة رسمية",
+      "consultation": "مشاورة",
+      "forum_session": "جلسة منتدى",
+      "other": "أخرى"
+    },
+    "category_label": "الفئة",
+    "category_placeholder": "اختر فئة",
+    "categories": {
+      "diplomatic": "دبلوماسي",
+      "statistical": "إحصائي",
+      "technical": "تقني",
+      "economic": "اقتصادي",
+      "cultural": "ثقافي",
+      "educational": "تعليمي",
+      "research": "بحثي",
+      "other": "أخرى"
+    },
+    "location_en_label": "الموقع (بالإنجليزية)",
+    "location_ar_label": "الموقع (بالعربية)",
+    "location_en_placeholder": "مثال: Riyadh, Saudi Arabia",
+    "location_ar_placeholder": "مثال: الرياض، المملكة العربية السعودية",
+    "start_date_label": "تاريخ البدء",
+    "end_date_label": "تاريخ الانتهاء",
+    "participants": {
+      "countries_label": "الدول المشاركة",
+      "organizations_label": "المنظمات المشاركة",
+      "persons_label": "الأشخاص المشاركون",
+      "countries_placeholder": "ابحث عن الدول…",
+      "organizations_placeholder": "ابحث عن المنظمات…",
+      "persons_placeholder": "ابحث عن الأشخاص…",
+      "section_hint": "اختياري — يمكنك الإضافة لاحقاً من صفحة تفاصيل الارتباط."
+    }
+  },
   "review": {
     "edit": "تعديل",
     "basic_info": "المعلومات الاساسية",
     "country_details": "تفاصيل الدولة",
     "org_details": "تفاصيل المنظمة",
     "person_details": "تفاصيل الشخص",
-    "theme_category": "فئة الموضوع"
+    "theme_category": "فئة الموضوع",
+    "working_group_details": "تفاصيل فريق العمل",
+    "engagement_details": "تفاصيل الارتباط",
+    "participants_summary": "المشاركون"
   }
 }

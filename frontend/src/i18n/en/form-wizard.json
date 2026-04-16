@@ -18,7 +18,8 @@
   "unsavedChangesMessage": "Your progress will be lost if you leave now. Would you like to save a draft?",
   "validation": {
     "required": "Please complete all required fields before proceeding",
-    "invalid": "Please fix the errors before proceeding"
+    "invalid": "Please fix the errors before proceeding",
+    "end_after_start": "End date must be on or after start date"
   },
   "progress": {
     "title": "Progress",
@@ -45,6 +46,12 @@
     "orgDetailsDesc": "Enter organization-specific information",
     "personDetails": "Person Details",
     "personDetailsDesc": "Enter person-specific information",
+    "workingGroupDetails": "Working Group Details",
+    "workingGroupDetailsDesc": "Status, mandate, and parent body",
+    "engagementDetails": "Engagement Details",
+    "engagementDetailsDesc": "Type, category, location, and dates",
+    "participants": "Participants",
+    "participantsDesc": "Link countries, organizations, and persons",
     "review": "Review",
     "reviewDesc": "Review and confirm details"
   },
@@ -123,12 +130,82 @@
     "photo_url": "Photo URL",
     "photo_url_ph": "https://example.com/photo.jpg"
   },
+  "workingGroup": {
+    "page_title": "New Working Group Dossier",
+    "back_to_list": "Back to Working Groups",
+    "create_button": "Create working group",
+    "status_label": "Status",
+    "status_placeholder": "Select a status",
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "suspended": "Suspended"
+    },
+    "established_date_label": "Established date",
+    "mandate_en_label": "Mandate (English)",
+    "mandate_ar_label": "Mandate (Arabic)",
+    "mandate_en_placeholder": "Describe the working group's mandate in English…",
+    "mandate_ar_placeholder": "صف تفويض فريق العمل بالعربية…",
+    "parent_body_label": "Parent body",
+    "parent_body_placeholder": "Search organizations…",
+    "parent_body_help": "Optional — link to the organization that owns this working group. You can set this later."
+  },
+  "engagement": {
+    "page_title": "New Engagement Dossier",
+    "back_to_list": "Back to Engagements",
+    "create_button": "Create engagement",
+    "type_label": "Engagement type",
+    "type_placeholder": "Select a type",
+    "types": {
+      "bilateral_meeting": "Bilateral Meeting",
+      "mission": "Mission",
+      "delegation": "Delegation",
+      "summit": "Summit",
+      "working_group": "Working Group",
+      "roundtable": "Roundtable",
+      "official_visit": "Official Visit",
+      "consultation": "Consultation",
+      "forum_session": "Forum Session",
+      "other": "Other"
+    },
+    "category_label": "Category",
+    "category_placeholder": "Select a category",
+    "categories": {
+      "diplomatic": "Diplomatic",
+      "statistical": "Statistical",
+      "technical": "Technical",
+      "economic": "Economic",
+      "cultural": "Cultural",
+      "educational": "Educational",
+      "research": "Research",
+      "other": "Other"
+    },
+    "location_en_label": "Location (English)",
+    "location_ar_label": "Location (Arabic)",
+    "location_en_placeholder": "e.g. Riyadh, Saudi Arabia",
+    "location_ar_placeholder": "مثال: الرياض، المملكة العربية السعودية",
+    "start_date_label": "Start date",
+    "end_date_label": "End date",
+    "participants": {
+      "countries_label": "Participating Countries",
+      "organizations_label": "Participating Organizations",
+      "persons_label": "Participating Persons",
+      "countries_placeholder": "Search countries…",
+      "organizations_placeholder": "Search organizations…",
+      "persons_placeholder": "Search persons…",
+      "section_hint": "Optional — you can add more later from the engagement detail page."
+    }
+  },
   "review": {
     "edit": "Edit",
     "basic_info": "Basic Information",
     "country_details": "Country Details",
     "org_details": "Organization Details",
     "person_details": "Person Details",
-    "theme_category": "Theme Category"
+    "theme_category": "Theme Category",
+    "working_group_details": "Working Group Details",
+    "engagement_details": "Engagement Details",
+    "participants_summary": "Participants"
   }
 }

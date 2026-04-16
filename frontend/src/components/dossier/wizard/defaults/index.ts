@@ -52,7 +52,10 @@ const forumDefaults: ForumFormData = {
 
 const workingGroupDefaults: WorkingGroupFormData = {
   ...baseDefaults,
-  wg_status: '',
+  // Plan 29-04 tightened wg_status from z.string() to z.enum(...).optional().
+  // Empty-string default no longer satisfies the type, and the user must pick
+  // a value anyway. Use undefined so Select shows placeholder.
+  wg_status: undefined,
   established_date: '',
   mandate_en: '',
   mandate_ar: '',
@@ -61,13 +64,20 @@ const workingGroupDefaults: WorkingGroupFormData = {
 
 const engagementDefaults: EngagementFormData = {
   ...baseDefaults,
-  engagement_type: '',
-  engagement_category: '',
+  // engagement_type and engagement_category are required enums in the schema, but
+  // we provide '' at draft/default-time because the user must pick a value before
+  // submission. The empty string is cast to the enum type so react-hook-form's
+  // defaultValues satisfies the EngagementFormData contract without losing the
+  // runtime validation that engagementSchema enforces on submit.
+  engagement_type: '' as EngagementFormData['engagement_type'],
+  engagement_category: '' as EngagementFormData['engagement_category'],
   location_en: '',
   location_ar: '',
   start_date: '',
   end_date: '',
-  participant_ids: [],
+  participant_country_ids: [],
+  participant_organization_ids: [],
+  participant_person_ids: [],
 }
 
 // NOTE: elected_official is not a DossierType. Phase 30 uses getDefaultsForType('person')

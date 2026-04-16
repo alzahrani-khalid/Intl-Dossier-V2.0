@@ -93,6 +93,19 @@ export function useCreateDossierWizard<T extends FieldValues>(
       // person_subtype is included in extensionData via filterExtensionData
 
       const newDossier = await createMutation.mutateAsync(createData)
+
+      // Run optional postCreate hook AFTER the dossier is created but BEFORE
+      // clearing the draft and navigating. Failures are logged and swallowed
+      // so a participants-insert failure never rolls back the dossier itself
+      // (see Plan 29-05 RESEARCH §6.4).
+      if (config.postCreate != null) {
+        try {
+          await config.postCreate(newDossier.id, values)
+        } catch (err) {
+          console.warn('postCreate hook failed', err)
+        }
+      }
+
       clearDraft()
       toast.success(t('dossier:create.success'))
 

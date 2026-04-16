@@ -45,19 +45,35 @@ export const dossierSchema = z.object({
       org_code: z.string().optional(),
       org_type: z.enum(['government', 'ngo', 'private', 'international', 'academic']).optional(),
       website: z.string().url().optional().or(z.literal('')),
-      // Engagement fields
+      // Engagement fields - aligned with live DB CHECK constraint
+      // (Phase 29 plan 05, amendments A-01 / A-02). Old enum values were
+      // frontend-only inventions that never matched the database.
       engagement_type: z
         .enum([
-          'meeting',
+          'bilateral_meeting',
+          'mission',
+          'delegation',
+          'summit',
+          'working_group',
+          'roundtable',
+          'official_visit',
           'consultation',
-          'coordination',
-          'workshop',
-          'conference',
-          'site_visit',
-          'ceremony',
+          'forum_session',
+          'other',
         ])
         .optional(),
-      engagement_category: z.enum(['bilateral', 'multilateral', 'regional', 'internal']).optional(),
+      engagement_category: z
+        .enum([
+          'diplomatic',
+          'statistical',
+          'technical',
+          'economic',
+          'cultural',
+          'educational',
+          'research',
+          'other',
+        ])
+        .optional(),
       location_en: z.string().optional(),
       location_ar: z.string().optional(),
       // Forum fields

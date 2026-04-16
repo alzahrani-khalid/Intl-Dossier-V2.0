@@ -79,17 +79,34 @@ export interface ForumExtension {
 }
 
 export interface EngagementExtension {
+  // Aligned with live DB CHECK constraint (Phase 29 plan 05, amendment A-01, A-02).
+  // Old values ('meeting'/'workshop'/etc., 'bilateral'/'multilateral'/etc.) were
+  // frontend-only inventions and never matched the database — the wizard would
+  // always fail on submit. These are the canonical enum values.
   engagement_type?:
-    | 'meeting'
+    | 'bilateral_meeting'
+    | 'mission'
+    | 'delegation'
+    | 'summit'
+    | 'working_group'
+    | 'roundtable'
+    | 'official_visit'
     | 'consultation'
-    | 'coordination'
-    | 'workshop'
-    | 'conference'
-    | 'site_visit'
-    | 'ceremony'
-  engagement_category?: 'bilateral' | 'multilateral' | 'regional' | 'internal'
+    | 'forum_session'
+    | 'other'
+  engagement_category?:
+    | 'diplomatic'
+    | 'statistical'
+    | 'technical'
+    | 'economic'
+    | 'cultural'
+    | 'educational'
+    | 'research'
+    | 'other'
   location_en?: string
   location_ar?: string
+  start_date?: string
+  end_date?: string
 }
 
 export interface TopicExtension {
