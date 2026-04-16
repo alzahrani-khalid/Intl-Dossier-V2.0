@@ -8,7 +8,6 @@ import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pencil } from 'lucide-react'
 
-import { FormWizardStep } from '@/components/ui/form-wizard'
 import { Button } from '@/components/ui/button'
 
 // ---------------------------------------------------------------------------
