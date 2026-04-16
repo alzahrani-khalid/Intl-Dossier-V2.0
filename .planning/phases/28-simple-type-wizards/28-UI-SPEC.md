@@ -46,14 +46,16 @@ Exceptions: Touch targets enforced at 44px (`min-h-11 min-w-11`) on all buttons 
 
 ## Typography
 
-Uses project's Compact UI scale from `index.css` tokens. Phase 28 wizards use these 4 roles:
+Uses project's Compact UI scale from `index.css` tokens. Phase 28 wizards use these 4 roles with 2 weights:
 
 | Role            | Size             | Weight         | Line Height | CSS Token                     | Usage                                                            |
 | --------------- | ---------------- | -------------- | ----------- | ----------------------------- | ---------------------------------------------------------------- |
 | Body            | 13px (0.8125rem) | 400 (normal)   | 1.5         | `--text-base`                 | Form field values, review field values                           |
-| Label           | 12px (0.75rem)   | 500 (medium)   | 1.375       | `--text-sm`                   | FormLabel, review field labels (`text-xs text-muted-foreground`) |
+| Label           | 12px (0.75rem)   | 400 (normal)   | 1.375       | `--text-sm`                   | FormLabel, review field labels (`text-xs text-muted-foreground`) |
 | Section heading | 12px (0.75rem)   | 600 (semibold) | 1.25        | `--text-sm` + `font-semibold` | ReviewSection title (`text-sm font-semibold`)                    |
 | Page title      | 14px (0.875rem)  | 600 (semibold) | 1.25        | `--text-lg` + `font-semibold` | Wizard page heading (`text-lg font-semibold`)                    |
+
+Weight budget: 2 weights -- 400 (normal) for body and labels, 600 (semibold) for headings. Labels are visually differentiated from body text by smaller size (12px vs 13px) and `text-muted-foreground` color treatment, so 400 weight is sufficient.
 
 RTL rule: All Arabic text fields use `writingDirection: "rtl"` via `dir={direction}` from `useDirection()` hook. Never use `textAlign: "right"`.
 
@@ -207,7 +209,7 @@ All copy uses i18n keys in the `form-wizard` namespace. Values below are English
 | Title AR label       | `person.title_ar`                                          | Title (Arabic)                               | --          |
 | Photo label          | `person.photo`                                             | Photo                                        | --          |
 | Photo button         | `person.upload_photo`                                      | Upload Photo                                 | --          |
-| Photo remove         | `person.remove_photo`                                      | Remove                                       | --          |
+| Photo remove         | `person.remove_photo`                                      | Remove Photo                                 | --          |
 | Bio EN label         | `person.biography_en`                                      | Biography (English)                          | --          |
 | Bio AR label         | `person.biography_ar`                                      | Biography (Arabic)                           | --          |
 | **Shared**           |                                                            |                                              |             |
@@ -247,7 +249,7 @@ All three use `getDossierDetailPath()` to navigate to the new dossier's detail p
 - File picker: Native `<input type="file" accept="image/*">` hidden, triggered by styled button
 - Preview: 128x128px thumbnail with `rounded-lg object-cover`
 - State: Store as base64 data URL in form state; convert to Storage upload on submit
-- Remove: Small "Remove" button appears next to thumbnail when photo is set
+- Remove: Small "Remove Photo" button appears next to thumbnail when photo is set
 
 ---
 
