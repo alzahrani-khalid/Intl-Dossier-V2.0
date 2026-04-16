@@ -45,6 +45,8 @@
     "orgDetailsDesc": "Enter organization-specific information",
     "personDetails": "Person Details",
     "personDetailsDesc": "Enter person-specific information",
+    "forumDetails": "Forum Details",
+    "forumDetailsDesc": "Set the forum type and organizing body",
     "review": "Review",
     "reviewDesc": "Review and confirm details"
   },
@@ -70,6 +72,22 @@
     "americas": "Americas",
     "oceania": "Oceania",
     "antarctic": "Antarctic"
+  },
+  "forum": {
+    "page_title": "New Forum Dossier",
+    "back_to_list": "Back to Forums",
+    "create_button": "Create forum",
+    "forum_type_label": "Forum type",
+    "forum_type_placeholder": "Select a type",
+    "forum_types": {
+      "conference": "Conference",
+      "seminar": "Seminar",
+      "workshop": "Workshop",
+      "summit": "Summit"
+    },
+    "organizing_body_label": "Organizing body",
+    "organizing_body_placeholder": "Search organizations…",
+    "organizing_body_help": "Optional — link to the organization that hosts this forum. You can set this later."
   },
   "organization": {
     "page_title": "Create Organization",
@@ -129,6 +147,7 @@
     "country_details": "Country Details",
     "org_details": "Organization Details",
     "person_details": "Person Details",
+    "forum_details": "Forum Details",
     "theme_category": "Theme Category"
   }
 }

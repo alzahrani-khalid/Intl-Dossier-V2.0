@@ -68,7 +68,12 @@ export interface OrganizationExtension {
 }
 
 export interface ForumExtension {
+  /** Legacy column (kept for back-compat with existing forms). FK → dossiers(id). */
   organizing_body_id?: string
+  /** Added by Plan 29-02 migration. FK → organizations(id) ON DELETE SET NULL. */
+  organizing_body?: string
+  /** UI-level enum surfaced through the Forum wizard (conference/seminar/workshop/summit). */
+  forum_type?: string
   number_of_sessions?: number
   keynote_speakers?: Array<{ name: string; title: string; org: string }>
   sponsors?: Array<unknown>
