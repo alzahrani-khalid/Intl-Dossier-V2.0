@@ -52,9 +52,8 @@ const forumDefaults: ForumFormData = {
 
 const workingGroupDefaults: WorkingGroupFormData = {
   ...baseDefaults,
-  // Plan 29-04 tightened wg_status from z.string() to z.enum(...).optional().
-  // Empty-string default no longer satisfies the type, and the user must pick
-  // a value anyway. Use undefined so Select shows placeholder.
+  // wg_status is z.enum(...).optional(); empty string no longer satisfies the type.
+  // undefined lets the Select show its placeholder until the user picks a value.
   wg_status: undefined,
   established_date: '',
   mandate_en: '',

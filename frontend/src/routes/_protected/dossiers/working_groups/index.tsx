@@ -41,7 +41,7 @@ export const Route = createFileRoute('/_protected/dossiers/working_groups/')({
 })
 
 function WorkingGroupsListPage() {
-  const { t } = useTranslation('dossier')
+  const { t } = useTranslation(['dossier', 'form-wizard'])
   const { isRTL } = useDirection()
   const { page, search: searchQuery } = Route.useSearch()
   const navigate = Route.useNavigate()
@@ -84,9 +84,9 @@ function WorkingGroupsListPage() {
         subtitle={t('typeDescription.working_group')}
         actions={
           <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
-            <Link to="/dossiers/create">
+            <Link to="/dossiers/working_groups/create">
               <Plus className="h-4 w-4 me-2" />
-              {t('action.create')}
+              {t('form-wizard:workingGroup.create_button')}
             </Link>
           </Button>
         }
@@ -147,7 +147,9 @@ function WorkingGroupsListPage() {
           </p>
           {!searchQuery && (
             <Button asChild>
-              <Link to="/dossiers/create">{t('action.create')}</Link>
+              <Link to="/dossiers/working_groups/create">
+                {t('form-wizard:workingGroup.create_button')}
+              </Link>
             </Button>
           )}
         </div>
