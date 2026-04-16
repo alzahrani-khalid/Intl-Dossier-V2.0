@@ -144,7 +144,9 @@ import { Route as ProtectedEngagementsEngagementIdCalendarRouteImport } from './
 import { Route as ProtectedEngagementsEngagementIdAuditRouteImport } from './routes/_protected/engagements/$engagementId/audit'
 import { Route as ProtectedEngagementsEngagementIdAfterActionRouteImport } from './routes/_protected/engagements/$engagementId/after-action'
 import { Route as ProtectedDossiersWorking_groupsIdRouteImport } from './routes/_protected/dossiers/working_groups/$id'
+import { Route as ProtectedDossiersTopicsCreateRouteImport } from './routes/_protected/dossiers/topics/create'
 import { Route as ProtectedDossiersTopicsIdRouteImport } from './routes/_protected/dossiers/topics/$id'
+import { Route as ProtectedDossiersPersonsCreateRouteImport } from './routes/_protected/dossiers/persons/create'
 import { Route as ProtectedDossiersPersonsIdRouteImport } from './routes/_protected/dossiers/persons/$id'
 import { Route as ProtectedDossiersOrganizationsCreateRouteImport } from './routes/_protected/dossiers/organizations/create'
 import { Route as ProtectedDossiersOrganizationsIdRouteImport } from './routes/_protected/dossiers/organizations/$id'
@@ -942,10 +944,22 @@ const ProtectedDossiersWorking_groupsIdRoute =
     path: '/dossiers/working_groups/$id',
     getParentRoute: () => ProtectedRoute,
   } as any)
+const ProtectedDossiersTopicsCreateRoute =
+  ProtectedDossiersTopicsCreateRouteImport.update({
+    id: '/dossiers/topics/create',
+    path: '/dossiers/topics/create',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedDossiersTopicsIdRoute =
   ProtectedDossiersTopicsIdRouteImport.update({
     id: '/dossiers/topics/$id',
     path: '/dossiers/topics/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersPersonsCreateRoute =
+  ProtectedDossiersPersonsCreateRouteImport.update({
+    id: '/dossiers/persons/create',
+    path: '/dossiers/persons/create',
     getParentRoute: () => ProtectedRoute,
   } as any)
 const ProtectedDossiersPersonsIdRoute =
@@ -1451,7 +1465,9 @@ export interface FileRoutesByFullPath {
   '/dossiers/organizations/$id': typeof ProtectedDossiersOrganizationsIdRouteWithChildren
   '/dossiers/organizations/create': typeof ProtectedDossiersOrganizationsCreateRoute
   '/dossiers/persons/$id': typeof ProtectedDossiersPersonsIdRouteWithChildren
+  '/dossiers/persons/create': typeof ProtectedDossiersPersonsCreateRoute
   '/dossiers/topics/$id': typeof ProtectedDossiersTopicsIdRouteWithChildren
+  '/dossiers/topics/create': typeof ProtectedDossiersTopicsCreateRoute
   '/dossiers/working_groups/$id': typeof ProtectedDossiersWorking_groupsIdRouteWithChildren
   '/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
   '/engagements/$engagementId/audit': typeof ProtectedEngagementsEngagementIdAuditRoute
@@ -1639,6 +1655,8 @@ export interface FileRoutesByTo {
   '/dossiers/countries/create': typeof ProtectedDossiersCountriesCreateRoute
   '/dossiers/engagements/$id': typeof ProtectedDossiersEngagementsIdRoute
   '/dossiers/organizations/create': typeof ProtectedDossiersOrganizationsCreateRoute
+  '/dossiers/persons/create': typeof ProtectedDossiersPersonsCreateRoute
+  '/dossiers/topics/create': typeof ProtectedDossiersTopicsCreateRoute
   '/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
   '/engagements/$engagementId/audit': typeof ProtectedEngagementsEngagementIdAuditRoute
   '/engagements/$engagementId/calendar': typeof ProtectedEngagementsEngagementIdCalendarRoute
@@ -1839,7 +1857,9 @@ export interface FileRoutesById {
   '/_protected/dossiers/organizations/$id': typeof ProtectedDossiersOrganizationsIdRouteWithChildren
   '/_protected/dossiers/organizations/create': typeof ProtectedDossiersOrganizationsCreateRoute
   '/_protected/dossiers/persons/$id': typeof ProtectedDossiersPersonsIdRouteWithChildren
+  '/_protected/dossiers/persons/create': typeof ProtectedDossiersPersonsCreateRoute
   '/_protected/dossiers/topics/$id': typeof ProtectedDossiersTopicsIdRouteWithChildren
+  '/_protected/dossiers/topics/create': typeof ProtectedDossiersTopicsCreateRoute
   '/_protected/dossiers/working_groups/$id': typeof ProtectedDossiersWorking_groupsIdRouteWithChildren
   '/_protected/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
   '/_protected/engagements/$engagementId/audit': typeof ProtectedEngagementsEngagementIdAuditRoute
@@ -2041,7 +2061,9 @@ export interface FileRouteTypes {
     | '/dossiers/organizations/$id'
     | '/dossiers/organizations/create'
     | '/dossiers/persons/$id'
+    | '/dossiers/persons/create'
     | '/dossiers/topics/$id'
+    | '/dossiers/topics/create'
     | '/dossiers/working_groups/$id'
     | '/engagements/$engagementId/after-action'
     | '/engagements/$engagementId/audit'
@@ -2229,6 +2251,8 @@ export interface FileRouteTypes {
     | '/dossiers/countries/create'
     | '/dossiers/engagements/$id'
     | '/dossiers/organizations/create'
+    | '/dossiers/persons/create'
+    | '/dossiers/topics/create'
     | '/engagements/$engagementId/after-action'
     | '/engagements/$engagementId/audit'
     | '/engagements/$engagementId/calendar'
@@ -2428,7 +2452,9 @@ export interface FileRouteTypes {
     | '/_protected/dossiers/organizations/$id'
     | '/_protected/dossiers/organizations/create'
     | '/_protected/dossiers/persons/$id'
+    | '/_protected/dossiers/persons/create'
     | '/_protected/dossiers/topics/$id'
+    | '/_protected/dossiers/topics/create'
     | '/_protected/dossiers/working_groups/$id'
     | '/_protected/engagements/$engagementId/after-action'
     | '/_protected/engagements/$engagementId/audit'
@@ -3460,11 +3486,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersWorking_groupsIdRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/dossiers/topics/create': {
+      id: '/_protected/dossiers/topics/create'
+      path: '/dossiers/topics/create'
+      fullPath: '/dossiers/topics/create'
+      preLoaderRoute: typeof ProtectedDossiersTopicsCreateRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/dossiers/topics/$id': {
       id: '/_protected/dossiers/topics/$id'
       path: '/dossiers/topics/$id'
       fullPath: '/dossiers/topics/$id'
       preLoaderRoute: typeof ProtectedDossiersTopicsIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dossiers/persons/create': {
+      id: '/_protected/dossiers/persons/create'
+      path: '/dossiers/persons/create'
+      fullPath: '/dossiers/persons/create'
+      preLoaderRoute: typeof ProtectedDossiersPersonsCreateRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/persons/$id': {
@@ -4463,7 +4503,9 @@ interface ProtectedRouteChildren {
   ProtectedDossiersOrganizationsIdRoute: typeof ProtectedDossiersOrganizationsIdRouteWithChildren
   ProtectedDossiersOrganizationsCreateRoute: typeof ProtectedDossiersOrganizationsCreateRoute
   ProtectedDossiersPersonsIdRoute: typeof ProtectedDossiersPersonsIdRouteWithChildren
+  ProtectedDossiersPersonsCreateRoute: typeof ProtectedDossiersPersonsCreateRoute
   ProtectedDossiersTopicsIdRoute: typeof ProtectedDossiersTopicsIdRouteWithChildren
+  ProtectedDossiersTopicsCreateRoute: typeof ProtectedDossiersTopicsCreateRoute
   ProtectedDossiersWorking_groupsIdRoute: typeof ProtectedDossiersWorking_groupsIdRouteWithChildren
   ProtectedDossiersCountriesIndexRoute: typeof ProtectedDossiersCountriesIndexRoute
   ProtectedDossiersElectedOfficialsIndexRoute: typeof ProtectedDossiersElectedOfficialsIndexRoute
@@ -4569,7 +4611,9 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDossiersOrganizationsCreateRoute:
     ProtectedDossiersOrganizationsCreateRoute,
   ProtectedDossiersPersonsIdRoute: ProtectedDossiersPersonsIdRouteWithChildren,
+  ProtectedDossiersPersonsCreateRoute: ProtectedDossiersPersonsCreateRoute,
   ProtectedDossiersTopicsIdRoute: ProtectedDossiersTopicsIdRouteWithChildren,
+  ProtectedDossiersTopicsCreateRoute: ProtectedDossiersTopicsCreateRoute,
   ProtectedDossiersWorking_groupsIdRoute:
     ProtectedDossiersWorking_groupsIdRouteWithChildren,
   ProtectedDossiersCountriesIndexRoute: ProtectedDossiersCountriesIndexRoute,
