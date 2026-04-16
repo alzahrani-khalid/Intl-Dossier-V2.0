@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Dossier Creation UX
 status: executing
-stopped_at: Phase 27 UI-SPEC approved
-last_updated: '2026-04-15T20:33:00.919Z'
+stopped_at: Phase 28 context gathered
+last_updated: '2026-04-16T09:07:05.287Z'
 last_activity: 2026-04-15
 progress:
   total_phases: 6
@@ -71,6 +71,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-15T19:13:55.820Z
-Stopped at: Phase 27 UI-SPEC approved
-Resume file: .planning/phases/27-country-wizard/27-UI-SPEC.md
+Last session: 2026-04-16T09:07:05.285Z
+Stopped at: Phase 28 context gathered
+Resume file: .planning/phases/28-simple-type-wizards/28-CONTEXT.md
