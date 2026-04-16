@@ -86,7 +86,7 @@ function ForumsListPage() {
           <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
             <Link to="/dossiers/forums/create">
               <Plus className="h-4 w-4 me-2" />
-              {t('action.create')}
+              {t('form-wizard:forum.create_button')}
             </Link>
           </Button>
         }
@@ -147,7 +147,7 @@ function ForumsListPage() {
           </p>
           {!searchQuery && (
             <Button asChild>
-              <Link to="/dossiers/forums/create">{t('action.create')}</Link>
+              <Link to="/dossiers/forums/create">{t('form-wizard:forum.create_button')}</Link>
             </Button>
           )}
         </div>
