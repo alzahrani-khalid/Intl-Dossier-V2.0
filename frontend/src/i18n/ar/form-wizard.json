@@ -41,6 +41,10 @@
     "basicInfoDesc": "ادخل اسم الدولة والتفاصيل العامة",
     "countryDetails": "تفاصيل الدولة",
     "countryDetailsDesc": "رموز الايزو والمنطقة والعاصمة",
+    "orgDetails": "تفاصيل المنظمة",
+    "orgDetailsDesc": "أدخل معلومات المنظمة",
+    "personDetails": "تفاصيل الشخص",
+    "personDetailsDesc": "أدخل معلومات الشخص",
     "review": "المراجعة",
     "reviewDesc": "مراجعة وتاكيد التفاصيل"
   },
@@ -67,9 +71,64 @@
     "oceania": "اوقيانوسيا",
     "antarctic": "القطب الجنوبي"
   },
+  "organization": {
+    "page_title": "إنشاء منظمة",
+    "back_to_list": "العودة إلى المنظمات",
+    "org_type": "نوع المنظمة",
+    "org_type_ph": "اختر النوع",
+    "org_types": {
+      "government": "حكومية",
+      "ngo": "غير حكومية",
+      "private": "خاصة",
+      "international": "دولية",
+      "academic": "أكاديمية"
+    },
+    "org_code": "رمز المنظمة",
+    "org_code_ph": "مثال: UN، NATO، WHO",
+    "website": "الموقع الإلكتروني",
+    "website_ph": "https://example.org",
+    "headquarters_en": "المقر الرئيسي (الإنجليزية)",
+    "headquarters_en_ph": "e.g. Geneva, Switzerland",
+    "headquarters_ar": "المقر الرئيسي (العربية)",
+    "headquarters_ar_ph": "مثال: جنيف، سويسرا",
+    "founding_date": "تاريخ التأسيس",
+    "founding_date_ph": "اختر تاريخ التأسيس"
+  },
+  "topic": {
+    "page_title": "إنشاء موضوع",
+    "back_to_list": "العودة إلى المواضيع",
+    "theme_category": "فئة الموضوع",
+    "theme_category_ph": "اختر الفئة",
+    "themes": {
+      "policy": "سياسة",
+      "technical": "تقنية",
+      "strategic": "استراتيجية",
+      "operational": "تشغيلية"
+    }
+  },
+  "person": {
+    "page_title": "إنشاء شخص",
+    "back_to_list": "العودة إلى الأشخاص",
+    "title_en": "اللقب (الإنجليزية)",
+    "title_en_ph": "e.g. Ambassador, Minister",
+    "title_ar": "اللقب (العربية)",
+    "title_ar_ph": "مثال: سفير، وزير",
+    "photo": "الصورة",
+    "upload_photo": "رفع صورة",
+    "remove_photo": "إزالة الصورة",
+    "biography_en": "السيرة الذاتية (الإنجليزية)",
+    "biography_en_ph": "Enter biography in English",
+    "biography_ar": "السيرة الذاتية (العربية)",
+    "biography_ar_ph": "أدخل السيرة الذاتية بالعربية",
+    "photo_url": "رابط الصورة",
+    "photo_url_ph": "https://example.com/photo.jpg"
+  },
   "review": {
     "edit": "تعديل",
     "basic_info": "المعلومات الاساسية",
-    "country_details": "تفاصيل الدولة"
+    "country_details": "تفاصيل الدولة",
+    "org_details": "تفاصيل المنظمة",
+    "person_details": "تفاصيل الشخص",
+    "theme_category": "فئة الموضوع"
   }
 }

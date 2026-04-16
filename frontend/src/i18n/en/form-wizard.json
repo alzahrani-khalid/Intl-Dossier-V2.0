@@ -41,6 +41,10 @@
     "basicInfoDesc": "Enter the country's name and general details",
     "countryDetails": "Country Details",
     "countryDetailsDesc": "ISO codes, region, and capital information",
+    "orgDetails": "Organization Details",
+    "orgDetailsDesc": "Enter organization-specific information",
+    "personDetails": "Person Details",
+    "personDetailsDesc": "Enter person-specific information",
     "review": "Review",
     "reviewDesc": "Review and confirm details"
   },
@@ -67,9 +71,64 @@
     "oceania": "Oceania",
     "antarctic": "Antarctic"
   },
+  "organization": {
+    "page_title": "Create Organization",
+    "back_to_list": "Back to Organizations",
+    "org_type": "Organization Type",
+    "org_type_ph": "Select type",
+    "org_types": {
+      "government": "Government",
+      "ngo": "NGO",
+      "private": "Private",
+      "international": "International",
+      "academic": "Academic"
+    },
+    "org_code": "Organization Code",
+    "org_code_ph": "e.g. UN, NATO, WHO",
+    "website": "Website",
+    "website_ph": "https://example.org",
+    "headquarters_en": "Headquarters (English)",
+    "headquarters_en_ph": "e.g. Geneva, Switzerland",
+    "headquarters_ar": "Headquarters (Arabic)",
+    "headquarters_ar_ph": "e.g. Geneva, Switzerland",
+    "founding_date": "Founding Date",
+    "founding_date_ph": "Select founding date"
+  },
+  "topic": {
+    "page_title": "Create Topic",
+    "back_to_list": "Back to Topics",
+    "theme_category": "Theme Category",
+    "theme_category_ph": "Select category",
+    "themes": {
+      "policy": "Policy",
+      "technical": "Technical",
+      "strategic": "Strategic",
+      "operational": "Operational"
+    }
+  },
+  "person": {
+    "page_title": "Create Person",
+    "back_to_list": "Back to Persons",
+    "title_en": "Title (English)",
+    "title_en_ph": "e.g. Ambassador, Minister",
+    "title_ar": "Title (Arabic)",
+    "title_ar_ph": "e.g. Ambassador, Minister",
+    "photo": "Photo",
+    "upload_photo": "Upload Photo",
+    "remove_photo": "Remove Photo",
+    "biography_en": "Biography (English)",
+    "biography_en_ph": "Enter biography in English",
+    "biography_ar": "Biography (Arabic)",
+    "biography_ar_ph": "Enter biography in Arabic",
+    "photo_url": "Photo URL",
+    "photo_url_ph": "https://example.com/photo.jpg"
+  },
   "review": {
     "edit": "Edit",
     "basic_info": "Basic Information",
-    "country_details": "Country Details"
+    "country_details": "Country Details",
+    "org_details": "Organization Details",
+    "person_details": "Person Details",
+    "theme_category": "Theme Category"
   }
 }
