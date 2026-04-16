@@ -4,14 +4,14 @@ milestone: v5.0
 milestone_name: Dossier Creation UX
 status: executing
 stopped_at: Phase 28 context gathered
-last_updated: '2026-04-16T09:07:05.287Z'
-last_activity: 2026-04-15
+last_updated: '2026-04-16T16:35:46.852Z'
+last_activity: 2026-04-16 -- Phase 28 execution started
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 6
+  total_plans: 10
   completed_plans: 6
-  percent: 100
+  percent: 60
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 27 — country-wizard
+**Current focus:** Phase 28 — Simple Type Wizards
 
 ## Current Position
 
-Phase: 28
-Plan: Not started
-Status: Executing Phase 27
-Last activity: 2026-04-15
+Phase: 28 (Simple Type Wizards) — EXECUTING
+Plan: 1 of 4
+Status: Executing Phase 28
+Last activity: 2026-04-16 -- Phase 28 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
