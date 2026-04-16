@@ -28,13 +28,13 @@ test.describe('Engagement wizard — create flow', () => {
       .click()
     await expect(page).toHaveURL(/\/dossiers\/engagements\/create$/)
 
-    // ENGM-05: Stepper — 4 steps (Basic Info, Details, Participants, Review)
-    const steps = page.getByRole('list', { name: /steps|الخطوات/i }).getByRole('listitem')
+    // ENGM-05: Stepper — 4 step buttons rendered by CreateWizardShell
+    const steps = page.getByRole('button', { name: /^(Step|الخطوة) \d+:/ })
     await expect(steps).toHaveCount(4)
 
     // Step 1 — Basic Info
-    await page.getByLabel(/name.*english|الاسم.*الإنجليزية/i).fill(nameEn)
-    await page.getByLabel(/name.*arabic|الاسم.*العربية/i).fill(nameAr)
+    await page.getByPlaceholder(/Enter name in English|أدخل الاسم بالإنجليزية/i).fill(nameEn)
+    await page.getByPlaceholder(/Enter name in Arabic|أدخل الاسم بالعربية/i).fill(nameAr)
     await page.getByRole('button', { name: /^next$|التالي/i }).click()
 
     // Step 2 — Engagement Details
@@ -65,7 +65,7 @@ test.describe('Engagement wizard — create flow', () => {
     // Step 4 — Review + submit
     await expect(page.getByRole('heading', { name: /review|مراجعة/i })).toBeVisible()
     await page
-      .getByRole('button', { name: /^(submit|create|finish)$|إرسال|إنشاء|إنهاء/i })
+      .getByRole('button', { name: /^(submit|create|finish|create dossier|create engagement)$|إرسال|إنشاء|إنهاء/i })
       .click()
 
     // Redirect to detail page
@@ -85,8 +85,8 @@ test.describe('Engagement wizard — create flow', () => {
     await page.goto('/dossiers/engagements/create')
 
     // Basic Info
-    await page.getByLabel(/name.*english|الاسم.*الإنجليزية/i).fill(nameEn)
-    await page.getByLabel(/name.*arabic|الاسم.*العربية/i).fill('ارتباط تواريخ سيئة')
+    await page.getByPlaceholder(/Enter name in English|أدخل الاسم بالإنجليزية/i).fill(nameEn)
+    await page.getByPlaceholder(/Enter name in Arabic|أدخل الاسم بالعربية/i).fill('ارتباط تواريخ سيئة')
     await page.getByRole('button', { name: /^next$|التالي/i }).click()
 
     // Details — type + category + inverted dates
@@ -120,8 +120,8 @@ test.describe('Engagement wizard — create flow', () => {
     await page.goto('/dossiers/engagements/create')
 
     // Basic Info
-    await page.getByLabel(/name.*english|الاسم.*الإنجليزية/i).fill(nameEn)
-    await page.getByLabel(/name.*arabic|الاسم.*العربية/i).fill('ارتباط شرائح')
+    await page.getByPlaceholder(/Enter name in English|أدخل الاسم بالإنجليزية/i).fill(nameEn)
+    await page.getByPlaceholder(/Enter name in Arabic|أدخل الاسم بالعربية/i).fill('ارتباط شرائح')
     await page.getByRole('button', { name: /^next$|التالي/i }).click()
 
     // Details — fill required fields to allow progression

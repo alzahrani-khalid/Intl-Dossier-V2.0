@@ -27,6 +27,19 @@ for (const role of roles) {
     await page.getByRole('button', { name: /sign in|login/i }).click()
     await expect(page).toHaveURL(/dashboard|operations|home/, { timeout: 15_000 })
 
+    // Pre-dismiss guided-tour / onboarding overlays so subsequent specs can
+    // interact with pages without modal interference. Keys mirror
+    // frontend/src/components/guided-tours/{OnboardingTourTrigger,TourContext}.tsx.
+    await page.evaluate(() => {
+      localStorage.setItem('intl-dossier-onboarding-seen', 'true')
+      localStorage.setItem('intl-dossier-onboarding-completed', 'true')
+      localStorage.setItem('intl-dossier-tours-enabled', 'false')
+      localStorage.setItem(
+        'intl-dossier-tours-dismissed',
+        JSON.stringify(['onboarding', 'dossier-hub', 'engagement-wizard']),
+      )
+    })
+
     const storagePath = path.join('tests/e2e/support/storage', `${role.name}.json`)
     await page.context().storageState({ path: storagePath })
   })
