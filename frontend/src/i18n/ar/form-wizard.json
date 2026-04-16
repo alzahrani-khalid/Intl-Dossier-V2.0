@@ -46,6 +46,8 @@
     "orgDetailsDesc": "أدخل معلومات المنظمة",
     "personDetails": "تفاصيل الشخص",
     "personDetailsDesc": "أدخل معلومات الشخص",
+    "forumDetails": "تفاصيل المنتدى",
+    "forumDetailsDesc": "حدد نوع المنتدى والجهة المنظمة",
     "workingGroupDetails": "تفاصيل فريق العمل",
     "workingGroupDetailsDesc": "الحالة والتفويض والجهة الأم",
     "engagementDetails": "تفاصيل الارتباط",
@@ -77,6 +79,22 @@
     "americas": "الامريكتان",
     "oceania": "اوقيانوسيا",
     "antarctic": "القطب الجنوبي"
+  },
+  "forum": {
+    "page_title": "ملف منتدى جديد",
+    "back_to_list": "العودة إلى المنتديات",
+    "create_button": "إنشاء منتدى",
+    "forum_type_label": "نوع المنتدى",
+    "forum_type_placeholder": "اختر نوعاً",
+    "forum_types": {
+      "conference": "مؤتمر",
+      "seminar": "ندوة",
+      "workshop": "ورشة عمل",
+      "summit": "قمة"
+    },
+    "organizing_body_label": "الجهة المنظمة",
+    "organizing_body_placeholder": "ابحث عن المنظمات…",
+    "organizing_body_help": "اختياري — اربط بالمنظمة التي تستضيف هذا المنتدى. يمكن ضبطه لاحقاً."
   },
   "organization": {
     "page_title": "إنشاء منظمة",
@@ -203,6 +221,7 @@
     "country_details": "تفاصيل الدولة",
     "org_details": "تفاصيل المنظمة",
     "person_details": "تفاصيل الشخص",
+    "forum_details": "تفاصيل المنتدى",
     "theme_category": "فئة الموضوع",
     "working_group_details": "تفاصيل فريق العمل",
     "engagement_details": "تفاصيل الارتباط",
