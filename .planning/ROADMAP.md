@@ -146,8 +146,15 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 3. User can create an engagement dossier via 4-step wizard with type, category, location, and a Participants step for multi-selecting countries, organizations, and persons
 4. The multi-select DossierPicker variant supports filtering by dossier type and displays selected items clearly
 5. All three wizards are accessible directly from their respective list pages (Forums, Working Groups, Engagements)
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 6 plans
+   Plans:
+   - [ ] 29-01-PLAN.md -- DossierPicker multi-select extension (ENGM-04)
+   - [ ] 29-02-PLAN.md -- Supabase migrations (working_groups.parent_body_id + conditional forums.organizing_body) [BLOCKING]
+   - [ ] 29-03-PLAN.md -- Forum wizard (FORUM-01/02/03)
+   - [ ] 29-04-PLAN.md -- Working Group wizard (WG-01/02/03)
+   - [ ] 29-05-PLAN.md -- Engagement wizard + participants postCreate hook (ENGM-01/02/03/05)
+   - [ ] 29-06-PLAN.md -- Integration sweep, Playwright E2E, bilingual human checkpoint
+         **UI hint**: yes
 
 ### Phase 30: Elected Official Wizard
 
