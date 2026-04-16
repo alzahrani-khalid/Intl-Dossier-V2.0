@@ -45,6 +45,8 @@
     "orgDetailsDesc": "أدخل معلومات المنظمة",
     "personDetails": "تفاصيل الشخص",
     "personDetailsDesc": "أدخل معلومات الشخص",
+    "workingGroupDetails": "تفاصيل فريق العمل",
+    "workingGroupDetailsDesc": "الحالة والتفويض والجهة الأم",
     "review": "المراجعة",
     "reviewDesc": "مراجعة وتاكيد التفاصيل"
   },
@@ -123,12 +125,34 @@
     "photo_url": "رابط الصورة",
     "photo_url_ph": "https://example.com/photo.jpg"
   },
+  "workingGroup": {
+    "page_title": "ملف فريق عمل جديد",
+    "back_to_list": "العودة إلى فرق العمل",
+    "create_button": "إنشاء فريق عمل",
+    "status_label": "الحالة",
+    "status_placeholder": "اختر حالة",
+    "statuses": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "pending": "قيد الانتظار",
+      "suspended": "معلق"
+    },
+    "established_date_label": "تاريخ التأسيس",
+    "mandate_en_label": "التفويض (بالإنجليزية)",
+    "mandate_ar_label": "التفويض (بالعربية)",
+    "mandate_en_placeholder": "Describe the working group's mandate in English…",
+    "mandate_ar_placeholder": "صف تفويض فريق العمل بالعربية…",
+    "parent_body_label": "الجهة الأم",
+    "parent_body_placeholder": "ابحث عن المنظمات…",
+    "parent_body_help": "اختياري — اربط بالمنظمة التي تملك فريق العمل هذا. يمكن ضبطه لاحقاً."
+  },
   "review": {
     "edit": "تعديل",
     "basic_info": "المعلومات الاساسية",
     "country_details": "تفاصيل الدولة",
     "org_details": "تفاصيل المنظمة",
     "person_details": "تفاصيل الشخص",
-    "theme_category": "فئة الموضوع"
+    "theme_category": "فئة الموضوع",
+    "working_group_details": "تفاصيل فريق العمل"
   }
 }

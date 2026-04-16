@@ -52,7 +52,7 @@ const forumDefaults: ForumFormData = {
 
 const workingGroupDefaults: WorkingGroupFormData = {
   ...baseDefaults,
-  wg_status: '',
+  wg_status: undefined,
   established_date: '',
   mandate_en: '',
   mandate_ar: '',

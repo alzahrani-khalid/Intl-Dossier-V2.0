@@ -45,6 +45,8 @@
     "orgDetailsDesc": "Enter organization-specific information",
     "personDetails": "Person Details",
     "personDetailsDesc": "Enter person-specific information",
+    "workingGroupDetails": "Working Group Details",
+    "workingGroupDetailsDesc": "Status, mandate, and parent body",
     "review": "Review",
     "reviewDesc": "Review and confirm details"
   },
@@ -123,12 +125,34 @@
     "photo_url": "Photo URL",
     "photo_url_ph": "https://example.com/photo.jpg"
   },
+  "workingGroup": {
+    "page_title": "New Working Group Dossier",
+    "back_to_list": "Back to Working Groups",
+    "create_button": "Create working group",
+    "status_label": "Status",
+    "status_placeholder": "Select a status",
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "suspended": "Suspended"
+    },
+    "established_date_label": "Established date",
+    "mandate_en_label": "Mandate (English)",
+    "mandate_ar_label": "Mandate (Arabic)",
+    "mandate_en_placeholder": "Describe the working group's mandate in English…",
+    "mandate_ar_placeholder": "صف تفويض فريق العمل بالعربية…",
+    "parent_body_label": "Parent body",
+    "parent_body_placeholder": "Search organizations…",
+    "parent_body_help": "Optional — link to the organization that owns this working group. You can set this later."
+  },
   "review": {
     "edit": "Edit",
     "basic_info": "Basic Information",
     "country_details": "Country Details",
     "org_details": "Organization Details",
     "person_details": "Person Details",
-    "theme_category": "Theme Category"
+    "theme_category": "Theme Category",
+    "working_group_details": "Working Group Details"
   }
 }
