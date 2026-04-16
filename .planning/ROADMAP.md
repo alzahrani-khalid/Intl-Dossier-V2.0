@@ -73,7 +73,7 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 
 - [x] **Phase 26: Shared Wizard Infrastructure** - Extract reusable hook, shell, schemas, and defaults powering all 8 type-specific wizards (completed 2026-04-15)
 - [x] **Phase 27: Country Wizard** - First type-specific wizard validating the compositional pattern end-to-end (completed 2026-04-15)
-- [ ] **Phase 28: Simple Type Wizards** - Organization, Topic, and Person wizards following the proven Country pattern
+- [x] **Phase 28: Simple Type Wizards** - Organization, Topic, and Person wizards following the proven Country pattern (completed 2026-04-16)
 - [ ] **Phase 29: Complex Type Wizards** - Forum, Working Group, and Engagement wizards with relationship linking steps
 - [ ] **Phase 30: Elected Official Wizard** - Person wizard variant adding office, term, and constituency steps
 - [ ] **Phase 31: Creation Hub and Cleanup** - CreateDossierHub entry point, old wizard removal, and reference updates
@@ -129,9 +129,9 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
    **Plans**: 4 plans
    Plans:
    - [x] 28-01-PLAN.md -- Extract shared review helpers, update org schema, add i18n keys
-   - [ ] 28-02-PLAN.md -- Organization wizard (config, steps, route, list page)
-   - [ ] 28-03-PLAN.md -- Topic wizard (config, inline step, route, list page)
-   - [ ] 28-04-PLAN.md -- Person wizard (config, steps, route, list page)
+   - [x] 28-02-PLAN.md -- Organization wizard (config, steps, route, list page)
+   - [x] 28-03-PLAN.md -- Topic wizard (config, inline step, route, list page)
+   - [x] 28-04-PLAN.md -- Person wizard (config, steps, route, list page)
          **UI hint**: yes
 
 ### Phase 29: Complex Type Wizards
@@ -199,7 +199,7 @@ Phases execute in numeric order: 26 -> 27 -> 28 -> 29 / 30 (parallel after 28) -
 | 25. Deferred Audit Fixes          | v4.1      | 5/5            | Complete    | 2026-04-12 |
 | 26. Shared Wizard Infrastructure  | v5.0      | 4/4            | Complete    | 2026-04-15 |
 | 27. Country Wizard                | v5.0      | 2/2            | Complete    | 2026-04-15 |
-| 28. Simple Type Wizards           | v5.0      | 1/4            | In Progress |            |
+| 28. Simple Type Wizards           | v5.0      | 4/4            | Complete    | 2026-04-16 |
 | 29. Complex Type Wizards          | v5.0      | 0/TBD          | Not started | -          |
 | 30. Elected Official Wizard       | v5.0      | 0/TBD          | Not started | -          |
 | 31. Creation Hub and Cleanup      | v5.0      | 0/TBD          | Not started | -          |
