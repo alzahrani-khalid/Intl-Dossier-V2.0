@@ -126,8 +126,13 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 2. User can create a topic dossier via 2-step wizard (Basic Info with theme category inline, Review) from the Topics list page
 3. User can create a person dossier via 3-step wizard (Basic Info, Person Details with title/photo/biography, Review) from the Persons list page
 4. All three wizards use the shared infrastructure (hook, shell, schemas) without duplicating creation logic
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 4 plans
+   Plans:
+   - [ ] 28-01-PLAN.md -- Extract shared review helpers, update org schema, add i18n keys
+   - [ ] 28-02-PLAN.md -- Organization wizard (config, steps, route, list page)
+   - [ ] 28-03-PLAN.md -- Topic wizard (config, inline step, route, list page)
+   - [ ] 28-04-PLAN.md -- Person wizard (config, steps, route, list page)
+         **UI hint**: yes
 
 ### Phase 29: Complex Type Wizards
 
@@ -194,7 +199,7 @@ Phases execute in numeric order: 26 -> 27 -> 28 -> 29 / 30 (parallel after 28) -
 | 25. Deferred Audit Fixes          | v4.1      | 5/5            | Complete    | 2026-04-12 |
 | 26. Shared Wizard Infrastructure  | v5.0      | 4/4            | Complete    | 2026-04-15 |
 | 27. Country Wizard                | v5.0      | 2/2            | Complete    | 2026-04-15 |
-| 28. Simple Type Wizards           | v5.0      | 0/TBD          | Not started | -          |
+| 28. Simple Type Wizards           | v5.0      | 0/4            | Not started | -          |
 | 29. Complex Type Wizards          | v5.0      | 0/TBD          | Not started | -          |
 | 30. Elected Official Wizard       | v5.0      | 0/TBD          | Not started | -          |
 | 31. Creation Hub and Cleanup      | v5.0      | 0/TBD          | Not started | -          |
