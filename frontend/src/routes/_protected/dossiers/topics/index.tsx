@@ -84,7 +84,7 @@ function TopicsListPage() {
         subtitle={t('typeDescription.topic')}
         actions={
           <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
-            <Link to="/dossiers/create">
+            <Link to="/dossiers/topics/create">
               <Plus className="h-4 w-4 me-2" />
               {t('action.create')}
             </Link>
@@ -147,7 +147,7 @@ function TopicsListPage() {
           </p>
           {!searchQuery && (
             <Button asChild>
-              <Link to="/dossiers/create">{t('action.create')}</Link>
+              <Link to="/dossiers/topics/create">{t('action.create')}</Link>
             </Button>
           )}
         </div>
