@@ -40,7 +40,7 @@ export const Route = createFileRoute('/_protected/dossiers/engagements/')({
 })
 
 function EngagementsListPage() {
-  const { t } = useTranslation('dossier')
+  const { t } = useTranslation(['dossier', 'form-wizard'])
   const { isRTL } = useDirection()
   const { page, search: searchQuery } = Route.useSearch()
   const navigate = Route.useNavigate()
@@ -83,9 +83,9 @@ function EngagementsListPage() {
         subtitle={t('typeDescription.engagement')}
         actions={
           <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
-            <Link to="/dossiers/create">
+            <Link to="/dossiers/engagements/create">
               <Plus className="h-4 w-4 me-2" />
-              {t('action.create')}
+              {t('form-wizard:engagement.create_button')}
             </Link>
           </Button>
         }
@@ -146,7 +146,9 @@ function EngagementsListPage() {
           </p>
           {!searchQuery && (
             <Button asChild>
-              <Link to="/dossiers/create">{t('action.create')}</Link>
+              <Link to="/dossiers/engagements/create">
+                {t('form-wizard:engagement.create_button')}
+              </Link>
             </Button>
           )}
         </div>
