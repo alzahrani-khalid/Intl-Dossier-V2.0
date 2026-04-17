@@ -1,7 +1,7 @@
 /**
- * Person Wizard Route (Plan 28-04, Task 2)
+ * Person Wizard Route (Plan 28-04, Task 2; Plan 32-02 swapped step 0 per PBI-01).
  *
- * Composes SharedBasicInfoStep, PersonDetailsStep, and PersonReviewStep
+ * Composes PersonBasicInfoStep, PersonDetailsStep, and PersonReviewStep
  * into a 3-step wizard via useCreateDossierWizard + CreateWizardShell.
  */
 import type { ReactElement } from 'react'
@@ -11,7 +11,7 @@ import { ChevronLeft } from 'lucide-react'
 
 import { useCreateDossierWizard } from '@/components/dossier/wizard/hooks/useCreateDossierWizard'
 import { CreateWizardShell } from '@/components/dossier/wizard/CreateWizardShell'
-import { SharedBasicInfoStep } from '@/components/dossier/wizard/SharedBasicInfoStep'
+import { PersonBasicInfoStep } from '@/components/dossier/wizard/steps/PersonBasicInfoStep'
 import { PersonDetailsStep } from '@/components/dossier/wizard/steps/PersonDetailsStep'
 import { PersonReviewStep } from '@/components/dossier/wizard/review/PersonReviewStep'
 import { personWizardConfig } from '@/components/dossier/wizard/config/person.config'
@@ -36,7 +36,7 @@ function CreatePersonPage(): ReactElement {
       </Link>
       <h1 className="text-lg font-semibold">{t('person.page_title')}</h1>
       <CreateWizardShell wizard={wizard}>
-        <SharedBasicInfoStep form={wizard.form} dossierType="person" />
+        <PersonBasicInfoStep form={wizard.form} dossierType="person" />
         <PersonDetailsStep form={wizard.form} />
         <PersonReviewStep form={wizard.form} onEditStep={wizard.setCurrentStep} />
       </CreateWizardShell>

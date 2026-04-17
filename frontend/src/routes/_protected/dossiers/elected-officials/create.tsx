@@ -1,7 +1,7 @@
 /**
- * Elected Official Wizard Route (Phase 30 D-03)
+ * Elected Official Wizard Route (Phase 30 D-03; Plan 32-02 swapped step 0 per PBI-01).
  *
- * Composes SharedBasicInfoStep, PersonDetailsStep, OfficeTermStep, and PersonReviewStep
+ * Composes PersonBasicInfoStep, PersonDetailsStep, OfficeTermStep, and PersonReviewStep
  * into a 4-step wizard via useCreateDossierWizard + CreateWizardShell.
  *
  * Uses electedOfficialWizardConfig which pre-seeds person_subtype='elected_official'
@@ -15,7 +15,7 @@ import { ChevronLeft } from 'lucide-react'
 
 import { useCreateDossierWizard } from '@/components/dossier/wizard/hooks/useCreateDossierWizard'
 import { CreateWizardShell } from '@/components/dossier/wizard/CreateWizardShell'
-import { SharedBasicInfoStep } from '@/components/dossier/wizard/SharedBasicInfoStep'
+import { PersonBasicInfoStep } from '@/components/dossier/wizard/steps/PersonBasicInfoStep'
 import { PersonDetailsStep } from '@/components/dossier/wizard/steps/PersonDetailsStep'
 import { OfficeTermStep } from '@/components/dossier/wizard/steps/OfficeTermStep'
 import { PersonReviewStep } from '@/components/dossier/wizard/review/PersonReviewStep'
@@ -41,7 +41,7 @@ function CreateElectedOfficialPage(): ReactElement {
       </Link>
       <h1 className="text-lg font-semibold">{t('elected_official.page_title')}</h1>
       <CreateWizardShell wizard={wizard}>
-        <SharedBasicInfoStep form={wizard.form} dossierType="person" />
+        <PersonBasicInfoStep form={wizard.form} dossierType="person" />
         <PersonDetailsStep form={wizard.form} />
         <OfficeTermStep form={wizard.form} />
         <PersonReviewStep form={wizard.form} onEditStep={wizard.setCurrentStep} />

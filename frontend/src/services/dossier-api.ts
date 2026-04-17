@@ -133,10 +133,24 @@ export interface PersonExtension {
   title_en?: string
   title_ar?: string
   organization_id?: string
-  nationality_country_id?: string
+  nationality_country_id?: string | null
   biography_en?: string
   biography_ar?: string
   photo_url?: string
+  // Phase 30 subtype discriminator.
+  person_subtype?: 'standard' | 'elected_official'
+  // Phase 32 identity fields (wizard sends nulls for unpopulated optionals;
+  // the Edge Function dossiers-create v19 forwards them verbatim to persons.*).
+  honorific_en?: string | null
+  honorific_ar?: string | null
+  first_name_en?: string | null
+  last_name_en?: string | null
+  first_name_ar?: string | null
+  last_name_ar?: string | null
+  known_as_en?: string | null
+  known_as_ar?: string | null
+  date_of_birth?: string | null
+  gender?: 'female' | 'male' | null
 }
 
 /**
@@ -288,6 +302,23 @@ export interface ElectedOfficialExtension {
 
   // Importance Level
   importance_level?: 1 | 2 | 3 | 4 | 5
+
+  // Phase 30 subtype discriminator.
+  person_subtype?: 'standard' | 'elected_official'
+
+  // Phase 32 identity fields (shared with PersonExtension; Edge Function dossiers-create
+  // v19 forwards them verbatim to the persons row).
+  honorific_en?: string | null
+  honorific_ar?: string | null
+  first_name_en?: string | null
+  last_name_en?: string | null
+  first_name_ar?: string | null
+  last_name_ar?: string | null
+  known_as_en?: string | null
+  known_as_ar?: string | null
+  nationality_country_id?: string | null
+  date_of_birth?: string | null
+  gender?: 'female' | 'male' | null
 }
 
 export type DossierExtensionData =

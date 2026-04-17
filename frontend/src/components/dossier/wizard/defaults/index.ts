@@ -34,8 +34,29 @@ const topicDefaults: TopicFormData = {
   theme_category: undefined,
 }
 
+// Phase 32 D-21, D-23: identity defaults shared by both person + elected-official wizards.
+// All-empty string for string fields (so react-hook-form controlled inputs render cleanly);
+// `gender` is undefined so the Select placeholder shows until the user picks a value.
+const personIdentityDefaults = {
+  honorific_selection: '',
+  honorific_en: '',
+  honorific_ar: '',
+  first_name_en: '',
+  last_name_en: '',
+  first_name_ar: '',
+  last_name_ar: '',
+  known_as_en: '',
+  known_as_ar: '',
+  nationality_id: '',
+  date_of_birth: '',
+  gender: undefined,
+  // D-23: manual status field is dropped from the person wizard — default to 'active'.
+  status: 'active' as const,
+}
+
 const personDefaults: PersonFormData = {
   ...baseDefaults,
+  ...personIdentityDefaults,
   title_en: '',
   title_ar: '',
   photo_url: '',
@@ -46,6 +67,7 @@ const personDefaults: PersonFormData = {
 
 const electedOfficialDefaults: PersonFormData = {
   ...baseDefaults,
+  ...personIdentityDefaults,
   title_en: '',
   title_ar: '',
   photo_url: '',
