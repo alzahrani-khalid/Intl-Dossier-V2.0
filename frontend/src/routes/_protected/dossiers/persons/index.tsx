@@ -24,6 +24,8 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { useMemo, useCallback } from 'react'
 import { useDirection } from '@/hooks/useDirection'
+import { formatPersonLabel, nationalityBadgeText } from '@/lib/person-display'
+import { usePersonIdentityEnrichment } from '@/domains/persons/hooks/usePersonIdentityEnrichment'
 
 // URL search params type for dossier list pagination
 interface DossierListSearch {
@@ -65,6 +67,13 @@ function PersonsListPage() {
       }),
     [data?.data, searchQuery],
   )
+
+  // Phase 32 (PBI-06): enrich visible rows with identity + nationality ISO-2.
+  // The dossiers-list Edge Function only returns dossier-level fields; we batch-
+  // fetch persons identity + countries.iso_code_2 for the page's IDs here.
+  const visibleIds = useMemo(() => (filteredDossiers ?? []).map((d) => d.id), [filteredDossiers])
+  const { data: identityMap } = usePersonIdentityEnrichment(visibleIds)
+  const locale: 'en' | 'ar' = isRTL ? 'ar' : 'en'
 
   // URL-driven pagination handlers
   const handlePrevPage = useCallback((): void => {
@@ -168,68 +177,137 @@ function PersonsListPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredDossiers.map((dossier) => (
-                  <TableRow key={dossier.id}>
-                    <TableCell className="font-medium">
-                      <Link
-                        to={getDossierDetailPath(dossier.id, 'person')}
-                        className="hover:text-primary hover:underline"
-                      >
-                        {dossier.name_en}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{dossier.name_ar}</TableCell>
-                    <TableCell>
-                      <Badge variant={dossier.status === 'active' ? 'default' : 'secondary'}>
-                        {t(`status.${dossier.status}`)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">
-                        {t(`sensitivityLevel.${dossier.sensitivity_level}`)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-end">
-                      <Button variant="ghost" size="sm" asChild className="min-h-11 min-w-11">
-                        <Link to={getDossierDetailPath(dossier.id, 'person')}>
-                          {t('action.view')}
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {filteredDossiers.map((dossier) => {
+                  const enrichment = identityMap?.get(dossier.id)
+                  const primaryLabel = formatPersonLabel(
+                    {
+                      honorific_en: enrichment?.honorific_en ?? null,
+                      honorific_ar: enrichment?.honorific_ar ?? null,
+                      first_name_en: enrichment?.first_name_en ?? null,
+                      last_name_en: enrichment?.last_name_en ?? null,
+                      first_name_ar: enrichment?.first_name_ar ?? null,
+                      last_name_ar: enrichment?.last_name_ar ?? null,
+                      name_en: dossier.name_en,
+                      name_ar: dossier.name_ar,
+                    },
+                    'en',
+                  )
+                  const primaryLabelAr = formatPersonLabel(
+                    {
+                      honorific_en: enrichment?.honorific_en ?? null,
+                      honorific_ar: enrichment?.honorific_ar ?? null,
+                      first_name_en: enrichment?.first_name_en ?? null,
+                      last_name_en: enrichment?.last_name_en ?? null,
+                      first_name_ar: enrichment?.first_name_ar ?? null,
+                      last_name_ar: enrichment?.last_name_ar ?? null,
+                      name_en: dossier.name_en,
+                      name_ar: dossier.name_ar,
+                    },
+                    'ar',
+                  )
+                  const iso2 = enrichment?.nationality_iso_2 ?? null
+                  const badgeText = nationalityBadgeText(iso2)
+                  return (
+                    <TableRow key={dossier.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Link
+                            to={getDossierDetailPath(dossier.id, 'person')}
+                            className="hover:text-primary hover:underline"
+                          >
+                            {primaryLabel}
+                          </Link>
+                          {badgeText !== '' && (
+                            <Badge
+                              variant="secondary"
+                              className="text-xs"
+                              aria-label={t('form.nationality', { defaultValue: 'Nationality' })}
+                            >
+                              {badgeText}
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>{primaryLabelAr}</TableCell>
+                      <TableCell>
+                        <Badge variant={dossier.status === 'active' ? 'default' : 'secondary'}>
+                          {t(`status.${dossier.status}`)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {t(`sensitivityLevel.${dossier.sensitivity_level}`)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-end">
+                        <Button variant="ghost" size="sm" asChild className="min-h-11 min-w-11">
+                          <Link to={getDossierDetailPath(dossier.id, 'person')}>
+                            {t('action.view')}
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>
 
           {/* Card List - Mobile */}
           <div className="md:hidden space-y-4">
-            {filteredDossiers.map((dossier) => (
-              <Link
-                key={dossier.id}
-                to={getDossierDetailPath(dossier.id, 'person')}
-                className="block p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent transition-colors min-h-11"
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <h3 className="font-semibold text-base">
-                    {isRTL ? dossier.name_ar : dossier.name_en}
-                  </h3>
-                  <Badge variant={dossier.status === 'active' ? 'default' : 'secondary'}>
-                    {t(`status.${dossier.status}`)}
-                  </Badge>
-                </div>
-                {(isRTL ? dossier.description_ar : dossier.description_en) && (
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                    {isRTL ? dossier.description_ar : dossier.description_en}
-                  </p>
-                )}
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs">
-                    {t(`sensitivityLevel.${dossier.sensitivity_level}`)}
-                  </Badge>
-                </div>
-              </Link>
-            ))}
+            {filteredDossiers.map((dossier) => {
+              const enrichment = identityMap?.get(dossier.id)
+              const primaryLabel = formatPersonLabel(
+                {
+                  honorific_en: enrichment?.honorific_en ?? null,
+                  honorific_ar: enrichment?.honorific_ar ?? null,
+                  first_name_en: enrichment?.first_name_en ?? null,
+                  last_name_en: enrichment?.last_name_en ?? null,
+                  first_name_ar: enrichment?.first_name_ar ?? null,
+                  last_name_ar: enrichment?.last_name_ar ?? null,
+                  name_en: dossier.name_en,
+                  name_ar: dossier.name_ar,
+                },
+                locale,
+              )
+              const iso2 = enrichment?.nationality_iso_2 ?? null
+              const badgeText = nationalityBadgeText(iso2)
+              return (
+                <Link
+                  key={dossier.id}
+                  to={getDossierDetailPath(dossier.id, 'person')}
+                  className="block p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent transition-colors min-h-11"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="flex flex-wrap items-center gap-2 min-w-0">
+                      <h3 className="font-semibold text-base text-start">{primaryLabel}</h3>
+                      {badgeText !== '' && (
+                        <Badge
+                          variant="secondary"
+                          className="text-xs flex-shrink-0"
+                          aria-label={t('form.nationality', { defaultValue: 'Nationality' })}
+                        >
+                          {badgeText}
+                        </Badge>
+                      )}
+                    </div>
+                    <Badge variant={dossier.status === 'active' ? 'default' : 'secondary'}>
+                      {t(`status.${dossier.status}`)}
+                    </Badge>
+                  </div>
+                  {(isRTL ? dossier.description_ar : dossier.description_en) && (
+                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                      {isRTL ? dossier.description_ar : dossier.description_en}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs">
+                      {t(`sensitivityLevel.${dossier.sensitivity_level}`)}
+                    </Badge>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
 
           {/* Pagination */}

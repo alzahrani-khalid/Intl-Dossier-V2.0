@@ -28,6 +28,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { UserCheck, Plus } from 'lucide-react'
+import { formatPersonLabel, nationalityBadgeText } from '@/lib/person-display'
+import { usePersonIdentityEnrichment } from '@/domains/persons/hooks/usePersonIdentityEnrichment'
 
 // ============================================================================
 // Filter chips
@@ -63,6 +65,13 @@ export function ElectedOfficialListTable(): ReactElement {
 
   const { data, isLoading, error } = useElectedOfficials(filters)
 
+  // Phase 32 (PBI-06): enrich visible rows with identity + nationality ISO-2.
+  // search_persons_advanced doesn't return new identity columns yet; piggyback
+  // with a second fetch via @/lib/supabase-client. See Plan 32-04.
+  const visibleIds = useMemo(() => (data?.data ?? []).map((item) => item.id), [data?.data])
+  const { data: identityMap } = usePersonIdentityEnrichment(visibleIds)
+  const locale: 'en' | 'ar' = isRTL ? 'ar' : 'en'
+
   const handleSearchChange = useCallback((value: string): void => {
     setFilters((prev) => ({ ...prev, search: value, page: 1 }))
   }, [])
@@ -96,13 +105,33 @@ export function ElectedOfficialListTable(): ReactElement {
   const total = data?.total ?? 0
   const totalPages = Math.ceil(total / pageSize)
 
-  // Determine display name based on language
+  // Determine display name based on language (D-15 composed name + legacy fallback)
   const getDisplayName = useMemo(() => {
     return (item: ElectedOfficialListItem): string => {
-      if (isRTL && item.name_ar != null) return item.name_ar
-      return item.name_en
+      const enrichment = identityMap?.get(item.id)
+      return formatPersonLabel(
+        {
+          honorific_en: enrichment?.honorific_en ?? null,
+          honorific_ar: enrichment?.honorific_ar ?? null,
+          first_name_en: enrichment?.first_name_en ?? null,
+          last_name_en: enrichment?.last_name_en ?? null,
+          first_name_ar: enrichment?.first_name_ar ?? null,
+          last_name_ar: enrichment?.last_name_ar ?? null,
+          name_en: item.name_en,
+          name_ar: item.name_ar,
+        },
+        locale,
+      )
     }
-  }, [isRTL])
+  }, [identityMap, locale])
+
+  // Nationality ISO-2 lookup helper for list-row badge (D-11..D-14)
+  const getNationalityBadge = useMemo(() => {
+    return (item: ElectedOfficialListItem): string => {
+      const enrichment = identityMap?.get(item.id)
+      return nationalityBadgeText(enrichment?.nationality_iso_2 ?? null)
+    }
+  }, [identityMap])
 
   // Loading skeleton
   if (isLoading) {
@@ -201,73 +230,101 @@ export function ElectedOfficialListTable(): ReactElement {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.data.map((item) => (
-              <TableRow key={item.id} className="min-h-11 cursor-pointer hover:bg-accent">
-                <TableCell className="font-medium">
-                  <Link
-                    to="/dossiers/elected-officials/$id/overview"
-                    params={{ id: item.id }}
-                    className="hover:text-primary hover:underline"
-                  >
-                    {getDisplayName(item)}
-                  </Link>
-                </TableCell>
-                <TableCell className="text-start">{item.office_name_en ?? '-'}</TableCell>
-                <TableCell className="text-start">
-                  {item.office_type != null ? t(`officeTypes.${item.office_type}`) : '-'}
-                </TableCell>
-                <TableCell className="text-start">{item.party_en ?? '-'}</TableCell>
-                <TableCell className="text-start">{item.district_en ?? '-'}</TableCell>
-                <TableCell>
-                  {item.is_current_term === true ? (
-                    <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 rounded-full px-2 py-0.5 text-xs">
-                      {t('termStatus.current')}
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary" className="rounded-full px-2 py-0.5 text-xs">
-                      {t('termStatus.expired')}
-                    </Badge>
-                  )}
-                </TableCell>
-                <TableCell className="text-start">{item.country_name_en ?? '-'}</TableCell>
-              </TableRow>
-            ))}
+            {data?.data.map((item) => {
+              const badgeText = getNationalityBadge(item)
+              return (
+                <TableRow key={item.id} className="min-h-11 cursor-pointer hover:bg-accent">
+                  <TableCell className="font-medium">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link
+                        to="/dossiers/elected-officials/$id/overview"
+                        params={{ id: item.id }}
+                        className="hover:text-primary hover:underline"
+                      >
+                        {getDisplayName(item)}
+                      </Link>
+                      {badgeText !== '' && (
+                        <Badge
+                          variant="secondary"
+                          className="text-xs"
+                          aria-label={t('columns.country')}
+                        >
+                          {badgeText}
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-start">{item.office_name_en ?? '-'}</TableCell>
+                  <TableCell className="text-start">
+                    {item.office_type != null ? t(`officeTypes.${item.office_type}`) : '-'}
+                  </TableCell>
+                  <TableCell className="text-start">{item.party_en ?? '-'}</TableCell>
+                  <TableCell className="text-start">{item.district_en ?? '-'}</TableCell>
+                  <TableCell>
+                    {item.is_current_term === true ? (
+                      <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 rounded-full px-2 py-0.5 text-xs">
+                        {t('termStatus.current')}
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="rounded-full px-2 py-0.5 text-xs">
+                        {t('termStatus.expired')}
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-start">{item.country_name_en ?? '-'}</TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </div>
 
       {/* Mobile Card List */}
       <div className="md:hidden space-y-3">
-        {data?.data.map((item) => (
-          <Link
-            key={item.id}
-            to="/dossiers/elected-officials/$id/overview"
-            params={{ id: item.id }}
-            className="block p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent transition-colors min-h-11"
-          >
-            <div className="flex items-start justify-between gap-3 mb-2">
-              <h3 className="font-semibold text-base">{getDisplayName(item)}</h3>
-              {item.is_current_term === true ? (
-                <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 rounded-full px-2 py-0.5 text-xs flex-shrink-0">
-                  {t('termStatus.current')}
-                </Badge>
-              ) : (
-                <Badge
-                  variant="secondary"
-                  className="rounded-full px-2 py-0.5 text-xs flex-shrink-0"
-                >
-                  {t('termStatus.expired')}
-                </Badge>
+        {data?.data.map((item) => {
+          const badgeText = getNationalityBadge(item)
+          return (
+            <Link
+              key={item.id}
+              to="/dossiers/elected-officials/$id/overview"
+              params={{ id: item.id }}
+              className="block p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent transition-colors min-h-11"
+            >
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex flex-wrap items-center gap-2 min-w-0">
+                  <h3 className="font-semibold text-base text-start">{getDisplayName(item)}</h3>
+                  {badgeText !== '' && (
+                    <Badge
+                      variant="secondary"
+                      className="text-xs flex-shrink-0"
+                      aria-label={t('columns.country')}
+                    >
+                      {badgeText}
+                    </Badge>
+                  )}
+                </div>
+                {item.is_current_term === true ? (
+                  <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 rounded-full px-2 py-0.5 text-xs flex-shrink-0">
+                    {t('termStatus.current')}
+                  </Badge>
+                ) : (
+                  <Badge
+                    variant="secondary"
+                    className="rounded-full px-2 py-0.5 text-xs flex-shrink-0"
+                  >
+                    {t('termStatus.expired')}
+                  </Badge>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {item.office_name_en ?? ''} {item.party_en != null ? `- ${item.party_en}` : ''}
+              </p>
+              {item.country_name_en != null && (
+                <p className="text-xs text-muted-foreground mt-1">{item.country_name_en}</p>
               )}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {item.office_name_en ?? ''} {item.party_en != null ? `- ${item.party_en}` : ''}
-            </p>
-            {item.country_name_en != null && (
-              <p className="text-xs text-muted-foreground mt-1">{item.country_name_en}</p>
-            )}
-          </Link>
-        ))}
+            </Link>
+          )
+        })}
       </div>
 
       {/* Pagination */}
