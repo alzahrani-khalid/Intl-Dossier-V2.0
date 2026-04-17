@@ -43,11 +43,14 @@ test.describe('Elected Official Wizard — happy path', () => {
       .getByLabel(/office name.*english|الاسم الوظيفي.*إنجليزي/i)
       .fill('Senator')
 
-    // Country picker — open and select first available option
-    const countryCombobox = page.getByLabel(/^country|^البلد/i).first()
+    // Country picker — inside the "Office" region, first combobox
+    const officeRegion = page.getByRole('region', { name: /^office$|^المنصب/i })
+    const countryCombobox = officeRegion.getByRole('combobox').first()
     await countryCombobox.click()
-    await page.waitForTimeout(400)
-    const firstCountryOption = page.getByRole('option').first()
+    const countryDialog = page.getByRole('dialog')
+    await countryDialog.getByRole('combobox').fill('sa')
+    const firstCountryOption = countryDialog.getByRole('option').first()
+    await expect(firstCountryOption).toBeVisible({ timeout: 10_000 })
     await firstCountryOption.click()
 
     // Term start (required)
@@ -68,7 +71,7 @@ test.describe('Elected Official Wizard — happy path', () => {
       .click()
 
     // ELOF-03 partial: redirect to detail page after creation
-    await expect(page).toHaveURL(/\/dossiers\/(elected-officials\/)?[0-9a-f-]{36}$/, {
+    await expect(page).toHaveURL(/\/dossiers\/(elected-officials\/|persons\/)?[0-9a-f-]{36}$/, {
       timeout: 15_000,
     })
     await expect(page.getByRole('heading', { name: new RegExp(nameEn, 'i') })).toBeVisible()
@@ -98,10 +101,14 @@ test.describe('Elected Official Wizard — happy path', () => {
       .fill('وزير الخارجية')
 
     // Country picker
-    const countryCombobox = page.getByLabel(/^country|^البلد/i).first()
+    const officeRegionCC = page.getByRole('region', { name: /^office$|^المنصب/i })
+    const countryCombobox = officeRegionCC.getByRole('combobox').first()
     await countryCombobox.click()
-    await page.waitForTimeout(400)
-    await page.getByRole('option').first().click()
+    const countryDialogX = page.getByRole('dialog')
+    await countryDialogX.getByRole('combobox').fill('sa')
+    const firstCountryOptX = countryDialogX.getByRole('option').first()
+    await expect(firstCountryOptX).toBeVisible({ timeout: 10_000 })
+    await firstCountryOptX.click()
 
     // Term start (required)
     await page.getByLabel(/term start|بداية الفترة/i).fill('2026-01-01')
@@ -116,7 +123,7 @@ test.describe('Elected Official Wizard — happy path', () => {
       .click()
 
     // D-19: Arabic-only constraint accepted — redirects to detail page
-    await expect(page).toHaveURL(/\/dossiers\/(elected-officials\/)?[0-9a-f-]{36}$/, {
+    await expect(page).toHaveURL(/\/dossiers\/(elected-officials\/|persons\/)?[0-9a-f-]{36}$/, {
       timeout: 15_000,
     })
   })
@@ -138,10 +145,14 @@ test.describe('Elected Official Wizard — happy path', () => {
 
     await page.getByLabel(/office name.*english|الاسم الوظيفي.*إنجليزي/i).fill('Representative')
 
-    const countryCombobox = page.getByLabel(/^country|^البلد/i).first()
+    const officeRegionCC = page.getByRole('region', { name: /^office$|^المنصب/i })
+    const countryCombobox = officeRegionCC.getByRole('combobox').first()
     await countryCombobox.click()
-    await page.waitForTimeout(400)
-    await page.getByRole('option').first().click()
+    const countryDialogX = page.getByRole('dialog')
+    await countryDialogX.getByRole('combobox').fill('sa')
+    const firstCountryOptX = countryDialogX.getByRole('option').first()
+    await expect(firstCountryOptX).toBeVisible({ timeout: 10_000 })
+    await firstCountryOptX.click()
 
     await page.getByLabel(/term start|بداية الفترة/i).fill('2026-01-01')
     await page.getByRole('button', { name: /^next$|التالي/i }).click()
@@ -150,7 +161,7 @@ test.describe('Elected Official Wizard — happy path', () => {
         name: /^(submit|create|finish|create dossier|create elected official)$|إرسال|إنشاء|إنهاء/i,
       })
       .click()
-    await page.waitForURL(/\/dossiers\/(elected-officials\/)?[0-9a-f-]{36}$/, {
+    await page.waitForURL(/\/dossiers\/(elected-officials\/|persons\/)?[0-9a-f-]{36}$/, {
       timeout: 15_000,
     })
 
