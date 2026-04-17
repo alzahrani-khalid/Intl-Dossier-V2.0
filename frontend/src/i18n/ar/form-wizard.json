@@ -135,6 +135,7 @@
   },
   "person": {
     "page_title": "إنشاء شخص",
+    "basicInfoDesc": "أدخل اسم الشخص والتفاصيل العامة",
     "back_to_list": "العودة إلى الأشخاص",
     "title_en": "اللقب (الإنجليزية)",
     "title_en_ph": "e.g. Ambassador, Minister",
@@ -232,6 +233,7 @@
   },
   "elected_official": {
     "page_title": "إنشاء مسؤول منتخب",
+    "basicInfoDesc": "أدخل اسم المسؤول المنتخب والتفاصيل العامة",
     "back_to_list": "العودة إلى المسؤولين المنتخبين",
     "sections": {
       "office": "المنصب",

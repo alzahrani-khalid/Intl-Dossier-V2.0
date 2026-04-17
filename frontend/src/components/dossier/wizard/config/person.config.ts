@@ -33,7 +33,11 @@ export const personWizardConfig: WizardConfig<PersonFormData> = {
   type: 'person',
   schema: personSchema,
   defaultValues: getDefaultsForType<PersonFormData>('person'),
-  steps: [basicStep, personDetailsStep, reviewStep],
+  steps: [
+    { ...basicStep, description: 'form-wizard:person.basicInfoDesc' },
+    personDetailsStep,
+    reviewStep,
+  ],
   filterExtensionData: (data: PersonFormData) => ({
     title_en: data.title_en !== '' ? data.title_en : undefined,
     title_ar: data.title_ar !== '' ? data.title_ar : undefined,
@@ -50,7 +54,12 @@ export const electedOfficialWizardConfig: WizardConfig<PersonFormData> = {
   type: 'person',
   schema: personSchema,
   defaultValues: getElectedOfficialDefaults(),
-  steps: [basicStep, personDetailsStep, officeTermStep, reviewStep],
+  steps: [
+    { ...basicStep, description: 'form-wizard:elected_official.basicInfoDesc' },
+    personDetailsStep,
+    officeTermStep,
+    reviewStep,
+  ],
   filterExtensionData: (data: PersonFormData) => ({
     // Person shared fields
     title_en: data.title_en !== '' ? data.title_en : undefined,

@@ -135,6 +135,7 @@
   },
   "person": {
     "page_title": "Create Person",
+    "basicInfoDesc": "Enter the person's name and general details",
     "back_to_list": "Back to Persons",
     "title_en": "Title (English)",
     "title_en_ph": "e.g. Ambassador, Minister",
@@ -232,6 +233,7 @@
   },
   "elected_official": {
     "page_title": "Create Elected Official",
+    "basicInfoDesc": "Enter the elected official's name and general details",
     "back_to_list": "Back to Elected Officials",
     "sections": {
       "office": "Office",
