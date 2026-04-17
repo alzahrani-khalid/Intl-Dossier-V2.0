@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Dossier Creation UX
-status: blocked_external
-stopped_at: Phase 30 CODE COMPLETE — UAT blocked by pre-existing dossiers-create Edge Function returning 42501/403 (RLS denial on all submit attempts, not a Phase 30 regression)
-last_updated: "2026-04-18T00:45:00.000Z"
-last_activity: 2026-04-18 -- UAT ran E2E; wizard traversal verified 4/4 steps; 4 spec locator fixes landed; submit blocked at Edge Function, filed as follow-up
+status: in_progress
+stopped_at: ''
+last_updated: '2026-04-18T01:00:00.000Z'
+last_activity: 2026-04-18 -- Phase 32 execution started (--auto); 4 plans queued in 4 waves; Wave 1 (Plan 32-01 migration + Edge Function) executing in parent session via Supabase CLI
 progress:
   total_phases: 7
   completed_phases: 5
-  total_plans: 24
+  total_plans: 28
   completed_plans: 20
   percent: 71
 ---
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 32 — Person-Native Basic Info (new, approved 2026-04-18)
+**Current focus:** Phase 32 — Person-Native Basic Info (executing, 2026-04-18)
 
 ## Current Position
 
-Phase: 30 (elected-official-wizard) — COMPLETE (UAT pending)
-Plan: 4 of 4
-Status: Awaiting UAT — Playwright E2E run against live dev+staging
-Last activity: 2026-04-17 -- Phase 30 complete; verification PASS
+Phase: 32 (person-native-basic-info) — EXECUTING
+Plan: 1 of 4 (Wave 1 in parent session)
+Status: Applying migration + Edge Function passthrough on staging zkrcjzdemdmwhearhfgg
+Last activity: 2026-04-18 -- Phase 32 execution started; Plan 32-01 in flight
 
-Progress: [████████░░] 83% (5/6 phases complete, phase 31 remaining)
+Progress: [████████░░] 71% (5/7 phases complete; phase 32 active, phase 31 remaining)
 
 ## Performance Metrics
 

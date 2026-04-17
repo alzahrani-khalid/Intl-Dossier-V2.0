@@ -300,6 +300,11 @@ serve(async (req) => {
 
       const extensionTable = extensionTableMap[body.type];
       if (extensionTable) {
+        // Phase 32 (D-30, D-31): person extension passes through 11 typed identity fields
+        // additively via the generic spread below — honorific_en/ar, first_name_en/ar,
+        // last_name_en/ar, known_as_en/ar, nationality_country_id, date_of_birth, gender.
+        // Old payloads (without these keys) still insert with new columns NULL.
+        // Name composition (name_en/ar) happens client-side; this function never derives names.
         const { data: extData, error: extError } = await supabaseClient
           .from(extensionTable)
           .insert({
