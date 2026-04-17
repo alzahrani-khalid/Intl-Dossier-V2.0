@@ -13,6 +13,8 @@ import { personSchema, type PersonFormData } from '../person.schema'
 
 // Baseline valid elected-official payload used for negative tests.
 // sensitivity_level is a number (1–4) per base.schema.ts.
+// Phase 32 D-25: baseline now also satisfies the identity-required rules
+// (last_name_en/ar, nationality_id) since those apply to ALL person subtypes.
 const validElectedOfficial: PersonFormData = {
   // base dossier fields
   name_en: 'Jane Doe',
@@ -42,6 +44,18 @@ const validElectedOfficial: PersonFormData = {
   country_id: '00000000-0000-0000-0000-000000000001',
   organization_id: '',
   is_current_term: true,
+  // Phase 32 D-25 identity fields (last_name_* + nationality_id required for all persons)
+  honorific_selection: '',
+  honorific_en: '',
+  honorific_ar: '',
+  first_name_en: 'Jane',
+  last_name_en: 'Doe',
+  first_name_ar: 'جين',
+  last_name_ar: 'دو',
+  known_as_en: '',
+  known_as_ar: '',
+  nationality_id: '00000000-0000-0000-0000-000000000099',
+  date_of_birth: '',
 } as PersonFormData
 
 describe('personSchema superRefine (elected-official rules)', () => {
