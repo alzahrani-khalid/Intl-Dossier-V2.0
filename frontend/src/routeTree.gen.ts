@@ -130,6 +130,7 @@ import { Route as ProtectedDossiersPersonsIndexRouteImport } from './routes/_pro
 import { Route as ProtectedDossiersOrganizationsIndexRouteImport } from './routes/_protected/dossiers/organizations/index'
 import { Route as ProtectedDossiersForumsIndexRouteImport } from './routes/_protected/dossiers/forums/index'
 import { Route as ProtectedDossiersEngagementsIndexRouteImport } from './routes/_protected/dossiers/engagements/index'
+import { Route as ProtectedDossiersElectedOfficialsCreateRouteImport } from './routes/_protected/dossiers/elected-officials/create'
 import { Route as ProtectedDossiersElectedOfficialsIndexRouteImport } from './routes/_protected/dossiers/elected-officials/index'
 import { Route as ProtectedDossiersCountriesIndexRouteImport } from './routes/_protected/dossiers/countries/index'
 import { Route as ProtectedSettingsCalendarCallbackRouteImport } from './routes/_protected/settings/calendar/callback'
@@ -863,6 +864,12 @@ const ProtectedDossiersEngagementsIndexRoute =
     path: '/dossiers/engagements/',
     getParentRoute: () => ProtectedRoute,
   } as any)
+const ProtectedDossiersElectedOfficialsCreateRoute =
+  ProtectedDossiersElectedOfficialsCreateRouteImport.update({
+    id: '/dossiers/elected-officials/create',
+    path: '/dossiers/elected-officials/create',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedDossiersElectedOfficialsIndexRoute =
   ProtectedDossiersElectedOfficialsIndexRouteImport.update({
     id: '/dossiers/elected-officials/',
@@ -1481,6 +1488,7 @@ export interface FileRoutesByFullPath {
   '/dossiers/countries/$id': typeof ProtectedDossiersCountriesIdRouteWithChildren
   '/dossiers/countries/create': typeof ProtectedDossiersCountriesCreateRoute
   '/dossiers/elected-officials/$id': typeof ProtectedDossiersElectedOfficialsIdRouteWithChildren
+  '/dossiers/elected-officials/create': typeof ProtectedDossiersElectedOfficialsCreateRoute
   '/dossiers/engagements/$id': typeof ProtectedDossiersEngagementsIdRoute
   '/dossiers/engagements/create': typeof ProtectedDossiersEngagementsCreateRoute
   '/dossiers/forums/$id': typeof ProtectedDossiersForumsIdRouteWithChildren
@@ -1681,6 +1689,7 @@ export interface FileRoutesByTo {
   '/dossiers/engagements/create': typeof ProtectedDossiersEngagementsCreateRoute
   '/dossiers/forums/create': typeof ProtectedDossiersForumsCreateRoute
   '/dossiers/organizations/create': typeof ProtectedDossiersOrganizationsCreateRoute
+  '/dossiers/elected-officials/create': typeof ProtectedDossiersElectedOfficialsCreateRoute
   '/dossiers/persons/create': typeof ProtectedDossiersPersonsCreateRoute
   '/dossiers/topics/create': typeof ProtectedDossiersTopicsCreateRoute
   '/dossiers/working_groups/create': typeof ProtectedDossiersWorking_groupsCreateRoute
@@ -1879,6 +1888,7 @@ export interface FileRoutesById {
   '/_protected/dossiers/countries/$id': typeof ProtectedDossiersCountriesIdRouteWithChildren
   '/_protected/dossiers/countries/create': typeof ProtectedDossiersCountriesCreateRoute
   '/_protected/dossiers/elected-officials/$id': typeof ProtectedDossiersElectedOfficialsIdRouteWithChildren
+  '/_protected/dossiers/elected-officials/create': typeof ProtectedDossiersElectedOfficialsCreateRoute
   '/_protected/dossiers/engagements/$id': typeof ProtectedDossiersEngagementsIdRoute
   '/_protected/dossiers/engagements/create': typeof ProtectedDossiersEngagementsCreateRoute
   '/_protected/dossiers/forums/$id': typeof ProtectedDossiersForumsIdRouteWithChildren
@@ -2086,6 +2096,7 @@ export interface FileRouteTypes {
     | '/dossiers/countries/$id'
     | '/dossiers/countries/create'
     | '/dossiers/elected-officials/$id'
+    | '/dossiers/elected-officials/create'
     | '/dossiers/engagements/$id'
     | '/dossiers/engagements/create'
     | '/dossiers/forums/$id'
@@ -2282,6 +2293,7 @@ export interface FileRouteTypes {
     | '/after-actions/$afterActionId/versions'
     | '/dossiers/$id/overview'
     | '/dossiers/countries/create'
+    | '/dossiers/elected-officials/create'
     | '/dossiers/engagements/$id'
     | '/dossiers/engagements/create'
     | '/dossiers/forums/create'
@@ -2483,6 +2495,7 @@ export interface FileRouteTypes {
     | '/_protected/dossiers/countries/$id'
     | '/_protected/dossiers/countries/create'
     | '/_protected/dossiers/elected-officials/$id'
+    | '/_protected/dossiers/elected-officials/create'
     | '/_protected/dossiers/engagements/$id'
     | '/_protected/dossiers/engagements/create'
     | '/_protected/dossiers/forums/$id'
@@ -3546,6 +3559,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersTopicsIdRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/dossiers/elected-officials/create': {
+      id: '/_protected/dossiers/elected-officials/create'
+      path: '/dossiers/elected-officials/create'
+      fullPath: '/dossiers/elected-officials/create'
+      preLoaderRoute: typeof ProtectedDossiersElectedOfficialsCreateRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/dossiers/persons/create': {
       id: '/_protected/dossiers/persons/create'
       path: '/dossiers/persons/create'
@@ -4558,6 +4578,7 @@ interface ProtectedRouteChildren {
   ProtectedDossiersCountriesIdRoute: typeof ProtectedDossiersCountriesIdRouteWithChildren
   ProtectedDossiersCountriesCreateRoute: typeof ProtectedDossiersCountriesCreateRoute
   ProtectedDossiersElectedOfficialsIdRoute: typeof ProtectedDossiersElectedOfficialsIdRouteWithChildren
+  ProtectedDossiersElectedOfficialsCreateRoute: typeof ProtectedDossiersElectedOfficialsCreateRoute
   ProtectedDossiersEngagementsIdRoute: typeof ProtectedDossiersEngagementsIdRoute
   ProtectedDossiersEngagementsCreateRoute: typeof ProtectedDossiersEngagementsCreateRoute
   ProtectedDossiersForumsIdRoute: typeof ProtectedDossiersForumsIdRouteWithChildren
@@ -4667,6 +4688,8 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDossiersCountriesCreateRoute: ProtectedDossiersCountriesCreateRoute,
   ProtectedDossiersElectedOfficialsIdRoute:
     ProtectedDossiersElectedOfficialsIdRouteWithChildren,
+  ProtectedDossiersElectedOfficialsCreateRoute:
+    ProtectedDossiersElectedOfficialsCreateRoute,
   ProtectedDossiersEngagementsIdRoute: ProtectedDossiersEngagementsIdRoute,
   ProtectedDossiersEngagementsCreateRoute:
     ProtectedDossiersEngagementsCreateRoute,
