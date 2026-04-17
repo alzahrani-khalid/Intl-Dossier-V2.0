@@ -75,7 +75,7 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 - [x] **Phase 27: Country Wizard** - First type-specific wizard validating the compositional pattern end-to-end (completed 2026-04-15)
 - [x] **Phase 28: Simple Type Wizards** - Organization, Topic, and Person wizards following the proven Country pattern (completed 2026-04-16)
 - [ ] **Phase 29: Complex Type Wizards** - Forum, Working Group, and Engagement wizards with relationship linking steps
-- [ ] **Phase 30: Elected Official Wizard** - Person wizard variant adding office, term, and constituency steps
+- [x] **Phase 30: Elected Official Wizard** - Person wizard variant adding office, term, and constituency steps
 - [ ] **Phase 31: Creation Hub and Cleanup** - CreateDossierHub entry point, old wizard removal, and reference updates
 
 ## Phase Details
@@ -168,10 +168,10 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 3. Created dossier uses `person_subtype: 'elected_official'` and appears in both Elected Officials and Persons lists
    **Plans**: 4 plans
    Plans:
-   - [ ] 30-01-schema-migration-PLAN.md -- Migration (relax office-name CHECK), person.schema superRefine, subtype-aware config, elected-official defaults (ELOF-01/02/03)
-   - [ ] 30-02-office-term-step-PLAN.md -- OfficeTermStep component (4 sections, 2 DossierPickers) + EN/AR i18n (ELOF-02)
-   - [ ] 30-03-wizard-wiring-PLAN.md -- /dossiers/elected-officials/create route, list page link, PersonReviewStep conditional section (ELOF-01/04)
-   - [ ] 30-04-testing-PLAN.md -- Unit (OfficeTermStep + schema superRefine) + Playwright E2E (EN-only, AR-only, dual-list) (ELOF-01/02/03/04)
+   - [x] 30-01-schema-migration-PLAN.md -- Migration (relax office-name CHECK), person.schema superRefine, subtype-aware config, elected-official defaults (ELOF-01/02/03)
+   - [x] 30-02-office-term-step-PLAN.md -- OfficeTermStep component (4 sections, 2 DossierPickers) + EN/AR i18n (ELOF-02)
+   - [x] 30-03-wizard-wiring-PLAN.md -- /dossiers/elected-officials/create route, list page link, PersonReviewStep conditional section (ELOF-01/04)
+   - [x] 30-04-testing-PLAN.md -- Unit (OfficeTermStep + schema superRefine) + Playwright E2E (EN-only, AR-only, dual-list) (ELOF-01/02/03/04)
          **UI hint**: yes
 
 ### Phase 31: Creation Hub and Cleanup
