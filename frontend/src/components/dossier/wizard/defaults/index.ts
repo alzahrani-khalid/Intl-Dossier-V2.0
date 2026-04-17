@@ -44,6 +44,28 @@ const personDefaults: PersonFormData = {
   person_subtype: 'standard' as const,
 }
 
+const electedOfficialDefaults: PersonFormData = {
+  ...baseDefaults,
+  title_en: '',
+  title_ar: '',
+  photo_url: '',
+  biography_en: '',
+  biography_ar: '',
+  person_subtype: 'elected_official' as const,
+  // Phase 30 D-15, D-17: elected-official defaults
+  office_name_en: '',
+  office_name_ar: '',
+  district_en: '',
+  district_ar: '',
+  party_en: '',
+  party_ar: '',
+  term_start: '',
+  term_end: '',
+  country_id: '',
+  organization_id: '',
+  is_current_term: true,
+}
+
 const forumDefaults: ForumFormData = {
   ...baseDefaults,
   forum_type: '',
@@ -79,8 +101,8 @@ const engagementDefaults: EngagementFormData = {
   participant_person_ids: [],
 }
 
-// NOTE: elected_official is not a DossierType. Phase 30 uses getDefaultsForType('person')
-// and overrides person_subtype to 'elected_official' via the wizard config's defaultValues.
+// Phase 30 D-17: elected_official defaults are exported via getElectedOfficialDefaults().
+// They share the 'person' DossierType but override person_subtype + seed ELOF-02 fields.
 
 export function getDefaultsForType<T = Record<string, unknown>>(type: DossierType): T {
   const map: Record<DossierType, unknown> = {
@@ -93,4 +115,13 @@ export function getDefaultsForType<T = Record<string, unknown>>(type: DossierTyp
     engagement: engagementDefaults,
   }
   return map[type] as T
+}
+
+/**
+ * Phase 30 D-17: Defaults for the Elected Official wizard.
+ * This is a Person variant (person_subtype='elected_official'), not a separate DossierType,
+ * so it is fetched via a dedicated getter rather than the type-keyed map.
+ */
+export function getElectedOfficialDefaults(): PersonFormData {
+  return electedOfficialDefaults
 }
