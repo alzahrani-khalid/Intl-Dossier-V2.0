@@ -154,12 +154,13 @@ This plan relaxes it to: `CHECK (person_subtype != 'elected_official' OR office_
 <tasks>
 
 <task type="auto">
-  <name>Task 1 [BLOCKING]: Apply Supabase migration to relax office-name constraint via Supabase MCP</name>
+  <name>Task 1 [BLOCKING]: Apply Supabase migration to relax office-name constraint via Supabase CLI</name>
   <files>supabase/migrations/20260417000001_relax_elected_official_office_constraint.sql</files>
   <read_first>
     - supabase/migrations/20260202000001_merge_elected_official_into_person.sql (lines 60-80 — existing constraint definition)
     - CLAUDE.md (§"Deployment Configuration > Staging Environment" — project_id zkrcjzdemdmwhearhfgg)
-    - CLAUDE.md global instructions: "when you need to apply migration to supabase, use the supabase mcp to do it yourself"
+    - supabase/config.toml (confirm local/linked config)
+    - supabase/.temp/project-ref (must equal `zkrcjzdemdmwhearhfgg` before push)
   </read_first>
   <action>
 Create the migration file at the exact path `supabase/migrations/20260417000001_relax_elected_official_office_constraint.sql` with this EXACT content (RTL-safe, idempotent, includes rollback docs):
@@ -200,33 +201,53 @@ COMMENT ON CONSTRAINT persons_elected_official_requires_office ON persons IS
   'Phase 30 (D-19): Elected officials must have at least one of office_name_en or office_name_ar populated.';
 ```
 
-Then apply the migration via the Supabase MCP against the staging project (project_id `zkrcjzdemdmwhearhfgg`):
+Then apply the migration via the Supabase CLI against the linked staging project.
 
-1. Use `mcp__supabase__apply_migration` with:
-   - `project_id`: `zkrcjzdemdmwhearhfgg`
-   - `name`: `relax_elected_official_office_constraint`
-   - `query`: the full SQL content above
+**Pre-checks (run once, exit early on failure):**
 
-2. Verify with `mcp__supabase__execute_sql` against project_id `zkrcjzdemdmwhearhfgg`:
-   ```sql
-   SELECT conname, pg_get_constraintdef(oid) AS def
+```bash
+cd "/Users/khalidalzahrani/Desktop/Coding Space/Intl-Dossier-V2.0"
+test "$(cat supabase/.temp/project-ref 2>/dev/null)" = "zkrcjzdemdmwhearhfgg" \
+  || { echo "Project not linked to staging — run 'supabase link --project-ref zkrcjzdemdmwhearhfgg'"; exit 1; }
+```
+
+**Apply:**
+
+```bash
+# Push migrations to the linked remote (staging project zkrcjzdemdmwhearhfgg).
+# --include-all is a safety net: if any earlier local migration is missing from
+# remote history, push flags it rather than silently skipping.
+supabase db push --linked --include-all
+```
+
+If the CLI prompts for confirmation, answer `y`. If it reports "Remote database is up to date" without applying the new migration, inspect the migration-history table with `supabase migration list --linked` and re-apply only the new file with `supabase db push --linked --file supabase/migrations/20260417000001_relax_elected_official_office_constraint.sql`.
+
+**Verify (post-apply):**
+
+```bash
+# Inspect the constraint definition on the linked remote.
+psql "$(supabase db remote list-linked-url 2>/dev/null || true)" -c \
+  "SELECT conname, pg_get_constraintdef(oid) AS def
    FROM pg_constraint
-   WHERE conname = 'persons_elected_official_requires_office';
-   ```
-   Expected output: one row where `def` contains the substring `office_name_ar IS NOT NULL`.
+   WHERE conname = 'persons_elected_official_requires_office';"
+```
 
-This is a BLOCKING task — no subsequent task in this plan may begin until the migration is confirmed applied via MCP on staging. Record the Supabase migration timestamp and version in the task completion notes.
+If the `psql` URL helper is not available, use the Supabase dashboard SQL editor (or `supabase db remote execute --linked "..."` if that subcommand is supported in the installed version) to run the same SELECT. Expected output: one row where `def` contains the substring `office_name_ar IS NOT NULL`.
 
-DO NOT run the migration locally without MCP; this project uses Supabase-managed PostgreSQL with MCP as the authoritative apply path (per CLAUDE.md global rules + project Deployment Configuration).
+This is a BLOCKING task — no subsequent task in this plan may begin until the migration is confirmed applied. Record the migration timestamp and the `supabase migration list --linked` output in the task completion notes.
+
+**Fallback:** If `supabase db push --linked` fails due to auth/token issues, run `supabase login` (opens browser for token) then retry. Do NOT bypass with `psql` direct-apply — we want the migration registered in `supabase_migrations.schema_migrations` so future pushes stay in sync.
 </action>
 <verify>
 <automated>grep -q "office_name_ar IS NOT NULL" supabase/migrations/20260417000001_relax_elected_official_office_constraint.sql && echo "migration file present"</automated>
 </verify>
-<acceptance_criteria> - File exists at `supabase/migrations/20260417000001_relax_elected_official_office_constraint.sql` - File contains the literal string `office_name_ar IS NOT NULL OR office_name_en IS NOT NULL` (order may vary; assertion: both operands appear within the same ADD CONSTRAINT CHECK block) - File contains the literal string `DROP CONSTRAINT persons_elected_official_requires_office` - File contains the literal string `ADD CONSTRAINT persons_elected_official_requires_office` - File contains `COMMENT ON CONSTRAINT persons_elected_official_requires_office` - Supabase MCP `apply_migration` returned success for project `zkrcjzdemdmwhearhfgg` - Post-apply `mcp__supabase__execute_sql` query on pg_constraint returns a row whose `def` column contains `office_name_ar IS NOT NULL`
+<acceptance_criteria> - File exists at `supabase/migrations/20260417000001_relax_elected_official_office_constraint.sql` - File contains the literal string `office_name_ar IS NOT NULL` AND the literal string `office_name_en IS NOT NULL` within the same ADD CONSTRAINT CHECK block - File contains the literal string `DROP CONSTRAINT persons_elected_official_requires_office` - File contains the literal string `ADD CONSTRAINT persons_elected_official_requires_office` - File contains `COMMENT ON CONSTRAINT persons_elected_official_requires_office` - `cat supabase/.temp/project-ref` returns `zkrcjzdemdmwhearhfgg` (project linked before push) - `supabase db push --linked --include-all` exits 0 (or surfaces interactive prompt that executor answers `y`) - `supabase migration list --linked` shows `20260417000001` in the Remote column (confirms registered on staging) - Post-apply SELECT on `pg_constraint` returns a row whose `def` column contains the substring `office_name_ar IS NOT NULL`
 </acceptance_criteria>
 <done>
-Migration file exists, applied via Supabase MCP against staging (zkrcjzdemdmwhearhfgg),
-and pg_constraint query confirms the relaxed CHECK definition includes `office_name_ar IS NOT NULL`.
+Migration file exists, `supabase db push --linked` applied it against staging
+(`zkrcjzdemdmwhearhfgg`), `supabase migration list --linked` shows the timestamp
+registered in the remote history, and the pg_constraint query confirms the relaxed
+CHECK definition includes `office_name_ar IS NOT NULL`.
 </done>
 </task>
 
@@ -537,8 +558,9 @@ untouched, DossierType map unchanged, typecheck passes.
 Run at plan close:
 1. `cd frontend && pnpm typecheck` → exits 0
 2. `cd frontend && pnpm lint frontend/src/components/dossier/wizard/schemas/person.schema.ts frontend/src/components/dossier/wizard/config/person.config.ts frontend/src/components/dossier/wizard/defaults/index.ts` → exits 0
-3. Supabase MCP `execute_sql` confirms `persons_elected_official_requires_office` constraint definition contains `office_name_ar IS NOT NULL`
-4. `grep -q "electedOfficialWizardConfig" frontend/src/components/dossier/wizard/config/person.config.ts` — exits 0
+3. `supabase migration list --linked` shows `20260417000001` with a timestamp in the Remote column (migration registered on staging)
+4. SELECT query against the linked remote confirms `persons_elected_official_requires_office` constraint definition contains `office_name_ar IS NOT NULL`
+5. `grep -q "electedOfficialWizardConfig" frontend/src/components/dossier/wizard/config/person.config.ts` — exits 0
 </verification>
 
 <success_criteria>
