@@ -55,7 +55,9 @@
     "participants": "Participants",
     "participantsDesc": "Link countries, organizations, and persons",
     "review": "Review",
-    "reviewDesc": "Review and confirm details"
+    "reviewDesc": "Review and confirm details",
+    "officeTerm": "Office & Term",
+    "officeTermDesc": "Office title, term, constituency, and party affiliation"
   },
   "country": {
     "page_title": "New Country Dossier",
@@ -225,6 +227,44 @@
     "theme_category": "Theme Category",
     "working_group_details": "Working Group Details",
     "engagement_details": "Engagement Details",
-    "participants_summary": "Participants"
+    "participants_summary": "Participants",
+    "office_term": "Office & Term"
+  },
+  "elected_official": {
+    "page_title": "Create Elected Official",
+    "back_to_list": "Back to Elected Officials",
+    "sections": {
+      "office": "Office",
+      "constituency": "Constituency",
+      "party": "Party",
+      "term": "Term"
+    },
+    "office_name_en": "Office Name (English)",
+    "office_name_ar": "Office Name (Arabic)",
+    "office_name_en_ph": "e.g. Minister of Foreign Affairs",
+    "office_name_ar_ph": "مثال: وزير الخارجية",
+    "country": "Country",
+    "country_ph": "Search countries…",
+    "country_help": "Required — the polity this office belongs to.",
+    "organization": "Organization / Body",
+    "organization_ph": "Search organizations…",
+    "organization_help": "Optional — link to the ministry, parliament, or body this office belongs to.",
+    "district_en": "Constituency (English)",
+    "district_ar": "Constituency (Arabic)",
+    "district_en_ph": "e.g. Riyadh District 3",
+    "district_ar_ph": "مثال: الرياض الدائرة ٣",
+    "party_en": "Political Party (English)",
+    "party_ar": "Political Party (Arabic)",
+    "party_en_ph": "e.g. National Coalition",
+    "party_ar_ph": "مثال: الائتلاف الوطني",
+    "term_start": "Term Start",
+    "term_end": "Term End",
+    "term_end_help": "Leave empty for ongoing terms",
+    "validation": {
+      "office_name_required": "Office name is required (English or Arabic)",
+      "country_required": "Country is required for elected officials",
+      "term_start_required": "Term start date is required",
+      "term_end_after_start": "Term end must be on or after term start"
+    }
   }
 }
