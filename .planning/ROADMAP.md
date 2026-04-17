@@ -166,8 +166,13 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 1. User can create an elected official via 4-step wizard (Basic Info, Person Details, Office/Term, Review) from the Elected Officials list page
 2. Office/Term step captures office title, term start/end dates, constituency, and political party
 3. Created dossier uses `person_subtype: 'elected_official'` and appears in both Elected Officials and Persons lists
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 4 plans
+   Plans:
+   - [ ] 30-01-schema-migration-PLAN.md -- Migration (relax office-name CHECK), person.schema superRefine, subtype-aware config, elected-official defaults (ELOF-01/02/03)
+   - [ ] 30-02-office-term-step-PLAN.md -- OfficeTermStep component (4 sections, 2 DossierPickers) + EN/AR i18n (ELOF-02)
+   - [ ] 30-03-wizard-wiring-PLAN.md -- /dossiers/elected-officials/create route, list page link, PersonReviewStep conditional section (ELOF-01/04)
+   - [ ] 30-04-testing-PLAN.md -- Unit (OfficeTermStep + schema superRefine) + Playwright E2E (EN-only, AR-only, dual-list) (ELOF-01/02/03/04)
+         **UI hint**: yes
 
 ### Phase 31: Creation Hub and Cleanup
 
