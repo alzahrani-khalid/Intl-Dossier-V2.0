@@ -36,7 +36,7 @@ function ElectedOfficialsListPage(): ReactElement {
         title={t('list.title')}
         actions={
           <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
-            <Link to="/dossiers/create">
+            <Link to="/dossiers/elected-officials/create">
               <Plus className="h-4 w-4 me-2" />
               {t('list.add')}
             </Link>
