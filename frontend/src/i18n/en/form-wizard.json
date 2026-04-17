@@ -231,6 +231,62 @@
     "participants_summary": "Participants",
     "office_term": "Office & Term"
   },
+  "wizard": {
+    "person_identity": {
+      "step_title": "Identity",
+      "step_desc": "Personal identity, nationality, and summary",
+      "honorific": {
+        "label": "Honorific",
+        "placeholder": "Select honorific",
+        "helper": "Formal title used when addressing this person",
+        "other_label": "Other (specify)",
+        "other_en_label": "Other (English)",
+        "other_ar_label": "Other (Arabic)"
+      },
+      "first_name": {
+        "label_en": "First name (English)",
+        "label_ar": "First name (Arabic)"
+      },
+      "last_name": {
+        "label_en": "Last name (English)",
+        "label_ar": "Last name (Arabic)"
+      },
+      "known_as": {
+        "label_en": "Known as (English)",
+        "label_ar": "Known as (Arabic)",
+        "helper": "Optional nickname or alternate name"
+      },
+      "photo_url": {
+        "label": "Photo URL",
+        "placeholder": "https://...",
+        "helper": "Direct link to a photo (optional)"
+      },
+      "nationality": {
+        "label": "Nationality",
+        "placeholder": "Select country",
+        "helper": "Country of citizenship (required)"
+      },
+      "dob": {
+        "label": "Date of birth",
+        "helper": "Optional"
+      },
+      "gender": {
+        "label": "Gender",
+        "female": "Female",
+        "male": "Male"
+      },
+      "validation": {
+        "nationality_required": "Nationality is required",
+        "last_name_required": "Last name is required",
+        "gender_invalid": "Gender must be Female or Male",
+        "honorific_other_required": "Please specify the honorific in both languages"
+      },
+      "review": {
+        "card_title": "Identity",
+        "biographical_summary_heading": "Biographical summary"
+      }
+    }
+  },
   "elected_official": {
     "page_title": "Create Elected Official",
     "basicInfoDesc": "Enter the elected official's name and general details",

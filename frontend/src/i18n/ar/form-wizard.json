@@ -231,6 +231,62 @@
     "participants_summary": "المشاركون",
     "office_term": "المنصب والولاية"
   },
+  "wizard": {
+    "person_identity": {
+      "step_title": "الهوية",
+      "step_desc": "الهوية الشخصية والجنسية والملخص",
+      "honorific": {
+        "label": "اللقب",
+        "placeholder": "اختر اللقب",
+        "helper": "اللقب الرسمي المستخدم عند مخاطبة هذا الشخص",
+        "other_label": "آخر (حدد)",
+        "other_en_label": "آخر (الإنجليزية)",
+        "other_ar_label": "آخر (العربية)"
+      },
+      "first_name": {
+        "label_en": "الاسم الأول (الإنجليزية)",
+        "label_ar": "الاسم الأول (العربية)"
+      },
+      "last_name": {
+        "label_en": "اسم العائلة (الإنجليزية)",
+        "label_ar": "اسم العائلة (العربية)"
+      },
+      "known_as": {
+        "label_en": "الاسم المعروف به (الإنجليزية)",
+        "label_ar": "الاسم المعروف به (العربية)",
+        "helper": "كنية أو اسم بديل اختياري"
+      },
+      "photo_url": {
+        "label": "رابط الصورة",
+        "placeholder": "https://...",
+        "helper": "رابط مباشر للصورة (اختياري)"
+      },
+      "nationality": {
+        "label": "الجنسية",
+        "placeholder": "اختر الدولة",
+        "helper": "دولة الجنسية (مطلوب)"
+      },
+      "dob": {
+        "label": "تاريخ الميلاد",
+        "helper": "اختياري"
+      },
+      "gender": {
+        "label": "الجنس",
+        "female": "أنثى",
+        "male": "ذكر"
+      },
+      "validation": {
+        "nationality_required": "الجنسية مطلوبة",
+        "last_name_required": "اسم العائلة مطلوب",
+        "gender_invalid": "يجب أن يكون الجنس أنثى أو ذكر",
+        "honorific_other_required": "يرجى تحديد اللقب باللغتين"
+      },
+      "review": {
+        "card_title": "الهوية",
+        "biographical_summary_heading": "ملخص السيرة الذاتية"
+      }
+    }
+  },
   "elected_official": {
     "page_title": "إنشاء مسؤول منتخب",
     "basicInfoDesc": "أدخل اسم المسؤول المنتخب والتفاصيل العامة",
