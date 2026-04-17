@@ -39,7 +39,7 @@
   "draft_restored": "تم استعادة المسودة",
   "steps": {
     "basicInfo": "المعلومات الاساسية",
-    "basicInfoDesc": "ادخل اسم الدولة والتفاصيل العامة",
+    "basicInfoDesc": "أدخل الاسم والتفاصيل العامة",
     "countryDetails": "تفاصيل الدولة",
     "countryDetailsDesc": "رموز الايزو والمنطقة والعاصمة",
     "orgDetails": "تفاصيل المنظمة",

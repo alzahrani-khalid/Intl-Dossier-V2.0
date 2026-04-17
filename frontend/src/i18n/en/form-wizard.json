@@ -39,7 +39,7 @@
   "draft_restored": "Draft restored",
   "steps": {
     "basicInfo": "Basic Information",
-    "basicInfoDesc": "Enter the country's name and general details",
+    "basicInfoDesc": "Enter the name and general details",
     "countryDetails": "Country Details",
     "countryDetailsDesc": "ISO codes, region, and capital information",
     "orgDetails": "Organization Details",
