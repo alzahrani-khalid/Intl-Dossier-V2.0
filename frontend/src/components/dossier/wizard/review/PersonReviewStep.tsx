@@ -118,6 +118,47 @@ export function PersonReviewStep({ form, onEditStep }: PersonReviewStepProps): R
           value={biographyArDisplay}
         />
       </ReviewSection>
+
+      {/* Phase 30 D-07: Office & Term section — rendered ONLY for elected-official subtype */}
+      {values.person_subtype === 'elected_official' && (
+        <ReviewSection title={t('form-wizard:review.office_term')} onEdit={() => onEditStep(2)}>
+          <ReviewField
+            label={t('form-wizard:elected_official.office_name_en')}
+            value={values.office_name_en}
+          />
+          <ReviewField
+            label={t('form-wizard:elected_official.office_name_ar')}
+            value={values.office_name_ar}
+          />
+          <ReviewField label={t('form-wizard:elected_official.country')} value={values.country_id} />
+          <ReviewField
+            label={t('form-wizard:elected_official.organization')}
+            value={values.organization_id}
+          />
+          <ReviewField
+            label={t('form-wizard:elected_official.district_en')}
+            value={values.district_en}
+          />
+          <ReviewField
+            label={t('form-wizard:elected_official.district_ar')}
+            value={values.district_ar}
+          />
+          <ReviewField label={t('form-wizard:elected_official.party_en')} value={values.party_en} />
+          <ReviewField label={t('form-wizard:elected_official.party_ar')} value={values.party_ar} />
+          <ReviewField
+            label={t('form-wizard:elected_official.term_start')}
+            value={values.term_start}
+          />
+          <ReviewField
+            label={t('form-wizard:elected_official.term_end')}
+            value={
+              values.term_end !== undefined && values.term_end !== ''
+                ? values.term_end
+                : t('form-wizard:elected_official.term_end_help')
+            }
+          />
+        </ReviewSection>
+      )}
     </FormWizardStep>
   )
 }
