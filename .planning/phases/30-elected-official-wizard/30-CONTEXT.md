@@ -63,7 +63,7 @@ Scope is bounded to capturing the fields named in ELOF-02 plus the two direct FK
 
 ### Database Migration
 
-- **D-19:** One new migration added via Supabase MCP: **relax** the `persons_elected_official_requires_office` constraint from `office_name_en IS NOT NULL` to `office_name_en IS NOT NULL OR office_name_ar IS NOT NULL`. Use `ALTER TABLE ... DROP CONSTRAINT ... / ADD CONSTRAINT ...` pattern. No data migration needed — existing elected officials already satisfy the relaxed rule. Rollback script documented alongside.
+- **D-19:** One new migration added to `supabase/migrations/` and applied via Supabase CLI (`supabase db push --linked` against the linked staging project `zkrcjzdemdmwhearhfgg`): **relax** the `persons_elected_official_requires_office` constraint from `office_name_en IS NOT NULL` to `office_name_en IS NOT NULL OR office_name_ar IS NOT NULL`. Use `ALTER TABLE ... DROP CONSTRAINT ... / ADD CONSTRAINT ...` pattern. No data migration needed — existing elected officials already satisfy the relaxed rule. Rollback script documented alongside. (Per user preference — CLI chosen over MCP for Phase 30; project is already linked via `supabase/.temp/project-ref`.)
 
 ### i18n
 
