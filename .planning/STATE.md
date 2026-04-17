@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Dossier Creation UX
-status: awaiting_uat
-stopped_at: Phase 30 COMPLETE — verification PASS (11/12 auto + staging DB confirmed); Playwright E2E deferred to UAT
-last_updated: "2026-04-17T22:30:00.000Z"
-last_activity: 2026-04-17 -- Phase 30 (elected-official-wizard) complete — 4 plans, 3 waves, verification PASS
+status: blocked_external
+stopped_at: Phase 30 CODE COMPLETE — UAT blocked by pre-existing dossiers-create Edge Function returning 42501/403 (RLS denial on all submit attempts, not a Phase 30 regression)
+last_updated: "2026-04-18T00:45:00.000Z"
+last_activity: 2026-04-18 -- UAT ran E2E; wizard traversal verified 4/4 steps; 4 spec locator fixes landed; submit blocked at Edge Function, filed as follow-up
 progress:
   total_phases: 6
   completed_phases: 5
