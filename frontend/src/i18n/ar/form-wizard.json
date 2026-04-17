@@ -55,7 +55,9 @@
     "participants": "المشاركون",
     "participantsDesc": "اربط الدول والمنظمات والأشخاص",
     "review": "المراجعة",
-    "reviewDesc": "مراجعة وتاكيد التفاصيل"
+    "reviewDesc": "مراجعة وتاكيد التفاصيل",
+    "officeTerm": "المنصب والولاية",
+    "officeTermDesc": "عنوان المنصب والولاية والدائرة والانتماء الحزبي"
   },
   "country": {
     "page_title": "ملف دولة جديد",
@@ -225,6 +227,44 @@
     "theme_category": "فئة الموضوع",
     "working_group_details": "تفاصيل فريق العمل",
     "engagement_details": "تفاصيل الارتباط",
-    "participants_summary": "المشاركون"
+    "participants_summary": "المشاركون",
+    "office_term": "المنصب والولاية"
+  },
+  "elected_official": {
+    "page_title": "إنشاء مسؤول منتخب",
+    "back_to_list": "العودة إلى المسؤولين المنتخبين",
+    "sections": {
+      "office": "المنصب",
+      "constituency": "الدائرة",
+      "party": "الحزب",
+      "term": "الولاية"
+    },
+    "office_name_en": "اسم المنصب (بالإنجليزية)",
+    "office_name_ar": "اسم المنصب (بالعربية)",
+    "office_name_en_ph": "e.g. Minister of Foreign Affairs",
+    "office_name_ar_ph": "مثال: وزير الخارجية",
+    "country": "البلد",
+    "country_ph": "ابحث عن البلدان…",
+    "country_help": "مطلوب — الجهة السياسية التي ينتمي إليها هذا المنصب.",
+    "organization": "المنظمة / الجهة",
+    "organization_ph": "ابحث عن المنظمات…",
+    "organization_help": "اختياري — رابط إلى الوزارة أو البرلمان أو الجهة التابعة.",
+    "district_en": "الدائرة الانتخابية (بالإنجليزية)",
+    "district_ar": "الدائرة الانتخابية (بالعربية)",
+    "district_en_ph": "e.g. Riyadh District 3",
+    "district_ar_ph": "مثال: الرياض الدائرة ٣",
+    "party_en": "الحزب السياسي (بالإنجليزية)",
+    "party_ar": "الحزب السياسي (بالعربية)",
+    "party_en_ph": "e.g. National Coalition",
+    "party_ar_ph": "مثال: الائتلاف الوطني",
+    "term_start": "بداية الولاية",
+    "term_end": "نهاية الولاية",
+    "term_end_help": "اتركه فارغًا للولايات الجارية",
+    "validation": {
+      "office_name_required": "اسم المنصب مطلوب (بالإنجليزية أو بالعربية)",
+      "country_required": "البلد مطلوب للمسؤولين المنتخبين",
+      "term_start_required": "تاريخ بداية الولاية مطلوب",
+      "term_end_after_start": "يجب أن يكون تاريخ نهاية الولاية مساويًا لتاريخ البداية أو بعده"
+    }
   }
 }
