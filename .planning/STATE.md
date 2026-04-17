@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Dossier Creation UX
 status: executing
-stopped_at: Phase 30 context gathered — ready for planning
-last_updated: '2026-04-17T00:00:00.000Z'
-last_activity: 2026-04-17 -- Phase 30 context gathered (chain → plan-phase next)
+stopped_at: Phase 30 planned (4 plans, 3 waves) — ready to execute
+last_updated: '2026-04-17T00:30:00.000Z'
+last_activity: 2026-04-17 -- Phase 30 plans verified PASS (stopped chain before execute — /clear + /gsd-execute-phase 30)
 progress:
   total_phases: 6
   completed_phases: 4
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 ## Current Position
 
 Phase: 30
-Plan: Context gathered — ready for planning (chain mode auto-advancing)
-Status: CONTEXT-CAPTURED
-Last activity: 2026-04-17 -- Phase 30 context gathered
+Plan: 4/4 plans written and verified (PASS) — 0/4 executed
+Status: READY-TO-EXECUTE
+Last activity: 2026-04-17 -- Phase 30 plans verified PASS; chain stopped before execute
 
-Progress: [░░░░░░░░░░] 0% (planning not started)
+Progress: [███░░░░░░░] 30% (discuss + plan done, execute pending)
 
 ## Performance Metrics
 
@@ -73,6 +73,17 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-17T00:00:00.000Z
-Stopped at: Phase 30 context gathered — chain mode advancing to plan-phase
-Resume file: .planning/phases/30-elected-official-wizard/30-CONTEXT.md
+Last session: 2026-04-17T00:30:00.000Z
+Stopped at: Phase 30 plans verified PASS — chain mode halted before execute (planner recommended /clear first)
+Resume file: .planning/phases/30-elected-official-wizard/30-01-schema-migration-PLAN.md
+Resume command: /clear then /gsd-execute-phase 30 --auto
+
+### Phase 30 Plan Summary (committed, ready to execute)
+
+- **30-01** (wave 1, BLOCKING migration via Supabase MCP): schema + config + defaults extensions — unblocks wave 2
+- **30-02** (wave 2): new OfficeTermStep.tsx + EN/AR i18n
+- **30-03** (wave 2): /create route + list page link fix + review step extension
+- **30-04** (wave 3): unit tests + Playwright E2E (EN-only + AR-only happy paths)
+
+Coverage: ELOF-01, ELOF-02, ELOF-03, ELOF-04 (all 4 requirements).
+Discretion resolved: is_current_term auto-derived client-side; field grouping in 4 sections; PersonReviewStep extended inline.
