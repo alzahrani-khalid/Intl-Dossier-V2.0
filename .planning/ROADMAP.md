@@ -6,7 +6,7 @@
 - ✅ **v3.0 Connected Workflow** — Phases 8-13 (shipped 2026-04-06) — [archive](milestones/v3.0-ROADMAP.md)
 - ✅ **v4.0 Live Operations** — Phases 14-23 (shipped 2026-04-09) — [archive](milestones/v4.0-ROADMAP.md)
 - ✅ **v4.1 Post-Launch Fixes** — Phases 24-25 (shipped 2026-04-12) — [archive](milestones/v4.1-ROADMAP.md)
-- 🚧 **v5.0 Dossier Creation UX** — Phases 26-31 (in progress)
+- 🚧 **v5.0 Dossier Creation UX** — Phases 26-32 (in progress)
 
 ## Phases
 
@@ -77,6 +77,7 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 - [ ] **Phase 29: Complex Type Wizards** - Forum, Working Group, and Engagement wizards with relationship linking steps
 - [x] **Phase 30: Elected Official Wizard** - Person wizard variant adding office, term, and constituency steps
 - [ ] **Phase 31: Creation Hub and Cleanup** - CreateDossierHub entry point, old wizard removal, and reference updates
+- [ ] **Phase 32: Person-Native Basic Info** - Replace SharedBasicInfoStep with PersonBasicInfoStep (split name, honorific, nationality, DOB, gender, photo) for person + elected_official wizards
 
 ## Phase Details
 
@@ -186,6 +187,22 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 3. The old monolithic DossierCreateWizard component and its route are removed from the codebase
 4. All references (Command Palette, FAB, empty states, navigation links) point to the new type-specific wizards or the hub
    **Plans**: TBD
+   **UI hint**: yes
+
+### Phase 32: Person-Native Basic Info
+
+**Goal**: The Person and Elected Official wizards collect the identity fields a diplomatic dossier system actually needs (honorific, split name, nationality, DOB, gender, photo), replacing the institution-shaped SharedBasicInfoStep that leaks org-centric copy like "abbreviation" onto person dossiers
+**Depends on**: Phase 30
+**Requirements**: PBI-01, PBI-02, PBI-03, PBI-04, PBI-05, PBI-06
+**Success Criteria** (what must be TRUE):
+
+1. A `PersonBasicInfoStep` component renders identity-shaped fields (honorific, first/last name EN+AR, known-as, photo, nationality, DOB, gender, summary, tags, classification) — not institution-shaped ones
+2. Both `personWizardConfig` and `electedOfficialWizardConfig` use `PersonBasicInfoStep` at step 1, and neither shows `abbreviation` or manual `status` fields anywhere
+3. Honorific is a curated dropdown (H.E., Dr., Prof., Sen., Hon., Rep., Sheikh, Amb., Mr., Ms., Mrs., Eng.) with an "Other" option that reveals a free-text input
+4. Gender is an optional Female/Male select (no "prefer not to say" option); nationality is a required DossierPicker filtered to country dossiers
+5. A non-breaking DB migration adds columns (`honorific_en`, `honorific_ar`, `first_name_en/ar`, `last_name_en/ar`, `known_as_en/ar`, `nationality_id`, `date_of_birth`, `gender`) to dossiers, backfills `first_name`/`last_name` by splitting existing person `name_en/ar` on last space, and preserves `name_en/ar` as a generated column for search
+6. PersonReviewStep displays the new identity fields; Persons and Elected Officials list pages show honorific + last name prominently and surface a nationality flag/badge
+   **Plans**: 4 plans (migration+backfill, PersonBasicInfoStep component, wizard rewiring + review, tests + list updates)
    **UI hint**: yes
 
 ## Progress

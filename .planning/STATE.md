@@ -7,11 +7,11 @@ stopped_at: Phase 30 CODE COMPLETE — UAT blocked by pre-existing dossiers-crea
 last_updated: "2026-04-18T00:45:00.000Z"
 last_activity: 2026-04-18 -- UAT ran E2E; wizard traversal verified 4/4 steps; 4 spec locator fixes landed; submit blocked at Edge Function, filed as follow-up
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 5
-  total_plans: 20
+  total_plans: 24
   completed_plans: 20
-  percent: 83
+  percent: 71
 ---
 
 # Project State
@@ -21,7 +21,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 31 — Creation Hub and Cleanup (next)
+**Current focus:** Phase 32 — Person-Native Basic Info (new, approved 2026-04-18)
 
 ## Current Position
 
