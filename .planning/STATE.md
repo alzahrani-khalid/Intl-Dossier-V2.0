@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Dossier Creation UX
-status: in_progress
-stopped_at: ''
-last_updated: '2026-04-18T01:00:00.000Z'
-last_activity: 2026-04-18 -- Phase 32 execution started (--auto); 4 plans queued in 4 waves; Wave 1 (Plan 32-01 migration + Edge Function) executing in parent session via Supabase CLI
+status: phase_complete
+stopped_at: Phase 32 COMPLETE — verifier PASS 7/7 PBI requirements; ready to spec/plan Phase 31 (Creation Hub & Cleanup)
+last_updated: '2026-04-18T02:30:00.000Z'
+last_activity: 2026-04-18 -- Phase 32 execution + verification complete (4 plans, 11 commits); next phase 31 has no SPEC yet — auto-chain pausing
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 28
-  completed_plans: 20
-  percent: 71
+  completed_plans: 24
+  percent: 86
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 32 — Person-Native Basic Info (executing, 2026-04-18)
+**Current focus:** Phase 31 — Creation Hub and Cleanup (NEXT — needs SPEC + PLAN)
 
 ## Current Position
 
-Phase: 32 (person-native-basic-info) — EXECUTING
-Plan: 1 of 4 (Wave 1 in parent session)
-Status: Applying migration + Edge Function passthrough on staging zkrcjzdemdmwhearhfgg
-Last activity: 2026-04-18 -- Phase 32 execution started; Plan 32-01 in flight
+Phase: 32 (person-native-basic-info) — COMPLETE (verified 2026-04-18, 7/7 PBI pass)
+Plan: 4 of 4 done
+Status: Phase 32 shipped; auto-chain pausing because Phase 31 has no SPEC.md yet
+Last activity: 2026-04-18 -- /gsd-execute-phase 32 --auto finished; gsd-verifier returned PASS
 
-Progress: [████████░░] 71% (5/7 phases complete; phase 32 active, phase 31 remaining)
+Progress: [█████████░] 86% (6/7 phases complete; phase 31 remaining — needs spec)
 
 ## Performance Metrics
 

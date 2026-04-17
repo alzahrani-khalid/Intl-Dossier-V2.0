@@ -77,7 +77,7 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 - [ ] **Phase 29: Complex Type Wizards** - Forum, Working Group, and Engagement wizards with relationship linking steps
 - [x] **Phase 30: Elected Official Wizard** - Person wizard variant adding office, term, and constituency steps
 - [ ] **Phase 31: Creation Hub and Cleanup** - CreateDossierHub entry point, old wizard removal, and reference updates
-- [ ] **Phase 32: Person-Native Basic Info** - Replace SharedBasicInfoStep with PersonBasicInfoStep (split name, honorific, nationality, DOB, gender, photo) for person + elected_official wizards
+- [x] **Phase 32: Person-Native Basic Info** - Replace SharedBasicInfoStep with PersonBasicInfoStep (split name, honorific, nationality, DOB, gender, photo) for person + elected_official wizards (4/4 plans, shipped 2026-04-18)
 
 ## Phase Details
 
