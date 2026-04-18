@@ -10,7 +10,8 @@
     "topic": "Topic",
     "theme": "Theme",
     "working_group": "Working Group",
-    "person": "Person"
+    "person": "Person",
+    "elected_official": "Elected Official"
   },
   "typeDescription": {
     "country": "National entities and sovereign states with geographic and demographic data",
@@ -288,6 +289,16 @@
     "title": "Create New Dossier",
     "subtitleSelectType": "Choose the type of dossier you want to create",
     "subtitleFillForm": "Enter information for {{type}} dossier",
+    "hubDescription": {
+      "country": "Create a country dossier — flags, codes, region, capital",
+      "organization": "Create an organization dossier — type, code, website",
+      "forum": "Create a forum dossier — conferences, summits, multi-party bodies",
+      "engagement": "Create an engagement dossier — meetings, consultations, visits",
+      "topic": "Create a topic dossier — policy areas and strategic initiatives",
+      "working_group": "Create a working group dossier — committees and task forces",
+      "person": "Create a person dossier — VIPs and individual contacts",
+      "elected_official": "Create an elected official dossier — government contacts with office and term"
+    },
     "cancel": "Cancel",
     "changeType": "Change Type",
     "step1": "Select Type",

@@ -6,8 +6,8 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
-import { DossierCreatePage } from '@/pages/dossiers/DossierCreatePage'
+import { CreateDossierHub } from '@/pages/dossiers/CreateDossierHub'
 
 export const Route = createFileRoute('/_protected/dossiers/create')({
-  component: DossierCreatePage,
+  component: CreateDossierHub,
 })
