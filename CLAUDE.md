@@ -53,9 +53,9 @@ supabase/         # Migrations, seed data, Edge Functions
 ### RTL Detection & Implementation
 
 ```tsx
-import { useTranslation } from 'react-i18next';
-const { i18n } = useTranslation();
-const isRTL = i18n.language === 'ar';
+import { useTranslation } from 'react-i18next'
+const { i18n } = useTranslation()
+const isRTL = i18n.language === 'ar'
 ```
 
 ### RTL-Safe Tailwind Classes (REQUIRED)
@@ -79,11 +79,11 @@ const isRTL = i18n.language === 'ar';
 ### RTL Component Template
 
 ```tsx
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 
 export function ResponsiveRTLComponent() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
     <div
@@ -97,7 +97,7 @@ export function ResponsiveRTLComponent() {
       {/* Flip directional icons */}
       <ChevronRight className={isRTL ? 'rotate-180' : ''} />
     </div>
-  );
+  )
 }
 ```
 
@@ -237,16 +237,16 @@ Kanban board positions for tasks:
 
 ```typescript
 // Always use unified types from work-item.types.ts
-import type { WorkItem, WorkSource, Priority, TrackingType } from '@/types/work-item.types';
+import type { WorkItem, WorkSource, Priority, TrackingType } from '@/types/work-item.types'
 
 // Always use unified i18n namespace
-import { useTranslation } from 'react-i18next';
-const { t } = useTranslation('unified-kanban');
+import { useTranslation } from 'react-i18next'
+const { t } = useTranslation('unified-kanban')
 
 // Correct terminology
-t('priority.urgent'); // NOT 'priority.critical'
-t('status.in_progress'); // Consistent naming
-t('columns.todo'); // Workflow stage for display
+t('priority.urgent') // NOT 'priority.critical'
+t('status.in_progress') // Consistent naming
+t('columns.todo') // Workflow stage for display
 ```
 
 ### Database Column Naming
@@ -290,37 +290,37 @@ The system is built around **dossiers** as the central organizing concept. All f
 
 ```typescript
 // URL generation for dossier routes
-import { getDossierRouteSegment } from '@/lib/dossier-routes';
-const route = getDossierRouteSegment('country'); // Returns 'countries'
+import { getDossierRouteSegment } from '@/lib/dossier-routes'
+const route = getDossierRouteSegment('country') // Returns 'countries'
 
 // Type validation
-import { isValidDossierType } from '@/lib/dossier-type-guards';
+import { isValidDossierType } from '@/lib/dossier-type-guards'
 if (isValidDossierType(type)) {
   /* type-safe usage */
 }
 
 // Dossier context inheritance hook
-import { useResolveDossierContext } from '@/hooks/useResolveDossierContext';
-const { dossiers, inheritanceSource } = useResolveDossierContext(parentType, parentId);
+import { useResolveDossierContext } from '@/hooks/useResolveDossierContext'
+const { dossiers, inheritanceSource } = useResolveDossierContext(parentType, parentId)
 ```
 
 ### Component Usage
 
 ```tsx
 // Display dossier context badge on work items
-import { DossierContextBadge } from '@/components/Dossier/DossierContextBadge';
-<DossierContextBadge
+import { DossierContextBadge } from '@/components/Dossier/DossierContextBadge'
+;<DossierContextBadge
   dossier={dossier}
   inheritanceSource="direct" // or 'engagement', 'after_action', etc.
-/>;
+/>
 
 // Universal card for any dossier type
-import { UniversalDossierCard } from '@/components/Dossier/UniversalDossierCard';
-<UniversalDossierCard dossier={dossier} />;
+import { UniversalDossierCard } from '@/components/Dossier/UniversalDossierCard'
+;<UniversalDossierCard dossier={dossier} />
 
 // Type selector for dossier creation
-import { DossierTypeSelector } from '@/components/Dossier/DossierTypeSelector';
-<DossierTypeSelector value={type} onChange={setType} />;
+import { DossierTypeSelector } from '@/components/Dossier/DossierTypeSelector'
+;<DossierTypeSelector value={type} onChange={setType} />
 ```
 
 ### Database Linking Pattern
@@ -509,16 +509,16 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 ## Key Layers
 
-| Layer | Location | Purpose |
-|-------|----------|---------|
-| Domain | `backend/src/core/domain/` | Business logic, entities (framework-agnostic) |
-| Ports/Adapters | `backend/src/core/ports/`, `backend/src/adapters/` | Contracts + Supabase/AI/email implementations |
-| API | `backend/src/api/` (60+ files) | Express routers, feature-based |
-| Middleware | `backend/src/middleware/` | Auth, rate-limit, security headers |
-| Routes | `frontend/src/routes/` (100+ files) | TanStack Router, `__root.tsx` → `_protected.tsx` → feature routes |
-| Domains | `frontend/src/domains/{feature}/` | Types, repositories, hooks, services per feature |
-| Components | `frontend/src/components/ui/` | HeroUI wrappers + re-exports (shadcn compat) |
-| State | `frontend/src/contexts/`, `frontend/src/providers/` | Auth/theme/language contexts |
+| Layer          | Location                                            | Purpose                                                           |
+| -------------- | --------------------------------------------------- | ----------------------------------------------------------------- |
+| Domain         | `backend/src/core/domain/`                          | Business logic, entities (framework-agnostic)                     |
+| Ports/Adapters | `backend/src/core/ports/`, `backend/src/adapters/`  | Contracts + Supabase/AI/email implementations                     |
+| API            | `backend/src/api/` (60+ files)                      | Express routers, feature-based                                    |
+| Middleware     | `backend/src/middleware/`                           | Auth, rate-limit, security headers                                |
+| Routes         | `frontend/src/routes/` (100+ files)                 | TanStack Router, `__root.tsx` → `_protected.tsx` → feature routes |
+| Domains        | `frontend/src/domains/{feature}/`                   | Types, repositories, hooks, services per feature                  |
+| Components     | `frontend/src/components/ui/`                       | HeroUI wrappers + re-exports (shadcn compat)                      |
+| State          | `frontend/src/contexts/`, `frontend/src/providers/` | Auth/theme/language contexts                                      |
 
 ## Data Flow
 
@@ -565,3 +565,80 @@ Do not make direct repo edits outside a GSD workflow unless the user explicitly 
 > This section is managed by `generate-claude-profile` -- do not edit manually.
 
 <!-- GSD:profile-end -->
+
+<!-- Karpathy-Skills:start -->
+
+## Karpathy Coding Principles
+
+Source: https://github.com/forrestchang/andrej-karpathy-skills (CLAUDE.md)
+
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+### 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+### 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+### 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+<!-- Karpathy-Skills:end -->
