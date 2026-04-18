@@ -1,0 +1,18 @@
+{
+  "wizard": {
+    "steps": {
+      "basic": {
+        "guidance": "Tell us who this official is — honorific, name, nationality, and identity details."
+      },
+      "person-details": {
+        "guidance": "Add the official's title, photo, and biography."
+      },
+      "office-term": {
+        "guidance": "Capture office title, term dates, constituency, and political party."
+      },
+      "review": {
+        "guidance": "Review everything before creating the elected official dossier."
+      }
+    }
+  }
+}

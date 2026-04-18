@@ -41,21 +41,25 @@ export const engagementWizardConfig: WizardConfig<EngagementFormData> = {
       id: 'basic',
       title: 'form-wizard:steps.basicInfo',
       description: 'form-wizard:steps.basicInfoDesc',
+      guidanceKey: 'engagement-wizard:wizard.steps.basic.guidance',
     },
     {
       id: 'engagement-details',
       title: 'form-wizard:steps.engagementDetails',
       description: 'form-wizard:steps.engagementDetailsDesc',
+      guidanceKey: 'engagement-wizard:wizard.steps.engagement-details.guidance',
     },
     {
       id: 'engagement-participants',
       title: 'form-wizard:steps.participants',
       description: 'form-wizard:steps.participantsDesc',
+      guidanceKey: 'engagement-wizard:wizard.steps.engagement-participants.guidance',
     },
     {
       id: 'review',
       title: 'form-wizard:steps.review',
       description: 'form-wizard:steps.reviewDesc',
+      guidanceKey: 'engagement-wizard:wizard.steps.review.guidance',
     },
   ],
   filterExtensionData: (data: EngagementFormData) => ({

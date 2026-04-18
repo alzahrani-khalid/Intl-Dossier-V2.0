@@ -1,0 +1,12 @@
+{
+  "wizard": {
+    "steps": {
+      "basic": {
+        "guidance": "Tell us about the topic — name, theme category, and a short description."
+      },
+      "review": {
+        "guidance": "Review everything before creating the topic dossier."
+      }
+    }
+  }
+}

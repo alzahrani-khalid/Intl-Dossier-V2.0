@@ -12,11 +12,13 @@ export const topicWizardConfig: WizardConfig<TopicFormData> = {
       id: 'basic',
       title: 'form-wizard:steps.basicInfo',
       description: 'form-wizard:steps.basicInfoDesc',
+      guidanceKey: 'topic-wizard:wizard.steps.basic.guidance',
     },
     {
       id: 'review',
       title: 'form-wizard:steps.review',
       description: 'form-wizard:steps.reviewDesc',
+      guidanceKey: 'topic-wizard:wizard.steps.review.guidance',
     },
   ],
   filterExtensionData: (data: TopicFormData) => ({

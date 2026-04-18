@@ -12,16 +12,19 @@ export const workingGroupWizardConfig: WizardConfig<WorkingGroupFormData> = {
       id: 'basic',
       title: 'form-wizard:steps.basicInfo',
       description: 'form-wizard:steps.basicInfoDesc',
+      guidanceKey: 'working-group-wizard:wizard.steps.basic.guidance',
     },
     {
       id: 'wg-details',
       title: 'form-wizard:steps.workingGroupDetails',
       description: 'form-wizard:steps.workingGroupDetailsDesc',
+      guidanceKey: 'working-group-wizard:wizard.steps.wg-details.guidance',
     },
     {
       id: 'review',
       title: 'form-wizard:steps.review',
       description: 'form-wizard:steps.reviewDesc',
+      guidanceKey: 'working-group-wizard:wizard.steps.review.guidance',
     },
   ],
   filterExtensionData: (data: WorkingGroupFormData) => ({

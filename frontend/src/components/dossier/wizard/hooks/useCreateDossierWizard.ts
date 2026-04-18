@@ -137,6 +137,7 @@ export function useCreateDossierWizard<T extends FieldValues>(
     (nameEn?.length ?? 0) >= 2 && (nameAr != null ? nameAr.length >= 2 : false)
 
   return {
+    type: config.type,
     form,
     currentStep,
     setCurrentStep,

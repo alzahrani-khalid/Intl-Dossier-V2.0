@@ -12,16 +12,19 @@ export const countryWizardConfig: WizardConfig<CountryFormData> = {
       id: 'basic',
       title: 'form-wizard:steps.basicInfo',
       description: 'form-wizard:steps.basicInfoDesc',
+      guidanceKey: 'country-wizard:wizard.steps.basic.guidance',
     },
     {
       id: 'country-details',
       title: 'form-wizard:steps.countryDetails',
       description: 'form-wizard:steps.countryDetailsDesc',
+      guidanceKey: 'country-wizard:wizard.steps.country-details.guidance',
     },
     {
       id: 'review',
       title: 'form-wizard:steps.review',
       description: 'form-wizard:steps.reviewDesc',
+      guidanceKey: 'country-wizard:wizard.steps.review.guidance',
     },
   ],
   filterExtensionData: (data: CountryFormData) => ({

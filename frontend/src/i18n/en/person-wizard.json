@@ -1,0 +1,15 @@
+{
+  "wizard": {
+    "steps": {
+      "basic": {
+        "guidance": "Tell us who this person is — honorific, name, nationality, and identity details."
+      },
+      "person-details": {
+        "guidance": "Add the person's title, photo, and biography."
+      },
+      "review": {
+        "guidance": "Review everything before creating the person dossier."
+      }
+    }
+  }
+}

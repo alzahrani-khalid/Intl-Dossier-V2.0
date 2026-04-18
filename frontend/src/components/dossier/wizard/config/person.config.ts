@@ -7,25 +7,29 @@ import { HONORIFIC_OTHER, resolveCuratedHonorific } from '../steps/honorific-map
 
 // Phase 32 D-27: person + elected-official step-0 title switches to the
 // identity key prefix (D-32). Other dossier types still use steps.basicInfo.
-const personBasicStep = {
+//
+// Plan 31-02 D-13/D-14: step `guidanceKey` field differs between the two
+// variants (person-wizard namespace vs elected-official-wizard namespace) —
+// so build step tuples inline per wizard rather than sharing constants.
+const personBasicStepBase = {
   id: 'basic',
   title: 'form-wizard:wizard.person_identity.step_title',
   description: 'form-wizard:wizard.person_identity.step_desc',
 }
 
-const personDetailsStep = {
+const personDetailsStepBase = {
   id: 'person-details',
   title: 'form-wizard:steps.personDetails',
   description: 'form-wizard:steps.personDetailsDesc',
 }
 
-const officeTermStep = {
+const officeTermStepBase = {
   id: 'office-term',
   title: 'form-wizard:steps.officeTerm',
   description: 'form-wizard:steps.officeTermDesc',
 }
 
-const reviewStep = {
+const reviewStepBase = {
   id: 'review',
   title: 'form-wizard:steps.review',
   description: 'form-wizard:steps.reviewDesc',
@@ -119,7 +123,14 @@ export const personWizardConfig: WizardConfig<PersonFormData> = {
   type: 'person',
   schema: personSchema,
   defaultValues: getDefaultsForType<PersonFormData>('person'),
-  steps: [personBasicStep, personDetailsStep, reviewStep],
+  steps: [
+    { ...personBasicStepBase, guidanceKey: 'person-wizard:wizard.steps.basic.guidance' },
+    {
+      ...personDetailsStepBase,
+      guidanceKey: 'person-wizard:wizard.steps.person-details.guidance',
+    },
+    { ...reviewStepBase, guidanceKey: 'person-wizard:wizard.steps.review.guidance' },
+  ],
   filterExtensionData: (data: PersonFormData) => {
     const identity = composePersonExtension(data)
     return {
@@ -153,7 +164,24 @@ export const electedOfficialWizardConfig: WizardConfig<PersonFormData> = {
   type: 'person',
   schema: personSchema,
   defaultValues: getElectedOfficialDefaults(),
-  steps: [personBasicStep, personDetailsStep, officeTermStep, reviewStep],
+  steps: [
+    {
+      ...personBasicStepBase,
+      guidanceKey: 'elected-official-wizard:wizard.steps.basic.guidance',
+    },
+    {
+      ...personDetailsStepBase,
+      guidanceKey: 'elected-official-wizard:wizard.steps.person-details.guidance',
+    },
+    {
+      ...officeTermStepBase,
+      guidanceKey: 'elected-official-wizard:wizard.steps.office-term.guidance',
+    },
+    {
+      ...reviewStepBase,
+      guidanceKey: 'elected-official-wizard:wizard.steps.review.guidance',
+    },
+  ],
   filterExtensionData: (data: PersonFormData) => {
     const identity = composePersonExtension(data)
     return {

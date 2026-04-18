@@ -5,6 +5,12 @@ import type { WizardStep } from '@/components/ui/form-wizard'
 
 export interface WizardStepConfig extends WizardStep {
   // Inherits id, title, description, icon, isOptional, validate
+
+  // Plan 31-02 D-13/D-14: optional per-step guidance key (i18n key with
+  // namespace, e.g. 'country-wizard:wizard.steps.basic.guidance'). When
+  // present, CreateWizardShell renders a <StepGuidanceBanner/> at the top
+  // of the step body.
+  guidanceKey?: string
 }
 
 export interface WizardConfig<T extends FieldValues> {
@@ -23,6 +29,8 @@ export interface WizardConfig<T extends FieldValues> {
 
 // Return type of the hook -- defined here so Shell can type its props
 export interface CreateWizardReturn<T extends FieldValues> {
+  // Plan 31-02: exposed so CreateWizardShell can build the banner storage key.
+  type: DossierType
   form: UseFormReturn<T>
   currentStep: number
   setCurrentStep: (step: number) => void

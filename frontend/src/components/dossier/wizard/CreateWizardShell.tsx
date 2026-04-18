@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react'
+import { Children, type ReactElement, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { FieldValues } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
@@ -7,6 +7,7 @@ import { Save } from 'lucide-react'
 import { FormWizard } from '@/components/ui/form-wizard'
 import { cn } from '@/lib/utils'
 import type { CreateWizardReturn } from './config/types'
+import { StepGuidanceBanner } from './StepGuidanceBanner'
 
 interface CreateWizardShellProps<T extends FieldValues> {
   wizard: CreateWizardReturn<T>
@@ -20,6 +21,30 @@ export function CreateWizardShell<T extends FieldValues>({
   className,
 }: CreateWizardShellProps<T>): ReactElement {
   const { t } = useTranslation(['dossier', 'form-wizard'])
+
+  // Plan 31-02: prepend a <StepGuidanceBanner/> to each step's rendered
+  // children when the matching WizardStepConfig has a guidanceKey. We do
+  // this at the shell level (rather than inside each step component) so
+  // every per-type wizard gets the banner without duplicated wiring.
+  //
+  // FormWizard renders `React.Children.toArray(children)[currentStep]` — so
+  // wrapping each child in a fragment that includes the banner preserves the
+  // existing "one child per step" contract.
+  const childArray = Children.toArray(children)
+  const wrappedChildren: ReactNode[] = childArray.map((child, index) => {
+    const step = wizard.steps[index]
+    if (step?.guidanceKey == null || step.guidanceKey === '') return child
+    return (
+      <>
+        <StepGuidanceBanner
+          type={String(wizard.type)}
+          stepId={step.id}
+          guidanceKey={step.guidanceKey}
+        />
+        {child}
+      </>
+    )
+  })
 
   return (
     <div className={cn('w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8', className)}>
@@ -49,7 +74,7 @@ export function CreateWizardShell<T extends FieldValues>({
             namespace="form-wizard"
             actionBarMode="auto"
           >
-            {children}
+            {wrappedChildren}
           </FormWizard>
         </form>
       </FormProvider>

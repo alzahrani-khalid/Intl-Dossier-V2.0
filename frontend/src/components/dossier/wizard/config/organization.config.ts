@@ -12,16 +12,19 @@ export const organizationWizardConfig: WizardConfig<OrganizationFormData> = {
       id: 'basic',
       title: 'form-wizard:steps.basicInfo',
       description: 'form-wizard:steps.basicInfoDesc',
+      guidanceKey: 'organization-wizard:wizard.steps.basic.guidance',
     },
     {
       id: 'org-details',
       title: 'form-wizard:steps.orgDetails',
       description: 'form-wizard:steps.orgDetailsDesc',
+      guidanceKey: 'organization-wizard:wizard.steps.org-details.guidance',
     },
     {
       id: 'review',
       title: 'form-wizard:steps.review',
       description: 'form-wizard:steps.reviewDesc',
+      guidanceKey: 'organization-wizard:wizard.steps.review.guidance',
     },
   ],
   filterExtensionData: (data: OrganizationFormData) => ({

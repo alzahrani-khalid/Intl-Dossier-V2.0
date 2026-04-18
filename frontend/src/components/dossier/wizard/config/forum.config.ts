@@ -12,16 +12,19 @@ export const forumWizardConfig: WizardConfig<ForumFormData> = {
       id: 'basic',
       title: 'form-wizard:steps.basicInfo',
       description: 'form-wizard:steps.basicInfoDesc',
+      guidanceKey: 'forum-wizard:wizard.steps.basic.guidance',
     },
     {
       id: 'forum-details',
       title: 'form-wizard:steps.forumDetails',
       description: 'form-wizard:steps.forumDetailsDesc',
+      guidanceKey: 'forum-wizard:wizard.steps.forum-details.guidance',
     },
     {
       id: 'review',
       title: 'form-wizard:steps.review',
       description: 'form-wizard:steps.reviewDesc',
+      guidanceKey: 'forum-wizard:wizard.steps.review.guidance',
     },
   ],
   filterExtensionData: (data: ForumFormData) => ({

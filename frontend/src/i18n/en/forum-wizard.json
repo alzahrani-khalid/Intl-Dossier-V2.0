@@ -1,0 +1,15 @@
+{
+  "wizard": {
+    "steps": {
+      "basic": {
+        "guidance": "Tell us about the forum — official names and a short description."
+      },
+      "forum-details": {
+        "guidance": "Link the organizing body and record forum specifics."
+      },
+      "review": {
+        "guidance": "Review everything before creating the forum dossier."
+      }
+    }
+  }
+}

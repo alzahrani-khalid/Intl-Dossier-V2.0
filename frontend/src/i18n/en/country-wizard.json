@@ -1,0 +1,15 @@
+{
+  "wizard": {
+    "steps": {
+      "basic": {
+        "guidance": "Tell us about the country — official names and a short description."
+      },
+      "country-details": {
+        "guidance": "Add the country's ISO codes, region, and capital."
+      },
+      "review": {
+        "guidance": "Review everything before creating the country dossier."
+      }
+    }
+  }
+}

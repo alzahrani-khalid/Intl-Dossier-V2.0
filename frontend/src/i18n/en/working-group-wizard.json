@@ -1,0 +1,15 @@
+{
+  "wizard": {
+    "steps": {
+      "basic": {
+        "guidance": "Tell us about the working group — official names and a short description."
+      },
+      "wg-details": {
+        "guidance": "Set status, established date, mandate, and parent body."
+      },
+      "review": {
+        "guidance": "Review everything before creating the working group dossier."
+      }
+    }
+  }
+}

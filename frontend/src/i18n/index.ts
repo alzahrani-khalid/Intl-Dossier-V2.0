@@ -186,6 +186,23 @@ import enDossierShell from './en/dossier-shell.json'
 import arDossierShell from './ar/dossier-shell.json'
 import enElectedOfficials from './en/elected-officials.json'
 import arElectedOfficials from './ar/elected-officials.json'
+// Plan 31-02: per-type wizard guidance namespaces (D-13)
+import enCountryWizard from './en/country-wizard.json'
+import arCountryWizard from './ar/country-wizard.json'
+import enOrganizationWizard from './en/organization-wizard.json'
+import arOrganizationWizard from './ar/organization-wizard.json'
+import enForumWizard from './en/forum-wizard.json'
+import arForumWizard from './ar/forum-wizard.json'
+import enEngagementWizard from './en/engagement-wizard.json'
+import arEngagementWizard from './ar/engagement-wizard.json'
+import enTopicWizard from './en/topic-wizard.json'
+import arTopicWizard from './ar/topic-wizard.json'
+import enWorkingGroupWizard from './en/working-group-wizard.json'
+import arWorkingGroupWizard from './ar/working-group-wizard.json'
+import enPersonWizard from './en/person-wizard.json'
+import arPersonWizard from './ar/person-wizard.json'
+import enElectedOfficialWizard from './en/elected-official-wizard.json'
+import arElectedOfficialWizard from './ar/elected-official-wizard.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -285,6 +302,15 @@ const resources = {
     workspace: enWorkspace,
     'dossier-shell': enDossierShell,
     'elected-officials': enElectedOfficials,
+    // Plan 31-02: per-type wizard guidance namespaces (D-13)
+    'country-wizard': enCountryWizard,
+    'organization-wizard': enOrganizationWizard,
+    'forum-wizard': enForumWizard,
+    'engagement-wizard': enEngagementWizard,
+    'topic-wizard': enTopicWizard,
+    'working-group-wizard': enWorkingGroupWizard,
+    'person-wizard': enPersonWizard,
+    'elected-official-wizard': enElectedOfficialWizard,
   },
   ar: {
     translation: arCommon,
@@ -380,6 +406,15 @@ const resources = {
     workspace: arWorkspace,
     'dossier-shell': arDossierShell,
     'elected-officials': arElectedOfficials,
+    // Plan 31-02: per-type wizard guidance namespaces (D-13)
+    'country-wizard': arCountryWizard,
+    'organization-wizard': arOrganizationWizard,
+    'forum-wizard': arForumWizard,
+    'engagement-wizard': arEngagementWizard,
+    'topic-wizard': arTopicWizard,
+    'working-group-wizard': arWorkingGroupWizard,
+    'person-wizard': arPersonWizard,
+    'elected-official-wizard': arElectedOfficialWizard,
   },
 }
 

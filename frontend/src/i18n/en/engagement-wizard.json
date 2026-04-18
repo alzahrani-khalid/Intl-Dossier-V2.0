@@ -1,0 +1,18 @@
+{
+  "wizard": {
+    "steps": {
+      "basic": {
+        "guidance": "Tell us about the engagement — official names and a short description."
+      },
+      "engagement-details": {
+        "guidance": "Capture engagement type, category, and location."
+      },
+      "engagement-participants": {
+        "guidance": "Select the countries, organizations, and persons involved."
+      },
+      "review": {
+        "guidance": "Review everything before creating the engagement dossier."
+      }
+    }
+  }
+}
