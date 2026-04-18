@@ -288,7 +288,6 @@
   "create": {
     "title": "Create New Dossier",
     "subtitleSelectType": "Choose the type of dossier you want to create",
-    "subtitleFillForm": "Enter information for {{type}} dossier",
     "hubDescription": {
       "country": "Create a country dossier — flags, codes, region, capital",
       "organization": "Create an organization dossier — type, code, website",
@@ -299,16 +298,6 @@
       "person": "Create a person dossier — VIPs and individual contacts",
       "elected_official": "Create an elected official dossier — government contacts with office and term"
     },
-    "cancel": "Cancel",
-    "changeType": "Change Type",
-    "step1": "Select Type",
-    "step2": "Fill Details",
-    "selectTypeTitle": "Select Dossier Type",
-    "selectTypeDescription": "Choose the type of entity you want to create. Each type has specific fields tailored to that entity.",
-    "fillFormTitle": "Create {{type}} Dossier",
-    "fillFormDescription": "Fill in the required information to create a new dossier.",
-    "helpTitle": "Need Help",
-    "helpText": "Select the appropriate dossier type based on the entity you're tracking. Required fields are marked with an asterisk (*). You can always edit the dossier later.",
     "success": "Dossier created successfully",
     "error": "Failed to create dossier",
     "checkingDuplicates": "Checking for similar dossiers...",
