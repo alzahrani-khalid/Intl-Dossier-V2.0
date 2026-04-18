@@ -166,7 +166,8 @@ export function ElectedOfficialListTable(): ReactElement {
         <UserCheck className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mb-4" />
         <h3 className="text-base sm:text-lg font-semibold mb-2">{t('list.empty')}</h3>
         <Button asChild className="mt-4 min-h-11">
-          <Link to="/dossiers/create">
+          {/* D-07: elected-officials list always routes direct to the per-type wizard. */}
+          <Link to="/dossiers/elected-officials/create">
             <Plus className="h-4 w-4 me-2" />
             {t('list.add')}
           </Link>

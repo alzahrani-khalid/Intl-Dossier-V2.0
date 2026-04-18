@@ -64,7 +64,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { DossierType, DossierStatus, DossierFilters } from '@/services/dossier-api'
-import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { getDossierDetailPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 import type { ViewConfig, DossierViewConfig } from '@/types/view-preferences.types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useDirection } from '@/hooks/useDirection'
@@ -503,7 +503,14 @@ export function DossierListPage() {
             <span className="hidden sm:inline">{t('list.exportDossiers')}</span>
           </Button>
 
-          <Link to="/dossiers/create">
+          {/* D-07: direct to per-type wizard when a type filter is active; D-08: hub fallback otherwise. */}
+          <Link
+            to={
+              filters.type
+                ? `/dossiers/${getDossierRouteSegment(filters.type)}/create`
+                : '/dossiers/create'
+            }
+          >
             <Button
               className={cn(
                 'w-full sm:w-auto',
@@ -881,6 +888,7 @@ export function DossierListPage() {
                     }))
                   }}
                   onCreateEntity={(_suggestion) => {
+                    // D-08: typeless suggestion context — hub fallback (user hasn't picked a type yet).
                     navigate({ to: '/dossiers/create' })
                   }}
                   className="py-8"
@@ -892,6 +900,7 @@ export function DossierListPage() {
                   isLoadingTemplates={isLoadingTemplates}
                   onPopulate={populateSampleData}
                   isPopulating={isPopulating}
+                  // D-08: no active type filter on empty list — hub fallback.
                   onCreateNew={() => navigate({ to: '/dossiers/create' })}
                 />
               ) : (

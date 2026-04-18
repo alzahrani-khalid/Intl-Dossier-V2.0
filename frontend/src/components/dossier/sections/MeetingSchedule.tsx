@@ -53,11 +53,8 @@ export function MeetingSchedule({ dossier, isWorkingGroup = false }: MeetingSche
             {t('sessions.subtitle', 'Editions and instances of this recurring forum')}
           </p>
         </div>
-        <Link
-          to="/dossiers/create"
-          search={{ type: 'engagement', parentForumId: dossier.id } as any}
-          className="shrink-0"
-        >
+        {/* D-08: MeetingSchedule stays on hub (user must pick a type); D-05: hub is stateless — search params stripped. */}
+        <Link to="/dossiers/create" className="shrink-0">
           <Button variant="outline" size="sm" className="gap-2 min-h-11">
             <Plus className={cn('h-4 w-4', isRTL && 'rotate-180')} />
             {t('sessions.addSession', 'Add Session')}
@@ -103,10 +100,8 @@ export function MeetingSchedule({ dossier, isWorkingGroup = false }: MeetingSche
               'This forum has no sessions or editions yet. Create an engagement dossier to represent a specific instance of this forum.',
             )}
           </p>
-          <Link
-            to="/dossiers/create"
-            search={{ type: 'engagement', parentForumId: dossier.id } as any}
-          >
+          {/* D-08: MeetingSchedule stays on hub (user must pick a type); D-05: hub is stateless — search params stripped. */}
+          <Link to="/dossiers/create">
             <Button variant="default" className="gap-2 min-h-11">
               <Plus className={cn('h-4 w-4', isRTL && 'rotate-180')} />
               {t('sessions.createFirst', 'Create First Session')}

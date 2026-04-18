@@ -7,7 +7,9 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { m, AnimatePresence } from 'framer-motion'
+import { getDossierRouteSegment } from '@/lib/dossier-routes'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -162,6 +164,19 @@ function HintTierSection({ tier, isExpanded, isLocked, onToggle, size }: HintTie
  * Displays an empty state with progressively revealed hints based on user experience.
  *
  * @example
+ * // Typed list — per-type wizard via `targetType` (D-07)
+ * <ProgressiveEmptyState
+ *   pageContext="dossiers.countries"
+ *   title={t('countries.empty.title')}
+ *   description={t('countries.empty.description')}
+ *   icon={Globe}
+ *   targetType="country"              // → /dossiers/countries/create
+ *   primaryAction={{ label: t('countries.create'), icon: Plus, onClick: () => {} }}
+ *   hints={dossierHints}
+ * />
+ *
+ * @example
+ * // Generic context — hub fallback (D-08)
  * <ProgressiveEmptyState
  *   pageContext="dossiers"
  *   title={t('dossiers.empty.title')}
@@ -169,10 +184,9 @@ function HintTierSection({ tier, isExpanded, isLocked, onToggle, size }: HintTie
  *   icon={FileText}
  *   primaryAction={{
  *     label: t('dossiers.create'),
- *     onClick: () => navigate('/dossiers/create'),
  *     icon: Plus,
+ *     onClick: () => navigate({ to: '/dossiers/create' }),
  *   }}
- *   hints={dossierHints}
  * />
  */
 export function ProgressiveEmptyState({
@@ -181,6 +195,7 @@ export function ProgressiveEmptyState({
   description,
   icon: Icon,
   primaryAction,
+  targetType,
   hints,
   variant = 'default',
   size = 'md',
@@ -188,6 +203,7 @@ export function ProgressiveEmptyState({
 }: ProgressiveEmptyStateProps) {
   const { t } = useTranslation('progressive-disclosure')
   const { isRTL } = useDirection()
+  const navigate = useNavigate()
 const sizes = sizeConfig[size]
 
   const { experienceLevel, isFirstVisit, hasInteractedBefore, hintsEnabled, recordActionTaken } =
@@ -234,13 +250,22 @@ const sizes = sizeConfig[size]
   }, [])
 
   // Handle primary action click
+  // D-07: if the caller passed an explicit onClick we defer to it; otherwise,
+  // if `targetType` is set, we synthesize per-type wizard navigation; otherwise,
+  // we fall back to the hub (D-08).
   const handlePrimaryAction = useCallback(() => {
-    if (primaryAction?.onClick) {
-      // Record action taken for the page context
-      recordActionTaken(`${pageContext}-primary-action`).catch(console.error)
+    if (!primaryAction) return
+    recordActionTaken(`${pageContext}-primary-action`).catch(console.error)
+    if (primaryAction.onClick) {
       primaryAction.onClick()
+      return
     }
-  }, [primaryAction, pageContext, recordActionTaken])
+    if (targetType) {
+      void navigate({ to: `/dossiers/${getDossierRouteSegment(targetType)}/create` })
+      return
+    }
+    void navigate({ to: '/dossiers/create' })
+  }, [primaryAction, targetType, pageContext, recordActionTaken, navigate])
 
   // Filter hints based on user experience
   const visibleHints = useMemo(() => {

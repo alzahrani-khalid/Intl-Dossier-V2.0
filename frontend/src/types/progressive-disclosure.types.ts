@@ -255,12 +255,30 @@ export interface ProgressiveEmptyStateProps {
   description: string
   /** Icon from Lucide */
   icon: React.ComponentType<{ className?: string }>
-  /** Primary action */
+  /**
+   * Primary action. When set, its `onClick` takes precedence over `targetType`.
+   */
   primaryAction?: {
     label: string
     onClick: () => void
     icon?: React.ComponentType<{ className?: string }>
   }
+  /**
+   * D-07: Optional per-type wizard target. When set AND `primaryAction` is
+   * provided without an `onClick`, the component synthesizes navigation to
+   * `/dossiers/{segment}/create`. Ignored when `primaryAction.onClick` is set.
+   * Kept as the dossier-type string union in the caller's domain to avoid
+   * coupling this shared type file to `@/services/dossier-api`.
+   */
+  targetType?:
+    | 'country'
+    | 'organization'
+    | 'forum'
+    | 'engagement'
+    | 'topic'
+    | 'working_group'
+    | 'person'
+    | 'elected_official'
   /** Progressive hints to show */
   hints?: ProgressiveHintSet
   /** Variant */

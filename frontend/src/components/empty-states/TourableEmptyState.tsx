@@ -23,9 +23,12 @@ import {
   FileCheck,
   FileSignature,
 } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import { EmptyState, EmptyStateVariant, EmptyStateSize, QuickAction } from './EmptyState'
 import { TourTrigger, type TourId } from '@/components/guided-tours'
 import { cn } from '@/lib/utils'
+import { getDossierRouteSegment } from '@/lib/dossier-routes'
+import type { DossierType } from '@/services/dossier-api'
 
 export type TourableEntityType =
   | 'document'
@@ -47,8 +50,16 @@ export type TourableEntityType =
 interface TourableEmptyStateProps {
   /** Type of entity the list is for */
   entityType: TourableEntityType
-  /** Callback to create new item */
+  /** Callback to create new item. When set, takes precedence over `targetType`. */
   onCreate?: () => void
+  /**
+   * D-07: Optional per-type wizard target. When set AND `onCreate` is not
+   * provided, the primary action navigates directly to the type's per-type
+   * wizard (e.g. `targetType="country"` → `/dossiers/countries/create`).
+   * When both are unset, the primary action falls back to the hub at
+   * `/dossiers/create` (D-08).
+   */
+  targetType?: DossierType
   /** Callback to import items */
   onImport?: () => void
   /** Whether this is the first item (affects messaging and tour trigger) */
@@ -104,12 +115,16 @@ const entityConfig: Record<TourableEntityType, { icon: LucideIcon; translationKe
  * Shows a tour trigger banner for first-time users in empty sections.
  *
  * @example
- * // Dossier list empty state with tour
+ * // Typed list — routes straight to the per-type wizard (D-07)
  * <TourableEmptyState
- *   entityType="dossier"
+ *   entityType="country"
  *   isFirstItem={true}
- *   onCreate={() => navigate('/dossiers/create')}
+ *   targetType="country"   // → /dossiers/countries/create
  * />
+ *
+ * @example
+ * // Generic dossier context — hub fallback (D-08)
+ * <TourableEmptyState entityType="dossier" isFirstItem={true} />
  *
  * @example
  * // Relationship section with inline tour trigger
@@ -123,6 +138,7 @@ const entityConfig: Record<TourableEntityType, { icon: LucideIcon; translationKe
 export function TourableEmptyState({
   entityType,
   onCreate,
+  targetType,
   onImport,
   isFirstItem = false,
   title: customTitle,
@@ -134,9 +150,27 @@ export function TourableEmptyState({
   tourVariant = 'banner',
 }: TourableEmptyStateProps) {
   const { t } = useTranslation('empty-states')
+  const navigate = useNavigate()
   const config = entityConfig[entityType]
   const translationKey = config.translationKey
   const tourId = entityToTourMap[entityType]
+
+  // D-07: resolve the primary-action handler. Precedence:
+  //   1. caller-supplied `onCreate`
+  //   2. `targetType` → per-type wizard
+  //   3. hub fallback (`/dossiers/create`) per D-08
+  // When neither `onCreate` nor `targetType` is set but the component is
+  // rendered with a truthy primary action (caller intent = "offer creation"),
+  // we fall back to the hub. If BOTH are unset and the caller hasn't asked
+  // for a primary action either, the button stays hidden — preserving the
+  // pre-existing behavior for purely informational empty states.
+  const resolvedOnCreate = onCreate
+    ? onCreate
+    : targetType
+      ? () => {
+          void navigate({ to: `/dossiers/${getDossierRouteSegment(targetType)}/create` })
+        }
+      : undefined
 
   // Determine if we should show the tour trigger
   const shouldShowTour = showTourTrigger ?? isFirstItem
@@ -162,7 +196,7 @@ export function TourableEmptyState({
     defaultValue: t('list.generic.hint'),
   })
 
-  const primaryAction: QuickAction | undefined = onCreate
+  const primaryAction: QuickAction | undefined = resolvedOnCreate
     ? {
         label: isFirstItem
           ? t(`list.${translationKey}.createFirst`, {
@@ -170,7 +204,7 @@ export function TourableEmptyState({
             })
           : t(`list.${translationKey}.create`, { defaultValue: t('list.generic.create') }),
         icon: Plus,
-        onClick: onCreate,
+        onClick: resolvedOnCreate,
       }
     : undefined
 

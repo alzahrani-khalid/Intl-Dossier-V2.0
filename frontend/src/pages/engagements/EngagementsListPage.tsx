@@ -94,7 +94,8 @@ function EngagementsListPage() {
 
   // Navigation handlers
   const handleCreateEngagement = () => {
-    navigate({ to: '/dossiers/create' })
+    // D-07: engagements list always routes direct to the per-type wizard.
+    navigate({ to: '/dossiers/engagements/create' })
   }
 
   const handleEngagementClick = (engagementId: string) => {

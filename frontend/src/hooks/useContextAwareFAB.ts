@@ -26,6 +26,23 @@ import {
 } from 'lucide-react'
 import type { FABAction, SpeedDialAction } from '@/components/ui/context-aware-fab'
 
+// D-09: typed dossier list route → per-type wizard lookup. Keys mirror the
+// filesystem route tree under `frontend/src/routes/_protected/dossiers/`
+// (note: `working_groups` uses an underscore; `elected-officials` uses a
+// hyphen — both verified against the route tree). The hub (`/dossiers/create`)
+// remains the fallback for non-typed routes (dashboard, tasks, notifications,
+// `/dossiers/` with no type filter, etc.) per D-08.
+const TYPED_LIST_TO_WIZARD: Record<string, string> = {
+  '/dossiers/countries': '/dossiers/countries/create',
+  '/dossiers/organizations': '/dossiers/organizations/create',
+  '/dossiers/forums': '/dossiers/forums/create',
+  '/dossiers/engagements': '/dossiers/engagements/create',
+  '/dossiers/topics': '/dossiers/topics/create',
+  '/dossiers/working_groups': '/dossiers/working_groups/create',
+  '/dossiers/persons': '/dossiers/persons/create',
+  '/dossiers/elected-officials': '/dossiers/elected-officials/create',
+}
+
 export interface UseContextAwareFABConfig {
   /** Override the current route path */
   currentRoute?: string
@@ -73,10 +90,13 @@ export function useContextAwareFAB(
   const handleCreateDossier = useCallback(() => {
     if (config.onCreateDossier) {
       config.onCreateDossier()
-    } else {
-      navigate({ to: '/dossiers/create' })
+      return
     }
-  }, [config.onCreateDossier, navigate])
+    // D-09: resolve typed list routes to their per-type wizard; hub fallback
+    // for everything else per D-08.
+    const destination = TYPED_LIST_TO_WIZARD[currentRoute] ?? '/dossiers/create'
+    navigate({ to: destination })
+  }, [config.onCreateDossier, currentRoute, navigate])
 
   const handleCreateEngagement = useCallback(() => {
     if (config.onCreateEngagement) {
