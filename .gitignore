@@ -133,6 +133,7 @@ frontend/dist-test/
 .claude_settings.json
 .worktrees/
 .claude/worktrees/
+.claude/launch.json
 .security-key
 logs/security/
 .playwright-mcp/
