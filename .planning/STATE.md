@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Dossier Creation UX
-status: phase_complete
-stopped_at: Phase 32 COMPLETE — verifier PASS 7/7 PBI requirements; ready to spec/plan Phase 31 (Creation Hub & Cleanup)
-last_updated: '2026-04-18T02:30:00.000Z'
-last_activity: 2026-04-18 -- Phase 32 execution + verification complete (4 plans, 11 commits); next phase 31 has no SPEC yet — auto-chain pausing
+status: executing
+stopped_at: Phase 30 plans verified PASS — chain mode halted before execute (planner recommended /clear first)
+last_updated: '2026-04-18T08:45:29.334Z'
+last_activity: 2026-04-18 -- Phase 31 planning complete
 progress:
   total_phases: 7
   completed_phases: 6
@@ -27,8 +27,8 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 
 Phase: 32 (person-native-basic-info) — COMPLETE (verified 2026-04-18, 7/7 PBI pass)
 Plan: 4 of 4 done
-Status: Phase 32 shipped; auto-chain pausing because Phase 31 has no SPEC.md yet
-Last activity: 2026-04-18 -- /gsd-execute-phase 32 --auto finished; gsd-verifier returned PASS
+Status: Ready to execute
+Last activity: 2026-04-18 -- Phase 31 planning complete
 
 Progress: [█████████░] 86% (6/7 phases complete; phase 31 remaining — needs spec)
 

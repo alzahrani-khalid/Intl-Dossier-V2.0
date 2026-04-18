@@ -186,8 +186,15 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 2. Each wizard displays type-specific contextual guidance and hints within its steps
 3. The old monolithic DossierCreateWizard component and its route are removed from the codebase
 4. All references (Command Palette, FAB, empty states, navigation links) point to the new type-specific wizards or the hub
-   **Plans**: TBD
-   **UI hint**: yes
+
+**Plans:** 4 plans
+Plans:
+
+- [ ] 31-01-PLAN.md -- CreateDossierHub component + route swap at /dossiers/create (UX-01)
+- [ ] 31-02-PLAN.md -- Step guidance banner + guidance copy across all 8 wizards i18n namespaces (UX-02)
+- [ ] 31-03-PLAN.md -- UX-04 reference updates (FAB lookup, list CTAs, empty states, MeetingSchedule) (UX-04)
+- [ ] 31-04-PLAN.md -- Cleanup: delete legacy wizard files, i18n audit, DossierTypeSelector orphan verify (UX-03)
+      **UI hint**: yes
 
 ### Phase 32: Person-Native Basic Info
 
