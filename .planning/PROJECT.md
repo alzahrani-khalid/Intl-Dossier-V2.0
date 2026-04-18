@@ -8,30 +8,26 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 Unified intelligence management for diplomatic operations — every relationship, commitment, and signal tracked in one secure, bilingual platform.
 
-## Current Milestone: v5.0 Dossier Creation UX
-
-**Goal:** Replace the generic 5-step wizard with type-specific creation flows that give each dossier type exactly the steps, fields, guidance, and relationships it needs.
-
-**Target features:**
-
-- Type-specific wizards — 8 tailored creation flows, each with only the steps that type needs
-- Direct entry from type pages — creation starts from each type's list page
-- Relationship linking at creation — engagements pick participants, forums link organizing bodies, etc.
-- Type-specific guidance — contextual hints tailored to each dossier type
-- Smart defaults per type — skip unnecessary fields, sensible defaults
-- Elected official creation path — variant of Person wizard with office/term/constituency
-- Progressive field design — essential fields upfront, optional details post-creation
-
 ## Current State
 
-**Shipped:** v4.1 Post-Launch Fixes (2026-04-12)
+**Shipped:** v5.0 Dossier Creation UX (2026-04-18) — 7 phases, 28 plans, 45/45 requirements satisfied, audit PASSED.
 
+<details>
+<summary>Shipped milestones</summary>
+
+- v5.0 Dossier Creation UX (2026-04-18): 8 per-type creation wizards, unified `CreateDossierHub`, legacy wizard removed, person-native identity refactor — see `.planning/milestones/v5.0-ROADMAP.md` and `.planning/v5.0-MILESTONE-AUDIT.md`
+- v4.1 Post-Launch Fixes (2026-04-12): 87-finding audit, semantic colors, PageHeader unification, 100% Arabic parity
 - v4.0 Live Operations (2026-04-09): Production deployment, notifications (in-app + email + push), seed data, E2E testing
 - v3.0 Connected Workflow (2026-04-06): Hub-and-spoke architecture, engagement lifecycle, Operations Hub, DossierShell
 - v2.0 Production Quality (2026-03-28): 7-phase hardening (toolchain, security, RTL, responsive, architecture, performance)
-- v4.1 Post-Launch Fixes (2026-04-12): 87-finding audit, semantic colors, PageHeader unification, 100% Arabic parity
 
-**Tech debt:** See `.planning/milestones/v4.0-MILESTONE-AUDIT.md` for known gaps (NOTIF-04 digest scheduler, TEST-05/10/11 E2E coverage, corporate infra items)
+</details>
+
+**Tech debt carried from v5.0:** `DossierTypeSelector` orphan cleanup, Playwright E2E runtime (CI env), bilingual UAT sweeps — see `.planning/v5.0-MILESTONE-AUDIT.md` §6.1. Prior tech debt in `.planning/milestones/v4.0-MILESTONE-AUDIT.md` (NOTIF-04 digest scheduler, TEST-05/10/11 E2E coverage, corporate infra items).
+
+## Next Milestone Goals
+
+_TBD — run `/gsd-new-milestone` to begin the next milestone cycle._
 
 ## Requirements
 
@@ -75,15 +71,19 @@ Unified intelligence management for diplomatic operations — every relationship
 - ✓ Playwright E2E test suite with CI integration — v4.0 Phase 18
 - ✓ Tech debt cleanup (typed router params, roadmap auto-sync) — v4.0 Phase 19
 
+- ✓ Shared compositional wizard infrastructure (`useCreateDossierWizard`, `CreateWizardShell`, per-type Zod schemas) — v5.0 Phase 26
+- ✓ Type-specific creation wizards for all 8 dossier types — v5.0 Phases 27–30
+- ✓ Direct creation entry from each type's list page (context-aware FAB) — v5.0 Phase 31
+- ✓ Relationship linking during creation (participants, organizing bodies, parent bodies) — v5.0 Phase 29
+- ✓ Type-specific guidance and contextual hints (bilingual) — v5.0 Phase 31
+- ✓ Smart defaults per type (status, sensitivity, optional fields) — v5.0 Phase 26
+- ✓ Elected official creation path (Person variant with office/term/constituency) — v5.0 Phase 30
+- ✓ Unified `CreateDossierHub` at `/dossiers/create` + legacy wizard removal — v5.0 Phase 31
+- ✓ Person-native identity fields (honorific, split names, nationality, DOB, gender) — v5.0 Phase 32
+
 ### Active
 
-- [ ] Type-specific creation wizards for all 8 dossier types
-- [ ] Direct creation entry from each type's list page
-- [ ] Relationship linking during creation (participants, organizing bodies, parent bodies)
-- [ ] Type-specific guidance and contextual hints
-- [ ] Smart defaults per type (status, sensitivity, optional fields)
-- [ ] Elected official creation path (Person variant with office/term/constituency)
-- [ ] Progressive field design (essential upfront, optional post-creation)
+_None — v5.0 shipped 2026-04-18. Run `/gsd-new-milestone` to define the next milestone._
 
 ### Out of Scope
 
@@ -159,4 +159,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-14 after v5.0 milestone start_
+_Last updated: 2026-04-18 after v5.0 milestone archive_

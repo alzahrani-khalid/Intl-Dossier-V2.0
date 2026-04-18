@@ -6,7 +6,7 @@
 - ✅ **v3.0 Connected Workflow** — Phases 8-13 (shipped 2026-04-06) — [archive](milestones/v3.0-ROADMAP.md)
 - ✅ **v4.0 Live Operations** — Phases 14-23 (shipped 2026-04-09) — [archive](milestones/v4.0-ROADMAP.md)
 - ✅ **v4.1 Post-Launch Fixes** — Phases 24-25 (shipped 2026-04-12) — [archive](milestones/v4.1-ROADMAP.md)
-- 🚧 **v5.0 Dossier Creation UX** — Phases 26-32 (in progress)
+- ✅ **v5.0 Dossier Creation UX** — Phases 26-32 (shipped 2026-04-18) — [archive](milestones/v5.0-ROADMAP.md)
 
 ## Phases
 
@@ -67,150 +67,24 @@ Full details: [v4.1-ROADMAP.md](milestones/v4.1-ROADMAP.md)
 
 </details>
 
-### v5.0 Dossier Creation UX (In Progress)
+<details>
+<summary>✅ v5.0 Dossier Creation UX (Phases 26-32) — SHIPPED 2026-04-18</summary>
 
-**Milestone Goal:** Replace the generic 5-step wizard with type-specific creation flows that give each dossier type exactly the steps, fields, guidance, and relationships it needs.
+- [x] Phase 26: Shared Wizard Infrastructure (4/4 plans) — `useCreateDossierWizard` hook, `CreateWizardShell`, per-type Zod schemas, defaults factory
+- [x] Phase 27: Country Wizard (2/2 plans) — 3-step wizard, ISO/region/capital, list-page CTA
+- [x] Phase 28: Simple Type Wizards (4/4 plans) — Organization, Topic, Person wizards
+- [x] Phase 29: Complex Type Wizards (6/6 plans) — Forum, Working Group, Engagement wizards with relationship linking
+- [x] Phase 30: Elected Official Wizard (4/4 plans) — Person variant with office/term/constituency
+- [x] Phase 31: Creation Hub and Cleanup (4/4 plans) — `CreateDossierHub`, context-aware FAB, legacy wizard removal
+- [x] Phase 32: Person-Native Basic Info (4/4 plans) — `PersonBasicInfoStep` with honorific, split names, nationality, DOB, gender
 
-- [x] **Phase 26: Shared Wizard Infrastructure** - Extract reusable hook, shell, schemas, and defaults powering all 8 type-specific wizards (completed 2026-04-15)
-- [x] **Phase 27: Country Wizard** - First type-specific wizard validating the compositional pattern end-to-end (completed 2026-04-15)
-- [x] **Phase 28: Simple Type Wizards** - Organization, Topic, and Person wizards following the proven Country pattern (completed 2026-04-16)
-- [ ] **Phase 29: Complex Type Wizards** - Forum, Working Group, and Engagement wizards with relationship linking steps
-- [x] **Phase 30: Elected Official Wizard** - Person wizard variant adding office, term, and constituency steps
-- [ ] **Phase 31: Creation Hub and Cleanup** - CreateDossierHub entry point, old wizard removal, and reference updates
-- [x] **Phase 32: Person-Native Basic Info** - Replace SharedBasicInfoStep with PersonBasicInfoStep (split name, honorific, nationality, DOB, gender, photo) for person + elected_official wizards (4/4 plans, shipped 2026-04-18)
+Full details: [v5.0-ROADMAP.md](milestones/v5.0-ROADMAP.md)
 
-## Phase Details
+</details>
 
-### Phase 26: Shared Wizard Infrastructure
+### Next Milestone — TBD
 
-**Goal**: All building blocks exist so any type-specific wizard can be composed from shared parts without duplicating logic
-**Depends on**: Nothing (first phase of v5.0)
-**Requirements**: INFRA-01, INFRA-02, INFRA-03, INFRA-04, INFRA-05, INFRA-06, INFRA-07
-**Success Criteria** (what must be TRUE):
-
-1. A `useCreateDossierWizard<T>` hook exists that handles draft persistence, form submission, AI assist, and duplicate detection for any dossier type
-2. A `CreateWizardShell` component renders progress indicator, step navigation, and bilingual labels given a step configuration array
-3. Per-type Zod schemas can extend a shared base schema and validate only their own fields
-4. Calling `getDefaultsForType('country')` (or any type) returns sensible defaults including status, sensitivity, and type-specific fields
-5. Existing localStorage drafts using the old format are migrated to per-type keys on first load without data loss
-   **Plans**: 4 plans
-   - [x] 26-00-PLAN.md -- Wave 0 test stubs for Nyquist compliance
-   - [x] 26-01-PLAN.md -- Type contracts, Zod schemas, defaults factory
-   - [x] 26-02-PLAN.md -- useCreateDossierWizard hook and draft migration
-   - [x] 26-03-PLAN.md -- CreateWizardShell and SharedBasicInfoStep components
-         **UI hint**: yes
-
-### Phase 27: Country Wizard
-
-**Goal**: Users can create a country dossier through a dedicated 3-step wizard directly from the Countries list page
-**Depends on**: Phase 26
-**Requirements**: CTRY-01, CTRY-02, CTRY-03
-**Success Criteria** (what must be TRUE):
-
-1. User navigates to Countries list page and clicks "Create Country" to open the country wizard (no type selection step)
-2. User fills Basic Info (name_en, name_ar, abbreviation, description) and Country Details (ISO codes, region, capital) across two focused steps
-3. User reviews all entered data on the Review step and submits to create the country dossier
-4. Created country appears in the Countries list and navigates to the new dossier detail page
-   **Plans**: 2 plans
-   - [x] 27-01-PLAN.md -- Country wizard config, auto-fill hook, CountryDetailsStep, and i18n keys
-   - [x] 27-02-PLAN.md -- CountryReviewStep, wizard route page, list page button update, and visual verification
-         **UI hint**: yes
-
-### Phase 28: Simple Type Wizards
-
-**Goal**: Users can create Organization, Topic, and Person dossiers through type-specific wizards from their respective list pages
-**Depends on**: Phase 27
-**Requirements**: ORG-01, ORG-02, ORG-03, TOPC-01, TOPC-02, TOPC-03, PRSN-01, PRSN-02, PRSN-03
-**Success Criteria** (what must be TRUE):
-
-1. User can create an organization dossier via 3-step wizard (Basic Info, Org Details with type/code/website, Review) from the Organizations list page
-2. User can create a topic dossier via 2-step wizard (Basic Info with theme category inline, Review) from the Topics list page
-3. User can create a person dossier via 3-step wizard (Basic Info, Person Details with title/photo/biography, Review) from the Persons list page
-4. All three wizards use the shared infrastructure (hook, shell, schemas) without duplicating creation logic
-   **Plans**: 4 plans
-   Plans:
-   - [x] 28-01-PLAN.md -- Extract shared review helpers, update org schema, add i18n keys
-   - [x] 28-02-PLAN.md -- Organization wizard (config, steps, route, list page)
-   - [x] 28-03-PLAN.md -- Topic wizard (config, inline step, route, list page)
-   - [x] 28-04-PLAN.md -- Person wizard (config, steps, route, list page)
-         **UI hint**: yes
-
-### Phase 29: Complex Type Wizards
-
-**Goal**: Users can create Forum, Working Group, and Engagement dossiers with relationship linking during creation
-**Depends on**: Phase 28
-**Requirements**: FORUM-01, FORUM-02, FORUM-03, WG-01, WG-02, WG-03, ENGM-01, ENGM-02, ENGM-03, ENGM-04, ENGM-05
-**Success Criteria** (what must be TRUE):
-
-1. User can create a forum dossier via 3-step wizard and link an organizing body (organization) using a DossierPicker in the Forum Details step
-2. User can create a working group dossier via 3-step wizard and link a parent body using a DossierPicker, plus set established date and mandate
-3. User can create an engagement dossier via 4-step wizard with type, category, location, and a Participants step for multi-selecting countries, organizations, and persons
-4. The multi-select DossierPicker variant supports filtering by dossier type and displays selected items clearly
-5. All three wizards are accessible directly from their respective list pages (Forums, Working Groups, Engagements)
-   **Plans**: 6 plans
-   Plans:
-   - [ ] 29-01-PLAN.md -- DossierPicker multi-select extension (ENGM-04)
-   - [ ] 29-02-PLAN.md -- Supabase migrations (working_groups.parent_body_id + conditional forums.organizing_body) [BLOCKING]
-   - [ ] 29-03-PLAN.md -- Forum wizard (FORUM-01/02/03)
-   - [ ] 29-04-PLAN.md -- Working Group wizard (WG-01/02/03)
-   - [ ] 29-05-PLAN.md -- Engagement wizard + participants postCreate hook (ENGM-01/02/03/05)
-   - [ ] 29-06-PLAN.md -- Integration sweep, Playwright E2E, bilingual human checkpoint
-         **UI hint**: yes
-
-### Phase 30: Elected Official Wizard
-
-**Goal**: Users can create an elected official as a Person variant with additional office and term information
-**Depends on**: Phase 28
-**Requirements**: ELOF-01, ELOF-02, ELOF-03, ELOF-04
-**Success Criteria** (what must be TRUE):
-
-1. User can create an elected official via 4-step wizard (Basic Info, Person Details, Office/Term, Review) from the Elected Officials list page
-2. Office/Term step captures office title, term start/end dates, constituency, and political party
-3. Created dossier uses `person_subtype: 'elected_official'` and appears in both Elected Officials and Persons lists
-   **Plans**: 4 plans
-   Plans:
-   - [x] 30-01-schema-migration-PLAN.md -- Migration (relax office-name CHECK), person.schema superRefine, subtype-aware config, elected-official defaults (ELOF-01/02/03)
-   - [x] 30-02-office-term-step-PLAN.md -- OfficeTermStep component (4 sections, 2 DossierPickers) + EN/AR i18n (ELOF-02)
-   - [x] 30-03-wizard-wiring-PLAN.md -- /dossiers/elected-officials/create route, list page link, PersonReviewStep conditional section (ELOF-01/04)
-   - [x] 30-04-testing-PLAN.md -- Unit (OfficeTermStep + schema superRefine) + Playwright E2E (EN-only, AR-only, dual-list) (ELOF-01/02/03/04)
-         **UI hint**: yes
-
-### Phase 31: Creation Hub and Cleanup
-
-**Goal**: All creation flows are unified under a hub entry point and the old monolithic wizard is removed
-**Depends on**: Phase 29, Phase 30
-**Requirements**: UX-01, UX-02, UX-03, UX-04
-**Success Criteria** (what must be TRUE):
-
-1. A CreateDossierHub page at `/dossiers/create` displays a type grid allowing users to pick any of the 8 dossier types to start the appropriate wizard
-2. Each wizard displays type-specific contextual guidance and hints within its steps
-3. The old monolithic DossierCreateWizard component and its route are removed from the codebase
-4. All references (Command Palette, FAB, empty states, navigation links) point to the new type-specific wizards or the hub
-
-**Plans:** 4 plans
-Plans:
-
-- [ ] 31-01-PLAN.md -- CreateDossierHub component + route swap at /dossiers/create (UX-01)
-- [ ] 31-02-PLAN.md -- Step guidance banner + guidance copy across all 8 wizards i18n namespaces (UX-02)
-- [ ] 31-03-PLAN.md -- UX-04 reference updates (FAB lookup, list CTAs, empty states, MeetingSchedule) (UX-04)
-- [ ] 31-04-PLAN.md -- Cleanup: delete legacy wizard files, i18n audit, DossierTypeSelector orphan verify (UX-03)
-      **UI hint**: yes
-
-### Phase 32: Person-Native Basic Info
-
-**Goal**: The Person and Elected Official wizards collect the identity fields a diplomatic dossier system actually needs (honorific, split name, nationality, DOB, gender, photo), replacing the institution-shaped SharedBasicInfoStep that leaks org-centric copy like "abbreviation" onto person dossiers
-**Depends on**: Phase 30
-**Requirements**: PBI-01, PBI-02, PBI-03, PBI-04, PBI-05, PBI-06
-**Success Criteria** (what must be TRUE):
-
-1. A `PersonBasicInfoStep` component renders identity-shaped fields (honorific, first/last name EN+AR, known-as, photo, nationality, DOB, gender, summary, tags, classification) — not institution-shaped ones
-2. Both `personWizardConfig` and `electedOfficialWizardConfig` use `PersonBasicInfoStep` at step 1, and neither shows `abbreviation` or manual `status` fields anywhere
-3. Honorific is a curated dropdown (H.E., Dr., Prof., Sen., Hon., Rep., Sheikh, Amb., Mr., Ms., Mrs., Eng.) with an "Other" option that reveals a free-text input
-4. Gender is an optional Female/Male select (no "prefer not to say" option); nationality is a required DossierPicker filtered to country dossiers
-5. A non-breaking DB migration adds columns (`honorific_en`, `honorific_ar`, `first_name_en/ar`, `last_name_en/ar`, `known_as_en/ar`, `nationality_id`, `date_of_birth`, `gender`) to dossiers, backfills `first_name`/`last_name` by splitting existing person `name_en/ar` on last space, and preserves `name_en/ar` as a generated column for search
-6. PersonReviewStep displays the new identity fields; Persons and Elected Officials list pages show honorific + last name prominently and surface a nationality flag/badge
-   **Plans**: 4 plans (migration+backfill, PersonBasicInfoStep component, wizard rewiring + review, tests + list updates)
-   **UI hint**: yes
+_Run `/gsd-new-milestone` to begin the next milestone cycle._
 
 ## Progress
 
@@ -219,25 +93,26 @@ Phases execute in numeric order: 26 -> 27 -> 28 -> 29 / 30 (parallel after 28) -
 
 <!-- gsd:progress:start -->
 
-| Phase                             | Milestone | Plans Complete | Status      | Completed  |
-| --------------------------------- | --------- | -------------- | ----------- | ---------- |
-| 14. Production Deployment         | v4.0      | 3/3            | Complete    | 2026-04-06 |
-| 15. Notification Backend & In-App | v4.0      | 3/3            | Complete    | 2026-04-06 |
-| 16. Email & Push Channels         | v4.0      | 4/4            | Complete    | 2026-04-06 |
-| 17. Seed Data & First Run         | v4.0      | 5/5            | Complete    | 2026-04-06 |
-| 18. E2E Test Suite                | v4.0      | 4/4            | Complete    | 2026-04-07 |
-| 19. Tech Debt Cleanup             | v4.0      | 2/2            | Complete    | 2026-04-08 |
-| 20. Live Operations Bring Up      | v4.0      | 1/1            | Complete    | 2026-04-09 |
-| 21. Digest Scheduler Wiring Fix   | v4.0      | 1/1            | Complete    | 2026-04-09 |
-| 22. E2E Test Fixes                | v4.0      | 1/1            | Complete    | 2026-04-09 |
-| 23. Missing Verifications         | v4.0      | 2/2            | Complete    | 2026-04-09 |
-| 24. Browser Inspection Fixes      | v4.1      | 2/2            | Complete    | 2026-04-12 |
-| 25. Deferred Audit Fixes          | v4.1      | 5/5            | Complete    | 2026-04-12 |
-| 26. Shared Wizard Infrastructure  | v5.0      | 4/4            | Complete    | 2026-04-15 |
-| 27. Country Wizard                | v5.0      | 2/2            | Complete    | 2026-04-15 |
-| 28. Simple Type Wizards           | v5.0      | 4/4            | Complete    | 2026-04-16 |
-| 29. Complex Type Wizards          | v5.0      | 3/6            | In Progress | -          |
-| 30. Elected Official Wizard       | v5.0      | 0/TBD          | Not started | -          |
-| 31. Creation Hub and Cleanup      | v5.0      | 0/TBD          | Not started | -          |
+| Phase                             | Milestone | Plans Complete | Status   | Completed  |
+| --------------------------------- | --------- | -------------- | -------- | ---------- |
+| 14. Production Deployment         | v4.0      | 3/3            | Complete | 2026-04-06 |
+| 15. Notification Backend & In-App | v4.0      | 3/3            | Complete | 2026-04-06 |
+| 16. Email & Push Channels         | v4.0      | 4/4            | Complete | 2026-04-06 |
+| 17. Seed Data & First Run         | v4.0      | 5/5            | Complete | 2026-04-06 |
+| 18. E2E Test Suite                | v4.0      | 4/4            | Complete | 2026-04-07 |
+| 19. Tech Debt Cleanup             | v4.0      | 2/2            | Complete | 2026-04-08 |
+| 20. Live Operations Bring Up      | v4.0      | 1/1            | Complete | 2026-04-09 |
+| 21. Digest Scheduler Wiring Fix   | v4.0      | 1/1            | Complete | 2026-04-09 |
+| 22. E2E Test Fixes                | v4.0      | 1/1            | Complete | 2026-04-09 |
+| 23. Missing Verifications         | v4.0      | 2/2            | Complete | 2026-04-09 |
+| 24. Browser Inspection Fixes      | v4.1      | 2/2            | Complete | 2026-04-12 |
+| 25. Deferred Audit Fixes          | v4.1      | 5/5            | Complete | 2026-04-12 |
+| 26. Shared Wizard Infrastructure  | v5.0      | 4/4            | Complete | 2026-04-15 |
+| 27. Country Wizard                | v5.0      | 2/2            | Complete | 2026-04-15 |
+| 28. Simple Type Wizards           | v5.0      | 4/4            | Complete | 2026-04-16 |
+| 29. Complex Type Wizards          | v5.0      | 6/6            | Complete | 2026-04-17 |
+| 30. Elected Official Wizard       | v5.0      | 4/4            | Complete | 2026-04-17 |
+| 31. Creation Hub and Cleanup      | v5.0      | 4/4            | Complete | 2026-04-18 |
+| 32. Person-Native Basic Info      | v5.0      | 4/4            | Complete | 2026-04-18 |
 
 <!-- gsd:progress:end -->

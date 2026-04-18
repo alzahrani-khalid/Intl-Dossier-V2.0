@@ -20,18 +20,18 @@ typed consumers can opt into direct routing without boilerplate.
 
 ## Files Modified
 
-| Role | Path | Change |
-| ---- | ---- | ------ |
-| hook | `frontend/src/hooks/useContextAwareFAB.ts` | Added `TYPED_LIST_TO_WIZARD` lookup (8 entries) + threaded `currentRoute` into `handleCreateDossier` — hub fallback preserved for non-typed routes. |
-| page | `frontend/src/pages/dossiers/DossierListPage.tsx` | `list.createNew` CTA is now type-aware (direct per-type wizard when `filters.type` is set, hub otherwise); lines 892/904 (search suggestion + sample-data empty state) intentionally remain on hub — annotated D-08. |
-| page | `frontend/src/pages/engagements/EngagementsListPage.tsx` | `handleCreateEngagement` → `/dossiers/engagements/create` (D-07). |
-| component | `frontend/src/components/elected-officials/ElectedOfficialListTable.tsx` | Empty-state Link → `/dossiers/elected-officials/create` (D-07). |
-| component | `frontend/src/components/empty-states/TourableEmptyState.tsx` | New optional `targetType?: DossierType` prop; precedence: `onCreate` → `targetType` → no-op. Uses `getDossierRouteSegment`. |
-| component | `frontend/src/components/progressive-disclosure/ProgressiveEmptyState.tsx` | New optional `targetType` prop wired via `handlePrimaryAction` — caller `onClick` wins, otherwise `targetType` → per-type wizard, else hub. |
-| component | `frontend/src/components/dossier/sections/MeetingSchedule.tsx` | Stripped dead `search={{ type, parentForumId }}` params on both call sites (D-05 hub is stateless); Link targets stay on `/dossiers/create` per D-08. |
-| types | `frontend/src/types/progressive-disclosure.types.ts` | Extended `ProgressiveEmptyStateProps` with `targetType?: DossierType` (inline union to avoid coupling the shared type file to `@/services/dossier-api`). |
-| test | `frontend/src/hooks/__tests__/useContextAwareFAB.test.ts` | NEW — 14 cases: 8 typed-route direct mappings + 5 hub fallbacks + 1 callback-wins. |
-| test | `frontend/src/components/empty-states/__tests__/TourableEmptyState.test.tsx` | NEW — 4 cases: country+elected-official typed routing, `onCreate` precedence, no-handler case. |
+| Role      | Path                                                                         | Change                                                                                                                                                                                                               |
+| --------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| hook      | `frontend/src/hooks/useContextAwareFAB.ts`                                   | Added `TYPED_LIST_TO_WIZARD` lookup (8 entries) + threaded `currentRoute` into `handleCreateDossier` — hub fallback preserved for non-typed routes.                                                                  |
+| page      | `frontend/src/pages/dossiers/DossierListPage.tsx`                            | `list.createNew` CTA is now type-aware (direct per-type wizard when `filters.type` is set, hub otherwise); lines 892/904 (search suggestion + sample-data empty state) intentionally remain on hub — annotated D-08. |
+| page      | `frontend/src/pages/engagements/EngagementsListPage.tsx`                     | `handleCreateEngagement` → `/dossiers/engagements/create` (D-07).                                                                                                                                                    |
+| component | `frontend/src/components/elected-officials/ElectedOfficialListTable.tsx`     | Empty-state Link → `/dossiers/elected-officials/create` (D-07).                                                                                                                                                      |
+| component | `frontend/src/components/empty-states/TourableEmptyState.tsx`                | New optional `targetType?: DossierType` prop; precedence: `onCreate` → `targetType` → no-op. Uses `getDossierRouteSegment`.                                                                                          |
+| component | `frontend/src/components/progressive-disclosure/ProgressiveEmptyState.tsx`   | New optional `targetType` prop wired via `handlePrimaryAction` — caller `onClick` wins, otherwise `targetType` → per-type wizard, else hub.                                                                          |
+| component | `frontend/src/components/dossier/sections/MeetingSchedule.tsx`               | Stripped dead `search={{ type, parentForumId }}` params on both call sites (D-05 hub is stateless); Link targets stay on `/dossiers/create` per D-08.                                                                |
+| types     | `frontend/src/types/progressive-disclosure.types.ts`                         | Extended `ProgressiveEmptyStateProps` with `targetType?: DossierType` (inline union to avoid coupling the shared type file to `@/services/dossier-api`).                                                             |
+| test      | `frontend/src/hooks/__tests__/useContextAwareFAB.test.ts`                    | NEW — 14 cases: 8 typed-route direct mappings + 5 hub fallbacks + 1 callback-wins.                                                                                                                                   |
+| test      | `frontend/src/components/empty-states/__tests__/TourableEmptyState.test.tsx` | NEW — 4 cases: country+elected-official typed routing, `onCreate` precedence, no-handler case.                                                                                                                       |
 
 ## FAB Typed-Route Lookup — final paths used
 
@@ -39,13 +39,13 @@ Verified against actual filesystem at `frontend/src/routes/_protected/dossiers/`
 
 ```typescript
 const TYPED_LIST_TO_WIZARD: Record<string, string> = {
-  '/dossiers/countries':         '/dossiers/countries/create',
-  '/dossiers/organizations':     '/dossiers/organizations/create',
-  '/dossiers/forums':            '/dossiers/forums/create',
-  '/dossiers/engagements':       '/dossiers/engagements/create',
-  '/dossiers/topics':            '/dossiers/topics/create',
-  '/dossiers/working_groups':    '/dossiers/working_groups/create',  // ← UNDERSCORE (verified)
-  '/dossiers/persons':           '/dossiers/persons/create',
+  '/dossiers/countries': '/dossiers/countries/create',
+  '/dossiers/organizations': '/dossiers/organizations/create',
+  '/dossiers/forums': '/dossiers/forums/create',
+  '/dossiers/engagements': '/dossiers/engagements/create',
+  '/dossiers/topics': '/dossiers/topics/create',
+  '/dossiers/working_groups': '/dossiers/working_groups/create', // ← UNDERSCORE (verified)
+  '/dossiers/persons': '/dossiers/persons/create',
   '/dossiers/elected-officials': '/dossiers/elected-officials/create', // ← HYPHEN (verified)
 }
 ```
@@ -56,9 +56,10 @@ Segment source of truth: `@/lib/dossier-routes.getDossierRouteSegment`.
 
 Both `TourableEmptyState` and `ProgressiveEmptyState` accept `targetType?: DossierType`.
 Resolution order (both components):
+
 1. caller-supplied `onCreate` / `primaryAction.onClick` → invoked verbatim.
 2. else `targetType` present → `navigate({ to: `/dossiers/${segment}/create` })`.
-3. else → hub (`/dossiers/create`) *or* (for `TourableEmptyState`) no primary-action button.
+3. else → hub (`/dossiers/create`) _or_ (for `TourableEmptyState`) no primary-action button.
 
 This preserves 100% of existing call-site behavior (all current callers pass `onCreate` explicitly or omit it entirely).
 
@@ -88,11 +89,11 @@ confirmed no dossier-create command entry exists that needs repointing.
 
 ## Verification
 
-| Gate | Command | Result |
-| ---- | ------- | ------ |
-| Tests | `cd frontend && pnpm vitest run src/hooks/__tests__/useContextAwareFAB.test.ts src/components/empty-states/__tests__/TourableEmptyState.test.tsx` | **PASS — 18/18** |
-| Typecheck (plan files) | `cd frontend && pnpm type-check` filtered to plan-31-03 files | **no new errors** — pre-existing `TS6133 isRTL` in `MeetingSchedule.tsx` (WorkingGroupScheduleProps — unchanged), pre-existing `TS2339` errors in `ProgressiveEmptyState.tsx` (hook return shape mismatch, lines shifted from 193→209 by my additions but same error set), pre-existing `TS6196` in `progressive-disclosure.types.ts` (unused helper types). Confirmed by `git stash` + re-typecheck pre-edit comparison. |
-| Grep sanity | `grep -RnE "to=\"/dossiers/create\"|navigate\\(\\{ ?to: ?['\"]/dossiers/create" frontend/src/hooks/ frontend/src/pages/dossiers/DossierListPage.tsx frontend/src/pages/engagements/EngagementsListPage.tsx frontend/src/components/elected-officials/ElectedOfficialListTable.tsx` | Only 2 allowed D-08 fallbacks in `DossierListPage.tsx` (lines 892, 904) — both annotated with `// D-08:` comments. |
+| Gate                   | Command                                                                                                                                           | Result                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Tests                  | `cd frontend && pnpm vitest run src/hooks/__tests__/useContextAwareFAB.test.ts src/components/empty-states/__tests__/TourableEmptyState.test.tsx` | **PASS — 18/18**                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Typecheck (plan files) | `cd frontend && pnpm type-check` filtered to plan-31-03 files                                                                                     | **no new errors** — pre-existing `TS6133 isRTL` in `MeetingSchedule.tsx` (WorkingGroupScheduleProps — unchanged), pre-existing `TS2339` errors in `ProgressiveEmptyState.tsx` (hook return shape mismatch, lines shifted from 193→209 by my additions but same error set), pre-existing `TS6196` in `progressive-disclosure.types.ts` (unused helper types). Confirmed by `git stash` + re-typecheck pre-edit comparison. |
+| Grep sanity            | `grep -RnE "to=\"/dossiers/create\"                                                                                                               | navigate\\(\\{ ?to: ?['\"]/dossiers/create" frontend/src/hooks/ frontend/src/pages/dossiers/DossierListPage.tsx frontend/src/pages/engagements/EngagementsListPage.tsx frontend/src/components/elected-officials/ElectedOfficialListTable.tsx`                                                                                                                                                                            | Only 2 allowed D-08 fallbacks in `DossierListPage.tsx` (lines 892, 904) — both annotated with `// D-08:` comments. |
 
 ## Deviations from Plan
 
@@ -110,10 +111,12 @@ None.
 ## Self-Check
 
 **Files created (verified via `ls`):**
+
 - FOUND: `frontend/src/hooks/__tests__/useContextAwareFAB.test.ts`
 - FOUND: `frontend/src/components/empty-states/__tests__/TourableEmptyState.test.tsx`
 
 **Files modified (verified via `git status --short`):**
+
 - FOUND: `frontend/src/hooks/useContextAwareFAB.ts`
 - FOUND: `frontend/src/pages/dossiers/DossierListPage.tsx`
 - FOUND: `frontend/src/pages/engagements/EngagementsListPage.tsx`
@@ -129,4 +132,4 @@ None.
 
 ## Commit SHA
 
-_recorded after final commit_
+`bbf4c158` — `plan(31-03): context-aware routing for FAB + list CTAs + empty states`
