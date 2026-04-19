@@ -118,7 +118,16 @@ Summary checklist:
 3. User can pick any accent hue (0–360°) and `--accent`, `--accent-ink`, `--accent-soft`, `--accent-fg`, `--sla-ok`, and `--sla-risk` (accent+55° warm shift) recompute while `--sla-bad` stays hue-locked red
 4. User can switch comfortable / compact / dense density and interactive row heights update (52/20/16 → 40/14/12 → 32/10/8 px), including in RTL where inline-start/inline-end logical spacing is preserved
 5. Existing HeroUI v3 Button/Card/Chip/Modal/Skeleton/TextField/Switch/Checkbox render with the new tokens via `@heroui/styles` bridge (accent → primary; danger/ok/warn/info → semantic) with zero per-component overrides, and Tailwind utilities `bg-surface / text-accent / border-line / bg-accent-soft` resolve to the active direction+mode+hue
-   **Plans**: TBD
+   **Plans**: 9 plans
+   - [ ] 33-01-token-module-PLAN.md — Pure OKLCH token engine (buildTokens, applyTokens, types, directions, densities) + unit tests
+   - [ ] 33-02-design-provider-PLAN.md — DesignProvider + useDesignDirection/useMode/useHue/useDensity/useDesignTokens hooks + App.tsx wiring
+   - [ ] 33-03-fouc-bootstrap-PLAN.md — Inline synchronous bootstrap in index.html + CSP audit + FOUC Playwright test
+   - [ ] 33-04-heroui-install-PLAN.md — Install @heroui/react + @heroui/styles; wire @plugin + :root --heroui-\* bridge in index.css (NO heroui.config.ts)
+   - [ ] 33-05-heroui-wrappers-PLAN.md — Rewrite heroui-{button,card,chip,skeleton}.tsx to real HeroUI primitives; re-export shims for button.tsx/skeleton.tsx
+   - [ ] 33-06-tailwind-remap-PLAN.md — @theme block in index.css for semantic remap + D-16 utilities + 24-baseline Playwright visual regression
+   - [ ] 33-07-legacy-cut-PLAN.md — Delete 19 [data-theme=...] blocks + HSL scales + 25-file legacy audit sweep + useTheme shim
+   - [ ] 33-08-storybook-PLAN.md — Install Storybook 8+ with Tailwind v4 + HeroUI; TokenGrid.stories.tsx + visual regression runner
+   - [ ] 33-09-e2e-verification-PLAN.md — Playwright E2E asserting all 5 Success Criteria on a live page (Nyquist layer)
 
 ### Phase 34: tweaks-drawer
 
