@@ -15,7 +15,8 @@ provides:
   - Widened `filterByDossierType` accepting `DossierType | DossierType[]`
   - Inline chip row rendered below the combobox (horizontal scroll, RTL-aware)
   - Vitest suite covering both single- and multi-select behaviors
-affects: [29-05-engagement-wizard, 29-complex-type-wizards, participants-step, engagement-participants]
+affects:
+  [29-05-engagement-wizard, 29-complex-type-wizards, participants-step, engagement-participants]
 
 # Tech tracking
 tech-stack:
@@ -95,6 +96,7 @@ _Plan metadata commit added after this SUMMARY._
 ### Auto-fixed Issues
 
 **1. [Rule 3 – Blocking] Made `onChange` optional on `DossierPickerProps`**
+
 - **Found during:** Task 1 (after adding multi-select props, the Engagement wizard's participant pickers would need to synthesize a dummy `onChange` to satisfy the old required signature).
 - **Issue:** With `onChange: (id, dossier) => void` required, any multi-select caller would either be forced to pass an unused no-op handler or cast away type safety. Plan §\<behavior\> explicitly states `onChange` is "ignored" in multi-select — contradicting a required signature.
 - **Fix:** Changed to `onChange?: (dossierId: string | null, dossier?: DossierOption) => void` and guarded the 2 call sites (`onChange?.(...)` in `handleSelect` single-path and `handleClear`). Verified via `git grep` that all 3 existing callers (`ForumFields`, `WorkCreationPalette`, `EnhancedKanbanBoard`) pass `onChange`, so no caller breaks.
@@ -103,6 +105,7 @@ _Plan metadata commit added after this SUMMARY._
 - **Committed in:** `bf7a0dbf` (part of Task 1 commit)
 
 **2. [Rule 1 – Bug] Jest-dom matchers not available — switched to Chai matchers**
+
 - **Found during:** Task 2 verification (initial vitest run failed 3/8 with `Invalid Chai property: toBeInTheDocument`).
 - **Issue:** Initial test file used `.toBeInTheDocument()` assuming `@testing-library/jest-dom` was registered. This project does not register it; existing test files (e.g. `CountryDetailsStep.test.tsx`) use `.toBeTruthy()` / `.toBeNull()`.
 - **Fix:** Replaced `.toBeInTheDocument()` with `.toBeTruthy()` and `.not.toBeInTheDocument()` with `.toBeNull()`, matching the existing codebase pattern.
@@ -123,22 +126,22 @@ _Plan metadata commit added after this SUMMARY._
 
 ### Must-have truths check
 
-| Truth | Status | Evidence |
-| --- | --- | --- |
-| Existing single-select callers work unchanged | PASS | `pnpm type-check` shows zero errors in ForumFields / WorkCreationPalette / EnhancedKanbanBoard; Test "calls onChange(id, dossier) when a recent dossier CommandItem is selected" green. |
-| Renders in multi-select when `multiple={true}` | PASS | Test "renders one chip per selected dossier" green; 3 chips visible in DOM. |
-| Chips render beneath combobox, horizontally scrollable, RTL-aware | PASS | `grep overflow-x-auto DossierPicker.tsx` → match; chip row uses `ms-*`/`me-*` only; `aria-live="polite"`. |
-| `filterByDossierType` accepts scalar OR array w/o type errors | PASS | `grep "DossierType \| DossierType\[\]" DossierPicker.tsx` → match; Test "accepts filterByDossierType as an array" green. |
-| ✕ on chip removes dossier and fires `onValuesChange` with remaining ids | PASS | Test "calls onValuesChange with remaining ids when a chip ✕ is clicked" → assertion `onValuesChange([japan.id], [japan])` green. |
+| Truth                                                                   | Status | Evidence                                                                                                                                                                                |
+| ----------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Existing single-select callers work unchanged                           | PASS   | `pnpm type-check` shows zero errors in ForumFields / WorkCreationPalette / EnhancedKanbanBoard; Test "calls onChange(id, dossier) when a recent dossier CommandItem is selected" green. |
+| Renders in multi-select when `multiple={true}`                          | PASS   | Test "renders one chip per selected dossier" green; 3 chips visible in DOM.                                                                                                             |
+| Chips render beneath combobox, horizontally scrollable, RTL-aware       | PASS   | `grep overflow-x-auto DossierPicker.tsx` → match; chip row uses `ms-*`/`me-*` only; `aria-live="polite"`.                                                                               |
+| `filterByDossierType` accepts scalar OR array w/o type errors           | PASS   | `grep "DossierType \| DossierType\[\]" DossierPicker.tsx` → match; Test "accepts filterByDossierType as an array" green.                                                                |
+| ✕ on chip removes dossier and fires `onValuesChange` with remaining ids | PASS   | Test "calls onValuesChange with remaining ids when a chip ✕ is clicked" → assertion `onValuesChange([japan.id], [japan])` green.                                                        |
 
 ### Plan-level verification
 
-| Command | Result |
-| --- | --- |
-| `pnpm vitest run src/components/work-creation/__tests__/DossierPicker.test.tsx` | **PASS** — 8/8 tests, 117 ms |
-| `pnpm type-check` (filtered to DossierPicker-related files) | **PASS** — 0 errors in `DossierPicker.tsx`, `__tests__/DossierPicker.test.tsx`, ForumFields, WorkCreationPalette, EnhancedKanbanBoard |
-| grep acceptance criteria on `DossierPicker.tsx` | **PASS** — `multiple?: boolean` (1), `values?: string[]` (1), `onValuesChange` (7), `selectedDossiers` (8), `DossierType \| DossierType[]` (1), `handleRemove` (2), `isMulti` (7), `overflow-x-auto` (1), RTL illegal classes (0) |
-| grep acceptance criteria on test file | **PASS** — `DossierPicker — multi-select` describe (1), `onValuesChange` (17, ≥5 required), `filterByDossierType={['country', 'organization']}` (3) |
+| Command                                                                         | Result                                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm vitest run src/components/work-creation/__tests__/DossierPicker.test.tsx` | **PASS** — 8/8 tests, 117 ms                                                                                                                                                                                                      |
+| `pnpm type-check` (filtered to DossierPicker-related files)                     | **PASS** — 0 errors in `DossierPicker.tsx`, `__tests__/DossierPicker.test.tsx`, ForumFields, WorkCreationPalette, EnhancedKanbanBoard                                                                                             |
+| grep acceptance criteria on `DossierPicker.tsx`                                 | **PASS** — `multiple?: boolean` (1), `values?: string[]` (1), `onValuesChange` (7), `selectedDossiers` (8), `DossierType \| DossierType[]` (1), `handleRemove` (2), `isMulti` (7), `overflow-x-auto` (1), RTL illegal classes (0) |
+| grep acceptance criteria on test file                                           | **PASS** — `DossierPicker — multi-select` describe (1), `onValuesChange` (17, ≥5 required), `filterByDossierType={['country', 'organization']}` (3)                                                                               |
 
 ### Manual spot-check of single-select callers (from code grep)
 
@@ -169,5 +172,5 @@ None — this is a pure frontend component extension with no new env vars, DB mi
 
 ---
 
-*Phase: 29-complex-type-wizards*
-*Completed: 2026-04-16*
+_Phase: 29-complex-type-wizards_
+_Completed: 2026-04-16_

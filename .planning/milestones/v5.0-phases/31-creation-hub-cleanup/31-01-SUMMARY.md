@@ -42,18 +42,18 @@ Requirements covered: **UX-01** (hub creation entry point).
 
 ## Acceptance Criteria (from PLAN)
 
-| Criterion | Result |
-|-----------|--------|
-| Hub renders 8 cards | PASS (test) |
-| DOSSIER_TYPES enum order | PASS (test) |
-| Uses `getDossierRouteSegment` | PASS (component) |
-| Grid `grid-cols-2 md:grid-cols-3 lg:grid-cols-4` | PASS |
-| No physical RTL classes | PASS (test assertion) |
-| EN + AR `hubDescription.*` keys added | PASS |
-| `elected_official` icon case | PASS |
-| Route `component: CreateDossierHub` | PASS |
-| Legacy `DossierCreatePage` import removed | PASS |
-| Test ≥3 cases passing | PASS (3/3) |
+| Criterion                                        | Result                |
+| ------------------------------------------------ | --------------------- |
+| Hub renders 8 cards                              | PASS (test)           |
+| DOSSIER_TYPES enum order                         | PASS (test)           |
+| Uses `getDossierRouteSegment`                    | PASS (component)      |
+| Grid `grid-cols-2 md:grid-cols-3 lg:grid-cols-4` | PASS                  |
+| No physical RTL classes                          | PASS (test assertion) |
+| EN + AR `hubDescription.*` keys added            | PASS                  |
+| `elected_official` icon case                     | PASS                  |
+| Route `component: CreateDossierHub`              | PASS                  |
+| Legacy `DossierCreatePage` import removed        | PASS                  |
+| Test ≥3 cases passing                            | PASS (3/3)            |
 
 ## Verdict
 

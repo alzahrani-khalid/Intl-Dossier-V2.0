@@ -30,13 +30,13 @@ key-files:
     - frontend/src/routeTree.gen.ts
 
 key-decisions:
-  - "Used form.watch() (not getValues()) in review step for live data after edits"
-  - "ReviewSection/ReviewField kept local to CountryReviewStep -- extract to shared in Phase 28 if pattern repeats (D-06)"
-  - "Description truncated to 120 chars with ellipsis in review display"
+  - 'Used form.watch() (not getValues()) in review step for live data after edits'
+  - 'ReviewSection/ReviewField kept local to CountryReviewStep -- extract to shared in Phase 28 if pattern repeats (D-06)'
+  - 'Description truncated to 120 chars with ellipsis in review display'
 
 patterns-established:
-  - "Review step pattern: ReviewSection card with title + Edit button, ReviewField for label/value pairs"
-  - "Type-specific wizard route: createFileRoute composing SharedBasicInfoStep + type step + review step"
+  - 'Review step pattern: ReviewSection card with title + Edit button, ReviewField for label/value pairs'
+  - 'Type-specific wizard route: createFileRoute composing SharedBasicInfoStep + type step + review step'
 
 requirements-completed: [CTRY-01, CTRY-02, CTRY-03]
 
@@ -57,6 +57,7 @@ completed: 2026-04-15
 - **Files modified:** 5
 
 ## Accomplishments
+
 - CountryReviewStep with two ReviewSection cards (Basic Info, Country Details), ReviewField helpers, Edit buttons calling onEditStep(0/1), live data via form.watch()
 - Country wizard route page composing SharedBasicInfoStep + CountryDetailsStep + CountryReviewStep via CreateWizardShell
 - Countries list page links updated from /dossiers/create to /dossiers/countries/create (both PageHeader and empty state CTA)
@@ -71,6 +72,7 @@ Each task was committed atomically:
 3. **Task 3: Human verification** - CHECKPOINT PENDING
 
 ## Files Created/Modified
+
 - `frontend/src/components/dossier/wizard/review/CountryReviewStep.tsx` - Review step with summary cards and edit navigation
 - `frontend/src/components/dossier/wizard/review/__tests__/CountryReviewStep.test.tsx` - Test stub with 4 test cases
 - `frontend/src/routes/_protected/dossiers/countries/create.tsx` - Wizard route composing all 3 steps
@@ -78,6 +80,7 @@ Each task was committed atomically:
 - `frontend/src/routeTree.gen.ts` - Regenerated with new route
 
 ## Decisions Made
+
 - Used form.watch() for live data in review step (per RESEARCH.md Pitfall 5)
 - ReviewSection/ReviewField kept local to CountryReviewStep for now (D-06 defers extraction)
 - Description truncated to 120 chars with ellipsis in review display
@@ -87,6 +90,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Fixed description field name mismatch**
+
 - **Found during:** Task 1
 - **Issue:** Plan referenced `values.description` but schema defines `description_en` and `description_ar` (separate bilingual fields)
 - **Fix:** Changed to `values.description_en` for review display
@@ -99,6 +103,7 @@ Each task was committed atomically:
 **Impact on plan:** Field name corrected to match actual schema. No scope creep.
 
 ## Issues Encountered
+
 None
 
 ## Checkpoint Pending
@@ -110,5 +115,6 @@ Task 3 is a `checkpoint:human-verify` requiring visual and functional verificati
 All 3 created files verified present. Both task commits verified in git log.
 
 ---
-*Phase: 27-country-wizard*
-*Completed: 2026-04-15 (Tasks 1-2; Task 3 checkpoint pending)*
+
+_Phase: 27-country-wizard_
+_Completed: 2026-04-15 (Tasks 1-2; Task 3 checkpoint pending)_

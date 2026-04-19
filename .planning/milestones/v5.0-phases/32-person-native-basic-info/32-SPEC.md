@@ -79,6 +79,7 @@ Replace `SharedBasicInfoStep` with a purpose-built `PersonBasicInfoStep` on the 
 ## Boundaries
 
 **In scope:**
+
 - New `PersonBasicInfoStep.tsx` component with all identity fields listed above
 - Zod schema extension (`personBasicInfoSchema`) with superRefine rules for required nationality + curated honorific values + gender enum
 - Rewiring both `personWizardConfig` and `electedOfficialWizardConfig` to use the new step at position 0
@@ -92,6 +93,7 @@ Replace `SharedBasicInfoStep` with a purpose-built `PersonBasicInfoStep` on the 
 - Playwright E2E spec covering the new wizard flow end-to-end (create + read-back + list assertion)
 
 **Out of scope:**
+
 - **Photo uploader / Supabase Storage bucket** — only the existing `photo_url` column is wired as a URL text input. Drag-drop upload, cropping, and storage integration are deferred to a later phase.
 - **Renaming or repurposing `persons.title_en/ar`** — these stay as job-title fields in `PersonDetailsStep` (step 2). `honorific_en/ar` is additive, not a rename.
 - **Backfilling existing `metadata` JSONB into typed columns** — no data munging beyond the name split.
@@ -134,16 +136,17 @@ Replace `SharedBasicInfoStep` with a purpose-built `PersonBasicInfoStep` on the 
 
 Final scoring (end of Round 2 + single gate question):
 
-| Dimension | Score | Minimum | Status |
-|---|---|---|---|
-| Goal Clarity | 0.90 | 0.75 | ✓ |
-| Boundary Clarity | 0.85 | 0.70 | ✓ |
-| Constraint Clarity | 0.75 | 0.65 | ✓ |
-| Acceptance Criteria | 0.75 | 0.70 | ✓ |
+| Dimension           | Score | Minimum | Status |
+| ------------------- | ----- | ------- | ------ |
+| Goal Clarity        | 0.90  | 0.75    | ✓      |
+| Boundary Clarity    | 0.85  | 0.70    | ✓      |
+| Constraint Clarity  | 0.75  | 0.65    | ✓      |
+| Acceptance Criteria | 0.75  | 0.70    | ✓      |
 
 **Final ambiguity:** 0.173 (gate: ≤ 0.20) ✅
 
 **Residual ambiguity accepted by user (flagged for planner to decide):**
+
 - "Prominently" in PBI-06 — the user declined to tighten this. Planner should choose a concrete rendering (e.g. primary label in the existing list row's heading slot, 16px font-weight-semibold, nationality badge as a shadcn `Badge` next to the name) and document in the plan.
 
 ## Downstream consumers

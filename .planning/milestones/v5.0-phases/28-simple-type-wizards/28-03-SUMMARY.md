@@ -32,28 +32,32 @@ metrics:
 
 ## Tasks Completed
 
-| Task | Name | Commit | Key Files |
-|------|------|--------|-----------|
-| 1 | Create topic config, TopicBasicInfoStep, and TopicReviewStep | 1f15aaa9 | topic.config.ts, TopicBasicInfoStep.tsx, TopicReviewStep.tsx |
-| 2 | Create topic wizard route and update list page Create button | 353f2808 | topics/create.tsx, topics/index.tsx |
+| Task | Name                                                         | Commit   | Key Files                                                    |
+| ---- | ------------------------------------------------------------ | -------- | ------------------------------------------------------------ |
+| 1    | Create topic config, TopicBasicInfoStep, and TopicReviewStep | 1f15aaa9 | topic.config.ts, TopicBasicInfoStep.tsx, TopicReviewStep.tsx |
+| 2    | Create topic wizard route and update list page Create button | 353f2808 | topics/create.tsx, topics/index.tsx                          |
 
 ## Implementation Details
 
 ### Topic Config (topic.config.ts)
+
 - 2-step wizard: basic + review (simplest wizard per D-08)
 - filterExtensionData passes theme_category to API
 
 ### TopicBasicInfoStep
+
 - Fragment composition: SharedBasicInfoStep + theme_category Select below it
 - SharedBasicInfoStep renders its own FormWizardStep internally
 - theme_category is a single-select with 4 options (policy, technical, strategic, operational)
 
 ### TopicReviewStep
+
 - Single ReviewSection combining basic info + topic details
 - onEdit navigates to step 0 (the only editable step)
 - theme_category displayed with translated label (Pitfall 5 covered)
 
 ### Route and List Page
+
 - topics/create.tsx follows countries/create.tsx pattern with 2 children in CreateWizardShell
 - topics/index.tsx Create buttons updated from /dossiers/create to /dossiers/topics/create
 

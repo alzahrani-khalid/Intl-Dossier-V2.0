@@ -1,36 +1,36 @@
 ---
 gsd_state_version: 1.0
-milestone: v5.0
-milestone_name: Dossier Creation UX
-status: complete
-stopped_at: Phase 31 complete — verification PASS (6/6 goals, 25/25 tests). Milestone v5.0 shipped.
-last_updated: '2026-04-18T12:30:00.000Z'
-last_activity: 2026-04-18 -- Phase 31 executed (4/4 plans) and verified
+milestone: v6.0
+milestone_name: Design System Adoption
+status: defining_requirements
+stopped_at: Milestone v6.0 started — defining requirements
+last_updated: '2026-04-19T00:00:00.000Z'
+last_activity: 2026-04-19 -- Milestone v6.0 started (Chancery / Situation Room / Ministerial / Bureau)
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 28
-  completed_plans: 28
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-14)
+See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Milestone v5.0 — COMPLETE. Ready to archive and start next milestone.
+**Current focus:** Milestone v6.0 — Design System Adoption (defining requirements)
 
 ## Current Position
 
-Phase: 31 (creation-hub-cleanup) — COMPLETE (verified 2026-04-18, 6/6 goals pass)
-Plan: 4 of 4 done (31-01 70e773a3, 31-02 09694570, 31-03 bbf4c158, 31-04 ca8b13ea)
-Status: Milestone v5.0 ready for archive
-Last activity: 2026-04-18 -- Phase 31 executed and verified
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-19 — Milestone v6.0 started
 
-Progress: [██████████] 100% (7/7 phases complete)
+Progress: [░░░░░░░░░░] 0% (0 phases defined)
 
 ## Performance Metrics
 

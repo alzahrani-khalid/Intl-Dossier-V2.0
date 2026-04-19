@@ -30,10 +30,10 @@ Extracted ReviewSection/ReviewField into shared module and added founding_date t
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Extract ReviewSection and ReviewField into shared module | d28cc484 | ReviewComponents.tsx (new), CountryReviewStep.tsx |
-| 2 | Add founding_date to org schema and all i18n keys | 4887e37c | organization.schema.ts, en/form-wizard.json, ar/form-wizard.json |
+| Task | Name                                                     | Commit   | Files                                                            |
+| ---- | -------------------------------------------------------- | -------- | ---------------------------------------------------------------- |
+| 1    | Extract ReviewSection and ReviewField into shared module | d28cc484 | ReviewComponents.tsx (new), CountryReviewStep.tsx                |
+| 2    | Add founding_date to org schema and all i18n keys        | 4887e37c | organization.schema.ts, en/form-wizard.json, ar/form-wizard.json |
 
 ## Deviations from Plan
 

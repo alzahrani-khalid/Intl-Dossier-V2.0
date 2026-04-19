@@ -32,14 +32,14 @@ key-files:
     - frontend/src/i18n/ar/form-wizard.json
 
 key-decisions:
-  - "Used STALE_TIME.NORMAL (5 min) for country reference queries since reference data changes infrequently"
+  - 'Used STALE_TIME.NORMAL (5 min) for country reference queries since reference data changes infrequently'
   - "Auto-fill returns undefined instead of null to align with TanStack Query's undefined data convention"
-  - "Region values stored as lowercase keys (asia, africa, etc.) with i18n display labels"
+  - 'Region values stored as lowercase keys (asia, africa, etc.) with i18n display labels'
 
 patterns-established:
-  - "Type-specific wizard config: import schema + defaults, define steps array, implement filterExtensionData"
-  - "Auto-fill hook pattern: useQuery with enabled guard, useEffect that checks empty fields before setValue"
-  - "Step component pattern: FormWizardStep wrapper, FormField for each field, useDirection for RTL"
+  - 'Type-specific wizard config: import schema + defaults, define steps array, implement filterExtensionData'
+  - 'Auto-fill hook pattern: useQuery with enabled guard, useEffect that checks empty fields before setValue'
+  - 'Step component pattern: FormWizardStep wrapper, FormField for each field, useDirection for RTL'
 
 requirements-completed: [CTRY-01, CTRY-02]
 
@@ -60,6 +60,7 @@ completed: 2026-04-15
 - **Files modified:** 7
 
 ## Accomplishments
+
 - Country wizard config wiring Phase 26 infrastructure (schema, defaults, 3 steps, filterExtensionData with ISO uppercase)
 - Auto-fill hook that queries GET /api/countries?search= and fills only empty form fields
 - CountryDetailsStep with ISO code inputs (maxLength, uppercase, font-mono), region dropdown (6 options), bilingual capital fields with RTL direction
@@ -73,6 +74,7 @@ Each task was committed atomically:
 2. **Task 2: CountryDetailsStep component with auto-fill integration** - `991d703b` (feat)
 
 ## Files Created/Modified
+
 - `frontend/src/components/dossier/wizard/config/country.config.ts` - WizardConfig<CountryFormData> with 3 steps and filterExtensionData
 - `frontend/src/components/dossier/wizard/hooks/useCountryAutoFill.ts` - Auto-fill hook with TanStack Query and empty-field guard
 - `frontend/src/components/dossier/wizard/steps/CountryDetailsStep.tsx` - Country-specific form fields step component
@@ -82,6 +84,7 @@ Each task was committed atomically:
 - `frontend/src/i18n/ar/form-wizard.json` - Added Arabic equivalents
 
 ## Decisions Made
+
 - Used STALE_TIME.NORMAL (5 min) for country reference queries -- REFERENCE tier doesn't exist in query-tiers.ts
 - Auto-fill returns undefined instead of null to match TanStack Query's data typing convention
 - Region values stored as lowercase keys with i18n display labels for consistency
@@ -91,6 +94,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Fixed optional ISO code fields in filterExtensionData**
+
 - **Found during:** Task 1
 - **Issue:** TypeScript strict mode flagged `data.iso_code_2.toUpperCase()` because schema defines iso_code_2/3 as optional
 - **Fix:** Added null check `data.iso_code_2 != null &&` before accessing `.toUpperCase()`
@@ -98,6 +102,7 @@ Each task was committed atomically:
 - **Committed in:** 7943ad20
 
 **2. [Rule 1 - Bug] Changed fetchCountryReference return type from null to undefined**
+
 - **Found during:** Task 1
 - **Issue:** useQuery wraps return as `T | undefined`, causing type mismatch with `Promise<T | null>`
 - **Fix:** Changed return type and value to `undefined` to align with TanStack Query convention
@@ -110,9 +115,11 @@ Each task was committed atomically:
 **Impact on plan:** Both fixes required for TypeScript strict mode compliance. No scope creep.
 
 ## Issues Encountered
+
 None
 
 ## User Setup Required
+
 None - no external service configuration required.
 
 ## Self-Check: PASSED
@@ -120,10 +127,12 @@ None - no external service configuration required.
 All 5 created files verified present. Both task commits verified in git log.
 
 ## Next Phase Readiness
+
 - All building blocks ready for Plan 02 to compose into a full wizard route
 - countryWizardConfig, useCountryAutoFill, and CountryDetailsStep are exported and ready to import
 - i18n keys complete for both languages
 
 ---
-*Phase: 27-country-wizard*
-*Completed: 2026-04-15*
+
+_Phase: 27-country-wizard_
+_Completed: 2026-04-15_

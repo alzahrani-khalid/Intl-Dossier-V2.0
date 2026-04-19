@@ -37,18 +37,20 @@ Person wizard with 3-step flow (Basic Info, Person Details, Review), photo file 
 
 ## Task Results
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Create person config, PersonDetailsStep, PersonReviewStep | 24512dc8 | person.config.ts, PersonDetailsStep.tsx, PersonReviewStep.tsx |
-| 2 | Create person wizard route and update list page | 7e4fcc07 | create.tsx, index.tsx, routeTree.gen.ts |
+| Task | Name                                                      | Commit   | Files                                                         |
+| ---- | --------------------------------------------------------- | -------- | ------------------------------------------------------------- |
+| 1    | Create person config, PersonDetailsStep, PersonReviewStep | 24512dc8 | person.config.ts, PersonDetailsStep.tsx, PersonReviewStep.tsx |
+| 2    | Create person wizard route and update list page           | 7e4fcc07 | create.tsx, index.tsx, routeTree.gen.ts                       |
 
 ## Implementation Details
 
 ### Person Config (person.config.ts)
+
 - 3 steps: basic, person-details, review
 - filterExtensionData strips empty strings, preserves person_subtype
 
 ### PersonDetailsStep
+
 - Bilingual title fields (free-text Input, not dropdown) per D-02
 - Photo file picker with thumbnail preview per D-03: hidden file input triggered by button, immediate blob URL preview, async upload to Supabase Storage via useUploadStore
 - Bilingual biography Textarea fields with min-h-[88px]
@@ -56,12 +58,14 @@ Person wizard with 3-step flow (Basic Info, Person Details, Review), photo file 
 - Touch-friendly: min-h-11 on all interactive elements
 
 ### PersonReviewStep
+
 - 2 ReviewSections: Basic Info (step 0) and Person Details (step 1)
 - Photo thumbnail (12x12 rounded) when photo_url is non-empty, fallback to "--" placeholder
 - Biography truncated at 120 characters with ellipsis
 
 ### Route and Navigation
-- Person wizard route at /_protected/dossiers/persons/create
+
+- Person wizard route at /\_protected/dossiers/persons/create
 - TanStack Router route tree regenerated to include new route
 - Persons list page Create button updated from /dossiers/create to /dossiers/persons/create (2 instances)
 
@@ -70,18 +74,21 @@ Person wizard with 3-step flow (Basic Info, Person Details, Review), photo file 
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] Upload store returns uploadId, not URL**
+
 - **Found during:** Task 1
 - **Issue:** Plan assumed uploadFile returns a public URL directly, but it returns an uploadId string. The actual URL is delivered via onComplete callback.
 - **Fix:** Used onComplete callback in upload options to call form.setValue('photo_url', url)
 - **Files modified:** PersonDetailsStep.tsx
 
 **2. [Rule 3 - Blocking] Used 'attachments' bucket instead of 'person-photos'**
+
 - **Found during:** Task 1
 - **Issue:** Plan suggested 'person-photos' bucket which may not exist in Supabase Storage
 - **Fix:** Used existing 'attachments' bucket with path prefix 'person-photos' for organization
 - **Files modified:** PersonDetailsStep.tsx
 
 **3. [Rule 3 - Blocking] Route tree regeneration required**
+
 - **Found during:** Task 2
 - **Issue:** New route file caused TS2345 because TanStack Router route tree did not include the new route path
 - **Fix:** Ran `npx @tanstack/router-cli generate` to regenerate routeTree.gen.ts

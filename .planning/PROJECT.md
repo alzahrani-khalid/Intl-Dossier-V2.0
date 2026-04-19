@@ -25,9 +25,34 @@ Unified intelligence management for diplomatic operations — every relationship
 
 **Tech debt carried from v5.0:** `DossierTypeSelector` orphan cleanup, Playwright E2E runtime (CI env), bilingual UAT sweeps — see `.planning/v5.0-MILESTONE-AUDIT.md` §6.1. Prior tech debt in `.planning/milestones/v4.0-MILESTONE-AUDIT.md` (NOTIF-04 digest scheduler, TEST-05/10/11 E2E coverage, corporate infra items).
 
-## Next Milestone Goals
+## Current Milestone: v6.0 Design System Adoption
 
-_TBD — run `/gsd-new-milestone` to begin the next milestone cycle._
+**Goal:** Adopt the Claude Design handoff as the system-wide visual language — four design directions (Chancery / Situation Room / Ministerial / Bureau) × light/dark × accent hue × density — replacing the existing theme list, rebuilding the shell chrome, and rebuilding the dashboard pixel-exact to the reference.
+
+**Target features:**
+
+- Token engine (4 directions × mode × hue × density, OKLCH accent math, Tailwind v4 `@theme` bridge, HeroUI v3 semantic mapping)
+- Tweaks drawer (topbar-only; replaces current `/themes` route and `pages/Themes.tsx`)
+- Typography stack (Fraunces / Space Grotesk / IBM Plex / Public Sans / Inter / JetBrains Mono / Tajawal, with RTL display-font override)
+- Shell chrome (256px sidebar with accent active bar, topbar with search+⌘K + direction switch + classification ribbon)
+- Signature visual primitives (GlobeLoader, GlobeSpinner, DossierGlyph w/ 24 flags + symbol glyphs, Sparkline, Donut)
+- Dashboard rebuilt verbatim to `reference/dashboard.png` (8 widgets wired to existing domain hooks)
+- Kanban WorkBoard + Calendar pages
+- List pages (Countries, Organizations, Persons, Forums, Topics, Working Groups, Engagements)
+- Dossier drawer + detail (720px slide-in, mini-KPI strip, serif summary)
+- Remaining pages (Briefs, After-actions, Tasks, Activity, Settings)
+- RTL audit + a11y + responsive sweep (320→1536)
+
+**Key context:**
+
+- Handoff bundle: `/tmp/inteldossier-handoff/inteldossier/` (HTML/CSS/JSX prototypes + reference screenshots + GASTAT_LOGO.svg)
+- **Replace** current theme list (strategy i) — no coexistence with v5.0 themes
+- HeroUI v3 consumes new CSS vars via `@heroui/styles` (accent → primary; danger/ok/warn → semantic)
+- Dashboard pixel-exact to reference; widgets wire to existing domain hooks (no mocked data)
+- Tweaks drawer lives in topbar only; `/themes` route + `pages/Themes.tsx` removed
+- Bilingual RTL/LTR invariant across every phase; logical properties only
+- No framework migrations (React 19, Express, Supabase, TanStack, HeroUI v3, Tailwind v4)
+- Phase numbering continues from v5.0 (starts at Phase 33)
 
 ## Requirements
 
@@ -83,7 +108,7 @@ _TBD — run `/gsd-new-milestone` to begin the next milestone cycle._
 
 ### Active
 
-_None — v5.0 shipped 2026-04-18. Run `/gsd-new-milestone` to define the next milestone._
+_Pending — v6.0 Design System Adoption requirements defined in `.planning/REQUIREMENTS.md`; REQ-IDs will appear here once phases commit._
 
 ### Out of Scope
 
@@ -159,4 +184,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-18 after v5.0 milestone archive_
+_Last updated: 2026-04-19 at v6.0 milestone start_

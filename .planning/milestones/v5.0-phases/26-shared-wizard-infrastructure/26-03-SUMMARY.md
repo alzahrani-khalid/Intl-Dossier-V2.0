@@ -34,14 +34,15 @@ CreateWizardShell wraps FormWizard with FormProvider and draft indicator; Shared
 
 ## Tasks Completed
 
-| Task | Name | Commit | Key Files |
-|------|------|--------|-----------|
-| 1 | Create CreateWizardShell component | c275605a | CreateWizardShell.tsx |
-| 2 | Create SharedBasicInfoStep + i18n keys | d5a2d1c5 | SharedBasicInfoStep.tsx, en/form-wizard.json, ar/form-wizard.json |
+| Task | Name                                   | Commit   | Key Files                                                         |
+| ---- | -------------------------------------- | -------- | ----------------------------------------------------------------- |
+| 1    | Create CreateWizardShell component     | c275605a | CreateWizardShell.tsx                                             |
+| 2    | Create SharedBasicInfoStep + i18n keys | d5a2d1c5 | SharedBasicInfoStep.tsx, en/form-wizard.json, ar/form-wizard.json |
 
 ## Implementation Details
 
 ### CreateWizardShell (Task 1)
+
 - Thin compositional wrapper around FormWizard per D-05
 - Provides FormProvider context so nested step components can use useFormContext()
 - Draft saved indicator with Save icon + fade-in animation at top
@@ -52,6 +53,7 @@ CreateWizardShell wraps FormWizard with FormProvider and draft indicator; Shared
 - allowStepNavigation=true (click completed steps)
 
 ### SharedBasicInfoStep (Task 2)
+
 - Merges old BasicInfoStep + ClassificationStep into single step component
 - Classification fields (status, sensitivity_level) in collapsible `<details>` section, collapsed by default
 - Bilingual name fields (name_en, name_ar) with FieldLabelWithHelp and contextual help
@@ -64,6 +66,7 @@ CreateWizardShell wraps FormWizard with FormProvider and draft indicator; Shared
 - All interactive elements have min-h-11 (44px touch targets)
 
 ### i18n Keys Added (9 new keys per language)
+
 - classificationTitle, create_type, empty_heading, empty_body
 - validation_error, submission_error, discard_draft, discard_confirm, draft_restored
 
@@ -72,12 +75,14 @@ CreateWizardShell wraps FormWizard with FormProvider and draft indicator; Shared
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] AIFieldAssist props mismatch**
+
 - **Found during:** Task 2
 - **Issue:** Plan specified `onAIGenerate?: () => void` but AIFieldAssist requires `dossierType: DossierType` and `onGenerate: (fields: GeneratedFields) => void`
 - **Fix:** Added `dossierType?: DossierType` and changed `onAIGenerate` to accept `GeneratedFields` parameter to match actual AIFieldAssist API
 - **Files modified:** SharedBasicInfoStep.tsx
 
 **2. [Rule 1 - Bug] Double FormProvider wrapping**
+
 - **Found during:** Task 1
 - **Issue:** Plan showed both `<FormProvider>` and `<Form>` wrapping, but Form=FormProvider in form.tsx, causing double context nesting
 - **Fix:** Used only `<FormProvider>` (which is what Form re-exports), removed redundant Form import

@@ -33,6 +33,7 @@ useCreateDossierWizard<T> all-in-one hook composing 5 sub-hooks plus silent lega
 ### Task 1: useDraftMigration hook (08ab28e6)
 
 Created `useDraftMigration.ts` with two exports:
+
 - `migrateLegacyDraft()` pure function: reads old `dossier-create-draft` localStorage key, extracts `type` field, writes data to `dossier-create-{type}` key, removes old key. Skips if no valid type or per-type key already exists. Silent failure via empty catch block per D-03.
 - `useDraftMigration()` hook: calls `migrateLegacyDraft()` once on mount using `useRef(false)` guard to prevent React StrictMode double-execution.
 
@@ -55,6 +56,7 @@ Handlers (`handleComplete`, `handleCancel`, `handleSaveDraft`, `handleAIGenerate
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] form.watch type error with generic T**
+
 - **Found during:** Task 2 verification
 - **Issue:** `form.watch('name_en')` on generic `UseFormReturn<T>` caused TS2352 because T doesn't constrain field names
 - **Fix:** Cast field name through `as never` and result through `as unknown as string`
@@ -62,6 +64,7 @@ Handlers (`handleComplete`, `handleCancel`, `handleSaveDraft`, `handleAIGenerate
 - **Commit:** 5394125e
 
 **2. [Rule 1 - Bug] person_subtype not on CreateDossierRequest**
+
 - **Found during:** Task 2 verification
 - **Issue:** Plan specified adding person_subtype to CreateDossierRequest, but the actual type does not have this field
 - **Fix:** Removed person_subtype assignment; it is handled via `config.filterExtensionData()` callback which delegates to per-type config

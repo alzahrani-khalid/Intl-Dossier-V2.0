@@ -35,10 +35,10 @@ metrics:
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Add i18n keys to en/ar form-wizard.json | 5fe1e482 | `frontend/src/i18n/en/form-wizard.json`, `frontend/src/i18n/ar/form-wizard.json` |
-| 2 | Create OfficeTermStep.tsx component | 8c5eca77 | `frontend/src/components/dossier/wizard/steps/OfficeTermStep.tsx` |
+| Task | Name                                    | Commit   | Files                                                                            |
+| ---- | --------------------------------------- | -------- | -------------------------------------------------------------------------------- |
+| 1    | Add i18n keys to en/ar form-wizard.json | 5fe1e482 | `frontend/src/i18n/en/form-wizard.json`, `frontend/src/i18n/ar/form-wizard.json` |
+| 2    | Create OfficeTermStep.tsx component     | 8c5eca77 | `frontend/src/components/dossier/wizard/steps/OfficeTermStep.tsx`                |
 
 ## Component Structure
 
@@ -47,12 +47,14 @@ metrics:
 **Export:** `export function OfficeTermStep({ form }: OfficeTermStepProps): ReactElement`
 
 **Section structure:**
+
 1. **Office** — `office_name_en` + `office_name_ar` bilingual grid + `country_id` DossierPicker (required) + `organization_id` DossierPicker (optional)
 2. **Constituency** — `district_en` + `district_ar` bilingual grid (both optional)
 3. **Party** — `party_en` + `party_ar` bilingual grid (both optional)
 4. **Term** — `term_start` (date, required) + `term_end` (date, optional)
 
 **DossierPicker prop signatures (canonical Phase 29 form):**
+
 ```tsx
 // Country (required)
 <DossierPicker
@@ -77,6 +79,7 @@ metrics:
 **AR file:** 84 insertions — same structure with Arabic translations
 
 Keys added under `elected_official.*`:
+
 - `page_title`, `back_to_list`
 - `sections.{office,constituency,party,term}`
 - `office_name_en`, `office_name_ar`, `office_name_en_ph`, `office_name_ar_ph`
@@ -90,6 +93,7 @@ Keys added under `elected_official.*`:
 ## RTL Compliance Audit
 
 Grep scan results on `OfficeTermStep.tsx`:
+
 - `ml-*`, `mr-*`, `pl-*`, `pr-*`, `text-left`, `text-right`: **0 matches** (PASS)
 - `textAlign.*right`: **0 matches** (PASS)
 - Arabic inputs with `dir={direction}`: `office_name_ar`, `district_ar`, `party_ar` — **3 of 3** (PASS)

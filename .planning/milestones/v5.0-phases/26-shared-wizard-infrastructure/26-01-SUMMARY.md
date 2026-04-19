@@ -51,6 +51,7 @@ Created `config/types.ts` with `WizardConfig<T extends FieldValues>` and `Create
 Created `baseDossierSchema` with shared fields (name_en, name_ar, abbreviation, description, status, sensitivity_level, tags) -- no `type` field, no `extension_data` nesting.
 
 Created 8 per-type schema files, each using `baseDossierSchema.merge(typeFields)`:
+
 - country: iso_code_2, iso_code_3, capital, region
 - organization: org_type, org_code, website, headquarters
 - topic: theme_category
@@ -73,10 +74,11 @@ Created `defaults/index.ts` with `getDefaultsForType<T>(type: DossierType): T` c
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] Wave 0 test stubs used require() which vitest cannot resolve for .ts files**
+
 - **Found during:** Task 1 verification
 - **Issue:** Test stubs from Plan 00 used `require('../base.schema')` pattern which fails with MODULE_NOT_FOUND because vitest's require() doesn't resolve .ts extensions
 - **Fix:** Converted both test files from `require()` to static `import` statements
-- **Files modified:** schemas/__tests__/schemas.test.ts, defaults/__tests__/defaults.test.ts
+- **Files modified:** schemas/**tests**/schemas.test.ts, defaults/**tests**/defaults.test.ts
 - **Commits:** c3929e8c, 7c9a1ad9
 
 ## Test Results

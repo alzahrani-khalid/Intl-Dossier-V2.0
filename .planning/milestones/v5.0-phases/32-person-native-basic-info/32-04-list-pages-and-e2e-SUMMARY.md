@@ -41,14 +41,14 @@ Landed the list-row primary label composition (`[honorific] first last` with `na
 
 ## Tasks Executed
 
-| # | Task                                                          | Status      | Commit    |
-| - | ------------------------------------------------------------- | ----------- | --------- |
-| 1 | `person-display.ts` helpers (formatPersonLabel + isoToFlag)   | ✅ done     | 2003cd4d  |
-| 2 | Extend persons-list query — nationality join                  | ✅ done     | 76333210  |
-| 3 | Persons list page row rendering                               | ✅ done     | 76333210  |
-| 4 | Elected-officials list page + table row rendering             | ✅ done     | 76333210  |
-| 5 | Legacy-row visual check (fallback to `name_en`)               | ✅ covered  | 76333210  |
-| 6 | Playwright E2E `tests/e2e/person-identity-fields.spec.ts`     | ✅ landed   | 7aff26c6  |
+| #   | Task                                                        | Status     | Commit   |
+| --- | ----------------------------------------------------------- | ---------- | -------- |
+| 1   | `person-display.ts` helpers (formatPersonLabel + isoToFlag) | ✅ done    | 2003cd4d |
+| 2   | Extend persons-list query — nationality join                | ✅ done    | 76333210 |
+| 3   | Persons list page row rendering                             | ✅ done    | 76333210 |
+| 4   | Elected-officials list page + table row rendering           | ✅ done    | 76333210 |
+| 5   | Legacy-row visual check (fallback to `name_en`)             | ✅ covered | 76333210 |
+| 6   | Playwright E2E `tests/e2e/person-identity-fields.spec.ts`   | ✅ landed  | 7aff26c6 |
 
 ## Acceptance Evidence
 
