@@ -142,31 +142,73 @@ Explicitly excluded from v6.0; documented to prevent scope creep.
 
 ## Traceability
 
-Phase mapping is empty until the roadmapper runs. Expect every v1 requirement to be mapped to exactly one phase.
+Every v1 requirement is mapped to exactly one roadmap phase.
 
-| Requirement                 | Phase | Status  |
-| --------------------------- | ----- | ------- |
-| TOKEN-01 through TOKEN-06   | TBD   | Pending |
-| THEME-01 through THEME-04   | TBD   | Pending |
-| TYPO-01 through TYPO-04     | TBD   | Pending |
-| SHELL-01 through SHELL-05   | TBD   | Pending |
-| VIZ-01 through VIZ-05       | TBD   | Pending |
-| DASH-01 through DASH-09     | TBD   | Pending |
-| BOARD-01 through BOARD-03   | TBD   | Pending |
-| LIST-01 through LIST-04     | TBD   | Pending |
-| DRAWER-01 through DRAWER-03 | TBD   | Pending |
-| PAGE-01 through PAGE-05     | TBD   | Pending |
-| QA-01 through QA-04         | TBD   | Pending |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| TOKEN-01    | Phase 33 | Pending |
+| TOKEN-02    | Phase 33 | Pending |
+| TOKEN-03    | Phase 33 | Pending |
+| TOKEN-04    | Phase 33 | Pending |
+| TOKEN-05    | Phase 33 | Pending |
+| TOKEN-06    | Phase 33 | Pending |
+| THEME-01    | Phase 34 | Pending |
+| THEME-02    | Phase 34 | Pending |
+| THEME-03    | Phase 34 | Pending |
+| THEME-04    | Phase 34 | Pending |
+| TYPO-01     | Phase 35 | Pending |
+| TYPO-02     | Phase 35 | Pending |
+| TYPO-03     | Phase 35 | Pending |
+| TYPO-04     | Phase 35 | Pending |
+| SHELL-01    | Phase 36 | Pending |
+| SHELL-02    | Phase 36 | Pending |
+| SHELL-03    | Phase 36 | Pending |
+| SHELL-04    | Phase 36 | Pending |
+| SHELL-05    | Phase 36 | Pending |
+| VIZ-01      | Phase 37 | Pending |
+| VIZ-02      | Phase 37 | Pending |
+| VIZ-03      | Phase 37 | Pending |
+| VIZ-04      | Phase 37 | Pending |
+| VIZ-05      | Phase 37 | Pending |
+| DASH-01     | Phase 38 | Pending |
+| DASH-02     | Phase 38 | Pending |
+| DASH-03     | Phase 38 | Pending |
+| DASH-04     | Phase 38 | Pending |
+| DASH-05     | Phase 38 | Pending |
+| DASH-06     | Phase 38 | Pending |
+| DASH-07     | Phase 38 | Pending |
+| DASH-08     | Phase 38 | Pending |
+| DASH-09     | Phase 38 | Pending |
+| BOARD-01    | Phase 39 | Pending |
+| BOARD-02    | Phase 39 | Pending |
+| BOARD-03    | Phase 39 | Pending |
+| LIST-01     | Phase 40 | Pending |
+| LIST-02     | Phase 40 | Pending |
+| LIST-03     | Phase 40 | Pending |
+| LIST-04     | Phase 40 | Pending |
+| DRAWER-01   | Phase 41 | Pending |
+| DRAWER-02   | Phase 41 | Pending |
+| DRAWER-03   | Phase 41 | Pending |
+| PAGE-01     | Phase 42 | Pending |
+| PAGE-02     | Phase 42 | Pending |
+| PAGE-03     | Phase 42 | Pending |
+| PAGE-04     | Phase 42 | Pending |
+| PAGE-05     | Phase 42 | Pending |
+| QA-01       | Phase 43 | Pending |
+| QA-02       | Phase 43 | Pending |
+| QA-03       | Phase 43 | Pending |
+| QA-04       | Phase 43 | Pending |
 
 **Coverage:**
 
 - v1 requirements: 52 total
-- Mapped to phases: 0 (roadmap not yet generated)
-- Unmapped: 52 ⚠️ (expected — roadmapper will resolve)
+- Mapped to phases: 52 ✓
+- Unmapped: 0
 
 **Categories:** TOKEN (6) · THEME (4) · TYPO (4) · SHELL (5) · VIZ (5) · DASH (9) · BOARD (3) · LIST (4) · DRAWER (3) · PAGE (5) · QA (4) = 52
 
 ---
 
 _Requirements defined: 2026-04-19_
-_Last updated: 2026-04-19 at milestone v6.0 start_
+_Traceability mapped by roadmapper: 2026-04-19_
+_Last updated: 2026-04-19 at roadmap creation_

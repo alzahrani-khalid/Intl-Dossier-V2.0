@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: defining_requirements
-stopped_at: Milestone v6.0 started — defining requirements
+status: ready_to_execute
+stopped_at: Roadmap created — ready to discuss Phase 33 (token-engine)
 last_updated: '2026-04-19T00:00:00.000Z'
-last_activity: 2026-04-19 -- Milestone v6.0 started (Chancery / Situation Room / Ministerial / Bureau)
+last_activity: 2026-04-19 -- Roadmap created; 11 phases (33-43), 52/52 requirements mapped
 progress:
-  total_phases: 0
+  total_phases: 11
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Milestone v6.0 — Design System Adoption (defining requirements)
+**Current focus:** Milestone v6.0 — Design System Adoption (ready to execute)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Phase 33 (token-engine) — not started
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-19 — Milestone v6.0 started
+Status: Ready to execute
+Last activity: 2026-04-19 — Roadmap created (11 phases, 52/52 REQs mapped)
 
-Progress: [░░░░░░░░░░] 0% (0 phases defined)
+Progress: [░░░░░░░░░░] 0% (0 / 11 phases complete)
 
 ## Performance Metrics
 
@@ -44,9 +44,9 @@ Progress: [░░░░░░░░░░] 0% (0 phases defined)
 
 | Phase | Plans | Total | Avg/Plan |
 | ----- | ----- | ----- | -------- |
-| 27    | 2     | -     | -        |
-| 28    | 4     | -     | -        |
-| 29    | 6     | -     | -        |
+| 27    | 2     | —     | —        |
+| 28    | 4     | —     | —        |
+| 29    | 6     | —     | —        |
 
 ## Accumulated Context
 
@@ -56,6 +56,11 @@ Progress: [░░░░░░░░░░] 0% (0 phases defined)
 - [v5.0]: Elected official is Person variant with person_subtype, not separate type
 - [v5.0]: Relationship linking via post-create API call (no new Edge Functions)
 - [v5.0]: Phase 29 and 30 can run in parallel after Phase 28
+- [v6.0]: Strategy (i) — full replacement of existing theme list; no coexistence with v5.0 themes
+- [v6.0]: HeroUI v3 consumes new CSS vars via `@heroui/styles` (accent → primary; danger/ok/warn/info → semantic)
+- [v6.0]: Dashboard pixel-exact to `reference/dashboard.png`; widgets wire to existing domain hooks (no mocked data)
+- [v6.0]: Tweaks drawer lives in topbar only; `/themes` route + `pages/Themes.tsx` removed
+- [v6.0]: Phase ordering: 33 is foundation → {34, 35, 37} parallelizable → 36 gates {38–42} → 43 is final QA sweep
 
 ### Pending Todos
 
@@ -63,8 +68,9 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Research]: Verify linkDossierRelationships API endpoint exists for Phase 29
-- [Research]: Verify dossiers-create Edge Function handles person_subtype for Phase 30
+- [Research]: Confirm `useDashboardStats` / `useDashboardTrends` / `useWeekAhead` / `usePersonalCommitments` / `useMyTasks` / `useRecentDossiers` / `useForums` hook names and return shapes before Phase 38 planning (DASH-09 requires real wiring, no mocks)
+- [Research]: Verify `handoff/project/reference/GASTAT_LOGO.svg` is at expected path before Phase 36 (SHELL-05)
+- [Research]: Confirm `@fontsource/fraunces`, `@fontsource/space-grotesk`, `@fontsource/public-sans`, `@fontsource/inter`, `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono`, `@fontsource/jetbrains-mono`, `@fontsource/tajawal` packages resolve before Phase 35 (TYPO-02)
 
 ### Quick Tasks Completed
 
@@ -73,17 +79,32 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-17T00:30:00.000Z
-Stopped at: Phase 30 plans verified PASS — chain mode halted before execute (planner recommended /clear first)
-Resume file: .planning/phases/30-elected-official-wizard/30-01-schema-migration-PLAN.md
-Resume command: /clear then /gsd-execute-phase 30 --auto
+Last session: 2026-04-19T00:00:00.000Z
+Stopped at: Roadmap created — v6.0 has 11 phases (33-43), 52/52 requirements mapped, ready to begin discussion of Phase 33
+Resume file: .planning/ROADMAP.md
+Resume command: /gsd-discuss-phase 33
 
-### Phase 30 Plan Summary (committed, ready to execute)
+### v6.0 Phase Map (11 phases, 52 requirements)
 
-- **30-01** (wave 1, BLOCKING migration via Supabase MCP): schema + config + defaults extensions — unblocks wave 2
-- **30-02** (wave 2): new OfficeTermStep.tsx + EN/AR i18n
-- **30-03** (wave 2): /create route + list page link fix + review step extension
-- **30-04** (wave 3): unit tests + Playwright E2E (EN-only + AR-only happy paths)
+| Phase | Name                      | Requirements  | Count |
+| ----- | ------------------------- | ------------- | ----- |
+| 33    | token-engine              | TOKEN-01..06  | 6     |
+| 34    | tweaks-drawer             | THEME-01..04  | 4     |
+| 35    | typography-stack          | TYPO-01..04   | 4     |
+| 36    | shell-chrome              | SHELL-01..05  | 5     |
+| 37    | signature-visuals         | VIZ-01..05    | 5     |
+| 38    | dashboard-verbatim        | DASH-01..09   | 9     |
+| 39    | kanban-calendar           | BOARD-01..03  | 3     |
+| 40    | list-pages                | LIST-01..04   | 4     |
+| 41    | dossier-drawer            | DRAWER-01..03 | 3     |
+| 42    | remaining-pages           | PAGE-01..05   | 5     |
+| 43    | rtl-a11y-responsive-sweep | QA-01..04     | 4     |
 
-Coverage: ELOF-01, ELOF-02, ELOF-03, ELOF-04 (all 4 requirements).
-Discretion resolved: is_current_term auto-derived client-side; field grouping in 4 sections; PersonReviewStep extended inline.
+**Dependency graph summary:**
+
+- Phase 33 (tokens) is the foundation — no deps
+- Phases 34, 35, 37 each depend on 33 (parallelizable)
+- Phase 36 depends on 33, 34, 35
+- Phases 38–42 each depend on 33, 36, 37 (parallelizable after the gate)
+- Phase 38 depends on 33, 37 (does not strictly require 36 but runs after for consistent chrome)
+- Phase 43 is the final QA gate — depends on 33–42
