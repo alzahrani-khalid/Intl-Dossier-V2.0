@@ -3,17 +3,17 @@ gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
 status: executing_phase
-stopped_at: Phase 33 Wave 2 complete (33-02 PASS, 33-03 PASS option-c, 33-06 PASS with build crash deferred) — ready for Wave 3 in a fresh session
-last_updated: '2026-04-20T11:20:00.000Z'
-last_activity: 2026-04-20 -- Wave 2 of Phase 33 executed (33-02 + 33-03 + 33-06); CSP decision option-c (external /bootstrap.js); 24 Playwright visual baselines user-approved; @tailwindcss/vite production-build crash deferred to 33-09
-resume_file: .planning/phases/33-token-engine/33-06-tailwind-remap-SUMMARY.md
-resume_command: /gsd-execute-phase 33 --wave 3
+stopped_at: Phase 33 Wave 3 partially complete (33-05 PASS, 33-07 PARTIAL Tier A only, 33-08 deferred) — Wave 4 (33-09) pending along with 33-07 Tier B–E follow-up
+last_updated: '2026-04-20T12:00:00.000Z'
+last_activity: 2026-04-20 -- Wave 3 critical path executed inline; 33-05 heroui wrappers now use real @heroui/react primitives (11/11 tests); 33-07 Tier A (index.css -984 lines, shim collapse, D-10 wipe) landed; 33-07 Tier B–E + 33-08 deferred per user decision
+resume_file: .planning/phases/33-token-engine/33-07-legacy-cut-SUMMARY.md
+resume_command: /gsd-execute-phase 33 --wave 4 (or follow-up session for 33-07 Tier B–E + 33-08 storybook bootstrap)
 progress:
   total_phases: 11
   completed_phases: 0
   total_plans: 4.5
-  completed_plans: 4
-  percent: 4
+  completed_plans: 5.5
+  percent: 5
 ---
 
 # Project State
@@ -27,12 +27,12 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: Phase 33 (token-engine) — Waves 1+2 complete, Waves 3-4 pending
-Plan: 33-02 PASS (18/18 unit tests); 33-03 PASS option-c (2/2 Playwright + 10/10 drift-guard); 33-06 PASS (24/24 visual baselines rerun-stable, production-build crash deferred)
-Status: Ready for `/gsd-execute-phase 33 --wave 3` — recommend a fresh conversation session for Wave 3
-Last activity: 2026-04-20 — Wave 2 executed; DesignProvider wraps App; external /bootstrap.js (option-c, no CSP changes); @theme block owns D-16 utilities; 24 visual baselines committed and user-approved
+Phase: Phase 33 (token-engine) — Waves 1+2 complete, Wave 3 partial, Wave 4 pending
+Plan: 33-05 PASS (11/11 heroui-wrapper unit tests, zero-override audit clean); 33-07 PARTIAL — Tier A done (index.css 1468→484 lines, theme-provider shim, useTheme shim, ThemeErrorBoundary rename, D-10 wipeLegacyThemeKeys wired into DesignProvider); 33-08 deferred (storybook packages not installed — needs fresh session)
+Status: Ready for `/gsd-execute-phase 33 --wave 4` for E2E SC-1..SC-5 verification + build-crash investigation. Also pending: 33-07 Tier B–E (preference-sync / i18n / AppearanceSection / layout call-sites / 5 integration tests / DESIGN_SYSTEM_MIGRATION.md) and 33-08 storybook + TokenGrid VRT.
+Last activity: 2026-04-20 — Wave 3 executed inline sequentially (sequential-inline mode, no worktrees). 33-07 Tier B–E + 33-08 deferred per user decision to keep session focused on critical path. Typecheck net −8 errors vs baseline (1586 → 1578). HeroUI wrappers + RegexedData-theme sweep clean.
 
-Progress: [█░░░░░░░░░] ~4% (Phase 33 Waves 1+2 of 4 complete — 4.5 of 9 plans)
+Progress: [█░░░░░░░░░] ~5% (Phase 33: 5.5 of 9 plans complete)
 
 ### Wave-level status for Phase 33
 
@@ -40,7 +40,7 @@ Progress: [█░░░░░░░░░] ~4% (Phase 33 Waves 1+2 of 4 complete
 | ---- | ----- | ------ | ----- |
 | 1    | 33-01, 33-04 | complete (33-01 PASS, 33-04 PARTIAL) | Worktree isolation runtime bug found; workaround: non-worktree subagents or inline |
 | 2    | 33-02, 33-03, 33-06 | complete (all PASS) | 33-03 CSP decision: option-c (external blocking script, no CSP added); 33-06 24 baselines user-approved + rerun-stable; @tailwindcss/vite build crash deferred to 33-09 |
-| 3    | 33-05, 33-07, 33-08 | pending | 33-07 non-autonomous (ThemeSelector removal decision); 33-08 non-autonomous |
+| 3    | 33-05, 33-07, 33-08 | partial (33-05 PASS; 33-07 PARTIAL Tier A; 33-08 deferred) | Executed sequential-inline to sidestep worktree runtime bug. 33-05 heroui wrappers rewritten against real @heroui/react primitives (11/11 tests, zero-override audit clean). 33-07 Tier A only — index.css surgery + shim collapse + D-10 wipe; Tier B–E (preference-sync, i18n, AppearanceSection, layout sites, 5 tests, migration doc) deferred. 33-08 storybook bootstrap + TokenGrid VRT deferred — packages not installed, 33-06 baselines + 33-09 E2E cover SC verification. |
 | 4    | 33-09 | pending | E2E verification across SC-1..SC-5 + build-crash investigation |
 
 ### Wave 1 commits (branch DesignV2)
@@ -78,6 +78,25 @@ Plan 33-06 (Tailwind remap — PASS, 24 baselines approved):
 - `b3707e5b` test(33-06): tailwind remap visual baselines (user-approved)
 - `e5fcacec` fix(33-06): inline shadow literals in @theme to avoid self-reference
 - `ec381691` docs(33-06): tailwind remap SUMMARY (verdict + 24 approved baselines)
+
+### Wave 3 commits (branch DesignV2)
+
+Plan 33-05 (HeroUI wrapper rewrites — PASS, 11/11 unit tests):
+- `c5c80710` feat(33-05): rewrite heroui-button to use real @heroui/react Button primitive
+- `6e09314c` feat(33-05): rewrite heroui-card to use HeroUI v3 Card compound components
+- `73e88186` feat(33-05): rewrite heroui-chip to use real @heroui/react Chip + semantic tokens
+- `97e4b374` feat(33-05): rewrite heroui-skeleton + relocate presets
+- `205e01bd` feat(33-05): convert button.tsx + skeleton.tsx to re-export shims
+- `(fix-up commit)` test(33-05): heroui-wrappers unit suite + remove ambient stub + prop-cast typecheck fixes
+- `40303c75` docs(33-05): SUMMARY — heroui wrappers PASS (11/11 unit tests, zero-override audit clean)
+
+Plan 33-07 (Legacy HSL + theme hard cut — PARTIAL, Tier A only):
+- `79c7d2e9` refactor(33-07): delete 19 data-theme blocks + all HSL scales from index.css
+- `7bf915d0` refactor(33-07): gut theme-provider + useTheme shims, rename fallbackDirection, wire D-10 wipe
+- `20a6ce91` docs(33-07): SUMMARY — Tier A critical path PARTIAL, Tier B–E deferred
+
+Plan 33-08 (Storybook + TokenGrid VRT — DEFERRED):
+- No commits. Storybook packages not installed in package.json; .storybook/{main.ts,preview.tsx} stubs date from April 2. User elected to defer the full bootstrap + 128-baseline approval workflow to a fresh session. 33-06's 24 user-approved visual baselines + the Wave-4 33-09 E2E tests together cover SC-1..SC-5 for the token engine.
 
 ### Runtime issue to track
 
