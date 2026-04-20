@@ -72,9 +72,14 @@
   --color-secondary-foreground: var(--accent-ink);
   --color-ring: var(--accent);
 
-  /* Shadows — exposed as shadow-card / shadow-drawer utilities */
-  --shadow-card: var(--shadow-card);
-  --shadow-drawer: var(--shadow-drawer);
+  /* Shadows — exposed as shadow-card / shadow-drawer utilities.
+     Inlined (NOT var() refs) because Tailwind v4 @theme treats LHS as the
+     authoritative namespace — `--shadow-card: var(--shadow-card)` creates
+     a self-reference that crashes the v4 generator with "y is not a function".
+     Shadows are palette-invariant (see buildTokens.ts:84-85) so inlining
+     them here is safe and stays in sync with the D-16 runtime. */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-drawer: -24px 0 60px rgba(0, 0, 0, 0.25);
 }
 
 @config "../tailwind.config.ts";
