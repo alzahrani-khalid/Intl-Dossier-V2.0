@@ -2,7 +2,8 @@ import { Component, ReactNode, ErrorInfo } from 'react'
 
 interface Props {
   children: ReactNode
-  fallbackTheme?: 'canvas' | 'gastat' | 'blueSky'
+  /** Direction to apply on error; renamed from the legacy `fallbackTheme`. */
+  fallbackDirection?: 'chancery' | 'situation' | 'ministerial' | 'bureau'
   fallbackColorMode?: 'light' | 'dark'
   fallbackLanguage?: 'en' | 'ar'
 }
@@ -37,28 +38,29 @@ export class ThemeErrorBoundary extends Component<Props, State> {
 
   applyFallbackTheme(): void {
     const {
-      fallbackTheme = 'canvas',
+      fallbackDirection = 'chancery',
       fallbackColorMode = 'light',
       fallbackLanguage = 'en',
     } = this.props
 
     const root = document.documentElement
 
-    // Apply theme classes
-    root.classList.remove('theme-canvas', 'theme-gastat', 'theme-blueSky')
-    root.classList.add(`theme-${fallbackTheme}`)
+    // Apply the direction via data attribute — DesignProvider reads it on remount.
+    root.setAttribute('data-direction', fallbackDirection)
 
-    // Apply color mode
+    // Apply color mode (.dark class drives HeroUI + Tailwind dark variants).
     root.classList.remove('light', 'dark')
     root.classList.add(fallbackColorMode)
 
-    // Apply language and direction
+    // Apply language + DOM direction.
     root.setAttribute('lang', fallbackLanguage)
     root.setAttribute('dir', fallbackLanguage === 'ar' ? 'rtl' : 'ltr')
 
-    // Clear corrupted localStorage
+    // Clear any corrupted D-16 + legacy preference keys.
     try {
       localStorage.removeItem('theme-preference')
+      localStorage.removeItem('theme')
+      localStorage.removeItem('colorMode')
     } catch (_e) {
       /* localStorage unavailable */
     }
@@ -68,6 +70,8 @@ export class ThemeErrorBoundary extends Component<Props, State> {
     // Clear corrupted state
     try {
       localStorage.removeItem('theme-preference')
+      localStorage.removeItem('theme')
+      localStorage.removeItem('colorMode')
     } catch (_e) {
       /* localStorage unavailable */
     }

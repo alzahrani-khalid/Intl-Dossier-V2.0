@@ -25,6 +25,7 @@ import React, { createContext, useCallback, useEffect, useMemo, useState } from 
 import { applyTokens } from './tokens/applyTokens'
 import { buildTokens } from './tokens/buildTokens'
 import type { Density, Direction, Hue, Mode, TokenSet } from './tokens/types'
+import { wipeLegacyThemeKeys } from '@/utils/storage/preference-storage'
 
 // ----------------------------------------------------------------------------
 // localStorage keys — canonical, shared with 33-03 bootstrap script.
@@ -162,6 +163,14 @@ export function DesignProvider({
   useEffect(() => {
     document.documentElement.setAttribute('data-density', density)
   }, [density])
+
+  // Plan 33-07 D-10: once-per-browser wipe of the legacy localStorage keys
+  // (`theme`, `colorMode`, `theme-preference`, `dossier.theme`) the removed
+  // theme system used to write. Guarded by an internal version flag so it is
+  // idempotent across reloads.
+  useEffect(() => {
+    wipeLegacyThemeKeys()
+  }, [])
 
   // --------------------------------------------------------------------------
   // Setters — each updates state, persists to localStorage, and broadcasts a

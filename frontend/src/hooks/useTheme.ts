@@ -1,127 +1,89 @@
-import { useEffect, useState, useCallback } from 'react'
-import {
-  useTheme as useThemeFromProvider,
-  AVAILABLE_THEMES,
-} from '../components/theme-provider/theme-provider'
-import { useLanguage } from './useLanguage'
-
 /**
- * Re-export the ThemeProvider hook so feature code can keep importing from hooks/
+ * Deprecated theme hook shim — Phase 33-07 (Wave 3).
+ *
+ * @deprecated Import directly from `@/design-system/hooks/useDesignDirection`
+ * + `@/design-system/hooks/useMode` instead. This shim exists only so the
+ * ~10 remaining `useTheme()` call sites keep working during the cutover.
+ * Phase 34 deletes this file.
  */
-export const useTheme = useThemeFromProvider
 
-/**
- * Re-export available themes for UI components
- */
+import { useDesignDirection } from '@/design-system/hooks/useDesignDirection'
+import { useMode } from '@/design-system/hooks/useMode'
+import { useDomDirection } from '@/hooks/useDomDirection'
+import { AVAILABLE_THEMES, useTheme as useThemeFromProvider } from '@/components/theme-provider/theme-provider'
+
 export { AVAILABLE_THEMES }
 
-/**
- * Hook to get just the current theme without setters
- * Useful for components that only need to read theme state
- */
-function useThemeValue() {
-  const { theme, colorMode, isDark } = useTheme()
-
-  return {
-    theme,
-    colorMode,
-    isDark,
-    isLight: colorMode === 'light',
+let _warned = false
+function warnOnce(): void {
+  if (!_warned && typeof console !== 'undefined') {
+    _warned = true
+    console.warn(
+      '[Phase 33 migration] `useTheme` is deprecated. Use useDesignDirection + useMode from @/design-system/hooks/* instead.',
+    )
   }
 }
 
-/**
- * Hook to toggle between light and dark modes
- */
-function useColorModeToggle() {
-  const { colorMode, setColorMode, isDark } = useTheme()
-
-  const toggleColorMode = () => {
-    setColorMode(colorMode === 'light' ? 'dark' : 'light')
-  }
-
-  return {
-    colorMode,
-    toggleColorMode,
-    isDark,
-  }
+export function useTheme(): ReturnType<typeof useThemeFromProvider> {
+  warnOnce()
+  return useThemeFromProvider()
 }
 
-/**
- * RTL/LTR helpers wired into the theme layer for convenience
- */
-export function useThemeRtl() {
-  const { direction, language, setLanguage } = useLanguage()
-
-  const isRtl = direction === 'rtl'
-  const setDirection = (dir: 'ltr' | 'rtl') => setLanguage(dir === 'rtl' ? 'ar' : 'en')
-  const toggleDirection = () => setDirection(isRtl ? 'ltr' : 'rtl')
-
+export function useThemeRtl(): {
+  direction: 'ltr' | 'rtl'
+  language: string
+  isRtl: boolean
+  isLtr: boolean
+  setDirection: (_d: 'ltr' | 'rtl') => void
+  toggleDirection: () => void
+} {
+  warnOnce()
+  const { isRTL } = useDomDirection()
+  const direction: 'ltr' | 'rtl' = isRTL ? 'rtl' : 'ltr'
   return {
     direction,
-    language,
-    isRtl,
-    isLtr: !isRtl,
-    setDirection,
-    toggleDirection,
+    language: isRTL ? 'ar' : 'en',
+    isRtl: isRTL,
+    isLtr: !isRTL,
+    setDirection: (): void => {
+      /* language switching is owned by i18n; no-op here. */
+    },
+    toggleDirection: (): void => {
+      /* language switching is owned by i18n; no-op here. */
+    },
   }
 }
 
-const useTextDirection = useThemeRtl
-
-/**
- * Hook for RTL/LTR support with theme integration
- */
-export function useDirection() {
-  const [direction, setDirection] = useState<'ltr' | 'rtl'>(() => {
-    if (typeof window === 'undefined') return 'ltr'
-    return (document.documentElement.dir as 'ltr' | 'rtl') || 'ltr'
-  })
-
-  useEffect(() => {
-    const htmlElement = document.documentElement
-    const observer = new MutationObserver(() => {
-      const newDir = (htmlElement.dir as 'ltr' | 'rtl') || 'ltr'
-      setDirection(newDir)
-    })
-
-    observer.observe(htmlElement, {
-      attributes: true,
-      attributeFilter: ['dir'],
-    })
-
-    return () => observer.disconnect()
-  }, [])
-
-  const toggleDirection = useCallback(() => {
-    const newDirection = direction === 'ltr' ? 'rtl' : 'ltr'
-    document.documentElement.dir = newDirection
-    setDirection(newDirection)
-  }, [direction])
-
-  const setDirectionValue = useCallback((value: 'ltr' | 'rtl') => {
-    document.documentElement.dir = value
-    setDirection(value)
-  }, [])
-
+export function useDirection(): {
+  direction: 'ltr' | 'rtl'
+  isRTL: boolean
+  isLTR: boolean
+  toggleDirection: () => void
+  setDirection: (_v: 'ltr' | 'rtl') => void
+} {
+  const { isRTL } = useDomDirection()
+  const direction: 'ltr' | 'rtl' = isRTL ? 'rtl' : 'ltr'
   return {
     direction,
-    isRTL: direction === 'rtl',
-    isLTR: direction === 'ltr',
-    toggleDirection,
-    setDirection: setDirectionValue,
+    isRTL,
+    isLTR: !isRTL,
+    toggleDirection: (): void => {
+      /* language switching is owned by i18n; no-op here. */
+    },
+    setDirection: (): void => {
+      /* language switching is owned by i18n; no-op here. */
+    },
   }
 }
 
-/**
- * Combined hook for theme with RTL support
- */
-function useThemeWithRTL() {
-  const theme = useTheme()
-  const direction = useDirection()
-
-  return {
-    ...theme,
-    ...direction,
-  }
+export function useThemeWithRTL(): ReturnType<typeof useTheme> & ReturnType<typeof useDirection> {
+  return { ...useTheme(), ...useDirection() }
 }
+
+// Kept for edge-case imports; all three routes now pass through the single deprecation warning above.
+export const useTextDirection = useThemeRtl
+
+// Touch the design-system hooks at import time so tree-shakers don't elide them in projects
+// that only consume `useTheme` through this shim.
+void useDesignDirection
+void useMode

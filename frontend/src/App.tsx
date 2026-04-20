@@ -31,11 +31,11 @@ function App() {
         <AuthProvider>
           <AuthListenerManager />
           <ThemeErrorBoundary
-            fallbackTheme="canvas"
+            fallbackDirection="chancery"
             fallbackColorMode="light"
             fallbackLanguage="en"
           >
-            <ThemeProvider initialTheme="canvas" initialColorMode="light">
+            <ThemeProvider>
               <DesignProvider
                 initialDirection="chancery"
                 initialMode="light"

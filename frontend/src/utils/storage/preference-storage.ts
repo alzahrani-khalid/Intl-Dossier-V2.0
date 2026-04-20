@@ -1,7 +1,36 @@
 /**
  * Local storage utility for user preferences
  * Provides immediate persistence with fallback handling
+ *
+ * Phase 33-07 notes:
+ *   - `wipeLegacyThemeKeys()` is run once on DesignProvider mount (D-10) to
+ *     clear keys written by the removed legacy theme system (`theme`,
+ *     `colorMode`, `theme-preference`, `dossier.theme`). The D-16 engine
+ *     writes its own canonical keys (`id.dir`, `id.theme`, `id.hue`,
+ *     `id.density`) directly from DesignProvider. The `user-preferences`
+ *     blob here is owned by preference-sync and is NOT touched by the wipe.
  */
+
+const LEGACY_THEME_KEYS = ['theme', 'colorMode', 'theme-preference', 'dossier.theme'] as const
+const WIPE_GUARD_KEY = 'id.legacy-wipe.v1'
+
+/**
+ * Remove legacy theme keys once per browser (guarded by a version flag so it
+ * is idempotent across reloads). Safe to call on every app mount.
+ */
+export function wipeLegacyThemeKeys(): void {
+  try {
+    if (typeof localStorage === 'undefined') return
+    if (localStorage.getItem(WIPE_GUARD_KEY) === '1') return
+    for (const key of LEGACY_THEME_KEYS) {
+      localStorage.removeItem(key)
+    }
+    localStorage.setItem(WIPE_GUARD_KEY, '1')
+  } catch {
+    /* localStorage unavailable — no-op. */
+  }
+}
+
 
 export interface StoredPreferences {
   theme: 'canvas' | 'azure' | 'lavender' | 'bluesky' | 'ocean' | 'sunset'
