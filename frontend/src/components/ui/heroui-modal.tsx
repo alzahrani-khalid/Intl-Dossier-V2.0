@@ -13,7 +13,7 @@ import * as React from 'react'
 import { X } from 'lucide-react'
 import { Modal, Button, useOverlayState } from '@heroui/react'
 import { cn } from '@/lib/utils'
-import { useDirection } from '@/hooks/useDirection'
+import { useDomDirection } from '@/hooks/useDomDirection'
 
 // Re-export HeroUI hooks for convenience
 export { useOverlayState }
@@ -104,8 +104,8 @@ export function HeroUIModalContent({
   isKeyboardDismissDisabled = false,
   showCloseButton = true,
 }: HeroUIModalContentProps) {
-const { isRTL } = useDirection()
-return (
+  const { isRTL } = useDomDirection()
+  return (
     <Modal.Backdrop
       variant={backdrop}
       isDismissable={isDismissable}
