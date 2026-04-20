@@ -6,21 +6,25 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { SettingsSectionCard, SettingsGroup } from '../SettingsSectionCard'
 import { cn } from '@/lib/utils'
-import { useTheme } from '@/hooks/useTheme'
+import { useMode } from '@/design-system/hooks/useMode'
 
 interface AppearanceSettingsSectionProps {
   form: UseFormReturn<any>
 }
 
 /**
- * Appearance settings section component
- * Handles color mode, theme, and display density
+ * Appearance settings section component.
+ *
+ * Handles color mode + display density. The legacy 4-option theme picker
+ * (canvas/azure/lavender/bluesky) was removed in Phase 33-07: it wrote OKLCH
+ * palettes that no longer exist. Phase 34's tweaks-drawer replaces the theme
+ * picker with a full direction × mode × hue × density surface mounted from
+ * the topbar.
  */
 export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionProps) {
   const { t } = useTranslation('settings')
-  const { setColorMode, setTheme: applyTheme } = useTheme()
+  const { setMode } = useMode()
   const colorMode = form.watch('color_mode')
-  const theme = form.watch('theme')
   const displayDensity = form.watch('display_density')
 
   const colorModes = [
@@ -41,49 +45,6 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
       label: t('appearance.systemMode'),
       icon: Monitor,
       color: 'text-muted-foreground',
-    },
-  ]
-
-  const themes = [
-    {
-      value: 'canvas',
-      label: t('appearance.canvas'),
-      description: t('appearance.canvasDesc'),
-      colors: [
-        'oklch(14.1% 0.004 285.83)',
-        'oklch(87.1% 0.008 286.29)',
-        'oklch(92% 0.0053 286.32)',
-      ],
-    },
-    {
-      value: 'azure',
-      label: t('appearance.azure'),
-      description: t('appearance.azureDesc'),
-      colors: [
-        'oklch(53.15% 0.0694 156.19)',
-        'oklch(52.11% 0.0755 338.14)',
-        'oklch(92.9% 0.0095 255.53)',
-      ],
-    },
-    {
-      value: 'lavender',
-      label: t('appearance.lavender'),
-      description: t('appearance.lavenderDesc'),
-      colors: [
-        'oklch(58.27% 0.2418 12.23)',
-        'oklch(89.38% 0.0563 3.77)',
-        'oklch(95.67% 0.0021 34.31)',
-      ],
-    },
-    {
-      value: 'bluesky',
-      label: t('appearance.bluesky'),
-      description: t('appearance.blueskyDesc'),
-      colors: [
-        'oklch(59% 0.2 277.12)',
-        'oklch(93.42% 0.0187 285.12)',
-        'oklch(91.12% 0.035 281.21)',
-      ],
     },
   ]
 
@@ -132,7 +93,12 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
                   )}
                   onClick={() => {
                     form.setValue('color_mode', mode.value, { shouldDirty: true })
-                    setColorMode(mode.value as 'light' | 'dark' | 'system')
+                    // useMode accepts only 'light' | 'dark' at the engine level;
+                    // 'system' is resolved one level up (by DesignProvider / FOUC
+                    // bootstrap reading matchMedia). Skip the direct call here.
+                    if (mode.value !== 'system') {
+                      setMode(mode.value as 'light' | 'dark')
+                    }
                   }}
                 >
                   <CardContent className="p-4 flex flex-col items-center justify-center h-full">
@@ -146,52 +112,9 @@ export function AppearanceSettingsSection({ form }: AppearanceSettingsSectionPro
           </div>
         </SettingsGroup>
 
-        {/* Theme Section */}
-        <SettingsGroup title={t('appearance.theme')}>
-          <p className="text-sm text-muted-foreground text-start -mt-2 mb-3">
-            {t('appearance.themeHint')}
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {themes.map((themeOption) => {
-              const isSelected = theme === themeOption.value
-
-              return (
-                <Card
-                  key={themeOption.value}
-                  className={cn(
-                    'cursor-pointer transition-all hover:shadow-md relative',
-                    isSelected && 'ring-2 ring-primary',
-                  )}
-                  onClick={() => {
-                    form.setValue('theme', themeOption.value, { shouldDirty: true })
-                    applyTheme(themeOption.value as 'canvas' | 'azure' | 'lavender' | 'bluesky')
-                  }}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="flex gap-1">
-                        {themeOption.colors.map((color, i) => (
-                          <div
-                            key={i}
-                            className="w-4 h-4 rounded-full"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                      {isSelected && <Check className="h-4 w-4 text-primary ms-auto" />}
-                    </div>
-                    <div className="text-start">
-                      <span className="text-sm font-medium block">{themeOption.label}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {themeOption.description}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        </SettingsGroup>
+        {/* Theme picker moved to Phase 34 tweaks-drawer (topbar).
+            Legacy 4-option picker removed in 33-07: direction/mode/hue/density
+            are the new axes, exposed via DesignProvider + useDesignDirection etc. */}
 
         {/* Display Density Section */}
         <SettingsGroup title={t('appearance.displayDensity')}>

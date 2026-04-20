@@ -31,9 +31,12 @@ export function wipeLegacyThemeKeys(): void {
   }
 }
 
-
 export interface StoredPreferences {
-  theme: 'canvas' | 'azure' | 'lavender' | 'bluesky' | 'ocean' | 'sunset'
+  // `theme` kept as plain string: legacy blobs may hold old names (canvas/azure/…);
+  // new blobs hold Direction values (chancery/situation/ministerial/bureau). The
+  // design-system layer owns interpretation. Phase 33 D-10 wipe (below) removes
+  // the old keys on first load after deploy.
+  theme: string
   colorMode: 'light' | 'dark'
   language: 'en' | 'ar'
   updatedAt: string

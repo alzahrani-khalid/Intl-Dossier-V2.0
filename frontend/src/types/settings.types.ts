@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import type { Direction } from '@/design-system/tokens/types'
+
 /**
  * Settings Section IDs
  */
@@ -20,9 +22,13 @@ export type SettingsSectionId =
 export type ColorMode = 'light' | 'dark' | 'system'
 
 /**
- * Theme options
+ * Theme options — Phase 33 token engine directions.
+ *
+ * `ThemeName` is retained as an alias of `Direction` for back-compat with the
+ * `UserSettings.theme` field name (DB column). New code should import
+ * `Direction` from `@/design-system/tokens/types` directly.
  */
-export type ThemeName = 'canvas' | 'ocean' | 'sunset' | 'azure' | 'lavender' | 'bluesky'
+export type ThemeName = Direction
 
 /**
  * Display density options
@@ -75,7 +81,7 @@ type GeneralSettings = z.infer<typeof generalSettingsSchema>
  */
 export const appearanceSettingsSchema = z.object({
   color_mode: z.enum(['light', 'dark', 'system']),
-  theme: z.enum(['canvas', 'ocean', 'sunset', 'azure', 'lavender', 'bluesky']),
+  theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau']),
   display_density: z.enum(['compact', 'comfortable', 'spacious']),
 })
 
@@ -219,7 +225,7 @@ export const defaultUserSettings: UserSettings = {
 
   // Appearance
   color_mode: 'system',
-  theme: 'canvas',
+  theme: 'chancery',
   display_density: 'comfortable',
 
   // Notifications

@@ -7,7 +7,10 @@ import { preferenceStorage, type StoredPreferences } from '../utils/storage/pref
 interface UserPreference {
   id?: string
   user_id: string
-  theme: 'canvas' | 'azure' | 'lavender' | 'bluesky' | 'ocean' | 'sunset'
+  // `theme` widened to string: row may hold legacy names (canvas/azure/…) or
+  // new Direction values (chancery/situation/ministerial/bureau). Phase 33
+  // D-10 wipe runs on DesignProvider mount; design-system layer owns parsing.
+  theme: string
   color_mode: 'light' | 'dark'
   language: 'en' | 'ar'
   created_at?: string
@@ -68,7 +71,7 @@ export function usePreferenceSync(userId?: string) {
       // Then sync to Supabase
       const upsertData: Partial<UserPreference> = {
         user_id: userId,
-        theme: preferences.theme || 'canvas',
+        theme: preferences.theme || 'chancery',
         color_mode: preferences.colorMode || 'light',
         language: preferences.language || 'en',
       }

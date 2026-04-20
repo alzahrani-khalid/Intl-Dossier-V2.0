@@ -45,7 +45,7 @@ const settingsSchema = z.object({
 
   // Appearance
   color_mode: z.enum(['light', 'dark', 'system']),
-  theme: z.enum(['canvas', 'ocean', 'sunset', 'azure', 'lavender']),
+  theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau']),
   display_density: z.enum(['compact', 'comfortable', 'spacious']),
 
   // Notifications
@@ -123,7 +123,7 @@ export function SettingsPage() {
 
         // Appearance
         color_mode: data.color_mode || 'system',
-        theme: data.theme || 'canvas',
+        theme: data.theme || 'chancery',
         display_density: data.display_density || 'comfortable',
 
         // Notifications
