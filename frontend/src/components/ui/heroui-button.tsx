@@ -90,14 +90,19 @@ function HeroUIButton({
     className,
   )
 
+  // `props` is the residual of a broad ButtonHTMLAttributes interface.
+  // Slot accepts a narrower surface and HeroUI's ButtonRoot extends a React
+  // Aria button (also narrower — no `form`, `formAction`, `name`, etc.).
+  // The spread is runtime-safe (DOM forwarding) so we widen via cast.
+  const forward = props as Record<string, unknown>
+
   if (asChild) {
     return (
       <Slot
         data-slot="button"
         className={mergedClassName}
-        ref={ref}
-        disabled={disabled === true || loading === true}
-        {...props}
+        ref={ref as React.Ref<HTMLElement>}
+        {...(forward as React.HTMLAttributes<HTMLElement>)}
       >
         {children}
       </Slot>
@@ -111,7 +116,7 @@ function HeroUIButton({
       isDisabled={disabled === true || loading === true}
       isIconOnly={isIconOnly}
       ref={ref}
-      {...props}
+      {...(forward as React.ComponentProps<typeof HeroUIButtonPrimitive>)}
     >
       {children}
     </HeroUIButtonPrimitive>

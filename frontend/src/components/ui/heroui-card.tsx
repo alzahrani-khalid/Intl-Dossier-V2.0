@@ -21,7 +21,11 @@ import type * as React from 'react'
 import { Card as HeroUICardPrimitive } from '@heroui/react'
 import { cn } from '@/lib/utils'
 
-function HeroUICard({ className, ...props }: React.ComponentProps<'div'>): React.JSX.Element {
+function HeroUICard({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'div'>): React.JSX.Element {
   return (
     <HeroUICardPrimitive
       data-slot="card"
@@ -29,8 +33,10 @@ function HeroUICard({ className, ...props }: React.ComponentProps<'div'>): React
         'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6',
         className,
       )}
-      {...props}
-    />
+      {...(props as React.ComponentProps<typeof HeroUICardPrimitive<'div'>>)}
+    >
+      {children}
+    </HeroUICardPrimitive>
   )
 }
 

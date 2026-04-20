@@ -60,16 +60,26 @@ function HeroUIChip({
 }: HeroUIChipProps): React.JSX.Element {
   const mergedClassName = cn(badgeVariants({ variant }), className)
 
+  const forward = props as Record<string, unknown>
+
   if (asChild) {
     return (
-      <Slot data-slot="badge" className={mergedClassName} {...props}>
+      <Slot
+        data-slot="badge"
+        className={mergedClassName}
+        {...(forward as React.HTMLAttributes<HTMLElement>)}
+      >
         {children}
       </Slot>
     )
   }
 
   return (
-    <HeroUIChipPrimitive data-slot="badge" className={mergedClassName} {...props}>
+    <HeroUIChipPrimitive
+      data-slot="badge"
+      className={mergedClassName}
+      {...(forward as unknown as React.ComponentProps<typeof HeroUIChipPrimitive<'span'>>)}
+    >
       {children}
     </HeroUIChipPrimitive>
   )
