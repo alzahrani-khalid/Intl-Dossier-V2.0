@@ -1,10 +1,11 @@
 ---
 phase: 34
 slug: tweaks-drawer
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-04-20
+reviewed_at: 2026-04-20
 ---
 
 # Phase 34 — UI Design Contract
