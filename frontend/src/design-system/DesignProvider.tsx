@@ -72,6 +72,18 @@ const safeSetItem = (key: string, value: string): void => {
 }
 
 // ----------------------------------------------------------------------------
+// Test-only hatch exposed on `window.__design` when running under Vite DEV or
+// test mode. Consumed by the Plan 33-09 Playwright SC suite. Do NOT import this
+// type outside test code.
+// ----------------------------------------------------------------------------
+export interface DesignTestHatch {
+  setDirection: (d: Direction) => void
+  setMode: (m: Mode) => void
+  setHue: (h: Hue) => void
+  setDensity: (d: Density) => void
+}
+
+// ----------------------------------------------------------------------------
 // Context shape — consumed by hooks in ./hooks/use{Direction,Mode,Hue,Density,Tokens}.ts
 // ----------------------------------------------------------------------------
 export interface DesignContextValue {
@@ -199,6 +211,26 @@ export function DesignProvider({
     safeSetItem(LS_DENSITY, d)
     window.dispatchEvent(new CustomEvent('designChange', { detail: { density: d } }))
   }, [])
+
+  // Plan 33-09: test-only setter hatch for the Playwright SC suite. `import.meta.env.DEV`
+  // is inlined by Vite and tree-shakes to `false` in production, so the hatch disappears
+  // from prod bundles entirely. `MODE === 'test'` covers vitest + Playwright dev runs.
+  useEffect(() => {
+    if (!(import.meta.env.DEV || import.meta.env.MODE === 'test')) return
+    ;(window as unknown as { __design: DesignTestHatch }).__design = {
+      setDirection,
+      setMode,
+      setHue,
+      setDensity,
+    }
+    return (): void => {
+      try {
+        delete (window as unknown as { __design?: DesignTestHatch }).__design
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [setDirection, setMode, setHue, setDensity])
 
   // --------------------------------------------------------------------------
   // Cross-tab sync — mirror localStorage writes from other tabs into state.
