@@ -3,17 +3,17 @@ gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
 status: executing_phase
-stopped_at: Phase 33 Wave 3 partially complete (33-05 PASS, 33-07 PARTIAL Tier A only, 33-08 deferred) — Wave 4 (33-09) pending along with 33-07 Tier B–E follow-up
-last_updated: '2026-04-20T12:00:00.000Z'
-last_activity: 2026-04-20 -- Wave 3 critical path executed inline; 33-05 heroui wrappers now use real @heroui/react primitives (11/11 tests); 33-07 Tier A (index.css -984 lines, shim collapse, D-10 wipe) landed; 33-07 Tier B–E + 33-08 deferred per user decision
-resume_file: .planning/phases/33-token-engine/33-07-legacy-cut-SUMMARY.md
-resume_command: /gsd-execute-phase 33 --wave 4 (or follow-up session for 33-07 Tier B–E + 33-08 storybook bootstrap)
+stopped_at: Phase 33 Wave 4 PARTIAL — 33-09 spec+hatch+script landed but execution blocked by @heroui/styles@3.0.3 × tailwindcss@4.2.2 `y is not a function` compat crash (same as 33-06 deferred prod-build issue; now also hits dev server since 33-05 started importing real @heroui/react components)
+last_updated: '2026-04-20T13:00:00.000Z'
+last_activity: 2026-04-20 -- Wave 4 (33-09) executed inline; Task 1 (window.__design hatch, env-gated via import.meta.env.DEV), Task 2 (tests/e2e/token-engine-sc.spec.ts, 5 SC blocks), Task 3 (test:e2e:sc script) all landed cleanly with 0 typecheck delta. Verify step blocked by pre-existing Tailwind v4 + @heroui/styles crash — SUMMARY.md documents bisect trail + 4 remediation levers
+resume_file: .planning/phases/33-token-engine/33-09-e2e-verification-SUMMARY.md
+resume_command: Follow-up session to pick a remediation lever (upstream triage / downgrade / decouple-plugin / additive hygiene), then `pnpm test:e2e:sc` to promote 33-09 PARTIAL → PASS. Also pending: 33-07 Tier B–E + 33-08 storybook bootstrap.
 progress:
   total_phases: 11
   completed_phases: 0
   total_plans: 4.5
-  completed_plans: 5.5
-  percent: 5
+  completed_plans: 6
+  percent: 6
 ---
 
 # Project State
@@ -27,21 +27,21 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: Phase 33 (token-engine) — Waves 1+2 complete, Wave 3 partial, Wave 4 pending
-Plan: 33-05 PASS (11/11 heroui-wrapper unit tests, zero-override audit clean); 33-07 PARTIAL — Tier A done (index.css 1468→484 lines, theme-provider shim, useTheme shim, ThemeErrorBoundary rename, D-10 wipeLegacyThemeKeys wired into DesignProvider); 33-08 deferred (storybook packages not installed — needs fresh session)
-Status: Ready for `/gsd-execute-phase 33 --wave 4` for E2E SC-1..SC-5 verification + build-crash investigation. Also pending: 33-07 Tier B–E (preference-sync / i18n / AppearanceSection / layout call-sites / 5 integration tests / DESIGN_SYSTEM_MIGRATION.md) and 33-08 storybook + TokenGrid VRT.
-Last activity: 2026-04-20 — Wave 3 executed inline sequentially (sequential-inline mode, no worktrees). 33-07 Tier B–E + 33-08 deferred per user decision to keep session focused on critical path. Typecheck net −8 errors vs baseline (1586 → 1578). HeroUI wrappers + RegexedData-theme sweep clean.
+Phase: Phase 33 (token-engine) — Waves 1+2 complete, Wave 3 partial, Wave 4 PARTIAL
+Plan: 33-09 PARTIAL — Task 1 (window.\_\_design hatch, env-gated), Task 2 (tests/e2e/token-engine-sc.spec.ts, 5 SC blocks), Task 3 (test:e2e:sc script) all landed with 0 typecheck delta (18/18 DesignProvider unit tests still pass). Verify step blocked: dev server returns HTTP 500 on every /src/index.css request with `y is not a function` crash in `tailwindcss@4.2.2` generator, triggered by `@plugin '@heroui/styles@3.0.3'`. Same crash 33-06 deferred from the prod build — now also hits dev since 33-05 started importing real @heroui/react components. Bisect + 4 remediation levers documented in 33-09-SUMMARY.md.
+Status: Wave 4 artifacts shipped as-is (`b01b5cd0`, `068a63d2`, `6c21203e`). Follow-up session needed to pick remediation lever (upstream triage / downgrade / decouple-plugin / additive hygiene) to unblock `pnpm test:e2e:sc`. Also pending: 33-07 Tier B–E + 33-08 storybook + TokenGrid VRT.
+Last activity: 2026-04-20 — Wave 4 executed inline. Investigation surfaced root cause of the `y is not a function` crash: `@heroui/styles@3.0.3` (latest stable) × `tailwindcss@4.2.2` (latest stable — `next` dist-tag is 4.0.0). No upgrade path available without remediation choice.
 
-Progress: [█░░░░░░░░░] ~5% (Phase 33: 5.5 of 9 plans complete)
+Progress: [█░░░░░░░░░] ~6% (Phase 33: 6 of 9 plans complete; 33-07 Tier B–E + 33-08 + 33-09 verify step remain)
 
 ### Wave-level status for Phase 33
 
-| Wave | Plans | Status | Notes |
-| ---- | ----- | ------ | ----- |
-| 1    | 33-01, 33-04 | complete (33-01 PASS, 33-04 PARTIAL) | Worktree isolation runtime bug found; workaround: non-worktree subagents or inline |
-| 2    | 33-02, 33-03, 33-06 | complete (all PASS) | 33-03 CSP decision: option-c (external blocking script, no CSP added); 33-06 24 baselines user-approved + rerun-stable; @tailwindcss/vite build crash deferred to 33-09 |
+| Wave | Plans               | Status                                                     | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ---- | ------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | 33-01, 33-04        | complete (33-01 PASS, 33-04 PARTIAL)                       | Worktree isolation runtime bug found; workaround: non-worktree subagents or inline                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 2    | 33-02, 33-03, 33-06 | complete (all PASS)                                        | 33-03 CSP decision: option-c (external blocking script, no CSP added); 33-06 24 baselines user-approved + rerun-stable; @tailwindcss/vite build crash deferred to 33-09                                                                                                                                                                                                                                                                                                             |
 | 3    | 33-05, 33-07, 33-08 | partial (33-05 PASS; 33-07 PARTIAL Tier A; 33-08 deferred) | Executed sequential-inline to sidestep worktree runtime bug. 33-05 heroui wrappers rewritten against real @heroui/react primitives (11/11 tests, zero-override audit clean). 33-07 Tier A only — index.css surgery + shim collapse + D-10 wipe; Tier B–E (preference-sync, i18n, AppearanceSection, layout sites, 5 tests, migration doc) deferred. 33-08 storybook bootstrap + TokenGrid VRT deferred — packages not installed, 33-06 baselines + 33-09 E2E cover SC verification. |
-| 4    | 33-09 | pending | E2E verification across SC-1..SC-5 + build-crash investigation |
+| 4    | 33-09               | PARTIAL                                                    | Spec + hatch + script landed (3 atomic commits, 0 typecheck delta, 18/18 DesignProvider unit tests still green). Verify step blocked by `@heroui/styles@3.0.3` × `tailwindcss@4.2.2` `y is not a function` compat crash (same as 33-06 deferred prod crash; now also kills dev server). Bisect confirmed `@plugin '@heroui/styles'` is the trigger. 4 remediation levers documented.                                                                                                |
 
 ### Wave 1 commits (branch DesignV2)
 
@@ -57,6 +57,7 @@ Progress: [█░░░░░░░░░] ~5% (Phase 33: 5.5 of 9 plans complet
 ### Wave 2 commits (branch DesignV2)
 
 Plan 33-02 (DesignProvider + hooks — PASS, 18/18 tests):
+
 - `1bba8f2e` feat(33-02): add DesignProvider + five design-system hooks
 - `21a66427` refactor(33-02): add useDomDirection hook, migrate heroui-modal
 - `bcabb640` feat(33-02): wrap App with DesignProvider above LanguageProvider
@@ -64,6 +65,7 @@ Plan 33-02 (DesignProvider + hooks — PASS, 18/18 tests):
 - `2aea6813` docs(33-02): design-provider plan summary — PASS, 18/18 tests
 
 Plan 33-03 (FOUC bootstrap — PASS, option-c):
+
 - `150063cf` feat(33-03): FOUC-safe inline bootstrap in index.html
 - `abb06f78` style(33-03): :root Chancery-light fallback literals
 - `cdd39122` feat(33-03): extract FOUC bootstrap to /bootstrap.js with blocking=render (option-c)
@@ -72,6 +74,7 @@ Plan 33-03 (FOUC bootstrap — PASS, option-c):
 - `95e39ff8` docs(33-03): FOUC bootstrap SUMMARY (verdict + option-c decision)
 
 Plan 33-06 (Tailwind remap — PASS, 24 baselines approved):
+
 - `d9f8c777` feat(33-06): @theme block exposing D-16 utilities via runtime vars
 - `76f2ab34` refactor(33-06): remove tailwind.config.ts colors (owned by @theme)
 - `d49c1c12` test(33-06): Playwright visual spec — 24-snapshot matrix (3 routes × 2 modes × 2 locales × 2 viewports)
@@ -82,6 +85,7 @@ Plan 33-06 (Tailwind remap — PASS, 24 baselines approved):
 ### Wave 3 commits (branch DesignV2)
 
 Plan 33-05 (HeroUI wrapper rewrites — PASS, 11/11 unit tests):
+
 - `c5c80710` feat(33-05): rewrite heroui-button to use real @heroui/react Button primitive
 - `6e09314c` feat(33-05): rewrite heroui-card to use HeroUI v3 Card compound components
 - `73e88186` feat(33-05): rewrite heroui-chip to use real @heroui/react Chip + semantic tokens
@@ -91,12 +95,23 @@ Plan 33-05 (HeroUI wrapper rewrites — PASS, 11/11 unit tests):
 - `40303c75` docs(33-05): SUMMARY — heroui wrappers PASS (11/11 unit tests, zero-override audit clean)
 
 Plan 33-07 (Legacy HSL + theme hard cut — PARTIAL, Tier A only):
+
 - `79c7d2e9` refactor(33-07): delete 19 data-theme blocks + all HSL scales from index.css
 - `7bf915d0` refactor(33-07): gut theme-provider + useTheme shims, rename fallbackDirection, wire D-10 wipe
 - `20a6ce91` docs(33-07): SUMMARY — Tier A critical path PARTIAL, Tier B–E deferred
 
 Plan 33-08 (Storybook + TokenGrid VRT — DEFERRED):
+
 - No commits. Storybook packages not installed in package.json; .storybook/{main.ts,preview.tsx} stubs date from April 2. User elected to defer the full bootstrap + 128-baseline approval workflow to a fresh session. 33-06's 24 user-approved visual baselines + the Wave-4 33-09 E2E tests together cover SC-1..SC-5 for the token engine.
+
+### Wave 4 commits (branch DesignV2)
+
+Plan 33-09 (E2E Nyquist verification — PARTIAL, spec+hatch+script landed; verify step blocked):
+
+- `b01b5cd0` feat(33-09): add env-gated window.\_\_design test hatch to DesignProvider
+- `068a63d2` test(33-09): add Phase 33 SC-1..SC-5 Playwright E2E suite (`tests/e2e/token-engine-sc.spec.ts`, 326 lines, 5 SC blocks)
+- `6c21203e` chore(33-09): add test:e2e:sc npm script (routes to `playwright test tests/e2e/token-engine-sc --project=chromium-en --no-deps`)
+- **Verify blocker (build-crash investigation):** `@plugin '@heroui/styles'` + `tailwindcss@4.2.2` crashes the v4 CSS generator with `y is not a function` on every `/src/index.css` request — same error 33-06 deferred as a prod-build crash, now also hitting dev because 33-05 started importing real @heroui/react components. `@heroui/styles@3.0.3` and `tailwindcss@4.2.2` are both on the latest stable dist-tag; no trivial upgrade path. Bisect + 4 remediation levers documented in 33-09-SUMMARY.md.
 
 ### Runtime issue to track
 
@@ -134,6 +149,7 @@ Worktree isolation via `Task(subagent_type=..., isolation="worktree")` forked ag
 - [v6.0/33-03]: FOUC bootstrap uses option-c (external `/bootstrap.js` with `blocking="render"`) — zero CSP changes, ~10-30ms FOUC cost on slow networks. Future hardening phase may revisit option-a (SHA-256 pin) when CSP is introduced; drift-guard already pins palette literals to `directions.ts`.
 - [v6.0/33-06]: Tailwind v4 `@theme` block is the single source of truth for color utilities; `tailwind.config.ts` is slim (173 lines, no `extend.colors`). Variables reference `buildTokens.ts` real names (`--sidebar-bg`, `--focus-ring`). 24-snapshot Playwright matrix gates future color changes.
 - [v6.0/33-06]: Production `pnpm build` crash (`@tailwindcss/vite:generate:build — y is not a function`) deferred to 33-09. Dev server + Playwright visual tests unaffected; pre-33-06 `dist/` contains `bg-accent`.
+- [v6.0/33-09]: Wave-4 investigation reclassified the 33-06 crash: root cause is `@plugin '@heroui/styles@3.0.3'` × `tailwindcss@4.2.2` incompatibility (both on latest stable). Dev server now ALSO crashes since 33-05 started importing real `@heroui/react` components, so the issue escalated from "build-only" to "blocks SC verification." Four remediation levers documented in 33-09-SUMMARY.md — pick one in a follow-up session to promote 33-09 PARTIAL → PASS.
 
 ### Pending Todos
 
