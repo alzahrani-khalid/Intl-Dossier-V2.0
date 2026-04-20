@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Menu, Search, User, LogOut, Settings, ChevronDown } from 'lucide-react'
 import { useAuthStore } from '../../store/authStore'
 import { useUIStore } from '../../store/uiStore'
-import { ThemeSelector } from '../theme-selector/ThemeSelector'
 import { LanguageToggle } from '../language-toggle/LanguageToggle'
 import { NotificationPanel } from '../notifications'
 import { useOptionalKeyboardShortcutContext } from '../keyboard-shortcuts'
@@ -62,9 +61,6 @@ export function Header() {
 
         {/* Right section */}
         <div className="flex items-center gap-2">
-          {/* Theme selector */}
-          <ThemeSelector />
-
           {/* Language toggle */}
           <LanguageToggle />
 

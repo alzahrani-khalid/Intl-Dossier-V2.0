@@ -13,7 +13,6 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { useResponsive } from '@/hooks/useResponsive'
 import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts'
-import { ThemeSelector } from '@/components/theme-selector/ThemeSelector'
 import { LanguageToggle } from '@/components/language-toggle/LanguageToggle'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -170,10 +169,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>): 
         </ScrollArea>
       </SidebarContent>
 
-      {/* Footer: Theme/Language controls only (user moved to header) */}
+      {/* Footer: Language control (theme selector removed in 33-07; Phase 34 will add tweaks-drawer entry point) */}
       <SidebarFooter className="border-t border-sidebar-border/70 pt-2">
         <div className="flex items-center gap-1 group-data-[collapsible=icon]:hidden">
-          <ThemeSelector />
           <LanguageToggle compact />
         </div>
       </SidebarFooter>
