@@ -1,131 +1,87 @@
-import { densities } from './densities'
-import { directions } from './directions'
-import type { AccentHue, BuildTokensArgs, TokenSet } from './types'
+import { DENSITIES } from './densities'
+import { PALETTES } from './directions'
+import type { BuildInput, TokenSet } from './types'
 
 /**
- * Accent hue catalog. Must match the handoff palette in
- * `/tmp/inteldossier-handoff/inteldossier/project/src/themes.jsx` (1:1 port).
+ * Pure token builder — maps `{direction, mode, hue, density}` to a flat
+ * `Record<string,string>` of CSS custom-property name → value pairs.
  *
- * - teal:   190  (cool, default)
- * - indigo: 262  (violet/blue)
- * - rose:   12   (warm, red-leaning)
+ * OKLCH math + per-direction palette lookup ported 1:1 from
+ * `/tmp/inteldossier-handoff/inteldossier/project/src/themes.jsx` `buildTokens`.
+ *
+ * Zero side effects. Zero DOM / React references. Deterministic: identical
+ * input always produces identical output — safe to call during SSR and in
+ * vitest unit tests.
+ *
+ * Hue-wrap contract: SLA-risk hue = `(hue + 55) % 360`. Caller passes hue in
+ * 0..360°; math wraps cleanly through 360 → 0 (verified by test at hue=350).
+ *
+ * Mode branches (SC-2):
+ *   - `--accent-ink`: 42% L (light) ↔ 72% L (dark)
+ *   - `--accent-soft`: 0.05 C (light) ↔ 0.08 C (dark)
+ *
+ * SLA-bad is hue-locked to red (25°) regardless of accent hue — breached
+ * status must always read as "danger" (SC-3).
  */
-const HUE_DEG: Record<AccentHue, number> = {
-  teal: 190,
-  indigo: 262,
-  rose: 12,
-}
-
-/**
- * Build the flat token map for a given theme configuration.
- *
- * Pure function. Zero DOM, zero React. Deterministic: identical args always
- * produce identical output. Safe to call during SSR or inside tests.
- *
- * Returns a flat `Record<string, string>` of CSS custom properties
- * (`--name` → value string). Consumers pass the result to `applyTokens`
- * which does the side-effectful DOM write.
- *
- * SLA-risk hue math: `(hue + 55) % 360` keeps the risk color perceptually
- * offset from the accent hue across the palette wheel. Tested at 350° (rose
- * at hue=12 → 67; but verified for the raw formula at hue=350 → 45).
- */
-export const buildTokens = (args: BuildTokensArgs): TokenSet => {
-  const { direction, mode, hue, density } = args
-
-  const h = HUE_DEG[hue]
-  const slaRiskHue = (h + 55) % 360
-
-  const dir = directions[direction]
-  const dens = densities[density]
-
-  const isLight = mode === 'light'
-
-  // ------- Surface + ink scale (mode-dependent, hue-tinted) ----------
-  const bg = isLight ? `oklch(0.98 0.01 ${h})` : `oklch(0.18 0.02 ${h})`
-  const panel = isLight ? `oklch(0.96 0.02 ${h})` : `oklch(0.22 0.02 ${h})`
-  const border = isLight ? `oklch(0.88 0.02 ${h})` : `oklch(0.30 0.02 ${h})`
-  const ink = isLight ? `oklch(0.22 0.02 ${h})` : `oklch(0.96 0.01 ${h})`
-  const muted = isLight ? `oklch(0.50 0.02 ${h})` : `oklch(0.70 0.02 ${h})`
-
-  // ------- Accent family (mode-shifted lightness + chroma) -----------
-  const accent = isLight ? `oklch(0.62 0.14 ${h})` : `oklch(0.74 0.17 ${h})`
-  const accentInk = isLight ? `oklch(0.42 0.10 ${h})` : `oklch(0.72 0.13 ${h})`
-  const accentSoft = isLight ? `oklch(0.94 0.05 ${h})` : `oklch(0.22 0.08 ${h})`
-
-  // ------- Semantic status colors (fixed hues, mode-neutral base) ----
-  const danger = `oklch(0.62 0.22 25)`
-  const ok = `oklch(0.70 0.16 155)`
-  const warn = `oklch(0.80 0.18 85)`
-  const info = `oklch(0.70 0.14 235)`
-
-  // ------- SLA risk triad (accent-hue-derived offset) ----------------
-  const slaOk = `oklch(0.78 0.17 155)`
-  const slaRisk = `oklch(0.82 0.18 ${slaRiskHue})`
-  const slaBad = `oklch(0.65 0.22 25)`
-
-  // ------- Soft variants of semantic + SLA families ------------------
-  // Light: high-lightness wash (L≈0.94, C=0.05). Dark: low-lightness tint
-  // (L≈0.22, C=0.08). See RESEARCH Gotcha #4.
-  const softL = isLight ? 0.94 : 0.22
-  const softC = isLight ? 0.05 : 0.08
-  const dangerSoft = `oklch(${softL} ${softC} 25)`
-  const okSoft = `oklch(${softL} ${softC} 155)`
-  const warnSoft = `oklch(${softL} ${softC} 85)`
-  const infoSoft = `oklch(${softL} ${softC} 235)`
-  const slaOkSoft = `oklch(${softL} ${softC} 155)`
-  const slaRiskSoft = `oklch(${softL} ${softC} ${slaRiskHue})`
-  const slaBadSoft = `oklch(${softL} ${softC} 25)`
+export const buildTokens = ({ direction, mode, hue, density }: BuildInput): TokenSet => {
+  const palette = PALETTES[direction][mode]
+  const den = DENSITIES[density]
+  const isDark = mode === 'dark'
+  const h = hue
+  const hRisk = (h + 55) % 360
 
   return {
-    // --- typography + direction -------------------------------------
-    '--font-sans': dir.fontFamily,
-    '--dir': dir.dirAttr,
-    '--lang': dir.langAttr,
-    '--numerals': dir.numerals,
+    // Surfaces / ink / lines (direction-driven literals)
+    '--bg': palette.bg,
+    '--surface': palette.surface,
+    '--surface-raised': palette.surfaceRaised,
+    '--ink': palette.ink,
+    '--ink-mute': palette.inkMute,
+    '--ink-faint': palette.inkFaint,
+    '--line': palette.line,
+    '--line-soft': palette.lineSoft,
+    '--sidebar-bg': palette.sidebar,
+    '--sidebar-ink': palette.sidebarInk,
 
-    // --- surfaces ----------------------------------------------------
-    '--bg': bg,
-    '--panel': panel,
-    '--border': border,
-    '--ink': ink,
-    '--muted': muted,
+    // Accent family (hue-driven OKLCH)
+    '--accent': `oklch(58% 0.14 ${h})`,
+    '--accent-ink': isDark ? `oklch(72% 0.12 ${h})` : `oklch(42% 0.15 ${h})`,
+    '--accent-soft': isDark ? `oklch(25% 0.08 ${h})` : `oklch(92% 0.05 ${h})`,
+    '--accent-fg': `oklch(99% 0.01 ${h})`,
 
-    // --- accent family ----------------------------------------------
-    '--accent': accent,
-    '--accent-ink': accentInk,
-    '--accent-soft': accentSoft,
+    // Semantic palette (mode-branching)
+    '--danger': isDark ? 'oklch(70% 0.16 25)' : 'oklch(52% 0.18 25)',
+    '--danger-soft': isDark ? 'oklch(25% 0.09 25)' : 'oklch(95% 0.04 25)',
+    '--warn': isDark ? 'oklch(78% 0.14 75)' : 'oklch(62% 0.14 75)',
+    '--warn-soft': isDark ? 'oklch(25% 0.08 75)' : 'oklch(95% 0.05 75)',
+    '--ok': isDark ? 'oklch(72% 0.14 155)' : 'oklch(52% 0.12 155)',
+    '--ok-soft': isDark ? 'oklch(22% 0.06 155)' : 'oklch(94% 0.04 155)',
+    '--info': isDark ? 'oklch(72% 0.13 230)' : 'oklch(50% 0.14 230)',
+    '--info-soft': isDark ? 'oklch(22% 0.07 230)' : 'oklch(94% 0.04 230)',
 
-    // --- status solids ----------------------------------------------
-    '--danger': danger,
-    '--ok': ok,
-    '--warn': warn,
-    '--info': info,
+    // SLA palette — hue-tracking with +55° shift for risk; red-locked for bad
+    '--sla-ok': `oklch(58% 0.14 ${h})`,
+    '--sla-ok-soft': isDark ? `oklch(28% 0.08 ${h})` : `oklch(94% 0.05 ${h})`,
+    '--sla-risk': `oklch(${isDark ? 74 : 60}% 0.13 ${hRisk})`,
+    '--sla-risk-soft': isDark ? `oklch(26% 0.08 ${hRisk})` : `oklch(95% 0.05 ${hRisk})`,
+    '--sla-bad': isDark ? 'oklch(68% 0.18 25)' : 'oklch(54% 0.2 25)',
+    '--sla-bad-soft': isDark ? 'oklch(27% 0.09 25)' : 'oklch(95% 0.05 25)',
 
-    // --- SLA triad --------------------------------------------------
-    '--sla-ok': slaOk,
-    '--sla-risk': slaRisk,
-    '--sla-bad': slaBad,
+    // Density (row heights + logical-property paddings + gap)
+    '--row-h': den.rowH,
+    '--pad-inline': den.padInline,
+    '--pad-block': den.padBlock,
+    '--gap': den.gap,
 
-    // --- soft variants (D-13 extension per plan) --------------------
-    '--danger-soft': dangerSoft,
-    '--ok-soft': okSoft,
-    '--warn-soft': warnSoft,
-    '--info-soft': infoSoft,
-    '--sla-ok-soft': slaOkSoft,
-    '--sla-risk-soft': slaRiskSoft,
-    '--sla-bad-soft': slaBadSoft,
+    // Shape (per-direction radius triplet from palette)
+    '--radius-sm': palette.radius.sm,
+    '--radius': palette.radius.base,
+    '--radius-lg': palette.radius.lg,
 
-    // --- geometry ---------------------------------------------------
-    '--radius': '10px',
-    '--field-radius': 'calc(var(--radius) * 1.5)',
+    // Derived tokens (plan D-13)
+    '--field-radius': `calc(${palette.radius.base} * 1.5)`,
     '--focus-ring': '0 0 0 3px color-mix(in oklch, var(--accent) 40%, transparent)',
     '--shadow-drawer': '-24px 0 60px rgba(0,0,0,.25)',
     '--shadow-card': '0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04)',
-
-    // --- density ----------------------------------------------------
-    '--row-h': dens.rowH,
-    '--pad-inline': dens.padInline,
-    '--control-h': dens.controlH,
   }
 }

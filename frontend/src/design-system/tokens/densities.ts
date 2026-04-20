@@ -1,37 +1,41 @@
-import type { Density } from './types'
+import type { Density, DensityValues } from './types'
 
 /**
- * Density presets drive row heights, inline padding, and control heights.
+ * Density presets (Phase 33 canonical). Drive row heights, inline padding,
+ * block padding, and inner gap. All values in pixels as CSS strings so they
+ * drop straight into `setProperty` calls from `applyTokens`.
  *
- * Values (in pixels) are the Phase 33 canonical density scale and must stay
- * synchronized with Wave 2 consumers (list views, grids, forms):
- *   - comfortable: 52px rows / 20px inline pad / 44px control — default
- *   - compact:     40px rows / 14px inline pad / 36px control — table-dense screens
- *   - dense:       32px rows / 10px inline pad / 32px control — KPI boards / inspectors
+ * Handoff port note: the source `themes.jsx` `DENSITIES` constant exposes
+ * only `{ row, pad, gap }` (single `pad` dimension). Phase 33 plan 33-01 D-04
+ * splits `pad` into `padInline` / `padBlock` so list views can tune vertical
+ * rhythm independently of horizontal rhythm. The canonical scale:
  *
- * Pure data — no runtime / DOM references. Safe for server rendering.
+ *   - comfortable: 52px rows / 20px inline / 16px block / 12px gap — default
+ *   - compact:     40px rows / 14px inline / 12px block /  8px gap — table-dense screens
+ *   - dense:       32px rows / 10px inline /  8px block /  6px gap — KPI boards / inspectors
+ *
+ * RTL-safe: logical property names (`padInline`, not `padLeft`/`padRight`) so
+ * downstream CSS utilities can bind to `padding-inline` / `padding-block`.
+ *
+ * Pure data — no runtime / DOM references. Safe for SSR and tests.
  */
-export const densities: Record<
-  Density,
-  {
-    rowH: string
-    padInline: string
-    controlH: string
-  }
-> = {
+export const DENSITIES: Record<Density, DensityValues> = {
   comfortable: {
     rowH: '52px',
     padInline: '20px',
-    controlH: '44px',
+    padBlock: '16px',
+    gap: '12px',
   },
   compact: {
     rowH: '40px',
     padInline: '14px',
-    controlH: '36px',
+    padBlock: '12px',
+    gap: '8px',
   },
   dense: {
     rowH: '32px',
     padInline: '10px',
-    controlH: '32px',
+    padBlock: '8px',
+    gap: '6px',
   },
 }

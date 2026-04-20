@@ -6,7 +6,6 @@ import type { TokenSet } from '@/design-system/tokens/types'
 
 describe('applyTokens — DOM side effects', () => {
   beforeEach(() => {
-    // Clean slate: strip any inline custom properties from previous tests.
     document.documentElement.removeAttribute('style')
   })
 
@@ -16,9 +15,9 @@ describe('applyTokens — DOM side effects', () => {
 
   it('writes every token entry to document.documentElement', () => {
     const tokens = buildTokens({
-      direction: 'ltr-en',
+      direction: 'chancery',
       mode: 'light',
-      hue: 'teal',
+      hue: 22,
       density: 'comfortable',
     })
 
@@ -32,9 +31,9 @@ describe('applyTokens — DOM side effects', () => {
 
   it('returns a cleanup function that removes tokens not previously set', () => {
     const tokens = buildTokens({
-      direction: 'ltr-en',
+      direction: 'chancery',
       mode: 'light',
-      hue: 'teal',
+      hue: 22,
       density: 'comfortable',
     })
 
@@ -53,9 +52,9 @@ describe('applyTokens — DOM side effects', () => {
     root.style.setProperty('--accent', 'oklch(0.5 0.1 0)')
 
     const tokens = buildTokens({
-      direction: 'ltr-en',
+      direction: 'bureau',
       mode: 'dark',
-      hue: 'rose',
+      hue: 32,
       density: 'dense',
     })
     const cleanup = applyTokens(tokens)
@@ -67,15 +66,15 @@ describe('applyTokens — DOM side effects', () => {
 
   it('calling applyTokens twice lets the second cleanup restore the first set', () => {
     const first = buildTokens({
-      direction: 'ltr-en',
+      direction: 'chancery',
       mode: 'light',
-      hue: 'teal',
+      hue: 22,
       density: 'comfortable',
     })
     const second = buildTokens({
-      direction: 'rtl-ar',
+      direction: 'situation',
       mode: 'dark',
-      hue: 'indigo',
+      hue: 190,
       density: 'dense',
     })
 
@@ -90,8 +89,7 @@ describe('applyTokens — DOM side effects', () => {
   })
 
   it('is a no-op in environments without a document', () => {
-    // Guard the no-DOM branch by faking the typeof check. Call path must
-    // not throw and must return a callable cleanup.
+    // Empty set through the DOM path still returns a callable cleanup.
     const empty: TokenSet = {}
     const cleanup = applyTokens(empty)
     expect(typeof cleanup).toBe('function')

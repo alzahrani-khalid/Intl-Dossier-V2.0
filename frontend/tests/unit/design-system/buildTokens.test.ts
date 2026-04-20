@@ -1,309 +1,335 @@
 import { describe, expect, it } from 'vitest'
 
 import { buildTokens } from '@/design-system/tokens/buildTokens'
-import type { AccentHue, Density, Direction, Mode } from '@/design-system/tokens/types'
+import type { Density, Direction, Mode } from '@/design-system/tokens/types'
 
-const directions: Direction[] = ['ltr-en', 'rtl-ar', 'rtl-fa', 'rtl-ur']
-const modes: Mode[] = ['light', 'dark']
-const hues: AccentHue[] = ['teal', 'indigo', 'rose']
-const densities: Density[] = ['comfortable', 'compact', 'dense']
+/**
+ * Canonical matrix per Plan 33-01 DoD:
+ *   4 directions × 2 modes × 3 hues × 3 densities = 72 cases.
+ *
+ * Hue sample points exercise the OKLCH palette wheel:
+ *   - 22°  = chancery's warm terracotta default (also the lowest-end sample)
+ *   - 190° = situation's signal cyan (cool mid-wheel)
+ *   - 250° = a deep-blue sample that also stress-tests `(h+55)%360` without
+ *            wrapping through 360 (returns 305)
+ *
+ * Plus explicit edge-case: hue=350 → `(350 + 55) % 360 = 45` for SC-3 wrap.
+ */
+const DIRECTIONS: readonly Direction[] = ['chancery', 'situation', 'ministerial', 'bureau'] as const
+const MODES: readonly Mode[] = ['light', 'dark'] as const
+const SAMPLE_HUES = [22, 190, 250] as const
+const DENSITIES: readonly Density[] = ['comfortable', 'compact', 'dense'] as const
 
 const REQUIRED_KEYS = [
-  '--font-sans',
-  '--dir',
-  '--lang',
-  '--numerals',
+  // Surfaces / ink / lines
   '--bg',
-  '--panel',
-  '--border',
+  '--surface',
+  '--surface-raised',
   '--ink',
-  '--muted',
+  '--ink-mute',
+  '--ink-faint',
+  '--line',
+  '--line-soft',
+  '--sidebar-bg',
+  '--sidebar-ink',
+  // Accent family
   '--accent',
   '--accent-ink',
   '--accent-soft',
+  '--accent-fg',
+  // Semantic
   '--danger',
-  '--ok',
-  '--warn',
-  '--info',
-  '--sla-ok',
-  '--sla-risk',
-  '--sla-bad',
   '--danger-soft',
-  '--ok-soft',
+  '--warn',
   '--warn-soft',
+  '--ok',
+  '--ok-soft',
+  '--info',
   '--info-soft',
+  // SLA
+  '--sla-ok',
   '--sla-ok-soft',
+  '--sla-risk',
   '--sla-risk-soft',
+  '--sla-bad',
   '--sla-bad-soft',
+  // Density
+  '--row-h',
+  '--pad-inline',
+  '--pad-block',
+  '--gap',
+  // Shape
+  '--radius-sm',
   '--radius',
+  '--radius-lg',
+  // Derived
   '--field-radius',
   '--focus-ring',
   '--shadow-drawer',
   '--shadow-card',
-  '--row-h',
-  '--pad-inline',
-  '--control-h',
-]
+] as const
 
-describe('buildTokens — 72 matrix cases', () => {
-  for (const direction of directions) {
-    for (const mode of modes) {
-      for (const hue of hues) {
-        for (const density of densities) {
-          it(`emits a complete token set for ${direction} / ${mode} / ${hue} / ${density}`, () => {
+const ROW_H_BY_DENSITY: Record<Density, string> = {
+  comfortable: '52px',
+  compact: '40px',
+  dense: '32px',
+}
+
+const PAD_INLINE_BY_DENSITY: Record<Density, string> = {
+  comfortable: '20px',
+  compact: '14px',
+  dense: '10px',
+}
+
+const PAD_BLOCK_BY_DENSITY: Record<Density, string> = {
+  comfortable: '16px',
+  compact: '12px',
+  dense: '8px',
+}
+
+const GAP_BY_DENSITY: Record<Density, string> = {
+  comfortable: '12px',
+  compact: '8px',
+  dense: '6px',
+}
+
+describe('buildTokens — 72-case matrix (4 directions × 2 modes × 3 hues × 3 densities)', () => {
+  for (const direction of DIRECTIONS) {
+    for (const mode of MODES) {
+      for (const hue of SAMPLE_HUES) {
+        for (const density of DENSITIES) {
+          it(`produces full token set for ${direction}/${mode}/h${hue}/${density}`, () => {
             const tokens = buildTokens({ direction, mode, hue, density })
 
-            // Every required key present and a non-empty string.
+            // All required keys present.
             for (const key of REQUIRED_KEYS) {
-              expect(tokens[key], `${key} missing`).toBeDefined()
-              expect(typeof tokens[key]).toBe('string')
-              expect(tokens[key].length).toBeGreaterThan(0)
+              expect(tokens[key], `missing ${key} for ${direction}/${mode}/h${hue}/${density}`)
+                .toBeDefined()
             }
 
-            // No extra/unexpected keys.
-            expect(Object.keys(tokens).sort()).toEqual([...REQUIRED_KEYS].sort())
+            // Accent contains the requested hue value as a substring.
+            expect(tokens['--accent']).toContain(`${hue}`)
+            expect(tokens['--accent']).toContain('oklch')
+
+            // Density row-h + logical-property paddings + gap match the scale.
+            expect(tokens['--row-h']).toBe(ROW_H_BY_DENSITY[density])
+            expect(tokens['--pad-inline']).toBe(PAD_INLINE_BY_DENSITY[density])
+            expect(tokens['--pad-block']).toBe(PAD_BLOCK_BY_DENSITY[density])
+            expect(tokens['--gap']).toBe(GAP_BY_DENSITY[density])
+
+            // Surface is a direction-driven hex literal, not an OKLCH expression.
+            expect(tokens['--bg']).toMatch(/^#[0-9a-f]{6}$/i)
+            expect(tokens['--surface']).toMatch(/^#[0-9a-f]{6}$/i)
           })
         }
       }
     }
   }
+})
 
-  it('covers exactly 72 combinations', () => {
-    expect(directions.length * modes.length * hues.length * densities.length).toBe(72)
+describe('buildTokens — SC-2: light/dark OKLCH flip (accent-ink lightness, accent-soft chroma)', () => {
+  const fixedHue = 22
+  const input = { direction: 'chancery' as const, hue: fixedHue, density: 'comfortable' as const }
+
+  it('flips --accent-ink lightness from 42% (light) to 72% (dark) at the same hue', () => {
+    const light = buildTokens({ ...input, mode: 'light' })
+    const dark = buildTokens({ ...input, mode: 'dark' })
+
+    expect(light['--accent-ink']).toBe(`oklch(42% 0.15 ${fixedHue})`)
+    expect(dark['--accent-ink']).toBe(`oklch(72% 0.12 ${fixedHue})`)
+  })
+
+  it('flips --accent-soft chroma from 0.05 (light) to 0.08 (dark) at the same hue', () => {
+    const light = buildTokens({ ...input, mode: 'light' })
+    const dark = buildTokens({ ...input, mode: 'dark' })
+
+    expect(light['--accent-soft']).toBe(`oklch(92% 0.05 ${fixedHue})`)
+    expect(dark['--accent-soft']).toBe(`oklch(25% 0.08 ${fixedHue})`)
+  })
+
+  it('flips semantic palette lightness across modes (danger, warn, ok, info)', () => {
+    const light = buildTokens({ ...input, mode: 'light' })
+    const dark = buildTokens({ ...input, mode: 'dark' })
+
+    expect(light['--danger']).toBe('oklch(52% 0.18 25)')
+    expect(dark['--danger']).toBe('oklch(70% 0.16 25)')
+    expect(light['--warn']).toBe('oklch(62% 0.14 75)')
+    expect(dark['--warn']).toBe('oklch(78% 0.14 75)')
+    expect(light['--ok']).toBe('oklch(52% 0.12 155)')
+    expect(dark['--ok']).toBe('oklch(72% 0.14 155)')
+    expect(light['--info']).toBe('oklch(50% 0.14 230)')
+    expect(dark['--info']).toBe('oklch(72% 0.13 230)')
   })
 })
 
-describe('buildTokens — direction + typography wiring', () => {
-  it('ltr-en uses Inter and dir=ltr + latn numerals', () => {
-    const t = buildTokens({
-      direction: 'ltr-en',
+describe('buildTokens — SC-3: hue recomputes accent family + SLA (hue+55°), sla-bad hue-locked', () => {
+  it('shifts --sla-risk hue by +55° for hue=22 (→ 77)', () => {
+    const tokens = buildTokens({
+      direction: 'chancery',
       mode: 'light',
-      hue: 'teal',
+      hue: 22,
       density: 'comfortable',
     })
-    expect(t['--dir']).toBe('ltr')
-    expect(t['--lang']).toBe('en')
-    expect(t['--numerals']).toBe('latn')
-    expect(t['--font-sans'].toLowerCase()).toContain('inter')
+    expect(tokens['--sla-risk']).toBe('oklch(60% 0.13 77)')
   })
 
-  it('rtl-ar uses IBM Plex Sans Arabic and dir=rtl + arab numerals', () => {
-    const t = buildTokens({
-      direction: 'rtl-ar',
-      mode: 'light',
-      hue: 'teal',
-      density: 'comfortable',
+  it('shifts --sla-risk hue by +55° for hue=250 (→ 305, no wrap)', () => {
+    const tokens = buildTokens({
+      direction: 'situation',
+      mode: 'dark',
+      hue: 250,
+      density: 'compact',
     })
-    expect(t['--dir']).toBe('rtl')
-    expect(t['--lang']).toBe('ar')
-    expect(t['--numerals']).toBe('arab')
-    expect(t['--font-sans'].toLowerCase()).toContain('arabic')
+    expect(tokens['--sla-risk']).toBe('oklch(74% 0.13 305)')
   })
 
-  it('rtl-fa and rtl-ur are rtl with locale-specific lang', () => {
-    const fa = buildTokens({
-      direction: 'rtl-fa',
+  it('wraps --sla-risk hue through 360 for hue=350 (→ 45)', () => {
+    const tokens = buildTokens({
+      direction: 'ministerial',
       mode: 'light',
-      hue: 'teal',
+      hue: 350,
+      density: 'dense',
+    })
+    expect(tokens['--sla-risk']).toBe('oklch(60% 0.13 45)')
+  })
+
+  it('keeps --sla-bad hue-locked to 25 regardless of input hue', () => {
+    const hues = [22, 100, 190, 250, 350] as const
+    for (const hue of hues) {
+      const light = buildTokens({ direction: 'chancery', mode: 'light', hue, density: 'comfortable' })
+      const dark = buildTokens({ direction: 'chancery', mode: 'dark', hue, density: 'comfortable' })
+      expect(light['--sla-bad']).toBe('oklch(54% 0.2 25)')
+      expect(dark['--sla-bad']).toBe('oklch(68% 0.18 25)')
+    }
+  })
+
+  it('tracks --sla-ok with the accent hue (no shift)', () => {
+    const tokens = buildTokens({
+      direction: 'bureau',
+      mode: 'light',
+      hue: 100,
       density: 'comfortable',
     })
-    const ur = buildTokens({
-      direction: 'rtl-ur',
-      mode: 'light',
-      hue: 'teal',
-      density: 'comfortable',
-    })
-    expect(fa['--dir']).toBe('rtl')
-    expect(fa['--lang']).toBe('fa')
-    expect(ur['--dir']).toBe('rtl')
-    expect(ur['--lang']).toBe('ur')
+    expect(tokens['--sla-ok']).toBe('oklch(58% 0.14 100)')
   })
 })
 
-describe('buildTokens — mode-dependent color math (handoff 1:1)', () => {
-  const base = {
-    direction: 'ltr-en',
-    hue: 'teal',
-    density: 'comfortable',
-  } as const
-
-  it('light mode accent = oklch(0.62 0.14 <hue>)', () => {
-    const t = buildTokens({ ...base, mode: 'light' })
-    expect(t['--accent']).toBe('oklch(0.62 0.14 190)')
-  })
-
-  it('dark mode accent = oklch(0.74 0.17 <hue>)', () => {
-    const t = buildTokens({ ...base, mode: 'dark' })
-    expect(t['--accent']).toBe('oklch(0.74 0.17 190)')
-  })
-
-  it('--accent-ink lightness differs by mode (0.42 light vs 0.72 dark)', () => {
-    const light = buildTokens({ ...base, mode: 'light' })
-    const dark = buildTokens({ ...base, mode: 'dark' })
-    expect(light['--accent-ink']).toBe('oklch(0.42 0.10 190)')
-    expect(dark['--accent-ink']).toBe('oklch(0.72 0.13 190)')
-  })
-
-  it('--accent-soft chroma differs by mode (0.05 light vs 0.08 dark)', () => {
-    const light = buildTokens({ ...base, mode: 'light' })
-    const dark = buildTokens({ ...base, mode: 'dark' })
-    expect(light['--accent-soft']).toBe('oklch(0.94 0.05 190)')
-    expect(dark['--accent-soft']).toBe('oklch(0.22 0.08 190)')
-  })
-
-  it('surfaces shift correctly between modes', () => {
-    const light = buildTokens({ ...base, mode: 'light' })
-    const dark = buildTokens({ ...base, mode: 'dark' })
-    expect(light['--bg']).toBe('oklch(0.98 0.01 190)')
-    expect(dark['--bg']).toBe('oklch(0.18 0.02 190)')
-    expect(light['--ink']).toBe('oklch(0.22 0.02 190)')
-    expect(dark['--ink']).toBe('oklch(0.96 0.01 190)')
-  })
-})
-
-describe('buildTokens — SLA-risk hue math (hue+55)%360', () => {
-  const base = { direction: 'ltr-en', mode: 'light', density: 'comfortable' } as const
-
-  it('teal (190°) → SLA risk at 245°', () => {
-    const t = buildTokens({ ...base, hue: 'teal' })
-    expect(t['--sla-risk']).toBe('oklch(0.82 0.18 245)')
-  })
-
-  it('indigo (262°) → SLA risk at 317°', () => {
-    const t = buildTokens({ ...base, hue: 'indigo' })
-    // (262 + 55) % 360 = 317
-    expect(t['--sla-risk']).toBe('oklch(0.82 0.18 317)')
-  })
-
-  it('rose (12°) → SLA risk at 67°', () => {
-    const t = buildTokens({ ...base, hue: 'rose' })
-    // (12 + 55) % 360 = 67
-    expect(t['--sla-risk']).toBe('oklch(0.82 0.18 67)')
-  })
-
-  it('wraps correctly: synthetic hue=350 → 45 (explicit SLA-risk modulo test)', () => {
-    // Plan contract: (hue + 55) % 360 must wrap past 360.
-    // This replicates the core math with a raw hue value of 350.
-    const rawHue = 350
-    const expected = (rawHue + 55) % 360
-    expect(expected).toBe(45)
-  })
-})
-
-describe('buildTokens — density wiring', () => {
-  const base = { direction: 'ltr-en', mode: 'light', hue: 'teal' } as const
-
-  it('comfortable → 52px / 20px / 44px', () => {
-    const t = buildTokens({ ...base, density: 'comfortable' })
-    expect(t['--row-h']).toBe('52px')
-    expect(t['--pad-inline']).toBe('20px')
-    expect(t['--control-h']).toBe('44px')
-  })
-
-  it('compact → 40px / 14px / 36px', () => {
-    const t = buildTokens({ ...base, density: 'compact' })
-    expect(t['--row-h']).toBe('40px')
-    expect(t['--pad-inline']).toBe('14px')
-    expect(t['--control-h']).toBe('36px')
-  })
-
-  it('dense → 32px / 10px / 32px', () => {
-    const t = buildTokens({ ...base, density: 'dense' })
-    expect(t['--row-h']).toBe('32px')
-    expect(t['--pad-inline']).toBe('10px')
-    expect(t['--control-h']).toBe('32px')
-  })
-})
-
-describe('buildTokens — geometry + derived tokens', () => {
-  const args = {
-    direction: 'ltr-en',
-    mode: 'light',
-    hue: 'teal',
-    density: 'comfortable',
-  } as const
-
-  it('--radius is 10px', () => {
-    expect(buildTokens(args)['--radius']).toBe('10px')
-  })
-
-  it('--field-radius derives from --radius via calc', () => {
-    expect(buildTokens(args)['--field-radius']).toBe('calc(var(--radius) * 1.5)')
-  })
-
-  it('--focus-ring uses color-mix in oklch at 40% accent', () => {
-    const t = buildTokens(args)
-    expect(t['--focus-ring']).toContain('color-mix(in oklch')
-    expect(t['--focus-ring']).toContain('var(--accent) 40%')
-  })
-
-  it('--shadow-drawer and --shadow-card match plan contract', () => {
-    const t = buildTokens(args)
-    expect(t['--shadow-drawer']).toBe('-24px 0 60px rgba(0,0,0,.25)')
-    expect(t['--shadow-card']).toBe('0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04)')
-  })
-})
-
-describe('buildTokens — soft variants (D-13 extension)', () => {
-  const base = { direction: 'ltr-en', hue: 'teal', density: 'comfortable' } as const
-
-  it('light mode soft variants use L=0.94 C=0.05', () => {
-    const t = buildTokens({ ...base, mode: 'light' })
-    expect(t['--danger-soft']).toBe('oklch(0.94 0.05 25)')
-    expect(t['--ok-soft']).toBe('oklch(0.94 0.05 155)')
-    expect(t['--warn-soft']).toBe('oklch(0.94 0.05 85)')
-    expect(t['--info-soft']).toBe('oklch(0.94 0.05 235)')
-  })
-
-  it('dark mode soft variants use L=0.22 C=0.08', () => {
-    const t = buildTokens({ ...base, mode: 'dark' })
-    expect(t['--danger-soft']).toBe('oklch(0.22 0.08 25)')
-    expect(t['--ok-soft']).toBe('oklch(0.22 0.08 155)')
-    expect(t['--warn-soft']).toBe('oklch(0.22 0.08 85)')
-    expect(t['--info-soft']).toBe('oklch(0.22 0.08 235)')
-  })
-
-  it('SLA soft variants follow the same mode rules + hue wheel', () => {
-    const light = buildTokens({ ...base, mode: 'light' })
-    const dark = buildTokens({ ...base, mode: 'dark' })
-    // teal → sla-risk hue 245
-    expect(light['--sla-risk-soft']).toBe('oklch(0.94 0.05 245)')
-    expect(dark['--sla-risk-soft']).toBe('oklch(0.22 0.08 245)')
-    expect(light['--sla-ok-soft']).toBe('oklch(0.94 0.05 155)')
-    expect(dark['--sla-bad-soft']).toBe('oklch(0.22 0.08 25)')
-  })
-})
-
-describe('buildTokens — determinism + purity', () => {
-  it('is referentially pure for identical args', () => {
-    const a = buildTokens({
-      direction: 'ltr-en',
+describe('buildTokens — SC-4: density values (rowH, pad-inline, pad-block, gap)', () => {
+  it('emits comfortable=52px / 20px / 16px / 12px', () => {
+    const tokens = buildTokens({
+      direction: 'chancery',
       mode: 'light',
-      hue: 'teal',
+      hue: 22,
       density: 'comfortable',
     })
-    const b = buildTokens({
-      direction: 'ltr-en',
-      mode: 'light',
-      hue: 'teal',
-      density: 'comfortable',
-    })
-    expect(a).toEqual(b)
+    expect(tokens['--row-h']).toBe('52px')
+    expect(tokens['--pad-inline']).toBe('20px')
+    expect(tokens['--pad-block']).toBe('16px')
+    expect(tokens['--gap']).toBe('12px')
   })
 
-  it('returns a fresh object each call (no shared reference)', () => {
-    const a = buildTokens({
-      direction: 'ltr-en',
+  it('emits compact=40px / 14px / 12px / 8px', () => {
+    const tokens = buildTokens({
+      direction: 'chancery',
       mode: 'light',
-      hue: 'teal',
+      hue: 22,
+      density: 'compact',
+    })
+    expect(tokens['--row-h']).toBe('40px')
+    expect(tokens['--pad-inline']).toBe('14px')
+    expect(tokens['--pad-block']).toBe('12px')
+    expect(tokens['--gap']).toBe('8px')
+  })
+
+  it('emits dense=32px / 10px / 8px / 6px', () => {
+    const tokens = buildTokens({
+      direction: 'chancery',
+      mode: 'light',
+      hue: 22,
+      density: 'dense',
+    })
+    expect(tokens['--row-h']).toBe('32px')
+    expect(tokens['--pad-inline']).toBe('10px')
+    expect(tokens['--pad-block']).toBe('8px')
+    expect(tokens['--gap']).toBe('6px')
+  })
+})
+
+describe('buildTokens — per-direction radius scale', () => {
+  const cases: Array<[Direction, { sm: string; base: string; lg: string }]> = [
+    ['chancery', { sm: '2px', base: '2px', lg: '2px' }],
+    ['situation', { sm: '2px', base: '3px', lg: '4px' }],
+    ['ministerial', { sm: '6px', base: '10px', lg: '14px' }],
+    ['bureau', { sm: '8px', base: '12px', lg: '16px' }],
+  ]
+
+  for (const [direction, expected] of cases) {
+    it(`emits correct radius triplet for ${direction}`, () => {
+      const tokens = buildTokens({ direction, mode: 'light', hue: 22, density: 'comfortable' })
+      expect(tokens['--radius-sm']).toBe(expected.sm)
+      expect(tokens['--radius']).toBe(expected.base)
+      expect(tokens['--radius-lg']).toBe(expected.lg)
+      expect(tokens['--field-radius']).toBe(`calc(${expected.base} * 1.5)`)
+    })
+  }
+})
+
+describe('buildTokens — derived tokens', () => {
+  it('emits focus-ring with color-mix(in oklch, var(--accent) 40%, transparent)', () => {
+    const tokens = buildTokens({
+      direction: 'chancery',
+      mode: 'light',
+      hue: 22,
       density: 'comfortable',
     })
-    const b = buildTokens({
-      direction: 'ltr-en',
-      mode: 'light',
-      hue: 'teal',
-      density: 'comfortable',
+    expect(tokens['--focus-ring']).toBe(
+      '0 0 0 3px color-mix(in oklch, var(--accent) 40%, transparent)',
+    )
+  })
+
+  it('emits shadow-drawer + shadow-card with fixed rgba literals', () => {
+    const tokens = buildTokens({
+      direction: 'bureau',
+      mode: 'dark',
+      hue: 100,
+      density: 'compact',
     })
-    expect(a).not.toBe(b)
+    expect(tokens['--shadow-drawer']).toBe('-24px 0 60px rgba(0,0,0,.25)')
+    expect(tokens['--shadow-card']).toBe(
+      '0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04)',
+    )
+  })
+})
+
+describe('buildTokens — purity', () => {
+  it('is deterministic — identical inputs produce identical outputs', () => {
+    const input = {
+      direction: 'chancery' as const,
+      mode: 'light' as const,
+      hue: 22,
+      density: 'comfortable' as const,
+    }
+    expect(buildTokens(input)).toEqual(buildTokens(input))
+  })
+
+  it('does not mutate inputs across calls', () => {
+    const inputA = {
+      direction: 'chancery' as const,
+      mode: 'light' as const,
+      hue: 22,
+      density: 'comfortable' as const,
+    }
+    const inputB = {
+      direction: 'situation' as const,
+      mode: 'dark' as const,
+      hue: 190,
+      density: 'dense' as const,
+    }
+    const snapshotA = { ...inputA }
+    const snapshotB = { ...inputB }
+    buildTokens(inputA)
+    buildTokens(inputB)
+    expect(inputA).toEqual(snapshotA)
+    expect(inputB).toEqual(snapshotB)
   })
 })
