@@ -1,221 +1,134 @@
-# Design System Migration Summary
+# Design System Migration — v5 Theme System → v6 Token Engine
 
-**Date**: 2025-10-29
-**Status**: ✅ Complete
+**Scope:** Phase 33 (token-engine) of Milestone v6.0. This document is the upgrade path for anyone touching theme-adjacent code after the v5→v6 cutover.
 
-## Overview
+**Status:** Phase 33 critical path complete. Phase 34 (tweaks-drawer) will add the user-facing picker on top of the engine delivered here.
 
-The GASTAT International Dossier System design system has been reorganized from a single monolithic document into a structured, scalable documentation system with dedicated folders and focused files.
+## What changed, in one paragraph
 
-## What Was Done
+The old 4-option color-theme picker (Canvas / Azure / Lavender / Bluesky) and its HSL-scale CSS is gone. In its place is a token engine keyed on **direction × mode × hue × density** that writes OKLCH `--*` custom properties onto `:root` at runtime. HeroUI v3 and Tailwind v4 both consume the same `--accent` / `--bg` / `--ink` / etc. without per-component overrides. The legacy `data-theme` CSS selectors, the `[data-theme='canvas'|…]` blocks in `index.css`, the `ThemeSelector` component, the `ThemeProvider` context, and the `useTheme()` hook's stateful implementation have all been removed. A **deprecated shim** of `useTheme()` remains so the final handful of call-sites keep working until Phase 34's picker replaces them.
 
-### 1. Blue Sky Theme Removal ✅
+## Key mappings
 
-**Removed Files:**
-- `src/config/themes/blue-sky.ts`
-- `src/styles/themes/blueSky.ts`
+### Theme names → Design directions
 
-**Updated Files:**
-- `src/styles/themes/types.ts` - Removed 'blueSky' from TypeScript types
-  - Changed `name: 'gastat' | 'blueSky'` to `name: 'gastat' | 'natural' | 'zinc'`
-  - Updated `UserPreference` and `PreferenceUpdate` interfaces
-- `src/i18n/en/common.json` - Removed "blueSky" translation, added "natural" and "zinc"
-- `src/i18n/ar/common.json` - Removed "السماء الزرقاء" translation, added "طبيعي" and "زنك"
+| Old theme                                | New direction            | Notes                                |
+| ---------------------------------------- | ------------------------ | ------------------------------------ |
+| `canvas`                                 | `chancery`               | Warm paper (default)                 |
+| `azure`                                  | `situation`              | Cool navy, high-contrast             |
+| `lavender`                               | `ministerial`            | Neutral formal                       |
+| `bluesky`                                | `bureau`                 | Cool business                        |
+| `ocean` / `sunset` (v4 legacy)           | `chancery` (fallback)    | No 1:1 mapping; defaults to chancery |
+| `gastat` / `blueSky` (v4 legacy typings) | `chancery` / `situation` | Inferred by proximity                |
 
-**Available Themes Now:**
-- Natural (Default) - Neutral gray scale
-- GASTAT - GASTAT-specific branding
-- Zinc - shadcn/ui zinc theme
+### localStorage keys
 
-### 2. Design System Folder Structure ✅
+| Old key                        | New key      | Notes                                        |
+| ------------------------------ | ------------ | -------------------------------------------- |
+| `theme`                        | `id.dir`     | Stores a `Direction` string                  |
+| `colorMode`                    | `id.theme`   | Stores `'light' \| 'dark'`                   |
+| `theme-preference` (JSON blob) | n/a          | Split into 4 atomic keys                     |
+| `dossier.theme`                | n/a          | Legacy alias, removed                        |
+| —                              | `id.hue`     | New: integer 0–360                           |
+| —                              | `id.density` | New: `'comfortable' \| 'compact' \| 'dense'` |
 
-Created comprehensive folder hierarchy:
+**D-10 wipe:** On first load of the new build, `wipeLegacyThemeKeys()` (in `src/utils/storage/preference-storage.ts`) removes `theme`, `colorMode`, `theme-preference`, `dossier.theme` exactly once per browser (guarded by `id.legacy-wipe.v1`). Call site: `src/design-system/DesignProvider.tsx` `useEffect` on mount.
 
-```
-frontend/design-system/
-├── README.md                          # Main entry point
-├── foundations/                       # Core design elements
-│   ├── colors.md                     # Color system & semantic tokens
-│   ├── typography.md                 # Font families, sizes, weights
-│   ├── breakpoints.md                # Custom breakpoints, mobile-first
-│   └── rtl.md                        # RTL support & logical properties
-├── components/                        # Component specifications (future)
-│   └── (To be populated as needed)
-├── patterns/                          # Design patterns (future)
-│   └── (To be populated as needed)
-└── guidelines/                        # Implementation guidelines
-    ├── aceternity-integration.md     # Aceternity UI integration guide
-    └── component-checklist.md        # Pre/post implementation checklist
-```
+### Hooks
 
-### 3. Documentation Created ✅
+| Old                                | New                                                              | Migration                                                                                |
+| ---------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `useTheme()`                       | `useDesignDirection()` + `useMode()`                             | Still exported as a deprecated shim; logs once per session                               |
+| `useTheme().setTheme(t)`           | `useDesignDirection().setDirection(d)`                           | Direction values, not theme names                                                        |
+| `useTheme().setColorMode(m)`       | `useMode().setMode(m)`                                           | `'light' \| 'dark'` only — `'system'` is resolved upstream (FOUC bootstrap + matchMedia) |
+| `useDirection()` (from `useTheme`) | `useDomDirection()` (DOM) **or** `useDesignDirection()` (design) | Two separate concerns: DOM `dir=` attribute vs design direction                          |
+| `useTheme().theme`                 | `useDesignDirection().direction`                                 |                                                                                          |
+| `useTheme().colorMode`             | `useMode().mode`                                                 |                                                                                          |
+| `useTheme().isDark`                | `useMode().mode === 'dark'`                                      |                                                                                          |
 
-#### Main Documents
+### CSS custom properties
 
-1. **design-system/README.md** (Navigation hub)
-   - Overview of design system
-   - Directory structure explanation
-   - Quick start guides for designers and developers
-   - Component library hierarchy
-   - Links to all major sections
+| Old                                           | New                                               | Notes                                                     |
+| --------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------- |
+| `[data-theme="canvas"] { --bg: … }`           | `:root { --bg: … }` (written by `applyTokens`)    | No data-theme selectors; single `:root` mutated by JS     |
+| `--primary-50` … `--primary-900` (HSL scales) | n/a                                               | Replaced by OKLCH calc in `buildTokens.ts`                |
+| `--base-*` scales                             | n/a                                               | Removed                                                   |
+| `--color-primary`                             | `--color-primary` (remap to `var(--accent)`)      | Same name, new source                                     |
+| `--accent`                                    | `--accent` (OKLCH, hue-driven)                    | Generated from direction/mode/hue inputs                  |
+| New                                           | `--accent-ink`, `--accent-soft`, `--accent-fg`    | Mode-branched OKLCH                                       |
+| New                                           | `--sla-ok`, `--sla-risk`, `--sla-bad`             | Hue-tracking with +55° shift for risk; red-locked for bad |
+| New                                           | `--row-h`, `--pad-inline`, `--pad-block`, `--gap` | Density-driven                                            |
 
-2. **design-system/foundations/colors.md**
-   - Available themes (Natural, GASTAT, Zinc)
-   - Semantic color tokens reference
-   - Usage examples (correct vs wrong)
-   - Natural theme color values
-   - Accessibility requirements (WCAG AA)
-   - Aceternity UI color adaptation
+### Components / routes
 
-3. **design-system/foundations/typography.md**
-   - Geist font family details
-   - Kibo UI scale (14px base)
-   - Font size scale (xs to 5xl)
-   - Font weights reference
-   - Typography hierarchy examples
-   - Line height and letter spacing
-   - RTL typography considerations
-   - Responsive typography patterns
+| Before                                                                    | After                                                                  | Notes                                             |
+| ------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
+| `<ThemeProvider>` wrapping App                                            | `<DesignProvider>` wrapping App                                        | 33-02                                             |
+| `<ThemeSelector />` in Header / AppSidebar / SiteHeader / responsive-demo | Removed (33-07)                                                        | Phase 34 adds a tweaks-drawer entry in the topbar |
+| `/themes` route displays `<Themes />` page                                | Unchanged — `/themes` is the Topics dossier page, not the theme picker | Plan 33-07 misidentified this; kept as-is         |
+| `AppearanceSettingsSection` theme picker block                            | Removed (33-07 Tier B+C)                                               | Color Mode + Display Density sections kept        |
+| `ThemeErrorBoundary fallbackTheme="canvas"`                               | `ThemeErrorBoundary fallbackDirection="chancery"`                      | 33-07 Tier A                                      |
 
-4. **design-system/foundations/breakpoints.md**
-   - Custom breakpoints (xs:320px, sm:768px, md:1024px, lg:1440px)
-   - Comparison with Tailwind defaults
-   - Mobile-first principle
-   - Breakpoint usage guide per size
-   - Common responsive patterns
-   - RTL-safe responsive design
-   - Testing checklist
-   - Common pitfalls
+### Deleted artifacts
 
-5. **design-system/foundations/rtl.md**
-   - Logical properties reference
-   - Implementation patterns
-   - Icon flipping guide
-   - Mobile-first RTL patterns
-   - Common pitfalls
-   - Testing guidelines
-   - Accessibility considerations
+| Path                                           | Why                                                               |
+| ---------------------------------------------- | ----------------------------------------------------------------- |
+| `src/components/theme-selector/` (entire dir)  | Legacy 4-option picker                                            |
+| `src/styles/themes/types.ts`                   | 0 consumers; orphaned v4 types                                    |
+| `tests/integration/theme-persistence.test.tsx` | Validated removed `data-theme` attribute + `theme-preference` key |
+| `tests/integration/default-theme.test.tsx`     | Validated removed default-theme fallback                          |
+| `tests/integration/cross-tab-sync.test.tsx`    | Validated removed `ThemeProvider` cross-tab sync                  |
+| `tests/integration/test_theme_switch.test.tsx` | Validated removed `ThemeSelector` flow                            |
 
-6. **design-system/guidelines/aceternity-integration.md**
-   - Component library hierarchy
-   - Aceternity categories (130+ components)
-   - Installation instructions
-   - Design system adaptation strategy
-   - Common integration patterns
-   - Mobile-first Aceternity
-   - RTL support with Aceternity
-   - Color adaptation mappings
-   - Performance considerations
-   - Troubleshooting guide
+All four integration tests validated behavior that no longer exists. Their coverage is replaced by `tests/unit/design-system/DesignProvider.test.tsx` (18/18 PASS) which tests the new provider's setters, storage, cross-tab sync via `storage` events, and `applyTokens` integration.
 
-7. **design-system/guidelines/component-checklist.md**
-   - Pre-implementation checklist (5 sections)
-   - Implementation checklist (7 sections)
-   - Post-implementation checklist (5 sections)
-   - Common mistakes to avoid
-   - Resources and references
+## How to migrate your code
 
-#### Updated Documents
+### You import `useTheme` today
 
-8. **DESIGN_SYSTEM_V2.md** (Migration notice)
-   - Redirects to new structure
-   - Quick navigation links
-   - Migration notes
-   - What changed summary
-   - Available themes update
+1. **Short term:** keep working via the shim. You'll see one console warning per session.
+2. **Proper migration:** replace with `useDesignDirection()` + `useMode()`:
+   ```ts
+   // Before
+   import { useTheme } from '@/hooks/useTheme'
+   const { theme, colorMode, setColorMode } = useTheme()
+   ```
+   ```ts
+   // After
+   import { useDesignDirection } from '@/design-system/hooks/useDesignDirection'
+   import { useMode } from '@/design-system/hooks/useMode'
+   const { direction } = useDesignDirection()
+   const { mode, setMode } = useMode()
+   ```
 
-## Key Changes
+### You import `useDirection` from `useTheme.ts`
 
-### Removed
-- ❌ Blue Sky theme from all locations
-- ❌ Monolithic documentation approach
+Decide which direction you mean:
 
-### Added
-- ✅ Structured folder hierarchy
-- ✅ 7 comprehensive documentation files
-- ✅ Pre/post implementation checklists
-- ✅ Aceternity UI integration guide
-- ✅ Clear navigation and cross-references
+- **DOM direction** (reading `document.dir` or the i18n language): use `useDomDirection()` from `@/hooks/useDomDirection`.
+- **Design direction** (the design-system direction setting): use `useDesignDirection()` from `@/design-system/hooks/useDesignDirection`.
 
-### Improved
-- ✨ Design system is now scalable
-- ✨ Documentation is focused and findable
-- ✨ Clear separation of concerns
-- ✨ Better onboarding for new developers
-- ✨ Easier maintenance and updates
+The standalone `src/hooks/useDirection.ts` remains as a thin wrapper over `useLanguage()` for code that just wants `{ direction, isRTL }` based on the UI language — that's a separate concern from the design-direction axis.
 
-## Migration Path
+### You reference theme names in data
 
-### For Developers
+If you're loading user preferences from the DB and getting back `'canvas'` / `'azure'` / …, use the mapping table above to translate to a `Direction`. New writes should use the new names directly. Phase 33 D-10 wipe only clears localStorage, not Supabase rows — backend preference rows may still contain legacy names for some time; the design-system layer treats unknown theme strings as `chancery` (the default).
 
-**Old Reference** → **New Reference**
+### You render the color-theme picker
 
-- `DESIGN_SYSTEM_V2.md` (all-in-one) → `design-system/README.md` (navigation hub)
-- Colors section → `design-system/foundations/colors.md`
-- Typography section → `design-system/foundations/typography.md`
-- Breakpoints section → `design-system/foundations/breakpoints.md`
-- RTL section → `design-system/foundations/rtl.md`
-- Aceternity section → `design-system/guidelines/aceternity-integration.md`
-- Checklist section → `design-system/guidelines/component-checklist.md`
+The old picker is removed. Phase 34 replaces it with a richer tweaks-drawer that exposes all four axes (direction / mode / hue / density). Until then, users can still change color mode and display density via Settings › Appearance.
 
-## Verification
+## What's NOT covered here
 
-### Build Status
-✅ **Build succeeds** - No compilation errors after changes
+- **Font wiring** — Phase 35 (typography-stack)
+- **Visual decorations** (aurora, sparkles, etc.) — Phase 37 (signature-visuals)
+- **App shell** (topbar, breadcrumbs, nav) — Phase 36 (shell-chrome)
+- **Tweaks drawer** (user-facing picker) — Phase 34 (tweaks-drawer)
 
-### Files Modified
-- 3 TypeScript files (types updated)
-- 2 Translation files (English & Arabic)
-- 2 Theme files (removed Blue Sky)
-- 1 Migration document (DESIGN_SYSTEM_V2.md)
+## References
 
-### Files Created
-- 1 Main README
-- 4 Foundation documents
-- 2 Guideline documents
-
-### Total Documentation
-- **7 new markdown files** created
-- **~3,000 lines** of comprehensive documentation
-- **4 folder structure** (foundations, components, patterns, guidelines)
-
-## Next Steps (Future)
-
-### Short Term
-1. Populate `components/` folder with component specifications
-2. Add spacing.md to foundations/
-3. Create pattern documents in `patterns/`
-
-### Medium Term
-1. Add visual examples and screenshots
-2. Create interactive component playground
-3. Build automated theme preview tool
-4. Add more Aceternity integration examples
-
-### Long Term
-1. Create design tokens package
-2. Build Figma plugin integration
-3. Automated design system linting
-4. Component usage analytics
-
-## Resources
-
-- **Main Entry Point**: `frontend/design-system/README.md`
-- **Quick Start**: Check README for navigation
-- **Component Checklist**: `design-system/guidelines/component-checklist.md`
-- **Aceternity Guide**: `design-system/guidelines/aceternity-integration.md`
-
-## Support
-
-For questions about the design system:
-1. Check `design-system/README.md` first
-2. Review relevant foundation document
-3. Consult checklist before implementation
-4. Contact frontend team if unclear
-
----
-
-**Migration Completed By**: Claude
-**Migration Date**: 2025-10-29
-**Status**: ✅ Complete and Verified
-**Build Status**: ✅ Passing
+- `.planning/phases/33-token-engine/33-00-OVERVIEW.md` — phase DAG
+- `.planning/phases/33-token-engine/33-07-legacy-cut-SUMMARY.md` — this migration's delivery report
+- `.planning/phases/33-token-engine/33-09-e2e-verification-SUMMARY.md` — E2E SC-1..SC-5 verification
+- `frontend/src/design-system/tokens/buildTokens.ts` — the OKLCH math (palette definition)
+- `frontend/src/design-system/DesignProvider.tsx` — the runtime that writes `:root` custom properties
