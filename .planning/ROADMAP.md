@@ -141,8 +141,16 @@ Summary checklist:
 3. Changing direction auto-resets Mode and Hue to that direction's defaults (Chancery=light/22°, Situation=dark/190°, Ministerial=light/158°, Bureau=light/32°) and the UI reflects the new values immediately
 4. Drawer opens from the inline-end edge in LTR and inline-start edge in RTL (logical properties only); focus trap + ESC dismissal work in both locales
 5. Navigating to `/themes` redirects to `/`; the legacy `pages/Themes.tsx` and `components/theme-selector/ThemeSelector.tsx` files are removed and no import references to them remain
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 8 plans
+   - [ ] 34-01-PLAN.md — Wave 0 test scaffolds (8 stub tests + deletion-gate bash script)
+   - [ ] 34-02-PLAN.md — DIRECTION_DEFAULTS map + getDirectionDefaults helper (THEME-03)
+   - [ ] 34-03-PLAN.md — useClassification + useLocale hooks + DesignProvider persistence (THEME-02)
+   - [ ] 34-04-PLAN.md — TweaksDrawer component + TweaksDisclosureProvider + EN/AR tweaks.\* keys + App root wire-up (THEME-01, THEME-03)
+   - [ ] 34-05-PLAN.md — Extend bootstrap.js (classif/locale/migrator) + i18next LanguageDetector canonicalize on id.locale (THEME-02)
+   - [ ] 34-06-PLAN.md — Inject gear trigger in SiteHeader + live LTR/RTL focus-trap E2E (THEME-01)
+   - [ ] 34-07-PLAN.md — /themes → / TanStack Router redirect + regenerate routeTree + E2E (THEME-04)
+   - [ ] 34-08-PLAN.md — Legacy cleanup sweep: retrofit 6 useTheme consumers + strip 5 render sites + delete 8 legacy files (THEME-04)
+         **UI hint**: yes
 
 ### Phase 35: typography-stack
 
