@@ -84,8 +84,21 @@ base.describe('Phase 33 Success Criteria (SC-1..SC-5)', () => {
   })
 
   base('SC-1: setDirection updates every token var without reload', async ({ page }) => {
-    // Baseline = chancery (beforeEach wiped stored prefs).
-    const keys = ['--bg', '--surface', '--ink', '--line', '--accent', '--sidebar-bg'] as const
+    // Baseline = chancery (beforeEach wiped stored prefs). `--accent` is
+    // hue-driven (independent of direction per buildTokens.ts), and
+    // `--surface-raised` collapses to pure white (#fff) in both chancery-light
+    // and situation-light palettes — neither is asserted here. Direction
+    // flips definitively touch bg/surface/ink/line/sidebar families.
+    const keys = [
+      '--bg',
+      '--surface',
+      '--ink',
+      '--ink-mute',
+      '--line',
+      '--line-soft',
+      '--sidebar-bg',
+      '--sidebar-ink',
+    ] as const
     const before: Record<string, string> = {}
     for (const k of keys) before[k] = await readVar(page, k)
 
@@ -234,13 +247,15 @@ base.describe('Phase 33 Success Criteria (SC-1..SC-5)', () => {
       expect(await readVar(page, '--gap')).toBe(gap)
     }
 
-    // RTL flip: logical properties must still resolve. Inject a probe with
-    // padding-inline-start/end and confirm it maps to the right physical edge
-    // under dir="rtl".
+    // RTL flip: logical properties must still resolve. Set dir="rtl" on the
+    // probe itself — the app's LanguageProvider pins `dir="ltr"` on <body> and
+    // an outer <div>, so setting it on <html> is masked. Applying dir directly
+    // on the probe is equivalent and cleaner for what we're testing: that
+    // `padding-inline-start` maps to the correct physical edge under RTL.
     await page.evaluate(() => {
-      document.documentElement.setAttribute('dir', 'rtl')
       const probe = document.createElement('div')
       probe.id = '__rtl_probe'
+      probe.setAttribute('dir', 'rtl')
       probe.style.paddingInlineStart = 'var(--pad-inline)'
       probe.style.paddingInlineEnd = '0px'
       probe.style.width = '100px'
@@ -254,14 +269,13 @@ base.describe('Phase 33 Success Criteria (SC-1..SC-5)', () => {
       return {
         paddingLeft: cs.paddingLeft,
         paddingRight: cs.paddingRight,
+        computedDirection: cs.direction,
       }
     })
+    expect(probeRect.computedDirection).toBe('rtl')
     // dense = 10px; the last iteration of the loop above left density=dense.
     expect(probeRect.paddingRight).toBe('10px')
     expect(probeRect.paddingLeft).toBe('0px')
-
-    // Reset direction so later tests (if any) see LTR baseline.
-    await page.evaluate(() => document.documentElement.setAttribute('dir', 'ltr'))
   })
 
   base('SC-5: HeroUI and Tailwind probes resolve to the same live --accent', async ({ page }) => {
