@@ -3,17 +3,17 @@ gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
 status: executing_phase
-stopped_at: Phase 33 Wave 1 complete (33-01 PASS, 33-04 PARTIAL) — ready for Wave 2 in a fresh session
-last_updated: '2026-04-20T10:30:00.000Z'
-last_activity: 2026-04-20 -- Wave 1 of Phase 33 executed (33-01 + 33-04); worktree-isolation runtime bug surfaced and worked around; 96/96 token-module tests pass; Wave 2 (33-02, 33-03, 33-06) not yet started
-resume_file: .planning/phases/33-token-engine/33-01-token-module-SUMMARY.md
-resume_command: /gsd-execute-phase 33 --wave 2
+stopped_at: Phase 33 Wave 2 complete (33-02 PASS, 33-03 PASS option-c, 33-06 PASS with build crash deferred) — ready for Wave 3 in a fresh session
+last_updated: '2026-04-20T11:20:00.000Z'
+last_activity: 2026-04-20 -- Wave 2 of Phase 33 executed (33-02 + 33-03 + 33-06); CSP decision option-c (external /bootstrap.js); 24 Playwright visual baselines user-approved; @tailwindcss/vite production-build crash deferred to 33-09
+resume_file: .planning/phases/33-token-engine/33-06-tailwind-remap-SUMMARY.md
+resume_command: /gsd-execute-phase 33 --wave 3
 progress:
   total_phases: 11
   completed_phases: 0
-  total_plans: 1.5
-  completed_plans: 1
-  percent: 2
+  total_plans: 4.5
+  completed_plans: 4
+  percent: 4
 ---
 
 # Project State
@@ -27,21 +27,21 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: Phase 33 (token-engine) — Wave 1 complete, Waves 2-4 pending
-Plan: 33-01 PASS; 33-04 PARTIAL (install + CSS; smoke E2E deferred to 33-09)
-Status: Ready for `/gsd-execute-phase 33 --wave 2` — recommend a fresh conversation session for Wave 2
-Last activity: 2026-04-20 — Wave 1 executed; 96/96 token-module tests pass; HeroUI v3.0.3 installed with @plugin + :root bridge
+Phase: Phase 33 (token-engine) — Waves 1+2 complete, Waves 3-4 pending
+Plan: 33-02 PASS (18/18 unit tests); 33-03 PASS option-c (2/2 Playwright + 10/10 drift-guard); 33-06 PASS (24/24 visual baselines rerun-stable, production-build crash deferred)
+Status: Ready for `/gsd-execute-phase 33 --wave 3` — recommend a fresh conversation session for Wave 3
+Last activity: 2026-04-20 — Wave 2 executed; DesignProvider wraps App; external /bootstrap.js (option-c, no CSP changes); @theme block owns D-16 utilities; 24 visual baselines committed and user-approved
 
-Progress: [░░░░░░░░░░] ~2% (Phase 33 Wave 1 of 4 complete)
+Progress: [█░░░░░░░░░] ~4% (Phase 33 Waves 1+2 of 4 complete — 4.5 of 9 plans)
 
 ### Wave-level status for Phase 33
 
 | Wave | Plans | Status | Notes |
 | ---- | ----- | ------ | ----- |
 | 1    | 33-01, 33-04 | complete (33-01 PASS, 33-04 PARTIAL) | Worktree isolation runtime bug found; workaround: non-worktree subagents or inline |
-| 2    | 33-02, 33-03, 33-06 | pending | 33-03 non-autonomous (CSP decision); 33-06 non-autonomous (24 Playwright baselines) |
+| 2    | 33-02, 33-03, 33-06 | complete (all PASS) | 33-03 CSP decision: option-c (external blocking script, no CSP added); 33-06 24 baselines user-approved + rerun-stable; @tailwindcss/vite build crash deferred to 33-09 |
 | 3    | 33-05, 33-07, 33-08 | pending | 33-07 non-autonomous (ThemeSelector removal decision); 33-08 non-autonomous |
-| 4    | 33-09 | pending | E2E verification across SC-1..SC-5 |
+| 4    | 33-09 | pending | E2E verification across SC-1..SC-5 + build-crash investigation |
 
 ### Wave 1 commits (branch DesignV2)
 
@@ -53,6 +53,31 @@ Progress: [░░░░░░░░░░] ~2% (Phase 33 Wave 1 of 4 complete)
 - `a5c14094` docs(33-01): initial summary (superseded)
 - `f161832a` fix(33-01): rewrite token engine against authoritative schema — 96/96 tests pass
 - `7d5edf53` docs(33): Wave 1 summaries (33-01 PASS + 33-04 PARTIAL)
+
+### Wave 2 commits (branch DesignV2)
+
+Plan 33-02 (DesignProvider + hooks — PASS, 18/18 tests):
+- `1bba8f2e` feat(33-02): add DesignProvider + five design-system hooks
+- `21a66427` refactor(33-02): add useDomDirection hook, migrate heroui-modal
+- `bcabb640` feat(33-02): wrap App with DesignProvider above LanguageProvider
+- `e1bff2d2` test(33-02): DesignProvider unit coverage (18 tests)
+- `2aea6813` docs(33-02): design-provider plan summary — PASS, 18/18 tests
+
+Plan 33-03 (FOUC bootstrap — PASS, option-c):
+- `150063cf` feat(33-03): FOUC-safe inline bootstrap in index.html
+- `abb06f78` style(33-03): :root Chancery-light fallback literals
+- `cdd39122` feat(33-03): extract FOUC bootstrap to /bootstrap.js with blocking=render (option-c)
+- `0fd065e2` test(33-03): pin FOUC bootstrap palette literals to directions.ts via regex scrape
+- `a347e912` test(33-03): Playwright FOUC assertion (cold load, dark persistence)
+- `95e39ff8` docs(33-03): FOUC bootstrap SUMMARY (verdict + option-c decision)
+
+Plan 33-06 (Tailwind remap — PASS, 24 baselines approved):
+- `d9f8c777` feat(33-06): @theme block exposing D-16 utilities via runtime vars
+- `76f2ab34` refactor(33-06): remove tailwind.config.ts colors (owned by @theme)
+- `d49c1c12` test(33-06): Playwright visual spec — 24-snapshot matrix (3 routes × 2 modes × 2 locales × 2 viewports)
+- `b3707e5b` test(33-06): tailwind remap visual baselines (user-approved)
+- `e5fcacec` fix(33-06): inline shadow literals in @theme to avoid self-reference
+- `ec381691` docs(33-06): tailwind remap SUMMARY (verdict + 24 approved baselines)
 
 ### Runtime issue to track
 
@@ -87,6 +112,9 @@ Worktree isolation via `Task(subagent_type=..., isolation="worktree")` forked ag
 - [v6.0]: Dashboard pixel-exact to `reference/dashboard.png`; widgets wire to existing domain hooks (no mocked data)
 - [v6.0]: Tweaks drawer lives in topbar only; `/themes` route + `pages/Themes.tsx` removed
 - [v6.0]: Phase ordering: 33 is foundation → {34, 35, 37} parallelizable → 36 gates {38–42} → 43 is final QA sweep
+- [v6.0/33-03]: FOUC bootstrap uses option-c (external `/bootstrap.js` with `blocking="render"`) — zero CSP changes, ~10-30ms FOUC cost on slow networks. Future hardening phase may revisit option-a (SHA-256 pin) when CSP is introduced; drift-guard already pins palette literals to `directions.ts`.
+- [v6.0/33-06]: Tailwind v4 `@theme` block is the single source of truth for color utilities; `tailwind.config.ts` is slim (173 lines, no `extend.colors`). Variables reference `buildTokens.ts` real names (`--sidebar-bg`, `--focus-ring`). 24-snapshot Playwright matrix gates future color changes.
+- [v6.0/33-06]: Production `pnpm build` crash (`@tailwindcss/vite:generate:build — y is not a function`) deferred to 33-09. Dev server + Playwright visual tests unaffected; pre-33-06 `dist/` contains `bg-accent`.
 
 ### Pending Todos
 
