@@ -2,17 +2,18 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: ready_to_plan
-stopped_at: Phase 33 context gathered — ready for /gsd-plan-phase 33
-last_updated: '2026-04-19T00:00:00.000Z'
-last_activity: 2026-04-19 -- Phase 33 CONTEXT.md + DISCUSSION-LOG.md written (4 areas discussed, 16 decisions)
-resume_file: .planning/phases/33-token-engine/33-CONTEXT.md
+status: executing_phase
+stopped_at: Phase 33 Wave 1 complete (33-01 PASS, 33-04 PARTIAL) — ready for Wave 2 in a fresh session
+last_updated: '2026-04-20T10:30:00.000Z'
+last_activity: 2026-04-20 -- Wave 1 of Phase 33 executed (33-01 + 33-04); worktree-isolation runtime bug surfaced and worked around; 96/96 token-module tests pass; Wave 2 (33-02, 33-03, 33-06) not yet started
+resume_file: .planning/phases/33-token-engine/33-01-token-module-SUMMARY.md
+resume_command: /gsd-execute-phase 33 --wave 2
 progress:
   total_phases: 11
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 1.5
+  completed_plans: 1
+  percent: 2
 ---
 
 # Project State
@@ -26,12 +27,36 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: Phase 33 (token-engine) — context gathered
-Plan: —
-Status: Ready for /gsd-plan-phase 33
-Last activity: 2026-04-19 — Phase 33 context captured (16 decisions across 4 gray areas)
+Phase: Phase 33 (token-engine) — Wave 1 complete, Waves 2-4 pending
+Plan: 33-01 PASS; 33-04 PARTIAL (install + CSS; smoke E2E deferred to 33-09)
+Status: Ready for `/gsd-execute-phase 33 --wave 2` — recommend a fresh conversation session for Wave 2
+Last activity: 2026-04-20 — Wave 1 executed; 96/96 token-module tests pass; HeroUI v3.0.3 installed with @plugin + :root bridge
 
-Progress: [░░░░░░░░░░] 0% (0 / 11 phases complete)
+Progress: [░░░░░░░░░░] ~2% (Phase 33 Wave 1 of 4 complete)
+
+### Wave-level status for Phase 33
+
+| Wave | Plans | Status | Notes |
+| ---- | ----- | ------ | ----- |
+| 1    | 33-01, 33-04 | complete (33-01 PASS, 33-04 PARTIAL) | Worktree isolation runtime bug found; workaround: non-worktree subagents or inline |
+| 2    | 33-02, 33-03, 33-06 | pending | 33-03 non-autonomous (CSP decision); 33-06 non-autonomous (24 Playwright baselines) |
+| 3    | 33-05, 33-07, 33-08 | pending | 33-07 non-autonomous (ThemeSelector removal decision); 33-08 non-autonomous |
+| 4    | 33-09 | pending | E2E verification across SC-1..SC-5 |
+
+### Wave 1 commits (branch DesignV2)
+
+- `8a4bca97` chore: regenerate routeTree
+- `fc097519` chore(33-04): install @heroui/react@3.0.3 + @heroui/styles@3.0.3 (exact pins)
+- `84b3b0a5` feat(33-04): wire HeroUI v3 @plugin + :root semantic bridge in index.css
+- `fbd4b441` feat(33-01): initial attempt (wrong schema — audit-trail only)
+- `39f87f49` test(33-01): initial tests (wrong schema — audit-trail only)
+- `a5c14094` docs(33-01): initial summary (superseded)
+- `f161832a` fix(33-01): rewrite token engine against authoritative schema — 96/96 tests pass
+- `7d5edf53` docs(33): Wave 1 summaries (33-01 PASS + 33-04 PARTIAL)
+
+### Runtime issue to track
+
+Worktree isolation via `Task(subagent_type=..., isolation="worktree")` forked agent worktrees from a stale commit (`49b225b8`, 9 commits behind `DesignV2` HEAD at session start) and did not actually isolate filesystem writes. Agents wrote into the main tree while their worktree git-state remained stale. For Waves 2-4, use `isolation` unset (shared main tree) and run subagents sequentially, or execute inline.
 
 ## Performance Metrics
 
