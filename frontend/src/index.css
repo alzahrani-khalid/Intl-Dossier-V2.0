@@ -19,6 +19,19 @@
    `success`, `warning`, `danger`) onto our token vars written by DesignProvider
    (33-02) and the FOUC bootstrap (33-03). Zero per-component overrides needed. */
 :root {
+  /* Defense-in-depth fallbacks for 33-03 FOUC bootstrap.
+     Literal Chancery-light values (NOT var() refs) so that if the inline
+     bootstrap's try/catch swallows an error (e.g. localStorage blocked in
+     sandboxed iframe) these kick in at first paint instead of unset vars.
+     Must match PALETTES.chancery.light in tokens/directions.ts. */
+  --bg: #f7f3ec;
+  --surface: #fdfaf3;
+  --surface-raised: #ffffff;
+  --ink: #1a1814;
+  --line: #e6ddc9;
+  --accent: oklch(58% 0.14 22);
+  --accent-fg: oklch(99% 0.01 22);
+
   --heroui-primary: var(--accent);
   --heroui-primary-foreground: var(--accent-fg);
   --heroui-default: var(--surface);
