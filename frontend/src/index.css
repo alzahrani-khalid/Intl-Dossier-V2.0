@@ -9,9 +9,20 @@
 
 @import 'tailwindcss';
 
-/* HeroUI v3 (Tailwind v4 plugin) — MUST come after @import 'tailwindcss' and
-   BEFORE any @theme block. See 33-RESEARCH Q1 Gotcha #8 (ordering). Plan 33-04. */
-@plugin '@heroui/styles';
+/* HeroUI v3 styles — manually composed from the package's CSS subtree.
+   @plugin '@heroui/styles' is incompatible with tailwindcss v4.0.0..4.2.2 (all
+   stable) — the JS plugin shim crashes the generator with "y is not a function".
+   Minimal repro: `@import 'tailwindcss'; @plugin '@heroui/styles';` crashes on
+   every 4.x version tested. The CSS sub-paths work fine via plain @import, so
+   we skip the JS plugin shim and compose the CSS modules directly. This keeps
+   100% of HeroUI's styling output (themes, variants, utilities) without
+   triggering the plugin crash. Reclassifies 33-06/33-09 deferred crash as
+   FIXED. See .planning/phases/33-token-engine/33-10-*-SUMMARY.md. */
+@import 'tw-animate-css';
+@import '@heroui/styles/base' layer(base);
+@import '@heroui/styles/themes/default' layer(theme);
+@import '@heroui/styles/utilities';
+@import '@heroui/styles/variants';
 
 /* ==========================================================================
    @theme — Tailwind v4 source of truth for the D-16 token engine (Plan 33-06).
@@ -218,7 +229,12 @@
 
   /* Headings use the display family by default. LTR/RTL rules below override
      when needed (RTL falls back to Readex Pro because Inter lacks Arabic). */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--display-family);
     font-weight: var(--display-weight);
   }
@@ -232,11 +248,21 @@
     font-family: inherit;
   }
 
-  p, span, div, a, li, label, td, th {
+  p,
+  span,
+  div,
+  a,
+  li,
+  label,
+  td,
+  th {
     font-family: var(--text-family);
   }
 
-  code, pre, kbd, samp {
+  code,
+  pre,
+  kbd,
+  samp {
     font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   }
 
