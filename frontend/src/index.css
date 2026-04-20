@@ -17,7 +17,7 @@
    we skip the JS plugin shim and compose the CSS modules directly. This keeps
    100% of HeroUI's styling output (themes, variants, utilities) without
    triggering the plugin crash. Reclassifies 33-06/33-09 deferred crash as
-   FIXED. See .planning/phases/33-token-engine/33-10-*-SUMMARY.md. */
+   FIXED. See .planning/phases/33-token-engine/33-09-e2e-verification-SUMMARY.md. */
 @import 'tw-animate-css';
 @import '@heroui/styles/base' layer(base);
 @import '@heroui/styles/themes/default' layer(theme);
