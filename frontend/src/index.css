@@ -8,7 +8,28 @@
 @import 'flag-icons/css/flag-icons.min.css';
 
 @import 'tailwindcss';
+
+/* HeroUI v3 (Tailwind v4 plugin) — MUST come after @import 'tailwindcss' and
+   BEFORE any @theme block. See 33-RESEARCH Q1 Gotcha #8 (ordering). Plan 33-04. */
+@plugin '@heroui/styles';
+
 @config "../tailwind.config.ts";
+
+/* HeroUI v3 semantic bridge — maps HeroUI primitives (`primary`, `default`,
+   `success`, `warning`, `danger`) onto our token vars written by DesignProvider
+   (33-02) and the FOUC bootstrap (33-03). Zero per-component overrides needed. */
+:root {
+  --heroui-primary: var(--accent);
+  --heroui-primary-foreground: var(--accent-fg);
+  --heroui-default: var(--surface);
+  --heroui-default-foreground: var(--ink);
+  --heroui-success: var(--ok);
+  --heroui-success-foreground: var(--accent-fg);
+  --heroui-warning: var(--warn);
+  --heroui-warning-foreground: var(--accent-fg);
+  --heroui-danger: var(--danger);
+  --heroui-danger-foreground: var(--accent-fg);
+}
 
 @layer base {
   /* ============================================
