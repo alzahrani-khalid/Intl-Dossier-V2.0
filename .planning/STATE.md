@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
 status: completed
-stopped_at: Phase 34 context gathered
-last_updated: '2026-04-20T20:06:55.438Z'
-last_activity: 2026-04-20 — 33-07 promoted PARTIAL → PASS via 3 atomic commits (`ffc03798` ThemeSelector delete + layout cleanup, `e71ac953` types + AppearanceSettingsSection, `ab965e14` Tier E tests + migration doc).
+stopped_at: Phase 34 UI-SPEC approved (6/6 dimensions PASS)
+last_updated: '2026-04-20T21:30:00.000Z'
+last_activity: 2026-04-20 — Phase 34 UI-SPEC.md generated + verified (6/6 dimensions PASS after single Typography revision 12→13px degree readout); status flipped draft→approved, committed `62f38ed5`. Ready for /gsd-plan-phase 34.
 progress:
   total_phases: 11
   completed_phases: 0
