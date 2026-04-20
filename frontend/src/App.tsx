@@ -15,6 +15,7 @@ import { RTLWrapper } from './components/rtl-wrapper/RTLWrapper'
 import { ThemeProvider } from './components/theme-provider/theme-provider'
 import { LanguageProvider } from './components/language-provider/language-provider'
 import { ThemeErrorBoundary } from './components/theme-error-boundary/ThemeErrorBoundary'
+import { DesignProvider } from './design-system/DesignProvider'
 import './i18n'
 
 function AppRouter() {
@@ -35,17 +36,24 @@ function App() {
             fallbackLanguage="en"
           >
             <ThemeProvider initialTheme="canvas" initialColorMode="light">
-              <LanguageProvider initialLanguage="en">
-                <LazyMotion features={domAnimation}>
-                  <RTLWrapper>
-                    <AppRouter />
-                    <OfflineIndicator />
-                    <RealtimeStatus />
-                    <Toaster position="top-right" />
-                    <SonnerToaster position="top-right" richColors closeButton />
-                  </RTLWrapper>
-                </LazyMotion>
-              </LanguageProvider>
+              <DesignProvider
+                initialDirection="chancery"
+                initialMode="light"
+                initialHue={22}
+                initialDensity="comfortable"
+              >
+                <LanguageProvider initialLanguage="en">
+                  <LazyMotion features={domAnimation}>
+                    <RTLWrapper>
+                      <AppRouter />
+                      <OfflineIndicator />
+                      <RealtimeStatus />
+                      <Toaster position="top-right" />
+                      <SonnerToaster position="top-right" richColors closeButton />
+                    </RTLWrapper>
+                  </LazyMotion>
+                </LanguageProvider>
+              </DesignProvider>
             </ThemeProvider>
           </ThemeErrorBoundary>
         </AuthProvider>
