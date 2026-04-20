@@ -13,6 +13,70 @@
    BEFORE any @theme block. See 33-RESEARCH Q1 Gotcha #8 (ordering). Plan 33-04. */
 @plugin '@heroui/styles';
 
+/* ==========================================================================
+   @theme — Tailwind v4 source of truth for the D-16 token engine (Plan 33-06).
+   Exposes utilities (bg-*, text-*, border-*, ring-*, shadow-*) that resolve to
+   runtime vars written by DesignProvider (33-02) and the FOUC bootstrap (33-03).
+   Legacy semantic names (primary/foreground/card/popover/border/etc.) are
+   REMAPPED here so that the 1,437 existing call sites continue to render
+   against the new Chancery palette without any per-file churn.
+   ========================================================================== */
+@theme {
+  /* D-16 raw namespace — bg-bg, bg-surface, text-ink, border-line, etc. */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-ink-mute: var(--ink-mute);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-sidebar: var(--sidebar-bg);
+  --color-sidebar-ink: var(--sidebar-ink);
+
+  /* Accent family */
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+
+  /* Semantic status */
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--accent-fg);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-info: var(--info);
+
+  /* SLA */
+  --color-sla-ok: var(--sla-ok);
+  --color-sla-risk: var(--sla-risk);
+  --color-sla-bad: var(--sla-bad);
+
+  /* Legacy semantic REMAP — load-bearing for 1,437 existing usages
+     (bg-primary, text-foreground, border-border, bg-card, bg-popover, etc.) */
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-fg);
+  --color-foreground: var(--ink);
+  --color-muted-foreground: var(--ink-mute);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-background: var(--bg);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface-raised);
+  --color-popover-foreground: var(--ink);
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: var(--accent-fg);
+  --color-muted: var(--surface);
+  --color-secondary: var(--accent-soft);
+  --color-secondary-foreground: var(--accent-ink);
+  --color-ring: var(--accent);
+
+  /* Shadows — exposed as shadow-card / shadow-drawer utilities */
+  --shadow-card: var(--shadow-card);
+  --shadow-drawer: var(--shadow-drawer);
+}
+
 @config "../tailwind.config.ts";
 
 /* HeroUI v3 semantic bridge — maps HeroUI primitives (`primary`, `default`,
@@ -31,6 +95,27 @@
   --line: #e6ddc9;
   --accent: oklch(58% 0.14 22);
   --accent-fg: oklch(99% 0.01 22);
+  /* Literal fallbacks for D-16 vars that @theme references but that the
+     33-01 runtime writes in full. Defense-in-depth for first paint. */
+  --ink-mute: #4f4a40;
+  --ink-faint: #8a8170;
+  --line-soft: #efe7d4;
+  --surface: #fdfaf3;
+  --surface-raised: #ffffff;
+  --sidebar-bg: #f0eadf;
+  --sidebar-ink: #1a1814;
+  --accent-ink: oklch(42% 0.15 22);
+  --accent-soft: oklch(92% 0.05 22);
+  --danger: oklch(52% 0.18 25);
+  --ok: oklch(52% 0.12 155);
+  --warn: oklch(62% 0.14 75);
+  --info: oklch(50% 0.14 230);
+  --sla-ok: oklch(58% 0.14 22);
+  --sla-risk: oklch(60% 0.13 75);
+  --sla-bad: oklch(54% 0.2 25);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-drawer: -24px 0 60px rgba(0, 0, 0, 0.25);
+  --focus-ring: 0 0 0 3px color-mix(in oklch, var(--accent) 40%, transparent);
 
   --heroui-primary: var(--accent);
   --heroui-primary-foreground: var(--accent-fg);
