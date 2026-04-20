@@ -51,18 +51,20 @@ Exceptions:
 
 ## Typography
 
-All sizes consume `--font-body` (system-ui until Phase 35). Line heights tuned for dense control panel readability.
+All sizes consume `--font-body` (system-ui until Phase 35). Line heights tuned for dense control panel readability. Exactly **4 distinct sizes** (11/13/14/16) and exactly **2 weights** (400, 600).
 
-| Role                     | Size | Weight | Line Height | Usage                                                                     |
-| ------------------------ | ---- | ------ | ----------- | ------------------------------------------------------------------------- |
-| Drawer title             | 16px | 600    | 1.3         | "Tweaks" / "تعديلات" in `DrawerHeader`                                    |
-| Section heading          | 13px | 600    | 1.3         | "Direction" / "Mode" / "Hue" / etc. — uppercase optional via utility      |
-| Direction button primary | 13px | 600    | 1.3         | "Chancery" / "Situation Room" label                                       |
-| Direction button tagline | 11px | 400    | 1.4         | "Formal, warm amber" caption under primary label                          |
-| Body / control label     | 14px | 400    | 1.5         | Light/Dark toggle labels, Comfortable/Compact labels, EN/ع labels         |
-| Degree readout           | 12px | 500    | 1           | Live hue value "158°" — rendered in `--font-mono` with inline `dir="ltr"` |
+| Role                     | Size | Weight | Line Height | Usage                                                                                                                          |
+| ------------------------ | ---- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Drawer title             | 16px | 600    | 1.3         | "Tweaks" / "تعديلات" in `DrawerHeader`                                                                                         |
+| Section heading          | 13px | 600    | 1.3         | "Direction" / "Mode" / "Hue" / etc. — uppercase optional via utility                                                           |
+| Direction button primary | 13px | 600    | 1.3         | "Chancery" / "Situation Room" label (D-17 locked)                                                                              |
+| Degree readout           | 13px | 600    | 1.3         | Live hue value "158°" — rendered in `--font-mono` with inline `dir="ltr"` (D-08: Western-Arabic numerals + ° symbol preserved) |
+| Body / control label     | 14px | 400    | 1.5         | Light/Dark toggle labels, Comfortable/Compact labels, EN/ع labels                                                              |
+| Direction button tagline | 11px | 400    | 1.4         | "Formal, warm amber" caption under primary label (D-17 locked — semantic weight: labels each direction's palette identity)     |
 
 **Weight policy:** exactly 2 weights used — **400 (regular)** and **600 (semibold)**. No 500/700 mixing.
+
+**Size count:** exactly 4 distinct sizes — **11 / 13 / 14 / 16**. The degree readout shares the 13px tier with section headings and direction-primary labels; its `--font-mono` family and `dir="ltr"` wrapper provide the visual differentiation without adding a new size tier.
 
 ---
 
@@ -186,10 +188,10 @@ Vertical stack with `gap-6` (24px) between sections. Each section:
 [Control row(s) — per section below]
 ```
 
-1. **Direction** — 2×2 grid of direction buttons (4 total). Each button is 2-line stacked (primary label + tagline), logical-start text alignment, padding 10px, `rounded-[var(--radius-sm)]`. Active: `bg-accent-soft border-accent text-accent-ink`. Inactive: `bg-surface border-line text-ink`.
+1. **Direction** — 2×2 grid of direction buttons (4 total). Each button is 2-line stacked (primary label 13/600 + tagline 11/400), logical-start text alignment, padding 10px, `rounded-[var(--radius-sm)]`. Active: `bg-accent-soft border-accent text-accent-ink`. Inactive: `bg-surface border-line text-ink`.
 2. **Mode** — segmented pill toggle (Light | Dark). Single row, `flex gap-2`, each pill flex-1, 44px min touch height. Active pill uses accent chrome; inactive uses `bg-surface border-line`.
 3. **Hue** — two sub-rows, `gap-sm`:
-   - Row A: Range slider (0–360, step 1) flex-1 + degree readout `<span dir="ltr">{hue}°</span>` inline-end, `--font-mono`. Slider track filled portion uses `var(--accent)`.
+   - Row A: Range slider (0–360, step 1) flex-1 + degree readout `<span dir="ltr">{hue}°</span>` inline-end, **13px/600**, `--font-mono`. Slider track filled portion uses `var(--accent)`.
    - Row B: 5 swatch buttons, `flex gap-2`, each `flex-1 h-6 rounded-[var(--radius-sm)]`. Active swatch: `2px solid var(--ink)` ring.
 4. **Density** — segmented pill toggle (Comfortable | Compact). Same chrome as Mode.
 5. **Classification** — label `Classification` + HeroUI `Switch` (boolean on/off). Switch uses `color="primary"` which bridges to `--accent` via Phase 33 D-06.
