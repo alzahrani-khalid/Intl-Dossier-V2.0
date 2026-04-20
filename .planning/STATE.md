@@ -2,18 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: executing_phase
-stopped_at: Phase 33 Wave 3 fully PASS — 33-07 PROMOTED PARTIAL → PASS via Tier B+C+E completion (Task 8 option-now ThemeSelector delete, types cleanup, AppearanceSettingsSection rewrite, 4 obsolete integration tests deleted, DESIGN_SYSTEM_MIGRATION.md rewritten). Phase 33 now effectively complete — only 33-08 Storybook polish (non-blocking) remains. Phases 34/35/37 fully unblocked.
-last_updated: '2026-04-20T17:00:00.000Z'
-last_activity: 2026-04-20 -- 33-07 Tier B/C/E landed (Tier A done session N-1). DoD grep clean for canvas|azure|lavender|bluesky in non-test source. ThemeSelector component + 4 layout call-sites deleted. Types + Zod schemas migrated to Direction enum. 4 obsolete theme integration tests deleted (validated removed behavior; coverage replaced by DesignProvider.test.tsx 18/18). preference-merge.test.ts updated 24/24 PASS. DESIGN_SYSTEM_MIGRATION.md rewritten as full v5→v6 upgrade path. Typecheck −2 errors vs session baseline (1594→1592).
-resume_file: .planning/phases/33-token-engine/33-07-legacy-cut-SUMMARY.md
-resume_command: Phase 33 effectively done. Downstream phases 34 (tweaks-drawer), 35 (typography-stack), 37 (signature-visuals) unblocked and parallelizable. Only remaining Phase 33 item is 33-08 Storybook bootstrap (non-blocking polish).
+status: completed
+stopped_at: Phase 34 context gathered
+last_updated: '2026-04-20T20:06:55.438Z'
+last_activity: 2026-04-20 — 33-07 promoted PARTIAL → PASS via 3 atomic commits (`ffc03798` ThemeSelector delete + layout cleanup, `e71ac953` types + AppearanceSettingsSection, `ab965e14` Tier E tests + migration doc).
 progress:
   total_phases: 11
   completed_phases: 0
-  total_plans: 4.5
+  total_plans: 9
   completed_plans: 8
-  percent: 8
+  percent: 89
 ---
 
 # Project State
@@ -176,9 +174,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-19T00:00:00.000Z
-Stopped at: Roadmap created — v6.0 has 11 phases (33-43), 52/52 requirements mapped, ready to begin discussion of Phase 33
-Resume file: .planning/ROADMAP.md
+Last session: 2026-04-20T20:06:55.435Z
+Stopped at: Phase 34 context gathered
+Resume file: .planning/phases/34-tweaks-drawer/34-CONTEXT.md
 Resume command: /gsd-discuss-phase 33
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
