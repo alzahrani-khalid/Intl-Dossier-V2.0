@@ -132,1018 +132,54 @@
   --heroui-warning-foreground: var(--accent-fg);
   --heroui-danger: var(--danger);
   --heroui-danger-foreground: var(--accent-fg);
+
+  /* Typography — invariant across direction/mode/hue/density (hoisted from
+     the removed legacy data-theme blocks as part of Plan 33-07). Direction-
+     specific typography is out of scope for this phase; Plan 34 may revisit. */
+  --display-family: 'Inter', system-ui, sans-serif;
+  --display-weight: 600;
+  --text-family: 'Inter', system-ui, sans-serif;
+  --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
+  --text-weight: 400;
+
+  /* Font size scale (mobile-first; body uses --text-sm and scales to --text-base
+     at ≥640px via @media query in the base layer below). */
+  --text-3xs: 0.5625rem;
+  --text-2xs: 0.625rem;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.75rem;
+  --text-base: 0.8125rem;
+  --text-lg: 0.875rem;
+  --text-xl: 1rem;
+  --text-2xl: 1.125rem;
+  --text-3xl: 1.25rem;
+  --text-4xl: 1.5rem;
+  --text-5xl: 1.875rem;
+  --text-metric: 3.5rem;
+
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  --transition-fast: 150ms;
+  --transition-base: 250ms;
+  --transition-slow: 350ms;
 }
 
 @layer base {
-  /* ============================================
-     THEME: Canvas (Eucalyptus) - DEFAULT
-     Scalable architecture: data-theme sets color palette
-     .dark class toggles light/dark semantic tokens
-     ============================================ */
-  :root,
-  [data-theme='canvas'] {
-    /* Base (Alabaster) - Neutral Gray Scale
-       WCAG AA compliant: base-400/500 adjusted for better muted text contrast */
-    --base-50: 0 0% 98%;
-    --base-100: 0 0% 96.1%;
-    --base-200: 0 0% 89.8%;
-    --base-300: 0 0% 83.1%;
-    --base-400: 0 0% 55%; /* Darkened from 63.1% to 55% for better contrast */
-    --base-500: 0 0% 40%; /* Darkened from 45.1% to 40% for WCAG AA 4.5:1 */
-    --base-600: 0 0% 32.2%;
-    --base-700: 0 0% 25.1%;
-    --base-800: 0 0% 14.9%;
-    --base-900: 0 0% 9%;
-    --base-950: 0 0% 3.9%;
-    --base-1000: 0 0% 1.6%;
-
-    /* Primary (Eucalyptus) - Green ~155°
-       WCAG AA compliant: primary-600 adjusted for 4.5:1 contrast with white */
-    --primary-50: 150 77.8% 96.5%;
-    --primary-100: 155 66.7% 90.2%;
-    --primary-200: 156 62.5% 82%;
-    --primary-300: 157 60.2% 71.4%;
-    --primary-400: 155 55.8% 58.4%;
-    --primary-500: 154 51.6% 47.1%;
-    --primary-600: 155 55% 32%; /* Darkened from 37.3% to 32% for WCAG AA 4.5:1 contrast */
-    --primary-700: 157 55% 27%; /* Darkened from 30.6% to 27% */
-    --primary-800: 158 62.4% 22.9%;
-    --primary-900: 159 56% 19.6%;
-    --primary-950: 159 66% 10.4%;
-    --primary-1000: 161 70.4% 5.3%;
-
-    /* Typography - Inter for LTR, Readex Pro for RTL */
-    --display-family: 'Inter', system-ui, sans-serif;
-    --display-weight: 600;
-    --text-family: 'Inter', system-ui, sans-serif;
-    --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-    --text-weight: 400;
-
-    /* Radius tokens — only base + field; Tailwind config derives sm/md/lg/xl via calc() */
-    --radius: 0;
-    --field-radius: calc(var(--radius) * 1.5);
-
-    /* HeroUI v3 Theme Builder Variables (oklch native) — Canvas
-       Source: hue=155, chroma=0.12, lightness=0.82, radius=none */
-    --heroui-accent: oklch(82% 0.12 155);
-    --heroui-accent-foreground: oklch(15% 0.024 155);
-    --heroui-background: oklch(97.02% 0.0015 155);
-    --heroui-surface: oklch(100% 0.0008 155);
-    --heroui-border: oklch(90% 0.0015 155);
-    --heroui-foreground: oklch(21.03% 0.0015 155);
-    --heroui-danger: oklch(65.32% 0.2335 31.88);
-    --heroui-success: oklch(73.29% 0.1941 156.95);
-    --heroui-warning: oklch(78.19% 0.159 78.47);
-
-    /* Font sizes - Reduced Compact UI scale for dense information display */
-    --text-3xs: 0.5625rem; /* 9px - Icon labels only */
-    --text-2xs: 0.625rem; /* 10px - Micro badges */
-    --text-xs: 0.6875rem; /* 11px - Labels, hints */
-    --text-sm: 0.75rem; /* 12px - Body text (WCAG minimum) */
-    --text-base: 0.8125rem; /* 13px - Default body */
-    --text-lg: 0.875rem; /* 14px - Emphasized */
-    --text-xl: 1rem; /* 16px - Section headers */
-    --text-2xl: 1.125rem; /* 18px - Card titles */
-    --text-3xl: 1.25rem; /* 20px - Page titles */
-    --text-4xl: 1.5rem; /* 24px - Hero text */
-    --text-5xl: 1.875rem; /* 30px - Large headings */
-    --text-metric: 3.5rem; /* 56px - Dashboard metrics */
-
-    /* Font weights */
-    --font-light: 300;
-    --font-normal: 400;
-    --font-medium: 500;
-    --font-semibold: 600;
-    --font-bold: 700;
-
-    /* Line Heights */
-    --leading-tight: 1.25;
-    --leading-snug: 1.375;
-    --leading-normal: 1.5;
-    --leading-relaxed: 1.625;
-
-    /* Letter Spacing */
-    --tracking-tight: -0.025em;
-    --tracking-normal: 0em;
-    --tracking-wide: 0.025em;
-    --tracking-wider: 0.05em;
-
-    /* Transitions */
-    --transition-fast: 150ms;
-    --transition-base: 250ms;
-    --transition-slow: 350ms;
-  }
-
-  /* ============================================
-     THEME: Azure (HeroUI Blue) - Hue 244
-     Converted from HeroUI v3 theme builder (oklch)
-     Source: hue=244, accent=oklch(71% 0.19 244)
-     ============================================ */
-  [data-theme='azure'] {
-    /* Base - Blue-tinted neutral scale (hue 244) */
-    --base-50: 240 5% 97%;
-    --base-100: 240 5% 95%;
-    --base-200: 240 4% 90%;
-    --base-300: 240 4% 83%;
-    --base-400: 240 3% 55%;
-    --base-500: 240 3% 40%;
-    --base-600: 240 3% 32%;
-    --base-700: 240 3% 25%;
-    --base-800: 240 3% 15%;
-    --base-900: 240 3% 9%;
-    --base-950: 240 3% 4%;
-    --base-1000: 240 3% 2%;
-
-    /* Primary - Azure Blue (hue 244, oklch 71% 0.19) */
-    --primary-50: 244 40% 96%;
-    --primary-100: 244 35% 90%;
-    --primary-200: 244 30% 82%;
-    --primary-300: 244 28% 71%;
-    --primary-400: 244 25% 58%;
-    --primary-500: 244 30% 47%;
-    --primary-600: 244 40% 42%;
-    --primary-700: 244 40% 35%;
-    --primary-800: 244 45% 28%;
-    --primary-900: 244 40% 22%;
-    --primary-950: 244 45% 12%;
-    --primary-1000: 244 50% 6%;
-
-    /* Typography - Bricolage Grotesque for LTR */
-    --display-family: 'Bricolage Grotesque', system-ui, sans-serif;
-    --display-weight: 600;
-    --text-family: 'Bricolage Grotesque', system-ui, sans-serif;
-    /* RTL remains Readex Pro (Bricolage doesn't support Arabic) */
-    --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-    --text-weight: 400;
-
-    /* Tighter radius from HeroUI theme (small) */
-    --radius: 0.25rem;
-    --field-radius: calc(var(--radius) * 1.5);
-
-    /* HeroUI v3 Theme Builder Variables (oklch native) — Azure */
-    --heroui-accent: oklch(71% 0.19 244);
-    --heroui-accent-foreground: oklch(15% 0.038 244);
-    --heroui-background: oklch(97.02% 0.0015 244);
-    --heroui-surface: oklch(100% 0.0008 244);
-    --heroui-border: oklch(90% 0.0015 244);
-    --heroui-foreground: oklch(21.03% 0.0015 244);
-    --heroui-danger: oklch(65.32% 0.2335 31.88);
-    --heroui-success: oklch(73.29% 0.1941 156.95);
-    --heroui-warning: oklch(78.19% 0.159 78.47);
-  }
-
-  /* ============================================
-     THEME: Lavender (HeroUI Purple) - Hue 305
-     Converted from HeroUI v3 theme builder (oklch)
-     Source: hue=305, chroma=0.13, lightness=0.77
-     ============================================ */
-  [data-theme='lavender'] {
-    /* Base - Purple-tinted neutral scale (hue 305) */
-    --base-50: 305 2% 97%;
-    --base-100: 305 2% 95%;
-    --base-200: 305 2% 91%;
-    --base-300: 305 2% 88%;
-    --base-400: 305 2% 55%;
-    --base-500: 305 3% 42%;
-    --base-600: 305 2% 33%;
-    --base-700: 305 2% 25%;
-    --base-800: 305 3% 15%;
-    --base-900: 305 2% 9%;
-    --base-950: 305 2% 4%;
-    --base-1000: 305 2% 2%;
-
-    /* Primary - Lavender Purple (hue 305, oklch 77% 0.13) */
-    --primary-50: 295 35% 96%;
-    --primary-100: 295 30% 91%;
-    --primary-200: 295 28% 83%;
-    --primary-300: 295 25% 73%;
-    --primary-400: 295 22% 62%;
-    --primary-500: 295 28% 52%;
-    --primary-600: 295 35% 44%;
-    --primary-700: 295 35% 36%;
-    --primary-800: 295 38% 29%;
-    --primary-900: 295 35% 23%;
-    --primary-950: 295 40% 13%;
-    --primary-1000: 295 45% 7%;
-
-    /* Typography - Inter (same as Canvas) */
-    --display-family: 'Inter', system-ui, sans-serif;
-    --display-weight: 600;
-    --text-family: 'Inter', system-ui, sans-serif;
-    --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-    --text-weight: 400;
-
-    /* Radius - Medium (from HeroUI theme) */
-    --radius: 0.5rem;
-    --field-radius: calc(var(--radius) * 1.5);
-
-    /* HeroUI v3 Theme Builder Variables (oklch native) — Lavender */
-    --heroui-accent: oklch(77% 0.13 305);
-    --heroui-accent-foreground: oklch(15% 0.026 305);
-    --heroui-background: oklch(97.02% 0.0015 305);
-    --heroui-surface: oklch(100% 0.0008 305);
-    --heroui-border: oklch(90% 0.0015 305);
-    --heroui-foreground: oklch(21.03% 0.0015 305);
-    --heroui-danger: oklch(65.32% 0.2335 31.88);
-    --heroui-success: oklch(73.29% 0.1941 156.95);
-    --heroui-warning: oklch(78.19% 0.159 78.47);
-  }
-
-  /* ============================================
-     THEME: BlueSky (Vivid Blue) - Hue 253.83
-     Converted from HeroUI v3 theme builder (oklch)
-     Source: hue=253.83, chroma=0.195, lightness=0.6204, radius=0.75rem
-     ============================================ */
-  [data-theme='bluesky'] {
-    /* Base - Blue-tinted neutral scale (hue 250) */
-    --base-50: 250 5% 97%;
-    --base-100: 250 5% 95%;
-    --base-200: 250 4% 90%;
-    --base-300: 250 4% 83%;
-    --base-400: 250 3% 55%;
-    --base-500: 250 3% 40%;
-    --base-600: 250 3% 32%;
-    --base-700: 250 3% 25%;
-    --base-800: 250 3% 15%;
-    --base-900: 250 3% 9%;
-    --base-950: 250 3% 4%;
-    --base-1000: 250 3% 2%;
-
-    /* Primary - BlueSky Vivid Blue (hue 250, oklch 62% 0.195) */
-    --primary-50: 250 55% 96%;
-    --primary-100: 250 50% 91%;
-    --primary-200: 250 45% 83%;
-    --primary-300: 250 42% 73%;
-    --primary-400: 250 38% 62%;
-    --primary-500: 250 45% 52%;
-    --primary-600: 250 55% 42%;
-    --primary-700: 250 55% 35%;
-    --primary-800: 250 58% 28%;
-    --primary-900: 250 55% 22%;
-    --primary-950: 250 60% 12%;
-    --primary-1000: 250 65% 6%;
-
-    /* Typography - Inter */
-    --display-family: 'Inter', system-ui, sans-serif;
-    --display-weight: 600;
-    --text-family: 'Inter', system-ui, sans-serif;
-    --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-    --text-weight: 400;
-
-    /* Radius - Medium-large (from HeroUI theme) */
-    --radius: 0.75rem;
-    --field-radius: calc(var(--radius) * 1.5);
-
-    /* HeroUI v3 Theme Builder Variables (oklch native) — BlueSky */
-    --heroui-accent: oklch(62.04% 0.195 253.83);
-    --heroui-accent-foreground: oklch(99.11% 0 0);
-    --heroui-background: oklch(97.02% 0.0015 253.83);
-    --heroui-surface: oklch(100% 0.0008 253.83);
-    --heroui-border: oklch(90% 0.0015 253.83);
-    --heroui-foreground: oklch(21.03% 0.0015 253.83);
-    --heroui-danger: oklch(65.32% 0.2335 25.74);
-    --heroui-success: oklch(73.29% 0.1941 150.81);
-    --heroui-warning: oklch(78.19% 0.159 72.33);
-  }
-
-  /* ============================================
-     FUTURE THEME TEMPLATE (copy & modify):
-     [data-theme="ocean"] {
-       --base-50: 210 40% 98%;
-       --primary-600: 200 80% 50%;
-       ...
-     }
-     ============================================ */
-
-  /* ============================================
-     SEMANTIC TOKENS - Light Mode (all themes)
-     ============================================ */
-  :root {
-    --background: var(--base-50);
-    --foreground: var(--base-800);
-    --card: 0 0% 100%;
-    --card-foreground: var(--base-800);
-    --popover: 0 0% 100%;
-    --popover-foreground: var(--base-800);
-    --primary: var(--primary-600);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--base-200);
-    --secondary-foreground: var(--base-950);
-    --muted: var(--base-100);
-    --muted-foreground: var(
-      --base-500
-    ); /* Darkened from base-600 to base-500 for better contrast */
-    --accent: var(--base-100);
-    --accent-foreground: var(--base-800);
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: var(--base-200);
-    --input: var(--base-300);
-    --ring: var(--primary-600);
-
-    /* Semantic status colors */
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-    --info: 221 83% 53%;
-    --info-foreground: 0 0% 100%;
-
-    /* Sidebar */
-    --sidebar: 0 0% 100%;
-    --sidebar-foreground: var(--base-800);
-    --sidebar-primary: var(--primary-600);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--base-50);
-    --sidebar-accent-foreground: var(--base-800);
-    --sidebar-border: var(--base-200);
-    --sidebar-ring: var(--primary-600);
-
-    /* Chart colors - derived from primary */
-    --chart-1: var(--primary-600);
-    --chart-2: var(--primary-200);
-    --chart-3: var(--primary-400);
-    --chart-4: var(--primary-300);
-    --chart-5: var(--primary-100);
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  }
-
-  /* ============================================
-     SEMANTIC TOKENS - Azure Theme Overrides
-     ============================================ */
-  [data-theme='azure'] {
-    --accent: var(--primary-100);
-    --accent-foreground: var(--primary-800);
-    --ring: var(--primary-600);
-  }
-
-  .dark[data-theme='azure'],
-  [data-theme='azure'].dark {
-    --accent: var(--primary-900);
-    --accent-foreground: var(--primary-200);
-
-    /* HeroUI dark oklch overrides */
-    --heroui-accent: oklch(71% 0.19 244);
-    --heroui-background: oklch(12% 0.0015 244);
-    --heroui-surface: oklch(21.03% 0.003 244);
-    --heroui-border: oklch(28% 0.0015 244);
-    --heroui-foreground: oklch(99.11% 0.0015 244);
-    --heroui-danger: oklch(59.4% 0.1973 30.77);
-  }
-
-  /* ============================================
-     SEMANTIC TOKENS - Lavender Theme Overrides
-     ============================================ */
-  [data-theme='lavender'] {
-    --accent: var(--primary-100);
-    --accent-foreground: var(--primary-800);
-    --ring: var(--primary-600);
-  }
-
-  .dark[data-theme='lavender'],
-  [data-theme='lavender'].dark {
-    --accent: var(--primary-900);
-    --accent-foreground: var(--primary-200);
-
-    /* HeroUI dark oklch overrides */
-    --heroui-accent: oklch(77% 0.13 305);
-    --heroui-background: oklch(12% 0.0015 305);
-    --heroui-surface: oklch(21.03% 0.003 305);
-    --heroui-border: oklch(28% 0.0015 305);
-    --heroui-foreground: oklch(99.11% 0.0015 305);
-    --heroui-danger: oklch(59.4% 0.1973 30.77);
-  }
-
-  /* ============================================
-     SEMANTIC TOKENS - BlueSky Theme Overrides
-     ============================================ */
-  [data-theme='bluesky'] {
-    --accent: var(--primary-100);
-    --accent-foreground: var(--primary-800);
-    --ring: var(--primary-600);
-  }
-
-  .dark[data-theme='bluesky'],
-  [data-theme='bluesky'].dark {
-    --accent: var(--primary-900);
-    --accent-foreground: var(--primary-200);
-    --heroui-accent: oklch(72% 0.19 253.83);
-    --heroui-accent-foreground: oklch(99.11% 0 0);
-    --heroui-background: oklch(12% 0.0015 253.83);
-    --heroui-surface: oklch(21.03% 0.003 253.83);
-    --heroui-border: oklch(28% 0.0015 253.83);
-    --heroui-foreground: oklch(99.11% 0.0015 253.83);
-    --heroui-danger: oklch(59.4% 0.1973 24.63);
-  }
-
-  /* ============================================
-     SEMANTIC TOKENS - Canvas Theme Dark Overrides
-     ============================================ */
-  .dark[data-theme='canvas'],
-  [data-theme='canvas'].dark,
-  .dark:not([data-theme]) {
-    /* HeroUI dark oklch overrides */
-    --heroui-accent: oklch(82% 0.12 155);
-    --heroui-background: oklch(12% 0.0015 155);
-    --heroui-surface: oklch(21.03% 0.003 155);
-    --heroui-border: oklch(28% 0.0015 155);
-    --heroui-foreground: oklch(99.11% 0.0015 155);
-    --heroui-danger: oklch(59.4% 0.1973 30.77);
-  }
-
-  /* ============================================
-     SEMANTIC TOKENS - Dark Mode (all themes)
-     ============================================ */
-  .dark {
-    --background: var(--base-950);
-    --foreground: var(--base-200);
-    --card: var(--base-900);
-    --card-foreground: var(--base-200);
-    --popover: var(--base-900);
-    --popover-foreground: var(--base-200);
-    --primary: var(--primary-600);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--base-700);
-    --secondary-foreground: var(--base-50);
-    --muted: var(--base-800);
-    --muted-foreground: var(--base-300);
-    --accent: var(--base-800);
-    --accent-foreground: var(--base-200);
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: var(--base-800);
-    --input: var(--base-700);
-    --ring: var(--primary-600);
-
-    /* Semantic status colors - Dark */
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: var(--base-950);
-    --info: 221 83% 53%;
-    --info-foreground: 0 0% 100%;
-
-    /* Sidebar - Dark */
-    --sidebar: var(--base-900);
-    --sidebar-foreground: var(--base-200);
-    --sidebar-primary: var(--primary-600);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--base-800);
-    --sidebar-accent-foreground: var(--base-200);
-    --sidebar-border: var(--base-800);
-    --sidebar-ring: var(--primary-600);
-
-    /* Shadows - Dark */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
-    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.4);
-    --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
-  }
-
-  /* ============================================
-     SHADCN UI KIT PRO BASELINE (Canvas/default)
-     Aligns this app's core visual language with:
-     https://github.com/bundui/shadcn-ui-kit-dashboard
-     ============================================ */
-  :root,
-  [data-theme='canvas'] {
-    /* Neutral scale (approximation of kit oklch neutrals in HSL form) */
-    --base-50: 0 0% 98.5%;
-    --base-100: 0 0% 96.7%;
-    --base-200: 0 0% 92%;
-    --base-300: 0 0% 87.1%;
-    --base-400: 0 0% 70.5%;
-    --base-500: 0 0% 55.2%;
-    --base-600: 0 0% 44.2%;
-    --base-700: 0 0% 37%;
-    --base-800: 0 0% 27.4%;
-    --base-900: 0 0% 21%;
-    --base-950: 0 0% 14.1%;
-    --base-1000: 0 0% 9.6%;
-
-    /* Keep the existing scale contract but move visual primary to neutral-dark */
-    --primary-50: 0 0% 98.5%;
-    --primary-100: 0 0% 96.7%;
-    --primary-200: 0 0% 92%;
-    --primary-300: 0 0% 87.1%;
-    --primary-400: 0 0% 70.5%;
-    --primary-500: 0 0% 55.2%;
-    --primary-600: 0 0% 14.1%;
-    --primary-700: 0 0% 12%;
-    --primary-800: 0 0% 9.6%;
-    --primary-900: 0 0% 8%;
-    --primary-950: 0 0% 6%;
-    --primary-1000: 0 0% 4%;
-
-    --background: 0 0% 100%;
-    --foreground: var(--base-800);
-    --card: 0 0% 100%;
-    --card-foreground: var(--base-800);
-    --popover: 0 0% 100%;
-    --popover-foreground: var(--base-800);
-    --primary: var(--base-950);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--base-300);
-    --secondary-foreground: var(--base-800);
-    --muted: var(--base-100);
-    --muted-foreground: var(--base-500);
-    --accent: var(--base-200);
-    --accent-foreground: var(--base-800);
-    --border: var(--base-200);
-    --input: var(--base-300);
-    --ring: var(--base-800);
-
-    --sidebar: var(--base-100);
-    --sidebar-foreground: var(--base-500);
-    --sidebar-primary: var(--base-950);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--base-200);
-    --sidebar-accent-foreground: var(--base-950);
-    --sidebar-border: var(--base-200);
-    --sidebar-ring: var(--base-800);
-
-    --chart-1: var(--base-950);
-    --chart-2: var(--base-600);
-    --chart-3: var(--base-800);
-    --chart-4: var(--base-400);
-    --chart-5: var(--base-300);
-
-    --radius: 0.5rem;
-    --field-radius: calc(var(--radius) * 1.5);
-
-    --display-family: 'Outfit', system-ui, sans-serif;
-    --display-weight: 700;
-    --text-family: 'Outfit', system-ui, sans-serif;
-    --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-    --text-weight: 400;
-
-    --text-3xs: 0.625rem;
-    --text-2xs: 0.6875rem;
-    --text-xs: 0.75rem;
-    --text-sm: 0.875rem;
-    --text-base: 1rem;
-    --text-lg: 1.125rem;
-    --text-xl: 1.25rem;
-    --text-2xl: 1.5rem;
-    --text-3xl: 1.875rem;
-    --text-4xl: 2.25rem;
-    --text-5xl: 3rem;
-    --text-metric: 3rem;
-
-    /* Keep HeroUI dependent utilities aligned with the semantic tokens */
-    --heroui-accent: hsl(var(--primary));
-    --heroui-accent-foreground: hsl(var(--primary-foreground));
-    --heroui-background: hsl(var(--background));
-    --heroui-surface: hsl(var(--card));
-    --heroui-border: hsl(var(--border));
-    --heroui-foreground: hsl(var(--foreground));
-    --heroui-danger: hsl(var(--destructive));
-    --heroui-success: hsl(var(--success));
-    --heroui-warning: hsl(var(--warning));
-  }
-
-  .dark {
-    --background: var(--base-950);
-    --foreground: var(--base-200);
-    --card: var(--base-950);
-    --card-foreground: var(--base-200);
-    --popover: var(--base-950);
-    --popover-foreground: var(--base-200);
-    --primary: var(--base-50);
-    --primary-foreground: var(--base-900);
-    --secondary: var(--base-500);
-    --secondary-foreground: var(--base-200);
-    --muted: var(--base-900);
-    --muted-foreground: var(--base-400);
-    --accent: var(--base-900);
-    --accent-foreground: var(--base-200);
-    --border: var(--base-800);
-    --input: var(--base-700);
-    --ring: var(--base-200);
-
-    --chart-1: var(--base-50);
-    --chart-2: var(--base-400);
-    --chart-3: var(--base-200);
-    --chart-4: var(--base-600);
-    --chart-5: var(--base-700);
-
-    --sidebar: var(--base-900);
-    --sidebar-foreground: var(--base-200);
-    --sidebar-primary: var(--base-50);
-    --sidebar-primary-foreground: var(--base-900);
-    --sidebar-accent: var(--base-800);
-    --sidebar-accent-foreground: var(--base-200);
-    --sidebar-border: var(--base-800);
-    --sidebar-ring: var(--base-200);
-
-    --heroui-accent: hsl(var(--primary));
-    --heroui-accent-foreground: hsl(var(--primary-foreground));
-    --heroui-background: hsl(var(--background));
-    --heroui-surface: hsl(var(--card));
-    --heroui-border: hsl(var(--border));
-    --heroui-foreground: hsl(var(--foreground));
-  }
-
-  /* ============================================
-     SHADCN UI KIT PRESET-COMPATIBLE OVERRIDES
-     Map app themes to Kit Pro presets:
-     - azure -> underground
-     - lavender -> rose-garden
-     - bluesky -> ocean-breeze
-     ============================================ */
-
-  /* Azure */
-  [data-theme='azure'],
-  body[data-theme-preset='underground'] {
-    --base-50: 248 20% 98%;
-    --base-100: 248 15% 96%;
-    --base-200: 252 14% 92%;
-    --base-300: 252 12% 86%;
-    --base-400: 256 10% 70%;
-    --base-500: 257 9% 55%;
-    --base-600: 257 9% 45%;
-    --base-700: 257 9% 37%;
-    --base-800: 260 10% 28%;
-    --base-900: 266 11% 21%;
-    --base-950: 265 12% 13%;
-    --base-1000: 264 13% 8%;
-
-    --primary-50: 160 35% 98%;
-    --primary-100: 159 42% 95%;
-    --primary-200: 159 45% 92%;
-    --primary-300: 159 46% 86%;
-    --primary-400: 156 43% 78%;
-    --primary-500: 155 41% 71%;
-    --primary-600: 155 37% 61%;
-    --primary-700: 156 34% 53%;
-    --primary-800: 157 30% 44%;
-    --primary-900: 159 26% 39%;
-    --primary-950: 160 23% 26%;
-    --primary-1000: 161 20% 18%;
-
-    --secondary-50: 330 30% 98%;
-    --secondary-100: 329 29% 95%;
-    --secondary-200: 330 30% 90%;
-    --secondary-300: 332 33% 83%;
-    --secondary-400: 334 40% 73%;
-    --secondary-500: 334 44% 66%;
-    --secondary-600: 337 42% 57%;
-    --secondary-700: 338 36% 52%;
-    --secondary-800: 339 31% 45%;
-    --secondary-900: 340 27% 40%;
-    --secondary-950: 340 23% 29%;
-    --secondary-1000: 341 20% 21%;
-
-    --background: var(--base-50);
-    --foreground: var(--base-800);
-    --card: 0 0% 100%;
-    --card-foreground: var(--base-800);
-    --popover: 0 0% 100%;
-    --popover-foreground: var(--base-800);
-    --primary: var(--primary-700);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--secondary-600);
-    --secondary-foreground: 0 0% 100%;
-    --muted: var(--base-100);
-    --muted-foreground: var(--base-600);
-    --accent: var(--base-200);
-    --accent-foreground: var(--base-800);
-    --border: var(--base-200);
-    --input: var(--base-300);
-    --ring: var(--primary-700);
-    --chart-1: var(--primary-700);
-    --chart-2: var(--secondary-600);
-    --chart-3: var(--primary-300);
-    --chart-4: var(--secondary-300);
-    --chart-5: var(--primary-100);
-    --sidebar: 0 0% 100%;
-    --sidebar-foreground: var(--base-800);
-    --sidebar-primary: var(--primary-700);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--primary-700);
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: var(--base-200);
-    --sidebar-ring: var(--primary-700);
-    --radius: 0.5rem;
-    --field-radius: calc(var(--radius) * 1.5);
-    --display-family: 'Hedvig Letters Serif', serif;
-    --display-weight: 800;
-    --text-family: 'Kumbh Sans', system-ui, sans-serif;
-    --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-
-    --heroui-accent: hsl(var(--primary));
-    --heroui-accent-foreground: hsl(var(--primary-foreground));
-    --heroui-background: hsl(var(--background));
-    --heroui-surface: hsl(var(--card));
-    --heroui-border: hsl(var(--border));
-    --heroui-foreground: hsl(var(--foreground));
-  }
-
-  .dark[data-theme='azure'],
-  [data-theme='azure'].dark,
-  .dark body[data-theme-preset='underground'] {
-    --background: var(--base-950);
-    --foreground: var(--base-200);
-    --card: var(--base-900);
-    --card-foreground: var(--base-200);
-    --popover: var(--base-900);
-    --popover-foreground: var(--base-200);
-    --primary: var(--primary-700);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--secondary-600);
-    --secondary-foreground: 0 0% 100%;
-    --muted: var(--base-800);
-    --muted-foreground: var(--base-300);
-    --accent: var(--base-800);
-    --accent-foreground: var(--base-200);
-    --border: var(--base-800);
-    --input: var(--base-700);
-    --ring: var(--primary-700);
-    --chart-1: var(--primary-700);
-    --chart-2: var(--secondary-600);
-    --chart-3: var(--primary-300);
-    --chart-4: var(--secondary-300);
-    --chart-5: var(--primary-100);
-    --sidebar: var(--base-900);
-    --sidebar-foreground: var(--base-200);
-    --sidebar-primary: var(--primary-700);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--primary-700);
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: var(--base-800);
-    --sidebar-ring: var(--primary-700);
-
-    --heroui-accent: hsl(var(--primary));
-    --heroui-accent-foreground: hsl(var(--primary-foreground));
-    --heroui-background: hsl(var(--background));
-    --heroui-surface: hsl(var(--card));
-    --heroui-border: hsl(var(--border));
-    --heroui-foreground: hsl(var(--foreground));
-  }
-
-  /* Lavender */
-  [data-theme='lavender'],
-  body[data-theme-preset='rose-garden'] {
-    --base-50: 35 18% 98%;
-    --base-100: 34 15% 95%;
-    --base-200: 34 12% 92%;
-    --base-300: 35 10% 87%;
-    --base-400: 35 9% 71%;
-    --base-500: 36 8% 55%;
-    --base-600: 37 7% 44%;
-    --base-700: 36 6% 37%;
-    --base-800: 35 6% 27%;
-    --base-900: 35 6% 21%;
-    --base-950: 34 6% 15%;
-    --base-1000: 34 5% 10%;
-
-    --primary-50: 6 50% 97%;
-    --primary-100: 6 55% 94%;
-    --primary-200: 4 60% 89%;
-    --primary-300: 6 63% 81%;
-    --primary-400: 8 68% 71%;
-    --primary-500: 10 73% 65%;
-    --primary-600: 12 76% 58%;
-    --primary-700: 12 68% 52%;
-    --primary-800: 10 62% 46%;
-    --primary-900: 8 55% 41%;
-    --primary-950: 9 45% 27%;
-    --primary-1000: 10 38% 19%;
-
-    --background: 0 0% 100%;
-    --foreground: var(--base-800);
-    --card: 0 0% 100%;
-    --card-foreground: var(--base-800);
-    --popover: 0 0% 100%;
-    --popover-foreground: var(--base-800);
-    --primary: var(--primary-600);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--primary-300);
-    --secondary-foreground: var(--base-800);
-    --muted: var(--base-200);
-    --muted-foreground: var(--base-600);
-    --accent: var(--base-100);
-    --accent-foreground: var(--base-800);
-    --border: var(--base-200);
-    --input: var(--base-300);
-    --ring: var(--primary-600);
-    --chart-1: var(--primary-600);
-    --chart-2: var(--primary-200);
-    --chart-3: var(--primary-400);
-    --chart-4: var(--primary-300);
-    --chart-5: var(--primary-100);
-    --sidebar: var(--base-100);
-    --sidebar-foreground: var(--base-800);
-    --sidebar-primary: var(--primary-600);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--primary-600);
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: var(--base-200);
-    --sidebar-ring: var(--primary-600);
-    --radius: 1rem;
-    --field-radius: calc(var(--radius) * 1.5);
-    --display-weight: 600;
-    --text-family: 'Poppins', system-ui, sans-serif;
-    --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-
-    --heroui-accent: hsl(var(--primary));
-    --heroui-accent-foreground: hsl(var(--primary-foreground));
-    --heroui-background: hsl(var(--background));
-    --heroui-surface: hsl(var(--card));
-    --heroui-border: hsl(var(--border));
-    --heroui-foreground: hsl(var(--foreground));
-  }
-
-  .dark[data-theme='lavender'],
-  [data-theme='lavender'].dark,
-  .dark body[data-theme-preset='rose-garden'] {
-    --background: var(--base-950);
-    --foreground: var(--base-200);
-    --card: var(--base-950);
-    --card-foreground: var(--base-200);
-    --popover: var(--base-950);
-    --popover-foreground: var(--base-200);
-    --primary: var(--primary-600);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--primary-300);
-    --secondary-foreground: var(--base-200);
-    --muted: var(--base-900);
-    --muted-foreground: var(--base-400);
-    --accent: var(--base-900);
-    --accent-foreground: var(--base-200);
-    --border: var(--base-800);
-    --input: var(--base-700);
-    --ring: var(--primary-600);
-    --chart-1: var(--primary-600);
-    --chart-2: var(--primary-200);
-    --chart-3: var(--primary-400);
-    --chart-4: var(--primary-300);
-    --chart-5: var(--primary-100);
-    --sidebar: var(--base-800);
-    --sidebar-foreground: var(--base-200);
-    --sidebar-primary: var(--primary-600);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--primary-600);
-    --sidebar-accent-foreground: var(--base-200);
-    --sidebar-border: var(--base-800);
-    --sidebar-ring: var(--primary-600);
-
-    --heroui-accent: hsl(var(--primary));
-    --heroui-accent-foreground: hsl(var(--primary-foreground));
-    --heroui-background: hsl(var(--background));
-    --heroui-surface: hsl(var(--card));
-    --heroui-border: hsl(var(--border));
-    --heroui-foreground: hsl(var(--foreground));
-  }
-
-  /* Bluesky */
-  [data-theme='bluesky'],
-  body[data-theme-preset='ocean-breeze'] {
-    --base-50: 108 25% 99%;
-    --base-100: 108 18% 97%;
-    --base-200: 108 14% 92%;
-    --base-300: 109 10% 87%;
-    --base-400: 109 8% 71%;
-    --base-500: 111 7% 55%;
-    --base-600: 112 6% 44%;
-    --base-700: 111 6% 37%;
-    --base-800: 110 6% 27%;
-    --base-900: 110 6% 21%;
-    --base-950: 109 6% 14%;
-    --base-1000: 110 6% 10%;
-
-    --primary-50: 255 65% 97%;
-    --primary-100: 256 68% 93%;
-    --primary-200: 254 70% 88%;
-    --primary-300: 252 72% 81%;
-    --primary-400: 255 74% 71%;
-    --primary-500: 260 76% 62%;
-    --primary-600: 263 78% 55%;
-    --primary-700: 264 74% 49%;
-    --primary-800: 266 66% 42%;
-    --primary-900: 266 52% 38%;
-    --primary-950: 268 42% 28%;
-    --primary-1000: 270 32% 22%;
-
-    --secondary-50: 272 60% 96%;
-    --secondary-100: 273 62% 93%;
-    --secondary-200: 274 64% 87%;
-    --secondary-300: 275 67% 79%;
-    --secondary-400: 277 71% 67%;
-    --secondary-500: 277 74% 58%;
-    --secondary-600: 277 76% 51%;
-    --secondary-700: 277 69% 46%;
-    --secondary-800: 277 57% 40%;
-    --secondary-900: 279 45% 36%;
-    --secondary-950: 281 35% 26%;
-    --secondary-1000: 283 27% 19%;
-
-    --background: 0 0% 100%;
-    --foreground: var(--base-800);
-    --card: 0 0% 100%;
-    --card-foreground: var(--base-800);
-    --popover: 0 0% 100%;
-    --popover-foreground: var(--base-800);
-    --primary: var(--primary-600);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--secondary-500);
-    --secondary-foreground: 0 0% 100%;
-    --muted: var(--base-50);
-    --muted-foreground: var(--base-600);
-    --accent: var(--base-100);
-    --accent-foreground: var(--base-800);
-    --border: var(--base-200);
-    --input: var(--base-300);
-    --ring: var(--primary-600);
-    --chart-1: var(--primary-600);
-    --chart-2: var(--secondary-500);
-    --chart-3: var(--primary-300);
-    --chart-4: var(--secondary-300);
-    --chart-5: var(--primary-100);
-    --sidebar: var(--base-100);
-    --sidebar-foreground: var(--base-800);
-    --sidebar-primary: var(--primary-600);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--primary-600);
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: var(--base-200);
-    --sidebar-ring: var(--primary-600);
-    --radius: 0.3rem;
-    --field-radius: calc(var(--radius) * 1.5);
-    --display-weight: 800;
-    --text-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-
-    --heroui-accent: hsl(var(--primary));
-    --heroui-accent-foreground: hsl(var(--primary-foreground));
-    --heroui-background: hsl(var(--background));
-    --heroui-surface: hsl(var(--card));
-    --heroui-border: hsl(var(--border));
-    --heroui-foreground: hsl(var(--foreground));
-  }
-
-  .dark[data-theme='bluesky'],
-  [data-theme='bluesky'].dark,
-  .dark body[data-theme-preset='ocean-breeze'] {
-    --background: var(--base-950);
-    --foreground: var(--base-200);
-    --card: var(--base-950);
-    --card-foreground: var(--base-200);
-    --popover: var(--base-950);
-    --popover-foreground: var(--base-200);
-    --primary: var(--primary-600);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--secondary-500);
-    --secondary-foreground: 0 0% 0%;
-    --muted: var(--base-900);
-    --muted-foreground: var(--base-400);
-    --accent: var(--base-900);
-    --accent-foreground: var(--base-200);
-    --border: var(--base-800);
-    --input: var(--base-700);
-    --ring: var(--primary-600);
-    --chart-1: var(--primary-600);
-    --chart-2: var(--secondary-500);
-    --chart-3: var(--primary-300);
-    --chart-4: var(--secondary-300);
-    --chart-5: var(--primary-100);
-    --sidebar: var(--base-900);
-    --sidebar-foreground: var(--base-200);
-    --sidebar-primary: var(--primary-600);
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: var(--primary-600);
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: var(--base-800);
-    --sidebar-ring: var(--primary-600);
-
-    --heroui-accent: hsl(var(--primary));
-    --heroui-accent-foreground: hsl(var(--primary-foreground));
-    --heroui-background: hsl(var(--background));
-    --heroui-surface: hsl(var(--card));
-    --heroui-border: hsl(var(--border));
-    --heroui-foreground: hsl(var(--foreground));
-  }
-
-  /* ============================================
-     BASE STYLES
-     ============================================ */
+  /* Universal reset — border-border resolves to var(--line) via the @theme remap. */
   *,
   *::before,
   *::after {
     @apply border-border;
   }
 
-  /* Global thin scrollbar for all scrollable containers */
+  /* Global thin scrollbar (uses D-16 vars directly — no HSL indirection). */
   * {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-color: var(--line) transparent;
   }
   *::-webkit-scrollbar {
     width: 6px;
@@ -1153,14 +189,13 @@
     background: transparent;
   }
   *::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
+    background: var(--line);
     border-radius: 3px;
   }
   *::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
+    background: var(--ink-mute);
   }
 
-  /* Apply theme font to ALL elements */
   html {
     font-family: var(--text-family);
   }
@@ -1175,25 +210,20 @@
       color var(--transition-base);
   }
 
-  /* Responsive body font - tablet and up */
   @media (min-width: 640px) {
     body {
       font-size: var(--text-base); /* 13px on tablet+ */
     }
   }
 
-  /* Headings use display font */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  /* Headings use the display family by default. LTR/RTL rules below override
+     when needed (RTL falls back to Readex Pro because Inter lacks Arabic). */
+  h1, h2, h3, h4, h5, h6 {
     font-family: var(--display-family);
     font-weight: var(--display-weight);
   }
 
-  /* Ensure all interactive elements inherit theme fonts */
+  /* Inherit theme fonts on interactive controls. */
   button,
   input,
   select,
@@ -1202,23 +232,11 @@
     font-family: inherit;
   }
 
-  /* Ensure spans, divs, paragraphs, and list items use theme font */
-  p,
-  span,
-  div,
-  a,
-  li,
-  label,
-  td,
-  th {
+  p, span, div, a, li, label, td, th {
     font-family: var(--text-family);
   }
 
-  /* Code elements use monospace */
-  code,
-  pre,
-  kbd,
-  samp {
+  code, pre, kbd, samp {
     font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   }
 
@@ -1235,21 +253,20 @@
     cursor: pointer;
   }
 
-  /* LTR support - Inter for English */
+  /* LTR — Inter. */
   html[dir='ltr'],
   html[dir='ltr'] body,
   html[dir='ltr'] * {
     font-family: var(--text-family);
   }
 
-  /* RTL support - Readex Pro for Arabic */
+  /* RTL — Readex Pro. */
   html[dir='rtl'],
   html[dir='rtl'] body,
   html[dir='rtl'] * {
     font-family: var(--text-family-rtl);
   }
 
-  /* Headings in LTR use Inter (display weight) */
   html[dir='ltr'] h1,
   html[dir='ltr'] h2,
   html[dir='ltr'] h3,
@@ -1260,7 +277,6 @@
     font-weight: var(--display-weight);
   }
 
-  /* Headings in RTL use Readex Pro - Inter doesn't support Arabic */
   html[dir='rtl'] h1,
   html[dir='rtl'] h2,
   html[dir='rtl'] h3,
@@ -1449,7 +465,7 @@ html[dir='rtl'] .font-text {
   /* Thin themed scrollbar — for data tables, kanban, content areas */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-color: var(--line) transparent;
   }
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
@@ -1459,10 +475,10 @@ html[dir='rtl'] .font-text {
     background: transparent;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
+    background: var(--line);
     border-radius: 3px;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
+    background: var(--ink-mute);
   }
 }
