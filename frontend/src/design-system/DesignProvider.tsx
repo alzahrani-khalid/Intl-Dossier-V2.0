@@ -14,10 +14,10 @@
  *   6. Dispatches `designChange` CustomEvents and listens for `storage` events
  *      so multiple tabs stay in sync.
  *
- * Skeleton ported from `components/theme-provider/theme-provider.tsx` (lazy
- * `useState`, `useEffect` DOM writer, `useCallback` setters, `storage` event
- * listener, CustomEvent dispatch, `data-testid="design-provider"`). The pure
- * token math lives in `./tokens/*` (plan 33-01); this module owns wiring only.
+ * Skeleton ported from the legacy ThemeProvider (lazy `useState`, `useEffect`
+ * DOM writer, `useCallback` setters, `storage` event listener, CustomEvent
+ * dispatch, `data-testid="design-provider"`). The pure token math lives in
+ * `./tokens/*` (plan 33-01); this module owns wiring only.
  */
 
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react'

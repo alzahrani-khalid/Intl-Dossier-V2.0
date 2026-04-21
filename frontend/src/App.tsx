@@ -12,7 +12,6 @@ import { RealtimeStatus } from './components/realtime-status/RealtimeStatus'
 import { AuthProvider, useAuth } from './contexts/auth.context'
 import { AuthListenerManager } from './components/auth/AuthListenerManager'
 import { RTLWrapper } from './components/rtl-wrapper/RTLWrapper'
-import { ThemeProvider } from './components/theme-provider/theme-provider'
 import { LanguageProvider } from './components/language-provider/language-provider'
 import { ThemeErrorBoundary } from './components/theme-error-boundary/ThemeErrorBoundary'
 import { DesignProvider } from './design-system/DesignProvider'
@@ -36,29 +35,27 @@ function App() {
             fallbackColorMode="light"
             fallbackLanguage="en"
           >
-            <ThemeProvider>
-              <DesignProvider
-                initialDirection="chancery"
-                initialMode="light"
-                initialHue={22}
-                initialDensity="comfortable"
-              >
-                <TweaksDisclosureProvider>
-                  <LanguageProvider initialLanguage="en">
-                    <LazyMotion features={domAnimation}>
-                      <RTLWrapper>
-                        <AppRouter />
-                        <OfflineIndicator />
-                        <RealtimeStatus />
-                        <Toaster position="top-right" />
-                        <SonnerToaster position="top-right" richColors closeButton />
-                        <TweaksDrawer />
-                      </RTLWrapper>
-                    </LazyMotion>
-                  </LanguageProvider>
-                </TweaksDisclosureProvider>
-              </DesignProvider>
-            </ThemeProvider>
+            <DesignProvider
+              initialDirection="chancery"
+              initialMode="light"
+              initialHue={22}
+              initialDensity="comfortable"
+            >
+              <TweaksDisclosureProvider>
+                <LanguageProvider initialLanguage="en">
+                  <LazyMotion features={domAnimation}>
+                    <RTLWrapper>
+                      <AppRouter />
+                      <OfflineIndicator />
+                      <RealtimeStatus />
+                      <Toaster position="top-right" />
+                      <SonnerToaster position="top-right" richColors closeButton />
+                      <TweaksDrawer />
+                    </RTLWrapper>
+                  </LazyMotion>
+                </LanguageProvider>
+              </TweaksDisclosureProvider>
+            </DesignProvider>
           </ThemeErrorBoundary>
         </AuthProvider>
       </QueryClientProvider>
