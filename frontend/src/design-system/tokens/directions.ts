@@ -14,7 +14,7 @@
  * SUMMARY.
  */
 
-import type { Direction, DirectionPalette } from './types'
+import type { Direction, DirectionPalette, DirectionFonts } from './types'
 
 export const PALETTES: Record<Direction, DirectionPalette> = {
   chancery: {
@@ -130,3 +130,27 @@ export const PALETTES: Record<Direction, DirectionPalette> = {
     },
   },
 }
+
+/** Phase 35 — D-01: per-direction font-family triplet emitted as --font-display/body/mono. */
+export const FONTS: Record<Direction, DirectionFonts> = {
+  chancery: {
+    display: "'Fraunces', serif",
+    body: "'Inter', system-ui, sans-serif",
+    mono: "'JetBrains Mono', ui-monospace, monospace",
+  },
+  situation: {
+    display: "'Space Grotesk', system-ui, sans-serif",
+    body: "'IBM Plex Sans', system-ui, sans-serif",
+    mono: "'IBM Plex Mono', ui-monospace, monospace",
+  },
+  ministerial: {
+    display: "'Public Sans', system-ui, sans-serif",
+    body: "'Public Sans', system-ui, sans-serif",
+    mono: "'JetBrains Mono', ui-monospace, monospace",
+  },
+  bureau: {
+    display: "'Inter', system-ui, sans-serif",
+    body: "'Inter', system-ui, sans-serif",
+    mono: "'JetBrains Mono', ui-monospace, monospace",
+  },
+} as const

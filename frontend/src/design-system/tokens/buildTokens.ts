@@ -1,5 +1,5 @@
 import { DENSITIES } from './densities'
-import { PALETTES } from './directions'
+import { PALETTES, FONTS } from './directions'
 import type { BuildInput, TokenSet } from './types'
 
 /**
@@ -26,6 +26,7 @@ import type { BuildInput, TokenSet } from './types'
 export const buildTokens = ({ direction, mode, hue, density }: BuildInput): TokenSet => {
   const palette = PALETTES[direction][mode]
   const den = DENSITIES[density]
+  const fonts = FONTS[direction]
   const isDark = mode === 'dark'
   const h = hue
   const hRisk = (h + 55) % 360
@@ -83,5 +84,10 @@ export const buildTokens = ({ direction, mode, hue, density }: BuildInput): Toke
     '--focus-ring': '0 0 0 3px color-mix(in oklch, var(--accent) 40%, transparent)',
     '--shadow-drawer': '-24px 0 60px rgba(0,0,0,.25)',
     '--shadow-card': '0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04)',
+
+    // Phase 35 — D-01: font-family triplet (direction-driven, mode/hue/density-invariant)
+    '--font-display': fonts.display,
+    '--font-body': fonts.body,
+    '--font-mono': fonts.mono,
   }
 }

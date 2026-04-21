@@ -57,3 +57,10 @@ export interface DensityValues {
   padBlock: string
   gap: string
 }
+
+/** Phase 35 — per-direction font triplet. Direction-invariant across modes/hues/densities. */
+export interface DirectionFonts {
+  display: string
+  body: string
+  mono: string
+}

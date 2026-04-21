@@ -67,6 +67,10 @@ const REQUIRED_KEYS = [
   '--focus-ring',
   '--shadow-drawer',
   '--shadow-card',
+  // Phase 35 — fonts (direction-driven, mode/hue/density-invariant)
+  '--font-display',
+  '--font-body',
+  '--font-mono',
 ] as const
 
 const ROW_H_BY_DENSITY: Record<Density, string> = {
@@ -103,8 +107,10 @@ describe('buildTokens — 72-case matrix (4 directions × 2 modes × 3 hues × 3
 
             // All required keys present.
             for (const key of REQUIRED_KEYS) {
-              expect(tokens[key], `missing ${key} for ${direction}/${mode}/h${hue}/${density}`)
-                .toBeDefined()
+              expect(
+                tokens[key],
+                `missing ${key} for ${direction}/${mode}/h${hue}/${density}`,
+              ).toBeDefined()
             }
 
             // Accent contains the requested hue value as a substring.
@@ -196,7 +202,12 @@ describe('buildTokens — SC-3: hue recomputes accent family + SLA (hue+55°), s
   it('keeps --sla-bad hue-locked to 25 regardless of input hue', () => {
     const hues = [22, 100, 190, 250, 350] as const
     for (const hue of hues) {
-      const light = buildTokens({ direction: 'chancery', mode: 'light', hue, density: 'comfortable' })
+      const light = buildTokens({
+        direction: 'chancery',
+        mode: 'light',
+        hue,
+        density: 'comfortable',
+      })
       const dark = buildTokens({ direction: 'chancery', mode: 'dark', hue, density: 'comfortable' })
       expect(light['--sla-bad']).toBe('oklch(54% 0.2 25)')
       expect(dark['--sla-bad']).toBe('oklch(68% 0.18 25)')
@@ -295,9 +306,7 @@ describe('buildTokens — derived tokens', () => {
       density: 'compact',
     })
     expect(tokens['--shadow-drawer']).toBe('-24px 0 60px rgba(0,0,0,.25)')
-    expect(tokens['--shadow-card']).toBe(
-      '0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04)',
-    )
+    expect(tokens['--shadow-card']).toBe('0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04)')
   })
 })
 
@@ -332,4 +341,58 @@ describe('buildTokens — purity', () => {
     expect(inputA).toEqual(snapshotA)
     expect(inputB).toEqual(snapshotB)
   })
+})
+
+describe('buildTokens — Phase 35 per-direction font triplet (TYPO-01)', () => {
+  const cases: Array<[Direction, { display: string; body: string; mono: string }]> = [
+    [
+      'chancery',
+      {
+        display: "'Fraunces', serif",
+        body: "'Inter', system-ui, sans-serif",
+        mono: "'JetBrains Mono', ui-monospace, monospace",
+      },
+    ],
+    [
+      'situation',
+      {
+        display: "'Space Grotesk', system-ui, sans-serif",
+        body: "'IBM Plex Sans', system-ui, sans-serif",
+        mono: "'IBM Plex Mono', ui-monospace, monospace",
+      },
+    ],
+    [
+      'ministerial',
+      {
+        display: "'Public Sans', system-ui, sans-serif",
+        body: "'Public Sans', system-ui, sans-serif",
+        mono: "'JetBrains Mono', ui-monospace, monospace",
+      },
+    ],
+    [
+      'bureau',
+      {
+        display: "'Inter', system-ui, sans-serif",
+        body: "'Inter', system-ui, sans-serif",
+        mono: "'JetBrains Mono', ui-monospace, monospace",
+      },
+    ],
+  ]
+
+  for (const [direction, expected] of cases) {
+    it(`emits correct font triplet for ${direction}`, () => {
+      const tokens = buildTokens({ direction, mode: 'light', hue: 22, density: 'comfortable' })
+      expect(tokens['--font-display']).toBe(expected.display)
+      expect(tokens['--font-body']).toBe(expected.body)
+      expect(tokens['--font-mono']).toBe(expected.mono)
+    })
+
+    it(`${direction} font triplet is mode/hue/density invariant`, () => {
+      const a = buildTokens({ direction, mode: 'light', hue: 22, density: 'comfortable' })
+      const b = buildTokens({ direction, mode: 'dark', hue: 190, density: 'dense' })
+      expect(a['--font-display']).toBe(b['--font-display'])
+      expect(a['--font-body']).toBe(b['--font-body'])
+      expect(a['--font-mono']).toBe(b['--font-mono'])
+    })
+  }
 })
