@@ -9,7 +9,6 @@ import {
   Building2,
   Users,
   UserCircle,
-  Palette,
   Handshake,
   BriefcaseBusiness,
   Users2,
@@ -114,13 +113,6 @@ export const navigationCategories: NavigationCategory[] = [
         labelKey: 'navigation.persons',
         icon: UserCircle,
         path: '/persons',
-      },
-      {
-        id: 'themes',
-        label: 'Themes',
-        labelKey: 'navigation.themes',
-        icon: Palette,
-        path: '/themes',
       },
       {
         id: 'engagements',

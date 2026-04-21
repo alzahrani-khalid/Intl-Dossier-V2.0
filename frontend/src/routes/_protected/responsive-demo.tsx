@@ -4,7 +4,6 @@ import { ResponsiveCard } from '@/components/responsive/responsive-card'
 import { ResponsiveCardGrid } from '@/components/responsive/responsive-card'
 import { ResponsiveTable } from '@/components/responsive/responsive-table'
 import { ResponsiveNav, type NavItem } from '@/components/responsive/responsive-nav'
-import { LanguageSwitcher } from '@/components/language-switcher/LanguageSwitcher'
 import { useResponsive } from '@/hooks/useResponsive'
 
 function ViewInfo() {
@@ -33,9 +32,6 @@ function DemoPage(): React.ReactElement {
   return (
     <div className="container mx-auto p-4 space-y-6">
       <h1 className="text-2xl font-semibold">Responsive Demo</h1>
-      <div className="flex gap-3">
-        <LanguageSwitcher />
-      </div>
       <ViewInfo />
 
       <div data-testid="responsive-nav">

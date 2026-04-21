@@ -12,7 +12,6 @@ import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useSidebar } from '@/components/ui/sidebar'
 import { NotificationPanel } from '@/components/notifications'
-import { LanguageToggle } from '@/components/language-toggle/LanguageToggle'
 import { useTweaksOpen } from '@/components/tweaks'
 import { HeaderSearch } from './header/Search'
 import { UserMenu } from './header/UserMenu'
@@ -70,11 +69,6 @@ export function SiteHeader() {
         <div className="ms-auto flex items-center gap-1">
           {/* Notification panel */}
           <NotificationPanel className="size-8" />
-
-          {/* Language toggle - hidden on mobile, visible in sidebar instead */}
-          <div className="hidden md:flex">
-            <LanguageToggle compact />
-          </div>
 
           {/* Tweaks drawer trigger */}
           <Tooltip>
