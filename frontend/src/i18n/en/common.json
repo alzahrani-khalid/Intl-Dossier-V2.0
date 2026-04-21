@@ -1091,5 +1091,22 @@
     "forum": "Forum Dossier",
     "working_group": "Working Group Dossier",
     "topic": "Topic Dossier"
+  },
+  "tweaks": {
+    "title": "Tweaks",
+    "open": "Open tweaks",
+    "close": "Close tweaks",
+    "direction": {
+      "label": "Direction",
+      "chancery": { "name": "Chancery", "tagline": "Formal, warm amber" },
+      "situation": { "name": "Situation Room", "tagline": "Dark, cool cyan" },
+      "ministerial": { "name": "Ministerial", "tagline": "Institutional green" },
+      "bureau": { "name": "Bureau", "tagline": "Crisp, neutral" }
+    },
+    "mode": { "label": "Mode", "light": "Light", "dark": "Dark" },
+    "hue": { "label": "Hue" },
+    "density": { "label": "Density", "comfortable": "Comfortable", "compact": "Compact" },
+    "classification": { "label": "Classification", "show": "Show", "hide": "Hide" },
+    "locale": { "label": "Locale", "en": "EN", "ar": "ع" }
   }
 }

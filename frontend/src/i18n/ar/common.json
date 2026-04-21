@@ -1091,5 +1091,22 @@
     "forum": "دوسيه منتدى",
     "working_group": "دوسيه مجموعة عمل",
     "topic": "دوسيه موضوع"
+  },
+  "tweaks": {
+    "title": "تعديلات",
+    "open": "فتح التعديلات",
+    "close": "إغلاق التعديلات",
+    "direction": {
+      "label": "الاتجاه",
+      "chancery": { "name": "المستشارية", "tagline": "رسمي، كهرماني دافئ" },
+      "situation": { "name": "غرفة العمليات", "tagline": "داكن، سماوي بارد" },
+      "ministerial": { "name": "وزاري", "tagline": "أخضر مؤسسي" },
+      "bureau": { "name": "مكتب", "tagline": "محايد، واضح" }
+    },
+    "mode": { "label": "المظهر", "light": "فاتح", "dark": "داكن" },
+    "hue": { "label": "الدرجة" },
+    "density": { "label": "الكثافة", "comfortable": "مريح", "compact": "مضغوط" },
+    "classification": { "label": "التصنيف", "show": "إظهار", "hide": "إخفاء" },
+    "locale": { "label": "اللغة", "en": "EN", "ar": "ع" }
   }
 }
