@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
 status: completed
-stopped_at: Completed 34-04-PLAN.md
-last_updated: '2026-04-21T19:48:54.566Z'
-last_activity: 2026-04-20 — 33-07 promoted PARTIAL → PASS via 3 atomic commits (`ffc03798` ThemeSelector delete + layout cleanup, `e71ac953` types + AppearanceSettingsSection, `ab965e14` Tier E tests + migration doc).
+stopped_at: Phase 34 (tweaks-drawer) complete — VERIFICATION PASS
+last_updated: '2026-04-21T20:33:06.000Z'
+last_activity: 2026-04-21 — Phase 34 executed end-to-end (4 waves, 8 plans, all PASS). Tweaks drawer wired via gear in SiteHeader; `useTheme` shim + Themes page + language-switcher/toggle duplicates deleted; `/themes` redirects to `/`. VERIFICATION.md committed as `5369308e` — PASS on all 4 THEME requirements.
 progress:
   total_phases: 11
-  completed_phases: 0
-  total_plans: 17
-  completed_plans: 12
-  percent: 71
+  completed_phases: 1
+  total_plans: 25
+  completed_plans: 20
+  percent: 80
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: Phase 33 (token-engine) — **Waves 1+2+3+4 all PASS** (33-07 PROMOTED PARTIAL→PASS this session; 33-08 Storybook remains deferred non-blocking)
-Plan: 33-07 PASS — Task 8 option-now (ThemeSelector component + 4 layout call-sites deleted), Tier B types (settings.types, preference-storage, preference-sync, styles/themes/types deleted, AppearanceSettingsSection rewritten), Tier C SettingsPage schema+defaults updated, Tier E (4 obsolete integration tests deleted, preference-merge updated 24/24 PASS, DESIGN_SYSTEM_MIGRATION.md rewritten as v5→v6 upgrade path). DoD grep clean for canvas|azure|lavender|bluesky in non-test source. Typecheck 1592 (−2 vs session baseline). DesignProvider unit tests still 18/18 PASS.
-Status: Phase 33 effectively done. Downstream phases 34 (tweaks-drawer), 35 (typography-stack), 37 (signature-visuals) fully unblocked and parallelizable. Only 33-08 Storybook bootstrap remains in Phase 33 (non-blocking polish).
-Last activity: 2026-04-20 — 33-07 promoted PARTIAL → PASS via 3 atomic commits (`ffc03798` ThemeSelector delete + layout cleanup, `e71ac953` types + AppearanceSettingsSection, `ab965e14` Tier E tests + migration doc).
+Phase: Phase 34 (tweaks-drawer) — **ALL 8 PLANS PASS · VERIFICATION PASS** (first fully verified phase in v6.0)
+Plan: 34-01..34-08 complete. THEME-01 (drawer + gear + focus-trap), THEME-02 (id.classif/id.locale persistence + bootstrap migrator), THEME-03 (D-16 direction defaults atomic apply), THEME-04 (/themes redirect + legacy shim purge) all verified.
+Status: Phase 34 closed. `useTheme` shim, Themes page, LanguageSwitcher/Toggle duplicates, theme-provider, theme-toggle all deleted. Tweaks drawer is the sole locus of UI-preference control. Downstream phases 35 (typography-stack), 37 (signature-visuals) remain unblocked in parallel with Phase 34 outcomes. Phase 36 (shell-chrome) now fully unblocked (depends on 33+34+35; 35 is next).
+Last activity: 2026-04-21 — Phase 34 executed end-to-end (4 waves, 8 plans, ~25 atomic commits). VERIFICATION.md committed as `5369308e` — PASS. 24/24 Phase-34-scoped vitest tests green; 4 live Playwright tests listed; `pnpm build` exit 0; legacy-import grep 0 matches.
 
-Progress: [███████░░░] 71%
+Progress: [████████░░] 80%
 
 ### Wave-level status for Phase 33
 
@@ -118,6 +118,20 @@ Plan 33-09 (E2E Nyquist verification — PASS, 5/5 SCs green, zero flake across 
 
 **Verification:** `pnpm test:e2e:sc` → 5/5 PASS single run; `playwright test ... --repeat-each 3` → 15/15 PASS (zero flake). Dev server responds 200 on `/src/index.css` (was HTTP 500). Frontend typecheck 1594 → 1594 (delta 0). DesignProvider unit tests 18/18 PASS (no regression).
 
+### Wave-level status for Phase 34 (tweaks-drawer — all PASS)
+
+| Wave | Plans        | Status | Notes                                                                                                                                                                                   |
+| ---- | ------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | 34-01        | PASS   | Vitest + Playwright skip-scaffolds across THEME-01..04 + CI gate `scripts/check-deleted-components.sh` (3 commits)                                                                      |
+| 1    | 34-02, 34-03 | PASS   | 34-02 D-16 `DIRECTION_DEFAULTS` map (5/5 tests); 34-03 `useClassification` + `useLocale` hooks + DesignProvider symmetry (6/6 tests)                                                    |
+| 2    | 34-04, 34-05 | PASS   | 34-04 TweaksDrawer 6 sections via HeroUI v3 Drawer + `TweaksDisclosureProvider`; 34-05 `bootstrap.js` pre-paint + i18next canonicalization (9/9 migrator)                               |
+| 3    | 34-06, 34-07 | PASS   | 34-06 SiteHeader gear + live focus-trap spec (2 Playwright); 34-07 `/themes` pure redirect + regenerated routeTree + live redirect spec (2 Playwright)                                  |
+| 4    | 34-08        | PASS   | 6 `useTheme` consumers migrated to DesignProvider hooks; 7 legacy files deleted (Themes page, useTheme shim, LanguageSwitcher/Toggle, theme-provider/toggle); 0 dangling legacy imports |
+
+**Verification:** `5369308e` VERIFICATION.md — 4/4 THEME requirements PASS. Scoped vitest 24/24, Playwright `--list` 4 live, `pnpm build` exit 0, CI gate exit 0, typecheck 1589 errors (0 in Phase-34 files; pre-existing elsewhere). No gap-closure plan needed.
+
+**Non-blocking follow-ups:** `bootstrap.js` at 3065 B > 2048 B budget (pre-existing Phase 33 baseline); no `frontend/playwright.config.ts` so Playwright full-run fell back to `--list` per plan-authorized path.
+
 ### Runtime issue to track
 
 Worktree isolation via `Task(subagent_type=..., isolation="worktree")` forked agent worktrees from a stale commit (`49b225b8`, 9 commits behind `DesignV2` HEAD at session start) and did not actually isolate filesystem writes. Agents wrote into the main tree while their worktree git-state remained stale. For Waves 2-4, use `isolation` unset (shared main tree) and run subagents sequentially, or execute inline.
@@ -126,7 +140,7 @@ Worktree isolation via `Task(subagent_type=..., isolation="worktree")` forked ag
 
 **Velocity:**
 
-- Total plans completed: 12
+- Total plans completed: 20
 - Average duration: —
 - Total execution time: 0 hours
 
