@@ -16,6 +16,7 @@ import { ThemeProvider } from './components/theme-provider/theme-provider'
 import { LanguageProvider } from './components/language-provider/language-provider'
 import { ThemeErrorBoundary } from './components/theme-error-boundary/ThemeErrorBoundary'
 import { DesignProvider } from './design-system/DesignProvider'
+import { TweaksDisclosureProvider, TweaksDrawer } from '@/components/tweaks'
 import './i18n'
 
 function AppRouter() {
@@ -42,17 +43,20 @@ function App() {
                 initialHue={22}
                 initialDensity="comfortable"
               >
-                <LanguageProvider initialLanguage="en">
-                  <LazyMotion features={domAnimation}>
-                    <RTLWrapper>
-                      <AppRouter />
-                      <OfflineIndicator />
-                      <RealtimeStatus />
-                      <Toaster position="top-right" />
-                      <SonnerToaster position="top-right" richColors closeButton />
-                    </RTLWrapper>
-                  </LazyMotion>
-                </LanguageProvider>
+                <TweaksDisclosureProvider>
+                  <LanguageProvider initialLanguage="en">
+                    <LazyMotion features={domAnimation}>
+                      <RTLWrapper>
+                        <AppRouter />
+                        <OfflineIndicator />
+                        <RealtimeStatus />
+                        <Toaster position="top-right" />
+                        <SonnerToaster position="top-right" richColors closeButton />
+                        <TweaksDrawer />
+                      </RTLWrapper>
+                    </LazyMotion>
+                  </LanguageProvider>
+                </TweaksDisclosureProvider>
               </DesignProvider>
             </ThemeProvider>
           </ThemeErrorBoundary>
