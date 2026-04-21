@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: completed
-stopped_at: Phase 34 (tweaks-drawer) complete — VERIFICATION PASS
-last_updated: '2026-04-21T20:33:06.000Z'
-last_activity: 2026-04-21 — Phase 34 executed end-to-end (4 waves, 8 plans, all PASS). Tweaks drawer wired via gear in SiteHeader; `useTheme` shim + Themes page + language-switcher/toggle duplicates deleted; `/themes` redirects to `/`. VERIFICATION.md committed as `5369308e` — PASS on all 4 THEME requirements.
+status: Phase 34 closed. `useTheme` shim, Themes page, LanguageSwitcher/Toggle duplicates, theme-provider, theme-toggle all deleted. Tweaks drawer is the sole locus of UI-preference control. Downstream phases 35 (typography-stack), 37 (signature-visuals) remain unblocked in parallel with Phase 34 outcomes. Phase 36 (shell-chrome) now fully unblocked (depends on 33+34+35; 35 is next).
+stopped_at: Phase 35 context gathered (7 decisions locked; all areas discussed)
+last_updated: '2026-04-21T20:56:00.154Z'
+last_activity: 2026-04-21 — Phase 34 executed end-to-end (4 waves, 8 plans, ~25 atomic commits). VERIFICATION.md committed as `5369308e` — PASS. 24/24 Phase-34-scoped vitest tests green; 4 live Playwright tests listed; `pnpm build` exit 0; legacy-import grep 0 matches.
 progress:
   total_phases: 11
   completed_phases: 1
-  total_plans: 25
-  completed_plans: 20
-  percent: 80
+  total_plans: 17
+  completed_plans: 16
+  percent: 94
 ---
 
 # Project State
@@ -189,9 +189,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-21T19:48:54.563Z
-Stopped at: Completed 34-04-PLAN.md
-Resume file: None
+Last session: --stopped-at
+Stopped at: Phase 35 context gathered (7 decisions locked; all areas discussed)
+Resume file: --resume-file
 Resume command: /gsd-discuss-phase 33
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
