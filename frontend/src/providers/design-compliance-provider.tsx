@@ -2,7 +2,8 @@ import React, { createContext, useCallback, useContext, useMemo, useRef, useStat
 import type { ValidationResult, ValidationRule } from '../types/validation'
 import type { PerformanceMetric } from '../types/performance'
 import { useResponsive } from '../hooks/useResponsive'
-import { useTheme } from '../hooks/useTheme'
+import { useDesignDirection } from '@/design-system/hooks/useDesignDirection'
+import { useMode } from '@/design-system/hooks/useMode'
 import { useLanguage } from '../hooks/useLanguage'
 
 interface ValidationInput {
@@ -48,7 +49,8 @@ function toOuterHTML(el?: HTMLElement | null): string | undefined {
 
 export function DesignComplianceProvider({ children }: { children: React.ReactNode }) {
   const { width } = useResponsive()
-  const { theme, colorMode } = useTheme()
+  const { direction: designDirection } = useDesignDirection()
+  const { mode: colorMode } = useMode()
   const { language, direction } = useLanguage()
   const [running, setRunning] = useState(false)
   const [lastResult, setLastResult] = useState<ValidationOutput | undefined>(undefined)
@@ -79,7 +81,7 @@ export function DesignComplianceProvider({ children }: { children: React.ReactNo
         componentName: input.componentName,
         html: html ?? '',
         viewport: width,
-        theme: `${theme}:${colorMode}`,
+        theme: `${designDirection}:${colorMode}`,
         language,
       }
 
@@ -130,12 +132,12 @@ export function DesignComplianceProvider({ children }: { children: React.ReactNo
         viewport: width,
         componentName: input.componentName,
         pageUrl: typeof window !== 'undefined' ? window.location.pathname : undefined,
-        metadata: { theme, colorMode, language },
+        metadata: { theme: designDirection, colorMode, language },
       })
 
       return output
     },
-    [width, theme, colorMode, language, direction, recordMetric],
+    [width, designDirection, colorMode, language, direction, recordMetric],
   )
 
   const value = useMemo<DesignComplianceContextValue>(

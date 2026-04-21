@@ -2,7 +2,7 @@ import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Card, CardContent } from '../ui/card'
 import { useResponsive } from '../../hooks/useResponsive'
-import { useDirection } from '../../hooks/useTheme'
+import { useDirection } from '@/hooks/useDirection'
 import { cn } from '../../lib/utils'
 
 export interface ResponsiveTableColumn<T> {

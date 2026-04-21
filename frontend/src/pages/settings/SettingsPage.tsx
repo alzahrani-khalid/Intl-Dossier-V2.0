@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/authStore'
 import { switchLanguage } from '@/i18n'
-import { useTheme } from '@/hooks/useTheme'
+import { useMode } from '@/design-system/hooks/useMode'
 import {
   SettingsLayout,
   SettingsSectionWrapper,
@@ -80,7 +80,7 @@ type SettingsFormValues = z.infer<typeof settingsSchema>
 export function SettingsPage() {
   const { t } = useTranslation('settings')
   const { user } = useAuthStore()
-  const { setColorMode } = useTheme()
+  const { setMode: setColorMode } = useMode()
   const queryClient = useQueryClient()
 
   // Active section state
@@ -223,10 +223,17 @@ export function SettingsPage() {
         await switchLanguage(values.language_preference)
       }
 
-      // Apply color mode change — pass 'system' directly so ThemeProvider
-      // can track OS preference changes, instead of resolving it here.
+      // Apply color mode change — DesignProvider tracks only 'light' | 'dark',
+      // so resolve 'system' against the user's OS preference here.
       if (values.color_mode !== settings?.color_mode) {
-        setColorMode(values.color_mode as 'light' | 'dark' | 'system')
+        const resolved: 'light' | 'dark' =
+          values.color_mode === 'system'
+            ? typeof window !== 'undefined' &&
+              window.matchMedia?.('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+            : values.color_mode
+        setColorMode(resolved)
       }
 
       // Apply accessibility settings
