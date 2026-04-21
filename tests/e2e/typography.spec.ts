@@ -24,7 +24,12 @@ async function seedDirection(page: Page, dir: Direction): Promise<void> {
 
 async function seedLocale(page: Page, loc: Locale): Promise<void> {
   await page.addInitScript((l: Locale): void => {
+    // Phase 34 key (read by bootstrap.js + DesignProvider.useLocale)
     localStorage.setItem('id.locale', l)
+    // Pre-Phase-34 keys still read by LanguageProvider on mount — without
+    // these the provider defaults to 'en' and overrides bootstrap's RTL.
+    localStorage.setItem('i18nextLng', l)
+    localStorage.setItem('user-preferences', JSON.stringify({ language: l }))
   }, loc)
 }
 
