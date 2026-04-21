@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: Phase 34 closed. `useTheme` shim, Themes page, LanguageSwitcher/Toggle duplicates, theme-provider, theme-toggle all deleted. Tweaks drawer is the sole locus of UI-preference control. Downstream phases 35 (typography-stack), 37 (signature-visuals) remain unblocked in parallel with Phase 34 outcomes. Phase 36 (shell-chrome) now fully unblocked (depends on 33+34+35; 35 is next).
-stopped_at: Phase 35 context gathered (7 decisions locked; all areas discussed)
-last_updated: '2026-04-21T20:56:00.154Z'
-last_activity: 2026-04-21 — Phase 34 executed end-to-end (4 waves, 8 plans, ~25 atomic commits). VERIFICATION.md committed as `5369308e` — PASS. 24/24 Phase-34-scoped vitest tests green; 4 live Playwright tests listed; `pnpm build` exit 0; legacy-import grep 0 matches.
+status: Phase 35 closed. Per-direction font triplet (--font-display/body/mono) flows through buildTokens → applyTokens → CSS cascade. Self-hosted fontsource packages replace Google Fonts CDN. Tajawal RTL cascade + JetBrains Mono carve-out active. Phase 36 (shell-chrome) fully unblocked; Phase 37 (signature-visuals) remains parallelizable.
+stopped_at: Phase 35 VERIFICATION PASS
+last_updated: "2026-04-22T00:55:00.000Z"
+last_activity: 2026-04-22 — Phase 35 executed end-to-end (4 waves, 5 plans, ~14 atomic commits + 1 pre-phase fix). Playwright typography.spec.ts 21/21 PASS with --repeat-each 3 (zero flake). 4 TYPO requirements verified. vitest design-system 158/160 (2 known-failing: 1 pre-existing fouc-bootstrap, 1 plan-internal byte-for-byte).
 progress:
   total_phases: 11
-  completed_phases: 1
-  total_plans: 17
-  completed_plans: 16
-  percent: 94
+  completed_phases: 3
+  total_plans: 27
+  completed_plans: 21
+  percent: 78
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: Phase 34 (tweaks-drawer) — **ALL 8 PLANS PASS · VERIFICATION PASS** (first fully verified phase in v6.0)
-Plan: 34-01..34-08 complete. THEME-01 (drawer + gear + focus-trap), THEME-02 (id.classif/id.locale persistence + bootstrap migrator), THEME-03 (D-16 direction defaults atomic apply), THEME-04 (/themes redirect + legacy shim purge) all verified.
-Status: Phase 34 closed. `useTheme` shim, Themes page, LanguageSwitcher/Toggle duplicates, theme-provider, theme-toggle all deleted. Tweaks drawer is the sole locus of UI-preference control. Downstream phases 35 (typography-stack), 37 (signature-visuals) remain unblocked in parallel with Phase 34 outcomes. Phase 36 (shell-chrome) now fully unblocked (depends on 33+34+35; 35 is next).
-Last activity: 2026-04-21 — Phase 34 executed end-to-end (4 waves, 8 plans, ~25 atomic commits). VERIFICATION.md committed as `5369308e` — PASS. 24/24 Phase-34-scoped vitest tests green; 4 live Playwright tests listed; `pnpm build` exit 0; legacy-import grep 0 matches.
+Phase: Phase 35 (typography-stack) — **ALL 5 PLANS PASS · VERIFICATION PASS** (3rd fully verified phase in v6.0, following 33-09 and 34)
+Plan: 35-01..35-05 complete. TYPO-01 (per-direction font triplet via buildTokens), TYPO-02 (zero Google Fonts CDN, self-hosted via 8 @fontsource packages), TYPO-03 (Tajawal RTL cascade, 48-line block per handoff), TYPO-04 (JetBrains Mono carve-out for LTR kbd inside RTL pages) all verified.
+Status: Phase 35 closed. `frontend/src/fonts.ts` boot-imports 14 `@fontsource` CSS sub-paths; `main.tsx` loads it as first import (before index.css per Pitfall 2); `index.html` stripped of 14 Google Fonts <link> / <noscript> elements (70 → 22 lines). buildTokens now emits `--font-display/body/mono` per direction, mode/hue/density-invariant. index.css legacy `--text-family*` / `--display-family` vars wiped; 48-line Tajawal RTL cascade appended between `@layer base` and `@layer components` (unlayered, high specificity). Phase 36 (shell-chrome) fully unblocked (33+34+35 gate cleared); Phase 37 (signature-visuals) remains parallelizable.
+Last activity: 2026-04-22 — Phase 35 executed end-to-end (4 waves, 5 plans, ~14 atomic commits + 1 pre-phase Kanban `inset-e-2` fix). Playwright `typography.spec.ts` 7/7 single-run, 21/21 with `--repeat-each 3` (zero flake). VERIFICATION.md committed. `pnpm build` exit 0; tsc delta −3 (1589 → 1586, zero new Phase-35 errors). vitest design-system 158/160: 1 pre-existing fouc-bootstrap failure, 1 known-defective plan-internal byte-for-byte test. A1 verdict SAFE (Tailwind v4 `@theme` self-reference works for font-family, unlike the Phase 33-06 shadow case).
 
-Progress: [████████░░] 80%
+Progress: [████████▌░] 85%
 
 ### Wave-level status for Phase 33
 
@@ -132,6 +132,19 @@ Plan 33-09 (E2E Nyquist verification — PASS, 5/5 SCs green, zero flake across 
 
 **Non-blocking follow-ups:** `bootstrap.js` at 3065 B > 2048 B budget (pre-existing Phase 33 baseline); no `frontend/playwright.config.ts` so Playwright full-run fell back to `--list` per plan-authorized path.
 
+### Wave-level status for Phase 35 (typography-stack — all PASS)
+
+| Wave | Plans        | Status              | Notes                                                                                                                                                                                                                                                                                                                                        |
+| ---- | ------------ | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | 35-01        | PASS                | 8 @fontsource deps pinned ^5.x; 14 CSS sub-paths verified; A1 probe HTTP 200 → SAFE (self-ref form chosen); 3 RED drift guards + TYPO-04 fixture authored                                                                                                                                                                                    |
+| 1    | 35-02, 35-03 | PASS                | 35-02 `FONTS: Record<Direction, DirectionFonts>` + 3 new keys in buildTokens (99 unit tests, +216 free matrix assertions); 35-03 `fonts.ts` 14 side-effect imports (flips 15 RED → 23 PASS)                                                                                                                                                  |
+| 2    | 35-04        | PASS-WITH-DEVIATION | Legacy `--text-family*` / `--display-family` wiped (9 rewrites + 5 var deletions + 4 RTL block deletions); 48-line Tajawal cascade appended unlayered between @layer base + @layer components; 4/5 tajawal drift guards PASS; 5th byte-for-byte test is plan-internal inconsistency (handoff double-quote vs plan single-quote — documented) |
+| 3    | 35-05        | PASS                | `import './fonts'` prepended to main.tsx line 1; `index.html` −48 lines (all 14 Google Fonts elements deleted); Playwright 7/7 single + 21/21 stability (zero flake). seedLocale fix documents pre-existing LanguageProvider dual-key persistence for Phase 36+ cleanup                                                                      |
+
+**Verification:** Phase 35 VERIFICATION.md — 4/4 TYPO requirements PASS. Playwright 21/21 with `--repeat-each 3`, `pnpm build` exit 0, typecheck 1586 errors (delta −3 vs Phase 34; zero new Phase-35 errors). 2 vitest failures: 1 pre-existing fouc-bootstrap (Phase 34 baseline), 1 known-defective plan-internal byte-for-byte test. No gap-closure plan needed.
+
+**Non-blocking follow-ups:** LanguageProvider still reads legacy `user-preferences` / `i18nextLng` / `ui-storage` instead of `id.locale`; flag for Phase 36 or targeted cleanup plan. `tajawal-cascade > byte-for-byte` handoff test defective due to Prettier quote mismatch (4 substantive drift guards still enforce real drift surface).
+
 ### Runtime issue to track
 
 Worktree isolation via `Task(subagent_type=..., isolation="worktree")` forked agent worktrees from a stale commit (`49b225b8`, 9 commits behind `DesignV2` HEAD at session start) and did not actually isolate filesystem writes. Agents wrote into the main tree while their worktree git-state remained stale. For Waves 2-4, use `isolation` unset (shared main tree) and run subagents sequentially, or execute inline.
@@ -171,6 +184,12 @@ Worktree isolation via `Task(subagent_type=..., isolation="worktree")` forked ag
 - [v6.0/33-06]: Production `pnpm build` crash (`@tailwindcss/vite:generate:build — y is not a function`) deferred to 33-09. Dev server + Playwright visual tests unaffected; pre-33-06 `dist/` contains `bg-accent`.
 - [v6.0/33-09]: Wave-4 investigation reclassified the 33-06 crash: root cause is `@plugin '@heroui/styles@3.0.3'` × `tailwindcss@4.2.2` incompatibility (both on latest stable). Dev server now ALSO crashes since 33-05 started importing real `@heroui/react` components, so the issue escalated from "build-only" to "blocks SC verification." Four remediation levers documented in 33-09-SUMMARY.md — pick one in a follow-up session to promote 33-09 PARTIAL → PASS.
 - [v6.0/33-09 FIX]: Resolved in same session via **lever 3 (decouple @plugin)**. Version bisect across all stable tailwind 4.x releases (4.0.0, 4.0.17, 4.1.0, 4.1.17, 4.2.0, 4.2.2) — all crash identically, only the minified variable name in the error changes (v, x, b, y). Bug is isolated to @heroui/styles's JS plugin shim (`dist/index.js`). Fix: replace `@plugin '@heroui/styles'` with 5 CSS sub-path `@imports` (`base`, `themes/default`, `utilities`, `variants`, plus `tw-animate-css` peer). These sub-paths are pre-compiled standalone CSS modules exposed via the package's `exports` field — they skip the JS plugin shim entirely and preserve 100% of HeroUI's styling output. Preserved the minimal 2-line repro in 33-09-SUMMARY.md (v2.0) for future upstream bug report to @heroui/styles or tailwindcss.
+- [v6.0/35-01]: A1 verdict **SAFE** — Tailwind v4 `@theme { --font-X: var(--font-X) }` self-reference does NOT crash the generator (unlike the Phase 33-06 shadow case, `e5fcacec`). Dev server probe returned HTTP 200 in 828 ms. Family-specific: the 33-06 crash was inside Tailwind's box-shadow multi-layer parser, not a general `@theme` self-ref problem. Plan 35-04 keeps the self-reference form verbatim with a final D-01 comment.
+- [v6.0/35-02]: Font triplet is **direction-driven only** (mode/hue/density-invariant per D-06). `FONTS: Record<Direction, DirectionFonts>` in `tokens/directions.ts` holds 12 literal strings; `buildTokens()` emits `--font-{display,body,mono}` on every call. REQUIRED_KEYS in the 72-case matrix test silently gained 216 existence assertions.
+- [v6.0/35-04]: Tajawal RTL cascade placed **unlayered** (between `@layer base` and `@layer components`) so it beats Tailwind's layered utility classes. Unlayered > layered in Tailwind v4's cascade-layer model. `!important` markers on defeat rule + chip/label block are load-bearing for Phase 36-42 text rendering (defeats `.dir-*` direction-class font overrides).
+- [v6.0/35-04]: Two legacy weight references (`--text-weight`, `--display-weight`) folded into existing Tailwind-scale `--font-normal` (400) / `--font-semibold` (600) — same rendered weight, different token name. Preserves paint behavior after `:root` var cleanup.
+- [v6.0/35-05 FINDING]: LanguageProvider still reads pre-Phase-34 localStorage keys (`user-preferences`, `i18nextLng`, `ui-storage`) and **overrides** bootstrap.js's `html.dir='rtl'` on mount. Phase 34 didn't finish the migration — LanguageProvider is the lone holdout. Playwright spec works around it by seeding all three keys; real cleanup belongs to Phase 36 or a targeted debug session.
+- [v6.0/35-05]: `typography.spec.ts` lives at root `tests/e2e/` not `frontend/tests/e2e/` (Phase 33-09 precedent — root `playwright.config.ts` has `testDir: './tests/e2e'`). Vitest drift guards stay at `frontend/tests/unit/design-system/`. Fixture HTML at `frontend/tests/e2e/fixtures/typo-04-fixture.html` (Vite doc root = `frontend/`, serves it via `/tests/e2e/fixtures/...`).
 
 ### Pending Todos
 
@@ -180,7 +199,7 @@ None yet.
 
 - [Research]: Confirm `useDashboardStats` / `useDashboardTrends` / `useWeekAhead` / `usePersonalCommitments` / `useMyTasks` / `useRecentDossiers` / `useForums` hook names and return shapes before Phase 38 planning (DASH-09 requires real wiring, no mocks)
 - [Research]: Verify `handoff/project/reference/GASTAT_LOGO.svg` is at expected path before Phase 36 (SHELL-05)
-- [Research]: Confirm `@fontsource/fraunces`, `@fontsource/space-grotesk`, `@fontsource/public-sans`, `@fontsource/inter`, `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono`, `@fontsource/jetbrains-mono`, `@fontsource/tajawal` packages resolve before Phase 35 (TYPO-02)
+- [Tech debt]: LanguageProvider reads pre-Phase-34 localStorage keys (`user-preferences`, `i18nextLng`, `ui-storage`) instead of `id.locale` — causes override of bootstrap.js's RTL direction on mount. Phase 34 migration left this provider behind; cleanup candidate for Phase 36 or debug session.
 
 ### Quick Tasks Completed
 
@@ -218,3 +237,5 @@ Resume command: /gsd-discuss-phase 33
 - Phases 38–42 each depend on 33, 36, 37 (parallelizable after the gate)
 - Phase 38 depends on 33, 37 (does not strictly require 36 but runs after for consistent chrome)
 - Phase 43 is the final QA gate — depends on 33–42
+
+**Planned Phase:** 35 (typography-stack) — 5 plans — 2026-04-21T21:31:35.308Z
