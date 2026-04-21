@@ -311,6 +311,70 @@
   font-weight: var(--font-normal);
 }
 
+/* ============ Arabic typography override: Tajawal ============ */
+/* When document is RTL, Tajawal takes precedence for all type — including */
+/* the Arabic-ع button (which is LTR by default) and Latin glyphs mixed in. */
+html[dir='rtl'],
+html[dir='rtl'] body {
+  font-family: 'Tajawal', 'Inter', system-ui, sans-serif;
+}
+html[dir='rtl'] * {
+  font-family: 'Tajawal', 'Inter', system-ui, sans-serif;
+}
+/* Defeat inline fontFamily:'var(--font-display)' in RTL (Fraunces lacks Arabic) */
+html[dir='rtl'] [style*='--font-display'] {
+  font-family: 'Tajawal', system-ui, sans-serif !important;
+}
+/* Display (serifs, grotesks) still use Tajawal in Arabic — no fallback serif */
+html[dir='rtl'] .page-title,
+html[dir='rtl'] .card-title,
+html[dir='rtl'] .drawer-title,
+html[dir='rtl'] .kpi-value,
+html[dir='rtl'] .week-dd,
+html[dir='rtl'] .label,
+html[dir='rtl'] .sb-group,
+html[dir='rtl'] .dir-chancery,
+html[dir='rtl'] .dir-situation,
+html[dir='rtl'] .dir-ministerial,
+html[dir='rtl'] .dir-bureau {
+  font-family: 'Tajawal', system-ui, sans-serif;
+}
+/* Let mono stay mono for non-Arabic tokens (⌘K, T−3), but when inside RTL
+   container with Arabic content use Tajawal */
+html[dir='rtl'] .mono:not([dir='ltr']) {
+  font-family: 'Tajawal', ui-monospace, monospace;
+}
+/* Keep the tiny LTR-isolated spans (kbd, T−3 etc.) in mono */
+html[dir='rtl'] [dir='ltr'].mono,
+html[dir='rtl'] kbd[dir='ltr'] {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Force Tajawal on chips/labels/tags in RTL — these have direction-class overrides */
+/* (.dir-bureau .chip, .dir-situation .chip etc.) which would otherwise win and  */
+/* show Arabic glyphs in Inter/JetBrains Mono (no Arabic coverage → tofu).        */
+html[dir='rtl'] .chip,
+html[dir='rtl'] .chip *,
+html[dir='rtl'] .label,
+html[dir='rtl'] .digest-tag,
+html[dir='rtl'] .task-due,
+html[dir='rtl'] .week-time,
+html[dir='rtl'] .week-day,
+html[dir='rtl'] .kpi-label,
+html[dir='rtl'] .kpi-delta,
+html[dir='rtl'] .overdue-days,
+html[dir='rtl'] .overdue-owner,
+html[dir='rtl'] .recent-when,
+html[dir='rtl'] .cls-chip {
+  font-family: 'Tajawal', system-ui, sans-serif !important;
+}
+
+/* The Arabic-ع button in the locale switcher should also use Tajawal */
+html[dir='rtl'] .tb-locale-btn,
+.tb-locale-btn[data-lang='ar'] {
+  font-family: 'Tajawal', system-ui, sans-serif;
+}
+
 @layer components {
   /* Card component */
   .card {
