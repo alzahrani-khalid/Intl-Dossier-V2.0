@@ -3,7 +3,9 @@ import {
   PanelLeftOpenIcon,
   PanelRightCloseIcon,
   PanelRightOpenIcon,
+  Settings2,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -11,6 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useSidebar } from '@/components/ui/sidebar'
 import { NotificationPanel } from '@/components/notifications'
 import { LanguageToggle } from '@/components/language-toggle/LanguageToggle'
+import { useTweaksOpen } from '@/components/tweaks'
 import { HeaderSearch } from './header/Search'
 import { UserMenu } from './header/UserMenu'
 import { useDirection } from '@/hooks/useDirection'
@@ -18,6 +21,8 @@ import { useDirection } from '@/hooks/useDirection'
 export function SiteHeader() {
   const { isRTL, direction } = useDirection()
   const { toggleSidebar, open, openMobile, isMobile } = useSidebar()
+  const { t } = useTranslation('common')
+  const { isOpen: isTweaksOpen, toggle: toggleTweaks } = useTweaksOpen()
 
   const isExpanded = isMobile ? openMobile : open
   const ToggleIcon = isRTL
@@ -70,6 +75,26 @@ export function SiteHeader() {
           <div className="hidden md:flex">
             <LanguageToggle compact />
           </div>
+
+          {/* Tweaks drawer trigger */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-11 min-h-11 min-w-11 text-muted-foreground hover:bg-accent/80 hover:text-foreground"
+                onClick={toggleTweaks}
+                aria-label={t('tweaks.open')}
+                aria-expanded={isTweaksOpen}
+              >
+                <Settings2 className="size-5" />
+                <span className="sr-only">{t('tweaks.open')}</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side={isRTL ? 'left' : 'right'} sideOffset={8}>
+              <p className="text-xs">{t('tweaks.open')}</p>
+            </TooltipContent>
+          </Tooltip>
 
           <Separator orientation="vertical" className="mx-2 hidden h-4 md:block" />
 
