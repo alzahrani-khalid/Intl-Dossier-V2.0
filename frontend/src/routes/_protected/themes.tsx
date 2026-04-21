@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import Themes from '../../pages/Themes'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/themes')({
-  component: Themes,
+  beforeLoad: (): never => {
+    throw redirect({ to: '/' })
+  },
 })
