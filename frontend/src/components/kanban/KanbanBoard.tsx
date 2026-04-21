@@ -8,7 +8,7 @@
  * Includes drag-and-drop functionality with optimistic updates and auto-retry on failure
  */
 
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   DndContext,
@@ -62,11 +62,11 @@ const PRIORITY_COLORS: Record<string, string> = {
 }
 
 function getStageColor(stage: WorkflowStage): string {
-  return STAGE_COLORS[stage] || STAGE_COLORS.todo
+  return STAGE_COLORS[stage] ?? STAGE_COLORS.todo ?? ''
 }
 
 function getPriorityColor(priority: string): string {
-  return PRIORITY_COLORS[priority] || PRIORITY_COLORS.medium
+  return PRIORITY_COLORS[priority] ?? PRIORITY_COLORS.medium ?? ''
 }
 
 function getSLAStatus(task: Task): 'safe' | 'warning' | 'breached' {
@@ -104,67 +104,73 @@ export function KanbanBoard({ tasks, onTaskClick, onTaskMove }: KanbanBoardProps
   )
 
   // Memo: useCallback prevents DndContext from re-rendering all children when parent re-renders
-  const handleDragStart = useCallback((event: DragStartEvent) => {
-    const { active } = event
-    const task = tasks.find((t) => t.id === active.id)
-    if (task) {
-      setActiveTask(task)
-      setIsDragging(true)
-    }
-  }, [tasks])
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const { active } = event
+      const task = tasks.find((t) => t.id === active.id)
+      if (task) {
+        setActiveTask(task)
+        setIsDragging(true)
+      }
+    },
+    [tasks],
+  )
 
   // Memo: useCallback stabilizes handler reference for DndContext onDragEnd prop
-  const handleDragEnd = useCallback(async (event: DragEndEvent) => {
-    const { active, over } = event
-    setIsDragging(false)
-    setActiveTask(null)
+  const handleDragEnd = useCallback(
+    async (event: DragEndEvent) => {
+      const { active, over } = event
+      setIsDragging(false)
+      setActiveTask(null)
 
-    if (!over || !onTaskMove) return
+      if (!over || !onTaskMove) return
 
-    const taskId = active.id as string
-    const newStage = over.id as WorkflowStage
-    const task = tasks.find((t) => t.id === taskId)
+      const taskId = active.id as string
+      const newStage = over.id as WorkflowStage
+      const task = tasks.find((t) => t.id === taskId)
 
-    if (!task || task.workflow_stage === newStage) return
+      if (!task || task.workflow_stage === newStage) return
 
-    // T062: Show loading indicator during drag operation (<200ms visibility per NFR-010)
-    setIsRetrying(taskId)
+      // T062: Show loading indicator during drag operation (<200ms visibility per NFR-010)
+      setIsRetrying(taskId)
 
-    // T061: Auto-retry with exponential backoff (2-3 attempts per research.md)
-    const maxRetries = 3
-    let lastError: Error | null = null
+      // T061: Auto-retry with exponential backoff (2-3 attempts per research.md)
+      const maxRetries = 3
+      let lastError: Error | null = null
 
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      try {
-        // T060: Call onTaskMove with optimistic locking timestamp
-        await onTaskMove(taskId, newStage, task.updated_at)
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+          // T060: Call onTaskMove with optimistic locking timestamp
+          await onTaskMove(taskId, newStage, task.updated_at)
 
-        // Success!
-        setIsRetrying(null)
-        toast({
-          title: t('tasks.move_success', 'Task moved successfully'),
-          description: t('tasks.moved_to', `Moved to ${newStage}`),
-        })
-        return
-      } catch (error) {
-        lastError = error as Error
+          // Success!
+          setIsRetrying(null)
+          toast({
+            title: t('tasks.move_success', 'Task moved successfully'),
+            description: t('tasks.moved_to', `Moved to ${newStage}`),
+          })
+          return
+        } catch (error) {
+          lastError = error as Error
 
-        // T061: Exponential backoff delay (500ms, 1s, 2s)
-        if (attempt < maxRetries - 1) {
-          const delay = Math.min(500 * Math.pow(2, attempt), 10000)
-          await new Promise((resolve) => setTimeout(resolve, delay))
+          // T061: Exponential backoff delay (500ms, 1s, 2s)
+          if (attempt < maxRetries - 1) {
+            const delay = Math.min(500 * Math.pow(2, attempt), 10000)
+            await new Promise((resolve) => setTimeout(resolve, delay))
+          }
         }
       }
-    }
 
-    // T063: All retries failed - revert card position and show error
-    setIsRetrying(null)
-    toast({
-      title: t('tasks.move_failed', 'Failed to move task'),
-      description: lastError?.message || t('tasks.move_error', 'Please try again'),
-      variant: 'destructive',
-    })
-  }, [tasks, onTaskMove, t, toast])
+      // T063: All retries failed - revert card position and show error
+      setIsRetrying(null)
+      toast({
+        title: t('tasks.move_failed', 'Failed to move task'),
+        description: lastError?.message || t('tasks.move_error', 'Please try again'),
+        variant: 'destructive',
+      })
+    },
+    [tasks, onTaskMove, t, toast],
+  )
 
   // Group tasks by workflow_stage
   const tasksByStage = React.useMemo(() => {
@@ -323,7 +329,12 @@ interface KanbanCardProps {
 }
 
 // Memo: prevents card re-render when unrelated cards/columns change (e.g., DnD in another column)
-const KanbanCard = React.memo(function KanbanCard({ task, onClick, isRTL, getPriorityColor }: KanbanCardProps) {
+const KanbanCard = React.memo(function KanbanCard({
+  task,
+  onClick,
+  isRTL,
+  getPriorityColor,
+}: KanbanCardProps) {
   const { t } = useTranslation()
   const isCompleted = task.status === 'completed' || task.status === 'cancelled'
 
@@ -429,7 +440,10 @@ interface DroppableColumnProps {
 }
 
 // Memo: prevents column re-render when items in other columns change
-const DroppableColumn = React.memo(function DroppableColumn({ id, children }: DroppableColumnProps) {
+const DroppableColumn = React.memo(function DroppableColumn({
+  id,
+  children,
+}: DroppableColumnProps) {
   const { setNodeRef } = useSortable({ id })
 
   return (
