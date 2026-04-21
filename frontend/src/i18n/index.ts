@@ -434,6 +434,8 @@ i18n
     detection: {
       order: ['localStorage', 'cookie', 'htmlTag', 'navigator'],
       caches: ['localStorage', 'cookie'],
+      lookupLocalStorage: 'id.locale',
+      lookupCookie: 'id.locale',
     },
 
     react: {
