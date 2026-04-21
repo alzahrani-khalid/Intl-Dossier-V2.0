@@ -34,6 +34,15 @@ const LS_DIR = 'id.dir'
 const LS_MODE = 'id.theme'
 const LS_HUE = 'id.hue'
 const LS_DENSITY = 'id.density'
+const LS_CLASSIF = 'id.classif'
+const LS_LOCALE = 'id.locale'
+
+// ----------------------------------------------------------------------------
+// Locale type — Phase 34 adds `id.locale` support to DesignProvider.
+// ----------------------------------------------------------------------------
+export type Locale = 'en' | 'ar'
+
+const isLocale = (value: unknown): value is Locale => value === 'en' || value === 'ar'
 
 // ----------------------------------------------------------------------------
 // Narrow runtime guards (localStorage returns `string | null`).
@@ -91,11 +100,15 @@ export interface DesignContextValue {
   mode: Mode
   hue: Hue
   density: Density
+  classif: boolean
+  locale: Locale
   tokens: TokenSet
   setDirection: (d: Direction) => void
   setMode: (m: Mode) => void
   setHue: (h: Hue) => void
   setDensity: (d: Density) => void
+  setClassif: (v: boolean) => void
+  setLocale: (l: Locale) => void
 }
 
 export interface DesignProviderProps {
@@ -104,6 +117,8 @@ export interface DesignProviderProps {
   initialMode?: Mode
   initialHue?: Hue
   initialDensity?: Density
+  initialClassif?: boolean
+  initialLocale?: Locale
 }
 
 export const DesignContext = createContext<DesignContextValue | undefined>(undefined)
@@ -117,6 +132,8 @@ export function DesignProvider({
   initialMode = 'light',
   initialHue = 22,
   initialDensity = 'comfortable',
+  initialClassif = false,
+  initialLocale = 'en',
 }: DesignProviderProps): React.ReactElement {
   // Lazy initialisers read from localStorage once per mount, falling back to
   // the prop defaults when the stored value is missing or malformed.
@@ -138,6 +155,18 @@ export function DesignProvider({
   const [density, setDensityState] = useState<Density>(() => {
     const stored = safeGetItem(LS_DENSITY)
     return isDensity(stored) ? stored : initialDensity
+  })
+
+  const [classif, setClassifState] = useState<boolean>(() => {
+    const stored = safeGetItem(LS_CLASSIF)
+    if (stored === 'true') return true
+    if (stored === 'false') return false
+    return initialClassif
+  })
+
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    const stored = safeGetItem(LS_LOCALE)
+    return isLocale(stored) ? stored : initialLocale
   })
 
   // Pure derivation — one `TokenSet` per {direction, mode, hue, density}.
@@ -212,6 +241,29 @@ export function DesignProvider({
     window.dispatchEvent(new CustomEvent('designChange', { detail: { density: d } }))
   }, [])
 
+  const setClassif = useCallback((v: boolean): void => {
+    setClassifState(v)
+    safeSetItem(LS_CLASSIF, v ? 'true' : 'false')
+    window.dispatchEvent(new CustomEvent('designChange', { detail: { classif: v } }))
+  }, [])
+
+  const setLocale = useCallback((l: Locale): void => {
+    setLocaleState(l)
+    safeSetItem(LS_LOCALE, l)
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = l
+      document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'
+    }
+    // Defer i18next call to runtime; dynamic import avoids a circular
+    // dependency between DesignProvider and the i18n bootstrap module.
+    void import('@/i18n')
+      .then(({ default: i18n }) => i18n.changeLanguage(l))
+      .catch((err: unknown) => {
+        console.warn('DesignProvider: i18n.changeLanguage failed', err)
+      })
+    window.dispatchEvent(new CustomEvent('designChange', { detail: { locale: l } }))
+  }, [])
+
   // Plan 33-09: test-only setter hatch for the Playwright SC suite. `import.meta.env.DEV`
   // is inlined by Vite and tree-shakes to `false` in production, so the hatch disappears
   // from prod bundles entirely. `MODE === 'test'` covers vitest + Playwright dev runs.
@@ -246,6 +298,11 @@ export function DesignProvider({
         if (parsed !== null) setHueState(parsed)
       } else if (event.key === LS_DENSITY && isDensity(event.newValue)) {
         setDensityState(event.newValue)
+      } else if (event.key === LS_CLASSIF) {
+        if (event.newValue === 'true') setClassifState(true)
+        else if (event.newValue === 'false') setClassifState(false)
+      } else if (event.key === LS_LOCALE && isLocale(event.newValue)) {
+        setLocaleState(event.newValue)
       }
     }
 
@@ -261,13 +318,31 @@ export function DesignProvider({
       mode,
       hue,
       density,
+      classif,
+      locale,
       tokens,
       setDirection,
       setMode,
       setHue,
       setDensity,
+      setClassif,
+      setLocale,
     }),
-    [direction, mode, hue, density, tokens, setDirection, setMode, setHue, setDensity],
+    [
+      direction,
+      mode,
+      hue,
+      density,
+      classif,
+      locale,
+      tokens,
+      setDirection,
+      setMode,
+      setHue,
+      setDensity,
+      setClassif,
+      setLocale,
+    ],
   )
 
   return (
