@@ -163,8 +163,13 @@ Summary checklist:
 2. All 6 Latin fonts plus Tajawal load self-hosted via `@fontsource/*` with weights 400/500/600/700 for display+body and 400/500 for mono; network panel shows zero requests to `fonts.googleapis.com` or `fonts.gstatic.com`
 3. When locale is Arabic (RTL), every display-font element (h1/h2, chip/label classes) renders in Tajawal; the `[style*="--font-display"]` override selectors from `project/src/app.css` are preserved verbatim
 4. Mono spans explicitly marked `[dir="ltr"]` inside RTL containers (`⌘K`, `T−3`, `+2`, `DD MMM` dates) keep rendering in JetBrains Mono without direction bleed
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 5 plans
+   - [ ] 35-01-PLAN.md — Wave 0: install 8 @fontsource packages, smoke-test @theme self-ref (A1), scaffold 3 test files + TYPO-04 fixture (RED)
+   - [ ] 35-02-PLAN.md — Extend buildTokens with DirectionFonts + FONTS const + 3 emitted keys (--font-display/body/mono) + 12 unit assertions (TYPO-01)
+   - [ ] 35-03-PLAN.md — Create frontend/src/fonts.ts with 16 side-effect @fontsource CSS imports (TYPO-02)
+   - [ ] 35-04-PLAN.md — Rewrite 13 legacy font-family vars in index.css + delete 5 :root legacy decls + delete 4 legacy RTL blocks + append 48-line verbatim Tajawal cascade (TYPO-01/03/04)
+   - [ ] 35-05-PLAN.md — Wire import './fonts' as first line in main.tsx + delete 14 Google Fonts links from index.html + run typography.spec.ts (7/7 GREEN, 21/21 stability)
+         **UI hint**: yes
 
 ### Phase 36: shell-chrome
 
