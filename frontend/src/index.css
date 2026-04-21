@@ -92,11 +92,12 @@
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-drawer: -24px 0 60px rgba(0, 0, 0, 0.25);
 
-  /* Phase 35 Wave-0 smoke probe — A1: same-name @theme self-reference for fonts.
-     If this crashes `pnpm -C frontend dev` with "... is not a function" (see Phase 33-06
-     commit e5fcacec), revert to distinct names (`--tw-font-display: var(--font-display);`)
-     OR inline literal fallbacks. Plan 35-03 replaces these three lines with the real
-     decision. Do NOT delete this probe without running `pnpm -C frontend dev` first. */
+  /* Phase 35 — D-01: font-family utilities (TYPO-01).
+     Tailwind v4 exposes `--font-*` entries as `font-*` utility classes.
+     RHS `var(--font-*)` refs are populated by buildTokens()/applyTokens() at boot.
+     A1 verdict (Plan 35-01 SUMMARY): SAFE — self-reference does not crash the
+     Tailwind v4 generator for font-family (unlike the box-shadow case fixed in
+     Phase 33-06 commit e5fcacec). */
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
@@ -153,15 +154,6 @@
   --heroui-danger: var(--danger);
   --heroui-danger-foreground: var(--accent-fg);
 
-  /* Typography — invariant across direction/mode/hue/density (hoisted from
-     the removed legacy data-theme blocks as part of Plan 33-07). Direction-
-     specific typography is out of scope for this phase; Plan 34 may revisit. */
-  --display-family: 'Inter', system-ui, sans-serif;
-  --display-weight: 600;
-  --text-family: 'Inter', system-ui, sans-serif;
-  --text-family-rtl: 'Readex Pro', system-ui, sans-serif;
-  --text-weight: 400;
-
   /* Font size scale (mobile-first; body uses --text-sm and scales to --text-base
      at ≥640px via @media query in the base layer below). */
   --text-3xs: 0.5625rem;
@@ -217,13 +209,13 @@
   }
 
   html {
-    font-family: var(--text-family);
+    font-family: var(--font-body);
   }
 
   body {
     @apply bg-background text-foreground overscroll-none antialiased;
-    font-family: var(--text-family);
-    font-weight: var(--text-weight);
+    font-family: var(--font-body);
+    font-weight: var(--font-normal);
     font-size: var(--text-sm); /* 12px on mobile */
     transition:
       background-color var(--transition-base),
@@ -244,8 +236,8 @@
   h4,
   h5,
   h6 {
-    font-family: var(--display-family);
-    font-weight: var(--display-weight);
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
   }
 
   /* Inherit theme fonts on interactive controls. */
@@ -265,14 +257,14 @@
   label,
   td,
   th {
-    font-family: var(--text-family);
+    font-family: var(--font-body);
   }
 
   code,
   pre,
   kbd,
   samp {
-    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-family: var(--font-mono);
   }
 
   [data-slot='button'],
@@ -288,18 +280,13 @@
     cursor: pointer;
   }
 
-  /* LTR — Inter. */
+  /* LTR — per-direction body font from --font-body (Fraunces/Inter/Public Sans
+     depending on active Direction; Tajawal RTL routing is handled in the
+     appended D-07 cascade at the end of this file). */
   html[dir='ltr'],
   html[dir='ltr'] body,
   html[dir='ltr'] * {
-    font-family: var(--text-family);
-  }
-
-  /* RTL — Readex Pro. */
-  html[dir='rtl'],
-  html[dir='rtl'] body,
-  html[dir='rtl'] * {
-    font-family: var(--text-family-rtl);
+    font-family: var(--font-body);
   }
 
   html[dir='ltr'] h1,
@@ -308,38 +295,20 @@
   html[dir='ltr'] h4,
   html[dir='ltr'] h5,
   html[dir='ltr'] h6 {
-    font-family: var(--display-family);
-    font-weight: var(--display-weight);
-  }
-
-  html[dir='rtl'] h1,
-  html[dir='rtl'] h2,
-  html[dir='rtl'] h3,
-  html[dir='rtl'] h4,
-  html[dir='rtl'] h5,
-  html[dir='rtl'] h6 {
-    font-family: var(--text-family-rtl);
+    font-family: var(--font-display);
     font-weight: var(--font-semibold);
   }
 }
 
 /* Font utility classes */
 .font-display {
-  font-family: var(--display-family);
-  font-weight: var(--display-weight);
-}
-
-html[dir='rtl'] .font-display {
-  font-family: var(--text-family-rtl);
+  font-family: var(--font-display);
+  font-weight: var(--font-semibold);
 }
 
 .font-text {
-  font-family: var(--text-family);
-  font-weight: var(--text-weight);
-}
-
-html[dir='rtl'] .font-text {
-  font-family: var(--text-family-rtl);
+  font-family: var(--font-body);
+  font-weight: var(--font-normal);
 }
 
 @layer components {
