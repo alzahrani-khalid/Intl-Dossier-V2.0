@@ -25,7 +25,8 @@ Requirements for this milestone. Every requirement maps to exactly one roadmap p
 
 ### Tweaks Drawer (THEME)
 
-- [ ] **THEME-01**: User can open a Tweaks drawer from a topbar button and see Direction, Mode, Hue, Density, Classification, and Locale controls in a single panel
+- [x] **THEME-01
+      **: User can open a Tweaks drawer from a topbar button and see Direction, Mode, Hue, Density, Classification, and Locale controls in a single panel
 - [ ] **THEME-02**: User's direction, mode, hue, density, classification, and locale selections persist across sessions via `localStorage` keys (`id.dir`, `id.theme`, `id.hue`, `id.density`, `id.classif`, `id.locale`)
 - [ ] **THEME-03**: Changing direction automatically resets mode and hue to that direction's defaults (Chancery=light/22°, Situation=dark/190°, Ministerial=light/158°, Bureau=light/32°)
 - [ ] **THEME-04**: The existing `/themes` route redirects to `/` and `pages/Themes.tsx` + `components/theme-selector/ThemeSelector.tsx` are removed; no references to the old theme list remain in the codebase
