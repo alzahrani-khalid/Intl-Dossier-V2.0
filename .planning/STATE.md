@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: Phase 35 closed. Per-direction font triplet (--font-display/body/mono) flows through buildTokens → applyTokens → CSS cascade. Self-hosted fontsource packages replace Google Fonts CDN. Tajawal RTL cascade + JetBrains Mono carve-out active. Phase 36 (shell-chrome) fully unblocked; Phase 37 (signature-visuals) remains parallelizable.
-stopped_at: Phase 36 context gathered (Fresh AppShell strategy locked; 3 areas deferred to Claude's discretion)
-last_updated: "2026-04-22T01:10:00.000Z"
-last_activity: 2026-04-22 — Phase 35 executed end-to-end (4 waves, 5 plans, ~14 atomic commits + 1 pre-phase fix). Playwright typography.spec.ts 21/21 PASS with --repeat-each 3 (zero flake). 4 TYPO requirements verified. vitest design-system 158/160 (2 known-failing: 1 pre-existing fouc-bootstrap, 1 plan-internal byte-for-byte).
+status: Phase 35 closed. `frontend/src/fonts.ts` boot-imports 14 `@fontsource` CSS sub-paths; `main.tsx` loads it as first import (before index.css per Pitfall 2); `index.html` stripped of 14 Google Fonts <link> / <noscript> elements (70 → 22 lines). buildTokens now emits `--font-display/body/mono` per direction, mode/hue/density-invariant. index.css legacy `--text-family*` / `--display-family` vars wiped; 48-line Tajawal RTL cascade appended between `@layer base` and `@layer components` (unlayered, high specificity). Phase 36 (shell-chrome) fully unblocked (33+34+35 gate cleared); Phase 37 (signature-visuals) remains parallelizable.
+stopped_at: Phase 36 UI-SPEC approved
+last_updated: '2026-04-22T09:38:23.041Z'
+last_activity: '2026-04-22 — Phase 35 executed end-to-end (4 waves, 5 plans, ~14 atomic commits + 1 pre-phase Kanban `inset-e-2` fix). Playwright `typography.spec.ts` 7/7 single-run, 21/21 with `--repeat-each 3` (zero flake). VERIFICATION.md committed. `pnpm build` exit 0; tsc delta −3 (1589 → 1586, zero new Phase-35 errors). vitest design-system 158/160: 1 pre-existing fouc-bootstrap failure, 1 known-defective plan-internal byte-for-byte test. A1 verdict SAFE (Tailwind v4 `@theme` self-reference works for font-family, unlike the Phase 33-06 shadow case).'
 progress:
   total_phases: 11
-  completed_phases: 3
+  completed_phases: 2
   total_plans: 27
   completed_plans: 21
   percent: 78
@@ -209,7 +209,7 @@ None yet.
 ## Session Continuity
 
 Last session: --stopped-at
-Stopped at: Phase 35 context gathered (7 decisions locked; all areas discussed)
+Stopped at: Phase 36 UI-SPEC approved
 Resume file: --resume-file
 Resume command: /gsd-discuss-phase 33
 
@@ -238,4 +238,4 @@ Resume command: /gsd-discuss-phase 33
 - Phase 38 depends on 33, 37 (does not strictly require 36 but runs after for consistent chrome)
 - Phase 43 is the final QA gate — depends on 33–42
 
-**Planned Phase:** 35 (typography-stack) — 5 plans — 2026-04-21T21:31:35.308Z
+**Planned Phase:** 36 (shell-chrome) — 5 plans — 2026-04-22T09:38:23.035Z
