@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
 status: Phase 35 closed. Per-direction font triplet (--font-display/body/mono) flows through buildTokens → applyTokens → CSS cascade. Self-hosted fontsource packages replace Google Fonts CDN. Tajawal RTL cascade + JetBrains Mono carve-out active. Phase 36 (shell-chrome) fully unblocked; Phase 37 (signature-visuals) remains parallelizable.
-stopped_at: Phase 35 VERIFICATION PASS
-last_updated: "2026-04-22T00:55:00.000Z"
+stopped_at: Phase 36 context gathered (Fresh AppShell strategy locked; 3 areas deferred to Claude's discretion)
+last_updated: "2026-04-22T01:10:00.000Z"
 last_activity: 2026-04-22 — Phase 35 executed end-to-end (4 waves, 5 plans, ~14 atomic commits + 1 pre-phase fix). Playwright typography.spec.ts 21/21 PASS with --repeat-each 3 (zero flake). 4 TYPO requirements verified. vitest design-system 158/160 (2 known-failing: 1 pre-existing fouc-bootstrap, 1 plan-internal byte-for-byte).
 progress:
   total_phases: 11
