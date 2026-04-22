@@ -9,7 +9,7 @@ completed_at: '2026-04-22T14:15:00+03:00'
 commits:
   - 76f69d41 · refactor(36-05): _protected.tsx mounts AppShell (SHELL-04) [combined swap + 4 deletions]
   - 75798acf · ci(36-05): check-deleted-components.sh regression gate
-  - 34bea14e · test(36-05): un-skip Playwright phase-36-shell specs + smoke matrix (SHELL-01..05)
+  - e409f6b4 · test(36-05): un-skip Playwright phase-36-shell specs + smoke matrix (SHELL-01..05)
   - f64045da · docs(36): VERIFICATION — all SHELL-01..05 complete
 key-files:
   modified:
@@ -284,7 +284,7 @@ next CI run or a developer running `pnpm test:e2e` locally with
 | ---------- | -------------------------------------------------------------------------------------------------- |
 | `76f69d41` | refactor(36-05): \_protected.tsx mounts AppShell (SHELL-04) [combined swap + 4 deletions per D-01] |
 | `75798acf` | ci(36-05): check-deleted-components.sh regression gate                                             |
-| `34bea14e` | test(36-05): un-skip Playwright phase-36-shell specs + smoke matrix (SHELL-01..05)                 |
+| `e409f6b4` | test(36-05): un-skip Playwright phase-36-shell specs + smoke matrix (SHELL-01..05)                 |
 | `f64045da` | docs(36): VERIFICATION — all SHELL-01..05 complete                                                 |
 
 ## Self-Check: PASSED
@@ -295,7 +295,7 @@ next CI run or a developer running `pnpm test:e2e` locally with
 - ✅ `tests/e2e/phase-36-shell.spec.ts` + `phase-36-shell-smoke.spec.ts`
   enumerate 13 tests via Playwright `--list`
 - ✅ `.planning/phases/36-shell-chrome/VERIFICATION.md` exists
-- ✅ Commits `76f69d41`, `75798acf`, `34bea14e`, `f64045da` present in
+- ✅ Commits `76f69d41`, `75798acf`, `e409f6b4`, `f64045da` present in
   `git log` (verified at commit time)
 - ✅ Vitest regression: 30/31 green (1 pre-existing non-blocker)
 
