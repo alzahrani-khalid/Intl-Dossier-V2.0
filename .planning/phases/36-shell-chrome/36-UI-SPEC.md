@@ -1,10 +1,11 @@
 ---
 phase: 36
 slug: shell-chrome
-status: draft
+status: approved
 shadcn_initialized: true
 preset: intl-dossier (HeroUI v3 + shadcn re-export, carried forward from Phase 33)
 created: 2026-04-22
+reviewed_at: 2026-04-22
 ---
 
 # Phase 36 — UI Design Contract (shell-chrome)
