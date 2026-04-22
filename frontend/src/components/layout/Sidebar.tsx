@@ -80,6 +80,7 @@ export function Sidebar({ className }: SidebarProps = {}): ReactElement {
       {/* 1. Brand row — GASTAT logo mark + app name + workspace */}
       <div className="sb-brand flex items-center gap-2.5 pb-3 border-b border-[color-mix(in_srgb,var(--sidebar-ink)_8%,transparent)]">
         <div
+          role="img"
           aria-label={t('shell.brand.mark')}
           className="sb-mark flex h-7 w-7 items-center justify-center text-[var(--accent)]"
         >
