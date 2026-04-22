@@ -183,8 +183,13 @@ Summary checklist:
 3. User sees a direction-specific classification element above main content (Chancery: marginalia italics; Situation: full-width ribbon; Ministerial/Bureau: chip pill) showing workspace + classification + session info
 4. At ≤1024px the sidebar becomes an overlay drawer (280px wide, backdrop, `translateX(-100%)` off-canvas); at ≤640px the topbar wraps and the drawer goes full-screen; in RTL the drawer slide direction flips to `translateX(100%)` and every touch target remains ≥44×44px
 5. Sidebar brand mark renders the real `GASTAT_LOGO.svg` at 22×22 tinted via `currentColor` in the active accent color
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 5 plans
+   - [ ] 36-01-PLAN.md — Wave 0 scaffolding: 7 test scaffolds + GastatLogo from real handoff SVG + shell.\* i18n (EN+AR) + concurrent-Drawer A1 validator
+   - [ ] 36-02-PLAN.md — Sidebar.tsx: 256px, brand + user card + 3 nav sections + footer + 2px accent bar at inset-inline-start:0 (SHELL-01, SHELL-05)
+   - [ ] 36-03-PLAN.md — Topbar.tsx (7-item row, useTweaksOpen re-host) + ClassificationBar.tsx (single component, internal direction switch) (SHELL-02, SHELL-03)
+   - [ ] 36-04-PLAN.md — AppShell.tsx composition + mobile overlay drawer + route-change auto-close + axe-core 8-combo matrix (SHELL-04)
+   - [ ] 36-05-PLAN.md — `_protected.tsx` swap, delete 4 legacy files, extend check-deleted-components.sh, fill Playwright E2E + smoke, VERIFICATION.md
+         **UI hint**: yes
 
 ### Phase 37: signature-visuals
 
