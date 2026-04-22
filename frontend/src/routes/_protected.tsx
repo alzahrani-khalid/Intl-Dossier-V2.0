@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
-import { MainLayout } from '@/components/layout/MainLayout'
+import { AppShell } from '@/components/layout/AppShell'
 import { useAuthStore, supabase } from '../store/authStore'
 import { ChatDock } from '@/components/ai/ChatDock'
 import { ChatProvider } from '@/contexts/ChatContext'
@@ -58,11 +58,11 @@ function ProtectedLayout(): React.ReactElement {
 
   return (
     <ChatProvider>
-      <MainLayout>
+      <AppShell>
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>
-      </MainLayout>
+      </AppShell>
       <ErrorBoundary>
         <ChatDock onCitationClick={handleCitationClick} />
       </ErrorBoundary>
