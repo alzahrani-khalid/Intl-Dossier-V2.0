@@ -385,7 +385,17 @@
   "reports": {
     "selectTemplate": "Select Report Template",
     "selectTemplateDesc": "Choose a report template to generate",
-    "parameters": "Parameters",
+    "parameters": {
+      "country": "Country",
+      "dateRange": "Date Range",
+      "status": "Status",
+      "includeExpiring": "Include Expiring Soon",
+      "period": "Period",
+      "confidenceLevel": "Confidence Level",
+      "classification": "Classification",
+      "organization": "Organization",
+      "reportPeriod": "Report Period"
+    },
     "parametersDesc": "Configure report parameters",
     "format": "Format",
     "generateReport": "Generate Report",
@@ -405,17 +415,6 @@
       "organizationProfileDesc": "Detailed organization information",
       "executiveDashboard": "Executive Dashboard",
       "executiveDashboardDesc": "High-level overview for executives"
-    },
-    "parameters": {
-      "country": "Country",
-      "dateRange": "Date Range",
-      "status": "Status",
-      "includeExpiring": "Include Expiring Soon",
-      "period": "Period",
-      "confidenceLevel": "Confidence Level",
-      "classification": "Classification",
-      "organization": "Organization",
-      "reportPeriod": "Report Period"
     },
     "periods": {
       "thisMonth": "This Month",
@@ -733,7 +732,41 @@
     "viewDetails": "View Details",
     "sendReminder": "Send Reminder",
     "escalate": "Escalate",
-    "bulkActions": "Bulk Actions",
+    "bulkActions": {
+      "toolbar": "Bulk Actions",
+      "sendReminders": "Send Reminders",
+      "sending": "Sending reminders...",
+      "clear": "Clear",
+      "clearSelection": "Clear Selection",
+      "selectedCount": "{{count}} selected",
+      "maxItems": "(max {{max}})",
+      "maxReached": "Maximum selection reached",
+      "maxReachedDesc": "You can only select up to 100 items at a time",
+      "selectItem": "Select {{id}}",
+      "processing": "Processing",
+      "jobCreated": "Bulk reminder job created for {{count}} items",
+      "skippedSome": "{{sent}} reminders queued, {{skipped}} skipped (no assignee)",
+      "completed": "Completed",
+      "summary": "{{success}} sent successfully, {{failed}} failed ({{total}} total)",
+      "failed": "Failed",
+      "failedDesc": "The bulk reminder operation encountered an error",
+      "selectionCleared": "Selection cleared",
+      "selectionClearedDesc": "All items have been deselected",
+      "noAssignees": "No valid assignees",
+      "noAssigneesDesc": "All selected items have no assignees. Cannot send reminders.",
+      "error": "Bulk action failed",
+      "errorDesc": "An error occurred while processing your request",
+      "escalate": "Escalate",
+      "cancel": "Cancel",
+      "maxSelectionExceeded": "Maximum selection is {{max}} items",
+      "jobStatus": "Job Status",
+      "queued": "Queued",
+      "progress": "Progress: {{processed}}/{{total}}",
+      "viewResults": "View Results",
+      "successfulIds": "Successful",
+      "failedIds": "Failed",
+      "skippedIds": "Skipped"
+    },
     "selectAll": "Select All",
     "clearSelection": "Clear Selection",
     "selectedCount": "{{count}} selected",
@@ -885,44 +918,6 @@
       "acknowledged": "Acknowledged on {{date}}",
       "resolve": "Resolve",
       "resolved": "Resolved on {{date}}"
-    },
-    "bulkActions": {
-      "toolbar": "Bulk Actions",
-      "sendReminders": "Send Reminders",
-      "sending": "Sending reminders...",
-      "clear": "Clear",
-      "clearSelection": "Clear Selection",
-      "selectedCount": "{{count}} selected",
-      "maxItems": "(max {{max}})",
-      "maxReached": "Maximum selection reached",
-      "maxReachedDesc": "You can only select up to 100 items at a time",
-      "selectItem": "Select {{id}}",
-      "processing": "Processing bulk reminders",
-      "jobCreated": "Bulk reminder job created for {{count}} items",
-      "skippedSome": "{{sent}} reminders queued, {{skipped}} skipped (no assignee)",
-      "completed": "Bulk reminders completed",
-      "summary": "{{success}} sent successfully, {{failed}} failed ({{total}} total)",
-      "failed": "Bulk operation failed",
-      "failedDesc": "The bulk reminder operation encountered an error",
-      "selectionCleared": "Selection cleared",
-      "selectionClearedDesc": "All items have been deselected",
-      "noAssignees": "No valid assignees",
-      "noAssigneesDesc": "All selected items have no assignees. Cannot send reminders.",
-      "error": "Bulk action failed",
-      "errorDesc": "An error occurred while processing your request",
-      "escalate": "Escalate",
-      "cancel": "Cancel",
-      "maxSelectionExceeded": "Maximum selection is {{max}} items",
-      "jobStatus": "Job Status",
-      "queued": "Queued",
-      "processing": "Processing",
-      "completed": "Completed",
-      "failed": "Failed",
-      "progress": "Progress: {{processed}}/{{total}}",
-      "viewResults": "View Results",
-      "successfulIds": "Successful",
-      "failedIds": "Failed",
-      "skippedIds": "Skipped"
     },
     "errors": {
       "loadFailed": "Failed to load assignments",
@@ -1098,15 +1093,90 @@
     "close": "Close tweaks",
     "direction": {
       "label": "Direction",
-      "chancery": { "name": "Chancery", "tagline": "Formal, warm amber" },
-      "situation": { "name": "Situation Room", "tagline": "Dark, cool cyan" },
-      "ministerial": { "name": "Ministerial", "tagline": "Institutional green" },
-      "bureau": { "name": "Bureau", "tagline": "Crisp, neutral" }
+      "chancery": {
+        "name": "Chancery",
+        "tagline": "Formal, warm amber"
+      },
+      "situation": {
+        "name": "Situation Room",
+        "tagline": "Dark, cool cyan"
+      },
+      "ministerial": {
+        "name": "Ministerial",
+        "tagline": "Institutional green"
+      },
+      "bureau": {
+        "name": "Bureau",
+        "tagline": "Crisp, neutral"
+      }
     },
-    "mode": { "label": "Mode", "light": "Light", "dark": "Dark" },
-    "hue": { "label": "Hue" },
-    "density": { "label": "Density", "comfortable": "Comfortable", "compact": "Compact" },
-    "classification": { "label": "Classification", "show": "Show", "hide": "Hide" },
-    "locale": { "label": "Locale", "en": "EN", "ar": "ع" }
+    "mode": {
+      "label": "Mode",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "hue": {
+      "label": "Hue"
+    },
+    "density": {
+      "label": "Density",
+      "comfortable": "Comfortable",
+      "compact": "Compact"
+    },
+    "classification": {
+      "label": "Classification",
+      "show": "Show",
+      "hide": "Hide"
+    },
+    "locale": {
+      "label": "Locale",
+      "en": "EN",
+      "ar": "ع"
+    }
+  },
+  "shell": {
+    "appName": "Intl-Dossier",
+    "workspace": "GASTAT · Intelligence Workspace",
+    "user": {
+      "noRole": "Member"
+    },
+    "footer": {
+      "sync": "v2.0 · Synced"
+    },
+    "search": {
+      "placeholder": "Search dossiers, tasks, people…",
+      "kbd": "⌘K"
+    },
+    "direction": {
+      "chancery": "Chancery",
+      "situation": "Situation Room",
+      "ministerial": "Ministerial",
+      "bureau": "Bureau"
+    },
+    "theme": {
+      "toggle": "Toggle theme"
+    },
+    "notifications": {
+      "open": "Open notifications"
+    },
+    "tweaks": "Tweaks",
+    "menu": {
+      "open": "Open navigation menu",
+      "close": "Close navigation menu"
+    },
+    "classification": {
+      "workspace": "GASTAT",
+      "handleSecurely": "Handle via secure channels",
+      "session": "Session:"
+    },
+    "empty": {
+      "noNav": {
+        "title": "No workspaces available",
+        "body": "Contact your administrator to request access."
+      }
+    },
+    "error": {
+      "mount": "The workspace couldn't load. Refresh to retry."
+    }
   }
 }
