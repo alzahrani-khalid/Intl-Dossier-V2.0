@@ -1,3 +1,8 @@
+// Phase 36 (shell-chrome) consumes NAVIGATION_GROUPS directly via the existing
+// `id: 'operations' | 'dossiers' | 'administration'` discriminator. See 36-02 D-03.
+// Admin gate: the administration group is only emitted by `createNavigationGroups`
+// when `isAdmin === true` (lines 169-216), so Sidebar.tsx passes the auth flag
+// through and no additional filter helper is required (audit verdict: Case A).
 import type { LucideIcon } from 'lucide-react'
 import {
   LayoutDashboard,
