@@ -1,15 +1,13 @@
-import type { CSSProperties, ReactElement, ReactNode } from 'react'
+import type { HTMLAttributes, ReactElement, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
-interface LtrIsolateProps {
+interface LtrIsolateProps extends Omit<HTMLAttributes<HTMLDivElement>, 'dir' | 'children'> {
   children: ReactNode
-  className?: string
-  style?: CSSProperties
 }
 
-export function LtrIsolate({ children, className, style }: LtrIsolateProps): ReactElement {
+export function LtrIsolate({ children, className, ...rest }: LtrIsolateProps): ReactElement {
   return (
-    <div dir="ltr" className={cn(className)} style={style}>
+    <div dir="ltr" className={cn(className)} {...rest}>
       {children}
     </div>
   )

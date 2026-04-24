@@ -4,10 +4,10 @@
     "openCommitments": "Open Commitments",
     "slaAtRisk": "SLA at Risk",
     "weekAhead": "Week Ahead",
-    "activeMeta": "",
-    "openMeta": "",
-    "slaMeta": "",
-    "weekAheadMeta": "",
+    "activeMeta": "5 this week · 3 travel",
+    "openMeta": "11 due this week",
+    "slaMeta": "4 breached · 5 amber",
+    "weekAheadMeta": "2 VIP visits · 1 travel",
     "strip": "Key metrics"
   },
   "weekAhead": {

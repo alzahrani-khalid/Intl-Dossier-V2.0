@@ -4,10 +4,10 @@
     "openCommitments": "الالتزامات المفتوحة",
     "slaAtRisk": "اتفاقيات مستوى الخدمة المعرضة للخطر",
     "weekAhead": "الأسبوع القادم",
-    "activeMeta": "",
-    "openMeta": "",
-    "slaMeta": "",
-    "weekAheadMeta": "",
+    "activeMeta": "٥ هذا الأسبوع · ٣ سفر",
+    "openMeta": "١١ مستحقة هذا الأسبوع",
+    "slaMeta": "٤ متجاوزة · ٥ تحذير",
+    "weekAheadMeta": "زيارتان لكبار · رحلة واحدة",
     "strip": "المؤشرات الرئيسية"
   },
   "weekAhead": {
