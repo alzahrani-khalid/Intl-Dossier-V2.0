@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Initial JS (entry point)",
+    "path": "dist/assets/index-*.js",
+    "limit": "200 KB",
+    "gzip": true
+  },
+  {
+    "name": "React vendor",
+    "path": "dist/assets/react-vendor-*.js",
+    "limit": "50 KB",
+    "gzip": true
+  },
+  {
+    "name": "TanStack vendor",
+    "path": "dist/assets/tanstack-vendor-*.js",
+    "limit": "80 KB",
+    "gzip": true
+  },
+  {
+    "name": "Total JS",
+    "path": "dist/assets/*.js",
+    "limit": "800 KB",
+    "gzip": true
+  },
+  {
+    "name": "signature-visuals/d3-lazy-chunk",
+    "path": "dist/assets/*d3-geo*.js",
+    "limit": "100 kB",
+    "gzip": true
+  },
+  {
+    "name": "signature-visuals/static-primitives",
+    "path": "dist/assets/*signature-visuals*.js",
+    "limit": "15 kB",
+    "gzip": true,
+    "ignore": ["d3-geo", "topojson-client", "world-atlas"]
+  }
+]
