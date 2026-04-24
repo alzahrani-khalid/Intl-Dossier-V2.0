@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: Phase 36 closed. AppShell replaces MainLayout as the sole mount point for every `_protected` route. 4 legacy layout files deleted (MainLayout, AppSidebar, SiteHeader, MobileBottomTabBar); `scripts/check-deleted-components.sh` CI gate exits 0. Sidebar (256px, GastatLogo 22×22 in var(--accent), active inset-inline-start accent bar, admin gate), Topbar (56px, 7-slot row with ⌘K kbd `lg:inline hidden`, Tweaks trigger via `useTweaksOpen`), ClassificationBar (4-case switch: chancery marginalia / situation ribbon / ministerial+bureau chip; null when `useClassification() === false`), AppShell (responsive grid `lg:grid-cols-[16rem_1fr]` + HeroUI overlay Drawer 280px/max-sm:w-screen with physical-placement RTL flip). shell.* i18n namespace added to common.json (21 leaf keys, EN/AR parity). Vitest layout+brand 30/31 green (1 pre-existing RED: ConcurrentDrawers `role=dialog` assertion, documented at Wave 0 as non-blocker). Playwright specs un-skipped and moved to root `tests/e2e/` (16/16 enumerate green; runtime deferred to CI/dev-machine). 19 atomic commits across 4 waves. Phase 37 (signature-visuals) remains parallelizable; Phase 38+ now unblocked by the 33+36 gate.
-stopped_at: Phase 36 closed
-last_updated: "2026-04-22T13:35:00.000Z"
-last_activity: "2026-04-22 — Phase 36 executed end-to-end (4 waves, 5 plans, 19 atomic commits). All 5 SHELL-0x requirements verified in VERIFICATION.md (`f64045da`). Regression: Sidebar 3/3, Topbar 3/3, ClassificationBar 4/4, AppShell 4/4, AppShell.a11y 8/8, GastatLogo 6/6 — 28/28 new tests green; ConcurrentDrawers 2/3 (1 pre-existing RED, non-blocker). check-deleted-components.sh exits 0; grep for deleted names returns 0 semantic imports. AppShell mounts inside DesignProvider > LanguageProvider > TweaksDisclosureProvider (provider order preserved). Cross-plan lint-staged race absorbed 36-03's Topbar.tsx into 36-02's commit `f44b8041` (files byte-identical; history mislabel only, no behavior impact)."
+status: Phase 36 closed. AppShell is the sole route mount; 4 legacy layout files deleted; 19 atomic commits across 4 waves; 30/31 Vitest layout+brand green. Phase 37 parallelizable; 38+ unblocked.
+stopped_at: Phase 37 context gathered
+last_updated: "2026-04-24T00:35:13.486Z"
+last_activity: 2026-04-22 — Phase 36 executed end-to-end (4 waves, 5 plans). 28/28 new tests green + 8/8 a11y axe-core combos; ConcurrentDrawers 2/3 (1 pre-existing RED, non-blocker). check-deleted-components.sh exits 0. VERIFICATION.md committed (`f64045da`).
 progress:
   total_phases: 11
   completed_phases: 3
@@ -221,9 +221,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-22 (Phase 36 execution + verification)
-Stopped at: Phase 36 closed · ready for Phase 37 (signature-visuals) or Phase 38 (dashboard-verbatim)
-Resume file: .planning/phases/36-shell-chrome/VERIFICATION.md
+Last session: --stopped-at
+Stopped at: Phase 37 context gathered
+Resume file: --resume-file
 Resume command: /gsd-discuss-phase 37 (or /gsd-discuss-phase 38)
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
