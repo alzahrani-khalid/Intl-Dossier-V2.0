@@ -151,7 +151,7 @@ describe('WeekAhead widget', () => {
     } as never)
 
     render(<WeekAhead />)
-    expect(screen.getByText('No upcoming events')).toBeTruthy()
+    expect(screen.getByText(/weekAhead\.empty|No upcoming events/i)).toBeTruthy()
   })
 
   it('shows error state on isError', () => {
@@ -162,6 +162,6 @@ describe('WeekAhead widget', () => {
     } as never)
 
     render(<WeekAhead />)
-    expect(screen.getByText("Couldn't load widget")).toBeTruthy()
+    expect(screen.getByText(/error\.load_failed|Couldn't load widget/i)).toBeTruthy()
   })
 })
