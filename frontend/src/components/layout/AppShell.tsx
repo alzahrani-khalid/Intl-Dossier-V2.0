@@ -72,12 +72,21 @@
  *     directions.
  */
 
-import { useCallback, useEffect, useRef, useState, type ReactElement, type ReactNode } from 'react'
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from 'react'
 import { useRouterState } from '@tanstack/react-router'
 import { Drawer, useOverlayState } from '@heroui/react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/lib/utils'
+import { FullscreenLoader } from '@/components/signature-visuals'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 import { ClassificationBar } from './ClassificationBar'
@@ -208,7 +217,7 @@ export function AppShell({ children }: AppShellProps): ReactElement {
           'bg-[var(--bg)]',
         )}
       >
-        {children}
+        <Suspense fallback={<FullscreenLoader open />}>{children}</Suspense>
       </main>
 
       {/* Mobile overlay drawer — only engages below lg. HeroUI Drawer renders
