@@ -16,7 +16,15 @@
     "this_week": "This Week",
     "next_week": "Next Week",
     "title": "Week Ahead",
-    "empty": "No upcoming events"
+    "empty": "No upcoming events",
+    "status": {
+      "scheduled": "Scheduled",
+      "confirmed": "Confirmed",
+      "pending": "Pending",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
   },
   "overdue": {
     "title": "Overdue Commitments",

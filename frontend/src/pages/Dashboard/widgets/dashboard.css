@@ -220,6 +220,11 @@
 
 /* ----- Week ahead (handoff lines 309–322) ----- */
 
+.week-group {
+  /* Phase 38 plan 02 — per-day group spacing inside WeekAhead. */
+  display: block;
+}
+
 .week-list {
   display: flex;
   flex-direction: column;
