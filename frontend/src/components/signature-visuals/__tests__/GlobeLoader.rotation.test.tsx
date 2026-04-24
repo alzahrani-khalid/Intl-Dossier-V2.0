@@ -24,23 +24,19 @@ vi.mock('../ensureWorld', () => {
     ...d3Real,
     geoOrthographic: (): ReturnType<typeof d3Real.geoOrthographic> => {
       const inner = d3Real.geoOrthographic()
-      const proxy = new Proxy(inner, {
-        get(target, prop: string | symbol): unknown {
-          if (prop === 'rotate') {
-            return (angles?: unknown): unknown => {
-              if (Array.isArray(angles) && angles.length >= 2) {
-                rotateCalls.push([Number(angles[0]), Number(angles[1])])
-              }
-              const t = target as unknown as Record<string, (...a: unknown[]) => unknown>
-              const fn = t['rotate']
-              return fn.call(target, angles)
-            }
-          }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return (target as any)[prop]
-        },
-      })
-      return proxy as unknown as ReturnType<typeof d3Real.geoOrthographic>
+      // Wrap the projection's `rotate` so we can record every call. Other
+      // chained setters return the projection itself — keep them bound to
+      // `inner` so the fluent API (`.scale().translate().clipAngle()`) works.
+      const originalRotate = inner.rotate.bind(inner)
+      ;(inner as unknown as { rotate: (a?: [number, number, number?]) => unknown }).rotate = (
+        angles?: [number, number, number?],
+      ): unknown => {
+        if (Array.isArray(angles) && angles.length >= 2) {
+          rotateCalls.push([Number(angles[0]), Number(angles[1])])
+        }
+        return originalRotate(angles as Parameters<typeof originalRotate>[0])
+      }
+      return inner
     },
   }
   return {

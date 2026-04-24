@@ -16,4 +16,5 @@
  * named exports below. See `.planning/phases/37-signature-visuals/` for
  * decisions, research, and acceptance criteria.
  */
-export {}
+export { GlobeLoader } from './GlobeLoader'
+export type { GlobeLoaderProps } from './GlobeLoader'
