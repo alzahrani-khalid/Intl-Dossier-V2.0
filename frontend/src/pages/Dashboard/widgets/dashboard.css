@@ -1,0 +1,639 @@
+/*
+ * Phase 38 Dashboard styles — verbatim port of inteldossier handoff `app.css`
+ * dashboard rules with Phase 33 design-token substitution.
+ *
+ * Source: /tmp/inteldossier-handoff/inteldossier/project/src/app.css
+ * Token mapping (Phase 33 → handoff):
+ *   --accent       ← Phase 33 brand accent
+ *   --surface      ← Phase 33 base canvas
+ *   --surface-raised ← raised cards
+ *   --line / --line-soft ← Phase 33 borders / dividers
+ *   --ink / --ink-mute / --ink-faint ← text
+ *   --accent-ink / --accent-soft ← link / highlight
+ *   --ok / --warn / --danger / --info ← semantic statuses
+ *   --sla-ok / --sla-risk / --sla-bad ← SLA severities
+ *   --font-display / --font-body / --font-mono ← typography
+ *
+ * Tokens not yet in Phase 33 (defined here as widget-scoped fallbacks so the
+ * verbatim handoff rules render unchanged. Wave 2 may promote to global.):
+ *   --pad, --gap, --radius, --radius-sm, --line-soft (already global), and
+ *   the *-soft semantic backgrounds (--danger-soft, --warn-soft, --ok-soft,
+ *   --info-soft) — defined as `color-mix` against the base hue.
+ *
+ * Logical properties: handoff already uses border-inline-end / padding-inline-end /
+ * margin-inline-start. Preserved verbatim. Any `text-align: end` is RTL-aware.
+ * NOTE: handoff includes `text-align: end` (NOT `right`) which is
+ * RTL-flip-safe per CLAUDE.md Rule 3 + project Tailwind logical-property rules.
+ */
+
+.dash-root {
+  /* Widget-scoped fallbacks — only apply if Phase 33 hasn't defined globally. */
+  --pad: var(--dash-pad, 16px);
+  --gap: var(--dash-gap, 16px);
+  --radius: var(--dash-radius, 6px);
+  --radius-sm: var(--dash-radius-sm, 3px);
+  --ink-soft: var(--ink-mute);
+  --danger-soft: color-mix(in srgb, var(--danger) 12%, var(--surface));
+  --warn-soft: color-mix(in srgb, var(--warn) 14%, var(--surface));
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--surface));
+  --info-soft: color-mix(in srgb, var(--info) 12%, var(--surface));
+  display: block;
+}
+
+/* ----- Card / chip primitives (handoff lines 233–252) ----- */
+
+.dash-root .card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--pad);
+}
+.dash-root .card-sub {
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.dash-root .card-link {
+  font-size: 12px;
+  color: var(--accent-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.dash-root .card-link:hover {
+  text-decoration: underline;
+}
+
+.dash-root .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 11px;
+  background: var(--line-soft);
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.dash-root .chip-accent {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+.dash-root .chip-danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.dash-root .chip-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.dash-root .chip-ok {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.dash-root .chip-info {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+/* ----- KPI strip (handoff lines 284–302) ----- */
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: calc(var(--gap) * 1.25);
+}
+.kpi {
+  background: var(--surface);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+.kpi-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.kpi-delta {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--ink-mute);
+}
+.kpi-delta.up {
+  color: var(--ok);
+}
+.kpi-delta.down {
+  color: var(--danger);
+}
+.kpi-meta {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
+.kpi-accent::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  block-size: 2px;
+  background: var(--accent);
+}
+
+.kpi-mini-strip {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+}
+.kpi-mini {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding-inline-end: 16px;
+  border-inline-end: 1px solid var(--line);
+}
+.kpi-mini:last-child {
+  border-inline-end: 0;
+}
+.kpi-mini-val {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.kpi-mini-label {
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+/* ----- Dashboard grid (handoff lines 305–306) ----- */
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: calc(var(--gap) * 1.25);
+}
+.dash-col {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 1.25);
+}
+
+/* Responsive reflow — handoff is desktop-only (RESEARCH A6).
+ * Add explicit mobile/tablet fallbacks per plan 38-00 step 1. */
+@media (max-width: 767px) {
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+  .kpi-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 768px) and (max-width: 1279px) {
+  .dash-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 1280px) {
+  .dash-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* ----- Week ahead (handoff lines 309–322) ----- */
+
+.week-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.week-row {
+  background: var(--surface);
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 14px;
+  padding: 12px 14px;
+  align-items: center;
+  transition: background 0.1s;
+  cursor: pointer;
+}
+.week-row:hover {
+  background: var(--line-soft);
+}
+.week-date {
+  text-align: center;
+  border-inline-end: 1px solid var(--line);
+  padding-inline-end: 12px;
+}
+.week-day {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.week-dd {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.week-time {
+  font-size: 11px;
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+.week-body {
+  min-width: 0;
+}
+.week-title {
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  margin-bottom: 2px;
+}
+.week-meta {
+  font-size: 12px;
+  color: var(--ink-mute);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.week-meta .sep {
+  color: var(--ink-faint);
+}
+.week-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* ----- Overdue commitments (handoff lines 325–338) ----- */
+
+.overdue-group {
+  border-top: 1px solid var(--line);
+  padding: 10px 0 6px;
+}
+.overdue-group:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.overdue-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 2px 6px;
+}
+.overdue-head-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 13px;
+}
+.overdue-flag {
+  font-size: 16px;
+}
+.overdue-dossier-type {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+}
+.overdue-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 10px;
+  padding: 6px 4px;
+  font-size: 12.5px;
+  align-items: center;
+  color: var(--ink);
+}
+.overdue-item:hover {
+  background: var(--line-soft);
+}
+.overdue-sev {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.overdue-sev.high {
+  background: var(--sla-bad);
+}
+.overdue-sev.med {
+  background: var(--sla-risk);
+}
+.overdue-sev.low {
+  background: var(--ink-faint);
+}
+.overdue-days {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--danger);
+}
+.overdue-owner {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  min-width: 60px;
+  text-align: end;
+}
+
+/* ----- My tasks (handoff lines 341–350) ----- */
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+}
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 13px;
+}
+.task-row:last-child {
+  border-bottom: 0;
+}
+.task-box {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--ink-faint);
+  border-radius: 3px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.task-box:hover {
+  border-color: var(--accent);
+}
+.task-box.done {
+  background: var(--ok);
+  border-color: var(--ok);
+}
+.task-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task-flag {
+  font-size: 14px;
+}
+.task-due {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--ink-mute);
+  min-width: 60px;
+  text-align: end;
+}
+.task-due.today,
+.task-due.high {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* ----- Digest (handoff lines 353–358) ----- */
+
+.digest-item {
+  padding: 10px 2px;
+  border-bottom: 1px solid var(--line-soft);
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 12px;
+}
+.digest-item:last-child {
+  border-bottom: 0;
+}
+.digest-tag {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  padding-top: 2px;
+}
+.digest-head {
+  font-weight: 500;
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
+  line-height: 1.35;
+}
+.digest-source {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 3px;
+}
+
+/* ----- Recent dossiers (handoff lines 361–367) ----- */
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+}
+.recent-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 10px;
+  padding: 9px 4px;
+  align-items: center;
+  border-bottom: 1px solid var(--line-soft);
+}
+.recent-row:last-child {
+  border-bottom: 0;
+}
+.recent-flag {
+  font-size: 18px;
+}
+.recent-name {
+  font-weight: 500;
+  font-size: 13px;
+  margin-bottom: 1px;
+}
+.recent-change {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+}
+.recent-when {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--ink-faint);
+  text-align: end;
+}
+
+/* ----- VIP visits (handoff lines 370–381) ----- */
+
+.vip-list {
+  display: flex;
+  flex-direction: column;
+}
+.vip-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  padding: 10px 2px;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: center;
+}
+.vip-row:last-child {
+  border-bottom: 0;
+}
+.vip-countdown {
+  font-family: var(--font-mono);
+  text-align: center;
+  min-width: 42px;
+}
+.vip-countdown-n {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--accent-ink);
+}
+.vip-countdown-l {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  margin-top: 2px;
+  font-weight: 600;
+}
+.vip-name {
+  font-weight: 500;
+  font-size: 13px;
+}
+.vip-role {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+}
+.vip-when {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--ink-mute);
+  text-align: end;
+}
+.vip-flag {
+  font-size: 16px;
+}
+
+/* ----- SLA health (handoff lines 384–388) ----- */
+
+.sla-donut {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.sla-numbers {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sla-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+.sla-row .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+.sla-row.ok .dot {
+  background: var(--sla-ok);
+}
+.sla-row.risk .dot {
+  background: var(--sla-risk);
+}
+.sla-row.bad .dot {
+  background: var(--sla-bad);
+}
+.sla-count {
+  margin-inline-start: auto;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* ----- Forums strip (handoff lines 435–442) ----- */
+
+.forums-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.forum-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 14px;
+  padding: 14px;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: center;
+}
+.forum-row:last-child {
+  border-bottom: 0;
+}
+.forum-short {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.forum-name {
+  font-weight: 500;
+  font-size: 14px;
+}
+.forum-when {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-mute);
+}
+
+/* ----- Empty hints (handoff) ----- */
+
+.empty-hint {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ink-mute);
+  font-size: 13px;
+}
+.empty-hint .sub {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}

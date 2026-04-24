@@ -1,4 +1,65 @@
 {
+  "kpi": {
+    "activeEngagements": "Active Engagements",
+    "openCommitments": "Open Commitments",
+    "slaAtRisk": "SLA at Risk",
+    "weekAhead": "Week Ahead",
+    "activeMeta": "",
+    "openMeta": "",
+    "slaMeta": "",
+    "weekAheadMeta": "",
+    "strip": "Key metrics"
+  },
+  "weekAhead": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "this_week": "This Week",
+    "next_week": "Next Week",
+    "title": "Week Ahead",
+    "empty": "No upcoming events"
+  },
+  "overdue": {
+    "title": "Overdue Commitments",
+    "empty": "No overdue commitments",
+    "expand": "Show more",
+    "collapse": "Show less"
+  },
+  "digest": {
+    "title": "Intelligence Digest",
+    "refresh": "Refresh",
+    "empty": "No digest items"
+  },
+  "sla": {
+    "title": "SLA Health",
+    "legend_ok": "On track",
+    "legend_risk": "At risk",
+    "legend_bad": "Breached"
+  },
+  "vip": {
+    "title": "VIP Visits",
+    "empty": "No upcoming visits"
+  },
+  "myTasks": {
+    "title": "My Tasks",
+    "empty": "No tasks assigned",
+    "due": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "overdue": "Overdue"
+    }
+  },
+  "recent": {
+    "title": "Recent Dossiers",
+    "empty": "No recent dossiers"
+  },
+  "forums": {
+    "title": "Forums",
+    "empty": "No active forums"
+  },
+  "error": {
+    "load_failed": "Couldn't load widget",
+    "retry": "Retry"
+  },
   "title": "Dashboard",
   "customDashboard": "Custom Dashboard",
   "editMode": "Edit Mode",
