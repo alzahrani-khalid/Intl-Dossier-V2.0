@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: Phase 36 closed. AppShell is the sole route mount; 4 legacy layout files deleted; 19 atomic commits across 4 waves; 30/31 Vitest layout+brand green. Phase 37 parallelizable; 38+ unblocked.
+status: executing
 stopped_at: Phase 37 context gathered
-last_updated: "2026-04-24T00:35:13.486Z"
-last_activity: 2026-04-22 — Phase 36 executed end-to-end (4 waves, 5 plans). 28/28 new tests green + 8/8 a11y axe-core combos; ConcurrentDrawers 2/3 (1 pre-existing RED, non-blocker). check-deleted-components.sh exits 0. VERIFICATION.md committed (`f64045da`).
+last_updated: "2026-04-24T10:23:51.241Z"
+last_activity: 2026-04-24 -- Phase 37 execution started
 progress:
   total_phases: 11
   completed_phases: 3
-  total_plans: 27
+  total_plans: 36
   completed_plans: 26
-  percent: 96
+  percent: 72
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Milestone v6.0 — Phase 36 complete, Phase 37 (signature-visuals) and/or Phase 38 (dashboard-verbatim) available next
+**Current focus:** Phase 37 — signature-visuals
 
 ## Current Position
 
-Phase: Phase 36 (shell-chrome) — **ALL 5 PLANS PASS · VERIFICATION PASS** (4th fully verified phase in v6.0, following 33-09, 34, 35)
-Plan: 36-01..36-05 complete. SHELL-01 (Sidebar), SHELL-02 (Topbar), SHELL-03 (ClassificationBar), SHELL-04 (AppShell composition + responsive drawer), SHELL-05 (GastatLogo + shell.\* i18n) all verified.
-Status: Phase 36 closed. AppShell is the sole route mount; 4 legacy layout files deleted; 19 atomic commits across 4 waves; 30/31 Vitest layout+brand green. Phase 37 parallelizable; 38+ unblocked.
-Last activity: 2026-04-22 — Phase 36 executed end-to-end (4 waves, 5 plans). 28/28 new tests green + 8/8 a11y axe-core combos; ConcurrentDrawers 2/3 (1 pre-existing RED, non-blocker). check-deleted-components.sh exits 0. VERIFICATION.md committed (`f64045da`).
+Phase: 37 (signature-visuals) — EXECUTING
+Plan: 1 of 9
+Status: Executing Phase 37
+Last activity: 2026-04-24 -- Phase 37 execution started
 
 Progress: [█████████▌] 96%
 
@@ -251,4 +251,4 @@ Resume command: /gsd-discuss-phase 37 (or /gsd-discuss-phase 38)
 - Phase 38 depends on 33, 37 (does not strictly require 36 but runs after for consistent chrome)
 - Phase 43 is the final QA gate — depends on 33–42
 
-**Planned Phase:** 36 (shell-chrome) — 5 plans — 2026-04-22T09:38:23.035Z
+**Planned Phase:** 37 (signature-visuals) — 9 plans — 2026-04-24T01:19:01.113Z
