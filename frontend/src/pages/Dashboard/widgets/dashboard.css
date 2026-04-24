@@ -668,3 +668,16 @@
   background: color-mix(in srgb, var(--ink) 8%, var(--surface-raised));
   letter-spacing: 0.04em;
 }
+
+/* ----- Plan 38-04: Digest refresh overlay (append-only) ----- */
+
+.digest-overlay {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--surface-raised) 70%, transparent);
+  backdrop-filter: blur(1px);
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  border-radius: inherit;
+}

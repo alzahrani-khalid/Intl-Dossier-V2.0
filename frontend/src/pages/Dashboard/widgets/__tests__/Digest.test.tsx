@@ -16,6 +16,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import type { ReactElement } from 'react'
 
+vi.mock('react-i18next', () => ({
+  useTranslation: (): { t: (k: string) => string; i18n: { language: string } } => ({
+    t: (k: string): string => k,
+    i18n: { language: 'en' },
+  }),
+}))
+
 vi.mock('@/hooks/useActivityFeed', () => ({
   useActivityFeed: vi.fn(),
 }))
@@ -101,8 +108,7 @@ describe('Digest widget', () => {
   it('shows empty state when no activities', () => {
     vi.mocked(useActivityFeed).mockReturnValue(mockReturn({ activities: [] }) as never)
     render(<Digest />)
-    // digest.empty key: "No digest items"
-    expect(screen.getByText('No digest items')).toBeDefined()
+    expect(screen.getByText('digest.empty')).toBeDefined()
   })
 
   it('renders widget skeleton while loading', () => {
@@ -118,7 +124,7 @@ describe('Digest widget', () => {
       mockReturn({ activities: [], error: new Error('boom') }) as never,
     )
     render(<Digest />)
-    expect(screen.getByText("Couldn't load widget")).toBeDefined()
+    expect(screen.getByText('error.load_failed')).toBeDefined()
   })
 
   it('refresh click shows GlobeSpinner overlay and button spin class', async () => {
