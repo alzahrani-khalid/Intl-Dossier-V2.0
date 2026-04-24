@@ -26,6 +26,8 @@ export { Donut } from './Donut'
 export type { DonutProps } from './Donut'
 export { FullscreenLoader } from './FullscreenLoader'
 export type { FullscreenLoaderProps } from './FullscreenLoader'
+export { DossierGlyph } from './DossierGlyph'
+export type { DossierGlyphProps } from './DossierGlyph'
 export {
   showGlobeLoader,
   subscribe as subscribeGlobeLoader,
