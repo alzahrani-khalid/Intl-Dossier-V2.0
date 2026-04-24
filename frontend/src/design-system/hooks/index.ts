@@ -12,6 +12,7 @@ export { useDensity } from './useDensity'
 export { useDesignTokens } from './useDesignTokens'
 export { useClassification } from './useClassification'
 export { useLocale } from './useLocale'
+export { useReducedMotion } from './useReducedMotion'
 
 export type { UseModeResult } from './useMode'
 export type { UseClassificationResult } from './useClassification'
