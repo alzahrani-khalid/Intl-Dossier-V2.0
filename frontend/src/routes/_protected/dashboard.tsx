@@ -32,9 +32,13 @@ const FIRST_RUN_DISMISSED_KEY = 'intl-dossier:first-run-dismissed'
 const ONBOARDING_SEEN_KEY = 'intl-dossier-onboarding-seen'
 const TOUR_POLL_INTERVAL_MS = 500
 
-const OperationsHub = lazy(() =>
-  import('@/pages/Dashboard/OperationsHub').then((m) => ({
-    default: m.OperationsHub,
+// Phase 38 (38-00): Route now mounts the new Dashboard composer (verbatim port from
+// inteldossier handoff) instead of OperationsHub. Plan 38-09 (Wave 2) will delete
+// OperationsHub.tsx and the operations-hub domain after all 8 widgets are wired.
+// TODO: 38-09 will delete OperationsHub
+const Dashboard = lazy(() =>
+  import('@/pages/Dashboard').then((m) => ({
+    default: m.Dashboard,
   })),
 )
 
@@ -102,7 +106,7 @@ function OperationsHubRoute(): React.ReactElement {
           </div>
         }
       >
-        <OperationsHub />
+        <Dashboard />
       </Suspense>
 
       <FirstRunModal
