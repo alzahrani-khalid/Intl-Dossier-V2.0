@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: executing
-stopped_at: Phase 37 context gathered
-last_updated: "2026-04-24T10:23:51.241Z"
-last_activity: 2026-04-24 -- Phase 37 execution started
+status: idle
+stopped_at: Phase 37 closed — PASS-WITH-DEVIATION
+last_updated: "2026-04-24T21:40:00.000Z"
+last_activity: 2026-04-24 — Phase 37 (signature-visuals) closed. 9/9 plans shipped across 3 waves; 94/94 vitest green (1.79s); 24 flags + 6 primitives + useReducedMotion; AppShell Suspense wrap wires FullscreenLoader. Verifier PASS-WITH-DEVIATION (5/5 VIZ reqs, 0 new findings). 5 deferred rows need Phase 38 route wiring.
 progress:
   total_phases: 11
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 36
-  completed_plans: 26
-  percent: 72
+  completed_plans: 35
+  percent: 97
 ---
 
 # Project State
@@ -21,16 +21,29 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 37 — signature-visuals
+**Current focus:** Milestone v6.0 — Phase 37 closed. Phase 38 (dashboard-verbatim) next; also unblocked in parallel: 39 (kanban-calendar), 40 (list-pages), 41 (dossier-drawer), 42 (remaining-pages).
 
 ## Current Position
 
-Phase: 37 (signature-visuals) — EXECUTING
-Plan: 1 of 9
-Status: Executing Phase 37
-Last activity: 2026-04-24 -- Phase 37 execution started
+Phase: 37 (signature-visuals) — **COMPLETE (PASS-WITH-DEVIATION)**
+Plans: 9 of 9 complete
+Status: idle — ready for next phase
+Last activity: 2026-04-24 — Phase 37 closed
 
-Progress: [█████████▌] 96%
+Progress: [█████████▉] 97% (35 / 36 plans)
+
+### Phase 37 summary
+
+| Wave | Plans | Status | Notes |
+| ---- | ----- | ------ | ----- |
+| 0 | 37-00 | PASS | Infra: d3-geo/topojson-client/world-atlas pinned; signature-visuals folder scaffold; .size-limit.json with signature-visuals budgets |
+| 1 | 37-01, 37-02 | PASS | useReducedMotion hook (5 tests); GlobeLoader with d3-geo orthographic + rAF + reduced-motion gate + graceful degradation (9 tests) |
+| 2 | 37-03, 37-04, 37-05, 37-06, 37-07 | PASS | FullscreenLoader+signal (9 tests); GlobeSpinner (10 tests); DossierGlyph + 24 flags (38 tests); Sparkline RTL (12 tests); Donut dasharray (11 tests) |
+| 3 | 37-08 | PASS-WITH-DEVIATION | AppShell Suspense wrap (D-03); 4 Playwright specs discovered but deferred to Phase 38 harness; size-limit signature-visuals budgets can't measure until Phase 38 wires primitives into routes |
+
+**Totals:** 94/94 vitest green (19 signature-visuals + 1 hook = 20 files, 1.79s); 0 new TS errors on Phase 37 surface; 0 hardcoded hex in components (flags excluded — sovereign colors legitimate); 24 flag TSX files; AppShell at line 220 has `<Suspense fallback={<FullscreenLoader open />}>`.
+
+**Verdict:** PASS-WITH-DEVIATION — 5/5 VIZ requirements delivered; 5 known deviations documented across 37-VALIDATION.md and VERIFICATION.md; 0 new findings from gsd-verifier. Handoff to Phase 38 unblocked.
 
 ### Wave-level status for Phase 33
 
