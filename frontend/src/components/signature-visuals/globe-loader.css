@@ -49,3 +49,10 @@
     animation: none !important;
   }
 }
+
+/* D-08 fallback: browsers without backdrop-filter get a solid-ish layer (95% bg). */
+@supports not (backdrop-filter: blur(3px)) {
+  [data-testid="fullscreen-loader-backdrop"] {
+    background: color-mix(in srgb, var(--bg) 95%, transparent) !important;
+  }
+}
