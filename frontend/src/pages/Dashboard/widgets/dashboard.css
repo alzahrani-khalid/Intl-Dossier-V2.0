@@ -637,3 +637,29 @@
   color: var(--ink-faint);
   margin-top: 4px;
 }
+
+/* ----- Plan 38-08: RecentDossiers + ForumsStrip (append-only) ----- */
+
+.recent-row {
+  transition: background-color 120ms ease;
+}
+
+.forums-row {
+  width: 100%;
+}
+
+.forum-card {
+  min-width: 0;
+}
+
+.forum-monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding-inline: 6px;
+  border-radius: var(--radius-sm, 6px);
+  background: color-mix(in srgb, var(--ink) 8%, var(--surface-raised));
+  letter-spacing: 0.04em;
+}
