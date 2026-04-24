@@ -54,7 +54,12 @@
   },
   "forums": {
     "title": "Forums",
-    "empty": "No active forums"
+    "empty": "No active forums",
+    "status": {
+      "active": "Active",
+      "scheduled": "Scheduled",
+      "archived": "Archived"
+    }
   },
   "error": {
     "load_failed": "Couldn't load widget",
