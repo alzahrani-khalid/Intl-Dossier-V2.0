@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: idle
-stopped_at: Phase 37 closed — PASS-WITH-DEVIATION
-last_updated: "2026-04-24T21:40:00.000Z"
-last_activity: 2026-04-24 — Phase 37 (signature-visuals) closed. 9/9 plans shipped across 3 waves; 94/94 vitest green (1.79s); 24 flags + 6 primitives + useReducedMotion; AppShell Suspense wrap wires FullscreenLoader. Verifier PASS-WITH-DEVIATION (5/5 VIZ reqs, 0 new findings). 5 deferred rows need Phase 38 route wiring.
+status: idle — ready for next phase
+stopped_at: Phase 38 closed
+last_updated: '2026-04-25T02:25:00.000Z'
+last_activity: 2026-04-25 — Phase 38 closed
 progress:
   total_phases: 11
-  completed_phases: 4
-  total_plans: 36
-  completed_plans: 35
-  percent: 97
+  completed_phases: 5
+  total_plans: 46
+  completed_plans: 45
+  percent: 98
 ---
 
 # Project State
@@ -21,25 +21,40 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Milestone v6.0 — Phase 37 closed. Phase 38 (dashboard-verbatim) next; also unblocked in parallel: 39 (kanban-calendar), 40 (list-pages), 41 (dossier-drawer), 42 (remaining-pages).
+**Current focus:** Milestone v6.0 — Phase 38 (dashboard-verbatim) closed. Next unblocked in parallel: 39 (kanban-calendar), 40 (list-pages), 41 (dossier-drawer), 42 (remaining-pages).
 
 ## Current Position
 
-Phase: 37 (signature-visuals) — **COMPLETE (PASS-WITH-DEVIATION)**
-Plans: 9 of 9 complete
+Phase: 38 (dashboard-verbatim) — **COMPLETE (PASS-WITH-DEVIATION)**
+Plans: 10 of 10 complete
 Status: idle — ready for next phase
-Last activity: 2026-04-24 — Phase 37 closed
+Last activity: 2026-04-25 — Phase 38 closed
 
-Progress: [█████████▉] 97% (35 / 36 plans)
+Progress: [█████████▉] 98% (45 / 46 plans)
+
+### Phase 38 summary
+
+| Wave | Plans                                    | Status              | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ---- | ---------------------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | 38-00                                    | PASS                | Route rewrite to @/pages/Dashboard; 8 widget stubs + 4 primitives barrel; useWeekAhead + usePersonalCommitments adapters (9/9 hook tests); handoff app.css ported verbatim with 59 token usages + 0 hex; 10 i18n namespaces (EN+AR); Playwright skeleton spec                                                                                                                                                                                                                                                                                                                                                                                                          |
+| 1    | 38-01, 38-02, 38-03, 38-05, 38-07, 38-08 | PASS-WITH-DEVIATION | 6 autonomous widgets in parallel worktrees: KpiStrip (5/5), WeekAhead (7/7), OverdueCommitments (8/8), SlaHealth (6/6), MyTasks (4/4), RecentDossiers+ForumsStrip (10/10). Multiple Rule-3 API adaptations (Donut `value+variants[3]` not `segments[]`; `useUpdateTask` not `useUpdateTaskStatus`; `upcoming_week` not `upcoming_this_week`; `useForums` returns `{data,pagination}` not `{forums}`; `DossierGlyph` `iso`/`type`+`name` not `flag`). Commit-attribution races across parallel agents, code correct                                                                                                                                                     |
+| 1    | 38-04, 38-06                             | PASS (checkpoint)   | Checkpoint plans — user chose Option A for Digest (`useActivityFeed` with source=actor_name compromise → DIGEST-SOURCE-COMPROMISE deferred) and Option B for VipVisits (new `useVipVisits` hook composed from `useUpcomingEvents` filter, no new tables → VIP-PERSON-ISO-JOIN deferred for personFlag). Tests: Digest 6/6, VipVisits 17/17 (6 hook + 11 widget)                                                                                                                                                                                                                                                                                                        |
+| 2    | 38-09                                    | PASS-WITH-DEVIATION | E2E suite: `dashboard-visual.spec.ts` (8-snapshot matrix), `dashboard-rtl.spec.ts`, `dashboard-a11y.spec.ts`, `dashboard-responsive.spec.ts`, extended `dashboard.spec.ts`. `no-placeholder-data.test.ts` 3/3 green. Deleted `pages/Dashboard/OperationsHub.tsx` (221 LOC); kept `domains/operations-hub/hooks/useUpcomingEvents` (still depended on by useWeekAhead + useVipVisits). Visual baselines BLOCKED-STRATEGY — no dev server/.env.test in worktree, operator one-shot documented in deferred-items.md. `dashboard.project-management.tsx` + `pages/Dashboard/components/` 12-file dead subtree kept (DASH-COMPONENTS-DEAD deferred for later surgical pass) |
+
+**Totals:** 75/75 vitest green (13 files, 2.66s — 63 widget unit tests + 9 hook tests + 3 grep-gate tests); 0 new TS errors on Phase 38 surface; 0 hardcoded hex in widgets (verified); 0 forbidden RTL classes in widgets (ms/me/ps/pe only); 5 Playwright specs discovered (not executed — no dev server in environment); OperationsHub page deleted (-225 LOC).
+
+**Verdict:** PASS-WITH-DEVIATION — 9/9 DASH requirements VERIFIED (DASH-01..09); 6 documented deviations carried forward with migration paths (DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED, DASH-VISUAL-REVIEW, DASH-COMPONENTS-DEAD); 0 open gaps. Handoff to Phase 39+ unblocked.
+
+### Phase 37 summary (prior)
 
 ### Phase 37 summary
 
-| Wave | Plans | Status | Notes |
-| ---- | ----- | ------ | ----- |
-| 0 | 37-00 | PASS | Infra: d3-geo/topojson-client/world-atlas pinned; signature-visuals folder scaffold; .size-limit.json with signature-visuals budgets |
-| 1 | 37-01, 37-02 | PASS | useReducedMotion hook (5 tests); GlobeLoader with d3-geo orthographic + rAF + reduced-motion gate + graceful degradation (9 tests) |
-| 2 | 37-03, 37-04, 37-05, 37-06, 37-07 | PASS | FullscreenLoader+signal (9 tests); GlobeSpinner (10 tests); DossierGlyph + 24 flags (38 tests); Sparkline RTL (12 tests); Donut dasharray (11 tests) |
-| 3 | 37-08 | PASS-WITH-DEVIATION | AppShell Suspense wrap (D-03); 4 Playwright specs discovered but deferred to Phase 38 harness; size-limit signature-visuals budgets can't measure until Phase 38 wires primitives into routes |
+| Wave | Plans                             | Status              | Notes                                                                                                                                                                                         |
+| ---- | --------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | 37-00                             | PASS                | Infra: d3-geo/topojson-client/world-atlas pinned; signature-visuals folder scaffold; .size-limit.json with signature-visuals budgets                                                          |
+| 1    | 37-01, 37-02                      | PASS                | useReducedMotion hook (5 tests); GlobeLoader with d3-geo orthographic + rAF + reduced-motion gate + graceful degradation (9 tests)                                                            |
+| 2    | 37-03, 37-04, 37-05, 37-06, 37-07 | PASS                | FullscreenLoader+signal (9 tests); GlobeSpinner (10 tests); DossierGlyph + 24 flags (38 tests); Sparkline RTL (12 tests); Donut dasharray (11 tests)                                          |
+| 3    | 37-08                             | PASS-WITH-DEVIATION | AppShell Suspense wrap (D-03); 4 Playwright specs discovered but deferred to Phase 38 harness; size-limit signature-visuals budgets can't measure until Phase 38 wires primitives into routes |
 
 **Totals:** 94/94 vitest green (19 signature-visuals + 1 hook = 20 files, 1.79s); 0 new TS errors on Phase 37 surface; 0 hardcoded hex in components (flags excluded — sovereign colors legitimate); 24 flag TSX files; AppShell at line 220 has `<Suspense fallback={<FullscreenLoader open />}>`.
 
@@ -264,4 +279,4 @@ Resume command: /gsd-discuss-phase 37 (or /gsd-discuss-phase 38)
 - Phase 38 depends on 33, 37 (does not strictly require 36 but runs after for consistent chrome)
 - Phase 43 is the final QA gate — depends on 33–42
 
-**Planned Phase:** 37 (signature-visuals) — 9 plans — 2026-04-24T01:19:01.113Z
+**Planned Phase:** 38 (dashboard-verbatim) — 10 plans — 2026-04-24T21:48:52.231Z

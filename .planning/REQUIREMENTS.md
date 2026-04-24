@@ -56,15 +56,15 @@ Requirements for this milestone. Every requirement maps to exactly one roadmap p
 
 ### Dashboard (DASH) — pixel-exact to `reference/dashboard.png`
 
-- [ ] **DASH-01**: User sees a `KpiStrip` of 4 cards (active engagements / open commitments / SLA at risk / week ahead), each with value + delta + meta; the third card has an accent top-bar
-- [ ] **DASH-02**: User sees a `WeekAhead` widget grouped by day/date/time with title + glyph + counterpart + location + status chips + brief chip per entry
-- [ ] **DASH-03**: User sees an `OverdueCommitments` widget grouped by dossier with expand toggle, severity dots, mono days-overdue, and owner initials
-- [ ] **DASH-04**: User sees a `Digest` widget with tag + headline + source + animated refresh button (shows `<GlobeSpinner>` overlay during refresh)
-- [ ] **DASH-05**: User sees a `SlaHealth` widget combining a Tajawal-style Donut + legend + 14-day Sparkline
-- [ ] **DASH-06**: User sees a `VipVisits` widget with T−N countdown + name + role + when
-- [ ] **DASH-07**: User sees a `MyTasks` widget with checkbox + glyph + title + due chip per row
-- [ ] **DASH-08**: User sees `RecentDossiers` + `ForumsStrip` (showing 4 of 8 forums with monogram short-code chips)
-- [ ] **DASH-09**: All 8 dashboard widgets wire to existing domain hooks (`useDashboardStats`, `useDashboardTrends`, `useWeekAhead`/equivalent, `usePersonalCommitments`, `useMyTasks`, `useRecentDossiers`, `useForums`, etc.) with no mock or placeholder data
+- [x] **DASH-01**: User sees a `KpiStrip` of 4 cards (active engagements / open commitments / SLA at risk / week ahead), each with value + delta + meta; the third card has an accent top-bar
+- [x] **DASH-02**: User sees a `WeekAhead` widget grouped by day/date/time with title + glyph + counterpart + location + status chips + brief chip per entry
+- [x] **DASH-03**: User sees an `OverdueCommitments` widget grouped by dossier with expand toggle, severity dots, mono days-overdue, and owner initials
+- [x] **DASH-04**: User sees a `Digest` widget with tag + headline + source + animated refresh button (shows `<GlobeSpinner>` overlay during refresh)
+- [x] **DASH-05**: User sees a `SlaHealth` widget combining a Tajawal-style Donut + legend + 14-day Sparkline
+- [x] **DASH-06**: User sees a `VipVisits` widget with T−N countdown + name + role + when
+- [x] **DASH-07**: User sees a `MyTasks` widget with checkbox + glyph + title + due chip per row
+- [x] **DASH-08**: User sees `RecentDossiers` + `ForumsStrip` (showing 4 of 8 forums with monogram short-code chips)
+- [x] **DASH-09**: All 8 dashboard widgets wire to existing domain hooks (`useDashboardStats`, `useDashboardTrends`, `useWeekAhead`/equivalent, `usePersonalCommitments`, `useMyTasks`, `useRecentDossiers`, `useForums`, etc.) with no mock or placeholder data
 
 ### Kanban + Calendar (BOARD)
 
@@ -145,60 +145,60 @@ Explicitly excluded from v6.0; documented to prevent scope creep.
 
 Every v1 requirement is mapped to exactly one roadmap phase.
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| TOKEN-01    | Phase 33 | Pending |
-| TOKEN-02    | Phase 33 | Pending |
-| TOKEN-03    | Phase 33 | Pending |
-| TOKEN-04    | Phase 33 | Pending |
-| TOKEN-05    | Phase 33 | Pending |
-| TOKEN-06    | Phase 33 | Pending |
-| THEME-01    | Phase 34 | Pending |
-| THEME-02    | Phase 34 | Pending |
-| THEME-03    | Phase 34 | Pending |
-| THEME-04    | Phase 34 | Pending |
-| TYPO-01     | Phase 35 | Pending |
-| TYPO-02     | Phase 35 | Pending |
-| TYPO-03     | Phase 35 | Pending |
-| TYPO-04     | Phase 35 | Pending |
-| SHELL-01    | Phase 36 | Pending |
-| SHELL-02    | Phase 36 | Pending |
-| SHELL-03    | Phase 36 | Pending |
-| SHELL-04    | Phase 36 | Pending |
-| SHELL-05    | Phase 36 | Pending |
-| VIZ-01      | Phase 37 | Pending |
-| VIZ-02      | Phase 37 | Pending |
-| VIZ-03      | Phase 37 | Pending |
-| VIZ-04      | Phase 37 | Pending |
-| VIZ-05      | Phase 37 | Pending |
-| DASH-01     | Phase 38 | Pending |
-| DASH-02     | Phase 38 | Pending |
-| DASH-03     | Phase 38 | Pending |
-| DASH-04     | Phase 38 | Pending |
-| DASH-05     | Phase 38 | Pending |
-| DASH-06     | Phase 38 | Pending |
-| DASH-07     | Phase 38 | Pending |
-| DASH-08     | Phase 38 | Pending |
-| DASH-09     | Phase 38 | Pending |
-| BOARD-01    | Phase 39 | Pending |
-| BOARD-02    | Phase 39 | Pending |
-| BOARD-03    | Phase 39 | Pending |
-| LIST-01     | Phase 40 | Pending |
-| LIST-02     | Phase 40 | Pending |
-| LIST-03     | Phase 40 | Pending |
-| LIST-04     | Phase 40 | Pending |
-| DRAWER-01   | Phase 41 | Pending |
-| DRAWER-02   | Phase 41 | Pending |
-| DRAWER-03   | Phase 41 | Pending |
-| PAGE-01     | Phase 42 | Pending |
-| PAGE-02     | Phase 42 | Pending |
-| PAGE-03     | Phase 42 | Pending |
-| PAGE-04     | Phase 42 | Pending |
-| PAGE-05     | Phase 42 | Pending |
-| QA-01       | Phase 43 | Pending |
-| QA-02       | Phase 43 | Pending |
-| QA-03       | Phase 43 | Pending |
-| QA-04       | Phase 43 | Pending |
+| Requirement | Phase    | Status                |
+| ----------- | -------- | --------------------- |
+| TOKEN-01    | Phase 33 | Pending               |
+| TOKEN-02    | Phase 33 | Pending               |
+| TOKEN-03    | Phase 33 | Pending               |
+| TOKEN-04    | Phase 33 | Pending               |
+| TOKEN-05    | Phase 33 | Pending               |
+| TOKEN-06    | Phase 33 | Pending               |
+| THEME-01    | Phase 34 | Pending               |
+| THEME-02    | Phase 34 | Pending               |
+| THEME-03    | Phase 34 | Pending               |
+| THEME-04    | Phase 34 | Pending               |
+| TYPO-01     | Phase 35 | Pending               |
+| TYPO-02     | Phase 35 | Pending               |
+| TYPO-03     | Phase 35 | Pending               |
+| TYPO-04     | Phase 35 | Pending               |
+| SHELL-01    | Phase 36 | Pending               |
+| SHELL-02    | Phase 36 | Pending               |
+| SHELL-03    | Phase 36 | Pending               |
+| SHELL-04    | Phase 36 | Pending               |
+| SHELL-05    | Phase 36 | Pending               |
+| VIZ-01      | Phase 37 | Pending               |
+| VIZ-02      | Phase 37 | Pending               |
+| VIZ-03      | Phase 37 | Pending               |
+| VIZ-04      | Phase 37 | Pending               |
+| VIZ-05      | Phase 37 | Pending               |
+| DASH-01     | Phase 38 | Verified (2026-04-25) |
+| DASH-02     | Phase 38 | Verified (2026-04-25) |
+| DASH-03     | Phase 38 | Verified (2026-04-25) |
+| DASH-04     | Phase 38 | Verified (2026-04-25) |
+| DASH-05     | Phase 38 | Verified (2026-04-25) |
+| DASH-06     | Phase 38 | Verified (2026-04-25) |
+| DASH-07     | Phase 38 | Verified (2026-04-25) |
+| DASH-08     | Phase 38 | Verified (2026-04-25) |
+| DASH-09     | Phase 38 | Verified (2026-04-25) |
+| BOARD-01    | Phase 39 | Pending               |
+| BOARD-02    | Phase 39 | Pending               |
+| BOARD-03    | Phase 39 | Pending               |
+| LIST-01     | Phase 40 | Pending               |
+| LIST-02     | Phase 40 | Pending               |
+| LIST-03     | Phase 40 | Pending               |
+| LIST-04     | Phase 40 | Pending               |
+| DRAWER-01   | Phase 41 | Pending               |
+| DRAWER-02   | Phase 41 | Pending               |
+| DRAWER-03   | Phase 41 | Pending               |
+| PAGE-01     | Phase 42 | Pending               |
+| PAGE-02     | Phase 42 | Pending               |
+| PAGE-03     | Phase 42 | Pending               |
+| PAGE-04     | Phase 42 | Pending               |
+| PAGE-05     | Phase 42 | Pending               |
+| QA-01       | Phase 43 | Pending               |
+| QA-02       | Phase 43 | Pending               |
+| QA-03       | Phase 43 | Pending               |
+| QA-04       | Phase 43 | Pending               |
 
 **Coverage:**
 

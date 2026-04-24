@@ -97,7 +97,7 @@ Summary checklist:
 - [ ] **Phase 35: typography-stack** — Self-hosted font stacks per direction (Fraunces / Space Grotesk / Public Sans / Inter / IBM Plex / JetBrains Mono / Tajawal) with RTL display-font override
 - [ ] **Phase 36: shell-chrome** — 256px sidebar + 56px topbar + direction-specific classification element, GASTAT brand mark, responsive overlay-drawer behavior
 - [ ] **Phase 37: signature-visuals** — GlobeLoader / GlobeSpinner / FullscreenLoader / DossierGlyph (24 flags + symbol fallbacks) / Sparkline / Donut primitives
-- [ ] **Phase 38: dashboard-verbatim** — 8 dashboard widgets rebuilt pixel-exact to `reference/dashboard.png`, all wired to existing domain hooks
+- [x] **Phase 38: dashboard-verbatim** — 8 dashboard widgets rebuilt pixel-exact to `reference/dashboard.png`, all wired to existing domain hooks (completed 2026-04-25, 10/10 plans, 75/75 tests, 9/9 DASH VERIFIED, PASS-WITH-DEVIATION)
 - [ ] **Phase 39: kanban-calendar** — Reskinned horizontal-scroll Kanban (kcards, overdue border, done opacity) + 7×5 calendar grid with event pills
 - [ ] **Phase 40: list-pages** — Countries / Organizations / Persons / Forums / Topics / Working Groups / Engagements lists with shared `GenericListPage` and filter pills
 - [ ] **Phase 41: dossier-drawer** — 720px dossier drawer (mini-KPI strip, serif summary, Upcoming/Activity/Commitments) with RTL flip + mobile full-screen
@@ -203,11 +203,21 @@ Summary checklist:
 3. Buttons, load-more rows, and the digest refresh show an inline `<GlobeSpinner>` (40×40 SVG, 1.4s whirl arc + 2.8s reverse stylized globe) inheriting `currentColor` so it tints to surrounding text
 4. Developer can render `<DossierGlyph>` resolving one of 24 hand-drawn flag SVGs (SA, AE, ID, EG, QA, JO, BH, OM, KW, PK, MA, TR, CN, IT, FR, DE, GB, US, JP, KR, IN, BR, EU, UN) clipped to a circle with a 1px `rgba(0,0,0,0.15)` hairline; non-country types fall back to symbol glyphs (forum ◇, person ●, topic ◆, organization ▲) in soft-tinted circles
 5. Developer can render `<Sparkline data={…}>` (80×22 polyline, min-max normalized, trailing dot at latest point, flipped via `scaleX(-1)` in RTL) and `<Donut value={…} variants={[ok,risk,bad]}>` with stacked `strokeDasharray` segments and center percentage pill
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 9 plans
+   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
+   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
+   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
+   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
+   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
+   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
+   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
+   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
+   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+         **UI hint**: yes
 
-### Phase 38: dashboard-verbatim
+### Phase 38: dashboard-verbatim ✅ COMPLETE (2026-04-25)
 
+**Status**: PASS-WITH-DEVIATION — 10/10 plans landed, 9/9 DASH requirements VERIFIED, 75/75 unit tests green. 6 documented deviations carried forward (see `.planning/phases/38-dashboard-verbatim/38-VERIFICATION.md` + `deferred-items.md`): DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED, DASH-VISUAL-REVIEW, DASH-COMPONENTS-DEAD.
 **Goal**: The `/` dashboard route matches `reference/dashboard.png` pixel-exact across all 4 directions and both modes, with all 8 widgets wired to real domain hooks and no placeholder data.
 **Depends on**: Phase 33 (tokens), Phase 37 (GlobeSpinner / Donut / Sparkline / DossierGlyph)
 **Requirements**: DASH-01, DASH-02, DASH-03, DASH-04, DASH-05, DASH-06, DASH-07, DASH-08, DASH-09
@@ -218,8 +228,17 @@ Summary checklist:
 3. User sees a `Digest` widget with tag + headline + source + animated refresh button (shows `<GlobeSpinner>` overlay during refresh), a `SlaHealth` widget combining Donut + legend + 14-day Sparkline, and a `VipVisits` widget with T−N countdown + name + role + when
 4. User sees `MyTasks` (checkbox + glyph + title + due chip per row), `RecentDossiers`, and `ForumsStrip` (4 of 8 forums with monogram short-code chips), all rendering correctly in RTL with logical padding/margins and mirrored chevrons
 5. All 8 widgets hydrate from existing domain hooks (`useDashboardStats`, `useDashboardTrends`, `useWeekAhead`/equivalent, `usePersonalCommitments`, `useMyTasks`, `useRecentDossiers`, `useForums`, etc.) with zero mock data, and the dashboard lays out correctly at 320 / 768 / 1280 px breakpoints
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 9 plans
+   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
+   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
+   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
+   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
+   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
+   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
+   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
+   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
+   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+         **UI hint**: yes
 
 ### Phase 39: kanban-calendar
 
@@ -232,8 +251,17 @@ Summary checklist:
 2. User sees overdue Kanban cards with `border-inline-start: 3px solid var(--danger)` (flipping edge correctly in RTL) and done cards rendering at `opacity: 0.55`
 3. User sees a 7×5 calendar grid with 1px divider lines on `--line` background, day-of-week header row, day number + stacked event pills per cell (default / `.travel` warn-soft / `.pending` line-soft), and an accent-colored day number on today
 4. Both pages lay out correctly at 320 / 640 / 768 / 1024 / 1280 px with ≥44×44px touch targets on all card controls; calendar cells collapse to a week-list on mobile
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 9 plans
+   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
+   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
+   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
+   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
+   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
+   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
+   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
+   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
+   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+         **UI hint**: yes
 
 ### Phase 40: list-pages
 
@@ -246,8 +274,17 @@ Summary checklist:
 2. User sees Persons as a grid of cards (44px circular initial avatar + name + glyph + VIP chip + role + org) and Forums / Topics / Working Groups as list rows (name + meta + status chip) rendered from a shared `GenericListPage`
 3. User sees Engagements with a search input + filter pills (All / Confirmed / Travel / Pending), week-list rendering, and a load-more row showing `<GlobeSpinner>` + "Loading more engagements…" in both locales
 4. All 7 list pages lay out correctly at 320 / 768 / 1280 px with card-view fallbacks on mobile and ≥44×44px touch targets on every row/chevron; chips and meta text flow right-to-left in RTL with logical properties only
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 9 plans
+   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
+   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
+   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
+   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
+   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
+   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
+   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
+   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
+   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+         **UI hint**: yes
 
 ### Phase 41: dossier-drawer
 
@@ -259,8 +296,17 @@ Summary checklist:
 1. User can open a 720px dossier drawer that slides in from the inline-end edge with a backdrop and `-24px 0 60px rgba(0,0,0,.25)` shadow
 2. Drawer shows sticky head (DOSSIER + CONFIDENTIAL chips, display-font title, meta strip, CTA row with Log Engagement / Brief / Follow), mini-KPI strip (engagements / commitments / overdue / documents), italic-serif summary paragraph, Upcoming list, Recent Activity, and Open Commitments
 3. In RTL the drawer slides from the inline-start edge with the shadow offset flipped accordingly; at ≤640px it renders full-screen with focus trap and ESC dismissal working in both locales
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 9 plans
+   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
+   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
+   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
+   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
+   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
+   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
+   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
+   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
+   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+         **UI hint**: yes
 
 ### Phase 42: remaining-pages
 
@@ -274,8 +320,17 @@ Summary checklist:
 3. User sees the Activity page as a timeline rendering `time · icon · "who action what in where"` with `where` in accent-ink
 4. User sees the Settings page as a two-column layout (240px vertical nav with active accent bar + content card with edit-row list); at ≤768px the nav collapses above the card and the accent bar flips to an accent underline
 5. All 5 pages render correctly in both locales with logical properties only and ≥44×44px touch targets on every interactive row
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 9 plans
+   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
+   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
+   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
+   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
+   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
+   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
+   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
+   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
+   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+         **UI hint**: yes
 
 ### Phase 43: rtl-a11y-responsive-sweep
 
@@ -288,7 +343,16 @@ Summary checklist:
 2. Automated axe-core run against every v6.0 route in both EN/LTR and AR/RTL reports zero WCAG AA violations; keyboard-only navigation reaches every interactive target with preserved focus outlines under all 4 directions × both modes
 3. Visual regression or manual responsive snapshots confirm correct layout at 320 / 640 / 768 / 1024 / 1280 / 1536 px with ≥44×44px touch targets on every interactive element
 4. Directional icons (`arrow-right`, `arrow-up-right`, `chevron-right`, `chevron-left`, `.icon-flip`) flip via `scaleX(-1)` in RTL; sparkline polylines also flip; `docs/rtl-icons.md` exists and enumerates every mirrored icon in the v6.0 set
-   **Plans**: TBD
+   **Plans**: 9 plans
+   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
+   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
+   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
+   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
+   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
+   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
+   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
+   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
+   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
 
 ## Progress
 
