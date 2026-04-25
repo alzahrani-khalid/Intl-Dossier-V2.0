@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useCalendarEvents, type CalendarEvent } from '@/hooks/useCalendarEvents'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Select,
   SelectContent,
@@ -124,9 +125,24 @@ export function UnifiedCalendar({
 
   if (isLoading) {
     return (
-      <Card className="p-8 text-center">
-        <p className="text-muted-foreground">{t('common.loading')}</p>
-      </Card>
+      <div className="cal-skeleton" aria-busy="true" aria-live="polite">
+        {isMobile ? (
+          <div className="week-list-mobile">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <Skeleton key={i} className="cal-row-skeleton" />
+            ))}
+          </div>
+        ) : (
+          <div className="cal-grid">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <Skeleton key={`dow-${i}`} className="cal-dow-skeleton" />
+            ))}
+            {Array.from({ length: 35 }).map((_, i) => (
+              <Skeleton key={`cell-${i}`} className="cal-cell-skeleton" />
+            ))}
+          </div>
+        )}
+      </div>
     )
   }
 

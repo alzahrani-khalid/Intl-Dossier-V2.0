@@ -162,3 +162,34 @@
     display: none;
   }
 }
+
+/* Phase 39 Plan 39-08 — shape-matching loading skeletons (SP-3).
+   Layout-stable: every Skeleton has explicit dimensions via class. */
+
+.cal-skeleton {
+  padding: 8px;
+}
+
+.cal-dow-skeleton {
+  height: 28px;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.cal-cell-skeleton {
+  height: 80px;
+  min-height: 80px;
+  width: 100%;
+  border-radius: 0;
+}
+
+.cal-row-skeleton {
+  height: 56px;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+/* Defense-in-depth: when the skeleton .cal-grid is rendered on mobile (≤640px),
+   the global @media rule above hides .cal-grid. The .cal-skeleton wrapper carries
+   the isMobile branch already, so no extra rule is required. */
