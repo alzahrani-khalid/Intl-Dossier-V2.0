@@ -13,7 +13,7 @@
 // has no `flag` field — only `id` / `type` / `name_en` / `name_ar`. We therefore omit the
 // DossierGlyph render (no flag to pass) and rely on the textual title alone, matching what the
 // 39-05 grid already exercises.
-import { type ReactElement, useEffect } from 'react'
+import { type CSSProperties, type ReactElement, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { CalendarEvent } from '@/hooks/useCalendarEvents'
 
@@ -37,7 +37,10 @@ export function CalendarEventPill({ event, onEventClick }: CalendarEventPillProp
     }
   }, [])
 
-  const title = lang === 'ar' && event.title_ar ? event.title_ar : (event.title_en ?? event.title_ar ?? event.id)
+  const title =
+    lang === 'ar' && event.title_ar
+      ? event.title_ar
+      : (event.title_en ?? event.title_ar ?? event.id)
 
   return (
     <button
@@ -45,7 +48,7 @@ export function CalendarEventPill({ event, onEventClick }: CalendarEventPillProp
       className="cal-ev"
       onClick={(): void => onEventClick?.(event)}
       aria-label={title}
-      style={lang === 'ar' ? { writingDirection: 'rtl' } : undefined}
+      style={lang === 'ar' ? ({ writingDirection: 'rtl' } as CSSProperties) : undefined}
     >
       <span>{title}</span>
     </button>
