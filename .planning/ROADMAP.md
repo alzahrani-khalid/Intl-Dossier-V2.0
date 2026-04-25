@@ -203,17 +203,20 @@ Summary checklist:
 3. Buttons, load-more rows, and the digest refresh show an inline `<GlobeSpinner>` (40×40 SVG, 1.4s whirl arc + 2.8s reverse stylized globe) inheriting `currentColor` so it tints to surrounding text
 4. Developer can render `<DossierGlyph>` resolving one of 24 hand-drawn flag SVGs (SA, AE, ID, EG, QA, JO, BH, OM, KW, PK, MA, TR, CN, IT, FR, DE, GB, US, JP, KR, IN, BR, EU, UN) clipped to a circle with a 1px `rgba(0,0,0,0.15)` hairline; non-country types fall back to symbol glyphs (forum ◇, person ●, topic ◆, organization ▲) in soft-tinted circles
 5. Developer can render `<Sparkline data={…}>` (80×22 polyline, min-max normalized, trailing dot at latest point, flipped via `scaleX(-1)` in RTL) and `<Donut value={…} variants={[ok,risk,bad]}>` with stacked `strokeDasharray` segments and center percentage pill
-   **Plans**: 9 plans
-   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
-   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
-   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
-   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
-   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
-   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
-   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
-   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
-   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
-         **UI hint**: yes
+   **Plans**: 11 plans
+
+- [ ] 40-01-PLAN.md — Wave 0 locales: 16 i18n namespace JSON files (8 namespaces × EN+AR) — list-pages + countries + organizations + persons + forums + topics + working-groups + engagements (LIST-01..04)
+- [ ] 40-02-PLAN.md — Wave 0 primitives + hooks + handoff CSS port: ListPageShell + GenericListPage + DossierTable + PersonsGrid + EngagementsList + FilterPill + ToolbarSearch + 4 skeletons + sensitivity helper + barrel + useCountries + useOrganizations + useEngagementsInfinite + list-pages.css (.icon-flip / .spinner-row / .pill / .tbl / .week-list / .forum-row / .chip\*) + size-limit 800→815 KB + 8 vitest fixtures
+- [ ] 40-03-PLAN.md — Wave 1 Countries page: replace `/dossiers/countries/index.tsx` body → ListPageShell + DossierTable + useCountries + render+empty vitest (LIST-01)
+- [ ] 40-04-PLAN.md — Wave 1 Organizations page: replace `/dossiers/organizations/index.tsx` body → ListPageShell + DossierTable + useOrganizations + render+empty vitest (LIST-01)
+- [ ] 40-05-PLAN.md — Wave 1 Persons page: replace `pages/Persons/PersonsListPage.tsx` body → ListPageShell + PersonsGrid + usePersons (44px avatar + VIP chip conditional) + render+empty vitest (LIST-02)
+- [ ] 40-06-PLAN.md — Wave 1 Forums page: replace `/dossiers/forums/index.tsx` body → ListPageShell + GenericListPage + useForums + status tone map + vitest (LIST-03)
+- [ ] 40-07-PLAN.md — Wave 1 Topics page: replace `/dossiers/topics/index.tsx` body → ListPageShell + GenericListPage + useTopics + status tone map + vitest (LIST-03)
+- [ ] 40-08-PLAN.md — Wave 1 Working Groups page: replace `/dossiers/working_groups/index.tsx` body → ListPageShell + GenericListPage + useWorkingGroups + getDossierRouteSegment for hyphenated href + vitest (LIST-03)
+- [ ] 40-09-PLAN.md — Wave 1 Engagements page: replace `pages/Engagements/EngagementsListPage.tsx` body → ListPageShell + EngagementsList primitive + click navigation `/engagements/$engagementId/overview` + filter/load-more/RTL vitest (LIST-04)
+- [ ] 40-10-PLAN.md — Wave 2 gates: 6 Playwright specs (render @ 320/768/1280 × 7 routes + RTL chevron scaleX(-1) + engagements filter pills/load-more/click navigation + 14 a11y axe-core + 14 visual baselines @1280 + touch-target ≥44×44) + ESLint logical-properties enforcement on Phase 40 file scope + size-limit 815 KB gate
+- [ ] 40-11-PLAN.md — Wave 2 human checkpoint: PNG-parity comparison (countries/organizations/forums/engagements + dashboard.png card aesthetic for persons + Topics/WG parity to forums.png) + AR sanity (chevron flip / Tajawal / RTL flow) + commit 14 visual baselines + write VERIFICATION.md (LIST-01..04 verdict + deviations)
+      **UI hint**: yes
 
 ### Phase 38: dashboard-verbatim ✅ COMPLETE (2026-04-25)
 
