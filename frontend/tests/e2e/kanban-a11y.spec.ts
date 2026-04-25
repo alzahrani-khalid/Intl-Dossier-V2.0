@@ -1,7 +1,20 @@
-import { test } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
 
-test.describe.skip('Phase 39: Kanban axe LTR + RTL', () => {
-  test.skip('placeholder — assertions added by Wave 1 + Wave 2 plans', async () => {
-    // Plan 39-09 activates this — see .planning/phases/39-kanban-calendar/39-09-PLAN.md
-  })
+test.describe('Phase 39: Kanban axe a11y', () => {
+  for (const lang of ['en', 'ar'] as const) {
+    test(`zero serious/critical violations in ${lang}`, async ({ page }): Promise<void> => {
+      await page.addInitScript((l: string): void => {
+        localStorage.setItem('i18nextLng', l)
+      }, lang)
+      await page.goto('/kanban')
+      await page.waitForLoadState('networkidle')
+
+      const results = await new AxeBuilder({ page }).analyze()
+      const seriousOrCritical = results.violations.filter(
+        (v) => v.impact === 'serious' || v.impact === 'critical',
+      )
+      expect(seriousOrCritical).toEqual([])
+    })
+  }
 })

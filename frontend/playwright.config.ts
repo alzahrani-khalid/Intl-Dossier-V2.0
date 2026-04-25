@@ -15,7 +15,12 @@
 
 import { defineConfig, devices } from '@playwright/test'
 import * as path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
+
+// ESM-safe __dirname (frontend/package.json declares "type": "module").
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Load test-only env vars from repo root .env.test (same file the root config uses).
 dotenv.config({ path: path.resolve(__dirname, '..', '.env.test') })
