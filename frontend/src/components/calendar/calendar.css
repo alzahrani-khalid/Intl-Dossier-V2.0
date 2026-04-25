@@ -49,3 +49,41 @@
   color: var(--accent-ink);
   font-weight: 700;
 }
+
+/* Phase 39 Plan 39-06 — calendar event pill — verbatim shape from
+ * /tmp/inteldossier-handoff/inteldossier/project/src/app.css#L413-423.
+ * NOTE: .travel and .pending classes ship for handoff fidelity but are NOT applied
+ * in this phase (D-13 fallback — schema does not provide event_type='travel' /
+ * status='pending'). Backend follow-up phase wires them by adding the className
+ * to <CalendarEventPill> without touching JSX again. */
+
+.cal-ev {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cal-ev.travel {
+  /* No --warn-soft token exists; synthesize a soft warn fill from --warn so the orphan
+   * variant ships on tokens only (no hex codes). */
+  background: color-mix(in oklab, var(--warn) 18%, transparent);
+  color: var(--warn);
+}
+
+.cal-ev.pending {
+  background: var(--surface);
+  color: var(--ink-mute);
+  border: 1px solid var(--line-soft);
+}
