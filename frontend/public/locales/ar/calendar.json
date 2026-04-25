@@ -54,5 +54,13 @@
     "working_group": "مجموعة عمل",
     "person": "شخص"
   },
-  "all_types": "جميع الأنواع"
+  "all_types": "جميع الأنواع",
+  "weeklist": {
+    "previousWeek": "الأسبوع السابق",
+    "nextWeek": "الأسبوع التالي",
+    "today": "اليوم"
+  },
+  "actions": {
+    "newEvent": "فعالية جديدة"
+  }
 }

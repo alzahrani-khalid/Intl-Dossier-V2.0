@@ -54,5 +54,13 @@
     "working_group": "Working Group",
     "person": "Person"
   },
-  "all_types": "All Types"
+  "all_types": "All Types",
+  "weeklist": {
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "today": "Today"
+  },
+  "actions": {
+    "newEvent": "New event"
+  }
 }

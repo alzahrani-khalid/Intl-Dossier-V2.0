@@ -53,8 +53,14 @@
     "priority": "الأولوية",
     "allPriorities": "جميع الأولويات",
     "overdueOnly": "المتأخرة فقط",
-    "clear": "مسح التصفية"
+    "clear": "مسح التصفية",
+    "byStatus": "بالحالة",
+    "byDossier": "بالملف",
+    "byOwner": "بالمسؤول",
+    "comingSoon": "قريبًا",
+    "search": "بحث في عناصر العمل…"
   },
+  "overdueChip": "{{count}} متأخر",
   "sorting": {
     "label": "ترتيب حسب",
     "deadline": "تاريخ الاستحقاق",
@@ -87,7 +93,10 @@
     "loadMore": "تحميل المزيد",
     "refresh": "تحديث",
     "openItem": "فتح العنصر",
-    "editItem": "تعديل العنصر"
+    "editItem": "تعديل العنصر",
+    "newItem": "عنصر جديد",
+    "listView": "عرض القائمة",
+    "addToColumn": "إضافة إلى {{column}}"
   },
   "context": {
     "personal": "أعمالي",
