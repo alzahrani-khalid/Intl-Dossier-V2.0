@@ -33,6 +33,20 @@
     "commitment": "التزام",
     "intake": "طلب"
   },
+  "source": {
+    "task": "مهمة",
+    "commitment": "التزام",
+    "intake": "طلب"
+  },
+  "priority": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالٍ",
+    "urgent": "عاجل"
+  },
+  "due": {
+    "today": "اليوم"
+  },
   "card": {
     "overdue": "متأخر",
     "dueToday": "مستحق اليوم",

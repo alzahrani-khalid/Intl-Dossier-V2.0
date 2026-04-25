@@ -33,6 +33,20 @@
     "commitment": "Commitment",
     "intake": "Intake"
   },
+  "source": {
+    "task": "Task",
+    "commitment": "Commitment",
+    "intake": "Intake"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "due": {
+    "today": "Today"
+  },
   "card": {
     "overdue": "Overdue",
     "dueToday": "Due today",
