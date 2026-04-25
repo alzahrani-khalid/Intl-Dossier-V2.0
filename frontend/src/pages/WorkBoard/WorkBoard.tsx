@@ -208,14 +208,25 @@ export function WorkBoard(): ReactElement {
 
   if (isLoading) {
     return (
-      <div className="workboard-page" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="board-columns" aria-busy="true">
+      <div
+        className="workboard-page"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <Skeleton className="board-toolbar-skeleton" />
+        <div className="board-columns">
           {STAGES.map((stage) => (
             <section key={stage} className="col" aria-label={t(`columns.${stage}`)}>
-              <Skeleton className="workboard-skeleton-head" />
-              <Skeleton className="workboard-skeleton-card" />
-              <Skeleton className="workboard-skeleton-card" />
-              <Skeleton className="workboard-skeleton-card" />
+              <header className="col-head">
+                <Skeleton className="workboard-skeleton-head-title" />
+                <Skeleton className="workboard-skeleton-head-count" />
+              </header>
+              <div className="col-body">
+                <Skeleton className="kcard-skeleton" />
+                <Skeleton className="kcard-skeleton" />
+                <Skeleton className="kcard-skeleton" />
+              </div>
             </section>
           ))}
         </div>

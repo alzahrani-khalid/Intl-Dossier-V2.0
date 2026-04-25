@@ -267,6 +267,34 @@
   border-radius: 8px;
 }
 
+/* Phase 39 Plan 39-08 — shape-matching loading skeletons (SP-3).
+   Layout-stable: every skeleton has explicit height + width via class. */
+
+.board-toolbar-skeleton {
+  height: 48px;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.workboard-skeleton-head-title {
+  height: 14px;
+  width: 80px;
+  border-radius: 4px;
+}
+
+.workboard-skeleton-head-count {
+  height: 12px;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.kcard-skeleton {
+  height: 80px;
+  width: 100%;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
 /* Phase 39 Plan 39-07 — mobile horizontal-scroll + snap for kanban columns.
    RTL: in dir=rtl, flexbox lays the first column on the RIGHT — first column
    lands on the right edge naturally (forceRTL handles direction).
