@@ -1,0 +1,89 @@
+/* Phase 39 — kanban board styles ported verbatim from
+   /tmp/inteldossier-handoff/.../app.css#L390-411
+   BOARD-02: .kcard.overdue uses border-inline-start (RTL-correct).
+   Use only logical-direction CSS properties here so RTL flips automatically. */
+
+.kcard {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kcard:hover {
+  border-color: var(--line-soft);
+}
+
+.kcard.overdue {
+  border-inline-start: 3px solid var(--danger);
+}
+
+.kcard.done {
+  opacity: 0.55;
+}
+
+.kcard-top {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.kcard-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.kcard-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.kcard-dossier {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ink-mute);
+  min-width: 0;
+}
+
+.kcard-dossier > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kcard-foot .font-mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.kcard-owner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .kcard {
+    min-height: 44px;
+  }
+}
