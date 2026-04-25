@@ -57,41 +57,58 @@ if [ "$FAIL" -eq 0 ]; then
 fi
 
 # ============================================================================
-# 39-09 ACTIVATES: Phase 39 kanban-calendar deletions (D-04)
-# Block stays commented out until plan 39-09 uncomments it during legacy cut.
+# Phase 39 kanban-calendar deletions (D-04) — activated 39-09
 # ============================================================================
-# PHASE_39_PATTERNS=(
-#   "from.*components/unified-kanban/UnifiedKanbanBoard"
-#   "from.*components/unified-kanban/EnhancedKanbanBoard"
-#   "from.*components/unified-kanban/UnifiedKanbanCard"
-#   "from.*components/unified-kanban/UnifiedKanbanColumn"
-#   "from.*components/unified-kanban/UnifiedKanbanHeader"
-#   "from.*components/unified-kanban/utils/swimlane-utils"
-#   "from.*components/unified-kanban/utils/wip-limits"
-#   "from.*components/ui/kanban"
-# )
-# PHASE_39_DELETED_FILES=(
-#   "frontend/src/components/unified-kanban/UnifiedKanbanBoard.tsx"
-#   "frontend/src/components/unified-kanban/EnhancedKanbanBoard.tsx"
-#   "frontend/src/components/unified-kanban/UnifiedKanbanCard.tsx"
-#   "frontend/src/components/unified-kanban/UnifiedKanbanColumn.tsx"
-#   "frontend/src/components/unified-kanban/UnifiedKanbanHeader.tsx"
-#   "frontend/src/components/unified-kanban/utils/swimlane-utils.ts"
-#   "frontend/src/components/unified-kanban/utils/wip-limits.ts"
-#   "frontend/src/components/ui/kanban.tsx"
-#   "frontend/src/routes/_protected/my-work/board.tsx"
-# )
-# for p in "${PHASE_39_PATTERNS[@]}"; do
-#   if grep -rn --include="*.ts" --include="*.tsx" -E "$p" frontend/src 2>/dev/null; then
-#     echo "FAIL: stale Phase-39 reference matching /$p/" >&2
-#     FAIL=1
-#   fi
-# done
-# for f in "${PHASE_39_DELETED_FILES[@]}"; do
-#   if [ -f "$f" ]; then
-#     echo "FAIL: Phase-39 deleted file reappeared: $f" >&2
-#     FAIL=1
-#   fi
-# done
+PHASE_39_PATTERNS=(
+  "from.*components/unified-kanban/UnifiedKanbanBoard"
+  "from.*components/unified-kanban/EnhancedKanbanBoard"
+  "from.*components/unified-kanban/UnifiedKanbanCard"
+  "from.*components/unified-kanban/UnifiedKanbanColumn"
+  "from.*components/unified-kanban/UnifiedKanbanHeader"
+  "from.*components/unified-kanban/utils/swimlane-utils"
+  "from.*components/unified-kanban/utils/wip-limits"
+  "from.*components/ui/kanban"
+)
+PHASE_39_DELETED_FILES=(
+  "frontend/src/components/unified-kanban/UnifiedKanbanBoard.tsx"
+  "frontend/src/components/unified-kanban/EnhancedKanbanBoard.tsx"
+  "frontend/src/components/unified-kanban/UnifiedKanbanCard.tsx"
+  "frontend/src/components/unified-kanban/UnifiedKanbanColumn.tsx"
+  "frontend/src/components/unified-kanban/UnifiedKanbanHeader.tsx"
+  "frontend/src/components/unified-kanban/utils/swimlane-utils.ts"
+  "frontend/src/components/unified-kanban/utils/wip-limits.ts"
+  "frontend/src/components/ui/kanban.tsx"
+)
+for p in "${PHASE_39_PATTERNS[@]}"; do
+  MATCH=$(grep -rn --include="*.ts" --include="*.tsx" -E "$p" frontend/src 2>/dev/null || true)
+  if [ -n "$MATCH" ]; then
+    echo "FAIL: Phase-39 deleted import pattern reappeared: $p" >&2
+    echo "$MATCH" >&2
+    FAIL=1
+  fi
+done
+for f in "${PHASE_39_DELETED_FILES[@]}"; do
+  if [ -f "$f" ]; then
+    echo "FAIL: Phase-39 deleted file reappeared: $f" >&2
+    FAIL=1
+  fi
+done
+
+# ============================================================================
+# 39-07 .week-list mirror gate (T-39-09-CSS-DRIFT)
+# shared-week-list.css must mirror dashboard.css source-of-truth.
+# Extracts ONLY the .week-list { ... } rule body (selector line starts at column 1,
+# excluding CSS comments). Stops at the closing brace of that block.
+# ============================================================================
+if [ -f frontend/src/components/calendar/shared-week-list.css ] && [ -f frontend/src/pages/Dashboard/widgets/dashboard.css ]; then
+  WEEK_LIST_RULES_DASHBOARD=$(awk '/^\.week-list[[:space:]]*\{/{flag=1} flag{print} flag && /^\}/{flag=0}' frontend/src/pages/Dashboard/widgets/dashboard.css | tr -d '[:space:]')
+  WEEK_LIST_RULES_MIRROR=$(awk '/^\.week-list[[:space:]]*\{/{flag=1} flag{print} flag && /^\}/{flag=0}' frontend/src/components/calendar/shared-week-list.css | tr -d '[:space:]')
+  if [ "$WEEK_LIST_RULES_DASHBOARD" != "$WEEK_LIST_RULES_MIRROR" ]; then
+    echo "FAIL: shared-week-list.css .week-list rules diverge from dashboard.css source-of-truth" >&2
+    echo "DASHBOARD: $WEEK_LIST_RULES_DASHBOARD" >&2
+    echo "MIRROR:    $WEEK_LIST_RULES_MIRROR" >&2
+    FAIL=1
+  fi
+fi
 
 exit "$FAIL"
