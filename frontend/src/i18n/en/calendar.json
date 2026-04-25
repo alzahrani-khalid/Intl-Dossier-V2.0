@@ -8,6 +8,11 @@
     "fri": "Fri",
     "sat": "Sat"
   },
+  "weeklist": {
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "today": "Today"
+  },
   "months": {
     "january": "January",
     "february": "February",
