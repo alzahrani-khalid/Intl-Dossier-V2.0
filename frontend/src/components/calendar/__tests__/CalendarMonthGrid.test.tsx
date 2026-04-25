@@ -146,7 +146,8 @@ describe('CalendarMonthGrid', () => {
         onEventClick={(): void => {}}
       />,
     )
-    const pills = screen.getAllByTestId('cal-event-pill-stub')
+    // 39-06 replaced the 39-05 stub; real CalendarEventPill renders as <button class="cal-ev">.
+    const pills = document.querySelectorAll('button.cal-ev')
     expect(pills.length).toBe(1)
   })
 
@@ -163,7 +164,8 @@ describe('CalendarMonthGrid', () => {
         onEventClick={(): void => {}}
       />,
     )
-    const pills = screen.getAllByTestId('cal-event-pill-stub')
+    // 39-06 replaced the 39-05 stub; real CalendarEventPill renders as <button class="cal-ev">.
+    const pills = document.querySelectorAll('button.cal-ev')
     expect(pills.length).toBe(3)
   })
 })
