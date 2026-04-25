@@ -84,13 +84,13 @@ beforeEach(() => {
 describe('KCard', () => {
   it('renders title from item.title in en', () => {
     render(<KCard item={makeItem()} onItemClick={vi.fn()} />)
-    expect(screen.getByText('Hello World')).toBeInTheDocument()
+    expect(screen.getByText('Hello World')).toBeTruthy()
   })
 
   it('renders title_ar in ar locale when present', () => {
     currentLang = 'ar'
     render(<KCard item={makeItem()} onItemClick={vi.fn()} />)
-    expect(screen.getByText('مرحبا')).toBeInTheDocument()
+    expect(screen.getByText('مرحبا')).toBeTruthy()
     expect(screen.queryByText('Hello World')).toBeNull()
   })
 
@@ -133,29 +133,29 @@ describe('KCard', () => {
 
   it('computes initials from first + last word of assignee name', () => {
     render(<KCard item={makeItem()} onItemClick={vi.fn()} />)
-    expect(screen.getByText('KA')).toBeInTheDocument()
+    expect(screen.getByText('KA')).toBeTruthy()
   })
 
   it('falls back to "?" when assignee is null', () => {
     render(<KCard item={makeItem({ assignee: null })} onItemClick={vi.fn()} />)
-    expect(screen.getByText('?')).toBeInTheDocument()
+    expect(screen.getByText('?')).toBeTruthy()
   })
 
   it('renders "Overdue 3d" text when overdue with days_until_due', () => {
     render(
       <KCard item={makeItem({ is_overdue: true, days_until_due: -3 })} onItemClick={vi.fn()} />,
     )
-    expect(screen.getByText(/Overdue 3d/)).toBeInTheDocument()
+    expect(screen.getByText(/Overdue 3d/)).toBeTruthy()
   })
 
   it('renders "Today" when deadline is today', () => {
     render(<KCard item={makeItem({ deadline: TODAY_ISO })} onItemClick={vi.fn()} />)
-    expect(screen.getByText('Today')).toBeInTheDocument()
+    expect(screen.getByText('Today')).toBeTruthy()
   })
 
   it('renders formatted future date "10 May" when deadline is in the future', () => {
     render(<KCard item={makeItem({ deadline: FUTURE_ISO })} onItemClick={vi.fn()} />)
-    expect(screen.getByText('10 May')).toBeInTheDocument()
+    expect(screen.getByText('10 May')).toBeTruthy()
   })
 
   it('converts due-text digits to Arabic-Indic in ar locale', () => {
@@ -163,7 +163,7 @@ describe('KCard', () => {
     render(
       <KCard item={makeItem({ is_overdue: true, days_until_due: -62 })} onItemClick={vi.fn()} />,
     )
-    expect(screen.getByText(/Overdue ٦٢d/)).toBeInTheDocument()
+    expect(screen.getByText(/Overdue ٦٢d/)).toBeTruthy()
   })
 
   it('fires onItemClick when card is clicked', () => {
