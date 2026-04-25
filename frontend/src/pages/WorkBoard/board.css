@@ -87,3 +87,75 @@
     min-height: 44px;
   }
 }
+
+/* Phase 39 Plan 02 — column shell, ported from
+   /tmp/inteldossier-handoff/.../app.css column block.
+   All physical-direction rules forbidden — RTL flips automatically. */
+
+.col {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  width: 300px;
+  min-width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.col-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.col-head h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  flex-grow: 1;
+}
+
+.col-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.col-add {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink-mute);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.col-add:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.col-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.col-empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 12px;
+}
