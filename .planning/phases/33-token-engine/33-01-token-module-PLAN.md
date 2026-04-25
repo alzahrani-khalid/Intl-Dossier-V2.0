@@ -148,7 +148,7 @@ export interface DensityValues {
    - `sidebarInk` (may differ from `ink`)
    - Dark-variant lightness values for ink / line / surface
    - Keep handoff comments inline as JSDoc where informative
-3. **Create `densities.ts`** with the three density records. Values from D-04: comfortable `{rowH:'52px', padInline:'20px', padBlock:'16px', gap:'12px'}`, compact `{rowH:'40px', padInline:'14px', padBlock:'12px', gap:'8px'}`, dense `{rowH:'32px', padInline:'10px', padBlock:'8px', gap:'6px'}`.
+3. **Create `densities.ts`** with the three density records. Values from D-04: comfortable `{rowH:'52px', padInline:'20px', padBlock:'16px', gap:'12px'}`, compact `{rowH:'40px', padInline:'14px', padBlock:'12px', gap:'8px'}`, dense `{rowH:'32px', padInline:'10px', padBlock:'8px', gap:'4px'}`.
 4. **Create `buildTokens.ts`** — pure function. Structure:
    ```ts
    export function buildTokens({ direction, mode, hue, density }: BuildInput): TokenSet {

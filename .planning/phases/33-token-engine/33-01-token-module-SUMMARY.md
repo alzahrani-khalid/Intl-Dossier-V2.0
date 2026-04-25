@@ -48,22 +48,22 @@ Pure TypeScript token module at `frontend/src/design-system/tokens/` that maps `
 - [x] No `index.ts` barrel file in `tokens/`
 - [x] SLA-risk math: `(hue + 55) % 360` — explicit test at `hue=350 → 45` passes
 - [x] `--accent-ink` 42% (light) ↔ 72% (dark); `--accent-soft` chroma 0.05 ↔ 0.08
-- [x] Density row-h 52/40/32; pad-inline 20/14/10; pad-block 16/12/8; gap 12/8/6
+- [x] Density row-h 52/40/32; pad-inline 20/14/10; pad-block 16/12/8; gap 12/8/4
 - [x] Derived tokens: `--field-radius: calc(<base> * 1.5)`, `--focus-ring: 0 0 0 3px color-mix(in oklch, var(--accent) 40%, transparent)`, `--shadow-drawer`, `--shadow-card`
 - [x] Soft-variants included (RESEARCH Gotcha #4)
 - [~] `tsc --noEmit` on raw files shows module-resolution noise (pre-existing vitest/vite d.ts config; not a regression). Tests pass at runtime.
 
 ## Token set (39 vars)
 
-| Category | Vars |
-| --- | --- |
+| Category           | Vars                                                                                                                                    |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
 | Surfaces/ink/lines | `--bg`, `--surface`, `--surface-raised`, `--ink`, `--ink-mute`, `--ink-faint`, `--line`, `--line-soft`, `--sidebar-bg`, `--sidebar-ink` |
-| Accent | `--accent`, `--accent-ink`, `--accent-soft`, `--accent-fg` |
-| Semantic | `--danger`, `--danger-soft`, `--warn`, `--warn-soft`, `--ok`, `--ok-soft`, `--info`, `--info-soft` |
-| SLA | `--sla-ok`, `--sla-ok-soft`, `--sla-risk`, `--sla-risk-soft`, `--sla-bad`, `--sla-bad-soft` |
-| Density | `--row-h`, `--pad-inline`, `--pad-block`, `--gap` |
-| Shape | `--radius-sm`, `--radius`, `--radius-lg` |
-| Derived | `--field-radius`, `--focus-ring`, `--shadow-drawer`, `--shadow-card` |
+| Accent             | `--accent`, `--accent-ink`, `--accent-soft`, `--accent-fg`                                                                              |
+| Semantic           | `--danger`, `--danger-soft`, `--warn`, `--warn-soft`, `--ok`, `--ok-soft`, `--info`, `--info-soft`                                      |
+| SLA                | `--sla-ok`, `--sla-ok-soft`, `--sla-risk`, `--sla-risk-soft`, `--sla-bad`, `--sla-bad-soft`                                             |
+| Density            | `--row-h`, `--pad-inline`, `--pad-block`, `--gap`                                                                                       |
+| Shape              | `--radius-sm`, `--radius`, `--radius-lg`                                                                                                |
+| Derived            | `--field-radius`, `--focus-ring`, `--shadow-drawer`, `--shadow-card`                                                                    |
 
 ## Handoff-vs-plan deviations
 

@@ -229,7 +229,7 @@ base.describe('Phase 33 Success Criteria (SC-1..SC-5)', () => {
     const densities = [
       { name: 'comfortable' as const, rowH: '52px', padInline: '20px', padBlock: '16px', gap: '12px' },
       { name: 'compact' as const, rowH: '40px', padInline: '14px', padBlock: '12px', gap: '8px' },
-      { name: 'dense' as const, rowH: '32px', padInline: '10px', padBlock: '8px', gap: '6px' },
+      { name: 'dense' as const, rowH: '32px', padInline: '10px', padBlock: '8px', gap: '4px' },
     ]
 
     for (const { name, rowH, padInline, padBlock, gap } of densities) {

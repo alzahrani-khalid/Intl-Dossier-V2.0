@@ -94,7 +94,7 @@ const PAD_BLOCK_BY_DENSITY: Record<Density, string> = {
 const GAP_BY_DENSITY: Record<Density, string> = {
   comfortable: '12px',
   compact: '8px',
-  dense: '6px',
+  dense: '4px',
 }
 
 describe('buildTokens — 72-case matrix (4 directions × 2 modes × 3 hues × 3 densities)', () => {
@@ -252,7 +252,7 @@ describe('buildTokens — SC-4: density values (rowH, pad-inline, pad-block, gap
     expect(tokens['--gap']).toBe('8px')
   })
 
-  it('emits dense=32px / 10px / 8px / 6px', () => {
+  it('emits dense=32px / 10px / 8px / 4px', () => {
     const tokens = buildTokens({
       direction: 'chancery',
       mode: 'light',
@@ -262,7 +262,7 @@ describe('buildTokens — SC-4: density values (rowH, pad-inline, pad-block, gap
     expect(tokens['--row-h']).toBe('32px')
     expect(tokens['--pad-inline']).toBe('10px')
     expect(tokens['--pad-block']).toBe('8px')
-    expect(tokens['--gap']).toBe('6px')
+    expect(tokens['--gap']).toBe('4px')
   })
 })
 

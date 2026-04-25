@@ -12,7 +12,7 @@ import type { Density, DensityValues } from './types'
  *
  *   - comfortable: 52px rows / 20px inline / 16px block / 12px gap — default
  *   - compact:     40px rows / 14px inline / 12px block /  8px gap — table-dense screens
- *   - dense:       32px rows / 10px inline /  8px block /  6px gap — KPI boards / inspectors
+ *   - dense:       32px rows / 10px inline /  8px block /  4px gap — KPI boards / inspectors
  *
  * RTL-safe: logical property names (`padInline`, not `padLeft`/`padRight`) so
  * downstream CSS utilities can bind to `padding-inline` / `padding-block`.
@@ -36,6 +36,6 @@ export const DENSITIES: Record<Density, DensityValues> = {
     rowH: '32px',
     padInline: '10px',
     padBlock: '8px',
-    gap: '6px',
+    gap: '4px',
   },
 }
