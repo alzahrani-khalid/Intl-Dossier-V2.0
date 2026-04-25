@@ -251,16 +251,17 @@ Summary checklist:
 2. User sees overdue Kanban cards with `border-inline-start: 3px solid var(--danger)` (flipping edge correctly in RTL) and done cards rendering at `opacity: 0.55`
 3. User sees a 7×5 calendar grid with 1px divider lines on `--line` background, day-of-week header row, day number + stacked event pills per cell (default / `.travel` warn-soft / `.pending` line-soft), and an accent-colored day number on today
 4. Both pages lay out correctly at 320 / 640 / 768 / 1024 / 1280 px with ≥44×44px touch targets on all card controls; calendar cells collapse to a week-list on mobile
-   **Plans**: 9 plans
-   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
-   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
-   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
-   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
-   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
-   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
-   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
-   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
-   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+   **Plans**: 10 plans
+   - [ ] 39-00-PLAN.md — Wave 0 infra: WorkBoard folder scaffold + toArDigits utility + locale extensions + 13 skipped E2E spec stubs + commented Phase 39 CI gate block (BOARD-01, BOARD-02, BOARD-03)
+   - [ ] 39-01-PLAN.md — KCard widget (kind+priority chips + title + DossierGlyph + dossier name + mono due + 20×20 owner-initials avatar; .kcard.overdue border-inline-start; .kcard.done opacity 0.55) (BOARD-01, BOARD-02)
+   - [ ] 39-02-PLAN.md — BoardColumn widget (header title + mono count + per-column + button; SortableContext when dndEnabled) (BOARD-01)
+   - [ ] 39-03-PLAN.md — BoardToolbar widget (By status pill wired + By dossier/By owner aria-disabled; mono overdue chip; client-side search; + New item button) (BOARD-01)
+   - [ ] 39-04-PLAN.md — WorkBoard.tsx page composer (real useUnifiedKanban signature {contextType, columnMode, sourceFilter}; conditional DnD when columnMode='status'; client-side search filter; cancelled filter) + /kanban route rewrite (BOARD-01, BOARD-02)
+   - [ ] 39-05-PLAN.md — UnifiedCalendar month-grid surgery + CalendarMonthGrid + calendar.css (.cal-grid 7×5; bilingual dow header; today highlight; other-month opacity 0.4) (BOARD-03)
+   - [ ] 39-06-PLAN.md — CalendarEventPill default-only (D-13 fallback — single console.warn per mount; .cal-ev.travel/.pending CSS shipped but never applied) (BOARD-03)
+   - [ ] 39-07-PLAN.md — WeekListMobile <640px swap (prev/next/Today; mirrors .week-list from dashboard.css) + RTL-correct horizontal-scroll for mobile kanban (BOARD-01, BOARD-03)
+   - [ ] 39-08-PLAN.md — Skeleton loading states + i18n key audit (BOARD-01, BOARD-03)
+   - [ ] 39-09-PLAN.md — Wave 2: visual-regression LTR/RTL × 768/1280 + axe zero serious/critical + legacy cut sweep (8 files + my-work/board.tsx + kanban-drag-drop.spec.ts) + activate check-deleted-components.sh + CSS-mirror gate (BOARD-01, BOARD-02, BOARD-03)
          **UI hint**: yes
 
 ### Phase 40: list-pages
