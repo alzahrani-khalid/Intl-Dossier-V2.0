@@ -1,0 +1,21 @@
+{
+  "title": "الدول",
+  "subtitle": "جميع ملفات الدول",
+  "table": {
+    "name": "الدولة",
+    "engagements": "الارتباطات",
+    "lastTouch": "آخر تحديث",
+    "sensitivity": "الحساسية"
+  },
+  "sensitivity": {
+    "public": "عام",
+    "internal": "داخلي",
+    "restricted": "مقيد",
+    "confidential": "سري"
+  },
+  "empty": {
+    "title": "لا توجد دول بعد",
+    "description": "ستظهر ملفات الدول هنا."
+  },
+  "loading": "جارٍ تحميل الدول…"
+}

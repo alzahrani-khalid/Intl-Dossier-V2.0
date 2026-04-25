@@ -1,0 +1,21 @@
+{
+  "title": "Organizations",
+  "subtitle": "International bodies and agencies",
+  "table": {
+    "name": "Organization",
+    "engagements": "Engagements",
+    "lastTouch": "Last updated",
+    "sensitivity": "Sensitivity"
+  },
+  "sensitivity": {
+    "public": "Public",
+    "internal": "Internal",
+    "restricted": "Restricted",
+    "confidential": "Confidential"
+  },
+  "empty": {
+    "title": "No organizations yet",
+    "description": "Organization dossiers will appear here."
+  },
+  "loading": "Loading organizations…"
+}

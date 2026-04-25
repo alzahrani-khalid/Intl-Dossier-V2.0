@@ -1,0 +1,16 @@
+{
+  "title": "Persons",
+  "subtitle": "VIPs and key contacts",
+  "card": {
+    "role": "Role",
+    "organization": "Organization"
+  },
+  "chip": {
+    "vip": "VIP"
+  },
+  "empty": {
+    "title": "No persons yet",
+    "description": "VIP profiles will appear here."
+  },
+  "loading": "Loading persons…"
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Forums",
+  "subtitle": "Multi-party conferences and summits",
+  "row": {
+    "meta": "Meta"
+  },
+  "status": {
+    "active": "Active",
+    "completed": "Completed",
+    "planned": "Planned",
+    "cancelled": "Cancelled"
+  },
+  "empty": {
+    "title": "No forums yet",
+    "description": "Forum dossiers will appear here."
+  },
+  "loading": "Loading forums…"
+}

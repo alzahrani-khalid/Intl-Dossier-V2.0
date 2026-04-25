@@ -1,0 +1,31 @@
+{
+  "title": "Engagements",
+  "subtitle": "Meetings, consultations, and visits",
+  "search": {
+    "placeholder": "Search engagements…"
+  },
+  "filter": {
+    "all": "All",
+    "confirmed": "Confirmed",
+    "travel": "Travel",
+    "pending": "Pending"
+  },
+  "week": {
+    "of": "Week of {{date}}"
+  },
+  "loadMore": {
+    "button": "Load more engagements",
+    "loading": "Loading more engagements…"
+  },
+  "status": {
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "empty": {
+    "title": "No engagements yet",
+    "description": "Engagements will appear here."
+  },
+  "loading": "Loading engagements…"
+}
