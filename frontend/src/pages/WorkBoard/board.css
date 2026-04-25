@@ -266,3 +266,18 @@
   margin-bottom: 8px;
   border-radius: 8px;
 }
+
+/* Phase 39 Plan 39-07 — mobile horizontal-scroll + snap for kanban columns.
+   RTL: in dir=rtl, flexbox lays the first column on the RIGHT — first column
+   lands on the right edge naturally (forceRTL handles direction).
+   No transform: scaleX or other manual RTL flips. */
+
+@media (max-width: 640px) {
+  .board-columns {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .col {
+    scroll-snap-align: start;
+  }
+}

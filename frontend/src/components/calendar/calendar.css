@@ -87,3 +87,78 @@
   color: var(--ink-mute);
   border: 1px solid var(--line-soft);
 }
+
+/* Phase 39 Plan 39-07 — week-list mobile toolbar + container layout.
+   NOTE: .week-list and .week-* CSS rules are owned by Phase 38 dashboard.css.
+   This stylesheet RE-IMPORTS dashboard.css's .week-list block via shared-week-list.css
+   (do NOT duplicate the source-of-truth rules; orchestrator open-question 2 resolved). */
+
+@import './shared-week-list.css';
+
+.week-list-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.week-list-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.weeklist-nav,
+.weeklist-today {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.day-row {
+  background: var(--surface);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.day-row[aria-current='date'] {
+  background: var(--accent-soft);
+}
+
+.day-row-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.day-row-events {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+/* Defense-in-depth: hide cal-grid below 640px and week-list-mobile above 640px.
+   The JSX gate (UnifiedCalendar.tsx isMobile branch) is the primary mechanism. */
+@media (max-width: 640px) {
+  .cal-grid {
+    display: none;
+  }
+}
+
+@media (min-width: 641px) {
+  .week-list-mobile {
+    display: none;
+  }
+}

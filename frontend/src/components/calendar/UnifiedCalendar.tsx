@@ -1,5 +1,5 @@
 // T052: UnifiedCalendar component
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCalendarEvents, type CalendarEvent } from '@/hooks/useCalendarEvents'
 import { Card } from '@/components/ui/card'
@@ -17,6 +17,7 @@ import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns
 import { CalendarEmptyWizard, type EventTemplate } from './CalendarEmptyWizard'
 import { CalendarEntryForm } from './CalendarEntryForm'
 import { CalendarMonthGrid } from './CalendarMonthGrid'
+import { WeekListMobile } from './WeekListMobile'
 import { useDirection } from '@/hooks/useDirection'
 import './calendar.css'
 
@@ -44,6 +45,18 @@ export function UnifiedCalendar({
   const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
   const [currentMonth, setCurrentMonth] = useState(new Date())
+  // Phase 39 Plan 39-07: media-query gate. Use window.matchMedia directly
+  // (no useMediaQuery hook in this repo). Default to false on first paint
+  // (desktop-first SSR-safe), then sync after mount and on viewport change.
+  const [isMobile, setIsMobile] = useState<boolean>(false)
+  useEffect((): (() => void) | undefined => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined
+    const mql = window.matchMedia('(max-width: 640px)')
+    setIsMobile(mql.matches)
+    const handler = (e: MediaQueryListEvent): void => setIsMobile(e.matches)
+    mql.addEventListener('change', handler)
+    return (): void => mql.removeEventListener('change', handler)
+  }, [])
   const [entryTypeFilter, setEntryTypeFilter] = useState<string | undefined>(undefined)
   const [showWizard, setShowWizard] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
@@ -225,14 +238,18 @@ export function UnifiedCalendar({
       </Card>
 
       {/* Calendar Grid — Phase 39 Plan 39-05 surgery: month view delegated to CalendarMonthGrid */}
-      {/* Mobile collapse handled in 39-07 */}
+      {/* Phase 39 Plan 39-07: <640px → WeekListMobile, ≥640px → CalendarMonthGrid */}
       <Card className="p-2 sm:p-4">
-        <CalendarMonthGrid
-          currentMonth={currentMonth}
-          events={events}
-          onEventClick={onEventClick}
-          onMonthChange={setCurrentMonth}
-        />
+        {isMobile ? (
+          <WeekListMobile events={events} onEventClick={onEventClick} />
+        ) : (
+          <CalendarMonthGrid
+            currentMonth={currentMonth}
+            events={events}
+            onEventClick={onEventClick}
+            onMonthChange={setCurrentMonth}
+          />
+        )}
       </Card>
 
       {/* Events List (Mobile-friendly alternative view) */}
