@@ -235,3 +235,34 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+/* Phase 39 Plan 04 — page composer layout.
+   Logical-direction CSS only — RTL handled by `dir` attribute on .workboard-page. */
+
+.workboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.board-columns {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 8px;
+}
+
+/* Skeleton shape-match — column-head + 3 kcard rows per column. */
+.workboard-skeleton-head {
+  height: 28px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+.workboard-skeleton-card {
+  height: 92px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
