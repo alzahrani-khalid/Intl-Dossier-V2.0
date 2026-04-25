@@ -203,10 +203,12 @@ Summary checklist:
 3. Buttons, load-more rows, and the digest refresh show an inline `<GlobeSpinner>` (40×40 SVG, 1.4s whirl arc + 2.8s reverse stylized globe) inheriting `currentColor` so it tints to surrounding text
 4. Developer can render `<DossierGlyph>` resolving one of 24 hand-drawn flag SVGs (SA, AE, ID, EG, QA, JO, BH, OM, KW, PK, MA, TR, CN, IT, FR, DE, GB, US, JP, KR, IN, BR, EU, UN) clipped to a circle with a 1px `rgba(0,0,0,0.15)` hairline; non-country types fall back to symbol glyphs (forum ◇, person ●, topic ◆, organization ▲) in soft-tinted circles
 5. Developer can render `<Sparkline data={…}>` (80×22 polyline, min-max normalized, trailing dot at latest point, flipped via `scaleX(-1)` in RTL) and `<Donut value={…} variants={[ok,risk,bad]}>` with stacked `strokeDasharray` segments and center percentage pill
-   **Plans**: 11 plans
+   **Plans**: 13 plans
 
 - [ ] 40-01-PLAN.md — Wave 0 locales: 16 i18n namespace JSON files (8 namespaces × EN+AR) — list-pages + countries + organizations + persons + forums + topics + working-groups + engagements (LIST-01..04)
-- [ ] 40-02-PLAN.md — Wave 0 primitives + hooks + handoff CSS port: ListPageShell + GenericListPage + DossierTable + PersonsGrid + EngagementsList + FilterPill + ToolbarSearch + 4 skeletons + sensitivity helper + barrel + useCountries + useOrganizations + useEngagementsInfinite + list-pages.css (.icon-flip / .spinner-row / .pill / .tbl / .week-list / .forum-row / .chip\*) + size-limit 800→815 KB + 8 vitest fixtures
+- [ ] 40-02a-PLAN.md — Wave 0 primitives + skeletons + sensitivity helper + barrel + 5 vitest fixtures (LIST-01..04)
+- [ ] 40-02b-PLAN.md — Wave 0 adapter hooks: useCountries + useOrganizations + useEngagementsInfinite + 3 vitest fixtures + Engagement type shape verification (LIST-01, LIST-04)
+- [ ] 40-02c-PLAN.md — Wave 0 handoff CSS port (list-pages.css with .icon-flip / .spinner-row / .pill / .tbl / .week-list / .forum-row / .chip\*) + size-limit 800→815 KB + RESEARCH Open-Questions branch resolution (engagement_count column / useDebouncedValue path / useTopics-usePersons shape / .spinner-row source)
 - [ ] 40-03-PLAN.md — Wave 1 Countries page: replace `/dossiers/countries/index.tsx` body → ListPageShell + DossierTable + useCountries + render+empty vitest (LIST-01)
 - [ ] 40-04-PLAN.md — Wave 1 Organizations page: replace `/dossiers/organizations/index.tsx` body → ListPageShell + DossierTable + useOrganizations + render+empty vitest (LIST-01)
 - [ ] 40-05-PLAN.md — Wave 1 Persons page: replace `pages/Persons/PersonsListPage.tsx` body → ListPageShell + PersonsGrid + usePersons (44px avatar + VIP chip conditional) + render+empty vitest (LIST-02)

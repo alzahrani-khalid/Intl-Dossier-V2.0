@@ -1089,29 +1089,41 @@ Phase 40 is a list-page rendering layer; no auth/session/cryptography changes. A
 | A9  | `signature-visuals/index.ts` exports `<DossierGlyph>` accepting `flag` (string), `type` (entity type), `size` (number) and `<GlobeSpinner>` accepting `size` (number)                                             | All Code Examples                 | Low — Phase 37 ships these; planner verifies barrel exports in Wave 0                                                                                          |
 | A10 | `engagement_count` exists as a denormalized column on `dossiers` (or is computed via a view)                                                                                                                      | LIST-01, §3                       | Mid — if not present, `useCountries`/`useOrganizations` must compute via a join + count subquery, OR the column reads `0` in Phase 40 (acceptable degradation) |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **`engagement_count` column existence on `dossiers`**
    - What we know: Handoff renders `r.engagements` per row; `dossier-api.ts` shows `CountryExtension`/`OrganizationExtension` interfaces but exact engagement-count column not searched
    - What's unclear: Is there a denormalized `engagement_count` integer, or do we need to join `engagements` and aggregate?
-   - Recommendation: Wave 0 task #1 — Supabase MCP `list_columns dossiers` to lock the exact schema; if no `engagement_count`, either compute via `.select('*, engagements(count)')` (if FK exists) or render `0` and file a follow-up todo for backend to add the column.
+   - **RESOLVED (2026-04-25):** Plan 02c Wave 0 verification task MUST run Supabase MCP `list_columns` (project `zkrcjzdemdmwhearhfgg`, table `dossiers`) to verify column existence. **Branching contract:** (a) if `engagement_count` column exists on `dossiers` → `useCountries`/`useOrganizations` read it directly via `.select('*')`; (b) if absent → Plan 02c creates a SQL view `dossier_engagement_counts` defined as `SELECT dossier_id, COUNT(*)::int AS engagement_count FROM engagements GROUP BY dossier_id` (applied via Supabase MCP), and the adapter hooks join via `.select('*, engagement_count:dossier_engagement_counts(engagement_count)')`. The adapter hooks normalize the result to a flat `engagement_count: number` field on every row regardless of branch. DossierTable consumes the flat field. Default `0` when null.
 
 2. **`useTopics` and `usePersons` actual signatures**
    - What we know: Both are 4-line re-exports from `@/domains/{topics,persons}`
    - What's unclear: Pagination params, return shape, whether they query `dossiers` or have their own table
-   - Recommendation: Wave 0 task #2 — read `frontend/src/domains/topics/index.ts` and `frontend/src/domains/persons/index.ts` and lock contracts.
+   - **RESOLVED (2026-04-25):** Plan 02c Wave 0 verification task MUST grep-verify `frontend/src/hooks/useTopics.ts` and `frontend/src/hooks/usePersons.ts`. **Locked default contract:** both return `{ data, isLoading, error }` mirroring `useForums.ts`. If actual return shape diverges, Plan 02c records the verified shape in its SUMMARY; Wave 1 plans 05 (Persons) and 07 (Topics) MUST adapt page bodies in their first task by reading the Plan 02c SUMMARY note. Page bodies use `data` for the rendered list and `isLoading` for the ListPageShell skeleton gate.
 
 3. **`.spinner-row` exact CSS rule lines**
    - What we know: Class is referenced in handoff `pages.jsx:99, 106` for engagements load-more
    - What's unclear: Did not appear in our grep — exact lines and properties unverified
-   - Recommendation: Wave 0 — extract `.spinner-row` rule from `app.css` lines ~625-660 and copy to `frontend/src/styles/list-pages.css` (or wherever Phase 36 mounted handoff CSS).
+   - **RESOLVED (2026-04-25):** Plan 02c CSS port task copies `.spinner-row` verbatim from handoff `/tmp/inteldossier-handoff/inteldossier/project/src/app.css` (executor runs `grep -n "\.spinner-row" /tmp/inteldossier-handoff/inteldossier/project/src/app.css` and copies the matching rule block). **Fallback canonical** (use only if grep returns 0 matches in handoff app.css): `.spinner-row { display: flex; align-items: center; gap: 12px; padding: 16px; min-height: 44px; border-top: 1px solid var(--line-soft); }`. Plan 02c records which branch was taken in its SUMMARY.
 
-4. **Existing handoff CSS port location**
-   - What we know: Handoff `app.css` rules need to be available app-wide for `.tbl`, `.chip`, `.card`, `.week-list`, `.forum-row`, `.tb-search` etc. to work
-   - What's unclear: Did Phase 36 already port these classes into a global CSS file, or does each phase port what it needs?
-   - Recommendation: Wave 0 — `grep -rn ".tbl\|.week-list\|.chip" frontend/src/styles/ frontend/src/app.css` to confirm where these live; create `frontend/src/styles/list-pages.css` if missing and import in `App.tsx` or root layout.
+4. **`useDebouncedValue` import path**
+   - **RESOLVED (2026-04-25):** Plan 02c Wave 0 verification task MUST run `grep -rn "useDebouncedValue" frontend/src/hooks/` to lock the exact path. **Branching contract:** (a) if `frontend/src/hooks/useDebouncedValue.ts` exists → primitives import from `@/hooks/useDebouncedValue` (default Plan 02a contract); (b) if absent → Plan 02c CREATES `frontend/src/hooks/useDebouncedValue.ts` using the standard 8-line pattern below, then primitives import from `@/hooks/useDebouncedValue`:
+     ```ts
+     import { useEffect, useState } from 'react'
+     export function useDebouncedValue<T>(value: T, delayMs: number): T {
+       const [debounced, setDebounced] = useState<T>(value)
+       useEffect((): (() => void) => {
+         const id = setTimeout((): void => setDebounced(value), delayMs)
+         return (): void => clearTimeout(id)
+       }, [value, delayMs])
+       return debounced
+     }
+     ```
 
-5. **`r.metaLine` / `r.status` field source for Forums/Topics/Working-Groups**
+5. **Existing handoff CSS port location + `list-page/` vs `list-pages/` directory name**
+   - **RESOLVED (2026-04-25):** Directory name LOCKED as **singular** `frontend/src/components/list-page/` per PATTERNS.md recommendation (matches React component naming convention — directory holds primitives, plural-named CSS file `list-pages.css` documents the cross-page concern). All Plan 02a/02b/02c paths and Wave 1 imports use singular `@/components/list-page`.
+
+6. **`r.metaLine` / `r.status` field source for Forums/Topics/Working-Groups**
    - What we know: Handoff demo data has `meta` (e.g., `"Co-chair · 12 members"`) and `chip` (e.g., `"active"`) per row
    - What's unclear: Real `dossiers`-typed Forums/Topics/Working-Groups don't have `meta` or `chip` columns; the meta line must be composed from real fields (e.g., for working_groups: `${role} · ${memberCount} members`)
    - Recommendation: Wave 1 task per page — read existing detail page (`_protected/dossiers/{type}/$id.tsx`) for inspiration on what fields render as the meta line; lock per-entity meta-line composition formulas in PLAN.md.

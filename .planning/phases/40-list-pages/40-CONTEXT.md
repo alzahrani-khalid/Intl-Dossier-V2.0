@@ -54,6 +54,7 @@ Rebuild all 7 dossier-type list pages — **Countries / Organizations / Persons 
 
 - **D-07:** **All 4 filter pills wired client-side.** `All` resets, `Confirmed`/`Travel`/`Pending` filter the loaded engagements client-side via `status === 'confirmed'`, `kind === 'travel'`, `status === 'pending'`. Mirrors handoff `pages.jsx` behavior. No backend changes.
 - **D-08:** **Pagination via `useInfiniteQuery` with cursor.** New `useEngagementsInfinite` adapter wraps the existing engagement repo using TanStack Query `useInfiniteQuery`. Cursor based on last `engagement_date` (researcher confirms exact column). Load-more button triggers `fetchNextPage()`; `<GlobeSpinner>` overlays during `isFetchingNextPage`.
+  > **SUPERSEDED by RESEARCH §3 (2026-04-25):** OFFSET pagination via useInfiniteQuery + getNextPageParam (engagementsRepo has no cursor support). See 40-RESEARCH.md.
 - **D-09:** **Search input: client-side filter with 250ms debounce.** Filters loaded engagements by title/counterpart. Matches Phase 39 search pattern.
 - **D-10:** **Row click navigates to existing engagement detail route.** Phase 41 dossier-drawer overlays this without changing the Phase 40 wiring. Researcher confirms exact target route (likely `/dossiers/{type}/{id}/engagements/{engId}` based on existing tree). Mirrors Phase 39 D-09.
 
