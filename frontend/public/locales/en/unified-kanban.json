@@ -61,6 +61,7 @@
     "search": "Search work items…"
   },
   "overdueChip": "{{count}} overdue",
+  "emptyColumn": "No items",
   "sorting": {
     "label": "Sort by",
     "deadline": "Deadline",

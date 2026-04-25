@@ -61,6 +61,7 @@
     "search": "بحث في عناصر العمل…"
   },
   "overdueChip": "{{count}} متأخر",
+  "emptyColumn": "لا توجد عناصر",
   "sorting": {
     "label": "ترتيب حسب",
     "deadline": "تاريخ الاستحقاق",
