@@ -113,6 +113,9 @@ tests/e2e/support/storage/*.json
 .devtools-screenshots/
 .factory/
 
+# Generated knowledge graph output (graphify) — regenerable locally via `graphify update .`
+graphify-out/
+
 # Build artifacts
 .pnpm-buildable-deps
 
