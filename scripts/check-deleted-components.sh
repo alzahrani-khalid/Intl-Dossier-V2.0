@@ -55,4 +55,43 @@ done
 if [ "$FAIL" -eq 0 ]; then
   echo "OK: zero references to deleted Phase 34 + 36 components/routes/shims"
 fi
+
+# ============================================================================
+# 39-09 ACTIVATES: Phase 39 kanban-calendar deletions (D-04)
+# Block stays commented out until plan 39-09 uncomments it during legacy cut.
+# ============================================================================
+# PHASE_39_PATTERNS=(
+#   "from.*components/unified-kanban/UnifiedKanbanBoard"
+#   "from.*components/unified-kanban/EnhancedKanbanBoard"
+#   "from.*components/unified-kanban/UnifiedKanbanCard"
+#   "from.*components/unified-kanban/UnifiedKanbanColumn"
+#   "from.*components/unified-kanban/UnifiedKanbanHeader"
+#   "from.*components/unified-kanban/utils/swimlane-utils"
+#   "from.*components/unified-kanban/utils/wip-limits"
+#   "from.*components/ui/kanban"
+# )
+# PHASE_39_DELETED_FILES=(
+#   "frontend/src/components/unified-kanban/UnifiedKanbanBoard.tsx"
+#   "frontend/src/components/unified-kanban/EnhancedKanbanBoard.tsx"
+#   "frontend/src/components/unified-kanban/UnifiedKanbanCard.tsx"
+#   "frontend/src/components/unified-kanban/UnifiedKanbanColumn.tsx"
+#   "frontend/src/components/unified-kanban/UnifiedKanbanHeader.tsx"
+#   "frontend/src/components/unified-kanban/utils/swimlane-utils.ts"
+#   "frontend/src/components/unified-kanban/utils/wip-limits.ts"
+#   "frontend/src/components/ui/kanban.tsx"
+#   "frontend/src/routes/_protected/my-work/board.tsx"
+# )
+# for p in "${PHASE_39_PATTERNS[@]}"; do
+#   if grep -rn --include="*.ts" --include="*.tsx" -E "$p" frontend/src 2>/dev/null; then
+#     echo "FAIL: stale Phase-39 reference matching /$p/" >&2
+#     FAIL=1
+#   fi
+# done
+# for f in "${PHASE_39_DELETED_FILES[@]}"; do
+#   if [ -f "$f" ]; then
+#     echo "FAIL: Phase-39 deleted file reappeared: $f" >&2
+#     FAIL=1
+#   fi
+# done
+
 exit "$FAIL"
