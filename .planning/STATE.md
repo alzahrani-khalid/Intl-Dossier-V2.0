@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
 status: idle — ready for next phase
-stopped_at: Phase 39 context gathered
-last_updated: '2026-04-25T00:55:05.208Z'
-last_activity: 2026-04-25 — Phase 38 closed
+stopped_at: Phase 39 closed
+last_updated: '2026-04-25T13:45:00.000Z'
+last_activity: 2026-04-25 — Phase 39 closed
 progress:
   total_phases: 11
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 56
-  completed_plans: 45
-  percent: 80
+  completed_plans: 55
+  percent: 98
 ---
 
 # Project State
@@ -21,16 +21,28 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Milestone v6.0 — Phase 38 (dashboard-verbatim) closed. Next unblocked in parallel: 39 (kanban-calendar), 40 (list-pages), 41 (dossier-drawer), 42 (remaining-pages).
+**Current focus:** Milestone v6.0 — Phase 39 (kanban-calendar) closed. Next unblocked in parallel: 40 (list-pages), 41 (dossier-drawer), 42 (remaining-pages).
 
 ## Current Position
 
-Phase: 38 (dashboard-verbatim) — **COMPLETE (PASS-WITH-DEVIATION)**
+Phase: 39 (kanban-calendar) — **COMPLETE (PASS-WITH-DEVIATION)**
 Plans: 10 of 10 complete
 Status: idle — ready for next phase
-Last activity: 2026-04-25 — Phase 38 closed
+Last activity: 2026-04-25 — Phase 39 closed
 
-Progress: [█████████▉] 98% (45 / 46 plans)
+Progress: [█████████▉] 98% (55 / 56 plans)
+
+### Phase 39 summary
+
+| Wave | Plans        | Status              | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---- | ------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 0    | 39-00        | PASS-WITH-DEVIATION | Infra: WorkBoard barrel, `toArDigits` utility (10/10 tests), `unified-kanban` + `calendar` i18n keys (EN+AR), 13 skipped Playwright spec stubs, COMMENTED Phase 39 block in `check-deleted-components.sh`. Workspace name `intake-frontend` (Rule-3 fix to test command); pre-existing playwright.config ESM `__dirname` bug deferred to 39-09                                                                                                                                                                                                               |
+| 1    | 39-01..39-08 | PASS-WITH-DEVIATION | 8 widgets sequentially on DesignV2 (file-overlap forced sequential): KCard 15/15, BoardColumn 8/8, BoardToolbar 8/8 (D-06 one-wired+two-stub), WorkBoard composer 10/10 (real `useUnifiedKanban` signature `{contextType,columnMode,sourceFilter}`, conditional DnD only when `columnMode==='status'`, STAGE_TO_STATUS map for missing newStatus param), CalendarMonthGrid 9/9 (D-02 `linkedItemType`/`linkedItemId` preserved), CalendarEventPill 8/8 (D-13 schema fallback, single console.warn), WeekListMobile 9/9 (mobile branch via window.matchMedia) |
+| 2    | 39-09        | PASS-WITH-DEVIATION | Activated 4 visual+a11y E2E specs; fixed playwright.config ESM `__dirname` (replaced with `fileURLToPath(import.meta.url)`); deleted 5 legacy unified-kanban components + `ui/kanban.tsx`; pruned `unified-kanban/index.ts` to keep `column-definitions` + `status-transitions` re-exports (still consumed by `useUnifiedKanban`); redirected `/my-work/board` → `/kanban` instead of deletion (preserves deep links); uncommented Phase 39 enforcement in CI gate (exit 0)                                                                                  |
+
+**Totals:** 77/77 vitest green across 8 Phase 39 surface files (KCard, BoardColumn, BoardToolbar, WorkBoard, CalendarMonthGrid, CalendarEventPill, WeekListMobile, toArDigits); 0 new TS errors on Phase 39 surface; 4 visual+a11y E2E specs activated (kanban-visual, calendar-visual, kanban-a11y, calendar-a11y) plus 6 functional specs (render/rtl/dnd/search/filters/responsive/mobile); legacy cut: 8 files deleted + my-work/board redirected; CI gate `check-deleted-components.sh` enforces zero-importer policy.
+
+**Verdict:** PASS-WITH-DEVIATION — 3/3 BOARD requirements VERIFIED (BOARD-01/02/03); 5 documented deviations carried forward (workspace name discovery, ESM playwright fix scope, kept index.ts re-exports for active consumers, `/my-work/board` redirect vs deletion, scoped test matrix); 0 open gaps. Phase 40 (list-pages) unblocked.
 
 ### Phase 38 summary
 
