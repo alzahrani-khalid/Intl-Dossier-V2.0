@@ -53,11 +53,14 @@ export const buildTokens = ({ direction, mode, hue, density }: BuildInput): Toke
     // Semantic palette (mode-branching)
     '--danger': isDark ? 'oklch(70% 0.16 25)' : 'oklch(52% 0.18 25)',
     '--danger-soft': isDark ? 'oklch(25% 0.09 25)' : 'oklch(95% 0.04 25)',
-    '--warn': isDark ? 'oklch(78% 0.14 75)' : 'oklch(62% 0.14 75)',
+    // Plan 40-15 (G2 close): light-mode L lowered (warn 62→51, ok 52→49,
+    // info 50→48) so chip-warn / chip-ok / chip-info meet WCAG AA 4.5:1 over
+    // their 15%-soft backgrounds. Dark-mode L unchanged — already passes.
+    '--warn': isDark ? 'oklch(78% 0.14 75)' : 'oklch(51% 0.14 75)',
     '--warn-soft': isDark ? 'oklch(25% 0.08 75)' : 'oklch(95% 0.05 75)',
-    '--ok': isDark ? 'oklch(72% 0.14 155)' : 'oklch(52% 0.12 155)',
+    '--ok': isDark ? 'oklch(72% 0.14 155)' : 'oklch(49% 0.12 155)',
     '--ok-soft': isDark ? 'oklch(22% 0.06 155)' : 'oklch(94% 0.04 155)',
-    '--info': isDark ? 'oklch(72% 0.13 230)' : 'oklch(50% 0.14 230)',
+    '--info': isDark ? 'oklch(72% 0.13 230)' : 'oklch(48% 0.14 230)',
     '--info-soft': isDark ? 'oklch(22% 0.07 230)' : 'oklch(94% 0.04 230)',
 
     // SLA palette — hue-tracking with +55° shift for risk; red-locked for bad

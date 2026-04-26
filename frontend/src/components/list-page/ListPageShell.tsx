@@ -31,9 +31,14 @@ export function ListPageShell({
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
+  // Plan 40-15 (G2 close): expose a labeled landmark. Parent <main> lives in
+  // AppShell.tsx, so this shell wraps content in <section role="region"> with an
+  // aria-label so axe `region` rule passes and screen readers announce the page.
   return (
     <section
       dir={isRTL ? 'rtl' : 'ltr'}
+      role="region"
+      aria-label={title}
       data-loading={isLoading ? 'true' : 'false'}
       className="container mx-auto flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-6 lg:px-8 min-w-0"
     >
