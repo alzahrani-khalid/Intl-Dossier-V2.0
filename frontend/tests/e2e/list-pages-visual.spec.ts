@@ -3,6 +3,7 @@
 // Phase 38 Pitfall 6: wait for fonts then 200ms before screenshot.
 // Baselines are captured here; human PNG-parity approval is gated by plan 11.
 import { test, expect } from '@playwright/test'
+import { loginForListPages } from './support/list-pages-auth'
 
 const ROUTES_WITH_NAMES = [
   ['/dossiers/countries', 'countries'],
@@ -17,6 +18,11 @@ const ROUTES_WITH_NAMES = [
 const LOCALES = ['en', 'ar'] as const
 
 test.use({ viewport: { width: 1280, height: 800 } })
+
+
+test.beforeEach(async ({ page }) => {
+  await loginForListPages(page)
+})
 
 for (const [path, name] of ROUTES_WITH_NAMES) {
   for (const locale of LOCALES) {

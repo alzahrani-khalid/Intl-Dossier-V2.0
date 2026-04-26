@@ -2,6 +2,12 @@
 // Asserts directional chevrons receive scaleX(-1) (matrix(-1,...) computed form)
 // when html[dir=rtl] and bilingual loading text on engagements load-more.
 import { test, expect } from '@playwright/test'
+import { loginForListPages } from './support/list-pages-auth'
+
+
+test.beforeEach(async ({ page }) => {
+  await loginForListPages(page)
+})
 
 test('RTL chevron transform includes scaleX(-1) on /dossiers/countries', async ({ page }) => {
   await page.goto('/dossiers/countries')

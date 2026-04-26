@@ -2,6 +2,12 @@
 // Filter pills (aria-pressed) + load-more (fetchNextPage + GlobeSpinner)
 // + row-click navigation to /engagements/$engagementId/overview.
 import { test, expect } from '@playwright/test'
+import { loginForListPages } from './support/list-pages-auth'
+
+
+test.beforeEach(async ({ page }) => {
+  await loginForListPages(page)
+})
 
 test.describe('Engagements LIST-04', () => {
   test.beforeEach(async ({ page }) => {

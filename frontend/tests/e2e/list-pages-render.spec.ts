@@ -2,6 +2,7 @@
 // Renders 7 list pages × 3 viewports (320 / 768 / 1280) and asserts
 // no horizontal overflow + responsive table→card collapse below md.
 import { test, expect } from '@playwright/test'
+import { loginForListPages } from './support/list-pages-auth'
 
 const ROUTES = [
   { path: '/dossiers/countries', name: 'countries' },
@@ -18,6 +19,11 @@ const VIEWPORTS = [
   { width: 768, height: 1024, name: 'tablet' },
   { width: 1280, height: 800, name: 'desktop' },
 ] as const
+
+
+test.beforeEach(async ({ page }) => {
+  await loginForListPages(page)
+})
 
 for (const route of ROUTES) {
   for (const vp of VIEWPORTS) {

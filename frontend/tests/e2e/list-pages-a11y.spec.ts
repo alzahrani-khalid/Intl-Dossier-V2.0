@@ -1,6 +1,7 @@
 // Phase 40 Plan 10 — list-pages-a11y
 // axe-core gate: 0 WCAG 2.1 AA violations across 7 pages × 2 locales.
 import { test, expect } from '@playwright/test'
+import { loginForListPages } from './support/list-pages-auth'
 import AxeBuilder from '@axe-core/playwright'
 
 const ROUTES = [
@@ -14,6 +15,11 @@ const ROUTES = [
 ] as const
 
 const LOCALES = ['en', 'ar'] as const
+
+
+test.beforeEach(async ({ page }) => {
+  await loginForListPages(page)
+})
 
 for (const route of ROUTES) {
   for (const locale of LOCALES) {
