@@ -14,7 +14,7 @@ const ROUTES_WITH_NAMES = [
   ['/persons', 'persons'],
   ['/dossiers/forums', 'forums'],
   ['/dossiers/topics', 'topics'],
-  ['/dossiers/working-groups', 'working-groups'],
+  ['/dossiers/working_groups', 'working-groups'],
   ['/engagements', 'engagements'],
 ] as const
 

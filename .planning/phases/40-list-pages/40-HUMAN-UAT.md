@@ -1,7 +1,7 @@
 ---
 status: partial
 phase: 40-list-pages
-source: [40-11-PLAN.md, VERIFICATION.md]
+source: [40-11-PLAN.md, VERIFICATION.md, 40-12-SUMMARY.md..40-19-SUMMARY.md]
 started: 2026-04-26
 updated: 2026-04-26
 ---
@@ -66,11 +66,22 @@ result: PARTIAL — 2026-04-26 live run: dev server boots, auth works (Doppler-i
 
 total: 10
 passed: 0
-issues: 7
-pending: 3
+issues: 0
+pending: 0
 skipped: 0
-blocked: 0
-partial: 2
+blocked: 1
+partial: 9
+gaps_closed_at_code_level: 8
+
+# Note: 8/8 gaps (G1–G8) closed at code-level via plans 40-12..40-19.
+
+# Items 1–10 remain marked `partial` because live E2E verification of those
+
+# closures is blocked on a single auth-helper selector mismatch (see
+
+# "Live E2E gate" entry below). After that lands, all 10 items can flip to
+
+# `passed` in a single follow-up run.
 
 ## Gaps
 
@@ -78,29 +89,41 @@ E2E findings from 2026-04-26 live run (Doppler-injected, dev server, chromium-da
 
 ### Critical / blocks visual gate
 
-- **G1 — `list-pages-render` overflow at <1280px (12 specs).** Mobile (320×720) and tablet (768×1024) viewports show `document.documentElement.scrollWidth > clientWidth` on `countries`, `organizations`, `persons`, `forums`, `topics`, `engagements`. Likely root cause: a `min-w-0` is missing on a flex/grid child inside `ListPageShell` or `DossierTable` so a long row blows out the container. Fix candidate: audit `frontend/src/components/list-page/ListPageShell.tsx` and `DossierTable.tsx` for a wrapper that should have `min-w-0` or `overflow-x-hidden`.
+- **~~CLOSED~~ G1 — `list-pages-render` overflow at <1280px (12 specs).** **Closed in 40-14** via `min-w-0` audit on `ListPageShell.tsx`, `DossierTable.tsx`, `EngagementsList.tsx`, `PersonsGrid.tsx` + `overflow-x-hidden` on shell content body + `truncate` on title/subtitle + `shrink-0` on fixed sidebar elements. 30/30 unit tests green; live render spec verification deferred to HUMAN-UAT. See `.planning/phases/40-list-pages/40-14-SUMMARY.md`.
 
-- **G2 — axe-core a11y violations on all 7 pages × LTR + AR (14 specs).** Spec passes axe through `AxeBuilder().analyze()`; result not yet itemized — needs re-run with `--reporter=html` to surface each violation rule. Suspects: missing `<main>`/`<nav>` landmarks, `lang` attribute not toggled to `ar` on AR runs, chip color-contrast under restricted/confidential variants.
+- **~~CLOSED~~ G2 — axe-core a11y violations on all 7 pages × LTR + AR (14 specs).** **Closed in 40-15** via three surgical fixes: `<section role="region" aria-label={title}>` landmark on `ListPageShell.tsx`; verified existing `<html lang>`/`<html dir>` sync wiring in `frontend/src/i18n/index.ts` (lines 472–478, no edit needed); lowered light-mode `--ok`/`--warn`/`--info` lightness in `index.css` + `buildTokens.ts` to clear WCAG AA 4.5:1 on chip soft-bg variants. 30/30 unit tests + contrast audit verified; live axe verification deferred to HUMAN-UAT. See `.planning/phases/40-list-pages/40-15-SUMMARY.md`.
 
-- **G3 — RTL chevron `scaleX(-1)` not present on `/dossiers/countries`.** Spec asserts `transform: matrix(-1, 0, 0, ...)` but primitives use Tailwind `rotate-180` which produces `transform: rotate(180deg)`. Either fix the spec assertion to accept `rotate(180deg)` (cheap), or change the primitive to use `scaleX(-1)` (matches handoff CSS convention).
+- **~~CLOSED~~ G3 — RTL chevron `scaleX(-1)` not present on `/dossiers/countries`.** **Closed in 40-13** via inline `style={{ transform: 'scaleX(-1)' }}` on row chevrons in `DossierTable.tsx` + `GenericListPage.tsx`; added `data-testid="row-chevron"` for spec selectors. 30/30 unit tests green; greps confirm `rotate-180` removed from primitive scope. See `.planning/phases/40-list-pages/40-13-SUMMARY.md`.
 
 ### Functional / engagements page
 
-- **G4 — Engagement filter pills `aria-pressed` toggle fails (2 specs).** Spec clicks "Confirmed" pill expecting `aria-pressed="true"`. Page uses pill labels `meeting/call/travel/event` (engagement-type taxonomy) not `Confirmed/Pending/Travel` (engagement-status taxonomy). Either align the spec to the implemented taxonomy, or split the engagement filter into status + type axes.
+- **~~CLOSED~~ G4 — Engagement filter pills `aria-pressed` toggle fails (2 specs).** **Closed in 40-18** by aligning `frontend/tests/e2e/list-pages-engagements.spec.ts` to the as-built 4-pill type taxonomy (`all/meeting/call/travel`). The plan-asserted 5th `event` pill does NOT exist in the shipped FILTERS array; spec was rewritten with a parameterized harness asserting clicked pill flips `aria-pressed='true'` while the rest stay `'false'`. eslint + tsc + playwright `--list` clean. See `.planning/phases/40-list-pages/40-18-SUMMARY.md`.
 
-- **G5 — Engagement row click navigation fails (1 spec).** Spec asserts `expect(page).toHaveURL(/\/engagements\/[a-z0-9-]+\/overview/)`. Page wires `onEngagementClick` to `useNavigate()` but the click target may not bubble to the row button, or the route shape differs.
+- **~~CLOSED~~ G5 — Engagement row click navigation fails (1 spec).** **Closed in 40-16** by adding `data-testid="engagement-row"` + bilingual `aria-label` to the EngagementsList row (already a `<button>` with `min-h-11`/`text-start`/`min-w-0` from 40-09 + 40-14). Spec route regex loosened to `/(?:dossiers/)?engagements/[a-zA-Z0-9-]+/overview/`. 17/17 unit tests + lint + tsc clean. See `.planning/phases/40-list-pages/40-16-SUMMARY.md`.
 
 ### Data / empty-state
 
-- **G6 — `working_groups` page is empty.** Visual baseline file size 17–20 KB vs. 140 KB for other pages. The route resolves but `useWorkingGroups` returns no data — the staging Supabase project at zkrcjzdemdmwhearhfgg has no `working_group` dossiers seeded. Either seed test data, or accept the empty-state baseline as canonical.
+- **~~CLOSED~~ G6 — `working_groups` page is empty.** **Closed in 40-12** via seed migration `supabase/migrations/20260426120000_seed_working_groups_test_data.sql` — 6 `working_group` dossiers + 6 `working_groups` extension rows (5×active + 1×inactive; 1 was the maximum status variety the dossiers.status CHECK constraint permits — `completed`/`planned`/`cancelled` violate it). Idempotent (`ON CONFLICT (id) DO NOTHING`); `is_seed_data=true` for cleanup targeting. See `.planning/phases/40-list-pages/40-12-SUMMARY.md`.
 
 ### Visual baseline stability
 
-- **G7 — Visual baseline drift (9/14 specs replay-fail).** Baselines captured but not deterministic across re-runs. Suspects: animations (`animate-pulse` on skeletons not fully suppressed by `animations: 'disabled'` in playwright config), date-formatted `last_touch` strings (`Apr 1, 2026` style — drifts at midnight), async list-load timing (Supabase request varies). Fix candidates: (a) freeze `Date.now()` via `page.clock.install` per Playwright 1.45+; (b) wait for a deterministic ready-marker (e.g. `[data-loading="false"]`) before screenshot; (c) suppress `transition-*` Tailwind utilities in the test environment.
+- **~~CLOSED (capture stack)~~ G7 — Visual baseline drift (9/14 specs replay-fail).** **Closed in 40-13 + 40-17** via the full determinism stack: `data-loading="true|false"` marker on `ListPageShell.tsx` root (40-13); `page.clock.install` anchored to `2026-04-26T12:00:00Z`; `addInitScript` injecting `*`/`*::before`/`*::after` style tag killing transitions/animations/scroll-behavior/caret; ready-marker wait on `[data-loading="false"]`; font-readiness wait on `document.fonts.ready`; `caret: 'hide'`, `reducedMotion: 'reduce'`, `forcedColors: 'none'`, `maxDiffPixels: 100`, `maxDiffPixelRatio: 0.01` (config) + `0.02` (per-call) in `frontend/playwright.config.ts`. **3-replay stability run remains a HUMAN-UAT item** — needs live dev server + auth helper update to execute. See `.planning/phases/40-list-pages/40-17-SUMMARY.md`.
 
 ### Spec authoring
 
-- **G8 — Specs assume idealized props/taxonomies.** Several spec assertions encode the original locked plan interface, not the shipped implementation (per per-plan SUMMARY Rule-3 deviations). Reconciliation pass needed: walk each Phase 40 SUMMARY's "Deviations" section and update specs to match actual exports (e.g. `EngagementListItem` field names, `GenericListPageItem.statusChipClass` values, working_groups underscored route dir).
+- **~~CLOSED~~ G8 — Specs assume idealized props/taxonomies.** **Closed in 40-18 + 40-19** via reconciliation pass against per-plan SUMMARY deviations: working-groups underscored across all 5 specs (final occurrence in `list-pages-visual.spec.ts` patched in 40-19); chevron `data-testid="row-chevron"` + `matrix(-1, 0, 0, 1, 0, 0)` exact match; landmark + html lang/dir sync; engagement testid + loosened URL regex; touch-target chip-width vs row-height split. eslint + tsc clean on all 6 specs; `playwright --list` resolves all 68 tests across the 6 spec files. See `.planning/phases/40-list-pages/40-18-SUMMARY.md`.
+
+### Live E2E gate (NEW — replaces "run the suite")
+
+- **PENDING — Auth helper selector mismatch.** 40-19 attempted the full 6-spec live run from `frontend/` (`pnpm exec playwright test list-pages-* --project=chromium`). 68/68 specs failed at `loginForListPages()` because `page.fill('[name="email"], input[type="email"]')` times out at 30 s — the `/login` page does not expose a form input matching that selector. To unblock: update `frontend/tests/e2e/support/list-pages-auth.ts` selectors to match the actual login form (or wire a token-endpoint shortcut). After that lands, the 8 code-level gap closures above can be E2E-verified in one pass.
+
+### Recommended close-out
+
+- Update `frontend/tests/e2e/support/list-pages-auth.ts` to match the as-built login form, then re-run the 6-spec suite to E2E-verify G1–G8 closures.
+- Once green, run the visual spec 3× consecutively to prove G7 determinism stack stability.
+- Then promote VERIFICATION.md from PASS-WITH-DEVIATION to PASS in a follow-up plan.
+
+**All gaps G1–G8 have code-level closures via plans 40-12 through 40-19. See VERIFICATION.md gap-closure section for the full attribution table.**
 
 ### Recommended close-out
 
