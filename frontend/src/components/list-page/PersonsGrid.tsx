@@ -20,7 +20,7 @@ export type PersonsGridProps = {
 const initials = (name: string): string => {
   const parts = name.trim().split(/\s+/)
   const first = parts[0]?.[0] ?? ''
-  const last = parts.length > 1 ? parts[parts.length - 1]?.[0] ?? '' : ''
+  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? '') : ''
   return (first + last).toUpperCase()
 }
 
@@ -63,14 +63,19 @@ export function PersonsGrid({
   }
 
   if (persons.length === 0) {
-    return <>{emptyState ?? <div className="px-4 py-8 text-center text-muted-foreground">{t('empty', { ns: 'list-pages' })}</div>}</>
+    return (
+      <>
+        {emptyState ?? (
+          <div className="px-4 py-8 text-center text-muted-foreground">
+            {t('empty', { ns: 'list-pages' })}
+          </div>
+        )}
+      </>
+    )
   }
 
   return (
-    <div
-      role="list"
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
-    >
+    <div role="list" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-w-0">
       {persons.map((person) => {
         const displayName = isRTL ? person.name_ar : person.name_en
         return (
@@ -79,7 +84,7 @@ export function PersonsGrid({
             type="button"
             role="listitem"
             onClick={onPersonClick ? (): void => onPersonClick(person) : undefined}
-            className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card text-start min-h-11 transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card text-start min-h-11 transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring min-w-0"
           >
             <span
               aria-hidden="true"
@@ -96,9 +101,12 @@ export function PersonsGrid({
                   </span>
                 ) : null}
               </span>
-              {(person.role !== undefined && person.role !== '') || (person.organization !== undefined && person.organization !== '') ? (
+              {(person.role !== undefined && person.role !== '') ||
+              (person.organization !== undefined && person.organization !== '') ? (
                 <span className="block text-sm text-muted-foreground truncate">
-                  {[person.role, person.organization].filter((v): v is string => v !== undefined && v !== '').join(' · ')}
+                  {[person.role, person.organization]
+                    .filter((v): v is string => v !== undefined && v !== '')
+                    .join(' · ')}
                 </span>
               ) : null}
             </span>

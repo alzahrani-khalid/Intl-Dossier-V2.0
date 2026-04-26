@@ -63,7 +63,10 @@ export function EngagementsList({
   const isRTL = i18n.language === 'ar'
 
   const groupedByWeek = useMemo(() => {
-    const map = new Map<string, { key: string; year: number; week: number; rows: EngagementRow[] }>()
+    const map = new Map<
+      string,
+      { key: string; year: number; week: number; rows: EngagementRow[] }
+    >()
     for (const e of engagements) {
       const w = getISOWeek(e.starts_at)
       const bucket = map.get(w.key) ?? { key: w.key, year: w.year, week: w.week, rows: [] }
@@ -80,15 +83,19 @@ export function EngagementsList({
   }, [engagements])
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 min-w-0">
       {/* Toolbar: search + filter pills */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between min-w-0">
         <ToolbarSearch
           value={search}
           onChange={onSearchChange}
           placeholder={t('engagements.search.placeholder', { defaultValue: 'Search engagements…' })}
         />
-        <div role="group" aria-label={t('engagements.filter.aria', { defaultValue: 'Filter engagements' })} className="flex flex-wrap gap-2">
+        <div
+          role="group"
+          aria-label={t('engagements.filter.aria', { defaultValue: 'Filter engagements' })}
+          className="flex flex-wrap gap-2"
+        >
           {FILTERS.map((f) => (
             <FilterPill
               key={f.value}
@@ -102,17 +109,30 @@ export function EngagementsList({
 
       {/* Body */}
       {isLoading ? (
-        <div data-testid="engagements-list-skeleton" role="status" aria-label={t('loading', { ns: 'list-pages' })}>
+        <div
+          data-testid="engagements-list-skeleton"
+          role="status"
+          aria-label={t('loading', { ns: 'list-pages' })}
+        >
           <SkeletonRow />
           <SkeletonRow />
           <SkeletonRow />
         </div>
       ) : engagements.length === 0 ? (
-        <>{emptyState ?? <div className="px-4 py-8 text-center text-muted-foreground">{t('empty', { ns: 'list-pages' })}</div>}</>
+        <>
+          {emptyState ?? (
+            <div className="px-4 py-8 text-center text-muted-foreground">
+              {t('empty', { ns: 'list-pages' })}
+            </div>
+          )}
+        </>
       ) : (
         <div role="list">
           {groupedByWeek.map((group) => (
-            <section key={group.key} aria-label={t('engagements.week.of', { defaultValue: 'Week of' }) + ' ' + group.key}>
+            <section
+              key={group.key}
+              aria-label={t('engagements.week.of', { defaultValue: 'Week of' }) + ' ' + group.key}
+            >
               <h3 className="px-4 py-2 text-xs font-semibold uppercase text-muted-foreground bg-muted/30">
                 {t('engagements.week.of', { defaultValue: 'Week of' })} {group.key}
               </h3>
@@ -124,18 +144,23 @@ export function EngagementsList({
                     type="button"
                     role="listitem"
                     onClick={onEngagementClick ? (): void => onEngagementClick(row) : undefined}
-                    className="w-full text-start min-h-11 px-4 py-3 border-b border-border transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="w-full text-start min-h-11 px-4 py-3 border-b border-border transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring min-w-0"
                   >
-                    <div className="font-medium truncate">{title}</div>
-                    <div className="text-sm text-muted-foreground truncate">
-                      {new Date(row.starts_at).toLocaleString(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: '2-digit',
-                      })}
-                      {row.location !== undefined && row.location !== '' ? ` · ${row.location}` : ''}
+                    <div className="font-medium truncate min-w-0">{title}</div>
+                    <div className="text-sm text-muted-foreground truncate min-w-0">
+                      {new Date(row.starts_at).toLocaleString(
+                        i18n.language === 'ar' ? 'ar-SA' : 'en-US',
+                        {
+                          weekday: 'short',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: '2-digit',
+                        },
+                      )}
+                      {row.location !== undefined && row.location !== ''
+                        ? ` · ${row.location}`
+                        : ''}
                     </div>
                   </button>
                 )
@@ -155,7 +180,10 @@ export function EngagementsList({
               >
                 {isFetchingNextPage ? (
                   <>
-                    <GlobeSpinner size={16} aria-label={t('engagements.loadMore.loading', { defaultValue: 'Loading…' })} />
+                    <GlobeSpinner
+                      size={16}
+                      aria-label={t('engagements.loadMore.loading', { defaultValue: 'Loading…' })}
+                    />
                     <span>{t('engagements.loadMore.loading', { defaultValue: 'Loading…' })}</span>
                   </>
                 ) : (

@@ -35,20 +35,26 @@ export function ListPageShell({
     <section
       dir={isRTL ? 'rtl' : 'ltr'}
       data-loading={isLoading ? 'true' : 'false'}
-      className="container mx-auto flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-6 lg:px-8"
+      className="container mx-auto flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-6 lg:px-8 min-w-0"
     >
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold text-start sm:text-3xl md:text-4xl">{title}</h1>
+      <header className="flex flex-col gap-1 min-w-0">
+        <h1 className="text-2xl font-semibold text-start sm:text-3xl md:text-4xl truncate">
+          {title}
+        </h1>
         {subtitle !== undefined && subtitle !== '' ? (
-          <p className="text-sm text-muted-foreground text-start sm:text-base">{subtitle}</p>
+          <p className="text-sm text-muted-foreground text-start sm:text-base truncate">
+            {subtitle}
+          </p>
         ) : null}
       </header>
 
       {toolbar !== undefined ? (
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">{toolbar}</div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 min-w-0">
+          {toolbar}
+        </div>
       ) : null}
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 min-w-0 overflow-x-hidden">
         {isLoading ? <DefaultSkeleton /> : isEmpty ? (emptyState ?? null) : children}
       </div>
     </section>

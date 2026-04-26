@@ -123,20 +123,20 @@ export function DossierTable({
             type="button"
             role="row"
             onClick={onRowClick ? (): void => onRowClick(row) : undefined}
-            className="w-full text-start min-h-11 grid items-center gap-3 px-4 py-3 border-b border-border transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring md:grid-cols-[auto_1fr_auto_auto_auto] grid-cols-[auto_1fr_auto]"
+            className="w-full text-start min-h-11 grid items-center gap-3 px-4 py-3 border-b border-border transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring md:grid-cols-[auto_1fr_auto_auto_auto] grid-cols-[auto_1fr_auto] min-w-0"
           >
             <DossierGlyph type={row.type} iso={row.iso} name={displayName} size={32} />
-            <span className="font-medium truncate text-start">{displayName}</span>
-            <span className="hidden md:inline text-sm text-muted-foreground">
+            <span className="font-medium truncate text-start min-w-0">{displayName}</span>
+            <span className="hidden md:inline text-sm text-muted-foreground shrink-0">
               {row.engagement_count}
             </span>
-            <span className="hidden md:inline text-sm text-muted-foreground">
+            <span className="hidden md:inline text-sm text-muted-foreground shrink-0">
               {formatLastTouch(row.last_touch, i18n.language)}
             </span>
-            <span className={`chip ${chipClass}`}>{chipLabel}</span>
+            <span className={`chip shrink-0 ${chipClass}`}>{chipLabel}</span>
             <ChevronRight
               data-testid="row-chevron"
-              className="size-4 text-muted-foreground md:hidden"
+              className="size-4 text-muted-foreground md:hidden shrink-0"
               style={isRTL ? { transform: 'scaleX(-1)' } : undefined}
               aria-hidden="true"
             />
