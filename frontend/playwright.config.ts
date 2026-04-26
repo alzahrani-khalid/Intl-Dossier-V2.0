@@ -42,6 +42,11 @@ export default defineConfig({
       maxDiffPixelRatio: 0.01,
       threshold: 0.2,
       animations: 'disabled',
+      // Plan 40-17 (G7): suppress caret blink in screenshots so focused inputs
+      // do not introduce one-pixel drift between replays.
+      caret: 'hide',
+      // Cap absolute pixel diffs as a safety net beyond the ratio.
+      maxDiffPixels: 100,
     },
   },
   use: {
@@ -49,6 +54,12 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    // Plan 40-17 (G7): emulate reduced-motion for the whole project so any
+    // `@media (prefers-reduced-motion)` branches in the app render the static
+    // variant.  Combined with the per-test addInitScript that kills CSS
+    // animations, this is the belt-and-braces layer.
+    reducedMotion: 'reduce',
+    forcedColors: 'none',
   },
   projects: [
     {
