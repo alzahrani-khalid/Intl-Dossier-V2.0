@@ -58,11 +58,7 @@ export function GenericListPage({
   }
 
   return (
-    <ul
-      className="flex flex-col gap-1.5"
-      role="list"
-      data-testid="generic-list-page"
-    >
+    <ul className="flex flex-col gap-1.5" role="list" data-testid="generic-list-page">
       {items.map((item) => {
         const interactive = typeof onItemClick === 'function'
         return (
@@ -124,10 +120,9 @@ export function GenericListPage({
               )}
 
               <ChevronRight
-                className={[
-                  'size-4 text-muted-foreground shrink-0',
-                  isRTL ? 'rotate-180' : '',
-                ].join(' ')}
+                data-testid="row-chevron"
+                className="size-4 text-muted-foreground shrink-0"
+                style={isRTL ? { transform: 'scaleX(-1)' } : undefined}
                 aria-hidden="true"
               />
             </div>

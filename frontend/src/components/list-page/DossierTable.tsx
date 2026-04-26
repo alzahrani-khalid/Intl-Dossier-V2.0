@@ -59,7 +59,11 @@ export function DossierTable({
 
   if (isLoading) {
     return (
-      <div data-testid="dossier-table-skeleton" role="status" aria-label={t('loading', { ns: 'list-pages' })}>
+      <div
+        data-testid="dossier-table-skeleton"
+        role="status"
+        aria-label={t('loading', { ns: 'list-pages' })}
+      >
         <SkeletonRow />
         <SkeletonRow />
         <SkeletonRow />
@@ -68,11 +72,22 @@ export function DossierTable({
   }
 
   if (rows.length === 0) {
-    return <>{emptyState ?? <div className="px-4 py-8 text-center text-muted-foreground">{t('empty', { ns: 'list-pages' })}</div>}</>
+    return (
+      <>
+        {emptyState ?? (
+          <div className="px-4 py-8 text-center text-muted-foreground">
+            {t('empty', { ns: 'list-pages' })}
+          </div>
+        )}
+      </>
+    )
   }
 
   return (
-    <div role="table" aria-label={t('countries.table.aria', { defaultValue: 'Dossiers', ns: 'countries' })}>
+    <div
+      role="table"
+      aria-label={t('countries.table.aria', { defaultValue: 'Dossiers', ns: 'countries' })}
+    >
       {/* Desktop / tablet header (md+) */}
       <div
         role="row"
@@ -80,16 +95,27 @@ export function DossierTable({
         style={{ gridTemplateColumns: 'auto 1fr auto auto auto' }}
       >
         <span aria-hidden="true" />
-        <span role="columnheader">{t('countries.table.name', { defaultValue: 'Name', ns: 'countries' })}</span>
-        <span role="columnheader">{t('countries.table.engagements', { defaultValue: 'Engagements', ns: 'countries' })}</span>
-        <span role="columnheader">{t('countries.table.lastTouch', { defaultValue: 'Last touch', ns: 'countries' })}</span>
-        <span role="columnheader">{t('countries.table.sensitivity', { defaultValue: 'Sensitivity', ns: 'countries' })}</span>
+        <span role="columnheader">
+          {t('countries.table.name', { defaultValue: 'Name', ns: 'countries' })}
+        </span>
+        <span role="columnheader">
+          {t('countries.table.engagements', { defaultValue: 'Engagements', ns: 'countries' })}
+        </span>
+        <span role="columnheader">
+          {t('countries.table.lastTouch', { defaultValue: 'Last touch', ns: 'countries' })}
+        </span>
+        <span role="columnheader">
+          {t('countries.table.sensitivity', { defaultValue: 'Sensitivity', ns: 'countries' })}
+        </span>
       </div>
 
       {rows.map((row) => {
         const displayName = isRTL ? row.name_ar : row.name_en
         const chipClass = sensitivityChipClass(row.sensitivity_level)
-        const chipLabel = t(sensitivityLabelKey(row.sensitivity_level), { ns: 'countries', defaultValue: '' })
+        const chipLabel = t(sensitivityLabelKey(row.sensitivity_level), {
+          ns: 'countries',
+          defaultValue: '',
+        })
 
         return (
           <button
@@ -101,10 +127,19 @@ export function DossierTable({
           >
             <DossierGlyph type={row.type} iso={row.iso} name={displayName} size={32} />
             <span className="font-medium truncate text-start">{displayName}</span>
-            <span className="hidden md:inline text-sm text-muted-foreground">{row.engagement_count}</span>
-            <span className="hidden md:inline text-sm text-muted-foreground">{formatLastTouch(row.last_touch, i18n.language)}</span>
+            <span className="hidden md:inline text-sm text-muted-foreground">
+              {row.engagement_count}
+            </span>
+            <span className="hidden md:inline text-sm text-muted-foreground">
+              {formatLastTouch(row.last_touch, i18n.language)}
+            </span>
             <span className={`chip ${chipClass}`}>{chipLabel}</span>
-            <ChevronRight className={`size-4 text-muted-foreground md:hidden ${isRTL ? 'rotate-180' : ''}`} aria-hidden="true" />
+            <ChevronRight
+              data-testid="row-chevron"
+              className="size-4 text-muted-foreground md:hidden"
+              style={isRTL ? { transform: 'scaleX(-1)' } : undefined}
+              aria-hidden="true"
+            />
           </button>
         )
       })}

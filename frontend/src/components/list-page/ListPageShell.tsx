@@ -34,6 +34,7 @@ export function ListPageShell({
   return (
     <section
       dir={isRTL ? 'rtl' : 'ltr'}
+      data-loading={isLoading ? 'true' : 'false'}
       className="container mx-auto flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-6 lg:px-8"
     >
       <header className="flex flex-col gap-1">
@@ -48,13 +49,7 @@ export function ListPageShell({
       ) : null}
 
       <div className="flex flex-col gap-3">
-        {isLoading ? (
-          <DefaultSkeleton />
-        ) : isEmpty ? (
-          (emptyState ?? null)
-        ) : (
-          children
-        )}
+        {isLoading ? <DefaultSkeleton /> : isEmpty ? (emptyState ?? null) : children}
       </div>
     </section>
   )
