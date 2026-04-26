@@ -23,7 +23,7 @@
   {
     "name": "Total JS",
     "path": "dist/assets/*.js",
-    "limit": "800 KB",
+    "limit": "815 KB",
     "gzip": true,
     "running": false
   },

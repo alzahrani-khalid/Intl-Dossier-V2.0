@@ -24,6 +24,11 @@
 @import '@heroui/styles/utilities';
 @import '@heroui/styles/variants';
 
+/* Phase 40 list-pages handoff CSS (Plan 02c) — port of app.css rules
+   required by list-page primitives (.btn, .chip, .tbl, .week-list,
+   .forum-row, .icon-flip, .spinner-row, .pill, .dossier-row, .page*). */
+@import url('./styles/list-pages.css');
+
 /* ==========================================================================
    @theme — Tailwind v4 source of truth for the D-16 token engine (Plan 33-06).
    Exposes utilities (bg-*, text-*, border-*, ring-*, shadow-*) that resolve to
