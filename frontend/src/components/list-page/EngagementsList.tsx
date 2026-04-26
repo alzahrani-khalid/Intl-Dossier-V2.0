@@ -138,11 +138,18 @@ export function EngagementsList({
               </h3>
               {group.rows.map((row) => {
                 const title = isRTL ? row.title_ar : row.title_en
+                const ariaLabel = t('engagements.row.openAria', {
+                  defaultValue: 'Open engagement: {{title}}',
+                  title,
+                })
                 return (
                   <button
                     key={row.id}
                     type="button"
                     role="listitem"
+                    data-testid="engagement-row"
+                    data-engagement-row={row.id}
+                    aria-label={ariaLabel}
                     onClick={onEngagementClick ? (): void => onEngagementClick(row) : undefined}
                     className="w-full text-start min-h-11 px-4 py-3 border-b border-border transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring min-w-0"
                   >

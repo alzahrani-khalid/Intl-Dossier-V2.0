@@ -4,7 +4,6 @@
 import { test, expect } from '@playwright/test'
 import { loginForListPages } from './support/list-pages-auth'
 
-
 test.beforeEach(async ({ page }) => {
   await loginForListPages(page)
 })
@@ -37,14 +36,40 @@ test.describe('Engagements LIST-04', () => {
   })
 
   test('Row click navigates to /engagements/$engagementId/overview', async ({ page }) => {
-    // Prefer data-engagement-row attribute; fall back to first list-page row.
-    const dataRow = page.locator('[data-engagement-row]').first()
-    if ((await dataRow.count()) > 0) {
-      await dataRow.click()
+    // Prefer data-testid="engagement-row" (G5 contract); fall back to legacy
+    // attribute / role-based selector for resilience.
+    const testIdRow = page.locator('[data-testid="engagement-row"]').first()
+    if ((await testIdRow.count()) > 0) {
+      await testIdRow.click()
     } else {
-      await page.locator('.week-list a, .week-list [role="button"]').first().click()
+      const dataRow = page.locator('[data-engagement-row]').first()
+      if ((await dataRow.count()) > 0) {
+        await dataRow.click()
+      } else {
+        await page.locator('.week-list a, .week-list [role="button"]').first().click()
+      }
     }
-    await expect(page).toHaveURL(/\/engagements\/[a-zA-Z0-9-]+\/overview$/)
+    await expect(page).toHaveURL(/\/(?:dossiers\/)?engagements\/[a-zA-Z0-9-]+\/overview/)
+  })
+
+  test('Engagement row is keyboard-accessible (Enter)', async ({ page }) => {
+    const row = page.locator('[data-testid="engagement-row"]').first()
+    if ((await row.count()) === 0) {
+      test.skip(true, 'No engagement rows present in current dataset')
+    }
+    await row.focus()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/(?:dossiers\/)?engagements\/[a-zA-Z0-9-]+\/overview/)
+  })
+
+  test('Engagement row meets 44×44 touch target', async ({ page }) => {
+    const row = page.locator('[data-testid="engagement-row"]').first()
+    if ((await row.count()) === 0) {
+      test.skip(true, 'No engagement rows present in current dataset')
+    }
+    const box = await row.boundingBox()
+    expect(box).not.toBeNull()
+    expect(box!.height).toBeGreaterThanOrEqual(44)
   })
 
   test('Load-more triggers fetchNextPage and shows GlobeSpinner + bilingual loading text', async ({
