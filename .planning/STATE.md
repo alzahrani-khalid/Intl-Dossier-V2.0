@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: idle — ready for next phase
-stopped_at: Phase 40 context gathered
-last_updated: '2026-04-25T17:43:45.246Z'
-last_activity: 2026-04-25 — Phase 39 closed
+status: phase-complete
+stopped_at: Phase 40 PASS-WITH-DEVIATION (visual baselines + PNG parity deferred to HUMAN-UAT)
+last_updated: "2026-04-26T10:05:00.000Z"
+last_activity: 2026-04-26 -- Phase 40 execution complete (PASS-WITH-DEVIATION)
 progress:
   total_phases: 11
-  completed_phases: 6
-  total_plans: 69
-  completed_plans: 55
-  percent: 80
+  completed_phases: 7
+  total_plans: 82
+  completed_plans: 68
+  percent: 83
 ---
 
 # Project State
@@ -21,16 +21,32 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Milestone v6.0 — Phase 39 (kanban-calendar) closed. Next unblocked in parallel: 40 (list-pages), 41 (dossier-drawer), 42 (remaining-pages).
+**Current focus:** Phase 41 — dossier-drawer (next), pending Phase 40 visual sign-off
 
 ## Current Position
 
-Phase: 39 (kanban-calendar) — **COMPLETE (PASS-WITH-DEVIATION)**
-Plans: 10 of 10 complete
-Status: idle — ready for next phase
-Last activity: 2026-04-25 — Phase 39 closed
+Phase: 40 (list-pages) — COMPLETE (PASS-WITH-DEVIATION)
+Plans: 13 of 13 complete
+Status: Phase 40 closed; visual baselines + 7-page PNG parity deferred to HUMAN-UAT
+Last activity: 2026-04-26 -- VERIFICATION.md authored (PASS-WITH-DEVIATION); HUMAN-UAT.md persisted
 
-Progress: [█████████▉] 98% (55 / 56 plans)
+Progress: [█████████▉] 83% (68 / 82 plans)
+
+### Phase 40 summary
+
+| Wave | Plans          | Status              | Notes |
+|------|----------------|---------------------|-------|
+| 0a   | 40-01          | PASS                | 16 locale namespaces (8 × EN+AR); AR parity verified per key |
+| 0a   | 40-02a         | PASS-WITH-DEVIATION | 8 primitives + sensitivity helper + barrel + 5 vitest fixtures (30/30 green); split α/β/γ + inline orchestration after 2 whole-plan subagent context exhaustions; 4 deviations documented |
+| 0b   | 40-02b         | PASS-WITH-DEVIATION | 3 Supabase adapter hooks + 7/7 tests; documented Engagement-shape divergence (real `EngagementListItem` uses `name_en/name_ar/host_country_*`, not plan's `title_en/title_ar/kind`) |
+| 0b   | 40-02c         | PASS                | CSS port 313 lines (`.chip`, `.btn`, `.icon-flip`, `.spinner-row`, etc); size-limit 800→815 KB; 4 Open Questions verified |
+| 1    | 40-03..40-09   | PASS-WITH-DEVIATION | 7 list pages parallel: countries, organizations, persons, forums, topics, working_groups, engagements; 36/36 page+hook tests green; 40-03 + 40-08 truncated mid-stream (test+SUMMARY salvaged inline); 40-09 built `toEngagementRow` mapper for real shape; 40-05 derives VIP from `importance_level >= 4`; 40-07 added `useTopics` list-hook shim |
+| 2    | 40-10          | PASS                | 6 Playwright E2E specs (render/rtl/engagements/a11y/touch-targets/visual) + ESLint logical-properties enforcement on Phase 40 file scope; runtime deferred to CI |
+| 2    | 40-11          | PARTIAL             | Manual checkpoint; orchestrator authored VERIFICATION.md verdict; 14 visual baselines + 7-page PNG parity deferred to HUMAN-UAT |
+
+**Totals:** 66/66 vitest green across 15 Phase 40 test files (5 primitive tests + 7 page tests + 3 hook tests); 6 E2E specs landed (run on CI); ESLint logical-properties enforcement live; size-limit 815 KB ceiling; 14 visual baselines pending capture; 10 documented phase deviations carried forward (split execution recovery, 2 truncation salvages, 4 plan-vs-real divergences, 2 mock-priority/CJS-import test fixes, macOS case-insensitive FS note).
+
+**Verdict:** PASS-WITH-DEVIATION — 4/4 LIST requirements coded and unit-tested; visual-gate sign-off (`pnpm playwright test list-pages-visual --update-snapshots` + 7-page handoff PNG parity) pending in `40-HUMAN-UAT.md`. Phase 41 (dossier-drawer) unblocked except for visual-gate convergence.
 
 ### Phase 39 summary
 
