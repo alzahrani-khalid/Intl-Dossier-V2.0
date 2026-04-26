@@ -1,60 +1,62 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { I18nextProvider } from 'react-i18next'
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
 import { ListPageShell } from '../ListPageShell'
 
-void i18n.use(initReactI18next).init({
-  lng: 'en',
-  fallbackLng: 'en',
-  resources: { en: { translation: {} } },
-  interpolation: { escapeValue: false },
-})
+// Per-file react-i18next mock (project pattern — global mock has afterActions-only map).
+vi.mock('react-i18next', () => ({
+  useTranslation: (): { i18n: { language: string }; t: (k: string, opts?: Record<string, unknown>) => string } => ({
+    i18n: { language: 'en' },
+    t: (k: string, opts?: Record<string, unknown>): string => {
+      if (opts && typeof opts === 'object' && 'defaultValue' in opts && typeof opts.defaultValue === 'string') {
+        return opts.defaultValue
+      }
+      return k
+    },
+  }),
+  Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
+}))
 
-const renderShell = (ui: React.ReactElement): ReturnType<typeof render> =>
-  render(<I18nextProvider i18n={i18n}>{ui}</I18nextProvider>)
 
 describe('ListPageShell', () => {
   it('renders the title', () => {
-    renderShell(<ListPageShell title="Countries" />)
-    expect(screen.getByRole('heading', { name: 'Countries' })).toBeInTheDocument()
+    render(<ListPageShell title="Countries" />)
+    expect(screen.getByRole('heading', { name: 'Countries' })).toBeTruthy()
   })
 
   it('renders subtitle when provided', () => {
-    renderShell(<ListPageShell title="Countries" subtitle="All nations" />)
-    expect(screen.getByText('All nations')).toBeInTheDocument()
+    render(<ListPageShell title="Countries" subtitle="All nations" />)
+    expect(screen.getByText('All nations')).toBeTruthy()
   })
 
   it('shows skeleton when isLoading', () => {
-    renderShell(<ListPageShell title="Countries" isLoading />)
-    expect(screen.getByTestId('list-page-skeleton')).toBeInTheDocument()
+    render(<ListPageShell title="Countries" isLoading />)
+    expect(screen.getByTestId('list-page-skeleton')).toBeTruthy()
   })
 
   it('shows empty state when isEmpty', () => {
-    renderShell(
+    render(
       <ListPageShell
         title="Countries"
         isEmpty
         emptyState={<div data-testid="empty-state">No data</div>}
       />,
     )
-    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
+    expect(screen.getByTestId('empty-state')).toBeTruthy()
   })
 
   it('renders children when not loading and not empty', () => {
-    renderShell(
+    render(
       <ListPageShell title="Countries">
         <div data-testid="content">Row 1</div>
       </ListPageShell>,
     )
-    expect(screen.getByTestId('content')).toBeInTheDocument()
+    expect(screen.getByTestId('content')).toBeTruthy()
   })
 
   it('renders toolbar when provided', () => {
-    renderShell(
+    render(
       <ListPageShell title="Countries" toolbar={<div data-testid="toolbar">Search</div>} />,
     )
-    expect(screen.getByTestId('toolbar')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar')).toBeTruthy()
   })
 })

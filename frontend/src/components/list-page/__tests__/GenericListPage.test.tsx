@@ -1,19 +1,21 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { I18nextProvider } from 'react-i18next'
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
 import { GenericListPage, type GenericListPageItem } from '../GenericListPage'
 
-void i18n.use(initReactI18next).init({
-  lng: 'en',
-  fallbackLng: 'en',
-  resources: { en: { translation: {} } },
-  interpolation: { escapeValue: false },
-})
+// Per-file react-i18next mock (project pattern — global mock has afterActions-only map).
+vi.mock('react-i18next', () => ({
+  useTranslation: (): { i18n: { language: string }; t: (k: string, opts?: Record<string, unknown>) => string } => ({
+    i18n: { language: 'en' },
+    t: (k: string, opts?: Record<string, unknown>): string => {
+      if (opts && typeof opts === 'object' && 'defaultValue' in opts && typeof opts.defaultValue === 'string') {
+        return opts.defaultValue
+      }
+      return k
+    },
+  }),
+  Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
+}))
 
-const renderUI = (ui: React.ReactElement): ReturnType<typeof render> =>
-  render(<I18nextProvider i18n={i18n}>{ui}</I18nextProvider>)
 
 const sampleItems: GenericListPageItem[] = [
   { id: '1', primary: 'Alpha', secondary: 'sub-a', statusLabel: 'Active', statusChipClass: 'chip-info' },
@@ -22,15 +24,15 @@ const sampleItems: GenericListPageItem[] = [
 
 describe('GenericListPage', () => {
   it('renders all items with primary/secondary text', () => {
-    renderUI(<GenericListPage items={sampleItems} />)
-    expect(screen.getByText('Alpha')).toBeInTheDocument()
-    expect(screen.getByText('sub-a')).toBeInTheDocument()
-    expect(screen.getByText('Beta')).toBeInTheDocument()
+    render(<GenericListPage items={sampleItems} />)
+    expect(screen.getByText('Alpha')).toBeTruthy()
+    expect(screen.getByText('sub-a')).toBeTruthy()
+    expect(screen.getByText('Beta')).toBeTruthy()
   })
 
   it('fires onItemClick when row clicked', () => {
     const onItemClick = vi.fn()
-    renderUI(<GenericListPage items={sampleItems} onItemClick={onItemClick} />)
+    render(<GenericListPage items={sampleItems} onItemClick={onItemClick} />)
     const rows = screen.getAllByTestId('generic-list-page-row')
     fireEvent.click(rows[0])
     expect(onItemClick).toHaveBeenCalledTimes(1)
@@ -38,24 +40,24 @@ describe('GenericListPage', () => {
   })
 
   it('shows skeleton when isLoading', () => {
-    renderUI(<GenericListPage items={[]} isLoading />)
-    expect(screen.getByTestId('generic-list-page-skeleton')).toBeInTheDocument()
+    render(<GenericListPage items={[]} isLoading />)
+    expect(screen.getByTestId('generic-list-page-skeleton')).toBeTruthy()
   })
 
   it('renders empty state when items=[]', () => {
-    renderUI(
+    render(
       <GenericListPage
         items={[]}
         emptyState={<div data-testid="empty">Nothing here</div>}
       />,
     )
-    expect(screen.getByTestId('empty')).toBeInTheDocument()
+    expect(screen.getByTestId('empty')).toBeTruthy()
   })
 
   it('renders status chip with provided class', () => {
-    renderUI(<GenericListPage items={sampleItems} />)
+    render(<GenericListPage items={sampleItems} />)
     const chip = screen.getByTestId('generic-list-page-status')
-    expect(chip).toHaveTextContent('Active')
+    expect(chip.textContent).toContain('Active')
     expect(chip.className).toContain('chip-info')
   })
 })
