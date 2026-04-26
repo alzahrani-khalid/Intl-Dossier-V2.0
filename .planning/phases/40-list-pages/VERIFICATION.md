@@ -3,18 +3,23 @@ phase: 40-list-pages
 status: PASS-WITH-DEVIATION
 verifier: orchestrator
 verified: 2026-04-26
-plans_complete: 13
-plans_total: 13
+plans_complete: 21
+plans_total: 21
+gap_closure_plans: 8
+gaps_closed_code_level: [G1, G2, G3, G4, G5, G6, G7, G8]
 unit_tests: 66/66
 e2e_specs: 6
 human_uat_pending: true
+human_action_blockers:
+  - 'frontend/tests/e2e/support/list-pages-auth.ts loginForListPages selector timeout (blocks 68 specs from running)'
+  - '14 visual baselines + 7-page handoff PNG parity (manual approval)'
 ---
 
 # Phase 40 — list-pages VERIFICATION
 
 **Verdict:** PASS-WITH-DEVIATION
 
-13 of 13 plans landed on DesignV2. All 4 LIST requirements coded and unit-tested (66/66 vitest green). 6 Playwright E2E specs (render, RTL, engagements, a11y, touch-targets, visual baselines) shipped — runtime validation deferred to CI dev-server (Phase 38/36 precedent). 14 visual baselines + handoff PNG parity remain a HUMAN-UAT item pending manual approval (plan 40-11 was an autonomous=false checkpoint by design).
+21 of 21 plans landed on DesignV2 (13 original + 8 gap-closure). All 8 gaps from the prior PASS-WITH-DEVIATION cycle (G1-G8) are now closed at code level. All 4 LIST requirements coded and unit-tested (66/66 vitest green). 6 Playwright E2E specs (render, RTL, engagements, a11y, touch-targets, visual baselines) shipped — runtime validation deferred to CI dev-server (Phase 38/36 precedent). Live E2E execution and 14 visual baselines + handoff PNG parity remain HUMAN-UAT items pending (a) a single targeted fix to the auth helper selector mismatch in `frontend/tests/e2e/support/list-pages-auth.ts` and (b) manual visual approval. Plan 40-11 + 40-15 + 40-19 were autonomous=false checkpoints; 40-19 chose to preserve PASS-WITH-DEVIATION rather than falsify the verdict, since live E2E gates cannot pass until the auth helper is repaired.
 
 ## Requirement coverage
 

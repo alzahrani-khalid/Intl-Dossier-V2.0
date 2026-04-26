@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: Phase 40 closed; visual baselines + 7-page PNG parity deferred to HUMAN-UAT
-stopped_at: Phase 40 context gathered
-last_updated: "2026-04-26T11:15:48.278Z"
-last_activity: 2026-04-26 -- VERIFICATION.md authored (PASS-WITH-DEVIATION); HUMAN-UAT.md persisted
+status: Phase 40 closed; G1-G8 gap-closure run complete (21/21 plans); auth-helper fix + visual baselines deferred to HUMAN-UAT
+stopped_at: Phase 40 gap-closure run complete
+last_updated: '2026-04-26T17:30:00.000Z'
+last_activity: '2026-04-26 -- /gsd-execute-phase 40 --auto: 8 gap-closure plans (40-12..40-19) merged on DesignV2 → G1-G8 closed at code level; verdict PASS-WITH-DEVIATION preserved (auth helper + visual baselines pending)'
 progress:
   total_phases: 11
   completed_phases: 6
-  total_plans: 77
-  completed_plans: 69
-  percent: 90
+  total_plans: 85
+  completed_plans: 77
+  percent: 91
 ---
 
 # Project State
@@ -25,28 +25,36 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: 40 (list-pages) — COMPLETE (PASS-WITH-DEVIATION)
-Plans: 13 of 13 complete
-Status: Phase 40 closed; visual baselines + 7-page PNG parity deferred to HUMAN-UAT
-Last activity: 2026-04-26 -- VERIFICATION.md authored (PASS-WITH-DEVIATION); HUMAN-UAT.md persisted
+Phase: 40 (list-pages) — COMPLETE (PASS-WITH-DEVIATION; G1-G8 closed at code level)
+Plans: 21 of 21 complete (13 original + 8 gap-closure)
+Status: Phase 40 closed; G1-G8 gap-closure landed; auth-helper fix + visual baselines deferred to HUMAN-UAT
+Last activity: 2026-04-26 -- /gsd-execute-phase 40 --auto: 40-12..40-19 merged (8 commits da89d14c..96ae4e8c)
 
-Progress: [█████████▉] 83% (68 / 82 plans)
+Progress: [█████████▉] 91% (77 / 85 plans)
 
 ### Phase 40 summary
 
-| Wave | Plans          | Status              | Notes |
-|------|----------------|---------------------|-------|
-| 0a   | 40-01          | PASS                | 16 locale namespaces (8 × EN+AR); AR parity verified per key |
-| 0a   | 40-02a         | PASS-WITH-DEVIATION | 8 primitives + sensitivity helper + barrel + 5 vitest fixtures (30/30 green); split α/β/γ + inline orchestration after 2 whole-plan subagent context exhaustions; 4 deviations documented |
-| 0b   | 40-02b         | PASS-WITH-DEVIATION | 3 Supabase adapter hooks + 7/7 tests; documented Engagement-shape divergence (real `EngagementListItem` uses `name_en/name_ar/host_country_*`, not plan's `title_en/title_ar/kind`) |
-| 0b   | 40-02c         | PASS                | CSS port 313 lines (`.chip`, `.btn`, `.icon-flip`, `.spinner-row`, etc); size-limit 800→815 KB; 4 Open Questions verified |
-| 1    | 40-03..40-09   | PASS-WITH-DEVIATION | 7 list pages parallel: countries, organizations, persons, forums, topics, working_groups, engagements; 36/36 page+hook tests green; 40-03 + 40-08 truncated mid-stream (test+SUMMARY salvaged inline); 40-09 built `toEngagementRow` mapper for real shape; 40-05 derives VIP from `importance_level >= 4`; 40-07 added `useTopics` list-hook shim |
-| 2    | 40-10          | PASS                | 6 Playwright E2E specs (render/rtl/engagements/a11y/touch-targets/visual) + ESLint logical-properties enforcement on Phase 40 file scope; runtime deferred to CI |
-| 2    | 40-11          | PARTIAL             | Manual checkpoint; orchestrator authored VERIFICATION.md verdict; 14 visual baselines + 7-page PNG parity deferred to HUMAN-UAT |
+| Wave | Plans        | Status                 | Notes                                                                                                                                                                                                                                                                                                                                                     |
+| ---- | ------------ | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0a   | 40-01        | PASS                   | 16 locale namespaces (8 × EN+AR); AR parity verified per key                                                                                                                                                                                                                                                                                              |
+| 0a   | 40-02a       | PASS-WITH-DEVIATION    | 8 primitives + sensitivity helper + barrel + 5 vitest fixtures (30/30 green); split α/β/γ + inline orchestration after 2 whole-plan subagent context exhaustions; 4 deviations documented                                                                                                                                                                 |
+| 0b   | 40-02b       | PASS-WITH-DEVIATION    | 3 Supabase adapter hooks + 7/7 tests; documented Engagement-shape divergence (real `EngagementListItem` uses `name_en/name_ar/host_country_*`, not plan's `title_en/title_ar/kind`)                                                                                                                                                                       |
+| 0b   | 40-02c       | PASS                   | CSS port 313 lines (`.chip`, `.btn`, `.icon-flip`, `.spinner-row`, etc); size-limit 800→815 KB; 4 Open Questions verified                                                                                                                                                                                                                                 |
+| 1    | 40-03..40-09 | PASS-WITH-DEVIATION    | 7 list pages parallel: countries, organizations, persons, forums, topics, working_groups, engagements; 36/36 page+hook tests green; 40-03 + 40-08 truncated mid-stream (test+SUMMARY salvaged inline); 40-09 built `toEngagementRow` mapper for real shape; 40-05 derives VIP from `importance_level >= 4`; 40-07 added `useTopics` list-hook shim        |
+| 2    | 40-10        | PASS                   | 6 Playwright E2E specs (render/rtl/engagements/a11y/touch-targets/visual) + ESLint logical-properties enforcement on Phase 40 file scope; runtime deferred to CI                                                                                                                                                                                          |
+| 2    | 40-11        | PARTIAL                | Manual checkpoint; orchestrator authored VERIFICATION.md verdict; 14 visual baselines + 7-page PNG parity deferred to HUMAN-UAT                                                                                                                                                                                                                           |
+| g0   | 40-12        | SUCCESS                | G6 closure: 6 working_group fixtures seeded to staging Supabase via MCP `apply_migration`; bilingual `name_en`/`name_ar`; idempotent. Status enum mismatch deviation logged (chip variety reduced 4→2 distinct classes)                                                                                                                                   |
+| g0   | 40-13        | SUCCESS                | G3 + G7-marker primitives: chevron `rotate-180` → inline `style={{transform:'scaleX(-1)'}}` + `data-testid="row-chevron"`; `ListPageShell` adds `data-loading={isLoading?'true':'false'}`                                                                                                                                                                 |
+| g1   | 40-14        | SUCCESS                | G1 closure: `min-w-0` applied across `ListPageShell`, `DossierTable`, `EngagementsList`, `PersonsGrid`; `overflow-x-hidden` on shell content area (clip, not scroll). 30/30 list-page unit tests green                                                                                                                                                    |
+| g1   | 40-15        | SUCCESS-WITH-DEVIATION | G2 closure: `<section role="region" aria-label={title}>` (parent `<main>` already in `AppShell`); `<html lang>` sync verified in `i18n/index.ts`; chip contrast tokens `--warn`/`--ok`/`--info` raised to WCAG AA 4.5:1+ in `index.css` + `buildTokens.ts`. File-mapping deviation: plan referenced `I18nProvider.tsx`/`tokens.css`, real files different |
+| g2   | 40-16        | SUCCESS                | G5 closure: `data-testid="engagement-row"` + bilingual `aria-label` on row `<button>` (already keyboard-activatable); E2E URL regex loosened to accept `/(?:dossiers/)?engagements/.../overview/`; +2 specs (Enter key, 44×44 boundingBox)                                                                                                                |
+| g3   | 40-17        | SUCCESS-WITH-DEFERRAL  | G7 closure: 10/10 visual determinism layers in `list-pages-visual.spec.ts` (clock freeze 2026-04-26T12Z, animation/transition kill, font readiness, RTL settle, viewport pin) + `playwright.config.ts` defaults (`caret:hide`, `maxDiffPixels:100`, `reducedMotion:reduce`)                                                                               |
+| g3   | 40-18        | SUCCESS                | 5 E2E specs reconciled with as-built primitives: `working_groups` (underscore), `[data-testid="row-chevron"]` exact transform match, 4 shipped filter pills `all/meeting/call/travel` (no `event`), `region` landmark assertion, 44×44 baselines                                                                                                          |
+| g4   | 40-19        | SUCCESS-WITH-DEVIATION | Final reconciliation: VERIFICATION.md gap closure attribution table (G1-G8 all closed at code-level), 40-HUMAN-UAT.md updated, last hyphenated `working-groups` route in visual spec patched. Verdict held at PASS-WITH-DEVIATION (live E2E blocked by `list-pages-auth.ts` selector timeout — human-action required)                                     |
 
-**Totals:** 66/66 vitest green across 15 Phase 40 test files (5 primitive tests + 7 page tests + 3 hook tests); 6 E2E specs landed (run on CI); ESLint logical-properties enforcement live; size-limit 815 KB ceiling; 14 visual baselines pending capture; 10 documented phase deviations carried forward (split execution recovery, 2 truncation salvages, 4 plan-vs-real divergences, 2 mock-priority/CJS-import test fixes, macOS case-insensitive FS note).
+**Totals:** 66/66 vitest green across 15 Phase 40 test files; 6 E2E specs (68 tests resolved via `playwright test --list`); ESLint logical-properties enforcement live; size-limit 815 KB ceiling; G1-G8 closed at code level; live E2E run blocked by auth-helper selector mismatch (single targeted fix needed); 14 visual baselines + 7-page PNG parity pending in `40-HUMAN-UAT.md`.
 
-**Verdict:** PASS-WITH-DEVIATION — 4/4 LIST requirements coded and unit-tested; visual-gate sign-off (`pnpm playwright test list-pages-visual --update-snapshots` + 7-page handoff PNG parity) pending in `40-HUMAN-UAT.md`. Phase 41 (dossier-drawer) unblocked except for visual-gate convergence.
+**Verdict:** PASS-WITH-DEVIATION — 4/4 LIST requirements coded and unit-tested; G1-G8 closed at code level; live E2E execution + visual-gate sign-off pending. **Next action to flip → PASS:** repair `frontend/tests/e2e/support/list-pages-auth.ts` `loginForListPages` selector timeout, then run `pnpm playwright test list-pages-* --update-snapshots` and 3× replay for stability. Phase 41 (dossier-drawer) unblocked except for visual-gate convergence.
 
 ### Phase 39 summary
 
