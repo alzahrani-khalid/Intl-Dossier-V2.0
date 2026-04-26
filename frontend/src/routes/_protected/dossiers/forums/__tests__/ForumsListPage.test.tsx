@@ -27,6 +27,14 @@ vi.mock('react-i18next', () => ({
   } => ({
     i18n: { language: 'en' },
     t: (k: string, opts?: Record<string, unknown>): string => {
+      // Translate explicit forum keys first (they override defaultValue).
+      if (k === 'forums:status.active') return 'Active'
+      if (k === 'forums:status.cancelled') return 'Cancelled'
+      if (k === 'forums:title') return 'Forums'
+      if (k === 'forums:subtitle') return 'Multi-party conferences'
+      if (k === 'forums:empty.title') return 'No forums yet'
+      if (k === 'forums:empty.description') return 'Forum dossiers will appear here.'
+      // Fall back to defaultValue for unknown keys.
       if (
         opts !== undefined &&
         typeof opts === 'object' &&
@@ -35,13 +43,6 @@ vi.mock('react-i18next', () => ({
       ) {
         return opts.defaultValue
       }
-      // Translate forum status keys for chip labels
-      if (k === 'forums:status.active') return 'Active'
-      if (k === 'forums:status.cancelled') return 'Cancelled'
-      if (k === 'forums:title') return 'Forums'
-      if (k === 'forums:subtitle') return 'Multi-party conferences'
-      if (k === 'forums:empty.title') return 'No forums yet'
-      if (k === 'forums:empty.description') return 'Forum dossiers will appear here.'
       return k
     },
   }),
@@ -86,10 +87,9 @@ vi.mock('@/hooks/useForums', () => ({
   }),
 }))
 
-function renderRoute(): ReactElement {
+async function renderRoute(): Promise<ReactElement> {
   // Lazy-import the route module so the mocks above are applied first.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { Route } = require('../index') as {
+  const { Route } = (await import('../index')) as {
     Route: ReturnType<typeof createRoute>
   }
 
@@ -122,19 +122,19 @@ function renderRoute(): ReactElement {
 
 describe('ForumsListPage (LIST-03)', () => {
   it('renders Forums title', async () => {
-    render(renderRoute())
+    render(await renderRoute())
     expect(await screen.findByText('Forums')).toBeTruthy()
   })
 
   it('renders one row per forum (2 rows total)', async () => {
-    render(renderRoute())
+    render(await renderRoute())
     await screen.findByText('Forums')
     const rows = screen.getAllByTestId('generic-list-page-row')
     expect(rows.length).toBe(2)
   })
 
   it('maps active → chip-ok', async () => {
-    const { container } = render(renderRoute())
+    const { container } = render(await renderRoute())
     await screen.findByText('Forums')
     const chips = container.querySelectorAll('[data-testid="generic-list-page-status"]')
     // First row (G20, active) → chip-ok
@@ -144,7 +144,7 @@ describe('ForumsListPage (LIST-03)', () => {
   })
 
   it('maps cancelled → chip-danger', async () => {
-    const { container } = render(renderRoute())
+    const { container } = render(await renderRoute())
     await screen.findByText('Forums')
     const chips = container.querySelectorAll('[data-testid="generic-list-page-status"]')
     // Second row (OPEC, cancelled) → chip-danger

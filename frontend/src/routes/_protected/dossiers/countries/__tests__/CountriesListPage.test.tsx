@@ -21,15 +21,6 @@ vi.mock('react-i18next', () => ({
   } => ({
     i18n: { language: 'en' },
     t: (k: string, opts?: Record<string, unknown>): string => {
-      if (
-        opts !== undefined &&
-        opts !== null &&
-        typeof opts === 'object' &&
-        'defaultValue' in opts &&
-        typeof opts.defaultValue === 'string'
-      ) {
-        return opts.defaultValue
-      }
       // Map a handful of keys to user-visible strings for assertions.
       const map: Record<string, string> = {
         'countries:title': 'Countries',
@@ -106,8 +97,8 @@ describe('CountriesListPage', () => {
     // Title
     expect(screen.getByRole('heading', { name: 'Countries' })).toBeTruthy()
 
-    // Row content
-    expect(screen.getByText('France')).toBeTruthy()
+    // Row content — DossierGlyph + row both render the name; getAllByText handles both.
+    expect(screen.getAllByText('France').length).toBeGreaterThan(0)
     expect(screen.getByText('42')).toBeTruthy()
 
     // Sensitivity chip — level 3 must carry the `chip-warn` class.
