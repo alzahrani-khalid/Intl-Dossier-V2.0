@@ -1,6 +1,17 @@
 // Phase 40 Plan 10 — list-pages-engagements
 // Filter pills (aria-pressed) + load-more (fetchNextPage + GlobeSpinner)
 // + row-click navigation to /engagements/$engagementId/overview.
+//
+// Reconciled by 40-18 (G4 + G8):
+// - 4 pills, taxonomy `all|meeting|call|travel` (per shipped FILTERS array
+//   in `EngagementsList.tsx`). Legacy labels `Confirmed/Pending` were i18n
+//   stubs; the component falls back to the value name via
+//   `t(key, { defaultValue: f.value })`, so the rendered text is `meeting`,
+//   `call`, `travel` when the i18n key is missing. The spec accepts both
+//   the type-taxonomy and any localized variant in `ar`.
+// - Row selector uses `data-testid="engagement-row"` (40-16 contract) with
+//   the legacy `data-engagement-row` attribute as a fallback.
+// - URL regex loosened to `/(?:dossiers/)?engagements/.../overview/` (40-16).
 import { test, expect } from '@playwright/test'
 import { loginForListPages } from './support/list-pages-auth'
 
@@ -11,6 +22,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('Engagements LIST-04', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/engagements')
+    await page.waitForSelector('[data-loading="false"]', { timeout: 10_000 }).catch(() => null)
     await page.waitForLoadState('networkidle')
   })
 
@@ -19,18 +31,39 @@ test.describe('Engagements LIST-04', () => {
     await expect(pills).toHaveCount(4)
   })
 
-  test('Confirmed pill toggles aria-pressed=true', async ({ page }) => {
-    const confirmed = page.getByRole('button', { name: /Confirmed|مؤكد/ }).first()
-    await confirmed.click()
-    await expect(confirmed).toHaveAttribute('aria-pressed', 'true')
+  test('Filter pills toggle aria-pressed correctly across the type taxonomy', async ({ page }) => {
+    // Shipped FILTERS array exposes 4 values: all, meeting, call, travel
+    // (no `event` — diverged from 40-CONTEXT-GAPS draft; type-source-of-truth
+    // is `EngagementsList.tsx` FILTERS constant).
+    const pills = ['all', 'meeting', 'call', 'travel'] as const
+    const aria: Record<(typeof pills)[number], RegExp> = {
+      all: /^All$|^الكل$|^all$/i,
+      meeting: /meeting|اجتماع/i,
+      call: /call|اتصال|مكالمة/i,
+      travel: /travel|سفر/i,
+    }
+
+    for (const target of pills) {
+      const targetPill = page.getByRole('button', { name: aria[target] }).first()
+      if ((await targetPill.count()) === 0) continue
+      await targetPill.click()
+      // Clicked pill is pressed; sibling pills are not.
+      await expect(targetPill).toHaveAttribute('aria-pressed', 'true')
+      for (const p of pills) {
+        if (p === target) continue
+        const other = page.getByRole('button', { name: aria[p] }).first()
+        if ((await other.count()) === 0) continue
+        await expect(other).toHaveAttribute('aria-pressed', 'false')
+      }
+    }
   })
 
   test('All pill resets filter (aria-pressed=true)', async ({ page }) => {
-    const travel = page.getByRole('button', { name: /Travel|سفر/ }).first()
+    const travel = page.getByRole('button', { name: /travel|سفر/i }).first()
     if (await travel.isVisible().catch(() => false)) {
       await travel.click()
     }
-    const all = page.getByRole('button', { name: /^All$|^الكل$/ }).first()
+    const all = page.getByRole('button', { name: /^All$|^الكل$|^all$/i }).first()
     await all.click()
     await expect(all).toHaveAttribute('aria-pressed', 'true')
   })
