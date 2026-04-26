@@ -1,0 +1,48 @@
+import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+
+export interface ToolbarSearchProps {
+  value: string
+  onChange: (next: string) => void
+  placeholder?: string
+  debounceMs?: number
+}
+
+export function ToolbarSearch({
+  value,
+  onChange,
+  placeholder,
+  debounceMs = 300,
+}: ToolbarSearchProps): ReactNode {
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+  const [local, setLocal] = useState(value)
+  const debounced = useDebouncedValue(local, debounceMs)
+
+  // Sync external -> internal when caller resets the value (e.g. clear).
+  useEffect(() => {
+    setLocal(value)
+  }, [value])
+
+  // Push debounced changes back to parent.
+  useEffect(() => {
+    if (debounced !== value) {
+      onChange(debounced)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounced])
+
+  return (
+    <input
+      type="search"
+      value={local}
+      onChange={(e) => setLocal(e.target.value)}
+      placeholder={placeholder ?? t('common.search', { defaultValue: 'Search' })}
+      dir={isRTL ? 'rtl' : 'ltr'}
+      className="h-11 w-full min-w-0 rounded-md border bg-background px-3 text-start text-sm outline-none focus:ring-2 focus:ring-primary sm:h-10"
+      aria-label={placeholder ?? t('common.search', { defaultValue: 'Search' })}
+    />
+  )
+}
