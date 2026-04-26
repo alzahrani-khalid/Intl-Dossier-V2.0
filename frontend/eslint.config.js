@@ -139,6 +139,30 @@ export default tseslint.config(
       'rtl-friendly/no-physical-properties': 'off',
     },
   },
+  // Phase 40 list-pages — reinforce logical-properties enforcement on Phase 40 file scope.
+  // Global rules above already block physical RTL classes; this block re-asserts the
+  // contract on the Phase 40 surface (list-page primitives, dossier list routes,
+  // engagements/persons routes, list-page hooks) so drift is caught at the source.
+  {
+    files: [
+      'src/components/list-page/**/*.{ts,tsx}',
+      'src/routes/_protected/dossiers/{countries,organizations,forums,topics,working_groups}/index.tsx',
+      'src/routes/_protected/{persons,engagements}/index.tsx',
+      'src/pages/{Persons,Engagements}/**/*.{ts,tsx}',
+      'src/hooks/{useCountries,useOrganizations,useEngagementsInfinite}.ts',
+    ],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "Literal[value=/\\b(ml-|mr-|pl-|pr-|text-left|text-right|rounded-l-|rounded-r-|left-|right-)\\b/]",
+          message:
+            'Phase 40 list-pages: physical RTL classes are forbidden. Use logical properties (ms-/me-/ps-/pe-/text-start/text-end/rounded-s-/rounded-e-/start-/end-).',
+        },
+      ],
+    },
+  },
   // Disabled/backup files are exempt from all rules
   {
     files: ['**/*.disabled', '**/*.bak*', '**/.!*'],
