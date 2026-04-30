@@ -57,7 +57,10 @@ export const TASKS_COLUMNS = {
 // COMMITMENTS TABLE (aa_commitments)
 // =============================================================================
 export const COMMITMENTS_COLUMNS = {
-  /** List view columns */
+  /** List view columns. Note: `aa_commitments.dossier_id` has NO FK to
+   *  `dossiers`, so PostgREST embeds (`dossier:dossiers!dossier_id(...)`)
+   *  return a 400. Consumers needing the dossier name must do a separate
+   *  batched lookup — see `usePersonalCommitments.ts` for the pattern. */
   LIST: 'id, dossier_id, after_action_id, title, description, due_date, owner_type, owner_user_id, owner_contact_id, priority, status, tracking_mode, proof_required, proof_url, evidence_submitted_at, completed_at, completion_notes, status_changed_at, created_by, updated_by, created_at, updated_at',
   /** Detail view with all fields */
   DETAIL:
