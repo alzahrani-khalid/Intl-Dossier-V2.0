@@ -31,9 +31,13 @@ BEGIN
   DELETE FROM aa_commitments     WHERE id::text         LIKE 'b0000003-%';
   DELETE FROM assignments        WHERE work_item_id::text LIKE 'b0000004-%';
   DELETE FROM tasks              WHERE id::text         LIKE 'b0000004-%';
+  DELETE FROM activity_stream    WHERE id::text         LIKE 'b0000009-%';
+  DELETE FROM intake_tickets     WHERE id::text         LIKE 'b0000007-%';
+  DELETE FROM calendar_entries   WHERE id::text         LIKE 'b0000006-%';
   DELETE FROM engagements        WHERE id::text         LIKE 'b0000002-%';
   DELETE FROM activities         WHERE id::text         LIKE 'b0000002-%';
-  DELETE FROM dossiers           WHERE id::text         LIKE 'b0000001-%';
+  -- engagement_dossiers + forums cascade from dossiers (ON DELETE CASCADE)
+  DELETE FROM dossiers           WHERE id::text         LIKE 'b0000001-%' OR id::text LIKE 'b0000002-%' OR id::text LIKE 'b0000008-%';
 
   -- ============================================================================
   -- 2. DOSSIERS — 8 international partners (countries / orgs / forum / topic)
@@ -107,5 +111,139 @@ BEGIN
     ('b0000003-0000-0000-0000-000000000007'::uuid, v_d_oecd,        'Finalize defense-cooperation framework',        'Close out OECD defense-cooperation framework draft.',             'high',   'in_progress', 'internal', v_user_id, 'automatic', CURRENT_DATE - 73),
     ('b0000003-0000-0000-0000-000000000008'::uuid, v_d_uae,         'Send follow-up documentation',                  'Compile and send follow-up documentation to UAE counterpart.',    'high',   'pending',     'internal', v_user_id, 'automatic', CURRENT_DATE - 165);
 
-  RAISE NOTICE 'Seed 060 complete: 8 dossiers, 3 engagements, 6 tasks, 6 assignments, 8 commitments.';
+  -- ============================================================================
+  -- 6. ENGAGEMENT_DOSSIERS — what the dashboard RPCs actually read
+  --    (legacy `engagements` table is NOT what get_dashboard_stats / get_upcoming_events query)
+  --    engagement_type ∈ {bilateral_meeting, mission, delegation, summit, working_group,
+  --                       roundtable, official_visit, consultation, forum_session, other}
+  --    engagement_category ∈ {diplomatic, statistical, technical, economic, cultural,
+  --                           educational, research, other}
+  --    lifecycle_stage ∈ {intake, preparation, briefing, execution, follow_up, closed}
+  -- ============================================================================
+  INSERT INTO engagement_dossiers
+    (id, engagement_type, engagement_category, start_date, end_date,
+     lifecycle_stage, engagement_status, location_en, location_ar) VALUES
+    ('b0000002-0000-0000-0000-000000000001'::uuid, 'consultation',  'diplomatic',
+     date_trunc('hour', NOW()) + INTERVAL '2 hours',  date_trunc('hour', NOW()) + INTERVAL '4 hours',
+     'execution',   'in_progress', 'Riyadh · GASTAT HQ, Room 4C',  'الرياض · المقر الرئيسي للهيئة، غرفة 4C'),
+    ('b0000002-0000-0000-0000-000000000002'::uuid, 'working_group', 'statistical',
+     date_trunc('day', NOW()) + INTERVAL '1 day 10 hours', date_trunc('day', NOW()) + INTERVAL '1 day 12 hours',
+     'preparation', 'planned',     'Virtual · Webex',              'افتراضي · ويبكس'),
+    ('b0000002-0000-0000-0000-000000000003'::uuid, 'official_visit','diplomatic',
+     date_trunc('day', NOW()) + INTERVAL '2 days 14 hours', date_trunc('day', NOW()) + INTERVAL '4 days 16 hours',
+     'briefing',    'confirmed',   'Riyadh · Ritz-Carlton',        'الرياض · فندق ريتز كارلتون');
+
+  -- ============================================================================
+  -- 7. CALENDAR_ENTRIES — feeds WeekAhead and dashboard upcoming events
+  --    entry_type ∈ {internal_meeting, deadline, reminder, holiday, training, review, forum, other}
+  -- ============================================================================
+  INSERT INTO calendar_entries
+    (id, title_en, title_ar, entry_type, event_date, event_time, duration_minutes,
+     organizer_id, status, dossier_id) VALUES
+    ('b0000006-0000-0000-0000-000000000001'::uuid, 'Standup — Indonesia delegation',  'وقفة فريق — وفد إندونيسيا',
+     'internal_meeting', CURRENT_DATE,                  '09:00', 30, v_user_id, 'scheduled', v_d_indonesia),
+    ('b0000006-0000-0000-0000-000000000002'::uuid, 'Brief minister — Vision 2030',     'إيجاز الوزير — رؤية 2030',
+     'review',           CURRENT_DATE + 1,              '11:00', 60, v_user_id, 'scheduled', v_d_vision_2030),
+    ('b0000006-0000-0000-0000-000000000003'::uuid, 'Submit OECD data response',        'تقديم رد بيانات OECD',
+     'deadline',         CURRENT_DATE + 2,              '17:00', 15, v_user_id, 'scheduled', v_d_oecd),
+    ('b0000006-0000-0000-0000-000000000004'::uuid, 'Training — new dossier workflow',  'تدريب — سير عمل الملف الجديد',
+     'training',         CURRENT_DATE + 3,              '14:00', 90, v_user_id, 'scheduled', NULL),
+    ('b0000006-0000-0000-0000-000000000005'::uuid, 'GCC sync — quarterly readout',     'مزامنة الخليج — التقرير الفصلي',
+     'internal_meeting', CURRENT_DATE + 5,              '10:00', 45, v_user_id, 'scheduled', v_d_gcc_stat);
+
+  -- ============================================================================
+  -- 8. INTAKE_TICKETS — feeds SlaHealth (sla_at_risk = external_deadline within 48h)
+  -- ============================================================================
+  INSERT INTO intake_tickets
+    (id, ticket_number, request_type, title, title_ar, description, description_ar,
+     sensitivity, urgency, priority, status, source,
+     assigned_to, dossier_id, external_deadline,
+     created_by, updated_by) VALUES
+    ('b0000007-0000-0000-0000-000000000001'::uuid, 'DEMO-INTAKE-001', 'engagement',
+     'Coordinate Indonesia BPS delegation logistics', 'تنسيق لوجستيات وفد BPS الإندونيسي',
+     'Hotel and protocol coordination for the incoming Indonesia BPS delegation visit.',
+     'تنسيق الفنادق والبروتوكول لوفد BPS الإندونيسي القادم.',
+     'internal', 'high', 'high', 'assigned', 'web',
+     v_user_id, v_d_indonesia, NOW() + INTERVAL '36 hours',
+     v_user_id, v_user_id),
+    ('b0000007-0000-0000-0000-000000000002'::uuid, 'DEMO-INTAKE-002', 'mou_action',
+     'Draft response — OECD data request',           'صياغة رد — طلب بيانات OECD',
+     'Prepare formal data response to OECD secretariat per Q2 cooperation framework.',
+     'إعداد رد رسمي على طلب البيانات لأمانة OECD وفق إطار التعاون للربع الثاني.',
+     'internal', 'medium', 'normal', 'in_progress', 'email',
+     v_user_id, v_d_oecd, NOW() + INTERVAL '5 days',
+     v_user_id, v_user_id);
+
+  -- ============================================================================
+  -- 9. ADDITIONAL FORUM-TYPED DOSSIERS (3 more — feeds ForumsStrip widget)
+  -- ============================================================================
+  INSERT INTO dossiers (id, type, name_en, name_ar, status, sensitivity_level, tags, metadata, created_by) VALUES
+    ('b0000008-0000-0000-0000-000000000001'::uuid, 'forum', 'UN Statistical Commission', 'اللجنة الإحصائية للأمم المتحدة', 'active', 2, ARRAY['handoff-demo'], '{"handoff_demo":true,"flag":"🇺🇳"}'::jsonb, v_user_id),
+    ('b0000008-0000-0000-0000-000000000002'::uuid, 'forum', 'IAOS Biennial Conference',  'مؤتمر IAOS الثنائي',              'active', 2, ARRAY['handoff-demo'], '{"handoff_demo":true,"flag":"🌐"}'::jsonb, v_user_id),
+    ('b0000008-0000-0000-0000-000000000003'::uuid, 'forum', 'Arab Statisticians Forum',  'منتدى الإحصائيين العرب',          'active', 2, ARRAY['handoff-demo'], '{"handoff_demo":true,"flag":"🇸🇦"}'::jsonb, v_user_id);
+
+  -- ============================================================================
+  -- 10. FORUMS — 1:1 with forum-typed dossiers (is_seed_data NOT NULL)
+  -- ============================================================================
+  INSERT INTO forums (id, number_of_sessions, is_seed_data) VALUES
+    (v_d_g20,                                       4, true),
+    ('b0000008-0000-0000-0000-000000000001'::uuid,  6, true),
+    ('b0000008-0000-0000-0000-000000000002'::uuid,  2, true),
+    ('b0000008-0000-0000-0000-000000000003'::uuid,  3, true);
+
+  -- ============================================================================
+  -- 11. ACTIVITY_STREAM — feeds Digest widget via activity-feed Edge Function
+  --     CHECK constraints (verified in DB, not assumed):
+  --       action_type ∈ {create, update, delete, comment, status_change, upload,
+  --                      download, view, share, assign, mention, approval,
+  --                      rejection, archive, restore}
+  --       entity_type ∈ {country, organization, person, engagement, forum,
+  --                      working_group, theme, mou, document, event, contact,
+  --                      task, brief, commitment, deliverable, position,
+  --                      relationship, intelligence, intake_ticket}
+  --       visibility_scope ∈ {all, team, managers, private}
+  -- ============================================================================
+  INSERT INTO activity_stream
+    (id, action_type, entity_type, entity_id, entity_name_en, entity_name_ar,
+     actor_id, actor_name, description_en, description_ar, created_at, is_public, visibility_scope) VALUES
+    ('b0000009-0000-0000-0000-000000000001'::uuid, 'create',        'country',       v_d_indonesia,
+      'Indonesia', 'جمهورية إندونيسيا', v_user_id, 'Khalid Alzahrani',
+      'New dossier created — Indonesia bilateral cooperation pipeline.',
+      'تم إنشاء ملف جديد — مسار التعاون الثنائي مع إندونيسيا.', NOW() - INTERVAL '15 minutes', true, 'team'),
+    ('b0000009-0000-0000-0000-000000000002'::uuid, 'status_change', 'engagement',    'b0000002-0000-0000-0000-000000000001'::uuid,
+      'Bilateral consultation — ESCWA', 'مشاورات ثنائية — الإسكوا', v_user_id, 'Khalid Alzahrani',
+      'Engagement moved to execution stage; agenda v2 attached.',
+      'تم نقل المشاركة إلى مرحلة التنفيذ؛ مرفق جدول الأعمال v2.', NOW() - INTERVAL '1 hour', true, 'team'),
+    ('b0000009-0000-0000-0000-000000000003'::uuid, 'create',        'commitment',    'b0000003-0000-0000-0000-000000000003'::uuid,
+      'Re-engage on post-Belt-and-Road trade note', 'متابعة مذكرة التجارة بعد الحزام والطريق', v_user_id, 'Khalid Alzahrani',
+      'New commitment logged after China bilateral readout.',
+      'تم تسجيل التزام جديد بعد التقرير الثنائي مع الصين.', NOW() - INTERVAL '2 hours', true, 'team'),
+    ('b0000009-0000-0000-0000-000000000004'::uuid, 'update',        'forum',         'b0000008-0000-0000-0000-000000000001'::uuid,
+      'UN Statistical Commission', 'اللجنة الإحصائية للأمم المتحدة', v_user_id, 'Khalid Alzahrani',
+      'Sponsorship list confirmed — 6 sessions scheduled for Q3.',
+      'تم تأكيد قائمة الرعاة — 6 جلسات مجدولة للربع الثالث.', NOW() - INTERVAL '4 hours', true, 'team'),
+    ('b0000009-0000-0000-0000-000000000005'::uuid, 'assign',        'task',          'b0000004-0000-0000-0000-000000000001'::uuid,
+      'Approve Indonesia delegation brief v3', 'الموافقة على ملخص وفد إندونيسيا v3', v_user_id, 'Khalid Alzahrani',
+      'High-priority task assigned for delegation brief approval.',
+      'تم تعيين مهمة عالية الأولوية للموافقة على ملخص الوفد.', NOW() - INTERVAL '6 hours', true, 'team'),
+    ('b0000009-0000-0000-0000-000000000006'::uuid, 'create',        'intake_ticket', 'b0000007-0000-0000-0000-000000000001'::uuid,
+      'Coordinate Indonesia BPS delegation logistics', 'تنسيق لوجستيات وفد BPS الإندونيسي', v_user_id, 'Khalid Alzahrani',
+      'Intake ticket DEMO-INTAKE-001 raised — SLA 48h.',
+      'تم رفع تذكرة الاستقبال DEMO-INTAKE-001 — SLA 48 ساعة.', NOW() - INTERVAL '8 hours', true, 'team'),
+    ('b0000009-0000-0000-0000-000000000007'::uuid, 'update',        'organization',  v_d_oecd,
+      'OECD', 'منظمة التعاون الاقتصادي والتنمية', v_user_id, 'Khalid Alzahrani',
+      'OECD framework draft revised — sections 3 and 7 redlined.',
+      'تمت مراجعة مسودة إطار OECD — تم تعديل القسمين 3 و 7.', NOW() - INTERVAL '14 hours', true, 'team'),
+    ('b0000009-0000-0000-0000-000000000008'::uuid, 'create',        'engagement',    'b0000002-0000-0000-0000-000000000003'::uuid,
+      'Delegation visit — Indonesia BPS', 'زيارة وفد — هيئة الإحصاء الإندونيسية', v_user_id, 'Khalid Alzahrani',
+      'Indonesia BPS delegation visit scheduled — confirmed by host.',
+      'تم جدولة زيارة وفد BPS الإندونيسي — مؤكدة من المضيف.', NOW() - INTERVAL '20 hours', true, 'team');
+
+  -- VipVisits widget intentionally NOT seeded:
+  -- VIP_EVENT_TYPE='vip_visit' is not allowed by either CHECK constraint
+  -- (engagement_dossiers.engagement_type or calendar_entries.entry_type),
+  -- and the widget's own 38-06-SUMMARY.md acknowledges a future RPC migration
+  -- (extending get_upcoming_events with person_iso/person_role) is required.
+
+  RAISE NOTICE 'Seed 060 complete: 8+3+3 dossiers, 3 engagement_dossiers, 4 forums, 6 tasks, 6 assignments, 8 commitments, 5 calendar_entries, 2 intake_tickets, 8 activity_stream.';
 END $$;
