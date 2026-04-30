@@ -14,7 +14,7 @@ export interface ListPageShellProps {
 const DefaultSkeleton = (): ReactNode => (
   <div className="flex flex-col gap-3" data-testid="list-page-skeleton">
     {Array.from({ length: 6 }).map((_, i) => (
-      <div key={i} className="h-16 w-full animate-pulse rounded-md bg-muted" />
+      <div key={i} className="h-16 w-full animate-pulse rounded-[var(--radius-sm)] bg-muted" />
     ))}
   </div>
 )

@@ -78,7 +78,7 @@ export function AttentionZone({
         {Array.from({ length: 3 }, (_, i) => (
           <Skeleton
             key={i}
-            className={`h-16 rounded-lg ${
+            className={`h-16 rounded-[var(--radius-sm)] ${
               i === 0
                 ? 'border border-destructive/20'
                 : i === 1
@@ -98,7 +98,7 @@ export function AttentionZone({
         role="region"
         aria-label={t('zones.attention.title')}
         aria-live="polite"
-        className="rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+        className="rounded-[var(--radius)] border border-destructive/30 bg-destructive/5 p-4"
       >
         <p className="text-sm text-destructive mb-2">
           {t('error.load_failed', { zone: t('zones.attention.title') })}
@@ -113,11 +113,7 @@ export function AttentionZone({
   // Empty state
   if (items.length === 0) {
     return (
-      <div
-        role="region"
-        aria-label={t('zones.attention.title')}
-        aria-live="polite"
-      >
+      <div role="region" aria-label={t('zones.attention.title')} aria-live="polite">
         <EmptyAttention />
       </div>
     )

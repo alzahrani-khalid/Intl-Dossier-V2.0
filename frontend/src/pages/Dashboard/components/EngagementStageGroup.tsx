@@ -54,7 +54,7 @@ export function EngagementStageGroup({
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger asChild>
         <button
-          className="flex items-center gap-3 w-full min-h-11 p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+          className="flex items-center gap-3 w-full min-h-11 p-3 rounded-[var(--radius-sm)] hover:bg-muted/50 transition-colors cursor-pointer"
           aria-expanded={isOpen}
           aria-controls={contentId}
         >
@@ -84,7 +84,7 @@ export function EngagementStageGroup({
             return (
               <div
                 key={engagement.id}
-                className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 cursor-pointer min-h-11 transition-colors"
+                className="flex items-center gap-2 p-2 rounded-[var(--radius-sm)] hover:bg-muted/50 cursor-pointer min-h-11 transition-colors"
                 role="button"
                 tabIndex={0}
                 onClick={(): void => {

@@ -20,7 +20,7 @@ export interface GenericListPageProps {
 
 const RowSkeleton = (): ReactNode => (
   <div
-    className="grid items-center gap-3 rounded-md bg-muted px-3.5 py-3.5 animate-pulse"
+    className="grid items-center gap-3 rounded-[var(--radius-sm)] bg-muted px-3.5 py-3.5 animate-pulse"
     style={{ gridTemplateColumns: 'auto 1fr auto auto', minHeight: 44 }}
     data-testid="generic-list-page-skeleton-row"
   >
@@ -78,7 +78,7 @@ export function GenericListPage({
                   : undefined
               }
               className={[
-                'grid items-center gap-3 rounded-md border border-border bg-card px-3.5 py-3.5',
+                'grid items-center gap-3 rounded-[var(--radius-sm)] border border-border bg-card px-3.5 py-3.5',
                 'transition-colors',
                 interactive
                   ? 'cursor-pointer hover:bg-accent-soft focus:outline-none focus:ring-2 focus:ring-ring'

@@ -27,7 +27,7 @@ const initials = (name: string): string => {
 const SkeletonCard = (): ReactNode => (
   <div
     aria-hidden="true"
-    className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card animate-pulse"
+    className="flex items-center gap-3 p-4 rounded-[var(--radius)] border border-border bg-card animate-pulse"
   >
     <div className="size-11 rounded-full bg-muted" />
     <div className="flex-1 space-y-2">
@@ -84,7 +84,7 @@ export function PersonsGrid({
             type="button"
             role="listitem"
             onClick={onPersonClick ? (): void => onPersonClick(person) : undefined}
-            className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card text-start min-h-11 transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring min-w-0"
+            className="flex items-center gap-3 p-4 rounded-[var(--radius)] border border-border bg-card text-start min-h-11 transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring min-w-0"
           >
             <span
               aria-hidden="true"

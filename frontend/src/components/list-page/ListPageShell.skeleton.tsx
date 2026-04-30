@@ -24,7 +24,12 @@ const Row = (): ReactNode => (
 
 export function GenericListSkeleton({ rows = 5 }: { rows?: number }): ReactNode {
   return (
-    <div data-testid="generic-list-skeleton" role="status" aria-label="Loading" className="animate-pulse">
+    <div
+      data-testid="generic-list-skeleton"
+      role="status"
+      aria-label="Loading"
+      className="animate-pulse"
+    >
       {Array.from({ length: rows }).map((_, i) => (
         <Row key={i} />
       ))}
@@ -34,7 +39,12 @@ export function GenericListSkeleton({ rows = 5 }: { rows?: number }): ReactNode 
 
 export function DossierTableSkeleton({ rows = 5 }: { rows?: number }): ReactNode {
   return (
-    <div data-testid="dossier-table-bundle-skeleton" role="status" aria-label="Loading" className="animate-pulse">
+    <div
+      data-testid="dossier-table-bundle-skeleton"
+      role="status"
+      aria-label="Loading"
+      className="animate-pulse"
+    >
       <div
         aria-hidden="true"
         className="hidden md:grid items-center gap-3 px-4 py-2 border-b border-border"
@@ -65,7 +75,7 @@ export function PersonsGridSkeleton({ cards = 6 }: { cards?: number }): ReactNod
         <div
           key={i}
           aria-hidden="true"
-          className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card"
+          className="flex items-center gap-3 p-4 rounded-[var(--radius)] border border-border bg-card"
         >
           <div className="size-11 rounded-full bg-muted" />
           <div className="flex-1 space-y-2">
@@ -78,7 +88,13 @@ export function PersonsGridSkeleton({ cards = 6 }: { cards?: number }): ReactNod
   )
 }
 
-export function EngagementsListSkeleton({ groups = 2, rowsPerGroup = 3 }: { groups?: number; rowsPerGroup?: number }): ReactNode {
+export function EngagementsListSkeleton({
+  groups = 2,
+  rowsPerGroup = 3,
+}: {
+  groups?: number
+  rowsPerGroup?: number
+}): ReactNode {
   return (
     <div
       data-testid="engagements-list-bundle-skeleton"
@@ -92,11 +108,7 @@ export function EngagementsListSkeleton({ groups = 2, rowsPerGroup = 3 }: { grou
             <div className="h-3 w-24 rounded bg-muted" />
           </div>
           {Array.from({ length: rowsPerGroup }).map((_, ri) => (
-            <div
-              key={ri}
-              aria-hidden="true"
-              className="px-4 py-3 border-b border-border"
-            >
+            <div key={ri} aria-hidden="true" className="px-4 py-3 border-b border-border">
               <div className="h-4 w-2/3 rounded bg-muted mb-2" />
               <div className="h-3 w-1/3 rounded bg-muted" />
             </div>

@@ -16,7 +16,7 @@
 export const USERS_COLUMNS = {
   /** User profile data for auth and settings */
   PROFILE:
-    'id, full_name, role, language_preference, timezone, avatar_url, is_active, mfa_enabled, last_login_at, mfa_backup_codes, default_organization_id',
+    'id, full_name, role, language_preference, timezone, avatar_url, is_active, mfa_enabled, last_login_at, mfa_backup_codes, default_organization_id, job_title_en, job_title_ar',
   /** Minimal user info for display (e.g., assignee names) */
   MINIMAL: 'id, full_name, email',
   /** User info with username for fallback display */

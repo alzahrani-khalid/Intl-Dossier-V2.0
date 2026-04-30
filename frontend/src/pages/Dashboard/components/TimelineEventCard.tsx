@@ -38,15 +38,15 @@ export function TimelineEventCard({ event, onClick }: TimelineEventCardProps): R
   const { i18n } = useTranslation('operations-hub')
   const navigate = useNavigate()
 
-  const title = i18n.language === 'ar' && event.title_ar != null && event.title_ar !== ''
-    ? event.title_ar
-    : event.title
+  const title =
+    i18n.language === 'ar' && event.title_ar != null && event.title_ar !== ''
+      ? event.title_ar
+      : event.title
 
-  const engagementName = i18n.language === 'ar'
-    && event.engagement_name_ar != null
-    && event.engagement_name_ar !== ''
-    ? event.engagement_name_ar
-    : event.engagement_name
+  const engagementName =
+    i18n.language === 'ar' && event.engagement_name_ar != null && event.engagement_name_ar !== ''
+      ? event.engagement_name_ar
+      : event.engagement_name
 
   const timeStr = format(parseISO(event.start_date), 'HH:mm')
   const IconComponent = EVENT_TYPE_ICONS[event.event_type] ?? Calendar
@@ -67,7 +67,7 @@ export function TimelineEventCard({ event, onClick }: TimelineEventCardProps): R
 
   return (
     <div
-      className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 cursor-pointer min-h-11 transition-colors"
+      className="flex items-center gap-3 p-3 rounded-[var(--radius-sm)] hover:bg-muted/50 cursor-pointer min-h-11 transition-colors"
       role="button"
       tabIndex={0}
       onClick={handleClick}
@@ -79,9 +79,7 @@ export function TimelineEventCard({ event, onClick }: TimelineEventCardProps): R
         {timeStr}
       </LtrIsolate>
       <div className="flex-1 min-w-0">
-        <span className="text-sm font-normal truncate block">
-          {title}
-        </span>
+        <span className="text-sm font-normal truncate block">{title}</span>
         {engagementName != null && (
           <span className="text-xs text-muted-foreground truncate block mt-0.5">
             {engagementName}

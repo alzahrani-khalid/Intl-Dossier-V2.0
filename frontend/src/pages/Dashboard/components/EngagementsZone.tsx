@@ -38,7 +38,7 @@ export function EngagementsZone({
     return (
       <div role="region" aria-label={t('zones.engagements.title')} className="space-y-2">
         {Array.from({ length: 3 }, (_, i) => (
-          <Skeleton key={i} className="h-12 rounded-lg" />
+          <Skeleton key={i} className="h-12 rounded-[var(--radius-sm)]" />
         ))}
       </div>
     )
@@ -50,7 +50,7 @@ export function EngagementsZone({
       <div
         role="region"
         aria-label={t('zones.engagements.title')}
-        className="rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+        className="rounded-[var(--radius)] border border-destructive/30 bg-destructive/5 p-4"
       >
         <p className="text-sm text-destructive mb-2">
           {t('error.load_failed', { zone: t('zones.engagements.title') })}
@@ -66,17 +66,15 @@ export function EngagementsZone({
   const stageMap = new Map(stages.map((s) => [s.stage, s]))
 
   // Filter to non-empty stages in lifecycle order
-  const orderedStages = LIFECYCLE_STAGES
-    .map((stage) => stageMap.get(stage))
-    .filter((sg): sg is StageGroup => sg != null && sg.stage_count > 0)
+  const orderedStages = LIFECYCLE_STAGES.map((stage) => stageMap.get(stage)).filter(
+    (sg): sg is StageGroup => sg != null && sg.stage_count > 0,
+  )
 
   // Empty state
   if (orderedStages.length === 0) {
     return (
       <div role="region" aria-label={t('zones.engagements.title')} className="py-4">
-        <p className="text-sm text-muted-foreground mb-3">
-          {t('zones.engagements.empty')}
-        </p>
+        <p className="text-sm text-muted-foreground mb-3">{t('zones.engagements.empty')}</p>
         <Button variant="outline" size="sm">
           {t('actions.new_engagement')}
         </Button>

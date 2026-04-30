@@ -31,7 +31,6 @@ export function ToolbarSearch({
     if (debounced !== value) {
       onChange(debounced)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounced])
 
   return (
@@ -41,7 +40,7 @@ export function ToolbarSearch({
       onChange={(e) => setLocal(e.target.value)}
       placeholder={placeholder ?? t('common.search', { defaultValue: 'Search' })}
       dir={isRTL ? 'rtl' : 'ltr'}
-      className="h-11 w-full min-w-0 rounded-md border bg-background px-3 text-start text-sm outline-none focus:ring-2 focus:ring-primary sm:h-10"
+      className="h-11 w-full min-w-0 rounded-[var(--radius-sm)] border bg-background px-3 text-start text-sm outline-none focus:ring-2 focus:ring-primary sm:h-10"
       aria-label={placeholder ?? t('common.search', { defaultValue: 'Search' })}
     />
   )

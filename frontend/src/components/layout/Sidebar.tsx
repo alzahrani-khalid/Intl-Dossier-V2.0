@@ -56,7 +56,7 @@ function getInitials(name: string | undefined, email: string | undefined): strin
 }
 
 export function Sidebar({ className }: SidebarProps = {}): ReactElement {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { user } = useAuthStore()
   const location = useLocation()
 
@@ -64,7 +64,9 @@ export function Sidebar({ className }: SidebarProps = {}): ReactElement {
   const groups: NavigationGroup[] = createNavigationGroups(SECTION_BADGE_COUNTS, isAdmin)
   const pathname = location.pathname
 
-  const roleLabel = user?.role ?? t('shell.user.noRole')
+  const isRTL = i18n.language === 'ar'
+  const localizedJobTitle = isRTL ? user?.jobTitleAr : user?.jobTitleEn
+  const roleLabel = localizedJobTitle ?? user?.role ?? t('shell.user.noRole')
   const displayName = user?.name ?? user?.email ?? t('shell.user.noRole')
   const initials = getInitials(user?.name, user?.email)
 

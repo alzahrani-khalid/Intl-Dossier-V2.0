@@ -55,7 +55,7 @@ export function ZoneCollapsible({
   const skipAnimation = prefersReducedMotion()
 
   return (
-    <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+    <div className="rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm">
       {/* Header button */}
       <button
         id={triggerId}
@@ -95,9 +95,7 @@ export function ZoneCollapsible({
             transition={skipAnimation ? { duration: 0 } : { duration: 0.25, ease: 'easeOut' }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4">
-              {children}
-            </div>
+            <div className="px-4 pb-4">{children}</div>
           </m.div>
         )}
       </AnimatePresence>

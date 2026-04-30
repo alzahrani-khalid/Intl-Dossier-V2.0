@@ -11,14 +11,17 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
-import type { AttentionItemData, AttentionSeverity } from '@/domains/operations-hub/types/operations-hub.types'
+import type {
+  AttentionItemData,
+  AttentionSeverity,
+} from '@/domains/operations-hub/types/operations-hub.types'
 
 // ============================================================================
 // Severity Variants (cva)
 // ============================================================================
 
 const attentionItemVariants = cva(
-  'flex items-center gap-3 rounded-lg border p-3 sm:p-4 transition-colors cursor-pointer min-h-11',
+  'flex items-center gap-3 rounded-[var(--radius-sm)] border p-3 sm:p-4 transition-colors cursor-pointer min-h-11',
   {
     variants: {
       severity: {
@@ -66,9 +69,10 @@ interface AttentionItemProps extends VariantProps<typeof attentionItemVariants> 
 export function AttentionItem({ item, onClick }: AttentionItemProps): React.ReactElement {
   const { t, i18n } = useTranslation('operations-hub')
 
-  const title = i18n.language === 'ar' && item.title_ar != null && item.title_ar !== ''
-    ? item.title_ar
-    : item.title
+  const title =
+    i18n.language === 'ar' && item.title_ar != null && item.title_ar !== ''
+      ? item.title_ar
+      : item.title
 
   const severityKey = itemTypeSeverityKey[item.item_type] ?? 'due_soon'
   const badgeLabel = t(`severity.${severityKey}`)
@@ -80,20 +84,21 @@ export function AttentionItem({ item, onClick }: AttentionItemProps): React.Reac
     }
   }
 
-  const detailText = item.item_type === 'stalled_engagement'
-    ? t('severity.stalled_detail', {
-        days: Math.floor(item.days_in_stage ?? 0),
-        stage: t(`stages.${item.lifecycle_stage ?? 'intake'}`),
-      })
-    : item.deadline != null
-      ? (() => {
-          const deadlineDate = new Date(item.deadline)
-          return deadlineDate.toLocaleDateString(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
-            month: 'short',
-            day: 'numeric',
-          })
-        })()
-      : null
+  const detailText =
+    item.item_type === 'stalled_engagement'
+      ? t('severity.stalled_detail', {
+          days: Math.floor(item.days_in_stage ?? 0),
+          stage: t(`stages.${item.lifecycle_stage ?? 'intake'}`),
+        })
+      : item.deadline != null
+        ? (() => {
+            const deadlineDate = new Date(item.deadline)
+            return deadlineDate.toLocaleDateString(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
+              month: 'short',
+              day: 'numeric',
+            })
+          })()
+        : null
 
   return (
     <div
@@ -113,9 +118,7 @@ export function AttentionItem({ item, onClick }: AttentionItemProps): React.Reac
         {badgeLabel}
       </Badge>
       <div className="flex-1 min-w-0">
-        <span className="text-sm font-normal truncate block">
-          {title}
-        </span>
+        <span className="text-sm font-normal truncate block">{title}</span>
         {detailText != null && (
           <span className="text-xs text-muted-foreground block mt-0.5">
             {item.item_type === 'stalled_engagement' ? (

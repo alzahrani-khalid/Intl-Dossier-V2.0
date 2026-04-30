@@ -496,7 +496,7 @@ const DraggableKanbanCard = React.memo(function DraggableKanbanCard({
         </div>
         {/* T062: Loading indicator visible within 200ms during retries */}
         {isRetrying && (
-          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center z-10 rounded-[var(--radius)]">
             <Loader2 className="size-6 animate-spin text-primary" />
           </div>
         )}
