@@ -234,7 +234,7 @@ Summary checklist:
 4. User sees `MyTasks` (checkbox + glyph + title + due chip per row), `RecentDossiers`, and `ForumsStrip` (4 of 8 forums with monogram short-code chips), all rendering correctly in RTL with logical padding/margins and mirrored chevrons
 5. All 8 widgets hydrate from existing domain hooks (`useDashboardStats`, `useDashboardTrends`, `useWeekAhead`/equivalent, `usePersonalCommitments`, `useMyTasks`, `useRecentDossiers`, `useForums`, etc.) with zero mock data, and the dashboard lays out correctly at 320 / 768 / 1280 px breakpoints
    **Plans**: 7 plans
-   - [ ] 41-01-PLAN.md — Wave 0 infra: useDossierDrawer hook + validateSearch on \_protected.tsx + dossier-drawer i18n namespace (28 keys EN+AR) + relativeTime utility + Radix Sheet shell + section stubs + DrawerSkeleton + AppShell mount + Playwright fixture + size-limit entry (DRAWER-01)
+   - [x] 41-01-PLAN.md — Wave 0 infra: useDossierDrawer hook + validateSearch on \_protected.tsx + dossier-drawer i18n namespace (28 keys EN+AR) + relativeTime utility + Radix Sheet shell + section stubs + DrawerSkeleton + AppShell mount + Playwright fixture + size-limit entry (DRAWER-01)
    - [ ] 41-02-PLAN.md — Wave 1 head: DrawerHead (chips + close ✕) + DrawerMetaStrip (location · lead · engagements · last touched) + DrawerCtaRow (Log engagement wired / Brief + Follow stubs / Open full dossier ghost link) (DRAWER-02)
    - [ ] 41-03-PLAN.md — Wave 1 body 1: MiniKpiStrip (4 cells per D-04 mapping) + SummarySection (italic-serif paragraph + bilingual fallback) (DRAWER-02)
    - [ ] 41-04-PLAN.md — Wave 1 body 2: UpcomingSection (top-2 calendar_events.upcoming) + RecentActivitySection (top-4 activity_timeline.recent_activities — correct field names per Pitfall 3) (DRAWER-02)
@@ -394,7 +394,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 38. Dashboard Verbatim            | v6.0      | 0/?            | Not started | —          |
 | 39. Kanban + Calendar             | v6.0      | 0/?            | Not started | —          |
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
-| 41. Dossier Drawer                | v6.0      | 0/?            | Not started | —          |
+| 41. Dossier Drawer                | v6.0      | 1/7 | In Progress|  |
 | 42. Remaining Pages               | v6.0      | 0/?            | Not started | —          |
 | 43. RTL / A11y / Responsive Sweep | v6.0      | 0/?            | Not started | —          |
 
