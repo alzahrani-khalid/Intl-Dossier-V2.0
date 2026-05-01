@@ -233,16 +233,14 @@ Summary checklist:
 3. User sees a `Digest` widget with tag + headline + source + animated refresh button (shows `<GlobeSpinner>` overlay during refresh), a `SlaHealth` widget combining Donut + legend + 14-day Sparkline, and a `VipVisits` widget with T−N countdown + name + role + when
 4. User sees `MyTasks` (checkbox + glyph + title + due chip per row), `RecentDossiers`, and `ForumsStrip` (4 of 8 forums with monogram short-code chips), all rendering correctly in RTL with logical padding/margins and mirrored chevrons
 5. All 8 widgets hydrate from existing domain hooks (`useDashboardStats`, `useDashboardTrends`, `useWeekAhead`/equivalent, `usePersonalCommitments`, `useMyTasks`, `useRecentDossiers`, `useForums`, etc.) with zero mock data, and the dashboard lays out correctly at 320 / 768 / 1280 px breakpoints
-   **Plans**: 9 plans
-   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
-   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
-   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
-   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
-   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
-   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
-   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
-   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
-   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+   **Plans**: 7 plans
+   - [ ] 41-01-PLAN.md — Wave 0 infra: useDossierDrawer hook + validateSearch on \_protected.tsx + dossier-drawer i18n namespace (28 keys EN+AR) + relativeTime utility + Radix Sheet shell + section stubs + DrawerSkeleton + AppShell mount + Playwright fixture + size-limit entry (DRAWER-01)
+   - [ ] 41-02-PLAN.md — Wave 1 head: DrawerHead (chips + close ✕) + DrawerMetaStrip (location · lead · engagements · last touched) + DrawerCtaRow (Log engagement wired / Brief + Follow stubs / Open full dossier ghost link) (DRAWER-02)
+   - [ ] 41-03-PLAN.md — Wave 1 body 1: MiniKpiStrip (4 cells per D-04 mapping) + SummarySection (italic-serif paragraph + bilingual fallback) (DRAWER-02)
+   - [ ] 41-04-PLAN.md — Wave 1 body 2: UpcomingSection (top-2 calendar_events.upcoming) + RecentActivitySection (top-4 activity_timeline.recent_activities — correct field names per Pitfall 3) (DRAWER-02)
+   - [ ] 41-05-PLAN.md — Wave 1 body 3: OpenCommitmentsSection (overdue-item rows + severity dots + days countdown + owner initials + click → /commitments?id=<id>) (DRAWER-02)
+   - [ ] 41-06-PLAN.md — Wave 1 trigger wiring: RecentDossiers / OverdueCommitments / ForumsStrip onClick swaps + UnifiedCalendar onEventClick branch on event.dossier_id + MyTasks deferred (DRAWER-01)
+   - [ ] 41-07-PLAN.md — Wave 2 gates: 10 Playwright E2E (D-13) + 2 visual baselines @ 1280×800 LTR+AR + axe-core zero violations EN+AR + size-limit verify + human checkpoint smoke + 41-VERIFICATION.md (DRAWER-01..03)
          **UI hint**: yes
 
 ### Phase 39: kanban-calendar
