@@ -1,0 +1,46 @@
+{
+  "accessible_title": "Dossier quick-look",
+  "cta": {
+    "close": "Close dossier",
+    "log_engagement": "Log engagement",
+    "brief": "Brief",
+    "follow": "Follow",
+    "coming_soon": "Coming soon",
+    "open_full_dossier": "Open full dossier"
+  },
+  "chip": {
+    "dossier": "DOSSIER",
+    "confidential": "CONFIDENTIAL"
+  },
+  "meta": {
+    "location_fallback": "Global",
+    "lead_prefix": "Lead",
+    "engagements_suffix": "engagements",
+    "last_touched_today": "Last touched today",
+    "last_touched_yesterday": "Last touched yesterday",
+    "last_touched_relative": "Last touched {{n}}d ago"
+  },
+  "kpi": {
+    "engagements": "Engagements",
+    "commitments": "Commitments",
+    "overdue": "Overdue",
+    "documents": "Documents"
+  },
+  "section": {
+    "summary": "SUMMARY",
+    "upcoming": "UPCOMING",
+    "recent_activity": "RECENT ACTIVITY",
+    "open_commitments": "OPEN COMMITMENTS"
+  },
+  "empty": {
+    "summary": "Active dossier — no summary recorded yet.",
+    "upcoming": "No upcoming engagements.",
+    "recent_activity": "No recent activity.",
+    "open_commitments": "No open commitments."
+  },
+  "error": {
+    "load_failed_heading": "Could not load this dossier",
+    "load_failed_body": "Try refreshing the page or open the full dossier.",
+    "retry": "Retry"
+  }
+}

@@ -184,6 +184,9 @@ import enWorkspace from './en/workspace.json'
 import arWorkspace from './ar/workspace.json'
 import enDossierShell from './en/dossier-shell.json'
 import arDossierShell from './ar/dossier-shell.json'
+// Phase 41 Wave 0: dossier quick-look drawer namespace
+import enDossierDrawer from './en/dossier-drawer.json'
+import arDossierDrawer from './ar/dossier-drawer.json'
 import enElectedOfficials from './en/elected-officials.json'
 import arElectedOfficials from './ar/elected-officials.json'
 // Plan 31-02: per-type wizard guidance namespaces (D-13)
@@ -301,6 +304,7 @@ const resources = {
     'operations-hub': enOperationsHub,
     workspace: enWorkspace,
     'dossier-shell': enDossierShell,
+    'dossier-drawer': enDossierDrawer,
     'elected-officials': enElectedOfficials,
     // Plan 31-02: per-type wizard guidance namespaces (D-13)
     'country-wizard': enCountryWizard,
@@ -405,6 +409,7 @@ const resources = {
     'operations-hub': arOperationsHub,
     workspace: arWorkspace,
     'dossier-shell': arDossierShell,
+    'dossier-drawer': arDossierDrawer,
     'elected-officials': arElectedOfficials,
     // Plan 31-02: per-type wizard guidance namespaces (D-13)
     'country-wizard': arCountryWizard,

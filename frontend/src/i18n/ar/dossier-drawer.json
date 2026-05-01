@@ -1,0 +1,46 @@
+{
+  "accessible_title": "نظرة سريعة على الملف",
+  "cta": {
+    "close": "إغلاق الملف",
+    "log_engagement": "تسجيل ارتباط",
+    "brief": "موجز",
+    "follow": "متابعة",
+    "coming_soon": "قريبًا",
+    "open_full_dossier": "فتح الملف الكامل"
+  },
+  "chip": {
+    "dossier": "الملف",
+    "confidential": "سري"
+  },
+  "meta": {
+    "location_fallback": "عالمي",
+    "lead_prefix": "المسؤول",
+    "engagements_suffix": "ارتباطات",
+    "last_touched_today": "آخر تحديث اليوم",
+    "last_touched_yesterday": "آخر تحديث أمس",
+    "last_touched_relative": "آخر تحديث منذ {{n}} يوم"
+  },
+  "kpi": {
+    "engagements": "ارتباطات",
+    "commitments": "التزامات",
+    "overdue": "متأخر",
+    "documents": "مستندات"
+  },
+  "section": {
+    "summary": "الملخص",
+    "upcoming": "قادم",
+    "recent_activity": "النشاط الحديث",
+    "open_commitments": "الالتزامات المفتوحة"
+  },
+  "empty": {
+    "summary": "ملف نشط — لا يوجد ملخص مسجل بعد.",
+    "upcoming": "لا توجد ارتباطات قادمة.",
+    "recent_activity": "لا يوجد نشاط حديث.",
+    "open_commitments": "لا توجد التزامات مفتوحة."
+  },
+  "error": {
+    "load_failed_heading": "تعذّر تحميل هذا الملف",
+    "load_failed_body": "حاول تحديث الصفحة أو افتح الملف الكامل.",
+    "retry": "إعادة المحاولة"
+  }
+}
