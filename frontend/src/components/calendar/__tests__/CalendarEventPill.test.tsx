@@ -122,4 +122,28 @@ describe('CalendarEventPill', (): void => {
     const button = screen.getByRole('button', { name: 'حدث' })
     expect(button.getAttribute('aria-label')).toBe('حدث')
   })
+
+  it('renders data-dossier-id when event.dossier_id is a non-empty string', async (): Promise<void> => {
+    const { CalendarEventPill } = await import('../CalendarEventPill')
+    const event = makeEvent({ dossier_id: 'b0000001-0000-0000-0000-000000000004' })
+    render(<CalendarEventPill event={event} onEventClick={() => {}} />)
+    const button = screen.getByRole('button', { name: 'Sample event' })
+    expect(button.getAttribute('data-dossier-id')).toBe('b0000001-0000-0000-0000-000000000004')
+  })
+
+  it('does NOT render data-dossier-id when event.dossier_id is null', async (): Promise<void> => {
+    const { CalendarEventPill } = await import('../CalendarEventPill')
+    const event = makeEvent({ dossier_id: null as unknown as string })
+    render(<CalendarEventPill event={event} onEventClick={() => {}} />)
+    const button = screen.getByRole('button', { name: 'Sample event' })
+    expect(button.hasAttribute('data-dossier-id')).toBe(false)
+  })
+
+  it('does NOT render data-dossier-id when event.dossier_id is undefined', async (): Promise<void> => {
+    const { CalendarEventPill } = await import('../CalendarEventPill')
+    const event = makeEvent({ dossier_id: undefined as unknown as string })
+    render(<CalendarEventPill event={event} onEventClick={() => {}} />)
+    const button = screen.getByRole('button', { name: 'Sample event' })
+    expect(button.hasAttribute('data-dossier-id')).toBe(false)
+  })
 })
