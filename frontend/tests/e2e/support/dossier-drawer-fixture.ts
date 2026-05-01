@@ -10,7 +10,12 @@ export async function openDrawerForFixtureDossier(
   page: Page,
   args: { id: string; type: string; route?: string },
 ): Promise<void> {
-  const route = args.route ?? '/'
+  // Default route is `/dashboard` (a protected route under `_protected.tsx`,
+  // where 41-01 D-02 wired `validateSearch` for the drawer params). The
+  // unauthenticated `/` index route redirects to `/dashboard` without
+  // forwarding search params and would silently strip `?dossier=` before any
+  // protected layout mounts.
+  const route = args.route ?? '/dashboard'
   const url = `${route}?dossier=${encodeURIComponent(args.id)}&dossierType=${encodeURIComponent(args.type)}`
   await page.goto(url)
   await expect(

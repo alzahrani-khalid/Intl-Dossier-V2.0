@@ -1,18 +1,21 @@
 ---
 phase: 41
 phase_name: dossier-drawer
-verdict: PENDING-HUMAN-SMOKE
-verdict_when_signed_off: PASS-WITH-DEVIATION
+status: gaps_found
+verdict: SMOKE-PARTIAL-GAPS-FOUND
 requirements:
   - id: DRAWER-01
     description: Drawer trigger inventory wired across surfaces
-    status: VERIFIED-CODE
+    status: PARTIAL-INTEGRATION-GAP
   - id: DRAWER-02
     description: Drawer body anatomy (head/meta/cta/kpi/summary/upcoming/activity/commitments)
     status: VERIFIED-CODE
   - id: DRAWER-03
     description: Drawer a11y (focus trap + ESC + RTL slide + axe-core green)
-    status: VERIFIED-CODE
+    status: PARTIAL-FAIL-CONTRAST
+playwright_pass: 7
+playwright_fail: 7
+playwright_total: 14
 last_updated: 2026-05-02
 ---
 
@@ -24,10 +27,22 @@ after the human smoke checkpoint in plan 41-07 Task 4.
 
 ## Verdict
 
-**PENDING-HUMAN-SMOKE** until plan 41-07 Task 4 returns "approved".  Once
-all 10 smokes pass and any post-smoke fixes are merged, the verdict
-flips to **PASS-WITH-DEVIATION** (deviations enumerated below — none
-block ship).
+**SMOKE-PARTIAL-GAPS-FOUND** — orchestrator-driven Playwright run on
+2026-05-02 lands 7/14 automated tests green and 7/14 red. The drawer
+fundamentals (mount, ESC, focus trap, deep-link with corrected fixture,
+all 3 CTA buttons, LTR baseline) all pass. The 7 failures cluster in
+two buckets: real implementation gaps (axe contrast, mobile box-shadow,
+RTL `document.dir`, calendar `data-dossier-id` attribute) and unrelated
+WIP regressions (Dashboard composer no longer mounts `RecentDossiers`/
+`ForumsStrip`/`Digest` after the user's pre-existing layout work was
+snapshotted in `e8f3341a`). See "Smoke Results — 2026-05-02" below.
+
+Path forward: `/gsd-plan-phase 41 --gaps` will read the gap table below
+and produce gap-closure plans.
+
+The original sign-off path (verdict → `PASS-WITH-DEVIATION`) is paused
+until the integration gaps either land in a 41.1 gap-closure phase or
+the user explicitly accepts them as deviations.
 
 | Requirement | Status         | Evidence                                                                                          |
 | ----------- | -------------- | ------------------------------------------------------------------------------------------------- |
@@ -57,6 +72,60 @@ Live execution (Playwright + visual baselines + axe-core run-time) is gated by:
 
 Per Phase 40 (40-11) precedent, runtime execution is deferred to the human
 smoke checkpoint and CI replay.
+
+## Smoke Results — 2026-05-02 (orchestrator-run)
+
+**Environment:** local Playwright run, dev server auto-spawned by
+`webServer` block in `frontend/playwright.config.ts`. Logged in as
+`TEST_USER_EMAIL`. Fixture id `seed-country-sa`.
+
+**Test fixture fix applied during smoke (committed as part of this
+update):** `frontend/tests/e2e/support/dossier-drawer-fixture.ts` default
+route changed from `/` (which redirects to `/dashboard` and *strips*
+search params via the unauthenticated index route) to `/dashboard`
+(a protected route under `_protected.tsx` where 41-01 D-02 wired
+`validateSearch`). Without this fix all 14 tests timed out at the dialog
+visibility assertion. After the fix, 7/14 pass.
+
+**Pass (7/14):**
+| Spec | Test | Verifies |
+|------|------|----------|
+| `dossier-drawer-a11y.spec.ts` | ESC closes drawer + strips `?dossier=` | DRAWER-03 keyboard a11y |
+| `dossier-drawer-a11y.spec.ts` | Tab/Shift+Tab focus trap | DRAWER-03 focus trap |
+| `dossier-drawer-cta.spec.ts` | Open-full-dossier navigates `/dossiers/{type}/{id}` | DRAWER-02 CTA |
+| `dossier-drawer-cta.spec.ts` | Log-engagement navigates `/dossiers/engagements/create` | DRAWER-02 CTA |
+| `dossier-drawer-cta.spec.ts` | Brief stub aria-disabled, no nav | DRAWER-02 CTA |
+| `dossier-drawer-deeplink.spec.ts` | `/dashboard?dossier=...` opens drawer + survives reload | DRAWER-02 deep link |
+| `dossier-drawer-rtl.spec.ts` | EN sanity — drawer at physical right edge | DRAWER-03 RTL inverse |
+
+**Fail (7/14):**
+| # | Spec | Failure | Category | Owner |
+|---|------|---------|----------|-------|
+| G1 | `dossier-drawer-trigger-recent.spec.ts` | `getByTestId('recent-dossier-trigger')` not found on `/dashboard` | WIP-REGRESSION (RecentDossiers no longer mounted in `Dashboard/index.tsx` after `e8f3341a`) | User WIP |
+| G2 | `dossier-drawer-trigger-calendar.spec.ts` | `[data-dossier-id]` locator times out on `/calendar` | IMPL-GAP (UnifiedCalendar / CalendarEventPill never expose `data-dossier-id` — Plan 41-06 Task 2 wired the `onEventClick` callback only) | Phase 41-06 |
+| G3 | `dossier-drawer-axe.spec.ts` (EN) | axe contrast violation: `#fff9f8` on `#bf5542` = 4.38 (need 4.5) — `--sla-bad` token converted | DESIGN-SYSTEM (handoff token `--sla-bad: oklch(54% 0.20 25)` fails WCAG AA — affects every consumer of red severity tokens, not just drawer) | Cross-phase |
+| G4 | `dossier-drawer-axe.spec.ts` (AR) | Same contrast violation in AR locale | DESIGN-SYSTEM | Cross-phase |
+| G5 | `dossier-drawer-mobile.spec.ts` | `box-shadow != 'none'` at 390×844 — drawer's `max-md:shadow-none` Tailwind utility not winning specificity over Sheet primitive's default shadow | IMPL-GAP (Phase 41-01 mobile chrome) | Phase 41-01 |
+| G6 | `dossier-drawer-rtl.spec.ts` (AR) | `document.dir !== 'rtl'` after AR locale switch — `loginForListPages('ar')` setAttribute call doesn't survive a re-render | TEST-INFRA (login helper used by Phase 40 specs already; not Phase 41 specific) | Cross-phase |
+| G7 | `dossier-drawer-commitment-click.spec.ts` | `dossier-drawer-commitments` testid never visible — `useDossierOverview('seed-country-sa')` returns no data, section unmounts | TEST-DATA (fixture id `seed-country-sa` is a placeholder; needs a real seeded UUID) | Phase 41-07 |
+
+**Visual baselines:** NOT generated this run — visual regression spec
+(`dossier-drawer-visual.spec.ts`, 2 tests) needs `--update-snapshots`
+on a deterministic environment. Still deferred to HUMAN-UAT as the
+executor noted.
+
+**Total JS size budget:** `pnpm size` confirms pre-existing config drift —
+2.42 MB / 815 KB ceiling, overage 1.6 MB. Drawer chunk is ≈330 B gz, far
+below the noise floor. OUT-OF-SCOPE for Phase 41 (already documented
+under "Total JS size-limit budget pre-existing overage" deviation below).
+
+**Recommended remediation order if a 41.1 gap-closure phase is created:**
+1. G2 (calendar attr) + G5 (mobile shadow) — focused 41 implementation fixes
+2. G7 (fixture data) — needs a real UUID seed in test setup
+3. G3/G4 (axe contrast) — consider as part of design-system token review
+4. G6 (RTL doc.dir) — patch `loginForListPages` once for the entire suite
+5. G1 (RecentDossiers mount) — only relevant if user re-mounts the widget
+   on the dashboard; otherwise the trigger spec is stale
 
 ## Locked Deviations
 
