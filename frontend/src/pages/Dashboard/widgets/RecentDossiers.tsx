@@ -1,10 +1,10 @@
 import { type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
 import { formatDistanceToNow } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { DossierGlyph } from '@/components/signature-visuals'
 import { useDossierStore, type DossierEntry } from '@/store/dossierStore'
+import { useDossierDrawer } from '@/hooks/useDossierDrawer'
 
 const MAX_RECENT = 7
 
@@ -15,16 +15,10 @@ function resolveName(entry: DossierEntry, isArabic: boolean): string {
   return entry.name_en
 }
 
-function resolveRoute(entry: DossierEntry): string {
-  if (entry.route !== undefined && entry.route.length > 0) {
-    return entry.route
-  }
-  return `/dossiers/${entry.id}`
-}
-
 export function RecentDossiers(): ReactElement {
   const { t, i18n } = useTranslation('dashboard-widgets')
   const recentDossiers = useDossierStore((s) => s.recentDossiers)
+  const { openDossier } = useDossierDrawer()
   const isArabic = i18n.language === 'ar'
   const locale = isArabic ? ar : enUS
 
@@ -55,20 +49,23 @@ export function RecentDossiers(): ReactElement {
       <ul className="space-y-2">
         {recentDossiers.slice(0, MAX_RECENT).map((d): ReactElement => {
           const name = resolveName(d, isArabic)
-          const route = resolveRoute(d)
           const viewedAt = d.viewedAt ?? Date.now()
           return (
             <li key={d.id}>
-              <Link
-                to={route as any}
-                className="recent-row flex items-center gap-3 min-h-11 rounded-md hover:bg-surface/60 ps-2 pe-2"
+              <button
+                type="button"
+                className="recent-row flex items-center gap-3 min-h-11 rounded-md hover:bg-surface/60 ps-2 pe-2 w-full text-start"
+                style={{ minBlockSize: 44 }}
+                onClick={(): void => openDossier({ id: d.id, type: d.type })}
+                aria-label={name}
+                data-testid="recent-dossier-trigger"
               >
                 <DossierGlyph type={d.type} name={name} size={20} />
                 <span className="text-sm text-ink text-start truncate flex-1">{name}</span>
                 <span className="text-xs text-ink-soft">
                   {formatDistanceToNow(viewedAt, { addSuffix: true, locale })}
                 </span>
-              </Link>
+              </button>
             </li>
           )
         })}
