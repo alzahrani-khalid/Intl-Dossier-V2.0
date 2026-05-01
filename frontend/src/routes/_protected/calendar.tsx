@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { CalendarDays, Plus } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
+import { useDossierDrawer, type DossierDrawerType } from '@/hooks/useDossierDrawer'
 
 const UnifiedCalendar = lazy(() =>
   import('@/components/calendar/UnifiedCalendar').then((m) => ({
@@ -20,6 +21,7 @@ export const Route = createFileRoute('/_protected/calendar')({
 function CalendarPage() {
   const { t } = useTranslation('calendar')
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month')
+  const { openDossier } = useDossierDrawer()
 
   return (
     <div className="space-y-6">
@@ -74,7 +76,20 @@ function CalendarPage() {
           </div>
         }
       >
-        <UnifiedCalendar viewMode={viewMode} />
+        <UnifiedCalendar
+          viewMode={viewMode}
+          onEventClick={(event) => {
+            // Phase 41 plan 06 — open the dossier drawer when the clicked event
+            // carries a dossier_id. Falls back to 'country' when event.dossier?.type
+            // is missing (RESEARCH §8 + Pitfall 6).
+            if (typeof event.dossier_id === 'string' && event.dossier_id.length > 0) {
+              const fallbackType = 'country' as const
+              const type: DossierDrawerType =
+                (event.dossier?.type as DossierDrawerType | undefined) ?? fallbackType
+              openDossier({ id: event.dossier_id, type })
+            }
+          }}
+        />
       </Suspense>
     </div>
   )
