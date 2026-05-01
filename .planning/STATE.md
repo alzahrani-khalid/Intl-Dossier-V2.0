@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: Phase 40 closed; G1-G8 gap-closure run complete (21/21 plans); auth-helper fix + visual baselines deferred to HUMAN-UAT
-stopped_at: Phase 40 gap-closure run complete
-last_updated: '2026-04-26T17:30:00.000Z'
-last_activity: '2026-04-26 -- /gsd-execute-phase 40 --auto: 8 gap-closure plans (40-12..40-19) merged on DesignV2 → G1-G8 closed at code level; verdict PASS-WITH-DEVIATION preserved (auth helper + visual baselines pending)'
+status: Phase 40 closed; G1-G8 gap-closure landed; auth-helper fix + visual baselines deferred to HUMAN-UAT
+stopped_at: Phase 41 context gathered
+last_updated: '2026-05-01T20:32:25.676Z'
+last_activity: '2026-04-26 -- /gsd-execute-phase 40 --auto: 40-12..40-19 merged (8 commits da89d14c..96ae4e8c)'
 progress:
   total_phases: 11
-  completed_phases: 6
-  total_plans: 85
+  completed_phases: 7
+  total_plans: 77
   completed_plans: 77
-  percent: 91
+  percent: 100
 ---
 
 # Project State
@@ -285,10 +285,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: --stopped-at
-Stopped at: Phase 40 context gathered
-Resume file: --resume-file
-Resume command: /gsd-discuss-phase 37 (or /gsd-discuss-phase 38)
+Last session: 2026-05-01T20:32:25.670Z
+Stopped at: Phase 41 context gathered
+Resume file: .planning/phases/41-dossier-drawer/41-CONTEXT.md
+Resume command: /gsd-discuss-phase 41
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
 
