@@ -1,14 +1,12 @@
 /**
- * Plan 38-08 — RecentDossiers unit tests.
+ * RecentDossiers unit tests.
  *
- * Verifies:
- *   T1. caps to top 7 recentDossiers from Zustand selector
- *   T2. each row is a Link with `to={entry.route}`
- *   T3. empty state renders when recentDossiers is []
- *   T4. relative timestamp uses Arabic locale when i18n.language === 'ar'
+ * Phase 38 origin (T1–T4) + Phase 41 plan 06 additions:
+ *   T5. clicking a row invokes openDossier({id, type}) (NOT navigates via Link)
+ *   T6. each row trigger is a <button> (not <a>) and surfaces an aria-label
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import type { ReactNode } from 'react'
 
 // --- mocks must be declared before component import (vi hoists vi.mock) ---
@@ -49,6 +47,23 @@ vi.mock('react-i18next', () => ({
   }),
 }))
 
+const openDossierMock = vi.fn()
+vi.mock('@/hooks/useDossierDrawer', () => ({
+  useDossierDrawer: (): {
+    openDossier: typeof openDossierMock
+    closeDossier: () => void
+    open: boolean
+    dossierId: string | null
+    dossierType: string | null
+  } => ({
+    openDossier: openDossierMock,
+    closeDossier: vi.fn(),
+    open: false,
+    dossierId: null,
+    dossierType: null,
+  }),
+}))
+
 import { RecentDossiers } from '../RecentDossiers'
 
 function makeEntries(n: number): Array<Record<string, unknown>> {
@@ -66,6 +81,7 @@ function makeEntries(n: number): Array<Record<string, unknown>> {
 describe('RecentDossiers', () => {
   beforeEach(() => {
     i18nLanguageHolder.value = 'en'
+    openDossierMock.mockReset()
   })
 
   it('caps to top 7 dossiers when 10 are provided', () => {
@@ -74,12 +90,15 @@ describe('RecentDossiers', () => {
     expect(container.querySelectorAll('.recent-row')).toHaveLength(7)
   })
 
-  it('wraps each row in a Link with entry.route', () => {
+  it('renders each row as a <button> (not <a>)', () => {
     recentDossiersHolder.value = makeEntries(3)
     render(<RecentDossiers />)
-    const link = screen.getByText('Dossier 0').closest('a')
-    expect(link).not.toBeNull()
-    expect(link?.getAttribute('href')).toBe('/dossiers/d0')
+    const triggers = screen.getAllByTestId('recent-dossier-trigger')
+    expect(triggers).toHaveLength(3)
+    triggers.forEach((el): void => {
+      expect(el.tagName).toBe('BUTTON')
+      expect(el.getAttribute('type')).toBe('button')
+    })
   })
 
   it('renders empty state when recentDossiers is empty', () => {
@@ -93,5 +112,21 @@ describe('RecentDossiers', () => {
     recentDossiersHolder.value = makeEntries(2)
     render(<RecentDossiers />)
     expect(screen.getByText('ملف 0')).toBeTruthy()
+  })
+
+  it('clicking a row calls openDossier({id, type}) with the entry data', () => {
+    recentDossiersHolder.value = makeEntries(2)
+    render(<RecentDossiers />)
+    const triggers = screen.getAllByTestId('recent-dossier-trigger')
+    fireEvent.click(triggers[0]!)
+    expect(openDossierMock).toHaveBeenCalledTimes(1)
+    expect(openDossierMock).toHaveBeenCalledWith({ id: 'd0', type: 'country' })
+  })
+
+  it('each trigger has an aria-label identifying the dossier', () => {
+    recentDossiersHolder.value = makeEntries(1)
+    render(<RecentDossiers />)
+    const trigger = screen.getByTestId('recent-dossier-trigger')
+    expect(trigger.getAttribute('aria-label')).toBe('Dossier 0')
   })
 })
