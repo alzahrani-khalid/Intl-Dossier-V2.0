@@ -1,6 +1,30 @@
 import { Page, expect } from '@playwright/test'
 
 /**
+ * Canonical seeded dossier fixture for Phase 41 drawer specs.
+ *
+ * UUID matches `v_d_china` in supabase/seed/060-dashboard-demo.sql:
+ *   - type='country', sensitivity_level=3 (CONFIDENTIAL chip threshold)
+ *   - 3 overdue aa_commitments linked via dossier_id (drawer commitments
+ *     section renders rows; D-13 case 10 spec asserts a row click)
+ *   - calendar_events seeded for upcoming + activity sections
+ *
+ * Override via env var when running against an alternate seed (CI replays
+ * a frozen snapshot may use a different UUID).
+ *
+ * PRECONDITION: supabase/seed/060-dashboard-demo.sql must be applied to the
+ * local Postgres before running any dossier-drawer spec. If the seed is
+ * missing, useDossierOverview('b0000001-...004') returns no rows and the
+ * commitments / upcoming / activity sections unmount.
+ *
+ * To apply: pnpm db:seed (runs supabase/seed/*.sql in order). The seed is
+ * idempotent — it deletes any existing b0000001-* rows before re-inserting.
+ */
+export const FIXTURE_DOSSIER_ID =
+  process.env.E2E_DOSSIER_FIXTURE_ID ?? 'b0000001-0000-0000-0000-000000000004'
+export const FIXTURE_DOSSIER_TYPE = 'country' as const
+
+/**
  * Open the dossier quick-look drawer for a known seeded fixture dossier.
  * Wave 2 specs use this to bypass widget-driven open paths during a11y/visual gates.
  *

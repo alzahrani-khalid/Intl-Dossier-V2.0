@@ -5,10 +5,11 @@
 // directly opens the drawer; reload preserves it.
 import { test, expect } from '@playwright/test'
 import { loginForListPages } from './support/list-pages-auth'
-import { openDrawerForFixtureDossier } from './support/dossier-drawer-fixture'
-
-const FIXTURE_DOSSIER_ID = process.env.E2E_DOSSIER_FIXTURE_ID ?? 'seed-country-sa'
-const FIXTURE_DOSSIER_TYPE = 'country'
+import {
+  openDrawerForFixtureDossier,
+  FIXTURE_DOSSIER_ID,
+  FIXTURE_DOSSIER_TYPE,
+} from './support/dossier-drawer-fixture'
 
 test.describe.configure({ retries: 1 })
 
