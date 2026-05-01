@@ -42,6 +42,15 @@ export function CalendarEventPill({ event, onEventClick }: CalendarEventPillProp
       ? event.title_ar
       : (event.title_en ?? event.title_ar ?? event.id)
 
+  // G2 (Phase 41-08): expose dossier_id as a DOM attribute so Playwright's
+  // [data-dossier-id] locator on /calendar resolves. Conditional spread keeps
+  // the attribute fully absent when dossier_id is null/undefined (avoids
+  // unintended matches on data-dossier-id="").
+  const dossierIdAttr =
+    typeof event.dossier_id === 'string' && event.dossier_id.length > 0
+      ? { 'data-dossier-id': event.dossier_id }
+      : undefined
+
   return (
     <button
       type="button"
@@ -49,6 +58,7 @@ export function CalendarEventPill({ event, onEventClick }: CalendarEventPillProp
       onClick={(): void => onEventClick?.(event)}
       aria-label={title}
       style={lang === 'ar' ? ({ writingDirection: 'rtl' } as CSSProperties) : undefined}
+      {...dossierIdAttr}
     >
       <span>{title}</span>
     </button>

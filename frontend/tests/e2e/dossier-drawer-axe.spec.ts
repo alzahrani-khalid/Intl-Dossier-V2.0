@@ -7,9 +7,10 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { loginForListPages } from './support/list-pages-auth'
-import { openDrawerForFixtureDossier } from './support/dossier-drawer-fixture'
-
-const FIXTURE_DOSSIER_ID = process.env.E2E_DOSSIER_FIXTURE_ID ?? 'seed-country-sa'
+import {
+  openDrawerForFixtureDossier,
+  FIXTURE_DOSSIER_ID,
+} from './support/dossier-drawer-fixture'
 
 test.describe.configure({ retries: 1 })
 
