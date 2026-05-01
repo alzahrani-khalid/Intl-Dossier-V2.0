@@ -1,0 +1,38 @@
+// D-13 case 10 — commitment row click navigates to commitment detail
+//
+// Phase 41 plan 07 Task 1 — Wave 2 functional E2E.
+// Plan 41-05 D-08 REVISED: clicking a commitment row routes to /commitments
+// (no work-item detail dialog component exists per RESEARCH §4). The drawer
+// closes because the next route's validateSearch drops the ?dossier= key.
+import { test, expect } from '@playwright/test'
+import { loginForListPages } from './support/list-pages-auth'
+import { openDrawerForFixtureDossier } from './support/dossier-drawer-fixture'
+
+const FIXTURE_DOSSIER_ID = process.env.E2E_DOSSIER_FIXTURE_ID ?? 'seed-country-sa'
+
+test.describe.configure({ retries: 1 })
+
+test.describe('DossierDrawer — commitment row click (D-13 case 10)', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.clock.install({ time: new Date('2026-04-26T12:00:00Z') })
+  })
+
+  test('clicking a commitment row navigates to /commitments?id=<uuid>', async ({ page }) => {
+    await loginForListPages(page)
+    await openDrawerForFixtureDossier(page, {
+      id: FIXTURE_DOSSIER_ID,
+      type: 'country',
+    })
+
+    // Wait for the commitments section + at least one row.
+    await expect(page.getByTestId('dossier-drawer-commitments')).toBeVisible()
+    const firstRow = page.getByTestId('dossier-drawer-commitment-row').first()
+    await firstRow.waitFor({ state: 'visible', timeout: 10_000 })
+
+    await firstRow.click()
+
+    await expect(page).toHaveURL(/\/commitments(?:\?|#|$)/)
+    await expect(page).toHaveURL(/[?&]id=[A-Za-z0-9-]+/)
+    await expect(page.getByRole('dialog')).toHaveCount(0)
+  })
+})
