@@ -1,7 +1,16 @@
 import { type ReactElement } from 'react'
 import { DashboardGrid } from './widgets/DashboardGrid'
 import { DashboardHero } from './components/DashboardHero'
-import { KpiStrip, WeekAhead, OverdueCommitments, SlaHealth, VipVisits, MyTasks } from './widgets'
+import {
+  KpiStrip,
+  WeekAhead,
+  OverdueCommitments,
+  SlaHealth,
+  VipVisits,
+  MyTasks,
+  RecentDossiers,
+  ForumsStrip,
+} from './widgets'
 import './widgets/dashboard.css'
 
 export function Dashboard(): ReactElement {
@@ -10,8 +19,17 @@ export function Dashboard(): ReactElement {
       <DashboardHero />
       <KpiStrip />
       <DashboardGrid
-        left={[<WeekAhead key="wa" />, <OverdueCommitments key="oc" />]}
-        right={[<SlaHealth key="sh" />, <VipVisits key="vv" />, <MyTasks key="mt" />]}
+        left={[
+          <WeekAhead key="wa" />,
+          <RecentDossiers key="rd" />,
+          <OverdueCommitments key="oc" />,
+        ]}
+        right={[
+          <SlaHealth key="sh" />,
+          <ForumsStrip key="fs" />,
+          <VipVisits key="vv" />,
+          <MyTasks key="mt" />,
+        ]}
       />
     </div>
   )
