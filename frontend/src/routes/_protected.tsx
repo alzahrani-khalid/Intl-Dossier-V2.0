@@ -6,6 +6,7 @@ import { ChatProvider } from '@/contexts/ChatContext'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { OnboardingTourTrigger } from '@/components/guided-tours'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { DossierDrawer } from '@/components/dossier/DossierDrawer'
 // Phase 41 (D-02 / 41-RESEARCH §7 Path A): validateSearch whitelists drawer params on
 // the protected layout route so any deep-link to a child route can open the dossier
 // quick-look drawer via ?dossier=<id>&dossierType=<type>.
@@ -91,6 +92,9 @@ function ProtectedLayout(): React.ReactElement {
       </AppShell>
       <ErrorBoundary>
         <ChatDock onCitationClick={handleCitationClick} />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <DossierDrawer />
       </ErrorBoundary>
       <OnboardingTourTrigger
         autoStartDelay={1000}
