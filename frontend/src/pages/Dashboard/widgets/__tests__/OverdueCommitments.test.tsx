@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 
 vi.mock('react-i18next', () => ({
@@ -16,6 +16,23 @@ vi.mock('@/components/signature-visuals', () => ({
   DossierGlyph: (p: { iso?: string; type: string }): JSX.Element => (
     <span data-testid="glyph" data-iso={p.iso ?? ''} data-type={p.type} />
   ),
+}))
+
+const openDossierMock = vi.fn()
+vi.mock('@/hooks/useDossierDrawer', () => ({
+  useDossierDrawer: (): {
+    openDossier: typeof openDossierMock
+    closeDossier: () => void
+    open: boolean
+    dossierId: string | null
+    dossierType: string | null
+  } => ({
+    openDossier: openDossierMock,
+    closeDossier: vi.fn(),
+    open: false,
+    dossierId: null,
+    dossierType: null,
+  }),
 }))
 
 import { usePersonalCommitments } from '@/hooks/usePersonalCommitments'
@@ -84,6 +101,7 @@ const amberGroup = {
 describe('OverdueCommitments', () => {
   beforeEach((): void => {
     vi.mocked(usePersonalCommitments).mockReset()
+    openDossierMock.mockReset()
   })
 
   it('renders loading skeleton when loading', (): void => {
@@ -130,7 +148,7 @@ describe('OverdueCommitments', () => {
     expect(groups[2]?.textContent).toContain('Saudi Arabia')
   })
 
-  it('default shows 3 items per group; expand reveals the rest', (): void => {
+  it('default shows 3 items per group; expand reveals the rest (without firing dossier-head click)', (): void => {
     vi.mocked(usePersonalCommitments).mockReturnValue({
       data: [yellowGroup],
       isLoading: false,
@@ -138,8 +156,12 @@ describe('OverdueCommitments', () => {
     })
     const { container } = render(<OverdueCommitments />)
     expect(container.querySelectorAll('.overdue-row')).toHaveLength(3)
-    fireEvent.click(screen.getByRole('button'))
+    // The expand toggle is a separate <button>; its click should NOT bubble to
+    // the dossier-head trigger (stopPropagation).
+    const expandToggle = screen.getByText('overdue.expand')
+    fireEvent.click(expandToggle)
     expect(container.querySelectorAll('.overdue-row')).toHaveLength(4)
+    expect(openDossierMock).not.toHaveBeenCalled()
   })
 
   it('severity dot CSS classes resolve to red/amber/yellow variants', (): void => {
@@ -189,5 +211,65 @@ describe('OverdueCommitments', () => {
     const glyph = render(<OverdueCommitments />).getAllByTestId('glyph')[0]
     expect(glyph?.getAttribute('data-iso')).toBe('QA')
     expect(glyph?.getAttribute('data-type')).toBe('country')
+  })
+
+  // -------------------------------------------------------------------------
+  // Phase 41 plan 06 additions
+  // -------------------------------------------------------------------------
+
+  describe('drawer-trigger (Phase 41 plan 06)', (): void => {
+    let warnSpy: ReturnType<typeof vi.spyOn>
+
+    beforeEach((): void => {
+      warnSpy = vi.spyOn(console, 'warn').mockImplementation((): void => undefined)
+    })
+
+    afterEach((): void => {
+      warnSpy.mockRestore()
+    })
+
+    it('clicking the dossier-group head with explicit dossierType calls openDossier with that type and does NOT warn', (): void => {
+      const typedGroup = {
+        ...redGroup,
+        dossierType: 'organization' as const,
+      }
+      vi.mocked(usePersonalCommitments).mockReturnValue({
+        data: [typedGroup],
+        isLoading: false,
+        isError: false,
+      } as never)
+      render(<OverdueCommitments />)
+      fireEvent.click(screen.getByTestId('overdue-commitments-dossier-head'))
+      expect(openDossierMock).toHaveBeenCalledWith({ id: 'd2', type: 'organization' })
+      expect(warnSpy).not.toHaveBeenCalled()
+    })
+
+    it('clicking the dossier-group head WITHOUT dossierType falls back to "country" and emits one console.warn', (): void => {
+      vi.mocked(usePersonalCommitments).mockReturnValue({
+        data: [redGroup],
+        isLoading: false,
+        isError: false,
+      })
+      render(<OverdueCommitments />)
+      fireEvent.click(screen.getByTestId('overdue-commitments-dossier-head'))
+      expect(openDossierMock).toHaveBeenCalledWith({ id: 'd2', type: 'country' })
+      expect(warnSpy).toHaveBeenCalledTimes(1)
+      const msg = String(warnSpy.mock.calls[0]?.[0] ?? '')
+      expect(msg).toContain('OverdueCommitments')
+      expect(msg).toContain('deferred-items.md')
+    })
+
+    it('the dossier-group head trigger is a <button> with aria-label', (): void => {
+      vi.mocked(usePersonalCommitments).mockReturnValue({
+        data: [redGroup],
+        isLoading: false,
+        isError: false,
+      })
+      render(<OverdueCommitments />)
+      const trigger = screen.getByTestId('overdue-commitments-dossier-head')
+      expect(trigger.tagName).toBe('BUTTON')
+      expect(trigger.getAttribute('type')).toBe('button')
+      expect(trigger.getAttribute('aria-label')).toBe('Qatar')
+    })
   })
 })

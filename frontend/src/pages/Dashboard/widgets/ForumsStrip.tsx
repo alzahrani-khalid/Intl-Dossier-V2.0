@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { useForums } from '@/hooks/useForums'
+import { useDossierDrawer } from '@/hooks/useDossierDrawer'
 import type { Forum } from '@/types/forum.types'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
@@ -35,6 +36,7 @@ export function ForumsStrip(): ReactElement {
   const { t, i18n } = useTranslation('dashboard-widgets')
   const isArabic = i18n.language === 'ar'
   const { data, isLoading, isError } = useForums({ limit: 4 })
+  const { openDossier } = useDossierDrawer()
 
   if (isLoading) {
     return <WidgetSkeleton rows={1} />
@@ -85,15 +87,21 @@ export function ForumsStrip(): ReactElement {
           const name = resolveName(f, isArabic)
           const status = String(f.status)
           return (
-            <li
-              key={f.id}
-              className="forum-card flex items-center gap-2 rounded-md border border-line bg-surface p-2 min-h-11 flex-1 min-w-0"
-            >
-              <LtrIsolate className="forum-monogram font-mono text-xs text-ink">
-                {monogram(f.name_en)}
-              </LtrIsolate>
-              <span className="text-sm text-ink text-start truncate flex-1">{name}</span>
-              <Badge>{t(`forums.status.${status}`, status)}</Badge>
+            <li key={f.id} className="flex-1 min-w-0">
+              <button
+                type="button"
+                className="forum-card flex items-center gap-2 rounded-md border border-line bg-surface p-2 min-h-11 w-full text-start"
+                style={{ minBlockSize: 44 }}
+                onClick={(): void => openDossier({ id: f.id, type: 'forum' })}
+                aria-label={name}
+                data-testid="forum-trigger"
+              >
+                <LtrIsolate className="forum-monogram font-mono text-xs text-ink">
+                  {monogram(f.name_en)}
+                </LtrIsolate>
+                <span className="text-sm text-ink text-start truncate flex-1">{name}</span>
+                <Badge>{t(`forums.status.${status}`, status)}</Badge>
+              </button>
             </li>
           )
         })}

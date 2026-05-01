@@ -10,6 +10,7 @@ import {
   type CommitmentSeverity,
   type GroupedCommitment,
 } from '@/hooks/usePersonalCommitments'
+import { useDossierDrawer, type DossierDrawerType } from '@/hooks/useDossierDrawer'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
 /**
@@ -44,9 +45,18 @@ function groupMaxSeverity(group: GroupedCommitment): CommitmentSeverity {
   )
 }
 
+/**
+ * GroupedCommitment may carry an optional `dossierType` discriminator if/when the
+ * data hook starts surfacing it. Until then we fall back to 'country' and warn so
+ * the drift surfaces during dev. See deferred-items.md
+ * "OverdueCommitments dossierType propagation".
+ */
+type GroupWithMaybeType = GroupedCommitment & { dossierType?: DossierDrawerType }
+
 export function OverdueCommitments(): ReactElement {
   const { t } = useTranslation('dashboard-widgets')
   const { data, isLoading, isError } = usePersonalCommitments()
+  const { openDossier } = useDossierDrawer()
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   if (isLoading) {
@@ -87,6 +97,18 @@ export function OverdueCommitments(): ReactElement {
     (a, b) => SEVERITY_ORDER[groupMaxSeverity(a)] - SEVERITY_ORDER[groupMaxSeverity(b)],
   )
 
+  const handleHeadClick = (group: GroupWithMaybeType): void => {
+    const resolvedType: DossierDrawerType = group.dossierType ?? 'country'
+    if (group.dossierType === undefined) {
+      // Surface drift — widget data hook does not yet expose dossierType on group objects
+      console.warn(
+        '[OverdueCommitments] group.dossierType is undefined; falling back to "country". ' +
+          'See deferred-items.md → "OverdueCommitments dossierType propagation".',
+      )
+    }
+    openDossier({ id: group.dossierId, type: resolvedType })
+  }
+
   return (
     <section
       role="region"
@@ -98,6 +120,7 @@ export function OverdueCommitments(): ReactElement {
       </h3>
       <ul className="space-y-3">
         {sortedGroups.map((group): ReactElement => {
+          const maybeTyped = group as GroupWithMaybeType
           const isOpen = expanded[group.dossierId] === true
           const visible = isOpen ? group.commitments : group.commitments.slice(0, DEFAULT_VISIBLE)
           const hasMore = group.commitments.length > DEFAULT_VISIBLE
@@ -105,7 +128,14 @@ export function OverdueCommitments(): ReactElement {
           return (
             <li key={group.dossierId} className="overdue-group">
               <div className="overdue-head">
-                <div className="overdue-head-left">
+                <button
+                  type="button"
+                  className="overdue-head-left flex items-center gap-2 w-full text-start min-h-11"
+                  style={{ minBlockSize: 44 }}
+                  onClick={(): void => handleHeadClick(maybeTyped)}
+                  aria-label={group.dossierName}
+                  data-testid="overdue-commitments-dossier-head"
+                >
                   <DossierGlyph
                     type="country"
                     iso={group.dossierFlag}
@@ -115,7 +145,7 @@ export function OverdueCommitments(): ReactElement {
                   <span className="card-title text-start truncate flex-1">
                     {group.dossierName}
                   </span>
-                </div>
+                </button>
               </div>
               <ul className="space-y-1">
                 {visible.map(
@@ -149,12 +179,13 @@ export function OverdueCommitments(): ReactElement {
                   variant="ghost"
                   size="sm"
                   className="mt-1"
-                  onClick={(): void =>
+                  onClick={(e): void => {
+                    e.stopPropagation()
                     setExpanded((prev) => ({
                       ...prev,
                       [group.dossierId]: !(prev[group.dossierId] ?? false),
                     }))
-                  }
+                  }}
                 >
                   {isOpen ? t('overdue.collapse') : t('overdue.expand')}
                 </Button>

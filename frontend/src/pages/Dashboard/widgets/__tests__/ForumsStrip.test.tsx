@@ -1,14 +1,12 @@
 /**
- * Plan 38-08 — ForumsStrip unit tests.
+ * ForumsStrip unit tests.
  *
- * Verifies:
- *   T1. monogram derivation: "General Assembly" → "GA", "United Nations" → "UN"
- *   T2. renders 4 forum cards when 4 forums returned
- *   T3. monogram chip wrapped in LtrIsolate (.forum-monogram present, dir="ltr")
- *   T4. status chip text uses i18n key path forums.status.{status}
+ * Phase 38 origin (T1–T6) + Phase 41 plan 06 additions:
+ *   T7. clicking a forum item invokes openDossier({id, type: 'forum'})
+ *   T8. forum item trigger is a <button> with aria-label
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 
 vi.mock('@/hooks/useForums', () => ({ useForums: vi.fn() }))
 
@@ -32,6 +30,23 @@ vi.mock('../WidgetSkeleton', () => ({
   WidgetSkeleton: (): JSX.Element => <div data-testid="skeleton" />,
 }))
 
+const openDossierMock = vi.fn()
+vi.mock('@/hooks/useDossierDrawer', () => ({
+  useDossierDrawer: (): {
+    openDossier: typeof openDossierMock
+    closeDossier: () => void
+    open: boolean
+    dossierId: string | null
+    dossierType: string | null
+  } => ({
+    openDossier: openDossierMock,
+    closeDossier: vi.fn(),
+    open: false,
+    dossierId: null,
+    dossierType: null,
+  }),
+}))
+
 import { useForums } from '@/hooks/useForums'
 import { ForumsStrip } from '../ForumsStrip'
 
@@ -49,6 +64,7 @@ function makeForum(id: string, name_en: string, status = 'active'): Record<strin
 describe('ForumsStrip', () => {
   beforeEach(() => {
     vi.mocked(useForums).mockReset()
+    openDossierMock.mockReset()
   })
 
   it('derives monogram "GA" from "General Assembly"', () => {
@@ -115,5 +131,31 @@ describe('ForumsStrip', () => {
     render(<ForumsStrip />)
     // t mock returns fallback (status string) so we assert badge contains it
     expect(screen.getByTestId('badge').textContent).toBe('active')
+  })
+
+  it("clicking a forum item calls openDossier({id, type: 'forum'})", () => {
+    vi.mocked(useForums).mockReturnValue({
+      data: { data: [makeForum('f1', 'General Assembly')], pagination: {} },
+      isLoading: false,
+      isError: false,
+    } as never)
+    render(<ForumsStrip />)
+    const trigger = screen.getByTestId('forum-trigger')
+    fireEvent.click(trigger)
+    expect(openDossierMock).toHaveBeenCalledTimes(1)
+    expect(openDossierMock).toHaveBeenCalledWith({ id: 'f1', type: 'forum' })
+  })
+
+  it('forum-trigger is a <button> with aria-label of forum name', () => {
+    vi.mocked(useForums).mockReturnValue({
+      data: { data: [makeForum('f1', 'General Assembly')], pagination: {} },
+      isLoading: false,
+      isError: false,
+    } as never)
+    render(<ForumsStrip />)
+    const trigger = screen.getByTestId('forum-trigger')
+    expect(trigger.tagName).toBe('BUTTON')
+    expect(trigger.getAttribute('type')).toBe('button')
+    expect(trigger.getAttribute('aria-label')).toBe('General Assembly')
   })
 })
