@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: Phase 40 closed; G1-G8 gap-closure landed; auth-helper fix + visual baselines deferred to HUMAN-UAT
-stopped_at: Phase 41 context gathered
-last_updated: '2026-05-01T20:32:25.676Z'
-last_activity: '2026-04-26 -- /gsd-execute-phase 40 --auto: 40-12..40-19 merged (8 commits da89d14c..96ae4e8c)'
+status: executing
+stopped_at: Phase 41 UI-SPEC approved
+last_updated: '2026-05-01T21:42:23.589Z'
+last_activity: 2026-05-01 -- Phase 41 execution started
 progress:
   total_phases: 11
   completed_phases: 7
-  total_plans: 77
+  total_plans: 84
   completed_plans: 77
-  percent: 100
+  percent: 92
 ---
 
 # Project State
@@ -21,14 +21,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 41 — dossier-drawer (next), pending Phase 40 visual sign-off
+**Current focus:** Phase 41 — dossier-drawer
 
 ## Current Position
 
-Phase: 40 (list-pages) — COMPLETE (PASS-WITH-DEVIATION; G1-G8 closed at code level)
+Phase: 41 (dossier-drawer) — EXECUTING
+Plan: 1 of 7
 Plans: 21 of 21 complete (13 original + 8 gap-closure)
-Status: Phase 40 closed; G1-G8 gap-closure landed; auth-helper fix + visual baselines deferred to HUMAN-UAT
-Last activity: 2026-04-26 -- /gsd-execute-phase 40 --auto: 40-12..40-19 merged (8 commits da89d14c..96ae4e8c)
+Status: Executing Phase 41
+Last activity: 2026-05-01 -- Phase 41 execution started
 
 Progress: [█████████▉] 91% (77 / 85 plans)
 
@@ -285,9 +286,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-01T20:32:25.670Z
-Stopped at: Phase 41 context gathered
-Resume file: .planning/phases/41-dossier-drawer/41-CONTEXT.md
+Last session: 2026-05-01T21:00:45.802Z
+Stopped at: Phase 41 UI-SPEC approved
+Resume file: .planning/phases/41-dossier-drawer/41-UI-SPEC.md
 Resume command: /gsd-discuss-phase 41
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
