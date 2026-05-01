@@ -56,7 +56,7 @@ export const tasksKeys = {
 /**
  * Hook to fetch tasks with filtering and pagination
  */
-function useTasks(filters: TaskFilters = {}) {
+export function useTasks(filters: TaskFilters = {}) {
   return useQuery({
     queryKey: tasksKeys.list(filters),
     queryFn: () => tasksAPI.getTasks(filters),

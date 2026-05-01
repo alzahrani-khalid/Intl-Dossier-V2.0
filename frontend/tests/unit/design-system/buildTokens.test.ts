@@ -92,9 +92,9 @@ const PAD_BLOCK_BY_DENSITY: Record<Density, string> = {
 }
 
 const GAP_BY_DENSITY: Record<Density, string> = {
-  comfortable: '12px',
-  compact: '8px',
-  dense: '4px',
+  comfortable: '16px',
+  compact: '12px',
+  dense: '8px',
 }
 
 describe('buildTokens — 72-case matrix (4 directions × 2 modes × 3 hues × 3 densities)', () => {
@@ -159,11 +159,11 @@ describe('buildTokens — SC-2: light/dark OKLCH flip (accent-ink lightness, acc
 
     expect(light['--danger']).toBe('oklch(52% 0.18 25)')
     expect(dark['--danger']).toBe('oklch(70% 0.16 25)')
-    expect(light['--warn']).toBe('oklch(62% 0.14 75)')
+    expect(light['--warn']).toBe('oklch(51% 0.14 75)')
     expect(dark['--warn']).toBe('oklch(78% 0.14 75)')
-    expect(light['--ok']).toBe('oklch(52% 0.12 155)')
+    expect(light['--ok']).toBe('oklch(49% 0.12 155)')
     expect(dark['--ok']).toBe('oklch(72% 0.14 155)')
-    expect(light['--info']).toBe('oklch(50% 0.14 230)')
+    expect(light['--info']).toBe('oklch(48% 0.14 230)')
     expect(dark['--info']).toBe('oklch(72% 0.13 230)')
   })
 })
@@ -226,7 +226,7 @@ describe('buildTokens — SC-3: hue recomputes accent family + SLA (hue+55°), s
 })
 
 describe('buildTokens — SC-4: density values (rowH, pad-inline, pad-block, gap)', () => {
-  it('emits comfortable=52px / 20px / 16px / 12px', () => {
+  it('emits comfortable=52px / 20px / 16px / 16px', () => {
     const tokens = buildTokens({
       direction: 'chancery',
       mode: 'light',
@@ -236,10 +236,10 @@ describe('buildTokens — SC-4: density values (rowH, pad-inline, pad-block, gap
     expect(tokens['--row-h']).toBe('52px')
     expect(tokens['--pad-inline']).toBe('20px')
     expect(tokens['--pad-block']).toBe('16px')
-    expect(tokens['--gap']).toBe('12px')
+    expect(tokens['--gap']).toBe('16px')
   })
 
-  it('emits compact=40px / 14px / 12px / 8px', () => {
+  it('emits compact=40px / 14px / 12px / 12px', () => {
     const tokens = buildTokens({
       direction: 'chancery',
       mode: 'light',
@@ -249,10 +249,10 @@ describe('buildTokens — SC-4: density values (rowH, pad-inline, pad-block, gap
     expect(tokens['--row-h']).toBe('40px')
     expect(tokens['--pad-inline']).toBe('14px')
     expect(tokens['--pad-block']).toBe('12px')
-    expect(tokens['--gap']).toBe('8px')
+    expect(tokens['--gap']).toBe('12px')
   })
 
-  it('emits dense=32px / 10px / 8px / 4px', () => {
+  it('emits dense=32px / 10px / 8px / 8px', () => {
     const tokens = buildTokens({
       direction: 'chancery',
       mode: 'light',
@@ -262,7 +262,7 @@ describe('buildTokens — SC-4: density values (rowH, pad-inline, pad-block, gap
     expect(tokens['--row-h']).toBe('32px')
     expect(tokens['--pad-inline']).toBe('10px')
     expect(tokens['--pad-block']).toBe('8px')
-    expect(tokens['--gap']).toBe('4px')
+    expect(tokens['--gap']).toBe('8px')
   })
 })
 

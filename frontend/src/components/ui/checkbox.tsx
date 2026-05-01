@@ -65,7 +65,7 @@ const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root
           <span
             className={cn(
               'pointer-events-none absolute inset-0 rounded-lg border-2 border-dashed transition-opacity duration-200',
-              'border-primary/40 bg-primary/5',
+              'border-[var(--accent)] bg-[var(--accent-soft)]',
               isLongPress ? 'opacity-100' : 'opacity-0',
             )}
             aria-hidden="true"
@@ -74,10 +74,10 @@ const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root
         <CheckboxPrimitive.Root
           ref={ref}
           className={cn(
-            'peer h-5 w-5 shrink-0 rounded-sm border border-primary shadow',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+            'peer h-5 w-5 shrink-0 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface)] text-[var(--accent-fg)] shadow-[var(--shadow-sm)]',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            'data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+            'data-[state=checked]:border-[var(--accent)] data-[state=checked]:bg-[var(--accent)]',
             className,
           )}
           {...props}

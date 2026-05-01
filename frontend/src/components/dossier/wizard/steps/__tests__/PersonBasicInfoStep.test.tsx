@@ -84,7 +84,7 @@ vi.mock('@/components/ui/select', () => ({
   SelectValue: ({ placeholder }: { placeholder?: string }) => <span>{placeholder}</span>,
   SelectContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SelectItem: ({ value, children }: { value: string; children: React.ReactNode }) => (
-    <button type="button" role="option" data-value={value}>
+    <button type="button" role="option" aria-selected={false} data-value={value}>
       {children}
     </button>
   ),

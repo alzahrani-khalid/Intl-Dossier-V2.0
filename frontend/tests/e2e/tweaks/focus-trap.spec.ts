@@ -2,9 +2,32 @@ import { test, expect, type Page } from '@playwright/test'
 
 async function authBypass(page: Page): Promise<void> {
   await page.addInitScript((): void => {
+    const now = Math.floor(Date.now() / 1000)
+    const user = {
+      id: '11111111-1111-1111-1111-111111111111',
+      aud: 'authenticated',
+      role: 'authenticated',
+      email: 'test@example.com',
+      email_confirmed_at: new Date().toISOString(),
+      app_metadata: { provider: 'email', providers: ['email'] },
+      user_metadata: { name: 'Test' },
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }
+    localStorage.setItem(
+      'sb-zkrcjzdemdmwhearhfgg-auth-token',
+      JSON.stringify({
+        access_token: 'fake-access-token',
+        token_type: 'bearer',
+        expires_in: 3600,
+        expires_at: now + 3600,
+        refresh_token: 'fake-refresh-token',
+        user,
+      }),
+    )
     const payload = {
       state: {
-        user: { id: 'test-user', email: 'test@example.com', name: 'Test' },
+        user: { id: user.id, email: user.email, name: 'Test' },
         isAuthenticated: true,
       },
       version: 0,
@@ -27,12 +50,12 @@ test.describe('Tweaks drawer focus trap (SC-4)', () => {
     await seedLocale(page, 'en')
     await page.goto('/')
 
-    const gear = page.getByRole('button', { name: 'Open tweaks' })
+    const gear = page.getByRole('button', { name: 'Tweaks' })
     await gear.click()
 
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
-    await expect(dialog.getByText('Direction')).toBeVisible()
+    await expect(dialog.getByText('Design direction')).toBeVisible()
 
     for (let i = 0; i < 8; i++) {
       await page.keyboard.press('Tab')
@@ -54,12 +77,12 @@ test.describe('Tweaks drawer focus trap (SC-4)', () => {
     await seedLocale(page, 'ar')
     await page.goto('/')
 
-    const gear = page.getByRole('button', { name: 'فتح التعديلات' })
+    const gear = page.getByRole('button', { name: 'تخصيص' })
     await gear.click()
 
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
-    await expect(dialog.getByText('الاتجاه')).toBeVisible()
+    await expect(dialog.getByText('الاتجاه التصميمي')).toBeVisible()
 
     for (let i = 0; i < 8; i++) {
       await page.keyboard.press('Tab')

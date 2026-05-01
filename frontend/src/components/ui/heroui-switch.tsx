@@ -77,18 +77,18 @@ const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
         disabled={disabled}
         onClick={handleClick}
         className={cn(
-          'peer inline-flex h-5 w-10 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-sm',
+          'peer inline-flex h-5 w-10 shrink-0 cursor-pointer items-center rounded-full border border-[var(--line)] shadow-[var(--shadow-sm)]',
           'transition-colors duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]',
           'disabled:cursor-not-allowed disabled:opacity-50',
-          isOn ? 'bg-primary' : 'bg-input',
+          isOn ? 'border-[var(--accent)] bg-[var(--accent)]' : 'bg-[var(--line-soft)]',
           className,
         )}
         {...props}
       >
         <span
           className={cn(
-            'pointer-events-none block h-4 w-[1.375rem] rounded-full bg-background shadow-lg ring-0',
+            'pointer-events-none block h-4 w-[1.375rem] rounded-full bg-[var(--surface)] shadow-[var(--shadow)] ring-0',
             'transition-[margin] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]',
             isOn ? 'ms-[calc(100%-1.5rem)]' : 'ms-0.5',
           )}

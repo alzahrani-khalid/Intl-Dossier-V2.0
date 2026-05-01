@@ -86,9 +86,9 @@ export function Digest(): ReactElement {
       <section
         role="region"
         aria-labelledby="digest-heading"
-        className="digest rounded-lg border border-line p-4"
+        className="digest card"
       >
-        <h3 id="digest-heading" className="text-sm font-medium text-ink text-start mb-2">
+        <h3 id="digest-heading" className="card-title text-start mb-2">
           {t('digest.title')}
         </h3>
         <p className="text-sm text-ink-mute text-start">{t('error.load_failed')}</p>
@@ -100,10 +100,10 @@ export function Digest(): ReactElement {
     <section
       role="region"
       aria-labelledby="digest-heading"
-      className="digest relative rounded-lg border border-line bg-surface-raised p-4"
+      className="digest relative card"
     >
       <div className="flex items-center justify-between mb-3 gap-2">
-        <h3 id="digest-heading" className="text-sm font-medium text-ink text-start">
+        <h3 id="digest-heading" className="card-title text-start">
           {t('digest.title')}
         </h3>
         <Button

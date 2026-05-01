@@ -86,8 +86,15 @@
     "overdueOnly": "Overdue only",
     "clear": "Clear filters",
     "clearFilters": "Clear all filters",
-    "searchPlaceholder": "Search work items..."
+    "searchPlaceholder": "Search work items...",
+    "byStatus": "By status",
+    "byDossier": "By dossier",
+    "byOwner": "By owner",
+    "comingSoon": "Coming soon",
+    "search": "Search work items…"
   },
+  "overdueChip": "{{count}} overdue",
+  "emptyColumn": "No items",
   "priority": {
     "urgent": "Urgent",
     "high": "High",
@@ -126,7 +133,10 @@
     "loadMore": "Load more",
     "refresh": "Refresh",
     "openItem": "Open item",
-    "editItem": "Edit item"
+    "editItem": "Edit item",
+    "newItem": "New item",
+    "listView": "List view",
+    "addToColumn": "Add to {{column}}"
   },
   "context": {
     "personal": "My Work",

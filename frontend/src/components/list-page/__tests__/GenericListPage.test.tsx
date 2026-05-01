@@ -58,6 +58,13 @@ describe('GenericListPage', () => {
     render(<GenericListPage items={sampleItems} />)
     const chip = screen.getByTestId('generic-list-page-status')
     expect(chip.textContent).toContain('Active')
+    expect(chip.className).toContain('chip')
     expect(chip.className).toContain('chip-info')
+  })
+
+  it('exposes the canonical dossier-row hook for handoff row styling', () => {
+    render(<GenericListPage items={sampleItems} />)
+    const rows = screen.getAllByTestId('generic-list-page-row')
+    expect(rows[0].className).toContain('dossier-row')
   })
 })

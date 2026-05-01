@@ -45,9 +45,9 @@ export function ForumsStrip(): ReactElement {
       <section
         role="region"
         aria-labelledby="forums-heading"
-        className="forums rounded-lg border border-line bg-surface-raised p-4"
+        className="forums card"
       >
-        <h3 id="forums-heading" className="text-sm font-medium text-ink mb-3 text-start">
+        <h3 id="forums-heading" className="card-title mb-3 text-start">
           {t('forums.title')}
         </h3>
         <p className="text-sm text-ink-soft text-start">{t('error.load_failed')}</p>
@@ -61,9 +61,9 @@ export function ForumsStrip(): ReactElement {
       <section
         role="region"
         aria-labelledby="forums-heading"
-        className="forums rounded-lg border border-line bg-surface-raised p-4"
+        className="forums card"
       >
-        <h3 id="forums-heading" className="text-sm font-medium text-ink mb-3 text-start">
+        <h3 id="forums-heading" className="card-title mb-3 text-start">
           {t('forums.title')}
         </h3>
         <p className="text-sm text-ink-soft text-start">{t('forums.empty')}</p>
@@ -75,9 +75,9 @@ export function ForumsStrip(): ReactElement {
     <section
       role="region"
       aria-labelledby="forums-heading"
-      className="forums rounded-lg border border-line bg-surface-raised p-4"
+      className="forums card"
     >
-      <h3 id="forums-heading" className="text-sm font-medium text-ink mb-3 text-start">
+      <h3 id="forums-heading" className="card-title mb-3 text-start">
         {t('forums.title')}
       </h3>
       <ul className="forums-row flex flex-col sm:flex-row gap-2">

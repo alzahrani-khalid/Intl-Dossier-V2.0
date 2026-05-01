@@ -53,7 +53,7 @@ beforeEach(async () => {
 })
 
 describe('TweaksDrawer (THEME-01)', () => {
-  it('renders 6 section headings in English once opened', async () => {
+  it('renders handoff sections in English once opened', async () => {
     const user = userEvent.setup()
     render(
       <Harness>
@@ -64,15 +64,22 @@ describe('TweaksDrawer (THEME-01)', () => {
     await user.click(screen.getByText('open'))
     // `findByText`/`getByText` throw if no match; asserting truthy is enough
     // in a repo without @testing-library/jest-dom installed.
-    expect(await screen.findByText('Direction')).toBeTruthy()
-    expect(screen.getByText('Mode')).toBeTruthy()
-    expect(screen.getByText('Hue')).toBeTruthy()
+    expect(await screen.findByText('Design direction')).toBeTruthy()
+    expect(document.querySelector('.drawer__backdrop')).toBeTruthy()
+    expect(document.querySelector('.drawer__dialog')).toBeTruthy()
+    expect(screen.getByText('Live-configure this prototype')).toBeTruthy()
+    expect(screen.getByText('Theme')).toBeTruthy()
     expect(screen.getByText('Density')).toBeTruthy()
-    expect(screen.getByText('Classification')).toBeTruthy()
-    expect(screen.getByText('Locale')).toBeTruthy()
+    expect(screen.getByText('Dense')).toBeTruthy()
+    expect(screen.getByText('Reading direction')).toBeTruthy()
+    expect(screen.getByText(/Accent hue/)).toBeTruthy()
+    expect(screen.getByText('Classification ribbon')).toBeTruthy()
+    expect(screen.getByText('Shortcuts')).toBeTruthy()
+    expect(screen.getByText('Loading state')).toBeTruthy()
+    expect(screen.getByText('Preview for 2s')).toBeTruthy()
   })
 
-  it('renders 6 section headings in Arabic once opened', async () => {
+  it('renders handoff sections in Arabic once opened', async () => {
     await i18n.changeLanguage('ar')
     const user = userEvent.setup()
     render(
@@ -82,11 +89,15 @@ describe('TweaksDrawer (THEME-01)', () => {
       </Harness>,
     )
     await user.click(screen.getByText('open'))
-    expect(await screen.findByText('الاتجاه')).toBeTruthy()
-    expect(screen.getByText('المظهر')).toBeTruthy()
-    expect(screen.getByText('الدرجة')).toBeTruthy()
+    expect(await screen.findByText('الاتجاه التصميمي')).toBeTruthy()
+    expect(screen.getByText('اضبط هذا النموذج مباشرةً')).toBeTruthy()
+    expect(screen.getByText('السمة')).toBeTruthy()
     expect(screen.getByText('الكثافة')).toBeTruthy()
-    expect(screen.getByText('التصنيف')).toBeTruthy()
-    expect(screen.getByText('اللغة')).toBeTruthy()
+    expect(screen.getByText('كثيف')).toBeTruthy()
+    expect(screen.getByText('اتجاه القراءة')).toBeTruthy()
+    expect(screen.getByText(/درجة اللون المميّز/)).toBeTruthy()
+    expect(screen.getByText('شريط التصنيف')).toBeTruthy()
+    expect(screen.getByText('الاختصارات')).toBeTruthy()
+    expect(screen.getByText('شاشة التحميل')).toBeTruthy()
   })
 })

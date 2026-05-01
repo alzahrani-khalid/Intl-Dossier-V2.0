@@ -21,7 +21,7 @@ function HeroUISkeleton({
   return (
     <HeroUISkeletonPrimitive
       data-slot="skeleton"
-      className={cn('animate-pulse rounded-lg bg-muted', className)}
+      className={cn('animate-pulse rounded-[var(--radius-sm)] bg-[var(--line-soft)]', className)}
       {...props}
     />
   )
@@ -29,7 +29,7 @@ function HeroUISkeleton({
 
 function SkeletonCard(): React.JSX.Element {
   return (
-    <div className="space-y-3 p-4 sm:p-6 rounded-lg border border-border bg-card">
+    <div className="card space-y-3">
       <div className="flex items-start gap-3">
         <HeroUISkeleton className="h-5 w-5" />
         <div className="flex-1 space-y-2">
@@ -61,7 +61,7 @@ function SkeletonTable({
 }): React.JSX.Element {
   return (
     <div className="space-y-3">
-      <div className="flex gap-4 pb-3 border-b">
+      <div className="flex gap-4 border-b border-[var(--line)] pb-3">
         {Array.from({ length: columns }, (_, n) => n).map((n) => (
           <HeroUISkeleton key={n} className="h-5 flex-1" />
         ))}
@@ -92,15 +92,8 @@ function SkeletonButton({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }): React.J
     md: 'h-10 w-24',
     lg: 'h-11 w-28',
   }
-  return <HeroUISkeleton className={cn('rounded-lg', sizeClasses[size])} />
+  return <HeroUISkeleton className={cn('rounded-[var(--radius-sm)]', sizeClasses[size])} />
 }
 
-export {
-  HeroUISkeleton,
-  SkeletonCard,
-  SkeletonText,
-  SkeletonTable,
-  SkeletonAvatar,
-  SkeletonButton,
-}
+export { HeroUISkeleton, SkeletonCard, SkeletonText, SkeletonTable, SkeletonAvatar, SkeletonButton }
 export default HeroUISkeleton

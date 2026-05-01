@@ -25,18 +25,22 @@ type DrawerHarnessProps = {
 function DrawerHarness({ label, initialOpen = true }: DrawerHarnessProps): JSX.Element {
   const state = useOverlayTriggerState({ defaultOpen: initialOpen })
   return (
-    <Drawer state={state} placement="right" aria-label={label}>
-      <Drawer.Content>
-        <Drawer.Header>{label}</Drawer.Header>
-        <Drawer.Body>
-          <button type="button" data-testid={`${label}-first`}>
-            {label} first
-          </button>
-          <button type="button" data-testid={`${label}-second`}>
-            {label} second
-          </button>
-        </Drawer.Body>
-      </Drawer.Content>
+    <Drawer state={state}>
+      <Drawer.Backdrop>
+        <Drawer.Content placement="right">
+          <Drawer.Dialog aria-label={label}>
+            <Drawer.Header>{label}</Drawer.Header>
+            <Drawer.Body>
+              <button type="button" data-testid={`${label}-first`}>
+                {label} first
+              </button>
+              <button type="button" data-testid={`${label}-second`}>
+                {label} second
+              </button>
+            </Drawer.Body>
+          </Drawer.Dialog>
+        </Drawer.Content>
+      </Drawer.Backdrop>
     </Drawer>
   )
 }

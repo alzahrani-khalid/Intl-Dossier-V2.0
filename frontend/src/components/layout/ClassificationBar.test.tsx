@@ -84,12 +84,27 @@ describe('ClassificationBar', () => {
     expect(el!.className).toMatch(/font-mono/)
   })
 
+  it('classification bootstrap marker — show/hide toggles do not render as levels', () => {
+    document.documentElement.dataset.classification = 'show'
+    vi.mocked(useDesignDirection).mockReturnValue({
+      direction: 'situation',
+      setDirection: vi.fn(),
+    })
+    const { container } = renderBar()
+    const text = container.textContent ?? ''
+    expect(text).toContain('RESTRICTED')
+    expect(text).not.toContain('SHOW')
+  })
+
   it('chip variants — ministerial and bureau both render .cls-chip with accent dot', () => {
     for (const direction of ['ministerial', 'bureau'] as const) {
       vi.mocked(useDesignDirection).mockReturnValue({ direction, setDirection: vi.fn() })
       const { container, unmount } = renderBar()
       const chip = container.querySelector('.cls-chip')
       expect(chip, `chip missing for ${direction}`).not.toBeNull()
+      expect(chip!.className, `chip should remain in normal document flow for ${direction}`).not.toMatch(
+        /\babsolute\b/,
+      )
       const dot = chip!.querySelector('span.bg-\\[var\\(--accent\\)\\]')
       expect(dot, `accent dot missing for ${direction}`).not.toBeNull()
       unmount()

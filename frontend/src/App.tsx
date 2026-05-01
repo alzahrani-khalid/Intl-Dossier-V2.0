@@ -31,14 +31,14 @@ function App() {
         <AuthProvider>
           <AuthListenerManager />
           <ThemeErrorBoundary
-            fallbackDirection="chancery"
+            fallbackDirection="bureau"
             fallbackColorMode="light"
             fallbackLanguage="en"
           >
             <DesignProvider
-              initialDirection="chancery"
+              initialDirection="bureau"
               initialMode="light"
-              initialHue={22}
+              initialHue={32}
               initialDensity="comfortable"
             >
               <TweaksDisclosureProvider>

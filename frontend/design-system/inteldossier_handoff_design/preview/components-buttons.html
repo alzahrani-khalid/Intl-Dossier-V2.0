@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css"/>
+<style>
+.btn { display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid #e8e4dc;background:#fff;color:#1a1714;font-size:13px;font-weight:500;font-family:Inter; }
+.btn-primary { background:#1a1714;color:#fff;border-color:#1a1714 }
+.btn-accent { background:oklch(58% 0.14 32);color:oklch(99% 0.01 32);border-color:oklch(58% 0.14 32) }
+.btn-ghost { border-color:transparent;background:transparent;color:#6b6459 }
+.btn-danger { background:#fff;color:oklch(52% 0.18 25);border-color:oklch(52% 0.18 25) }
+</style></head>
+<body>
+<div class="dscard">
+  <div class="tlabel" style="margin-bottom:14px;">Buttons — primary · accent · default · ghost · danger</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+    <button class="btn btn-primary">+ New engagement</button>
+    <button class="btn btn-accent">Publish</button>
+    <button class="btn">Filter</button>
+    <button class="btn btn-ghost">Cancel</button>
+    <button class="btn btn-danger">Archive</button>
+  </div>
+  <div class="divider"></div>
+  <div class="tlabel" style="margin-bottom:10px;">Situation direction — primary becomes mono caps</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+    <button class="btn" style="background:oklch(58% 0.14 190);color:#fff;border-color:oklch(58% 0.14 190);text-transform:uppercase;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;border-radius:3px;padding:7px 14px;">+ NEW ENGAGEMENT</button>
+    <button class="btn" style="border-radius:3px;font-family:'IBM Plex Sans',sans-serif">Filter</button>
+  </div>
+</div>
+</body></html>

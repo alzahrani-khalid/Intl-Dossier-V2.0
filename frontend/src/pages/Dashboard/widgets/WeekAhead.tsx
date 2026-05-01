@@ -118,7 +118,7 @@ export function WeekAhead(): ReactElement {
   if (isLoading) {
     return (
       <section role="region" aria-labelledby="week-ahead-heading" className="week-ahead">
-        <h3 id="week-ahead-heading" className="text-sm font-medium mb-3 text-start">
+        <h3 id="week-ahead-heading" className="card-title mb-3 text-start">
           {t('weekAhead.title')}
         </h3>
         <WidgetSkeleton rows={4} />
@@ -131,9 +131,9 @@ export function WeekAhead(): ReactElement {
       <section
         role="region"
         aria-labelledby="week-ahead-heading"
-        className="week-ahead rounded-lg border border-line p-4"
+        className="week-ahead card"
       >
-        <h3 id="week-ahead-heading" className="text-sm font-medium mb-2 text-start">
+        <h3 id="week-ahead-heading" className="card-title mb-2 text-start">
           {t('weekAhead.title')}
         </h3>
         <p className="text-sm text-start">{t('error.load_failed')}</p>
@@ -148,9 +148,9 @@ export function WeekAhead(): ReactElement {
       <section
         role="region"
         aria-labelledby="week-ahead-heading"
-        className="week-ahead rounded-lg border border-line p-4"
+        className="week-ahead card"
       >
-        <h3 id="week-ahead-heading" className="text-sm font-medium mb-2 text-start">
+        <h3 id="week-ahead-heading" className="card-title mb-2 text-start">
           {t('weekAhead.title')}
         </h3>
         <p className="text-sm text-start">{t('weekAhead.empty')}</p>
@@ -163,7 +163,7 @@ export function WeekAhead(): ReactElement {
 
   return (
     <section role="region" aria-labelledby="week-ahead-heading" className="week-ahead">
-      <h3 id="week-ahead-heading" className="text-sm font-medium mb-3 text-start">
+      <h3 id="week-ahead-heading" className="card-title mb-3 text-start">
         {t('weekAhead.title')}
       </h3>
       {populatedGroups.map((group): ReactElement => {

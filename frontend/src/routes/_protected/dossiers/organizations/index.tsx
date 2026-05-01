@@ -31,7 +31,8 @@ export const Route = createFileRoute('/_protected/dossiers/organizations/')({
 })
 
 function OrganizationsListPage(): JSX.Element {
-  const { t } = useTranslation(['organizations', 'list-pages'])
+  const { t, i18n } = useTranslation(['organizations', 'list-pages'])
+  const isArabic = i18n.language.startsWith('ar')
   const { page, search } = Route.useSearch()
   const navigate = Route.useNavigate()
   const rootNavigate = useNavigate()
@@ -83,8 +84,12 @@ function OrganizationsListPage(): JSX.Element {
 
   return (
     <ListPageShell
-      title={t('organizations:title')}
-      subtitle={t('organizations:subtitle')}
+      title={t('organizations:title', {
+        defaultValue: isArabic ? 'المنظمات' : 'Organizations',
+      })}
+      subtitle={t('organizations:subtitle', {
+        defaultValue: isArabic ? 'كل ملفات المنظمات' : 'All organization dossiers',
+      })}
       toolbar={
         <ToolbarSearch
           value={search ?? ''}
@@ -96,8 +101,18 @@ function OrganizationsListPage(): JSX.Element {
       isEmpty={!query.isLoading && rows.length === 0}
       emptyState={
         <div className="empty-hint">
-          <p>{t('organizations:empty.title')}</p>
-          <p className="sub">{t('organizations:empty.description')}</p>
+          <p>
+            {t('organizations:empty.title', {
+              defaultValue: isArabic ? 'لا توجد منظمات بعد' : 'No organizations yet',
+            })}
+          </p>
+          <p className="sub">
+            {t('organizations:empty.description', {
+              defaultValue: isArabic
+                ? 'ستظهر ملفات المنظمات هنا.'
+                : 'Organization dossiers will appear here.',
+            })}
+          </p>
         </div>
       }
     >

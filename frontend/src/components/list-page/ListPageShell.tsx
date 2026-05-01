@@ -14,7 +14,10 @@ export interface ListPageShellProps {
 const DefaultSkeleton = (): ReactNode => (
   <div className="flex flex-col gap-3" data-testid="list-page-skeleton">
     {Array.from({ length: 6 }).map((_, i) => (
-      <div key={i} className="h-16 w-full animate-pulse rounded-[var(--radius-sm)] bg-muted" />
+      <div
+        key={i}
+        className="h-[var(--row-h)] w-full animate-pulse rounded-[var(--radius-sm)] bg-[var(--line-soft)]"
+      />
     ))}
   </div>
 )
@@ -40,26 +43,24 @@ export function ListPageShell({
       role="region"
       aria-label={title}
       data-loading={isLoading ? 'true' : 'false'}
-      className="container mx-auto flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-6 lg:px-8 min-w-0"
+      className="page list-page-shell flex min-w-0 flex-col gap-[var(--gap)]"
     >
-      <header className="flex flex-col gap-1 min-w-0">
-        <h1 className="text-2xl font-semibold text-start sm:text-3xl md:text-4xl truncate">
-          {title}
-        </h1>
-        {subtitle !== undefined && subtitle !== '' ? (
-          <p className="text-sm text-muted-foreground text-start sm:text-base truncate">
-            {subtitle}
-          </p>
-        ) : null}
+      <header className="page-head">
+        <div>
+          <h1 className="page-title truncate text-start">{title}</h1>
+          {subtitle !== undefined && subtitle !== '' ? (
+            <p className="page-sub truncate text-start">{subtitle}</p>
+          ) : null}
+        </div>
       </header>
 
       {toolbar !== undefined ? (
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 min-w-0">
+        <div className="list-toolbar flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
           {toolbar}
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-3 min-w-0 overflow-x-hidden">
+      <div className="flex min-w-0 flex-col gap-[var(--gap)] overflow-x-hidden">
         {isLoading ? <DefaultSkeleton /> : isEmpty ? (emptyState ?? null) : children}
       </div>
     </section>

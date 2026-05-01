@@ -20,7 +20,7 @@ export interface GenericListPageProps {
 
 const RowSkeleton = (): ReactNode => (
   <div
-    className="grid items-center gap-3 rounded-[var(--radius-sm)] bg-muted px-3.5 py-3.5 animate-pulse"
+    className="dossier-row animate-pulse"
     style={{ gridTemplateColumns: 'auto 1fr auto auto', minHeight: 44 }}
     data-testid="generic-list-page-skeleton-row"
   >
@@ -58,7 +58,7 @@ export function GenericListPage({
   }
 
   return (
-    <ul className="flex flex-col gap-1.5" role="list" data-testid="generic-list-page">
+    <ul className="card flex flex-col overflow-hidden p-0" role="list" data-testid="generic-list-page">
       {items.map((item) => {
         const interactive = typeof onItemClick === 'function'
         return (
@@ -78,10 +78,9 @@ export function GenericListPage({
                   : undefined
               }
               className={[
-                'grid items-center gap-3 rounded-[var(--radius-sm)] border border-border bg-card px-3.5 py-3.5',
-                'transition-colors',
+                'dossier-row min-w-0',
                 interactive
-                  ? 'cursor-pointer hover:bg-accent-soft focus:outline-none focus:ring-2 focus:ring-ring'
+                  ? 'cursor-pointer focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)]'
                   : '',
               ].join(' ')}
               style={{ gridTemplateColumns: 'auto 1fr auto auto', minHeight: 44 }}
@@ -108,7 +107,7 @@ export function GenericListPage({
               {item.statusLabel !== undefined && item.statusLabel !== '' ? (
                 <span
                   className={[
-                    'inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-medium',
+                    'chip',
                     item.statusChipClass ?? 'chip-default',
                   ].join(' ')}
                   data-testid="generic-list-page-status"
@@ -121,7 +120,7 @@ export function GenericListPage({
 
               <ChevronRight
                 data-testid="row-chevron"
-                className="size-4 text-muted-foreground shrink-0"
+                className="icon-flip size-4 text-[var(--ink-faint)] shrink-0"
                 style={isRTL ? { transform: 'scaleX(-1)' } : undefined}
                 aria-hidden="true"
               />

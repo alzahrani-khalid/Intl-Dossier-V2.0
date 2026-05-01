@@ -45,6 +45,15 @@ export interface TopbarProps {
 }
 
 const DIRECTIONS: readonly Direction[] = ['chancery', 'situation', 'ministerial', 'bureau'] as const
+const DIRECTION_SHORT_LABELS: Record<Direction, { en: string; ar: string }> = {
+  chancery: { en: 'C', ar: 'د' },
+  situation: { en: 'S', ar: 'ع' },
+  ministerial: { en: 'M', ar: 'و' },
+  bureau: { en: 'B', ar: 'م' },
+}
+
+// Phase-42 will swap this for a real notification feed; design-handoff stub.
+const NOTIFICATION_COUNT = 3
 
 export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
   const { t } = useTranslation()
@@ -56,7 +65,7 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
   return (
     <header
       className={cn(
-        'tb flex items-center gap-3.5 h-14 min-h-14 py-2.5 px-5',
+        'topbar tb flex items-center gap-3.5 h-14 min-h-14 py-2.5 px-5',
         'border-b border-[var(--line)] bg-[var(--surface)]',
         'sm:max-md:h-14',
         'max-sm:min-h-[52px] max-sm:h-auto max-sm:flex-wrap max-sm:py-2 max-sm:px-3 max-sm:gap-2',
@@ -82,14 +91,16 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
       <div
         className={cn(
           'tb-search flex-1 max-w-[520px] h-9 flex items-center gap-2 px-2.5',
-          'rounded-[var(--radius)] border border-[var(--line)] bg-[var(--bg)]',
+          'rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--bg)]',
           'focus-within:border-[var(--accent)] focus-within:bg-[var(--surface)]',
           'max-sm:order-10 max-sm:basis-full',
         )}
       >
         <Search size={16} className="text-[var(--ink-mute)] shrink-0" />
         <input
-          type="text"
+          id="topbar-search"
+          name="topbar-search"
+          type="search"
           className={cn(
             'tb-search-input flex-1 bg-transparent outline-none',
             'font-body text-[13px] text-[var(--ink)] placeholder:text-[var(--ink-mute)]',
@@ -124,15 +135,20 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
                 aria-checked={isActive}
                 onClick={() => setDirection(d)}
                 className={cn(
-                  'tb-dir-btn h-11 px-2.5 font-body text-[11.5px] font-medium',
+                  'tb-dir-btn h-9 px-2.5 font-body text-[11.5px] font-medium',
                   'text-[var(--ink-mute)] hover:text-[var(--ink)]',
                   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
-                  'max-sm:px-1.5 max-sm:text-[10.5px] max-sm:max-w-[68px] max-sm:truncate',
+                  'max-sm:w-8 max-sm:px-0 max-sm:text-[10.5px]',
+                  isActive && 'active',
                   isActive && d === 'situation' && 'bg-[var(--accent)] text-[var(--accent-fg)]',
                   isActive && d !== 'situation' && 'bg-[var(--ink)] text-[var(--surface)]',
                 )}
+                aria-label={t(`shell.direction.${d}`)}
               >
-                {t(`shell.direction.${d}`)}
+                <span className="tb-dir-label max-sm:hidden">{t(`shell.direction.${d}`)}</span>
+                <span className="tb-dir-short hidden max-sm:inline" aria-hidden="true">
+                  {DIRECTION_SHORT_LABELS[d][locale]}
+                </span>
               </button>
             )
           })}
@@ -142,7 +158,7 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
         <button
           type="button"
           className={cn(
-            'tb-icon-btn relative min-h-11 min-w-11 inline-flex items-center justify-center p-1.5',
+            'tb-icon-btn relative h-9 w-9 inline-flex items-center justify-center p-1.5',
             'rounded-[var(--radius-sm)] text-[var(--ink-mute)]',
             'hover:bg-[var(--line-soft)] hover:text-[var(--ink)]',
             'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
@@ -150,23 +166,26 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
           aria-label={t('shell.notifications.open')}
         >
           <Bell size={16} />
-          <span
-            className={cn(
-              'tb-badge absolute top-0.5 end-0.5 min-w-[14px] h-[14px] px-1',
-              'rounded-full bg-[var(--danger)] text-white',
-              'font-mono text-[9px] font-semibold leading-none',
-              'inline-flex items-center justify-center',
-            )}
-          >
-            0
-          </span>
+          {NOTIFICATION_COUNT > 0 && (
+            <span
+              className={cn(
+                'tb-badge absolute top-0.5 end-0.5 min-w-[14px] h-[14px] px-1',
+                'rounded-full bg-[var(--danger)] text-white',
+                'font-mono text-[9px] font-semibold leading-none',
+                'inline-flex items-center justify-center',
+              )}
+              aria-label={t('shell.notifications.count', { count: NOTIFICATION_COUNT })}
+            >
+              {NOTIFICATION_COUNT}
+            </span>
+          )}
         </button>
 
         {/* 5 — Theme toggle */}
         <button
           type="button"
           className={cn(
-            'tb-icon-btn min-h-11 min-w-11 inline-flex items-center justify-center p-1.5',
+            'tb-icon-btn h-9 w-9 inline-flex items-center justify-center p-1.5',
             'rounded-[var(--radius-sm)] text-[var(--ink-mute)]',
             'hover:bg-[var(--line-soft)] hover:text-[var(--ink)]',
             'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
@@ -190,9 +209,10 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
             aria-checked={locale === 'en'}
             onClick={() => setLocale('en')}
             lang="en"
+            data-lang="en"
             className={cn(
-              'tb-locale-btn h-11 px-2 font-mono text-[11.5px] text-[var(--ink-mute)] hover:text-[var(--ink)]',
-              locale === 'en' && 'bg-[var(--ink)] text-[var(--surface)]',
+              'tb-locale-btn h-9 px-2 font-mono text-[11.5px] text-[var(--ink-mute)] hover:text-[var(--ink)]',
+              locale === 'en' && 'active bg-[var(--ink)] text-[var(--surface)]',
             )}
           >
             EN
@@ -203,9 +223,10 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
             aria-checked={locale === 'ar'}
             onClick={() => setLocale('ar')}
             lang="ar"
+            data-lang="ar"
             className={cn(
-              'tb-locale-btn h-11 px-2 font-body text-[14px] text-[var(--ink-mute)] hover:text-[var(--ink)]',
-              locale === 'ar' && 'bg-[var(--ink)] text-[var(--surface)]',
+              'tb-locale-btn h-9 px-2 font-body text-[14px] text-[var(--ink-mute)] hover:text-[var(--ink)]',
+              locale === 'ar' && 'active bg-[var(--ink)] text-[var(--surface)]',
             )}
           >
             ع
@@ -216,7 +237,7 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
         <button
           type="button"
           className={cn(
-            'tb-tweaks min-h-11 inline-flex items-center gap-1.5 px-3 py-1.5',
+            'tb-tweaks h-9 inline-flex items-center gap-1.5 px-3 py-1.5',
             'rounded-[var(--radius-sm)] border border-[var(--line)]',
             'font-body text-[12px] text-[var(--ink-mute)]',
             'hover:bg-[var(--line-soft)]',
@@ -226,7 +247,7 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
           aria-label={t('shell.tweaks')}
         >
           <Sliders size={14} />
-          <span className="max-sm:hidden">{t('shell.tweaks')}</span>
+          <span className="tb-tweaks-label max-sm:hidden">{t('shell.tweaks')}</span>
         </button>
       </div>
     </header>

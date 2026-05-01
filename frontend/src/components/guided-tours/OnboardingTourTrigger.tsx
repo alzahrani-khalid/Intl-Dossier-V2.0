@@ -101,7 +101,7 @@ export function OnboardingTourTrigger({
 }: OnboardingTourTriggerProps) {
   const { t } = useTranslation('guided-tours')
   const { isRTL } = useDirection()
-const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
+  const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
 
   const [showWelcomePrompt, setShowWelcomePrompt] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
@@ -165,7 +165,7 @@ const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9998] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            className="id-dialog-overlay fixed inset-0 z-[9998] flex items-center justify-center p-4"
             onClick={handleSkip}
           >
             <m.div
@@ -174,9 +174,8 @@ const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               className={cn(
-                'relative w-full max-w-md p-6 sm:p-8',
-                'bg-background/95 backdrop-blur-xl',
-                'rounded-2xl shadow-2xl border border-border/50',
+                'id-dialog-content relative w-full max-w-md p-6 sm:p-8',
+                'border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)]',
               )}
               onClick={(e) => e.stopPropagation()}
             >
@@ -184,9 +183,9 @@ const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
               <button
                 onClick={handleSkip}
                 className={cn(
-                  'absolute top-4 p-2 rounded-full',
-                  'text-muted-foreground hover:text-foreground',
-                  'hover:bg-muted transition-colors',
+                  'absolute top-4 rounded-[var(--radius-sm)] p-2',
+                  'text-[var(--ink-mute)] hover:text-[var(--ink)]',
+                  'hover:bg-[var(--line-soft)] transition-colors',
                   isRTL ? 'start-4' : 'end-4',
                 )}
                 aria-label={t('common.closeTour')}
@@ -195,17 +194,17 @@ const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
               </button>
 
               {/* Icon */}
-              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/10">
-                <HelpCircle className="w-8 h-8 text-primary" />
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-[var(--radius)] bg-[var(--accent-soft)]">
+                <HelpCircle className="h-8 w-8 text-[var(--accent-ink)]" />
               </div>
 
               {/* Title */}
-              <h2 className="text-xl sm:text-2xl font-bold text-center mb-3">
+              <h2 className="mb-3 text-center font-display text-xl font-semibold text-[var(--ink)] sm:text-2xl">
                 {t('tours.onboarding.welcome.title', 'Welcome to GASTAT Dossier!')}
               </h2>
 
               {/* Description */}
-              <p className="text-center text-muted-foreground mb-6 leading-relaxed">
+              <p className="mb-6 text-center leading-relaxed text-[var(--ink-mute)]">
                 {t(
                   'tours.onboarding.welcome.description',
                   "Let's take a quick tour to help you understand how everything is organized around Dossiers - your central hub for managing international relations.",
@@ -213,7 +212,7 @@ const { startTour, isActive, progress, toursEnabled, resetTour } = useTour()
               </p>
 
               {/* Estimated time */}
-              <p className="text-center text-sm text-muted-foreground mb-6">
+              <p className="mb-6 text-center text-sm text-[var(--ink-mute)]">
                 <span className="inline-flex items-center gap-1.5">
                   <Play className="h-3.5 w-3.5" />
                   {t('trigger.estimatedTime', '~{{minutes}} min', { minutes: 3 })}

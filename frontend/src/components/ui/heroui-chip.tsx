@@ -16,25 +16,22 @@
  */
 
 import type * as React from 'react'
-import { Chip as HeroUIChipPrimitive } from '@heroui/react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@/lib/utils'
 
 const badgeVariants = cva(
-  'inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 overflow-hidden transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none',
+  'chip w-fit shrink-0 justify-center overflow-hidden whitespace-nowrap border border-transparent transition-[background,color,border-color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] aria-invalid:border-[var(--danger)] [&>svg]:size-3 [&>svg]:pointer-events-none',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90',
-        secondary:
-          'border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90',
-        destructive:
-          'border-destructive/40 bg-destructive/10 text-destructive [a&]:hover:bg-destructive/20',
-        outline: 'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
-        warning: 'border-warn/40 bg-warn/10 text-warn [a&]:hover:bg-warn/20',
-        info: 'border-info/40 bg-info/10 text-info [a&]:hover:bg-info/20',
-        success: 'border-ok/40 bg-ok/10 text-ok [a&]:hover:bg-ok/20',
+        default: 'chip-accent',
+        secondary: '',
+        destructive: 'chip-danger',
+        outline: 'chip-default',
+        warning: 'chip-warn',
+        info: 'chip-info',
+        success: 'chip-ok',
       },
     },
     defaultVariants: {
@@ -44,8 +41,7 @@ const badgeVariants = cva(
 )
 
 export interface HeroUIChipProps
-  extends React.ComponentProps<'span'>,
-    VariantProps<typeof badgeVariants> {
+  extends React.ComponentProps<'span'>, VariantProps<typeof badgeVariants> {
   asChild?: boolean
 }
 
@@ -75,13 +71,13 @@ function HeroUIChip({
   }
 
   return (
-    <HeroUIChipPrimitive
+    <span
       data-slot="badge"
       className={mergedClassName}
-      {...(forward as unknown as React.ComponentProps<typeof HeroUIChipPrimitive<'span'>>)}
+      {...(forward as React.HTMLAttributes<HTMLSpanElement>)}
     >
       {children}
-    </HeroUIChipPrimitive>
+    </span>
   )
 }
 

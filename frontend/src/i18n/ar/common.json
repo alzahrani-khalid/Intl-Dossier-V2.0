@@ -119,7 +119,7 @@
     "intakeQueue": "قائمة الاستقبال",
     "waitingQueue": "قائمة الانتظار",
     "browse": "تصفح",
-    "dashboard": "لوحة القيادة",
+    "dashboard": "الموقف",
     "assignments": "تكليفاتي",
     "intake": "قائمة الاستقبال",
     "approvals": "الموافقات",
@@ -168,7 +168,7 @@
     "awaitingResponse": "بانتظار الرد",
     "main": "الرئيسية",
     "operations": "العمليات",
-    "tasks": "المهام",
+    "tasks": "مكتبي",
     "activity": "النشاط",
     "advancedSearch": "البحث المتقدم",
     "availabilityPolling": "استطلاع التوفر",
@@ -1088,55 +1088,67 @@
     "topic": "دوسيه موضوع"
   },
   "tweaks": {
-    "title": "تعديلات",
+    "title": "تخصيص",
+    "subtitle": "اضبط هذا النموذج مباشرةً",
     "open": "فتح التعديلات",
     "close": "إغلاق التعديلات",
     "direction": {
-      "label": "الاتجاه",
+      "label": "الاتجاه التصميمي",
       "chancery": {
         "name": "المستشارية",
-        "tagline": "رسمي، كهرماني دافئ"
+        "tagline": "Editorial · serif · composed"
       },
       "situation": {
         "name": "غرفة العمليات",
-        "tagline": "داكن، سماوي بارد"
+        "tagline": "Intelligence terminal · dense · mono"
       },
       "ministerial": {
         "name": "وزاري",
-        "tagline": "أخضر مؤسسي"
+        "tagline": "Government-formal · clean · restrained"
       },
       "bureau": {
         "name": "مكتب",
-        "tagline": "محايد، واضح"
+        "tagline": "Warm neutrals · document-forward · SaaS-clean"
       }
     },
     "mode": {
-      "label": "المظهر",
+      "label": "السمة",
       "light": "فاتح",
       "dark": "داكن"
     },
     "hue": {
-      "label": "الدرجة"
+      "label": "درجة اللون المميّز"
     },
     "density": {
       "label": "الكثافة",
       "comfortable": "مريح",
-      "compact": "مضغوط"
+      "compact": "متوسط",
+      "dense": "كثيف"
     },
     "classification": {
-      "label": "التصنيف",
-      "show": "إظهار",
-      "hide": "إخفاء"
+      "label": "شريط التصنيف",
+      "on": "تشغيل",
+      "off": "إيقاف"
     },
     "locale": {
-      "label": "اللغة",
-      "en": "EN",
-      "ar": "ع"
+      "label": "اتجاه القراءة",
+      "en": "LTR · الإنجليزية",
+      "ar": "RTL · العربية"
+    },
+    "shortcuts": {
+      "label": "الاختصارات",
+      "searchAny": "ابحث في أي شيء",
+      "newEngagement": "مشاركة جديدة",
+      "newBrief": "ملخص جديد"
+    },
+    "loader": {
+      "label": "شاشة التحميل",
+      "preview": "عرض لفترة وجيزة"
     }
   },
   "shell": {
-    "appName": "النظام الدولي للملفات",
-    "workspace": "الهيئة العامة للإحصاء · فضاء الاستخبارات",
+    "appName": "دوسييه",
+    "workspace": "الهيئة العامة للإحصاء · الشراكات الدولية",
     "user": {
       "noRole": "عضو"
     },
@@ -1157,7 +1169,8 @@
       "toggle": "تبديل المظهر"
     },
     "notifications": {
-      "open": "فتح الإشعارات"
+      "open": "فتح الإشعارات",
+      "count": "{{count}} إشعارات غير مقروءة"
     },
     "tweaks": "تخصيص",
     "menu": {

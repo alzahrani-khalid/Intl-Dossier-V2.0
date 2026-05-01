@@ -7,6 +7,13 @@
 /* Flag Icons CSS */
 @import 'flag-icons/css/flag-icons.min.css';
 
+/* Phase 40 list-pages handoff CSS (Plan 02c) — port of app.css rules
+   for list-page primitives (.btn, .chip, .tbl, .week-list, .forum-row,
+   .icon-flip, .spinner-row, .pill, .dossier-row, .page*). Imported as
+   a side-effect from main.tsx instead of @import here, because Tailwind
+   v4 + flag-icons expansion places non-@import statements before this
+   point in the bundle, violating the CSS @import-must-be-first rule. */
+
 @import 'tailwindcss';
 
 /* HeroUI v3 styles — manually composed from the package's CSS subtree.
@@ -23,11 +30,7 @@
 @import '@heroui/styles/themes/default' layer(theme);
 @import '@heroui/styles/utilities';
 @import '@heroui/styles/variants';
-
-/* Phase 40 list-pages handoff CSS (Plan 02c) — port of app.css rules
-   required by list-page primitives (.btn, .chip, .tbl, .week-list,
-   .forum-row, .icon-flip, .spinner-row, .pill, .dossier-row, .page*). */
-@import url('./styles/list-pages.css');
+@import '@heroui/styles/components/drawer.css';
 
 /* ==========================================================================
    @theme — Tailwind v4 source of truth for the D-16 token engine (Plan 33-06).
@@ -55,13 +58,19 @@
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
   --color-accent-fg: var(--accent-fg);
+  --color-accent-foreground: var(--accent-fg);
 
   /* Semantic status */
   --color-danger: var(--danger);
   --color-danger-foreground: var(--accent-fg);
+  --color-success: var(--ok);
+  --color-success-foreground: var(--accent-fg);
+  --color-warning: var(--warn);
+  --color-warning-foreground: var(--accent-fg);
   --color-ok: var(--ok);
   --color-warn: var(--warn);
   --color-info: var(--info);
+  --color-info-foreground: var(--accent-fg);
 
   /* SLA */
   --color-sla-ok: var(--sla-ok);
@@ -115,44 +124,100 @@
    (33-02) and the FOUC bootstrap (33-03). Zero per-component overrides needed. */
 :root {
   /* Defense-in-depth fallbacks for 33-03 FOUC bootstrap.
-     Literal Chancery-light values (NOT var() refs) so that if the inline
+     Literal Bureau-light values (NOT var() refs) so that if the inline
      bootstrap's try/catch swallows an error (e.g. localStorage blocked in
      sandboxed iframe) these kick in at first paint instead of unset vars.
-     Must match PALETTES.chancery.light in tokens/directions.ts. */
-  --bg: #f7f3ec;
-  --surface: #fdfaf3;
+     Must match PALETTES.bureau.light in tokens/directions.ts. Phase-41
+     migration: default direction switched from chancery to bureau. */
+  --bg: #f7f6f4;
+  --surface: #ffffff;
   --surface-raised: #ffffff;
-  --ink: #1a1814;
-  --line: #e6ddc9;
-  --accent: oklch(58% 0.14 22);
-  --accent-fg: oklch(99% 0.01 22);
-  /* Literal fallbacks for D-16 vars that @theme references but that the
-     33-01 runtime writes in full. Defense-in-depth for first paint. */
-  --ink-mute: #4f4a40;
-  --ink-faint: #8a8170;
-  --line-soft: #efe7d4;
-  --surface: #fdfaf3;
-  --surface-raised: #ffffff;
-  --sidebar-bg: #f0eadf;
-  --sidebar-ink: #1a1814;
-  --accent-ink: oklch(42% 0.15 22);
-  --accent-soft: oklch(92% 0.05 22);
+  --ink: #1a1714;
+  --line: #e8e4dc;
+  --accent: oklch(58% 0.14 32);
+  --accent-fg: oklch(99% 0.01 32);
+  --ink-mute: #6b6459;
+  --ink-faint: #9a9082;
+  --line-soft: #efece3;
+  --sidebar-bg: #ffffff;
+  --sidebar-ink: #2a2520;
+  --accent-ink: oklch(42% 0.15 32);
+  --accent-soft: oklch(92% 0.05 32);
   --danger: oklch(52% 0.18 25);
+  --danger-soft: oklch(95% 0.04 25);
   /* Plan 40-15 (G2 close): light-mode chip foregrounds darkened so chip-warn /
-     chip-ok / chip-info meet WCAG AA 4.5:1 over their soft backgrounds (which
-     render as 15% color over --surface). Original values: ok 52%, warn 62%,
-     info 50%. New values verified ≥4.5:1 against both --surface (#fdfaf3) and
-     --surface-raised (#ffffff). Dark-mode tokens (in buildTokens.ts) already
-     pass and are unchanged. */
+     chip-ok / chip-info meet WCAG AA 4.5:1 over their soft backgrounds. */
   --ok: oklch(49% 0.12 155);
+  --ok-soft: oklch(94% 0.04 155);
   --warn: oklch(51% 0.14 75);
+  --warn-soft: oklch(95% 0.05 75);
   --info: oklch(48% 0.14 230);
-  --sla-ok: oklch(58% 0.14 22);
-  --sla-risk: oklch(60% 0.13 75);
+  --info-soft: oklch(94% 0.04 230);
+  --sla-ok: oklch(58% 0.14 32);
+  --sla-risk: oklch(60% 0.13 87);
   --sla-bad: oklch(54% 0.2 25);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-drawer: -24px 0 60px rgba(0, 0, 0, 0.25);
   --focus-ring: 0 0 0 3px color-mix(in oklch, var(--accent) 40%, transparent);
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --pad: 20px;
+  --pad-inline: 20px;
+  --pad-block: 16px;
+  --gap: 16px;
+  --row-h: 52px;
+
+  /* ───────── Phase-41 handoff parity (colors_and_type.css canonical spec) ─────────
+     Direction-invariant tokens: type scale, spacing scale, elevation triplet,
+     motion, and the Arabic font alias. These don't change with direction so
+     they live in :root rather than buildTokens. */
+
+  /* Type scale (semantic) */
+  --t-page-title: 28px;
+  --t-card-title: 16px;
+  --t-kpi-value: 36px;
+  --t-body: 13px;
+  --t-meta: 12px;
+  --t-label: 10.5px;
+  --t-mono-small: 11px;
+  --t-mono-tiny: 10px;
+
+  /* Tracking (letter-spacing) */
+  --tracking-tight: -0.02em;
+  --tracking-display: -0.005em;
+  --tracking-label: 0.1em;
+  --tracking-ribbon: 0.15em;
+
+  /* Line-height */
+  --line-h-tight: 1.1;
+  --line-h-snug: 1.35;
+  --line-h-body: 1.5;
+
+  /* Spacing scale (multiples of 4) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Elevation triplet (handoff naming; --shadow-card/drawer kept above for
+     existing consumers). */
+  --shadow-sm: 0 1px 2px rgba(20, 18, 15, 0.04);
+  --shadow: 0 4px 12px rgba(20, 18, 15, 0.06);
+  --shadow-lg: -12px 0 40px rgba(20, 18, 15, 0.15);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur: 220ms;
+
+  /* Arabic font alias — always Tajawal regardless of direction. */
+  --font-arabic: 'Tajawal', system-ui, sans-serif;
 
   --heroui-primary: var(--accent);
   --heroui-primary-foreground: var(--accent-fg);
@@ -320,6 +385,41 @@
 .font-text {
   font-family: var(--font-body);
   font-weight: var(--font-normal);
+}
+
+/* Phase-41 handoff: semantic typography utility classes (colors_and_type.css). */
+.t-page-title {
+  font-family: var(--font-display);
+  font-size: var(--t-page-title);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--line-h-tight);
+  margin: 0;
+}
+.t-card-title {
+  font-family: var(--font-display);
+  font-size: var(--t-card-title);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+}
+.t-body {
+  font-size: var(--t-body);
+  line-height: var(--line-h-body);
+  color: var(--ink);
+}
+.t-meta {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+}
+.t-label {
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.t-mono {
+  font-family: var(--font-mono);
 }
 
 /* ============ Arabic typography override: Tajawal ============ */

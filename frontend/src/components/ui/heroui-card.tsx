@@ -29,10 +29,7 @@ function HeroUICard({
   return (
     <HeroUICardPrimitive
       data-slot="card"
-      className={cn(
-        'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6',
-        className,
-      )}
+      className={cn('card flex flex-col gap-[var(--gap)] text-[var(--ink)]', className)}
       {...(props as React.ComponentProps<typeof HeroUICardPrimitive<'div'>>)}
     >
       {children}
@@ -40,26 +37,17 @@ function HeroUICard({
   )
 }
 
-function HeroUICardHeader({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.JSX.Element {
+function HeroUICardHeader({ className, ...props }: React.ComponentProps<'div'>): React.JSX.Element {
   return (
     <HeroUICardPrimitive.Header
       data-slot="card-header"
-      className={cn(
-        '@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-[data-slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6',
-        className,
-      )}
+      className={cn('card-head min-w-0 gap-[var(--gap)] p-0', className)}
       {...props}
     />
   )
 }
 
-function HeroUICardTitle({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.JSX.Element {
+function HeroUICardTitle({ className, ...props }: React.ComponentProps<'div'>): React.JSX.Element {
   // HeroUI Card.Title defaults to <h3>; call sites overwhelmingly pass only
   // className + children, which both tags accept. We keep <div> semantics via
   // the existing consumer ergonomics (ComponentProps<'div'>) and let HeroUI
@@ -68,7 +56,7 @@ function HeroUICardTitle({
   return (
     <HeroUICardPrimitive.Title
       data-slot="card-title"
-      className={cn('leading-none font-semibold', className)}
+      className={cn('card-title leading-tight', className)}
       {...(props as React.ComponentProps<'h3'>)}
     />
   )
@@ -81,20 +69,17 @@ function HeroUICardDescription({
   return (
     <HeroUICardPrimitive.Description
       data-slot="card-description"
-      className={cn('text-muted-foreground text-sm', className)}
+      className={cn('card-sub', className)}
       {...(props as React.ComponentProps<'p'>)}
     />
   )
 }
 
-function HeroUICardAction({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.JSX.Element {
+function HeroUICardAction({ className, ...props }: React.ComponentProps<'div'>): React.JSX.Element {
   return (
     <div
       data-slot="card-action"
-      className={cn('col-start-2 row-span-2 row-start-1 self-start justify-self-end', className)}
+      className={cn('ms-auto self-start justify-self-end', className)}
       {...props}
     />
   )
@@ -107,20 +92,17 @@ function HeroUICardContent({
   return (
     <HeroUICardPrimitive.Content
       data-slot="card-content"
-      className={cn('px-6', className)}
+      className={cn('card-content min-w-0 p-0', className)}
       {...props}
     />
   )
 }
 
-function HeroUICardFooter({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.JSX.Element {
+function HeroUICardFooter({ className, ...props }: React.ComponentProps<'div'>): React.JSX.Element {
   return (
     <HeroUICardPrimitive.Footer
       data-slot="card-footer"
-      className={cn('flex items-center px-6 [.border-t]:pt-6', className)}
+      className={cn('card-footer flex items-center gap-2 p-0', className)}
       {...props}
     />
   )

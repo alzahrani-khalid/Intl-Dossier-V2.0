@@ -33,9 +33,9 @@ export function RecentDossiers(): ReactElement {
       <section
         role="region"
         aria-labelledby="recent-heading"
-        className="recent rounded-lg border border-line bg-surface-raised p-4"
+        className="recent card"
       >
-        <h3 id="recent-heading" className="text-sm font-medium text-ink mb-3 text-start">
+        <h3 id="recent-heading" className="card-title mb-3 text-start">
           {t('recent.title')}
         </h3>
         <p className="text-sm text-ink-soft text-start">{t('recent.empty')}</p>
@@ -47,9 +47,9 @@ export function RecentDossiers(): ReactElement {
     <section
       role="region"
       aria-labelledby="recent-heading"
-      className="recent rounded-lg border border-line bg-surface-raised p-4"
+      className="recent card"
     >
-      <h3 id="recent-heading" className="text-sm font-medium text-ink mb-3 text-start">
+      <h3 id="recent-heading" className="card-title mb-3 text-start">
         {t('recent.title')}
       </h3>
       <ul className="space-y-2">

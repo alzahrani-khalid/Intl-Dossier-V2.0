@@ -136,8 +136,9 @@ export function WorkBoard(): ReactElement {
   const keyboardSensor = useSensor(KeyboardSensor, {
     coordinateGetter: sortableKeyboardCoordinates,
   })
-  const dndSensors =
-    mode === 'status' ? useSensors(mouseSensor, touchSensor, keyboardSensor) : useSensors()
+  const activeSensors = useSensors(mouseSensor, touchSensor, keyboardSensor)
+  const emptySensors = useSensors()
+  const dndSensors = mode === 'status' ? activeSensors : emptySensors
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent): void => {

@@ -8,6 +8,8 @@ import enIntake from './en/intake.json'
 import arIntake from './ar/intake.json'
 import enDossiers from './en/dossiers.json'
 import arDossiers from './ar/dossiers.json'
+import enListPages from './en/list-pages.json'
+import arListPages from './ar/list-pages.json'
 import enDossier from './en/dossier.json'
 import arDossier from './ar/dossier.json'
 import enPositions from './en/positions.json'
@@ -213,6 +215,7 @@ const resources = {
     common: enCommon,
     intake: enIntake,
     dossiers: enDossiers,
+    'list-pages': enListPages,
     dossier: enDossier,
     positions: enPositions,
     assignments: enAssignments,
@@ -317,6 +320,7 @@ const resources = {
     common: arCommon,
     intake: arIntake,
     dossiers: arDossiers,
+    'list-pages': arListPages,
     dossier: arDossier,
     positions: arPositions,
     assignments: arAssignments,
@@ -425,6 +429,7 @@ i18n
     resources,
     fallbackLng: 'en',
     debug: false,
+    showSupportNotice: false,
     supportedLngs: supportedLanguages,
 
     interpolation: {

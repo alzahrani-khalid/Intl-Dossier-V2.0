@@ -29,11 +29,8 @@ export function initSentry(): void {
     import.meta.env.VITE_SENTRY_RELEASE ||
     `intl-dossier-frontend@${import.meta.env.VITE_APP_VERSION || '1.0.0'}`
 
-  // Don't initialize if no DSN configured
+  // Don't initialize if no DSN configured (expected in local dev)
   if (!dsn) {
-    if (import.meta.env.DEV) {
-      console.warn('[Sentry] No DSN configured, error tracking disabled')
-    }
     return
   }
 
@@ -236,7 +233,7 @@ const SentryProfiler = Sentry.withProfiler
  * In production, Sentry browserTracingIntegration captures these automatically
  */
 export function initWebVitalsReporting(): void {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.DEV && import.meta.env.VITE_LOG_WEB_VITALS === 'true') {
     import('web-vitals').then(({ onLCP, onINP, onCLS }) => {
       onLCP((metric) => console.warn('[Web Vitals] LCP:', metric.value.toFixed(0), 'ms'))
       onINP((metric) => console.warn('[Web Vitals] INP:', metric.value.toFixed(0), 'ms'))

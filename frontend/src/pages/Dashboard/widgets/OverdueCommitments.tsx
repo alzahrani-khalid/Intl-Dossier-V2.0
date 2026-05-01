@@ -58,9 +58,9 @@ export function OverdueCommitments(): ReactElement {
       <section
         role="region"
         aria-labelledby="overdue-heading"
-        className="overdue rounded-lg border border-line bg-surface-raised p-4"
+        className="overdue card"
       >
-        <h3 id="overdue-heading" className="text-sm font-medium text-ink mb-2 text-start">
+        <h3 id="overdue-heading" className="card-title mb-2 text-start">
           {t('overdue.title')}
         </h3>
         <p className="text-sm text-destructive text-start">{t('error.load_failed')}</p>
@@ -73,9 +73,9 @@ export function OverdueCommitments(): ReactElement {
       <section
         role="region"
         aria-labelledby="overdue-heading"
-        className="overdue rounded-lg border border-line bg-surface-raised p-4"
+        className="overdue card"
       >
-        <h3 id="overdue-heading" className="text-sm font-medium text-ink mb-2 text-start">
+        <h3 id="overdue-heading" className="card-title mb-2 text-start">
           {t('overdue.title')}
         </h3>
         <p className="text-sm text-ink-soft text-start">{t('overdue.empty')}</p>
@@ -91,9 +91,9 @@ export function OverdueCommitments(): ReactElement {
     <section
       role="region"
       aria-labelledby="overdue-heading"
-      className="overdue rounded-lg border border-line bg-surface-raised p-4"
+      className="overdue card"
     >
-      <h3 id="overdue-heading" className="text-sm font-medium text-ink mb-3 text-start">
+      <h3 id="overdue-heading" className="card-title mb-3 text-start">
         {t('overdue.title')}
       </h3>
       <ul className="space-y-3">
@@ -112,7 +112,7 @@ export function OverdueCommitments(): ReactElement {
                     name={group.dossierName}
                     size={20}
                   />
-                  <span className="text-sm font-medium text-ink text-start truncate flex-1">
+                  <span className="card-title text-start truncate flex-1">
                     {group.dossierName}
                   </span>
                 </div>

@@ -9,7 +9,7 @@
  *
  *   - chancery   → `.cls-marginalia` italic serif line (em-dash wrapped)
  *   - situation  → `.cls-ribbon` full-width accent banner (uppercase mono)
- *   - ministerial→ `.cls-chip` absolute-positioned pill (accent dot + label)
+ *   - ministerial→ `.cls-chip` inline pill (accent dot + label)
  *   - bureau     → same chip variant as ministerial (both use `.cls-chip`)
  *
  * Visibility gate (T-36-05 disposition + UI-SPEC line 219):
@@ -22,8 +22,8 @@
  *     `localStorage.getItem('id.classif')`. Default "restricted" when absent.
  *
  * RTL contract (CLAUDE.md rule 1 + rule 2):
- *   - Chip uses logical `ms-5` (margin-inline-start) and `insetInlineStart: 0`
- *     so the anchor edge flips automatically between LTR and RTL.
+ *   - Chip spacing is owned by `.cls-chip` logical margin styles so the inline
+ *     anchor edge flips automatically between LTR and RTL.
  *   - Ribbon is center-aligned — no inline start/end concerns.
  *   - Marginalia is center-aligned; no directional positioning needed.
  *
@@ -68,6 +68,7 @@ function getInitials(source: string): string {
 function readLevel(): string {
   if (typeof document === 'undefined') return 'RESTRICTED'
   const raw = document.documentElement.dataset.classification ?? 'restricted'
+  if (raw === 'show' || raw === 'hide') return 'RESTRICTED'
   return raw.toUpperCase()
 }
 
@@ -122,14 +123,7 @@ export function ClassificationBar(): JSX.Element | null {
     case 'ministerial':
     case 'bureau':
       return (
-        <div
-          className={
-            'cls-chip absolute ms-5 mt-2 inline-flex items-center gap-1 px-2.5 py-1 ' +
-            'rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface)] ' +
-            'font-mono text-[10.5px] tracking-[0.04em] text-[var(--ink-mute)] leading-[1.3]'
-          }
-          style={{ insetInlineStart: 0, top: 0 }}
-        >
+        <div className="cls-chip">
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
           {content}
         </div>

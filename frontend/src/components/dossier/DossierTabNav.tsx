@@ -82,9 +82,9 @@ export function DossierTabNav({
       dir={direction}
       role="tablist"
       aria-label={t('tabs.ariaLabel')}
-      className="sticky top-[57px] z-10 bg-muted/50 border-b overflow-x-auto snap-x snap-mandatory scrollbar-none"
+      className="tabs sticky top-0 z-10 overflow-x-auto snap-x snap-mandatory scrollbar-none px-4 sm:px-6 lg:px-8"
     >
-      <div className="flex min-w-max">
+      <div className="flex min-w-max gap-6">
         {allTabs.map((tab) => {
           const isActive = matchRoute({
             to: `/dossiers/${routeSegment}/$id/${tab.path}` as string,
@@ -101,10 +101,8 @@ export function DossierTabNav({
               role="tab"
               aria-selected={Boolean(isActive)}
               className={cn(
-                'min-h-11 min-w-11 px-3 py-2 text-sm font-normal whitespace-nowrap snap-center rounded-t-md transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                isActive
-                  ? 'border-b-2 border-primary text-foreground bg-background'
-                  : 'text-muted-foreground hover:text-foreground',
+                'tab min-h-11 min-w-11 snap-center outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+                isActive && 'active',
               )}
             >
               {t(tab.labelKey)}

@@ -68,7 +68,7 @@ export function VipVisits(): ReactElement {
   if (isLoading) {
     return (
       <section role="region" aria-labelledby="vip-heading" className="vip">
-        <h3 id="vip-heading" className="text-sm font-medium mb-3 text-start">
+        <h3 id="vip-heading" className="card-title mb-3 text-start">
           {t('vip.title')}
         </h3>
         <WidgetSkeleton rows={4} />
@@ -81,9 +81,9 @@ export function VipVisits(): ReactElement {
       <section
         role="region"
         aria-labelledby="vip-heading"
-        className="vip rounded-lg border border-line p-4"
+        className="vip card"
       >
-        <h3 id="vip-heading" className="text-sm font-medium mb-2 text-start">
+        <h3 id="vip-heading" className="card-title mb-2 text-start">
           {t('vip.title')}
         </h3>
         <p className="text-sm text-start">{t('error.load_failed')}</p>
@@ -98,9 +98,9 @@ export function VipVisits(): ReactElement {
       <section
         role="region"
         aria-labelledby="vip-heading"
-        className="vip rounded-lg border border-line p-4"
+        className="vip card"
       >
-        <h3 id="vip-heading" className="text-sm font-medium mb-2 text-start">
+        <h3 id="vip-heading" className="card-title mb-2 text-start">
           {t('vip.title')}
         </h3>
         <p className="text-sm text-start">{t('vip.empty')}</p>
@@ -111,7 +111,7 @@ export function VipVisits(): ReactElement {
   return (
     <section role="region" aria-labelledby="vip-heading" className="vip">
       <div className="flex items-center justify-between mb-3">
-        <h3 id="vip-heading" className="text-sm font-medium text-start">
+        <h3 id="vip-heading" className="card-title text-start">
           {t('vip.title')}
         </h3>
         <a

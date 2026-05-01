@@ -6,7 +6,7 @@
 
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { TopicsListPage } from '../index'
+import { TopicsListPage } from '../-TopicsListPage'
 
 vi.mock('react-i18next', () => ({
   useTranslation: (): {
@@ -82,6 +82,8 @@ vi.mock('@tanstack/react-router', () => ({
     useSearch: (): { page: number; search?: string } => ({ page: 1, search: undefined }),
     useNavigate: (): (() => Promise<void>) => () => Promise.resolve(),
   }),
+  useSearch: (): { page: number; search?: string } => ({ page: 1, search: undefined }),
+  useNavigate: (): (() => Promise<void>) => () => Promise.resolve(),
 }))
 
 describe('TopicsListPage', () => {

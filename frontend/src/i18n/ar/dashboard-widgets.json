@@ -1,4 +1,18 @@
 {
+  "hero": {
+    "fallbackName": "بكم",
+    "greeting": {
+      "morning": "صباح الخير، {{name}}",
+      "afternoon": "مساء الخير، {{name}}",
+      "evening": "مساء الخير، {{name}}"
+    },
+    "subtitle": "نظرة عامة على المحفظة",
+    "classification": "الهيئة العامة للإحصاء · مقيّد · يُتداول عبر قنوات آمنة",
+    "actions": {
+      "newEngagement": "مشاركة جديدة",
+      "newRequest": "طلب جديد"
+    }
+  },
   "kpi": {
     "activeEngagements": "الارتباطات النشطة",
     "openCommitments": "الالتزامات المفتوحة",

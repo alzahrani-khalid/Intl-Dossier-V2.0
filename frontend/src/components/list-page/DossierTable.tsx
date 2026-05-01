@@ -23,6 +23,16 @@ export type DossierTableProps = {
   emptyState?: ReactNode
 }
 
+const fallbackSensitivityLabel = (level: number, isRTL: boolean): string => {
+  const labels: Record<number, { en: string; ar: string }> = {
+    1: { en: 'Public', ar: 'عام' },
+    2: { en: 'Internal', ar: 'داخلي' },
+    3: { en: 'Restricted', ar: 'مقيّد' },
+    4: { en: 'Confidential', ar: 'سري' },
+  }
+  return labels[level]?.[isRTL ? 'ar' : 'en'] ?? (isRTL ? 'غير معروف' : 'Unknown')
+}
+
 const formatLastTouch = (iso: string | null | undefined, locale: string): string => {
   if (iso == null || iso === '') return '—'
   const d = new Date(iso)
@@ -37,14 +47,14 @@ const formatLastTouch = (iso: string | null | undefined, locale: string): string
 const SkeletonRow = (): ReactNode => (
   <div
     aria-hidden="true"
-    className="grid items-center gap-3 px-4 py-3 border-b border-border animate-pulse"
+    className="dossier-row animate-pulse"
     style={{ gridTemplateColumns: 'auto 1fr auto auto auto' }}
   >
-    <div className="size-8 rounded-full bg-muted" />
-    <div className="h-4 w-40 rounded bg-muted" />
-    <div className="h-4 w-16 rounded bg-muted hidden md:block" />
-    <div className="h-4 w-20 rounded bg-muted hidden md:block" />
-    <div className="h-5 w-20 rounded-full bg-muted" />
+    <div className="size-8 rounded-full bg-[var(--line-soft)]" />
+    <div className="h-4 w-40 rounded bg-[var(--line-soft)]" />
+    <div className="hidden h-4 w-16 rounded bg-[var(--line-soft)] md:block" />
+    <div className="hidden h-4 w-20 rounded bg-[var(--line-soft)] md:block" />
+    <div className="h-5 w-20 rounded-full bg-[var(--line-soft)]" />
   </div>
 )
 
@@ -54,7 +64,7 @@ export function DossierTable({
   isLoading = false,
   emptyState,
 }: DossierTableProps): ReactNode {
-  const { t, i18n } = useTranslation(['list-pages', 'countries'])
+  const { t, i18n } = useTranslation('list-pages')
   const isRTL = i18n.language === 'ar'
 
   if (isLoading) {
@@ -86,26 +96,27 @@ export function DossierTable({
   return (
     <div
       role="table"
-      aria-label={t('countries.table.aria', { defaultValue: 'Dossiers', ns: 'countries' })}
+      aria-label={t('table.aria', { defaultValue: isRTL ? 'الدوسيهات' : 'Dossiers' })}
+      className="card overflow-hidden p-0"
     >
       {/* Desktop / tablet header (md+) */}
       <div
         role="row"
-        className="hidden md:grid items-center gap-3 px-4 py-2 text-xs font-medium uppercase text-muted-foreground border-b border-border"
+        className="dossier-row label hidden md:grid"
         style={{ gridTemplateColumns: 'auto 1fr auto auto auto' }}
       >
         <span aria-hidden="true" />
         <span role="columnheader">
-          {t('countries.table.name', { defaultValue: 'Name', ns: 'countries' })}
+          {t('table.name', { defaultValue: isRTL ? 'الاسم' : 'Name' })}
         </span>
         <span role="columnheader">
-          {t('countries.table.engagements', { defaultValue: 'Engagements', ns: 'countries' })}
+          {t('table.engagements', { defaultValue: isRTL ? 'المشاركات' : 'Engagements' })}
         </span>
         <span role="columnheader">
-          {t('countries.table.lastTouch', { defaultValue: 'Last touch', ns: 'countries' })}
+          {t('table.lastTouch', { defaultValue: isRTL ? 'آخر تحديث' : 'Last touch' })}
         </span>
         <span role="columnheader">
-          {t('countries.table.sensitivity', { defaultValue: 'Sensitivity', ns: 'countries' })}
+          {t('table.sensitivity', { defaultValue: isRTL ? 'الحساسية' : 'Sensitivity' })}
         </span>
       </div>
 
@@ -113,8 +124,7 @@ export function DossierTable({
         const displayName = isRTL ? row.name_ar : row.name_en
         const chipClass = sensitivityChipClass(row.sensitivity_level)
         const chipLabel = t(sensitivityLabelKey(row.sensitivity_level), {
-          ns: 'countries',
-          defaultValue: '',
+          defaultValue: fallbackSensitivityLabel(row.sensitivity_level, isRTL),
         })
 
         return (
@@ -123,20 +133,20 @@ export function DossierTable({
             type="button"
             role="row"
             onClick={onRowClick ? (): void => onRowClick(row) : undefined}
-            className="w-full text-start min-h-11 grid items-center gap-3 px-4 py-3 border-b border-border transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring md:grid-cols-[auto_1fr_auto_auto_auto] grid-cols-[auto_1fr_auto] min-w-0"
+            className="dossier-row w-full min-w-0 grid-cols-[auto_1fr_auto] text-start transition-colors hover:bg-[var(--line-soft)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)] md:grid-cols-[auto_1fr_auto_auto_auto]"
           >
             <DossierGlyph type={row.type} iso={row.iso} name={displayName} size={32} />
             <span className="font-medium truncate text-start min-w-0">{displayName}</span>
-            <span className="hidden md:inline text-sm text-muted-foreground shrink-0">
+            <span className="hidden shrink-0 text-[13px] text-[var(--ink-mute)] md:inline">
               {row.engagement_count}
             </span>
-            <span className="hidden md:inline text-sm text-muted-foreground shrink-0">
+            <span className="hidden shrink-0 text-[13px] text-[var(--ink-mute)] md:inline">
               {formatLastTouch(row.last_touch, i18n.language)}
             </span>
             <span className={`chip shrink-0 ${chipClass}`}>{chipLabel}</span>
             <ChevronRight
               data-testid="row-chevron"
-              className="size-4 text-muted-foreground md:hidden shrink-0"
+              className="icon-flip size-4 shrink-0 text-[var(--ink-faint)] md:hidden"
               style={isRTL ? { transform: 'scaleX(-1)' } : undefined}
               aria-hidden="true"
             />

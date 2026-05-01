@@ -75,54 +75,6 @@ function getTypeIcon(type: DossierType, className?: string) {
 }
 
 /**
- * Get type-specific gradient classes
- */
-function getTypeGradient(type: DossierType): string {
-  switch (type) {
-    case 'country':
-      return 'from-blue-500 to-blue-600'
-    case 'organization':
-      return 'from-purple-500 to-purple-600'
-    case 'forum':
-      return 'from-green-500 to-green-600'
-    case 'engagement':
-      return 'from-orange-500 to-orange-600'
-    case 'topic':
-      return 'from-pink-500 to-pink-600'
-    case 'working_group':
-      return 'from-indigo-500 to-indigo-600'
-    case 'person':
-      return 'from-teal-500 to-teal-600'
-    default:
-      return 'from-gray-500 to-gray-600'
-  }
-}
-
-/**
- * Get type-specific hover gradient
- */
-function getTypeHoverGradient(type: DossierType): string {
-  switch (type) {
-    case 'country':
-      return 'hover:from-blue-600 hover:to-blue-700'
-    case 'organization':
-      return 'hover:from-purple-600 hover:to-purple-700'
-    case 'forum':
-      return 'hover:from-green-600 hover:to-green-700'
-    case 'engagement':
-      return 'hover:from-orange-600 hover:to-orange-700'
-    case 'topic':
-      return 'hover:from-pink-600 hover:to-pink-700'
-    case 'working_group':
-      return 'hover:from-indigo-600 hover:to-indigo-700'
-    case 'person':
-      return 'hover:from-teal-600 hover:to-teal-700'
-    default:
-      return 'hover:from-gray-600 hover:to-gray-700'
-  }
-}
-
-/**
  * Get trend icon
  */
 function getTrendIcon(trend?: 'up' | 'down' | 'stable') {
@@ -154,38 +106,26 @@ export function DossierTypeStatsCard({
 }: DossierTypeStatsCardProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-return (
+  return (
     <m.div
-      whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.12 }}
       className="w-full aspect-square sm:aspect-auto"
     >
       <Card
         className={cn(
-          'cursor-pointer h-full flex flex-col overflow-hidden',
-          'transition-all duration-300',
-          'hover:shadow-lg',
-          isSelected && 'ring-2 ring-offset-2',
+          'dossier-type-stat-card cursor-pointer h-full flex flex-col overflow-hidden p-0',
+          'transition-colors duration-150 hover:border-[var(--ink-faint)]',
+          isSelected && 'ring-2 ring-[var(--accent)] ring-offset-2 ring-offset-[var(--bg)]',
           className,
         )}
         onClick={onClick}
       >
-        {/* Gradient Header - Compact */}
-        <div
-          className={cn(
-            'bg-gradient-to-br',
-            getTypeGradient(type),
-            getTypeHoverGradient(type),
-            'text-white',
-            'p-1.5 sm:p-3',
-            'transition-all duration-300',
-            'flex-shrink-0',
-          )}
-        >
+        {/* Header - Compact */}
+        <div className="flex-shrink-0 border-b border-[var(--line)] bg-[var(--line-soft)] p-2 text-[var(--ink)] sm:p-3">
           <div className="flex items-center justify-between mb-0.5 sm:mb-1">
             {/* Icon */}
-            <div className="p-0.5 sm:p-1.5 bg-white/20 backdrop-blur-sm rounded">
+            <div className="rounded-[var(--radius-sm)] bg-[var(--surface)] p-1 text-[var(--accent)] sm:p-1.5">
               {getTypeIcon(type, 'h-2.5 w-2.5 sm:h-4 sm:w-4')}
             </div>
 
@@ -202,10 +142,10 @@ return (
                       'hidden sm:inline-flex items-center justify-center',
                       'min-h-5 min-w-5 p-0.5',
                       'rounded-full',
-                      'bg-white/20 hover:bg-white/30',
-                      'text-white/80 hover:text-white',
+                      'bg-[var(--surface)] hover:bg-[var(--accent-soft)]',
+                      'text-[var(--ink-mute)] hover:text-[var(--accent-ink)]',
                       'transition-colors duration-150',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1',
                     )}
                     aria-label={t('typeGuide.learnMore', 'Learn more about this type')}
                   >
@@ -219,9 +159,7 @@ return (
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.3 }}
                 className={cn(
-                  'inline-block px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded',
-                  'bg-white/25 backdrop-blur-sm',
-                  'text-[10px] sm:text-base font-bold leading-none',
+                  'chip chip-accent px-1.5 py-0.5 text-[10px] font-bold leading-none sm:px-2 sm:py-0.5 sm:text-base',
                 )}
               >
                 {totalCount}
@@ -230,15 +168,13 @@ return (
           </div>
 
           {/* Type Title */}
-          <h3 className="text-sm sm:text-base font-bold text-start leading-tight">
-            {t(`type.${type}`)}
-          </h3>
+          <h3 className="card-title text-start leading-tight">{t(`type.${type}`)}</h3>
 
           {/* Trend Badge - Show below title on larger screens */}
           {trend && trendValue && (
             <Badge
               variant={trend === 'up' ? 'success' : trend === 'down' ? 'warning' : 'secondary'}
-              className="hidden sm:inline-flex mt-1 bg-white/20 backdrop-blur-sm text-white border-0 text-xs"
+              className="mt-1 hidden border-0 text-xs sm:inline-flex"
             >
               {getTrendIcon(trend)}
               <span className={cn(isRTL ? 'me-1' : 'ms-1')}>
@@ -250,13 +186,13 @@ return (
         </div>
 
         {/* Stats Content */}
-        <CardContent className="p-1.5 sm:p-3 flex-1 flex flex-col justify-between bg-card">
+        <CardContent className="flex flex-1 flex-col justify-between bg-[var(--surface)]">
           {/* Percentage Display */}
           <div className="mb-2 sm:mb-3 text-center">
-            <div className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-1">
+            <div className="mb-1 text-[10px] font-medium text-[var(--ink-mute)] sm:text-xs">
               % of total active dossiers
             </div>
-            <div className="text-sm sm:text-lg font-bold text-foreground">
+            <div className="text-sm font-bold text-[var(--ink)] sm:text-lg">
               {Math.round(percentage)}%
             </div>
           </div>
@@ -264,18 +200,18 @@ return (
           {/* Status Breakdown */}
           <div className="grid grid-cols-2 gap-1 sm:gap-2">
             <div className="flex flex-col gap-0.5 items-center">
-              <span className="text-[10px] sm:text-xs text-muted-foreground text-center leading-tight">
+              <span className="text-center text-[10px] leading-tight text-[var(--ink-mute)] sm:text-xs">
                 {t('status.active')}
               </span>
-              <span className="text-xs sm:text-base font-semibold text-green-600 dark:text-green-400 text-center">
+              <span className="text-center text-xs font-semibold text-[var(--ok)] sm:text-base">
                 {activeCount}
               </span>
             </div>
             <div className="flex flex-col gap-0.5 items-center">
-              <span className="text-[10px] sm:text-xs text-muted-foreground text-center leading-tight">
+              <span className="text-center text-[10px] leading-tight text-[var(--ink-mute)] sm:text-xs">
                 {t('status.inactive')}
               </span>
-              <span className="text-xs sm:text-base font-semibold text-yellow-600 dark:text-yellow-400 text-center">
+              <span className="text-center text-xs font-semibold text-[var(--warn)] sm:text-base">
                 {inactiveCount}
               </span>
             </div>
@@ -292,16 +228,18 @@ return (
 export function DossierTypeStatsCardSkeleton({ className }: { className?: string }) {
   return (
     <div className="w-full aspect-square sm:aspect-auto">
-      <Card className={cn('h-full flex flex-col overflow-hidden', className)}>
-        <div className="bg-gradient-to-br from-gray-400 to-gray-500 p-1.5 sm:p-3 flex-shrink-0">
+      <Card
+        className={cn('dossier-type-stat-card h-full flex flex-col overflow-hidden p-0', className)}
+      >
+        <div className="flex-shrink-0 border-b border-[var(--line)] bg-[var(--line-soft)] p-1.5 sm:p-3">
           <div className="flex items-center justify-between mb-0.5 sm:mb-1">
-            <Skeleton className="h-4 w-4 sm:h-7 sm:w-7 rounded bg-white/20" />
-            <Skeleton className="h-5 sm:h-9 w-9 sm:w-16 rounded bg-white/20" />
+            <Skeleton className="h-4 w-4 rounded-[var(--radius-sm)] sm:h-7 sm:w-7" />
+            <Skeleton className="h-5 w-9 rounded-[var(--radius-sm)] sm:h-9 sm:w-16" />
           </div>
-          <Skeleton className="h-4 sm:h-5 w-16 sm:w-20 bg-white/20" />
-          <Skeleton className="hidden sm:block h-4 w-12 rounded-full bg-white/20 mt-1" />
+          <Skeleton className="h-4 w-16 sm:h-5 sm:w-20" />
+          <Skeleton className="mt-1 hidden h-4 w-12 rounded-full sm:block" />
         </div>
-        <CardContent className="p-1.5 sm:p-3 flex-1 flex flex-col justify-between bg-card">
+        <CardContent className="flex flex-1 flex-col justify-between bg-[var(--surface)]">
           <div className="mb-2 sm:mb-3 text-center">
             <Skeleton className="h-3 sm:h-4 w-24 sm:w-32 mx-auto mb-1" />
             <Skeleton className="h-4 sm:h-5 w-12 sm:w-16 mx-auto" />

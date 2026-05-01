@@ -84,7 +84,7 @@ export function MyTasks(): ReactElement {
 
   if (isError) {
     return (
-      <section className="tasks rounded-lg border border-line p-4">
+      <section className="tasks card">
         <p className="text-sm text-ink-soft text-start">{t('error.load_failed')}</p>
       </section>
     )
@@ -94,7 +94,7 @@ export function MyTasks(): ReactElement {
 
   if (rawTasks.length === 0) {
     return (
-      <section className="tasks rounded-lg border border-line p-4 text-sm text-ink-soft text-start">
+      <section className="tasks card text-sm text-ink-soft text-start">
         {t('myTasks.empty')}
       </section>
     )
@@ -111,9 +111,9 @@ export function MyTasks(): ReactElement {
     <section
       role="region"
       aria-labelledby="tasks-heading"
-      className="tasks rounded-lg border border-line bg-surface-raised p-4"
+      className="tasks card"
     >
-      <h3 id="tasks-heading" className="text-sm font-medium text-ink mb-3 text-start">
+      <h3 id="tasks-heading" className="card-title mb-3 text-start">
         {t('myTasks.title')}
       </h3>
       <ul className="space-y-2">

@@ -124,12 +124,14 @@ describe('AppShell', () => {
     // utility that switches into two-column mode above lg.
     const root = container.querySelector('.appshell')
     expect(root).not.toBeNull()
+    expect(root!.className).toMatch(/\bapp\b/)
     expect(root!.className).toMatch(/lg:grid-cols-\[16rem_1fr\]/)
 
     // Desktop aside carries `hidden lg:block` — under 1024px, it's hidden by
     // Tailwind (className string assertion, no computed style needed).
     const aside = container.querySelector('.appshell-aside')
     expect(aside).not.toBeNull()
+    expect(aside!.className).toMatch(/\bsidebar\b/)
     expect(aside!.className).toMatch(/\bhidden\b/)
     expect(aside!.className).toMatch(/\blg:block\b/)
 
@@ -138,6 +140,10 @@ describe('AppShell', () => {
     const hamburger = container.querySelector('.tb-menu')
     expect(hamburger).not.toBeNull()
     expect(hamburger!.className).toMatch(/\blg:hidden\b/)
+
+    const main = container.querySelector('.appshell-main')
+    expect(main).not.toBeNull()
+    expect(main!.className).toMatch(/\bmain\b/)
   })
 
   it('drawer open close — backdrop click + ESC both dismiss', async () => {

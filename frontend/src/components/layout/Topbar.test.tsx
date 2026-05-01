@@ -60,6 +60,7 @@ describe('Topbar', () => {
     const { container } = renderTopbar()
     const topbar = container.querySelector('.tb')
     expect(topbar).not.toBeNull()
+    expect(topbar!.className).toMatch(/\btopbar\b/)
 
     // Slots 1 & 2 are direct siblings of the right-cluster wrapper.
     expect(topbar!.querySelector('.tb-menu')).not.toBeNull()
@@ -83,12 +84,34 @@ describe('Topbar', () => {
     expect(localeRadios.length).toBe(2)
   })
 
+  it('handoff class hooks — active direction and locale controls expose .active', () => {
+    const { container } = renderTopbar()
+    const activeDirection = container.querySelector('.tb-dir-btn.active')
+    const activeLocale = container.querySelector('.tb-locale-btn.active')
+
+    expect(activeDirection).not.toBeNull()
+    expect(activeDirection?.querySelector('.tb-dir-label')?.textContent).toBe(
+      'shell.direction.chancery',
+    )
+    expect(activeLocale).not.toBeNull()
+    expect(activeLocale?.textContent).toBe('EN')
+  })
+
   it('kbd hint responsive — ⌘K element has `hidden` + `lg:inline` classes', () => {
     const { container } = renderTopbar()
     const kbd = container.querySelector('.tb-kbd')
     expect(kbd).not.toBeNull()
     expect(kbd!.className).toMatch(/\bhidden\b/)
     expect(kbd!.className).toMatch(/\blg:inline\b/)
+  })
+
+  it('phone direction switcher — exposes compact mobile initials for all four directions', () => {
+    const { container } = renderTopbar()
+    const initials = Array.from(container.querySelectorAll('.tb-dir-short')).map((el) =>
+      el.textContent?.trim(),
+    )
+
+    expect(initials).toEqual(['C', 'S', 'M', 'B'])
   })
 
   it('tweaks trigger — clicking Tweaks calls useTweaksOpen().open()', async () => {

@@ -159,13 +159,6 @@ export const createNavigationGroups = (
           path: '/dossiers/working_groups',
           icon: UsersRound,
         },
-        // Engagements cross-link (per D-03)
-        {
-          id: 'dossier-engagements',
-          label: 'navigation.engagements',
-          path: '/dossiers/engagements',
-          icon: Briefcase,
-        },
       ],
     },
   ]

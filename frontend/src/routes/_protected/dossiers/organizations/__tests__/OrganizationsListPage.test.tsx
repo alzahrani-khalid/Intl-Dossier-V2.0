@@ -48,7 +48,6 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Import AFTER mocks are registered so Route.useSearch resolves to the mock factory.
-// eslint-disable-next-line import/first
 import { Route } from '../index'
 
 const Component = (Route as unknown as { component: () => JSX.Element }).component
@@ -90,8 +89,7 @@ describe('OrganizationsListPage (Phase 40 / Plan 04)', () => {
 
     render(<Component />)
 
-    // Title (key resolved by mock t — namespaced with `organizations:title`).
-    expect(screen.getByText('organizations:title')).toBeTruthy()
+    expect(screen.getByText('Organizations')).toBeTruthy()
 
     // Row contents.
     expect(screen.getByText('WHO')).toBeTruthy()
@@ -107,10 +105,7 @@ describe('OrganizationsListPage (Phase 40 / Plan 04)', () => {
 
     render(<Component />)
 
-    // Empty hint text resolves to the `organizations:empty.title` key
-    // (and to its default value: "No organizations yet" if locale loaded;
-    // the mock t returns the key, which is sufficient for the assertion).
-    expect(screen.getByText('organizations:empty.title')).toBeTruthy()
-    expect(screen.getByText('organizations:empty.description')).toBeTruthy()
+    expect(screen.getByText('No organizations yet')).toBeTruthy()
+    expect(screen.getByText('Organization dossiers will appear here.')).toBeTruthy()
   })
 })

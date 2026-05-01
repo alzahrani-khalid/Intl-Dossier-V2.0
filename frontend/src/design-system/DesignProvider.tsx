@@ -128,9 +128,9 @@ export const DesignContext = createContext<DesignContextValue | undefined>(undef
 // ----------------------------------------------------------------------------
 export function DesignProvider({
   children,
-  initialDirection = 'chancery',
+  initialDirection = 'bureau',
   initialMode = 'light',
-  initialHue = 22,
+  initialHue = 32,
   initialDensity = 'comfortable',
   initialClassif = false,
   initialLocale = 'en',
@@ -196,9 +196,14 @@ export function DesignProvider({
   }, [mode])
 
   // Expose direction + density on the root element so CSS selectors (e.g.
-  // `[data-direction="situation"] .foo`) can reach them if needed.
+  // `[data-direction="situation"] .foo` OR `.dir-situation .foo`) can reach
+  // them. The handoff CSS (app.css lines 461-664) uses `.dir-{direction}`
+  // class selectors, so we apply both forms here for verbatim portability.
   useEffect(() => {
-    document.documentElement.setAttribute('data-direction', direction)
+    const root = document.documentElement
+    root.setAttribute('data-direction', direction)
+    root.classList.remove('dir-chancery', 'dir-situation', 'dir-ministerial', 'dir-bureau')
+    root.classList.add(`dir-${direction}`)
   }, [direction])
 
   useEffect(() => {

@@ -107,7 +107,7 @@
     "dossiersHub": "Dossiers Hub",
     "allDossiers": "All Dossiers",
     "workingGroups": "Working Groups",
-    "persons": "Persons",
+    "persons": "People",
     "topics": "Topics",
     "electedOfficials": "Elected Officials",
     "relationshipGraph": "Relationship Graph",
@@ -119,13 +119,13 @@
     "intakeQueue": "Intake Queue",
     "waitingQueue": "Waiting Queue",
     "browse": "Browse",
-    "dashboard": "Dashboard",
+    "dashboard": "Situation",
     "assignments": "My Assignments",
     "intake": "Intake Queue",
     "approvals": "Approvals",
     "dossiers": "Dossiers",
     "positions": "Positions",
-    "afterActions": "After Actions",
+    "afterActions": "After-Actions",
     "projects": "Projects",
     "organizations": "Organizations",
     "countries": "Countries",
@@ -168,7 +168,7 @@
     "awaitingResponse": "Awaiting Response",
     "main": "Main",
     "operations": "Operations",
-    "tasks": "Tasks",
+    "tasks": "My Desk",
     "activity": "Activity",
     "advancedSearch": "Advanced Search",
     "availabilityPolling": "Availability Polling",
@@ -1089,54 +1089,66 @@
   },
   "tweaks": {
     "title": "Tweaks",
+    "subtitle": "Live-configure this prototype",
     "open": "Open tweaks",
     "close": "Close tweaks",
     "direction": {
-      "label": "Direction",
+      "label": "Design direction",
       "chancery": {
         "name": "Chancery",
-        "tagline": "Formal, warm amber"
+        "tagline": "Editorial · serif · composed"
       },
       "situation": {
         "name": "Situation Room",
-        "tagline": "Dark, cool cyan"
+        "tagline": "Intelligence terminal · dense · mono"
       },
       "ministerial": {
         "name": "Ministerial",
-        "tagline": "Institutional green"
+        "tagline": "Government-formal · clean · restrained"
       },
       "bureau": {
         "name": "Bureau",
-        "tagline": "Crisp, neutral"
+        "tagline": "Warm neutrals · document-forward · SaaS-clean"
       }
     },
     "mode": {
-      "label": "Mode",
+      "label": "Theme",
       "light": "Light",
       "dark": "Dark"
     },
     "hue": {
-      "label": "Hue"
+      "label": "Accent hue"
     },
     "density": {
       "label": "Density",
       "comfortable": "Comfortable",
-      "compact": "Compact"
+      "compact": "Compact",
+      "dense": "Dense"
     },
     "classification": {
-      "label": "Classification",
-      "show": "Show",
-      "hide": "Hide"
+      "label": "Classification ribbon",
+      "on": "On",
+      "off": "Off"
     },
     "locale": {
-      "label": "Locale",
-      "en": "EN",
-      "ar": "ع"
+      "label": "Reading direction",
+      "en": "LTR · English",
+      "ar": "RTL · عربي"
+    },
+    "shortcuts": {
+      "label": "Shortcuts",
+      "searchAny": "Search anything",
+      "newEngagement": "New engagement",
+      "newBrief": "New brief"
+    },
+    "loader": {
+      "label": "Loading state",
+      "preview": "Preview for 2s"
     }
   },
   "shell": {
-    "appName": "Intl-Dossier",
-    "workspace": "GASTAT · Intelligence Workspace",
+    "appName": "IntelDossier",
+    "workspace": "GASTAT · International Partnerships",
     "user": {
       "noRole": "Member"
     },
@@ -1157,7 +1169,8 @@
       "toggle": "Toggle theme"
     },
     "notifications": {
-      "open": "Open notifications"
+      "open": "Open notifications",
+      "count": "{{count}} unread notifications"
     },
     "tweaks": "Tweaks",
     "menu": {

@@ -16,22 +16,17 @@ export function PageHeader({
   className,
 }: PageHeaderProps): React.JSX.Element {
   return (
-    <header
-      className={cn(
-        'flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6',
-        className,
-      )}
-    >
-      <div className="flex items-center gap-3">
-        {icon != null && <span className="text-muted-foreground">{icon}</span>}
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{title}</h1>
-          {subtitle != null && (
-            <p className="text-sm sm:text-base text-muted-foreground">{subtitle}</p>
-          )}
+    <header className={cn('page-head', className)}>
+      <div className="flex min-w-0 items-start gap-3">
+        {icon != null && (
+          <span className="page-head-icon mt-1 shrink-0 text-[var(--ink-faint)]">{icon}</span>
+        )}
+        <div className="min-w-0">
+          <h1 className="page-title text-start">{title}</h1>
+          {subtitle != null && <p className="page-sub text-start">{subtitle}</p>}
         </div>
       </div>
-      {actions != null && <div className="flex items-center gap-2 flex-wrap">{actions}</div>}
+      {actions != null && <div className="dash-hero-actions">{actions}</div>}
     </header>
   )
 }

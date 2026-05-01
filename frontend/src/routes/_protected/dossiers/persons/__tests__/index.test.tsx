@@ -43,7 +43,7 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
 }))
 
-import PersonsListPage from '../index'
+import PersonsListPage from '../-PersonsListPage'
 
 describe('PersonsListPage (Phase 40 LIST-02)', () => {
   beforeEach(() => {

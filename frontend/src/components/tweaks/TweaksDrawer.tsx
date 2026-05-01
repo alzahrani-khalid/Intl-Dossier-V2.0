@@ -1,9 +1,8 @@
 /**
  * TweaksDrawer — Phase 34 Plan 34-04 (THEME-01).
  *
- * Central UX surface for the Phase 33/34 design system. Renders six sections
- * in the UI-SPEC copywriting order (Direction, Mode, Hue, Density,
- * Classification, Locale) backed by DesignProvider hooks.
+ * Central UX surface for the Phase 33/34 design system. Renders the live
+ * prototype controls in the handoff order backed by DesignProvider hooks.
  *
  * HeroUI v3 Drawer compound primitives are used. Note: HeroUI's Drawer does
  * NOT take `isOpen`/`onOpenChange` as top-level props — it consumes a React
@@ -22,10 +21,19 @@
  * state is ever rendered.
  */
 
-import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useOverlayState } from '@heroui/react'
+import {
+  Drawer,
+  DrawerBackdrop,
+  DrawerContent,
+  DrawerDialog,
+  DrawerHeader,
+  DrawerBody,
+  useOverlayState,
+} from '@heroui/react'
 import type { ReactElement } from 'react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { X } from 'lucide-react'
 
 import {
   useDesignDirection,
@@ -36,14 +44,19 @@ import {
   useLocale,
 } from '@/design-system/hooks'
 import { DIRECTION_DEFAULTS } from '@/design-system/directionDefaults'
-import { cn } from '@/lib/utils'
 
 import { useTweaksOpen } from './use-tweaks-open'
+import './tweaks-drawer.css'
 
 type Direction = keyof typeof DIRECTION_DEFAULTS
+type GlobeLoaderWindow = Window & { __showGlobeLoader?: (durationMs: number) => void }
 
 const DIRECTIONS: readonly Direction[] = ['chancery', 'situation', 'ministerial', 'bureau']
 const HUE_PRESETS: readonly number[] = [22, 158, 190, 258, 330]
+const MODES = ['light', 'dark'] as const
+const DENSITIES = ['comfortable', 'compact', 'dense'] as const
+const LOCALES = ['en', 'ar'] as const
+const CLASSIFICATION_OPTIONS = [true, false] as const
 
 export function TweaksDrawer(): ReactElement {
   const { t, i18n } = useTranslation()
@@ -76,228 +89,221 @@ export function TweaksDrawer(): ReactElement {
     setHue(defaults.hue)
   }
 
+  const handlePreviewLoader = (): void => {
+    close()
+    window.setTimeout(() => {
+      ;(window as GlobeLoaderWindow).__showGlobeLoader?.(2200)
+    }, 150)
+  }
+
   // Memoise label computations for ARIA so screen readers see the final state
   // string, not the intermediate react-i18next lookup.
   const titleLabel = useMemo<string>(() => t('tweaks.title'), [t])
+  const formattedHue = useMemo<string>(
+    () =>
+      new Intl.NumberFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
+        maximumFractionDigits: 0,
+      }).format(Math.round(hue)),
+    [hue, locale],
+  )
 
   return (
     <Drawer state={overlayState}>
-      <DrawerContent
-        placement={isRTL ? 'left' : 'right'}
-        aria-label={titleLabel}
-        className="w-full sm:!w-[360px]"
-      >
-        <DrawerHeader className="flex items-center justify-between px-lg py-xl">
-          <span className="text-[16px] font-semibold leading-tight">{titleLabel}</span>
-        </DrawerHeader>
-        <DrawerBody className="flex flex-col gap-6 px-lg pb-xl">
-          {/* Section 1: Direction */}
-          <section aria-labelledby="tweaks-direction">
-            <h3
-              id="tweaks-direction"
-              className="text-[13px] font-semibold leading-tight text-start mb-sm"
-            >
-              {t('tweaks.direction.label')}
-            </h3>
-            <div className="grid grid-cols-2 gap-sm">
-              {DIRECTIONS.map((d) => {
-                const active = direction === d
-                return (
-                  <button
-                    key={d}
-                    type="button"
-                    onClick={(): void => handleDirection(d)}
-                    aria-pressed={active}
-                    className={cn(
-                      'flex flex-col items-start gap-xs p-[10px] rounded-[var(--radius-sm)] border text-start min-h-11',
-                      active
-                        ? 'bg-accent-soft border-accent text-accent-ink'
-                        : 'bg-surface border-line text-ink',
-                    )}
-                  >
-                    <span className="text-[13px] font-semibold leading-tight">
-                      {t(`tweaks.direction.${d}.name`)}
-                    </span>
-                    <span className="text-[11px] font-normal text-ink-mute leading-tight">
-                      {t(`tweaks.direction.${d}.tagline`)}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-          </section>
-
-          {/* Section 2: Mode */}
-          <section aria-labelledby="tweaks-mode">
-            <h3
-              id="tweaks-mode"
-              className="text-[13px] font-semibold leading-tight text-start mb-sm"
-            >
-              {t('tweaks.mode.label')}
-            </h3>
-            <div className="flex gap-sm">
-              {(['light', 'dark'] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={(): void => setMode(m)}
-                  aria-pressed={mode === m}
-                  className={cn(
-                    'flex-1 min-h-11 rounded-[var(--radius-sm)] border text-[14px]',
-                    mode === m
-                      ? 'bg-accent-soft border-accent text-accent-ink'
-                      : 'bg-surface border-line text-ink',
-                  )}
-                >
-                  {t(`tweaks.mode.${m}`)}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          {/* Section 3: Hue */}
-          <section aria-labelledby="tweaks-hue">
-            <h3
-              id="tweaks-hue"
-              className="text-[13px] font-semibold leading-tight text-start mb-sm"
-            >
-              {t('tweaks.hue.label')}
-            </h3>
-            <div className="flex items-center gap-sm">
-              {/*
-               * Native `<input type="range">` rather than HeroUI Slider: the
-               * HeroUI v3.0.3 Slider is a compound (Track/Fill/Thumb) + passes
-               * props through to React Aria's `<Slider>`, which doesn't accept
-               * `size` / `classNames` / top-level `aria-label`. A native range
-               * input covers the same behavior and is accessible by default.
-               */}
-              <input
-                type="range"
-                aria-label={t('tweaks.hue.label')}
-                min={0}
-                max={360}
-                step={1}
-                value={hue}
-                onChange={(e): void => setHue(Number(e.target.value))}
-                className="flex-1 accent-accent min-h-11"
-              />
-              <span
-                dir="ltr"
-                className="text-[13px] font-semibold leading-tight font-mono min-w-[3ch] text-end"
+      <DrawerBackdrop>
+        <DrawerContent className="id-tweaks-content" placement={isRTL ? 'left' : 'right'}>
+          <DrawerDialog aria-label={titleLabel} className="id-tweaks-dialog">
+            <DrawerHeader className="id-tweaks-header">
+              <div>
+                <h2 className="id-tweaks-title">{titleLabel}</h2>
+                <p className="id-tweaks-subtitle">{t('tweaks.subtitle')}</p>
+              </div>
+              <button
+                type="button"
+                onClick={close}
+                aria-label={t('tweaks.close')}
+                className="id-tweaks-close"
               >
-                {hue}°
-              </span>
-            </div>
-            <div className="flex gap-sm mt-sm">
-              {HUE_PRESETS.map((h) => {
-                const active = Math.abs(hue - h) < 4
-                return (
-                  <button
-                    key={h}
-                    type="button"
-                    onClick={(): void => setHue(h)}
-                    aria-label={`${h}°`}
-                    aria-pressed={active}
-                    className={cn(
-                      'flex-1 h-6 rounded-[var(--radius-sm)]',
-                      active && 'ring-2 ring-ink',
-                    )}
-                    style={{ background: `oklch(58% 0.14 ${h})` }}
-                  />
-                )
-              })}
-            </div>
-          </section>
+                <X size={20} strokeWidth={1.8} aria-hidden="true" />
+              </button>
+            </DrawerHeader>
+            <DrawerBody className="id-tweaks-body">
+              {/* Section 1: Direction */}
+              <section aria-labelledby="tweaks-direction">
+                <h3 id="tweaks-direction" className="id-tweaks-section-title">
+                  {t('tweaks.direction.label')}
+                </h3>
+                <div className="id-tweaks-direction-stack">
+                  {DIRECTIONS.map((d) => {
+                    const active = direction === d
+                    return (
+                      <button
+                        key={d}
+                        type="button"
+                        onClick={(): void => handleDirection(d)}
+                        aria-pressed={active}
+                        className="id-tweaks-direction-card"
+                      >
+                        <span className="id-tweaks-card-title">
+                          {t(`tweaks.direction.${d}.name`)}
+                        </span>
+                        <span className="id-tweaks-card-subtitle">
+                          {t(`tweaks.direction.${d}.tagline`)}
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </section>
 
-          {/* Section 4: Density */}
-          <section aria-labelledby="tweaks-density">
-            <h3
-              id="tweaks-density"
-              className="text-[13px] font-semibold leading-tight text-start mb-sm"
-            >
-              {t('tweaks.density.label')}
-            </h3>
-            <div className="flex gap-sm">
-              {(['comfortable', 'compact'] as const).map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  onClick={(): void => setDensity(d)}
-                  aria-pressed={density === d}
-                  className={cn(
-                    'flex-1 min-h-11 rounded-[var(--radius-sm)] border text-[14px]',
-                    density === d
-                      ? 'bg-accent-soft border-accent text-accent-ink'
-                      : 'bg-surface border-line text-ink',
-                  )}
-                >
-                  {t(`tweaks.density.${d}`)}
+              {/* Section 2: Theme */}
+              <section aria-labelledby="tweaks-mode">
+                <h3 id="tweaks-mode" className="id-tweaks-section-title">
+                  {t('tweaks.mode.label')}
+                </h3>
+                <div className="id-tweaks-row">
+                  {MODES.map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={(): void => setMode(m)}
+                      aria-pressed={mode === m}
+                    >
+                      {t(`tweaks.mode.${m}`)}
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              {/* Section 3: Density */}
+              <section aria-labelledby="tweaks-density">
+                <h3 id="tweaks-density" className="id-tweaks-section-title">
+                  {t('tweaks.density.label')}
+                </h3>
+                <div className="id-tweaks-row">
+                  {DENSITIES.map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={(): void => setDensity(d)}
+                      aria-pressed={density === d}
+                    >
+                      {t(`tweaks.density.${d}`)}
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              {/* Section 4: Reading direction */}
+              <section aria-labelledby="tweaks-locale">
+                <h3 id="tweaks-locale" className="id-tweaks-section-title">
+                  {t('tweaks.locale.label')}
+                </h3>
+                <div className="id-tweaks-row">
+                  {LOCALES.map((l) => (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={(): void => setLocale(l)}
+                      aria-pressed={locale === l}
+                    >
+                      {t(`tweaks.locale.${l}`)}
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              {/* Section 5: Hue */}
+              <section aria-labelledby="tweaks-hue">
+                <h3 id="tweaks-hue" className="id-tweaks-section-title">
+                  {t('tweaks.hue.label')} <span aria-hidden="true">—</span>{' '}
+                  <span dir="ltr">{formattedHue}°</span>
+                </h3>
+                {/*
+                 * Native `<input type="range">` rather than HeroUI Slider: the
+                 * handoff uses a plain rainbow range and native range semantics
+                 * are more predictable across the compact drawer.
+                 */}
+                <input
+                  type="range"
+                  aria-label={t('tweaks.hue.label')}
+                  min={0}
+                  max={360}
+                  step={1}
+                  value={hue}
+                  onChange={(e): void => setHue(Number(e.target.value))}
+                  className="id-tweaks-hue"
+                />
+                <div className="id-tweaks-swatch-row">
+                  {HUE_PRESETS.map((h) => {
+                    const active = Math.abs(hue - h) < 4
+                    return (
+                      <button
+                        key={h}
+                        type="button"
+                        onClick={(): void => setHue(h)}
+                        aria-label={`${h}°`}
+                        aria-pressed={active}
+                        className="id-tweaks-swatch"
+                        style={{ background: `oklch(58% 0.14 ${h})` }}
+                      />
+                    )
+                  })}
+                </div>
+              </section>
+
+              {/* Section 6: Classification */}
+              <section aria-labelledby="tweaks-classif">
+                <h3 id="tweaks-classif" className="id-tweaks-section-title">
+                  {t('tweaks.classification.label')}
+                </h3>
+                <div className="id-tweaks-row">
+                  {CLASSIFICATION_OPTIONS.map((value) => (
+                    <button
+                      key={String(value)}
+                      type="button"
+                      onClick={(): void => setClassif(value)}
+                      aria-pressed={classif === value}
+                    >
+                      {value ? t('tweaks.classification.on') : t('tweaks.classification.off')}
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              {/* Section 7: Shortcuts */}
+              <section aria-labelledby="tweaks-shortcuts">
+                <h3 id="tweaks-shortcuts" className="id-tweaks-section-title">
+                  {t('tweaks.shortcuts.label')}
+                </h3>
+                <div className="id-tweaks-shortcuts">
+                  <div>
+                    <span className="id-tweaks-kbd" dir="ltr">
+                      ⌘K
+                    </span>{' '}
+                    {t('tweaks.shortcuts.searchAny')}
+                  </div>
+                  <div>
+                    <span className="id-tweaks-kbd">C</span> {t('tweaks.shortcuts.newEngagement')}
+                  </div>
+                  <div>
+                    <span className="id-tweaks-kbd">B</span> {t('tweaks.shortcuts.newBrief')}
+                  </div>
+                </div>
+              </section>
+
+              {/* Section 8: Loading state */}
+              <section aria-labelledby="tweaks-loader">
+                <h3 id="tweaks-loader" className="id-tweaks-section-title">
+                  {t('tweaks.loader.label')}
+                </h3>
+                <button type="button" onClick={handlePreviewLoader} className="id-tweaks-primary">
+                  {t('tweaks.loader.preview')}
                 </button>
-              ))}
-            </div>
-          </section>
-
-          {/* Section 5: Classification */}
-          <section
-            aria-labelledby="tweaks-classif"
-            className="flex items-center justify-between gap-sm"
-          >
-            <h3 id="tweaks-classif" className="text-[13px] font-semibold leading-tight text-start">
-              {t('tweaks.classification.label')}
-            </h3>
-            {/*
-             * Native `role="switch"` checkbox rather than HeroUI Switch: the
-             * HeroUI v3.0.3 Switch uses `children` as visual content + doesn't
-             * accept `isSelected`/`onChange` at the root level. A semantic
-             * switch-role input gives us the same a11y contract with strict
-             * TypeScript compatibility.
-             */}
-            <label className="flex items-center gap-sm min-h-11 cursor-pointer">
-              <input
-                type="checkbox"
-                role="switch"
-                checked={classif}
-                onChange={(e): void => setClassif(e.target.checked)}
-                aria-label={
-                  classif ? t('tweaks.classification.show') : t('tweaks.classification.hide')
-                }
-                className="min-h-11 min-w-11 accent-accent"
-              />
-              <span className="text-[14px]">
-                {classif ? t('tweaks.classification.show') : t('tweaks.classification.hide')}
-              </span>
-            </label>
-          </section>
-
-          {/* Section 6: Locale */}
-          <section aria-labelledby="tweaks-locale">
-            <h3
-              id="tweaks-locale"
-              className="text-[13px] font-semibold leading-tight text-start mb-sm"
-            >
-              {t('tweaks.locale.label')}
-            </h3>
-            <div className="flex gap-sm">
-              {(['en', 'ar'] as const).map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={(): void => setLocale(l)}
-                  aria-pressed={locale === l}
-                  className={cn(
-                    'flex-1 min-h-11 rounded-[var(--radius-sm)] border text-[14px]',
-                    locale === l
-                      ? 'bg-accent-soft border-accent text-accent-ink'
-                      : 'bg-surface border-line text-ink',
-                  )}
-                >
-                  {t(`tweaks.locale.${l}`)}
-                </button>
-              ))}
-            </div>
-          </section>
-        </DrawerBody>
-      </DrawerContent>
+              </section>
+            </DrawerBody>
+          </DrawerDialog>
+        </DrawerContent>
+      </DrawerBackdrop>
     </Drawer>
   )
 }

@@ -38,7 +38,16 @@ vi.mock('react-i18next', () => ({
         'sensitivity.confidential': 'Confidential',
         'list-pages:search.placeholder': 'Search…',
       }
-      return map[k] ?? k
+      if (map[k] !== undefined) return map[k]
+      if (
+        opts !== undefined &&
+        opts !== null &&
+        'defaultValue' in opts &&
+        typeof opts.defaultValue === 'string'
+      ) {
+        return opts.defaultValue
+      }
+      return k
     },
   }),
   Trans: ({ children }: { children: ReactNode }): ReactNode => children,

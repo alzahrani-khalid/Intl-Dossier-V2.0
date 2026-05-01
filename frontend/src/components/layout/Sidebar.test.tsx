@@ -55,7 +55,10 @@ beforeEach(() => {
 
 describe('Sidebar', () => {
   it('renders three sections — Workspace / Intelligence / Administration', () => {
-    render(<Sidebar />)
+    const { container } = render(<Sidebar />)
+    const sidebar = container.querySelector('.sb')
+    expect(sidebar).not.toBeNull()
+    expect(sidebar!.className).toMatch(/\bsidebar\b/)
     // The i18n mock echoes the translation key back, so we match the tail of
     // each group label against /operations|dossiers|administration/. getByText
     // throws if the node is missing — the non-throw is the assertion.
@@ -69,6 +72,7 @@ describe('Sidebar', () => {
     render(<Sidebar />)
     const activeLink = screen.getByRole('link', { current: 'page' })
     expect(activeLink).toBeTruthy()
+    expect(activeLink.className).toMatch(/\bactive\b/)
     // Accent bar is a ::before pseudo, encoded into the className string.
     expect(activeLink.className).toMatch(/before:start-0/)
     expect(activeLink.className).toMatch(/before:bg-\[var\(--accent\)\]/)

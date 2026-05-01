@@ -33,14 +33,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import {
-  ChevronRight,
-  FileDown,
-  Home,
-  Link2,
-  Wifi,
-  WifiOff,
-} from 'lucide-react'
+import { ChevronRight, FileDown, Home, Link2, Wifi, WifiOff } from 'lucide-react'
 
 // ============================================================================
 // Constants
@@ -131,51 +124,54 @@ export function DossierShell({
     : (dossier?.name_en ?? '')
 
   return (
-    <div dir={direction} className="flex min-h-screen flex-col bg-background">
+    <div
+      dir={direction}
+      className="dossier-shell flex min-h-full flex-col bg-[var(--bg)] text-[var(--ink)]"
+    >
       {/* Header bar -- sticky */}
       <header
         className={cn(
-          'sticky top-0 z-20 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
-          'px-4 sm:px-6 lg:px-8 py-3',
+          'sticky top-0 z-20 border-b border-[var(--line)] bg-[var(--surface)]',
+          'px-4 py-3 sm:px-6 lg:px-8',
         )}
       >
         {/* Breadcrumbs */}
         <nav
-          className="flex items-center gap-2 text-sm mb-2"
+          className="label mb-2 flex min-w-0 items-center gap-2 overflow-hidden"
           aria-label="Breadcrumb"
         >
           <Link
             to="/dashboard"
-            className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors min-h-11"
+            className="flex min-h-9 shrink-0 items-center gap-1 text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
           >
             <Home className="h-4 w-4" />
           </Link>
-          <ChevronRight className={cn('h-4 w-4 text-muted-foreground', isRTL && 'rotate-180')} />
+          <ChevronRight className="icon-flip h-4 w-4 shrink-0 text-[var(--ink-faint)]" />
           <Link
             to="/dossiers"
-            className="text-muted-foreground hover:text-foreground transition-colors min-h-11 flex items-center"
+            className="flex min-h-9 shrink-0 items-center text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
           >
             {t('tabs.overview', { ns: 'dossiers', defaultValue: 'Dossier Hub' })}
           </Link>
-          <ChevronRight className={cn('h-4 w-4 text-muted-foreground', isRTL && 'rotate-180')} />
-          <span className="text-foreground font-medium truncate">
+          <ChevronRight className="icon-flip h-4 w-4 shrink-0 text-[var(--ink-faint)]" />
+          <span className="min-w-0 truncate font-medium text-[var(--ink)]">
             {isLoading ? <Skeleton className="h-4 w-24 inline-block" /> : displayName}
           </span>
         </nav>
 
         {/* Title + Actions row */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-[var(--gap)] sm:flex-row sm:items-center sm:justify-between">
           {/* Dossier title */}
           <div className="min-w-0 flex-1">
             {isLoading ? (
               <Skeleton className="h-8 w-64" />
             ) : (
-              <h1 className="truncate text-xl sm:text-2xl font-semibold">{displayName}</h1>
+              <h1 className="page-title truncate text-start">{displayName}</h1>
             )}
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex flex-shrink-0 flex-wrap items-center justify-start gap-2 sm:justify-end">
             {/* Active Viewers */}
             {viewerCount > 0 && (
               <>
@@ -200,10 +196,10 @@ export function DossierShell({
                 <TooltipTrigger asChild>
                   <div
                     className={cn(
-                      'flex items-center justify-center h-6 w-6 rounded-full',
+                      'flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] border',
                       isConnected
-                        ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400',
+                        ? 'border-[var(--ok)] bg-[var(--ok-soft)] text-[var(--ok)]'
+                        : 'border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger)]',
                     )}
                   >
                     {isConnected ? (
@@ -226,7 +222,7 @@ export function DossierShell({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="min-h-11 min-w-11"
+                    className="min-h-10 min-w-10"
                     onClick={() => setIsExportDialogOpen(true)}
                   >
                     <FileDown className="h-4 w-4 sm:me-2" />
@@ -253,7 +249,7 @@ export function DossierShell({
             <Button
               variant="outline"
               size="sm"
-              className="lg:hidden min-h-11 min-w-11"
+              className="min-h-10 min-w-10 lg:hidden"
               onClick={() => setIsMobileSheetOpen(true)}
             >
               <Link2 className="h-4 w-4 sm:me-2" />
@@ -264,17 +260,11 @@ export function DossierShell({
       </header>
 
       {/* Tab navigation */}
-      <DossierTabNav
-        dossierId={dossierId}
-        dossierType={dossierType}
-        extraTabs={tabConfig}
-      />
+      <DossierTabNav dossierId={dossierId} dossierType={dossierType} extraTabs={tabConfig} />
 
       {/* Content area with sidebar */}
-      <div className="flex flex-1 overflow-hidden">
-        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 overflow-y-auto">
-          {children}
-        </main>
+      <div className="flex min-h-0 flex-1 overflow-hidden">
+        <main className="page min-w-0 flex-1 overflow-y-auto">{children}</main>
 
         {/* RelationshipSidebar -- desktop only */}
         <RelationshipSidebar

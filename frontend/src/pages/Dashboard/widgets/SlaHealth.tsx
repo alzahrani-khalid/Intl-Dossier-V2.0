@@ -60,9 +60,9 @@ export function SlaHealth(): ReactElement {
       <section
         role="region"
         aria-labelledby="sla-heading"
-        className="sla rounded-lg border border-line p-4"
+        className="sla card"
       >
-        <h3 id="sla-heading" className="text-sm font-medium text-ink mb-1 text-start">
+        <h3 id="sla-heading" className="card-title mb-1 text-start">
           {t('sla.title')}
         </h3>
         <p className="text-sm text-ink-soft">{t('error.load_failed')}</p>
@@ -92,9 +92,9 @@ export function SlaHealth(): ReactElement {
     <section
       role="region"
       aria-labelledby="sla-heading"
-      className="sla rounded-lg border border-line bg-surface-raised p-4"
+      className="sla card"
     >
-      <h3 id="sla-heading" className="text-sm font-medium text-ink mb-3 text-start">
+      <h3 id="sla-heading" className="card-title mb-3 text-start">
         {t('sla.title')}
       </h3>
       <div className="sla-body flex items-center gap-4">

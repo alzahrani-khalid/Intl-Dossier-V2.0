@@ -127,7 +127,7 @@ export function CollapsibleSection({
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="card overflow-hidden p-0">
       {/* Header - WCAG AA touch target: min 44x44px */}
       <button
         type="button"
@@ -139,17 +139,17 @@ export function CollapsibleSection({
         className={cn(
           'w-full min-h-11 px-4 py-3 sm:px-6 sm:py-4',
           'flex items-center justify-between gap-3',
-          'bg-card text-card-foreground',
-          'hover:bg-accent hover:text-accent-foreground',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+          'bg-[var(--surface)] text-[var(--ink)]',
+          'hover:bg-[var(--line-soft)]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]',
           'transition-colors duration-200',
           'text-start', // Logical property for RTL support
           headerClassName,
         )}
       >
         <div className="flex-1">
-          <h2 className="text-base sm:text-lg font-semibold">{title}</h2>
-          {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
+          <h2 className="card-title">{title}</h2>
+          {description && <p className="card-sub mt-1">{description}</p>}
         </div>
 
         {/* Chevron icon */}
@@ -180,8 +180,7 @@ export function CollapsibleSection({
           >
             <div
               className={cn(
-                'px-4 py-3 sm:px-6 sm:py-4 bg-background',
-                'border-t',
+                'border-t border-[var(--line)] bg-[var(--surface)] px-4 py-3 sm:px-6 sm:py-4',
                 contentClassName,
               )}
             >
@@ -192,10 +191,8 @@ export function CollapsibleSection({
                   aria-live="polite"
                   aria-busy="true"
                 >
-                  <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-muted-foreground" />
-                  <span className="ms-3 text-muted-foreground">
-                    {t('sections.collapsible.loading')}
-                  </span>
+                  <Loader2 className="h-6 w-6 animate-spin text-[var(--ink-mute)] sm:h-8 sm:w-8" />
+                  <span className="card-sub ms-3">{t('sections.collapsible.loading')}</span>
                 </div>
               )}
 
@@ -206,14 +203,14 @@ export function CollapsibleSection({
                   role="alert"
                   aria-live="assertive"
                 >
-                  <p className="text-destructive text-sm sm:text-base">{error}</p>
+                  <p className="text-sm text-[var(--danger)] sm:text-base">{error}</p>
                 </div>
               )}
 
               {/* Empty State */}
               {showEmptyState && !isLoading && !error && !children && (
                 <div className="flex items-center justify-center py-8 sm:py-12">
-                  <p className="text-muted-foreground text-sm sm:text-base">
+                  <p className="text-sm text-[var(--ink-mute)] sm:text-base">
                     {emptyMessage || t('sections.collapsible.empty')}
                   </p>
                 </div>

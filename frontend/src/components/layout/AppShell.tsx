@@ -65,11 +65,8 @@
  *     mounted across direction changes. `applyTokens()` in DesignProvider
  *     repaints CSS vars on `documentElement` without remounting React.
  *
- * Pitfall 5 mitigation (Classification chip rendering outside <main>):
- *   - `<div className="appshell-classif relative …">` provides the positioned
- *     parent that the chip variant needs. Chip uses `position: absolute` +
- *     `inset-inline-start: 0` which resolves against this parent in both
- *     directions.
+ * Classification chrome sits outside <main> so the topbar and ribbon/chip stay
+ * pinned while page content scrolls independently.
  */
 
 import {
@@ -175,7 +172,7 @@ export function AppShell({ children }: AppShellProps): ReactElement {
   return (
     <div
       className={cn(
-        'appshell relative min-h-screen w-full',
+        'app appshell relative min-h-screen w-full',
         'grid grid-rows-[auto_auto_1fr]',
         'lg:grid-cols-[16rem_1fr]',
         'bg-[var(--bg)] text-[var(--ink)]',
@@ -185,7 +182,7 @@ export function AppShell({ children }: AppShellProps): ReactElement {
       {/* Desktop sidebar column — hidden below lg breakpoint; drawer replaces it. */}
       <aside
         className={cn(
-          'appshell-aside',
+          'sidebar appshell-aside',
           'hidden lg:block',
           'lg:col-start-1 lg:row-span-full',
           'border-e border-[var(--line)]',
@@ -200,9 +197,7 @@ export function AppShell({ children }: AppShellProps): ReactElement {
         <Topbar onOpenDrawer={handleToggleDrawer} />
       </div>
 
-      {/* Classification chrome — row 2 of main column. `relative` provides the
-          positioned parent that the chip variant's absolute positioning needs
-          (Pitfall 5). */}
+      {/* Classification chrome — row 2 of main column. */}
       <div className="appshell-classif relative lg:col-start-2 lg:row-start-2">
         <ClassificationBar />
       </div>
@@ -212,6 +207,7 @@ export function AppShell({ children }: AppShellProps): ReactElement {
       <main
         className={cn(
           'appshell-main',
+          'main',
           'lg:col-start-2 lg:row-start-3',
           'overflow-y-auto',
           'bg-[var(--bg)]',
@@ -225,21 +221,24 @@ export function AppShell({ children }: AppShellProps): ReactElement {
           `classNames.wrapper` + `classNames.base`. Placement flips between
           'left' (LTR) and 'right' (RTL) via `document.dir` (Pitfall 1). */}
       <Drawer state={overlayState}>
-        <Drawer.Content
-          placement={isRTL ? 'right' : 'left'}
-          aria-label={t('shell.menu.open')}
-          className={cn('w-[280px] max-sm:w-screen lg:hidden')}
-        >
-          <Drawer.Body className="p-0">
-            <div
-              className="appshell-drawer-panel h-full w-full"
-              onClick={handlePanelClick}
-              role="presentation"
+        <Drawer.Backdrop>
+          <Drawer.Content placement={isRTL ? 'right' : 'left'}>
+            <Drawer.Dialog
+              aria-label={t('shell.menu.open')}
+              className={cn('w-[280px] max-sm:w-screen lg:hidden p-0')}
             >
-              <Sidebar />
-            </div>
-          </Drawer.Body>
-        </Drawer.Content>
+              <Drawer.Body className="p-0">
+                <div
+                  className="appshell-drawer-panel h-full w-full"
+                  onClick={handlePanelClick}
+                  role="presentation"
+                >
+                  <Sidebar />
+                </div>
+              </Drawer.Body>
+            </Drawer.Dialog>
+          </Drawer.Content>
+        </Drawer.Backdrop>
       </Drawer>
     </div>
   )

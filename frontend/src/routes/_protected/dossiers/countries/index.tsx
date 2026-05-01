@@ -74,7 +74,8 @@ export function CountriesListPage({
   onSearchChange,
   onRowClick,
 }: CountriesListPageProps): JSX.Element {
-  const { t } = useTranslation(['countries', 'list-pages'])
+  const { t, i18n } = useTranslation(['countries', 'list-pages'])
+  const isArabic = i18n.language.startsWith('ar')
   const query = useCountries({ page, limit: 20, search })
 
   const rows: DossierTableRow[] = useMemo(() => {
@@ -97,8 +98,10 @@ export function CountriesListPage({
 
   return (
     <ListPageShell
-      title={t('countries:title')}
-      subtitle={t('countries:subtitle')}
+      title={t('countries:title', { defaultValue: isArabic ? 'الدول' : 'Countries' })}
+      subtitle={t('countries:subtitle', {
+        defaultValue: isArabic ? 'كل ملفات الدول' : 'All country dossiers',
+      })}
       toolbar={
         <ToolbarSearch
           value={search ?? ''}
@@ -110,8 +113,18 @@ export function CountriesListPage({
       isEmpty={!query.isLoading && rows.length === 0}
       emptyState={
         <div className="empty-hint">
-          <p>{t('countries:empty.title')}</p>
-          <p className="sub">{t('countries:empty.description')}</p>
+          <p>
+            {t('countries:empty.title', {
+              defaultValue: isArabic ? 'لا توجد دول بعد' : 'No countries yet',
+            })}
+          </p>
+          <p className="sub">
+            {t('countries:empty.description', {
+              defaultValue: isArabic
+                ? 'ستظهر ملفات الدول هنا.'
+                : 'Country dossiers will appear here.',
+            })}
+          </p>
         </div>
       }
     >
@@ -119,4 +132,3 @@ export function CountriesListPage({
     </ListPageShell>
   )
 }
-

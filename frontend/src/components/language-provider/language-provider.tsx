@@ -19,26 +19,38 @@ interface LanguageProviderProps {
   initialLanguage?: SupportedLanguage
 }
 
+function isSupportedLanguage(value: unknown): value is SupportedLanguage {
+  return value === 'en' || value === 'ar'
+}
+
 export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageProviderProps) {
   const { i18n, t } = useTranslation()
   const [language, setLanguageState] = useState<SupportedLanguage>(initialLanguage)
   const [direction, setDirection] = useState<'ltr' | 'rtl'>('ltr')
 
-  // Load language preference from localStorage on mount
-  // Priority: user-preferences > ui-storage (Zustand) > i18nextLng > browser detection
+  // Load language preference from localStorage on mount.
+  // Priority: canonical design-system id.locale > user-preferences > ui-storage
+  // (Zustand) > i18nextLng > browser detection.
   useEffect(() => {
+    const designLocale = localStorage.getItem('id.locale')
+    if (isSupportedLanguage(designLocale)) {
+      setLanguageState(designLocale)
+      void i18n.changeLanguage(designLocale)
+      return
+    }
+
     // First check user-preferences (set by setLanguage)
     const userPrefs = localStorage.getItem('user-preferences')
     if (userPrefs) {
       try {
         const parsed = JSON.parse(userPrefs)
         const storedLang = parsed?.language
-        if (storedLang && (storedLang === 'en' || storedLang === 'ar')) {
+        if (isSupportedLanguage(storedLang)) {
           setLanguageState(storedLang)
           i18n.changeLanguage(storedLang)
           return
         }
-      } catch (e) {
+      } catch {
         // Silently ignore parse errors
       }
     }
@@ -49,20 +61,20 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
       try {
         const parsed = JSON.parse(uiStorage)
         const storedLang = parsed?.state?.language
-        if (storedLang && (storedLang === 'en' || storedLang === 'ar')) {
+        if (isSupportedLanguage(storedLang)) {
           setLanguageState(storedLang)
           i18n.changeLanguage(storedLang)
           return
         }
-      } catch (e) {
+      } catch {
         // Silently ignore parse errors
       }
     }
 
     // Fallback to i18nextLng (set by language detector)
     const i18nextLng = localStorage.getItem('i18nextLng')
-    if (i18nextLng && (i18nextLng === 'en' || i18nextLng === 'ar')) {
-      setLanguageState(i18nextLng as SupportedLanguage)
+    if (isSupportedLanguage(i18nextLng)) {
+      setLanguageState(i18nextLng)
       // Don't call changeLanguage - i18n already initialized with this value
       return
     }
@@ -85,7 +97,7 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
 
   const setLanguage = useCallback(
     async (newLanguage: SupportedLanguage) => {
-      if (newLanguage !== 'en' && newLanguage !== 'ar') {
+      if (!isSupportedLanguage(newLanguage)) {
         console.error(`Invalid language: ${newLanguage}`)
         return
       }
@@ -113,11 +125,12 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
         try {
           const existing = JSON.parse(stored)
           prefs = { ...existing, language: newLanguage, updatedAt: new Date().toISOString() }
-        } catch (e) {
+        } catch {
           // Use defaults
         }
       }
       localStorage.setItem('user-preferences', JSON.stringify(prefs))
+      localStorage.setItem('id.locale', newLanguage)
       localStorage.setItem('i18nextLng', newLanguage)
 
       // Dispatch custom event for cross-component sync
@@ -143,7 +156,7 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
       if (e.key === 'user-preferences' && e.newValue) {
         try {
           const prefs = JSON.parse(e.newValue)
-          if (prefs.language && (prefs.language === 'en' || prefs.language === 'ar')) {
+          if (isSupportedLanguage(prefs.language)) {
             setLanguageState(prefs.language)
             i18n.changeLanguage(prefs.language)
           }
@@ -153,19 +166,31 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
       }
     }
 
-    const handleLanguageChange = (e: CustomEvent) => {
-      if (e.detail?.language) {
-        setLanguageState(e.detail.language)
-        i18n.changeLanguage(e.detail.language)
+    const handleLanguageChange = (event: Event) => {
+      const { detail } = event as CustomEvent<{ language?: unknown }>
+      if (isSupportedLanguage(detail?.language)) {
+        setLanguageState(detail.language)
+        i18n.changeLanguage(detail.language)
+      }
+    }
+
+    const handleDesignChange = (event: Event) => {
+      const { detail } = event as CustomEvent<{ locale?: unknown }>
+      const locale = detail?.locale
+      if (isSupportedLanguage(locale)) {
+        setLanguageState(locale)
+        i18n.changeLanguage(locale)
       }
     }
 
     window.addEventListener('storage', handleStorageChange)
-    window.addEventListener('languageChange' as any, handleLanguageChange)
+    window.addEventListener('languageChange', handleLanguageChange)
+    window.addEventListener('designChange', handleDesignChange)
 
     return () => {
       window.removeEventListener('storage', handleStorageChange)
-      window.removeEventListener('languageChange' as any, handleLanguageChange)
+      window.removeEventListener('languageChange', handleLanguageChange)
+      window.removeEventListener('designChange', handleDesignChange)
     }
   }, [i18n])
 
@@ -173,7 +198,7 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
     language,
     direction,
     setLanguage,
-    t: t as any,
+    t: (key: string) => t(key),
   }
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>

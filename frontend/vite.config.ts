@@ -16,6 +16,8 @@ const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN
 const sentryRelease =
   process.env.SENTRY_RELEASE ||
   `intl-dossier-frontend@${process.env.npm_package_version || '1.0.0'}`
+const devPort = process.env.VITE_DEV_PORT ? Number(process.env.VITE_DEV_PORT) : 5173
+const backendProxyTarget = process.env.VITE_BACKEND_PROXY_TARGET || 'http://localhost:5000'
 
 // Only enable Sentry plugin in production build with proper config
 const isSentryEnabled = !!(
@@ -31,6 +33,7 @@ export default defineConfig({
       // Disable auto-generation in dev mode to prevent infinite loops
       autoCodeSplitting: true,
       generatedRouteTree: './src/routeTree.gen.ts',
+      routeFileIgnorePattern: '(__tests__|\\.test\\.)',
     }),
     tailwindcss(),
     react(),
@@ -68,7 +71,8 @@ export default defineConfig({
   },
   server: {
     host: true, // Expose on network (shows both localhost and network IP)
-    port: 5173,
+    port: devPort,
+    strictPort: false,
     watch: {
       ignored: [
         '**/node_modules/**',
@@ -85,26 +89,26 @@ export default defineConfig({
       usePolling: false,
     },
     proxy: {
-      // Express backend routes (port 5000)
+      // Express backend routes
       // Edge Functions use full VITE_SUPABASE_URL so don't need a proxy
       '/api': {
-        target: 'http://localhost:5000',
+        target: backendProxyTarget,
         changeOrigin: true,
       },
       '/ai': {
-        target: 'http://localhost:5000',
+        target: backendProxyTarget,
         changeOrigin: true,
       },
       '/analytics-dashboard': {
-        target: 'http://localhost:5000',
+        target: backendProxyTarget,
         changeOrigin: true,
       },
       '/organization-benchmarks': {
-        target: 'http://localhost:5000',
+        target: backendProxyTarget,
         changeOrigin: true,
       },
       '/notifications-center': {
-        target: 'http://localhost:5000',
+        target: backendProxyTarget,
         changeOrigin: true,
       },
     },

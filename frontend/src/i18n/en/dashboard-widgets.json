@@ -1,4 +1,18 @@
 {
+  "hero": {
+    "fallbackName": "there",
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "afternoon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}"
+    },
+    "subtitle": "Portfolio overview",
+    "classification": "GASTAT · Restricted · Transmitted over secure channels",
+    "actions": {
+      "newEngagement": "New engagement",
+      "newRequest": "New request"
+    }
+  },
   "kpi": {
     "activeEngagements": "Active Engagements",
     "openCommitments": "Open Commitments",

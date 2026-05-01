@@ -76,6 +76,12 @@ export const buildTokens = ({ direction, mode, hue, density }: BuildInput): Toke
     '--pad-inline': den.padInline,
     '--pad-block': den.padBlock,
     '--gap': den.gap,
+    // Handoff parity (themes.jsx emits a single `--pad`). Phase 33 D-04 split it
+    // into inline/block; we restore the alias here so verbatim handoff CSS rules
+    // (`var(--pad)` in `.page`, `.page-head`, `.kpi`, `.card`) work outside the
+    // `.dash-root` local scope. Aliased to `padInline` because the handoff value
+    // matches our inline dimension (20/14/10 for comfortable/compact/dense).
+    '--pad': den.padInline,
 
     // Shape (per-direction radius triplet from palette)
     '--radius-sm': palette.radius.sm,

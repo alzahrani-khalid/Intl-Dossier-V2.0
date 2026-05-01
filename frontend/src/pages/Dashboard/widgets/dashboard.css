@@ -27,11 +27,10 @@
  */
 
 .dash-root {
-  /* Widget-scoped fallbacks — only apply if Phase 33 hasn't defined globally. */
-  --pad: var(--dash-pad, 16px);
-  --gap: var(--dash-gap, 16px);
-  --radius: var(--dash-radius, 6px);
-  --radius-sm: var(--dash-radius-sm, 3px);
+  /* Phase 41 design-handoff alignment: dropped --pad/--gap/--radius/--radius-sm
+     overrides. The global Phase 33/41 tokens (driven by direction + density)
+     now provide the correct values: bureau=12/8 radii, comfortable=20/16 pad/gap.
+     Only soft-semantic colors remain here — they aren't in the global system. */
   --ink-soft: var(--ink-mute);
   --danger-soft: color-mix(in srgb, var(--danger) 12%, var(--surface));
   --warn-soft: color-mix(in srgb, var(--warn) 14%, var(--surface));
@@ -47,6 +46,18 @@
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: var(--pad);
+}
+.dash-root .card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--gap);
+}
+.dash-root .card-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 .dash-root .card-sub {
   font-size: 12px;
@@ -203,8 +214,122 @@
   .dash-grid {
     grid-template-columns: 1fr;
   }
+  .dash-root,
+  .dash-grid,
+  .dash-col,
+  .dash-root .card {
+    min-width: 0;
+    max-width: 100%;
+  }
   .kpi-strip {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .kpi {
+    padding: 14px;
+    gap: 4px;
+  }
+  .kpi-value {
+    font-size: 28px;
+  }
+  .dir-chancery .kpi-value {
+    font-size: 34px;
+  }
+  .week-row {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'date' 'body' 'right';
+    gap: 8px;
+    padding: 12px;
+  }
+  .week-date {
+    grid-area: date;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    border-inline-end: 0;
+    padding-inline-end: 0;
+    border-bottom: 1px solid var(--line-soft);
+    padding-bottom: 6px;
+    text-align: start;
+  }
+  .week-dd {
+    font-size: 18px;
+  }
+  .dir-chancery .week-dd {
+    font-size: 20px;
+  }
+  .week-body {
+    grid-area: body;
+  }
+  .week-right {
+    grid-area: right;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .overdue-item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: 'sev title days' 'sev owner owner';
+    row-gap: 2px;
+  }
+  .overdue-sev {
+    grid-area: sev;
+  }
+  .overdue-days {
+    grid-area: days;
+  }
+  .overdue-owner {
+    grid-area: owner;
+    min-width: 0;
+    text-align: start;
+  }
+  .vip-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'cd info' 'cd when';
+    row-gap: 2px;
+  }
+  .vip-countdown {
+    grid-area: cd;
+    align-self: center;
+  }
+  .vip-row > div:nth-child(2) {
+    grid-area: info;
+  }
+  .vip-when {
+    grid-area: when;
+    text-align: start;
+    font-size: 10.5px;
+  }
+  .forum-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'short name' 'short meta';
+    row-gap: 2px;
+  }
+  .forum-short {
+    grid-area: short;
+    align-self: start;
+  }
+  .forum-row > div:nth-child(2) {
+    grid-area: name;
+  }
+  .forum-row > div:nth-child(3) {
+    grid-area: meta;
+    text-align: start;
+  }
+  .recent-row {
+    grid-template-columns: 24px minmax(0, 1fr);
+    grid-template-areas: 'flag name' 'flag when';
+    row-gap: 1px;
+  }
+  .recent-flag {
+    grid-area: flag;
+    font-size: 16px;
+  }
+  .recent-row > div {
+    grid-area: name;
+  }
+  .recent-when {
+    grid-area: when;
+    text-align: start;
   }
 }
 @media (min-width: 768px) and (max-width: 1279px) {
@@ -680,4 +805,268 @@
   place-items: center;
   z-index: 2;
   border-radius: inherit;
+}
+
+/* ----- Phase 41: Dashboard greeting hero (handoff dashboard.jsx page-head) -----
+   Markup uses canonical .page-head/.page-title/.page-sub/.btn from
+   styles/list-pages.css. Only the action group needs a tiny rule for the
+   inline flex spacing — the handoff used inline style={{display:'flex', gap:8}}. */
+.dash-hero-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ----- Phase 41: .dir-bureau KPI + page-head overrides (handoff app.css 575-655) -----
+   Bureau is the design's default direction. Without these the KPI strip renders
+   as a single bordered grid (Phase 33 default) instead of the design's gapped
+   white cards on the warm canvas. */
+.dir-bureau .kpi-strip {
+  background: transparent;
+  border: 0;
+  gap: 12px;
+  border-radius: 0;
+}
+.dir-bureau .kpi {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.04);
+}
+.dir-bureau .kpi-value {
+  font-weight: 600;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+}
+.dir-bureau .kpi-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+}
+.dir-bureau .page-head::after {
+  display: none;
+}
+.dir-bureau .page-head {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* ----- Phase 41: .dir-bureau widget primitives (handoff app.css 565-625) -----
+   Chip pill restyle, label restyle, list/row container reset, avatar tint,
+   kanban-card shadow. These are the small details that turn the page from
+   "tokens applied" into "looks like the design". */
+.dir-bureau .chip {
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+  padding: 3px 8px;
+}
+.dir-bureau .label {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+.dir-bureau .tbl th {
+  font-family: var(--font-body);
+  text-transform: none;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: normal;
+  color: var(--ink-mute);
+}
+.dir-bureau .week-list {
+  border-radius: 10px;
+}
+.dir-bureau .week-row,
+.dir-bureau .vip-row,
+.dir-bureau .task-row,
+.dir-bureau .forum-row,
+.dir-bureau .recent-row {
+  border-radius: 0;
+}
+.dir-bureau .week-title {
+  font-weight: 500;
+  font-size: 14px;
+}
+.dir-bureau .avatar {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.dir-bureau .kcard {
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.04);
+}
+
+/* ----- Phase 41: bureau tabs / drawer / classification (handoff app.css 590-660) -----
+   .tabs / .tab — page-level tabs (e.g. dossier detail). Bureau uses an
+   orange-underline-active treatment instead of the situation/chancery filled.
+   .drawer + .drawer-title — DossierDrawer component surface.
+   .cls-ribbon — bureau renders a more restrained ribbon (lighter weight, less
+   tracking, slightly tinted accent). */
+.dir-bureau .tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 20px;
+}
+.dir-bureau .tab {
+  padding: 10px 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-mute);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.dir-bureau .tab:hover {
+  color: var(--ink);
+}
+.dir-bureau .tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+.dir-bureau .drawer {
+  background: var(--surface);
+  border-inline-start: 1px solid var(--line);
+}
+.dir-bureau .drawer-title {
+  font-weight: 600;
+  font-size: 24px;
+}
+.dir-bureau .cls-ribbon {
+  background: color-mix(in srgb, var(--accent) 92%, black);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  font-size: 10.5px;
+}
+
+/* Final phone overrides: declared after direction-specific rules so the
+   handoff mobile row contracts are not overwritten by base widget styles. */
+@media (max-width: 767px) {
+  .dash-root,
+  .dash-grid,
+  .dash-col,
+  .dash-root .card {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .week-row {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'date' 'body' 'right';
+    gap: 8px;
+    padding: 12px;
+  }
+  .week-date {
+    grid-area: date;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+    width: 100%;
+    border-inline-end: 0;
+    padding-inline-end: 0;
+    border-bottom: 1px solid var(--line-soft);
+    padding-bottom: 6px;
+    text-align: start;
+  }
+  .week-dd {
+    font-size: 18px;
+  }
+  .dir-chancery .week-dd {
+    font-size: 20px;
+  }
+  .week-body {
+    grid-area: body;
+  }
+  .week-right {
+    grid-area: right;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .overdue-item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: 'sev title days' 'sev owner owner';
+    row-gap: 2px;
+  }
+  .overdue-sev {
+    grid-area: sev;
+  }
+  .overdue-item > :nth-child(2) {
+    grid-area: title;
+    min-width: 0;
+  }
+  .overdue-days {
+    grid-area: days;
+  }
+  .overdue-owner {
+    grid-area: owner;
+    min-width: 0;
+    text-align: start;
+  }
+  .vip-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'cd info' 'cd when';
+    row-gap: 2px;
+  }
+  .vip-countdown {
+    grid-area: cd;
+    align-self: center;
+  }
+  .vip-row > div:nth-child(2) {
+    grid-area: info;
+    min-width: 0;
+  }
+  .vip-when {
+    grid-area: when;
+    text-align: start;
+    font-size: 10.5px;
+  }
+  .forum-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'short name' 'short meta';
+    row-gap: 2px;
+  }
+  .forum-short {
+    grid-area: short;
+    align-self: start;
+  }
+  .forum-row > div:nth-child(2) {
+    grid-area: name;
+    min-width: 0;
+  }
+  .forum-row > div:nth-child(3) {
+    grid-area: meta;
+    text-align: start;
+  }
+  .recent-row {
+    grid-template-columns: 24px minmax(0, 1fr);
+    grid-template-areas: 'flag name' 'flag when';
+    row-gap: 1px;
+  }
+  .recent-flag {
+    grid-area: flag;
+    font-size: 16px;
+  }
+  .recent-row > div {
+    grid-area: name;
+    min-width: 0;
+  }
+  .recent-when {
+    grid-area: when;
+    text-align: start;
+  }
 }

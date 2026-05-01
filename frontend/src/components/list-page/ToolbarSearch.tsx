@@ -19,12 +19,15 @@ export function ToolbarSearch({
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
   const [local, setLocal] = useState(value)
+  const [lastSyncedValue, setLastSyncedValue] = useState(value)
   const debounced = useDebouncedValue(local, debounceMs)
 
   // Sync external -> internal when caller resets the value (e.g. clear).
-  useEffect(() => {
+  // Adjust state during render rather than in an effect to avoid a double-pass.
+  if (value !== lastSyncedValue) {
+    setLastSyncedValue(value)
     setLocal(value)
-  }, [value])
+  }
 
   // Push debounced changes back to parent.
   useEffect(() => {
@@ -40,7 +43,7 @@ export function ToolbarSearch({
       onChange={(e) => setLocal(e.target.value)}
       placeholder={placeholder ?? t('common.search', { defaultValue: 'Search' })}
       dir={isRTL ? 'rtl' : 'ltr'}
-      className="h-11 w-full min-w-0 rounded-[var(--radius-sm)] border bg-background px-3 text-start text-sm outline-none focus:ring-2 focus:ring-primary sm:h-10"
+      className="id-input h-11 w-full min-w-0 text-start sm:h-10"
       aria-label={placeholder ?? t('common.search', { defaultValue: 'Search' })}
     />
   )
