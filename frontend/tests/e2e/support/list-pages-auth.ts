@@ -39,12 +39,28 @@ export async function loginForListPages(
   })
 
   if (locale === 'ar') {
+    // Pre-seed localStorage so the i18n LanguageDetector picks up AR on the
+    // next load. The optimistic same-frame setAttribute is preserved as a
+    // belt-and-suspenders for any code that reads dir before reload.
     await page.evaluate(() => {
+      window.localStorage.setItem('i18nextLng', 'ar')
       document.documentElement.setAttribute('dir', 'rtl')
       document.documentElement.setAttribute('lang', 'ar')
-      window.localStorage.setItem('i18nextLng', 'ar')
     })
     await page.reload()
+
+    // G6 (Phase 41-08): the i18n languageChanged handler at
+    // frontend/src/i18n/index.ts:486-488 sets document.documentElement.dir
+    // = 'rtl' AFTER the languageChanged event fires (asynchronously, after
+    // React mount). Block until the live DOM matches the expected locale so
+    // downstream tests don't race the i18n bootstrap.
+    await page.waitForFunction(
+      () =>
+        document.documentElement.getAttribute('dir') === 'rtl' &&
+        document.documentElement.getAttribute('lang') === 'ar',
+      null,
+      { timeout: 10_000 },
+    )
   }
 
   // Pre-dismiss guided-tour overlays that can intercept clicks / break visual diffs.
