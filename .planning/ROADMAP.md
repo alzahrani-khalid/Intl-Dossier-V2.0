@@ -233,7 +233,7 @@ Summary checklist:
 3. User sees a `Digest` widget with tag + headline + source + animated refresh button (shows `<GlobeSpinner>` overlay during refresh), a `SlaHealth` widget combining Donut + legend + 14-day Sparkline, and a `VipVisits` widget with T−N countdown + name + role + when
 4. User sees `MyTasks` (checkbox + glyph + title + due chip per row), `RecentDossiers`, and `ForumsStrip` (4 of 8 forums with monogram short-code chips), all rendering correctly in RTL with logical padding/margins and mirrored chevrons
 5. All 8 widgets hydrate from existing domain hooks (`useDashboardStats`, `useDashboardTrends`, `useWeekAhead`/equivalent, `usePersonalCommitments`, `useMyTasks`, `useRecentDossiers`, `useForums`, etc.) with zero mock data, and the dashboard lays out correctly at 320 / 768 / 1280 px breakpoints
-   **Plans**: 7 plans
+   **Plans**: 11 plans (7 original + 4 gap closure)
    - [x] 41-01-PLAN.md — Wave 0 infra: useDossierDrawer hook + validateSearch on \_protected.tsx + dossier-drawer i18n namespace (28 keys EN+AR) + relativeTime utility + Radix Sheet shell + section stubs + DrawerSkeleton + AppShell mount + Playwright fixture + size-limit entry (DRAWER-01)
    - [x] 41-02-PLAN.md — Wave 1 head: DrawerHead (chips + close ✕) + DrawerMetaStrip (location · lead · engagements · last touched) + DrawerCtaRow (Log engagement wired / Brief + Follow stubs / Open full dossier ghost link) (DRAWER-02)
    - [x] 41-03-PLAN.md — Wave 1 body 1: MiniKpiStrip (4 cells per D-04 mapping) + SummarySection (italic-serif paragraph + bilingual fallback) (DRAWER-02)
@@ -241,6 +241,10 @@ Summary checklist:
    - [x] 41-05-PLAN.md — Wave 1 body 3: OpenCommitmentsSection (overdue-item rows + severity dots + days countdown + owner initials + click → /commitments?id=<id>) (DRAWER-02)
    - [x] 41-06-PLAN.md — Wave 1 trigger wiring: RecentDossiers / OverdueCommitments / ForumsStrip onClick swaps + UnifiedCalendar onEventClick branch on event.dossier_id + MyTasks deferred (DRAWER-01)
    - [x] 41-07-PLAN.md — Wave 2 gates: 10 Playwright E2E (D-13) + 2 visual baselines @ 1280×800 LTR+AR + axe-core zero violations EN+AR + size-limit verify + human checkpoint smoke + 41-VERIFICATION.md (DRAWER-01..03)
+   - [ ] 41-08-PLAN.md — Gap closure Wave 0: G2 calendar data-dossier-id + G5 mobile box-shadow specificity + G6 RTL test helper waitForFunction + G7 fixture UUID swap to b0000001-0000-0000-0000-000000000004 (DRAWER-01, DRAWER-03)
+   - [ ] 41-09-PLAN.md — Gap closure Wave 0: G3 + G4 axe contrast — darken light-mode --sla-bad token to oklch(46% 0.18 25) at all 4 byte-synced sites (DRAWER-03)
+   - [ ] 41-10-PLAN.md — Gap closure Wave 0: G1 RecentDossiers regression — checkpoint:decision (re-mount vs skip+defer) (DRAWER-01)
+   - [ ] 41-11-PLAN.md — Gap closure Wave 1: smoke re-run + 41-VERIFICATION.md verdict update to PASS / PASS-WITH-DEVIATION (DRAWER-01..03)
          **UI hint**: yes
 
 ### Phase 39: kanban-calendar
