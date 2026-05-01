@@ -100,7 +100,7 @@ Summary checklist:
 - [x] **Phase 38: dashboard-verbatim** — 8 dashboard widgets rebuilt pixel-exact to `reference/dashboard.png`, all wired to existing domain hooks (completed 2026-04-25, 10/10 plans, 75/75 tests, 9/9 DASH VERIFIED, PASS-WITH-DEVIATION)
 - [ ] **Phase 39: kanban-calendar** — Reskinned horizontal-scroll Kanban (kcards, overdue border, done opacity) + 7×5 calendar grid with event pills
 - [ ] **Phase 40: list-pages** — Countries / Organizations / Persons / Forums / Topics / Working Groups / Engagements lists with shared `GenericListPage` and filter pills
-- [ ] **Phase 41: dossier-drawer** — 720px dossier drawer (mini-KPI strip, serif summary, Upcoming/Activity/Commitments) with RTL flip + mobile full-screen
+- [x] **Phase 41: dossier-drawer** — 720px dossier drawer (mini-KPI strip, serif summary, Upcoming/Activity/Commitments) with RTL flip + mobile full-screen (completed 2026-05-01)
 - [ ] **Phase 42: remaining-pages** — Briefs / After-actions / Tasks / Activity / Settings pages reskinned per handoff
 - [ ] **Phase 43: rtl-a11y-responsive-sweep** — RTL audit, axe-core WCAG AA, responsive 320→1536 sweep, directional-icon documentation, CI gates
 
@@ -240,7 +240,7 @@ Summary checklist:
    - [x] 41-04-PLAN.md — Wave 1 body 2: UpcomingSection (top-2 calendar_events.upcoming) + RecentActivitySection (top-4 activity_timeline.recent_activities — correct field names per Pitfall 3) (DRAWER-02)
    - [x] 41-05-PLAN.md — Wave 1 body 3: OpenCommitmentsSection (overdue-item rows + severity dots + days countdown + owner initials + click → /commitments?id=<id>) (DRAWER-02)
    - [x] 41-06-PLAN.md — Wave 1 trigger wiring: RecentDossiers / OverdueCommitments / ForumsStrip onClick swaps + UnifiedCalendar onEventClick branch on event.dossier_id + MyTasks deferred (DRAWER-01)
-   - [ ] 41-07-PLAN.md — Wave 2 gates: 10 Playwright E2E (D-13) + 2 visual baselines @ 1280×800 LTR+AR + axe-core zero violations EN+AR + size-limit verify + human checkpoint smoke + 41-VERIFICATION.md (DRAWER-01..03)
+   - [x] 41-07-PLAN.md — Wave 2 gates: 10 Playwright E2E (D-13) + 2 visual baselines @ 1280×800 LTR+AR + axe-core zero violations EN+AR + size-limit verify + human checkpoint smoke + 41-VERIFICATION.md (DRAWER-01..03)
          **UI hint**: yes
 
 ### Phase 39: kanban-calendar
@@ -394,7 +394,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 38. Dashboard Verbatim            | v6.0      | 0/?            | Not started | —          |
 | 39. Kanban + Calendar             | v6.0      | 0/?            | Not started | —          |
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
-| 41. Dossier Drawer                | v6.0      | 6/7            | In Progress |            |
+| 41. Dossier Drawer                | v6.0      | 7/7            | Complete    | 2026-05-01 |
 | 42. Remaining Pages               | v6.0      | 0/?            | Not started | —          |
 | 43. RTL / A11y / Responsive Sweep | v6.0      | 0/?            | Not started | —          |
 
