@@ -90,7 +90,11 @@
   --sla-ok-soft:   oklch(94% 0.05 32);
   --sla-risk:      oklch(60% 0.13 87);
   --sla-risk-soft: oklch(95% 0.05 87);
-  --sla-bad:       oklch(54% 0.20 25);
+  /* Plan 41-09: darkened to 46%/0.18 for WCAG AA — see frontend/src/index.css
+     line 158 comment for byte-sync rationale. The handoff README treats this
+     file as the design-system source of truth; this divergence is intentional
+     and recorded in .planning/phases/41-dossier-drawer/41-09-SUMMARY.md. */
+  --sla-bad:       oklch(46% 0.18 25);
   --sla-bad-soft:  oklch(95% 0.05 25);
 
   /* ───────── Density (Comfortable) ─────────

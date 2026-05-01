@@ -68,7 +68,10 @@ export const buildTokens = ({ direction, mode, hue, density }: BuildInput): Toke
     '--sla-ok-soft': isDark ? `oklch(28% 0.08 ${h})` : `oklch(94% 0.05 ${h})`,
     '--sla-risk': `oklch(${isDark ? 74 : 60}% 0.13 ${hRisk})`,
     '--sla-risk-soft': isDark ? `oklch(26% 0.08 ${hRisk})` : `oklch(95% 0.05 ${hRisk})`,
-    '--sla-bad': isDark ? 'oklch(68% 0.18 25)' : 'oklch(54% 0.2 25)',
+    // Plan 41-09 (G3/G4): light branch darkened to 46%/0.18 for WCAG AA
+    // (see frontend/src/index.css line 158 comment for full rationale).
+    // Dark branch unchanged.
+    '--sla-bad': isDark ? 'oklch(68% 0.18 25)' : 'oklch(46% 0.18 25)',
     '--sla-bad-soft': isDark ? 'oklch(27% 0.09 25)' : 'oklch(95% 0.05 25)',
 
     // Density (row heights + logical-property paddings + gap)
