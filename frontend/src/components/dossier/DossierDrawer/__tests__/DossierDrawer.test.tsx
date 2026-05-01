@@ -110,4 +110,56 @@ describe('DossierDrawer (Wave 0 shell)', () => {
     expect(screen.getAllByTestId('skeleton-activity-item')).toHaveLength(4)
     expect(screen.getAllByTestId('skeleton-commitments-item')).toHaveLength(2)
   })
+
+  it('applies inline style box-shadow:none when (max-width: 768px) matches (G5 mobile fix)', () => {
+    // Simulate mobile viewport via matchMedia mock — useSyncExternalStore reads
+    // the live MediaQueryList on each render.
+    const originalMatchMedia = window.matchMedia
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query === '(max-width: 768px)',
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })) as unknown as typeof window.matchMedia
+
+    try {
+      searchValue = { dossier: 'test-id', dossierType: 'country' }
+      render(<DossierDrawer />)
+      const drawer = document.querySelector('.drawer') as HTMLElement | null
+      expect(drawer).not.toBeNull()
+      expect(drawer!.style.boxShadow).toBe('none')
+    } finally {
+      window.matchMedia = originalMatchMedia
+    }
+  })
+
+  it('does NOT apply inline box-shadow when viewport is desktop (>768px)', () => {
+    const originalMatchMedia = window.matchMedia
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: false, // desktop — no media query matches
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })) as unknown as typeof window.matchMedia
+
+    try {
+      searchValue = { dossier: 'test-id', dossierType: 'country' }
+      render(<DossierDrawer />)
+      const drawer = document.querySelector('.drawer') as HTMLElement | null
+      expect(drawer).not.toBeNull()
+      // When boxShadow style is undefined, React omits the property — so it
+      // stays empty-string in the inline style declaration.
+      expect(drawer!.style.boxShadow).toBe('')
+    } finally {
+      window.matchMedia = originalMatchMedia
+    }
+  })
 })
