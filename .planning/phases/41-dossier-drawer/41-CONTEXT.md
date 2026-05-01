@@ -69,6 +69,7 @@ Ship a 720px slide-in dossier **quick-look drawer** that opens any dossier as an
   - `overdue` → `stats.overdue_work_items`
   - `documents` → `stats.documents_count`
   - All four labels are bilingual i18n keys under the new `dossier-drawer.json` namespace.
+- **D-04 Amendment (2026-05-02 / per RESEARCH §2):** commitments KPI canonical path is `work_items.by_source.commitments.length`. The original `items.filter(it => it.source === 'commitment').length` produces the same result (the `by_source` map is the pre-grouped form of `items.filter`) — RESEARCH §2 confirms `by_source` is the supported, indexed access path. **Plan 41-03 uses the `by_source` path** for cache locality and to avoid re-filtering already-grouped data. Decision history preserved; no semantic change to D-04 outputs.
 
 ### Area 4: CTAs + click targets
 
