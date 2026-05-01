@@ -107,7 +107,9 @@
   --sla-ok-soft:   oklch(94% 0.05 32);
   --sla-risk:      oklch(60% 0.13 87);
   --sla-risk-soft: oklch(95% 0.05 87);
-  --sla-bad:       oklch(54% 0.20 25);
+  /* Plan 41-09: light-mode --sla-bad darkened to 46%/0.18 for WCAG AA.
+     --sla-bad-soft unchanged. Dark-mode override at line ~202 unchanged. */
+  --sla-bad:       oklch(46% 0.18 25);
   --sla-bad-soft:  oklch(95% 0.05 25);
 
   /* Density — Comfortable */
