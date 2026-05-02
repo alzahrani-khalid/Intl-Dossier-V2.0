@@ -208,6 +208,13 @@ import enPersonWizard from './en/person-wizard.json'
 import arPersonWizard from './ar/person-wizard.json'
 import enElectedOfficialWizard from './en/elected-official-wizard.json'
 import arElectedOfficialWizard from './ar/elected-official-wizard.json'
+// Phase 42 Wave 0: page-scoped namespaces for Briefs / After-actions / Tasks reskins
+import enBriefsPage from './en/briefs-page.json'
+import arBriefsPage from './ar/briefs-page.json'
+import enAfterActionsPage from './en/after-actions-page.json'
+import arAfterActionsPage from './ar/after-actions-page.json'
+import enTasksPage from './en/tasks-page.json'
+import arTasksPage from './ar/tasks-page.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -318,6 +325,10 @@ const resources = {
     'working-group-wizard': enWorkingGroupWizard,
     'person-wizard': enPersonWizard,
     'elected-official-wizard': enElectedOfficialWizard,
+    // Phase 42 Wave 0: page-scoped namespaces
+    'briefs-page': enBriefsPage,
+    'after-actions-page': enAfterActionsPage,
+    'tasks-page': enTasksPage,
   },
   ar: {
     translation: arCommon,
@@ -424,6 +435,10 @@ const resources = {
     'working-group-wizard': arWorkingGroupWizard,
     'person-wizard': arPersonWizard,
     'elected-official-wizard': arElectedOfficialWizard,
+    // Phase 42 Wave 0: page-scoped namespaces
+    'briefs-page': arBriefsPage,
+    'after-actions-page': arAfterActionsPage,
+    'tasks-page': arTasksPage,
   },
 }
 

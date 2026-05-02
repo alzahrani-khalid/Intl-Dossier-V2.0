@@ -21,6 +21,22 @@
     "security": "Security"
   },
 
+  "nav": {
+    "profile": "Profile",
+    "general": "General",
+    "appearance": "Appearance",
+    "notifications": "Notifications",
+    "accessAndSecurity": "Access & Security",
+    "accessibility": "Accessibility",
+    "dataPrivacy": "Data & Privacy",
+    "emailDigest": "Email Digest",
+    "integrations": "Integrations"
+  },
+
+  "errors": {
+    "save": "Could not save changes. Review the highlighted fields and try again."
+  },
+
   "profile": {
     "title": "Profile Settings",
     "description": "Manage your personal information and profile picture",
@@ -91,7 +107,30 @@
     "comfortable": "Comfortable",
     "comfortableDesc": "Balanced spacing",
     "spacious": "Spacious",
-    "spaciousDesc": "More breathing room"
+    "spaciousDesc": "More breathing room",
+    "direction": {
+      "label": "Design direction",
+      "help": "Choose the visual character.",
+      "bureau": "Bureau",
+      "chancery": "Chancery",
+      "situation": "Situation Room",
+      "ministerial": "Ministerial"
+    },
+    "mode": {
+      "label": "Mode",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "hue": {
+      "label": "Accent hue",
+      "help": "0–360°"
+    },
+    "density": {
+      "label": "Density",
+      "comfortable": "Comfortable",
+      "compact": "Compact",
+      "dense": "Dense"
+    }
   },
 
   "notifications": {

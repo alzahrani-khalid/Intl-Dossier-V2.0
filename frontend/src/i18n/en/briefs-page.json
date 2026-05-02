@@ -1,0 +1,25 @@
+{
+  "title": "Briefs",
+  "subtitle": "Captured intelligence summaries and AI-generated briefs.",
+  "cta": {
+    "newBrief": "New brief"
+  },
+  "card": {
+    "pages": "{{count}} pp",
+    "byAuthor": "By {{name}}",
+    "approxLengthHint": "Approximate length"
+  },
+  "status": {
+    "ready": "Ready",
+    "awaiting": "Awaiting",
+    "review": "Review",
+    "draft": "Draft"
+  },
+  "empty": {
+    "heading": "No briefs yet"
+  },
+  "error": {
+    "list": "Could not load briefs. Try refreshing the page.",
+    "generation": "Brief generation failed. Try again or contact support."
+  }
+}
