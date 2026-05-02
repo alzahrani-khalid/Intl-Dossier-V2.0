@@ -12,24 +12,46 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
-    );
-
-    if (req.method !== 'GET') {
+    if (req.method !== 'GET' && req.method !== 'POST') {
       return new Response(
         JSON.stringify({ error: 'Method not allowed' }),
         { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Parse query parameters
-    const url = new URL(req.url);
-    const status = url.searchParams.get('status') ?? 'published';
-    const limit = parseInt(url.searchParams.get('limit') || '20');
-    const offset = parseInt(url.searchParams.get('offset') || '0');
+    // CR-02: guard missing Authorization header → return clean 401 instead
+    // of forwarding the literal string "null" into the Supabase client.
+    const authHeader = req.headers.get('Authorization');
+    if (authHeader === null) {
+      return new Response(
+        JSON.stringify({ error: 'unauthorized', message: 'Missing Authorization header' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    // CR-01: accept either GET (query string) or POST (JSON body) so the
+    // function reachable both via direct HTTP and via supabase.functions.invoke,
+    // which always issues a POST when `body` is provided.
+    let status = 'published';
+    let limit = 20;
+    let offset = 0;
+    if (req.method === 'POST') {
+      const body = await req.json().catch(() => ({}));
+      status = typeof body.status === 'string' ? body.status : status;
+      limit = typeof body.limit === 'number' ? body.limit : limit;
+      offset = typeof body.offset === 'number' ? body.offset : offset;
+    } else {
+      const url = new URL(req.url);
+      status = url.searchParams.get('status') ?? status;
+      limit = parseInt(url.searchParams.get('limit') ?? String(limit));
+      offset = parseInt(url.searchParams.get('offset') ?? String(offset));
+    }
 
     // Validate status filter (T-42-01-S-1 mitigation)
     if (status && !['draft', 'published', 'edit_requested', 'edit_approved'].includes(status)) {
@@ -97,8 +119,10 @@ serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
+    // WR-09: catch binding is `unknown` in Deno; narrow before reading .message.
+    const message = error instanceof Error ? error.message : String(error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
