@@ -78,6 +78,15 @@ type AiBriefRow = {
 
 const APPROX_CHARS_PER_PAGE = 2200
 
+// WR-11: single source of truth for the AI-briefs API base. `??` only
+// catches null/undefined, so an empty-string `VITE_API_URL` would fall
+// through and route calls to the local origin. Trim + falsy-coalesce
+// catches '', '   ', null, and undefined.
+const AI_BRIEFS_API_BASE: string =
+  (import.meta.env.VITE_API_URL?.trim() ?? '') !== ''
+    ? (import.meta.env.VITE_API_URL as string).trim()
+    : '/api'
+
 function formatDayFirst(date: string | null | undefined): string {
   if (date == null || date === '') return '—'
   const d = new Date(date)
@@ -222,8 +231,7 @@ export function BriefsPage(): React.JSX.Element {
           data: { session },
         } = await supabase.auth.getSession()
         if (session?.access_token == null) return
-        const API_BASE = import.meta.env.VITE_API_URL ?? '/api'
-        const response = await fetch(`${API_BASE}/ai/briefs/${brief.id}`, {
+        const response = await fetch(`${AI_BRIEFS_API_BASE}/ai/briefs/${brief.id}`, {
           headers: { Authorization: `Bearer ${session.access_token}` },
         })
         if (response.ok) {
@@ -474,8 +482,7 @@ export function BriefsPage(): React.JSX.Element {
                     data: { session },
                   } = await supabase.auth.getSession()
                   if (session?.access_token == null) return
-                  const API_BASE = import.meta.env.VITE_API_URL ?? '/api'
-                  const response = await fetch(`${API_BASE}/ai/briefs/${briefId}`, {
+                  const response = await fetch(`${AI_BRIEFS_API_BASE}/ai/briefs/${briefId}`, {
                     headers: { Authorization: `Bearer ${session.access_token}` },
                   })
                   if (response.ok) {
