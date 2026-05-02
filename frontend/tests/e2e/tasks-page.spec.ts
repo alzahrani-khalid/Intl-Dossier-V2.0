@@ -21,11 +21,16 @@ test.describe('Phase 42 — Tasks page', () => {
   })
 
   test('done-toggle flips visual state without nav', async ({ page }) => {
+    // CR-04: 42-11 removed the opacity-0.45 done state because every child
+    // failed WCAG colour contrast. Done rows now use line-through +
+    // var(--ink-mute) and keep full opacity. Assert the WCAG-compliant
+    // post-42-11 behaviour: aria-checked flips and the URL doesn't change.
     await gotoPhase42Page(page, PHASE_42_ROUTES.tasks)
     const initialUrl = page.url()
-    await page.locator('button.task-box').first().click()
+    const checkbox = page.locator('button.task-box').first()
+    await checkbox.click()
     expect(page.url()).toBe(initialUrl)
-    await expect(page.locator('li.task-row').first()).toHaveCSS('opacity', /0\.4[0-9]+/)
+    await expect(checkbox).toHaveAttribute('aria-checked', 'true')
   })
 
   test('tabs swap between Assigned and Contributed', async ({ page }) => {
