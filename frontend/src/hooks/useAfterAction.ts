@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import type { UseQueryResult } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 
 // Types based on API spec
@@ -120,6 +121,25 @@ export interface AfterActionRecord {
   [key: string]: unknown
 }
 
+/**
+ * AfterActionRecord enriched with engagement + dossier joins returned by the
+ * `after-actions-list-all` Edge Function (Phase 42-01). The cross-dossier table
+ * needs Engagement title + Dossier name without an extra round-trip.
+ */
+export interface AfterActionRecordWithJoins extends AfterActionRecord {
+  engagement?: {
+    id: string
+    title_en: string
+    title_ar: string
+    engagement_date: string
+  }
+  dossier?: {
+    id: string
+    name_en: string
+    name_ar: string
+  }
+}
+
 export interface CreateAfterActionRequest {
   engagement_id: string
   is_confidential: boolean
@@ -199,6 +219,29 @@ function useAfterActions(
       return data as { data: AfterActionRecord[]; total: number }
     },
     enabled: !!dossierId,
+  })
+}
+
+// Fetch after-actions list across every dossier the caller can read via RLS.
+// Backed by the `after-actions-list-all` Edge Function (Phase 42-01). Cache key
+// `['after-actions', 'all', options]` is intentionally distinct from the
+// per-dossier `['after-actions', dossierId, options]` so invalidations don't
+// collide.
+export function useAfterActionsAll(options?: {
+  status?: 'draft' | 'published' | 'edit_requested' | 'edit_approved'
+  limit?: number
+  offset?: number
+}): UseQueryResult<{ data: AfterActionRecordWithJoins[]; total: number }, Error> {
+  return useQuery({
+    queryKey: ['after-actions', 'all', options],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke('after-actions-list-all', {
+        body: { ...options },
+      })
+
+      if (error) throw error
+      return data as { data: AfterActionRecordWithJoins[]; total: number }
+    },
   })
 }
 

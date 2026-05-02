@@ -132,8 +132,11 @@ describe('useAfterActionsAll — Plan 42-01', () => {
       data: { data: [], total: 0 },
       error: null,
     } as never)
+    // Use a non-zero staleTime so a second observer with the same cache key
+    // re-uses the cached result instead of refetching. This isolates the
+    // de-dup behavior to the cache-key contract.
     const sharedClient = new QueryClient({
-      defaultOptions: { queries: { retry: false, gcTime: 0 } },
+      defaultOptions: { queries: { retry: false, staleTime: Infinity } },
     })
     const sharedWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       React.createElement(QueryClientProvider, { client: sharedClient }, children)
