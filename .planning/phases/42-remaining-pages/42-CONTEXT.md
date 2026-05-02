@@ -328,7 +328,26 @@ _None — no pending todos surfaced from `cross_reference_todos`._
 
 </deferred>
 
+<resolutions>
+## Research Resolutions (2026-05-02 — supersede affected decisions)
+
+These resolutions were captured after `42-RESEARCH.md` surfaced 2 blockers and 4 open questions. Any plan must honor these over the conflicting wording above.
+
+- **R-01 (supersedes implicit assumption "Phase 37 `<Icon/>` set ships"):** **Wave 0 ships a minimal `<Icon name="..."/>` component** at `frontend/src/components/signature-visuals/Icon.tsx` (verbatim port of the ~14 handoff glyphs needed by the 5 pages from `frontend/design-system/inteldossier_handoff_design/src/icons.jsx`). Adds `Icon` to the signature-visuals barrel. All 5 pages render `<Icon name="..."/>` (no `lucide-react` for these glyphs).
+  - Required glyphs: `plus`, `check`, `link`, `file`, `alert`, `chat`, `dot`, `chevron-right`, `chevron-down`, `cog`, `palette`, `bell`, `shield`, `lock`, `accessibility`, `user`. Planner trims to actual usage; minimum is the 14 named in `42-RESEARCH.md` §Blocker 1.
+
+- **R-02 (supersedes D-09 "7 sections"):** **Settings vertical nav ships all 9 shipped sections**: Profile / General / Appearance / Notifications / Access & Security / Accessibility / Data & Privacy / **Email Digest** / **Integrations**. Avoids orphaning `BotIntegrationsSettings` and the `email-digest` UI. Mobile pill-strip handles 9 entries fine. The "rename `Security → Access & Security`" sub-decision in D-09 still applies.
+
+- **R-03 (extends D-11 "Phase 33/34 design controls into Appearance"):** **Density triad rename `spacious → dense`** (token + persisted localStorage key + types) ships with the Appearance section. DesignProvider includes a one-time migration shim that maps any existing `spacious` localStorage values to `dense` on first read. Visible labels: `Comfortable / Compact / Dense`.
+
+- **R-04 (locks D-03 "Date" column):** **After-actions Date column = `engagement.engagement_date`** (not `created_at` and not `published_at`). The new `after-actions-list-all` Edge Function joins `engagements!inner` and selects `engagement_date`. Wave 0 plan verifies the column exists on `engagements` (per dashboard precedent it does); fallback only if absent.
+
+- **R-05 (Activity row-click — non-blocking, planner discretion):** Activity rows MAY navigate to `metadata.navigation_url` when present (existing `ActivityItem` shape carries it); when absent, rows are non-interactive (cursor: default). Planner specifies the conditional in `42-PLAN-04.md`.
+
+</resolutions>
+
 ---
 
 _Phase: 42-remaining-pages_
 _Context gathered: 2026-05-02_
+_Research resolutions applied: 2026-05-02_
