@@ -1,329 +1,306 @@
 /**
- * MyTasks Page
- * Feature: 025-unified-tasks-model
- * User Story: US1 - View My Tasks with Clear Titles
- * User Story: US2 - Track Team Collaboration
- * Task: T035, T049
+ * Phase 42 Plan 07 — MyTasks ("My desk") page reskin.
  *
- * Renamed from MyAssignments, fetches from unified tasks table with title display
- * Includes "Contributed" filter option to view tasks user contributed to
+ * Implements the IntelDossier handoff `.tasks-list` anatomy from
+ * `frontend/design-system/inteldossier_handoff_design/src/pages.jsx`:
+ *
+ *   <ul class="tasks-list">
+ *     <li class="task-row">
+ *       [.task-box checkbox 14×14 visual / 44×44 hit area]
+ *       [<DossierGlyph size={18}/>]
+ *       [.task-title  (title + dossier · type subtitle)]
+ *       [.chip priority]
+ *       [.task-due    mono]
+ *     </li>
+ *   </ul>
+ *
+ * Preserves (D-15):
+ *   - Assigned / Contributed tabs (real shipped collaboration feature)
+ *   - Done-toggle via existing `useUpdateTask` optimistic mutation
+ *   - Whole-row click navigates to /tasks/$id
+ *
+ * Strips:
+ *   - Floating useWorkCreation action button → CTA moved to PageHeader action slot
+ *   - Inline summary stat blocks (Card/CardHeader)
+ *   - Filter / AlertCircle / CheckCircle2 / UserCheck / Users lucide chrome
+ *
+ * Critical constraints:
+ *   - Pitfall 8 — checkbox MUST stopPropagation so the row click doesn't navigate
+ *   - Pitfall 3 — priority chip mapping handles DB-only `critical` / `normal`
+ *     defensively in case future migrations widen the enum
+ *   - 44×44 hit area on the checkbox button (visual is 14×14, kept by an inner
+ *     span since the CSS `.task-box` sets a fixed width/height of 14px)
+ *   - dir="ltr" on .task-due keeps mono dates LTR inside RTL containers (TYPO-04)
+ *   - Logical properties only — `ms-*`, `text-start`
+ *
+ * Deviation log (Rule 3 — blocking issue):
+ *   - Plan body assumed `task.dossier` was embedded on each row. The DB row
+ *     (`tasks` table, see backend/src/types/database.types.ts:25334) ships
+ *     no embedded dossier and no `title_ar`. We derive a glyph hint from
+ *     `work_item_type === 'dossier'` + `work_item_id` lowercased (matches
+ *     the existing dashboard widget — Phase 38 Plan 07). Subtitle composes
+ *     from `work_item_type` + `task.type`.
+ *   - Plan body called `useUpdateTask().mutate({ id, updates })`. Real hook
+ *     signature is `mutate({ taskId, data })` — adopted verbatim.
+ *   - Plan body proposed a `default export`. The existing route at
+ *     routes/_protected/tasks/index.tsx imports `{ MyTasksPage }`, so we
+ *     keep the named export AND add a default export to satisfy the plan
+ *     spec without breaking the route registration.
  */
 
-import React, { useState } from 'react'
+import { useState, type CSSProperties, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { useMyTasks, useContributedTasks } from '../hooks/useTasks'
-import { TaskCard } from '../components/tasks/TaskCard'
-import { Alert, AlertDescription } from '../components/ui/alert'
+
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Icon, DossierGlyph } from '@/components/signature-visuals'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { Button } from '../components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../components/ui/select'
-import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs'
-import { AlertCircle, CheckCircle2, Filter, Plus, UserCheck, Users } from 'lucide-react'
-import { useWorkCreation } from '../components/work-creation'
+import { useMyTasks, useContributedTasks, useUpdateTask } from '@/hooks/useTasks'
+import { useWorkCreation } from '@/components/work-creation'
+import { toArDigits } from '@/lib/i18n/toArDigits'
+import { cn } from '@/lib/utils'
 import type { Database } from '../../../backend/src/types/database.types'
-import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 type ViewType = 'assigned' | 'contributed'
 
-export function MyTasksPage() {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
+// ---- Helpers ----
+
+function priorityChipClass(priority: string | null | undefined): string {
+  if (priority === 'urgent' || priority === 'high' || priority === 'critical') {
+    return 'chip chip-danger'
+  }
+  if (priority === 'medium' || priority === 'normal') {
+    return 'chip chip-warn'
+  }
+  return 'chip' // low / unknown
+}
+
+function isToday(deadline: string | null | undefined): boolean {
+  if (deadline === null || deadline === undefined || deadline === '') {
+    return false
+  }
+  const d = new Date(deadline)
+  if (Number.isNaN(d.getTime())) {
+    return false
+  }
+  const now = new Date()
+  return d.toDateString() === now.toDateString()
+}
+
+function formatDueDate(deadline: string | null | undefined): string {
+  if (deadline === null || deadline === undefined || deadline === '') {
+    return '—'
+  }
+  const d = new Date(deadline)
+  if (Number.isNaN(d.getTime())) {
+    return '—'
+  }
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+}
+
+function dossierIsoHint(task: Task): string | undefined {
+  if (task.work_item_type === 'dossier' && typeof task.work_item_id === 'string') {
+    return task.work_item_id.toLowerCase()
+  }
+  return undefined
+}
+
+// ---- Page ----
+
+export function MyTasksPage(): ReactElement {
+  const { t, i18n } = useTranslation('tasks-page')
+  const locale = i18n.language === 'ar' ? 'ar' : 'en'
+  const isRTL = locale === 'ar'
   const navigate = useNavigate()
-
   const { openPalette } = useWorkCreation()
-  const [viewType, setViewType] = useState<ViewType>('assigned')
-  const [statusFilter, setStatusFilter] = useState<string>('active')
-  const [priorityFilter, setPriorityFilter] = useState<string>('all')
 
-  // Fetch tasks based on view type (US2 - T049)
-  const { data: assignedTasks, isLoading: isLoadingAssigned, error: assignedError } = useMyTasks()
-  const {
-    data: contributedTasks,
-    isLoading: isLoadingContributed,
-    error: contributedError,
-  } = useContributedTasks()
+  const [view, setView] = useState<ViewType>('assigned')
+  const assigned = useMyTasks()
+  const contributed = useContributedTasks()
+  const active = view === 'assigned' ? assigned : contributed
+  const tasks = (active.data?.tasks ?? []) as Task[]
 
-  // Determine which data to use based on view type
-  // TasksListResponse has { tasks: Task[], total_count, page, page_size }
-  const tasks = viewType === 'assigned' ? assignedTasks?.tasks : contributedTasks?.tasks
-  const isLoading = viewType === 'assigned' ? isLoadingAssigned : isLoadingContributed
-  const error = viewType === 'assigned' ? assignedError : contributedError
+  const updateTask = useUpdateTask()
 
-  const handleTaskClick = (task: Task) => {
-    navigate({ to: `/tasks/${task.id}` })
+  const toggleDone = (task: Task): void => {
+    const nextStatus: Task['status'] = task.status === 'completed' ? 'pending' : 'completed'
+    updateTask.mutate({ taskId: task.id, data: { status: nextStatus } })
   }
 
-  // Filter tasks based on selected filters
-  const filteredTasks = React.useMemo(() => {
-    if (!tasks) return []
+  const goToTask = (taskId: string): void => {
+    void navigate({ to: '/tasks/$id', params: { id: taskId } })
+  }
 
-    let filtered = tasks
-
-    // Status filter (T080: Added "breached_sla" filter option)
-    if (statusFilter === 'active') {
-      filtered = filtered.filter((t) => !['completed', 'cancelled'].includes(t.status))
-    } else if (statusFilter === 'breached_sla') {
-      // T080: Breached SLA filter - tasks where sla_deadline < now() AND status != 'completed'
-      const now = Date.now()
-      filtered = filtered.filter((t) => {
-        if (!t.sla_deadline || ['completed', 'cancelled'].includes(t.status)) return false
-        return new Date(t.sla_deadline).getTime() < now
-      })
-    } else if (statusFilter !== 'all') {
-      filtered = filtered.filter((t) => t.status === statusFilter)
-    }
-
-    // Priority filter
-    if (priorityFilter !== 'all') {
-      filtered = filtered.filter((t) => t.priority === priorityFilter)
-    }
-
-    return filtered
-  }, [tasks, statusFilter, priorityFilter])
-
-  // Calculate summary stats
-  const summary = React.useMemo(() => {
-    if (!tasks) return { active: 0, atRisk: 0, breached: 0 }
-
-    const now = Date.now()
-    const activeTasks = tasks.filter((t) => !['completed', 'cancelled'].includes(t.status))
-
-    const atRisk = activeTasks.filter((t) => {
-      if (!t.sla_deadline) return false
-      const deadline = new Date(t.sla_deadline).getTime()
-      const created = new Date(t.created_at).getTime()
-      const total = deadline - created
-      const remaining = deadline - now
-      return remaining > 0 && remaining / total < 0.25 // < 25% time remaining
-    }).length
-
-    const breached = activeTasks.filter((t) => {
-      if (!t.sla_deadline) return false
-      return new Date(t.sla_deadline).getTime() < now
-    }).length
-
-    return {
-      active: activeTasks.length,
-      atRisk,
-      breached,
-    }
-  }, [tasks])
-
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <Alert variant="destructive">
-          <AlertCircle className="size-4" />
-          <AlertDescription>
-            {error.message || t('failed_to_load_tasks', 'Failed to load tasks. Please try again.')}
-          </AlertDescription>
-        </Alert>
-      </div>
-    )
+  // Visual override for the .task-box CSS (which sets a fixed 14×14). We need
+  // a 44×44 hit-area; the 14×14 visual lives in an inner <span>.
+  const checkboxHitAreaStyle: CSSProperties = {
+    width: 44,
+    height: 44,
+    minWidth: 44,
+    minHeight: 44,
+    border: 'none',
+    background: 'transparent',
+    padding: 0,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    flexShrink: 0,
   }
 
   return (
-    <div className="space-y-6">
+    <section
+      role="region"
+      aria-label={t('title')}
+      dir={isRTL ? 'rtl' : 'ltr'}
+      data-loading={active.isLoading ? 'true' : 'false'}
+      className="page flex min-w-0 flex-col gap-[var(--gap)]"
+    >
       <PageHeader
-        icon={<CheckCircle2 className="h-6 w-6" />}
-        title={t('my_tasks', 'My Tasks')}
-        subtitle={t('my_tasks_description', 'View and manage tasks assigned to you')}
+        title={t('title')}
+        subtitle={t('subtitle')}
         actions={
-          <Button onClick={() => openPalette('task')} className="min-h-11 w-full sm:w-auto">
-            <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('create_task', 'Create Task')}
-          </Button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            style={{ minHeight: 44, minWidth: 44 }}
+            onClick={(): void => openPalette('task')}
+          >
+            <Icon name="plus" size={14} aria-hidden />
+            <span className="ms-2">{t('cta.newTask')}</span>
+          </button>
         }
       />
 
-      {/* View Type Tabs (US2 - T049) */}
-      <Tabs
-        value={viewType}
-        onValueChange={(value) => setViewType(value as ViewType)}
-        className="w-full"
-      >
-        <TabsList className="mx-auto grid w-full max-w-md grid-cols-2 sm:mx-0">
-          <TabsTrigger value="assigned" className="flex items-center gap-2">
-            <UserCheck className="size-4" />
-            {t('assigned_to_me', 'Assigned to Me')}
-          </TabsTrigger>
-          <TabsTrigger value="contributed" className="flex items-center gap-2">
-            <Users className="size-4" />
-            {t('contributed', 'Tasks I Contributed To')}
-          </TabsTrigger>
+      <Tabs value={view} onValueChange={(v): void => setView(v as ViewType)}>
+        <TabsList>
+          <TabsTrigger value="assigned">{t('tabs.assigned')}</TabsTrigger>
+          <TabsTrigger value="contributed">{t('tabs.contributed')}</TabsTrigger>
         </TabsList>
       </Tabs>
 
-      {/* Summary Stats - Mobile-first grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle
-              className={`text-sm font-medium text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}
-            >
-              {t('total_active', 'Total Active')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold sm:text-3xl ${isRTL ? 'text-end' : 'text-start'}`}>
-              {isLoading ? '...' : summary.active}
-            </div>
-          </CardContent>
-        </Card>
+      {active.error !== null && active.error !== undefined && (
+        <div className="card" role="alert">
+          <Icon name="alert" size={16} style={{ color: 'var(--danger)' }} aria-hidden />
+          <span className="ms-2">{t('error.list')}</span>
+        </div>
+      )}
 
-        <Card className="border-yellow-200 dark:border-yellow-800">
-          <CardHeader className="pb-3">
-            <CardTitle
-              className={`text-sm font-medium text-yellow-700 dark:text-yellow-300 ${isRTL ? 'text-end' : 'text-start'}`}
-            >
-              {t('at_risk', 'At Risk (< 25% SLA)')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      {active.isLoading && (
+        <div className="card" data-testid="tasks-skeleton">
+          {Array.from({ length: 10 }).map((_, i) => (
             <div
-              className={`text-2xl font-bold text-yellow-700 dark:text-yellow-300 sm:text-3xl ${isRTL ? 'text-end' : 'text-start'}`}
-            >
-              {isLoading ? '...' : summary.atRisk}
-            </div>
-          </CardContent>
-        </Card>
+              key={i}
+              className="mb-2 h-[var(--row-h)] w-full animate-pulse rounded-[var(--radius-sm)] bg-[var(--line-soft)]"
+            />
+          ))}
+        </div>
+      )}
 
-        <Card className="border-red-200 dark:border-red-800 sm:col-span-2 lg:col-span-1">
-          <CardHeader className="pb-3">
-            <CardTitle
-              className={`text-sm font-medium text-red-700 dark:text-red-300 ${isRTL ? 'text-end' : 'text-start'}`}
-            >
-              {t('sla_breached', 'SLA Breached')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div
-              className={`text-2xl font-bold text-red-700 dark:text-red-300 sm:text-3xl ${isRTL ? 'text-end' : 'text-start'}`}
-            >
-              {isLoading ? '...' : summary.breached}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {!active.isLoading && tasks.length === 0 && (
+        <div className="text-center py-12 text-[var(--ink-mute)]">
+          <h2 className="text-lg" style={{ fontFamily: 'var(--font-display)' }}>
+            {t('empty.heading')}
+          </h2>
+        </div>
+      )}
 
-      {/* Filters - Mobile-first: stacked on mobile, row on desktop */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Filter className="size-5" />
-            <CardTitle>{t('filters', 'Filters')}</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-4 sm:flex-row">
-            {/* Status Filter */}
-            <div className="flex-1">
-              <label
-                className={`mb-2 block text-sm font-medium ${isRTL ? 'text-end' : 'text-start'}`}
-              >
-                {t('status', 'Status')}
-              </label>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder={t('select_status', 'Select status')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('all', 'All')}</SelectItem>
-                  <SelectItem value="active">{t('active', 'Active')}</SelectItem>
-                  <SelectItem value="breached_sla">
-                    <span className="flex items-center gap-2">
-                      <AlertCircle className="size-4 text-red-500" />
-                      {t('breached_sla', 'Breached SLA')}
-                    </span>
-                  </SelectItem>
-                  <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
-                  <SelectItem value="in_progress">{t('in_progress', 'In Progress')}</SelectItem>
-                  <SelectItem value="review">{t('review', 'Review')}</SelectItem>
-                  <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
-                  <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+      {!active.isLoading && tasks.length > 0 && (
+        <div className="card">
+          <ul className="tasks-list">
+            {tasks.map((task) => {
+              const isDone = task.status === 'completed'
+              const iso = dossierIsoHint(task)
+              const subtitleParts: string[] = []
+              if (typeof task.work_item_type === 'string' && task.work_item_type !== '') {
+                subtitleParts.push(task.work_item_type)
+              }
+              if (typeof task.type === 'string') {
+                subtitleParts.push(task.type)
+              }
+              const subtitle = subtitleParts.length > 0 ? subtitleParts.join(' · ') : '—'
 
-            {/* Priority Filter */}
-            <div className="flex-1">
-              <label
-                className={`mb-2 block text-sm font-medium ${isRTL ? 'text-end' : 'text-start'}`}
-              >
-                {t('priority', 'Priority')}
-              </label>
-              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder={t('select_priority', 'Select priority')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('all', 'All')}</SelectItem>
-                  <SelectItem value="urgent">{t('urgent', 'Urgent')}</SelectItem>
-                  <SelectItem value="high">{t('high', 'High')}</SelectItem>
-                  <SelectItem value="medium">{t('medium', 'Medium')}</SelectItem>
-                  <SelectItem value="low">{t('low', 'Low')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+              const rowStyle: CSSProperties | undefined = isDone
+                ? { opacity: 0.45, textDecoration: 'line-through' }
+                : undefined
 
-            {/* Reset Filters */}
-            <div className="flex items-end">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setStatusFilter('active')
-                  setPriorityFilter('all')
-                }}
-                className="w-full sm:w-auto"
-              >
-                {t('reset', 'Reset')}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              return (
+                <li
+                  key={task.id}
+                  data-task-id={task.id}
+                  className={cn('task-row', isDone && 'is-done')}
+                  style={rowStyle}
+                  role="button"
+                  tabIndex={0}
+                  onClick={(): void => goToTask(task.id)}
+                  onKeyDown={(e): void => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      goToTask(task.id)
+                    }
+                  }}
+                >
+                  <button
+                    type="button"
+                    role="checkbox"
+                    aria-checked={isDone}
+                    aria-label={
+                      isDone
+                        ? t('priority.markNotDone', { defaultValue: 'Mark not done' })
+                        : t('priority.markDone', { defaultValue: 'Mark done' })
+                    }
+                    className={cn('task-box', isDone && 'done')}
+                    style={checkboxHitAreaStyle}
+                    onClick={(e): void => {
+                      e.stopPropagation()
+                      toggleDone(task)
+                    }}
+                    onKeyDown={(e): void => {
+                      e.stopPropagation()
+                    }}
+                  >
+                    {isDone && (
+                      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
+                        <path d="M3 7l3 3 5-6" stroke="white" strokeWidth="2" fill="none" />
+                      </svg>
+                    )}
+                  </button>
 
-      {/* Tasks List */}
-      <div className="space-y-4">
-        <h2 className={`text-lg font-semibold sm:text-xl ${isRTL ? 'text-end' : 'text-start'}`}>
-          {t('tasks', 'Tasks')} ({filteredTasks.length})
-        </h2>
+                  <DossierGlyph
+                    type="country"
+                    iso={iso}
+                    name={task.title}
+                    size={18}
+                  />
 
-        {isLoading ? (
-          <Card>
-            <CardContent className="p-6 text-center text-muted-foreground">
-              {t('loading_tasks', 'Loading tasks...')}
-            </CardContent>
-          </Card>
-        ) : filteredTasks.length > 0 ? (
-          <div className="space-y-4">
-            {filteredTasks.map((task) => (
-              <TaskCard key={task.id} task={task} onClick={handleTaskClick} showWorkItem={true} />
-            ))}
-          </div>
-        ) : (
-          <Card>
-            <CardContent className="p-6 text-center text-muted-foreground">
-              <CheckCircle2 className="mx-auto mb-2 size-12 text-green-500" />
-              <p>{t('no_tasks', 'No tasks found')}</p>
-              <p className="mt-1 text-sm">
-                {statusFilter !== 'all' || priorityFilter !== 'all'
-                  ? t('try_adjusting_filters', 'Try adjusting your filters')
-                  : t('no_tasks_assigned', 'You have no tasks assigned')}
-              </p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    </div>
+                  <div className="task-title">
+                    <div>{task.title}</div>
+                    <small style={{ color: 'var(--ink-mute)' }}>{subtitle}</small>
+                  </div>
+
+                  <span className={priorityChipClass(task.priority)}>
+                    {t(`priority.${task.priority}`)}
+                  </span>
+
+                  <span
+                    className={cn(
+                      'task-due',
+                      isToday(task.sla_deadline) && 'today',
+                      (task.priority === 'high' || task.priority === 'urgent') && 'high',
+                    )}
+                    dir="ltr"
+                  >
+                    {toArDigits(formatDueDate(task.sla_deadline), locale)}
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      )}
+    </section>
   )
 }
+
+export default MyTasksPage
