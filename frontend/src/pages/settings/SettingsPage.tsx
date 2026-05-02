@@ -46,7 +46,10 @@ const settingsSchema = z.object({
   // Appearance
   color_mode: z.enum(['light', 'dark', 'system']),
   theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau']),
-  display_density: z.enum(['compact', 'comfortable', 'spacious']),
+  // WR-07: 42-03 R-03 renamed the third density value from 'spacious' to 'dense'.
+  // The DesignProvider migration shim only reads localStorage, so persisting
+  // 'spacious' to the DB would survive the migration forever.
+  display_density: z.enum(['compact', 'comfortable', 'dense']),
 
   // Notifications
   notifications_push: z.boolean(),

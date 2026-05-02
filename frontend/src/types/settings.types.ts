@@ -31,9 +31,12 @@ export type ColorMode = 'light' | 'dark' | 'system'
 export type ThemeName = Direction
 
 /**
- * Display density options
+ * Display density options.
+ *
+ * WR-07: 42-03 R-03 renamed the third value from 'spacious' to 'dense'.
+ * The DesignProvider migrates legacy localStorage values on read.
  */
-export type DisplayDensity = 'compact' | 'comfortable' | 'spacious'
+export type DisplayDensity = 'compact' | 'comfortable' | 'dense'
 
 /**
  * Focus indicator style options
@@ -82,7 +85,7 @@ type GeneralSettings = z.infer<typeof generalSettingsSchema>
 export const appearanceSettingsSchema = z.object({
   color_mode: z.enum(['light', 'dark', 'system']),
   theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau']),
-  display_density: z.enum(['compact', 'comfortable', 'spacious']),
+  display_density: z.enum(['compact', 'comfortable', 'dense']),
 })
 
 type AppearanceSettings = z.infer<typeof appearanceSettingsSchema>
