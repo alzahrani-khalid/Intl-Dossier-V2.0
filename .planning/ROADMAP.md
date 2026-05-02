@@ -329,11 +329,11 @@ Summary checklist:
 4. User sees the Settings page as a two-column layout (240px vertical nav with active accent bar + content card with edit-row list); at ≤768px the nav collapses above the card and the accent bar flips to an accent underline
 5. All 5 pages render correctly in both locales with logical properties only and ≥44×44px touch targets on every interactive row
    **Plans**: 12 plans
-   - [ ] 42-00-PLAN.md — Wave 0: <Icon/> primitive + signature-visuals barrel (R-01; supersedes Phase 37 Icon assumption) (PAGE-01..05)
-   - [ ] 42-01-PLAN.md — Wave 0: after-actions-list-all Edge Function + useAfterActionsAll hook + RLS pass-through (D-01..D-04 + R-04) (PAGE-02)
-   - [ ] 42-02-PLAN.md — Wave 0: i18n namespaces (briefs-page / after-actions-page / tasks-page NEW; activity-feed + settings EXTEND) + EN/AR parity drift-guard (D-14) (PAGE-01..05)
-   - [ ] 42-03-PLAN.md — Wave 0: handoff CSS port (.tasks-list / .act-list / .settings-nav / .card-head + mobile pill-row @ ≤768px) + density triad rename spacious→dense + migration shim (R-03) (PAGE-03..05)
-   - [ ] 42-04-PLAN.md — Wave 0: Playwright fixtures (phase-42-fixtures.ts) + 13 spec scaffolds (5 visual + 5 functional + axe + touch-targets) all test.skip (PAGE-01..05)
+   - [x] 42-00-PLAN.md — Wave 0: <Icon/> primitive + signature-visuals barrel (R-01; supersedes Phase 37 Icon assumption) (PAGE-01..05)
+   - [x] 42-01-PLAN.md — Wave 0: after-actions-list-all Edge Function + useAfterActionsAll hook + RLS pass-through (D-01..D-04 + R-04) (PAGE-02)
+   - [x] 42-02-PLAN.md — Wave 0: i18n namespaces (briefs-page / after-actions-page / tasks-page NEW; activity-feed + settings EXTEND) + EN/AR parity drift-guard (D-14) (PAGE-01..05)
+   - [x] 42-03-PLAN.md — Wave 0: handoff CSS port (.tasks-list / .act-list / .settings-nav / .card-head + mobile pill-row @ ≤768px) + density triad rename spacious→dense + migration shim (R-03) (PAGE-03..05)
+   - [x] 42-04-PLAN.md — Wave 0: Playwright fixtures (phase-42-fixtures.ts) + 13 spec scaffolds (5 visual + 5 functional + axe + touch-targets) all test.skip (PAGE-01..05)
    - [ ] 42-05-PLAN.md — Wave 1: Briefs page reskin — handoff card grid + status chip + page count + serif title + author/due (preserves dual-table fetch + BriefViewer/Generator dialogs) (PAGE-01)
    - [ ] 42-06-PLAN.md — Wave 1: After-actions page reskin — .tbl 6-column anatomy + chevron icon-flip RTL (PAGE-02)
    - [ ] 42-07-PLAN.md — Wave 1: Tasks page reskin — .tasks-list anatomy with checkbox + DossierGlyph + priority chip + .task-due (D-15) (PAGE-03)
@@ -401,7 +401,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 39. Kanban + Calendar             | v6.0      | 0/?            | Not started | —          |
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
 | 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
-| 42. Remaining Pages               | v6.0      | 0/?            | Not started | —          |
+| 42. Remaining Pages               | v6.0      | 5/12           | In Progress |            |
 | 43. RTL / A11y / Responsive Sweep | v6.0      | 0/?            | Not started | —          |
 
 <!-- gsd:progress:end -->
