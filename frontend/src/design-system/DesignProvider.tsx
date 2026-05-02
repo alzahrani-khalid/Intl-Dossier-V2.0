@@ -81,6 +81,24 @@ const safeSetItem = (key: string, value: string): void => {
 }
 
 // ----------------------------------------------------------------------------
+// Plan 42-03 R-03: density triad rename migration.
+// Legacy `id.density='spacious'` values written by Phase 33-era builds are
+// one-time rewritten to `'dense'` on first read so users keep their preference
+// across the rename. Idempotent: subsequent reads see `'dense'` (or any other
+// valid value) and skip the rewrite. The function returns the (possibly
+// migrated) Density value, or null when the stored value is missing/invalid
+// — callers fall back to the prop default in that case.
+// ----------------------------------------------------------------------------
+function readDensityWithMigration(): Density | null {
+  const raw = safeGetItem(LS_DENSITY)
+  if (raw === 'spacious') {
+    safeSetItem(LS_DENSITY, 'dense')
+    return 'dense'
+  }
+  return isDensity(raw) ? raw : null
+}
+
+// ----------------------------------------------------------------------------
 // Test-only hatch exposed on `window.__design` when running under Vite DEV or
 // test mode. Consumed by the Plan 33-09 Playwright SC suite. Do NOT import this
 // type outside test code.
@@ -153,8 +171,8 @@ export function DesignProvider({
   })
 
   const [density, setDensityState] = useState<Density>(() => {
-    const stored = safeGetItem(LS_DENSITY)
-    return isDensity(stored) ? stored : initialDensity
+    const migrated = readDensityWithMigration()
+    return migrated ?? initialDensity
   })
 
   const [classif, setClassifState] = useState<boolean>(() => {
