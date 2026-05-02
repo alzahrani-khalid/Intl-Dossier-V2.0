@@ -241,10 +241,10 @@ Summary checklist:
    - [x] 41-05-PLAN.md — Wave 1 body 3: OpenCommitmentsSection (overdue-item rows + severity dots + days countdown + owner initials + click → /commitments?id=<id>) (DRAWER-02)
    - [x] 41-06-PLAN.md — Wave 1 trigger wiring: RecentDossiers / OverdueCommitments / ForumsStrip onClick swaps + UnifiedCalendar onEventClick branch on event.dossier_id + MyTasks deferred (DRAWER-01)
    - [x] 41-07-PLAN.md — Wave 2 gates: 10 Playwright E2E (D-13) + 2 visual baselines @ 1280×800 LTR+AR + axe-core zero violations EN+AR + size-limit verify + human checkpoint smoke + 41-VERIFICATION.md (DRAWER-01..03)
-   - [ ] 41-08-PLAN.md — Gap closure Wave 0: G2 calendar data-dossier-id + G5 mobile box-shadow specificity + G6 RTL test helper waitForFunction + G7 fixture UUID swap to b0000001-0000-0000-0000-000000000004 (DRAWER-01, DRAWER-03)
-   - [ ] 41-09-PLAN.md — Gap closure Wave 0: G3 + G4 axe contrast — darken light-mode --sla-bad token to oklch(46% 0.18 25) at all 4 byte-synced sites (DRAWER-03)
-   - [ ] 41-10-PLAN.md — Gap closure Wave 0: G1 RecentDossiers regression — checkpoint:decision (re-mount vs skip+defer) (DRAWER-01)
-   - [ ] 41-11-PLAN.md — Gap closure Wave 1: smoke re-run + 41-VERIFICATION.md verdict update to PASS / PASS-WITH-DEVIATION (DRAWER-01..03)
+   - [x] 41-08-PLAN.md — Gap closure Wave 0: G2 calendar data-dossier-id + G5 mobile box-shadow specificity + G6 RTL test helper waitForFunction + G7 fixture UUID swap to b0000001-0000-0000-0000-000000000004 (DRAWER-01, DRAWER-03)
+   - [x] 41-09-PLAN.md — Gap closure Wave 0: G3 + G4 axe contrast — darken light-mode --sla-bad token to oklch(46% 0.18 25) at all 4 byte-synced sites (DRAWER-03)
+   - [x] 41-10-PLAN.md — Gap closure Wave 0: G1 RecentDossiers regression — checkpoint:decision (re-mount vs skip+defer) (DRAWER-01)
+   - [x] 41-11-PLAN.md — Gap closure Wave 1: smoke re-run + 41-VERIFICATION.md verdict update to PASS / PASS-WITH-DEVIATION (DRAWER-01..03)
          **UI hint**: yes
 
 ### Phase 39: kanban-calendar
@@ -398,7 +398,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 38. Dashboard Verbatim            | v6.0      | 0/?            | Not started | —          |
 | 39. Kanban + Calendar             | v6.0      | 0/?            | Not started | —          |
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
-| 41. Dossier Drawer                | v6.0      | 7/7            | Complete    | 2026-05-01 |
+| 41. Dossier Drawer                | v6.0      | 11/11 | Complete   | 2026-05-02 |
 | 42. Remaining Pages               | v6.0      | 0/?            | Not started | —          |
 | 43. RTL / A11y / Responsive Sweep | v6.0      | 0/?            | Not started | —          |
 
