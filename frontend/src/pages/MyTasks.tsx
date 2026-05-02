@@ -52,7 +52,7 @@ import { useState, type CSSProperties, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Icon, DossierGlyph } from '@/components/signature-visuals'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { useMyTasks, useContributedTasks, useUpdateTask } from '@/hooks/useTasks'
@@ -178,6 +178,12 @@ export function MyTasksPage(): ReactElement {
           <TabsTrigger value="assigned">{t('tabs.assigned')}</TabsTrigger>
           <TabsTrigger value="contributed">{t('tabs.contributed')}</TabsTrigger>
         </TabsList>
+        {/* Empty panels exist solely so each TabsTrigger's aria-controls
+            resolves to a real DOM element. Without them axe-core flags
+            aria-valid-attr-value (critical) on the active trigger. The
+            actual task list renders below this <Tabs> block. */}
+        <TabsContent value="assigned" />
+        <TabsContent value="contributed" />
       </Tabs>
 
       {active.error !== null && active.error !== undefined && (
@@ -221,8 +227,14 @@ export function MyTasksPage(): ReactElement {
               }
               const subtitle = subtitleParts.length > 0 ? subtitleParts.join(' · ') : '—'
 
+              // Done rows: line-through + muted color (NOT opacity).
+                  // opacity: 0.45 washed every child into <3:1 contrast — five
+                  // axe-core color-contrast failures (chip-danger, task-due,
+                  // task-title, subtitle, checkbox glyph). Using --ink-mute
+                  // (6.0:1 on white) keeps all child elements at WCAG AA while
+                  // still visually de-emphasising completed tasks.
               const rowStyle: CSSProperties | undefined = isDone
-                ? { opacity: 0.45, textDecoration: 'line-through' }
+                ? { color: 'var(--ink-mute)', textDecoration: 'line-through' }
                 : undefined
 
               return (

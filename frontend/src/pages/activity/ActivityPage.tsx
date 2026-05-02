@@ -15,7 +15,7 @@
 
 import { useState, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Icon } from '@/components/signature-visuals'
 import { useActivityFeed } from '@/hooks/useActivityFeed'
@@ -50,6 +50,10 @@ export function ActivityPage(): ReactElement {
           <TabsTrigger value="all">{t('tabs.all')}</TabsTrigger>
           <TabsTrigger value="following">{t('tabs.following')}</TabsTrigger>
         </TabsList>
+        {/* Empty panels keep aria-controls valid (axe-core
+            aria-valid-attr-value). The actual feed renders below. */}
+        <TabsContent value="all" />
+        <TabsContent value="following" />
       </Tabs>
 
       {error != null && (

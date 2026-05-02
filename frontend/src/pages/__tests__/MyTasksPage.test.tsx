@@ -118,6 +118,14 @@ vi.mock('@/components/ui/tabs', () => ({
       {children}
     </button>
   ),
+  // Empty-panel stub — Phase 42-11 a11y fix added <TabsContent value=...>
+  // alongside each <TabsTrigger> so aria-controls resolves to a real
+  // element in the DOM (axe-core aria-valid-attr-value gate).
+  TabsContent: ({ value, children }: { value: string; children?: ReactNode }): ReactElement => (
+    <div role="tabpanel" data-tabs-value={value}>
+      {children}
+    </div>
+  ),
 }))
 
 // ----- useTasks hooks — mutable returns per test -----
@@ -273,7 +281,7 @@ describe('MyTasksPage', () => {
     expect(chipFor('t-normal')?.className).toBe('chip chip-warn')
   })
 
-  it('3. done-state row has line-through + opacity-45; checkbox aria-checked="true"', () => {
+  it('3. done-state row has line-through + ink-mute color (no opacity — WCAG AA fix); checkbox aria-checked="true"', () => {
     setAssigned([baseTasks[0], baseTasks[6]])
     setContributed([])
 
@@ -282,9 +290,13 @@ describe('MyTasksPage', () => {
     const doneRow = rows.find((r) => r.getAttribute('data-task-id') === 't-done')
     const pendingRow = rows.find((r) => r.getAttribute('data-task-id') === 't-low')
 
-    expect(doneRow?.style.opacity).toBe('0.45')
+    // Phase 42-11: opacity 0.45 was replaced with `color: var(--ink-mute)` so
+    // every child (chip-danger, task-due, task-title, subtitle) keeps WCAG AA
+    // contrast. Visually still de-emphasised; no contrast collapse.
+    expect(doneRow?.style.color).toBe('var(--ink-mute)')
     expect(doneRow?.style.textDecoration).toContain('line-through')
-    expect(pendingRow?.style.opacity).not.toBe('0.45')
+    expect(doneRow?.style.opacity).toBe('')
+    expect(pendingRow?.style.color).toBe('')
 
     const doneCheckbox = doneRow?.querySelector('button.task-box') as HTMLElement | null
     const pendingCheckbox = pendingRow?.querySelector('button.task-box') as HTMLElement | null

@@ -157,6 +157,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
                 className="sr-only"
                 onChange={handleAvatarUpload}
                 disabled={isUploading}
+                aria-label={t('profile.avatar')}
               />
             </label>
           </div>
