@@ -96,6 +96,10 @@ export async function setupPhase42Test({ page }: { page: Page }): Promise<void> 
  */
 export async function switchToArabic(page: Page): Promise<void> {
   await page.evaluate(() => {
+    // i18next reads `id.locale` (see frontend/src/i18n/index.ts:462).
+    // Writing `i18nextLng` is silently cleared by the bootstrap migration when
+    // `id.locale` already exists from login.
+    window.localStorage.setItem('id.locale', 'ar')
     window.localStorage.setItem('i18nextLng', 'ar')
     document.documentElement.setAttribute('dir', 'rtl')
     document.documentElement.setAttribute('lang', 'ar')

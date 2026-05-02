@@ -43,6 +43,10 @@ export async function loginForListPages(
     // next load. The optimistic same-frame setAttribute is preserved as a
     // belt-and-suspenders for any code that reads dir before reload.
     await page.evaluate(() => {
+      // i18next reads `id.locale` (frontend/src/i18n/index.ts). After login,
+      // bootstrap.js skips the migration when `id.locale` already exists and
+      // unconditionally clears `i18nextLng` — so we must write the canonical key.
+      window.localStorage.setItem('id.locale', 'ar')
       window.localStorage.setItem('i18nextLng', 'ar')
       document.documentElement.setAttribute('dir', 'rtl')
       document.documentElement.setAttribute('lang', 'ar')

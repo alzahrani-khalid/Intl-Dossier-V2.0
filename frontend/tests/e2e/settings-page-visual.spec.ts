@@ -17,7 +17,7 @@ test.describe('Phase 42 — Settings visual', () => {
     await page.setViewportSize({ width: 1280, height: 800 })
   })
 
-  test.skip('LTR baseline @ 1280', async ({ page }) => {
+  test('LTR baseline @ 1280', async ({ page }) => {
     await gotoPhase42Page(page, PHASE_42_ROUTES.settings)
     await expect(page).toHaveScreenshot('settings-page-en.png', {
       maxDiffPixelRatio: 0.02,
@@ -25,7 +25,7 @@ test.describe('Phase 42 — Settings visual', () => {
     })
   })
 
-  test.skip('AR baseline @ 1280', async ({ page }) => {
+  test('AR baseline @ 1280', async ({ page }) => {
     await switchToArabic(page)
     await gotoPhase42Page(page, PHASE_42_ROUTES.settings)
     await expect(page).toHaveScreenshot('settings-page-ar.png', {
@@ -34,7 +34,7 @@ test.describe('Phase 42 — Settings visual', () => {
     })
   })
 
-  test.skip('mobile pill nav @ 768', async ({ page }) => {
+  test('mobile pill nav @ 768', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 })
     await gotoPhase42Page(page, PHASE_42_ROUTES.settings)
     await expect(page).toHaveScreenshot('settings-page-mobile.png', {

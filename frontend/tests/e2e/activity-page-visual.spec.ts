@@ -16,7 +16,7 @@ test.describe('Phase 42 — Activity visual', () => {
     await page.setViewportSize({ width: 1280, height: 800 })
   })
 
-  test.skip('LTR baseline @ 1280', async ({ page }) => {
+  test('LTR baseline @ 1280', async ({ page }) => {
     await gotoPhase42Page(page, PHASE_42_ROUTES.activity)
     await expect(page).toHaveScreenshot('activity-page-en.png', {
       maxDiffPixelRatio: 0.02,
@@ -24,7 +24,7 @@ test.describe('Phase 42 — Activity visual', () => {
     })
   })
 
-  test.skip('AR baseline @ 1280', async ({ page }) => {
+  test('AR baseline @ 1280', async ({ page }) => {
     await switchToArabic(page)
     await gotoPhase42Page(page, PHASE_42_ROUTES.activity)
     await expect(page).toHaveScreenshot('activity-page-ar.png', {
