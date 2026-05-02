@@ -11,10 +11,41 @@ import userEvent from '@testing-library/user-event'
 import { AfterActionsTable } from '../AfterActionsTable'
 import type { AfterActionRecordWithJoins } from '@/hooks/useAfterAction'
 
-// Mock TanStack Router useNavigate so row clicks don't blow up under jsdom.
+// Mock TanStack Router so Link rendering doesn't blow up under jsdom.
+// WR-02: row navigation now uses <Link> in the engagement cell instead
+// of <tr role="button"> + useNavigate.
 const navigateMock = vi.fn()
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: (): typeof navigateMock => navigateMock,
+  Link: ({
+    to,
+    params,
+    children,
+    ...rest
+  }: {
+    to: string
+    params?: Record<string, string>
+    children: React.ReactNode
+  } & React.AnchorHTMLAttributes<HTMLAnchorElement>): React.ReactNode => {
+    const href =
+      params != null
+        ? Object.entries(params).reduce(
+            (acc, [k, v]) => acc.replace(`$${k}`, v),
+            to,
+          )
+        : to
+    return (
+      <a
+        href={href}
+        onClick={(e): void => {
+          e.preventDefault()
+          navigateMock({ to, params })
+        }}
+        {...rest}
+      >
+        {children}
+      </a>
+    )
+  },
 }))
 
 // Per-file i18n mock (PATTERNS Pattern I).
@@ -132,11 +163,16 @@ describe('AfterActionsTable', () => {
     expect(ths.length).toBe(6)
   })
 
-  it('rows are keyboard-focusable (tabIndex=0, role=button)', () => {
+  it('rows are keyboard-focusable via a Link in the engagement cell', () => {
+    // WR-02: row navigation is owned by a single focusable <Link> inside
+    // the engagement cell — not <tr role="button"> which trips axe-core.
     render(<AfterActionsTable rows={[baseRow]} isLoading={false} error={null} />)
     const row = screen.getByTestId('after-action-row')
-    expect(row.getAttribute('tabindex')).toBe('0')
-    expect(row.getAttribute('role')).toBe('button')
+    expect(row.getAttribute('role')).toBeNull()
+    expect(row.getAttribute('tabindex')).toBeNull()
+    const link = row.querySelector('a[href]')
+    expect(link).toBeTruthy()
+    expect(link?.getAttribute('href')).toContain('after-actions')
   })
 
   it('engagement column shows title_en in EN and title_ar in AR', () => {
@@ -192,10 +228,14 @@ describe('AfterActionsTable', () => {
     expect(screen.getByText('empty.heading')).toBeTruthy()
   })
 
-  it('row click calls navigate with /after-actions/$afterActionId', async () => {
+  it('row link navigates to /after-actions/$afterActionId on click', async () => {
+    // WR-02: navigation is via the Link inside the engagement cell, not a row click.
     const user = userEvent.setup()
     render(<AfterActionsTable rows={[baseRow]} isLoading={false} error={null} />)
-    await user.click(screen.getByTestId('after-action-row'))
+    const row = screen.getByTestId('after-action-row')
+    const link = row.querySelector('a[href]') as HTMLAnchorElement | null
+    expect(link).toBeTruthy()
+    await user.click(link!)
     expect(navigateMock).toHaveBeenCalledWith({
       to: '/after-actions/$afterActionId',
       params: { afterActionId: 'r1' },

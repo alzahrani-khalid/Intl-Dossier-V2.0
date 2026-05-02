@@ -238,23 +238,16 @@ export function MyTasksPage(): ReactElement {
                 : undefined
 
               return (
-                // Row is a list item, not a button — the inner checkbox button
-                // is nested-interactive if the row also exposes role="button".
-                // Mouse users get whole-row click via onClick; keyboard users
-                // navigate via the title button below.
+                // WR-02: row is a structural <li> with no click handler and
+                // no cursor:pointer. The "click anywhere on the row" pattern
+                // implied an interactive role without exposing it to AT and
+                // produced the nested-interactive axe class. Activation
+                // (mouse + keyboard) is owned by the inner title button below.
                 <li
                   key={task.id}
                   data-task-id={task.id}
                   className={cn('task-row', isDone && 'is-done')}
-                  style={{ ...rowStyle, cursor: 'pointer' }}
-                  onClick={(e): void => {
-                    // Only navigate if the click didn't originate from an inner
-                    // interactive element (button, link). Buttons inside the row
-                    // already stopPropagation, so this is belt-and-suspenders.
-                    const target = e.target as HTMLElement
-                    if (target.closest('button, a')) return
-                    goToTask(task.id)
-                  }}
+                  style={rowStyle}
                 >
                   <button
                     type="button"

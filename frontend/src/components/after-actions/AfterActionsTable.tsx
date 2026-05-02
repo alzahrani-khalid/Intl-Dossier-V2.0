@@ -8,7 +8,7 @@
  * `useAfterActionsAll()` hook. Empty / loading / error are rendered
  * inline so the route file stays a thin shell.
  */
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Icon } from '@/components/signature-visuals'
 import { toArDigits } from '@/lib/i18n/toArDigits'
@@ -41,11 +41,6 @@ export function AfterActionsTable({
 }: AfterActionsTableProps): React.JSX.Element {
   const { t, i18n } = useTranslation('after-actions-page')
   const locale = (i18n.language === 'ar' ? 'ar' : 'en') as 'en' | 'ar'
-  const navigate = useNavigate()
-
-  function navigateToDetail(id: string): void {
-    void navigate({ to: '/after-actions/$afterActionId', params: { afterActionId: id } })
-  }
 
   if (error !== null) {
     return (
@@ -103,24 +98,23 @@ export function AfterActionsTable({
                 : (r.engagement?.title_en ?? r.engagement?.title_ar ?? '—')
             const dossierName =
               locale === 'ar' ? (r.dossier?.name_ar ?? '—') : (r.dossier?.name_en ?? '—')
+            // WR-02: <tr role="button"> is invalid HTML/ARIA and trips
+            // axe-core (presentation-role-conflict / aria-allowed-role).
+            // Make the engagement cell own the row's keyboard activation
+            // via a single focusable Link; the rest of the row stays
+            // structural with no role swap.
             return (
-              <tr
-                key={r.id}
-                data-testid="after-action-row"
-                role="button"
-                tabIndex={0}
-                style={{ cursor: 'pointer', minHeight: 44 }}
-                onClick={() => {
-                  navigateToDetail(r.id)
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    navigateToDetail(r.id)
-                  }
-                }}
-              >
-                <td style={{ fontWeight: 500 }}>{engagementTitle}</td>
+              <tr key={r.id} data-testid="after-action-row">
+                <td style={{ fontWeight: 500 }}>
+                  <Link
+                    to="/after-actions/$afterActionId"
+                    params={{ afterActionId: r.id }}
+                    className="row-affordance"
+                    style={{ color: 'inherit', textDecoration: 'none' }}
+                  >
+                    {engagementTitle}
+                  </Link>
+                </td>
                 <td
                   dir="ltr"
                   style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-mute)' }}
@@ -144,7 +138,7 @@ export function AfterActionsTable({
                 <td className="text-end" style={{ fontFamily: 'var(--font-mono)' }}>
                   {toArDigits(r.commitments?.length ?? 0, locale)}
                 </td>
-                <td>
+                <td aria-hidden="true">
                   <Icon name="chevron-right" size={16} className="icon-flip" aria-hidden />
                 </td>
               </tr>
