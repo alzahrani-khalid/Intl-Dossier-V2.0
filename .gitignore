@@ -149,3 +149,4 @@ audit-screenshots/
 
 # Exception: Playwright visual regression baselines are source-of-truth
 !tests/e2e/**/*-snapshots/**/*.png
+!frontend/tests/e2e/**/*-snapshots/**/*.png
