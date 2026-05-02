@@ -1,6 +1,6 @@
-// Phase 42-04 — Settings functional E2E scaffold.
+// Phase 42-04 — Settings functional E2E.
 //
-// `test.skip` until Wave 1 plan 42-09 un-skips after the SettingsPage reskin.
+// Un-skipped by Wave 1 plan 42-09 after the SettingsPage reskin.
 // Covers:
 //   - 240+1fr layout with active accent bar
 //   - mobile-collapse: ≤768px renders horizontal pill nav
@@ -13,12 +13,12 @@ test.describe('Phase 42 — Settings page', () => {
     await page.setViewportSize({ width: 1280, height: 800 })
   })
 
-  test.skip('renders 240+1fr layout with active accent bar', async ({ page }) => {
+  test('renders 240+1fr layout with active accent bar', async ({ page }) => {
     await gotoPhase42Page(page, PHASE_42_ROUTES.settings)
     await expect(page.locator('button.settings-nav.active')).toBeVisible()
   })
 
-  test.skip('mobile-collapse: ≤768px shows horizontal pill nav', async ({ page }) => {
+  test('mobile-collapse: ≤768px shows horizontal pill nav', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 })
     await gotoPhase42Page(page, PHASE_42_ROUTES.settings)
     await expect(page.locator('.settings-nav-card')).toHaveCSS('overflow-x', /auto|scroll/)

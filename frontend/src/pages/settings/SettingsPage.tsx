@@ -283,6 +283,7 @@ export function SettingsPage() {
     <SettingsLayout
       activeSection={activeSection}
       onSectionChange={handleSectionChange}
+      isLoading={isLoading}
       hasChanges={hasChanges}
       isSaving={saveMutation.isPending}
       onSave={handleSave}
