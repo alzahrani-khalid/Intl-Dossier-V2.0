@@ -248,8 +248,12 @@ export function SettingsPage() {
 
       toast.success(t('savedSuccessfully'))
     },
-    onError: () => {
-      toast.error(t('saveError'))
+    onError: (error: unknown) => {
+      const detail = error instanceof Error ? error.message : null
+      console.error(error)
+      toast.error(t('saveError'), {
+        description: detail ?? undefined,
+      })
     },
   })
 
