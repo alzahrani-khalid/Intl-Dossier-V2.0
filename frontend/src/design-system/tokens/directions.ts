@@ -108,7 +108,12 @@ export const PALETTES: Record<Direction, DirectionPalette> = {
       surfaceRaised: '#ffffff',
       ink: '#1a1714',
       inkMute: '#6b6459',
-      inkFaint: '#9a9082',
+      // Phase 42-11: bumped from #9a9082 (3.14:1 on white — failed WCAG AA)
+      // to #736b60 (5.07:1 on white, 4.82:1 on the warm bg #f7f6f4). The
+      // .page-sub subtitle in PageHeader sits on the page bg, not on a
+      // surface card, so the value has to clear AA on both. Same darkening
+      // pattern as Plan 40-15 G2 close (which bumped --warn/--ok/--info-ink).
+      inkFaint: '#736b60',
       line: '#e8e4dc',
       lineSoft: '#efece3',
       sidebar: '#ffffff',

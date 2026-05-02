@@ -48,7 +48,12 @@ export const buildTokens = ({ direction, mode, hue, density }: BuildInput): Toke
     '--accent': `oklch(58% 0.14 ${h})`,
     '--accent-ink': isDark ? `oklch(72% 0.12 ${h})` : `oklch(42% 0.15 ${h})`,
     '--accent-soft': isDark ? `oklch(25% 0.08 ${h})` : `oklch(92% 0.05 ${h})`,
-    '--accent-fg': `oklch(99% 0.01 ${h})`,
+    // Phase 42-11: bumped from oklch(99% 0.01 h) (#fff9f8 at hue 25) to pure
+    // white. The tinted near-white gave .btn-primary "New brief" text a
+    // 4.38:1 ratio on the bureau-light accent #bf5542 — just below WCAG AA.
+    // Pure white is 5.28:1. The 0.01 chroma tint was a design polish that's
+    // imperceptible at L=99% anyway.
+    '--accent-fg': `oklch(100% 0 0)`,
 
     // Semantic palette (mode-branching)
     '--danger': isDark ? 'oklch(70% 0.16 25)' : 'oklch(52% 0.18 25)',
