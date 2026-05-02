@@ -261,6 +261,9 @@ export function useCreateAfterAction() {
     onSuccess: (data) => {
       // Invalidate after-actions list for the dossier
       queryClient.invalidateQueries({ queryKey: ['after-actions', data.dossier_id] })
+      // CR-03: invalidate the cross-dossier list as well so the global
+      // /after-actions page reflects the new record. Prefix-match key.
+      queryClient.invalidateQueries({ queryKey: ['after-actions', 'all'] })
       // Invalidate engagement so its detail page reflects the new after-action
       queryClient.invalidateQueries({ queryKey: ['engagement', data.engagement_id] })
       // Set the single after-action in cache
@@ -357,6 +360,8 @@ export function useUpdateAfterAction(id: string) {
       queryClient.setQueryData(['after-action', id], data)
       // Invalidate list
       queryClient.invalidateQueries({ queryKey: ['after-actions', data.dossier_id] })
+      // CR-03: also invalidate cross-dossier list so /after-actions reflects the edit.
+      queryClient.invalidateQueries({ queryKey: ['after-actions', 'all'] })
     },
   })
 }
