@@ -226,19 +226,22 @@ export function MyTasksPage(): ReactElement {
                 : undefined
 
               return (
+                // Row is a list item, not a button — the inner checkbox button
+                // is nested-interactive if the row also exposes role="button".
+                // Mouse users get whole-row click via onClick; keyboard users
+                // navigate via the title button below.
                 <li
                   key={task.id}
                   data-task-id={task.id}
                   className={cn('task-row', isDone && 'is-done')}
-                  style={rowStyle}
-                  role="button"
-                  tabIndex={0}
-                  onClick={(): void => goToTask(task.id)}
-                  onKeyDown={(e): void => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      goToTask(task.id)
-                    }
+                  style={{ ...rowStyle, cursor: 'pointer' }}
+                  onClick={(e): void => {
+                    // Only navigate if the click didn't originate from an inner
+                    // interactive element (button, link). Buttons inside the row
+                    // already stopPropagation, so this is belt-and-suspenders.
+                    const target = e.target as HTMLElement
+                    if (target.closest('button, a')) return
+                    goToTask(task.id)
                   }}
                 >
                   <button
@@ -274,10 +277,29 @@ export function MyTasksPage(): ReactElement {
                     size={18}
                   />
 
-                  <div className="task-title">
+                  {/* Keyboard activation lives on this title button (mouse
+                      users still get whole-row click via the parent <li>). */}
+                  <button
+                    type="button"
+                    className="task-title"
+                    onClick={(e): void => {
+                      e.stopPropagation()
+                      goToTask(task.id)
+                    }}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      padding: 0,
+                      textAlign: 'start',
+                      font: 'inherit',
+                      color: 'inherit',
+                      cursor: 'pointer',
+                      minHeight: 44,
+                    }}
+                  >
                     <div>{task.title}</div>
                     <small style={{ color: 'var(--ink-mute)' }}>{subtitle}</small>
-                  </div>
+                  </button>
 
                   <span className={priorityChipClass(task.priority)}>
                     {t(`priority.${task.priority}`)}

@@ -89,7 +89,10 @@ export function AfterActionsTable({
             <th className="text-start">{t('columns.dossier')}</th>
             <th className="text-end">{t('columns.decisions')}</th>
             <th className="text-end">{t('columns.commitments')}</th>
-            <th aria-label="" />
+            {/* Decorative chevron column — empty header by design.
+                Use scope without aria-label rather than aria-label="" which
+                axe-core flags as aria-valid-attr-value. */}
+            <th scope="col" />
           </tr>
         </thead>
         <tbody>

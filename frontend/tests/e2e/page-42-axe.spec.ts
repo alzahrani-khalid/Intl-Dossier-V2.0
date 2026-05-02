@@ -28,7 +28,7 @@ test.describe('Phase 42 — axe-core WCAG AA', () => {
   })
 
   for (const [name, route] of PAGES) {
-    test.skip(`${name} — LTR has zero serious/critical violations`, async ({ page }) => {
+    test(`${name} — LTR has zero serious/critical violations`, async ({ page }) => {
       await gotoPhase42Page(page, route)
       const results = await new AxeBuilder({ page })
         .include('.page')
@@ -43,7 +43,7 @@ test.describe('Phase 42 — axe-core WCAG AA', () => {
       ).toEqual([])
     })
 
-    test.skip(`${name} — AR has zero serious/critical violations`, async ({ page }) => {
+    test(`${name} — AR has zero serious/critical violations`, async ({ page }) => {
       await switchToArabic(page)
       await gotoPhase42Page(page, route)
       const results = await new AxeBuilder({ page })
