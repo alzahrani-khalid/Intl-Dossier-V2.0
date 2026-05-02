@@ -133,6 +133,16 @@
     }
   },
 
+  "emailDigest": {
+    "title": "Email digest",
+    "description": "Configure scheduled email summaries"
+  },
+
+  "integrations": {
+    "title": "Integrations",
+    "description": "Connect external bots and services"
+  },
+
   "notifications": {
     "title": "Notification Settings",
     "description": "Control how and when you receive notifications",
