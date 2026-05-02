@@ -1093,7 +1093,7 @@ serve(async (req) => {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 ### O-1: Settings — keep all 9 sections or fold to 7?
 
@@ -1101,6 +1101,7 @@ serve(async (req) => {
 **What's unclear:** Should `EmailDigestSettings` (in `frontend/src/components/email/`) and `BotIntegrationsSettings` (16 KB) be (a) dropped, (b) re-housed inside Notifications + Profile, or (c) kept as 8th and 9th nav items?
 **Recommendation:** **(c) Keep all 9, document the deviation in plan**. Dropping orphans 16+ KB; re-housing is an ergonomic regression for users who already know where these settings live. The handoff's 6-section count is visual aspiration, not a functional cap.
 **User confirmation:** would benefit from an explicit yes/no during plan-check.
+**RESOLVED:** see CONTEXT.md R-02 — keep all 9 sections (Profile, General, Appearance, Notifications, Access & Security, Accessibility, Data & Privacy, Email Digest, Integrations); deviation from D-09's 7-count documented and accepted.
 
 ### O-2: Density triad reconciliation — "spacious" vs "dense"
 
@@ -1108,6 +1109,7 @@ serve(async (req) => {
 **What's unclear:** Was `spacious` a typo carried forward from an older theme system, or an intentional rename?
 **Recommendation:** Treat as a typo. Wave 1 plan that touches `AppearanceSettingsSection` can rename `'spacious' → 'dense'` in the union type; tests covering the rename can be added cheaply. Coordinate with Phase 33's token system (`useDensity` hook) since the hook's value enum must agree.
 **User confirmation:** needed before authoring the Appearance section's density picker.
+**RESOLVED:** see CONTEXT.md R-03 — rename `spacious → dense` in `settings.types.ts` and `useDensity` hook; density triad is `comfortable / compact / dense` (handoff canon).
 
 ### O-3: After-actions row "Date" column — `engagement_date` or `created_at`?
 
@@ -1115,18 +1117,21 @@ serve(async (req) => {
 **What's unclear:** Should the column show "when the engagement happened" (= `engagement.engagement_date`) or "when the record was published" (= `published_at`)?
 **Recommendation:** **`engagement.engagement_date`** — analyst's mental model is "the after-action FOR the meeting on date X", not "the after-action FILED on date Y". Date column is read as "the engagement's date".
 **User confirmation:** worth a one-line plan-check confirmation.
+**RESOLVED:** see CONTEXT.md R-04 — Date column shows `engagement.engagement_date` (joined via the new Edge Function); falls back to `created_at` if `engagement_date` is null.
 
 ### O-4: Brief card "page count" — compute or omit?
 
 **What we know:** No `pages` / `page_count` / `word_count` field on `briefs` or `ai_briefs`. Handoff renders `12 pp`.
 **What's unclear:** Compute approximate count from `full_content_en.length` (Recommendation A4) or render `—`?
 **Recommendation:** **Compute approximate; render `—` only when `full_content_en` is null**. The card has visual space reserved; an empty slot would look broken.
+**RESOLVED:** see CONTEXT.md R-01 — compute `pageCount = ceil(full_content_en.length / 2200)`; render `—` when `full_content_en` is null.
 
 ### O-5: Activity row click target
 
 **What we know:** UI-SPEC `<interaction contracts>` says "Activity row click optional. If `event.entity_url` is set, navigate to that URL; otherwise non-interactive." But `ActivityItem.metadata.navigation_url` is the actual field (per `frontend/src/types/activity-feed.types.ts:111`); there is no top-level `entity_url`.
 **What's unclear:** Is row navigation desired this phase, or is it deferred?
 **Recommendation:** **Make row click navigate to `metadata.navigation_url` when present; otherwise the row is non-interactive (cursor: default; no `tabIndex`)**. Document this in the plan so the executor doesn't add a phantom click target.
+**RESOLVED:** see CONTEXT.md R-05 — row click navigates to `metadata.navigation_url` ONLY when it starts with `/` (in-app path); absolute/external/protocol-relative URLs are rejected by an inline open-redirect guard and render the row as fully non-interactive (no `cursor: pointer`, no `role`/`tabIndex`/`onClick`).
 
 ---
 

@@ -328,17 +328,19 @@ Summary checklist:
 3. User sees the Activity page as a timeline rendering `time · icon · "who action what in where"` with `where` in accent-ink
 4. User sees the Settings page as a two-column layout (240px vertical nav with active accent bar + content card with edit-row list); at ≤768px the nav collapses above the card and the accent bar flips to an accent underline
 5. All 5 pages render correctly in both locales with logical properties only and ≥44×44px touch targets on every interactive row
-   **Plans**: 9 plans
-   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
-   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
-   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
-   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
-   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
-   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
-   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
-   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
-   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
-         **UI hint**: yes
+   **Plans**: 12 plans
+   - [ ] 42-00-PLAN.md — Wave 0: <Icon/> primitive + signature-visuals barrel (R-01; supersedes Phase 37 Icon assumption) (PAGE-01..05)
+   - [ ] 42-01-PLAN.md — Wave 0: after-actions-list-all Edge Function + useAfterActionsAll hook + RLS pass-through (D-01..D-04 + R-04) (PAGE-02)
+   - [ ] 42-02-PLAN.md — Wave 0: i18n namespaces (briefs-page / after-actions-page / tasks-page NEW; activity-feed + settings EXTEND) + EN/AR parity drift-guard (D-14) (PAGE-01..05)
+   - [ ] 42-03-PLAN.md — Wave 0: handoff CSS port (.tasks-list / .act-list / .settings-nav / .card-head + mobile pill-row @ ≤768px) + density triad rename spacious→dense + migration shim (R-03) (PAGE-03..05)
+   - [ ] 42-04-PLAN.md — Wave 0: Playwright fixtures (phase-42-fixtures.ts) + 13 spec scaffolds (5 visual + 5 functional + axe + touch-targets) all test.skip (PAGE-01..05)
+   - [ ] 42-05-PLAN.md — Wave 1: Briefs page reskin — handoff card grid + status chip + page count + serif title + author/due (preserves dual-table fetch + BriefViewer/Generator dialogs) (PAGE-01)
+   - [ ] 42-06-PLAN.md — Wave 1: After-actions page reskin — .tbl 6-column anatomy + chevron icon-flip RTL (PAGE-02)
+   - [ ] 42-07-PLAN.md — Wave 1: Tasks page reskin — .tasks-list anatomy with checkbox + DossierGlyph + priority chip + .task-due (D-15) (PAGE-03)
+   - [ ] 42-08-PLAN.md — Wave 1: Activity page reskin — .act-list 3-col grid + sentence composition + 6-key icon map per action_type (D-13/D-14 + R-05) (PAGE-04)
+   - [ ] 42-09-PLAN.md — Wave 1: Settings page reskin — 240+1fr grid + 9-section nav (R-02) + Appearance design controls (D-11) + mobile pill row (D-12) (PAGE-05)
+   - [ ] 42-10-PLAN.md — Wave 2: 11 visual baselines (5 pages × LTR+AR @ 1280 + settings mobile @ 768) + size-limit gate + human checkpoint (PAGE-01..05)
+   - [ ] 42-11-PLAN.md — Wave 2: axe-core WCAG AA gate (10 cases) + touch-targets ≥44×44 (5 cases) + 42-VERIFICATION.md verdict (PAGE-01..05)
 
 ### Phase 43: rtl-a11y-responsive-sweep
 
@@ -398,7 +400,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 38. Dashboard Verbatim            | v6.0      | 0/?            | Not started | —          |
 | 39. Kanban + Calendar             | v6.0      | 0/?            | Not started | —          |
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
-| 41. Dossier Drawer                | v6.0      | 11/11 | Complete   | 2026-05-02 |
+| 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
 | 42. Remaining Pages               | v6.0      | 0/?            | Not started | —          |
 | 43. RTL / A11y / Responsive Sweep | v6.0      | 0/?            | Not started | —          |
 
