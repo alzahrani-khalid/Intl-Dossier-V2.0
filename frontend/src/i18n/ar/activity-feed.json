@@ -1,13 +1,35 @@
 {
   "title": "سجل النشاطات",
   "subtitle": "النشاطات الأخيرة عبر جميع الكيانات",
-  "empty": "لا توجد نشاطات لعرضها",
   "loading": "جاري تحميل النشاطات...",
   "loadMore": "تحميل المزيد",
   "tabs": {
     "all": "جميع النشاطات",
     "following": "المتابعة"
   },
+  "events": {
+    "approval": "وافق على <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "rejection": "رفض <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "create": "أنشأ <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "update": "حدّث <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "delete": "حذف <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "comment": "علّق على <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "mention": "أشار إلى <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "upload": "رفع <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "download": "نزّل <entity>{{entity}}</entity> من <where>{{where}}</where>",
+    "view": "اطلع على <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "share": "شارك <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "assign": "أسند <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "status_change": "غيّر حالة <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "archive": "أرشف <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "restore": "استعاد <entity>{{entity}}</entity> في <where>{{where}}</where>",
+    "_default": "تفاعل مع <entity>{{entity}}</entity> في <where>{{where}}</where>"
+  },
+  "empty": {
+    "all": "لا يوجد نشاط بعد",
+    "following": "تابع الكيانات لمشاهدة نشاطها"
+  },
+  "errorList": "تعذر تحميل النشاط. حاول تحديث الصفحة.",
   "statistics": {
     "title": "الإحصائيات",
     "followingCount": "المتابعة",

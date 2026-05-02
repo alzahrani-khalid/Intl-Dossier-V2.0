@@ -1,13 +1,35 @@
 {
   "title": "Activity Feed",
   "subtitle": "Recent activities across all entities",
-  "empty": "No activities to display",
   "loading": "Loading activities...",
   "loadMore": "Load more",
   "tabs": {
     "all": "All Activity",
     "following": "Following"
   },
+  "events": {
+    "approval": "approved <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "rejection": "rejected <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "create": "created <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "update": "updated <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "delete": "deleted <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "comment": "commented on <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "mention": "mentioned <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "upload": "uploaded <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "download": "downloaded <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "view": "viewed <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "share": "shared <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "assign": "assigned <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "status_change": "changed status on <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "archive": "archived <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "restore": "restored <entity>{{entity}}</entity> in <where>{{where}}</where>",
+    "_default": "acted on <entity>{{entity}}</entity> in <where>{{where}}</where>"
+  },
+  "empty": {
+    "all": "No activity yet",
+    "following": "Follow entities to see their activity"
+  },
+  "errorList": "Could not load activity. Try refreshing the page.",
   "statistics": {
     "title": "Statistics",
     "followingCount": "Following",
