@@ -1,49 +1,29 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { FileText, Plus } from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import { useAfterActionsAll } from '@/hooks/useAfterAction'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { Button } from '../../../components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../../../components/ui/card'
+import { AfterActionsTable } from '@/components/after-actions/AfterActionsTable'
 
 export const Route = createFileRoute('/_protected/after-actions/')({
-  component: AfterActionsIndexPage,
+  component: AfterActionsListPage,
 })
 
-function AfterActionsIndexPage() {
-  const navigate = useNavigate()
+function AfterActionsListPage(): React.JSX.Element {
+  const { t, i18n } = useTranslation('after-actions-page')
+  const isRTL = i18n.language === 'ar'
+  const { data, isLoading, error } = useAfterActionsAll()
+  const rows = data?.data ?? []
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        icon={<FileText className="h-6 w-6" />}
-        title="After Action Records"
-        subtitle="Manage engagement outcomes and commitments"
-        actions={
-          <Button className="gap-2" onClick={() => navigate({ to: '/engagements' })}>
-            <Plus className="h-5 w-5" />
-            Create After Action
-          </Button>
-        }
-      />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>After Actions</CardTitle>
-          <CardDescription>
-            After action records are created from engagement details.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground text-center py-8">
-            No after action records available. Create an engagement to get started.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <section
+      role="region"
+      aria-label={t('title')}
+      dir={isRTL ? 'rtl' : 'ltr'}
+      data-loading={isLoading ? 'true' : 'false'}
+      className="page flex min-w-0 flex-col gap-[var(--gap)]"
+    >
+      <PageHeader title={t('title')} subtitle={t('subtitle')} />
+      <AfterActionsTable rows={rows} isLoading={isLoading} error={error ?? null} />
+    </section>
   )
 }
