@@ -101,11 +101,15 @@ export function ActivityList({ activities }: ActivityListProps): ReactElement {
         // also reject the second-char `/`), `javascript:`/`data:`/`mailto:`
         // schemes, and empty strings all fail the guard and the row stays
         // fully non-interactive (no role/tabIndex/onClick/onKeyDown).
+        // WR-01: also reject backslash variants (`/\evil.example`,
+        // `\\evil.example`). Some browsers normalise `\` → `/` in URL
+        // parsing, which would turn `/\evil.example` into `//evil.example`.
         const navUrl = a.metadata?.navigation_url
         const safeNavUrl =
           typeof navUrl === 'string' &&
           navUrl.startsWith('/') &&
-          !navUrl.startsWith('//')
+          !navUrl.startsWith('//') &&
+          !navUrl.includes('\\')
             ? navUrl
             : null
         const interactive = safeNavUrl !== null
