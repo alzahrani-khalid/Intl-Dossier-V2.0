@@ -118,7 +118,7 @@ describe('ActivityList', () => {
     const row = container.querySelector('li.act-row')
     expect(row).not.toBeNull()
     const children = Array.from(row!.children)
-    expect(children[0]).toHaveClass('act-t')
+    expect(children[0]?.classList.contains('act-t')).toBe(true)
     expect(children[1]?.tagName.toLowerCase()).toBe('svg') // Icon renders <svg>
     expect(children[2]?.tagName.toLowerCase()).toBe('span') // sentence container
   })
@@ -175,13 +175,13 @@ describe('ActivityList', () => {
     expect(rows).toHaveLength(2)
 
     // Interactive row
-    expect(rows[0]).toHaveAttribute('role', 'button')
-    expect(rows[0]).toHaveAttribute('tabindex', '0')
+    expect(rows[0]?.getAttribute('role')).toBe('button')
+    expect(rows[0]?.getAttribute('tabindex')).toBe('0')
     expect(rows[0]?.style.cursor).toBe('pointer')
 
     // Non-interactive row
-    expect(rows[1]).not.toHaveAttribute('role')
-    expect(rows[1]).not.toHaveAttribute('tabindex')
+    expect(rows[1]?.hasAttribute('role')).toBe(false)
+    expect(rows[1]?.hasAttribute('tabindex')).toBe(false)
     expect(rows[1]?.style.cursor).toBe('default')
 
     // Click the interactive row → navigate spy fires with the relative path
@@ -209,8 +209,8 @@ describe('ActivityList', () => {
     const rows = Array.from(container.querySelectorAll<HTMLLIElement>('li.act-row'))
     expect(rows).toHaveLength(dangerous.length)
     for (const row of rows) {
-      expect(row).not.toHaveAttribute('role')
-      expect(row).not.toHaveAttribute('tabindex')
+      expect(row.hasAttribute('role')).toBe(false)
+      expect(row.hasAttribute('tabindex')).toBe(false)
       expect(row.style.cursor).toBe('default')
       // Click must not trigger navigation.
       row.click()
