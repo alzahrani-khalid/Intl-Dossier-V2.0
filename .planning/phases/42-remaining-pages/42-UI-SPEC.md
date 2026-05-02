@@ -1,12 +1,13 @@
 ---
 phase: 42
 slug: remaining-pages
-status: draft
+status: approved
 shadcn_initialized: false
 preset: intel-dossier-bureau
 created: 2026-05-02
 revised: 2026-05-02
 revision: 1
+reviewed_at: 2026-05-02
 ---
 
 # Phase 42 — UI Design Contract
