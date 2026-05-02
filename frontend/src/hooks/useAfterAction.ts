@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { UseQueryResult } from '@tanstack/react-query'
+import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 
 // Types based on API spec
@@ -180,11 +180,16 @@ export interface AfterActionVersion {
 }
 
 // Fetch single after-action by ID
-export function useAfterAction(id: string | undefined) {
+// WR-08: explicit `id !== undefined && id !== ''` guard satisfies
+// strict-boolean-expressions; explicit return type added.
+export function useAfterAction(id: string | undefined): UseQueryResult<AfterActionRecord, Error> {
+  const isReady = id !== undefined && id !== ''
   return useQuery({
     queryKey: ['after-action', id],
-    queryFn: async () => {
-      if (!id) throw new Error('After-action ID is required')
+    queryFn: async (): Promise<AfterActionRecord> => {
+      // Unreachable when isReady is false (enabled gates the queryFn), but kept
+      // as a defensive narrow so the type below holds without `as`.
+      if (!isReady) throw new Error('After-action ID is required')
 
       const { data, error } = await supabase.functions.invoke('after-actions-get', {
         body: { id },
@@ -193,7 +198,7 @@ export function useAfterAction(id: string | undefined) {
       if (error) throw error
       return data as AfterActionRecord
     },
-    enabled: !!id,
+    enabled: isReady,
   })
 }
 
@@ -205,11 +210,12 @@ function useAfterActions(
     limit?: number
     offset?: number
   },
-) {
+): UseQueryResult<{ data: AfterActionRecord[]; total: number }, Error> {
+  const isReady = dossierId !== undefined && dossierId !== ''
   return useQuery({
     queryKey: ['after-actions', dossierId, options],
-    queryFn: async () => {
-      if (!dossierId) throw new Error('Dossier ID is required')
+    queryFn: async (): Promise<{ data: AfterActionRecord[]; total: number }> => {
+      if (!isReady) throw new Error('Dossier ID is required')
 
       const { data, error } = await supabase.functions.invoke('after-actions-list', {
         body: { dossier_id: dossierId, ...options },
@@ -218,7 +224,7 @@ function useAfterActions(
       if (error) throw error
       return data as { data: AfterActionRecord[]; total: number }
     },
-    enabled: !!dossierId,
+    enabled: isReady,
   })
 }
 
@@ -246,11 +252,16 @@ export function useAfterActionsAll(options?: {
 }
 
 // Create after-action mutation
-export function useCreateAfterAction() {
+// WR-08: explicit return type satisfies explicit-function-return-type.
+export function useCreateAfterAction(): UseMutationResult<
+  AfterActionRecord,
+  Error,
+  CreateAfterActionRequest
+> {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (request: CreateAfterActionRequest) => {
+    mutationFn: async (request: CreateAfterActionRequest): Promise<AfterActionRecord> => {
       const { data, error } = await supabase.functions.invoke('after-actions-create', {
         body: request,
       })
@@ -273,7 +284,15 @@ export function useCreateAfterAction() {
 }
 
 // Update after-action mutation with optimistic locking via updated_at (D-41)
-export function useUpdateAfterAction(id: string) {
+// WR-08: explicit return type added.
+export function useUpdateAfterAction(
+  id: string,
+): UseMutationResult<
+  AfterActionRecord,
+  Error,
+  UpdateAfterActionRequest,
+  { previousAfterAction: AfterActionRecord | undefined }
+> {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -367,11 +386,15 @@ export function useUpdateAfterAction(id: string) {
 }
 
 // Fetch version history for an after-action
-export function useAfterActionVersions(afterActionId: string | undefined) {
+// WR-08: explicit guard + explicit return type.
+export function useAfterActionVersions(
+  afterActionId: string | undefined,
+): UseQueryResult<AfterActionVersion[], Error> {
+  const isReady = afterActionId !== undefined && afterActionId !== ''
   return useQuery({
     queryKey: ['after-action-versions', afterActionId],
-    queryFn: async () => {
-      if (!afterActionId) throw new Error('After-action ID is required')
+    queryFn: async (): Promise<AfterActionVersion[]> => {
+      if (!isReady) throw new Error('After-action ID is required')
 
       const { data, error } = await supabase.functions.invoke('after-actions-versions', {
         body: { after_action_id: afterActionId },
@@ -380,6 +403,6 @@ export function useAfterActionVersions(afterActionId: string | undefined) {
       if (error) throw error
       return data as AfterActionVersion[]
     },
-    enabled: !!afterActionId,
+    enabled: isReady,
   })
 }
