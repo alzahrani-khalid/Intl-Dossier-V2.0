@@ -334,11 +334,11 @@ Summary checklist:
    - [x] 42-02-PLAN.md — Wave 0: i18n namespaces (briefs-page / after-actions-page / tasks-page NEW; activity-feed + settings EXTEND) + EN/AR parity drift-guard (D-14) (PAGE-01..05)
    - [x] 42-03-PLAN.md — Wave 0: handoff CSS port (.tasks-list / .act-list / .settings-nav / .card-head + mobile pill-row @ ≤768px) + density triad rename spacious→dense + migration shim (R-03) (PAGE-03..05)
    - [x] 42-04-PLAN.md — Wave 0: Playwright fixtures (phase-42-fixtures.ts) + 13 spec scaffolds (5 visual + 5 functional + axe + touch-targets) all test.skip (PAGE-01..05)
-   - [ ] 42-05-PLAN.md — Wave 1: Briefs page reskin — handoff card grid + status chip + page count + serif title + author/due (preserves dual-table fetch + BriefViewer/Generator dialogs) (PAGE-01)
-   - [ ] 42-06-PLAN.md — Wave 1: After-actions page reskin — .tbl 6-column anatomy + chevron icon-flip RTL (PAGE-02)
-   - [ ] 42-07-PLAN.md — Wave 1: Tasks page reskin — .tasks-list anatomy with checkbox + DossierGlyph + priority chip + .task-due (D-15) (PAGE-03)
-   - [ ] 42-08-PLAN.md — Wave 1: Activity page reskin — .act-list 3-col grid + sentence composition + 6-key icon map per action_type (D-13/D-14 + R-05) (PAGE-04)
-   - [ ] 42-09-PLAN.md — Wave 1: Settings page reskin — 240+1fr grid + 9-section nav (R-02) + Appearance design controls (D-11) + mobile pill row (D-12) (PAGE-05)
+   - [x] 42-05-PLAN.md — Wave 1: Briefs page reskin — handoff card grid + status chip + page count + serif title + author/due (preserves dual-table fetch + BriefViewer/Generator dialogs) (PAGE-01)
+   - [x] 42-06-PLAN.md — Wave 1: After-actions page reskin — .tbl 6-column anatomy + chevron icon-flip RTL (PAGE-02)
+   - [x] 42-07-PLAN.md — Wave 1: Tasks page reskin — .tasks-list anatomy with checkbox + DossierGlyph + priority chip + .task-due (D-15) (PAGE-03)
+   - [x] 42-08-PLAN.md — Wave 1: Activity page reskin — .act-list 3-col grid + sentence composition + 6-key icon map per action_type (D-13/D-14 + R-05) (PAGE-04)
+   - [x] 42-09-PLAN.md — Wave 1: Settings page reskin — 240+1fr grid + 9-section nav (R-02) + Appearance design controls (D-11) + mobile pill row (D-12) (PAGE-05)
    - [ ] 42-10-PLAN.md — Wave 2: 11 visual baselines (5 pages × LTR+AR @ 1280 + settings mobile @ 768) + size-limit gate + human checkpoint (PAGE-01..05)
    - [ ] 42-11-PLAN.md — Wave 2: axe-core WCAG AA gate (10 cases) + touch-targets ≥44×44 (5 cases) + 42-VERIFICATION.md verdict (PAGE-01..05)
 
@@ -401,7 +401,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 39. Kanban + Calendar             | v6.0      | 0/?            | Not started | —          |
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
 | 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
-| 42. Remaining Pages               | v6.0      | 5/12           | In Progress |            |
+| 42. Remaining Pages               | v6.0      | 10/12          | In Progress |            |
 | 43. RTL / A11y / Responsive Sweep | v6.0      | 0/?            | Not started | —          |
 
 <!-- gsd:progress:end -->
