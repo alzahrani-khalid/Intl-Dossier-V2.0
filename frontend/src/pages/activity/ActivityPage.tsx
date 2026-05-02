@@ -1,137 +1,89 @@
 /**
- * Activity Page
+ * Activity Page — Phase 42 Plan 08 reskin (PAGE-04).
  *
- * Main activity feed page with:
- * - Tab navigation (All Activity / Following)
- * - Collapsible statistics panel
- * - Settings sheet on mobile
- * - Full RTL/mobile-first support
+ * Renders the IntelDossier handoff `.act-list` 3-col grid timeline via
+ * <ActivityList>. Preserves the All / Following tabs (D-13: real follow
+ * feature). Strips:
+ *   - Collapsible Statistics panel
+ *   - Settings sheet trigger (preferences move to Settings → Notifications,
+ *     out of scope for this plan)
+ *   - EnhancedActivityFeed body (replaced by ActivityList)
+ *
+ * Emits `data-loading` on the section root so the Phase 42 Playwright
+ * helper (`gotoPhase42Page`) can wait deterministically.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Activity, BarChart3, RefreshCcw, Loader2, Settings } from 'lucide-react'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
-import { EnhancedActivityFeed } from '@/components/activity-feed/EnhancedActivityFeed'
-import { useEntityFollow } from '@/hooks/useActivityFeed'
-import { ActivityStatistics } from './components/ActivityStatistics'
-import { ActivitySettingsSheet } from './components/ActivitySettingsSheet'
+import { Icon } from '@/components/signature-visuals'
+import { useActivityFeed } from '@/hooks/useActivityFeed'
+import { ActivityList } from '@/components/activity-feed/ActivityList'
 
-// =============================================
-// COMPONENT
-// =============================================
+type ActivityTab = 'all' | 'following'
 
-export function ActivityPage() {
-  const { t } = useTranslation('activity-feed')
-  const [showStatistics, setShowStatistics] = useState(false)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<'all' | 'following'>('all')
-  const [isRefreshing, setIsRefreshing] = useState(false)
+export function ActivityPage(): ReactElement {
+  const { t, i18n } = useTranslation('activity-feed')
+  const isRTL = i18n.language === 'ar'
+  const [tab, setTab] = useState<ActivityTab>('all')
 
-  // Get following count for statistics
-  const { following } = useEntityFollow()
-
-  const handleRefresh = useCallback(() => {
-    setIsRefreshing(true)
-    // The feed will auto-refresh, we just show the loading state
-    setTimeout(() => setIsRefreshing(false), 1000)
-  }, [])
+  const feed = useActivityFeed({ followed_only: tab === 'following' })
+  const { activities, isLoading, error } = feed
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        icon={<Activity className="h-6 w-6" />}
-        title={t('title')}
-        subtitle={t('subtitle')}
-        actions={
-          <>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowStatistics(!showStatistics)}
-              className="gap-2 min-h-11 sm:min-h-9"
-            >
-              <BarChart3 className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('statistics.title')}</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsSettingsOpen(true)}
-              className="gap-2 min-h-11 sm:min-h-9"
-            >
-              <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('buttons.settings')}</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              className="min-h-11 sm:min-h-9"
-            >
-              {isRefreshing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <RefreshCcw className="h-4 w-4" />
-              )}
-            </Button>
-          </>
-        }
-      />
+    <section
+      role="region"
+      aria-label="Activity"
+      dir={isRTL ? 'rtl' : 'ltr'}
+      data-loading={isLoading ? 'true' : 'false'}
+      className="page flex min-w-0 flex-col gap-[var(--gap)]"
+    >
+      <PageHeader title={t('title')} />
 
-      {/* Statistics Panel (Collapsible) */}
-      <Collapsible open={showStatistics} onOpenChange={setShowStatistics}>
-        <CollapsibleContent>
-          <ActivityStatistics followingCount={following.length} className="mb-6" />
-        </CollapsibleContent>
-      </Collapsible>
-
-      {/* Main Content with Tabs */}
       <Tabs
-        value={activeTab}
-        onValueChange={(value) => setActiveTab(value as 'all' | 'following')}
+        value={tab}
+        onValueChange={(v) => setTab(v as ActivityTab)}
         className="w-full"
       >
-        <TabsList className="w-full sm:w-auto grid grid-cols-2 sm:inline-flex mb-4">
-          <TabsTrigger value="all" className="min-h-11 sm:min-h-9 px-4 sm:px-6">
-            {t('tabs.all')}
-          </TabsTrigger>
-          <TabsTrigger value="following" className="min-h-11 sm:min-h-9 px-4 sm:px-6">
-            {t('tabs.following')}
-            {following.length > 0 && (
-              <span className="ms-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">
-                {following.length}
-              </span>
-            )}
-          </TabsTrigger>
+        <TabsList>
+          <TabsTrigger value="all">{t('tabs.all')}</TabsTrigger>
+          <TabsTrigger value="following">{t('tabs.following')}</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="all" className="mt-0">
-          <EnhancedActivityFeed
-            showFilters={true}
-            showSearch={true}
-            maxHeight="calc(100vh - 400px)"
-            emptyMessage={t('emptyState.all.description')}
-          />
-        </TabsContent>
-
-        <TabsContent value="following" className="mt-0">
-          <EnhancedActivityFeed
-            filters={{ followed_only: true }}
-            showFilters={true}
-            showSearch={true}
-            maxHeight="calc(100vh - 400px)"
-            emptyMessage={t('emptyState.following.description')}
-          />
-        </TabsContent>
       </Tabs>
 
-      {/* Settings Sheet */}
-      <ActivitySettingsSheet open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
-    </div>
+      {error != null && (
+        <div className="card" role="alert">
+          <Icon name="alert" size={16} style={{ color: 'var(--danger)' }} aria-hidden />
+          <span className="ms-2">{t('errorList')}</span>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="card" data-testid="activity-skeleton">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-[var(--row-h)] w-full animate-pulse rounded-[var(--radius-sm)] mb-2"
+              style={{ background: 'var(--line-soft)' }}
+            />
+          ))}
+        </div>
+      )}
+
+      {!isLoading && error == null && activities.length === 0 && (
+        <div className="text-center py-12" style={{ color: 'var(--ink-mute)' }}>
+          <h2 className="text-lg" style={{ fontFamily: 'var(--font-display)' }}>
+            {tab === 'all' ? t('empty.all') : t('empty.following')}
+          </h2>
+        </div>
+      )}
+
+      {!isLoading && error == null && activities.length > 0 && (
+        <div className="card">
+          <ActivityList activities={activities} />
+        </div>
+      )}
+    </section>
   )
 }
