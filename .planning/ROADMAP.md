@@ -101,7 +101,7 @@ Summary checklist:
 - [ ] **Phase 39: kanban-calendar** — Reskinned horizontal-scroll Kanban (kcards, overdue border, done opacity) + 7×5 calendar grid with event pills
 - [ ] **Phase 40: list-pages** — Countries / Organizations / Persons / Forums / Topics / Working Groups / Engagements lists with shared `GenericListPage` and filter pills
 - [x] **Phase 41: dossier-drawer** — 720px dossier drawer (mini-KPI strip, serif summary, Upcoming/Activity/Commitments) with RTL flip + mobile full-screen (completed 2026-05-01)
-- [ ] **Phase 42: remaining-pages** — Briefs / After-actions / Tasks / Activity / Settings pages reskinned per handoff
+- [x] **Phase 42: remaining-pages** — Briefs / After-actions / Tasks / Activity / Settings pages reskinned per handoff (completed 2026-05-02)
 - [ ] **Phase 43: rtl-a11y-responsive-sweep** — RTL audit, axe-core WCAG AA, responsive 320→1536 sweep, directional-icon documentation, CI gates
 
 ## Phase Details
@@ -339,8 +339,8 @@ Summary checklist:
    - [x] 42-07-PLAN.md — Wave 1: Tasks page reskin — .tasks-list anatomy with checkbox + DossierGlyph + priority chip + .task-due (D-15) (PAGE-03)
    - [x] 42-08-PLAN.md — Wave 1: Activity page reskin — .act-list 3-col grid + sentence composition + 6-key icon map per action_type (D-13/D-14 + R-05) (PAGE-04)
    - [x] 42-09-PLAN.md — Wave 1: Settings page reskin — 240+1fr grid + 9-section nav (R-02) + Appearance design controls (D-11) + mobile pill row (D-12) (PAGE-05)
-   - [ ] 42-10-PLAN.md — Wave 2: 11 visual baselines (5 pages × LTR+AR @ 1280 + settings mobile @ 768) + size-limit gate + human checkpoint (PAGE-01..05)
-   - [ ] 42-11-PLAN.md — Wave 2: axe-core WCAG AA gate (10 cases) + touch-targets ≥44×44 (5 cases) + 42-VERIFICATION.md verdict (PAGE-01..05)
+   - [x] 42-10-PLAN.md — Wave 2: 11 visual baselines (5 pages × LTR+AR @ 1280 + settings mobile @ 768) + size-limit gate + human checkpoint (PAGE-01..05)
+   - [x] 42-11-PLAN.md — Wave 2: axe-core WCAG AA gate (10 cases) + touch-targets ≥44×44 (5 cases) + 42-VERIFICATION.md verdict (PAGE-01..05)
 
 ### Phase 43: rtl-a11y-responsive-sweep
 
@@ -401,7 +401,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 39. Kanban + Calendar             | v6.0      | 0/?            | Not started | —          |
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
 | 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
-| 42. Remaining Pages               | v6.0      | 10/12          | In Progress |            |
+| 42. Remaining Pages               | v6.0      | 12/12 | Complete   | 2026-05-02 |
 | 43. RTL / A11y / Responsive Sweep | v6.0      | 0/?            | Not started | —          |
 
 <!-- gsd:progress:end -->
