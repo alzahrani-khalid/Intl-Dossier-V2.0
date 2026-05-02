@@ -164,7 +164,10 @@ export function BriefsPage(): React.JSX.Element {
             reference_number:
               raw.reference_number != null && raw.reference_number !== ''
                 ? String(raw.reference_number)
-                : `BRF-${String(raw.id ?? '').replace(/-/g, '').slice(0, 8).toUpperCase()}`,
+                : `BRF-${String(raw.id ?? '')
+                    .replace(/-/g, '')
+                    .slice(0, 8)
+                    .toUpperCase()}`,
             title_en: title,
             title_ar: raw.title_ar ?? title,
             summary_en: summary,
@@ -298,12 +301,7 @@ export function BriefsPage(): React.JSX.Element {
           data-testid="briefs-loading"
         >
           {Array.from({ length: 6 }).map((_, i) => (
-            <li
-              key={i}
-              className="card"
-              style={{ minHeight: 120 }}
-              data-testid="brief-skeleton"
-            >
+            <li key={i} className="card" style={{ minHeight: 120 }} data-testid="brief-skeleton">
               <div
                 className="rounded"
                 style={{ height: 12, width: '25%', background: 'var(--line-soft)' }}
@@ -332,16 +330,14 @@ export function BriefsPage(): React.JSX.Element {
       )}
 
       {isEmpty && (
-        <div
-          className="text-center"
-          style={{ paddingBlock: 48, color: 'var(--ink-mute)' }}
-        >
+        <div className="text-center" style={{ paddingBlock: 48, color: 'var(--ink-mute)' }}>
+          {/* WR-03: parent already centres horizontally; the heading no longer
+              fights it with a `text-start` className overridden by an inline
+              physical `textAlign: 'center'`. */}
           <h2
-            className="text-start"
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 18,
-              textAlign: 'center',
             }}
           >
             {t('empty.heading')}
@@ -363,7 +359,7 @@ export function BriefsPage(): React.JSX.Element {
           data-testid="briefs-card-grid"
         >
           {briefList.map((b) => {
-            const title = locale === 'ar' ? (b.title_ar || b.title_en) : (b.title_en || b.title_ar)
+            const title = locale === 'ar' ? b.title_ar || b.title_en : b.title_en || b.title_ar
             const dateStr = formatDayFirst(b.published_date ?? b.created_at)
             return (
               <li
@@ -383,10 +379,7 @@ export function BriefsPage(): React.JSX.Element {
                   }
                 }}
               >
-                <div
-                  className="flex items-center justify-between"
-                  style={{ marginBlockEnd: 8 }}
-                >
+                <div className="flex items-center justify-between" style={{ marginBlockEnd: 8 }}>
                   <span className={cn('chip', chipModifierFor(b))}>
                     {t(`status.${statusKeyFor(b)}`)}
                   </span>
