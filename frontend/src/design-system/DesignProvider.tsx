@@ -85,16 +85,19 @@ const safeSetItem = (key: string, value: string): void => {
 // Legacy `id.density='spacious'` values written by Phase 33-era builds are
 // one-time rewritten to `'dense'` on first read so users keep their preference
 // across the rename. Idempotent: subsequent reads see `'dense'` (or any other
-// valid value) and skip the rewrite. The function returns the (possibly
-// migrated) Density value, or null when the stored value is missing/invalid
-// — callers fall back to the prop default in that case.
+// valid value) and skip the rewrite. Returns the (possibly migrated) Density
+// value, or null when the stored value is missing/invalid — callers fall
+// back to the prop default in that case.
+//
+// WR-10: this function is called from a useState lazy initializer (which runs
+// twice in React 18+ StrictMode dev) and from a useEffect (which runs once
+// post-mount). The initializer path MUST NOT write to localStorage (React
+// docs warn against side effects in lazy initializers) — only the effect
+// path performs the rewrite. We split the read and the write below.
 // ----------------------------------------------------------------------------
-function readDensityWithMigration(): Density | null {
+function readDensityValue(): Density | null {
   const raw = safeGetItem(LS_DENSITY)
-  if (raw === 'spacious') {
-    safeSetItem(LS_DENSITY, 'dense')
-    return 'dense'
-  }
+  if (raw === 'spacious') return 'dense'
   return isDensity(raw) ? raw : null
 }
 
@@ -171,8 +174,8 @@ export function DesignProvider({
   })
 
   const [density, setDensityState] = useState<Density>(() => {
-    const migrated = readDensityWithMigration()
-    return migrated ?? initialDensity
+    // WR-10: side-effect-free initializer (StrictMode runs this twice in dev).
+    return readDensityValue() ?? initialDensity
   })
 
   const [classif, setClassifState] = useState<boolean>(() => {
@@ -186,6 +189,13 @@ export function DesignProvider({
     const stored = safeGetItem(LS_LOCALE)
     return isLocale(stored) ? stored : initialLocale
   })
+
+  // WR-10: persist the legacy 'spacious' → 'dense' rewrite ONCE on mount,
+  // outside the lazy state initializer (which is double-invoked in StrictMode
+  // dev). Idempotent — re-reading 'dense' is a no-op.
+  useEffect(() => {
+    if (safeGetItem(LS_DENSITY) === 'spacious') safeSetItem(LS_DENSITY, 'dense')
+  }, [])
 
   // Pure derivation — one `TokenSet` per {direction, mode, hue, density}.
   const tokens = useMemo<TokenSet>(
