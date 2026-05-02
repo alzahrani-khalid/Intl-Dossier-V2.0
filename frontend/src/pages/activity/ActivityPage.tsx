@@ -7,7 +7,7 @@
  *   - Collapsible Statistics panel
  *   - Settings sheet trigger (preferences move to Settings → Notifications,
  *     out of scope for this plan)
- *   - EnhancedActivityFeed body (replaced by ActivityList)
+ *   - Legacy enhanced-activity-feed body (replaced by ActivityList)
  *
  * Emits `data-loading` on the section root so the Phase 42 Playwright
  * helper (`gotoPhase42Page`) can wait deterministically.
