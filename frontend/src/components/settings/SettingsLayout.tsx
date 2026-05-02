@@ -77,10 +77,16 @@ export function SettingsLayout({
         >
           <div>
             <div className="card-title">
-              {t(`${activeSection}.title`, { defaultValue: t(`nav.${navLabelKey(activeSection)}`) })}
+              {/* WR-06: section IDs are hyphenated (`data-privacy`, `email-digest`)
+                  but settings.json uses camelCase (`dataPrivacy`, `emailDigest`).
+                  Translate the ID to the camelCase JSON key first; fall back to
+                  the nav label only if the camelCase section is also missing. */}
+              {t(`${navLabelKey(activeSection)}.title`, {
+                defaultValue: t(`nav.${navLabelKey(activeSection)}`),
+              })}
             </div>
             <div className="card-sub">
-              {t(`${activeSection}.description`, { defaultValue: '' })}
+              {t(`${navLabelKey(activeSection)}.description`, { defaultValue: '' })}
             </div>
           </div>
           {hasChanges && onSave && (
@@ -153,8 +159,14 @@ export function SettingsSectionSkeleton(): React.JSX.Element {
             style={{ border: '1px solid var(--line)' }}
           >
             <div className="space-y-2 flex-1">
-              <div className="h-4 rounded" style={{ background: 'var(--line-soft)', width: '25%' }} />
-              <div className="h-3 rounded" style={{ background: 'var(--line-soft)', width: '50%' }} />
+              <div
+                className="h-4 rounded"
+                style={{ background: 'var(--line-soft)', width: '25%' }}
+              />
+              <div
+                className="h-3 rounded"
+                style={{ background: 'var(--line-soft)', width: '50%' }}
+              />
             </div>
             <div className="h-6 w-10 rounded-full" style={{ background: 'var(--line-soft)' }} />
           </div>
