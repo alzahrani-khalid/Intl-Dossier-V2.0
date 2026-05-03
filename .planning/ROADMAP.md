@@ -357,16 +357,15 @@ Summary checklist:
 2. Automated axe-core run against every v6.0 route in both EN/LTR and AR/RTL reports zero WCAG AA violations; keyboard-only navigation reaches every interactive target with preserved focus outlines under all 4 directions × both modes
 3. Visual regression or manual responsive snapshots confirm correct layout at 320 / 640 / 768 / 1024 / 1280 / 1536 px with ≥44×44px touch targets on every interactive element
 4. Directional icons (`arrow-right`, `arrow-up-right`, `chevron-right`, `chevron-left`, `.icon-flip`) flip via `scaleX(-1)` in RTL; sparkline polylines also flip; `docs/rtl-icons.md` exists and enumerates every mirrored icon in the v6.0 set
-   **Plans**: 9 plans
-   - [ ] 37-00-PLAN.md — Wave 0 infra: install d3-geo/topojson-client/world-atlas (exact pins) + scaffold signature-visuals/flags folders + .size-limit.json budget
-   - [ ] 37-01-PLAN.md — useReducedMotion hook (useSyncExternalStore + matchMedia) shipped to design-system (VIZ-01)
-   - [ ] 37-02-PLAN.md — GlobeLoader: ensureWorld lazy loader + globe-loader.css (rings 3.2s/5.5s/8s + halo + reduced-motion) + rAF rotation + graceful degrade (VIZ-01)
-   - [ ] 37-03-PLAN.md — FullscreenLoader + globeLoaderSignal + DEV-gated window.\_\_showGlobeLoader + color-mix backdrop (VIZ-02)
-   - [ ] 37-04-PLAN.md — GlobeSpinner verbatim port (40×40 currentColor SVG, 1.4s whirl + 2.8s reverse) (VIZ-03)
-   - [ ] 37-05-PLAN.md — 24 hand-drawn flag TSX + DossierGlyph resolver (country flag / symbol fallback / initials fallback) (VIZ-04)
-   - [ ] 37-06-PLAN.md — Sparkline 80×22 polyline + trailing dot + useLocale-driven scaleX(-1) RTL flip (VIZ-05)
-   - [ ] 37-07-PLAN.md — Donut stacked strokeDasharray segments + center percentage pill (VIZ-05)
-   - [ ] 37-08-PLAN.md — AppShell Suspense wrap + 4 Playwright E2E (appshell / axe a11y / prod-gate / sparkline-rtl) + size-limit gate + human checkpoint
+   **Plans**: 8 plans
+   - [ ] 43-00-PLAN.md — Wave 0 infra: V6_ROUTES registry + qa-sweep helpers + contrast util (culori) + ESLint glob expansion + test:qa-sweep + docs:rtl-icons scripts + CI qa-sweep job (QA-01..04)
+   - [ ] 43-01-PLAN.md — Wave 1 axe sweep: qa-sweep-axe.spec.ts (15 routes × 2 locales = 30 tests, serious|critical filter per Phase 38–42 precedent) (QA-02)
+   - [ ] 43-02-PLAN.md — Wave 1 responsive sweep: qa-sweep-responsive.spec.ts (15 routes × 2 locales × 5 breakpoints; 4-assertion battery; 1280 excluded per D-03) (QA-03)
+   - [ ] 43-03-PLAN.md — Wave 1 keyboard sweep: qa-sweep-keyboard.spec.ts (15 × 2 = 30 tests; per-route Tab-walk membership, NOT order, per D-09) (QA-02)
+   - [ ] 43-04-PLAN.md — Wave 1 focus-outline matrix: qa-sweep-focus-outline.spec.ts (Settings × 4 dirs × 2 modes = 8 tests; window.\_\_design hatch + 3:1 programmatic probe) (QA-02)
+   - [ ] 43-05-PLAN.md — Wave 1 icon-screenshot generator: qa-sweep-icon-screenshots.spec.ts (advisory, opt-in via pnpm docs:rtl-icons; 7 fixtures × 2 directions = 14 tests) (QA-04)
+   - [ ] 43-06-PLAN.md — Wave 1 docs/rtl-icons.md: 3-section audit doc (Flip mechanisms / Audit table / Out of scope) covering 11 icon entries (QA-04)
+   - [ ] 43-07-PLAN.md — Wave 2 gate + remediation: 5 rotate-180→.icon-flip migrations + lint survivors fix + sweep survivors fix + 8 focus-outline baselines + 14 icon PNG fixtures + delete responsive-breakpoints.spec.ts + 43-VERIFICATION.md (QA-01..04)
 
 ## Progress
 
