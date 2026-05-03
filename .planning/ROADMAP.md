@@ -359,12 +359,12 @@ Summary checklist:
 4. Directional icons (`arrow-right`, `arrow-up-right`, `chevron-right`, `chevron-left`, `.icon-flip`) flip via `scaleX(-1)` in RTL; sparkline polylines also flip; `docs/rtl-icons.md` exists and enumerates every mirrored icon in the v6.0 set
    **Plans**: 8 plans
    - [x] 43-00-PLAN.md — Wave 0 infra: V6_ROUTES registry + qa-sweep helpers + contrast util (culori) + ESLint glob expansion + test:qa-sweep + docs:rtl-icons scripts + CI qa-sweep job (QA-01..04)
-   - [ ] 43-01-PLAN.md — Wave 1 axe sweep: qa-sweep-axe.spec.ts (15 routes × 2 locales = 30 tests, serious|critical filter per Phase 38–42 precedent) (QA-02)
-   - [ ] 43-02-PLAN.md — Wave 1 responsive sweep: qa-sweep-responsive.spec.ts (15 routes × 2 locales × 5 breakpoints; 4-assertion battery; 1280 excluded per D-03) (QA-03)
-   - [ ] 43-03-PLAN.md — Wave 1 keyboard sweep: qa-sweep-keyboard.spec.ts (15 × 2 = 30 tests; per-route Tab-walk membership, NOT order, per D-09) (QA-02)
-   - [ ] 43-04-PLAN.md — Wave 1 focus-outline matrix: qa-sweep-focus-outline.spec.ts (Settings × 4 dirs × 2 modes = 8 tests; window.\_\_design hatch + 3:1 programmatic probe) (QA-02)
-   - [ ] 43-05-PLAN.md — Wave 1 icon-screenshot generator: qa-sweep-icon-screenshots.spec.ts (advisory, opt-in via pnpm docs:rtl-icons; 7 fixtures × 2 directions = 14 tests) (QA-04)
-   - [ ] 43-06-PLAN.md — Wave 1 docs/rtl-icons.md: 3-section audit doc (Flip mechanisms / Audit table / Out of scope) covering 11 icon entries (QA-04)
+   - [x] 43-01-PLAN.md — Wave 1 axe sweep: qa-sweep-axe.spec.ts (15 routes × 2 locales = 30 tests, serious|critical filter per Phase 38–42 precedent) (QA-02)
+   - [x] 43-02-PLAN.md — Wave 1 responsive sweep: qa-sweep-responsive.spec.ts (15 routes × 2 locales × 5 breakpoints; 4-assertion battery; 1280 excluded per D-03) (QA-03)
+   - [x] 43-03-PLAN.md — Wave 1 keyboard sweep: qa-sweep-keyboard.spec.ts (15 × 2 = 30 tests; per-route Tab-walk membership, NOT order, per D-09) (QA-02)
+   - [x] 43-04-PLAN.md — Wave 1 focus-outline matrix: qa-sweep-focus-outline.spec.ts (Settings × 4 dirs × 2 modes = 8 tests; window.\_\_design hatch + 3:1 programmatic probe) (QA-02)
+   - [x] 43-05-PLAN.md — Wave 1 icon-screenshot generator: qa-sweep-icon-screenshots.spec.ts (advisory, opt-in via pnpm docs:rtl-icons; 7 fixtures × 2 directions = 14 tests) (QA-04)
+   - [x] 43-06-PLAN.md — Wave 1 docs/rtl-icons.md: 3-section audit doc (Flip mechanisms / Audit table / Out of scope) covering 11 icon entries (QA-04)
    - [ ] 43-07-PLAN.md — Wave 2 gate + remediation: 5 rotate-180→.icon-flip migrations + lint survivors fix + sweep survivors fix + 8 focus-outline baselines + 14 icon PNG fixtures + delete responsive-breakpoints.spec.ts + 43-VERIFICATION.md (QA-01..04)
 
 ## Progress
@@ -405,7 +405,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
 | 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
 | 42. Remaining Pages               | v6.0      | 12/12          | Complete    | 2026-05-02 |
-| 43. RTL / A11y / Responsive Sweep | v6.0      | 1/8            | In Progress |            |
+| 43. RTL / A11y / Responsive Sweep | v6.0      | 7/8            | In Progress |            |
 
 <!-- gsd:progress:end -->
 
