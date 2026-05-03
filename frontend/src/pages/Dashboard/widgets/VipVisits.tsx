@@ -2,8 +2,8 @@
  * Phase 38 plan 06 — VipVisits widget.
  *
  * Renders upcoming VIP visit rows: <DossierGlyph type="person"> + name + role +
- * <LtrIsolate> `T−N` countdown. The "All" link's arrow-right rotates 180° in
- * RTL (rotate-180) — never mirrored via scaleX (T-38-04).
+ * <LtrIsolate> `T−N` countdown. The "All" link's arrow-right flips horizontally
+ * in RTL via the global `.icon-flip` class (CSS `scaleX(-1)`), per QA-04.
  *
  * Data: useVipVisits(user?.id) — Wave 1 adapter hook wrapping useUpcomingEvents
  * and filtering event_type === 'vip_visit' (Option B per plan checkpoint).
@@ -11,7 +11,6 @@
  *
  * Mitigates:
  *   T-38-10 — no data-source discretion; hook was confirmed at checkpoint.
- *   T-38-04 — arrow uses conditional `rotate-180` on isRTL; no scaleX.
  *   T-38-01 — no mock constants; data comes from useVipVisits only.
  */
 
@@ -60,10 +59,9 @@ function VipRow({ visit }: VipRowProps): ReactElement {
 }
 
 export function VipVisits(): ReactElement {
-  const { t, i18n } = useTranslation('dashboard-widgets')
+  const { t } = useTranslation('dashboard-widgets')
   const { user } = useAuth()
   const { data, isLoading, isError } = useVipVisits(user?.id)
-  const isRTL = i18n.language === 'ar'
 
   if (isLoading) {
     return (
@@ -78,11 +76,7 @@ export function VipVisits(): ReactElement {
 
   if (isError || data === undefined) {
     return (
-      <section
-        role="region"
-        aria-labelledby="vip-heading"
-        className="vip card"
-      >
+      <section role="region" aria-labelledby="vip-heading" className="vip card">
         <h3 id="vip-heading" className="card-title mb-2 text-start">
           {t('vip.title')}
         </h3>
@@ -95,11 +89,7 @@ export function VipVisits(): ReactElement {
 
   if (visits.length === 0) {
     return (
-      <section
-        role="region"
-        aria-labelledby="vip-heading"
-        className="vip card"
-      >
+      <section role="region" aria-labelledby="vip-heading" className="vip card">
         <h3 id="vip-heading" className="card-title mb-2 text-start">
           {t('vip.title')}
         </h3>
@@ -120,7 +110,7 @@ export function VipVisits(): ReactElement {
           aria-label={t('actions.viewAll')}
         >
           {t('actions.viewAll')}
-          <ArrowRight className={`size-3 ${isRTL ? 'rotate-180' : ''}`} aria-hidden="true" />
+          <ArrowRight className="size-3 icon-flip" aria-hidden="true" />
         </a>
       </div>
       <ul className="vip-list">
