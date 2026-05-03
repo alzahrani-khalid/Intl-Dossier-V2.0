@@ -35,6 +35,11 @@ interface IconFixture {
 }
 
 // Minimum viable seed per RESEARCH §6.F. Plan 43-06 may add more if rtl-icons.md grows.
+// The `no-restricted-syntax` RTL rule fires on any string literal containing `right-`
+// (it targets Tailwind classes like `mr-4` / `right-0`). The fixture names below are
+// icon component identifiers (e.g. `chevron-right-table`), not Tailwind classes —
+// disable the rule for this block.
+/* eslint-disable no-restricted-syntax */
 const iconFixtures: IconFixture[] = [
   {
     name: 'chevron-right-table',
@@ -100,6 +105,7 @@ const iconFixtures: IconFixture[] = [
     selector: '[data-testid="drawer-cta-row"] .icon-flip, .drawer-cta .icon-flip, aside .icon-flip',
   },
 ]
+/* eslint-enable no-restricted-syntax */
 
 test.describe('Phase 43 — qa-sweep-icon-screenshots (advisory, opt-in)', () => {
   test.beforeAll(() => {
