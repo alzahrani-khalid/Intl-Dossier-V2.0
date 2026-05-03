@@ -78,8 +78,8 @@ test.describe('Phase 43 — qa-sweep-focus-outline (Settings × 4 dirs × 2 mode
           caret: 'hide',
         })
 
-        // Surface diagnostics in CI logs.
-        console.log(
+        // Surface diagnostics in CI logs (lint config allows warn/error only).
+        console.warn(
           `[settings][${direction}/${mode}] outline=${probe.outlineColor} bg=${probe.bgColor} ratio=${probe.ratio.toFixed(2)}`,
         )
       })
