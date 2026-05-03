@@ -111,8 +111,8 @@ function ForumsListPage(): React.ReactNode {
 
   return (
     <ListPageShell
-      title={t('forums:title')}
-      subtitle={t('forums:subtitle')}
+      title={t('forums:pageTitle')}
+      subtitle={t('forums:pageSubtitle')}
       toolbar={
         <ToolbarSearch
           value={search ?? ''}

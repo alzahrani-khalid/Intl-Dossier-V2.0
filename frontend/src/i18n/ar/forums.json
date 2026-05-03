@@ -9,7 +9,17 @@
   "venue": "المكان",
   "participants": "المشاركون",
   "sessions": "الجلسات",
-  "status": "الحالة",
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "completed": "مكتمل",
+    "planned": "مجدول",
+    "cancelled": "ملغى",
+    "scheduled": "مقرر",
+    "ongoing": "جاري",
+    "archived": "مؤرشف",
+    "on_hold": "قيد الانتظار"
+  },
   "virtual": "افتراضي",
   "addForum": "إضافة منتدى",
   "editForum": "تعديل المنتدى",
