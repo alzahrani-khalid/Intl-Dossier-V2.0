@@ -203,7 +203,7 @@ Summary checklist:
 3. Buttons, load-more rows, and the digest refresh show an inline `<GlobeSpinner>` (40×40 SVG, 1.4s whirl arc + 2.8s reverse stylized globe) inheriting `currentColor` so it tints to surrounding text
 4. Developer can render `<DossierGlyph>` resolving one of 24 hand-drawn flag SVGs (SA, AE, ID, EG, QA, JO, BH, OM, KW, PK, MA, TR, CN, IT, FR, DE, GB, US, JP, KR, IN, BR, EU, UN) clipped to a circle with a 1px `rgba(0,0,0,0.15)` hairline; non-country types fall back to symbol glyphs (forum ◇, person ●, topic ◆, organization ▲) in soft-tinted circles
 5. Developer can render `<Sparkline data={…}>` (80×22 polyline, min-max normalized, trailing dot at latest point, flipped via `scaleX(-1)` in RTL) and `<Donut value={…} variants={[ok,risk,bad]}>` with stacked `strokeDasharray` segments and center percentage pill
-   **Plans**: 13 plans
+   **Plans**: 25 plans (13 original + 8 gap closure G1–G8 (40-12..40-19) + 4 gap closure G9/G10/G11/AUTH-FIX (40-20..40-23))
 
 - [ ] 40-01-PLAN.md — Wave 0 locales: 16 i18n namespace JSON files (8 namespaces × EN+AR) — list-pages + countries + organizations + persons + forums + topics + working-groups + engagements (LIST-01..04)
 - [ ] 40-02a-PLAN.md — Wave 0 primitives + skeletons + sensitivity helper + barrel + 5 vitest fixtures (LIST-01..04)
@@ -218,6 +218,10 @@ Summary checklist:
 - [ ] 40-09-PLAN.md — Wave 1 Engagements page: replace `pages/Engagements/EngagementsListPage.tsx` body → ListPageShell + EngagementsList primitive + click navigation `/engagements/$engagementId/overview` + filter/load-more/RTL vitest (LIST-04)
 - [ ] 40-10-PLAN.md — Wave 2 gates: 6 Playwright specs (render @ 320/768/1280 × 7 routes + RTL chevron scaleX(-1) + engagements filter pills/load-more/click navigation + 14 a11y axe-core + 14 visual baselines @1280 + touch-target ≥44×44) + ESLint logical-properties enforcement on Phase 40 file scope + size-limit 815 KB gate
 - [ ] 40-11-PLAN.md — Wave 2 human checkpoint: PNG-parity comparison (countries/organizations/forums/engagements + dashboard.png card aesthetic for persons + Topics/WG parity to forums.png) + AR sanity (chevron flip / Tajawal / RTL flow) + commit 14 visual baselines + write VERIFICATION.md (LIST-01..04 verdict + deviations)
+- [ ] 40-20-PLAN.md — Gap closure G9: seed ≥10 person dossiers (≥2 VIP, importance_level >= 4) via Supabase MCP migration to unblock /dossiers/persons D-04 card aesthetic verification (LIST-02)
+- [ ] 40-21-PLAN.md — Gap closure G10: fix Forums i18n key collision (pageTitle/pageSubtitle) + add bilingual EN+AR status chip translations (LIST-03)
+- [ ] 40-22-PLAN.md — Gap closure G11: rewire /dossiers/engagements to Phase 40 EngagementsListPage + strip double-prefix i18n keys + add filter/week/row/loadMore EN+AR + fix search_engagements_advanced RPC type filter + Edge Function redeploy (LIST-04)
+- [ ] 40-23-PLAN.md — Gap closure AUTH-FIX: switch list-pages-auth.ts to id-based selectors (#email / #password) so 6-spec Playwright sweep clears the auth gate (LIST-01..04)
       **UI hint**: yes
 
 ### Phase 38: dashboard-verbatim ✅ COMPLETE (2026-04-25)
@@ -401,7 +405,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 39. Kanban + Calendar             | v6.0      | 0/?            | Not started | —          |
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
 | 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
-| 42. Remaining Pages               | v6.0      | 12/12 | Complete   | 2026-05-02 |
+| 42. Remaining Pages               | v6.0      | 12/12          | Complete    | 2026-05-02 |
 | 43. RTL / A11y / Responsive Sweep | v6.0      | 0/?            | Not started | —          |
 
 <!-- gsd:progress:end -->
