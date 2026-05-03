@@ -33,10 +33,10 @@ export type EngagementsListProps = {
 }
 
 const FILTERS: ReadonlyArray<{ value: EngagementFilter; labelKey: string }> = [
-  { value: 'all', labelKey: 'engagements.filter.all' },
-  { value: 'meeting', labelKey: 'engagements.filter.meeting' },
-  { value: 'call', labelKey: 'engagements.filter.call' },
-  { value: 'travel', labelKey: 'engagements.filter.travel' },
+  { value: 'all', labelKey: 'filter.all' },
+  { value: 'meeting', labelKey: 'filter.meeting' },
+  { value: 'call', labelKey: 'filter.call' },
+  { value: 'travel', labelKey: 'filter.travel' },
 ] as const
 
 const SkeletonRow = (): ReactNode => (
@@ -89,11 +89,11 @@ export function EngagementsList({
         <ToolbarSearch
           value={search}
           onChange={onSearchChange}
-          placeholder={t('engagements.search.placeholder', { defaultValue: 'Search engagements…' })}
+          placeholder={t('search.placeholder', { defaultValue: 'Search engagements…' })}
         />
         <div
           role="group"
-          aria-label={t('engagements.filter.aria', { defaultValue: 'Filter engagements' })}
+          aria-label={t('filter.aria', { defaultValue: 'Filter engagements' })}
           className="flex flex-wrap gap-2"
         >
           {FILTERS.map((f) => (
@@ -131,14 +131,14 @@ export function EngagementsList({
           {groupedByWeek.map((group) => (
             <section
               key={group.key}
-              aria-label={t('engagements.week.of', { defaultValue: 'Week of' }) + ' ' + group.key}
+              aria-label={t('week.of', { defaultValue: 'Week of' }) + ' ' + group.key}
             >
               <h3 className="px-4 py-2 text-xs font-semibold uppercase text-muted-foreground bg-muted/30">
-                {t('engagements.week.of', { defaultValue: 'Week of' })} {group.key}
+                {t('week.of', { defaultValue: 'Week of' })} {group.key}
               </h3>
               {group.rows.map((row) => {
                 const title = isRTL ? row.title_ar : row.title_en
-                const ariaLabel = t('engagements.row.openAria', {
+                const ariaLabel = t('row.openAria', {
                   defaultValue: 'Open engagement: {{title}}',
                   title,
                 })
@@ -189,12 +189,12 @@ export function EngagementsList({
                   <>
                     <GlobeSpinner
                       size={16}
-                      aria-label={t('engagements.loadMore.loading', { defaultValue: 'Loading…' })}
+                      aria-label={t('loadMore.loading', { defaultValue: 'Loading…' })}
                     />
-                    <span>{t('engagements.loadMore.loading', { defaultValue: 'Loading…' })}</span>
+                    <span>{t('loadMore.loading', { defaultValue: 'Loading…' })}</span>
                   </>
                 ) : (
-                  <span>{t('engagements.loadMore.cta', { defaultValue: 'Load more' })}</span>
+                  <span>{t('loadMore.cta', { defaultValue: 'Load more' })}</span>
                 )}
               </button>
             </div>
