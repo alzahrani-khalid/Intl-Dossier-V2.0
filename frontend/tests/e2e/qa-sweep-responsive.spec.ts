@@ -1,0 +1,126 @@
+/**
+ * Phase 43 Plan 02 — qa-sweep-responsive.
+ *
+ * Render-assertion battery (D-04) at 5 non-baseline breakpoints (D-03) for
+ * every v6.0 route in both locales. The desktop baseline viewport stays
+ * owned by per-phase visual specs (Phase 38 / 40 / 41 / 42) and is
+ * deliberately excluded from this sweep.
+ *
+ * Battery (per breakpoint, per route, per locale):
+ *   1. No horizontal overflow (`document.body.scrollWidth ≤ viewport + 1`)
+ *   2. Touch targets ≥ 44×44 (WCAG 2.5.5 AAA / Apple HIG)
+ *   3. Key landmarks visible (`<main>`, `<nav>`, `<h1>`)
+ *   4. Mobile shell (≤ 768): desktop sidebar hidden, drawer trigger present
+ *
+ * Test cardinality:
+ *   15 routes × 2 locales = 30 tests, each running 4 assertions × 5 breakpoints
+ *   = 20 inline assertions per test → 600 assertion executions.
+ *
+ * Failure messages embed `[route][locale][breakpoint]` so CI logs are
+ * actionable per RESEARCH "CI failure messages".
+ */
+
+import { test, expect, type Page } from '@playwright/test'
+
+import { loginForListPages } from './support/list-pages-auth'
+import { V6_ROUTES } from './helpers/v6-routes'
+import { BREAKPOINTS, forEachBreakpoint, settlePage } from './helpers/qa-sweep'
+
+// Reference BREAKPOINTS so the import is non-elided and grep-verifiable.
+void BREAKPOINTS
+
+const TOUCH_TARGET_MIN = 44
+const SCROLL_TOLERANCE = 1
+
+const INTERACTIVE_SELECTOR = [
+  'button:not([disabled])',
+  'a[href]',
+  'input:not([type="hidden"]):not([disabled])',
+  '[role="button"]:not([aria-disabled="true"])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ')
+
+async function assertNoHorizontalOverflow(page: Page, vw: number, label: string): Promise<void> {
+  const scrollWidth = await page.evaluate(() => document.body.scrollWidth)
+  expect(
+    scrollWidth,
+    `${label} horizontal scroll: scrollWidth=${scrollWidth} > viewport=${vw}`,
+  ).toBeLessThanOrEqual(vw + SCROLL_TOLERANCE)
+}
+
+async function assertTouchTargets(page: Page, label: string): Promise<void> {
+  const offenders = await page.evaluate(
+    ({ selector, min }) => {
+      const els = Array.from(document.querySelectorAll(selector))
+      return els
+        .filter((el) => {
+          const cs = getComputedStyle(el as Element)
+          if (cs.display === 'none' || cs.visibility === 'hidden') return false
+          const rect = (el as HTMLElement).getBoundingClientRect()
+          return rect.width > 0 && rect.height > 0 && (rect.width < min || rect.height < min)
+        })
+        .slice(0, 5) // cap output for actionable failure messages
+        .map((el) => {
+          const rect = (el as HTMLElement).getBoundingClientRect()
+          return {
+            tag: el.tagName.toLowerCase(),
+            w: Math.round(rect.width),
+            h: Math.round(rect.height),
+            html: el.outerHTML.slice(0, 120),
+          }
+        })
+    },
+    { selector: INTERACTIVE_SELECTOR, min: TOUCH_TARGET_MIN },
+  )
+  expect(
+    offenders,
+    `${label} touch targets <${TOUCH_TARGET_MIN}px: ${JSON.stringify(offenders)}`,
+  ).toEqual([])
+}
+
+async function assertLandmarksVisible(page: Page, label: string): Promise<void> {
+  const main = page.locator('main, [role="main"]').first()
+  await expect(main, `${label} <main> not visible`).toBeVisible()
+  const nav = page.locator('nav, [role="navigation"]').first()
+  await expect(nav, `${label} <nav> not visible`).toBeVisible()
+  const h1 = page.locator('h1').first()
+  await expect(h1, `${label} <h1> not visible`).toBeVisible()
+}
+
+async function assertMobileShell(page: Page, vw: number, label: string): Promise<void> {
+  if (vw > 768) return // shell collapse contract is ≤768
+  // Sidebar must be off-canvas / hidden; mobile drawer trigger must be reachable.
+  const sidebar = page.locator('aside[data-sidebar], aside.app-sidebar, nav.app-sidebar').first()
+  if ((await sidebar.count()) > 0) {
+    const isVisible = await sidebar.isVisible()
+    expect(isVisible, `${label} desktop sidebar still visible at ≤768px`).toBe(false)
+  }
+  const drawerTrigger = page
+    .locator(
+      'button[aria-label*="menu" i], button[data-mobile-menu], button[aria-controls*="drawer" i]',
+    )
+    .first()
+  await expect(drawerTrigger, `${label} mobile drawer trigger not visible`).toBeVisible()
+}
+
+test.describe('Phase 43 — qa-sweep-responsive', () => {
+  for (const route of V6_ROUTES) {
+    for (const locale of route.locales) {
+      test(`${route.name} [${locale}] — render-assertion battery × 5 breakpoints`, async ({
+        page,
+      }) => {
+        await loginForListPages(page, locale)
+        await page.goto(route.path)
+        await settlePage(page)
+        await forEachBreakpoint(page, async (bp) => {
+          await settlePage(page) // re-settle after viewport change
+          const label = `[${route.name}][${locale}][${bp.name}]`
+          await assertNoHorizontalOverflow(page, bp.width, label)
+          await assertTouchTargets(page, label)
+          await assertLandmarksVisible(page, label)
+          await assertMobileShell(page, bp.width, label)
+        })
+      })
+    }
+  }
+})
