@@ -17,10 +17,7 @@ import type { Page } from '@playwright/test'
 const TEST_EMAIL = process.env.TEST_USER_EMAIL ?? ''
 const TEST_PASSWORD = process.env.TEST_USER_PASSWORD ?? ''
 
-export async function loginForListPages(
-  page: Page,
-  locale: 'en' | 'ar' = 'en',
-): Promise<void> {
+export async function loginForListPages(page: Page, locale: 'en' | 'ar' = 'en'): Promise<void> {
   if (TEST_EMAIL === '' || TEST_PASSWORD === '') {
     throw new Error(
       'Missing TEST_USER_EMAIL or TEST_USER_PASSWORD. Source from Doppler: ' +
@@ -29,8 +26,8 @@ export async function loginForListPages(
   }
 
   await page.goto('/login')
-  await page.fill('[name="email"], input[type="email"]', TEST_EMAIL)
-  await page.fill('[name="password"], #password, input[type="password"]', TEST_PASSWORD)
+  await page.fill('#email', TEST_EMAIL)
+  await page.fill('#password', TEST_PASSWORD)
   await page.click('button[type="submit"]')
 
   // Wait for post-login redirect — accept any of the canonical landing routes.
