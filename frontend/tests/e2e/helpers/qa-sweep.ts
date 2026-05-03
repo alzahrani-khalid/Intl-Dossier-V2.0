@@ -105,14 +105,18 @@ export async function assertFocusOutlineVisible(
   selector: string,
 ): Promise<{ outlineColor: string; bgColor: string; ratio: number }> {
   await page.locator(selector).first().focus()
-  const { outlineColor, bgColor } = await page.evaluate((sel) => {
-    const el = document.querySelector(sel) as HTMLElement | null
-    if (!el) return { outlineColor: '', bgColor: '' }
+  const { outlineColor, bgColor } = await page.evaluate(() => {
+    // Read the active element rather than re-querying the selector — guarantees
+    // we measure the exact element Playwright just focused, and avoids any
+    // selector-syntax mismatch between Playwright locators (which support
+    // `:visible`) and `document.querySelector` (which does not).
+    const el = document.activeElement as HTMLElement | null
+    if (!el || el === document.body) return { outlineColor: '', bgColor: '' }
     const cs = getComputedStyle(el)
     const parent = el.parentElement
     const parentBg = parent ? getComputedStyle(parent).backgroundColor : 'rgb(255, 255, 255)'
     return { outlineColor: cs.outlineColor, bgColor: parentBg }
-  }, selector)
+  })
   expect(
     outlineColor !== 'rgba(0, 0, 0, 0)' && outlineColor !== 'transparent' && outlineColor !== '',
     `focus outline is transparent for ${selector} (got "${outlineColor}")`,
