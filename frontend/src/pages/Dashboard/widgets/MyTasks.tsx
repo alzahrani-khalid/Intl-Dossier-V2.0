@@ -108,11 +108,7 @@ export function MyTasks(): ReactElement {
   }
 
   return (
-    <section
-      role="region"
-      aria-labelledby="tasks-heading"
-      className="tasks card"
-    >
+    <section role="region" aria-labelledby="tasks-heading" className="tasks card">
       <h3 id="tasks-heading" className="card-title mb-3 text-start">
         {t('myTasks.title')}
       </h3>
@@ -132,6 +128,7 @@ export function MyTasks(): ReactElement {
               }`}
             >
               <Checkbox
+                className="touch-44"
                 checked={done}
                 onCheckedChange={(c): void => handleToggle(task, c === true)}
                 aria-label={task.title}

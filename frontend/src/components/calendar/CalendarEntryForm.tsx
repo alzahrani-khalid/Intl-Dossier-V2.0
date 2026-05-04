@@ -105,7 +105,7 @@ export function CalendarEntryForm({
 }: CalendarEntryFormProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_meeting')
+  const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_meeting')
   const [titleEn, setTitleEn] = useState(initialData?.title_en || '')
   const [titleAr, setTitleAr] = useState(initialData?.title_ar || '')
   const [descriptionEn, setDescriptionEn] = useState(initialData?.description_en || '')
@@ -453,12 +453,14 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
         {/* All Day & Location */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
-            <Checkbox
-              id="all-day"
-              checked={allDay}
-              onCheckedChange={(checked) => setAllDay(checked as boolean)}
-              disabled={isPending}
-            />
+            <span className="touch-44">
+              <Checkbox
+                id="all-day"
+                checked={allDay}
+                onCheckedChange={(checked) => setAllDay(checked as boolean)}
+                disabled={isPending}
+              />
+            </span>
             <Label htmlFor="all-day" className="cursor-pointer">
               {t('calendar.form.all_day')}
             </Label>
