@@ -71,7 +71,7 @@ export function AdvancedSearchFilters({
 }: AdvancedSearchFiltersProps) {
   const { t } = useTranslation('advanced-search')
   const { isRTL } = useDirection()
-const [state, dispatch] = useReducer(
+  const [state, dispatch] = useReducer(
     searchReducer,
     initialState ? { ...defaultSearchState, ...initialState } : defaultSearchState,
   )
@@ -274,13 +274,15 @@ const [state, dispatch] = useReducer(
 
           {/* Include Archived */}
           <div className="flex items-center gap-3 py-2">
-            <Checkbox
-              id="include-archived"
-              checked={state.includeArchived}
-              onCheckedChange={(checked) =>
-                dispatch({ type: 'SET_INCLUDE_ARCHIVED', payload: checked === true })
-              }
-            />
+            <span className="touch-44">
+              <Checkbox
+                id="include-archived"
+                checked={state.includeArchived}
+                onCheckedChange={(checked) =>
+                  dispatch({ type: 'SET_INCLUDE_ARCHIVED', payload: checked === true })
+                }
+              />
+            </span>
             <label
               htmlFor="include-archived"
               className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"

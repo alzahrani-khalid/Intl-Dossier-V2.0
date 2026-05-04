@@ -867,3 +867,18 @@ html[dir='rtl'] .tb-locale-btn,
     border-block-end: 2px solid var(--accent-ink);
   }
 }
+
+/* QA-03 — minimum 44×44 hit area for compact interactives (HeroUI
+   Checkbox, Button size="sm", topbar radio direction switcher). Pure
+   hit-area expansion; visual size of the inner control is unchanged.
+   Applied either as a parent wrapper className OR merged onto the
+   control's own className when the control already carries the click
+   handler. Logical-property `inline-size` / `block-size` keep RTL
+   correct without extra rules. */
+.touch-44 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+}

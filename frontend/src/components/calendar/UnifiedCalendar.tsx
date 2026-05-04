@@ -195,13 +195,23 @@ export function UnifiedCalendar({
       <Card className="p-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Button variant="outline" size="sm" onClick={handlePreviousMonth} className="icon-flip">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePreviousMonth}
+              className="icon-flip min-h-11 min-w-11"
+            >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <h2 className="text-base sm:text-lg font-semibold flex-1 text-center">
               {format(currentMonth, 'MMMM yyyy')}
             </h2>
-            <Button variant="outline" size="sm" onClick={handleNextMonth} className="icon-flip">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNextMonth}
+              className="icon-flip min-h-11 min-w-11"
+            >
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
