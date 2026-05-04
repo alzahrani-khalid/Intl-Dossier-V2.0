@@ -203,14 +203,22 @@ export function AppShell({ children }: AppShellProps): ReactElement {
       </div>
 
       {/* Main content — row 3 of main column. `overflow-y-auto` keeps the
-          topbar + classif pinned while page content scrolls independently. */}
+          topbar + classif pinned while page content scrolls independently.
+          tabIndex={0} + aria-label make the scroll region keyboard-reachable
+          and announceable (closes axe `scrollable-region-focusable` violation
+          on every _protected route — Plan 43-11). */}
       <main
+        tabIndex={0}
+        aria-label={t('shell.main.region')}
         className={cn(
           'appshell-main',
           'main',
           'lg:col-start-2 lg:row-start-3',
           'overflow-y-auto',
           'bg-[var(--bg)]',
+          'focus-visible:outline-2',
+          'focus-visible:outline-offset-2',
+          'focus-visible:outline-[var(--accent)]',
         )}
       >
         <Suspense fallback={<FullscreenLoader open />}>{children}</Suspense>
