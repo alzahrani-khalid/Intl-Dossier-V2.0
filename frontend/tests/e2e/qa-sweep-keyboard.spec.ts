@@ -61,17 +61,36 @@ test.describe('Phase 43 — qa-sweep-keyboard', () => {
         // implicit ~5s timeout.
         await page.waitForLoadState('networkidle').catch(() => {})
 
-        // Enumerate visible interactives via DOM filter scoped to <main>.
-        // Bypasses Playwright's chained `:visible` selector-composition
-        // quirk on `<main tabindex="0">` (43-11). Mirrors axe-core's
-        // visibility heuristic: `offsetParent !== null` + non-zero
-        // `getBoundingClientRect`.
+        // Plan 43-18: enumerate Tab-order-eligible interactives scoped to
+        // <main>. Replaces the prior offsetParent + rect heuristic with
+        // an `isTabbable` predicate that mirrors browser Tab-order
+        // semantics: any inert / aria-hidden="true" / display:none /
+        // visibility:hidden ancestor disqualifies the element, and the
+        // element's own `tabIndex` must be ≥ 0. This eliminates
+        // false-positive over-counting when an element looks tabbable
+        // by tag (button, a, [role=button]) but is excluded from the
+        // tab sequence by an ancestor or attribute.
         const visibleHandles = await page
           .locator('main')
           .first()
           .evaluateAll((mainNodes: Element[]) => {
             const main = mainNodes[0]
             if (!main) return []
+            const isTabbable = (el: HTMLElement): boolean => {
+              let cur: HTMLElement | null = el
+              while (cur && cur !== document.body) {
+                if (cur.hasAttribute('inert')) return false
+                if (cur.getAttribute('aria-hidden') === 'true') return false
+                const cs = getComputedStyle(cur)
+                if (cs.display === 'none' || cs.visibility === 'hidden') return false
+                cur = cur.parentElement
+              }
+              if (el.tabIndex < 0) return false
+              if (el.offsetParent === null) return false
+              const rect = el.getBoundingClientRect()
+              if (rect.width === 0 || rect.height === 0) return false
+              return true
+            }
             const candidates = main.querySelectorAll<HTMLElement>(
               'button, a, input, [role="button"], [tabindex]:not([tabindex="-1"])',
             )
@@ -81,9 +100,7 @@ test.describe('Phase 43 — qa-sweep-keyboard', () => {
               // satisfy WCAG `scrollable-region-focusable`, but is not an
               // "interactive" in this sweep's semantics.
               if (el === main) return
-              if (el.offsetParent === null) return
-              const rect = el.getBoundingClientRect()
-              if (rect.width === 0 || rect.height === 0) return
+              if (!isTabbable(el)) return
               visible.push(el.outerHTML.slice(0, 200))
             })
             return visible
