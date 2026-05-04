@@ -1188,6 +1188,9 @@
       "open": "Open navigation menu",
       "close": "Close navigation menu"
     },
+    "main": {
+      "region": "Main content"
+    },
     "classification": {
       "workspace": "GASTAT",
       "handleSecurely": "Handle via secure channels",
