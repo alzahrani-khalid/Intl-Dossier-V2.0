@@ -102,7 +102,7 @@ Summary checklist:
 - [ ] **Phase 40: list-pages** — Countries / Organizations / Persons / Forums / Topics / Working Groups / Engagements lists with shared `GenericListPage` and filter pills
 - [x] **Phase 41: dossier-drawer** — 720px dossier drawer (mini-KPI strip, serif summary, Upcoming/Activity/Commitments) with RTL flip + mobile full-screen (completed 2026-05-01)
 - [x] **Phase 42: remaining-pages** — Briefs / After-actions / Tasks / Activity / Settings pages reskinned per handoff (completed 2026-05-02)
-- [ ] **Phase 43: rtl-a11y-responsive-sweep** — RTL audit, axe-core WCAG AA, responsive 320→1536 sweep, directional-icon documentation, CI gates
+- [x] **Phase 43: rtl-a11y-responsive-sweep** — RTL audit, axe-core WCAG AA, responsive 320→1536 sweep, directional-icon documentation, CI gates (completed 2026-05-04)
 
 ## Phase Details
 
@@ -365,7 +365,7 @@ Summary checklist:
    - [x] 43-04-PLAN.md — Wave 1 focus-outline matrix: qa-sweep-focus-outline.spec.ts (Settings × 4 dirs × 2 modes = 8 tests; window.\_\_design hatch + 3:1 programmatic probe) (QA-02)
    - [x] 43-05-PLAN.md — Wave 1 icon-screenshot generator: qa-sweep-icon-screenshots.spec.ts (advisory, opt-in via pnpm docs:rtl-icons; 7 fixtures × 2 directions = 14 tests) (QA-04)
    - [x] 43-06-PLAN.md — Wave 1 docs/rtl-icons.md: 3-section audit doc (Flip mechanisms / Audit table / Out of scope) covering 11 icon entries (QA-04)
-   - [ ] 43-07-PLAN.md — Wave 2 gate + remediation: 5 rotate-180→.icon-flip migrations + lint survivors fix + sweep survivors fix + 8 focus-outline baselines + 14 icon PNG fixtures + delete responsive-breakpoints.spec.ts + 43-VERIFICATION.md (QA-01..04)
+   - [x] 43-07-PLAN.md — Wave 2 gate + remediation: 5 rotate-180→.icon-flip migrations + lint survivors fix + sweep survivors fix + 8 focus-outline baselines + 14 icon PNG fixtures + delete responsive-breakpoints.spec.ts + 43-VERIFICATION.md (QA-01..04)
 
 ## Progress
 
@@ -405,7 +405,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
 | 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
 | 42. Remaining Pages               | v6.0      | 12/12          | Complete    | 2026-05-02 |
-| 43. RTL / A11y / Responsive Sweep | v6.0      | 7/8            | In Progress |            |
+| 43. RTL / A11y / Responsive Sweep | v6.0      | 8/8            | Complete    | 2026-05-04 |
 
 <!-- gsd:progress:end -->
 
