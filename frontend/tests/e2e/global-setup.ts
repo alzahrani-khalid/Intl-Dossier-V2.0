@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-export const STORAGE_STATE_PATH = path.resolve(__dirname, '..', '.auth', 'storageState.json')
+export const STORAGE_STATE_PATH = path.resolve(__dirname, '.auth', 'storageState.json')
 
 export default async function globalSetup(config: FullConfig): Promise<void> {
   const baseURL = config.projects[0]?.use.baseURL ?? 'http://localhost:5173'

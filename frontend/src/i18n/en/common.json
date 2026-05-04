@@ -1160,6 +1160,9 @@
   "shell": {
     "appName": "IntelDossier",
     "workspace": "GASTAT · International Partnerships",
+    "brand": {
+      "mark": "IntelDossier brand mark"
+    },
     "user": {
       "noRole": "Member"
     },
