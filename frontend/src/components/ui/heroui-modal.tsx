@@ -10,6 +10,7 @@
  */
 
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 import { Modal, Button, useOverlayState } from '@heroui/react'
 import { cn } from '@/lib/utils'
@@ -229,6 +230,7 @@ export interface HeroUIModalCloseProps {
 }
 
 export function HeroUIModalClose({ children, className }: HeroUIModalCloseProps) {
+  const { t } = useTranslation()
   if (children) {
     return (
       <Button slot="close" className={className}>
@@ -243,6 +245,7 @@ export function HeroUIModalClose({ children, className }: HeroUIModalCloseProps)
       isIconOnly
       variant="ghost"
       size="sm"
+      aria-label={t('common.actions.closeDialog')}
       className={cn(
         'absolute end-4 top-4 rounded-sm opacity-70',
         'hover:opacity-100 transition-opacity',
@@ -250,7 +253,7 @@ export function HeroUIModalClose({ children, className }: HeroUIModalCloseProps)
       )}
     >
       <X className="h-4 w-4" />
-      <span className="sr-only">Close</span>
+      <span className="sr-only">{t('common.actions.closeDialog')}</span>
     </Button>
   )
 }

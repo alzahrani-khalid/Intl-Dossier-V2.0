@@ -165,6 +165,7 @@ export function OverdueCommitments(): ReactElement {
                   variant="ghost"
                   size="sm"
                   className="mt-1"
+                  aria-label={t('common.actions.toggleSection')}
                   onClick={(e): void => {
                     e.stopPropagation()
                     setExpanded((prev) => ({
