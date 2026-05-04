@@ -112,10 +112,8 @@ test.describe('Phase 43 — qa-sweep-keyboard', () => {
           // Genuinely empty route content. Assertion would be vacuously
           // true; skip with a labelled reason so the SUMMARY surfaces it
           // as data for follow-up audit (not silent green).
-          test.skip(
-            true,
-            `[${route.name}][${locale}] no visible interactives inside <main> after waitForRouteReady`,
-          )
+          // prettier-ignore
+          test.skip(true, `[${route.name}][${locale}] no visible interactives inside <main> after waitForRouteReady`)
         }
         await page.waitForTimeout(50)
 
@@ -131,10 +129,8 @@ test.describe('Phase 43 — qa-sweep-keyboard', () => {
         const label = `[${route.name}][${locale}]`
         // Membership: every counted interactive was focused. Per D-09 we
         // assert STRICT equality between counted and reached sets.
-        expect(
-          reached.size,
-          `${label} unreached interactives: counted=${visibleCount} reached=${reached.size}`,
-        ).toBe(visibleCount)
+        // prettier-ignore
+        expect(reached.size, `${label} unreached interactives: counted=${visibleCount} reached=${reached.size}`).toBe(visibleCount)
       })
     }
   }
