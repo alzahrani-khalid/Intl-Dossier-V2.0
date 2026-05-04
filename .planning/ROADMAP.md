@@ -369,7 +369,7 @@ Summary checklist:
    - [x] 43-13-PLAN.md — Wave 1 gap closure: raise `.btn` min-block-size to 2.75rem in list-pages.css (closes Gap-1: 30 dashboard quick-action touch-target failures) (QA-03)
    - [x] 43-14-PLAN.md — Wave 1 gap closure: convert DossierTable role-grid pattern to role-list (drop invalid role="row"/columnheader/table; closes Gap-2: 4 axe `aria-required-children` violations on /countries + /organizations) (QA-02)
    - [x] 43-15-PLAN.md — Wave 1 gap closure: repair qa-sweep-keyboard.spec.ts visibleCount enumeration + Tab walk seeding (closes Gap-3: spec falsely reports visibleCount=0 on every route) (QA-02)
-   - [ ] 43-16-PLAN.md — Wave 2 gap closure: regenerate 8 focus-outline visual baselines + final full qa-sweep verification (closes Gap-4: stale baselines; depends_on 43-13/14/15) (QA-02, QA-03)
+   - [x] 43-16-PLAN.md — Wave 2 gap closure: regenerate 8 focus-outline visual baselines + final full qa-sweep verification (closes Gap-4: stale baselines; depends_on 43-13/14/15) (QA-02, QA-03)
 
 ## Progress
 
@@ -409,7 +409,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
 | 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
 | 42. Remaining Pages               | v6.0      | 12/12          | Complete    | 2026-05-02 |
-| 43. RTL / A11y / Responsive Sweep | v6.0      | 16/17          | In Progress |            |
+| 43. RTL / A11y / Responsive Sweep | v6.0      | 17/17          | Complete    | 2026-05-04 |
 
 <!-- gsd:progress:end -->
 
