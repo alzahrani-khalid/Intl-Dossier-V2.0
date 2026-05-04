@@ -165,6 +165,7 @@ export function OverdueCommitments(): ReactElement {
                   variant="ghost"
                   size="sm"
                   className="mt-1"
+                  aria-label={isOpen ? t('common.actions.collapse') : t('common.actions.expand')}
                   onClick={(e): void => {
                     e.stopPropagation()
                     setExpanded((prev) => ({
