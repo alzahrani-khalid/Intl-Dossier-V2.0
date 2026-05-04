@@ -18,6 +18,8 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
 
+import { STORAGE_STATE_PATH } from './tests/e2e/global-setup'
+
 // ESM-safe __dirname (frontend/package.json declares "type": "module").
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -31,6 +33,10 @@ export default defineConfig({
   testDir: path.resolve(__dirname, 'tests/e2e'),
   // Only pick up spec files — not mocks, fixtures, __screenshots__, etc.
   testMatch: /.*\.spec\.ts$/,
+  // Plan 43-12: pre-authenticate ONCE per Playwright run; qa-sweep specs
+  // consume the persisted storageState so parallel workers never race the
+  // login form into a route's render assertions (43-VERIFICATION Class D).
+  globalSetup: './tests/e2e/global-setup.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -60,11 +66,23 @@ export default defineConfig({
     // animations, this is the belt-and-braces layer.
     reducedMotion: 'reduce',
     forcedColors: 'none',
+    // Plan 43-12: every project inherits the pre-authenticated session
+    // unless explicitly overridden (see `chromium-no-auth` below).
+    storageState: STORAGE_STATE_PATH,
   },
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    // Plan 43-12: auth-bypass project for specs that NEED to render the
+    // login form (override storageState back to an empty session). No such
+    // specs exist today; the project is wired so future `login*.spec.ts`
+    // can opt out of the global session without further config changes.
+    {
+      name: 'chromium-no-auth',
+      use: { ...devices['Desktop Chrome'], storageState: { cookies: [], origins: [] } },
+      testMatch: /login.*\.spec\.ts$/,
     },
   ],
   webServer: process.env.E2E_BASE_URL
