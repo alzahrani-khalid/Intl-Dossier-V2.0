@@ -109,6 +109,10 @@ playwright-report/
 tests/e2e/support/storage/*.json
 !tests/e2e/support/storage/.gitkeep
 
+# Phase 43-12: Playwright globalSetup writes a pre-authenticated storage state
+# here. Session cookies — never commit.
+frontend/tests/e2e/.auth/
+
 # Chrome DevTools screenshots
 .devtools-screenshots/
 .factory/

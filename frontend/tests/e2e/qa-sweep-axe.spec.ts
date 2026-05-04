@@ -18,7 +18,7 @@
 import { test } from '@playwright/test'
 
 import { V6_ROUTES } from './helpers/v6-routes'
-import { runAxe, settlePage } from './helpers/qa-sweep'
+import { runAxe, settlePage, waitForRouteReady } from './helpers/qa-sweep'
 import { loginForListPages } from './support/list-pages-auth'
 
 test.describe('Phase 43 — qa-sweep-axe', () => {
@@ -28,7 +28,11 @@ test.describe('Phase 43 — qa-sweep-axe', () => {
         await loginForListPages(page, locale)
         await page.goto(route.path)
         await settlePage(page)
-        await runAxe(page)
+        // Plan 43-12: gate axe on <main> readiness AND scope it to <main>.
+        // Sidebar/topbar a11y is owned by their per-route specs; the global
+        // sweep should not flake on transient login-form bleed-through.
+        await waitForRouteReady(page)
+        await runAxe(page, { include: 'main' })
       })
     }
   }

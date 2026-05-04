@@ -143,3 +143,28 @@ export async function settlePage(page: Page): Promise<void> {
   await page.waitForLoadState('domcontentloaded')
   await page.waitForTimeout(150)
 }
+
+/**
+ * Plan 43-12: route-readiness gate for the qa-sweep specs.
+ *
+ * Waits until `<main>` is visible AND any `data-loading="true"`
+ * skeletons (Phase 38 D-11) have cleared, before render assertions
+ * scoped to `<main>` execute. This is the second layer of defence
+ * against login-form bleed-through (the first being the persisted
+ * storageState from globalSetup); even if a route is mid-mount, the
+ * assertion set will not include the login form.
+ *
+ * The `waitForFunction` is best-effort with a 5 s timeout — not all
+ * routes carry the `data-loading` attribute, and we never want to
+ * block on its absence.
+ */
+export async function waitForRouteReady(page: Page): Promise<void> {
+  await page.locator('main').first().waitFor({ state: 'visible', timeout: 15_000 })
+  await page
+    .waitForFunction(() => document.querySelector('[data-loading="true"]') === null, null, {
+      timeout: 5_000,
+    })
+    .catch(() => {
+      /* ok — not all routes carry the attribute */
+    })
+}

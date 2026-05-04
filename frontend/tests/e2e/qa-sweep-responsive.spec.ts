@@ -24,7 +24,7 @@ import { test, expect, type Page } from '@playwright/test'
 
 import { loginForListPages } from './support/list-pages-auth'
 import { V6_ROUTES } from './helpers/v6-routes'
-import { BREAKPOINTS, forEachBreakpoint, settlePage } from './helpers/qa-sweep'
+import { BREAKPOINTS, forEachBreakpoint, settlePage, waitForRouteReady } from './helpers/qa-sweep'
 
 // Reference BREAKPOINTS so the import is non-elided and grep-verifiable.
 void BREAKPOINTS
@@ -32,12 +32,16 @@ void BREAKPOINTS
 const TOUCH_TARGET_MIN = 44
 const SCROLL_TOLERANCE = 1
 
+// Plan 43-12: scope touch-target queries to `<main>` so login-form
+// interactives (which can momentarily render during the auth flow) are
+// excluded from the touch-target battery. Sidebar/topbar interactives
+// are owned by their per-phase specs.
 const INTERACTIVE_SELECTOR = [
-  'button:not([disabled])',
-  'a[href]',
-  'input:not([type="hidden"]):not([disabled])',
-  '[role="button"]:not([aria-disabled="true"])',
-  '[tabindex]:not([tabindex="-1"])',
+  'main button:not([disabled])',
+  'main a[href]',
+  'main input:not([type="hidden"]):not([disabled])',
+  'main [role="button"]:not([aria-disabled="true"])',
+  'main [tabindex]:not([tabindex="-1"])',
 ].join(', ')
 
 async function assertNoHorizontalOverflow(page: Page, vw: number, label: string): Promise<void> {
@@ -112,6 +116,9 @@ test.describe('Phase 43 — qa-sweep-responsive', () => {
         await loginForListPages(page, locale)
         await page.goto(route.path)
         await settlePage(page)
+        // Plan 43-12: gate the breakpoint sweep on <main> being ready —
+        // touch-target queries are scoped to `main` (see INTERACTIVE_SELECTOR).
+        await waitForRouteReady(page)
         await forEachBreakpoint(page, async (bp) => {
           await settlePage(page) // re-settle after viewport change
           const label = `[${route.name}][${locale}][${bp.name}]`
