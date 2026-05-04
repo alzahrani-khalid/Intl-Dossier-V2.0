@@ -92,7 +92,7 @@ export function Sidebar({ className }: SidebarProps = {}): ReactElement {
           <span className="sb-app font-display text-[15px] font-semibold leading-[1.2] tracking-[-0.01em] truncate">
             {t('shell.appName')}
           </span>
-          <span className="sb-ws font-body text-[11px] leading-[1.3] opacity-60 truncate">
+          <span className="sb-ws font-body text-[11px] leading-[1.3] truncate text-[var(--sidebar-ink)]/70">
             {t('shell.workspace')}
           </span>
         </div>
@@ -107,7 +107,7 @@ export function Sidebar({ className }: SidebarProps = {}): ReactElement {
           <span className="font-body text-[13px] font-medium leading-[1.4] truncate">
             {displayName}
           </span>
-          <span className="font-body text-[10.5px] leading-[1.3] opacity-60 truncate">
+          <span className="font-body text-[10.5px] leading-[1.3] truncate text-[var(--sidebar-ink)]/70">
             {roleLabel}
           </span>
         </div>
@@ -117,7 +117,7 @@ export function Sidebar({ className }: SidebarProps = {}): ReactElement {
       <nav className="sb-nav mt-3.5 flex flex-1 flex-col gap-3.5 overflow-y-auto">
         {groups.map((group) => (
           <div key={group.id} className="sb-group-block flex flex-col gap-1">
-            <div className="sb-group px-2.5 font-body text-[10px] font-semibold tracking-[0.1em] uppercase leading-[1.3] opacity-60">
+            <div className="sb-group px-2.5 font-body text-[10px] font-semibold tracking-[0.1em] uppercase leading-[1.3] text-[var(--sidebar-ink)]/80">
               {t(group.label)}
             </div>
             <ul className="flex flex-col gap-0.5">
@@ -135,7 +135,7 @@ export function Sidebar({ className }: SidebarProps = {}): ReactElement {
           aria-hidden="true"
           className="inline-block h-[6px] w-[6px] rounded-full bg-[var(--ok)]"
         />
-        <span className="sb-foot-line font-mono text-[10.5px] leading-[1.3] opacity-60">
+        <span className="sb-foot-line font-mono text-[10.5px] leading-[1.3] text-[var(--sidebar-ink)]/70">
           {t('shell.footer.sync')}
         </span>
       </div>
