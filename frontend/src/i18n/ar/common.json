@@ -32,6 +32,17 @@
     "info": "معلومات"
   },
   "common": {
+    "actions": {
+      "previous": "السابق",
+      "next": "التالي",
+      "expand": "توسيع",
+      "collapse": "طي",
+      "openMenu": "فتح القائمة",
+      "closeDialog": "إغلاق الحوار",
+      "toggleSection": "تبديل القسم",
+      "viewMore": "عرض المزيد",
+      "remove": "إزالة"
+    },
     "appTitle": "نظام الدوسيهات الدولية للهيئة العامة للإحصاء",
     "save": "حفظ",
     "cancel": "إلغاء",
