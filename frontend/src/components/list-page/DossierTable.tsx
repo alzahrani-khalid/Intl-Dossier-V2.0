@@ -95,29 +95,20 @@ export function DossierTable({
 
   return (
     <div
-      role="table"
+      role="list"
       aria-label={t('table.aria', { defaultValue: isRTL ? 'الدوسيهات' : 'Dossiers' })}
       className="card overflow-hidden p-0"
     >
       {/* Desktop / tablet header (md+) */}
       <div
-        role="row"
         className="dossier-row label hidden md:grid"
         style={{ gridTemplateColumns: 'auto 1fr auto auto auto' }}
       >
         <span aria-hidden="true" />
-        <span role="columnheader">
-          {t('table.name', { defaultValue: isRTL ? 'الاسم' : 'Name' })}
-        </span>
-        <span role="columnheader">
-          {t('table.engagements', { defaultValue: isRTL ? 'المشاركات' : 'Engagements' })}
-        </span>
-        <span role="columnheader">
-          {t('table.lastTouch', { defaultValue: isRTL ? 'آخر تحديث' : 'Last touch' })}
-        </span>
-        <span role="columnheader">
-          {t('table.sensitivity', { defaultValue: isRTL ? 'الحساسية' : 'Sensitivity' })}
-        </span>
+        <span>{t('table.name', { defaultValue: isRTL ? 'الاسم' : 'Name' })}</span>
+        <span>{t('table.engagements', { defaultValue: isRTL ? 'المشاركات' : 'Engagements' })}</span>
+        <span>{t('table.lastTouch', { defaultValue: isRTL ? 'آخر تحديث' : 'Last touch' })}</span>
+        <span>{t('table.sensitivity', { defaultValue: isRTL ? 'الحساسية' : 'Sensitivity' })}</span>
       </div>
 
       {rows.map((row) => {
@@ -131,7 +122,7 @@ export function DossierTable({
           <button
             key={row.id}
             type="button"
-            role="row"
+            role="listitem"
             onClick={onRowClick ? (): void => onRowClick(row) : undefined}
             className="dossier-row w-full min-w-0 grid-cols-[auto_1fr_auto] text-start transition-colors hover:bg-[var(--line-soft)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)] md:grid-cols-[auto_1fr_auto_auto_auto]"
           >
