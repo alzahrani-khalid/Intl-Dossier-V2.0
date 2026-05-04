@@ -135,10 +135,10 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
                 aria-checked={isActive}
                 onClick={() => setDirection(d)}
                 className={cn(
-                  'tb-dir-btn h-9 px-2.5 font-body text-[11.5px] font-medium',
+                  'tb-dir-btn h-9 min-h-11 min-w-11 px-2.5 font-body text-[11.5px] font-medium',
                   'text-[var(--ink-mute)] hover:text-[var(--ink)]',
                   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
-                  'max-sm:w-8 max-sm:px-0 max-sm:text-[10.5px]',
+                  'max-sm:min-w-11 max-sm:px-1 max-sm:text-[10.5px]',
                   isActive && 'active',
                   isActive && d === 'situation' && 'bg-[var(--accent)] text-[var(--accent-fg)]',
                   isActive && d !== 'situation' && 'bg-[var(--ink)] text-[var(--surface)]',
