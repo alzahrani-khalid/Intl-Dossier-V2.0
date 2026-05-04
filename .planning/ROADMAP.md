@@ -141,7 +141,7 @@ Summary checklist:
 3. Changing direction auto-resets Mode and Hue to that direction's defaults (Chancery=light/22°, Situation=dark/190°, Ministerial=light/158°, Bureau=light/32°) and the UI reflects the new values immediately
 4. Drawer opens from the inline-end edge in LTR and inline-start edge in RTL (logical properties only); focus trap + ESC dismissal work in both locales
 5. Navigating to `/themes` redirects to `/`; the legacy `pages/Themes.tsx` and `components/theme-selector/ThemeSelector.tsx` files are removed and no import references to them remain
-   **Plans**: 8 plans
+   **Plans**: 12 plans (4 gap-closure plans added 2026-05-04 from 43-HUMAN-UAT.md)
    - [ ] 34-01-PLAN.md — Wave 0 test scaffolds (8 stub tests + deletion-gate bash script)
    - [ ] 34-02-PLAN.md — DIRECTION_DEFAULTS map + getDirectionDefaults helper (THEME-03)
    - [ ] 34-03-PLAN.md — useClassification + useLocale hooks + DesignProvider persistence (THEME-02)
@@ -366,6 +366,10 @@ Summary checklist:
    - [x] 43-05-PLAN.md — Wave 1 icon-screenshot generator: qa-sweep-icon-screenshots.spec.ts (advisory, opt-in via pnpm docs:rtl-icons; 7 fixtures × 2 directions = 14 tests) (QA-04)
    - [x] 43-06-PLAN.md — Wave 1 docs/rtl-icons.md: 3-section audit doc (Flip mechanisms / Audit table / Out of scope) covering 11 icon entries (QA-04)
    - [x] 43-07-PLAN.md — Wave 2 gate + remediation: 5 rotate-180→.icon-flip migrations + lint survivors fix + sweep survivors fix + 8 focus-outline baselines + 14 icon PNG fixtures + delete responsive-breakpoints.spec.ts + 43-VERIFICATION.md (QA-01..04)
+   - [ ] 43-13-PLAN.md — Wave 1 gap closure: raise `.btn` min-block-size to 2.75rem in list-pages.css (closes Gap-1: 30 dashboard quick-action touch-target failures) (QA-03)
+   - [ ] 43-14-PLAN.md — Wave 1 gap closure: convert DossierTable role-grid pattern to role-list (drop invalid role="row"/columnheader/table; closes Gap-2: 4 axe `aria-required-children` violations on /countries + /organizations) (QA-02)
+   - [ ] 43-15-PLAN.md — Wave 1 gap closure: repair qa-sweep-keyboard.spec.ts visibleCount enumeration + Tab walk seeding (closes Gap-3: spec falsely reports visibleCount=0 on every route) (QA-02)
+   - [ ] 43-16-PLAN.md — Wave 2 gap closure: regenerate 8 focus-outline visual baselines + final full qa-sweep verification (closes Gap-4: stale baselines; depends_on 43-13/14/15) (QA-02, QA-03)
 
 ## Progress
 
