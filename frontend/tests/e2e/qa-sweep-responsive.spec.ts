@@ -55,9 +55,44 @@ async function assertNoHorizontalOverflow(page: Page, vw: number, label: string)
 async function assertTouchTargets(page: Page, label: string): Promise<void> {
   const offenders = await page.evaluate(
     ({ selector, min }) => {
+      // Plan 43-17: skip offenders that are visually unreachable —
+      // sr-only labels (Tailwind clip-path:inset(50%) / clip:rect(0,0,0,0))
+      // are screen-reader-only; aria-hidden subtrees are not announced;
+      // pointer-events:none ancestors block pointer/touch entirely.
+      // These shapes are not real touch targets, so excluding them
+      // eliminates false-positive offenders without weakening the gate.
+      const isAriaHidden = (el: Element): boolean => {
+        let cur: Element | null = el
+        while (cur && cur !== document.body) {
+          if ((cur as HTMLElement).getAttribute('aria-hidden') === 'true') return true
+          cur = cur.parentElement
+        }
+        return false
+      }
+      const isSrOnly = (el: Element): boolean => {
+        const cs = getComputedStyle(el)
+        const w = parseFloat(cs.width)
+        const h = parseFloat(cs.height)
+        const tinyClipped =
+          (w <= 1 || h <= 1) && (cs.overflow === 'hidden' || cs.clipPath.includes('inset'))
+        if (tinyClipped) return true
+        if (cs.clip === 'rect(0px, 0px, 0px, 0px)' || cs.clip === 'rect(0, 0, 0, 0)') return true
+        return false
+      }
+      const hasPointerEventsNone = (el: Element): boolean => {
+        let cur: Element | null = el
+        while (cur && cur !== document.body) {
+          if (getComputedStyle(cur).pointerEvents === 'none') return true
+          cur = cur.parentElement
+        }
+        return false
+      }
       const els = Array.from(document.querySelectorAll(selector))
       return els
         .filter((el) => {
+          if (isAriaHidden(el)) return false
+          if (isSrOnly(el)) return false
+          if (hasPointerEventsNone(el)) return false
           const cs = getComputedStyle(el as Element)
           if (cs.display === 'none' || cs.visibility === 'hidden') return false
           const rect = (el as HTMLElement).getBoundingClientRect()
