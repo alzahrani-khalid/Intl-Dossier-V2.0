@@ -405,7 +405,7 @@ v6.0 phases execute in numeric order. Phase 33 is the foundation. After 33 lands
 | 40. List Pages                    | v6.0      | 0/?            | Not started | —          |
 | 41. Dossier Drawer                | v6.0      | 11/11          | Complete    | 2026-05-02 |
 | 42. Remaining Pages               | v6.0      | 12/12          | Complete    | 2026-05-02 |
-| 43. RTL / A11y / Responsive Sweep | v6.0      | 8/8            | Complete    | 2026-05-04 |
+| 43. RTL / A11y / Responsive Sweep | v6.0      | 9/13           | In Progress |            |
 
 <!-- gsd:progress:end -->
 
