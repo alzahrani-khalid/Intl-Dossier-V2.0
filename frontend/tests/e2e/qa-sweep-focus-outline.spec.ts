@@ -26,7 +26,12 @@ const MODES = ['light', 'dark'] as const
 // Representative primitive on Settings — first visible interactive in <main>.
 // Settings (Phase 33-07) defaults to the 'general' tab on load, so the
 // settings-nav buttons are stable on initial paint.
-const PRIMITIVE_SELECTOR = 'main button:visible, main a[href]:visible, main input:visible'
+//
+// Note: `:visible` is a Playwright/jQuery extension and is NOT valid CSS for
+// `document.querySelector`. The Playwright locator `.first()` will pick the
+// first DOM-order match; combined with `assertFocusOutlineVisible` reading
+// `document.activeElement`, this is sufficient.
+const PRIMITIVE_SELECTOR = 'main button, main a[href], main input'
 
 test.describe('Phase 43 — qa-sweep-focus-outline (Settings × 4 dirs × 2 modes)', () => {
   for (const direction of DIRECTIONS) {

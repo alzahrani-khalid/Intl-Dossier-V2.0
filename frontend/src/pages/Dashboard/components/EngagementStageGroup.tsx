@@ -65,9 +65,11 @@ export function EngagementStageGroup({
           <ChevronDown
             className={cn(
               'text-muted-foreground shrink-0 transition-transform duration-200',
+              // .icon-flip handles the RTL mirror via CSS scaleX(-1) (gated on
+              // html[dir='rtl']). The rotate-180 below is the disclosure
+              // semantic (open vs closed) and composes with .icon-flip.
+              'icon-flip',
               isOpen && 'rotate-180',
-              isRTL && !isOpen && 'rotate-0',
-              isRTL && isOpen && 'rotate-180',
             )}
             size={16}
           />

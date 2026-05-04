@@ -65,11 +65,7 @@ export function OverdueCommitments(): ReactElement {
 
   if (isError) {
     return (
-      <section
-        role="region"
-        aria-labelledby="overdue-heading"
-        className="overdue card"
-      >
+      <section role="region" aria-labelledby="overdue-heading" className="overdue card">
         <h3 id="overdue-heading" className="card-title mb-2 text-start">
           {t('overdue.title')}
         </h3>
@@ -80,11 +76,7 @@ export function OverdueCommitments(): ReactElement {
 
   if (data == null || data.length === 0) {
     return (
-      <section
-        role="region"
-        aria-labelledby="overdue-heading"
-        className="overdue card"
-      >
+      <section role="region" aria-labelledby="overdue-heading" className="overdue card">
         <h3 id="overdue-heading" className="card-title mb-2 text-start">
           {t('overdue.title')}
         </h3>
@@ -110,11 +102,7 @@ export function OverdueCommitments(): ReactElement {
   }
 
   return (
-    <section
-      role="region"
-      aria-labelledby="overdue-heading"
-      className="overdue card"
-    >
+    <section role="region" aria-labelledby="overdue-heading" className="overdue card">
       <h3 id="overdue-heading" className="card-title mb-3 text-start">
         {t('overdue.title')}
       </h3>
@@ -142,9 +130,7 @@ export function OverdueCommitments(): ReactElement {
                     name={group.dossierName}
                     size={20}
                   />
-                  <span className="card-title text-start truncate flex-1">
-                    {group.dossierName}
-                  </span>
+                  <span className="card-title text-start truncate flex-1">{group.dossierName}</span>
                 </button>
               </div>
               <ul className="space-y-1">
@@ -169,7 +155,7 @@ export function OverdueCommitments(): ReactElement {
                       >
                         {c.ownerInitials}
                       </span>
-                      <ArrowUpRight className="size-4 text-ink-soft" aria-hidden="true" />
+                      <ArrowUpRight className="size-4 text-ink-soft icon-flip" aria-hidden="true" />
                     </li>
                   ),
                 )}
