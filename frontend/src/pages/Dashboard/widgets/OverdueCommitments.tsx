@@ -151,7 +151,7 @@ export function OverdueCommitments(): ReactElement {
                       </LtrIsolate>
                       <span
                         className="overdue-owner text-xs font-mono"
-                        aria-label={String(t('overdue.owner') ?? c.ownerInitials)}
+                        aria-label={`${t('overdue.owner')}: ${c.ownerInitials}`}
                       >
                         {c.ownerInitials}
                       </span>
@@ -165,7 +165,6 @@ export function OverdueCommitments(): ReactElement {
                   variant="ghost"
                   size="sm"
                   className="mt-1"
-                  aria-label={t('common.actions.toggleSection')}
                   onClick={(e): void => {
                     e.stopPropagation()
                     setExpanded((prev) => ({

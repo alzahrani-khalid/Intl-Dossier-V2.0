@@ -90,7 +90,6 @@ export function DrawerCtaRow({ dossierId, dossierType }: DrawerCtaRowProps): Rea
         className="btn-ghost inline-flex items-center gap-1 ms-auto"
         style={{ minBlockSize: 44 }}
         onClick={handleOpenFull}
-        aria-label={t('common.actions.viewMore', { ns: 'translation' })}
         data-testid="cta-open-full-dossier"
       >
         <span>{t('cta.open_full_dossier')}</span>

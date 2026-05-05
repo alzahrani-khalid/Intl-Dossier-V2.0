@@ -107,7 +107,6 @@ export function VipVisits(): ReactElement {
         <a
           href="/vip-visits"
           className="text-xs text-ink-soft inline-flex items-center gap-1"
-          aria-label={t('common.actions.viewMore')}
         >
           {t('actions.viewAll')}
           <ArrowRight className="size-3 icon-flip" aria-hidden="true" />
