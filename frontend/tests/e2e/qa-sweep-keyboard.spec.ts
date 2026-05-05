@@ -70,6 +70,10 @@ test.describe('Phase 43 — qa-sweep-keyboard', () => {
         // false-positive over-counting when an element looks tabbable
         // by tag (button, a, [role=button]) but is excluded from the
         // tab sequence by an ancestor or attribute.
+        // Plan 43-18 Task 3: identify candidates by a temporary data-attribute
+        // so the reached-set comparison uses element identity, not a
+        // truncated outerHTML fingerprint that can collide across siblings
+        // with similar markup (Gap-6 Cluster-G root cause).
         const visibleHandles = await page
           .locator('main')
           .first()
@@ -86,6 +90,18 @@ test.describe('Phase 43 — qa-sweep-keyboard', () => {
                 cur = cur.parentElement
               }
               if (el.tabIndex < 0) return false
+              if (
+                (
+                  el as
+                    | HTMLButtonElement
+                    | HTMLInputElement
+                    | HTMLSelectElement
+                    | HTMLTextAreaElement
+                ).disabled
+              ) {
+                return false
+              }
+              if (el.getAttribute('aria-disabled') === 'true') return false
               if (el.offsetParent === null) return false
               const rect = el.getBoundingClientRect()
               if (rect.width === 0 || rect.height === 0) return false
@@ -94,14 +110,36 @@ test.describe('Phase 43 — qa-sweep-keyboard', () => {
             const candidates = main.querySelectorAll<HTMLElement>(
               'button, a, input, [role="button"], [tabindex]:not([tabindex="-1"])',
             )
+            // ARIA composite widgets own their internal Tab order via arrow
+            // keys: a `role="tablist"` container takes one Tab stop, then
+            // Left/Right walk within it. Same applies to `role="grid"`,
+            // `role="listbox"`, `role="menu"`, `role="tree"`, `role="radiogroup"`.
+            // Exclude the container itself; the active descendant is the
+            // real Tab target.
+            const isCompositeWidgetContainer = (el: HTMLElement): boolean => {
+              const r = el.getAttribute('role')
+              return (
+                r === 'tablist' ||
+                r === 'grid' ||
+                r === 'listbox' ||
+                r === 'menu' ||
+                r === 'menubar' ||
+                r === 'tree' ||
+                r === 'radiogroup'
+              )
+            }
             const visible: string[] = []
+            let idx = 0
             candidates.forEach((el) => {
               // Skip <main> itself — it carries tabIndex={0} (43-11) to
               // satisfy WCAG `scrollable-region-focusable`, but is not an
               // "interactive" in this sweep's semantics.
               if (el === main) return
               if (!isTabbable(el)) return
-              visible.push(el.outerHTML.slice(0, 200))
+              if (isCompositeWidgetContainer(el)) return
+              const id = `qs-${idx++}`
+              el.setAttribute('data-qa-sweep-id', id)
+              visible.push(`${id}|${el.outerHTML.slice(0, 200)}`)
             })
             return visible
           })
@@ -135,15 +173,42 @@ test.describe('Phase 43 — qa-sweep-keyboard', () => {
         await page.waitForTimeout(50)
 
         const reached = new Set<string>()
+        // Seed with the pre-focused element so the first Tab press doesn't
+        // count as "skipping" qs-0 — the pre-focus already reached it.
+        const preFocusedId = await page.evaluate(() => {
+          const el = document.activeElement as HTMLElement | null
+          return el?.getAttribute('data-qa-sweep-id') ?? ''
+        })
+        if (preFocusedId !== '') reached.add(preFocusedId)
         for (let i = 0; i < visibleCount + 1; i++) {
           await page.keyboard.press('Tab')
-          const focused = await page.evaluate(
-            () => document.activeElement?.outerHTML?.slice(0, 200) ?? '',
-          )
-          reached.add(focused)
+          const focused = await page.evaluate(() => {
+            const el = document.activeElement as HTMLElement | null
+            if (!el) return ''
+            const id = el.getAttribute('data-qa-sweep-id')
+            return id ?? ''
+          })
+          if (focused !== '') reached.add(focused)
         }
+        // Cleanup tracker attribute so subsequent specs don't see leftover marks.
+        await page.evaluate(() => {
+          document
+            .querySelectorAll('[data-qa-sweep-id]')
+            .forEach((el) => el.removeAttribute('data-qa-sweep-id'))
+        })
 
         const label = `[${route.name}][${locale}]`
+        if (reached.size !== visibleCount) {
+          const reachedIds = new Set(reached)
+          const unreached = visibleHandles.filter((h) => {
+            const id = h.split('|')[0]
+            return id !== undefined && !reachedIds.has(id)
+          })
+          // eslint-disable-next-line no-console
+          console.log(
+            `[unreached]${label} counted=${visibleCount} reached=${reached.size}\n${unreached.map((u) => '  - ' + u).join('\n')}`,
+          )
+        }
         // Membership: every counted interactive was focused. Per D-09 we
         // assert STRICT equality between counted and reached sets.
         // prettier-ignore
