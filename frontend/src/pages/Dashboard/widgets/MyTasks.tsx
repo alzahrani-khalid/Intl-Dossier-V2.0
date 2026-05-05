@@ -120,6 +120,7 @@ export function MyTasks(): ReactElement {
             task.work_item_type === 'dossier' && typeof task.work_item_id === 'string'
               ? task.work_item_id.toLowerCase()
               : undefined
+          const titleId = `mytasks-${task.id}-title`
           return (
             <li
               key={task.id}
@@ -131,10 +132,12 @@ export function MyTasks(): ReactElement {
                 className="touch-44"
                 checked={done}
                 onCheckedChange={(c): void => handleToggle(task, c === true)}
-                aria-label={task.title}
+                aria-labelledby={titleId}
               />
               <DossierGlyph type="country" iso={iso} name={task.title} size={20} />
-              <span className="text-sm text-ink text-start truncate flex-1">{task.title}</span>
+              <span id={titleId} className="text-sm text-ink text-start truncate flex-1">
+                {task.title}
+              </span>
               {due.text !== '' && (
                 <Badge variant={due.intent === 'destructive' ? 'destructive' : 'default'}>
                   {due.text}
