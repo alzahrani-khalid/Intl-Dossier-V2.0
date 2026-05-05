@@ -205,8 +205,7 @@ const Sidebar = React.forwardRef<
             style={
               {
                 '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
-                // FIXED: Force solid background on mobile
-                backgroundColor: 'hsl(var(--sidebar))',
+                backgroundColor: 'var(--sidebar)',
               } as React.CSSProperties
             }
             side={side}
