@@ -63,6 +63,7 @@ export function SettingsLayout({
         gap: 'var(--gap)',
       }}
     >
+      <h1 className="sr-only">{t('pageTitle')}</h1>
       <SettingsNavigation activeSection={activeSection} onChange={onSectionChange} />
 
       <div className="card">

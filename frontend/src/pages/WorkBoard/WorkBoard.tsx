@@ -238,6 +238,7 @@ export function WorkBoard(): ReactElement {
   return (
     <DndContext sensors={dndSensors} onDragEnd={handleDragEnd}>
       <div className="workboard-page" dir={isRTL ? 'rtl' : 'ltr'}>
+        <h1 className="sr-only">{t('title', { defaultValue: 'Work Board' })}</h1>
         <BoardToolbar
           mode={mode}
           searchQuery={searchQuery}
