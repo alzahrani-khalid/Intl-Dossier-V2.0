@@ -26,6 +26,8 @@ jobs:
       E2E_INTAKE_PASSWORD: ${{ secrets.E2E_INTAKE_PASSWORD }}
       SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.E2E_SUPABASE_SERVICE_ROLE_KEY }}
+      VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -68,6 +70,8 @@ jobs:
       TEST_USER_PASSWORD: ${{ secrets.E2E_ANALYST_PASSWORD }}
       SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.E2E_SUPABASE_SERVICE_ROLE_KEY }}
+      VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
