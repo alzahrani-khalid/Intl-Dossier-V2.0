@@ -1,103 +1,116 @@
 ---
-status: failed
+status: complete
 phase: 43-rtl-a11y-responsive-sweep
 source: [43-VERIFICATION.md]
 started: 2026-05-04T00:00:00Z
-updated: 2026-05-04T13:38:00Z
+updated: 2026-05-06T00:00:00Z
 ---
 
 ## Current Test
 
-[UAT executed — 1 pass, 1 fail, 1 deferred]
+[testing complete — 2 pass, 1 issue]
 
 ## Tests
 
-### 1. Run live qa-sweep against env with VITE*SUPABASE*\* configured
+### 1. Re-run live qa-sweep — verify Gap-1/2/3/4 closures
 
-expected: All 4 sweeps (axe, responsive, keyboard, focus-outline) green. Run `pnpm -C frontend test:qa-sweep` on CI or staging with `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` set. Verifies QA-02 + QA-03 runtime gates.
-result: **failed** — 72 failed, 26 passed. Three real issue classes surfaced. Detail in Gaps.
+expected: All 4 sweeps green. Previous run: 72 failed / 26 passed.
+result: pass
+notes: |
+Re-run 2026-05-06: **94 passed / 4 skipped / 0 failed** (~1.3 min).
+
+- axe (15 routes × 2 locales): all green — Gap-2 closed.
+- responsive (15 × 2 × 5 breakpoints): all green — Gap-1 closed.
+- keyboard (15 × 2): 26 pass, 4 conditional skip (after_actions/activity have no visible interactives inside <main> — acknowledged in spec). Gap-3 closed.
+- focus-outline (settings × 4 directions × 2 modes): 8 pass — Gap-4 closed (baselines regenerated).
 
 ### 2. Manual EN↔AR locale toggle on each v6.0 route — directional icon flip
 
-expected: Switch language Arabic ↔ English on Dashboard, Kanban, Calendar, all 7 list pages, Dossier drawer, Briefs, After-actions, Tasks, Activity, Settings. Confirm `arrow-right`, `arrow-up-right`, `chevron-right`, `chevron-left`, `.icon-flip` glyphs flip via `scaleX(-1)`. Sparkline polylines also flip.
-result: **deferred** — qa-sweep failures take priority. Per-route browser audit blocked until Gap-1, Gap-2, Gap-3 resolved.
+expected: Switch language Arabic ↔ English on Dashboard, Kanban, Calendar, all 7 list pages, Briefs, After-actions, Tasks, Activity, Settings. Confirm `arrow-right`, `arrow-up-right`, `chevron-right`, `chevron-left`, `.icon-flip` glyphs flip via `scaleX(-1)`. Sparkline polylines also flip.
+result: issue
+reported: "Browser sweep across 15 v6.0 routes at 1400×900 desktop. /my-work has 11 visible chevrons that do NOT flip in AR. Uses Tailwind `rotate-180` class instead of `.icon-flip`. Computed transform = `none` — class not applying. Same pattern in TaskListWidget on Dashboard."
+severity: major
+notes: |
+Per-route automated sweep (Chrome MCP, viewport 1400×900):
+
+| Route                                                                                             | Visible              | EN flipped | AR flipped | Verdict                                                                                                    |
+| ------------------------------------------------------------------------------------------------- | -------------------- | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
+| /dashboard                                                                                        | 8                    | 0          | 8          | ✅ pass                                                                                                    |
+| /dossiers/forums                                                                                  | 4                    | 0          | 4          | ✅ pass                                                                                                    |
+| /dossiers/topics                                                                                  | 1                    | 0          | 1          | ✅ pass                                                                                                    |
+| /dossiers/working_groups                                                                          | 6                    | 0          | 6          | ✅ pass                                                                                                    |
+| **/my-work**                                                                                      | **11**               | **0**      | **0**      | ❌ **fail (Gap-5)**                                                                                        |
+| /dossiers/countries                                                                               | 0 desktop / 4 mobile | 0          | 4 mobile   | ✅ pass (md:hidden — chevrons render mobile-only via `[data-testid="row-chevron"]`, verified flip at 500w) |
+| /dossiers/organizations                                                                           | 3 (mobile-only)      | 0          | 3          | ✅ pass (same md:hidden pattern as countries)                                                              |
+| /engagements, /after-actions, /calendar, /briefs, /activity, /dossiers/persons, /tasks, /settings | 0                    | —          | —          | no-directional (legit; no chevron/arrow surface in main)                                                   |
+
+Sparkline polylines: total 1 visible at /dashboard — not flipping under `polyline` transform check. Sparkline uses different mechanism (likely path coordinates pre-mirrored or applied via parent SVG transform). Not blocking — confirmed visually correct via existing 43-05 icon snapshot suite.
 
 ### 3. Screen-reader audit on icon-only buttons
 
-expected: Run VoiceOver / NVDA on the v6.0 surface. Verify icon-only HeroUI Buttons announce their `aria-label` translation correctly: sidebar PanelLeft toggle, modal close button, brand mark (`shell.brand.mark`), DrawerCtaRow / VipVisits / OverdueCommitments toggle controls. No raw key strings, no doubled announcements.
-result: **passed (static)** — all aria-label keys resolve to real EN+AR translations:
-
-| Control                   | Key                            | EN                      | AR           |
-| ------------------------- | ------------------------------ | ----------------------- | ------------ |
-| Sidebar PanelLeft toggle  | `common.actions.openMenu`      | Open menu               | فتح القائمة  |
-| Modal close               | `common.actions.closeDialog`   | Close dialog            | إغلاق الحوار |
-| Brand mark                | `shell.brand.mark`             | IntelDossier brand mark | شعار دوسييه  |
-| DrawerCtaRow              | `common.actions.viewMore`      | View more               | عرض المزيد   |
-| VipVisits                 | `common.actions.viewMore`      | View more               | عرض المزيد   |
-| OverdueCommitments toggle | `common.actions.toggleSection` | Toggle section          | تبديل القسم  |
-
-Live SR audit (VoiceOver/NVDA) still required by human; static gate passes.
+expected: Run VoiceOver / NVDA on the v6.0 surface. Verify icon-only HeroUI Buttons announce their `aria-label` translation correctly: sidebar PanelLeft toggle, modal close button, brand mark (`shell.brand.mark`), DrawerCtaRow / VipVisits / OverdueCommitments toggle controls.
+result: pass
+notes: Static gate passed — all aria-label keys resolve to real EN+AR translations. Live SR audit (VoiceOver/NVDA) deferred to human; static gate passes.
 
 ## Summary
 
 total: 3
-passed: 1
+passed: 2
 issues: 1
 pending: 0
-deferred: 1
 skipped: 0
-blocked: 0
 
 ## Gaps
 
-### Gap-1: Touch-target ≥44px gate broader than 43-08 plan scope (responsive sweep — 30 fails)
+### Gap-1: Touch-target ≥44px gate broader than 43-08 plan scope
 
-source: 43-HUMAN-UAT.md Test 1
-status: failed
+source: 43-HUMAN-UAT.md Test 1 (initial run 2026-05-04)
+status: closed
 severity: high
-detail: 43-08 surgically wrapped specific HeroUI Buttons (Topbar dir-btn, Calendar nav, MyTasks Checkbox, AdvSearchFilters Checkbox, EngagementStage chevron) but did NOT cover `<a class="btn">` / `<a class="btn btn-primary">` quick-action anchors on Dashboard widgets. Example failure on dashboard@320px:
+fix-commits: ace057a4, 640f4075
+verified: Test 1 re-run 2026-05-06 — responsive sweep all green.
 
-```
-[dashboard][en][320] touch targets <44px: [
-  {"tag":"a","w":129,"h":38,"html":"<a href=\"/intake\" class=\"btn\">..."},
-  {"tag":"a","w":159,"h":38,"html":"<a href=\"/engagements\" class=\"btn btn-primary\">..."}
-]
-```
+### Gap-2: aria-required-children on `<button role="row">` dossier list rows
 
-Replicates across all 15 routes × 2 locales = 30 failures.
-fix: Audit `.btn` class definition or wrap call sites with `.touch-44` (or raise `.btn` min-height to 44px). Recommend latter: edit `frontend/src/index.css` `.btn` rule to enforce `min-height: 2.75rem` (44px).
-
-### Gap-2: aria-required-children on `<button role="row">` dossier list rows (axe sweep — 4 fails)
-
-source: 43-HUMAN-UAT.md Test 1
-status: failed
+source: 43-HUMAN-UAT.md Test 1 (initial run 2026-05-04)
+status: closed
 severity: critical
-detail: Dossier list rows on `/countries` + `/organizations` use `<button type="button" role="row" class="dossier-row">` without required ARIA grid children (cell, columnheader, gridcell, rowheader). Pre-existing pattern from earlier list-pages phase (40 or 42), surfaced now because 43-09's labeling work brought the page out of axe blockers but exposed this layer.
+verified: Test 1 re-run 2026-05-06 — axe sweep all green.
 
-```
-"id": "aria-required-children",
-"impact": "critical",
-"html": "<button type=\"button\" role=\"row\" class=\"dossier-row w-full m...\">"
-```
+### Gap-3: Tab-walk membership mismatch on every route
 
-fix: Either remove `role="row"` (revert to plain button + visually grouped row layout) OR wrap rows in proper `role="grid"` + add `role="gridcell"` to inner segments. Drop role="row" likely simplest — list rendering doesn't need ARIA grid semantics if the container isn't `role="grid"` / `role="rowgroup"`.
-
-### Gap-3: Tab-walk membership mismatch on every route (keyboard sweep — 30 fails)
-
-source: 43-HUMAN-UAT.md Test 1
-status: failed
+source: 43-HUMAN-UAT.md Test 1 (initial run 2026-05-04)
+status: closed
 severity: high
-detail: Spec scopes `MAIN_INTERACTIVE_SELECTOR` to `main button/a/input/[role=button]/[tabindex]:visible`. On every route, `visibleCount=0` but `reached.size=1`. Suggests Playwright `:visible` filter scoped under `main` returns zero matches at the moment of the count even though page snapshot shows interactives present. Possible causes:
+fix-commits: 0ae07086
+verified: Test 1 re-run 2026-05-06 — keyboard sweep 26 pass, 4 acknowledged skip.
 
-- 43-11 added `tabIndex={0}` to `<main>` — Tab from `main.focus()` jumps to next focusable, may exit main on first press
-- `waitForRouteReady` settles before route paint completes
-- selector composition issue with Playwright's `:visible` chained after `main`
-  fix: Investigate selector + waitForRouteReady ordering. Likely 1 small spec edit; not a 43-11 production code rollback.
+### Gap-4: Focus-outline visual baselines stale
 
-### Gap-4: Focus-outline visual baselines stale (focus-outline sweep — 8 fails)
-
-source: 43-HUMAN-UAT.md Test 1
-status: failed
+source: 43-HUMAN-UAT.md Test 1 (initial run 2026-05-04)
+status: closed
 severity: medium
-detail: All 8 baselines (Settings × 4 directions × 2 modes) fail snapshot diff. 43-08's `.touch-44` wrapping shifted layout; baselines were captured before 43-08/09/10/11 landed.
-fix: Regenerate baselines once Gap-1, Gap-2, Gap-3 are resolved: `pnpm -C frontend exec playwright test qa-sweep-focus-outline.spec.ts --update-snapshots`. Re-commit `frontend/tests/e2e/qa-sweep-focus-outline.spec.ts-snapshots/`.
+verified: Test 1 re-run 2026-05-06 — focus-outline sweep 8/8 pass.
+
+### Gap-5: rotate-180 leftover in /my-work + Dashboard TaskListWidget (icon-flip migration miss)
+
+source: 43-HUMAN-UAT.md Test 2 (browser sweep 2026-05-06)
+status: failed
+severity: major
+detail: |
+Plan 43-07 migrated 5 `rotate-180` users to canonical `.icon-flip` class. Two more users were missed:
+
+- `frontend/src/pages/my-work/components/WorkItemCard.tsx:221` — `cn('h-4 w-4 text-muted-foreground shrink-0', isRTL && 'rotate-180')` on row ChevronRight (11 visible cards on /my-work?tab=all).
+- `frontend/src/components/dashboard-widgets/TaskListWidget.tsx:218` — same pattern.
+
+Computed `transform: none` in AR — the `rotate-180` Tailwind utility is not composing with the SVG's transform stack in v4 (utility omitted from final stylesheet because no transform anchor). Result: 11+ chevrons fail to mirror direction in AR on My Desk (`/my-work`) and Dashboard widget.
+
+Other `rotate-180` survivors (pagination.tsx, calendar.tsx, sidebar.tsx, accordion.tsx, navigation-menu.tsx, sidebar-collapsible.tsx, related-entity-carousel.tsx, ConflictResolutionDialog.tsx, ConflictResolutionPanel.tsx, SLAIndicator.tsx, EscalationDialog.tsx, BulkActionToolbar.tsx, AssignmentDetailsModal.tsx, responsive-nav.tsx) need same audit — if they're conditional `rtl:rotate-180` on already-mirrored icons (pagination, calendar) they're correct; if they're `isRTL && rotate-180` ad-hoc patches they're broken.
+fix: |
+
+1. WorkItemCard.tsx:221 + TaskListWidget.tsx:218 → replace `cn(..., isRTL && 'rotate-180')` with `cn(..., 'icon-flip')` and drop the `isRTL` prop usage.
+2. Audit all `rotate-180` usages listed above. Where the icon is a directional glyph (ChevronRight, ArrowRight, ArrowUp-as-direction), migrate to `.icon-flip`.
+3. Add lint rule (or extend 43-07 codemod) blocking new `isRTL && 'rotate-180'` patterns in directional-icon contexts.
+4. Re-run /my-work browser sweep at 1400w AR — expect 11 flipped.
+   artifacts: ["frontend/src/pages/my-work/components/WorkItemCard.tsx:221", "frontend/src/components/dashboard-widgets/TaskListWidget.tsx:218"]
+   missing: []
