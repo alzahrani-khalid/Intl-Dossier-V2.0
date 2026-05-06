@@ -95,8 +95,10 @@ verified: Test 1 re-run 2026-05-06 — focus-outline sweep 8/8 pass.
 ### Gap-5: rotate-180 leftover in /my-work + Dashboard TaskListWidget (icon-flip migration miss)
 
 source: 43-HUMAN-UAT.md Test 2 (browser sweep 2026-05-06)
-status: failed
+status: closed
 severity: major
+fix-commits: 6b450d02
+verified: Browser sweep 2026-05-06 — /my-work AR 11/11 chevrons flipped (matrix(-1,0,0,1,0,0)); EN 11/11 transform: none.
 detail: |
 Plan 43-07 migrated 5 `rotate-180` users to canonical `.icon-flip` class. Two more users were missed:
 
