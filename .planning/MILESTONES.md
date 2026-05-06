@@ -1,5 +1,42 @@
 # Milestones
 
+## v6.0 Design System Adoption (Shipped: 2026-05-06)
+
+**Phases completed:** 11 phases (33-43), 121 plans (122 planned, 33-08 storybook deferred), 66 tasks
+**Timeline:** 17 days (2026-04-19 → 2026-05-06)
+**Audit:** `.planning/milestones/v6.0-MILESTONE-AUDIT.md` (status: tech_debt — no critical blockers)
+
+**Key accomplishments:**
+
+- OKLCH-driven token engine across 4 design directions (Chancery / Situation Room / Ministerial / Bureau) × light/dark × accent hue × density, bridged to Tailwind v4 `@theme` and HeroUI v3 semantics with zero per-component overrides
+- Self-hosted typography stack (Fraunces / Space Grotesk / Public Sans / Inter / IBM Plex Sans / IBM Plex Mono / JetBrains Mono / Tajawal) via `@fontsource/*` — zero `fonts.googleapis.com` requests; verbatim Tajawal RTL cascade
+- New shell chrome: 256px sidebar with 2px accent bar (`inset-inline-start:0`), 56px topbar with `⌘K` search + direction switcher + Tweaks button, direction-specific classification element, and ≤1024px overlay-drawer with RTL flip
+- Tweaks drawer with Direction/Mode/Hue/Density/Classification/Locale controls and `localStorage` persistence; legacy `/themes` route + `pages/Themes.tsx` + `components/theme-selector/` removed
+- Signature visual primitives: `<GlobeLoader>` (d3-geo orthographic + 3 whirl rings), `<GlobeSpinner>`, `<FullscreenLoader>`, `<DossierGlyph>` (24 hand-drawn flag SVGs + symbol fallbacks), `<Sparkline>` (RTL-flipped polyline), `<Donut>` (stacked dasharray segments)
+- Dashboard rebuilt verbatim to `reference/dashboard.png`: 8 widgets (KpiStrip / WeekAhead / OverdueCommitments / Digest / SlaHealth / VipVisits / MyTasks / RecentDossiers / ForumsStrip) wired to real domain hooks with zero placeholder data; legacy `OperationsHub.tsx` deleted (75/75 vitest)
+- Kanban (`kcards` with overdue inline-start border + done opacity) + 7×5 calendar grid (event pills, today accent, RTL nav)
+- Seven list pages (Countries / Organizations / Persons / Forums / Topics / Working Groups / Engagements) on shared `ListPageShell` + `GenericListPage` with filter pills + `<GlobeSpinner>` load-more; `EngagementsListPage` swap from 266 LOC → 16 LOC
+- 720px dossier drawer (DOSSIER + CONFIDENTIAL chips, mini-KPI strip, italic-serif summary, Upcoming/Activity/Commitments) with focus trap + ESC + RTL slide flip + ≤640px full-screen
+- Five remaining pages reskinned: Briefs (auto-fill card grid), After-actions (`.tbl` 6-column), Tasks (`.tasks-list` with checkbox + glyph + priority chip), Activity (`time · icon · "who action what in where"` timeline), Settings (240+1fr nav grid + 9-section vertical nav)
+- Hard cross-phase QA gate (Phase 43): `pnpm lint` zero `eslint-plugin-rtl-friendly` violations across 13+ routes; axe-core 30/30 across EN/AR; responsive 60/60 across 6 breakpoints; keyboard 26 + 4 acknowledged-skip; focus-outline 8/8; `docs/rtl-icons.md` enumerates 11 mirrored-icon entries; CI `qa-sweep` gate live in `.github/workflows/e2e.yml`
+- Two design tokens raised to clear WCAG AA (`inkFaint` 3.14 → 5.07; `--accent-fg` 4.38 → 5.28); `--sla-bad` darkened to `oklch(46% 0.18 25)`; FOUC bootstrap byte-mirror invariant preserved
+- Playwright `globalSetup` + `storageState` + `chromium-no-auth` project replace brittle `loginForListPages` helper across 9 dossier-drawer specs
+
+**Known deferred items at close:** 9 (see STATE.md `## Deferred Items`)
+
+**Tech debt (see audit for details):**
+
+- 6 phases (33, 34, 36, 37, 39, 40) lack per-phase VERIFICATION.md — coverage proven indirectly via Phase 43 cross-phase QA sweep
+- Visual-regression baselines pending operator action for Phases 38, 40, 41 (Doppler env + `--update-snapshots` on seeded dev machine)
+- Schema/seed work deferred: `intelligence_digest` table (DIGEST-SOURCE-COMPROMISE), VIP person ISO join in RPC, `060-dashboard-demo.sql` seed for 4 BLOCKED-BY-SEED specs
+- size-limit budget gate broken since vendor super-chunk drift (Phase 40/42) — chunk-glob config no longer matches Vite output (2.42 MB vs 815 KB ceiling)
+- Phase 43 anti-patterns: WR-03 aria-label shadows visible text (DrawerCtaRow, VipVisits, OverdueCommitments); WR-04 invalid `hsl(var(--sidebar))` wraps hex; WR-05 redundant Checkbox aria-label
+- Plan 33-08 storybook deferred (no SUMMARY)
+
+**Archive:** `.planning/milestones/v6.0-ROADMAP.md` · `.planning/milestones/v6.0-REQUIREMENTS.md` · `.planning/milestones/v6.0-MILESTONE-AUDIT.md`
+
+---
+
 ## v4.1 Post-Launch Fixes (Shipped: 2026-04-12)
 
 **Phases completed:** 2 phases (24-25), 7 plans, 6 quick tasks

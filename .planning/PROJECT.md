@@ -10,12 +10,13 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ## Current State
 
-**Shipped:** v5.0 Dossier Creation UX (2026-04-18) — 7 phases, 28 plans, 45/45 requirements satisfied, audit PASSED.
+**Shipped:** v6.0 Design System Adoption (2026-05-06) — 11 phases, 121 plans, 52/52 requirements satisfied (25 fully verified + 27 covered by SUMMARY frontmatter and Phase 43 cross-phase QA sweep), audit status `tech_debt` (no critical blockers).
 
 <details>
 <summary>Shipped milestones</summary>
 
-- v5.0 Dossier Creation UX (2026-04-18): 8 per-type creation wizards, unified `CreateDossierHub`, legacy wizard removed, person-native identity refactor — see `.planning/milestones/v5.0-ROADMAP.md` and `.planning/v5.0-MILESTONE-AUDIT.md`
+- v6.0 Design System Adoption (2026-05-06): OKLCH token engine (4 directions × mode × hue × density), Tweaks drawer, self-hosted typography stack, new shell chrome, signature visual primitives, verbatim dashboard, kanban + calendar reskin, 7 list pages, 720px dossier drawer, 5 remaining pages reskinned, hard cross-phase QA gate (axe + responsive + keyboard + focus-outline) — see `.planning/milestones/v6.0-ROADMAP.md` and `.planning/milestones/v6.0-MILESTONE-AUDIT.md`
+- v5.0 Dossier Creation UX (2026-04-18): 8 per-type creation wizards, unified `CreateDossierHub`, legacy wizard removed, person-native identity refactor
 - v4.1 Post-Launch Fixes (2026-04-12): 87-finding audit, semantic colors, PageHeader unification, 100% Arabic parity
 - v4.0 Live Operations (2026-04-09): Production deployment, notifications (in-app + email + push), seed data, E2E testing
 - v3.0 Connected Workflow (2026-04-06): Hub-and-spoke architecture, engagement lifecycle, Operations Hub, DossierShell
@@ -23,36 +24,11 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-**Tech debt carried from v5.0:** `DossierTypeSelector` orphan cleanup, Playwright E2E runtime (CI env), bilingual UAT sweeps — see `.planning/v5.0-MILESTONE-AUDIT.md` §6.1. Prior tech debt in `.planning/milestones/v4.0-MILESTONE-AUDIT.md` (NOTIF-04 digest scheduler, TEST-05/10/11 E2E coverage, corporate infra items).
+**Tech debt carried from v6.0:** 6 phases lack per-phase VERIFICATION.md (33/34/36/37/39/40); visual-regression baselines pending operator action for Phases 38/40/41; schema/seed work deferred (intelligence_digest table, VIP person ISO join, 060-dashboard-demo.sql); size-limit budget gate broken (chunk-glob drift, 2.42 MB vs 815 KB ceiling); 5 Phase 43 anti-patterns (WR-02..WR-06); Plan 33-08 storybook deferred. See `.planning/milestones/v6.0-MILESTONE-AUDIT.md` for full inventory.
 
-## Current Milestone: v6.0 Design System Adoption
+## Next Milestone
 
-**Goal:** Adopt the Claude Design handoff as the system-wide visual language — four design directions (Chancery / Situation Room / Ministerial / Bureau) × light/dark × accent hue × density — replacing the existing theme list, rebuilding the shell chrome, and rebuilding the dashboard pixel-exact to the reference.
-
-**Target features:**
-
-- Token engine (4 directions × mode × hue × density, OKLCH accent math, Tailwind v4 `@theme` bridge, HeroUI v3 semantic mapping)
-- Tweaks drawer (topbar-only; replaces current `/themes` route and `pages/Themes.tsx`)
-- Typography stack (Fraunces / Space Grotesk / IBM Plex / Public Sans / Inter / JetBrains Mono / Tajawal, with RTL display-font override)
-- Shell chrome (256px sidebar with accent active bar, topbar with search+⌘K + direction switch + classification ribbon)
-- Signature visual primitives (GlobeLoader, GlobeSpinner, DossierGlyph w/ 24 flags + symbol glyphs, Sparkline, Donut)
-- Dashboard rebuilt verbatim to `reference/dashboard.png` (8 widgets wired to existing domain hooks)
-- Kanban WorkBoard + Calendar pages
-- List pages (Countries, Organizations, Persons, Forums, Topics, Working Groups, Engagements)
-- Dossier drawer + detail (720px slide-in, mini-KPI strip, serif summary)
-- Remaining pages (Briefs, After-actions, Tasks, Activity, Settings)
-- RTL audit + a11y + responsive sweep (320→1536)
-
-**Key context:**
-
-- Handoff bundle: `/tmp/inteldossier-handoff/inteldossier/` (HTML/CSS/JSX prototypes + reference screenshots + GASTAT_LOGO.svg)
-- **Replace** current theme list (strategy i) — no coexistence with v5.0 themes
-- HeroUI v3 consumes new CSS vars via `@heroui/styles` (accent → primary; danger/ok/warn → semantic)
-- Dashboard pixel-exact to reference; widgets wire to existing domain hooks (no mocked data)
-- Tweaks drawer lives in topbar only; `/themes` route + `pages/Themes.tsx` removed
-- Bilingual RTL/LTR invariant across every phase; logical properties only
-- No framework migrations (React 19, Express, Supabase, TanStack, HeroUI v3, Tailwind v4)
-- Phase numbering continues from v5.0 (starts at Phase 33)
+_Pending — run `/gsd-new-milestone` to scope v7.0._
 
 ## Requirements
 
@@ -106,9 +82,21 @@ Unified intelligence management for diplomatic operations — every relationship
 - ✓ Unified `CreateDossierHub` at `/dossiers/create` + legacy wizard removal — v5.0 Phase 31
 - ✓ Person-native identity fields (honorific, split names, nationality, DOB, gender) — v5.0 Phase 32
 
+- ✓ OKLCH token engine: 4 directions × light/dark × accent hue × density, Tailwind v4 `@theme` + HeroUI v3 semantic bridge — v6.0 Phase 33 (TOKEN-01..06)
+- ✓ Tweaks drawer with `localStorage` persistence + `/themes` route removal — v6.0 Phase 34 (THEME-01..04)
+- ✓ Per-direction self-hosted typography stack with Tajawal RTL cascade, zero Google Fonts CDN — v6.0 Phase 35 (TYPO-01..04)
+- ✓ 256px sidebar + 56px topbar + direction-specific classification element + responsive overlay-drawer + GASTAT brand mark — v6.0 Phase 36 (SHELL-01..05)
+- ✓ Signature visual primitives: GlobeLoader / GlobeSpinner / FullscreenLoader / DossierGlyph (24 flags) / Sparkline / Donut — v6.0 Phase 37 (VIZ-01..05)
+- ✓ Dashboard rebuilt pixel-exact to reference, 8 widgets wired to real domain hooks, zero mock data — v6.0 Phase 38 (DASH-01..09)
+- ✓ Kanban kcards (overdue inline-start border, done opacity) + 7×5 calendar grid with token-driven event pills — v6.0 Phase 39 (BOARD-01..03)
+- ✓ Seven list pages on shared `ListPageShell` + `GenericListPage` with RTL chevron, filter pills, GlobeSpinner load-more — v6.0 Phase 40 (LIST-01..04)
+- ✓ 720px dossier drawer with focus trap + ESC + RTL slide flip + ≤640px full-screen — v6.0 Phase 41 (DRAWER-01..03)
+- ✓ Briefs / After-actions / Tasks / Activity / Settings pages reskinned to handoff anatomy with WCAG AA bidirectional — v6.0 Phase 42 (PAGE-01..05)
+- ✓ Hard cross-phase QA gate: zero `eslint-plugin-rtl-friendly` violations, axe-core 30/30, responsive 60/60, keyboard 26 + 4 acknowledged-skip, focus-outline 8/8, `docs/rtl-icons.md` — v6.0 Phase 43 (QA-01..04)
+
 ### Active
 
-_Pending — v6.0 Design System Adoption requirements defined in `.planning/REQUIREMENTS.md`; REQ-IDs will appear here once phases commit._
+_Pending — run `/gsd-new-milestone` to define v7.0 requirements._
 
 ### Out of Scope
 
@@ -138,30 +126,40 @@ _Pending — v6.0 Design System Adoption requirements defined in `.planning/REQU
 
 ## Key Decisions
 
-| Decision                          | Rationale                                       | Outcome    |
-| --------------------------------- | ----------------------------------------------- | ---------- |
-| Full stack scope                  | Backend and frontend both need quality pass     | ✓ Good     |
-| Quality before features           | Fragile foundation makes new features risky     | ✓ Good     |
-| No new features in this milestone | Keeps scope focused on hardening                | ✓ Good     |
-| Supabase-first auth               | Unified auth strategy, JWT as fallback          | ✓ Good     |
-| Domain repository pattern         | Consistent data flow, zero raw fetch            | ✓ Good     |
-| useDirection() over prop drilling | Centralized RTL, no per-component dir=          | ✓ Good     |
-| size-limit as hard CI gate        | Bundle budget enforced, Lighthouse advisory     | ✓ Good     |
-| ESLint strict rules deferred      | 4500+ violations too large for this milestone   | ⚠️ Revisit |
-| rtl-friendly at warn level        | Error-level no-restricted-syntax covers it      | ⚠️ Revisit |
-| Lifecycle guides, not gates       | Diplomatic work is non-linear; skip/revert OK   | ✓ Good     |
-| Hub-and-spoke architecture        | Matches how diplomatic staff actually work      | ✓ Good     |
-| DossierShell shared layout        | Consistent UX across all 8 dossier types        | ✓ Good     |
-| Feature absorption over deletion  | Redirect old routes, absorb into context        | ✓ Good     |
-| Elected Officials via persons     | Query persons with subtype filter, no new table | ✓ Good     |
-| Kibo-UI KanbanProvider            | Better DX than raw @dnd-kit/core for kanban     | ✓ Good     |
-| Supabase Realtime for dashboard   | 1s debounce on tasks+transitions tables         | ✓ Good     |
-| BullMQ for async notification     | Decouple dispatch from triggering action        | ✓ Good     |
-| Resend for transactional email    | Simple API, bilingual HTML templates            | ✓ Good     |
-| nginx + certbot over Caddy        | Existing config, lower migration risk           | ✓ Good     |
-| VAPID push with soft-ask pattern  | Better UX than cold browser permission dialog   | ✓ Good     |
-| Playwright POM + CI sharding      | Maintainable E2E with parallelized CI runs      | ✓ Good     |
-| Plans 20-02–05 deferred to corp   | Corporate infra migration pending               | — Pending  |
+| Decision                              | Rationale                                                                                                            | Outcome       |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Full stack scope                      | Backend and frontend both need quality pass                                                                          | ✓ Good        |
+| Quality before features               | Fragile foundation makes new features risky                                                                          | ✓ Good        |
+| No new features in this milestone     | Keeps scope focused on hardening                                                                                     | ✓ Good        |
+| Supabase-first auth                   | Unified auth strategy, JWT as fallback                                                                               | ✓ Good        |
+| Domain repository pattern             | Consistent data flow, zero raw fetch                                                                                 | ✓ Good        |
+| useDirection() over prop drilling     | Centralized RTL, no per-component dir=                                                                               | ✓ Good        |
+| size-limit as hard CI gate            | Bundle budget enforced, Lighthouse advisory                                                                          | ✓ Good        |
+| ESLint strict rules deferred          | 4500+ violations too large for this milestone                                                                        | ⚠️ Revisit    |
+| rtl-friendly at warn level            | Error-level no-restricted-syntax covers it                                                                           | ⚠️ Revisit    |
+| Lifecycle guides, not gates           | Diplomatic work is non-linear; skip/revert OK                                                                        | ✓ Good        |
+| Hub-and-spoke architecture            | Matches how diplomatic staff actually work                                                                           | ✓ Good        |
+| DossierShell shared layout            | Consistent UX across all 8 dossier types                                                                             | ✓ Good        |
+| Feature absorption over deletion      | Redirect old routes, absorb into context                                                                             | ✓ Good        |
+| Elected Officials via persons         | Query persons with subtype filter, no new table                                                                      | ✓ Good        |
+| Kibo-UI KanbanProvider                | Better DX than raw @dnd-kit/core for kanban                                                                          | ✓ Good        |
+| Supabase Realtime for dashboard       | 1s debounce on tasks+transitions tables                                                                              | ✓ Good        |
+| BullMQ for async notification         | Decouple dispatch from triggering action                                                                             | ✓ Good        |
+| Resend for transactional email        | Simple API, bilingual HTML templates                                                                                 | ✓ Good        |
+| nginx + certbot over Caddy            | Existing config, lower migration risk                                                                                | ✓ Good        |
+| VAPID push with soft-ask pattern      | Better UX than cold browser permission dialog                                                                        | ✓ Good        |
+| Playwright POM + CI sharding          | Maintainable E2E with parallelized CI runs                                                                           | ✓ Good        |
+| Plans 20-02–05 deferred to corp       | Corporate infra migration pending                                                                                    | — Pending     |
+| OKLCH token engine over HSL           | Better perceptual uniformity for accent math; clean dark/light flips per direction                                   | ✓ Good (v6.0) |
+| HeroUI v3 + Tailwind v4 `@theme`      | Single token bridge instead of per-component overrides; semantic mapping accent→primary                              | ✓ Good (v6.0) |
+| Self-hosted fonts via @fontsource     | Zero CDN traffic + offline-friendly + bundled by Vite                                                                | ✓ Good (v6.0) |
+| Replace v5 themes (no coexistence)    | Strategy (i) — clean cut over coexistence; eliminates token cascade conflicts                                        | ✓ Good (v6.0) |
+| FOUC bootstrap byte-mirror invariant  | Inline synchronous bootstrap.js paints first-frame tokens; literal palette must byte-match `tokens/directions.ts`    | ✓ Good (v6.0) |
+| Phase 43 as cross-phase QA gate       | Final phase enforces lint + axe + responsive + keyboard + focus-outline across all v6.0 routes — not per-phase       | ✓ Good (v6.0) |
+| Playwright globalSetup + storageState | Replaces brittle per-test login helper; eliminates Class D login-form bleed-through across qa-sweep specs            | ✓ Good (v6.0) |
+| `.touch-44` utility + 7 call-sites    | Single CSS class with logical `min-inline-size`/`min-block-size`; applied to existing components without refactoring | ✓ Good (v6.0) |
+| 6 phases ship without VERIFICATION.md | Phase 43 cross-phase sweep covers them indirectly; per-phase backfill deferred as tech debt                          | ⚠️ Revisit    |
+| Visual baselines deferred to operator | Sandboxed worktrees lack `pnpm dev` + Doppler env; baselines regenerated on dev machine + committed                  | ⚠️ Revisit    |
 
 ## Evolution
 
@@ -184,4 +182,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-19 at v6.0 milestone start_
+_Last updated: 2026-05-06 after v6.0 milestone close_

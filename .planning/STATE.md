@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: shipped
-stopped_at: v6.0 closed — Phase 43 verified 2026-05-06
-last_updated: '2026-05-06T00:00:00.000Z'
-last_activity: 2026-05-06 -- v6.0 milestone shipped (Phase 43 UAT 94/4/0 + Gap-5 closed)
+status: v6.0 milestone shipped
+stopped_at: Phase 43 context gathered
+last_updated: '2026-05-06T10:29:30.402Z'
+last_activity: 2026-05-06
 progress:
   total_phases: 11
   completed_phases: 11
-  total_plans: 121
+  total_plans: 122
   completed_plans: 121
   percent: 100
 ---
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 Phase: 43 (rtl-a11y-responsive-sweep) — VERIFIED & SHIPPED
 Plans: 121 of 121 complete across v6.0 (Phases 33-43)
 Status: v6.0 milestone shipped
-Last activity: 2026-05-06 -- Phase 43 UAT re-run PASS (qa-sweep 94/4/0); Gap-5 rotate-180 leftovers closed (commits 6b450d02, 1b74869a); Gap-6 keyboard sweep closed (0ae07086); 43-VERIFICATION flipped to verified.
+Last activity: 2026-05-06
 
 Progress: [██████████] 100% (121 / 121 plans)
 
@@ -233,6 +233,24 @@ Plan 33-09 (E2E Nyquist verification — PASS, 5/5 SCs green, zero flake across 
 ### Runtime issue to track
 
 Worktree isolation via `Task(subagent_type=..., isolation="worktree")` forked agent worktrees from a stale commit (`49b225b8`, 9 commits behind `DesignV2` HEAD at session start) and did not actually isolate filesystem writes. Agents wrote into the main tree while their worktree git-state remained stale. For Waves 2-4, use `isolation` unset (shared main tree) and run subagents sequentially, or execute inline.
+
+## Deferred Items
+
+Items acknowledged and deferred at v6.0 milestone close on 2026-05-06:
+
+| Category   | Item                                                                    | Status                |
+| ---------- | ----------------------------------------------------------------------- | --------------------- |
+| debug      | dashboard-max-update-depth                                              | awaiting_human_verify |
+| quick_task | 260409-dgf-fix-redis-initialization-race-maxmemory-                     | missing               |
+| quick_task | 260412-hlb-fix-batch-5-data-flow-state-management-d                     | missing               |
+| quick_task | 260412-jkp-fix-batch-6-navigation-routing-n-20-n-21                     | missing               |
+| quick_task | 260412-jth-fix-batch-7-per-journey-route-fixes-28-f                     | missing               |
+| quick_task | 260412-kmh-fix-batch-0-critical-audit-findings-b-01                     | missing               |
+| quick_task | 260412-kot-route-notifications-center-through-expre                     | missing               |
+| quick_task | 260413-tuf-create-unified-pageheader-component-and-                     | missing               |
+| uat_gap    | 40-HUMAN-UAT.md (visual baselines + 7-page PNG parity pending operator) | partial               |
+
+See `.planning/v6.0-MILESTONE-AUDIT.md` for full tech-debt inventory across phases 38, 40, 41, 42, 43 and cross-cutting documentation drift.
 
 ## Performance Metrics
 
