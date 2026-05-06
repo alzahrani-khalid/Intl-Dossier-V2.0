@@ -7,7 +7,7 @@
 - ✅ **v4.0 Live Operations** — Phases 14-23 (shipped 2026-04-09) — [archive](milestones/v4.0-ROADMAP.md)
 - ✅ **v4.1 Post-Launch Fixes** — Phases 24-25 (shipped 2026-04-12) — [archive](milestones/v4.1-ROADMAP.md)
 - ✅ **v5.0 Dossier Creation UX** — Phases 26-32 (shipped 2026-04-18) — [archive](milestones/v5.0-ROADMAP.md)
-- 🚧 **v6.0 Design System Adoption** — Phases 33-43 (active)
+- ✅ **v6.0 Design System Adoption** — Phases 33-43 (shipped 2026-05-06) — [archive](milestones/v6.0-ROADMAP.md)
 
 ## Phases
 
@@ -83,7 +83,7 @@ Full details: [v5.0-ROADMAP.md](milestones/v5.0-ROADMAP.md)
 
 </details>
 
-### 🚧 v6.0 Design System Adoption (Phases 33-43) — ACTIVE
+### ✅ v6.0 Design System Adoption (Phases 33-43) — SHIPPED 2026-05-06
 
 **Milestone goal:** Adopt the Claude Design handoff as the system-wide visual language — four design directions (Chancery / Situation Room / Ministerial / Bureau) × light/dark × accent hue × density — replacing the existing theme list, rebuilding the shell chrome, and rebuilding the dashboard pixel-exact to the reference.
 

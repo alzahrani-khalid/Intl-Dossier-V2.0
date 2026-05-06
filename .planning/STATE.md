@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v6.0
 milestone_name: Design System Adoption
-status: executing
-stopped_at: Phase 43 context gathered
-last_updated: '2026-05-04T12:06:59.708Z'
-last_activity: 2026-05-04 -- Phase 43 execution started
+status: shipped
+stopped_at: v6.0 closed — Phase 43 verified 2026-05-06
+last_updated: '2026-05-06T00:00:00.000Z'
+last_activity: 2026-05-06 -- v6.0 milestone shipped (Phase 43 UAT 94/4/0 + Gap-5 closed)
 progress:
   total_phases: 11
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 121
   completed_plans: 121
   percent: 100
@@ -21,17 +21,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 43 — rtl-a11y-responsive-sweep
+**Current focus:** v6.0 shipped 2026-05-06. Awaiting next milestone selection.
 
 ## Current Position
 
-Phase: 43 (rtl-a11y-responsive-sweep) — EXECUTING
-Plan: 1 of 17
-Plans: 21 of 21 complete (13 original + 8 gap-closure)
-Status: Executing Phase 43
-Last activity: 2026-05-04 -- Phase 43 execution started
+Phase: 43 (rtl-a11y-responsive-sweep) — VERIFIED & SHIPPED
+Plans: 121 of 121 complete across v6.0 (Phases 33-43)
+Status: v6.0 milestone shipped
+Last activity: 2026-05-06 -- Phase 43 UAT re-run PASS (qa-sweep 94/4/0); Gap-5 rotate-180 leftovers closed (commits 6b450d02, 1b74869a); Gap-6 keyboard sweep closed (0ae07086); 43-VERIFICATION flipped to verified.
 
-Progress: [█████████▉] 91% (77 / 85 plans)
+Progress: [██████████] 100% (121 / 121 plans)
+
+## Next Action
+
+Run `/gsd:new-milestone` to scope v7.0, or `/gsd:retrospective` to lock in v6.0 lessons before starting new work.
 
 ### Phase 40 summary
 
