@@ -131,12 +131,10 @@ function formatDeadline(deadline: string, locale: string): string {
 function TaskItemComponent({
   task,
   locale,
-  isRTL,
   onToggle,
 }: {
   task: TaskItem
   locale: string
-  isRTL: boolean
   onToggle?: (completed: boolean) => void
 }) {
   const { t } = useTranslation('dashboard-widgets')
@@ -214,8 +212,7 @@ function TaskItemComponent({
       {/* Chevron */}
       <ChevronRight
         className={cn(
-          'h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0 self-center',
-          isRTL && 'rotate-180',
+          'h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0 self-center icon-flip',
         )}
       />
     </div>
@@ -239,7 +236,7 @@ function GroupHeader({ label, count }: { label: string; count: number }) {
 export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskListWidgetProps) {
   const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-const locale = isRTL ? 'ar-SA' : 'en-US'
+  const locale = isRTL ? 'ar-SA' : 'en-US'
 
   const { settings } = config
 
@@ -345,7 +342,6 @@ const locale = isRTL ? 'ar-SA' : 'en-US'
                       key={task.id}
                       task={task}
                       locale={locale}
-                      isRTL={isRTL}
                       onToggle={(completed) => onTaskToggle?.(task.id, completed)}
                     />
                   ))}
@@ -358,7 +354,6 @@ const locale = isRTL ? 'ar-SA' : 'en-US'
                 key={task.id}
                 task={task}
                 locale={locale}
-                isRTL={isRTL}
                 onToggle={(completed) => onTaskToggle?.(task.id, completed)}
               />
             ))}
