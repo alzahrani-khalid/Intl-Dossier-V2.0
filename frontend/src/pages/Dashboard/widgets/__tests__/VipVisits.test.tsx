@@ -1,9 +1,8 @@
 /**
  * Phase 38 plan 06 — VipVisits widget unit tests.
  *
- * Verifies: countdown math (T-N / T+N / T-0), LtrIsolate wrapping, RTL
- * arrow-right rotate-180, DossierGlyph wiring, row render, and skeleton/
- * empty/error states.
+ * Verifies: countdown math (T-N / T+N / T-0), LtrIsolate wrapping, RTL icon
+ * class, DossierGlyph wiring, row render, and skeleton/empty/error states.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -59,9 +58,10 @@ function makeVisit(days: number, overrides: Record<string, unknown> = {}): unkno
   return {
     id: `v-${days}`,
     name: 'Ambassador Al-Sayed',
+    nameAr: 'السفير السيد',
     role: 'G20 Bilateral',
     when: isoDaysFromNow(days),
-    personFlag: 'SA',
+    personFlag: 'ID',
     ...overrides,
   }
 }
@@ -114,22 +114,23 @@ describe('VipVisits widget (RTL)', (): void => {
     expect(ltrAncestor).not.toBeNull()
   })
 
-  it('rotates arrow-right 180° when language is ar (RTL)', (): void => {
+  it('uses icon-flip on the RTL navigation arrow', (): void => {
     vi.mocked(useVipVisits).mockReturnValue({
       data: [makeVisit(1)],
       isLoading: false,
       isError: false,
     } as never)
     const { container } = render(<VipVisits />)
-    expect(container.querySelector('.rotate-180')).not.toBeNull()
+    expect(container.querySelector('.icon-flip')).not.toBeNull()
   })
 
-  it('renders DossierGlyph with type="person" + name + row content', (): void => {
+  it('renders DossierGlyph with type="country" + ISO + row content', (): void => {
     vi.mocked(useVipVisits).mockReturnValue({
       data: [
         makeVisit(1, {
           id: 'v-1',
           name: 'Amb. Fatima',
+          nameAr: 'السفيرة فاطمة',
           role: 'UN Envoy',
         }),
       ],
@@ -139,9 +140,10 @@ describe('VipVisits widget (RTL)', (): void => {
     render(<VipVisits />)
     const glyphs = screen.getAllByTestId('glyph')
     expect(glyphs.length).toBe(1)
-    expect(glyphs[0].getAttribute('data-type')).toBe('person')
-    expect(glyphs[0].getAttribute('data-name')).toBe('Amb. Fatima')
-    expect(screen.getByText('Amb. Fatima')).toBeDefined()
+    expect(glyphs[0].getAttribute('data-type')).toBe('country')
+    expect(glyphs[0].getAttribute('data-iso')).toBe('ID')
+    expect(glyphs[0].getAttribute('data-name')).toBe('السفيرة فاطمة')
+    expect(screen.getByText('السفيرة فاطمة')).toBeDefined()
     expect(screen.getByText('UN Envoy')).toBeDefined()
   })
 
@@ -173,7 +175,8 @@ describe('VipVisits widget (RTL)', (): void => {
       isError: false,
     } as never)
     render(<VipVisits />)
-    expect(screen.getByText(/vip\.empty/)).toBeDefined()
+    expect(screen.getByText(/vip\.empty\.heading/)).toBeDefined()
+    expect(screen.getByText(/vip\.empty\.body/)).toBeDefined()
   })
 
   it('shows error state on isError', (): void => {
@@ -183,7 +186,7 @@ describe('VipVisits widget (RTL)', (): void => {
       isError: true,
     } as never)
     render(<VipVisits />)
-    expect(screen.getByText(/error\.load_failed/)).toBeDefined()
+    expect(screen.getByText(/vip\.error/)).toBeDefined()
   })
 
   it('omits role line when role is empty string', (): void => {
