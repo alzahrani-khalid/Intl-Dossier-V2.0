@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.1
 milestone_name: Hardening & Reconciliation
-status: executing
+status: ready_to_plan
 stopped_at: Phase 44 context gathered
 last_updated: '2026-05-07T19:43:23.877Z'
 last_activity: 2026-05-07 -- Phase 44 implementation complete (6/6 plans); verification in progress
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
   completed_plans: 6
-  percent: 100
+  percent: 67
 ---
 
 # Project State
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: 44 (documentation-toolchain-anti-patterns) — EXECUTING
-Plan: 6 of 6
-Status: Phase 44 implementation complete; verification in progress
-Last activity: 2026-05-07 -- Phase 44 implementation complete (6/6 plans); verification in progress
+Phase: 45
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-05-07
 
 ## Next Action
 
@@ -254,7 +254,7 @@ See `.planning/v6.0-MILESTONE-AUDIT.md` for full tech-debt inventory across phas
 
 **Velocity:**
 
-- Total plans completed: 20
+- Total plans completed: 26
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -266,6 +266,7 @@ See `.planning/v6.0-MILESTONE-AUDIT.md` for full tech-debt inventory across phas
 | 28           | 4     | —       | —        |
 | 29           | 6     | —       | —        |
 | Phase 34 P04 | 35    | 3 tasks | 9 files  |
+| 44           | 6     | -       | -        |
 
 ## Accumulated Context
 

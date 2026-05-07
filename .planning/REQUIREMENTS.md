@@ -16,32 +16,32 @@ Requirements for this milestone. Every requirement maps to exactly one roadmap p
 
 ### Documentation Reconciliation (DOC)
 
-- [ ] **DOC-01**: A reviewer can read `.planning/milestones/v6.0-phases/33-*/VERIFICATION.md` and find every TOKEN-01..06 requirement listed with a PASS/FAIL verdict and a verification artifact reference (test file, validation log, or audit pointer)
-- [ ] **DOC-02**: A reviewer can read `.planning/milestones/v6.0-phases/34-*/VERIFICATION.md` and find every THEME-02..04 requirement listed with a PASS/FAIL verdict (THEME-01 already verified - included for completeness)
-- [ ] **DOC-03**: A reviewer can read `.planning/milestones/v6.0-phases/36-*/VERIFICATION.md` and find every SHELL-01..05 requirement listed with a PASS/FAIL verdict
-- [ ] **DOC-04**: A reviewer can read `.planning/milestones/v6.0-phases/37-*/VERIFICATION.md` and find every VIZ-01..05 requirement listed with a PASS/FAIL verdict
-- [ ] **DOC-05**: A reviewer can read `.planning/milestones/v6.0-phases/39-*/VERIFICATION.md` and find every BOARD-01..03 requirement listed with a PASS/FAIL verdict
-- [ ] **DOC-06**: A reviewer can read `.planning/milestones/v6.0-phases/40-*/VERIFICATION.md` and find every LIST-01..04 requirement listed with a PASS/FAIL verdict
-- [ ] **DOC-07**: Every `[x]` checkbox in the v6.0 archive at `.planning/milestones/v6.0-REQUIREMENTS.md` matches the SUMMARY frontmatter for the same REQ-ID (THEME-01 truncated checkbox repaired; remaining 26 partial-verified IDs flipped from `[ ]` to `[x]` once their VERIFICATION.md backfill lands)
-- [ ] **DOC-08**: The v6.0 ROADMAP archive (`.planning/milestones/v6.0-ROADMAP.md`) progress table reports 121/121 plans complete and matches MILESTONES.md, and the active `.planning/ROADMAP.md` shows a clean v6.0 close + v6.1 open
+- [x] **DOC-01**: A reviewer can read `.planning/milestones/v6.0-phases/33-*/VERIFICATION.md` and find every TOKEN-01..06 requirement listed with a PASS/FAIL verdict and a verification artifact reference (test file, validation log, or audit pointer)
+- [x] **DOC-02**: A reviewer can read `.planning/milestones/v6.0-phases/34-*/VERIFICATION.md` and find every THEME-02..04 requirement listed with a PASS/FAIL verdict (THEME-01 already verified - included for completeness)
+- [x] **DOC-03**: A reviewer can read `.planning/milestones/v6.0-phases/36-*/VERIFICATION.md` and find every SHELL-01..05 requirement listed with a PASS/FAIL verdict
+- [x] **DOC-04**: A reviewer can read `.planning/milestones/v6.0-phases/37-*/VERIFICATION.md` and find every VIZ-01..05 requirement listed with a PASS/FAIL verdict
+- [x] **DOC-05**: A reviewer can read `.planning/milestones/v6.0-phases/39-*/VERIFICATION.md` and find every BOARD-01..03 requirement listed with a PASS/FAIL verdict
+- [x] **DOC-06**: A reviewer can read `.planning/milestones/v6.0-phases/40-*/VERIFICATION.md` and find every LIST-01..04 requirement listed with a PASS/FAIL verdict
+- [x] **DOC-07**: Every `[x]` checkbox in the v6.0 archive at `.planning/milestones/v6.0-REQUIREMENTS.md` matches the SUMMARY frontmatter for the same REQ-ID (THEME-01 truncated checkbox repaired; remaining 26 partial-verified IDs flipped from `[ ]` to `[x]` once their VERIFICATION.md backfill lands)
+- [x] **DOC-08**: The v6.0 ROADMAP archive (`.planning/milestones/v6.0-ROADMAP.md`) progress table reports 121/121 plans complete and matches MILESTONES.md, and the active `.planning/ROADMAP.md` shows a clean v6.0 close + v6.1 open
 
 ### Toolchain & Bundle Budget (TOOL)
 
-- [ ] **TOOL-01**: A developer can run `pnpm -C frontend size-limit` and the command exits 0 with all configured chunks measured against the current output budgets in `frontend/.size-limit.json`; the historical 815 KB total remains an aspirational optimization target, not the enforced Phase 44 gate
-- [ ] **TOOL-02**: The `size-limit` configuration matches Vite's actual output filenames (vendor-super-chunk + per-route splits as of Phase 42), so a real budget regression fails the gate; an intentional >=1 KB increase from `main.tsx` produces a non-zero exit
-- [ ] **TOOL-03**: The CI workflow that runs `size-limit` is wired so a failing budget blocks merge; a verification PR that bumps a chunk past the ceiling is rejected by CI
+- [x] **TOOL-01**: A developer can run `pnpm -C frontend size-limit` and the command exits 0 with all configured chunks measured against the current output budgets in `frontend/.size-limit.json`; the historical 815 KB total remains an aspirational optimization target, not the enforced Phase 44 gate
+- [x] **TOOL-02**: The `size-limit` configuration matches Vite's actual output filenames (vendor-super-chunk + per-route splits as of Phase 42), so a real budget regression fails the gate; an intentional >=1 KB increase from `main.tsx` produces a non-zero exit
+- [x] **TOOL-03**: The CI workflow that runs `size-limit` is wired so a failing budget blocks merge; a verification PR that bumps a chunk past the ceiling is rejected by CI
 
 ### Anti-Pattern Closure (LINT)
 
-- [ ] **LINT-01**: `OverdueCommitments.tsx:154` no longer has the dead `?? c.ownerInitials` branch on a `t()` return; the branch is either deleted or replaced with a typed fallback that the linter accepts as reachable (WR-02)
-- [ ] **LINT-02**: `DrawerCtaRow.tsx:93`, `VipVisits.tsx:110`, and `OverdueCommitments.tsx:168` use `aria-labelledby` referencing the visible label element instead of `aria-label` shadowing visible text; axe-core "label not redundant with text" rule passes (WR-03)
-- [ ] **LINT-03**: `sidebar.tsx:209` no longer wraps a literal hex inside `hsl(var(--sidebar))`; the value either resolves to a valid OKLCH/HSL color via the design tokens or is replaced with a direct token reference, and CSS validation passes (WR-04)
-- [ ] **LINT-04**: `MyTasks.tsx:130-135` uses `aria-labelledby` on the Checkbox referencing the sibling task title span instead of duplicating the title in `aria-label` (WR-05)
-- [ ] **LINT-05**: `CalendarEntryForm.tsx` `t('calendar.form.*')` calls resolve in the `calendar` namespace (or are explicitly namespaced as `t('form.field', { ns: 'calendar' })`); both EN and AR translations render the form labels correctly with no fallback to the default namespace (WR-06)
+- [x] **LINT-01**: `OverdueCommitments.tsx:154` no longer has the dead `?? c.ownerInitials` branch on a `t()` return; the branch is either deleted or replaced with a typed fallback that the linter accepts as reachable (WR-02)
+- [x] **LINT-02**: `DrawerCtaRow.tsx:93`, `VipVisits.tsx:110`, and `OverdueCommitments.tsx:168` use `aria-labelledby` referencing the visible label element instead of `aria-label` shadowing visible text; axe-core "label not redundant with text" rule passes (WR-03)
+- [x] **LINT-03**: `sidebar.tsx:209` no longer wraps a literal hex inside `hsl(var(--sidebar))`; the value either resolves to a valid OKLCH/HSL color via the design tokens or is replaced with a direct token reference, and CSS validation passes (WR-04)
+- [x] **LINT-04**: `MyTasks.tsx:130-135` uses `aria-labelledby` on the Checkbox referencing the sibling task title span instead of duplicating the title in `aria-label` (WR-05)
+- [x] **LINT-05**: `CalendarEntryForm.tsx` `t('calendar.form.*')` calls resolve in the `calendar` namespace (or are explicitly namespaced as `t('form.field', { ns: 'calendar' })`); both EN and AR translations render the form labels correctly with no fallback to the default namespace (WR-06)
 
 ### Storybook Coverage (STORY)
 
-- [ ] **STORY-01**: Either Plan 33-08 ships — Storybook stories exist for the 8 v6.0 visual primitives (`GlobeLoader`, `GlobeSpinner`, `FullscreenLoader`, `DossierGlyph`, `Sparkline`, `Donut`, plus Skeleton/Spinner) covering each direction × mode × density permutation in `frontend/src/stories/` — OR the deferral is formalized via an ADR at `.planning/decisions/ADR-006-storybook-deferral.md` that names the replacement coverage strategy (vitest snapshot tests, Playwright visual specs) and the trigger condition for revisiting
+- [x] **STORY-01**: Either Plan 33-08 ships — Storybook stories exist for the 8 v6.0 visual primitives (`GlobeLoader`, `GlobeSpinner`, `FullscreenLoader`, `DossierGlyph`, `Sparkline`, `Donut`, plus Skeleton/Spinner) covering each direction × mode × density permutation in `frontend/src/stories/` — OR the deferral is formalized via an ADR at `.planning/decisions/ADR-006-storybook-deferral.md` that names the replacement coverage strategy (vitest snapshot tests, Playwright visual specs) and the trigger condition for revisiting
 
 ### Schema & Seed Closure (DATA)
 
