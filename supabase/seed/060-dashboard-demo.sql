@@ -23,7 +23,23 @@ DECLARE
   v_d_gcc_stat    UUID := 'b0000001-0000-0000-0000-000000000006';
   v_d_vision_2030 UUID := 'b0000001-0000-0000-0000-000000000007';
   v_d_uae         UUID := 'b0000001-0000-0000-0000-000000000008';
+  v_org_id UUID;
+  v_country_indonesia UUID;
+  v_p_indonesia_delegate UUID := 'b0000011-0000-0000-0000-000000000001';
 BEGIN
+  SELECT tenant_isolation.resolve_user_tenant(v_user_id) INTO v_org_id;
+  IF v_org_id IS NULL THEN
+    RAISE EXCEPTION 'Seed 060 requires an organization membership for user %', v_user_id;
+  END IF;
+
+  SELECT id INTO v_country_indonesia
+  FROM countries
+  WHERE iso_code_2 = 'ID'
+  LIMIT 1;
+  IF v_country_indonesia IS NULL THEN
+    RAISE EXCEPTION 'Seed 060 requires countries.iso_code_2 = ID';
+  END IF;
+
   -- ============================================================================
   -- 1. CLEAN — remove prior handoff-demo rows (idempotent reseed)
   -- ============================================================================
@@ -37,6 +53,10 @@ BEGIN
   DELETE FROM engagements        WHERE id::text         LIKE 'b0000002-%';
   DELETE FROM activities         WHERE id::text         LIKE 'b0000002-%';
   -- engagement_dossiers + forums cascade from dossiers (ON DELETE CASCADE)
+  DELETE FROM intelligence_digest WHERE id::text LIKE 'b0000010-%';
+  DELETE FROM engagement_participants WHERE id::text LIKE 'b0000012-%' OR participant_dossier_id::text LIKE 'b0000011-%';
+  DELETE FROM persons WHERE id::text LIKE 'b0000011-%';
+  DELETE FROM dossiers WHERE id::text LIKE 'b0000011-%';
   DELETE FROM dossiers           WHERE id::text         LIKE 'b0000001-%' OR id::text LIKE 'b0000002-%' OR id::text LIKE 'b0000008-%';
 
   -- ============================================================================
@@ -132,6 +152,35 @@ BEGIN
     ('b0000002-0000-0000-0000-000000000003'::uuid, 'official_visit','diplomatic',
      date_trunc('day', NOW()) + INTERVAL '2 days 14 hours', date_trunc('day', NOW()) + INTERVAL '4 days 16 hours',
      'briefing',    'confirmed',   'Riyadh · Ritz-Carlton',        'الرياض · فندق ريتز كارلتون');
+
+  -- ============================================================================
+  -- 6A. VIP PERSON PARTICIPANT — feeds VipVisits person ISO enrichment
+  -- ============================================================================
+  INSERT INTO dossiers (id, type, name_en, name_ar, status, sensitivity_level, tags, metadata, created_by)
+  VALUES (
+    v_p_indonesia_delegate, 'person', 'Dr. Sari Widodo', 'د. ساري ويدودو',
+    'active', 2, ARRAY['handoff-demo', 'vip-visit'],
+    '{"handoff_demo":true,"vip_seed":true}'::jsonb, v_user_id
+  );
+
+  INSERT INTO persons (id, title_en, title_ar, nationality_country_id)
+  VALUES (
+    v_p_indonesia_delegate,
+    'Head of delegation',
+    'رئيسة الوفد',
+    v_country_indonesia
+  );
+
+  INSERT INTO engagement_participants
+    (id, engagement_id, participant_type, participant_dossier_id, role, attendance_status, created_by)
+  VALUES
+    ('b0000012-0000-0000-0000-000000000001'::uuid,
+     'b0000002-0000-0000-0000-000000000003'::uuid,
+     'person',
+     v_p_indonesia_delegate,
+     'head_of_delegation',
+     'confirmed',
+     v_user_id);
 
   -- ============================================================================
   -- 7. CALENDAR_ENTRIES — feeds WeekAhead and dashboard upcoming events
@@ -239,11 +288,33 @@ BEGIN
       'Indonesia BPS delegation visit scheduled — confirmed by host.',
       'تم جدولة زيارة وفد BPS الإندونيسي — مؤكدة من المضيف.', NOW() - INTERVAL '20 hours', true, 'team');
 
-  -- VipVisits widget intentionally NOT seeded:
-  -- VIP_EVENT_TYPE='vip_visit' is not allowed by either CHECK constraint
-  -- (engagement_dossiers.engagement_type or calendar_entries.entry_type),
-  -- and the widget's own 38-06-SUMMARY.md acknowledges a future RPC migration
-  -- (extending get_upcoming_events with person_iso/person_role) is required.
+  -- ============================================================================
+  -- 12. INTELLIGENCE_DIGEST — feeds Digest widget with publication source labels
+  -- ============================================================================
+  INSERT INTO intelligence_digest
+    (id, organization_id, headline_en, headline_ar, summary_en, summary_ar,
+     source_publication, occurred_at, dossier_id, created_by, created_at)
+  VALUES
+    ('b0000010-0000-0000-0000-000000000001'::uuid, v_org_id,
+     'Reuters flags China trade-data revisions', 'رويترز ترصد مراجعات بيانات التجارة الصينية',
+     'Analysts should review the China readout before the next bilateral follow-up.',
+     'ينبغي للمحللين مراجعة موجز الصين قبل المتابعة الثنائية القادمة.',
+     'Reuters', NOW() - INTERVAL '25 minutes', v_d_china, v_user_id, NOW() - INTERVAL '25 minutes'),
+    ('b0000010-0000-0000-0000-000000000002'::uuid, v_org_id,
+     'Al Sharq covers GCC statistical data forum', 'الشرق تغطي منتدى البيانات الإحصائية الخليجي',
+     'The item supports the GCC Statistical Centre dossier with a publication-named source.',
+     'يدعم هذا البند ملف المركز الإحصائي الخليجي بمصدر يحمل اسم منشور.',
+     'Al Sharq', NOW() - INTERVAL '2 hours', v_d_gcc_stat, v_user_id, NOW() - INTERVAL '2 hours'),
+    ('b0000010-0000-0000-0000-000000000003'::uuid, v_org_id,
+     'UN ESCWA publishes SDG data brief', 'الإسكوا تنشر موجز بيانات أهداف التنمية',
+     'The digest row links the ESCWA dossier to a real publication label.',
+     'يربط بند الموجز ملف الإسكوا بتسمية منشور حقيقية.',
+     'UN ESCWA', NOW() - INTERVAL '4 hours', v_d_escwa, v_user_id, NOW() - INTERVAL '4 hours'),
+    ('b0000010-0000-0000-0000-000000000004'::uuid, v_org_id,
+     'OECD releases quarterly data-governance note', 'منظمة التعاون الاقتصادي تصدر مذكرة حوكمة بيانات ربع سنوية',
+     'The item gives the dashboard a fourth seeded publication source.',
+     'يمنح هذا البند لوحة التحكم مصدر منشور رابع مزروع.',
+     'OECD Statistics Directorate', NOW() - INTERVAL '8 hours', v_d_oecd, v_user_id, NOW() - INTERVAL '8 hours');
 
-  RAISE NOTICE 'Seed 060 complete: 8+3+3 dossiers, 3 engagement_dossiers, 4 forums, 6 tasks, 6 assignments, 8 commitments, 5 calendar_entries, 2 intake_tickets, 8 activity_stream.';
+  RAISE NOTICE 'Seed 060 complete: 8+3+3+1 dossiers, 1 VIP participant, 3 engagement_dossiers, 4 forums, 6 tasks, 6 assignments, 8 commitments, 5 calendar_entries, 2 intake_tickets, 8 activity_stream, 4 intelligence_digest.';
 END $$;
