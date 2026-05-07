@@ -22,21 +22,33 @@ interface MakeEventOpts {
   id: string
   event_type: string
   title?: string
+  title_ar?: string | null
   engagement_name?: string | null
   engagement_id?: string | null
+  person_id?: string | null
+  person_name?: string | null
+  person_name_ar?: string | null
+  person_role?: string | null
+  person_iso?: string | null
 }
 
 function makeEvent({
   id,
   event_type,
   title = 'Visit',
+  title_ar = null,
   engagement_name = 'Saudi Arabia',
   engagement_id = 'eng-1',
+  person_id = null,
+  person_name = null,
+  person_name_ar = null,
+  person_role = null,
+  person_iso = null,
 }: MakeEventOpts): unknown {
   return {
     id,
     title,
-    title_ar: null,
+    title_ar,
     start_date: '2026-05-01T09:00:00Z',
     end_date: null,
     event_type,
@@ -44,6 +56,11 @@ function makeEvent({
     engagement_name,
     engagement_name_ar: null,
     lifecycle_stage: 'scheduled',
+    person_id,
+    person_name,
+    person_name_ar,
+    person_role,
+    person_iso,
   }
 }
 
@@ -69,11 +86,74 @@ describe('useVipVisits', (): void => {
     expect(result.current.data?.map((v) => v.id)).toEqual(['b', 'd'])
   })
 
+  it('treats official_visit rows with person metadata as VIP visits', (): void => {
+    vi.mocked(useUpcomingEvents).mockReturnValue({
+      data: [
+        makeEvent({ id: 'a', event_type: 'meeting' }),
+        makeEvent({
+          id: 'v1',
+          event_type: 'official_visit',
+          title: 'Indonesia official visit',
+          title_ar: 'زيارة رسمية من إندونيسيا',
+          engagement_name: 'G20 Bilateral',
+          engagement_id: 'eng-42',
+          person_id: 'person-42',
+          person_name: 'Dr. Sari Widodo',
+          person_name_ar: 'د. ساري ويدودو',
+          person_role: 'Head of delegation',
+          person_iso: 'ID',
+        }),
+      ],
+      isLoading: false,
+      isError: false,
+    } as never)
+
+    const { result } = renderHook(() => useVipVisits('u1'))
+    const row = result.current.data?.[0]
+    expect(result.current.data).toHaveLength(1)
+    expect(row?.id).toBe('v1')
+    expect(row?.name).toBe('Dr. Sari Widodo')
+    expect(row?.nameAr).toBe('د. ساري ويدودو')
+    expect(row?.role).toBe('Head of delegation')
+    expect(row?.personFlag).toBe('ID')
+    expect(row?.dossierId).toBe('person-42')
+  })
+
   it('maps TimelineEvent → VipVisit shape', (): void => {
     vi.mocked(useUpcomingEvents).mockReturnValue({
       data: [
         makeEvent({
           id: 'v1',
+          event_type: VIP_EVENT_TYPE,
+          title: 'Indonesia official visit',
+          engagement_name: 'G20 Bilateral',
+          engagement_id: 'eng-42',
+          person_id: 'person-42',
+          person_name: 'Dr. Sari Widodo',
+          person_role: 'Head of delegation',
+          person_iso: 'ID',
+        }),
+      ],
+      isLoading: false,
+      isError: false,
+    } as never)
+
+    const { result } = renderHook(() => useVipVisits('u1'))
+    const row = result.current.data?.[0]
+    expect(row).toBeDefined()
+    expect(row?.id).toBe('v1')
+    expect(row?.name).toBe('Dr. Sari Widodo')
+    expect(row?.role).toBe('Head of delegation')
+    expect(row?.when).toBe('2026-05-01T09:00:00Z')
+    expect(row?.dossierId).toBe('person-42')
+    expect(row?.personFlag).toBe('ID')
+  })
+
+  it('keeps legacy vip_visit fallback without person metadata', (): void => {
+    vi.mocked(useUpcomingEvents).mockReturnValue({
+      data: [
+        makeEvent({
+          id: 'legacy-vip',
           event_type: VIP_EVENT_TYPE,
           title: 'Amb. Al-Sayed',
           engagement_name: 'G20 Bilateral',
@@ -86,11 +166,8 @@ describe('useVipVisits', (): void => {
 
     const { result } = renderHook(() => useVipVisits('u1'))
     const row = result.current.data?.[0]
-    expect(row).toBeDefined()
-    expect(row?.id).toBe('v1')
     expect(row?.name).toBe('Amb. Al-Sayed')
     expect(row?.role).toBe('G20 Bilateral')
-    expect(row?.when).toBe('2026-05-01T09:00:00Z')
     expect(row?.dossierId).toBe('eng-42')
     expect(row?.personFlag).toBeUndefined()
   })
