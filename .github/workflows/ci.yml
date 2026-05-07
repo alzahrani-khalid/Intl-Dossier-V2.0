@@ -279,12 +279,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build frontend
-        run: pnpm run build
-        working-directory: ./frontend
+        run: pnpm -C frontend build
+
+      - name: Assert size-limit paths match built files
+        run: node frontend/scripts/assert-size-limit-matches.mjs
 
       - name: Check bundle size budgets
-        run: pnpm size-limit
-        working-directory: ./frontend
+        run: pnpm -C frontend size-limit
 
   lighthouse-ci:
     name: Lighthouse CI
