@@ -48,8 +48,13 @@
   },
   "digest": {
     "title": "Intelligence Digest",
-    "refresh": "Refresh",
-    "empty": "No digest items"
+    "tag": "Source",
+    "refresh": "Refresh digest",
+    "empty": {
+      "heading": "Digest is ready for seeded publications.",
+      "body": "Apply the dashboard demo seed, then refresh the digest."
+    },
+    "error": "Digest could not load. Check the staging seed and try again."
   },
   "sla": {
     "title": "SLA Health",

@@ -1,20 +1,14 @@
 /**
- * Phase 38 plan 04 — Digest widget.
+ * Digest widget.
  *
  * DASH-03 right-panel widget. Renders intelligence-digest feed rows (tag chip
  * + headline + source + relative timestamp) plus a refresh button that triggers
- * a `<GlobeSpinner>` overlay while refetching. First domain-code consumer of
- * the Phase 37 signature visual.
+ * a `<GlobeSpinner>` overlay while refetching.
  *
- * Data source: `useActivityFeed` (confirmed via human checkpoint 2026-04-25,
- * Option A). Field mapping contains a documented semantic compromise —
- * see 38-04-SUMMARY.md "Deviations" + `deferred-items.md` for the planned
- * migration to a dedicated `useIntelligenceDigest` hook.
- *
- *   tag       ← entity_type (uppercased)
- *   headline  ← description_en | description_ar (by i18n language)
- *   source    ← actor_name  (NOTE: reads as actor, not publication)
- *   timestamp ← created_at
+ *   tag       ← digest.tag translation
+ *   headline  ← headline_en | headline_ar (by i18n language)
+ *   source    ← source_publication
+ *   timestamp ← occurred_at
  *
  * Constraints:
  *  - RTL-safe: logical Tailwind only (ms/me/ps/pe, text-start). No ml/mr/pl/pr.
@@ -28,8 +22,10 @@ import { RefreshCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { GlobeSpinner } from '@/components/signature-visuals'
-import { useActivityFeed } from '@/hooks/useActivityFeed'
-import type { ActivityItem } from '@/types/activity-feed.types'
+import {
+  useIntelligenceDigest,
+  type IntelligenceDigestRow,
+} from '@/hooks/useIntelligenceDigest'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
 interface DigestRow {
@@ -40,24 +36,24 @@ interface DigestRow {
   timestamp: string
 }
 
-function mapActivityToRow(a: ActivityItem, lang: string): DigestRow {
+function mapDigestToRow(row: IntelligenceDigestRow, lang: string, tag: string): DigestRow {
   const isAr = lang === 'ar'
   const headline =
-    (isAr && a.description_ar !== undefined && a.description_ar !== ''
-      ? a.description_ar
-      : a.description_en) ?? ''
+    isAr && row.headline_ar !== null && row.headline_ar.trim() !== ''
+      ? row.headline_ar
+      : row.headline_en
   return {
-    id: a.id,
-    tag: a.entity_type.toUpperCase(),
+    id: row.id,
+    tag,
     headline,
-    source: a.actor_name,
-    timestamp: a.created_at,
+    source: row.source_publication,
+    timestamp: row.occurred_at,
   }
 }
 
 export function Digest(): ReactElement {
   const { t, i18n } = useTranslation('dashboard-widgets')
-  const { activities, isLoading, error, refetch } = useActivityFeed()
+  const { data, isLoading, error, refetch } = useIntelligenceDigest()
   const [clicked, setClicked] = useState<boolean>(false)
 
   const busy = clicked
@@ -75,8 +71,8 @@ export function Digest(): ReactElement {
   }
 
   const rows = useMemo<DigestRow[]>(
-    () => (activities ?? []).map((a) => mapActivityToRow(a, i18n.language)),
-    [activities, i18n.language],
+    () => (data ?? []).map((row) => mapDigestToRow(row, i18n.language, t('digest.tag'))),
+    [data, i18n.language, t],
   )
 
   if (isLoading) return <WidgetSkeleton rows={4} />
@@ -91,7 +87,7 @@ export function Digest(): ReactElement {
         <h3 id="digest-heading" className="card-title text-start mb-2">
           {t('digest.title')}
         </h3>
-        <p className="text-sm text-ink-mute text-start">{t('error.load_failed')}</p>
+        <p className="text-sm text-ink-mute text-start">{t('digest.error')}</p>
       </section>
     )
   }
@@ -124,7 +120,10 @@ export function Digest(): ReactElement {
       </div>
 
       {rows.length === 0 ? (
-        <p className="text-sm text-ink-mute text-start py-6">{t('digest.empty')}</p>
+        <div className="text-start py-6">
+          <p className="text-sm text-ink text-start">{t('digest.empty.heading')}</p>
+          <p className="text-sm text-ink-mute text-start">{t('digest.empty.body')}</p>
+        </div>
       ) : (
         <ul className="flex flex-col">
           {rows.map((r) => (
