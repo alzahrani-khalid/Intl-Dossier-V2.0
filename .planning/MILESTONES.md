@@ -2,9 +2,9 @@
 
 ## v6.0 Design System Adoption (Shipped: 2026-05-06)
 
-**Phases completed:** 11 phases (33-43), 121 plans (122 planned, 33-08 storybook deferred), 66 tasks
+**Phases completed:** 11 phases (33-43), 121/121 executable plans complete (33-08 superseded by ADR-006), 66 tasks
 **Timeline:** 17 days (2026-04-19 → 2026-05-06)
-**Audit:** `.planning/milestones/v6.0-MILESTONE-AUDIT.md` (status: tech_debt — no critical blockers)
+**Audit:** `.planning/milestones/v6.0-MILESTONE-AUDIT.md` (status: tech_debt — no critical blockers); Phase 44 reconciliation evidence is recorded in `.planning/phases/44-documentation-toolchain-anti-patterns/44-final-audit.md`
 
 **Key accomplishments:**
 
@@ -22,16 +22,16 @@
 - Two design tokens raised to clear WCAG AA (`inkFaint` 3.14 → 5.07; `--accent-fg` 4.38 → 5.28); `--sla-bad` darkened to `oklch(46% 0.18 25)`; FOUC bootstrap byte-mirror invariant preserved
 - Playwright `globalSetup` + `storageState` + `chromium-no-auth` project replace brittle `loginForListPages` helper across 9 dossier-drawer specs
 
-**Known deferred items at close:** 9 (see STATE.md `## Deferred Items`)
+**Known deferred items at close:** 9 historical items, with documentation/toolchain reconciliation handled by Phase 44 (see `.planning/phases/44-documentation-toolchain-anti-patterns/44-final-audit.md`)
 
 **Tech debt (see audit for details):**
 
-- 6 phases (33, 34, 36, 37, 39, 40) lack per-phase VERIFICATION.md — coverage proven indirectly via Phase 43 cross-phase QA sweep
+- Backfilled VERIFICATION.md files now exist for phases 33, 34, 36, 37, 39, and 40; Phase 44 final audit reports `phases_missing_verification: []` and `requirements_partial_verification_gap: 0`
 - Visual-regression baselines pending operator action for Phases 38, 40, 41 (Doppler env + `--update-snapshots` on seeded dev machine)
 - Schema/seed work deferred: `intelligence_digest` table (DIGEST-SOURCE-COMPROMISE), VIP person ISO join in RPC, `060-dashboard-demo.sql` seed for 4 BLOCKED-BY-SEED specs
-- size-limit budget gate broken since vendor super-chunk drift (Phase 40/42) — chunk-glob config no longer matches Vite output (2.42 MB vs 815 KB ceiling)
-- Phase 43 anti-patterns: WR-03 aria-label shadows visible text (DrawerCtaRow, VipVisits, OverdueCommitments); WR-04 invalid `hsl(var(--sidebar))` wraps hex; WR-05 redundant Checkbox aria-label
-- Plan 33-08 storybook deferred (no SUMMARY)
+- size-limit budget gate repaired with current measured Vite output budgets in `frontend/.size-limit.json`; the historical 815 KB ceiling remains aspirational, not the enforced gate
+- Phase 43 WR-02..WR-06 source/lint/browser closure is recorded in Phase 44 summaries and final audit
+- Plan 33-08 Storybook deferral is formalized by ADR-006, which names the replacement coverage and revisit trigger
 
 **Archive:** `.planning/milestones/v6.0-ROADMAP.md` · `.planning/milestones/v6.0-REQUIREMENTS.md` · `.planning/milestones/v6.0-MILESTONE-AUDIT.md`
 
