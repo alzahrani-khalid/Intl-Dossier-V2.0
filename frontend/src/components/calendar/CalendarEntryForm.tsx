@@ -4,7 +4,10 @@
 // Feature: recurring-event-patterns - Added recurrence pattern support
 import { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCreateCalendarEvent } from '@/hooks/useCreateCalendarEvent'
+import {
+  useCreateCalendarEvent,
+  type CreateCalendarEventInput,
+} from '@/hooks/useCreateCalendarEvent'
 import { useUpdateCalendarEvent } from '@/hooks/useUpdateCalendarEvent'
 import { useDossiers } from '@/hooks/useDossier'
 import { useConflictCheck, useGenerateSuggestions } from '@/hooks/useCalendarConflicts'
@@ -49,7 +52,11 @@ import {
 } from './ConflictResolution'
 import type { ParticipantConflictInfo } from './ConflictResolution'
 import { RecurrencePatternEditor } from './RecurrencePatternEditor'
-import type { ConflictCheckRequest } from '@/types/calendar-conflict.types'
+import type {
+  ConflictCheckRequest,
+  ReschedulingSuggestion,
+  ReschedulingSuggestionResponse,
+} from '@/types/calendar-conflict.types'
 import type { CreateRecurrenceRuleInput } from '@/types/recurrence.types'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -80,6 +87,43 @@ interface CalendarEntryFormProps {
   onCancel?: () => void
 }
 
+type CalendarEntryType = CreateCalendarEventInput['entry_type']
+type CalendarParticipantInput = {
+  participant_type: 'person_dossier' | 'organization_dossier'
+  participant_id: string
+}
+type CalendarEventFormInput = CreateCalendarEventInput & {
+  participants: CalendarParticipantInput[]
+}
+type AcceptedReschedulingSuggestion =
+  | ReschedulingSuggestion
+  | ReschedulingSuggestionResponse['suggestions'][number]
+
+const CALENDAR_ENTRY_TYPES: readonly CalendarEntryType[] = [
+  'internal_meeting',
+  'deadline',
+  'reminder',
+  'holiday',
+  'training',
+  'review',
+  'other',
+]
+
+function toCalendarEntryType(value: string | undefined): CalendarEntryType {
+  return CALENDAR_ENTRY_TYPES.includes(value as CalendarEntryType)
+    ? (value as CalendarEntryType)
+    : 'internal_meeting'
+}
+
+function getStringField(source: unknown, key: string): string | undefined {
+  if (source === null || typeof source !== 'object') {
+    return undefined
+  }
+
+  const value = (source as Record<string, unknown>)[key]
+  return typeof value === 'string' ? value : undefined
+}
+
 /**
  * Extract initials from name (handles both English and Arabic)
  */
@@ -105,7 +149,9 @@ export function CalendarEntryForm({
 }: CalendarEntryFormProps) {
   const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
-  const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_meeting')
+  const [entryType, setEntryType] = useState<CalendarEntryType>(
+    toCalendarEntryType(initialData?.entry_type),
+  )
   const [titleEn, setTitleEn] = useState(initialData?.title_en || '')
   const [titleAr, setTitleAr] = useState(initialData?.title_ar || '')
   const [descriptionEn, setDescriptionEn] = useState(initialData?.description_en || '')
@@ -248,7 +294,7 @@ export function CalendarEntryForm({
   )
 
   // Apply a suggestion to the form
-  const handleAcceptSuggestion = useCallback((suggestion: any) => {
+  const handleAcceptSuggestion = useCallback((suggestion: AcceptedReschedulingSuggestion) => {
     if (suggestion.suggested_start) {
       // Convert ISO to datetime-local format
       const startDate = new Date(suggestion.suggested_start)
@@ -281,8 +327,8 @@ export function CalendarEntryForm({
       return
     }
 
-    const eventData = {
-      entry_type: entryType as any,
+    const eventData: CalendarEventFormInput = {
+      entry_type: entryType,
       title_en: titleEn || undefined,
       title_ar: titleAr || undefined,
       description_en: descriptionEn || undefined,
@@ -350,7 +396,11 @@ export function CalendarEntryForm({
         {/* Event Type */}
         <div className="flex flex-col gap-2">
           <Label htmlFor="entry-type">{t('form.entry_type')}</Label>
-          <Select value={entryType} onValueChange={setEntryType} disabled={isPending}>
+          <Select
+            value={entryType}
+            onValueChange={(value): void => setEntryType(toCalendarEntryType(value))}
+            disabled={isPending}
+          >
             <SelectTrigger id="entry-type">
               <SelectValue />
             </SelectTrigger>
@@ -558,6 +608,8 @@ export function CalendarEntryForm({
                     {personDossiers.data.map((person) => {
                       const displayName = isRTL ? person.name_ar : person.name_en
                       const isSelected = participants.some((p) => p.participant_id === person.id)
+                      const photoUrl = getStringField(person.extension, 'photo_url')
+                      const title = getStringField(person.extension, 'title')
 
                       return (
                         <CommandItem
@@ -571,7 +623,7 @@ export function CalendarEntryForm({
                                   participant_type: 'person_dossier',
                                   participant_id: person.id,
                                   participant_name: displayName || person.id,
-                                  participant_photo: (person.extension as any)?.photo_url,
+                                  participant_photo: photoUrl,
                                 },
                               ])
                             }
@@ -580,12 +632,9 @@ export function CalendarEntryForm({
                           disabled={isSelected}
                         >
                           <div className="flex items-center gap-2 flex-1">
-                            {(person.extension as any)?.photo_url ? (
+                            {photoUrl ? (
                               <Avatar className="h-6 w-6">
-                                <AvatarImage
-                                  src={(person.extension as any).photo_url}
-                                  alt={displayName || ''}
-                                />
+                                <AvatarImage src={photoUrl} alt={displayName || ''} />
                                 <AvatarFallback className="text-xs">
                                   {displayName ? getInitials(displayName) : 'VIP'}
                                 </AvatarFallback>
@@ -597,10 +646,8 @@ export function CalendarEntryForm({
                             )}
                             <div className="flex flex-col">
                               <span className="text-sm">{displayName}</span>
-                              {(person.extension as any)?.title && (
-                                <span className="text-xs text-muted-foreground">
-                                  {(person.extension as any).title}
-                                </span>
+                              {title && (
+                                <span className="text-xs text-muted-foreground">{title}</span>
                               )}
                             </div>
                           </div>
