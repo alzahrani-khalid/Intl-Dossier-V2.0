@@ -130,6 +130,10 @@ export default defineConfig({
         // Strategic chunk splitting for better caching and load performance
         // Split vendor bundles by category to optimize cache invalidation
         manualChunks: (id) => {
+          if (id.includes('/src/components/signature-visuals/')) {
+            return 'signature-visuals'
+          }
+
           if (id.includes('node_modules')) {
             // React core - rarely changes, cache well
             if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
@@ -146,6 +150,14 @@ export default defineConfig({
             // Radix UI - headless components
             if (id.includes('@radix-ui')) {
               return 'radix-vendor'
+            }
+            // Signature visuals geospatial dependencies
+            if (
+              id.includes('d3-geo') ||
+              id.includes('topojson-client') ||
+              id.includes('world-atlas')
+            ) {
+              return 'signature-visuals-d3'
             }
             // Charts and visualization
             if (
