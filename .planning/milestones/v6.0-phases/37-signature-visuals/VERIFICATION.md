@@ -6,13 +6,13 @@
 
 ## Requirements Verification
 
-| REQ    | Description                                          | Verdict | Evidence                                                                                                                            |
-| ------ | ---------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| VIZ-01 | Animated GlobeLoader and reduced-motion support      | PASS    | `37-01-SUMMARY.md` and `37-02-SUMMARY.md` list VIZ-01; `.planning/STATE.md` reports GlobeLoader and reduced-motion tests green.     |
-| VIZ-02 | Fullscreen loader and app-shell suspense integration | PASS    | `37-03-SUMMARY.md` lists VIZ-02; `37-08-SUMMARY.md` records AppShell suspense fallback wiring.                                      |
-| VIZ-03 | Inline GlobeSpinner primitive                        | PASS    | `37-04-SUMMARY.md` lists VIZ-03; `.planning/STATE.md` reports 10 GlobeSpinner tests green.                                          |
-| VIZ-04 | DossierGlyph with flag registry and fallbacks        | PASS    | `37-05-SUMMARY.md` lists VIZ-04; `.planning/STATE.md` reports DossierGlyph plus 24 flag TSX files.                                  |
-| VIZ-05 | Sparkline and Donut tokenized visuals                | PASS    | `37-06-SUMMARY.md` and `37-07-SUMMARY.md` cover VIZ-05; `.planning/STATE.md` reports Sparkline RTL and Donut dasharray tests green. |
+| REQ    | Description                                          | Verdict | Evidence                                                                                                                                                                                                                                        |
+| ------ | ---------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| VIZ-01 | Animated GlobeLoader and reduced-motion support      | PASS    | `.planning/milestones/v6.0-phases/37-signature-visuals/37-01-SUMMARY.md` and `.planning/milestones/v6.0-phases/37-signature-visuals/37-02-SUMMARY.md` list VIZ-01; `.planning/STATE.md` reports GlobeLoader and reduced-motion tests green.     |
+| VIZ-02 | Fullscreen loader and app-shell suspense integration | PASS    | `.planning/milestones/v6.0-phases/37-signature-visuals/37-03-SUMMARY.md` lists VIZ-02; `.planning/milestones/v6.0-phases/37-signature-visuals/37-08-SUMMARY.md` records AppShell suspense fallback wiring.                                      |
+| VIZ-03 | Inline GlobeSpinner primitive                        | PASS    | `.planning/milestones/v6.0-phases/37-signature-visuals/37-04-SUMMARY.md` lists VIZ-03; `.planning/STATE.md` reports 10 GlobeSpinner tests green.                                                                                                |
+| VIZ-04 | DossierGlyph with flag registry and fallbacks        | PASS    | `.planning/milestones/v6.0-phases/37-signature-visuals/37-05-SUMMARY.md` lists VIZ-04; `.planning/STATE.md` reports DossierGlyph plus 24 flag TSX files.                                                                                        |
+| VIZ-05 | Sparkline and Donut tokenized visuals                | PASS    | `.planning/milestones/v6.0-phases/37-signature-visuals/37-06-SUMMARY.md` and `.planning/milestones/v6.0-phases/37-signature-visuals/37-07-SUMMARY.md` cover VIZ-05; `.planning/STATE.md` reports Sparkline RTL and Donut dasharray tests green. |
 
 ## Summary
 
