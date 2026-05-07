@@ -26,17 +26,18 @@ key-files:
     - .planning/phases/44-documentation-toolchain-anti-patterns/44-04-antipattern-source-fixes-SUMMARY.md
   modified:
     - frontend/src/pages/Dashboard/widgets/OverdueCommitments.tsx
+    - frontend/src/pages/Dashboard/widgets/__tests__/OverdueCommitments.test.tsx
     - frontend/src/pages/MyTasks.tsx
     - frontend/src/components/calendar/CalendarEntryForm.tsx
 
 key-decisions:
-  - "Verified already-fixed WR-03/WR-04/WR-06 targets as no-ops rather than manufacturing source churn."
-  - "Kept repo-wide lint backlog out of scope after owned-file ESLint passed with zero errors."
-  - "Used explicit-path commits because concurrent Phase 44 agents had staged unrelated archive work."
+  - 'Verified already-fixed WR-03/WR-04/WR-06 targets as no-ops rather than manufacturing source churn.'
+  - 'Kept repo-wide lint backlog out of scope after owned-file ESLint passed with zero errors.'
+  - 'Used explicit-path commits because concurrent Phase 44 agents had staged unrelated archive work.'
 
 patterns-established:
-  - "Interactive controls that already render a visible title should reference that title with aria-labelledby."
-  - "Optional JSON-like extension data should be read through unknown-safe field helpers instead of any casts."
+  - 'Interactive controls that already render a visible title should reference that title with aria-labelledby.'
+  - 'Optional JSON-like extension data should be read through unknown-safe field helpers instead of any casts.'
 
 requirements-completed: [LINT-01, LINT-02, LINT-03, LINT-04, LINT-05]
 
@@ -70,10 +71,12 @@ completed: 2026-05-07
 3. **Task 3: Fix MyTasks checkbox WR-05 with aria-labelledby** - `c684af0c` (fix)
 4. **Task 4: Verify/fix sidebar color and CalendarEntryForm namespace** - `19b27e4b` (chore, verified no-op)
 5. **Task 5: Run targeted lint and source closure checks** - `2bab64c5` (fix)
+6. **Post-wave integration fix: Align OverdueCommitments test with aria-labelledby contract** - `183025c0`
 
 ## Files Created/Modified
 
 - `frontend/src/pages/Dashboard/widgets/OverdueCommitments.tsx` - Dossier head button now references visible dossier name text with `aria-labelledby`.
+- `frontend/src/pages/Dashboard/widgets/__tests__/OverdueCommitments.test.tsx` - Dossier head test now verifies visible-title `aria-labelledby` and absence of duplicate `aria-label`.
 - `frontend/src/pages/MyTasks.tsx` - Checkbox button now references visible task title text with `aria-labelledby={titleId}`.
 - `frontend/src/components/calendar/CalendarEntryForm.tsx` - Replaced blocking `any` casts with explicit calendar event, suggestion, and extension-field helpers.
 - `.planning/phases/44-documentation-toolchain-anti-patterns/44-04-antipattern-source-fixes-SUMMARY.md` - Execution record.
@@ -100,6 +103,7 @@ Verified no-op files:
 - `rg "calendar\.form\." frontend/src/components/calendar/CalendarEntryForm.tsx` - no matches.
 - Targeted closure command for WR-02/WR-03/WR-04/WR-06 patterns - PASS, no matches.
 - Scoped ESLint for the six plan-owned files - exit 0 with 0 errors and 3 pre-existing warnings.
+- `pnpm -C frontend exec vitest run src/pages/Dashboard/widgets/__tests__/OverdueCommitments.test.tsx` - 11/11 passed after post-wave test alignment.
 - `pnpm -C frontend lint` - exit 1 due repo-wide pre-existing backlog: 723 problems, 52 errors, 671 warnings outside the owned source-fix scope.
 
 ## Remaining Scoped `aria-label` Attributes
@@ -114,6 +118,7 @@ Verified no-op files:
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] Cleared owned-file CalendarEntryForm lint errors**
+
 - **Found during:** Task 5 (Run targeted lint and source closure checks)
 - **Issue:** Scoped ESLint failed on seven `@typescript-eslint/no-explicit-any` errors in `CalendarEntryForm.tsx`.
 - **Fix:** Added explicit event-entry, rescheduling suggestion, and participant extension helpers.
@@ -125,6 +130,10 @@ Verified no-op files:
 
 **Total deviations:** 1 auto-fixed (Rule 3).
 **Impact on plan:** The fix stayed inside the owned file scope and was required to make the plan-owned lint surface error-free.
+
+### Post-Wave Integration Fix
+
+The broad post-wave Vitest run exposed that the existing OverdueCommitments unit test still asserted the old duplicate `aria-label`. The component behavior from Task 1 was correct per the Phase 44 accessibility contract, so the test was updated to assert `aria-labelledby` points at the visible dossier title instead.
 
 ## Issues Encountered
 
@@ -151,5 +160,6 @@ Plan 44-05 can run browser-level anti-pattern verification against the source-cl
 - No `.planning/STATE.md` or `.planning/ROADMAP.md` changes were staged or committed by this plan.
 
 ---
-*Phase: 44-documentation-toolchain-anti-patterns*
-*Completed: 2026-05-07*
+
+_Phase: 44-documentation-toolchain-anti-patterns_
+_Completed: 2026-05-07_

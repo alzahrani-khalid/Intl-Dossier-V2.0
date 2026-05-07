@@ -259,7 +259,7 @@ describe('OverdueCommitments', () => {
       expect(msg).toContain('deferred-items.md')
     })
 
-    it('the dossier-group head trigger is a <button> with aria-label', (): void => {
+    it('the dossier-group head trigger is a <button> labelled by visible text', (): void => {
       vi.mocked(usePersonalCommitments).mockReturnValue({
         data: [redGroup],
         isLoading: false,
@@ -269,7 +269,10 @@ describe('OverdueCommitments', () => {
       const trigger = screen.getByTestId('overdue-commitments-dossier-head')
       expect(trigger.tagName).toBe('BUTTON')
       expect(trigger.getAttribute('type')).toBe('button')
-      expect(trigger.getAttribute('aria-label')).toBe('Qatar')
+      expect(trigger.getAttribute('aria-label')).toBeNull()
+      const titleId = trigger.getAttribute('aria-labelledby')
+      expect(titleId).toBe('overdue-dossier-d2-title')
+      expect(document.getElementById(titleId ?? '')?.textContent).toBe('Qatar')
     })
   })
 })
