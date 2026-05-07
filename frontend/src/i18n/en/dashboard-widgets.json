@@ -64,7 +64,11 @@
   },
   "vip": {
     "title": "VIP Visits",
-    "empty": "No upcoming visits"
+    "empty": {
+      "heading": "No VIP visits with country data.",
+      "body": "Add VIP participant data to the dashboard seed, then refresh the widget."
+    },
+    "error": "VIP visits could not load. Check event data and try again."
   },
   "myTasks": {
     "title": "My Tasks",
@@ -342,7 +346,7 @@
   },
 
   "actions": {
-    "viewAll": "View All",
+    "viewAll": "View all VIP visits",
     "refresh": "Refresh",
     "expand": "Expand",
     "collapse": "Collapse",

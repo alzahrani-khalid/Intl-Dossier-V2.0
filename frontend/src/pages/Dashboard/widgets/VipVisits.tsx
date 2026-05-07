@@ -1,8 +1,8 @@
 /**
  * Phase 38 plan 06 — VipVisits widget.
  *
- * Renders upcoming VIP visit rows: <DossierGlyph type="person"> + name + role +
- * <LtrIsolate> `T−N` countdown. The "All" link's arrow-right flips horizontally
+ * Renders upcoming VIP visit rows: <DossierGlyph type="country"> + name + role
+ * + <LtrIsolate> `T−N` countdown. The VIP visits link icon flips horizontally
  * in RTL via the global `.icon-flip` class (CSS `scaleX(-1)`), per QA-04.
  *
  * Data: useVipVisits(user?.id) — Wave 1 adapter hook wrapping useUpcomingEvents
@@ -35,20 +35,23 @@ function countdownLabel(whenIso: string): string {
 
 interface VipRowProps {
   visit: VipVisit
+  language: string
 }
 
-function VipRow({ visit }: VipRowProps): ReactElement {
+function VipRow({ visit, language }: VipRowProps): ReactElement {
+  const displayName = language === 'ar' && visit.nameAr ? visit.nameAr : visit.name
+
   return (
     <li className="vip-row min-h-11">
       <DossierGlyph
-        type="person"
+        type="country"
         iso={visit.personFlag}
-        name={visit.name}
+        name={displayName}
         size={20}
         className="vip-flag"
       />
       <div className="min-w-0 flex-1">
-        <div className="vip-name text-start truncate">{visit.name}</div>
+        <div className="vip-name text-start truncate">{displayName}</div>
         {visit.role.length > 0 && <div className="vip-role text-start truncate">{visit.role}</div>}
       </div>
       <LtrIsolate className="vip-countdown">
@@ -59,7 +62,7 @@ function VipRow({ visit }: VipRowProps): ReactElement {
 }
 
 export function VipVisits(): ReactElement {
-  const { t } = useTranslation('dashboard-widgets')
+  const { t, i18n } = useTranslation('dashboard-widgets')
   const { user } = useAuth()
   const { data, isLoading, isError } = useVipVisits(user?.id)
 
@@ -80,7 +83,7 @@ export function VipVisits(): ReactElement {
         <h3 id="vip-heading" className="card-title mb-2 text-start">
           {t('vip.title')}
         </h3>
-        <p className="text-sm text-start">{t('error.load_failed')}</p>
+        <p className="text-sm text-start">{t('vip.error')}</p>
       </section>
     )
   }
@@ -93,7 +96,10 @@ export function VipVisits(): ReactElement {
         <h3 id="vip-heading" className="card-title mb-2 text-start">
           {t('vip.title')}
         </h3>
-        <p className="text-sm text-start">{t('vip.empty')}</p>
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-start">{t('vip.empty.heading')}</p>
+          <p className="text-sm text-ink-soft text-start">{t('vip.empty.body')}</p>
+        </div>
       </section>
     )
   }
@@ -104,10 +110,7 @@ export function VipVisits(): ReactElement {
         <h3 id="vip-heading" className="card-title text-start">
           {t('vip.title')}
         </h3>
-        <a
-          href="/vip-visits"
-          className="text-xs text-ink-soft inline-flex items-center gap-1"
-        >
+        <a href="/vip-visits" className="text-xs text-ink-soft inline-flex items-center gap-1">
           {t('actions.viewAll')}
           <ArrowRight className="size-3 icon-flip" aria-hidden="true" />
         </a>
@@ -115,7 +118,7 @@ export function VipVisits(): ReactElement {
       <ul className="vip-list">
         {visits.map(
           (v): ReactElement => (
-            <VipRow key={v.id} visit={v} />
+            <VipRow key={v.id} visit={v} language={i18n.language} />
           ),
         )}
       </ul>
