@@ -277,7 +277,7 @@ export function CalendarEntryForm({
   const handleReschedule = useCallback(() => {
     handleGenerateSuggestions()
     setShowSideBySideComparison(false)
-  }, [])
+  }, [handleGenerateSuggestions])
 
   // Handle adjust duration - update end datetime
   const handleAdjustDuration = useCallback(
