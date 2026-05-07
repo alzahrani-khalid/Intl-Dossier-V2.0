@@ -71,7 +71,7 @@ completed: 2026-05-07
 3. **Task 3: Fix MyTasks checkbox WR-05 with aria-labelledby** - `c684af0c` (fix)
 4. **Task 4: Verify/fix sidebar color and CalendarEntryForm namespace** - `19b27e4b` (chore, verified no-op)
 5. **Task 5: Run targeted lint and source closure checks** - `2bab64c5` (fix)
-6. **Post-wave integration fix: Align OverdueCommitments test with aria-labelledby contract** - `183025c0`
+6. **Post-wave integration fix: Align OverdueCommitments test with aria-labelledby contract** - `2802fee9`
 
 ## Files Created/Modified
 
