@@ -226,6 +226,7 @@ export function MyTasksPage(): ReactElement {
                 subtitleParts.push(task.type)
               }
               const subtitle = subtitleParts.length > 0 ? subtitleParts.join(' · ') : '—'
+              const titleId = `task-title-${task.id}`
 
               // Done rows: line-through + muted color (NOT opacity).
                   // opacity: 0.45 washed every child into <3:1 contrast — five
@@ -253,11 +254,7 @@ export function MyTasksPage(): ReactElement {
                     type="button"
                     role="checkbox"
                     aria-checked={isDone}
-                    aria-label={
-                      isDone
-                        ? t('priority.markNotDone', { defaultValue: 'Mark not done' })
-                        : t('priority.markDone', { defaultValue: 'Mark done' })
-                    }
+                    aria-labelledby={titleId}
                     className={cn('task-box', isDone && 'done')}
                     style={checkboxHitAreaStyle}
                     onClick={(e): void => {
@@ -302,7 +299,7 @@ export function MyTasksPage(): ReactElement {
                       minHeight: 44,
                     }}
                   >
-                    <div>{task.title}</div>
+                    <div id={titleId}>{task.title}</div>
                     <small style={{ color: 'var(--ink-mute)' }}>{subtitle}</small>
                   </button>
 
