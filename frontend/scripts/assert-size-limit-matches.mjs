@@ -1,3 +1,4 @@
+/* global console, process */
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -38,6 +39,13 @@ function normalizePattern(pattern) {
 const checks = JSON.parse(fs.readFileSync(configPath, 'utf8'))
 const files = walkFiles(distRoot).map((file) => `dist/${file}`)
 let hasMissingMatch = false
+const expectedMatchCounts = new Map([
+  ['Initial JS (entry point)', 1],
+  ['React vendor', 1],
+  ['TanStack vendor', 1],
+  ['signature-visuals/d3-geospatial', 1],
+  ['signature-visuals/static-primitives', 1],
+])
 
 for (const check of checks) {
   const patterns = Array.isArray(check.path) ? check.path : [check.path]
@@ -52,10 +60,15 @@ for (const check of checks) {
     }
   }
 
+  const expectedMatchCount = expectedMatchCounts.get(check.name)
+  const expectedLabel =
+    expectedMatchCount === undefined ? 'at least 1' : String(expectedMatchCount)
+
   console.log(`${check.name}: ${matches.size} file(s)`)
 
-  if (matches.size === 0) {
+  if (matches.size === 0 || (expectedMatchCount !== undefined && matches.size !== expectedMatchCount)) {
     hasMissingMatch = true
+    console.error(`${check.name}: expected ${expectedLabel} match(es), got ${matches.size}`)
   }
 }
 

@@ -44,6 +44,7 @@
     "location": "الموقع",
     "location_placeholder": "أدخل الموقع أو القاعة",
     "participants": "المشاركون",
+    "remove_participant": "إزالة {{name}}",
     "add_participant": "إضافة مشارك",
     "search_participants": "البحث عن المشاركين...",
     "no_participants_found": "لم يتم العثور على مشاركين",

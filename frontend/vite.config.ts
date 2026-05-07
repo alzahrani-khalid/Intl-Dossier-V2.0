@@ -131,7 +131,7 @@ export default defineConfig({
         // Split vendor bundles by category to optimize cache invalidation
         manualChunks: (id) => {
           if (id.includes('/src/components/signature-visuals/')) {
-            return 'signature-visuals'
+            return 'signature-visuals-static'
           }
 
           if (id.includes('node_modules')) {
@@ -186,7 +186,7 @@ export default defineConfig({
         },
         // Optimize chunk file names for better caching
         chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/app-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },

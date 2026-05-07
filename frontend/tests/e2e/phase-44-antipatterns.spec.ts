@@ -21,6 +21,7 @@ async function loadProtectedRoute(
   await page.goto(path)
   await settlePage(page)
   await waitForRouteReady(page)
+  await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
 }
 
 async function loadFixtureDrawer(page: Page, locale: 'en' | 'ar'): Promise<void> {
@@ -31,36 +32,46 @@ async function loadFixtureDrawer(page: Page, locale: 'en' | 'ar'): Promise<void>
   })
   await settlePage(page)
   await waitForRouteReady(page)
+  await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
+  await expect(page.locator('.drawer-body[data-loading="false"]')).toBeAttached()
 }
 
 test.describe('Phase 44 - label-in-name anti-pattern closure', () => {
   test('dashboard EN - no label-content-name-mismatch violations', async ({ page }) => {
     await loadProtectedRoute(page, 'en', '/dashboard')
-    await expectNoLabelInNameViolations(page, 'main')
+    await expect(page.getByTestId('overdue-commitments-dossier-head').first()).toBeVisible()
+    await expectNoLabelInNameViolations(page, '.overdue')
   })
 
   test('dashboard AR - no label-content-name-mismatch violations', async ({ page }) => {
     await loadProtectedRoute(page, 'ar', '/dashboard')
-    await expectNoLabelInNameViolations(page, 'main')
+    await expect(page.getByTestId('overdue-commitments-dossier-head').first()).toBeVisible()
+    await expectNoLabelInNameViolations(page, '.overdue')
   })
 
   test('drawer EN - no label-content-name-mismatch violations', async ({ page }) => {
     await loadFixtureDrawer(page, 'en')
+    await expect(page.getByTestId('dossier-drawer-commitments')).toBeVisible()
     await expectNoLabelInNameViolations(page, '.drawer')
   })
 
   test('drawer AR - no label-content-name-mismatch violations', async ({ page }) => {
     await loadFixtureDrawer(page, 'ar')
+    await expect(page.getByTestId('dossier-drawer-commitments')).toBeVisible()
     await expectNoLabelInNameViolations(page, '.drawer')
   })
 
   test('tasks EN - no label-content-name-mismatch violations', async ({ page }) => {
     await loadProtectedRoute(page, 'en', '/tasks')
+    await expect(page.locator('ul.tasks-list')).toBeVisible()
+    await expect(page.locator('button.task-box').first()).toBeVisible()
     await expectNoLabelInNameViolations(page, 'main')
   })
 
   test('tasks AR - no label-content-name-mismatch violations', async ({ page }) => {
     await loadProtectedRoute(page, 'ar', '/tasks')
+    await expect(page.locator('ul.tasks-list')).toBeVisible()
+    await expect(page.locator('button.task-box').first()).toBeVisible()
     await expectNoLabelInNameViolations(page, 'main')
   })
 })

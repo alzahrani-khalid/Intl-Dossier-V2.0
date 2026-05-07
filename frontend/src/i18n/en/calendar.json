@@ -44,6 +44,7 @@
     "location": "Location",
     "location_placeholder": "Enter location or venue",
     "participants": "Participants",
+    "remove_participant": "Remove {{name}}",
     "add_participant": "Add Participant",
     "search_participants": "Search participants...",
     "no_participants_found": "No participants found",

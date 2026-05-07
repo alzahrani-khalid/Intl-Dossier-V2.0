@@ -569,7 +569,10 @@ export function CalendarEntryForm({
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="h-5 w-5 p-0 hover:bg-transparent"
+                    className="min-h-11 min-w-11 p-0 hover:bg-transparent"
+                    aria-label={t('form.remove_participant', {
+                      name: participant.participant_name || participant.participant_id,
+                    })}
                     onClick={() => {
                       setParticipants(
                         participants.filter((p) => p.participant_id !== participant.participant_id),
@@ -577,7 +580,7 @@ export function CalendarEntryForm({
                     }}
                     disabled={isPending}
                   >
-                    <X className="h-3 w-3" />
+                    <X className="h-3 w-3" aria-hidden="true" />
                   </Button>
                 </Badge>
               ))}

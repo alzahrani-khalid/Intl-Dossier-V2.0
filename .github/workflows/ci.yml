@@ -11,7 +11,7 @@ env:
   # Backend uses ts-node ESM features as well.
   NODE_VERSION: '20.19.0'
   # pnpm version must match packageManager field in package.json
-  PNPM_VERSION: '10.18.3'
+  PNPM_VERSION: '10.29.1'
 
 jobs:
   repo-policy:

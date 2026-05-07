@@ -1,7 +1,7 @@
 [
   {
     "name": "Initial JS (entry point)",
-    "path": "dist/assets/index-*.js",
+    "path": "dist/assets/app-*.js",
     "limit": "517 KB",
     "gzip": true,
     "running": false
@@ -36,7 +36,7 @@
   },
   {
     "name": "signature-visuals/static-primitives",
-    "path": "dist/assets/signature-visuals-*.js",
+    "path": "dist/assets/signature-visuals-static-*.js",
     "limit": "64 KB",
     "gzip": true,
     "running": false
