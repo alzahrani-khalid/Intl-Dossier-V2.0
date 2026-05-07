@@ -87,32 +87,32 @@ Explicit exclusions for v6.1 (with reasoning):
 
 ## Traceability
 
-| REQ-ID   | Phase | VERIFICATION |
-| -------- | ----- | ------------ |
-| DOC-01   | TBD   | TBD          |
-| DOC-02   | TBD   | TBD          |
-| DOC-03   | TBD   | TBD          |
-| DOC-04   | TBD   | TBD          |
-| DOC-05   | TBD   | TBD          |
-| DOC-06   | TBD   | TBD          |
-| DOC-07   | TBD   | TBD          |
-| DOC-08   | TBD   | TBD          |
-| TOOL-01  | TBD   | TBD          |
-| TOOL-02  | TBD   | TBD          |
-| TOOL-03  | TBD   | TBD          |
-| LINT-01  | TBD   | TBD          |
-| LINT-02  | TBD   | TBD          |
-| LINT-03  | TBD   | TBD          |
-| LINT-04  | TBD   | TBD          |
-| LINT-05  | TBD   | TBD          |
-| STORY-01 | TBD   | TBD          |
-| DATA-01  | TBD   | TBD          |
-| DATA-02  | TBD   | TBD          |
-| DATA-03  | TBD   | TBD          |
-| DATA-04  | TBD   | TBD          |
-| VIS-01   | TBD   | TBD          |
-| VIS-02   | TBD   | TBD          |
-| VIS-03   | TBD   | TBD          |
-| VIS-04   | TBD   | TBD          |
+| REQ-ID   | Phase    | VERIFICATION |
+| -------- | -------- | ------------ |
+| DOC-01   | Phase 44 | TBD          |
+| DOC-02   | Phase 44 | TBD          |
+| DOC-03   | Phase 44 | TBD          |
+| DOC-04   | Phase 44 | TBD          |
+| DOC-05   | Phase 44 | TBD          |
+| DOC-06   | Phase 44 | TBD          |
+| DOC-07   | Phase 44 | TBD          |
+| DOC-08   | Phase 44 | TBD          |
+| TOOL-01  | Phase 44 | TBD          |
+| TOOL-02  | Phase 44 | TBD          |
+| TOOL-03  | Phase 44 | TBD          |
+| LINT-01  | Phase 44 | TBD          |
+| LINT-02  | Phase 44 | TBD          |
+| LINT-03  | Phase 44 | TBD          |
+| LINT-04  | Phase 44 | TBD          |
+| LINT-05  | Phase 44 | TBD          |
+| STORY-01 | Phase 44 | TBD          |
+| DATA-01  | Phase 45 | TBD          |
+| DATA-02  | Phase 45 | TBD          |
+| DATA-03  | Phase 45 | TBD          |
+| DATA-04  | Phase 45 | TBD          |
+| VIS-01   | Phase 46 | TBD          |
+| VIS-02   | Phase 46 | TBD          |
+| VIS-03   | Phase 46 | TBD          |
+| VIS-04   | Phase 46 | TBD          |
 
-_Phase column populated by `gsd-roadmapper` after roadmap approval._
+_Phase column populated by `gsd-roadmapper` 2026-05-07. VERIFICATION column populated per-phase by `gsd-verify-phase` after each phase completes._

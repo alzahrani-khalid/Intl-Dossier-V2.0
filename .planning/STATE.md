@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v6.1
 milestone_name: Hardening & Reconciliation
-status: planning
+status: active
 last_updated: '2026-05-07T07:57:01.205Z'
 last_activity: 2026-05-07
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,18 +20,18 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v6.0 shipped 2026-05-06. Awaiting next milestone selection.
+**Current focus:** v6.1 Hardening & Reconciliation roadmap drafted (Phases 44-46) — closing v6.0 tech debt before v7.0.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 44 (Documentation, Toolchain & Anti-patterns) — pending plan-phase
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-07 — Milestone v6.1 started
+Status: Roadmap drafted; awaiting `/gsd-plan-phase 44`
+Last activity: 2026-05-07 — v6.1 ROADMAP written (44 docs+tooling+lint+story / 45 data / 46 visual)
 
 ## Next Action
 
-Run `/gsd:new-milestone` to scope v7.0, or `/gsd:retrospective` to lock in v6.0 lessons before starting new work.
+Run `/gsd-plan-phase 44` to decompose Phase 44 (DOC-01..08, TOOL-01..03, LINT-01..05, STORY-01) into executable plans.
 
 ### Phase 40 summary
 
