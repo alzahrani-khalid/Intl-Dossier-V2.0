@@ -12,6 +12,8 @@ Unified intelligence management for diplomatic operations — every relationship
 
 **Shipped:** v6.0 Design System Adoption (2026-05-06) — 11 phases, 121 plans, 52/52 requirements satisfied (25 fully verified + 27 covered by SUMMARY frontmatter and Phase 43 cross-phase QA sweep), audit status `tech_debt` (no critical blockers).
 
+**In progress:** v6.1 Hardening & Reconciliation — Phase 44 complete (verification backfill, docs sync, size-limit gate repair, Phase 43 anti-pattern closure, Storybook deferral ADR). Next: Phase 45 Schema & Seed Closure.
+
 <details>
 <summary>Shipped milestones</summary>
 
@@ -24,19 +26,22 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-**Tech debt carried from v6.0:** 6 phases lack per-phase VERIFICATION.md (33/34/36/37/39/40); visual-regression baselines pending operator action for Phases 38/40/41; schema/seed work deferred (intelligence_digest table, VIP person ISO join, 060-dashboard-demo.sql); size-limit budget gate broken (chunk-glob drift, 2.42 MB vs 815 KB ceiling); 5 Phase 43 anti-patterns (WR-02..WR-06); Plan 33-08 storybook deferred. See `.planning/milestones/v6.0-MILESTONE-AUDIT.md` for full inventory.
+**Remaining tech debt carried from v6.0:** schema/seed work deferred (intelligence_digest table, VIP person ISO join, 060-dashboard-demo.sql) and visual-regression baselines pending operator action for Phases 38/40/41. Phase 44 closed the missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006.
 
 ## Current Milestone: v6.1 Hardening & Reconciliation
 
 **Goal:** Close v6.0 tech debt — verification, baselines, schema, anti-patterns — before scoping v7.0 feature work.
 
-**Target features:**
+**Completed in Phase 44:**
 
 - Backfill VERIFICATION.md for 6 phases (33, 34, 36, 37, 39, 40)
-- Repair `size-limit` chunk-glob configuration so the 815 KB bundle gate is enforced again
-- Close Phase 43 anti-patterns (WR-02..WR-06) — `aria-label` shadows, dead `??` branches, invalid `hsl(var(--*))` wrap, redundant Checkbox label, `t('calendar.form.*')` namespace mismatch
+- Repair `size-limit` chunk-glob configuration so current Vite output budgets are enforced again; the historical 815 KB target remains aspirational
+- Close Phase 43 anti-patterns (WR-02..WR-06): `aria-label` shadows, dead `??` branches, invalid `hsl(var(--*))` wrap, redundant Checkbox label, `t('calendar.form.*')` namespace mismatch
 - Sync REQUIREMENTS.md `[x]` checkboxes and ROADMAP progress table with SUMMARY frontmatter
-- Land Plan 33-08 storybook deliverable (or formally drop via ADR with migration guidance)
+- Formalize Plan 33-08 Storybook deferral through ADR-006 with replacement coverage and revisit trigger
+
+**Remaining target features:**
+
 - Create `intelligence_digest` schema + read hook (replaces `actor_name` digest source compromise)
 - Add VIP person ISO join in dashboard RPC (foreign-relations enrichment)
 - Apply `060-dashboard-demo.sql` seed → 4 BLOCKED-BY-SEED specs unblocked
@@ -107,10 +112,12 @@ Unified intelligence management for diplomatic operations — every relationship
 - ✓ 720px dossier drawer with focus trap + ESC + RTL slide flip + ≤640px full-screen — v6.0 Phase 41 (DRAWER-01..03)
 - ✓ Briefs / After-actions / Tasks / Activity / Settings pages reskinned to handoff anatomy with WCAG AA bidirectional — v6.0 Phase 42 (PAGE-01..05)
 - ✓ Hard cross-phase QA gate: zero `eslint-plugin-rtl-friendly` violations, axe-core 30/30, responsive 60/60, keyboard 26 + 4 acknowledged-skip, focus-outline 8/8, `docs/rtl-icons.md` — v6.0 Phase 43 (QA-01..04)
+- ✓ v6.1 documentation/toolchain reconciliation: v6.0 verification backfill, archive sync, size-limit CI gate repair, WR-02..WR-06 closure, Storybook deferral ADR — v6.1 Phase 44 (DOC-01..08, TOOL-01..03, LINT-01..05, STORY-01)
 
 ### Active
 
-- v6.1 Hardening & Reconciliation requirements pending scoping in `.planning/REQUIREMENTS.md` (DOC-01..N, BUNDLE-01..N, ANTIPAT-01..N, SCHEMA-01..N, BASELINE-01..N) — to be assigned by `/gsd-new-milestone` workflow.
+- Phase 45 Schema & Seed Closure — DATA-01..04 (`intelligence_digest`, dashboard digest hook, VIP ISO join, `060-dashboard-demo.sql`)
+- Phase 46 Visual Baseline Regeneration — VIS-01..04 (Phase 38 widgets, Phase 40 list pages, Phase 41 drawer baselines, human-eyeball validation)
 
 ### Out of Scope
 
@@ -196,4 +203,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-07 — milestone v6.1 Hardening & Reconciliation initialized_
+_Last updated: 2026-05-07 — Phase 44 complete; v6.1 remaining scope is DATA/VIS closure_
