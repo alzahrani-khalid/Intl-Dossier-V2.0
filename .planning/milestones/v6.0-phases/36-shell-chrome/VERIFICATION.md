@@ -6,13 +6,13 @@
 
 ## Requirements Verification
 
-| REQ | Description | Verdict | Evidence |
-| --- | --- | --- | --- |
-| SHELL-01 | 256px sidebar with brand, sections, and accent state | PASS | `36-02-SUMMARY.md` lists SHELL-01; `36-05-SUMMARY.md` and `.planning/STATE.md` report AppShell swap and deleted legacy sidebar gate. |
-| SHELL-02 | 56px topbar with search, tweaks trigger, and user controls | PASS | `36-03-SUMMARY.md` lists SHELL-02; `.planning/STATE.md` records Topbar 7-slot implementation and tests. |
-| SHELL-03 | Direction-specific classification element | PASS | `36-03-SUMMARY.md` lists SHELL-03; Phase 43 QA sweep in `.planning/STATE.md` re-validates shell behavior across locales. |
-| SHELL-04 | AppShell responsive grid, overlay drawer, and RTL flip | PASS | `36-04-SUMMARY.md` lists SHELL-04; `36-05-SUMMARY.md` records `_protected.tsx` swap and 16 Playwright specs enumerated. |
-| SHELL-05 | GASTAT brand mark integration | PASS | `36-01-SUMMARY.md` and `36-02-SUMMARY.md` list SHELL-05; `.planning/STATE.md` reports GastatLogo tests green and currentColor tint. |
+| REQ      | Description                                                | Verdict | Evidence                                                                                                                             |
+| -------- | ---------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| SHELL-01 | 256px sidebar with brand, sections, and accent state       | PASS    | `36-02-SUMMARY.md` lists SHELL-01; `36-05-SUMMARY.md` and `.planning/STATE.md` report AppShell swap and deleted legacy sidebar gate. |
+| SHELL-02 | 56px topbar with search, tweaks trigger, and user controls | PASS    | `36-03-SUMMARY.md` lists SHELL-02; `.planning/STATE.md` records Topbar 7-slot implementation and tests.                              |
+| SHELL-03 | Direction-specific classification element                  | PASS    | `36-03-SUMMARY.md` lists SHELL-03; Phase 43 QA sweep in `.planning/STATE.md` re-validates shell behavior across locales.             |
+| SHELL-04 | AppShell responsive grid, overlay drawer, and RTL flip     | PASS    | `36-04-SUMMARY.md` lists SHELL-04; `36-05-SUMMARY.md` records `_protected.tsx` swap and 16 Playwright specs enumerated.              |
+| SHELL-05 | GASTAT brand mark integration                              | PASS    | `36-01-SUMMARY.md` and `36-02-SUMMARY.md` list SHELL-05; `.planning/STATE.md` reports GastatLogo tests green and currentColor tint.  |
 
 ## Summary
 
@@ -23,6 +23,7 @@ cross-phase QA provide sufficient evidence for all SHELL requirements.
 ## Methodology
 
 Verification performed by evidence backfill only:
+
 1. Reviewed archived Phase 36 SUMMARY files and `.planning/STATE.md`.
 2. Cross-checked `.planning/milestones/v6.0-MILESTONE-AUDIT.md`.
 3. Used Phase 43 axe/responsive/keyboard sweep as integration evidence.
