@@ -4,14 +4,14 @@ milestone: v6.1
 milestone_name: Hardening & Reconciliation
 status: executing
 stopped_at: Phase 44 context gathered
-last_updated: '2026-05-07T19:13:36.806Z'
-last_activity: 2026-05-07 -- Phase 44 Wave 1 complete (3/6 plans); Wave 2 next
+last_updated: '2026-05-07T19:29:00.017Z'
+last_activity: 2026-05-07 -- Phase 44 Wave 2 complete (5/6 plans); final docs sync next
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 6
-  completed_plans: 3
-  percent: 50
+  completed_plans: 5
+  percent: 83
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 ## Current Position
 
 Phase: 44 (documentation-toolchain-anti-patterns) — EXECUTING
-Plan: 4 of 6
-Status: Executing Phase 44 (Wave 1 complete; Wave 2 next)
-Last activity: 2026-05-07 -- Phase 44 Wave 1 complete (3/6 plans); Wave 2 next
+Plan: 6 of 6
+Status: Executing Phase 44 (Wave 2 complete; final docs sync next)
+Last activity: 2026-05-07 -- Phase 44 Wave 2 complete (5/6 plans); final docs sync next
 
 ## Next Action
 
