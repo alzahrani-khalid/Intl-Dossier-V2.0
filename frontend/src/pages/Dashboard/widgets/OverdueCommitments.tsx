@@ -112,6 +112,7 @@ export function OverdueCommitments(): ReactElement {
           const isOpen = expanded[group.dossierId] === true
           const visible = isOpen ? group.commitments : group.commitments.slice(0, DEFAULT_VISIBLE)
           const hasMore = group.commitments.length > DEFAULT_VISIBLE
+          const headTitleId = `overdue-dossier-${group.dossierId}-title`
 
           return (
             <li key={group.dossierId} className="overdue-group">
@@ -121,7 +122,7 @@ export function OverdueCommitments(): ReactElement {
                   className="overdue-head-left flex items-center gap-2 w-full text-start min-h-11"
                   style={{ minBlockSize: 44 }}
                   onClick={(): void => handleHeadClick(maybeTyped)}
-                  aria-label={group.dossierName}
+                  aria-labelledby={headTitleId}
                   data-testid="overdue-commitments-dossier-head"
                 >
                   <DossierGlyph
@@ -130,7 +131,9 @@ export function OverdueCommitments(): ReactElement {
                     name={group.dossierName}
                     size={20}
                   />
-                  <span className="card-title text-start truncate flex-1">{group.dossierName}</span>
+                  <span id={headTitleId} className="card-title text-start truncate flex-1">
+                    {group.dossierName}
+                  </span>
                 </button>
               </div>
               <ul className="space-y-1">
