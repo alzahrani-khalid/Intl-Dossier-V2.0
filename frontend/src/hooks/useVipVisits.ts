@@ -1,27 +1,19 @@
 /**
  * useVipVisits — Phase 38 plan 06 dashboard adapter hook.
  *
- * Wraps `useUpcomingEvents` from the operations-hub domain and exposes
- * VIP-visit rows for the `VipVisits` widget. The filter is client-side on
- * `event_type === 'vip_visit'` — no new database schema or RPC is added
- * (Option B per user checkpoint answer + Rule-3 deviation documented in
- * 38-06-SUMMARY.md).
+ * Wraps `useUpcomingEvents` from the operations-hub domain and exposes VIP
+ * visit rows for the `VipVisits` widget. Phase 45 recognizes engagement rows
+ * with nullable person metadata from `get_upcoming_events`, while keeping
+ * `event_type === 'vip_visit'` as a legacy fallback.
  *
  * Shape is a minimal projection from the existing `TimelineEvent` row:
  *   - id         ← event.id
- *   - name       ← event.title             (VIP name as titled in the event)
- *   - role       ← event.engagement_name   (host engagement label — falls back to '')
+ *   - name       ← event.person_name ?? event.title
+ *   - nameAr     ← event.person_name_ar ?? event.title_ar
+ *   - role       ← event.person_role ?? event.engagement_name ?? ''
  *   - when       ← event.start_date        (ISO)
- *   - personFlag ← event.engagement_name_ar // not a flag; left undefined (no
- *                  participant join available without schema changes)
- *   - dossierId  ← event.engagement_id
- *
- * Rule-3 deviation: Without schema changes we cannot join the visiting
- * person's country ISO through the existing `TimelineEvent` projection.
- * `personFlag` is therefore left undefined and the widget falls back to
- * `<DossierGlyph type="person" name={row.name}>` (initials). When a future
- * migration extends `get_upcoming_events` with `person_iso` / `person_role`,
- * this hook is the single place to surface them.
+ *   - personFlag ← event.person_iso
+ *   - dossierId  ← event.person_id ?? event.engagement_id
  *
  * Mitigates: T-38-10 (no data-source discretion — hook filter is explicit
  * and unit-tested), T-38-01 (no mock constants leak through).
@@ -36,6 +28,7 @@ export const VIP_EVENT_TYPE = 'vip_visit'
 export interface VipVisit {
   id: string
   name: string
+  nameAr?: string
   role: string
   when: string
   personFlag?: string
@@ -51,12 +44,20 @@ export interface UseVipVisitsResult {
 function toVipVisit(event: TimelineEvent): VipVisit {
   return {
     id: event.id,
-    name: event.title,
-    role: event.engagement_name ?? '',
+    name: event.person_name ?? event.title,
+    nameAr: event.person_name_ar ?? event.title_ar ?? undefined,
+    role: event.person_role ?? event.engagement_name ?? '',
     when: event.start_date,
-    personFlag: undefined,
-    dossierId: event.engagement_id ?? undefined,
+    personFlag: event.person_iso ?? undefined,
+    dossierId: event.person_id ?? event.engagement_id ?? undefined,
   }
+}
+
+function isVipVisitEvent(event: TimelineEvent): boolean {
+  return (
+    (event.person_id !== null && event.person_id !== undefined) ||
+    event.event_type === VIP_EVENT_TYPE
+  )
 }
 
 export function useVipVisits(userId?: string): UseVipVisitsResult {
@@ -66,7 +67,7 @@ export function useVipVisits(userId?: string): UseVipVisitsResult {
     if (query.data == null) {
       return undefined
     }
-    return query.data.filter((e): boolean => e.event_type === VIP_EVENT_TYPE).map(toVipVisit)
+    return query.data.filter(isVipVisitEvent).map(toVipVisit)
   }, [query.data])
 
   return {
