@@ -176,7 +176,7 @@ Full details: [v6.0-ROADMAP.md](milestones/v6.0-ROADMAP.md)
 | 26-32                                        | v5.0      | —              | Shipped     | 2026-04-18 |
 | 33-43                                        | v6.0      | —              | Shipped     | 2026-05-06 |
 | 44. Documentation, Toolchain & Anti-patterns | v6.1      | 6/6            | Complete    | 2026-05-07 |
-| 45. Schema & Seed Closure                    | v6.1      | 1/4            | In Progress |            |
+| 45. Schema & Seed Closure                    | v6.1      | 3/4            | In Progress |            |
 | 46. Visual Baseline Regeneration             | v6.1      | 0/0            | Not started | —          |
 
 <!-- gsd:progress:end -->
