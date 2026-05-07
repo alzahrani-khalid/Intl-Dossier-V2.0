@@ -32,6 +32,10 @@ must_haves:
       pattern: "from '@heroui/react'"
 ---
 
+> SUPERSEDED-BY-ADR-006: Storybook was formally deferred by
+> `.planning/decisions/ADR-006-storybook-deferral.md`. This plan remains as
+> historical v6.0 context and must not be executed as part of Phase 44.
+
 # Plan 33-08: Storybook Install + Token Grid Story
 
 **Phase:** 33 (token-engine)
