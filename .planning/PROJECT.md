@@ -26,9 +26,23 @@ Unified intelligence management for diplomatic operations — every relationship
 
 **Tech debt carried from v6.0:** 6 phases lack per-phase VERIFICATION.md (33/34/36/37/39/40); visual-regression baselines pending operator action for Phases 38/40/41; schema/seed work deferred (intelligence_digest table, VIP person ISO join, 060-dashboard-demo.sql); size-limit budget gate broken (chunk-glob drift, 2.42 MB vs 815 KB ceiling); 5 Phase 43 anti-patterns (WR-02..WR-06); Plan 33-08 storybook deferred. See `.planning/milestones/v6.0-MILESTONE-AUDIT.md` for full inventory.
 
-## Next Milestone
+## Current Milestone: v6.1 Hardening & Reconciliation
 
-_Pending — run `/gsd-new-milestone` to scope v7.0._
+**Goal:** Close v6.0 tech debt — verification, baselines, schema, anti-patterns — before scoping v7.0 feature work.
+
+**Target features:**
+
+- Backfill VERIFICATION.md for 6 phases (33, 34, 36, 37, 39, 40)
+- Repair `size-limit` chunk-glob configuration so the 815 KB bundle gate is enforced again
+- Close Phase 43 anti-patterns (WR-02..WR-06) — `aria-label` shadows, dead `??` branches, invalid `hsl(var(--*))` wrap, redundant Checkbox label, `t('calendar.form.*')` namespace mismatch
+- Sync REQUIREMENTS.md `[x]` checkboxes and ROADMAP progress table with SUMMARY frontmatter
+- Land Plan 33-08 storybook deliverable (or formally drop via ADR with migration guidance)
+- Create `intelligence_digest` schema + read hook (replaces `actor_name` digest source compromise)
+- Add VIP person ISO join in dashboard RPC (foreign-relations enrichment)
+- Apply `060-dashboard-demo.sql` seed → 4 BLOCKED-BY-SEED specs unblocked
+- Regenerate visual baselines for Phases 38, 40, 41 via `--update-snapshots` on a seeded dev machine
+
+**Key context:** Sourced from `.planning/milestones/v6.0-MILESTONE-AUDIT.md` §6 Tech Debt Inventory + §8 Recommendation, plus the /gsd-explore session captured in `.planning/notes/v6.1-rationale.md`. Audit recommended this scope as a "small surgical phase early in v7.0"; promoting to its own micro-milestone (v6.1) gives a clean ship line before v7.0 feature scoping. Deferred candidate `v7.0 Intelligence Engine` lives at `.planning/seeds/v7.0-intelligence-engine.md` — trigger condition: v6.1 ships.
 
 ## Requirements
 
@@ -96,7 +110,7 @@ _Pending — run `/gsd-new-milestone` to scope v7.0._
 
 ### Active
 
-_Pending — run `/gsd-new-milestone` to define v7.0 requirements._
+- v6.1 Hardening & Reconciliation requirements pending scoping in `.planning/REQUIREMENTS.md` (DOC-01..N, BUNDLE-01..N, ANTIPAT-01..N, SCHEMA-01..N, BASELINE-01..N) — to be assigned by `/gsd-new-milestone` workflow.
 
 ### Out of Scope
 
@@ -182,4 +196,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-06 after v6.0 milestone close_
+_Last updated: 2026-05-07 — milestone v6.1 Hardening & Reconciliation initialized_

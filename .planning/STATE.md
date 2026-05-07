@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v6.0
-milestone_name: Design System Adoption
-status: v6.0 milestone shipped
-stopped_at: Phase 43 context gathered
-last_updated: '2026-05-06T10:29:30.402Z'
-last_activity: 2026-05-06
+milestone: v6.1
+milestone_name: Hardening & Reconciliation
+status: planning
+last_updated: '2026-05-07T07:57:01.205Z'
+last_activity: 2026-05-07
 progress:
-  total_phases: 11
-  completed_phases: 11
-  total_plans: 122
-  completed_plans: 121
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,12 +24,10 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: 43 (rtl-a11y-responsive-sweep) — VERIFIED & SHIPPED
-Plans: 121 of 121 complete across v6.0 (Phases 33-43)
-Status: v6.0 milestone shipped
-Last activity: 2026-05-06
-
-Progress: [██████████] 100% (121 / 121 plans)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-07 — Milestone v6.1 started
 
 ## Next Action
 
