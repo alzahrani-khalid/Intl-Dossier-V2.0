@@ -138,7 +138,15 @@ Full details: [v6.0-ROADMAP.md](milestones/v6.0-ROADMAP.md)
 3. The dashboard RPC powering `VipVisits` returns each row with an ISO-3166 alpha-2 code joined from `country_iso_codes`, and `<DossierGlyph>` consumes that code so the rendered widget shows correct flag glyphs instead of name-initials fallbacks
 4. `frontend/seeds/060-dashboard-demo.sql` is applied to staging via Supabase MCP, and the four previously BLOCKED-BY-SEED Playwright specs (Phase 41 dashboard widget specs G1/G2/G7) execute and pass against the seeded data on a developer machine with `doppler run -- pnpm --filter frontend exec playwright test`
 
-**Plans**: TBD
+**Plans**:
+
+- **Wave 1**
+  - `45-01-schema-seed-foundation-PLAN.md` — create the `intelligence_digest` schema/RLS migration and canonical dashboard seed deltas
+- **Wave 2** _(blocked on Wave 1 completion)_
+  - `45-02-digest-widget-closure-PLAN.md` — add `useIntelligenceDigest`, rewire Digest, and remove `actor_name`/`useActivityFeed` from the render path
+  - `45-03-vip-iso-closure-PLAN.md` — extend `get_upcoming_events` with nullable person ISO fields and render VIP flags through `DossierGlyph`
+- **Wave 3** _(blocked on Wave 2 completion)_
+  - `45-04-staging-e2e-verification-PLAN.md` — apply Phase 45 migrations through Supabase MCP and run focused unit + seed-dependent Playwright gates
 
 ### Phase 46: Visual Baseline Regeneration
 
