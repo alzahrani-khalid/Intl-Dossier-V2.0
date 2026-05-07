@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v6.1
 milestone_name: Hardening & Reconciliation
-status: active
-last_updated: '2026-05-07T07:57:01.205Z'
-last_activity: 2026-05-07
+status: Roadmap drafted; awaiting `/gsd-plan-phase 44`
+stopped_at: Phase 44 context gathered
+last_updated: '2026-05-07T18:09:06.979Z'
+last_activity: 2026-05-07 — v6.1 ROADMAP written (44 docs+tooling+lint+story / 45 data / 46 visual)
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
-  percent: 0
 ---
 
 # Project State
@@ -308,9 +308,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-03T19:48:53.804Z
-Stopped at: Phase 43 context gathered
-Resume file: .planning/phases/43-rtl-a11y-responsive-sweep/43-CONTEXT.md
+Last session: 2026-05-07T18:09:06.973Z
+Stopped at: Phase 44 context gathered
+Resume file: .planning/phases/44-documentation-toolchain-anti-patterns/44-CONTEXT.md
 Resume command: /gsd-discuss-phase 41
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
