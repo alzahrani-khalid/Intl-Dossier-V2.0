@@ -167,7 +167,7 @@ Full details: [v6.0-ROADMAP.md](milestones/v6.0-ROADMAP.md)
 | 24-25                                        | v4.1      | —              | Shipped     | 2026-04-12 |
 | 26-32                                        | v5.0      | —              | Shipped     | 2026-04-18 |
 | 33-43                                        | v6.0      | —              | Shipped     | 2026-05-06 |
-| 44. Documentation, Toolchain & Anti-patterns | v6.1      | 0/0            | Not started | —          |
+| 44. Documentation, Toolchain & Anti-patterns | v6.1      | 3/6            | In Progress |            |
 | 45. Schema & Seed Closure                    | v6.1      | 0/0            | Not started | —          |
 | 46. Visual Baseline Regeneration             | v6.1      | 0/0            | Not started | —          |
 

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.1
 milestone_name: Hardening & Reconciliation
-status: Ready to execute
+status: executing
 stopped_at: Phase 44 context gathered
-last_updated: '2026-05-07T18:37:59.459Z'
-last_activity: 2026-05-07 -- Phase 44 planning complete
+last_updated: '2026-05-07T19:13:36.806Z'
+last_activity: 2026-05-07 -- Phase 44 Wave 1 complete (3/6 plans); Wave 2 next
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 6
-  completed_plans: 0
-  percent: 0
+  completed_plans: 3
+  percent: 50
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v6.1 Hardening & Reconciliation roadmap drafted (Phases 44-46) — closing v6.0 tech debt before v7.0.
+**Current focus:** Phase 44 — documentation-toolchain-anti-patterns
 
 ## Current Position
 
-Phase: 44 (Documentation, Toolchain & Anti-patterns) -- planned
-Plan: —
-Status: Ready to execute
-Last activity: 2026-05-07 -- Phase 44 planning complete
+Phase: 44 (documentation-toolchain-anti-patterns) — EXECUTING
+Plan: 4 of 6
+Status: Executing Phase 44 (Wave 1 complete; Wave 2 next)
+Last activity: 2026-05-07 -- Phase 44 Wave 1 complete (3/6 plans); Wave 2 next
 
 ## Next Action
 
