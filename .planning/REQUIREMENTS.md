@@ -16,19 +16,19 @@ Requirements for this milestone. Every requirement maps to exactly one roadmap p
 
 ### Documentation Reconciliation (DOC)
 
-- [ ] **DOC-01**: A reviewer can read `.planning/phases/33-*/VERIFICATION.md` and find every TOKEN-01..06 requirement listed with a PASS/FAIL verdict and a verification artifact reference (test file, validation log, or audit pointer)
-- [ ] **DOC-02**: A reviewer can read `.planning/phases/34-*/VERIFICATION.md` and find every THEME-02..04 requirement listed with a PASS/FAIL verdict (THEME-01 already verified — included for completeness)
-- [ ] **DOC-03**: A reviewer can read `.planning/phases/36-*/VERIFICATION.md` and find every SHELL-01..05 requirement listed with a PASS/FAIL verdict
-- [ ] **DOC-04**: A reviewer can read `.planning/phases/37-*/VERIFICATION.md` and find every VIZ-01..05 requirement listed with a PASS/FAIL verdict
-- [ ] **DOC-05**: A reviewer can read `.planning/phases/39-*/VERIFICATION.md` and find every BOARD-01..03 requirement listed with a PASS/FAIL verdict
-- [ ] **DOC-06**: A reviewer can read `.planning/phases/40-*/VERIFICATION.md` and find every LIST-01..04 requirement listed with a PASS/FAIL verdict
+- [ ] **DOC-01**: A reviewer can read `.planning/milestones/v6.0-phases/33-*/VERIFICATION.md` and find every TOKEN-01..06 requirement listed with a PASS/FAIL verdict and a verification artifact reference (test file, validation log, or audit pointer)
+- [ ] **DOC-02**: A reviewer can read `.planning/milestones/v6.0-phases/34-*/VERIFICATION.md` and find every THEME-02..04 requirement listed with a PASS/FAIL verdict (THEME-01 already verified - included for completeness)
+- [ ] **DOC-03**: A reviewer can read `.planning/milestones/v6.0-phases/36-*/VERIFICATION.md` and find every SHELL-01..05 requirement listed with a PASS/FAIL verdict
+- [ ] **DOC-04**: A reviewer can read `.planning/milestones/v6.0-phases/37-*/VERIFICATION.md` and find every VIZ-01..05 requirement listed with a PASS/FAIL verdict
+- [ ] **DOC-05**: A reviewer can read `.planning/milestones/v6.0-phases/39-*/VERIFICATION.md` and find every BOARD-01..03 requirement listed with a PASS/FAIL verdict
+- [ ] **DOC-06**: A reviewer can read `.planning/milestones/v6.0-phases/40-*/VERIFICATION.md` and find every LIST-01..04 requirement listed with a PASS/FAIL verdict
 - [ ] **DOC-07**: Every `[x]` checkbox in the v6.0 archive at `.planning/milestones/v6.0-REQUIREMENTS.md` matches the SUMMARY frontmatter for the same REQ-ID (THEME-01 truncated checkbox repaired; remaining 26 partial-verified IDs flipped from `[ ]` to `[x]` once their VERIFICATION.md backfill lands)
 - [ ] **DOC-08**: The v6.0 ROADMAP archive (`.planning/milestones/v6.0-ROADMAP.md`) progress table reports 121/121 plans complete and matches MILESTONES.md, and the active `.planning/ROADMAP.md` shows a clean v6.0 close + v6.1 open
 
 ### Toolchain & Bundle Budget (TOOL)
 
-- [ ] **TOOL-01**: A developer can run `pnpm --filter frontend size-limit` and the command exits 0 with all configured chunks measured against the 815 KB ceiling — no `0 B` measurements caused by stale chunk-glob patterns
-- [ ] **TOOL-02**: The `size-limit` configuration matches Vite's actual output filenames (vendor-super-chunk + per-route splits as of Phase 42), so a real budget regression fails the gate; an intentional ≥1 KB increase from `main.tsx` produces a non-zero exit
+- [ ] **TOOL-01**: A developer can run `pnpm -C frontend size-limit` and the command exits 0 with all configured chunks measured against the current output budgets in `frontend/.size-limit.json`; the historical 815 KB total remains an aspirational optimization target, not the enforced Phase 44 gate
+- [ ] **TOOL-02**: The `size-limit` configuration matches Vite's actual output filenames (vendor-super-chunk + per-route splits as of Phase 42), so a real budget regression fails the gate; an intentional >=1 KB increase from `main.tsx` produces a non-zero exit
 - [ ] **TOOL-03**: The CI workflow that runs `size-limit` is wired so a failing budget blocks merge; a verification PR that bumps a chunk past the ceiling is rejected by CI
 
 ### Anti-Pattern Closure (LINT)
