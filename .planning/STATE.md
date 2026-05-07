@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.1
 milestone_name: Hardening & Reconciliation
-status: Roadmap drafted; awaiting `/gsd-plan-phase 44`
+status: Ready to execute
 stopped_at: Phase 44 context gathered
-last_updated: '2026-05-07T18:09:06.979Z'
-last_activity: 2026-05-07 — v6.1 ROADMAP written (44 docs+tooling+lint+story / 45 data / 46 visual)
+last_updated: '2026-05-07T18:37:59.459Z'
+last_activity: 2026-05-07 -- Phase 44 planning complete
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
+  total_plans: 6
   completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -24,14 +25,14 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: 44 (Documentation, Toolchain & Anti-patterns) — pending plan-phase
+Phase: 44 (Documentation, Toolchain & Anti-patterns) -- planned
 Plan: —
-Status: Roadmap drafted; awaiting `/gsd-plan-phase 44`
-Last activity: 2026-05-07 — v6.1 ROADMAP written (44 docs+tooling+lint+story / 45 data / 46 visual)
+Status: Ready to execute
+Last activity: 2026-05-07 -- Phase 44 planning complete
 
 ## Next Action
 
-Run `/gsd-plan-phase 44` to decompose Phase 44 (DOC-01..08, TOOL-01..03, LINT-01..05, STORY-01) into executable plans.
+Run `/gsd-execute-phase 44` to execute the 6 Phase 44 plans.
 
 ### Phase 40 summary
 
