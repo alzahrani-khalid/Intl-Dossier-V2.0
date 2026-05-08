@@ -163,7 +163,7 @@ export class FullTextSearchService {
    */
   private async searchEntityType(
     entityType: string,
-    tsquery: string,
+    _tsquery: string,
     language: 'en' | 'ar' | 'mixed',
     options: SearchOptions,
   ): Promise<SearchResult[]> {
@@ -225,16 +225,4 @@ export class FullTextSearchService {
     }
   }
 
-  /**
-   * Get count of results user doesn't have permission to view
-   */
-  private async getRestrictedCount(
-    entityType: string,
-    tsquery: string,
-    userId?: string,
-  ): Promise<number> {
-    // This would need RLS policy checking
-    // For now, return 0 as placeholder
-    return 0
-  }
 }

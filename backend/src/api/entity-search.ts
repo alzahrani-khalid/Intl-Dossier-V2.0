@@ -58,142 +58,158 @@ const entityParamsSchema = z.object({
  * - offset: Offset for pagination (default: 0)
  * - min_confidence: Minimum confidence score for AI suggestions (optional)
  */
-router.get('/entities/search', validate({ query: entitySearchQuerySchema }), async (req: Request, res: Response) => {
-  try {
-    const userId = req.user?.id
+router.get(
+  '/entities/search',
+  validate({ query: entitySearchQuerySchema }),
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id
 
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        error: {
-          code: 'UNAUTHORIZED',
-          message: 'User not authenticated',
-        },
-      })
-    }
-
-    // Query params are validated and coerced by Zod
-    const { q: query, entity_types: entityTypesParam, limit, offset, min_confidence: minConfidence } = req.query as z.infer<typeof entitySearchQuerySchema>
-
-    // Parse entity types from comma-separated string
-    let entityTypes: EntityType[] | undefined
-    if (entityTypesParam) {
-      entityTypes = entityTypesParam.split(',').map((type) => type.trim()) as EntityType[]
-
-      const invalidTypes = entityTypes.filter((type) => !validEntityTypes.includes(type as typeof validEntityTypes[number]))
-      if (invalidTypes.length > 0) {
-        return res.status(400).json({
+      if (!userId) {
+        return res.status(401).json({
           success: false,
           error: {
-            code: 'VALIDATION_ERROR',
-            message: `Invalid entity types: ${invalidTypes.join(', ')}`,
-            details: {
-              valid_types: [...validEntityTypes],
-              invalid_types: invalidTypes,
-            },
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
           },
         })
       }
-    }
 
-    // Perform entity search
-    const searchResults = await searchEntities(
-      (query as string).trim(),
-      {
-        entity_types: entityTypes,
-        min_confidence: minConfidence as number | undefined,
-        limit: limit as number,
-        offset: offset as number,
-      },
-      userId,
-    )
-
-    // Return success response
-    return res.status(200).json({
-      success: true,
-      data: searchResults,
-      pagination: {
-        total: searchResults.length, // Note: This is the count of returned results
+      // Query params are validated and coerced by Zod
+      const {
+        q: query,
+        entity_types: entityTypesParam,
         limit,
         offset,
-      },
-    })
-  } catch (error: any) {
-    console.error('Error searching entities:', error)
+        min_confidence: minConfidence,
+      } = req.query as unknown as z.infer<typeof entitySearchQuerySchema>
 
-    // Handle specific error codes
-    if (error.code && error.statusCode) {
-      return res.status(error.statusCode).json({
+      // Parse entity types from comma-separated string
+      let entityTypes: EntityType[] | undefined
+      if (entityTypesParam) {
+        entityTypes = entityTypesParam.split(',').map((type) => type.trim()) as EntityType[]
+
+        const invalidTypes = entityTypes.filter(
+          (type) => !validEntityTypes.includes(type as (typeof validEntityTypes)[number]),
+        )
+        if (invalidTypes.length > 0) {
+          return res.status(400).json({
+            success: false,
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: `Invalid entity types: ${invalidTypes.join(', ')}`,
+              details: {
+                valid_types: [...validEntityTypes],
+                invalid_types: invalidTypes,
+              },
+            },
+          })
+        }
+      }
+
+      // Perform entity search
+      const searchResults = await searchEntities(
+        (query as string).trim(),
+        {
+          entity_types: entityTypes,
+          min_confidence: minConfidence as number | undefined,
+          limit: limit as number,
+          offset: offset as number,
+        },
+        userId,
+      )
+
+      // Return success response
+      return res.status(200).json({
+        success: true,
+        data: searchResults,
+        pagination: {
+          total: searchResults.length, // Note: This is the count of returned results
+          limit,
+          offset,
+        },
+      })
+    } catch (error: any) {
+      console.error('Error searching entities:', error)
+
+      // Handle specific error codes
+      if (error.code && error.statusCode) {
+        return res.status(error.statusCode).json({
+          success: false,
+          error: {
+            code: error.code,
+            message: error.message,
+          },
+        })
+      }
+
+      // Generic error response
+      return res.status(500).json({
         success: false,
         error: {
-          code: error.code,
-          message: error.message,
+          code: 'SEARCH_FAILED',
+          message: 'Failed to search entities',
         },
       })
     }
-
-    // Generic error response
-    return res.status(500).json({
-      success: false,
-      error: {
-        code: 'SEARCH_FAILED',
-        message: 'Failed to search entities',
-      },
-    })
-  }
-})
+  },
+)
 
 /**
  * GET /api/entities/:entity_type/:entity_id
  * Gets metadata for a specific entity
  */
-router.get('/entities/:entity_type/:entity_id', validate({ params: entityParamsSchema }), async (req: Request, res: Response) => {
-  try {
-    const userId = req.user?.id
+router.get(
+  '/entities/:entity_type/:entity_id',
+  validate({ params: entityParamsSchema }),
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id
 
-    if (!userId) {
-      return res.status(401).json({
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
+      const { entity_type, entity_id } = req.params as { entity_type: string; entity_id: string }
+
+      // Get entity metadata
+      const metadata = await getEntityMetadata(entity_type as EntityType, entity_id)
+
+      if (!metadata) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            code: 'ENTITY_NOT_FOUND',
+            message: `${entity_type} with ID ${entity_id} not found`,
+          },
+        })
+      }
+
+      // Return success response
+      return res.status(200).json({
+        success: true,
+        data: metadata,
+      })
+    } catch (error: any) {
+      console.error('Error fetching entity metadata:', error)
+
+      // Generic error response
+      return res.status(500).json({
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'User not authenticated',
+          code: 'FETCH_FAILED',
+          message: 'Failed to fetch entity metadata',
         },
       })
     }
-
-    const { entity_type, entity_id } = req.params
-
-    // Get entity metadata
-    const metadata = await getEntityMetadata(entity_type as EntityType, entity_id)
-
-    if (!metadata) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'ENTITY_NOT_FOUND',
-          message: `${entity_type} with ID ${entity_id} not found`,
-        },
-      })
-    }
-
-    // Return success response
-    return res.status(200).json({
-      success: true,
-      data: metadata,
-    })
-  } catch (error: any) {
-    console.error('Error fetching entity metadata:', error)
-
-    // Generic error response
-    return res.status(500).json({
-      success: false,
-      error: {
-        code: 'FETCH_FAILED',
-        message: 'Failed to fetch entity metadata',
-      },
-    })
-  }
-})
+  },
+)
 
 /**
  * POST /api/entities/:entity_type/:entity_id/invalidate-cache
@@ -218,7 +234,7 @@ router.post(
         })
       }
 
-      const { entity_type, entity_id } = req.params
+      const { entity_type, entity_id } = req.params as { entity_type: string; entity_id: string }
 
       // Invalidate cache
       await invalidateEntityCache(entity_type as EntityType, entity_id)
@@ -247,7 +263,7 @@ router.post(
  * GET /api/entities/types
  * Returns all available entity types with their descriptions
  */
-router.get('/entities/types', async (req: Request, res: Response) => {
+router.get('/entities/types', async (_req: Request, res: Response) => {
   try {
     const entityTypes = [
       {

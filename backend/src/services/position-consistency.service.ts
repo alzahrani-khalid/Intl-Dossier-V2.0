@@ -80,7 +80,7 @@ export class PositionConsistencyService {
     const conflicts = consistency.conflicts as PositionConflict[]
     if (dto.conflict_index >= 0 && dto.conflict_index < conflicts.length) {
       conflicts[dto.conflict_index] = {
-        ...conflicts[dto.conflict_index],
+        ...(conflicts[dto.conflict_index] as PositionConflict),
         suggested_resolution: dto.resolution_notes,
       }
     } else {
@@ -232,7 +232,9 @@ export class PositionConsistencyService {
       ['mandatory', 'optional'],
     ]
 
-    for (const [word1, word2] of contradictoryPairs) {
+    for (const pair of contradictoryPairs) {
+      const word1 = pair[0]!
+      const word2 = pair[1]!
       if ((words1.has(word1) && words2.has(word2)) || (words1.has(word2) && words2.has(word1))) {
         return {
           type: 'contradiction',
@@ -285,7 +287,6 @@ export class PositionConsistencyService {
 
     const highSeverity = conflicts.filter((c) => c.severity === 'high')
     const mediumSeverity = conflicts.filter((c) => c.severity === 'medium')
-    const lowSeverity = conflicts.filter((c) => c.severity === 'low')
 
     if (highSeverity.length > 0) {
       recommendations.push(

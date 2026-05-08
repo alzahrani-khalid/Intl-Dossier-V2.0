@@ -25,7 +25,7 @@ function kmeans(
   maxIter = 20,
 ): { labels: number[]; centroids: number[][]; inertia: number } {
   const n = data.length
-  const dim = data[0].length
+  const dim = data[0]!.length
   // init centroids as first k points (deterministic for consistency)
   const centroids = data.slice(0, k).map((row) => row.slice())
   const labels = new Array(n).fill(0)
@@ -37,7 +37,7 @@ function kmeans(
       for (let c = 0; c < k; c++) {
         let d = 0
         for (let j = 0; j < dim; j++) {
-          const diff = data[i][j] - centroids[c][j]
+          const diff = data[i]![j]! - centroids[c]![j]!
           d += diff * diff
         }
         if (d < bestD) {
@@ -53,11 +53,11 @@ function kmeans(
     for (let i = 0; i < n; i++) {
       const c = labels[i]
       counts[c]++
-      for (let j = 0; j < dim; j++) sums[c][j] += data[i][j]
+      for (let j = 0; j < dim; j++) sums[c]![j] += data[i]![j]!
     }
     for (let c = 0; c < k; c++) {
       if (counts[c] > 0) {
-        for (let j = 0; j < dim; j++) centroids[c][j] = sums[c][j] / counts[c]
+        for (let j = 0; j < dim; j++) centroids[c]![j] = sums[c]![j]! / counts[c]
       }
     }
   }
@@ -66,19 +66,13 @@ function kmeans(
   for (let i = 0; i < n; i++) {
     const c = labels[i]
     let d = 0
-    for (let j = 0; j < data[i].length; j++) {
-      const diff = data[i][j] - centroids[c][j]
+    for (let j = 0; j < data[i]!.length; j++) {
+      const diff = data[i]![j]! - centroids[c]![j]!
       d += diff * diff
     }
     inertia += d
   }
   return { labels, centroids, inertia }
-}
-
-function silhouetteScore(data: number[][], labels: number[], k: number): number {
-  // Very rough approximation: scaled inverse of inertia per point
-  if (data.length === 0) return 0
-  return Math.max(-1, Math.min(1, 1 - labels.reduce((a) => a, 0) / (data.length * k + 1)))
 }
 
 export class ClusteringService {

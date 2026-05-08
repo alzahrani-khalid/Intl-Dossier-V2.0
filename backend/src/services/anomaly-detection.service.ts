@@ -14,10 +14,10 @@ function rid() {
 
 const anomalies: AnomalyPattern[] = Array.from({ length: 30 }).map(() => ({
   id: rid(),
-  entity_type: (['user', 'system', 'api'] as const)[Math.floor(Math.random() * 3)],
+  entity_type: (['user', 'system', 'api'] as const)[Math.floor(Math.random() * 3)]!,
   entity_id: rid(),
   anomaly_score: Math.random(),
-  sensitivity_level: (['low', 'medium', 'high'] as const)[Math.floor(Math.random() * 3)],
+  sensitivity_level: (['low', 'medium', 'high'] as const)[Math.floor(Math.random() * 3)]!,
   detected_at: new Date(Date.now() - Math.floor(Math.random() * 86_400_000)).toISOString(),
   reviewed_at: null,
 }))

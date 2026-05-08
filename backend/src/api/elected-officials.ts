@@ -158,7 +158,7 @@ router.get('/', validate({ query: electedOfficialFiltersSchema }), async (req, r
       logError('Failed to count elected officials', countError as unknown as Error)
     }
 
-    res.json({
+    return res.json({
       data: data ?? [],
       total: count ?? data?.length ?? 0,
       page: pageNum,
@@ -166,7 +166,7 @@ router.get('/', validate({ query: electedOfficialFiltersSchema }), async (req, r
     })
   } catch (error) {
     logError('Failed to fetch elected officials', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -214,10 +214,10 @@ router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) =
       })
     }
 
-    res.json({ data: personData })
+    return res.json({ data: personData })
   } catch (error) {
     logError('Failed to fetch elected official', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -316,7 +316,7 @@ router.post(
       })
     } catch (error) {
       logError('Failed to create elected official', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -439,7 +439,7 @@ router.patch(
       logInfo('Elected official updated successfully', { id })
 
       const updatedData = Array.isArray(updated) ? updated[0] : updated
-      res.json({
+      return res.json({
         data: updatedData,
         message: createBilingualError(
           'Elected official updated successfully',
@@ -449,7 +449,7 @@ router.patch(
       })
     } catch (error) {
       logError('Failed to update elected official', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )

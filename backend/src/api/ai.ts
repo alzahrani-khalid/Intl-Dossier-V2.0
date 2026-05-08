@@ -23,7 +23,7 @@ const router = Router()
  * @access Public (no auth required for health check)
  * Feature: ai-features-reenablement
  */
-router.get('/health', async (req, res) => {
+router.get('/health', async (_req, res) => {
   try {
     const featureStatus = getAIFeatureStatus()
     const embeddingHealth = await embeddingsService.getHealthStatus()
@@ -123,7 +123,7 @@ const upload = multer({
   limits: {
     fileSize: 25 * 1024 * 1024, // 25MB limit for audio files
   },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     const allowedMimeTypes = ['audio/webm', 'audio/mp3', 'audio/wav', 'audio/m4a', 'audio/ogg']
     if (allowedMimeTypes.includes(file.mimetype)) {
       cb(null, true)
@@ -239,7 +239,7 @@ router.get('/briefs', async (req, res, next) => {
  */
 router.get('/briefs/:id', async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
     const brief = await briefService.getBriefById(id)
 
     if (!brief) {
@@ -249,10 +249,10 @@ router.get('/briefs/:id', async (req, res, next) => {
       })
     }
 
-    res.json(brief)
+    return res.json(brief)
   } catch (error) {
     logError('Failed to fetch brief', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -280,14 +280,14 @@ router.post('/voice/transcribe', upload.single('audio'), async (req, res, next) 
 
     const transcription = await voiceService.transcribeAudio(req.file.buffer, language)
 
-    res.json({
+    return res.json({
       text: transcription.text,
       confidence: transcription.confidence,
       language: transcription.language,
     })
   } catch (error) {
     logError('Failed to transcribe audio', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -387,7 +387,7 @@ router.post('/analyze', validate({ body: analysisRequestSchema }), async (req, r
  * @desc Get available brief templates
  * @access Private
  */
-router.get('/templates', async (req, res, next) => {
+router.get('/templates', async (_req, res, next) => {
   try {
     const templates = await briefService.getTemplates()
 

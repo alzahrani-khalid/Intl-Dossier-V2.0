@@ -67,15 +67,15 @@ router.post(
       }
 
       const contributor = await taskContributorsService.addContributor({
-        task_id: req.params.taskId,
+        task_id: req.params.taskId as string,
         user_id: req.body.user_id,
         added_by: userId,
         role: req.body.role,
       })
 
-      res.status(201).json(contributor)
+      return res.status(201).json(contributor)
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -99,15 +99,15 @@ router.post(
       }
 
       const contributors = await taskContributorsService.addMultipleContributors(
-        req.params.taskId,
+        req.params.taskId as string,
         req.body.user_ids,
         userId,
         req.body.role,
       )
 
-      res.status(201).json({ contributors, total_count: contributors.length })
+      return res.status(201).json({ contributors, total_count: contributors.length })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -121,11 +121,13 @@ router.get(
   validate({ params: z.object({ taskId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const contributors = await taskContributorsService.getTaskContributors(req.params.taskId)
+      const contributors = await taskContributorsService.getTaskContributors(
+        req.params.taskId as string,
+      )
 
-      res.json({ contributors, total_count: contributors.length })
+      return res.json({ contributors, total_count: contributors.length })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -139,11 +141,13 @@ router.get(
   validate({ params: z.object({ taskId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const contributors = await taskContributorsService.getContributorHistory(req.params.taskId)
+      const contributors = await taskContributorsService.getContributorHistory(
+        req.params.taskId as string,
+      )
 
-      res.json({ contributors, total_count: contributors.length })
+      return res.json({ contributors, total_count: contributors.length })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -157,11 +161,13 @@ router.get(
   validate({ params: z.object({ userId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const contributorTasks = await taskContributorsService.getContributorTasks(req.params.userId)
+      const contributorTasks = await taskContributorsService.getContributorTasks(
+        req.params.userId as string,
+      )
 
-      res.json({ contributor_tasks: contributorTasks, total_count: contributorTasks.length })
+      return res.json({ contributor_tasks: contributorTasks, total_count: contributorTasks.length })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -179,9 +185,9 @@ router.get('/me/tasks', async (req: Request, res: Response, next: NextFunction) 
 
     const contributorTasks = await taskContributorsService.getContributorTasks(userId)
 
-    res.json({ contributor_tasks: contributorTasks, total_count: contributorTasks.length })
+    return res.json({ contributor_tasks: contributorTasks, total_count: contributorTasks.length })
   } catch (error: any) {
-    next(error)
+    return next(error)
   }
 })
 
@@ -194,11 +200,11 @@ router.get(
   validate({ params: z.object({ taskId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const count = await taskContributorsService.getContributorCount(req.params.taskId)
+      const count = await taskContributorsService.getContributorCount(req.params.taskId as string)
 
-      res.json({ count })
+      return res.json({ count })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -224,14 +230,14 @@ router.delete(
       }
 
       await taskContributorsService.removeContributor({
-        task_id: req.params.taskId,
-        user_id: req.params.userId,
+        task_id: req.params.taskId as string,
+        user_id: req.params.userId as string,
         removed_by: removedBy,
       })
 
-      res.json({ success: true, message: 'Contributor removed successfully' })
+      return res.json({ success: true, message: 'Contributor removed successfully' })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -255,14 +261,14 @@ router.delete(
       }
 
       await taskContributorsService.removeMultipleContributors(
-        req.params.taskId,
+        req.params.taskId as string,
         req.body.user_ids,
         removedBy,
       )
 
-      res.json({ success: true, message: 'Contributors removed successfully' })
+      return res.json({ success: true, message: 'Contributors removed successfully' })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -287,15 +293,15 @@ router.put(
       }
 
       const contributors = await taskContributorsService.replaceContributors(
-        req.params.taskId,
+        req.params.taskId as string,
         req.body.user_ids,
         updatedBy,
         req.body.role,
       )
 
-      res.json({ contributors, total_count: contributors.length })
+      return res.json({ contributors, total_count: contributors.length })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -315,13 +321,13 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const isContributor = await taskContributorsService.isContributor(
-        req.params.taskId,
-        req.params.userId,
+        req.params.taskId as string,
+        req.params.userId as string,
       )
 
-      res.json({ is_contributor: isContributor })
+      return res.json({ is_contributor: isContributor })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )

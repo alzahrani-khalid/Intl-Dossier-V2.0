@@ -7,7 +7,7 @@ import { validate } from '../utils/validation'
 const router = Router()
 let consistencyService: PositionConsistencyService
 
-function initializePositionsRouter(supabaseUrl: string, supabaseKey: string): Router {
+export function initializePositionsRouter(supabaseUrl: string, supabaseKey: string): Router {
   consistencyService = new PositionConsistencyService(supabaseUrl, supabaseKey)
   return router
 }
@@ -55,18 +55,18 @@ router.get(
   validate({ params: uuidParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const analysis = await consistencyService.analyzeConsistency(req.params.id)
+      const analysis = await consistencyService.analyzeConsistency(req.params.id as string)
 
-      res.json({
+      return res.json({
         success: true,
         data: analysis,
         meta: {
           analyzed_at: new Date(),
-          thematic_area_id: req.params.id,
+          thematic_area_id: req.params.id as string,
         },
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -91,8 +91,8 @@ router.post(
       if (!force_refresh) {
         const history = await consistencyService.getConsistencyHistory(thematic_area_id, 1)
 
-        if (history.length > 0) {
-          const lastAnalysis = history[0]
+        const lastAnalysis = history[0]
+        if (lastAnalysis) {
           const hoursSinceAnalysis =
             (Date.now() - new Date(lastAnalysis.calculated_at).getTime()) / (1000 * 60 * 60)
 
@@ -112,7 +112,7 @@ router.post(
       // Perform new analysis
       const analysis = await consistencyService.analyzeConsistency(thematic_area_id)
 
-      res.json({
+      return res.json({
         success: true,
         data: analysis,
         meta: {
@@ -121,7 +121,7 @@ router.post(
         },
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -145,19 +145,19 @@ router.put(
         return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      const updated = await consistencyService.reconcileConflict(req.params.id, {
+      const updated = await consistencyService.reconcileConflict(req.params.id as string, {
         conflict_index: req.body.conflict_index,
         resolution_notes: req.body.resolution_notes,
         reconciled_by: userId,
       })
 
-      res.json({
+      return res.json({
         success: true,
         data: updated,
         message: 'Conflict reconciled successfully',
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -190,7 +190,7 @@ router.get(
       const limit = parseInt(req.query.limit as string) || 50
       unresolved = unresolved.slice(0, limit)
 
-      res.json({
+      return res.json({
         success: true,
         data: unresolved,
         meta: {
@@ -201,7 +201,7 @@ router.get(
         },
       })
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         error: error.message,
       })
@@ -214,7 +214,7 @@ router.get(
  * @desc Get critical position inconsistencies
  * @access Private
  */
-router.get('/consistency/critical', authenticate, async (req: Request, res: Response) => {
+router.get('/consistency/critical', authenticate, async (_req: Request, res: Response) => {
   try {
     const critical = await consistencyService.getCriticalInconsistencies()
 
@@ -251,21 +251,21 @@ router.get(
     try {
       const limit = parseInt(req.query.limit as string) || 10
       const history = await consistencyService.getConsistencyHistory(
-        req.params.thematicAreaId,
+        req.params.thematicAreaId as string,
         limit,
       )
 
-      res.json({
+      return res.json({
         success: true,
         data: history,
         meta: {
-          thematic_area_id: req.params.thematicAreaId,
+          thematic_area_id: req.params.thematicAreaId as string,
           count: history.length,
           limit,
         },
       })
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         error: error.message,
       })
@@ -285,7 +285,6 @@ router.post(
   validate({ body: bulkAnalyzeBodySchema }),
   async (req: Request, res: Response) => {
     try {
-
       const results = []
       const errors = []
 
@@ -304,7 +303,7 @@ router.post(
         }
       }
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           successful: results,
@@ -317,7 +316,7 @@ router.post(
         },
       })
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         error: error.message,
       })

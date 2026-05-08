@@ -36,7 +36,7 @@ const createTaskSchema = z.object({
   sla_deadline: z.string().datetime().optional(),
   work_item_type: z.enum(['dossier', 'position', 'ticket', 'generic']).optional(),
   work_item_id: z.string().uuid().optional(),
-  source: z.record(z.any()).optional(),
+  source: z.record(z.string(), z.any()).optional(),
 })
 
 const updateTaskSchema = z.object({
@@ -50,7 +50,7 @@ const updateTaskSchema = z.object({
   sla_deadline: z.string().datetime().optional(),
   work_item_type: z.enum(['dossier', 'position', 'ticket', 'generic']).optional(),
   work_item_id: z.string().uuid().optional(),
-  source: z.record(z.any()).optional(),
+  source: z.record(z.string(), z.any()).optional(),
   completed_by: z.string().uuid().optional(),
   completed_at: z.string().datetime().optional(),
   last_known_updated_at: z.string().datetime().optional(), // For optimistic locking
@@ -95,9 +95,9 @@ router.post(
         tenant_id: req.user?.organization_id,
       })
 
-      res.status(201).json(task)
+      return res.status(201).json(task)
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -116,15 +116,15 @@ router.get(
         return res.status(401).json({ error: 'User not authenticated' })
       }
 
-      const task = await tasksService.getTaskById(req.params.id, userId)
+      const task = await tasksService.getTaskById(req.params.id as string, userId)
 
       if (!task) {
         return res.status(404).json({ error: 'Task not found' })
       }
 
-      res.json(task)
+      return res.json(task)
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -155,9 +155,9 @@ router.get(
         sort_order: (req.query.sort_order as any) || 'desc',
       })
 
-      res.json(result)
+      return res.json(result)
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -177,14 +177,14 @@ router.put(
         return res.status(401).json({ error: 'User not authenticated' })
       }
 
-      const task = await tasksService.updateTask(req.params.id, {
+      const task = await tasksService.updateTask(req.params.id as string, {
         ...req.body,
         updated_by: userId,
       })
 
-      res.json(task)
+      return res.json(task)
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -203,11 +203,11 @@ router.delete(
         return res.status(401).json({ error: 'User not authenticated' })
       }
 
-      await tasksService.deleteTask(req.params.id, userId)
+      await tasksService.deleteTask(req.params.id as string, userId)
 
-      res.json({ success: true, message: 'Task deleted successfully' })
+      return res.json({ success: true, message: 'Task deleted successfully' })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -232,9 +232,9 @@ router.get('/my-tasks', async (req: Request, res: Response, next: NextFunction) 
       page_size: parseInt(req.query.page_size as string) || 50,
     })
 
-    res.json(result)
+    return res.json(result)
   } catch (error: any) {
-    next(error)
+    return next(error)
   }
 })
 
@@ -247,11 +247,11 @@ router.get(
   validate({ params: z.object({ engagementId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await tasksService.getEngagementTasks(req.params.engagementId)
+      const result = await tasksService.getEngagementTasks(req.params.engagementId as string)
 
-      res.json(result)
+      return res.json(result)
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -271,13 +271,13 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const tasks = await tasksService.getWorkItemTasks(
-        req.params.workItemType as any,
-        req.params.workItemId,
+        req.params.workItemType as string as any,
+        req.params.workItemId as string,
       )
 
       res.json({ tasks, total_count: tasks.length })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -318,7 +318,7 @@ router.get(
 
       res.json({ tasks, total_count: tasks.length })
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -344,14 +344,14 @@ router.patch(
         return res.status(401).json({ error: 'User not authenticated' })
       }
 
-      const task = await tasksService.updateTask(req.params.id, {
+      const task = await tasksService.updateTask(req.params.id as string, {
         workflow_stage: req.body.workflow_stage,
         updated_by: userId,
       })
 
-      res.json(task)
+      return res.json(task)
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -376,7 +376,7 @@ router.patch(
         return res.status(401).json({ error: 'User not authenticated' })
       }
 
-      const task = await tasksService.updateTask(req.params.id, {
+      const task = await tasksService.updateTask(req.params.id as string, {
         status: 'completed',
         workflow_stage: 'done',
         completed_by: userId,
@@ -384,9 +384,9 @@ router.patch(
         updated_by: userId,
       })
 
-      res.json(task)
+      return res.json(task)
     } catch (error: any) {
-      next(error)
+      return next(error)
     }
   },
 )

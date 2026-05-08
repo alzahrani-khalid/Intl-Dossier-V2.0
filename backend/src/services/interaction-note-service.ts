@@ -9,16 +9,39 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { Database } from '../types/contact-directory.types.js'
 
-type InteractionNote = Database['public']['Tables']['cd_interaction_notes']['Row']
-type InteractionNoteInsert = Database['public']['Tables']['cd_interaction_notes']['Insert']
-type InteractionNoteUpdate = Database['public']['Tables']['cd_interaction_notes']['Update']
+// cd_interaction_notes table is not yet in the generated contact-directory schema —
+// keep loose typing until the migration adds it back. See 47-EXCEPTIONS.md.
+type InteractionNote = {
+  id: string
+  contact_id: string
+  type: 'meeting' | 'email' | 'call' | 'conference' | 'other'
+  date: string
+  details?: string
+  notes?: string | null
+  is_archived?: boolean | null
+  created_at?: string | null
+  updated_at?: string | null
+  attachments?: unknown[] | null
+  [key: string]: unknown
+}
+type InteractionNoteInsert = Partial<InteractionNote> & {
+  contact_id: string
+  date: string
+  details?: string
+}
+type InteractionNoteUpdate = Partial<InteractionNote>
 
 // Valid interaction types
 const INTERACTION_TYPES = ['meeting', 'email', 'call', 'conference', 'other'] as const
 type InteractionType = (typeof INTERACTION_TYPES)[number]
 
 export class InteractionNoteService {
-  constructor(private supabase: SupabaseClient<Database>) {}
+  // SupabaseClient typed as <any> because cd_interaction_notes has not yet been
+  // added to the generated contact-directory.types.ts schema. See 47-EXCEPTIONS.md.
+  private supabase: SupabaseClient<any>
+  constructor(supabase: SupabaseClient<Database>) {
+    this.supabase = supabase as unknown as SupabaseClient<any>
+  }
 
   /**
    * Create a new interaction note with validation

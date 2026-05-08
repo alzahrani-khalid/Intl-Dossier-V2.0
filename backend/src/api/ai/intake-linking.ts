@@ -12,14 +12,14 @@
  * - DELETE /api/ai/intake/links/:linkId - Remove a link
  */
 
-import { Router, Response } from 'express'
+import { Router, Request, Response } from 'express'
 import { intakeLinkerAgent } from '../../ai/agents/intake-linker.js'
 import { supabaseAdmin } from '../../config/supabase.js'
 import { isFeatureEnabled } from '../../ai/config.js'
 import logger from '../../utils/logger.js'
 
-// Use Express namespace for extended Request type
-type AuthenticatedRequest = Express.Request
+// Use Express Request type (extended with `user` via global declaration in src/middleware/auth)
+type AuthenticatedRequest = Request
 
 const router = Router()
 
@@ -43,7 +43,7 @@ router.post(
   '/intake/:ticketId/propose-links',
   checkFeatureEnabled,
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { ticketId } = req.params
+    const { ticketId } = req.params as { ticketId: string }
     const { language = 'en' } = req.body
     const userId = req.user?.id
     const organizationId = req.user?.organization_id
@@ -104,7 +104,7 @@ router.post(
 router.get(
   '/intake/:ticketId/proposals',
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { ticketId } = req.params
+    const { ticketId } = req.params as { ticketId: string }
     const { status } = req.query
     const userId = req.user?.id
     const organizationId = req.user?.organization_id
@@ -158,7 +158,7 @@ router.get(
 router.post(
   '/proposals/:proposalId/approve',
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { proposalId } = req.params
+    const { proposalId } = req.params as { proposalId: string }
     const userId = req.user?.id
     const organizationId = req.user?.organization_id
 
@@ -245,7 +245,7 @@ router.post(
 router.post(
   '/proposals/:proposalId/reject',
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { proposalId } = req.params
+    const { proposalId } = req.params as { proposalId: string }
     const { reason } = req.body
     const userId = req.user?.id
     const organizationId = req.user?.organization_id
@@ -312,7 +312,7 @@ router.post(
 router.get(
   '/intake/:ticketId/links',
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { ticketId } = req.params
+    const { ticketId } = req.params as { ticketId: string }
     const userId = req.user?.id
     const organizationId = req.user?.organization_id
 
@@ -383,7 +383,7 @@ router.get(
 router.delete(
   '/intake/links/:linkId',
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { linkId } = req.params
+    const { linkId } = req.params as { linkId: string }
     const userId = req.user?.id
     const organizationId = req.user?.organization_id
 
@@ -455,7 +455,7 @@ router.delete(
 router.post(
   '/intake/:ticketId/links',
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { ticketId } = req.params
+    const { ticketId } = req.params as { ticketId: string }
     const { entity_type, entity_id } = req.body
     const userId = req.user?.id
     const organizationId = req.user?.organization_id

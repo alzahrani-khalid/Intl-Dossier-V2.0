@@ -27,7 +27,10 @@ const isLocalNetworkOrigin = (origin: string): boolean => {
     const ipv4Regex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/
     const match = hostname.match(ipv4Regex)
     if (match) {
-      const [, a, b] = match.map(Number)
+      const parts = match.map(Number)
+      const a = parts[1]
+      const b = parts[2]
+      if (a === undefined || b === undefined) return false
       // 10.0.0.0 - 10.255.255.255
       if (a === 10) return true
       // 172.16.0.0 - 172.31.255.255
@@ -116,9 +119,7 @@ export function buildCspDirectives(): Record<string, string[]> {
         ? process.env.SUPABASE_URL.replace('https://', 'wss://')
         : 'wss://*.supabase.co',
       // Sentry error reporting
-      process.env.SENTRY_DSN
-        ? new URL(process.env.SENTRY_DSN).origin
-        : null,
+      process.env.SENTRY_DSN ? new URL(process.env.SENTRY_DSN).origin : null,
       // AnythingLLM API
       process.env.ANYTHINGLLM_API_URL || null,
     ].filter(Boolean) as string[],
@@ -357,7 +358,11 @@ function parseSize(size: string): number {
     throw new Error(`Invalid size format: ${size}`)
   }
 
-  const [, value, unit] = match
+  const value = match[1]
+  const unit = match[2]
+  if (value === undefined || unit === undefined || units[unit] === undefined) {
+    throw new Error(`Invalid size format: ${size}`)
+  }
   return parseFloat(value) * units[unit]
 }
 

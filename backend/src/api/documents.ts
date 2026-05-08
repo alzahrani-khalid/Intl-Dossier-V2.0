@@ -12,7 +12,7 @@ const documentService = new DocumentService()
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     const allowedTypes = [
       'application/pdf',
       'application/msword',
@@ -48,9 +48,9 @@ router.get('/', async (req, res, next) => {
   try {
     const filters = req.query
     const documents = await documentService.findAll(filters)
-    res.json(documents)
+    return res.json(documents)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 })
 
@@ -72,9 +72,9 @@ router.post(
         uploadedBy: req.user?.id,
       })
 
-      res.status(201).json({ data: document })
+      return res.status(201).json({ data: document })
     } catch (error) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -82,13 +82,13 @@ router.post(
 // GET /api/documents/:id
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const document = await documentService.findById(req.params.id)
+    const document = await documentService.findById(req.params.id as string)
     if (!document) {
       return res.status(404).json({ error: 'Document not found' })
     }
-    res.json(document)
+    return res.json(document)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 })
 
@@ -99,10 +99,10 @@ router.delete(
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      await documentService.delete(req.params.id)
-      res.json({ message: 'Document deleted successfully' })
+      await documentService.delete(req.params.id as string)
+      return res.json({ message: 'Document deleted successfully' })
     } catch (error) {
-      next(error)
+      return next(error)
     }
   },
 )

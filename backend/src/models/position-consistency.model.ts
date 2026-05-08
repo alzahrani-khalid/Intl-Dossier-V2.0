@@ -43,7 +43,7 @@ export interface ConsistencyAnalysisResult {
   analysis_time_ms: number
 }
 
-class PositionConsistencyModel {
+export class PositionConsistencyModel {
   static tableName = 'position_consistencies'
 
   static readonly CONSISTENCY_THRESHOLDS = {
@@ -147,7 +147,7 @@ class PositionConsistencyModel {
     }
   }
 
-  static canReconcile(consistency: PositionConsistency, userId: string): boolean {
+  static canReconcile(consistency: PositionConsistency, _userId: string): boolean {
     if (consistency.reconciliation_status === 'resolved') {
       return false
     }
@@ -170,7 +170,9 @@ class PositionConsistencyModel {
     }
 
     // In real implementation, this would update the conflict status
-    consistency.conflicts[conflictIndex].suggested_resolution = resolution
+    const conflict = consistency.conflicts[conflictIndex]
+    if (!conflict) return false
+    conflict.suggested_resolution = resolution
 
     // Check if all conflicts are resolved
     const allResolved = consistency.conflicts.every((c) => c.suggested_resolution)
@@ -209,12 +211,12 @@ class PositionConsistencyModel {
   }
 
   // Placeholder methods for conflict detection
-  private static hasContradiction(content1: string, content2: string): boolean {
+  private static hasContradiction(_content1: string, _content2: string): boolean {
     // In real implementation, use NLP to detect contradictions
     return false
   }
 
-  private static hasAmbiguity(content1: string, content2: string): boolean {
+  private static hasAmbiguity(_content1: string, _content2: string): boolean {
     // In real implementation, use NLP to detect ambiguity
     return false
   }

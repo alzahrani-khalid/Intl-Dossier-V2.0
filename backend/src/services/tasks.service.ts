@@ -171,7 +171,7 @@ export class TasksService {
   /**
    * Get a single task by ID
    */
-  async getTaskById(taskId: string, userId: string): Promise<Task | null> {
+  async getTaskById(taskId: string, _userId: string): Promise<Task | null> {
     const { data, error } = await this.supabase
       .from('tasks')
       .select('*')
@@ -688,7 +688,7 @@ export class TaskCreationService {
           updated_at: new Date().toISOString(),
           completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
         })
-        .eq('related_commitment_id', commitmentId)
+        .eq('related_commitment_id' as never, commitmentId)
 
       if (error) {
         logger.error('Failed to update task status', { commitmentId, error: error.message })
@@ -713,7 +713,7 @@ export class TaskCreationService {
       const { data, error } = await this.supabase
         .from('tasks')
         .select('*')
-        .eq('related_after_action_id', afterActionId)
+        .eq('related_after_action_id' as never, afterActionId)
         .order('created_at', { ascending: false })
 
       if (error) {
@@ -743,7 +743,7 @@ export class TaskCreationService {
       const { error } = await this.supabase
         .from('tasks')
         .delete()
-        .eq('related_after_action_id', afterActionId)
+        .eq('related_after_action_id' as never, afterActionId)
 
       if (error) {
         logger.error('Failed to delete tasks', { afterActionId, error: error.message })

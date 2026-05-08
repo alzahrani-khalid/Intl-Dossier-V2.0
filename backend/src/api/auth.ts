@@ -85,7 +85,7 @@ router.post('/login', validate({ body: loginSchema }), async (req, res, next) =>
       role: result.user?.role,
     })
 
-    res.json({
+    return res.json({
       accessToken: result.accessToken,
       refreshToken: result.refreshToken,
       user: result.user,
@@ -93,7 +93,7 @@ router.post('/login', validate({ body: loginSchema }), async (req, res, next) =>
     })
   } catch (error) {
     logError('Login failed', error as Error, { email: req.body.email })
-    next(error)
+    return next(error)
   }
 })
 
@@ -122,7 +122,7 @@ router.post('/register', validate({ body: registerSchema }), async (req, res, ne
       email: userData.email,
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       user: result.user,
       message: createBilingualError(
         'Registration successful. Please verify your email.',
@@ -132,7 +132,7 @@ router.post('/register', validate({ body: registerSchema }), async (req, res, ne
     })
   } catch (error) {
     logError('Registration failed', error as Error, { email: req.body.email })
-    next(error)
+    return next(error)
   }
 })
 
@@ -147,14 +147,14 @@ router.post('/refresh', validate({ body: refreshTokenSchema }), async (req, res,
 
     const result = await authService.refreshToken(refreshToken)
 
-    res.json({
+    return res.json({
       accessToken: result.accessToken,
       refreshToken: result.refreshToken,
       expiresIn: result.expiresIn,
     })
   } catch (error) {
     logError('Token refresh failed', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -177,12 +177,12 @@ router.post('/logout', async (req, res, next) => {
       }
     }
 
-    res.json({
+    return res.json({
       message: createBilingualError('Logged out successfully', 'تم تسجيل الخروج بنجاح', lang),
     })
   } catch (error) {
     logError('Logout failed', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -238,7 +238,7 @@ router.post('/reset-password', validate({ body: resetPasswordSchema }), async (r
 
     logInfo('Password reset successful')
 
-    res.json({
+    return res.json({
       message: createBilingualError(
         'Password reset successful',
         'تم إعادة تعيين كلمة المرور بنجاح',
@@ -247,7 +247,7 @@ router.post('/reset-password', validate({ body: resetPasswordSchema }), async (r
     })
   } catch (error) {
     logError('Password reset failed', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -268,7 +268,7 @@ router.get('/verify-email/:token', async (req, res, next) => {
       throw new Error('Invalid verification token')
     }
 
-    res.json({
+    return res.json({
       message: createBilingualError(
         'Email verified successfully',
         'تم التحقق من البريد الإلكتروني بنجاح',
@@ -277,7 +277,7 @@ router.get('/verify-email/:token', async (req, res, next) => {
     })
   } catch (error) {
     logError('Email verification failed', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -293,7 +293,7 @@ router.post('/setup-mfa', validate({ body: setupMfaSchema }), async (req, res, n
 
     const result = await authService.setupMFA(userId)
 
-    res.json({
+    return res.json({
       secret: result.secret,
       qrCode: result.qrCodeUrl,
       backupCodes: result.backupCodes,
@@ -305,7 +305,7 @@ router.post('/setup-mfa', validate({ body: setupMfaSchema }), async (req, res, n
     })
   } catch (error) {
     logError('MFA setup failed', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -320,7 +320,7 @@ router.post('/verify-mfa', validate({ body: verifyMfaSchema }), async (req, res,
 
     const verified = await authService.verifyMFA(userId, code)
 
-    res.json({
+    return res.json({
       verified: verified,
       message: verified
         ? createBilingualError(
@@ -336,7 +336,7 @@ router.post('/verify-mfa', validate({ body: verifyMfaSchema }), async (req, res,
     })
   } catch (error) {
     logError('MFA verification failed', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -373,7 +373,7 @@ router.post('/disable-mfa', async (req, res, next) => {
 
     await authService.disableMFA(user.id, password)
 
-    res.json({
+    return res.json({
       message: createBilingualError(
         'MFA disabled successfully',
         'تم تعطيل المصادقة الثنائية بنجاح',
@@ -382,7 +382,7 @@ router.post('/disable-mfa', async (req, res, next) => {
     })
   } catch (error) {
     logError('MFA disable failed', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -406,10 +406,10 @@ router.get('/me', async (req, res, next) => {
       throw new Error('Invalid session')
     }
 
-    res.json({ user })
+    return res.json({ user })
   } catch (error) {
     logError('Get current user failed', error as Error)
-    next(error)
+    return next(error)
   }
 })
 

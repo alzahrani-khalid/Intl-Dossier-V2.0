@@ -62,12 +62,8 @@ function transformBriefToFrontend(data: DbBrief) {
   }
 }
 
-interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string
-    organization_id: string
-  }
-}
+// AuthenticatedRequest aliases Request — `user` is added globally via middleware/auth
+type AuthenticatedRequest = Request
 
 // Middleware to verify Supabase token and populate req.user
 const verifySupabaseToken = async (
@@ -104,9 +100,9 @@ const verifySupabaseToken = async (
     req.user = {
       id: user.id,
       organization_id: profile?.organization_id || user.user_metadata?.organization_id || '',
-    }
+    } as typeof req.user
 
-    next()
+    return next()
   } catch (err) {
     logger.error('Token verification failed', { error: err })
     return res.status(401).json({ error: 'Authentication failed' })
@@ -114,12 +110,13 @@ const verifySupabaseToken = async (
 }
 
 // Middleware to check feature flag
-const checkFeatureEnabled = (_req: Request, res: Response, next: () => void) => {
+const checkFeatureEnabled = (_req: Request, res: Response, next: () => void): void => {
   if (!isFeatureEnabled('brief_generation')) {
-    return res.status(403).json({
+    res.status(403).json({
       error: 'Brief generation is disabled',
       code: 'FEATURE_DISABLED',
     })
+    return
   }
   next()
 }
@@ -200,6 +197,7 @@ router.post(
         res.write(`data: ${JSON.stringify({ type: 'error', error: 'Generation failed' })}\n\n`)
         res.end()
       }
+      return
     } else {
       // Regular JSON response
       try {
@@ -219,7 +217,7 @@ router.post(
           timeoutPromise,
         ])
 
-        res.json({
+        return res.json({
           success: true,
           data: brief,
         })
@@ -234,7 +232,7 @@ router.post(
           })
         }
 
-        res.status(500).json({
+        return res.status(500).json({
           error: 'Brief generation failed',
           code: 'GENERATION_FAILED',
           message: error instanceof Error ? error.message : 'Unknown error',
@@ -275,13 +273,13 @@ router.get('/:id', verifySupabaseToken, async (req: AuthenticatedRequest, res: R
     // Transform to frontend camelCase format
     const transformedBrief = transformBriefToFrontend(data as DbBrief)
 
-    res.json({
+    return res.json({
       success: true,
       data: transformedBrief,
     })
   } catch (error) {
     logger.error('Failed to get brief', { error, id })
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to retrieve brief',
       code: 'FETCH_FAILED',
     })
@@ -338,7 +336,7 @@ router.get('/', verifySupabaseToken, async (req: AuthenticatedRequest, res: Resp
       })
     }
 
-    res.json({
+    return res.json({
       success: true,
       data,
       pagination: {
@@ -349,7 +347,7 @@ router.get('/', verifySupabaseToken, async (req: AuthenticatedRequest, res: Resp
     })
   } catch (error) {
     logger.error('Failed to list briefs', { error })
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to list briefs',
       code: 'LIST_FAILED',
     })
@@ -402,13 +400,13 @@ router.delete('/:id', verifySupabaseToken, async (req: AuthenticatedRequest, res
       })
     }
 
-    res.json({
+    return res.json({
       success: true,
       message: 'Brief deleted',
     })
   } catch (error) {
     logger.error('Failed to delete brief', { error, id })
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to delete brief',
       code: 'DELETE_FAILED',
     })
