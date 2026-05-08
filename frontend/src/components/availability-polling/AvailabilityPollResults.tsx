@@ -38,8 +38,25 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils'
 
 import { usePollDetails, useClosePoll, useAutoSchedule } from '@/hooks/useAvailabilityPolling'
-import { POLL_STATUS_COLORS } from '@/types/availability-polling.types'
+import {
+  POLL_STATUS_COLORS,
+  type PollDetailsResponse,
+  type AutoScheduleResponse,
+} from '@/types/availability-polling.types'
 import { useDirection } from '@/hooks/useDirection'
+
+// Local typed shim narrowing the stub usePollDetails hook return.
+// Hook surface is owned by 47-07.
+interface PollDetailsHookShim {
+  data: PollDetailsResponse | undefined
+  isLoading: boolean
+  error: unknown
+}
+
+interface PollMutationShim<TArgs, TResult> {
+  mutateAsync: (args: TArgs) => Promise<TResult>
+  isPending: boolean
+}
 
 interface AvailabilityPollResultsProps {
   pollId: string
@@ -54,11 +71,21 @@ export function AvailabilityPollResults({
 }: AvailabilityPollResultsProps) {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? ar : enUS
+  const dateLocale = isRTL ? ar : enUS
 
-  const { data: pollData, isLoading, error } = usePollDetails(pollId)
-  const closePoll = useClosePoll()
-  const autoSchedule = useAutoSchedule()
+  const {
+    data: pollData,
+    isLoading,
+    error,
+  } = usePollDetails(pollId) as unknown as PollDetailsHookShim
+  const closePoll = useClosePoll() as unknown as PollMutationShim<
+    { pollId: string; selectedSlotId?: string },
+    unknown
+  >
+  const autoSchedule = useAutoSchedule() as unknown as PollMutationShim<
+    { pollId: string; slotId?: string },
+    AutoScheduleResponse
+  >
 
   // Calculate response rate
   const responseStats = useMemo(() => {

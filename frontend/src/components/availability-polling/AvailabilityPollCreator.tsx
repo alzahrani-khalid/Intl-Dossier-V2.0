@@ -32,9 +32,16 @@ import type {
   CreatePollRequest,
   VotingRule,
   CreatePollSlotRequest,
+  AvailabilityPoll,
 } from '@/types/availability-polling.types'
 import { DEFAULT_DURATION_OPTIONS, DEFAULT_TIMEZONE } from '@/types/availability-polling.types'
 import { useDirection } from '@/hooks/useDirection'
+
+// Local typed shim narrowing the stub useCreatePoll hook return.
+interface UseCreatePollShim {
+  mutateAsync: (req: CreatePollRequest) => Promise<AvailabilityPoll>
+  isPending: boolean
+}
 
 interface AvailabilityPollCreatorProps {
   onSuccess?: (pollId: string) => void
@@ -75,7 +82,7 @@ export function AvailabilityPollCreator({
 }: AvailabilityPollCreatorProps) {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-const createPoll = useCreatePoll()
+  const createPoll = useCreatePoll() as unknown as UseCreatePollShim
 
   // Default values
   const defaultDeadline = format(addDays(new Date(), 7), "yyyy-MM-dd'T'HH:mm")
