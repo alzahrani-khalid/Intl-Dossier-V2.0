@@ -150,10 +150,10 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 3. The type-check job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single TS error in either workspace fails the merge check on `main`.
 4. Net new `@ts-ignore` / `@ts-expect-error` suppressions added during v6.2 are zero outside documented exceptions; any retained suppression carries an inline reason and an issue/follow-up reference.
 
-**Plans:** 3 plans
+**Plans:** 2/11 plans executed
 
-- [ ] 47-01-frontend-type-fix-PLAN.md — Drive frontend type-check from 1580 to 0 errors (TYPE-01, TYPE-04 frontend half)
-- [ ] 47-02-backend-type-fix-PLAN.md — Drive backend type-check from 498 to 0 errors (TYPE-02, TYPE-04 backend half)
+- [x] 47-01-frontend-type-fix-PLAN.md — Drive frontend type-check from 1580 to 0 errors (TYPE-01, TYPE-04 frontend half)
+- [x] 47-02-backend-type-fix-PLAN.md — Drive backend type-check from 498 to 0 errors (TYPE-02, TYPE-04 backend half)
 - [ ] 47-03-ci-gate-and-branch-protection-PLAN.md — Split type-check into dedicated CI job, set branch protection on main, smoke-test (TYPE-03, TYPE-04 phase reconciliation)
 
 #### Phase 48: Lint & Config Alignment
@@ -203,7 +203,7 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 | 26-32 | v5.0      | —              | Shipped     | 2026-04-18 |
 | 33-43 | v6.0      | —              | Shipped     | 2026-05-06 |
 | 44-46 | v6.1      | 14/14          | Shipped     | 2026-05-08 |
-| 47    | v6.2      | 0/0            | Not started | -          |
+| 47    | v6.2      | 2/11           | In Progress |            |
 | 48    | v6.2      | 0/0            | Not started | -          |
 | 49    | v6.2      | 0/0            | Not started | -          |
 
