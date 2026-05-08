@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v6.1
-milestone_name: Hardening & Reconciliation
-status: between_milestones
-stopped_at: v6.1 milestone archived
-last_updated: '2026-05-08T12:51:04Z'
-last_activity: 2026-05-08 -- v6.1 milestone archived
+milestone: v6.2
+milestone_name: Type-Check, Lint & Bundle Reset
+status: planning
+last_updated: '2026-05-08T16:49:23.752Z'
+last_activity: 2026-05-08
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 14
-  completed_plans: 14
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: 46
-Plan: 4/4 complete
-Status: Milestone complete
-Last activity: 2026-05-08
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-08 — Milestone v6.2 started
 
 ## Next Action
 

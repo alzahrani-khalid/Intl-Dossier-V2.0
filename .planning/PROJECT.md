@@ -29,9 +29,22 @@ Unified intelligence management for diplomatic operations — every relationship
 
 **v6.0 debt closure status:** Phase 44 closed missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006. Phase 45 closed deferred schema/seed work: intelligence digest table + seed rows, VIP person ISO projection, and staging seed-dependent drawer specs. Phase 46 closed visual-regression baselines for Phases 38/40/41 with committed PNGs, human review, and focused CI replay. v6.1 artifacts are archived under `.planning/milestones/v6.1-*`.
 
-## Between Milestones
+## Current Milestone: v6.2 Type-Check, Lint & Bundle Reset
 
-v6.1 is archived. The next candidate is deferred seed `v7.0 Intelligence Engine` at `.planning/seeds/v7.0-intelligence-engine.md`.
+**Goal:** Restore code-quality gates and bundle budget on `main` before v7.0 Intelligence Engine work begins.
+
+**Target features:**
+
+- Type-check zero across frontend (1580 TS errors) + backend (498 TS errors); type-check restored as blocking CI gate
+- Lint zero across frontend (52 errors + 671 warnings) + backend (3 errors); Aceternity references purged from `frontend/eslint.config.js`; `no-restricted-imports` aligned with CLAUDE.md primitive cascade
+- Bundle budget reset (Total JS 2.42 MB gzip → ≤500 KB initial-route proposal); route-split heavy chunks; size-limit gate restored as PR-blocking with a real ceiling
+
+**Key context:**
+
+- All numbers measured fresh on `main` 2026-05-08 — see `.planning/notes/v6.2-rationale.md`
+- Open research question Q1 (`.planning/research/questions.md`): are TS/lint failures auto-suppressed in CI today? — must be answered before Phase 47 plan-phase
+- v7.0 Intelligence Engine deferred — seed trigger updated to "v6.2 ships"
+- Phase numbering continues from v6.1 (last phase 46) → v6.2 starts at phase 47
 
 ## Last Milestone: v6.1 Hardening & Reconciliation
 
@@ -128,7 +141,16 @@ v6.1 is archived. The next candidate is deferred seed `v7.0 Intelligence Engine`
 
 ### Active
 
-- None. v7.0 Intelligence Engine is the next scoped candidate seed.
+- ⏳ Frontend `pnpm type-check` exits 0 with no `// @ts-ignore` / `// @ts-expect-error` regressions added — v6.2 Phase 47
+- ⏳ Backend `pnpm type-check` exits 0 with no suppression escape hatches added — v6.2 Phase 47
+- ⏳ Type-check job restored as blocking CI gate on PRs and `main` builds — v6.2 Phase 47
+- ⏳ Frontend `pnpm lint` exits 0 (52 errors + 671 warnings → 0); `unused-imports` warnings either fixed or rule downgraded with rationale — v6.2 Phase 48
+- ⏳ Backend `pnpm lint` exits 0 (3 errors + 1 warning → 0) — v6.2 Phase 48
+- ⏳ `frontend/eslint.config.js` contains zero references to Aceternity (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` aligned with CLAUDE.md primitive cascade — v6.2 Phase 48
+- ⏳ Lint job restored as blocking CI gate on PRs and `main` builds — v6.2 Phase 48
+- ⏳ `frontend/.size-limit.json` Total JS ceiling lowered from 2.43 MB to a real budget (≤500 KB initial-route proposal) and PR-blocking — v6.2 Phase 49
+- ⏳ Heavy chunks route-split via `React.lazy()` so the initial route loads under the new budget — v6.2 Phase 49
+- ⏳ Vendor super-chunk audited and documented; rationale for any chunk > 100 KB recorded in `.size-limit.json` comments or sibling note — v6.2 Phase 49
 
 ### Out of Scope
 
@@ -214,4 +236,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-08 — v6.1 archived; ready for next milestone_
+_Last updated: 2026-05-08 — v6.2 Type-Check, Lint & Bundle Reset opened (phase numbering 47+)_
