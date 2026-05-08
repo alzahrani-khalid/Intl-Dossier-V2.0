@@ -27,7 +27,7 @@
 **Tech debt (see audit for details):**
 
 - Backfilled VERIFICATION.md files now exist for phases 33, 34, 36, 37, 39, and 40; Phase 44 final audit reports `phases_missing_verification: []` and `requirements_partial_verification_gap: 0`
-- Visual-regression baselines pending operator action for Phases 38, 40, 41 (Doppler env + `--update-snapshots` on seeded dev machine)
+- Visual-regression baselines for Phases 38, 40, and 41 were regenerated and human-reviewed in Phase 46 (`.planning/phases/46-visual-baseline-regeneration/46-VALIDATION.md`)
 - Schema/seed work deferred: `intelligence_digest` table (DIGEST-SOURCE-COMPROMISE), VIP person ISO join in RPC, `060-dashboard-demo.sql` seed for 4 BLOCKED-BY-SEED specs
 - size-limit budget gate repaired with current measured Vite output budgets in `frontend/.size-limit.json`; the historical 815 KB ceiling remains aspirational, not the enforced gate
 - Phase 43 WR-02..WR-06 source/lint/browser closure is recorded in Phase 44 summaries and final audit

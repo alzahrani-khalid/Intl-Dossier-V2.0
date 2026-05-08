@@ -52,10 +52,10 @@ Requirements for this milestone. Every requirement maps to exactly one roadmap p
 
 ### Visual Baseline Regeneration (VIS)
 
-- [ ] **VIS-01**: Eight Phase 38 widget visual baselines (KpiStrip, WeekAhead, OverdueCommitments, Digest, SlaHealth, VipVisits, MyTasks, RecentDossiers) are regenerated via `doppler run -- pnpm --filter frontend exec playwright test dashboard-widgets --update-snapshots` and committed; the corresponding CI visual-regression job exits 0 (DASH-VISUAL-BLOCKED + DASH-VISUAL-REVIEW closed)
-- [ ] **VIS-02**: Fourteen Phase 40 list-page visual baselines (7 pages × EN + AR) are regenerated via `doppler run -- pnpm --filter frontend exec playwright test list-pages-* --update-snapshots` and committed; CI visual-regression for list pages exits 0
-- [ ] **VIS-03**: Two Phase 41 dossier-drawer visual baselines are regenerated post-token-darkening (`--accent-fg` 4.38 → 5.28; `inkFaint` 3.14 → 5.07) and committed; the dossier-drawer visual spec exits 0
-- [ ] **VIS-04**: A reviewer documents the human-eyeball pass for the regenerated baselines in `.planning/phases/46-*/VALIDATION.md` (or equivalent), naming each new baseline file and confirming the rendering matches the handoff reference
+- [x] **VIS-01**: Eight Phase 38 widget visual baselines (KpiStrip, WeekAhead, OverdueCommitments, Digest, SlaHealth, VipVisits, MyTasks, RecentDossiers) are regenerated via `doppler run -- pnpm --filter frontend exec playwright test dashboard-widgets --update-snapshots` and committed; the corresponding CI visual-regression job exits 0 (DASH-VISUAL-BLOCKED + DASH-VISUAL-REVIEW closed)
+- [x] **VIS-02**: Fourteen Phase 40 list-page visual baselines (7 pages × EN + AR) are regenerated via `doppler run -- pnpm --filter frontend exec playwright test list-pages-* --update-snapshots` and committed; CI visual-regression for list pages exits 0
+- [x] **VIS-03**: Two Phase 41 dossier-drawer visual baselines are regenerated post-token-darkening (`--accent-fg` 4.38 → 5.28; `inkFaint` 3.14 → 5.07) and committed; the dossier-drawer visual spec exits 0
+- [x] **VIS-04**: A reviewer documents the human-eyeball pass for the regenerated baselines in `.planning/phases/46-*/VALIDATION.md` (or equivalent), naming each new baseline file and confirming the rendering matches the handoff reference
 
 ---
 
@@ -110,9 +110,9 @@ Explicit exclusions for v6.1 (with reasoning):
 | DATA-02  | Phase 45 | 45-VERIFICATION.md |
 | DATA-03  | Phase 45 | 45-VERIFICATION.md |
 | DATA-04  | Phase 45 | 45-VERIFICATION.md |
-| VIS-01   | Phase 46 | TBD                |
-| VIS-02   | Phase 46 | TBD                |
-| VIS-03   | Phase 46 | TBD                |
-| VIS-04   | Phase 46 | TBD                |
+| VIS-01   | Phase 46 | 46-VALIDATION.md   |
+| VIS-02   | Phase 46 | 46-VALIDATION.md   |
+| VIS-03   | Phase 46 | 46-VALIDATION.md   |
+| VIS-04   | Phase 46 | 46-VALIDATION.md   |
 
 _Phase column populated by `gsd-roadmapper` 2026-05-07. VERIFICATION column populated per-phase by `gsd-verify-phase` after each phase completes._

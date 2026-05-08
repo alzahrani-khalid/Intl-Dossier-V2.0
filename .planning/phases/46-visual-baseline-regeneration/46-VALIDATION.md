@@ -1,7 +1,7 @@
 ---
 phase: 46
 slug: visual-baseline-regeneration
-status: draft
+status: complete
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-05-08
@@ -31,13 +31,13 @@ created: 2026-05-08
 
 ## Per-Task Verification Map
 
-| Task ID  | Plan | Wave | Requirement                    | Threat Ref | Secure Behavior                                                           | Test Type | Automated Command                                                                                                                                                                                                                                                   | File Exists                | Status                                                                                                              |
-| -------- | ---- | ---- | ------------------------------ | ---------- | ------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---- | ---- |
-| 46-01-01 | 01   | 1    | VIS-01                         | T-46-01    | Widget baselines are tied to stable locators, not fragile layout position | source    | `rg "dashboard-widget-kpi-strip                                                                                                                                                                                                                                     | chromium-dashboard-widgets | **snapshots**/dashboard-widgets" frontend/tests/e2e/dashboard-widgets-visual.spec.ts frontend/playwright.config.ts` | PASS | DONE |
-| 46-01-02 | 01   | 1    | VIS-01, VIS-04                 | T-46-02    | Dashboard widget snapshots come from seeded staging data                  | visual    | `doppler run -- pnpm -C frontend exec playwright test dashboard-widgets --project=chromium-dashboard-widgets`                                                                                                                                                       | PASS                       | DONE                                                                                                                |
-| 46-02-01 | 02   | 1    | VIS-02, VIS-04                 | T-46-03    | List-page visual snapshots use the Phase 40 deterministic spec            | visual    | `doppler run -- pnpm -C frontend exec playwright test list-pages-visual.spec.ts --project=chromium`                                                                                                                                                                 | PASS                       | DONE                                                                                                                |
-| 46-03-01 | 03   | 1    | VIS-03, VIS-04                 | T-46-04    | Drawer snapshots reflect post-token-darkening contrast                    | visual    | `doppler run -- pnpm -C frontend exec playwright test dossier-drawer-visual.spec.ts --project=chromium`                                                                                                                                                             | PASS                       | DONE                                                                                                                |
-| 46-04-01 | 04   | 2    | VIS-01, VIS-02, VIS-03, VIS-04 | T-46-05    | CI/no-update replay catches uncommitted or stale baselines                | visual    | `CI=true doppler run -- pnpm -C frontend exec playwright test dashboard-widgets --project=chromium-dashboard-widgets` and `CI=true doppler run -- pnpm -C frontend exec playwright test list-pages-visual.spec.ts dossier-drawer-visual.spec.ts --project=chromium` | PASS                       | IN PROGRESS                                                                                                         |
+| Task ID  | Plan | Wave | Requirement                    | Threat Ref | Secure Behavior                                                           | Test Type | Automated Command                                                                                                                                                                                                                                                   | Status | State |
+| -------- | ---- | ---- | ------------------------------ | ---------- | ------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----- |
+| 46-01-01 | 01   | 1    | VIS-01                         | T-46-01    | Widget baselines are tied to stable locators, not fragile layout position | source    | `rg "dashboard-widget-kpi-strip" frontend/tests/e2e/dashboard-widgets-visual.spec.ts` and `rg "dashboard-widgets" frontend/playwright.config.ts`                                                                                                                    | PASS   | DONE  |
+| 46-01-02 | 01   | 1    | VIS-01, VIS-04                 | T-46-02    | Dashboard widget snapshots come from seeded staging data                  | visual    | `doppler run -- pnpm -C frontend exec playwright test dashboard-widgets --project=chromium-dashboard-widgets`                                                                                                                                                       | PASS   | DONE  |
+| 46-02-01 | 02   | 1    | VIS-02, VIS-04                 | T-46-03    | List-page visual snapshots use the Phase 40 deterministic spec            | visual    | `doppler run -- pnpm -C frontend exec playwright test list-pages-visual.spec.ts --project=chromium`                                                                                                                                                                 | PASS   | DONE  |
+| 46-03-01 | 03   | 1    | VIS-03, VIS-04                 | T-46-04    | Drawer snapshots reflect post-token-darkening contrast                    | visual    | `doppler run -- pnpm -C frontend exec playwright test dossier-drawer-visual.spec.ts --project=chromium`                                                                                                                                                             | PASS   | DONE  |
+| 46-04-01 | 04   | 2    | VIS-01, VIS-02, VIS-03, VIS-04 | T-46-05    | CI/no-update replay catches uncommitted or stale baselines                | visual    | `CI=true doppler run -- pnpm -C frontend exec playwright test dashboard-widgets --project=chromium-dashboard-widgets` and `CI=true doppler run -- pnpm -C frontend exec playwright test list-pages-visual.spec.ts dossier-drawer-visual.spec.ts --project=chromium` | PASS   | DONE  |
 
 ## Baseline Inventory And Human Review Log
 
@@ -83,10 +83,10 @@ path with the exact file that was committed.
 
 ## Validation Sign-Off
 
-- [ ] 8 dashboard widget baselines generated and committed.
-- [ ] 14 list-page baselines regenerated and committed.
-- [ ] 2 drawer baselines regenerated and committed.
-- [ ] All 24 baseline rows have human review results.
-- [ ] No-update Playwright replay passes.
-- [ ] Focused CI visual job or equivalent `CI=true` replay passes.
-- [ ] `nyquist_compliant: true` set in frontmatter.
+- [x] 8 dashboard widget baselines generated and committed.
+- [x] 14 list-page baselines regenerated and committed.
+- [x] 2 drawer baselines regenerated and committed.
+- [x] All 24 baseline rows have human review results.
+- [x] No-update Playwright replay passes.
+- [x] Focused CI visual job or equivalent `CI=true` replay passes.
+- [x] `nyquist_compliant: true` set in frontmatter.
