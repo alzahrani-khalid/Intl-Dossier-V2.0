@@ -26,6 +26,7 @@ key-files:
     - frontend/tests/e2e/__snapshots__/dashboard-widgets/my-tasks.png
     - frontend/tests/e2e/__snapshots__/dashboard-widgets/recent-dossiers.png
   modified:
+    - frontend/src/pages/Dashboard/index.tsx
     - frontend/playwright.config.ts
     - frontend/src/pages/Dashboard/widgets/KpiStrip.tsx
     - frontend/src/pages/Dashboard/widgets/WeekAhead.tsx
@@ -62,16 +63,19 @@ completed: 2026-05-08
 
 - Added `chromium-dashboard-widgets` to `frontend/playwright.config.ts` with a dedicated `__snapshots__/dashboard-widgets` path template.
 - Added stable dashboard widget `data-testid` roots and a new `dashboard-widgets-visual.spec.ts` matrix for all eight VIS-01 widgets.
+- Rendered the Digest widget in the dashboard layout so the committed digest baseline replays from a clean checkout.
 - Regenerated and committed eight dashboard widget PNG baselines, including non-empty WeekAhead and VipVisits rows backed by staging seed data.
 
 ## Task Commits
 
 1. **Task 46-01-01: Add dashboard widget visual target** - `06f4ba0c`
 2. **Task 46-01-02: Generate and verify eight dashboard widget baselines** - `7f56f4cf`
+3. **Follow-up: Render digest dashboard widget** - `9eace5fd`
 
 ## Files Created/Modified
 
 - `frontend/playwright.config.ts` - Added `chromium-dashboard-widgets` and excluded the new spec from default `chromium`.
+- `frontend/src/pages/Dashboard/index.tsx` - Added the Digest widget to the rendered dashboard layout for VIS-01 capture.
 - `frontend/tests/e2e/dashboard-widgets-visual.spec.ts` - Captures eight widget-level screenshots with deterministic setup and content readiness checks.
 - `frontend/src/pages/Dashboard/widgets/*.tsx` - Added stable widget root selectors.
 - `frontend/tests/e2e/__snapshots__/dashboard-widgets/*.png` - Eight committed VIS-01 baselines.
@@ -104,9 +108,18 @@ completed: 2026-05-08
 - **Verification:** `doppler run -- pnpm -C frontend exec playwright test dashboard-widgets --project=chromium-dashboard-widgets`
 - **Committed in:** `7f56f4cf`
 
+**3. [Rule 3 - Blocking] Rendered Digest in dashboard layout**
+
+- **Found during:** Plan 46-02 pre-commit review of the 46-01 working tree.
+- **Issue:** The dashboard digest baseline depended on the Digest widget being present in `/dashboard`, but `frontend/src/pages/Dashboard/index.tsx` had not been included in the original 46-01 commits.
+- **Fix:** Added `<Digest />` to the dashboard right column and committed it separately.
+- **Files modified:** `frontend/src/pages/Dashboard/index.tsx`
+- **Verification:** Pre-commit build passed; dashboard visual replay remains part of final Plan 46-04 no-update verification.
+- **Committed in:** `9eace5fd`
+
 ---
 
-**Total deviations:** 2 auto-fixed (2 blocking).
+**Total deviations:** 3 auto-fixed (3 blocking).
 **Impact on plan:** Both fixes protect VIS-01 from false empty baselines. No mock UI data was added.
 
 ## Issues Encountered
