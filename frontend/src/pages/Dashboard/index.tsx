@@ -5,6 +5,7 @@ import {
   KpiStrip,
   WeekAhead,
   OverdueCommitments,
+  Digest,
   SlaHealth,
   VipVisits,
   MyTasks,
@@ -26,6 +27,7 @@ export function Dashboard(): ReactElement {
         ]}
         right={[
           <SlaHealth key="sh" />,
+          <Digest key="dg" />,
           <ForumsStrip key="fs" />,
           <VipVisits key="vv" />,
           <MyTasks key="mt" />,
