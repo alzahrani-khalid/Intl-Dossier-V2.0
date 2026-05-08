@@ -12,11 +12,12 @@ Unified intelligence management for diplomatic operations — every relationship
 
 **Shipped:** v6.0 Design System Adoption (2026-05-06) — 11 phases, 121 plans, 52/52 requirements satisfied (25 fully verified + 27 covered by SUMMARY frontmatter and Phase 43 cross-phase QA sweep), audit status `tech_debt` (no critical blockers).
 
-**In progress:** v6.1 Hardening & Reconciliation — Phases 44 and 45 complete (verification/toolchain/docs reconciliation, schema and staging seed closure). Next: Phase 46 Visual Baseline Regeneration.
+**Shipped:** v6.1 Hardening & Reconciliation (2026-05-08) — Phases 44-46 complete. Closed v6.0 documentation/toolchain drift, schema and staging seed gaps, and deferred visual-regression baselines for Phases 38, 40, and 41.
 
 <details>
 <summary>Shipped milestones</summary>
 
+- v6.1 Hardening & Reconciliation (2026-05-08): v6.0 verification backfill, archive sync, size-limit CI gate repair, WR-02..WR-06 closure, Storybook deferral ADR, intelligence digest schema/seed closure, VIP ISO projection, and visual baseline regeneration for Phases 38/40/41
 - v6.0 Design System Adoption (2026-05-06): OKLCH token engine (4 directions × mode × hue × density), Tweaks drawer, self-hosted typography stack, new shell chrome, signature visual primitives, verbatim dashboard, kanban + calendar reskin, 7 list pages, 720px dossier drawer, 5 remaining pages reskinned, hard cross-phase QA gate (axe + responsive + keyboard + focus-outline) — see `.planning/milestones/v6.0-ROADMAP.md` and `.planning/milestones/v6.0-MILESTONE-AUDIT.md`
 - v5.0 Dossier Creation UX (2026-04-18): 8 per-type creation wizards, unified `CreateDossierHub`, legacy wizard removed, person-native identity refactor
 - v4.1 Post-Launch Fixes (2026-04-12): 87-finding audit, semantic colors, PageHeader unification, 100% Arabic parity
@@ -26,9 +27,9 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-**Remaining tech debt carried from v6.0:** visual-regression baselines pending operator action for Phases 38/40/41. Phase 44 closed the missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006. Phase 45 closed the deferred schema/seed work: intelligence digest table + seed rows, VIP person ISO projection, and staging seed-dependent drawer specs.
+**v6.0 debt closure status:** Phase 44 closed missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006. Phase 45 closed deferred schema/seed work: intelligence digest table + seed rows, VIP person ISO projection, and staging seed-dependent drawer specs. Phase 46 closed visual-regression baselines for Phases 38/40/41 with committed PNGs, human review, and focused CI replay.
 
-## Current Milestone: v6.1 Hardening & Reconciliation
+## Current Milestone: v6.1 Hardening & Reconciliation (Complete)
 
 **Goal:** Close v6.0 tech debt — verification, baselines, schema, anti-patterns — before scoping v7.0 feature work.
 
@@ -47,11 +48,14 @@ Unified intelligence management for diplomatic operations — every relationship
 - Applied Phase 45 migrations to staging project `zkrcjzdemdmwhearhfgg` through MCP and verified seeded rows with MCP SQL
 - Passed Phase 41 seed-dependent dossier drawer Playwright specs
 
-**Remaining target features:**
+**Completed in Phase 46:**
 
-- Regenerate visual baselines for Phases 38, 40, 41 via `--update-snapshots` on a seeded dev machine
+- Regenerated 8 dashboard widget baselines, 14 list-page baselines, and 2 dossier-drawer baselines
+- Completed the 24-row human review log in `.planning/phases/46-visual-baseline-regeneration/46-VALIDATION.md`
+- Added focused Phase 46 visual regression replay to `.github/workflows/e2e.yml`
+- Closed VIS-01..04 in REQUIREMENTS, ROADMAP, MILESTONES, and the v6.0 audit
 
-**Key context:** Sourced from `.planning/milestones/v6.0-MILESTONE-AUDIT.md` §6 Tech Debt Inventory + §8 Recommendation, plus the /gsd-explore session captured in `.planning/notes/v6.1-rationale.md`. Audit recommended this scope as a "small surgical phase early in v7.0"; promoting to its own micro-milestone (v6.1) gives a clean ship line before v7.0 feature scoping. Deferred candidate `v7.0 Intelligence Engine` lives at `.planning/seeds/v7.0-intelligence-engine.md` — trigger condition: v6.1 ships.
+**Next candidate:** Deferred seed `v7.0 Intelligence Engine` lives at `.planning/seeds/v7.0-intelligence-engine.md`. Its trigger condition is now met: v6.1 has shipped.
 
 ## Requirements
 
@@ -118,10 +122,11 @@ Unified intelligence management for diplomatic operations — every relationship
 - ✓ Hard cross-phase QA gate: zero `eslint-plugin-rtl-friendly` violations, axe-core 30/30, responsive 60/60, keyboard 26 + 4 acknowledged-skip, focus-outline 8/8, `docs/rtl-icons.md` — v6.0 Phase 43 (QA-01..04)
 - ✓ v6.1 documentation/toolchain reconciliation: v6.0 verification backfill, archive sync, size-limit CI gate repair, WR-02..WR-06 closure, Storybook deferral ADR — v6.1 Phase 44 (DOC-01..08, TOOL-01..03, LINT-01..05, STORY-01)
 - ✓ v6.1 schema and seed closure: intelligence_digest, dashboard digest hook, VIP ISO join, staging MCP apply, and seed-dependent drawer specs — v6.1 Phase 45 (DATA-01..04)
+- ✓ v6.1 visual baseline regeneration: Phase 38 widget baselines, Phase 40 EN/AR list-page baselines, Phase 41 drawer baselines, human review, and focused CI replay — v6.1 Phase 46 (VIS-01..04)
 
 ### Active
 
-- Phase 46 Visual Baseline Regeneration — VIS-01..04 (Phase 38 widgets, Phase 40 list pages, Phase 41 drawer baselines, human-eyeball validation)
+- None. v7.0 Intelligence Engine is the next scoped candidate seed.
 
 ### Out of Scope
 
@@ -183,8 +188,8 @@ Unified intelligence management for diplomatic operations — every relationship
 | Phase 43 as cross-phase QA gate       | Final phase enforces lint + axe + responsive + keyboard + focus-outline across all v6.0 routes — not per-phase       | ✓ Good (v6.0) |
 | Playwright globalSetup + storageState | Replaces brittle per-test login helper; eliminates Class D login-form bleed-through across qa-sweep specs            | ✓ Good (v6.0) |
 | `.touch-44` utility + 7 call-sites    | Single CSS class with logical `min-inline-size`/`min-block-size`; applied to existing components without refactoring | ✓ Good (v6.0) |
-| 6 phases ship without VERIFICATION.md | Phase 43 cross-phase sweep covers them indirectly; per-phase backfill deferred as tech debt                          | ⚠️ Revisit    |
-| Visual baselines deferred to operator | Sandboxed worktrees lack `pnpm dev` + Doppler env; baselines regenerated on dev machine + committed                  | ⚠️ Revisit    |
+| 6 phases ship without VERIFICATION.md | Phase 43 cross-phase sweep covered them indirectly; Phase 44 backfilled explicit verification                        | ✓ Closed      |
+| Visual baselines deferred to operator | Phase 46 regenerated and committed baselines on a seeded dev machine with human review and CI replay                 | ✓ Closed      |
 
 ## Evolution
 
@@ -207,4 +212,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-08 — Phase 45 complete; v6.1 remaining scope is VIS closure_
+_Last updated: 2026-05-08 — Phase 46 complete; v6.1 shipped_
