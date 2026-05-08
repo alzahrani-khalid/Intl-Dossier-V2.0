@@ -170,15 +170,3 @@ export interface ResponsiveDataGridProps {
   className?: string
 }
 
-function ResponsiveDataGrid({ children, className }: ResponsiveDataGridProps) {
-  const { viewport } = useResponsive()
-
-  const gridClasses = {
-    mobile: 'grid-cols-1',
-    tablet: 'grid-cols-2 lg:grid-cols-3',
-    desktop: 'grid-cols-3 xl:grid-cols-4',
-    wide: 'grid-cols-4 2xl:grid-cols-5',
-  }
-
-  return <div className={cn('grid gap-4', gridClasses[viewport], className)}>{children}</div>
-}

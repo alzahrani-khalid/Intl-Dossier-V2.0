@@ -71,9 +71,3 @@ export function useGlobalKeyboard({ onCreateNew, enabled = true }: GlobalKeyboar
   }, [handleKeyDown, enabled])
 }
 
-/**
- * Get keyboard shortcut display text
- */
-function getShortcutText(): string {
-  return isMac() ? '⌘K' : 'Ctrl+K'
-}

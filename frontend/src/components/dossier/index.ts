@@ -48,19 +48,6 @@ export { DossierLinksWidget, type DossierLinksWidgetProps } from './DossierLinks
 // Mini Relationship Graph Widget (Sidebar widget showing 1-degree connections)
 export { MiniRelationshipGraph, type MiniRelationshipGraphProps } from './MiniRelationshipGraph'
 
-// Pre-wrapped components with error boundaries
-import { withDossierErrorBoundary } from './DossierErrorBoundary'
-import { DossierSelector as _DossierSelector } from './DossierSelector'
-import { DossierActivityTimeline as _DossierActivityTimeline } from './DossierActivityTimeline'
-
-const SafeDossierSelector = withDossierErrorBoundary(_DossierSelector, {
-  componentType: 'selector',
-})
-
-const SafeDossierActivityTimeline = withDossierErrorBoundary(_DossierActivityTimeline, {
-  componentType: 'timeline',
-})
-
 // Dossier Type Guide (contextual help for dossier types)
 export {
   DossierTypeGuide,

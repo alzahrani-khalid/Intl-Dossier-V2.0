@@ -138,7 +138,6 @@ const EnhancedDossierNode = memo(
     }
     selected?: boolean
   }) => {
-    const { t } = useTranslation()
     const { isRTL } = useDirection()
 const name = isRTL ? data.name_ar : data.name_en
 

@@ -82,7 +82,6 @@ const typeIcons: Record<RecommendationType, React.ComponentType<{ className?: st
 // ============================================================================
 
 function UrgencyBadge({ urgency }: { urgency: RecommendationUrgency }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const label = URGENCY_LABELS[urgency]
 
@@ -102,7 +101,6 @@ const label = URGENCY_LABELS[urgency]
 }
 
 function TypeBadge({ type }: { type: RecommendationType }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
   const label = RECOMMENDATION_TYPE_LABELS[type]
   const Icon = typeIcons[type]
@@ -167,7 +165,6 @@ function ConfidenceIndicator({ score }: { score: number }) {
 }
 
 function OptimalTimingBadge({ startDate, endDate }: { startDate?: string; endDate?: string }) {
-  const { t } = useTranslation('engagement-recommendations')
   const { isRTL } = useDirection()
 
   if (!startDate && !endDate) return null

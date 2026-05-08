@@ -9,7 +9,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { useDirection } from '@/hooks/useDirection'
 
 // ============================================================================
 // Base Types
@@ -31,7 +30,6 @@ interface BaseSkeletonProps {
  * Skeleton for a work item / task card
  */
 export function WorkItemSkeleton({ className }: BaseSkeletonProps) {
-  const { isRTL } = useDirection()
   return (
     <Card className={cn('overflow-hidden', className)}>
       <CardContent className="p-4">
@@ -62,7 +60,6 @@ export function WorkItemSkeleton({ className }: BaseSkeletonProps) {
  * Skeleton for a list of work items
  */
 export function WorkItemListSkeleton({ count = 5, className }: BaseSkeletonProps) {
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('space-y-3', className)}>
@@ -77,7 +74,6 @@ export function WorkItemListSkeleton({ count = 5, className }: BaseSkeletonProps
  * Skeleton for a person/contact card
  */
 export function PersonCardSkeleton({ className }: BaseSkeletonProps) {
-  const { isRTL } = useDirection()
 
   return (
     <Card className={cn('overflow-hidden', className)}>
@@ -130,7 +126,6 @@ export function TableSkeleton({
   showHeader = true,
   className,
 }: BaseSkeletonProps & { rows?: number; columns?: number; showHeader?: boolean }) {
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('rounded-lg border overflow-hidden', className)}>
@@ -161,7 +156,6 @@ export function TableSkeleton({
  * Skeleton for a metric/KPI card
  */
 export function MetricCardSkeleton({ className }: BaseSkeletonProps) {
-  const { isRTL } = useDirection()
 
   return (
     <Card className={cn('overflow-hidden', className)}>
@@ -190,7 +184,6 @@ export function MetricsGridSkeleton({
   columns = 4,
   className,
 }: BaseSkeletonProps & { columns?: number }) {
-  const { isRTL } = useDirection()
 
   const gridCols =
     {
@@ -215,7 +208,6 @@ export function ChartSkeleton({
   className,
   height = 'h-64 sm:h-80',
 }: BaseSkeletonProps & { height?: string }) {
-  const { isRTL } = useDirection()
 
   return (
     <Card className={cn('overflow-hidden', className)}>
@@ -256,7 +248,6 @@ export function ChartSkeleton({
  * Skeleton for a timeline item
  */
 export function TimelineItemSkeleton({ className }: BaseSkeletonProps) {
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('flex gap-4', className)}>
@@ -282,7 +273,6 @@ export function TimelineItemSkeleton({ className }: BaseSkeletonProps) {
  * Skeleton for a timeline
  */
 export function TimelineSkeleton({ count = 5, className }: BaseSkeletonProps) {
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('', className)}>
@@ -318,7 +308,6 @@ export function FormSkeleton({
   showSubmit = true,
   className,
 }: BaseSkeletonProps & { fields?: number; columns?: number; showSubmit?: boolean }) {
-  const { isRTL } = useDirection()
 
   const gridCols =
     {
@@ -352,7 +341,6 @@ export function FormSkeleton({
  * Skeleton for a detail page header
  */
 export function DetailHeaderSkeleton({ className }: BaseSkeletonProps) {
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('space-y-4', className)}>
@@ -387,7 +375,6 @@ export function TabbedContentSkeleton({
   tabs = 4,
   className,
 }: BaseSkeletonProps & { tabs?: number }) {
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('space-y-6', className)}>
@@ -465,7 +452,6 @@ export function KanbanBoardSkeleton({
   cardsPerColumn = 4,
   className,
 }: BaseSkeletonProps & { columns?: number; cardsPerColumn?: number }) {
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('flex gap-4 overflow-x-auto scrollbar-thin pb-4', className)}>
@@ -484,7 +470,6 @@ export function KanbanBoardSkeleton({
  * Skeleton for a calendar grid
  */
 export function CalendarSkeleton({ className }: BaseSkeletonProps) {
-  const { isRTL } = useDirection()
 
   return (
     <Card className={cn('overflow-hidden', className)}>
@@ -526,7 +511,6 @@ export function NetworkGraphSkeleton({
   className,
   height = 'h-96',
 }: BaseSkeletonProps & { height?: string }) {
-  const { isRTL } = useDirection()
 
   return (
     <Card className={cn('overflow-hidden', className)}>

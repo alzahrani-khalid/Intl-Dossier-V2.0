@@ -444,7 +444,6 @@ function Subtopics({ dossierId }: { dossierId: string }) {
  */
 export function TopicDossierDetail({ dossier }: TopicDossierDetailProps) {
   const { t } = useTranslation('dossier')
-  const { isRTL } = useDirection()
 
   // Session storage for section collapse state
   const [policyOpen, setPolicyOpen] = useSessionStorage(`topic-${dossier.id}-policy-open`, true)

@@ -1094,7 +1094,6 @@ export function AddToDossierDialogs({
   onClose,
   dossierContext,
 }: AddToDossierDialogsProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const commonProps = {
     dossier,

@@ -178,20 +178,3 @@ export function CountryMapImage({
   )
 }
 
-/**
- * Lightweight version without loading states (for lists/grids)
- */
-function CountryMapImageSimple({
-  countryCode,
-  className,
-  size = 'sm',
-}: Pick<CountryMapImageProps, 'countryCode' | 'className' | 'size'>) {
-  return (
-    <CountryMapImage
-      countryCode={countryCode}
-      className={className}
-      size={size}
-      showLoading={false}
-    />
-  )
-}

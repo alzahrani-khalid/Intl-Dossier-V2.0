@@ -108,7 +108,6 @@ export function ContextualHelp({
   className,
   children,
 }: ContextualHelpProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 // Suppress unused variable warning
   void _position
@@ -359,7 +358,6 @@ export function FieldLabelWithHelp({
   htmlFor,
 }: FieldLabelWithHelpProps) {
   const { t } = useTranslation()
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('flex items-center gap-1.5', className)}>

@@ -106,12 +106,10 @@ const BannerLock = memo(function BannerLock({
   lockedBy,
   sectionName,
   showAvatar,
-  isRTL,
 }: {
   lockedBy: DossierPresenceUser
   sectionName?: string
   showAvatar: boolean
-  isRTL: boolean
 }) {
   const { t } = useTranslation('collaboration')
 
@@ -252,7 +250,6 @@ const [showForceEditDialog, setShowForceEditDialog] = useState(false)
             lockedBy={lockedBy}
             sectionName={sectionName}
             showAvatar={showAvatar}
-            isRTL={isRTL}
           />
         )}
 

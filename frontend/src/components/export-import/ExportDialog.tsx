@@ -41,8 +41,7 @@ export function ExportDialog({
   selectedIds,
   onExportComplete,
 }: ExportDialogProps) {
-  const { t, i18n } = useTranslation('export-import')
-  const isRTL = i18n.language === 'ar'
+  const { t } = useTranslation('export-import')
 
   const [format, setFormat] = useState<ExportFormat>('xlsx')
   const [language, setLanguage] = useState<'en' | 'ar' | 'both'>('both')

@@ -199,10 +199,8 @@ function EventCard({
  */
 function EmptyState({
   type,
-  isRTL,
 }: {
   type?: 'upcoming' | 'today' | 'past' | 'all'
-  isRTL: boolean
 }) {
   const { t } = useTranslation('dossier-overview')
 
@@ -233,7 +231,7 @@ function EventList({
   emptyType?: 'upcoming' | 'today' | 'past' | 'all'
 }) {
   if (events.length === 0) {
-    return <EmptyState type={emptyType} isRTL={isRTL} />
+    return <EmptyState type={emptyType} />
   }
 
   return (
@@ -288,7 +286,7 @@ export function CalendarEventsSection({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">
-          <EmptyState type="all" isRTL={isRTL} />
+          <EmptyState type="all" />
         </CardContent>
       </Card>
     )

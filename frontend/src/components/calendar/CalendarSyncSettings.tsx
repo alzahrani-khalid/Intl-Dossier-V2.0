@@ -57,6 +57,39 @@ import type {
   CalendarSyncConflict,
   ICalFeedSubscription,
 } from '@/types/calendar-sync.types'
+
+// Local typed shim narrowing the stub useCalendarSync hook return.
+// Stub source: frontend/src/domains/briefings/hooks/useCalendarSync.ts (returns
+// UseQueryResult<unknown>); shim keeps the consumer type-clean without editing
+// the hook (47-07's surface).
+interface CalendarSyncShim {
+  connections: ExternalCalendarConnection[]
+  isLoadingConnections: boolean
+  conflicts: CalendarSyncConflict[]
+  icalSubscriptions: ICalFeedSubscription[]
+  connectProvider: (provider: ExternalCalendarProvider, redirectUri: string) => Promise<void>
+  isConnecting: boolean
+  disconnectProvider: (id: string) => Promise<void> | void
+  updateConnection: (id: string, updates: Record<string, unknown>) => Promise<void> | void
+  triggerSync: (params: { connection_id: string }) => Promise<void> | void
+  isSyncing: boolean
+  resolveConflict: (params: { conflict_id: string; resolution: string }) => Promise<void> | void
+  isResolvingConflict: boolean
+  addICalFeed: (feed: Record<string, unknown>) => Promise<void> | void
+  isAddingIcal: boolean
+  updateICalFeed: (id: string, updates: Record<string, unknown>) => Promise<void> | void
+  removeICalFeed: (id: string) => Promise<void> | void
+  refreshICalFeed: (id: string) => Promise<void> | void
+  isRefreshingIcal: boolean
+}
+
+interface ExternalCalendarShape {
+  id: string
+  name: string
+  is_primary?: boolean
+  color?: string
+  sync_enabled?: boolean
+}
 import {
   CALENDAR_PROVIDERS,
   SYNC_DIRECTION_OPTIONS,
@@ -142,7 +175,12 @@ function ConnectionCard({
   const [isExpanded, setIsExpanded] = useState(false)
   const [showDisconnectDialog, setShowDisconnectDialog] = useState(false)
 
-  const { data: calendars } = useExternalCalendars(isExpanded ? connection.id : undefined)
+  // Stub hook signature is `(): UseQueryResult<unknown>` (no params); we discard
+  // the (connectionId, isExpanded) intent since the stub has no use for it (47-07's surface).
+  void (isExpanded ? connection.id : undefined)
+  const { data: calendars } = useExternalCalendars() as unknown as {
+    data: ExternalCalendarShape[] | undefined
+  }
 
   const providerConfig = CALENDAR_PROVIDERS[connection.provider]
 
@@ -385,7 +423,6 @@ function ConnectProviderDialog({
   isConnecting,
 }: ConnectProviderDialogProps) {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
 
   const providers: ExternalCalendarProvider[] = ['google_calendar', 'outlook', 'exchange']
 
@@ -439,7 +476,6 @@ interface ICalFeedDialogProps {
 
 function ICalFeedDialog({ open, onOpenChange, onAdd, isAdding }: ICalFeedDialogProps) {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
   const [feedUrl, setFeedUrl] = useState('')
   const [feedName, setFeedName] = useState('')
   const [color, setColor] = useState('#3B82F6')
@@ -528,7 +564,6 @@ function ICalSubscriptionCard({
   isRefreshing,
 }: ICalSubscriptionCardProps) {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
 
   return (
     <Card className="w-full">
@@ -663,7 +698,6 @@ function ConflictCard({ conflict, onResolve, isResolving }: ConflictCardProps) {
 
 export function CalendarSyncSettings() {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
 
   const [showConnectDialog, setShowConnectDialog] = useState(false)
   const [showICalDialog, setShowICalDialog] = useState(false)
@@ -687,7 +721,7 @@ export function CalendarSyncSettings() {
     removeICalFeed,
     refreshICalFeed,
     isRefreshingIcal,
-  } = useCalendarSync()
+  } = useCalendarSync() as unknown as CalendarSyncShim
 
   const handleConnect = async (provider: ExternalCalendarProvider) => {
     const redirectUri = `${window.location.origin}/settings/calendar/callback`

@@ -169,8 +169,6 @@ export function ErrorWithSuggestion({
   recoveryAction,
   className,
 }: ErrorWithSuggestionProps) {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
 const message = getErrorMessage(error)
 
   if (!message) return null
@@ -415,7 +413,6 @@ export function ToastError({
   autoDismiss = 5000,
   severity = 'error',
 }: ToastErrorProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 
   const styles = getSeverityStyles(severity)

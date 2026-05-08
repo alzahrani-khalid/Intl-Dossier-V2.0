@@ -952,16 +952,6 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   }, [isCommandPaletteOpen])
 
   // Get category label
-  const getCategoryLabel = (category: string): string => {
-    const labels: Record<string, string> = {
-      navigation: t('categories.navigation', 'Navigation'),
-      actions: t('categories.actions', 'Actions'),
-      editing: t('categories.editing', 'Editing'),
-      view: t('categories.view', 'View'),
-      help: t('categories.help', 'Help'),
-    }
-    return labels[category] || category
-  }
 
   // Get icon for a shortcut
   const getShortcutIcon = (shortcut: KeyboardShortcut): React.ElementType => {

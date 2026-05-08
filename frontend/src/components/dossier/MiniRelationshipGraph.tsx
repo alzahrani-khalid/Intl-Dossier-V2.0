@@ -136,7 +136,6 @@ interface MiniNodeData {
 }
 
 const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const name = isRTL ? data.name_ar || data.name_en : data.name_en
 

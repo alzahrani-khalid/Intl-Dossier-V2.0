@@ -507,30 +507,4 @@ export function StepUpMFA({
   )
 }
 
-/**
- * Hook to get elevated token from storage
- */
-function useElevatedToken(): {
-  token: string | null
-  isValid: boolean
-  validUntil: string | null
-} {
-  const token = sessionStorage.getItem('elevated_token')
-  const validUntil = sessionStorage.getItem('elevated_token_valid_until')
 
-  const isValid = token && validUntil ? new Date(validUntil).getTime() > Date.now() : false
-
-  return {
-    token,
-    isValid,
-    validUntil,
-  }
-}
-
-/**
- * Hook to clear elevated token
- */
-function clearElevatedToken(): void {
-  sessionStorage.removeItem('elevated_token')
-  sessionStorage.removeItem('elevated_token_valid_until')
-}

@@ -93,7 +93,6 @@ function InlineHint({
   onDismiss,
   onAction,
   className,
-  isRTL,
 }: Omit<InternalHintProps, 'variant' | 'position' | 'children' | 'delayMs'>) {
   const { t } = useTranslation('progressive-disclosure')
   const sizes = sizeConfig[size]
@@ -163,7 +162,6 @@ function ExpandableHint({
   onExpand,
   onAction,
   className,
-  isRTL,
 }: Omit<InternalHintProps, 'variant' | 'position' | 'children' | 'delayMs'>) {
   const { t } = useTranslation('progressive-disclosure')
   const [isExpanded, setIsExpanded] = useState(false)
@@ -273,7 +271,6 @@ function CardHint({
   onDismiss,
   onAction,
   className,
-  isRTL,
 }: Omit<InternalHintProps, 'variant' | 'position' | 'children' | 'delayMs' | 'onExpand'>) {
   const { t } = useTranslation('progressive-disclosure')
   const sizes = sizeConfig[size]
@@ -451,7 +448,6 @@ export function ProgressiveHint({
   className,
   delayMs,
 }: ProgressiveHintProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const [isVisible, setIsVisible] = useState(true)
   const hasTrackedShow = useRef(false)

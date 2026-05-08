@@ -372,7 +372,6 @@ interface TagDisplayProps {
 }
 
 export function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 
   if (!tags || tags.length === 0) return null

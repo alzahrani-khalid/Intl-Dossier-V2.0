@@ -123,7 +123,7 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
 /**
  * Empty state component
  */
-function EmptyState({ type, isRTL }: { type?: DossierDocumentType | 'all'; isRTL: boolean }) {
+function EmptyState({ type}: { type?: DossierDocumentType | 'all'; isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (

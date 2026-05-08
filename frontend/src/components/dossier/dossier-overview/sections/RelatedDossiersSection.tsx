@@ -92,7 +92,7 @@ function RelatedDossierCard({ dossier, isRTL }: { dossier: RelatedDossier; isRTL
 /**
  * Empty state component
  */
-function EmptyState({ isRTL }: { isRTL: boolean }) {
+function EmptyState({}: { isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (

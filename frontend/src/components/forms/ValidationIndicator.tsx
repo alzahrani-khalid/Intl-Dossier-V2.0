@@ -292,8 +292,6 @@ interface CharacterCountProps {
 }
 
 export function CharacterCount({ current, max, className }: CharacterCountProps) {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
 
   const percentage = (current / max) * 100
   const remaining = max - current
@@ -355,7 +353,6 @@ export function PasswordStrength({
   className,
 }: PasswordStrengthProps) {
   const { t } = useTranslation('validation')
-  const { isRTL } = useDirection()
 
   return (
     <div className={cn('space-y-2', className)}>
@@ -411,7 +408,6 @@ interface ValidationSummaryProps {
 
 export function ValidationSummary({ errors, className, onFieldClick }: ValidationSummaryProps) {
   const { t } = useTranslation('validation')
-  const { isRTL } = useDirection()
 
   const errorEntries = Object.entries(errors).filter(([, result]) => !result.isValid)
 
