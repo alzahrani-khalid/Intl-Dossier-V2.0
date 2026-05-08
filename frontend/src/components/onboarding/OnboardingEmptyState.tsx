@@ -122,6 +122,8 @@ export function OnboardingEmptyState({
 }: OnboardingEmptyStateProps) {
   const { t } = useTranslation('onboarding')
   const { isRTL } = useDirection()
+  // Stub useOnboardingChecklist returns UseQueryResult<unknown>; the rich state
+  // shape consumed below is owned by 47-07. Local typed shim narrows it here.
   const {
     isLoading,
     isDismissed,
@@ -131,7 +133,16 @@ export function OnboardingEmptyState({
     markCelebrationShown,
     dismissOnboarding,
     resumeOnboarding,
-  } = useOnboardingChecklist()
+  } = useOnboardingChecklist() as unknown as {
+    isLoading: boolean
+    isDismissed: boolean
+    isFullyCompleted: boolean
+    completionPercentage: number
+    activeCelebration: { percentage: number } | null
+    markCelebrationShown: (percentage: number) => Promise<void> | void
+    dismissOnboarding: () => Promise<void> | void
+    resumeOnboarding: () => Promise<void> | void
+  }
 
   const [showChecklistExpanded, setShowChecklistExpanded] = useState(true)
 

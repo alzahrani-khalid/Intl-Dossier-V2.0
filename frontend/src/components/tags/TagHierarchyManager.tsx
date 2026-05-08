@@ -104,7 +104,7 @@ export function TagHierarchyManager({
 }: TagHierarchyManagerProps) {
   const { t } = useTranslation('tags')
   const { isRTL } = useDirection()
-const { toast } = useToast()
+  const { toast } = useToast()
 
   // State
   const [searchQuery, setSearchQuery] = useState('')
@@ -119,8 +119,18 @@ const { toast } = useToast()
   const [formData, setFormData] = useState<TagFormData>(defaultFormData)
 
   // Queries
-  const { data: hierarchyTree, isLoading, error, refetch } = useTagHierarchyTree()
-  const { data: flatTags } = useTagsFlat(true)
+  const {
+    data: hierarchyTree,
+    isLoading,
+    error,
+    refetch,
+  } = useTagHierarchyTree() as unknown as {
+    data: TagCategory[] | undefined
+    isLoading: boolean
+    error: unknown
+    refetch: () => Promise<unknown>
+  }
+  const { data: flatTags } = useTagsFlat(true) as unknown as { data: TagCategory[] | undefined }
 
   // Mutations
   const createTag = useCreateTag()

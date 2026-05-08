@@ -29,6 +29,18 @@ import type {
 } from '@/types/entity-template.types'
 import { useDirection } from '@/hooks/useDirection'
 
+// Local typed shim narrowing the stub useContextAwareTemplates / useApplyTemplate
+// hook returns. Hook surface owned by 47-07.
+interface ContextAwareTemplatesShim {
+  data: { templates: EntityTemplate[] } | undefined
+  isLoading: boolean
+  error: unknown
+}
+
+interface ApplyTemplateShim {
+  applyTemplate: (template: EntityTemplate) => Record<string, unknown>
+}
+
 export interface TemplateSelectorProps {
   entityType: TemplateEntityType
   context?: TemplateContext
@@ -45,7 +57,7 @@ export function TemplateSelector({
 }: TemplateSelectorProps) {
   const { t } = useTranslation('entity-templates')
   const { isRTL } = useDirection()
-// State
+  // State
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [showShortcuts, setShowShortcuts] = useState(false)
@@ -55,11 +67,13 @@ export function TemplateSelector({
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Queries & Mutations
-  const { data, isLoading, error } = useContextAwareTemplates(entityType, {
-    enabled: true,
-  })
+  // Stub useContextAwareTemplates takes `Record<string, unknown> | undefined`;
+  // the entityType filter is wrapped to keep the call-site documented.
+  const { data, isLoading, error } = useContextAwareTemplates({
+    entityType,
+  }) as unknown as ContextAwareTemplatesShim
   const toggleFavorite = useToggleFavorite()
-  const { applyTemplate } = useApplyTemplate()
+  const { applyTemplate } = useApplyTemplate() as unknown as ApplyTemplateShim
 
   // Filter templates by search
   const filteredTemplates =

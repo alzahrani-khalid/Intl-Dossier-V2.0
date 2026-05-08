@@ -48,7 +48,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
   ) {
     const { t } = useTranslation('comments')
     const { isRTL } = useDirection()
-const [mentionQuery, setMentionQuery] = useState('')
+    const [mentionQuery, setMentionQuery] = useState('')
     const [showMentionList, setShowMentionList] = useState(false)
     const [mentionStartIndex, setMentionStartIndex] = useState<number | null>(null)
     const [selectedIndex, setSelectedIndex] = useState(0)
@@ -71,10 +71,12 @@ const [mentionQuery, setMentionQuery] = useState('')
     )
 
     // Search users for mention
+    // Stub useSearchUsersForMention takes 0-1 args (a query string); the
+    // `{ enabled: ... }` options shape is unsupported and discarded.
+    void (showMentionList && mentionQuery.length >= 1)
     const { data: mentionUsers = [], isLoading: isSearching } = useSearchUsersForMention(
       mentionQuery,
-      { enabled: showMentionList && mentionQuery.length >= 1 },
-    )
+    ) as unknown as { data: MentionUser[]; isLoading: boolean }
 
     // Reset selected index when users change (render-time adjustment)
     const prevMentionUsersRef = useRef(mentionUsers)

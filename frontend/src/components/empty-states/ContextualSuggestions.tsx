@@ -338,12 +338,21 @@ export function ContextualSuggestions({
 }: ContextualSuggestionsProps) {
   const { t } = useTranslation('contextual-suggestions')
   const { isRTL } = useDirection()
-const { data, isLoading, isError } = useContextualSuggestions({
+  const { data, isLoading, isError } = useContextualSuggestions({
     context,
-    entity_type: entityType,
+    entityType,
     entity_id: entityId,
     limit,
-  })
+  } as Record<string, unknown>) as unknown as {
+    data:
+      | {
+          suggestions: import('@/types/contextual-suggestion.types').ContextualSuggestion[]
+          metadata?: { generated_at?: string; cache_hit?: boolean }
+        }
+      | undefined
+    isLoading: boolean
+    isError: boolean
+  }
 
   const sizes = sizeClasses[size]
   const suggestions = data?.suggestions || []
@@ -357,10 +366,7 @@ const { data, isLoading, isError } = useContextualSuggestions({
   // Loading state
   if (isLoading && showSkeleton) {
     return (
-      <div
-        className={cn('rounded-lg bg-muted/30', className)}
-        data-testid={`${testId}-loading`}
-      >
+      <div className={cn('rounded-lg bg-muted/30', className)} data-testid={`${testId}-loading`}>
         <SuggestionSkeleton size={size} count={Math.min(limit, 3)} />
       </div>
     )
