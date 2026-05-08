@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import type { AuthError } from '@supabase/supabase-js'
 import { AuthService } from '../auth.service'
 import { supabaseAdmin, supabaseAnon } from '../../config/supabase'
 
@@ -52,6 +53,8 @@ describe('AuthService', () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
+        app_metadata: {},
+        aud: 'authenticated',
         user_metadata: {
           name: 'Test User',
           role: 'admin',
@@ -63,6 +66,7 @@ describe('AuthService', () => {
       const mockSession = {
         access_token: 'mock-access-token',
         refresh_token: 'mock-refresh-token',
+        token_type: 'bearer' as const,
         user: mockUser,
         expires_in: 3600,
       }
@@ -117,9 +121,10 @@ describe('AuthService', () => {
         error: {
           message: 'MFA challenge required',
           status: 400,
+          code: 'mfa_required',
           __isAuthError: true,
           name: 'AuthApiError',
-        },
+        } as unknown as AuthError,
       })
 
       await expect(authService.login('test@example.com', 'password123')).rejects.toThrow(
@@ -133,9 +138,10 @@ describe('AuthService', () => {
         error: {
           message: 'Invalid login credentials',
           status: 400,
+          code: 'invalid_credentials',
           __isAuthError: true,
           name: 'AuthApiError',
-        },
+        } as unknown as AuthError,
       })
 
       await expect(authService.login('test@example.com', 'wrongpassword')).rejects.toThrow(
@@ -157,6 +163,8 @@ describe('AuthService', () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
+        app_metadata: {},
+        aud: 'authenticated',
         user_metadata: { name: 'Test User' },
         created_at: '2023-01-01T00:00:00Z',
         updated_at: '2023-01-01T00:00:00Z',
@@ -165,6 +173,7 @@ describe('AuthService', () => {
       const mockSession = {
         access_token: 'new-access-token',
         refresh_token: 'new-refresh-token',
+        token_type: 'bearer' as const,
         user: mockUser,
         expires_in: 3600,
       }
@@ -208,6 +217,8 @@ describe('AuthService', () => {
       const mockUser = {
         id: 'user-123',
         email: 'new@example.com',
+        app_metadata: {},
+        aud: 'authenticated',
         user_metadata: {
           name: 'New User',
         },
@@ -274,6 +285,8 @@ describe('AuthService', () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
+        app_metadata: {},
+        aud: 'authenticated',
         user_metadata: { name: 'Updated Name' },
         created_at: '2023-01-01T00:00:00Z',
         updated_at: '2023-01-01T00:00:00Z',
@@ -342,7 +355,17 @@ describe('AuthService', () => {
     it('should validate session', async () => {
       const mockSession = {
         access_token: 'valid-token',
-        user: { id: 'user-123', email: 'test@example.com' },
+        refresh_token: 'valid-refresh',
+        expires_in: 3600,
+        token_type: 'bearer' as const,
+        user: {
+          id: 'user-123',
+          email: 'test@example.com',
+          app_metadata: {},
+          aud: 'authenticated',
+          user_metadata: {},
+          created_at: '2023-01-01T00:00:00Z',
+        },
       }
 
       vi.mocked(supabaseAnon.auth.getSession).mockResolvedValue({
@@ -370,6 +393,8 @@ describe('AuthService', () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
+        app_metadata: {},
+        aud: 'authenticated',
         user_metadata: { name: 'Test User' },
         created_at: '2023-01-01T00:00:00Z',
         updated_at: '2023-01-01T00:00:00Z',
@@ -377,6 +402,9 @@ describe('AuthService', () => {
 
       const mockSession = {
         access_token: 'token',
+        refresh_token: 'refresh',
+        expires_in: 3600,
+        token_type: 'bearer' as const,
         user: mockUser,
       }
 
@@ -480,9 +508,10 @@ describe('AuthService', () => {
           error: {
             message: 'Invalid login credentials',
             status: 400,
+            code: 'invalid_credentials',
             __isAuthError: true,
             name: 'AuthApiError',
-          },
+          } as unknown as AuthError,
         })
 
         try {
@@ -517,7 +546,10 @@ describe('AuthService', () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
+        app_metadata: {},
+        aud: 'authenticated',
         user_metadata: { name: 'Test User' },
+        created_at: '2023-01-01T00:00:00Z',
       }
 
       vi.mocked(supabaseAnon.auth.getUser).mockResolvedValue({
