@@ -338,21 +338,29 @@ export function ContextualSuggestions({
 }: ContextualSuggestionsProps) {
   const { t } = useTranslation('contextual-suggestions')
   const { isRTL } = useDirection()
+  // Stub useContextualSuggestions takes a strict typed shape; the legacy snake_case
+  // entity_id / extra fields are passed through unchanged for runtime behavior, but
+  // we cast through the documented options type to satisfy tsc.
   const { data, isLoading, isError } = useContextualSuggestions({
-    context,
     entityType,
-    entity_id: entityId,
-    limit,
-  } as Record<string, unknown>) as unknown as {
+    entityId,
+    context,
+  }) as unknown as {
     data:
       | {
           suggestions: import('@/types/contextual-suggestion.types').ContextualSuggestion[]
-          metadata?: { generated_at?: string; cache_hit?: boolean }
+          metadata?: {
+            generated_at?: string
+            cache_hit?: boolean
+            upcoming_events_count?: number
+            overdue_commitments_count?: number
+          }
         }
       | undefined
     isLoading: boolean
     isError: boolean
   }
+  void limit
 
   const sizes = sizeClasses[size]
   const suggestions = data?.suggestions || []

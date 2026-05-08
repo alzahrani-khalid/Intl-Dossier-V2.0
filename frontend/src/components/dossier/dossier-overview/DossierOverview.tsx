@@ -67,15 +67,15 @@ function StatCard({
   variant?: 'default' | 'warning' | 'success'
 }) {
   const variantStyles = {
-    default: statVariantStyles.default.card,
-    warning: statVariantStyles.warning.card,
-    success: statVariantStyles.success.card,
+    default: statVariantStyles['default']!.card,
+    warning: statVariantStyles['warning']!.card,
+    success: statVariantStyles['success']!.card,
   }
 
   const iconStyles = {
-    default: statVariantStyles.default.icon,
-    warning: statVariantStyles.warning.icon,
-    success: statVariantStyles.success.icon,
+    default: statVariantStyles['default']!.icon,
+    warning: statVariantStyles['warning']!.icon,
+    success: statVariantStyles['success']!.icon,
   }
 
   return (
@@ -332,11 +332,7 @@ export function DossierOverview({
             label={t('stats.relatedDossiers')}
             value={stats.related_dossiers_count}
           />
-          <StatCard
-            icon={FileStack}
-            label={t('stats.documents')}
-            value={stats.documents_count}
-          />
+          <StatCard icon={FileStack} label={t('stats.documents')} value={stats.documents_count} />
           <StatCard
             icon={ClipboardList}
             label={t('stats.workItems')}

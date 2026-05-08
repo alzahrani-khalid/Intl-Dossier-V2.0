@@ -204,10 +204,18 @@ export function ProgressiveEmptyState({
   const { t } = useTranslation('progressive-disclosure')
   const { isRTL } = useDirection()
   const navigate = useNavigate()
-const sizes = sizeConfig[size]
+  const sizes = sizeConfig[size]
 
+  // Stub useProgressiveDisclosure takes `{ featureArea?: string; enabled?: boolean }`;
+  // pageContext is consolidated into featureArea for forward compatibility.
   const { experienceLevel, isFirstVisit, hasInteractedBefore, hintsEnabled, recordActionTaken } =
-    useProgressiveDisclosure({ pageContext })
+    useProgressiveDisclosure({ featureArea: pageContext }) as unknown as {
+      experienceLevel: 'beginner' | 'intermediate' | 'advanced'
+      isFirstVisit: boolean
+      hasInteractedBefore: boolean
+      hintsEnabled: boolean
+      recordActionTaken: (id: string) => Promise<void> | void
+    }
 
   // Track which tiers are expanded
   const [expandedTiers, setExpandedTiers] = useState<Record<string, boolean>>({

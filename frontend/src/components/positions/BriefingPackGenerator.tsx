@@ -38,11 +38,17 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   // Mutations and queries
-  const generateMutation = useGenerateBriefingPack()
-  const briefingStatus = useBriefingPackStatus({
-    jobId: jobId || '',
-    enabled: !!jobId && status === 'generating',
-  })
+  // Stub useGenerateBriefingPack returns UseMutationResult<unknown>; component-side
+  // typed shim narrows the return shape (47-07's surface).
+  const generateMutation = useGenerateBriefingPack() as unknown as {
+    mutateAsync: (vars: { engagementId: string; language: string }) => Promise<{ job_id: string }>
+  }
+  // Stub useBriefingPackStatus takes (jobId: string).
+  const briefingStatus = useBriefingPackStatus(jobId || '') as unknown as {
+    status: 'pending' | 'completed' | 'failed' | 'success' | 'error'
+    briefingPack?: { file_url?: string }
+    error: string | null
+  }
   const jobStatus =
     briefingStatus.status !== 'pending'
       ? {

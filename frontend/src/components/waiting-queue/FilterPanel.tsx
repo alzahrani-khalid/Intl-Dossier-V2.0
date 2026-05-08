@@ -23,8 +23,19 @@ import { PriorityFilter } from './PriorityFilter'
 import { AgingFilter } from './AgingFilter'
 import { TypeFilter } from './TypeFilter'
 import { AssigneeFilter } from './AssigneeFilter'
-import type { FilterCriteria } from '@/hooks/useQueueFilters'
+import type { FilterCriteria as BaseFilterCriteria } from '@/hooks/useQueueFilters'
 import { useDirection } from '@/hooks/useDirection'
+
+// Local widened FilterCriteria. The base type from @/hooks/useQueueFilters lacks
+// priority / aging / type / page fields that this component manipulates. The hook
+// surface is owned by 47-07; this component-local widening keeps tsc clean. The
+// array shapes mirror the sub-filter components' actual prop signatures.
+type FilterCriteria = Omit<BaseFilterCriteria, 'priority' | 'aging' | 'type'> & {
+  priority?: ('low' | 'medium' | 'high' | 'urgent')[]
+  aging?: ('0-2' | '3-6' | '7+')[]
+  type?: ('ticket' | 'dossier' | 'position' | 'task')[]
+  page?: number
+}
 
 interface FilterPanelProps {
   filters: FilterCriteria
@@ -53,7 +64,7 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-return (
+  return (
     <Popover open={isOpen} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
         <Button
@@ -68,11 +79,7 @@ return (
             : t('waitingQueue.filters.title')}
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-[240px] p-0"
-        align={isRTL ? 'end' : 'start'}
-        side="bottom"
-      >
+      <PopoverContent className="w-[240px] p-0" align={isRTL ? 'end' : 'start'} side="bottom">
         <div className="flex flex-col max-h-[520px]">
           {/* Compact Header */}
           <div className="flex items-center justify-between px-3 py-2.5 border-b">
