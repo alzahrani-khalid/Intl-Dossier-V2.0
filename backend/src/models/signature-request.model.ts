@@ -69,7 +69,7 @@ export interface SignatureVerificationResult {
   errors?: string[]
 }
 
-class SignatureRequestModel {
+export class SignatureRequestModel {
   static tableName = 'signature_requests'
 
   static readonly STATUS_TRANSITIONS: Record<SignatureStatus, SignatureStatus[]> = {
@@ -157,7 +157,7 @@ class SignatureRequestModel {
 
   static async verifySignature(
     request: SignatureRequest,
-    signatureData: string,
+    _signatureData: string,
   ): Promise<SignatureVerificationResult> {
     // This would integrate with actual signature verification services
     // Placeholder implementation

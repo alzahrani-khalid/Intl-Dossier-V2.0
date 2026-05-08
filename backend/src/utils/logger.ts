@@ -81,13 +81,6 @@ const logger = winston.createLogger({
   exitOnError: false,
 })
 
-// Create a stream object with a 'write' function for HTTP logging
-const loggerStream = {
-  write: (message: string) => {
-    logger.http(message.trim())
-  },
-}
-
 // Helper functions for structured logging
 export const logInfo = (message: string, meta?: any) => {
   logger.info(message, meta)
@@ -111,37 +104,6 @@ export const logWarn = (message: string, meta?: any) => {
   logger.warn(message, meta)
 }
 
-const logDebug = (message: string, meta?: any) => {
-  logger.debug(message, meta)
-}
-
-const logHttp = (message: string, meta?: any) => {
-  logger.http(message, meta)
-}
-
-// Database operation logging helpers
-const logDatabaseQuery = (query: string, duration: number, meta?: any) => {
-  logger.info('Database query executed', {
-    type: 'database',
-    query: query.substring(0, 200) + (query.length > 200 ? '...' : ''), // Truncate long queries
-    duration: `${duration}ms`,
-    ...meta,
-  })
-}
-
-const logDatabaseError = (query: string, error: Error, meta?: any) => {
-  logger.error('Database query failed', {
-    type: 'database',
-    query: query.substring(0, 200) + (query.length > 200 ? '...' : ''),
-    error: {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    },
-    ...meta,
-  })
-}
-
 // API request logging helpers
 export const logApiRequest = (
   method: string,
@@ -156,20 +118,6 @@ export const logApiRequest = (
     url,
     statusCode,
     duration: `${duration}ms`,
-    ...meta,
-  })
-}
-
-const logApiError = (method: string, url: string, error: Error, meta?: any) => {
-  logger.error('API request failed', {
-    type: 'api',
-    method,
-    url,
-    error: {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    },
     ...meta,
   })
 }
@@ -194,16 +142,6 @@ export const logAuthEvent = (event: string, userId?: string, meta?: any) => {
     type: 'auth',
     userId,
     timestamp: new Date().toISOString(),
-    ...meta,
-  })
-}
-
-// Performance logging helpers
-const logPerformance = (operation: string, duration: number, meta?: any) => {
-  const logLevel = duration > 1000 ? 'warn' : 'info' // Warn if operation takes more than 1 second
-  logger[logLevel](`Performance: ${operation}`, {
-    type: 'performance',
-    duration: `${duration}ms`,
     ...meta,
   })
 }

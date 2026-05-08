@@ -32,12 +32,12 @@ export interface UpdatePermissionDelegationDto {
   reason?: string
 }
 
-interface RevokePermissionDelegationDto {
+export interface RevokePermissionDelegationDto {
   revoked_by: string
   revoked_at?: Date
 }
 
-class PermissionDelegationModel {
+export class PermissionDelegationModel {
   static tableName = 'permission_delegations'
 
   static validate(delegation: Partial<PermissionDelegation>): boolean {

@@ -165,81 +165,8 @@ export const CACHE_TAGS = {
 } as const
 
 /**
- * Get TTL for a specific entity type
- */
-function getTTL(entityType: CacheableEntityType): number {
-  return CACHE_TTL[entityType] ?? CACHE_TTL.default
-}
-
-/**
  * Get cache key prefix for a specific entity type
  */
 export function getKeyPrefix(entityType: CacheableEntityType): string {
   return CACHE_KEY_PREFIX[entityType] ?? CACHE_KEY_PREFIX.default
 }
-
-/**
- * Generate a cache key with proper prefix
- */
-function generateCacheKey(
-  entityType: CacheableEntityType,
-  identifier: string | Record<string, unknown>,
-): string {
-  const prefix = getKeyPrefix(entityType)
-  if (typeof identifier === 'string') {
-    return `${prefix}${identifier}`
-  }
-  // For objects, create a deterministic hash
-  const sortedJson = JSON.stringify(identifier, Object.keys(identifier).sort())
-  const hash = simpleHash(sortedJson)
-  return `${prefix}${hash}`
-}
-
-/**
- * Simple hash function for cache key generation
- */
-function simpleHash(str: string): string {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i)
-    hash = (hash << 5) - hash + char
-    hash = hash & hash // Convert to 32-bit integer
-  }
-  return Math.abs(hash).toString(36)
-}
-
-/**
- * Get tags for an entity type (for invalidation grouping)
- */
-function getTagsForEntity(entityType: CacheableEntityType): string[] {
-  const tagMap: Partial<Record<CacheableEntityType, string[]>> = {
-    dossier: [CACHE_TAGS.DOSSIERS],
-    country: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.COUNTRIES],
-    organization: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.ORGANIZATIONS],
-    forum: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.FORUMS],
-    engagement: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.ENGAGEMENTS],
-    topic: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.TOPICS],
-    working_group: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.WORKING_GROUPS],
-    person: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.PERSONS],
-    user: [CACHE_TAGS.USERS],
-    session: [CACHE_TAGS.SESSIONS, CACHE_TAGS.USERS],
-    translation: [CACHE_TAGS.TRANSLATIONS, CACHE_TAGS.STATIC],
-    document: [CACHE_TAGS.DOCUMENTS],
-    position: [CACHE_TAGS.POSITIONS, CACHE_TAGS.DOCUMENTS],
-    mou: [CACHE_TAGS.MOUS, CACHE_TAGS.DOCUMENTS],
-    task: [CACHE_TAGS.TASKS],
-    commitment: [CACHE_TAGS.COMMITMENTS, CACHE_TAGS.TASKS],
-    contact: [CACHE_TAGS.CONTACTS],
-    relationship: [CACHE_TAGS.RELATIONSHIPS],
-    calendar: [CACHE_TAGS.CALENDAR],
-    search: [CACHE_TAGS.SEARCH],
-    suggestion: [CACHE_TAGS.SUGGESTIONS, CACHE_TAGS.SEARCH],
-    embedding: [CACHE_TAGS.EMBEDDINGS],
-    ai_response: [CACHE_TAGS.AI_RESPONSES],
-    static: [CACHE_TAGS.STATIC],
-  }
-
-  return tagMap[entityType] ?? []
-}
-
-type CacheTag = (typeof CACHE_TAGS)[keyof typeof CACHE_TAGS]

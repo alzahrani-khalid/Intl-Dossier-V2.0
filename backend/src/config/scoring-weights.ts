@@ -29,20 +29,6 @@ if (totalWeight !== 100) {
 }
 
 /**
- * Type for assignment scoring result
- */
-interface AssignmentScore {
-  staffId: string
-  score: number
-  breakdown: {
-    skillsScore: number
-    capacityScore: number
-    availabilityScore: number
-    unitScore: number
-  }
-}
-
-/**
  * Validate scoring weights on module load
  */
 console.warn('✓ Assignment scoring weights validated:', SCORING_WEIGHTS)

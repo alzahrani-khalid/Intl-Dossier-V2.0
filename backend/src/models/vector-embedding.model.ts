@@ -56,7 +56,7 @@ export class VectorEmbeddingModel {
       throw new Error('Vectors must have the same dimensions')
     }
 
-    const dotProduct = vector1.reduce((sum, val, i) => sum + val * vector2[i], 0)
+    const dotProduct = vector1.reduce((sum, val, i) => sum + val * (vector2[i] ?? 0), 0)
     const magnitude1 = Math.sqrt(vector1.reduce((sum, val) => sum + val * val, 0))
     const magnitude2 = Math.sqrt(vector2.reduce((sum, val) => sum + val * val, 0))
 

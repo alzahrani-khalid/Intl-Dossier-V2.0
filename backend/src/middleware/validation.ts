@@ -34,12 +34,12 @@ export const checkValidation = (req: Request, res: Response, next: NextFunction)
       details: errors.array(),
     })
   }
-  next()
+  return next()
 }
 
 /**
  * Export the same as handleValidation for compatibility
  */
-const handleValidation = checkValidation
+export const handleValidation = checkValidation
 
 // no-op
