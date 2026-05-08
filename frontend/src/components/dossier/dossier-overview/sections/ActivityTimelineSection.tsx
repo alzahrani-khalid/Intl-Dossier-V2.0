@@ -243,7 +243,7 @@ function ActivityItem({
 /**
  * Empty state component
  */
-function EmptyState({}: { isRTL: boolean }) {
+function EmptyState() {
   const { t } = useTranslation('dossier-overview')
 
   return (
@@ -301,7 +301,7 @@ export function ActivityTimelineSection({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">
-          <EmptyState isRTL={isRTL} />
+          <EmptyState />
         </CardContent>
       </Card>
     )
