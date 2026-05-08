@@ -85,15 +85,6 @@ export interface BatchCreateLinksRequest {
   }>
 }
 
-// Request to reorder links
-interface ReorderLinksRequest {
-  intake_id: string
-  link_orders: Array<{
-    link_id: string
-    link_order: number
-  }>
-}
-
 // Audit log entry
 export interface LinkAuditLog {
   id: string
