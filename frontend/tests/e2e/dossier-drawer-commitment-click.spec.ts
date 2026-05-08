@@ -2,8 +2,9 @@
 //
 // Phase 41 plan 07 Task 1 — Wave 2 functional E2E.
 // Plan 41-05 D-08 REVISED: clicking a commitment row routes to /commitments
-// (no work-item detail dialog component exists per RESEARCH §4). The drawer
-// closes because the next route's validateSearch drops the ?dossier= key.
+// (no work-item detail dialog component exists per RESEARCH §4). The dossier
+// drawer closes because the row navigation drops the ?dossier= keys while the
+// commitments route may open its own detail drawer for ?id=.
 import { test, expect } from '@playwright/test'
 import { loginForListPages } from './support/list-pages-auth'
 import {
@@ -34,6 +35,11 @@ test.describe('DossierDrawer — commitment row click (D-13 case 10)', () => {
 
     await expect(page).toHaveURL(/\/commitments(?:\?|#|$)/)
     await expect(page).toHaveURL(/[?&]id=[A-Za-z0-9-]+/)
-    await expect(page.getByRole('dialog')).toHaveCount(0)
+    await expect(page).not.toHaveURL(/[?&]dossier=/)
+    await expect(page).not.toHaveURL(/[?&]dossierType=/)
+    await expect(
+      page.getByRole('dialog', { name: /dossier quick-look|نظرة سريعة/i }),
+    ).toHaveCount(0)
+    await expect(page.getByTestId('dossier-drawer-commitments')).toHaveCount(0)
   })
 })

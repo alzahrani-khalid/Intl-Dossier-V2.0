@@ -16,7 +16,7 @@
  *   7. AR title falls through to title_en when title_ar null
  *   8. days label: T-N for past, T+N for future, '—' for null deadline
  *   9. owner initials computed; '—' when assignee_name null
- *  10. row click → navigate({ to: '/commitments', search: { id } })
+ *  10. row click → navigate to /commitments?id=<id> while clearing drawer keys
  *  11. row min-block-size === 44
  *  12. section heading renders t('section.open_commitments')
  */
@@ -208,7 +208,7 @@ describe('OpenCommitmentsSection (Phase 41 Plan 05)', () => {
     expect(owners[3]).toBe('—')
   })
 
-  it('10. row click navigates to /commitments?id=<id>', () => {
+  it('10. row click navigates to /commitments?id=<id> and clears drawer params', () => {
     const items = [
       mkItem({ id: 'click-me', title_en: 'Click target' }),
       mkItem({ id: 'other', title_en: 'Other row' }),
@@ -217,10 +217,19 @@ describe('OpenCommitmentsSection (Phase 41 Plan 05)', () => {
     const rows = screen.getAllByTestId('dossier-drawer-commitment-row')
     fireEvent.click(rows[0]!)
     expect(navigateMock).toHaveBeenCalledTimes(1)
-    expect(navigateMock).toHaveBeenCalledWith({
-      to: '/commitments',
-      search: { id: 'click-me' },
-    })
+    const navArg = navigateMock.mock.calls[0]?.[0] as {
+      to?: string
+      search?: (prev: Record<string, unknown>) => Record<string, unknown>
+    }
+    expect(navArg.to).toBe('/commitments')
+    expect(typeof navArg.search).toBe('function')
+    expect(
+      navArg.search?.({
+        dossier: 'open-dossier',
+        dossierType: 'country',
+        page: 2,
+      }),
+    ).toEqual({ id: 'click-me', page: 2 })
   })
 
   it('11. each row has min-block-size 44 (D-11 touch target)', () => {

@@ -89,11 +89,15 @@ export function OpenCommitmentsSection({
   const handleRowClick = (id: string): void => {
     // RESEARCH §4: no work-item detail dialog component exists in the codebase.
     // Phase 39 WorkBoard.handleItemClick already routes commitments to
-    // `/commitments`; we mirror that here. Drawer closes via `?dossier=`
-    // removal because the next route's validateSearch does not carry the key.
-    navigate({ to: '/commitments', search: { id } } as unknown as Parameters<
-      typeof navigate
-    >[0])
+    // `/commitments`; the protected layout keeps the drawer mounted, so remove
+    // drawer search params explicitly before switching routes.
+    navigate({
+      to: '/commitments',
+      search: (prev: Record<string, unknown>) => {
+        const { dossier: _d, dossierType: _t, ...rest } = prev
+        return { ...rest, id }
+      },
+    } as unknown as Parameters<typeof navigate>[0])
   }
 
   return (

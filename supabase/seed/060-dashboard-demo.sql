@@ -27,6 +27,54 @@ DECLARE
   v_country_indonesia UUID;
   v_p_indonesia_delegate UUID := 'b0000011-0000-0000-0000-000000000001';
 BEGIN
+  INSERT INTO dossiers (id, type, name_en, name_ar, status, sensitivity_level, tags, metadata, created_by)
+  VALUES (
+    v_tenant_id, 'organization', 'General Authority for Statistics',
+    'الهيئة العامة للإحصاء', 'active', 2, ARRAY['handoff-demo', 'tenant-seed'],
+    '{"handoff_demo":true,"tenant_seed":true}'::jsonb, v_user_id
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    type = EXCLUDED.type,
+    name_en = EXCLUDED.name_en,
+    name_ar = EXCLUDED.name_ar,
+    status = EXCLUDED.status,
+    sensitivity_level = EXCLUDED.sensitivity_level,
+    tags = EXCLUDED.tags,
+    metadata = dossiers.metadata || EXCLUDED.metadata,
+    updated_at = NOW();
+
+  INSERT INTO organizations (id, org_code, org_type, is_seed_data)
+  VALUES (v_tenant_id, 'GASTAT', 'government', true)
+  ON CONFLICT (id) DO UPDATE SET
+    org_code = EXCLUDED.org_code,
+    org_type = EXCLUDED.org_type,
+    is_seed_data = EXCLUDED.is_seed_data;
+
+  INSERT INTO organization_members (organization_id, user_id, role, joined_at, left_at)
+  VALUES (v_tenant_id, v_user_id, 'admin', NOW(), NULL)
+  ON CONFLICT (organization_id, user_id) DO UPDATE SET
+    role = EXCLUDED.role,
+    left_at = NULL;
+
+  UPDATE users
+  SET default_organization_id = v_tenant_id
+  WHERE id = v_user_id
+    AND default_organization_id IS NULL;
+
+  INSERT INTO countries (id, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion, flag_url, is_seed_data)
+  VALUES
+    (v_d_indonesia, 'ID', 'IDN', 'Jakarta', 'جاكرتا', 'Asia', 'South-eastern Asia', '🇮🇩', true),
+    (v_d_china, 'CN', 'CHN', 'Beijing', 'بكين', 'Asia', 'Eastern Asia', '🇨🇳', true)
+  ON CONFLICT (id) DO UPDATE SET
+    iso_code_2 = EXCLUDED.iso_code_2,
+    iso_code_3 = EXCLUDED.iso_code_3,
+    capital_en = EXCLUDED.capital_en,
+    capital_ar = EXCLUDED.capital_ar,
+    region = EXCLUDED.region,
+    subregion = EXCLUDED.subregion,
+    flag_url = EXCLUDED.flag_url,
+    is_seed_data = EXCLUDED.is_seed_data;
+
   SELECT tenant_isolation.resolve_user_tenant(v_user_id) INTO v_org_id;
   IF v_org_id IS NULL THEN
     RAISE EXCEPTION 'Seed 060 requires an organization membership for user %', v_user_id;

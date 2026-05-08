@@ -6,6 +6,7 @@
 // activity/commitments) per DRAWER-01 + DRAWER-02 contracts.
 import { test, expect } from '@playwright/test'
 import { loginForListPages } from './support/list-pages-auth'
+import { seedRecentDossierStore } from './support/dossier-drawer-fixture'
 
 test.describe.configure({ retries: 1 })
 
@@ -16,6 +17,7 @@ test.describe('DossierDrawer — opens from RecentDossiers (D-13 case 1)', () =>
   })
 
   test('clicking a recent dossier row opens drawer with all sections', async ({ page }) => {
+    await seedRecentDossierStore(page)
     await loginForListPages(page)
     await page.goto('/')
     await page.evaluate(() => document.fonts.ready)

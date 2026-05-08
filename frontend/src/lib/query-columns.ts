@@ -66,7 +66,7 @@ export const COMMITMENTS_COLUMNS = {
   DETAIL:
     'id, dossier_id, after_action_id, title, description, due_date, owner_type, owner_user_id, owner_contact_id, priority, status, tracking_mode, proof_required, proof_url, evidence_submitted_at, completed_at, completion_notes, status_changed_at, created_by, updated_by, created_at, updated_at',
   /** Summary for dashboard widgets */
-  SUMMARY: 'id, title, status, priority, due_date, deadline, assignee_id, created_at',
+  SUMMARY: 'id, title, description, status, priority, due_date, owner_user_id, created_at, updated_at',
 } as const
 
 // =============================================================================

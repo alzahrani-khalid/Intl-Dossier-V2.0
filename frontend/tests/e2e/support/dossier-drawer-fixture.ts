@@ -23,6 +23,37 @@ import { Page, expect } from '@playwright/test'
 export const FIXTURE_DOSSIER_ID =
   process.env.E2E_DOSSIER_FIXTURE_ID ?? 'b0000001-0000-0000-0000-000000000004'
 export const FIXTURE_DOSSIER_TYPE = 'country' as const
+export const FIXTURE_DOSSIER_NAME_EN = 'China'
+export const FIXTURE_DOSSIER_NAME_AR = 'جمهورية الصين الشعبية'
+
+export async function seedRecentDossierStore(page: Page): Promise<void> {
+  await page.addInitScript(
+    ([id, type, nameEn, nameAr]) => {
+      window.localStorage.setItem(
+        'dossier-store',
+        JSON.stringify({
+          state: {
+            recentDossiers: [
+              {
+                id,
+                type,
+                name_en: nameEn,
+                name_ar: nameAr,
+                status: 'active',
+                viewedAt: Date.now(),
+              },
+            ],
+            pinnedDossiers: [],
+            maxRecentDossiers: 10,
+            maxPinnedDossiers: 10,
+          },
+          version: 0,
+        }),
+      )
+    },
+    [FIXTURE_DOSSIER_ID, FIXTURE_DOSSIER_TYPE, FIXTURE_DOSSIER_NAME_EN, FIXTURE_DOSSIER_NAME_AR],
+  )
+}
 
 /**
  * Open the dossier quick-look drawer for a known seeded fixture dossier.
