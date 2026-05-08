@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v6.2
 milestone_name: Type-Check, Lint & Bundle Reset
 status: planning
-last_updated: '2026-05-08T16:49:23.752Z'
+last_updated: '2026-05-08T20:00:00.000Z'
 last_activity: 2026-05-08
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,21 +17,40 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-19)
+See: .planning/PROJECT.md (updated 2026-05-08)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Planning next milestone
+**Current focus:** v6.2 Type-Check, Lint & Bundle Reset — Phases 47-49 planned, requirements mapped
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 47 — Type-Check Zero (planned, not yet plan-phased)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-08 — Milestone v6.2 started
+Status: Roadmap approved; awaiting Phase 47 plan-phase
+Last activity: 2026-05-08 — v6.2 roadmap created (12/12 requirements mapped to Phases 47-49)
 
 ## Next Action
 
-Run `$gsd-new-milestone` to start the next milestone cycle. Candidate seed: `.planning/seeds/v7.0-intelligence-engine.md`.
+1. Resolve research question Q1 (`.planning/research/questions.md`) — confirm CI status of `pnpm type-check` / `pnpm lint` on PRs and `main`. This must be answered before Phase 47 plan-phase. Capture findings under `.planning/research/` and reference them from the Phase 47 plan.
+2. Run `/gsd-plan-phase 47` to decompose Phase 47 (Type-Check Zero) into executable plans.
+
+## v6.2 Phase Map (3 phases, 12 requirements)
+
+| Phase | Name                      | Requirements  | Count |
+| ----- | ------------------------- | ------------- | ----- |
+| 47    | type-check-zero           | TYPE-01..04   | 4     |
+| 48    | lint-and-config-alignment | LINT-06..09   | 4     |
+| 49    | bundle-budget-reset       | BUNDLE-01..04 | 4     |
+
+**Dependency graph summary:**
+
+- Phase 47 (type-check) is the foundation of v6.2 — no v6.2 deps; entry-blocked on Q1 answer.
+- Phase 48 (lint) depends on Phase 47 — same files, avoids re-doing fixes after lint config changes.
+- Phase 49 (bundle) depends on Phase 48 — route-split / vendor-chunk changes ride on a typed and linted baseline so the new gates catch regressions.
+
+## v6.2 Open Research
+
+- **Q1 (`.planning/research/questions.md`)** — Are TS / lint failures auto-suppressed in CI today? Required reading before Phase 47 plan-phase. Look at `.github/workflows/*.yml`, `turbo.json`, root `package.json` scripts, `.husky/`, and the last green CI run on `main`.
 
 ### Phase 40 summary
 

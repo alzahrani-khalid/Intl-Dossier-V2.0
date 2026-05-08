@@ -50,23 +50,23 @@ Detail: `.planning/notes/v6.2-rationale.md`.
 
 ## Traceability
 
-| REQ-ID    | Phase | Status      |
-| --------- | ----- | ----------- |
-| TYPE-01   | TBD   | Not started |
-| TYPE-02   | TBD   | Not started |
-| TYPE-03   | TBD   | Not started |
-| TYPE-04   | TBD   | Not started |
-| LINT-06   | TBD   | Not started |
-| LINT-07   | TBD   | Not started |
-| LINT-08   | TBD   | Not started |
-| LINT-09   | TBD   | Not started |
-| BUNDLE-01 | TBD   | Not started |
-| BUNDLE-02 | TBD   | Not started |
-| BUNDLE-03 | TBD   | Not started |
-| BUNDLE-04 | TBD   | Not started |
+| REQ-ID    | Phase    | Status      |
+| --------- | -------- | ----------- |
+| TYPE-01   | Phase 47 | Not started |
+| TYPE-02   | Phase 47 | Not started |
+| TYPE-03   | Phase 47 | Not started |
+| TYPE-04   | Phase 47 | Not started |
+| LINT-06   | Phase 48 | Not started |
+| LINT-07   | Phase 48 | Not started |
+| LINT-08   | Phase 48 | Not started |
+| LINT-09   | Phase 48 | Not started |
+| BUNDLE-01 | Phase 49 | Not started |
+| BUNDLE-02 | Phase 49 | Not started |
+| BUNDLE-03 | Phase 49 | Not started |
+| BUNDLE-04 | Phase 49 | Not started |
 
-_Phase column is filled by the roadmapper after roadmap approval._
+_Phase column filled by the roadmapper after roadmap approval (2026-05-08)._
 
 ---
 
-_Last updated: 2026-05-08 — initial v6.2 requirements draft_
+_Last updated: 2026-05-08 — v6.2 roadmap approved; traceability mapped to Phases 47-49_

@@ -9,6 +9,7 @@
 - ✅ **v5.0 Dossier Creation UX** — Phases 26-32 (shipped 2026-04-18) — [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Design System Adoption** — Phases 33-43 (shipped 2026-05-06) — [archive](milestones/v6.0-ROADMAP.md)
 - ✅ **v6.1 Hardening & Reconciliation** — Phases 44-46 (shipped 2026-05-08) — [archive](milestones/v6.1-ROADMAP.md)
+- ⏳ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (planning, opened 2026-05-08)
 
 ## Phases
 
@@ -114,22 +115,96 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 
 </details>
 
+## v6.2 Type-Check, Lint & Bundle Reset
+
+**Goal:** Restore code-quality gates and bundle budget on `main` before v7.0 Intelligence Engine work begins.
+
+**Source measurements (2026-05-08, `main`):** frontend 1580 TS errors / backend 498 TS errors / frontend 723 lint problems (52 errors + 671 warnings) / backend 4 lint problems (3 errors + 1 warning) / frontend Total JS 2.42 MB gzip vs 2.43 MB symbolic ceiling. Detail: `.planning/notes/v6.2-rationale.md`.
+
+**Coverage:** 12/12 v6.2 requirements mapped (TYPE-01..04, LINT-06..09, BUNDLE-01..04).
+
+### Phases (summary)
+
+- [ ] **Phase 47: Type-Check Zero** — Drive frontend + backend `pnpm type-check` to zero and restore type-check as a PR-blocking CI gate
+- [ ] **Phase 48: Lint & Config Alignment** — Drive frontend + backend `pnpm lint` to zero, purge Aceternity references from `frontend/eslint.config.js`, align `no-restricted-imports` with the CLAUDE.md primitive cascade, restore lint as a PR-blocking CI gate
+- [ ] **Phase 49: Bundle Budget Reset** — Lower `frontend/.size-limit.json` Total JS ceiling to a real budget (≤500 KB initial-route gzip proposal), route-split heavy chunks via `React.lazy()`, audit the vendor super-chunk, restore `size-limit` as a PR-blocking CI gate
+
+### Phase Details
+
+#### Phase 47: Type-Check Zero
+
+**Goal:** Frontend and backend `pnpm type-check` exit 0 on a clean clone, with type-check restored as a PR-blocking CI gate so a single regression cannot reach `main`.
+
+**Depends on:** Nothing inside v6.2 (first phase). Operates directly on the v6.1 baseline.
+
+**Entry condition (must be answered before plan-phase):**
+
+- Open research question Q1 (`.planning/research/questions.md`) must be resolved: confirm whether `pnpm type-check` runs on PRs and `main` builds today, and if so why it does not block. The answer determines whether Phase 47 must wire a new CI job (TYPE-03) or only repair an existing one. Inspect `.github/workflows/*.yml`, `turbo.json`, root `package.json` scripts, `.husky/`, and the last green CI run on `main` for the type-check exit code. Capture the answer in `.planning/research/Q1-ci-gate-status.md` (or equivalent) and reference it from the Phase 47 plan-phase output.
+
+**Requirements:** TYPE-01, TYPE-02, TYPE-03, TYPE-04
+
+**Success Criteria** (what must be TRUE):
+
+1. `pnpm --filter frontend type-check` exits 0 on a clean clone of `main` (1580 TS errors → 0). Resolution is by deletion of unused declarations / real type fixes, never by adding `// @ts-ignore` or `// @ts-expect-error` to mask errors.
+2. `pnpm --filter backend type-check` exits 0 on a clean clone of `main` (498 TS errors → 0), under the same suppression-free rule.
+3. The type-check job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single TS error in either workspace fails the merge check on `main`.
+4. Net new `@ts-ignore` / `@ts-expect-error` suppressions added during v6.2 are zero outside documented exceptions; any retained suppression carries an inline reason and an issue/follow-up reference.
+
+**Plans:** TBD
+
+#### Phase 48: Lint & Config Alignment
+
+**Goal:** Frontend and backend `pnpm lint` exit 0, the ESLint config matches the CLAUDE.md primitive cascade with zero Aceternity references, and lint is restored as a PR-blocking CI gate.
+
+**Depends on:** Phase 47 (type-check zero). Sequencing rationale: lint fixes touch many of the same files as type-check fixes; running on a typed baseline avoids re-doing the same edits twice and prevents lint changes from masking type errors.
+
+**Requirements:** LINT-06, LINT-07, LINT-08, LINT-09
+
+**Success Criteria** (what must be TRUE):
+
+1. `pnpm --filter frontend lint` exits 0 on a clean clone of `main` (52 errors + 671 warnings → 0). Warnings are either fixed at the call site or the rule is downgraded with a written rationale recorded in `frontend/eslint.config.js`.
+2. `pnpm --filter backend lint` exits 0 on a clean clone of `main` (3 errors + 1 warning → 0).
+3. `frontend/eslint.config.js` contains zero references to Aceternity (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` is aligned with the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom) and rule messages no longer recommend a banned library.
+4. The lint job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single lint error in either workspace fails the merge check on `main`.
+
+**Plans:** TBD
+
+#### Phase 49: Bundle Budget Reset
+
+**Goal:** The `frontend/.size-limit.json` ceiling reflects a real, defensible budget; the initial route loads under it; and `size-limit` is restored as a PR-blocking CI gate.
+
+**Depends on:** Phase 48 (lint zero, primitive cascade aligned). Sequencing rationale: bundle work introduces `React.lazy()` route splits and vendor-chunk changes; doing it on a typed and linted baseline ensures every code-mod is enforced by the same gates that will catch regressions on PRs.
+
+**Requirements:** BUNDLE-01, BUNDLE-02, BUNDLE-03, BUNDLE-04
+
+**Success Criteria** (what must be TRUE):
+
+1. `frontend/.size-limit.json` Total JS ceiling is lowered from 2.43 MB to a real budget (≤500 KB initial-route gzip proposal); the chosen value is documented as the enforced budget, not aspirational.
+2. The initial route loads under the new ceiling on a clean `pnpm --filter frontend size-limit` run; heavy chunks are route-split via `React.lazy()` based on the Phase 49 audit, and the existing E2E suite still passes against the new lazy boundaries.
+3. The vendor super-chunk is audited; every chunk > 100 KB has a documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
+4. `size-limit` runs as a PR-blocking CI gate; a PR that adds ≥1 KB to any measured chunk is rejected on `main`.
+
+**Plans:** TBD
+
 ## Progress
 
 <!-- gsd:progress:start -->
 
-| Phase | Milestone | Plans Complete | Status  | Completed  |
-| ----- | --------- | -------------- | ------- | ---------- |
-| 1-7   | v2.0      | —              | Shipped | 2026-03-28 |
-| 8-13  | v3.0      | —              | Shipped | 2026-04-06 |
-| 14-23 | v4.0      | —              | Shipped | 2026-04-09 |
-| 24-25 | v4.1      | —              | Shipped | 2026-04-12 |
-| 26-32 | v5.0      | —              | Shipped | 2026-04-18 |
-| 33-43 | v6.0      | —              | Shipped | 2026-05-06 |
-| 44-46 | v6.1      | 14/14          | Shipped | 2026-05-08 |
+| Phase | Milestone | Plans Complete | Status      | Completed  |
+| ----- | --------- | -------------- | ----------- | ---------- |
+| 1-7   | v2.0      | —              | Shipped     | 2026-03-28 |
+| 8-13  | v3.0      | —              | Shipped     | 2026-04-06 |
+| 14-23 | v4.0      | —              | Shipped     | 2026-04-09 |
+| 24-25 | v4.1      | —              | Shipped     | 2026-04-12 |
+| 26-32 | v5.0      | —              | Shipped     | 2026-04-18 |
+| 33-43 | v6.0      | —              | Shipped     | 2026-05-06 |
+| 44-46 | v6.1      | 14/14          | Shipped     | 2026-05-08 |
+| 47    | v6.2      | 0/0            | Not started | -          |
+| 48    | v6.2      | 0/0            | Not started | -          |
+| 49    | v6.2      | 0/0            | Not started | -          |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-05-08 — v6.1 archived; ready for next milestone_
+_Roadmap last updated: 2026-05-08 — v6.2 Type-Check, Lint & Bundle Reset opened (phases 47-49)_
