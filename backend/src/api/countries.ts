@@ -83,7 +83,7 @@ router.get('/', validate({ query: countryFiltersSchema }), async (req, res, next
     })
   } catch (error) {
     logError('Failed to fetch countries', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -103,7 +103,7 @@ router.get('/stats', async (req, res, next) => {
     res.json(stats)
   } catch (error) {
     logError('Failed to fetch country statistics', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -114,7 +114,7 @@ router.get('/stats', async (req, res, next) => {
  */
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
     const userId = req.user?.id
 
     logInfo('Fetching country details', { countryId: id, userId })
@@ -131,7 +131,7 @@ router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) =
     res.json(country)
   } catch (error) {
     logError('Failed to fetch country', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -173,7 +173,7 @@ router.post(
       })
     } catch (error) {
       logError('Failed to create country', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -192,7 +192,7 @@ router.put(
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const updates = req.body
       const userId = req.user?.id
       const lang = getRequestLanguage(req)
@@ -222,7 +222,7 @@ router.put(
       })
     } catch (error) {
       logError('Failed to update country', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -238,7 +238,7 @@ router.delete(
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const userId = req.user?.id
       const lang = getRequestLanguage(req)
 
@@ -259,7 +259,7 @@ router.delete(
       })
     } catch (error) {
       logError('Failed to delete country', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -271,7 +271,7 @@ router.delete(
  */
 router.get('/:id/relationships', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
 
     logInfo('Fetching country relationships', { countryId: id })
 
@@ -280,7 +280,7 @@ router.get('/:id/relationships', validate({ params: idParamSchema }), async (req
     res.json(relationships)
   } catch (error) {
     logError('Failed to fetch country relationships', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -298,7 +298,7 @@ router.put(
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const updates = req.body
       const userId = req.user?.id
       const lang = getRequestLanguage(req)
@@ -321,7 +321,7 @@ router.put(
       })
     } catch (error) {
       logError('Failed to update country relationship', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -333,7 +333,7 @@ router.put(
  */
 router.get('/:id/mous', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
 
     logInfo('Fetching country MoUs', { countryId: id })
 
@@ -345,7 +345,7 @@ router.get('/:id/mous', validate({ params: idParamSchema }), async (req, res, ne
     })
   } catch (error) {
     logError('Failed to fetch country MoUs', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -356,7 +356,7 @@ router.get('/:id/mous', validate({ params: idParamSchema }), async (req, res, ne
  */
 router.get('/:id/events', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
 
     logInfo('Fetching country events', { countryId: id })
 
@@ -368,7 +368,7 @@ router.get('/:id/events', validate({ params: idParamSchema }), async (req, res, 
     })
   } catch (error) {
     logError('Failed to fetch country events', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -379,7 +379,7 @@ router.get('/:id/events', validate({ params: idParamSchema }), async (req, res, 
  */
 router.get('/:id/contacts', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
 
     logInfo('Fetching country contacts', { countryId: id })
 
@@ -391,7 +391,7 @@ router.get('/:id/contacts', validate({ params: idParamSchema }), async (req, res
     })
   } catch (error) {
     logError('Failed to fetch country contacts', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -402,7 +402,7 @@ router.get('/:id/contacts', validate({ params: idParamSchema }), async (req, res
  */
 router.get('/:id/timeline', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
 
     logInfo('Fetching country timeline', { countryId: id })
 
@@ -414,7 +414,7 @@ router.get('/:id/timeline', validate({ params: idParamSchema }), async (req, res
     })
   } catch (error) {
     logError('Failed to fetch country timeline', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -434,7 +434,7 @@ router.post(
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const { tags } = req.body
       const lang = getRequestLanguage(req)
 
@@ -448,7 +448,7 @@ router.post(
       })
     } catch (error) {
       logError('Failed to add tags to country', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -469,7 +469,7 @@ router.delete(
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const { tags } = req.body
       const lang = getRequestLanguage(req)
 
@@ -487,7 +487,7 @@ router.delete(
       })
     } catch (error) {
       logError('Failed to remove tags from country', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )

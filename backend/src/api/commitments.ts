@@ -27,7 +27,7 @@ router.get('/', validate({ query: paginationSchema }), async (req, res, next) =>
   }
 })
 
-router.get('/overdue', async (req, res, next) => {
+router.get('/overdue', async (_req, res, next) => {
   try {
     const overdue = await commitmentService.getOverdueCommitments()
     res.json({ data: overdue })

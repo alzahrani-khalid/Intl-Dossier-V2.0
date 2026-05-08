@@ -52,7 +52,7 @@ router.get('/', validate({ query: contactSearchSchema }), async (req, res, next)
     const result = await contactService.findAll(req.query)
     res.json(result)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 })
 
@@ -62,9 +62,9 @@ router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) =
     if (!contact) {
       return res.status(404).json({ error: 'Contact not found' })
     }
-    res.json(contact)
+    return res.json(contact)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 })
 
@@ -176,22 +176,22 @@ router.get(
 )
 
 // Get high-influence contacts with default threshold
-router.get('/high-influence', async (req, res, next) => {
+router.get('/high-influence', async (_req, res, next) => {
   try {
     const contacts = await contactService.getHighInfluenceContacts(70)
     res.json({ data: contacts })
   } catch (error) {
-    next(error)
+    return next(error)
   }
 })
 
 // Get contact statistics
-router.get('/stats/overview', async (req, res, next) => {
+router.get('/stats/overview', async (_req, res, next) => {
   try {
     const stats = await contactService.getStatistics()
     res.json(stats)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 })
 

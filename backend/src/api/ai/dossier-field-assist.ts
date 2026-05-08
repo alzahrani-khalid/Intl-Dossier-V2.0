@@ -82,23 +82,11 @@ const TYPE_CONTEXT: Record<DossierType, { en: string; ar: string; suggestedTags:
   },
 }
 
-// Type labels for fallback
-const TYPE_LABELS: Record<DossierType, { en: string; ar: string }> = {
-  country: { en: 'Country', ar: 'دولة' },
-  organization: { en: 'Organization', ar: 'منظمة' },
-  forum: { en: 'Forum', ar: 'منتدى' },
-  engagement: { en: 'Engagement', ar: 'مشاركة' },
-  topic: { en: 'Topic', ar: 'موضوع' },
-  working_group: { en: 'Working Group', ar: 'مجموعة عمل' },
-  person: { en: 'Person', ar: 'شخص' },
-}
-
 /**
  * Generate fallback fields when AI is unavailable
  */
 function generateFallbackFields(dossierType: DossierType, description: string): GeneratedFields {
   const context = TYPE_CONTEXT[dossierType]
-  const typeLabel = TYPE_LABELS[dossierType]
   const isArabic = /[\u0600-\u06FF]/.test(description)
 
   // Extract a name from the description (first sentence or first 50 chars)
@@ -171,7 +159,7 @@ async function callAnythingLLM(prompt: string): Promise<string | null> {
       return null
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as { textResponse?: string }
     return data.textResponse || null
   } catch (error) {
     logger.error('AnythingLLM request failed', { error })
@@ -184,7 +172,7 @@ async function callAnythingLLM(prompt: string): Promise<string | null> {
  * Generate bilingual fields for dossier creation
  */
 router.post('/', async (req: Request, res: Response): Promise<void> => {
-  const { dossier_type, description, language = 'en' } = req.body
+  const { dossier_type, description } = req.body
   const userId = req.user?.id
 
   if (!userId) {

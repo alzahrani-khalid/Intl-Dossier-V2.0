@@ -7,7 +7,7 @@ import { validate } from '../utils/validation'
 const router = Router()
 let permissionService: PermissionDelegationService
 
-function initializePermissionsRouter(supabaseUrl: string, supabaseKey: string): Router {
+export function initializePermissionsRouter(supabaseUrl: string, supabaseKey: string): Router {
   permissionService = new PermissionDelegationService(supabaseUrl, supabaseKey)
   return router
 }
@@ -64,13 +64,13 @@ router.post(
 
       const delegation = await permissionService.delegate(grantorId, req.body)
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: delegation,
         message: 'Permission delegation created successfully',
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -94,14 +94,14 @@ router.delete(
         return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      await permissionService.revoke(req.params.id, userId)
+      await permissionService.revoke(req.params.id as string, userId)
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Permission delegation revoked successfully',
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -136,12 +136,12 @@ router.get(
         delegations.received = await permissionService.getDelegationsReceived(userId)
       }
 
-      res.json({
+      return res.json({
         success: true,
         data: delegations,
       })
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         error: error.message,
       })
@@ -171,7 +171,7 @@ router.get(
         req.query.resource_id as string,
       )
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           permissions,
@@ -179,7 +179,7 @@ router.get(
         },
       })
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         error: error.message,
       })
@@ -203,15 +203,19 @@ router.put(
         return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      const updated = await permissionService.updateDelegation(req.params.id, userId, req.body)
+      const updated = await permissionService.updateDelegation(
+        req.params.id as string,
+        userId,
+        req.body,
+      )
 
-      res.json({
+      return res.json({
         success: true,
         data: updated,
         message: 'Permission delegation updated successfully',
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -233,7 +237,7 @@ router.get(
       const days = parseInt(req.query.days as string) || 7
       const expiring = await permissionService.getExpiringDelegations(days)
 
-      res.json({
+      return res.json({
         success: true,
         data: expiring,
         meta: {
@@ -242,7 +246,7 @@ router.get(
         },
       })
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         error: error.message,
       })

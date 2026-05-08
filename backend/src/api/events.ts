@@ -95,7 +95,7 @@ router.get('/', validate({ query: eventFiltersSchema }), async (req, res, next) 
     })
   } catch (error) {
     logError('Failed to fetch events', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -128,7 +128,7 @@ router.get('/calendar', async (req, res, next) => {
     res.json({ data: events })
   } catch (error) {
     logError('Failed to fetch calendar events', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -144,7 +144,7 @@ router.get('/upcoming', async (req, res, next) => {
     res.json({ data: events })
   } catch (error) {
     logError('Failed to fetch upcoming events', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -160,11 +160,11 @@ router.get(
   }),
   async (req, res, next) => {
     try {
-      const events = await eventService.findByCountry(req.params.countryId)
+      const events = await eventService.findByCountry(req.params.countryId as string)
       res.json({ data: events })
     } catch (error) {
       logError('Failed to fetch events by country', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -181,11 +181,11 @@ router.get(
   }),
   async (req, res, next) => {
     try {
-      const events = await eventService.findByOrganization(req.params.organizationId)
+      const events = await eventService.findByOrganization(req.params.organizationId as string)
       res.json({ data: events })
     } catch (error) {
       logError('Failed to fetch events by organization', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -216,7 +216,7 @@ router.post(
       })
     } catch (error) {
       logError('Failed to check event conflicts', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -226,13 +226,13 @@ router.post(
  * @desc Get event statistics
  * @access Private
  */
-router.get('/stats', async (req, res, next) => {
+router.get('/stats', async (_req, res, next) => {
   try {
     const stats = await eventService.getStatistics()
     res.json(stats)
   } catch (error) {
     logError('Failed to fetch event statistics', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -243,7 +243,7 @@ router.get('/stats', async (req, res, next) => {
  */
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
 
     const event = await eventService.findById(id)
 
@@ -257,7 +257,7 @@ router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) =
     res.json(event)
   } catch (error) {
     logError('Failed to fetch event', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -286,7 +286,7 @@ router.post(
       })
     } catch (error) {
       logError('Failed to create event', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -305,7 +305,7 @@ router.put(
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const updates = req.body
       const userId = req.user?.id
       const lang = getRequestLanguage(req)
@@ -318,7 +318,7 @@ router.put(
       })
     } catch (error) {
       logError('Failed to update event', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -334,7 +334,7 @@ router.delete(
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const userId = req.user?.id
       const lang = getRequestLanguage(req)
 
@@ -345,7 +345,7 @@ router.delete(
       })
     } catch (error) {
       logError('Failed to delete event', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -369,7 +369,7 @@ router.post(
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const attendee = req.body
       const userId = req.user?.id
       const lang = getRequestLanguage(req)
@@ -386,7 +386,7 @@ router.post(
       })
     } catch (error) {
       logError('Failed to add attendee', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -407,7 +407,7 @@ router.delete(
   }),
   async (req, res, next) => {
     try {
-      const { id, attendeeId } = req.params
+      const { id, attendeeId } = req.params as { id: string; attendeeId: string }
       const userId = req.user?.id
       const lang = getRequestLanguage(req)
 
@@ -423,7 +423,7 @@ router.delete(
       })
     } catch (error) {
       logError('Failed to remove attendee', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )

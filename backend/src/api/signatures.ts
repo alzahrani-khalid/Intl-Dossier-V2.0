@@ -7,7 +7,7 @@ import { validate } from '../utils/validation'
 const router = Router()
 let signatureService: SignatureService
 
-function initializeSignaturesRouter(
+export function initializeSignaturesRouter(
   supabaseUrl: string,
   supabaseKey: string,
   docusignConfig?: any,
@@ -29,10 +29,14 @@ const mouIdParamSchema = z.object({
 const createSignatureBodySchema = z.object({
   document_id: z.string().uuid(),
   provider: z.enum(['docusign', 'pki']),
-  signatories: z.array(z.object({
-    contact_id: z.string().uuid(),
-    order: z.number().int().min(0).optional(),
-  })).min(1),
+  signatories: z
+    .array(
+      z.object({
+        contact_id: z.string().uuid(),
+        order: z.number().int().min(0).optional(),
+      }),
+    )
+    .min(1),
   workflow: z.enum(['parallel', 'sequential']).optional(),
   expires_at: z.string().datetime(),
 })
@@ -45,7 +49,7 @@ const updateStatusBodySchema = z.object({
   status: z.string().min(1),
   signatory_id: z.string().uuid().optional(),
   signed_at: z.string().datetime().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 })
 
 /**
@@ -60,17 +64,17 @@ router.post(
   async (req: Request, res: Response, _next: NextFunction) => {
     try {
       const signatureRequest = await signatureService.createSignatureRequest({
-        mou_id: req.params.id,
+        mou_id: req.params.id as string,
         ...req.body,
       })
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: signatureRequest,
         message: 'Signature request created successfully',
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -94,15 +98,15 @@ router.post(
         return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      const sent = await signatureService.sendForSignature(req.params.id, userId)
+      const sent = await signatureService.sendForSignature(req.params.id as string, userId)
 
-      res.json({
+      return res.json({
         success: true,
         data: sent,
         message: 'Signature request sent successfully',
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -121,9 +125,9 @@ router.get(
   validate({ params: uuidParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const signatureRequest = await signatureService.getSignatureRequest(req.params.id)
+      const signatureRequest = await signatureService.getSignatureRequest(req.params.id as string)
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           id: signatureRequest.id,
@@ -134,7 +138,7 @@ router.get(
         },
       })
     } catch (error: any) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: error.message,
       })
@@ -154,16 +158,16 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const verification = await signatureService.verifySignature(
-        req.params.id,
+        req.params.id as string,
         req.body.signature_data,
       )
 
-      res.json({
+      return res.json({
         success: true,
         data: verification,
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -182,15 +186,18 @@ router.put(
   validate({ params: uuidParamSchema, body: updateStatusBodySchema }),
   async (req: Request, res: Response, _next: NextFunction) => {
     try {
-      const updated = await signatureService.updateSignatureStatus(req.params.id, req.body)
+      const updated = await signatureService.updateSignatureStatus(
+        req.params.id as string,
+        req.body,
+      )
 
-      res.json({
+      return res.json({
         success: true,
         data: updated,
         message: 'Signature status updated successfully',
       })
     } catch (error: any) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       })
@@ -209,9 +216,9 @@ router.get(
   validate({ params: mouIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const requests = await signatureService.getSignatureRequestsByMoU(req.params.mouId)
+      const requests = await signatureService.getSignatureRequestsByMoU(req.params.mouId as string)
 
-      res.json({
+      return res.json({
         success: true,
         data: requests,
         meta: {
@@ -219,7 +226,7 @@ router.get(
         },
       })
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         error: error.message,
       })
@@ -241,12 +248,12 @@ router.post('/check-expired', authenticate, async (req: Request, res: Response) 
 
     await signatureService.checkExpiredRequests()
 
-    res.json({
+    return res.json({
       success: true,
       message: 'Expired signature requests processed',
     })
   } catch (error: any) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: error.message,
     })

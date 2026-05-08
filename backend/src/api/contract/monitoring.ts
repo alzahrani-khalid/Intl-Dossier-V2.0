@@ -44,7 +44,7 @@ router.post('/alerts', requireAuthHeader, (req, res) => {
 })
 
 router.get('/alerts/:id', requireAuthHeader, (req, res) => {
-  const item = alertsService.get(req.params.id)
+  const item = alertsService.get(req.params.id as string)
   if (!item)
     return sendError(res, 404, 'ALERT_NOT_FOUND', 'Alert not found', 'لم يتم العثور على التنبيه')
   return ok(res, item)
@@ -62,7 +62,7 @@ router.patch('/alerts/:id', requireAuthHeader, (req, res) => {
     ) {
       return sendError(res, 400, 'INVALID_THRESHOLD', 'Invalid threshold', 'حد غير صالح')
     }
-    return ok(res, alertsService.update(req.params.id, patch))
+    return ok(res, alertsService.update(req.params.id as string, patch))
   } catch (e: any) {
     return sendError(res, e.status || 400, e.code || 'BAD_REQUEST', e.message || 'Error', 'خطأ')
   }
@@ -70,7 +70,7 @@ router.patch('/alerts/:id', requireAuthHeader, (req, res) => {
 
 router.delete('/alerts/:id', requireAuthHeader, (req, res) => {
   try {
-    alertsService.delete(req.params.id)
+    alertsService.delete(req.params.id as string)
     return res.status(204).send()
   } catch (e: any) {
     return sendError(
@@ -85,7 +85,7 @@ router.delete('/alerts/:id', requireAuthHeader, (req, res) => {
 
 router.post('/alerts/:id/acknowledge', requireAuthHeader, (req, res) => {
   try {
-    const result = alertsService.acknowledge(req.params.id)
+    const result = alertsService.acknowledge(req.params.id as string)
     return ok(res, result)
   } catch (e: any) {
     return sendError(res, e.status || 400, e.code || 'BAD_REQUEST', e.message || 'Error', 'خطأ')
@@ -116,7 +116,7 @@ router.get('/anomalies', requireAuthHeader, (req, res) => {
 router.post('/anomalies/:id/review', requireAuthHeader, (req, res) => {
   try {
     const { classification, false_positive } = req.body || {}
-    const result = anomalyService.review(req.params.id, classification, false_positive)
+    const result = anomalyService.review(req.params.id as string, classification, false_positive)
     return ok(res, result)
   } catch (e: any) {
     return sendError(res, e.status || 400, e.code || 'BAD_REQUEST', e.message || 'Error', 'خطأ')
