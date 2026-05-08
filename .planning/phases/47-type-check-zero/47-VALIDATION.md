@@ -2,7 +2,7 @@
 phase: 47
 slug: type-check-zero
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-05-08
 ---
@@ -90,4 +90,4 @@ _All other phase behaviors (TYPE-01, TYPE-02, TYPE-04 grep-diff) have automated 
 - [ ] Feedback latency ≤ 33s (backend full type-check)
 - [ ] `nyquist_compliant: true` set in frontmatter once plan-checker / nyquist-auditor agree the per-task verification map is complete
 
-**Approval:** pending
+**Approval:** approved 2026-05-08
