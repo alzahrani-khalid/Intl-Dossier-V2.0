@@ -68,12 +68,7 @@ export function VipVisits(): ReactElement {
 
   if (isLoading) {
     return (
-      <section
-        role="region"
-        aria-labelledby="vip-heading"
-        className="vip"
-        data-testid="dashboard-widget-vip-visits"
-      >
+      <section role="region" aria-labelledby="vip-heading" className="vip">
         <h3 id="vip-heading" className="card-title mb-3 text-start">
           {t('vip.title')}
         </h3>

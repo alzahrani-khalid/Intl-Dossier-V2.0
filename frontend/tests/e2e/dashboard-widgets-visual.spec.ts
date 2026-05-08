@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { loginForListPages } from './support/list-pages-auth'
 import { seedRecentDossierStore } from './support/dossier-drawer-fixture'
 
-const FROZEN_TIME = new Date('2026-04-26T12:00:00Z')
+const FROZEN_TIME = new Date('2026-05-08T12:00:00Z')
 
 const SUPPRESS_TRANSITIONS_CSS = `
   *, *::before, *::after {
@@ -26,6 +26,17 @@ const WIDGETS = [
   ['dashboard-widget-my-tasks', 'my-tasks'],
   ['dashboard-widget-recent-dossiers', 'recent-dossiers'],
 ] as const
+
+const READY_SELECTORS: Record<(typeof WIDGETS)[number][0], string> = {
+  'dashboard-widget-kpi-strip': '.kpi-value',
+  'dashboard-widget-week-ahead': '.week-row',
+  'dashboard-widget-overdue-commitments': '.overdue-group',
+  'dashboard-widget-digest': '.digest-row',
+  'dashboard-widget-sla-health': '.sla-row',
+  'dashboard-widget-vip-visits': '.vip-row',
+  'dashboard-widget-my-tasks': '.task-row',
+  'dashboard-widget-recent-dossiers': '.recent-row',
+}
 
 test.beforeEach(async ({ page }) => {
   await page.clock.install({ time: FROZEN_TIME })
@@ -54,8 +65,10 @@ test.beforeEach(async ({ page }) => {
 for (const [selector, name] of WIDGETS) {
   test(`visual ${name}`, async ({ page }) => {
     await page.waitForSelector(`[data-testid="${selector}"]`)
-    await expect(page.getByTestId(selector)).toBeVisible()
-    await expect(page.getByTestId(selector)).toHaveScreenshot(`${name}.png`, {
+    const widget = page.getByTestId(selector)
+    await expect(widget).toBeVisible()
+    await expect(widget.locator(READY_SELECTORS[selector]).first()).toBeVisible({ timeout: 15_000 })
+    await expect(widget).toHaveScreenshot(`${name}.png`, {
       animations: 'disabled',
       maxDiffPixelRatio: 0.02,
     })
