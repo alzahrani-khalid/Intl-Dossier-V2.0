@@ -6,7 +6,7 @@ import {
   SignatureVerificationResult,
   SignatureStatus,
   Signatory
-} from '../models/SignatureRequest';
+} from '../models/signature-request.model';
 
 // DocuSign integration types
 interface DocuSignConfig {
@@ -280,7 +280,7 @@ export class SignatureService {
     }
   }
 
-  private async sendToDocuSign(request: SignatureRequest): Promise<string> {
+  private async sendToDocuSign(_request: SignatureRequest): Promise<string> {
     // DocuSign API integration
     // This is a placeholder - actual implementation would use DocuSign SDK
     if (!this.docusignConfig) {
@@ -292,7 +292,7 @@ export class SignatureService {
     return `docusign_envelope_${Date.now()}`;
   }
 
-  private async sendToPKI(request: SignatureRequest): Promise<string> {
+  private async sendToPKI(_request: SignatureRequest): Promise<string> {
     // PKI integration
     // This is a placeholder - actual implementation would use PKI provider
     if (!this.pkiConfig) {
@@ -306,7 +306,7 @@ export class SignatureService {
 
   private async verifyDocuSignSignature(
     request: SignatureRequest,
-    signatureData: string
+    _signatureData: string
   ): Promise<SignatureVerificationResult> {
     // DocuSign signature verification
     // Placeholder implementation
@@ -320,7 +320,7 @@ export class SignatureService {
 
   private async verifyPKISignature(
     request: SignatureRequest,
-    signatureData: string
+    _signatureData: string
   ): Promise<SignatureVerificationResult> {
     // PKI signature verification
     // Placeholder implementation

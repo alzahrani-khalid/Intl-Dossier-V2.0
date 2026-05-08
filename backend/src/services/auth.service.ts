@@ -241,7 +241,7 @@ export class AuthService {
   /**
    * Logout user and invalidate tokens
    */
-  async logout(userId?: string): Promise<{ success: boolean; message?: string }> {
+  async logout(_userId?: string): Promise<{ success: boolean; message?: string }> {
     try {
       const { error } = await supabaseAnon.auth.signOut()
 
@@ -503,7 +503,7 @@ export class AuthService {
   /**
    * Reset password with token
    */
-  async resetPasswordWithToken(resetToken: string, newPassword: string): Promise<boolean> {
+  async resetPasswordWithToken(_resetToken: string, newPassword: string): Promise<boolean> {
     try {
       const { error } = await supabaseAnon.auth.updateUser({
         password: newPassword,
@@ -611,7 +611,7 @@ export class AuthService {
   /**
    * Send password reset email
    */
-  async sendPasswordResetEmail(email: string): Promise<boolean> {
+  async sendPasswordResetEmail(_email: string): Promise<boolean> {
     // Implementation would go here - for now return true
     return true
   }
@@ -619,7 +619,7 @@ export class AuthService {
   /**
    * Verify email address
    */
-  async verifyEmail(token: string): Promise<boolean> {
+  async verifyEmail(_token: string): Promise<boolean> {
     // Implementation would go here - for now return true
     return true
   }
@@ -757,7 +757,7 @@ export class AuthService {
   /**
    * Validate session token
    */
-  async validateSession(token: string): Promise<boolean> {
+  async validateSession(_token: string): Promise<boolean> {
     try {
       const { data, error } = await supabaseAnon.auth.getSession()
 
@@ -774,7 +774,7 @@ export class AuthService {
   /**
    * Check user permissions
    */
-  async checkPermission(userId: string, permission: string, resourceId?: string): Promise<boolean> {
+  async checkPermission(userId: string, permission: string, _resourceId?: string): Promise<boolean> {
     try {
       const { data: user } = await supabaseAdmin
         .from('users')
@@ -844,7 +844,7 @@ export class AuthService {
   /**
    * Verify JWT token
    */
-  async verifyJWT(token: string, secret?: string): Promise<any> {
+  async verifyJWT(token: string, _secret?: string): Promise<any> {
     try {
       const { data, error } = await supabaseAnon.auth.getUser(token)
 
@@ -860,7 +860,7 @@ export class AuthService {
 
   // Helper methods
 
-  private verifyMFACode(secret: string, code: string): boolean {
+  private verifyMFACode(_secret: string, _code: string): boolean {
     // For now, return true for testing - implement proper MFA verification later
     return true
   }
@@ -877,5 +877,5 @@ export class AuthService {
   }
 }
 
-export { User, LoginResult, MFASetupResult }
+export type { User, LoginResult, MFASetupResult }
 export default AuthService

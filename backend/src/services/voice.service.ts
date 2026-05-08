@@ -13,7 +13,7 @@ export class VoiceService {
   }
 
   async transcribeAudio(
-    audioBuffer: Buffer,
+    _audioBuffer: Buffer,
     language: 'en' | 'ar' = 'en',
   ): Promise<{
     text: string

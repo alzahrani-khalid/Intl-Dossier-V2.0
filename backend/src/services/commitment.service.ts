@@ -57,7 +57,7 @@ export class CommitmentService {
     return data
   }
 
-  private async scheduleReminder(commitmentId: string, dueDate: string) {
+  private async scheduleReminder(commitmentId: string, _dueDate: string) {
     // Integration with background job system
     logInfo(`Reminder scheduled for commitment ${commitmentId}`)
   }
@@ -78,7 +78,7 @@ export class CommitmentService {
   }
 
   // Missing methods for API endpoints
-  async findAll(filters?: any) {
+  async findAll(_filters?: any) {
     const { data, error } = await supabaseAdmin
       .from('commitments')
       .select('*')

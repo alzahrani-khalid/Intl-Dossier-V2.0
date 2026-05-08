@@ -422,7 +422,7 @@ function calculateSimilarityScore(
  */
 function calculateCombinedScores(
   results: EntitySearchResult[],
-  query: string,
+  _query: string,
 ): EntitySearchResult[] {
   if (results.length === 0) return results
 
@@ -455,8 +455,8 @@ function calculateCombinedScores(
     // Alphabetical: 20%
     combined_score:
       (result.similarity_score || 0) * 0.5 + // AI confidence: 50%
-      normalizedRecencyScores[index] * 0.3 + // Recency: 30%
-      alphabeticalScores[index] * 0.2,
+      (normalizedRecencyScores[index] ?? 0) * 0.3 + // Recency: 30%
+      (alphabeticalScores[index] ?? 0) * 0.2,
   }))
 }
 

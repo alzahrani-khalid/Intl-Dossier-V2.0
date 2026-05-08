@@ -429,7 +429,7 @@ export class BriefService {
     }
   }
 
-  private async translateContent(content: string, targetLang: 'ar'): Promise<string> {
+  private async translateContent(content: string, _targetLang: 'ar'): Promise<string> {
     // This would integrate with translation service
     // For now, return a placeholder
     return `[Arabic translation of: ${content.substring(0, 50)}...]`;

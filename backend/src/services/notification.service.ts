@@ -122,12 +122,8 @@ export async function enqueueNotification(
  * NotificationService class for after-action integration
  */
 export class NotificationService {
-  private supabaseUrl: string
-  private supabaseKey: string
-
-  constructor(supabaseUrl: string, supabaseKey: string) {
-    this.supabaseUrl = supabaseUrl
-    this.supabaseKey = supabaseKey
+  constructor(_supabaseUrl: string, _supabaseKey: string) {
+    // Args reserved for future Supabase client construction
   }
 
   /**

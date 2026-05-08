@@ -278,7 +278,7 @@ export class ReportingService {
   private async generatePDF(
     content: string,
     template: ReportTemplate,
-    data: any[],
+    _data: any[],
   ): Promise<GeneratedReport> {
     const doc = new (PDFDocument as any)()
     const chunks: Buffer[] = []
@@ -310,7 +310,7 @@ export class ReportingService {
   }
 
   private async generateExcel(
-    content: string,
+    _content: string,
     template: ReportTemplate,
     data: any[],
   ): Promise<GeneratedReport> {

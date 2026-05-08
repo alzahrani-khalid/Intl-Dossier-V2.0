@@ -15,7 +15,6 @@ import type { Database } from '../types/database.types'
 
 type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
 type TaskContributorInsert = Database['public']['Tables']['task_contributors']['Insert']
-type TaskContributorUpdate = Database['public']['Tables']['task_contributors']['Update']
 
 const supabase = createClient<Database>(
   process.env.SUPABASE_URL!,

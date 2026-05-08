@@ -22,16 +22,6 @@ export interface RankingFactors {
   isExactMatch: boolean // Keyword exact match vs semantic match
 }
 
-interface RankedResult {
-  id: string
-  type: string
-  title_en: string
-  title_ar: string
-  rank_score: number
-  match_type: 'exact' | 'semantic' | 'fuzzy'
-  updated_at: string
-}
-
 /**
  * Calculate final rank score for a search result
  *
@@ -148,24 +138,6 @@ export function sortByRankScore<T extends { rank_score: number }>(results: T[]):
 }
 
 /**
- * Separate exact and semantic matches into sections
- *
- * @param results - Mixed results
- * @returns Object with exactMatches and semanticMatches arrays
- */
-function separateMatchTypes<T extends { rank_score: number; match_type?: string }>(
-  results: T[],
-): { exactMatches: T[]; semanticMatches: T[] } {
-  const exactMatches = results.filter((r) => r.rank_score >= 100)
-  const semanticMatches = results.filter((r) => r.rank_score < 100)
-
-  return {
-    exactMatches: sortByRankScore(exactMatches),
-    semanticMatches: sortByRankScore(semanticMatches),
-  }
-}
-
-/**
  * Calculate days since update from ISO timestamp
  *
  * @param updatedAt - ISO 8601 timestamp
@@ -180,15 +152,3 @@ export function getDaysSinceUpdate(updatedAt: string): number {
   return Math.max(0, diffDays)
 }
 
-/**
- * Normalize PostgreSQL ts_rank_cd to 0-1 scale
- *
- * ts_rank_cd returns values typically between 0 and 1, but can exceed 1
- * for very high-quality matches. Normalize to ensure consistent scoring.
- *
- * @param tsRank - Raw ts_rank_cd value
- * @returns Normalized rank (0.0 - 1.0)
- */
-function normalizeTsRank(tsRank: number): number {
-  return Math.min(1.0, Math.max(0.0, tsRank))
-}

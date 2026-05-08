@@ -77,7 +77,7 @@ function tokenizeQuery(query: string): string[] {
     // Quoted phrase (double or single quotes)
     if (match[1] || match[2]) {
       tokens.push(`"${match[1] || match[2]}"`)
-    } else {
+    } else if (match[3] !== undefined) {
       // Single word or operator
       tokens.push(match[3])
     }
@@ -93,11 +93,12 @@ function tokenizeQuery(query: string): string[] {
  * @param language - PostgreSQL text search configuration
  * @returns tsquery string
  */
-function convertToTsquery(tokens: string[], language: string): string {
+function convertToTsquery(tokens: string[], _language: string): string {
   const tsqueryParts: string[] = []
 
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i]
+    if (token === undefined) continue
     const upperToken = token.toUpperCase()
 
     // Handle Boolean operators
@@ -161,58 +162,3 @@ function convertToTsquery(tokens: string[], language: string): string {
  * @param language - Language for text search configuration
  * @returns tsquery string ready for PostgreSQL
  */
-function buildTsquery(userQuery: string, language: 'en' | 'ar' = 'en'): string {
-  const parsed = parseQueryToTsquery(userQuery, language)
-
-  // If no Boolean operators, use plainto_tsquery for simpler matching
-  if (!parsed.hasBooleanOperators && parsed.tokens.length === 1) {
-    return `plainto_tsquery('${parsed.language}', '${parsed.tokens[0]}')`
-  }
-
-  // Use to_tsquery for Boolean operator support
-  return `to_tsquery('${parsed.language}', '${parsed.tsquery}')`
-}
-
-/**
- * Validate query syntax
- *
- * @param query - User query
- * @returns True if valid, throws error if invalid
- */
-function validateQuerySyntax(query: string): boolean {
-  if (!query || query.trim().length === 0) {
-    throw new Error('Query cannot be empty')
-  }
-
-  if (query.length > 500) {
-    throw new Error('Query exceeds maximum length of 500 characters')
-  }
-
-  // Check for balanced parentheses
-  let parenCount = 0
-  for (const char of query) {
-    if (char === '(') parenCount++
-    if (char === ')') parenCount--
-    if (parenCount < 0) {
-      throw new Error('Unbalanced parentheses in query')
-    }
-  }
-
-  if (parenCount !== 0) {
-    throw new Error('Unbalanced parentheses in query')
-  }
-
-  // Check for balanced quotes
-  const doubleQuotes = (query.match(/"/g) || []).length
-  const singleQuotes = (query.match(/'/g) || []).length
-
-  if (doubleQuotes % 2 !== 0) {
-    throw new Error('Unbalanced double quotes in query')
-  }
-
-  if (singleQuotes % 2 !== 0) {
-    throw new Error('Unbalanced single quotes in query')
-  }
-
-  return true
-}
