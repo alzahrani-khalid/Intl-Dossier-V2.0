@@ -53,9 +53,8 @@ export function SLAIndicator({
   mode = 'badge',
   className,
 }: SLAIndicatorProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
-// No deadline = no SLA tracking
+  // No deadline = no SLA tracking
   if (!deadline) {
     return null
   }
