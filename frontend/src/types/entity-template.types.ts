@@ -80,16 +80,6 @@ export interface TemplateContext {
 // ============================================
 
 /**
- * Request to get templates
- */
-interface GetTemplatesRequest {
-  entity_type: TemplateEntityType
-  context?: TemplateContext
-  include_recent?: boolean
-  limit?: number
-}
-
-/**
  * Response from get templates
  */
 export interface GetTemplatesResponse {
@@ -115,22 +105,6 @@ export interface CreateTemplateRequest {
   context_conditions?: TemplateContext
   keyboard_shortcut?: string
   tags?: string[]
-}
-
-/**
- * Request to track template usage
- */
-interface TrackUsageRequest {
-  action: 'track-usage'
-  template_id: string
-}
-
-/**
- * Request to toggle favorite
- */
-interface ToggleFavoriteRequest {
-  action: 'toggle-favorite'
-  template_id: string
 }
 
 /**
@@ -165,17 +139,6 @@ export interface ToggleFavoriteResponse {
 // ============================================
 
 /**
- * Props for TemplateSelector component
- */
-interface TemplateSelectorProps {
-  entityType: TemplateEntityType
-  context?: TemplateContext
-  onSelect: (template: EntityTemplate) => void
-  onSkip?: () => void
-  className?: string
-}
-
-/**
  * Props for TemplateCard component
  */
 export interface TemplateCardProps {
@@ -186,107 +149,17 @@ export interface TemplateCardProps {
   showKeyboardShortcut?: boolean
 }
 
-/**
- * Props for QuickEntryMode component
- */
-interface QuickEntryModeProps {
-  entityType: TemplateEntityType
-  onSubmit: (values: Record<string, unknown>, template?: EntityTemplate) => void
-  onCancel: () => void
-  defaultValues?: Record<string, unknown>
-  context?: TemplateContext
-}
-
-/**
- * Props for TemplateFormDialog component
- */
-interface TemplateFormDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  entityType: TemplateEntityType
-  defaultValues?: Record<string, unknown>
-  onSave: (template: CreateTemplateRequest) => void
-}
-
 // ============================================
 // Keyboard Shortcuts
 // ============================================
-
-/**
- * Keyboard shortcut registration
- */
-interface TemplateShortcut {
-  template_id: string
-  shortcut: string
-  entity_type: TemplateEntityType
-}
-
-/**
- * Quick entry keyboard commands
- */
-const QUICK_ENTRY_KEYS = {
-  OPEN_PICKER: ['Alt+T', 'Cmd+Shift+T'],
-  SUBMIT: 'Cmd+Enter',
-  CANCEL: 'Escape',
-  NAVIGATE_UP: 'ArrowUp',
-  NAVIGATE_DOWN: 'ArrowDown',
-  SELECT: 'Enter',
-  TOGGLE_FAVORITE: 'Cmd+F',
-} as const
 
 // ============================================
 // Template Presets
 // ============================================
 
-/**
- * Icon options for templates
- */
-const TEMPLATE_ICONS = [
-  'FileText',
-  'Users',
-  'Globe',
-  'Building',
-  'Calendar',
-  'CheckCircle',
-  'UserCheck',
-  'AlertTriangle',
-  'Search',
-  'FileSearch',
-  'Plane',
-  'Flag',
-  'Lightbulb',
-  'Clock',
-  'Star',
-] as const
-
-/**
- * Color options for templates
- */
-const TEMPLATE_COLORS = [
-  'blue',
-  'green',
-  'purple',
-  'amber',
-  'red',
-  'cyan',
-  'indigo',
-  'orange',
-  'pink',
-  'violet',
-  'emerald',
-  'teal',
-] as const
-
 // ============================================
 // Utility Types
 // ============================================
-
-/**
- * Get icon component name from template
- */
-function getIconName(template: EntityTemplate): string {
-  return template.icon || 'FileText'
-}
 
 /**
  * Get color class from template

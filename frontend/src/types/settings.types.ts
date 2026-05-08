@@ -65,8 +65,6 @@ export const profileSettingsSchema = z.object({
   avatar_url: z.string().url().optional().nullable(),
 })
 
-type ProfileSettings = z.infer<typeof profileSettingsSchema>
-
 /**
  * General settings schema
  */
@@ -77,8 +75,6 @@ export const generalSettingsSchema = z.object({
   start_of_week: z.enum(['sunday', 'monday', 'saturday']),
 })
 
-type GeneralSettings = z.infer<typeof generalSettingsSchema>
-
 /**
  * Appearance settings schema
  */
@@ -87,8 +83,6 @@ export const appearanceSettingsSchema = z.object({
   theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau']),
   display_density: z.enum(['compact', 'comfortable', 'dense']),
 })
-
-type AppearanceSettings = z.infer<typeof appearanceSettingsSchema>
 
 /**
  * Notification settings schema
@@ -104,8 +98,6 @@ export const notificationSettingsSchema = z.object({
   notifications_mentions: z.boolean(),
 })
 
-type NotificationSettings = z.infer<typeof notificationSettingsSchema>
-
 /**
  * Accessibility settings schema
  */
@@ -118,8 +110,6 @@ export const accessibilitySettingsSchema = z.object({
   screen_reader: z.boolean(),
 })
 
-type AccessibilitySettings = z.infer<typeof accessibilitySettingsSchema>
-
 /**
  * Security settings schema
  */
@@ -127,8 +117,6 @@ export const securitySettingsSchema = z.object({
   mfa_enabled: z.boolean(),
   session_timeout: z.number().min(5).max(480),
 })
-
-type SecuritySettings = z.infer<typeof securitySettingsSchema>
 
 /**
  * Combined user settings type
@@ -177,35 +165,12 @@ export interface UserSettings {
 }
 
 /**
- * Settings section navigation item
- */
-interface SettingsNavItem {
-  id: SettingsSectionId
-  labelKey: string
-  icon: React.ComponentType<{ className?: string }>
-  description?: string
-}
-
-/**
  * Timezone option
  */
 export interface TimezoneOption {
   value: string
   label: string
   offset: string
-}
-
-/**
- * Active session info
- */
-interface ActiveSession {
-  id: string
-  device: string
-  browser: string
-  ip_address: string
-  location?: string
-  last_active: string
-  is_current: boolean
 }
 
 /**

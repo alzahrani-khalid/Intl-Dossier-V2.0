@@ -147,36 +147,6 @@ export interface FieldHistoryTimelineProps {
   className?: string
 }
 
-interface FieldHistoryEntryCardProps {
-  entry: FieldHistoryEntry
-  isRTL: boolean
-  onRollback?: (entry: FieldHistoryEntry) => void
-  className?: string
-}
-
-interface FieldHistoryGroupCardProps {
-  field: FieldHistoryGrouped
-  isRTL: boolean
-  onClick?: (fieldName: string) => void
-  className?: string
-}
-
-interface FieldHistoryDiffViewProps {
-  oldValue: unknown
-  newValue: unknown
-  fieldName: string
-  isRTL: boolean
-  className?: string
-}
-
-interface RollbackConfirmDialogProps {
-  entry: FieldHistoryEntry
-  isOpen: boolean
-  isLoading: boolean
-  onConfirm: () => void
-  onCancel: () => void
-}
-
 // =============================================
 // HOOK RETURN TYPES
 // =============================================

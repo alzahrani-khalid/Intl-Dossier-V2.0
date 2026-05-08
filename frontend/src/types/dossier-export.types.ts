@@ -7,7 +7,7 @@
  * Supports bilingual export (EN/AR).
  */
 
-import type { DossierType, DossierStatus } from '@/services/dossier-api'
+import type { DossierType } from '@/services/dossier-api'
 
 /**
  * Export format options
@@ -231,30 +231,6 @@ export interface DossierExportResponse {
     message_en: string
     message_ar: string
   }
-}
-
-/**
- * Dossier summary for export cover page
- */
-interface DossierExportSummary {
-  id: string
-  name_en: string
-  name_ar: string
-  type: DossierType
-  status: DossierStatus
-  description_en: string | null
-  description_ar: string | null
-  stats: {
-    relationships_count: number
-    positions_count: number
-    mous_count: number
-    commitments_count: number
-    events_count: number
-    contacts_count: number
-    documents_count: number
-  }
-  generated_at: string
-  generated_by: string
 }
 
 /**

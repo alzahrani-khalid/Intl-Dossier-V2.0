@@ -103,91 +103,13 @@ export interface DossierRelationshipWithDossiers extends DossierRelationship {
 // API Request Types
 // ============================================================================
 
-/**
- * Input for creating a new relationship
- */
-interface RelationshipCreate {
-  source_dossier_id: string
-  target_dossier_id: string
-  relationship_type: DossierRelationshipType
-  relationship_metadata?: Record<string, unknown>
-  notes_en?: string
-  notes_ar?: string
-  effective_from?: string
-  effective_to?: string
-  status?: RelationshipStatus
-}
-
-/**
- * Input for updating a relationship
- */
-interface RelationshipUpdate {
-  relationship_type?: DossierRelationshipType
-  relationship_metadata?: Record<string, unknown>
-  notes_en?: string
-  notes_ar?: string
-  effective_from?: string
-  effective_to?: string
-  status?: RelationshipStatus
-}
-
-/**
- * Parameters for listing relationships
- */
-interface RelationshipListParams {
-  source_dossier_id?: string
-  target_dossier_id?: string
-  dossier_id?: string
-  relationship_type?: DossierRelationshipType
-  status?: RelationshipStatus
-  limit?: number
-  offset?: number
-}
-
 // ============================================================================
 // API Response Types
 // ============================================================================
 
-/**
- * Paginated relationship list response
- */
-interface RelationshipListResponse {
-  data: DossierRelationshipWithDossiers[]
-  pagination: {
-    total?: number
-    limit: number
-    offset: number
-    has_more: boolean
-  }
-}
-
 // ============================================================================
 // Helper Constants
 // ============================================================================
-
-/**
- * All valid relationship types
- */
-const RELATIONSHIP_TYPES: DossierRelationshipType[] = [
-  'member_of',
-  'participates_in',
-  'cooperates_with',
-  'bilateral_relation',
-  'partnership',
-  'parent_of',
-  'subsidiary_of',
-  'related_to',
-  'represents',
-  'hosted_by',
-  'sponsored_by',
-  'involves',
-  'discusses',
-  'participant_in',
-  'observer_of',
-  'affiliate_of',
-  'successor_of',
-  'predecessor_of',
-]
 
 /**
  * Labels for relationship types
@@ -215,15 +137,6 @@ export const RELATIONSHIP_TYPE_LABELS: Record<DossierRelationshipType, { en: str
   }
 
 /**
- * Labels for relationship status
- */
-const RELATIONSHIP_STATUS_LABELS: Record<RelationshipStatus, { en: string; ar: string }> = {
-  active: { en: 'Active', ar: 'نشط' },
-  historical: { en: 'Historical', ar: 'تاريخي' },
-  terminated: { en: 'Terminated', ar: 'منتهي' },
-}
-
-/**
  * Labels for dossier types
  */
 export const DOSSIER_TYPE_LABELS: Record<DossierType, { en: string; ar: string }> = {
@@ -234,33 +147,4 @@ export const DOSSIER_TYPE_LABELS: Record<DossierType, { en: string; ar: string }
   engagement: { en: 'Engagement', ar: 'ارتباط' },
   working_group: { en: 'Working Group', ar: 'مجموعة عمل' },
   topic: { en: 'Topic', ar: 'موضوع' },
-}
-
-/**
- * Get inverse relationship type (for bidirectional display)
- */
-function getInverseRelationshipType(type: DossierRelationshipType): DossierRelationshipType | null {
-  const inverseMap: Partial<Record<DossierRelationshipType, DossierRelationshipType>> = {
-    member_of: 'involves',
-    parent_of: 'subsidiary_of',
-    subsidiary_of: 'parent_of',
-    hosted_by: 'involves',
-    sponsored_by: 'involves',
-    successor_of: 'predecessor_of',
-    predecessor_of: 'successor_of',
-  }
-  return inverseMap[type] || null
-}
-
-/**
- * Check if relationship type is symmetric (same meaning in both directions)
- */
-function isSymmetricRelationship(type: DossierRelationshipType): boolean {
-  const symmetricTypes: DossierRelationshipType[] = [
-    'cooperates_with',
-    'bilateral_relation',
-    'partnership',
-    'related_to',
-  ]
-  return symmetricTypes.includes(type)
 }

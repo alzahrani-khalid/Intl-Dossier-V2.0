@@ -96,18 +96,6 @@ export interface AuditLogMetadata {
 // API RESPONSES
 // =============================================
 
-interface AuditLogListResponse {
-  data: AuditLogEntry[]
-  metadata: AuditLogMetadata
-}
-
-interface AuditLogDetailResponse {
-  data: {
-    log: AuditLogEntry
-    related_logs: AuditLogRelated[]
-  }
-}
-
 export interface AuditLogStatistics {
   period: {
     from: string
@@ -122,10 +110,6 @@ export interface AuditLogStatistics {
     count: number
   }>
   total_events: number
-}
-
-interface AuditLogStatisticsResponse {
-  data: AuditLogStatistics
 }
 
 // =============================================
@@ -184,50 +168,6 @@ export interface UseAuditLogExportReturn {
 // COMPONENT PROPS
 // =============================================
 
-interface AuditLogViewerProps {
-  initialFilters?: AuditLogFilters
-  showFilters?: boolean
-  showExport?: boolean
-  showStatistics?: boolean
-  maxHeight?: string
-  className?: string
-}
-
-interface AuditLogFiltersProps {
-  filters: AuditLogFilters
-  onFiltersChange: (filters: AuditLogFilters) => void
-  onClearFilters: () => void
-  availableTables?: string[]
-  className?: string
-}
-
-interface AuditLogTableProps {
-  logs: AuditLogEntry[]
-  isLoading: boolean
-  onLogClick?: (log: AuditLogEntry) => void
-  selectedLogId?: string
-  className?: string
-}
-
-interface AuditLogDetailProps {
-  logId: string
-  onClose?: () => void
-  className?: string
-}
-
-interface AuditLogDiffViewProps {
-  oldData: Record<string, unknown> | null
-  newData: Record<string, unknown> | null
-  changedFields: string[] | null
-  className?: string
-}
-
-interface AuditLogExportButtonProps {
-  filters: AuditLogFilters
-  disabled?: boolean
-  className?: string
-}
-
 // =============================================
 // CONFIGURATION
 // =============================================
@@ -241,52 +181,4 @@ export interface OperationConfig {
   icon: string
 }
 
-const OPERATION_CONFIG: Record<AuditOperation, OperationConfig> = {
-  INSERT: {
-    operation: 'INSERT',
-    label_en: 'Created',
-    label_ar: 'إنشاء',
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
-    icon: 'Plus',
-  },
-  UPDATE: {
-    operation: 'UPDATE',
-    label_en: 'Updated',
-    label_ar: 'تحديث',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
-    icon: 'Edit3',
-  },
-  DELETE: {
-    operation: 'DELETE',
-    label_en: 'Deleted',
-    label_ar: 'حذف',
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
-    icon: 'Trash2',
-  },
-}
-
 // Common table names for display
-const TABLE_DISPLAY_NAMES: Record<string, { en: string; ar: string }> = {
-  users: { en: 'Users', ar: 'المستخدمون' },
-  countries: { en: 'Countries', ar: 'الدول' },
-  organizations: { en: 'Organizations', ar: 'المنظمات' },
-  mous: { en: 'MoUs', ar: 'مذكرات التفاهم' },
-  events: { en: 'Events', ar: 'الفعاليات' },
-  forums: { en: 'Forums', ar: 'المنتديات' },
-  briefs: { en: 'Briefs', ar: 'الموجزات' },
-  intelligence_reports: { en: 'Intelligence Reports', ar: 'تقارير المعلومات' },
-  data_library_items: { en: 'Data Library', ar: 'مكتبة البيانات' },
-  intake_tickets: { en: 'Intake Tickets', ar: 'تذاكر الاستقبال' },
-  commitments: { en: 'Commitments', ar: 'الالتزامات' },
-  tasks: { en: 'Tasks', ar: 'المهام' },
-  engagements: { en: 'Engagements', ar: 'الارتباطات' },
-  persons: { en: 'Persons', ar: 'الأشخاص' },
-  positions: { en: 'Positions', ar: 'المناصب' },
-  working_groups: { en: 'Working Groups', ar: 'مجموعات العمل' },
-  themes: { en: 'Themes', ar: 'المواضيع' },
-  documents: { en: 'Documents', ar: 'الوثائق' },
-  relationships: { en: 'Relationships', ar: 'العلاقات' },
-}

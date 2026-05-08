@@ -327,18 +327,6 @@ export interface UseStakeholderTimelineReturn {
   isLoadingStats: boolean
 }
 
-/**
- * Hook return type for interaction mutations
- */
-interface UseStakeholderInteractionMutationsReturn {
-  createInteraction: (data: CreateInteractionRequest) => Promise<StakeholderInteraction>
-  isCreating: boolean
-  createAnnotation: (data: CreateAnnotationRequest) => Promise<TimelineAnnotation>
-  updateAnnotation: (id: string, data: UpdateAnnotationRequest) => Promise<TimelineAnnotation>
-  deleteAnnotation: (id: string) => Promise<void>
-  isAnnotating: boolean
-}
-
 // ===========================================
 // COMPONENT PROP TYPES
 // ===========================================
@@ -370,13 +358,4 @@ export interface InteractionCardProps {
   onAnnotate?: (event: StakeholderTimelineEvent) => void
   onViewDetails?: (event: StakeholderTimelineEvent) => void
   showAnnotations?: boolean
-}
-
-/**
- * Stats card props
- */
-interface InteractionStatsCardProps {
-  stats: StakeholderInteractionStats
-  isLoading?: boolean
-  className?: string
 }

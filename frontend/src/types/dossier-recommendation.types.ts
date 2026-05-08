@@ -132,19 +132,6 @@ export interface DossierRecommendationListItem {
   recommended_dossier: RecommendedDossierSummary
 }
 
-/**
- * Interaction record
- */
-interface RecommendationInteraction {
-  id: string
-  recommendation_id: string
-  user_id: string
-  interaction_type: RecommendationInteractionType
-  feedback_text: string | null
-  context: Record<string, unknown>
-  created_at: string
-}
-
 // ============================================================================
 // API Request/Response Types
 // ============================================================================
@@ -253,22 +240,6 @@ export function getReasonBgColor(reason: DossierRecommendationReason): string {
 }
 
 /**
- * Get icon name for recommendation reason
- */
-function getReasonIcon(reason: DossierRecommendationReason): string {
-  const icons: Record<DossierRecommendationReason, string> = {
-    similar_content: 'FileText',
-    shared_relationships: 'Network',
-    topic_overlap: 'Tags',
-    recent_activity: 'Activity',
-    collaboration_history: 'Users',
-    geographic_proximity: 'MapPin',
-    strategic_alignment: 'Target',
-  }
-  return icons[reason]
-}
-
-/**
  * Get display color for similarity score
  */
 export function getSimilarityColor(score: number): string {
@@ -279,41 +250,10 @@ export function getSimilarityColor(score: number): string {
 }
 
 /**
- * Get status badge color
- */
-function getStatusColor(status: DossierRecommendationStatus): string {
-  const colors: Record<DossierRecommendationStatus, string> = {
-    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-    viewed: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-    accepted: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-    dismissed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
-    expired: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-  }
-  return colors[status]
-}
-
-/**
  * Format similarity score as percentage
  */
 export function formatSimilarity(score: number): string {
   return `${Math.round(score * 100)}%`
-}
-
-/**
- * Check if recommendation is actionable
- */
-function isActionable(recommendation: DossierRecommendation): boolean {
-  return recommendation.status === 'pending' || recommendation.status === 'viewed'
-}
-
-/**
- * Get priority display color
- */
-function getPriorityColor(priority: number): string {
-  if (priority >= 5) return 'text-red-600 dark:text-red-400'
-  if (priority >= 4) return 'text-orange-600 dark:text-orange-400'
-  if (priority >= 3) return 'text-yellow-600 dark:text-yellow-400'
-  return 'text-gray-600 dark:text-gray-400'
 }
 
 // ============================================================================
@@ -331,17 +271,6 @@ export const REASON_LABELS: Record<DossierRecommendationReason, { en: string; ar
   collaboration_history: { en: 'Collaboration History', ar: 'تاريخ التعاون' },
   geographic_proximity: { en: 'Same Region', ar: 'نفس المنطقة' },
   strategic_alignment: { en: 'Strategic Alignment', ar: 'توافق استراتيجي' },
-}
-
-/**
- * Status labels (bilingual)
- */
-const STATUS_LABELS: Record<DossierRecommendationStatus, { en: string; ar: string }> = {
-  pending: { en: 'New', ar: 'جديد' },
-  viewed: { en: 'Viewed', ar: 'تمت المشاهدة' },
-  accepted: { en: 'Opened', ar: 'تم الفتح' },
-  dismissed: { en: 'Dismissed', ar: 'مرفوض' },
-  expired: { en: 'Expired', ar: 'منتهي الصلاحية' },
 }
 
 /**

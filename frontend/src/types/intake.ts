@@ -51,8 +51,6 @@ export interface ForesightFields {
   stakeholders: string
 }
 
-type TypeSpecificFields = EngagementFields | PositionFields | MouActionFields | ForesightFields
-
 /**
  * Intake Form Data
  */
@@ -66,58 +64,6 @@ export interface IntakeFormData {
   dossierId?: string
   typeSpecificFields?: DynamicFields
   attachmentIds?: string[]
-}
-
-/**
- * Intake Ticket (full entity)
- */
-interface IntakeTicket {
-  id: string
-  ticketNumber: string
-  requestType: RequestType
-  title: string
-  titleAr?: string
-  description: string
-  descriptionAr?: string
-  typeSpecificFields?: DynamicFields
-
-  // Classification
-  sensitivity: Sensitivity
-  urgency: Urgency
-  priority: Priority
-
-  // Relationships
-  dossierId?: string
-  parentTicketId?: string
-  convertedToType?: RequestType
-  convertedToId?: string
-
-  // Assignment
-  assignedTo?: string
-  assignedUnit?: string
-
-  // Status
-  status: TicketStatus
-  resolution?: string
-  resolutionAr?: string
-
-  // Timestamps
-  createdAt: string
-  createdBy: string
-  updatedAt: string
-  updatedBy: string
-  submittedAt?: string
-  triagedAt?: string
-  assignedAt?: string
-  resolvedAt?: string
-  closedAt?: string
-
-  // SLA Status
-  slaStatus?: SLAStatus
-
-  // Metadata
-  source: 'web' | 'api' | 'email' | 'import'
-  clientMetadata?: Metadata
 }
 
 /**
@@ -201,11 +147,6 @@ export interface TriageDecision {
 export type ConfidenceLevel = 'very_low' | 'low' | 'medium' | 'high' | 'very_high'
 
 /**
- * Feedback type for ML predictions
- */
-type FeedbackType = 'accepted' | 'rejected' | 'corrected' | 'ignored'
-
-/**
  * ML Model Status
  */
 export type MLModelStatus = 'training' | 'validating' | 'active' | 'deprecated' | 'failed'
@@ -235,43 +176,6 @@ export interface TriageSuggestions {
   cachedAt?: string
   mlPowered?: boolean
   predictionId?: string
-}
-
-/**
- * ML Classification Prediction
- */
-interface MLClassificationPrediction {
-  predictionId: string
-  predictions: {
-    type: RequestType
-    typeConfidence: number
-    typeProbabilities: Record<string, number>
-    sensitivity: Sensitivity
-    sensitivityConfidence: number
-    sensitivityProbabilities: Record<string, number>
-    urgency: Urgency
-    urgencyConfidence: number
-    urgencyProbabilities: Record<string, number>
-    priority: Priority
-    priorityConfidence: number
-    priorityProbabilities: Record<string, number>
-    unit: string | null
-    unitConfidence: number
-    unitProbabilities?: Record<string, number>
-    assignee: string | null
-    assigneeConfidence: number
-    assigneeProbabilities?: Record<string, number>
-  }
-  overallConfidence: number
-  confidenceLevel: ConfidenceLevel
-  explanation: MLClassificationExplanation
-  modelInfo: {
-    name: string
-    version: string
-  }
-  cached: boolean
-  cachedAt?: string
-  processingTimeMs: number
 }
 
 /**
@@ -339,94 +243,6 @@ export interface MLModelInfo {
   validationSamples: number
   activatedAt?: string
   createdAt: string
-}
-
-/**
- * ML Model Performance Metrics
- */
-interface MLModelPerformance {
-  model: MLModelInfo
-  performance: {
-    totalPredictions: number
-    acceptanceRate: number
-    correctionRate: number
-    accuracyByField: {
-      type: number
-      sensitivity: number
-      urgency: number
-      priority: number
-      unit: number
-    }
-    periodDays: number
-  }
-}
-
-/**
- * ML Prediction Feedback Request
- */
-interface MLPredictionFeedbackRequest {
-  predictionId: string
-  finalValues: {
-    type?: RequestType
-    sensitivity?: Sensitivity
-    urgency?: Urgency
-    priority?: Priority
-    unit?: string
-    assignee?: string
-  }
-  feedbackNotes?: string
-}
-
-/**
- * ML Prediction Feedback Response
- */
-interface MLPredictionFeedbackResponse {
-  feedbackId: string
-  message: string
-  usedForTraining: boolean
-}
-
-/**
- * ML Keyword Pattern
- */
-interface MLKeywordPattern {
-  id: string
-  pattern: string
-  patternAr?: string
-  patternType: 'keyword' | 'regex' | 'phrase'
-  indicatesType?: RequestType
-  indicatesSensitivity?: Sensitivity
-  indicatesUrgency?: Urgency
-  indicatesUnit?: string
-  weight: number
-  isActive: boolean
-  matchCount: number
-  accuracyWhenMatched?: number
-  createdAt: string
-}
-
-/**
- * ML Assignment Rule
- */
-interface MLAssignmentRule {
-  id: string
-  ruleName: string
-  ruleNameAr?: string
-  description?: string
-  descriptionAr?: string
-  matchRequestType?: RequestType[]
-  matchSensitivity?: Sensitivity[]
-  matchUrgency?: Urgency[]
-  matchKeywords?: string[]
-  matchKeywordsAr?: string[]
-  assignToUnit?: string
-  assignToUser?: string
-  priority: number
-  isActive: boolean
-  timesApplied: number
-  successRate?: number
-  createdAt: string
-  updatedAt: string
 }
 
 /**

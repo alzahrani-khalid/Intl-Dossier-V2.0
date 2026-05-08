@@ -85,11 +85,6 @@ export interface FieldDisplayConfig {
 }
 
 /**
- * Field configuration registry by dossier type
- */
-type FieldConfigRegistry = Record<DossierType, FieldDisplayConfig[]>
-
-/**
  * Comparison view mode
  */
 export type ComparisonViewMode = 'table' | 'side_by_side' | 'highlights_only'
@@ -161,83 +156,6 @@ export interface EntitySelectionState {
   maxSelections: number
   /** Search query for filtering entities */
   searchQuery: string
-}
-
-/**
- * Props for the EntityComparisonTable component
- */
-interface EntityComparisonTableProps {
-  /** Comparison result to display */
-  comparisonResult: EntityComparisonResult
-  /** Current view mode */
-  viewMode: ComparisonViewMode
-  /** Filter options */
-  filters: ComparisonFilters
-  /** Callback when view mode changes */
-  onViewModeChange?: (mode: ComparisonViewMode) => void
-  /** Callback when filters change */
-  onFiltersChange?: (filters: ComparisonFilters) => void
-  /** Whether the component is in loading state */
-  isLoading?: boolean
-  /** Additional CSS classes */
-  className?: string
-}
-
-/**
- * Props for the EntityComparisonSelector component
- */
-interface EntityComparisonSelectorProps {
-  /** Current selection state */
-  selectionState: EntitySelectionState
-  /** Callback when selection changes */
-  onSelectionChange: (state: EntitySelectionState) => void
-  /** Callback when compare button is clicked */
-  onCompare: (type: DossierType, ids: string[]) => void
-  /** Minimum number of entities required to compare */
-  minSelections?: number
-  /** Maximum number of entities allowed */
-  maxSelections?: number
-  /** Additional CSS classes */
-  className?: string
-}
-
-/**
- * Props for the ComparisonExport component
- */
-interface ComparisonExportProps {
-  /** Comparison result to export */
-  comparisonResult: EntityComparisonResult
-  /** Export configuration */
-  config?: Partial<ComparisonExportConfig>
-  /** Callback after successful export */
-  onExportComplete?: (format: ComparisonExportFormat) => void
-  /** Callback on export error */
-  onExportError?: (error: Error) => void
-  /** Additional CSS classes */
-  className?: string
-}
-
-/**
- * Default comparison filters
- */
-const DEFAULT_COMPARISON_FILTERS: ComparisonFilters = {
-  showOnlyDifferences: false,
-  showBaseFields: true,
-  showExtensionFields: true,
-  showMetadataFields: true,
-  includedFields: [],
-  excludedFields: [],
-}
-
-/**
- * Default export configuration
- */
-const DEFAULT_EXPORT_CONFIG: ComparisonExportConfig = {
-  format: 'csv',
-  includeHeader: true,
-  includeSummary: true,
-  onlyDifferences: false,
-  language: 'en',
 }
 
 /**

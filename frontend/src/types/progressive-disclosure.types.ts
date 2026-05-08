@@ -152,24 +152,6 @@ export interface SessionHintTracking {
 }
 
 /**
- * Progressive disclosure state
- */
-interface ProgressiveDisclosureState {
-  /** User's preferences */
-  preferences: DisclosurePreferences | null
-  /** Hint interactions map (hintId -> interaction) */
-  interactions: Record<string, HintInteraction>
-  /** Current session tracking */
-  session: SessionHintTracking | null
-  /** Whether data is loading */
-  isLoading: boolean
-  /** Error message */
-  error: string | null
-  /** Session ID */
-  sessionId: string
-}
-
-/**
  * Result from shouldShowHint check
  */
 export interface ShouldShowHintResult {
@@ -287,85 +269,4 @@ export interface ProgressiveEmptyStateProps {
   size?: 'sm' | 'md' | 'lg'
   /** Additional CSS classes */
   className?: string
-}
-
-/**
- * Database row for user_hint_interactions
- */
-interface UserHintInteractionRow {
-  id: string
-  user_id: string
-  hint_id: string
-  hint_context: HintContextType
-  page_context: string | null
-  status: HintInteractionStatus
-  shown_count: number
-  expanded_count: number
-  first_shown_at: string
-  last_shown_at: string
-  dismissed_at: string | null
-  expanded_at: string | null
-  action_taken_at: string | null
-  should_reshow_after: string | null
-  reshow_interval_days: number
-  created_at: string
-  updated_at: string
-}
-
-/**
- * Database row for user_disclosure_preferences
- */
-interface UserDisclosurePreferencesRow {
-  id: string
-  user_id: string
-  experience_level: UserExperienceLevel
-  experience_level_auto_calculated: boolean
-  hints_enabled: boolean
-  show_keyboard_shortcuts: boolean
-  show_advanced_features: boolean
-  hint_delay_ms: number
-  auto_dismiss_seconds: number | null
-  max_hints_per_session: number
-  hint_cooldown_minutes: number
-  total_visits: number
-  total_interactions: number
-  first_visit_at: string
-  last_visit_at: string
-  intermediate_unlock_interactions: number
-  advanced_unlock_interactions: number
-  expert_unlock_interactions: number
-  created_at: string
-  updated_at: string
-}
-
-/**
- * API request for recording hint interaction
- */
-interface RecordHintInteractionRequest {
-  hintId: string
-  hintContext: HintContextType
-  pageContext?: string
-  status: HintInteractionStatus
-}
-
-/**
- * API response for hint interaction
- */
-interface HintInteractionResponse {
-  success: boolean
-  data?: HintInteraction
-  error?: string
-}
-
-/**
- * API response for disclosure preferences
- */
-interface DisclosurePreferencesResponse {
-  success: boolean
-  data?: {
-    preferences: DisclosurePreferences
-    interactions: HintInteraction[]
-    session: SessionHintTracking
-  }
-  error?: string
 }

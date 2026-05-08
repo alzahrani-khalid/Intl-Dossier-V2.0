@@ -88,16 +88,6 @@ export interface RecommendationReasoning {
 }
 
 /**
- * Dossier reference in recommendation
- */
-interface RecommendationDossierRef {
-  id: string
-  name_en: string
-  name_ar: string
-  type: string
-}
-
-/**
  * Full engagement recommendation
  */
 export interface EngagementRecommendation {
@@ -223,23 +213,6 @@ export interface RecommendationFeedbackCreate {
 // Batch/Generation Types
 // ============================================================================
 
-/**
- * Recommendation batch record
- */
-interface RecommendationBatch {
-  id: string
-  batch_type: 'scheduled' | 'manual' | 'event_based'
-  relationships_analyzed: number
-  recommendations_generated: number
-  high_priority_count: number
-  model_version: string
-  parameters: Record<string, unknown>
-  started_at: string
-  completed_at?: string
-  status: 'running' | 'completed' | 'failed' | 'partial'
-  error_message?: string
-}
-
 // ============================================================================
 // API Request/Response Types
 // ============================================================================
@@ -320,18 +293,6 @@ export interface RecommendationStats {
   average_confidence: number
 }
 
-/**
- * Weekly recommendation summary
- */
-interface RecommendationWeeklySummary {
-  week_start: string
-  week_end: string
-  generated: number
-  accepted: number
-  dismissed: number
-  expired: number
-}
-
 // ============================================================================
 // Helper Functions
 // ============================================================================
@@ -363,17 +324,6 @@ export function getUrgencyBgColor(urgency: RecommendationUrgency): string {
 }
 
 /**
- * Get display color for priority (1-5)
- */
-function getPriorityColor(priority: number): string {
-  if (priority >= 5) return 'text-red-600 dark:text-red-400'
-  if (priority >= 4) return 'text-orange-600 dark:text-orange-400'
-  if (priority >= 3) return 'text-yellow-600 dark:text-yellow-400'
-  if (priority >= 2) return 'text-blue-600 dark:text-blue-400'
-  return 'text-gray-600 dark:text-gray-400'
-}
-
-/**
  * Get background color for recommendation type
  */
 export function getRecommendationTypeBgColor(type: RecommendationType): string {
@@ -387,22 +337,6 @@ export function getRecommendationTypeBgColor(type: RecommendationType): string {
     reciprocity_balance: 'bg-teal-100 dark:bg-teal-900/30',
   }
   return colors[type]
-}
-
-/**
- * Get icon name for recommendation type
- */
-function getRecommendationTypeIcon(type: RecommendationType): string {
-  const icons: Record<RecommendationType, string> = {
-    proactive_outreach: 'Send',
-    follow_up: 'Reply',
-    commitment_reminder: 'Clock',
-    relationship_maintenance: 'RefreshCw',
-    strategic_opportunity: 'Target',
-    risk_mitigation: 'AlertTriangle',
-    reciprocity_balance: 'Scale',
-  }
-  return icons[type]
 }
 
 /**
@@ -425,13 +359,6 @@ export function getStatusColor(status: RecommendationStatus): string {
  */
 export function formatConfidence(score: number): string {
   return `${Math.round(score * 100)}%`
-}
-
-/**
- * Check if recommendation is actionable
- */
-function isActionable(recommendation: EngagementRecommendation): boolean {
-  return recommendation.status === 'pending' || recommendation.status === 'viewed'
 }
 
 /**
@@ -481,40 +408,4 @@ export const STATUS_LABELS: Record<RecommendationStatus, { en: string; ar: strin
   dismissed: { en: 'Dismissed', ar: 'مرفوض' },
   expired: { en: 'Expired', ar: 'منتهي الصلاحية' },
   superseded: { en: 'Superseded', ar: 'تم استبداله' },
-}
-
-/**
- * Feedback type labels
- */
-const FEEDBACK_TYPE_LABELS: Record<RecommendationFeedbackType, { en: string; ar: string }> = {
-  helpful: { en: 'Helpful', ar: 'مفيد' },
-  not_helpful: { en: 'Not Helpful', ar: 'غير مفيد' },
-  timing_wrong: { en: 'Timing Wrong', ar: 'التوقيت خاطئ' },
-  already_planned: { en: 'Already Planned', ar: 'مخطط له مسبقًا' },
-  not_relevant: { en: 'Not Relevant', ar: 'غير ذي صلة' },
-  too_early: { en: 'Too Early', ar: 'مبكر جدًا' },
-  too_late: { en: 'Too Late', ar: 'متأخر جدًا' },
-}
-
-/**
- * Suggested format labels
- */
-const FORMAT_LABELS: Record<SuggestedFormat, { en: string; ar: string }> = {
-  in_person: { en: 'In Person', ar: 'حضوري' },
-  virtual: { en: 'Virtual', ar: 'افتراضي' },
-  hybrid: { en: 'Hybrid', ar: 'هجين' },
-  phone_call: { en: 'Phone Call', ar: 'مكالمة هاتفية' },
-  email: { en: 'Email', ar: 'بريد إلكتروني' },
-  formal_letter: { en: 'Formal Letter', ar: 'خطاب رسمي' },
-}
-
-/**
- * Priority labels
- */
-const PRIORITY_LABELS: Record<number, { en: string; ar: string }> = {
-  1: { en: 'Very Low', ar: 'منخفض جدًا' },
-  2: { en: 'Low', ar: 'منخفض' },
-  3: { en: 'Medium', ar: 'متوسط' },
-  4: { en: 'High', ar: 'مرتفع' },
-  5: { en: 'Critical', ar: 'حرج' },
 }

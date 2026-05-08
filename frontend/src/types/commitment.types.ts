@@ -73,18 +73,6 @@ export interface Commitment {
   updated_by: string | null
   created_at: string | null
   updated_at: string | null
-
-}
-
-/**
- * Commitment with computed properties for UI display
- */
-interface CommitmentWithComputedProps extends Commitment {
-  isOverdue: boolean
-  daysOverdue: number
-  daysUntilDue: number
-  ownerName?: string
-  dossierName?: string
 }
 
 /**
@@ -318,8 +306,3 @@ export const ALLOWED_EVIDENCE_TYPES = [
  * Maximum evidence file size in bytes (10MB)
  */
 export const MAX_EVIDENCE_SIZE = 10 * 1024 * 1024
-
-/**
- * Default page size for pagination
- */
-const DEFAULT_PAGE_SIZE = 20

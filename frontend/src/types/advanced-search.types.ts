@@ -253,55 +253,10 @@ export interface UpdateTemplateRequest {
 }
 
 // Saved filter (from database)
-interface SavedFilter {
-  id: string
-  user_id: string
-  name: string
-  description?: string
-  search_entities: SearchableEntityType[]
-  full_text_query?: string
-  date_range?: DateRange
-  status_filter: string[]
-  priority_filter: string[]
-  custom_tags: string[]
-  filter_logic: LogicOperator
-  page_size: number
-  timeout_behavior: 'partial' | 'fail' | 'cached'
-  max_timeout_ms: number
-  is_default: boolean
-  is_shared: boolean
-  shared_with: string[]
-  use_count: number
-  last_used_at: string | null
-  created_at: string
-  updated_at: string
-}
 
 // Filter condition with database fields
-interface SearchFilterCondition {
-  id: string
-  filter_id: string
-  group_operator: LogicOperator
-  group_order: number
-  field_name: string
-  operator: FilterOperator
-  field_value: unknown
-  is_negated: boolean
-  condition_order: number
-  created_at: string
-}
 
 // Relationship filter with database fields
-interface SearchFilterRelationship {
-  id: string
-  filter_id: string
-  source_entity_type: SearchableEntityType
-  target_entity_type: SearchableEntityType
-  relationship_type: RelationshipType
-  target_entity_conditions: Record<string, unknown>
-  include_depth: number
-  created_at: string
-}
 
 // Field metadata for UI rendering
 export interface SearchableField {

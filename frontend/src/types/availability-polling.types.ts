@@ -256,14 +256,6 @@ export interface SubmitVoteRequest {
 }
 
 /**
- * Batch submit votes request (multiple slots at once)
- */
-interface BatchSubmitVotesRequest {
-  poll_id: string
-  votes: SubmitVoteRequest[]
-}
-
-/**
  * Poll list filters
  */
 export interface PollListFilters {
@@ -328,23 +320,6 @@ export interface OptimalSlot {
 }
 
 /**
- * Close poll request
- */
-interface ClosePollRequest {
-  selected_slot_id?: string
-}
-
-/**
- * Auto-schedule request
- */
-interface AutoScheduleRequest {
-  poll_id: string
-  slot_id?: string // If not provided, uses best slot
-  event_type?: string
-  additional_participants?: CreatePollParticipantRequest[]
-}
-
-/**
  * Auto-schedule response
  */
 export interface AutoScheduleResponse {
@@ -364,50 +339,6 @@ export interface AutoScheduleResponse {
 // =============================================================================
 // UI HELPER TYPES
 // =============================================================================
-
-/**
- * Slot with user's response for UI
- */
-interface SlotWithResponse extends PollSlot {
-  my_response?: PollResponseType
-  my_notes?: string
-  response_summary: {
-    available: number
-    unavailable: number
-    maybe: number
-    total: number
-    percentage: number
-  }
-  is_best: boolean
-  is_selected: boolean
-}
-
-/**
- * Participant with response status for UI
- */
-interface ParticipantWithStatus extends PollParticipant {
-  response_count: number
-  total_slots: number
-  has_completed: boolean
-}
-
-/**
- * Vote matrix cell for grid display
- */
-interface VoteMatrixCell {
-  slot_id: string
-  participant_id: string
-  response?: PollResponseType
-  notes?: string
-}
-
-/**
- * Vote matrix row (participant)
- */
-interface VoteMatrixRow {
-  participant: PollParticipant
-  votes: Map<string, PollResponseType | undefined>
-}
 
 // =============================================================================
 // CONSTANTS
@@ -464,21 +395,6 @@ export const POLL_STATUS_COLORS: Record<PollStatus, { bg: string; text: string; 
       border: 'border-red-200 dark:border-red-800',
     },
   }
-
-/** Voting rule icons */
-const VOTING_RULE_ICONS: Record<VotingRule, string> = {
-  simple_majority: 'Vote',
-  consensus: 'Users',
-  unanimous: 'CheckCircle2',
-  organizer_decides: 'UserCog',
-}
-
-/** Response type icons */
-const RESPONSE_TYPE_ICONS: Record<PollResponseType, string> = {
-  available: 'Check',
-  unavailable: 'X',
-  maybe: 'HelpCircle',
-}
 
 /** Default meeting durations (in minutes) */
 export const DEFAULT_DURATION_OPTIONS = [15, 30, 45, 60, 90, 120, 180, 240]

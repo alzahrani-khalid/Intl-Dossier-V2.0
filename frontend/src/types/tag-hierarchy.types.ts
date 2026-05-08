@@ -328,30 +328,6 @@ export const TAG_COLOR_PALETTE = [
 ] as const
 
 /**
- * Default tag icons (Lucide icon names)
- */
-const TAG_ICON_OPTIONS = [
-  'tag',
-  'bookmark',
-  'folder',
-  'star',
-  'flag',
-  'heart',
-  'alert-circle',
-  'check-circle',
-  'info',
-  'globe',
-  'map-pin',
-  'briefcase',
-  'users',
-  'calendar',
-  'clock',
-  'file-text',
-  'link',
-  'hash',
-] as const
-
-/**
  * Bilingual labels for entity types
  */
 export const TAG_ENTITY_TYPE_LABELS: Record<TagEntityType, { en: string; ar: string }> = {
@@ -364,17 +340,6 @@ export const TAG_ENTITY_TYPE_LABELS: Record<TagEntityType, { en: string; ar: str
   forum: { en: 'Forum', ar: 'منتدى' },
   organization: { en: 'Organization', ar: 'منظمة' },
   country: { en: 'Country', ar: 'دولة' },
-}
-
-/**
- * Bilingual labels for match types
- */
-const TAG_MATCH_TYPE_LABELS: Record<TagMatchType, { en: string; ar: string }> = {
-  exact: { en: 'Exact match', ar: 'تطابق تام' },
-  prefix: { en: 'Starts with', ar: 'يبدأ بـ' },
-  partial: { en: 'Contains', ar: 'يحتوي على' },
-  synonym: { en: 'Synonym', ar: 'مرادف' },
-  fuzzy: { en: 'Similar', ar: 'مشابه' },
 }
 
 /**
@@ -391,21 +356,6 @@ export const TAG_SUGGESTION_REASON_LABELS: Record<TagSuggestionReason, { en: str
 // Type Guards
 // ============================================================================
 
-function isTagCategory(value: unknown): value is TagCategory {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'id' in value &&
-    'name_en' in value &&
-    'name_ar' in value &&
-    'hierarchy_level' in value
-  )
-}
-
-function isTagEntityType(value: string): value is TagEntityType {
-  return TAG_ENTITY_TYPES.includes(value as TagEntityType)
-}
-
 // ============================================================================
 // Utility Functions
 // ============================================================================
@@ -415,33 +365,6 @@ function isTagEntityType(value: string): value is TagEntityType {
  */
 export function getTagName(tag: Pick<TagCategory, 'name_en' | 'name_ar'>, isRTL: boolean): string {
   return isRTL ? tag.name_ar : tag.name_en
-}
-
-/**
- * Get the description for a tag based on language
- */
-function getTagDescription(
-  tag: Pick<TagCategory, 'description_en' | 'description_ar'>,
-  isRTL: boolean,
-): string | undefined {
-  return isRTL ? tag.description_ar : tag.description_en
-}
-
-/**
- * Build a flat list from hierarchical tags
- */
-function flattenTagHierarchy(tags: TagCategory[]): TagCategory[] {
-  const result: TagCategory[] = []
-
-  function traverse(tag: TagCategory) {
-    result.push(tag)
-    if (tag.children) {
-      tag.children.forEach(traverse)
-    }
-  }
-
-  tags.forEach(traverse)
-  return result
 }
 
 /**
@@ -489,18 +412,4 @@ export function getTagAncestors(tag: TagCategory, allTags: TagCategory[]): TagCa
   }
 
   return ancestors
-}
-
-/**
- * Get breadcrumb path for a tag
- */
-function getTagBreadcrumb(
-  tag: TagCategory,
-  allTags: TagCategory[],
-  isRTL: boolean,
-  separator = ' > ',
-): string {
-  const ancestors = getTagAncestors(tag, allTags)
-  const path = [...ancestors, tag]
-  return path.map((t) => getTagName(t, isRTL)).join(separator)
 }

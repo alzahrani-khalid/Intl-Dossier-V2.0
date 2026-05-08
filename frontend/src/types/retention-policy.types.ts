@@ -180,43 +180,6 @@ export interface LegalHoldInput {
 }
 
 /**
- * Entity retention status tracking
- */
-interface EntityRetentionStatus {
-  id: string
-  entity_type: RetentionEntityType
-  entity_id: string
-
-  // Policy
-  retention_policy_id?: string
-  retention_expires_at?: string
-
-  // Hold status
-  under_legal_hold: boolean
-  legal_hold_ids?: string[]
-
-  // Processing status
-  archived_at?: string
-  archive_location?: string
-  deleted_at?: string
-  anonymized_at?: string
-
-  // Warnings
-  expiration_warning_sent: boolean
-  warning_sent_at?: string
-
-  // Manual holds
-  manual_hold: boolean
-  manual_hold_reason?: string
-  manual_hold_by?: string
-  manual_hold_until?: string
-
-  // Audit
-  created_at: string
-  updated_at: string
-}
-
-/**
  * Retention execution log entry
  */
 export interface RetentionExecutionLog {
@@ -378,33 +341,3 @@ export interface ProcessorConfig {
 // ============================================================================
 // UI Helper Types
 // ============================================================================
-
-/**
- * Display-friendly retention policy for tables/lists
- */
-interface RetentionPolicyDisplay extends RetentionPolicy {
-  retention_display: string // e.g., "7 Years", "Permanent", "90 Days"
-  action_display: string // Translated action label
-  status_display: string // Translated status label
-}
-
-/**
- * Legal hold with resolved user names
- */
-interface LegalHoldDisplay extends LegalHold {
-  created_by_name?: string
-  released_by_name?: string
-  status_display: string
-}
-
-/**
- * Summary card data
- */
-interface RetentionSummary {
-  total_policies: number
-  active_policies: number
-  active_legal_holds: number
-  entities_under_hold: number
-  pending_actions: number
-  expiring_this_month: number
-}

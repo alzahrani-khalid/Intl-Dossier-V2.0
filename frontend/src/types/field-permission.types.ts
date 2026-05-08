@@ -170,12 +170,6 @@ export interface UpdateFieldPermissionRequest {
   expires_at?: string | null
 }
 
-interface CheckPermissionsRequest {
-  entity_type: FieldPermissionEntityType
-  entity_id?: string
-  field_names?: string[]
-}
-
 export interface ListFieldPermissionsParams {
   entity_type?: FieldPermissionEntityType
   scope_type?: FieldPermissionScope
@@ -195,31 +189,6 @@ export interface GetAuditLogsParams {
 
 // Response types
 
-interface FieldPermissionsResponse {
-  data: FieldPermission[]
-}
-
-interface FieldDefinitionsResponse {
-  data: FieldDefinition[]
-}
-
-interface ResolvedPermissionsResponse {
-  data: ResolvedFieldPermission[]
-}
-
-interface BulkPermissionCheckResponse {
-  data: BulkPermissionCheck[]
-}
-
-interface AuditLogsResponse {
-  data: FieldPermissionAudit[]
-  pagination: {
-    limit: number
-    offset: number
-    total?: number
-  }
-}
-
 // UI-specific types
 
 /**
@@ -229,15 +198,6 @@ export interface FieldWithPermission extends FieldDefinition {
   can_view: boolean
   can_edit: boolean
   permission_source?: 'default' | 'role' | 'user' | 'team' | 'inherited'
-}
-
-/**
- * Permission rule for admin management UI
- */
-interface PermissionRuleDisplay extends FieldPermission {
-  scope_display: string
-  entity_display?: string
-  field_display: string
 }
 
 /**
@@ -320,14 +280,6 @@ export const SCOPE_TYPE_CONFIG: ScopeTypeConfig[] = [
     description_en: 'Apply to all team members',
     description_ar: 'تطبيق على جميع أعضاء الفريق',
   },
-]
-
-const FIELD_CATEGORY_CONFIG: { value: FieldCategory; label_en: string; label_ar: string }[] = [
-  { value: 'base', label_en: 'Base Fields', label_ar: 'الحقول الأساسية' },
-  { value: 'extension', label_en: 'Extension Fields', label_ar: 'حقول الامتداد' },
-  { value: 'metadata', label_en: 'Metadata', label_ar: 'البيانات الوصفية' },
-  { value: 'relationship', label_en: 'Relationships', label_ar: 'العلاقات' },
-  { value: 'sensitive', label_en: 'Sensitive', label_ar: 'حساس' },
 ]
 
 export const SENSITIVITY_LEVEL_CONFIG: {

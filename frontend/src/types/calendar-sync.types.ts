@@ -87,36 +87,6 @@ export interface ExternalCalendar {
 }
 
 /**
- * Mapping between internal and external events
- */
-interface CalendarEventSyncMapping {
-  id: string
-  internal_event_id?: string
-  internal_series_id?: string
-  external_calendar_id: string
-  external_event_id: string
-  external_recurring_event_id?: string
-
-  // Sync state
-  sync_state: EventSyncState
-  last_synced_at?: string
-  last_external_update?: string
-  last_internal_update?: string
-
-  // Version tracking
-  external_etag?: string
-  internal_version: number
-
-  // Error tracking
-  last_error?: string
-  error_count: number
-
-  // Timestamps
-  created_at: string
-  updated_at: string
-}
-
-/**
  * Sync log entry
  */
 export interface CalendarSyncLog {
@@ -214,85 +184,9 @@ export interface ICalFeedSubscription {
   updated_at: string
 }
 
-/**
- * Event from iCal feed
- */
-interface ICalFeedEvent {
-  id: string
-  subscription_id: string
-
-  // Event identifiers
-  ical_uid: string
-  sequence: number
-
-  // Event data
-  title: string
-  description?: string
-  location?: string
-
-  // Timing
-  start_datetime: string
-  end_datetime?: string
-  is_all_day: boolean
-  timezone: string
-
-  // Recurrence
-  rrule?: string
-  recurrence_id?: string
-
-  // Status
-  status: string
-
-  // Organizer
-  organizer_email?: string
-  organizer_name?: string
-
-  // Timestamps
-  created_at: string
-  updated_at: string
-}
-
 // ============================================================================
 // API Types
 // ============================================================================
-
-/**
- * OAuth authorization request
- */
-interface OAuthAuthorizationRequest {
-  provider: ExternalCalendarProvider
-  redirect_uri: string
-  scopes?: string[]
-}
-
-/**
- * OAuth authorization response
- */
-interface OAuthAuthorizationResponse {
-  authorization_url: string
-  state: string
-}
-
-/**
- * OAuth callback request
- */
-interface OAuthCallbackRequest {
-  provider: ExternalCalendarProvider
-  code: string
-  state: string
-}
-
-/**
- * Connection creation input
- */
-interface CreateConnectionInput {
-  provider: ExternalCalendarProvider
-  sync_direction?: SyncDirection
-  conflict_strategy?: SyncConflictStrategy
-  auto_sync_interval_minutes?: number
-  sync_past_days?: number
-  sync_future_days?: number
-}
 
 /**
  * Connection update input
@@ -379,91 +273,13 @@ export interface UnifiedCalendarEvent {
   can_edit: boolean
 }
 
-/**
- * Calendar source filter
- */
-interface CalendarSourceFilter {
-  internal: boolean
-  ical_feeds: string[]
-  external_calendars: string[]
-}
-
 // ============================================================================
 // Provider-specific Types
 // ============================================================================
 
-/**
- * Google Calendar event (simplified)
- */
-interface GoogleCalendarEvent {
-  id: string
-  summary: string
-  description?: string
-  start: { dateTime?: string; date?: string; timeZone?: string }
-  end: { dateTime?: string; date?: string; timeZone?: string }
-  location?: string
-  status: string
-  recurringEventId?: string
-  etag: string
-  updated: string
-  attendees?: Array<{ email: string; responseStatus: string }>
-}
-
-/**
- * Outlook/Exchange event (simplified)
- */
-interface OutlookCalendarEvent {
-  id: string
-  subject: string
-  bodyPreview?: string
-  start: { dateTime: string; timeZone: string }
-  end: { dateTime: string; timeZone: string }
-  location?: { displayName: string }
-  showAs: string
-  seriesMasterId?: string
-  changeKey: string
-  lastModifiedDateTime: string
-  attendees?: Array<{
-    emailAddress: { address: string }
-    status: { response: string }
-  }>
-}
-
 // ============================================================================
 // Hook Return Types
 // ============================================================================
-
-interface UseCalendarSyncReturn {
-  // Connections
-  connections: ExternalCalendarConnection[]
-  isLoadingConnections: boolean
-  connectionsError: Error | null
-
-  // Actions
-  connectProvider: (provider: ExternalCalendarProvider) => Promise<{ authorization_url: string }>
-  disconnectProvider: (connectionId: string) => Promise<void>
-  updateConnection: (connectionId: string, input: UpdateConnectionInput) => Promise<void>
-
-  // Calendars
-  calendars: ExternalCalendar[]
-  updateCalendar: (calendarId: string, input: UpdateCalendarInput) => Promise<void>
-
-  // Sync operations
-  triggerSync: (request: TriggerSyncRequest) => Promise<CalendarSyncLog>
-  isSyncing: boolean
-  lastSyncLog: CalendarSyncLog | null
-
-  // Conflicts
-  conflicts: CalendarSyncConflict[]
-  resolveConflict: (input: ResolveConflictInput) => Promise<void>
-
-  // iCal feeds
-  icalSubscriptions: ICalFeedSubscription[]
-  addICalFeed: (input: CreateICalSubscriptionInput) => Promise<void>
-  updateICalFeed: (id: string, input: UpdateICalSubscriptionInput) => Promise<void>
-  removeICalFeed: (id: string) => Promise<void>
-  refreshICalFeed: (id: string) => Promise<void>
-}
 
 // ============================================================================
 // Provider Configuration

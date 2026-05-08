@@ -258,23 +258,6 @@ export interface ReportSchedule {
 // Report Execution Types
 // ============================================================================
 
-interface ReportExecutionResult {
-  id: string
-  reportId: string
-  status: 'pending' | 'running' | 'completed' | 'failed'
-  data?: Record<string, unknown>[]
-  rowCount?: number
-  executionTimeMs?: number
-  error?: string
-  createdAt: string
-  completedAt?: string
-}
-
-interface ReportPreviewRequest {
-  configuration: ReportConfiguration
-  limit?: number
-}
-
 export interface ReportPreviewResponse {
   data: Record<string, unknown>[]
   columns: ReportField[]
@@ -296,33 +279,9 @@ export interface DragItem {
 
 export type DropZoneType = 'columns' | 'filters' | 'groupings' | 'aggregations' | 'trash'
 
-interface DropZone {
-  type: DropZoneType
-  accepts: DragItemType[]
-}
-
 // ============================================================================
 // Builder State Types
 // ============================================================================
-
-interface ReportBuilderState {
-  // Configuration
-  configuration: ReportConfiguration
-
-  // UI State
-  selectedEntity: ReportEntityType | null
-  availableFields: ReportField[]
-  isDirty: boolean
-  isPreviewLoading: boolean
-  previewData: ReportPreviewResponse | null
-  previewError: string | null
-
-  // Drag state
-  activeDragItem: DragItem | null
-
-  // Saved report
-  savedReport: SavedReport | null
-}
 
 // ============================================================================
 // API Request/Response Types
@@ -370,11 +329,6 @@ export interface CreateScheduleRequest {
   timezone: string
   exportFormat: ExportFormat
   recipients: string[]
-}
-
-interface UpdateScheduleRequest extends Partial<CreateScheduleRequest> {
-  id: string
-  isActive?: boolean
 }
 
 // ============================================================================
@@ -1211,16 +1165,6 @@ export const ENTITY_FIELDS: Record<ReportEntityType, ReportField[]> = {
 // Helper Functions
 // ============================================================================
 
-function getFieldsForEntity(entity: ReportEntityType): ReportField[] {
-  return ENTITY_FIELDS[entity] || []
-}
-
-function getFieldById(fieldId: string): ReportField | undefined {
-  const [entity] = fieldId.split('.') as [ReportEntityType]
-  const fields = ENTITY_FIELDS[entity]
-  return fields?.find((f) => f.id === fieldId)
-}
-
 export function createEmptyFilterGroup(): FilterGroup {
   return {
     id: crypto.randomUUID(),
@@ -1244,16 +1188,5 @@ export function createEmptyReportConfiguration(): ReportConfiguration {
       showLabels: true,
       showGrid: true,
     },
-  }
-}
-
-function createDefaultSavedReport(): Omit<
-  SavedReport,
-  'id' | 'createdBy' | 'createdAt' | 'updatedAt'
-> {
-  return {
-    name: '',
-    configuration: createEmptyReportConfiguration(),
-    accessLevel: 'private',
   }
 }

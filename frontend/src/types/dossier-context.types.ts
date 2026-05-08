@@ -78,12 +78,6 @@ export type DossierType =
   | 'person'
 
 /**
- * Person subtype discriminator
- * Used to distinguish between standard persons and elected officials
- */
-type PersonSubtype = 'standard' | 'elected_official'
-
-/**
  * Dossier status
  */
 export type DossierStatus = 'active' | 'inactive' | 'archived'
@@ -112,42 +106,9 @@ export interface ResolvedDossierContext {
   resolution_path: string[]
 }
 
-/**
- * Context resolution request
- */
-interface DossierContextRequest {
-  entity_type: ContextEntityType
-  entity_id: string
-}
-
-/**
- * Context resolution response
- */
-interface DossierContextResponse {
-  dossiers: ResolvedDossierContext[]
-  resolved_from: ContextEntityType
-  query_time_ms: number
-}
-
 // =============================================================================
 // State Management Types (T002)
 // =============================================================================
-
-/**
- * Creation context (detected from URL)
- */
-interface CreationContext {
-  route: string
-  entityType?: ContextEntityType
-  entityId?: string
-
-  /** Resolved dossier context */
-  resolvedDossiers?: DossierReference[]
-  inheritanceSource?: InheritanceSource
-
-  /** If context could not be resolved */
-  requiresSelection: boolean
-}
 
 /**
  * Dossier context state (synced with URL)
@@ -227,124 +188,13 @@ export interface DossierActivity {
   inheritance_label: string | null
 }
 
-/**
- * Timeline query parameters
- */
-interface DossierTimelineParams {
-  dossier_id: string
-  limit?: number
-  cursor?: string // ISO timestamp
-  work_item_type?: WorkItemType
-  inheritance_source?: InheritanceSource
-}
-
-/**
- * Timeline response
- */
-interface DossierTimelineResponse {
-  activities: DossierActivity[]
-  next_cursor: string | null
-  total_count: number
-}
-
 // =============================================================================
 // Component Props Types (T004)
 // =============================================================================
 
-/**
- * DossierContextBadge props
- */
-interface DossierContextBadgeProps {
-  dossier: DossierReference
-  inheritanceSource?: InheritanceSource
-  inheritedFromName?: string
-  size?: 'sm' | 'md' | 'lg'
-  className?: string
-  /** Show inheritance label (e.g., "via Engagement") */
-  showInheritanceLabel?: boolean
-}
-
-/**
- * DossierSelector props
- */
-interface DossierSelectorProps {
-  value: string[]
-  onChange: (dossierIds: string[]) => void
-  multiple?: boolean
-  required?: boolean
-  placeholder?: string
-  className?: string
-  /** Filter by dossier type */
-  filterByType?: DossierType
-  /** Disable specific dossiers */
-  disabledDossierIds?: string[]
-  /** Error message to display */
-  error?: string
-}
-
-/**
- * DossierActivityTimeline props
- */
-interface DossierActivityTimelineProps {
-  dossierId: string
-  className?: string
-  initialLimit?: number
-  filterByType?: WorkItemType
-  filterByInheritance?: InheritanceSource
-  /** Show empty state message */
-  showEmptyState?: boolean
-}
-
-/**
- * DossierTypeIcon props
- */
-interface DossierTypeIconProps {
-  type: DossierType
-  className?: string
-  size?: 'sm' | 'md' | 'lg'
-}
-
-/**
- * ActivityTimelineItem props
- */
-interface ActivityTimelineItemProps {
-  activity: DossierActivity
-  className?: string
-  onNavigate?: (workItemType: WorkItemType, workItemId: string) => void
-}
-
 // =============================================================================
 // API Request/Response Types
 // =============================================================================
-
-/**
- * Create work item dossier link request
- */
-interface CreateWorkItemDossierLinkRequest {
-  work_item_type: WorkItemType
-  work_item_id: string
-  dossier_ids: string[]
-  inheritance_source: InheritanceSource
-  inherited_from_type?: ContextEntityType
-  inherited_from_id?: string
-  is_primary?: boolean
-}
-
-/**
- * Create work item dossier link response
- */
-interface CreateWorkItemDossierLinkResponse {
-  links: WorkItemDossierLink[]
-  created_count: number
-}
-
-/**
- * List work item dossier links response
- */
-interface ListWorkItemDossierLinksResponse {
-  links: WorkItemDossierLink[]
-  primary_dossier: DossierReference | null
-}
 
 // =============================================================================
 // Dossier Search Types (for DossierSelector)
@@ -361,24 +211,4 @@ export interface DossierSearchResult extends DossierReference {
     name_en?: string
     name_ar?: string
   }
-}
-
-/**
- * Dossier search params
- */
-interface DossierSearchParams {
-  query: string
-  limit?: number
-  type?: DossierType
-  status?: DossierStatus
-  excludeIds?: string[]
-}
-
-/**
- * Dossier search response
- */
-interface DossierSearchResponse {
-  results: DossierSearchResult[]
-  total_count: number
-  query_time_ms: number
 }

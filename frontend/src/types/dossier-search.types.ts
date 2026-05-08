@@ -138,23 +138,6 @@ export interface DossierFirstSearchResponse {
 }
 
 /**
- * Dossier-first search request
- */
-interface DossierFirstSearchRequest {
-  query: string
-  filters: DossierSearchFilters
-  page?: number
-  page_size?: number
-  dossier_page_size?: number
-  work_page_size?: number
-}
-
-/**
- * Search result section type
- */
-type SearchSectionType = 'dossiers' | 'related_work'
-
-/**
  * Props for the dossier-first search results component
  */
 export interface DossierFirstSearchResultsProps {
@@ -180,69 +163,4 @@ export interface DossierTypeFilterOption {
   label_en: string
   label_ar: string
   count?: number
-}
-
-/**
- * Default dossier type filter options
- */
-const DOSSIER_TYPE_FILTER_OPTIONS: DossierTypeFilterOption[] = [
-  { value: 'all', label_en: 'All Types', label_ar: 'جميع الأنواع' },
-  { value: 'country', label_en: 'Countries', label_ar: 'الدول' },
-  { value: 'organization', label_en: 'Organizations', label_ar: 'المنظمات' },
-  { value: 'forum', label_en: 'Forums', label_ar: 'المنتديات' },
-  { value: 'engagement', label_en: 'Engagements', label_ar: 'المشاركات' },
-  { value: 'topic', label_en: 'Topics', label_ar: 'المواضيع' },
-  { value: 'working_group', label_en: 'Working Groups', label_ar: 'مجموعات العمل' },
-  { value: 'person', label_en: 'People', label_ar: 'الأشخاص' },
-]
-
-/**
- * Related work type display config
- */
-const RELATED_WORK_TYPE_CONFIG: Record<
-  RelatedWorkType,
-  { label_en: string; label_ar: string; color: string; bgColor: string }
-> = {
-  position: {
-    label_en: 'Position',
-    label_ar: 'موقف',
-    color: 'text-orange-600 dark:text-orange-400',
-    bgColor: 'bg-orange-100 dark:bg-orange-900/30',
-  },
-  document: {
-    label_en: 'Document',
-    label_ar: 'وثيقة',
-    color: 'text-indigo-600 dark:text-indigo-400',
-    bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
-  },
-  mou: {
-    label_en: 'MoU',
-    label_ar: 'مذكرة تفاهم',
-    color: 'text-red-600 dark:text-red-400',
-    bgColor: 'bg-red-100 dark:bg-red-900/30',
-  },
-  engagement: {
-    label_en: 'Engagement',
-    label_ar: 'مشاركة',
-    color: 'text-green-600 dark:text-green-400',
-    bgColor: 'bg-green-100 dark:bg-green-900/30',
-  },
-  task: {
-    label_en: 'Task',
-    label_ar: 'مهمة',
-    color: 'text-blue-600 dark:text-blue-400',
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
-  },
-  commitment: {
-    label_en: 'Commitment',
-    label_ar: 'التزام',
-    color: 'text-purple-600 dark:text-purple-400',
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
-  },
-  intake: {
-    label_en: 'Request',
-    label_ar: 'طلب',
-    color: 'text-cyan-600 dark:text-cyan-400',
-    bgColor: 'bg-cyan-100 dark:bg-cyan-900/30',
-  },
 }

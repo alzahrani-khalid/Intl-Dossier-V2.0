@@ -47,29 +47,9 @@ export function isRTLLanguage(lang: ContentLanguage): boolean {
   return RTL_LANGUAGES.includes(lang)
 }
 
-/**
- * Get text direction for a language
- */
-function getLanguageDirection(lang: ContentLanguage): 'rtl' | 'ltr' {
-  return isRTLLanguage(lang) ? 'rtl' : 'ltr'
-}
-
 // ============================================================================
 // LANGUAGE METADATA
 // ============================================================================
-
-/**
- * Language metadata from database
- */
-interface SupportedLanguage {
-  code: ContentLanguage
-  name_en: string
-  name_native: string
-  is_rtl: boolean
-  is_enabled: boolean
-  display_order: number
-  flag_emoji: string | null
-}
 
 /**
  * Static language metadata for client-side use
@@ -193,102 +173,6 @@ export interface EntityAvailableLanguage {
 // API REQUEST/RESPONSE TYPES
 // ============================================================================
 
-/**
- * Request to get entity translations
- */
-interface GetEntityTranslationsRequest {
-  entity_type: TranslatableEntityType
-  entity_id: string
-  language?: ContentLanguage
-}
-
-/**
- * Response from get entity translations
- */
-interface GetEntityTranslationsResponse {
-  translations: EntityContentTranslation[]
-  available_languages: EntityAvailableLanguage[]
-  settings: EntityLanguageSettings | null
-}
-
-/**
- * Request to upsert a translation
- */
-interface UpsertTranslationRequest {
-  entity_type: TranslatableEntityType
-  entity_id: string
-  field_name: string
-  language: ContentLanguage
-  content: string
-  content_format?: ContentFormat
-  is_primary?: boolean
-  is_machine_translated?: boolean
-  translation_confidence?: number
-  source_language?: ContentLanguage
-  status?: TranslationStatus
-}
-
-/**
- * Request to get content in a specific language
- */
-interface GetEntityContentRequest {
-  entity_type: TranslatableEntityType
-  entity_id: string
-  field_name: string
-  language: ContentLanguage
-  fallback_language?: ContentLanguage
-}
-
-/**
- * Response from get entity content
- */
-interface GetEntityContentResponse {
-  content: string
-  language: ContentLanguage
-  is_fallback: boolean
-  is_machine_translated: boolean
-  translation_confidence: number | null
-}
-
-/**
- * Request to bulk upsert translations
- */
-interface BulkUpsertTranslationsRequest {
-  entity_type: TranslatableEntityType
-  entity_id: string
-  translations: Array<{
-    field_name: string
-    language: ContentLanguage
-    content: string
-    content_format?: ContentFormat
-    is_primary?: boolean
-  }>
-}
-
-/**
- * Request to translate content to another language
- */
-interface TranslateContentRequest {
-  entity_type: TranslatableEntityType
-  entity_id: string
-  field_name: string
-  source_language: ContentLanguage
-  target_language: ContentLanguage
-  content?: string // If not provided, uses existing content in source_language
-}
-
-/**
- * Response from translate content
- */
-interface TranslateContentResponse {
-  original_content: string
-  translated_content: string
-  source_language: ContentLanguage
-  target_language: ContentLanguage
-  confidence: number
-  translation_id: string
-}
-
 // ============================================================================
 // HOOK TYPES
 // ============================================================================
@@ -400,36 +284,6 @@ export interface MultiLanguageContentEditorProps {
   className?: string
 }
 
-/**
- * Props for LanguageTabPanel component
- */
-interface LanguageTabPanelProps {
-  /** Currently selected language */
-  selectedLanguage: ContentLanguage
-  /** Callback when language tab changes */
-  onLanguageChange: (language: ContentLanguage) => void
-  /** Available languages */
-  availableLanguages: EntityAvailableLanguage[]
-  /** Children to render in the panel */
-  children: React.ReactNode
-  /** Whether to allow adding new languages */
-  allowAddLanguage?: boolean
-  /** Callback when adding a new language */
-  onAddLanguage?: (language: ContentLanguage) => void
-  /** Custom class name */
-  className?: string
-}
-
-/**
- * Props for TranslationStatusBadge component
- */
-interface TranslationStatusBadgeProps {
-  status: TranslationStatus
-  isMachineTranslated?: boolean
-  confidence?: number | null
-  className?: string
-}
-
 // ============================================================================
 // UTILITY TYPES
 // ============================================================================
@@ -438,11 +292,6 @@ interface TranslationStatusBadgeProps {
  * Map of field content by language
  */
 export type FieldContentByLanguage = Record<ContentLanguage, string | undefined>
-
-/**
- * Map of all fields by language
- */
-type EntityContentByLanguage = Record<string, FieldContentByLanguage>
 
 /**
  * Translation completeness info
@@ -481,34 +330,4 @@ export function calculateCompleteness(
       missingFields,
     }
   })
-}
-
-/**
- * Group translations by field name
- */
-function groupTranslationsByField(
-  translations: EntityContentTranslation[],
-): Record<string, EntityContentTranslation[]> {
-  return translations.reduce(
-    (acc, translation) => {
-      const fieldName = translation.field_name
-      if (!acc[fieldName]) {
-        acc[fieldName] = []
-      }
-      acc[fieldName]!.push(translation)
-      return acc
-    },
-    {} as Record<string, EntityContentTranslation[]>,
-  )
-}
-
-/**
- * Get content for a specific field and language
- */
-function getFieldContent(
-  translations: EntityContentTranslation[],
-  fieldName: string,
-  language: ContentLanguage,
-): EntityContentTranslation | undefined {
-  return translations.find((t) => t.field_name === fieldName && t.language === language)
 }

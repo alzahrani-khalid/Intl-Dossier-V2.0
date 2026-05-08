@@ -152,14 +152,6 @@ export interface SavedView {
 }
 
 /**
- * Input for creating/updating default preferences
- */
-interface UpsertDefaultPreferencesInput {
-  entity_type: EntityViewType
-  default_preferences: DefaultViewPreferences
-}
-
-/**
  * Input for creating a saved view
  */
 export interface CreateSavedViewInput {
@@ -192,38 +184,6 @@ export interface ViewPreferencesResponse {
 }
 
 /**
- * Hook return type for useViewPreferences
- */
-interface UseViewPreferencesReturn {
-  // Data
-  preferences: UserViewPreference | null
-  savedViews: SavedView[]
-  defaultView: SavedView | null
-  pinnedViews: SavedView[]
-
-  // Loading states
-  isLoading: boolean
-  isUpdating: boolean
-
-  // Actions
-  updateDefaultPreferences: (preferences: DefaultViewPreferences) => Promise<void>
-  createSavedView: (input: CreateSavedViewInput) => Promise<SavedView>
-  updateSavedView: (input: UpdateSavedViewInput) => Promise<SavedView>
-  deleteSavedView: (id: string) => Promise<void>
-  setDefaultView: (id: string | null) => Promise<void>
-  togglePinned: (id: string) => Promise<void>
-  applyView: (viewConfig: ViewConfig) => void
-
-  // Current applied view
-  currentViewConfig: ViewConfig
-  setCurrentViewConfig: (config: ViewConfig) => void
-
-  // Dirty state (unsaved changes)
-  hasUnsavedChanges: boolean
-  resetToDefault: () => void
-}
-
-/**
  * Dossier-specific view configuration
  */
 export interface DossierViewConfig extends ViewConfig {
@@ -231,27 +191,5 @@ export interface DossierViewConfig extends ViewConfig {
     typeFilter?: string
     statusFilter?: string[]
     showArchived?: boolean
-  }
-}
-
-/**
- * My Work-specific view configuration
- */
-interface MyWorkViewConfig extends ViewConfig {
-  customSettings?: {
-    sourceTab?: 'all' | 'commitments' | 'tasks' | 'intake'
-    trackingType?: string
-    quickFilter?: 'overdue' | 'due-today' | 'due-week'
-  }
-}
-
-/**
- * Engagement-specific view configuration
- */
-interface EngagementViewConfig extends ViewConfig {
-  customSettings?: {
-    statusFilter?: string[]
-    dateRange?: { start?: string; end?: string }
-    participantFilter?: string[]
   }
 }

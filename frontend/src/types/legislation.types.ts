@@ -81,36 +81,6 @@ export type LegislationRelationshipType =
 // STATUS CONFIGURATION
 // =============================================
 
-const LEGISLATION_STATUS_ORDER: LegislationStatus[] = [
-  'draft',
-  'proposed',
-  'under_review',
-  'in_committee',
-  'pending_vote',
-  'passed',
-  'enacted',
-  'implemented',
-  'superseded',
-  'repealed',
-  'expired',
-  'withdrawn',
-]
-
-const VALID_STATUS_TRANSITIONS: Record<LegislationStatus, LegislationStatus[]> = {
-  draft: ['proposed', 'withdrawn'],
-  proposed: ['under_review', 'in_committee', 'withdrawn'],
-  under_review: ['in_committee', 'pending_vote', 'withdrawn'],
-  in_committee: ['pending_vote', 'under_review', 'withdrawn'],
-  pending_vote: ['passed', 'under_review', 'withdrawn'],
-  passed: ['enacted', 'superseded'],
-  enacted: ['implemented', 'superseded', 'repealed', 'expired'],
-  implemented: ['superseded', 'repealed', 'expired'],
-  superseded: [],
-  repealed: [],
-  expired: [],
-  withdrawn: [],
-}
-
 export const STATUS_COLORS: Record<
   LegislationStatus,
   { bg: string; text: string; border: string }
@@ -362,24 +332,6 @@ export interface LegislationDeadline {
   priority: LegislationPriority
   linked_commitment_id: string | null
   created_by: string | null
-  created_at: string
-  updated_at: string
-}
-
-interface LegislationDeadlineAlert {
-  id: string
-  deadline_id: string
-  legislation_id: string
-  alert_date: string
-  days_before: number
-  recipient_user_id: string
-  status: DeadlineAlertStatus
-  sent_at: string | null
-  acknowledged_at: string | null
-  snoozed_until: string | null
-  dismissed_at: string | null
-  notification_type: 'email' | 'in_app' | 'both'
-  delivery_error: string | null
   created_at: string
   updated_at: string
 }

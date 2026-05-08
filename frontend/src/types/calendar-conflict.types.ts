@@ -239,54 +239,6 @@ export interface ResolveConflictRequest {
 }
 
 /**
- * Participant availability
- */
-interface ParticipantAvailability {
-  id: string
-  participant_id: string
-  participant_type: 'user' | 'person_dossier' | 'external_contact'
-  available_from: string
-  available_to: string
-  availability_status: 'available' | 'busy' | 'tentative' | 'out_of_office'
-  location_en?: string
-  location_ar?: string
-  timezone: string
-  source: 'manual' | 'calendar_sync' | 'ai_inferred'
-  confidence: number
-}
-
-/**
- * Venue/resource information
- */
-interface VenueResource {
-  id: string
-  name_en: string
-  name_ar?: string
-  resource_type: 'room' | 'equipment' | 'service' | 'venue'
-  capacity?: number
-  features?: Record<string, unknown>
-  building_en?: string
-  building_ar?: string
-  floor?: string
-  is_active: boolean
-  booking_lead_time_hours: number
-}
-
-/**
- * Travel logistics between locations
- */
-interface TravelLogistics {
-  id: string
-  from_location: string
-  to_location: string
-  estimated_travel_minutes: number
-  travel_mode: 'walking' | 'driving' | 'public_transit' | 'flight'
-  recommended_buffer_minutes: number
-  last_updated: string
-  data_source: string
-}
-
-/**
  * Conflict list query filters
  */
 export interface ConflictListFilters {
@@ -334,16 +286,4 @@ export const SEVERITY_COLORS: Record<
     text: 'text-blue-700 dark:text-blue-300',
     border: 'border-blue-200 dark:border-blue-800',
   },
-}
-
-/**
- * Conflict type icons mapping
- */
-const CONFLICT_TYPE_ICONS: Record<ConflictType, string> = {
-  venue: 'Building2',
-  participant: 'Users',
-  organizer: 'UserCog',
-  holiday: 'Calendar',
-  resource: 'Package',
-  travel_time: 'Clock',
 }

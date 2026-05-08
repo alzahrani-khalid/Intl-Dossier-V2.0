@@ -112,19 +112,6 @@ export interface SLAPolicyInput {
 // SLA Event Types
 // ============================================
 
-interface SLAEvent {
-  id: string
-  ticket_id: string
-  policy_id: string
-  event_type: SLAEventType
-  event_timestamp: string
-  elapsed_minutes: number
-  remaining_minutes: number
-  is_breached: boolean
-  created_by: string
-  reason?: string
-}
-
 // ============================================
 // SLA Escalation Types
 // ============================================
@@ -225,68 +212,9 @@ export interface SLABreachedItem {
 // Compliance Snapshot Types
 // ============================================
 
-interface SLAComplianceSnapshot {
-  id: string
-  snapshot_date: string
-  entity_type: SLAEntityType
-  total_items: number
-  met_count: number
-  breached_count: number
-  warning_count: number
-  avg_resolution_time?: number
-  p50_resolution_time?: number
-  p90_resolution_time?: number
-  p99_resolution_time?: number
-  overall_compliance_pct?: number
-  acknowledgment_compliance_pct?: number
-  resolution_compliance_pct?: number
-  metrics_by_priority: Record<
-    string,
-    {
-      total: number
-      met: number
-      breached: number
-    }
-  >
-  metrics_by_assignee: Array<{
-    assignee_id: string
-    assignee_name: string
-    total: number
-    met: number
-    breached: number
-    compliance_rate: number
-  }>
-  created_at: string
-}
-
 // ============================================
 // API Request/Response Types
 // ============================================
-
-interface SLADashboardRequest {
-  entity_type?: SLAEntityType
-  start_date?: string
-  end_date?: string
-}
-
-interface SLAComplianceRequest {
-  entity_type?: SLAEntityType
-  start_date?: string
-  end_date?: string
-  limit?: number
-}
-
-interface SLAAtRiskRequest {
-  entity_type?: SLAEntityType
-  threshold?: number
-  limit?: number
-}
-
-interface SLAEscalationsRequest {
-  status?: SLAEscalationStatus
-  entity_type?: SLAEntityType
-  limit?: number
-}
 
 // ============================================
 // Status Configuration Types

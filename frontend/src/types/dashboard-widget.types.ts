@@ -303,17 +303,6 @@ export interface DashboardLayout {
   updatedAt: string
 }
 
-/**
- * User dashboard preferences
- */
-interface DashboardPreferences {
-  userId: string
-  activeLayoutId: string
-  layouts: DashboardLayout[]
-  defaultWidgets: WidgetConfig[]
-  theme: 'light' | 'dark' | 'system'
-}
-
 // ============================================================================
 // Widget Data Types
 // ============================================================================
@@ -329,25 +318,6 @@ export interface KpiData {
   sparklineData?: number[]
   target?: number
   targetProgress?: number
-}
-
-/**
- * Chart data point
- */
-interface ChartDataPoint {
-  label: string
-  value: number
-  color?: string
-  metadata?: Record<string, unknown>
-}
-
-/**
- * Time series data point
- */
-interface TimeSeriesDataPoint {
-  timestamp: string
-  value: number
-  label?: string
 }
 
 /**
@@ -398,26 +368,6 @@ export interface NotificationData {
   metadata?: Record<string, unknown>
 }
 
-/**
- * Activity data for activity feed
- */
-interface ActivityData {
-  id: string
-  type: ActivityType
-  actor: {
-    id: string
-    name: string
-    avatar?: string
-  }
-  target: {
-    id: string
-    type: string
-    title: string
-  }
-  timestamp: string
-  details?: string
-}
-
 // ============================================================================
 // Widget State Types
 // ============================================================================
@@ -432,36 +382,9 @@ export interface WidgetLoadingState {
   lastUpdated?: string
 }
 
-/**
- * Widget with runtime state
- */
-interface WidgetWithState<T = unknown> {
-  config: WidgetConfig
-  data: T | null
-  state: WidgetLoadingState
-}
-
 // ============================================================================
 // Drag and Drop Types
 // ============================================================================
-
-/**
- * Drag event data for widget reordering
- */
-interface WidgetDragData {
-  widgetId: UniqueIdentifier
-  type: WidgetType
-  fromIndex: number
-}
-
-/**
- * Drop result for widget placement
- */
-interface WidgetDropResult {
-  widgetId: UniqueIdentifier
-  toIndex: number
-  position?: WidgetPosition
-}
 
 // ============================================================================
 // Widget Registry Types
@@ -484,50 +407,6 @@ export interface WidgetRegistryEntry {
   supportedSizes: WidgetSize[]
 }
 
-/**
- * Widget registry for all available widgets
- */
-type WidgetRegistry = Record<WidgetType, WidgetRegistryEntry>
-
 // ============================================================================
 // Default Values and Constants
 // ============================================================================
-
-/**
- * Size to grid columns mapping
- */
-const SIZE_TO_COLUMNS: Record<WidgetSize, number> = {
-  small: 1,
-  medium: 2,
-  large: 3,
-  full: 4,
-}
-
-/**
- * Size to grid rows mapping
- */
-const SIZE_TO_ROWS: Record<WidgetSize, number> = {
-  small: 1,
-  medium: 1,
-  large: 2,
-  full: 2,
-}
-
-/**
- * Refresh interval labels
- */
-const REFRESH_INTERVAL_OPTIONS: { value: RefreshInterval; label: string }[] = [
-  { value: 0, label: 'Never' },
-  { value: 30000, label: '30 seconds' },
-  { value: 60000, label: '1 minute' },
-  { value: 300000, label: '5 minutes' },
-  { value: 600000, label: '10 minutes' },
-  { value: 1800000, label: '30 minutes' },
-]
-
-/**
- * Default dashboard layout
- */
-const DEFAULT_COLUMNS = 4
-const DEFAULT_ROW_HEIGHT = 150
-const WIDGET_GAP = 16
