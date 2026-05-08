@@ -61,9 +61,8 @@ test.beforeEach(async ({ page }) => {
     apply()
   }, SUPPRESS_TRANSITIONS_CSS)
 
-  // Login (sets auth cookies / storage).  Login itself navigates; the init
-  // script and clock are now armed for every subsequent navigation.
-  await loginForListPages(page)
+  // Login happens inside each test so the requested locale can be seeded
+  // before the app initializes on the target route.
 })
 
 /**
@@ -76,6 +75,16 @@ async function gotoAndReady(page: Page, url: string): Promise<void> {
   // Ready marker from Plan 40-13: ListPageShell renders data-loading="false"
   // once query state has resolved (success OR error, but not loading).
   await page.waitForSelector('[data-loading="false"]', { timeout: 15_000 })
+  // Some route primitives own nested loading states below ListPageShell.
+  // Screenshots must capture settled content, not transient row skeletons.
+  await page.waitForFunction(
+    () => {
+      const shell = document.querySelector('[data-loading]')
+      return shell?.querySelector('[data-testid*="skeleton"]') === null
+    },
+    null,
+    { timeout: 15_000 },
+  )
   // Phase 38 Pitfall 6: ensure web fonts are loaded before snapshot.
   await page.waitForFunction(() => document.fonts.ready)
   // Tick the frozen clock once so any pending requestAnimationFrame /
@@ -86,15 +95,17 @@ async function gotoAndReady(page: Page, url: string): Promise<void> {
 for (const [path, name] of ROUTES_WITH_NAMES) {
   for (const locale of LOCALES) {
     test(`visual ${name} (${locale})`, async ({ page }) => {
+      await loginForListPages(page, locale)
       await gotoAndReady(page, `${path}?lng=${locale}`)
-      if (locale === 'ar') {
-        await page.evaluate(() => {
-          document.documentElement.dir = 'rtl'
-          document.documentElement.lang = 'ar'
-        })
-        // Re-tick the clock so the dir/lang flip settles before screenshot.
-        await page.clock.runFor(100)
-      }
+      await page.waitForFunction(
+        (expectedLocale) =>
+          document.documentElement.getAttribute('lang') === expectedLocale &&
+          document.documentElement.getAttribute('dir') ===
+            (expectedLocale === 'ar' ? 'rtl' : 'ltr'),
+        locale,
+      )
+      // Re-tick the clock so locale-driven layout and text settle before screenshot.
+      await page.clock.runFor(100)
       await expect(page).toHaveScreenshot(`${name}-${locale}.png`, {
         maxDiffPixelRatio: 0.02,
         fullPage: true,

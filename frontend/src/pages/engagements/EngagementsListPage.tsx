@@ -95,13 +95,8 @@ export default function EngagementsListPage(): ReactNode {
   const [search, setSearch] = useState<string>('')
   const [filter, setFilter] = useState<EngagementFilter>('all')
 
-  const {
-    data,
-    isLoading,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  } = useEngagementsInfinite({ search: search.length > 0 ? search : undefined })
+  const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useEngagementsInfinite({ search: search.length > 0 ? search : undefined })
 
   const engagements = useMemo<EngagementRow[]>(() => {
     if (!data) return []
@@ -136,6 +131,7 @@ export default function EngagementsListPage(): ReactNode {
         ns: 'engagements',
         defaultValue: 'Meetings, consultations, and visits',
       })}
+      isLoading={isLoading}
     >
       <EngagementsList
         engagements={engagements}
