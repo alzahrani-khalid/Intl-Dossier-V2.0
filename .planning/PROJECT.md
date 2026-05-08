@@ -12,7 +12,7 @@ Unified intelligence management for diplomatic operations — every relationship
 
 **Shipped:** v6.0 Design System Adoption (2026-05-06) — 11 phases, 121 plans, 52/52 requirements satisfied (25 fully verified + 27 covered by SUMMARY frontmatter and Phase 43 cross-phase QA sweep), audit status `tech_debt` (no critical blockers).
 
-**In progress:** v6.1 Hardening & Reconciliation — Phase 44 complete (verification backfill, docs sync, size-limit gate repair, Phase 43 anti-pattern closure, Storybook deferral ADR). Next: Phase 45 Schema & Seed Closure.
+**In progress:** v6.1 Hardening & Reconciliation — Phases 44 and 45 complete (verification/toolchain/docs reconciliation, schema and staging seed closure). Next: Phase 46 Visual Baseline Regeneration.
 
 <details>
 <summary>Shipped milestones</summary>
@@ -26,7 +26,7 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-**Remaining tech debt carried from v6.0:** schema/seed work deferred (intelligence_digest table, VIP person ISO join, 060-dashboard-demo.sql) and visual-regression baselines pending operator action for Phases 38/40/41. Phase 44 closed the missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006.
+**Remaining tech debt carried from v6.0:** visual-regression baselines pending operator action for Phases 38/40/41. Phase 44 closed the missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006. Phase 45 closed the deferred schema/seed work: intelligence digest table + seed rows, VIP person ISO projection, and staging seed-dependent drawer specs.
 
 ## Current Milestone: v6.1 Hardening & Reconciliation
 
@@ -40,11 +40,15 @@ Unified intelligence management for diplomatic operations — every relationship
 - Sync REQUIREMENTS.md `[x]` checkboxes and ROADMAP progress table with SUMMARY frontmatter
 - Formalize Plan 33-08 Storybook deferral through ADR-006 with replacement coverage and revisit trigger
 
+**Completed in Phase 45:**
+
+- Created `intelligence_digest` schema/RLS/source-controlled seed rows and `useIntelligenceDigest`
+- Added VIP person ISO projection and country glyph rendering in `VipVisits`
+- Applied Phase 45 migrations to staging project `zkrcjzdemdmwhearhfgg` through MCP and verified seeded rows with MCP SQL
+- Passed Phase 41 seed-dependent dossier drawer Playwright specs
+
 **Remaining target features:**
 
-- Create `intelligence_digest` schema + read hook (replaces `actor_name` digest source compromise)
-- Add VIP person ISO join in dashboard RPC (foreign-relations enrichment)
-- Apply `060-dashboard-demo.sql` seed → 4 BLOCKED-BY-SEED specs unblocked
 - Regenerate visual baselines for Phases 38, 40, 41 via `--update-snapshots` on a seeded dev machine
 
 **Key context:** Sourced from `.planning/milestones/v6.0-MILESTONE-AUDIT.md` §6 Tech Debt Inventory + §8 Recommendation, plus the /gsd-explore session captured in `.planning/notes/v6.1-rationale.md`. Audit recommended this scope as a "small surgical phase early in v7.0"; promoting to its own micro-milestone (v6.1) gives a clean ship line before v7.0 feature scoping. Deferred candidate `v7.0 Intelligence Engine` lives at `.planning/seeds/v7.0-intelligence-engine.md` — trigger condition: v6.1 ships.
@@ -113,10 +117,10 @@ Unified intelligence management for diplomatic operations — every relationship
 - ✓ Briefs / After-actions / Tasks / Activity / Settings pages reskinned to handoff anatomy with WCAG AA bidirectional — v6.0 Phase 42 (PAGE-01..05)
 - ✓ Hard cross-phase QA gate: zero `eslint-plugin-rtl-friendly` violations, axe-core 30/30, responsive 60/60, keyboard 26 + 4 acknowledged-skip, focus-outline 8/8, `docs/rtl-icons.md` — v6.0 Phase 43 (QA-01..04)
 - ✓ v6.1 documentation/toolchain reconciliation: v6.0 verification backfill, archive sync, size-limit CI gate repair, WR-02..WR-06 closure, Storybook deferral ADR — v6.1 Phase 44 (DOC-01..08, TOOL-01..03, LINT-01..05, STORY-01)
+- ✓ v6.1 schema and seed closure: intelligence_digest, dashboard digest hook, VIP ISO join, staging MCP apply, and seed-dependent drawer specs — v6.1 Phase 45 (DATA-01..04)
 
 ### Active
 
-- Phase 45 Schema & Seed Closure — DATA-01..04 (`intelligence_digest`, dashboard digest hook, VIP ISO join, `060-dashboard-demo.sql`)
 - Phase 46 Visual Baseline Regeneration — VIS-01..04 (Phase 38 widgets, Phase 40 list pages, Phase 41 drawer baselines, human-eyeball validation)
 
 ### Out of Scope
@@ -203,4 +207,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-07 — Phase 44 complete; v6.1 remaining scope is DATA/VIS closure_
+_Last updated: 2026-05-08 — Phase 45 complete; v6.1 remaining scope is VIS closure_
