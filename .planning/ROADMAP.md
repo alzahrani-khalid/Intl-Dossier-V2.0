@@ -160,7 +160,21 @@ Full details: [v6.0-ROADMAP.md](milestones/v6.0-ROADMAP.md)
 3. Two Phase 41 dossier-drawer visual baselines are regenerated post-token-darkening (`--accent-fg` 4.38 → 5.28; `inkFaint` 3.14 → 5.07) and the dossier-drawer visual spec exits 0 in both EN and AR
 4. `.planning/phases/46-*/VALIDATION.md` (or equivalent) documents a human-eyeball confirmation for each new baseline file, naming the file path and noting concordance with the handoff reference at `frontend/design-system/inteldossier_handoff_design/`
 
-**Plans**: TBD
+**Plans**:
+
+- **Wave 1**
+  - `46-01-dashboard-widget-baselines-PLAN.md` — add the dashboard widget visual target, capture eight widget-level baselines, and record dashboard review rows
+  - `46-02-list-page-baselines-PLAN.md` — regenerate fourteen Phase 40 list-page baselines and record list-page review rows
+  - `46-03-drawer-baselines-PLAN.md` — regenerate two Phase 41 dossier-drawer baselines and record drawer review rows
+- **Wave 2** _(blocked on Wave 1 completion)_
+  - `46-04-human-review-ci-closure-PLAN.md` — complete 24-baseline human review, add focused visual CI replay, and close VIS-01..VIS-04 planning docs
+
+**Cross-cutting constraints**:
+
+- Phase 46 visual jobs must run against the Phase 45 seeded staging database through Doppler-managed environment variables.
+- Final verification must replay visual specs without `--update-snapshots`.
+- Human-review evidence in `.planning/phases/46-visual-baseline-regeneration/46-VALIDATION.md` is required before VIS-01..VIS-04 may be marked complete.
+
 **UI hint**: yes
 
 ## Progress

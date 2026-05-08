@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.1
 milestone_name: Hardening & Reconciliation
-status: ready_to_plan
+status: executing
 stopped_at: Phase 46 ready to plan
-last_updated: '2026-05-08T08:26:20Z'
-last_activity: 2026-05-08 -- Phase 45 completed; Phase 46 ready to plan
+last_updated: '2026-05-08T08:48:12.500Z'
+last_activity: 2026-05-08 -- Phase 46 planning complete
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 10
+  total_plans: 14
   completed_plans: 10
-  percent: 67
+  percent: 71
 ---
 
 # Project State
@@ -27,12 +27,12 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 Phase: 46
 Plan: Not started
-Status: Ready to plan
-Last activity: 2026-05-08
+Status: Ready to execute
+Last activity: 2026-05-08 -- Phase 46 planning complete
 
 ## Next Action
 
-Run `$gsd-plan-phase 46` to plan visual baseline regeneration against the seeded staging database.
+Run `$gsd-execute-phase 46` to execute visual baseline regeneration against the seeded staging database.
 
 ### Phase 40 summary
 
