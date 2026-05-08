@@ -65,7 +65,12 @@ export function OverdueCommitments(): ReactElement {
 
   if (isError) {
     return (
-      <section role="region" aria-labelledby="overdue-heading" className="overdue card">
+      <section
+        role="region"
+        aria-labelledby="overdue-heading"
+        className="overdue card"
+        data-testid="dashboard-widget-overdue-commitments"
+      >
         <h3 id="overdue-heading" className="card-title mb-2 text-start">
           {t('overdue.title')}
         </h3>
@@ -76,7 +81,12 @@ export function OverdueCommitments(): ReactElement {
 
   if (data == null || data.length === 0) {
     return (
-      <section role="region" aria-labelledby="overdue-heading" className="overdue card">
+      <section
+        role="region"
+        aria-labelledby="overdue-heading"
+        className="overdue card"
+        data-testid="dashboard-widget-overdue-commitments"
+      >
         <h3 id="overdue-heading" className="card-title mb-2 text-start">
           {t('overdue.title')}
         </h3>
@@ -102,7 +112,12 @@ export function OverdueCommitments(): ReactElement {
   }
 
   return (
-    <section role="region" aria-labelledby="overdue-heading" className="overdue card">
+    <section
+      role="region"
+      aria-labelledby="overdue-heading"
+      className="overdue card"
+      data-testid="dashboard-widget-overdue-commitments"
+    >
       <h3 id="overdue-heading" className="card-title mb-3 text-start">
         {t('overdue.title')}
       </h3>

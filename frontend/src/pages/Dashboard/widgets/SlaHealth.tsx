@@ -61,6 +61,7 @@ export function SlaHealth(): ReactElement {
         role="region"
         aria-labelledby="sla-heading"
         className="sla card"
+        data-testid="dashboard-widget-sla-health"
       >
         <h3 id="sla-heading" className="card-title mb-1 text-start">
           {t('sla.title')}
@@ -93,6 +94,7 @@ export function SlaHealth(): ReactElement {
       role="region"
       aria-labelledby="sla-heading"
       className="sla card"
+      data-testid="dashboard-widget-sla-health"
     >
       <h3 id="sla-heading" className="card-title mb-3 text-start">
         {t('sla.title')}

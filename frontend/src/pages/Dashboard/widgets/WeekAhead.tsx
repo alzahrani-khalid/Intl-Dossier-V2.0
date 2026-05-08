@@ -117,7 +117,12 @@ export function WeekAhead(): ReactElement {
 
   if (isLoading) {
     return (
-      <section role="region" aria-labelledby="week-ahead-heading" className="week-ahead">
+      <section
+        role="region"
+        aria-labelledby="week-ahead-heading"
+        className="week-ahead"
+        data-testid="dashboard-widget-week-ahead"
+      >
         <h3 id="week-ahead-heading" className="card-title mb-3 text-start">
           {t('weekAhead.title')}
         </h3>
@@ -132,6 +137,7 @@ export function WeekAhead(): ReactElement {
         role="region"
         aria-labelledby="week-ahead-heading"
         className="week-ahead card"
+        data-testid="dashboard-widget-week-ahead"
       >
         <h3 id="week-ahead-heading" className="card-title mb-2 text-start">
           {t('weekAhead.title')}
@@ -149,6 +155,7 @@ export function WeekAhead(): ReactElement {
         role="region"
         aria-labelledby="week-ahead-heading"
         className="week-ahead card"
+        data-testid="dashboard-widget-week-ahead"
       >
         <h3 id="week-ahead-heading" className="card-title mb-2 text-start">
           {t('weekAhead.title')}
@@ -162,7 +169,12 @@ export function WeekAhead(): ReactElement {
     t(`weekAhead.status.${stage}`, { defaultValue: stage })
 
   return (
-    <section role="region" aria-labelledby="week-ahead-heading" className="week-ahead">
+    <section
+      role="region"
+      aria-labelledby="week-ahead-heading"
+      className="week-ahead"
+      data-testid="dashboard-widget-week-ahead"
+    >
       <h3 id="week-ahead-heading" className="card-title mb-3 text-start">
         {t('weekAhead.title')}
       </h3>

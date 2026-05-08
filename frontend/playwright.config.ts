@@ -73,7 +73,23 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testIgnore: /dashboard-widgets-visual\.spec\.ts$/,
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'chromium-dashboard-widgets',
+      testMatch: /dashboard-widgets-visual\.spec\.ts$/,
+      use: { ...devices['Desktop Chrome'] },
+      expect: {
+        toHaveScreenshot: {
+          pathTemplate: '{testDir}/__snapshots__/dashboard-widgets/{arg}{ext}',
+          maxDiffPixelRatio: 0.02,
+          threshold: 0.2,
+          animations: 'disabled',
+          caret: 'hide',
+          maxDiffPixels: 100,
+        },
+      },
     },
     // Plan 43-12: auth-bypass project for specs that NEED to render the
     // login form (override storageState back to an empty session). No such

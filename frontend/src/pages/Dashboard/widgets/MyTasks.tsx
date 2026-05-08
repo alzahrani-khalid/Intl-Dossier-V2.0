@@ -84,7 +84,7 @@ export function MyTasks(): ReactElement {
 
   if (isError) {
     return (
-      <section className="tasks card">
+      <section className="tasks card" data-testid="dashboard-widget-my-tasks">
         <p className="text-sm text-ink-soft text-start">{t('error.load_failed')}</p>
       </section>
     )
@@ -94,7 +94,10 @@ export function MyTasks(): ReactElement {
 
   if (rawTasks.length === 0) {
     return (
-      <section className="tasks card text-sm text-ink-soft text-start">
+      <section
+        className="tasks card text-sm text-ink-soft text-start"
+        data-testid="dashboard-widget-my-tasks"
+      >
         {t('myTasks.empty')}
       </section>
     )
@@ -108,7 +111,12 @@ export function MyTasks(): ReactElement {
   }
 
   return (
-    <section role="region" aria-labelledby="tasks-heading" className="tasks card">
+    <section
+      role="region"
+      aria-labelledby="tasks-heading"
+      className="tasks card"
+      data-testid="dashboard-widget-my-tasks"
+    >
       <h3 id="tasks-heading" className="card-title mb-3 text-start">
         {t('myTasks.title')}
       </h3>

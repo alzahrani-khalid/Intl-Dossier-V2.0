@@ -33,7 +33,7 @@ interface KpiCard {
 
 function KpiStripSkeleton(): ReactElement {
   return (
-    <div className="kpi-strip" aria-hidden="true">
+    <div className="kpi-strip" aria-hidden="true" data-testid="dashboard-widget-kpi-strip">
       {Array.from({ length: 4 }).map((_, i): ReactElement => {
         const accent = i === 2 ? ' kpi-accent' : ''
         return (
@@ -96,7 +96,12 @@ export function KpiStrip(): ReactElement {
   ]
 
   return (
-    <div className="kpi-strip" role="group" aria-label={t('kpi.strip')}>
+    <div
+      className="kpi-strip"
+      role="group"
+      aria-label={t('kpi.strip')}
+      data-testid="dashboard-widget-kpi-strip"
+    >
       {cards.map((k, i): ReactElement => {
         const accentClass = k.accent === true ? ' kpi-accent' : ''
         return (

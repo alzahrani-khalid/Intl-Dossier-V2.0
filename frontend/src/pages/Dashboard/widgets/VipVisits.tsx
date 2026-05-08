@@ -68,7 +68,12 @@ export function VipVisits(): ReactElement {
 
   if (isLoading) {
     return (
-      <section role="region" aria-labelledby="vip-heading" className="vip">
+      <section
+        role="region"
+        aria-labelledby="vip-heading"
+        className="vip"
+        data-testid="dashboard-widget-vip-visits"
+      >
         <h3 id="vip-heading" className="card-title mb-3 text-start">
           {t('vip.title')}
         </h3>
@@ -79,7 +84,12 @@ export function VipVisits(): ReactElement {
 
   if (isError || data === undefined) {
     return (
-      <section role="region" aria-labelledby="vip-heading" className="vip card">
+      <section
+        role="region"
+        aria-labelledby="vip-heading"
+        className="vip card"
+        data-testid="dashboard-widget-vip-visits"
+      >
         <h3 id="vip-heading" className="card-title mb-2 text-start">
           {t('vip.title')}
         </h3>
@@ -92,7 +102,12 @@ export function VipVisits(): ReactElement {
 
   if (visits.length === 0) {
     return (
-      <section role="region" aria-labelledby="vip-heading" className="vip card">
+      <section
+        role="region"
+        aria-labelledby="vip-heading"
+        className="vip card"
+        data-testid="dashboard-widget-vip-visits"
+      >
         <h3 id="vip-heading" className="card-title mb-2 text-start">
           {t('vip.title')}
         </h3>
@@ -105,7 +120,12 @@ export function VipVisits(): ReactElement {
   }
 
   return (
-    <section role="region" aria-labelledby="vip-heading" className="vip">
+    <section
+      role="region"
+      aria-labelledby="vip-heading"
+      className="vip"
+      data-testid="dashboard-widget-vip-visits"
+    >
       <div className="flex items-center justify-between mb-3">
         <h3 id="vip-heading" className="card-title text-start">
           {t('vip.title')}

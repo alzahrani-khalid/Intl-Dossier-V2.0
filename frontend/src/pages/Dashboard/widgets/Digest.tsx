@@ -22,10 +22,7 @@ import { RefreshCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { GlobeSpinner } from '@/components/signature-visuals'
-import {
-  useIntelligenceDigest,
-  type IntelligenceDigestRow,
-} from '@/hooks/useIntelligenceDigest'
+import { useIntelligenceDigest, type IntelligenceDigestRow } from '@/hooks/useIntelligenceDigest'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
 interface DigestRow {
@@ -62,7 +59,11 @@ export function Digest(): ReactElement {
     setClicked(true)
     try {
       const result = refetch() as unknown
-      if (result !== null && result !== undefined && typeof (result as Promise<unknown>).then === 'function') {
+      if (
+        result !== null &&
+        result !== undefined &&
+        typeof (result as Promise<unknown>).then === 'function'
+      ) {
         await (result as Promise<unknown>)
       }
     } finally {
@@ -83,6 +84,7 @@ export function Digest(): ReactElement {
         role="region"
         aria-labelledby="digest-heading"
         className="digest card"
+        data-testid="dashboard-widget-digest"
       >
         <h3 id="digest-heading" className="card-title text-start mb-2">
           {t('digest.title')}
@@ -97,6 +99,7 @@ export function Digest(): ReactElement {
       role="region"
       aria-labelledby="digest-heading"
       className="digest relative card"
+      data-testid="dashboard-widget-digest"
     >
       <div className="flex items-center justify-between mb-3 gap-2">
         <h3 id="digest-heading" className="card-title text-start">
@@ -112,10 +115,7 @@ export function Digest(): ReactElement {
           disabled={busy}
           className="min-h-11 min-w-11"
         >
-          <RefreshCcw
-            className={`size-4 ${busy ? 'animate-spin' : ''}`}
-            aria-hidden="true"
-          />
+          <RefreshCcw className={`size-4 ${busy ? 'animate-spin' : ''}`} aria-hidden="true" />
         </Button>
       </div>
 
@@ -127,10 +127,7 @@ export function Digest(): ReactElement {
       ) : (
         <ul className="flex flex-col">
           {rows.map((r) => (
-            <li
-              key={r.id}
-              className="digest-row digest-item py-2 flex items-start gap-3 min-h-11"
-            >
+            <li key={r.id} className="digest-row digest-item py-2 flex items-start gap-3 min-h-11">
               <Badge variant="outline" className="digest-tag shrink-0">
                 {r.tag}
               </Badge>

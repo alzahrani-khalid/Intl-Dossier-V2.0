@@ -28,6 +28,7 @@ export function RecentDossiers(): ReactElement {
         role="region"
         aria-labelledby="recent-heading"
         className="recent card"
+        data-testid="dashboard-widget-recent-dossiers"
       >
         <h3 id="recent-heading" className="card-title mb-3 text-start">
           {t('recent.title')}
@@ -42,6 +43,7 @@ export function RecentDossiers(): ReactElement {
       role="region"
       aria-labelledby="recent-heading"
       className="recent card"
+      data-testid="dashboard-widget-recent-dossiers"
     >
       <h3 id="recent-heading" className="card-title mb-3 text-start">
         {t('recent.title')}
