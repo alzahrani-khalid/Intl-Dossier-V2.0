@@ -27,11 +27,13 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-**v6.0 debt closure status:** Phase 44 closed missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006. Phase 45 closed deferred schema/seed work: intelligence digest table + seed rows, VIP person ISO projection, and staging seed-dependent drawer specs. Phase 46 closed visual-regression baselines for Phases 38/40/41 with committed PNGs, human review, and focused CI replay.
+**v6.0 debt closure status:** Phase 44 closed missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006. Phase 45 closed deferred schema/seed work: intelligence digest table + seed rows, VIP person ISO projection, and staging seed-dependent drawer specs. Phase 46 closed visual-regression baselines for Phases 38/40/41 with committed PNGs, human review, and focused CI replay. v6.1 artifacts are archived under `.planning/milestones/v6.1-*`.
 
-## Current Milestone: v6.1 Hardening & Reconciliation (Complete)
+## Between Milestones
 
-**Goal:** Close v6.0 tech debt — verification, baselines, schema, anti-patterns — before scoping v7.0 feature work.
+v6.1 is archived. The next candidate is deferred seed `v7.0 Intelligence Engine` at `.planning/seeds/v7.0-intelligence-engine.md`.
+
+## Last Milestone: v6.1 Hardening & Reconciliation
 
 **Completed in Phase 44:**
 
@@ -51,11 +53,11 @@ Unified intelligence management for diplomatic operations — every relationship
 **Completed in Phase 46:**
 
 - Regenerated 8 dashboard widget baselines, 14 list-page baselines, and 2 dossier-drawer baselines
-- Completed the 24-row human review log in `.planning/phases/46-visual-baseline-regeneration/46-VALIDATION.md`
+- Completed the 24-row human review log in `.planning/milestones/v6.1-phases/46-visual-baseline-regeneration/46-VALIDATION.md`
 - Added focused Phase 46 visual regression replay to `.github/workflows/e2e.yml`
 - Closed VIS-01..04 in REQUIREMENTS, ROADMAP, MILESTONES, and the v6.0 audit
 
-**Next candidate:** Deferred seed `v7.0 Intelligence Engine` lives at `.planning/seeds/v7.0-intelligence-engine.md`. Its trigger condition is now met: v6.1 has shipped.
+**Archive:** `.planning/milestones/v6.1-ROADMAP.md`, `.planning/milestones/v6.1-REQUIREMENTS.md`, `.planning/milestones/v6.1-phases/`
 
 ## Requirements
 
@@ -144,7 +146,7 @@ Unified intelligence management for diplomatic operations — every relationship
 - **Security:** Supabase-first auth with RBAC hierarchy, Zod validation on all routes, RLS on all tables, CSP hardened
 - **RTL:** useDirection() hook, LtrIsolate wrapper, eslint-plugin-rtl-friendly, zero physical CSS properties
 - **Responsive:** Mobile-first across all pages, 44px touch targets, card view fallbacks, RelationshipSidebar → BottomSheet on mobile
-- **Known tech debt:** See milestone audit files in `.planning/milestones/` (v2.0, v3.0, v4.0)
+- **Known tech debt:** See milestone audit files in `.planning/milestones/` and acknowledged open artifacts in `.planning/STATE.md` Deferred Items
 
 ## Constraints
 
@@ -212,4 +214,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-08 — Phase 46 complete; v6.1 shipped_
+_Last updated: 2026-05-08 — v6.1 archived; ready for next milestone_

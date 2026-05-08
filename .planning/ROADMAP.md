@@ -8,7 +8,7 @@
 - ✅ **v4.1 Post-Launch Fixes** — Phases 24-25 (shipped 2026-04-12) — [archive](milestones/v4.1-ROADMAP.md)
 - ✅ **v5.0 Dossier Creation UX** — Phases 26-32 (shipped 2026-04-18) — [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Design System Adoption** — Phases 33-43 (shipped 2026-05-06) — [archive](milestones/v6.0-ROADMAP.md)
-- 🚧 **v6.1 Hardening & Reconciliation** — Phases 44-46 (in planning, opened 2026-05-07)
+- ✅ **v6.1 Hardening & Reconciliation** — Phases 44-46 (shipped 2026-05-08) — [archive](milestones/v6.1-ROADMAP.md)
 
 ## Phases
 
@@ -103,98 +103,33 @@ Full details: [v6.0-ROADMAP.md](milestones/v6.0-ROADMAP.md)
 
 </details>
 
-### ✅ v6.1 Hardening & Reconciliation (Phases 44-46) — COMPLETE
+<details>
+<summary>✅ v6.1 Hardening & Reconciliation (Phases 44-46) — SHIPPED 2026-05-08</summary>
 
-- [x] **Phase 44: Documentation, Toolchain & Anti-patterns** — Backfill VERIFICATION.md for 6 v6.0 phases, sync REQUIREMENTS/ROADMAP checkboxes, repair size-limit chunk-glob gate, close 5 Phase 43 anti-patterns (WR-02..WR-06), resolve Plan 33-08 storybook deferral (completed 2026-05-07)
-- [x] **Phase 45: Schema & Seed Closure** — Create `intelligence_digest` table + read hook, add VIP person ISO join in dashboard RPC, apply `060-dashboard-demo.sql` seed to staging, unblock 4 BLOCKED-BY-SEED Playwright specs (completed 2026-05-08)
-- [x] **Phase 46: Visual Baseline Regeneration** — Regenerate Phase 38 (8 widgets), Phase 40 (14 list-page) and Phase 41 (2 drawer) Playwright visual baselines against the seeded staging DB; document human-eyeball pass (completed 2026-05-08)
+- [x] Phase 44: Documentation, Toolchain & Anti-patterns (6/6 plans) — verification backfill, archive sync, size-limit gate repair, WR-02..WR-06 closure, ADR-006
+- [x] Phase 45: Schema & Seed Closure (4/4 plans) — `intelligence_digest`, dashboard digest hook, VIP ISO projection, staging seed closure
+- [x] Phase 46: Visual Baseline Regeneration (4/4 plans) — 24 regenerated baselines for dashboard widgets, list pages, and dossier drawer with human review
 
-## Phase Details
+Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 
-### Phase 44: Documentation, Toolchain & Anti-patterns
-
-**Goal**: A reviewer auditing v6.0 finds explicit per-phase verification, accurate REQUIREMENTS/ROADMAP checkboxes, an enforced bundle-budget CI gate, zero open Phase 43 anti-patterns, and a resolved storybook deferral — without consulting any new schema or visual baseline.
-**Depends on**: Nothing (independent of DATA + VIS work; pure code/doc/config edits to v6.0 artifacts)
-**Requirements**: DOC-01, DOC-02, DOC-03, DOC-04, DOC-05, DOC-06, DOC-07, DOC-08, TOOL-01, TOOL-02, TOOL-03, LINT-01, LINT-02, LINT-03, LINT-04, LINT-05, STORY-01
-**Success Criteria** (what must be TRUE):
-
-1. All six backfilled VERIFICATION.md files exist at `.planning/milestones/v6.0-phases/{33,34,36,37,39,40}-*/VERIFICATION.md`, each listing every owned REQ-ID with a PASS/FAIL verdict and a verification artifact reference; the final audit reports `phases_missing_verification: []` and `requirements_partial_verification_gap: 0`
-2. `pnpm -C frontend size-limit` exits 0 in CI against the current Vite output budgets in `frontend/.size-limit.json`, and a verification PR that adds >=1 KB to a measured chunk is rejected by the CI gate (the historical 815 KB total remains aspirational, while the repaired chunk-glob gate is enforced again)
-3. Phase-scoped WR-02..WR-06 source/lint checks pass across `OverdueCommitments.tsx`, `DrawerCtaRow.tsx`, `VipVisits.tsx`, `MyTasks.tsx`, `sidebar.tsx`, and `CalendarEntryForm.tsx`; an axe-core run on dashboard + drawer + my-work routes in EN and AR reports zero "label not redundant with text" violations, with full `pnpm -C frontend lint` tracked separately for unrelated repo-wide backlog
-4. The v6.0 archive at `.planning/milestones/v6.0-REQUIREMENTS.md` shows `[x]` for all 52 REQ-IDs (matching the SUMMARY frontmatter), and the v6.0 ROADMAP archive progress table reads 121/121 plans complete with no "Not started" cells
-5. Either Storybook stories for the 8 v6.0 visual primitives render at `frontend/src/stories/` across the direction × mode × density matrix, OR `.planning/decisions/ADR-006-storybook-deferral.md` exists and names the replacement coverage strategy with a concrete revisit trigger
-
-**Plans**: TBD
-
-### Phase 45: Schema & Seed Closure
-
-**Goal**: A user opening the dashboard sees the Digest widget pulling real publication names (not internal usernames), the VIP Visits widget showing country flags resolved from ISO codes, and the four Phase 41 BLOCKED-BY-SEED Playwright specs executing successfully against seeded staging data.
-**Depends on**: Phase 44 (clean docs/CI baseline before introducing schema changes; not technically required, but sequencing avoids regressing the freshly-fixed budget gate with a new migration's bundle delta and keeps each phase's verification surface narrow)
-**Requirements**: DATA-01, DATA-02, DATA-03, DATA-04
-**Success Criteria** (what must be TRUE):
-
-1. The `intelligence_digest` table exists in staging Supabase with the columns specified in DATA-01 (id, headline_en, headline_ar, summary_en, summary_ar, source_publication, occurred_at, dossier_id nullable FK, created_at), org-scoped RLS policies match the existing `dossiers` pattern, and the migration is applied via the Supabase MCP (visible in `supabase/migrations/`)
-2. The dashboard Digest widget at `/` reads from `intelligence_digest` via a typed `useIntelligenceDigest` hook; the rendered `source` field shows publication names in both EN and AR, and a search of the widget render path returns zero references to `actor_name` (closes DIGEST-SOURCE-COMPROMISE)
-3. The dashboard RPC powering `VipVisits` returns each row with an ISO-3166 alpha-2 code joined from `country_iso_codes`, and `<DossierGlyph>` consumes that code so the rendered widget shows correct flag glyphs instead of name-initials fallbacks
-4. `frontend/seeds/060-dashboard-demo.sql` is applied to staging via Supabase MCP, and the four previously BLOCKED-BY-SEED Playwright specs (Phase 41 dashboard widget specs G1/G2/G7) execute and pass against the seeded data on a developer machine with `doppler run -- pnpm --filter frontend exec playwright test`
-
-**Plans**:
-
-- **Wave 1**
-  - `45-01-schema-seed-foundation-PLAN.md` — create the `intelligence_digest` schema/RLS migration and canonical dashboard seed deltas
-- **Wave 2** _(blocked on Wave 1 completion)_
-  - `45-02-digest-widget-closure-PLAN.md` — add `useIntelligenceDigest`, rewire Digest, and remove `actor_name`/`useActivityFeed` from the render path
-  - `45-03-vip-iso-closure-PLAN.md` — extend `get_upcoming_events` with nullable person ISO fields and render VIP flags through `DossierGlyph`
-- **Wave 3** _(blocked on Wave 2 completion)_
-  - `45-04-staging-e2e-verification-PLAN.md` — apply Phase 45 migrations through Supabase MCP and run focused unit + seed-dependent Playwright gates
-
-### Phase 46: Visual Baseline Regeneration
-
-**Goal**: A reviewer running the Playwright visual-regression suite on a clean checkout against the seeded staging DB sees Phase 38, 40, and 41 visual specs all exit 0, with new baselines committed and a documented human-eyeball confirmation that each baseline matches the IntelDossier handoff reference.
-**Depends on**: Phase 45 (DATA-04 seed must be applied before VIS-01 regenerates dashboard widget baselines that consume seeded data; DATA-02 + DATA-03 affect Digest source text and VIP flag rendering, both of which appear in regenerated PNGs)
-**Requirements**: VIS-01, VIS-02, VIS-03, VIS-04
-**Success Criteria** (what must be TRUE):
-
-1. Eight Phase 38 widget visual baselines (KpiStrip, WeekAhead, OverdueCommitments, Digest, SlaHealth, VipVisits, MyTasks, RecentDossiers) are committed under `frontend/tests/e2e/__snapshots__/dashboard-widgets/` and the `dashboard-widgets` Playwright job exits 0 on a fresh run (no `--update-snapshots`); DASH-VISUAL-BLOCKED + DASH-VISUAL-REVIEW are closed in the deferred-items table
-2. Fourteen Phase 40 list-page visual baselines (7 pages × EN + AR) are committed and the `list-pages-*` Playwright visual jobs exit 0 across both locales
-3. Two Phase 41 dossier-drawer visual baselines are regenerated post-token-darkening (`--accent-fg` 4.38 → 5.28; `inkFaint` 3.14 → 5.07) and the dossier-drawer visual spec exits 0 in both EN and AR
-4. `.planning/phases/46-*/VALIDATION.md` (or equivalent) documents a human-eyeball confirmation for each new baseline file, naming the file path and noting concordance with the handoff reference at `frontend/design-system/inteldossier_handoff_design/`
-
-**Plans**:
-
-- **Wave 1**
-  - `46-01-dashboard-widget-baselines-PLAN.md` — add the dashboard widget visual target, capture eight widget-level baselines, and record dashboard review rows
-  - `46-02-list-page-baselines-PLAN.md` — regenerate fourteen Phase 40 list-page baselines and record list-page review rows
-  - `46-03-drawer-baselines-PLAN.md` — regenerate two Phase 41 dossier-drawer baselines and record drawer review rows
-- **Wave 2** _(blocked on Wave 1 completion)_
-  - `46-04-human-review-ci-closure-PLAN.md` — complete 24-baseline human review, add focused visual CI replay, and close VIS-01..VIS-04 planning docs
-
-**Cross-cutting constraints**:
-
-- Phase 46 visual jobs must run against the Phase 45 seeded staging database through Doppler-managed environment variables.
-- Final verification must replay visual specs without `--update-snapshots`.
-- Human-review evidence in `.planning/phases/46-visual-baseline-regeneration/46-VALIDATION.md` is required before VIS-01..VIS-04 may be marked complete.
-
-**UI hint**: yes
+</details>
 
 ## Progress
 
 <!-- gsd:progress:start -->
 
-| Phase                                        | Milestone | Plans Complete | Status   | Completed  |
-| -------------------------------------------- | --------- | -------------- | -------- | ---------- |
-| 1-7                                          | v2.0      | —              | Shipped  | 2026-03-28 |
-| 8-13                                         | v3.0      | —              | Shipped  | 2026-04-06 |
-| 14-23                                        | v4.0      | —              | Shipped  | 2026-04-09 |
-| 24-25                                        | v4.1      | —              | Shipped  | 2026-04-12 |
-| 26-32                                        | v5.0      | —              | Shipped  | 2026-04-18 |
-| 33-43                                        | v6.0      | —              | Shipped  | 2026-05-06 |
-| 44. Documentation, Toolchain & Anti-patterns | v6.1      | 6/6            | Complete | 2026-05-07 |
-| 45. Schema & Seed Closure                    | v6.1      | 4/4            | Complete | 2026-05-08 |
-| 46. Visual Baseline Regeneration             | v6.1      | 4/4            | Complete | 2026-05-08 |
+| Phase | Milestone | Plans Complete | Status  | Completed  |
+| ----- | --------- | -------------- | ------- | ---------- |
+| 1-7   | v2.0      | —              | Shipped | 2026-03-28 |
+| 8-13  | v3.0      | —              | Shipped | 2026-04-06 |
+| 14-23 | v4.0      | —              | Shipped | 2026-04-09 |
+| 24-25 | v4.1      | —              | Shipped | 2026-04-12 |
+| 26-32 | v5.0      | —              | Shipped | 2026-04-18 |
+| 33-43 | v6.0      | —              | Shipped | 2026-05-06 |
+| 44-46 | v6.1      | 14/14          | Shipped | 2026-05-08 |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-05-08 — Phase 46 visual baseline regeneration complete_
+_Roadmap last updated: 2026-05-08 — v6.1 archived; ready for next milestone_

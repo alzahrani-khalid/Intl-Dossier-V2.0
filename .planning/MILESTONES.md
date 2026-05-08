@@ -1,5 +1,26 @@
 # Milestones
 
+## v6.1 Hardening & Reconciliation (Shipped: 2026-05-08)
+
+**Delivered:** v6.0 debt closure: verification/archive reconciliation, repaired bundle-budget enforcement, schema and staging seed closure, and regenerated visual baselines for the deferred dashboard/list/drawer surfaces.
+
+**Phases completed:** 3 phases (44-46), 14 plans, 25 tasks
+
+**Key accomplishments:**
+
+- Backfilled explicit v6.0 verification evidence for TOKEN, THEME, SHELL, VIZ, BOARD, and LIST requirements.
+- Reconciled active and archived v6.0 planning truth: REQUIREMENTS, ROADMAP, final audit caveats, and Storybook deferral via ADR-006.
+- Restored truthful `size-limit` enforcement with stable Vite chunk globs, zero-match detection, and CI parity.
+- Closed WR-02..WR-06 source/accessibility anti-patterns with focused lint and axe evidence in English and Arabic.
+- Shipped tenant-scoped `intelligence_digest` schema, deterministic dashboard seed rows, digest hook, and VIP country ISO projection.
+- Regenerated 24 visual baselines across dashboard widgets, list pages, and dossier drawer, with PASS review rows and no-update replay.
+
+**Known deferred items at close:** 10 acknowledged items (see `.planning/STATE.md` Deferred Items), including the historical dashboard max-depth debug session, seven stale quick-task artifacts, the v6.1 kickoff todo, and the missing v6.1 milestone audit file.
+
+**Archive:** `.planning/milestones/v6.1-ROADMAP.md` · `.planning/milestones/v6.1-REQUIREMENTS.md` · `.planning/milestones/v6.1-phases/`
+
+---
+
 ## v6.0 Design System Adoption (Shipped: 2026-05-06)
 
 **Phases completed:** 11 phases (33-43), 121/121 executable plans complete (33-08 superseded by ADR-006), 66 tasks

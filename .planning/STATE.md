@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v6.1
 milestone_name: Hardening & Reconciliation
-status: milestone_complete
-stopped_at: v6.1 milestone complete
-last_updated: '2026-05-08T10:44:40.353Z'
-last_activity: 2026-05-08 -- Phase 46 execution complete
+status: between_milestones
+stopped_at: v6.1 milestone archived
+last_updated: '2026-05-08T12:51:04Z'
+last_activity: 2026-05-08 -- v6.1 milestone archived
 progress:
   total_phases: 3
   completed_phases: 3
@@ -21,7 +21,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v6.1 milestone complete
+**Current focus:** Planning next milestone
 
 ## Current Position
 
@@ -32,7 +32,7 @@ Last activity: 2026-05-08
 
 ## Next Action
 
-Run `$gsd-progress` to review the completed v6.1 milestone state.
+Run `$gsd-new-milestone` to start the next milestone cycle. Candidate seed: `.planning/seeds/v7.0-intelligence-engine.md`.
 
 ### Phase 40 summary
 
@@ -250,6 +250,21 @@ Items acknowledged and deferred at v6.0 milestone close on 2026-05-06:
 
 See `.planning/v6.0-MILESTONE-AUDIT.md` for full tech-debt inventory across phases 38, 40, 41, 42, 43 and cross-cutting documentation drift.
 
+Items acknowledged and deferred at v6.1 milestone close on 2026-05-08:
+
+| Category        | Item                                                | Status                |
+| --------------- | --------------------------------------------------- | --------------------- |
+| debug           | dashboard-max-update-depth                          | awaiting_human_verify |
+| quick_task      | 260409-dgf-fix-redis-initialization-race-maxmemory- | missing               |
+| quick_task      | 260412-hlb-fix-batch-5-data-flow-state-management-d | missing               |
+| quick_task      | 260412-jkp-fix-batch-6-navigation-routing-n-20-n-21 | missing               |
+| quick_task      | 260412-jth-fix-batch-7-per-journey-route-fixes-28-f | missing               |
+| quick_task      | 260412-kmh-fix-batch-0-critical-audit-findings-b-01 | missing               |
+| quick_task      | 260412-kot-route-notifications-center-through-expre | missing               |
+| quick_task      | 260413-tuf-create-unified-pageheader-component-and- | missing               |
+| todo            | v6.1-kickoff.md                                     | high                  |
+| milestone_audit | v6.1-MILESTONE-AUDIT.md                             | missing               |
+
 ## Performance Metrics
 
 **Velocity:**
@@ -312,10 +327,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-08T08:26:20Z
-Stopped at: Phase 46 ready to plan
+Last session: 2026-05-08T12:51:04Z
+Stopped at: v6.1 milestone archived
 Resume file: .planning/ROADMAP.md
-Resume command: /gsd-plan-phase 46
+Resume command: /gsd-new-milestone
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
 

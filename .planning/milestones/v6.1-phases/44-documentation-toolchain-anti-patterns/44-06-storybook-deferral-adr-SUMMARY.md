@@ -23,11 +23,11 @@ key-files:
   modified:
     - .planning/milestones/v6.0-phases/33-token-engine/33-08-storybook-PLAN.md
 key-decisions:
-  - "Storybook remains deferred in Phase 44; replacement coverage is Vitest component tests plus existing Playwright visual specs."
-  - "The revisit trigger is when the visual primitive count exceeds 15, counted from named primitive exports in frontend/src/components/signature-visuals/index.ts."
-  - "Skeleton and Spinner are covered in the STORY-01 replacement table but are not counted toward the signature-visuals barrel threshold unless exported there later."
+  - 'Storybook remains deferred in Phase 44; replacement coverage is Vitest component tests plus existing Playwright visual specs.'
+  - 'The revisit trigger is when the visual primitive count exceeds 15, counted from named primitive exports in frontend/src/components/signature-visuals/index.ts.'
+  - 'Skeleton and Spinner are covered in the STORY-01 replacement table but are not counted toward the signature-visuals barrel threshold unless exported there later.'
 patterns-established:
-  - "Archived executable plans can be preserved with a supersession banner instead of deleted."
+  - 'Archived executable plans can be preserved with a supersession banner instead of deleted.'
 requirements-completed: [STORY-01]
 duration: 3 min
 completed: 2026-05-07
@@ -65,12 +65,12 @@ completed: 2026-05-07
 
 ## Verification Results
 
-| Command | Result |
-|---------|--------|
-| `test -f .planning/decisions/ADR-006-storybook-deferral.md && grep -q "visual primitive count exceeds 15" .planning/decisions/ADR-006-storybook-deferral.md` | PASS |
-| `grep -q "SUPERSEDED-BY-ADR-006" .planning/milestones/v6.0-phases/33-token-engine/33-08-storybook-PLAN.md` | PASS |
-| `test ! -d frontend/src/stories` | PASS |
-| `test ! -d .storybook` | PASS |
+| Command                                                                                                                                                      | Result |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ |
+| `test -f .planning/decisions/ADR-006-storybook-deferral.md && grep -q "visual primitive count exceeds 15" .planning/decisions/ADR-006-storybook-deferral.md` | PASS   |
+| `grep -q "SUPERSEDED-BY-ADR-006" .planning/milestones/v6.0-phases/33-token-engine/33-08-storybook-PLAN.md`                                                   | PASS   |
+| `test ! -d frontend/src/stories`                                                                                                                             | PASS   |
+| `test ! -d .storybook`                                                                                                                                       | PASS   |
 
 ## Decisions Made
 
@@ -92,9 +92,9 @@ state and roadmap updates to the orchestrator.
 
 ## Known Stubs
 
-| File | Line | Reason |
-|------|------|--------|
-| `.planning/milestones/v6.0-phases/33-token-engine/33-08-storybook-PLAN.md` | 248 | Pre-existing `placeholder="you@example.com"` appears inside historical Storybook sample code. The plan is now superseded and must not be executed as Phase 44 work. |
+| File                                                                       | Line | Reason                                                                                                                                                              |
+| -------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.planning/milestones/v6.0-phases/33-token-engine/33-08-storybook-PLAN.md` | 248  | Pre-existing `placeholder="you@example.com"` appears inside historical Storybook sample code. The plan is now superseded and must not be executed as Phase 44 work. |
 
 ## Threat Flags
 
@@ -129,5 +129,5 @@ chooses to re-open visual primitive documentation tooling explicitly.
 
 ---
 
-*Phase: 44-documentation-toolchain-anti-patterns*
-*Completed: 2026-05-07*
+_Phase: 44-documentation-toolchain-anti-patterns_
+_Completed: 2026-05-07_
