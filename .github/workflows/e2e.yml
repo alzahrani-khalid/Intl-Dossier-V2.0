@@ -96,6 +96,35 @@ jobs:
             frontend/test-results/**/*.webm
           retention-days: 90
 
+  visual-regression-phase-46:
+    name: Visual Regression (Phase 46)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      CI: true
+      E2E_BASE_URL: ${{ secrets.E2E_BASE_URL }}
+      TEST_USER_EMAIL: ${{ secrets.E2E_ANALYST_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.E2E_ANALYST_PASSWORD }}
+      SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.E2E_SUPABASE_SERVICE_ROLE_KEY }}
+      VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -C frontend exec playwright install chromium
+      - name: Run dashboard widget visual baselines
+        run: pnpm -C frontend exec playwright test dashboard-widgets --project=chromium-dashboard-widgets
+      - name: Run list and drawer visual baselines
+        run: pnpm -C frontend exec playwright test list-pages-visual.spec.ts dossier-drawer-visual.spec.ts --project=chromium
+
   merge-reports:
     name: Merge Playwright reports
     if: always()
