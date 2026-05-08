@@ -168,6 +168,54 @@ _A living document updated after each milestone. Lessons feed forward into futur
 
 ---
 
+## Milestone: v6.1 — Hardening & Reconciliation
+
+**Shipped:** 2026-05-08
+**Phases:** 3 | **Plans:** 14 | **Tasks:** 25
+**Timeline:** 2 days (2026-05-07 → 2026-05-08)
+
+### What Was Built
+
+- v6.0 verification backfill for phases 33, 34, 36, 37, 39, and 40, with archive/requirements/roadmap sync.
+- Repaired `size-limit` enforcement around real Vite chunk globs and CI parity.
+- Closed Phase 43 anti-patterns WR-02..WR-06 and formalized Storybook deferral through ADR-006.
+- Added `intelligence_digest` schema/RLS/seed data, dashboard digest hook, and VIP ISO projection.
+- Regenerated 24 visual baselines across dashboard widgets, list pages, and dossier drawer with human review and focused replay.
+
+### What Worked
+
+- **Debt-focused milestone scope:** Keeping v6.1 limited to reconciliation prevented feature creep before v7.0 planning.
+- **Archive-first evidence:** Phase 44 directly repaired historical truth sources, which made later schema and visual closure easier to verify.
+- **Seed before visual replay:** Phase 45’s staging seed closure gave Phase 46 stable visual inputs.
+- **Human-review log:** The 24-row baseline review table made visual acceptance auditable instead of implicit.
+
+### What Was Inefficient
+
+- **No v6.1 milestone audit artifact:** The close proceeded with the missing audit acknowledged in STATE.md; future closes should run `$gsd-audit-milestone` before completion.
+- **Old open artifacts persisted:** The dashboard debug session, stale quick tasks, and kickoff todo remained visible at close and had to be explicitly deferred.
+- **Summary extraction is noisy:** Some generated accomplishment candidates included code-review finding labels, requiring manual cleanup in MILESTONES.md.
+
+### Patterns Established
+
+- **Hardening milestone as bridge:** A short reconciliation milestone can close audit debt and unblock the next feature milestone without expanding product scope.
+- **Visual operator wave:** Visual-heavy phases should reserve a final operator/replay plan with Doppler, seeded data, no-update replay, and review rows.
+- **Audit-open gate:** Milestone close should surface stale artifacts as first-class deferred items rather than hiding them.
+
+### Key Lessons
+
+1. Run milestone audit before archive, not during archive.
+2. Treat visual baselines as release artifacts: seed, capture, review, replay, and link the evidence.
+3. Curate generated milestone accomplishments before committing them; raw summary extraction is useful input, not final copy.
+4. Keep historical phase directories archived with their milestone to make active `.planning/phases/` reflect only current work.
+
+### Cost Observations
+
+- Model mix: Opus for orchestration and planning; review/fix agents used for scoped quality checks.
+- Sessions: ~3 sessions across 3 phases.
+- Notable: A tightly-scoped hardening milestone moved faster than feature milestones because success criteria were concrete and evidence-driven.
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -177,6 +225,7 @@ _A living document updated after each milestone. Lessons feed forward into futur
 | v2.0      | 7      | 29    | 185 days | First milestone — established GSD workflow, verification reports, milestone audit |
 | v3.0      | 6      | 28    | 9 days   | Worktree parallelism, 20x velocity boost, established shell/absorption patterns   |
 | v6.0      | 11     | 121   | 18 days  | Token-first architecture, gap-closure-as-plan, CI-anchored qa-sweep gate          |
+| v6.1      | 3      | 14    | 2 days   | Hardening bridge milestone, audit-open close gate, visual operator replay         |
 
 ### Cumulative Quality
 
@@ -185,6 +234,7 @@ _A living document updated after each milestone. Lessons feed forward into futur
 | v2.0      | 5 (ESLint, Prettier, Knip, size-limit, pre-commit)                                                                   | 12                                                                                                                                                                       | 29/29            |
 | v3.0      | Same 5 + VERIFICATION.md per phase                                                                                   | +5 (v3.0)                                                                                                                                                                | 45/45            |
 | v6.0      | Same + qa-sweep CI (axe, responsive, kbd, focus) + eslint-plugin-rtl-friendly + size-limit signature-visuals budgets | +9 deferred (DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED/REVIEW, DASH-COMPONENTS-DEAD, JSON-key-uniqueness, WR-03 SR shadowing) | 52/52            |
+| v6.1      | Same + focused visual replay for deferred dashboard/list/drawer baselines                                            | 10 acknowledged open artifacts at close (historical/stale items plus missing v6.1 audit)                                                                                 | 25/25            |
 
 ### Top Lessons (Verified Across Milestones)
 
