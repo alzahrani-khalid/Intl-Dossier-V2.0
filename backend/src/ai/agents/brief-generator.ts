@@ -13,7 +13,6 @@
 import { llmRouter, LLMRouterConfig, StreamChunk } from '../llm-router.js'
 import { briefContextService, BriefContext } from '../../services/brief.service.js'
 import { supabaseAdmin } from '../../config/supabase.js'
-import { defineAgent, createAgentTools } from '../mastra-config.js'
 import logger from '../../utils/logger.js'
 
 export interface BriefGenerationRequest {
@@ -102,52 +101,6 @@ const ARABIC_BRIEF_SYSTEM_PROMPT = `أنت مساعد لإنشاء موجزات 
 قم بتنسيق ردك كـ JSON.`
 
 export class BriefGeneratorAgent {
-  // Agent configuration for future Mastra integration
-  private readonly _agentConfig = defineAgent({
-    name: 'brief-generator',
-    description: 'Generates comprehensive diplomatic briefs for engagements',
-    systemPrompt: BRIEF_SYSTEM_PROMPT,
-    tools: createAgentTools([
-      {
-        name: 'search_dossiers',
-        description: 'Search for relevant dossiers by query',
-        parameters: {
-          query: { type: 'string', description: 'Search query', required: true },
-          limit: { type: 'number', description: 'Max results', default: 5 },
-        },
-        execute: async () => ({ results: [] }),
-      },
-      {
-        name: 'get_positions',
-        description: 'Get positions for a dossier',
-        parameters: {
-          dossierId: { type: 'string', description: 'Dossier ID', required: true },
-        },
-        execute: async () => ({ positions: [] }),
-      },
-      {
-        name: 'get_commitments',
-        description: 'Get active commitments',
-        parameters: {
-          dossierId: { type: 'string', description: 'Dossier ID' },
-          engagementId: { type: 'string', description: 'Engagement ID' },
-        },
-        execute: async () => ({ commitments: [] }),
-      },
-      {
-        name: 'get_engagements',
-        description: 'Get recent engagements',
-        parameters: {
-          dossierId: { type: 'string', description: 'Dossier ID' },
-          limit: { type: 'number', description: 'Max results', default: 5 },
-        },
-        execute: async () => ({ engagements: [] }),
-      },
-    ]),
-    temperature: 0.7,
-    maxTokens: 4096,
-  })
-
   async generate(request: BriefGenerationRequest): Promise<GeneratedBrief> {
     const {
       engagementId,

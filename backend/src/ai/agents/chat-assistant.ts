@@ -147,7 +147,7 @@ async function searchEntities(
         .split(/\s+/)
         .filter((word) => word.length > 2 && !stopWords.includes(word))
 
-      const searchTerm = searchTerms.length > 0 ? searchTerms[0] : input.query
+      const searchTerm = (searchTerms.length > 0 ? searchTerms[0] : input.query) ?? input.query
       logger.info('Searching dossiers with term', {
         originalQuery: input.query,
         searchTerm,

@@ -1,5 +1,4 @@
 import crypto from 'crypto'
-import { SignatureRequest, Signatory } from '../models/signature-request.model'
 
 export interface PKIConfig {
   certificateAuthority: string
@@ -82,11 +81,7 @@ export class PKIClient {
   /**
    * Create digital signature for a document
    */
-  async createSignature(
-    documentContent: Buffer,
-    signatureRequest: SignatureRequest,
-    signatory: Signatory,
-  ): Promise<PKISignature> {
+  async createSignature(documentContent: Buffer): Promise<PKISignature> {
     try {
       if (!this.privateKey || !this.certificate) {
         throw new Error('PKI certificates not initialized')
@@ -198,9 +193,6 @@ export class PKIClient {
         errors.push('Certificate not issued by trusted CA')
       }
 
-      // Verify certificate signature
-      const caPublicKey = crypto.createPublicKey(this.caCertificate.publicKey)
-
       // For now, skip signature verification as X509Certificate.signature is not available in all Node versions
       // In a production environment, you would implement proper certificate chain verification
       const isValid = true // Placeholder - implement proper verification
@@ -220,7 +212,7 @@ export class PKIClient {
 
       // Check certificate revocation (placeholder - would need CRL or OCSP)
       // This is a simplified implementation
-      const isRevoked = await this.checkCertificateRevocation(certificate.serialNumber)
+      const isRevoked = await this.checkCertificateRevocation()
       if (isRevoked) {
         errors.push('Certificate has been revoked')
       }
@@ -244,7 +236,7 @@ export class PKIClient {
   /**
    * Check certificate revocation status
    */
-  private async checkCertificateRevocation(serialNumber: string): Promise<boolean> {
+  private async checkCertificateRevocation(): Promise<boolean> {
     // Placeholder implementation
     // In a real implementation, this would check against CRL or OCSP
     try {
@@ -331,10 +323,7 @@ export class PKIClient {
   /**
    * Sign document with smart card
    */
-  async signWithSmartCard(
-    documentContent: Buffer,
-    cardInfo: SmartCardInfo,
-  ): Promise<PKISignature | null> {
+  async signWithSmartCard(cardInfo: SmartCardInfo): Promise<PKISignature | null> {
     try {
       // Placeholder implementation
       // In a real implementation, this would use the smart card to sign
@@ -391,11 +380,7 @@ export class PKIClient {
 
       // Test signature creation and verification
       const testDocument = Buffer.from('Test document for PKI verification')
-      const testSignature = await this.createSignature(
-        testDocument,
-        {} as SignatureRequest,
-        {} as Signatory,
-      )
+      const testSignature = await this.createSignature(testDocument)
 
       const verification = await this.verifySignature(testDocument, testSignature)
 

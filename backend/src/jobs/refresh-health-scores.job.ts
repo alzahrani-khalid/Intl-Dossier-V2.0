@@ -179,12 +179,13 @@ async function recalculateStaleHealthScores(): Promise<number> {
 
             if (dossierResponse.ok) {
               const dossiers = (await dossierResponse.json()) as DossierInfo[]
-              if (dossiers.length > 0 && dossiers[0].owner_id) {
+              const dossier = dossiers[0]
+              if (dossier && dossier.owner_id) {
                 // T183-T187: Send health score drop notification
                 await sendHealthScoreDropNotification(
                   recalcResult.dossierId,
-                  dossiers[0].name,
-                  dossiers[0].owner_id,
+                  dossier.name,
+                  dossier.owner_id,
                   previousOverallScore,
                   newOverallScore,
                   factors.length > 0 ? factors : ['health score components changed'],

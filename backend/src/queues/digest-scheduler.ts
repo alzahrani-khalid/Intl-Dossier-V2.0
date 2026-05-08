@@ -1,6 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { notificationQueue } from './notification.queue'
-import { renderDailyDigestTemplate, renderWeeklyDigestTemplate } from '../services/digest-template.service'
+import {
+  renderDailyDigestTemplate,
+  renderWeeklyDigestTemplate,
+} from '../services/digest-template.service'
 import type { DigestContent } from '../services/digest-template.service'
 import { logInfo, logError } from '../utils/logger'
 
@@ -30,12 +33,12 @@ interface UserPreferenceRow {
 function getUtcHourForLocalTime(localTime: string, timezone: string): number {
   try {
     // Parse HH:MM
-    const [hours, minutes] = localTime.split(':').map(Number)
+    const [hoursPart] = localTime.split(':').map(Number)
+    const hours = hoursPart ?? 0
 
     // Create a reference date in the user's timezone
     const now = new Date()
     const dateStr = now.toISOString().split('T')[0]
-    const localDateStr = `${dateStr}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`
 
     // Use Intl.DateTimeFormat to get the timezone offset
     const formatter = new Intl.DateTimeFormat('en-US', {
@@ -57,8 +60,8 @@ function getUtcHourForLocalTime(localTime: string, timezone: string): number {
     return utcHour
   } catch {
     // Fallback: assume UTC if timezone conversion fails
-    const [hours] = localTime.split(':').map(Number)
-    return hours
+    const [hoursPart] = localTime.split(':').map(Number)
+    return hoursPart ?? 0
   }
 }
 
@@ -106,8 +109,9 @@ async function processDailyDigests(): Promise<void> {
       }
 
       // Fetch digest content
-      const { data: content, error: rpcError } = await supabase
-        .rpc('get_user_digest_content', { p_user_id: user.user_id })
+      const { data: content, error: rpcError } = await supabase.rpc('get_user_digest_content', {
+        p_user_id: user.user_id,
+      })
 
       if (rpcError !== null) {
         logError(`Daily digest: RPC failed for user ${user.user_id}`, rpcError as unknown as Error)
@@ -121,40 +125,50 @@ async function processDailyDigests(): Promise<void> {
         .eq('user_id', user.user_id)
         .single()
 
-      const language = ((prefs as UserPreferenceRow | null)?.language === 'ar' ? 'ar' : 'en') as 'ar' | 'en'
-      const today = new Date().toISOString().split('T')[0]
+      const language = ((prefs as UserPreferenceRow | null)?.language === 'ar' ? 'ar' : 'en') as
+        | 'ar'
+        | 'en'
+      const today = new Date().toISOString().split('T')[0] ?? ''
       const digestContent = content as DigestContent
 
       // Render template
-      const { subject, bodyHtml, bodyText } = renderDailyDigestTemplate(language, today, digestContent)
+      const { subject, bodyHtml, bodyText } = renderDailyDigestTemplate(
+        language,
+        today,
+        digestContent,
+      )
 
       // Get user email
       const { data: authUser } = await supabase.auth.admin.getUserById(user.user_id)
       const email = authUser?.user?.email
 
       if (email == null) {
-        logError(`Daily digest: no email found for user ${user.user_id}`, new Error('Missing email'))
+        logError(
+          `Daily digest: no email found for user ${user.user_id}`,
+          new Error('Missing email'),
+        )
         continue
       }
 
       // Insert into email_queue (do not log digest content per T-16-05)
-      const { error: insertError } = await supabase
-        .from('email_queue')
-        .insert({
-          to_email: email,
-          subject,
-          body_html: bodyHtml,
-          body_text: bodyText,
-          template_type: 'digest_daily',
-          template_data: {},
-          language,
-          user_id: user.user_id,
-          priority: 5,
-          status: 'pending',
-        })
+      const { error: insertError } = await supabase.from('email_queue').insert({
+        to_email: email,
+        subject,
+        body_html: bodyHtml,
+        body_text: bodyText,
+        template_type: 'digest_daily',
+        template_data: {},
+        language,
+        user_id: user.user_id,
+        priority: 5,
+        status: 'pending',
+      })
 
       if (insertError !== null) {
-        logError(`Daily digest: failed to insert email for user ${user.user_id}`, insertError as unknown as Error)
+        logError(
+          `Daily digest: failed to insert email for user ${user.user_id}`,
+          insertError as unknown as Error,
+        )
         continue
       }
 
@@ -202,8 +216,9 @@ async function processWeeklyDigests(): Promise<void> {
   for (const user of users as DigestUserRow[]) {
     try {
       // Fetch digest content
-      const { data: content, error: rpcError } = await supabase
-        .rpc('get_user_digest_content', { p_user_id: user.user_id })
+      const { data: content, error: rpcError } = await supabase.rpc('get_user_digest_content', {
+        p_user_id: user.user_id,
+      })
 
       if (rpcError !== null) {
         logError(`Weekly digest: RPC failed for user ${user.user_id}`, rpcError as unknown as Error)
@@ -217,48 +232,71 @@ async function processWeeklyDigests(): Promise<void> {
         .eq('user_id', user.user_id)
         .single()
 
-      const language = ((prefs as UserPreferenceRow | null)?.language === 'ar' ? 'ar' : 'en') as 'ar' | 'en'
+      const language = ((prefs as UserPreferenceRow | null)?.language === 'ar' ? 'ar' : 'en') as
+        | 'ar'
+        | 'en'
       const digestContent = content as DigestContent
 
       // Build date range string
       const now = new Date()
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
       const formatDate = (d: Date): string => {
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ]
         return `${months[d.getUTCMonth()]} ${d.getUTCDate()}`
       }
       const dateRange = `${formatDate(weekAgo)} - ${formatDate(now)}`
 
       // Render template
-      const { subject, bodyHtml, bodyText } = renderWeeklyDigestTemplate(language, dateRange, digestContent)
+      const { subject, bodyHtml, bodyText } = renderWeeklyDigestTemplate(
+        language,
+        dateRange,
+        digestContent,
+      )
 
       // Get user email
       const { data: authUser } = await supabase.auth.admin.getUserById(user.user_id)
       const email = authUser?.user?.email
 
       if (email == null) {
-        logError(`Weekly digest: no email found for user ${user.user_id}`, new Error('Missing email'))
+        logError(
+          `Weekly digest: no email found for user ${user.user_id}`,
+          new Error('Missing email'),
+        )
         continue
       }
 
       // Insert into email_queue (do not log digest content per T-16-05)
-      const { error: insertError } = await supabase
-        .from('email_queue')
-        .insert({
-          to_email: email,
-          subject,
-          body_html: bodyHtml,
-          body_text: bodyText,
-          template_type: 'digest_weekly',
-          template_data: {},
-          language,
-          user_id: user.user_id,
-          priority: 5,
-          status: 'pending',
-        })
+      const { error: insertError } = await supabase.from('email_queue').insert({
+        to_email: email,
+        subject,
+        body_html: bodyHtml,
+        body_text: bodyText,
+        template_type: 'digest_weekly',
+        template_data: {},
+        language,
+        user_id: user.user_id,
+        priority: 5,
+        status: 'pending',
+      })
 
       if (insertError !== null) {
-        logError(`Weekly digest: failed to insert email for user ${user.user_id}`, insertError as unknown as Error)
+        logError(
+          `Weekly digest: failed to insert email for user ${user.user_id}`,
+          insertError as unknown as Error,
+        )
         continue
       }
 

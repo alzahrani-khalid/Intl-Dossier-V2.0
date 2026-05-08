@@ -11,7 +11,7 @@
  */
 
 import * as Sentry from '@sentry/node'
-import type { Request, Response, NextFunction, RequestHandler, ErrorRequestHandler } from 'express'
+import type { RequestHandler, ErrorRequestHandler } from 'express'
 
 interface SentryUserContext {
   id: string
@@ -153,27 +153,6 @@ export const sentryErrorHandler: ErrorRequestHandler = (
 }
 
 /**
- * Middleware to set user context from request
- * Add this AFTER authentication middleware
- */
-function sentryUserMiddleware(
-  getUserFromRequest: (req: Request) => SentryUserContext | null,
-): RequestHandler {
-  return (req: Request, _res: Response, next: NextFunction) => {
-    try {
-      const user = getUserFromRequest(req)
-      if (user) {
-        setSentryUser(user)
-      }
-    } catch (error) {
-      // Don't fail the request if user extraction fails
-      console.error('[Sentry] Failed to extract user context:', error)
-    }
-    next()
-  }
-}
-
-/**
  * Set user context for error tracking
  * Call this after user authentication
  */
@@ -190,41 +169,6 @@ export function setSentryUser(user: SentryUserContext): void {
   if (user.tenant) {
     Sentry.setTag('user.tenant', user.tenant)
   }
-}
-
-/**
- * Clear user context
- */
-function clearSentryUser(): void {
-  Sentry.setUser(null)
-  Sentry.setTag('user.role', undefined)
-  Sentry.setTag('user.tenant', undefined)
-}
-
-/**
- * Add breadcrumb for tracking actions
- * Useful for debugging error context
- */
-function addBreadcrumb(
-  message: string,
-  category: string,
-  level: Sentry.SeverityLevel = 'info',
-  data?: Record<string, unknown>,
-): void {
-  Sentry.addBreadcrumb({
-    message,
-    category,
-    level,
-    data,
-    timestamp: Date.now() / 1000,
-  })
-}
-
-/**
- * Set custom context for error tracking
- */
-function setContext(key: string, context: Record<string, unknown>): void {
-  Sentry.setContext(key, context)
 }
 
 /**
@@ -245,30 +189,6 @@ export function captureException(
   return Sentry.captureException(error, {
     tags: context?.tags,
     extra: context?.extra,
-  })
-}
-
-/**
- * Capture a message with severity level
- */
-function captureMessage(
-  message: string,
-  level: Sentry.SeverityLevel = 'info',
-  context?: Record<string, unknown>,
-): string {
-  return Sentry.captureMessage(message, {
-    level,
-    extra: context,
-  })
-}
-
-/**
- * Start a performance transaction
- */
-function startTransaction(name: string, op: string): ReturnType<typeof Sentry.startInactiveSpan> {
-  return Sentry.startInactiveSpan({
-    name,
-    op,
   })
 }
 

@@ -432,23 +432,6 @@ export class DocuSignClient {
   }
 
   /**
-   * Map internal status to DocuSign status
-   */
-  private mapInternalStatusToDocuSign(internalStatus: SignatureStatus): string {
-    const statusMap: Record<SignatureStatus, string> = {
-      draft: 'created',
-      sent: 'sent',
-      viewed: 'delivered',
-      signed: 'completed',
-      completed: 'completed',
-      declined: 'declined',
-      expired: 'voided',
-    }
-
-    return statusMap[internalStatus] || 'created'
-  }
-
-  /**
    * Get account information
    */
   async getAccountInfo(): Promise<any> {
