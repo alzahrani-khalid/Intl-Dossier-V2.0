@@ -96,7 +96,14 @@ interface PositionsHeldProps {
 export function PositionsHeld({ dossierId }: PositionsHeldProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { data: personData, isLoading, isError } = usePerson(dossierId)
+const { data: personData, isLoading, isError } = usePerson(dossierId) as unknown as {
+  data: {
+    current_role?: import('@/types/person.types').PersonRole
+    roles?: import('@/types/person.types').PersonRole[]
+  } | undefined
+  isLoading: boolean
+  isError: boolean
+}
 
   // Format date range
   const formatDateRange = (startDate?: string, endDate?: string): string => {

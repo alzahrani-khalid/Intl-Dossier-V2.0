@@ -138,7 +138,9 @@ export function OnboardingEmptyState({
     isDismissed: boolean
     isFullyCompleted: boolean
     completionPercentage: number
-    activeCelebration: { percentage: number } | null
+    activeCelebration:
+      | (import('@/types/onboarding.types').MilestoneCelebration & { percentage: number })
+      | null
     markCelebrationShown: (percentage: number) => Promise<void> | void
     dismissOnboarding: () => Promise<void> | void
     resumeOnboarding: () => Promise<void> | void

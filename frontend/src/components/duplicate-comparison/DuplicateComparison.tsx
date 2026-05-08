@@ -38,8 +38,12 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
   const [mergeReason, setMergeReason] = useState('')
 
   // Fetch duplicate candidates using the proper hook
-  const { data: response, isLoading, error } = useDuplicateCandidates(ticketId)
-  const candidates = (response?.candidates || []) as unknown as DuplicateCandidate[]
+  const { data: response, isLoading, error } = useDuplicateCandidates(ticketId) as unknown as {
+    data: { candidates?: DuplicateCandidate[] } | undefined
+    isLoading: boolean
+    error: unknown
+  }
+  const candidates = response?.candidates || []
 
   // Use the merge tickets hook
   const mergeMutation = useMergeTickets(ticketId)

@@ -42,6 +42,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
   // typed shim narrows the return shape (47-07's surface).
   const generateMutation = useGenerateBriefingPack() as unknown as {
     mutateAsync: (vars: { engagementId: string; language: string }) => Promise<{ job_id: string }>
+    isPending: boolean
   }
   // Stub useBriefingPackStatus takes (jobId: string).
   const briefingStatus = useBriefingPackStatus(jobId || '') as unknown as {

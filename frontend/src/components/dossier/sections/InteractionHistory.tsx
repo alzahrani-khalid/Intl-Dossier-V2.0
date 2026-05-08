@@ -24,7 +24,11 @@ interface InteractionHistoryProps {
 export function InteractionHistory({ dossierId }: InteractionHistoryProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { data: personData, isLoading, isError } = usePerson(dossierId)
+const { data: personData, isLoading, isError } = usePerson(dossierId) as unknown as {
+  data: { recent_engagements?: PersonEngagementWithDetails[] } | undefined
+  isLoading: boolean
+  isError: boolean
+}
 
   // Get display value based on language
   const getDisplayValue = (en?: string, ar?: string) => {

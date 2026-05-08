@@ -111,7 +111,10 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
 
-  const { data, isLoading } = useRelationshipsForDossier(dossierId)
+  const { data, isLoading } = useRelationshipsForDossier(dossierId) as unknown as {
+    data: { data: RelationshipWithDossiers[] } | undefined
+    isLoading: boolean
+  }
   const relationships = data?.data || []
 
   if (isLoading) {
@@ -335,7 +338,19 @@ function Subtopics({ dossierId }: { dossierId: string }) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
 
-  const { data: subtopics, isLoading } = useTopicSubtopics(dossierId)
+  const { data: subtopics, isLoading } = useTopicSubtopics(dossierId) as unknown as {
+    data:
+      | Array<{
+          id: string
+          name_en?: string
+          name_ar?: string
+          description_en?: string
+          description_ar?: string
+          extension?: unknown
+        }>
+      | undefined
+    isLoading: boolean
+  }
 
   if (isLoading) {
     return (

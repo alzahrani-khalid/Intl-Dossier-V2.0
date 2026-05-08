@@ -210,11 +210,11 @@ export function ProgressiveEmptyState({
   // pageContext is consolidated into featureArea for forward compatibility.
   const { experienceLevel, isFirstVisit, hasInteractedBefore, hintsEnabled, recordActionTaken } =
     useProgressiveDisclosure({ featureArea: pageContext }) as unknown as {
-      experienceLevel: 'beginner' | 'intermediate' | 'advanced'
+      experienceLevel: 'beginner' | 'intermediate' | 'advanced' | 'expert'
       isFirstVisit: boolean
       hasInteractedBefore: boolean
       hintsEnabled: boolean
-      recordActionTaken: (id: string) => Promise<void> | void
+      recordActionTaken: (id: string) => Promise<unknown>
     }
 
   // Track which tiers are expanded

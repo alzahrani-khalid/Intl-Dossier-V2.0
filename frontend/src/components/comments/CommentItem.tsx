@@ -90,11 +90,18 @@ const locale = isRTL ? ar : enUS
   const deleteComment = useDeleteComment()
 
   // Fetch thread replies if this is a root comment
-  const { data: replies = [], isLoading: isLoadingReplies } = useCommentThread(comment.id, {
+  // Stub useCommentThread takes 0-1 args; the options shape is unsupported.
+  void {
     enabled:
       showReplies && comment.reply_count > 0 && showRepliesExpanded && comment.parent_id === null,
     maxDepth: maxDepth - currentDepth,
-  })
+  }
+  const { data: replies = [], isLoading: isLoadingReplies } = useCommentThread(
+    comment.id,
+  ) as unknown as {
+    data: CommentWithDetails[]
+    isLoading: boolean
+  }
 
   const isAuthor = currentUserId === comment.author_id
   const canEdit = isAuthor

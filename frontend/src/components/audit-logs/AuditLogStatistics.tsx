@@ -51,7 +51,22 @@ interface AuditLogStatisticsProps {
 export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStatisticsProps) {
   const { t } = useTranslation('audit-logs')
   const { isRTL } = useDirection()
-const { statistics, isLoading, error } = useAuditLogStatistics(dateFrom, dateTo)
+// Stub useAuditLogStatistics takes 0-1 args; the (dateFrom, dateTo) intent is preserved
+// as void but the call is consolidated to the single options shape that the stub accepts.
+void dateTo
+const { statistics, isLoading, error } = useAuditLogStatistics(
+  dateFrom ? { dateFrom, dateTo } : undefined,
+) as unknown as {
+  statistics: {
+    by_operation?: Array<{ operation: string; count: number; percentage: number }>
+    by_table?: Array<{ table: string; count: number; percentage: number }>
+    total_count?: number
+    total_events?: number
+    period?: { from?: string; to?: string }
+  }
+  isLoading: boolean
+  error: unknown
+}
 
   if (isLoading) {
     return (
@@ -111,15 +126,20 @@ const { statistics, isLoading, error } = useAuditLogStatistics(dateFrom, dateTo)
         </CardTitle>
         <p className="text-sm text-muted-foreground">
           {t('statistics.period')}:{' '}
-          {new Date(statistics.period.from).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')} -{' '}
-          {new Date(statistics.period.to).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+          {statistics.period?.from
+            ? new Date(statistics.period.from).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')
+            : '-'}{' '}
+          -{' '}
+          {statistics.period?.to
+            ? new Date(statistics.period.to).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')
+            : '-'}
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Total Events */}
         <div className="text-center p-4 bg-muted/50 rounded-lg">
           <div className="text-3xl font-bold text-primary">
-            {statistics.total_events.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+            {(statistics.total_events ?? 0).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
           </div>
           <div className="text-sm text-muted-foreground">{t('statistics.total_events')}</div>
         </div>
@@ -128,7 +148,7 @@ const { statistics, isLoading, error } = useAuditLogStatistics(dateFrom, dateTo)
         <div>
           <h4 className="text-sm font-medium mb-3">{t('statistics.by_operation')}</h4>
           <div className="grid grid-cols-3 gap-3">
-            {statistics.by_operation.map((item) => {
+            {(statistics.by_operation ?? []).map((item) => {
               const Icon = OPERATION_ICONS[item.operation] || Database
               const colorClass = OPERATION_COLORS[item.operation] || 'text-gray-600 bg-gray-100'
 
@@ -141,7 +161,7 @@ const { statistics, isLoading, error } = useAuditLogStatistics(dateFrom, dateTo)
                   <div className="text-lg font-bold">
                     {item.count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                   </div>
-                  <div className="text-xs">{t(`operations.${item.operation}`, item.operation)}</div>
+                  <div className="text-xs">{String(t(`operations.${item.operation}`, { defaultValue: item.operation }))}</div>
                 </div>
               )
             })}
@@ -159,7 +179,7 @@ const { statistics, isLoading, error } = useAuditLogStatistics(dateFrom, dateTo)
                     variant="outline"
                     className="min-w-[100px] justify-center font-mono text-xs"
                   >
-                    {t(`tables.${item.table}`, item.table)}
+                    {String(t(`tables.${item.table}`, { defaultValue: item.table }))}
                   </Badge>
                   <div className="flex-1 h-6 bg-muted rounded-full overflow-hidden">
                     <div

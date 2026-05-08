@@ -70,8 +70,16 @@ export function CommentForm({
   )
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const createComment = useCreateComment()
-  const updateComment = useUpdateComment()
+  // Stub useCreateComment / useUpdateComment return UseMutationResult<unknown>;
+  // shims narrow their data types to the contract documented in @/types/comment.types.
+  const createComment = useCreateComment() as unknown as {
+    mutateAsync: (params: Record<string, unknown>) => Promise<CommentWithDetails>
+    isPending: boolean
+  }
+  const updateComment = useUpdateComment() as unknown as {
+    mutateAsync: (params: Record<string, unknown>) => Promise<Partial<CommentWithDetails>>
+    isPending: boolean
+  }
 
   const isEditing = !!editingComment
   const isSubmitting = createComment.isPending || updateComment.isPending

@@ -26,7 +26,10 @@ interface DecisionLogsProps {
 export function DecisionLogs({ dossier }: DecisionLogsProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { data, isLoading } = useRelationshipsForDossier(dossier.id)
+const { data, isLoading } = useRelationshipsForDossier(dossier.id) as unknown as {
+  data: { data: RelationshipWithDossiers[] } | undefined
+  isLoading: boolean
+}
   const allRelationships = data?.data || []
 
   // Filter for engagement-type related dossiers

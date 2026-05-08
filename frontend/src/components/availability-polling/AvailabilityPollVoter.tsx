@@ -37,7 +37,7 @@ interface PollDetailsHookShim {
 }
 
 interface SubmitVotesShim {
-  mutateAsync: (req: SubmitVoteRequest) => Promise<unknown>
+  mutateAsync: (req: { pollId: string; votes: SubmitVoteRequest[] }) => Promise<unknown>
   isPending: boolean
 }
 

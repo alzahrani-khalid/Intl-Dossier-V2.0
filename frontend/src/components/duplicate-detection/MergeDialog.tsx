@@ -236,6 +236,7 @@ export function MergeDialog({
       }
     })
 
+    if (!entityType) return
     await mergeMutation.mutateAsync({
       primaryId: primary.id,
       duplicateId: duplicate.id,

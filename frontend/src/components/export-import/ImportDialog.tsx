@@ -6,7 +6,7 @@
  * Includes file upload, validation, conflict resolution, and import execution.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDropzone } from 'react-dropzone'
 import {
@@ -85,6 +85,14 @@ export function ImportDialog({
     isImporting,
     reset: resetHook,
   } = useImportData() as unknown as UseImportDataReturn
+
+  // Notify caller on import completion (preserves the documented onImportComplete contract;
+  // wired via importResponse since the hook no longer accepts callback options).
+  useEffect(() => {
+    if (importResponse?.success) {
+      onImportComplete?.()
+    }
+  }, [importResponse, onImportComplete])
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {

@@ -42,7 +42,9 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   const [dragActive, setDragActive] = useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
 
-  const uploadMutation = useUploadAttachment()
+  const uploadMutation = useUploadAttachment() as unknown as {
+    mutateAsync: (data: FormData) => Promise<{ id: string }>
+  }
   const deleteMutation = useDeleteAttachment()
 
   // Calculate total size

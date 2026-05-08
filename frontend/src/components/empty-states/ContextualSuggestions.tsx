@@ -342,8 +342,8 @@ export function ContextualSuggestions({
   // entity_id / extra fields are passed through unchanged for runtime behavior, but
   // we cast through the documented options type to satisfy tsc.
   const { data, isLoading, isError } = useContextualSuggestions({
-    entityType,
-    entityId,
+    entityType: entityType ?? '',
+    entityId: entityId ?? '',
     context,
   }) as unknown as {
     data:
@@ -431,7 +431,7 @@ export function ContextualSuggestions({
               ? `${data.metadata.upcoming_events_count} فعالية قادمة`
               : `${data.metadata.upcoming_events_count} upcoming events`}
           </span>
-          {data.metadata.overdue_commitments_count > 0 && (
+          {(data.metadata.overdue_commitments_count ?? 0) > 0 && (
             <span className="flex items-center gap-1 text-destructive">
               <AlertCircle className="w-3 h-3" />
               {isRTL

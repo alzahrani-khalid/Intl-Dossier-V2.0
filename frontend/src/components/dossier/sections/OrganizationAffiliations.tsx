@@ -23,7 +23,11 @@ interface OrganizationAffiliationsProps {
 export function OrganizationAffiliations({ dossierId }: OrganizationAffiliationsProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { data: personData, isLoading, isError } = usePerson(dossierId)
+const { data: personData, isLoading, isError } = usePerson(dossierId) as unknown as {
+  data: { affiliations?: import('@/types/person.types').PersonAffiliation[] } | undefined
+  isLoading: boolean
+  isError: boolean
+}
 
   // Format date range
   const formatDateRange = (startDate?: string, endDate?: string): string => {
