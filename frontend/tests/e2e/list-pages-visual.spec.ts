@@ -11,7 +11,7 @@ import { loginForListPages } from './support/list-pages-auth'
 const ROUTES_WITH_NAMES = [
   ['/dossiers/countries', 'countries'],
   ['/dossiers/organizations', 'organizations'],
-  ['/persons', 'persons'],
+  ['/dossiers/persons', 'persons'],
   ['/dossiers/forums', 'forums'],
   ['/dossiers/topics', 'topics'],
   ['/dossiers/working_groups', 'working-groups'],
