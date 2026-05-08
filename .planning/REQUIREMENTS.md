@@ -45,10 +45,10 @@ Requirements for this milestone. Every requirement maps to exactly one roadmap p
 
 ### Schema & Seed Closure (DATA)
 
-- [ ] **DATA-01**: An `intelligence_digest` table exists in Supabase with `id`, `headline_en`, `headline_ar`, `summary_en`, `summary_ar`, `source_publication`, `occurred_at`, `dossier_id` (nullable FK), `created_at` columns; RLS policies match the existing `dossiers` table pattern (org-scoped read, role-gated write); migration applied to staging via the Supabase MCP per CLAUDE.md
-- [ ] **DATA-02**: The dashboard `Digest` widget reads from `intelligence_digest` via a typed hook (`useIntelligenceDigest`), not from `actor_name` on internal user records; the displayed `source` field shows the publication name, not an internal username (closes DIGEST-SOURCE-COMPROMISE)
-- [ ] **DATA-03**: The dashboard RPC that powers `VipVisits` includes a join to `country_iso_codes` so each VIP row carries the country's ISO-3166 alpha-2 code; the `<DossierGlyph>` flag fallback chain consumes the ISO code instead of inferring from the dossier name (foreign-relations enrichment closes the Phase 41 deferred item)
-- [ ] **DATA-04**: `frontend/seeds/060-dashboard-demo.sql` is applied to the staging database via Supabase MCP migration; the 4 previously BLOCKED-BY-SEED Playwright specs (Phase 41 dashboard widget specs) execute and pass against the seeded data
+- [x] **DATA-01**: An `intelligence_digest` table exists in Supabase with `id`, `headline_en`, `headline_ar`, `summary_en`, `summary_ar`, `source_publication`, `occurred_at`, `dossier_id` (nullable FK), `created_at` columns; RLS policies match the existing `dossiers` table pattern (org-scoped read, role-gated write); migration applied to staging via the Supabase MCP per CLAUDE.md
+- [x] **DATA-02**: The dashboard `Digest` widget reads from `intelligence_digest` via a typed hook (`useIntelligenceDigest`), not from `actor_name` on internal user records; the displayed `source` field shows the publication name, not an internal username (closes DIGEST-SOURCE-COMPROMISE)
+- [x] **DATA-03**: The dashboard RPC that powers `VipVisits` includes a join to `country_iso_codes` so each VIP row carries the country's ISO-3166 alpha-2 code; the `<DossierGlyph>` flag fallback chain consumes the ISO code instead of inferring from the dossier name (foreign-relations enrichment closes the Phase 41 deferred item)
+- [x] **DATA-04**: `frontend/seeds/060-dashboard-demo.sql` is applied to the staging database via Supabase MCP migration; the 4 previously BLOCKED-BY-SEED Playwright specs (Phase 41 dashboard widget specs) execute and pass against the seeded data
 
 ### Visual Baseline Regeneration (VIS)
 
@@ -87,32 +87,32 @@ Explicit exclusions for v6.1 (with reasoning):
 
 ## Traceability
 
-| REQ-ID   | Phase    | VERIFICATION |
-| -------- | -------- | ------------ |
-| DOC-01   | Phase 44 | TBD          |
-| DOC-02   | Phase 44 | TBD          |
-| DOC-03   | Phase 44 | TBD          |
-| DOC-04   | Phase 44 | TBD          |
-| DOC-05   | Phase 44 | TBD          |
-| DOC-06   | Phase 44 | TBD          |
-| DOC-07   | Phase 44 | TBD          |
-| DOC-08   | Phase 44 | TBD          |
-| TOOL-01  | Phase 44 | TBD          |
-| TOOL-02  | Phase 44 | TBD          |
-| TOOL-03  | Phase 44 | TBD          |
-| LINT-01  | Phase 44 | TBD          |
-| LINT-02  | Phase 44 | TBD          |
-| LINT-03  | Phase 44 | TBD          |
-| LINT-04  | Phase 44 | TBD          |
-| LINT-05  | Phase 44 | TBD          |
-| STORY-01 | Phase 44 | TBD          |
-| DATA-01  | Phase 45 | TBD          |
-| DATA-02  | Phase 45 | TBD          |
-| DATA-03  | Phase 45 | TBD          |
-| DATA-04  | Phase 45 | TBD          |
-| VIS-01   | Phase 46 | TBD          |
-| VIS-02   | Phase 46 | TBD          |
-| VIS-03   | Phase 46 | TBD          |
-| VIS-04   | Phase 46 | TBD          |
+| REQ-ID   | Phase    | VERIFICATION       |
+| -------- | -------- | ------------------ |
+| DOC-01   | Phase 44 | TBD                |
+| DOC-02   | Phase 44 | TBD                |
+| DOC-03   | Phase 44 | TBD                |
+| DOC-04   | Phase 44 | TBD                |
+| DOC-05   | Phase 44 | TBD                |
+| DOC-06   | Phase 44 | TBD                |
+| DOC-07   | Phase 44 | TBD                |
+| DOC-08   | Phase 44 | TBD                |
+| TOOL-01  | Phase 44 | TBD                |
+| TOOL-02  | Phase 44 | TBD                |
+| TOOL-03  | Phase 44 | TBD                |
+| LINT-01  | Phase 44 | TBD                |
+| LINT-02  | Phase 44 | TBD                |
+| LINT-03  | Phase 44 | TBD                |
+| LINT-04  | Phase 44 | TBD                |
+| LINT-05  | Phase 44 | TBD                |
+| STORY-01 | Phase 44 | TBD                |
+| DATA-01  | Phase 45 | 45-VERIFICATION.md |
+| DATA-02  | Phase 45 | 45-VERIFICATION.md |
+| DATA-03  | Phase 45 | 45-VERIFICATION.md |
+| DATA-04  | Phase 45 | 45-VERIFICATION.md |
+| VIS-01   | Phase 46 | TBD                |
+| VIS-02   | Phase 46 | TBD                |
+| VIS-03   | Phase 46 | TBD                |
+| VIS-04   | Phase 46 | TBD                |
 
 _Phase column populated by `gsd-roadmapper` 2026-05-07. VERIFICATION column populated per-phase by `gsd-verify-phase` after each phase completes._

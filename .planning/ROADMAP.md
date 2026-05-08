@@ -106,7 +106,7 @@ Full details: [v6.0-ROADMAP.md](milestones/v6.0-ROADMAP.md)
 ### 🚧 v6.1 Hardening & Reconciliation (Phases 44-46) — IN PLANNING
 
 - [x] **Phase 44: Documentation, Toolchain & Anti-patterns** — Backfill VERIFICATION.md for 6 v6.0 phases, sync REQUIREMENTS/ROADMAP checkboxes, repair size-limit chunk-glob gate, close 5 Phase 43 anti-patterns (WR-02..WR-06), resolve Plan 33-08 storybook deferral (completed 2026-05-07)
-- [ ] **Phase 45: Schema & Seed Closure** — Create `intelligence_digest` table + read hook, add VIP person ISO join in dashboard RPC, apply `060-dashboard-demo.sql` seed to staging, unblock 4 BLOCKED-BY-SEED Playwright specs
+- [x] **Phase 45: Schema & Seed Closure** — Create `intelligence_digest` table + read hook, add VIP person ISO join in dashboard RPC, apply `060-dashboard-demo.sql` seed to staging, unblock 4 BLOCKED-BY-SEED Playwright specs (completed 2026-05-08)
 - [ ] **Phase 46: Visual Baseline Regeneration** — Regenerate Phase 38 (8 widgets), Phase 40 (14 list-page) and Phase 41 (2 drawer) Playwright visual baselines against the seeded staging DB; document human-eyeball pass
 
 ## Phase Details
@@ -176,7 +176,7 @@ Full details: [v6.0-ROADMAP.md](milestones/v6.0-ROADMAP.md)
 | 26-32                                        | v5.0      | —              | Shipped     | 2026-04-18 |
 | 33-43                                        | v6.0      | —              | Shipped     | 2026-05-06 |
 | 44. Documentation, Toolchain & Anti-patterns | v6.1      | 6/6            | Complete    | 2026-05-07 |
-| 45. Schema & Seed Closure                    | v6.1      | 3/4            | In Progress |            |
+| 45. Schema & Seed Closure                    | v6.1      | 4/4            | Complete    | 2026-05-08 |
 | 46. Visual Baseline Regeneration             | v6.1      | 0/0            | Not started | —          |
 
 <!-- gsd:progress:end -->

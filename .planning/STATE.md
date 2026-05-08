@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.1
 milestone_name: Hardening & Reconciliation
-status: blocked
-stopped_at: Phase 45 Plan 45-04 Supabase MCP authentication checkpoint
-last_updated: '2026-05-07T21:58:18Z'
-last_activity: 2026-05-07 -- Phase 45 blocked at Supabase MCP authentication
+status: ready_to_plan
+stopped_at: Phase 46 ready to plan
+last_updated: '2026-05-08T08:26:20Z'
+last_activity: 2026-05-08 -- Phase 45 completed; Phase 46 ready to plan
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 10
-  completed_plans: 6
-  percent: 60
+  completed_plans: 10
+  percent: 67
 ---
 
 # Project State
@@ -21,18 +21,18 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-19)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 45 — schema-seed-closure
+**Current focus:** Phase 46 — visual-baseline-regeneration
 
 ## Current Position
 
-Phase: 45 (schema-seed-closure) — BLOCKED
-Plan: 4 of 4
-Status: Waiting for Supabase MCP authentication
-Last activity: 2026-05-07 -- Phase 45 blocked at Supabase MCP authentication
+Phase: 46
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-05-08
 
 ## Next Action
 
-Set `SUPABASE_ACCESS_TOKEN` for the Supabase MCP server, then run `$gsd-execute-phase 45` to resume Plan 45-04.
+Run `$gsd-plan-phase 46` to plan visual baseline regeneration against the seeded staging database.
 
 ### Phase 40 summary
 
@@ -254,7 +254,7 @@ See `.planning/v6.0-MILESTONE-AUDIT.md` for full tech-debt inventory across phas
 
 **Velocity:**
 
-- Total plans completed: 26
+- Total plans completed: 30
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -267,6 +267,7 @@ See `.planning/v6.0-MILESTONE-AUDIT.md` for full tech-debt inventory across phas
 | 29           | 6     | —       | —        |
 | Phase 34 P04 | 35    | 3 tasks | 9 files  |
 | 44           | 6     | -       | -        |
+| 45           | 4     | -       | -        |
 
 ## Accumulated Context
 
@@ -310,10 +311,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07T21:07:24.303Z
-Stopped at: Phase 45 planning complete
-Resume file: .planning/phases/45-schema-seed-closure/45-01-schema-seed-foundation-PLAN.md
-Resume command: /gsd-execute-phase 45
+Last session: 2026-05-08T08:26:20Z
+Stopped at: Phase 46 ready to plan
+Resume file: .planning/ROADMAP.md
+Resume command: /gsd-plan-phase 46
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
 
