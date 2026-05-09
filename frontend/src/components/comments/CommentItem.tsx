@@ -90,14 +90,13 @@ export function CommentItem({
   const deleteComment = useDeleteComment()
 
   // Fetch thread replies if this is a root comment
-  // Stub useCommentThread takes 0-1 args; the options shape is unsupported.
-  void {
-    enabled:
-      showReplies && comment.reply_count > 0 && showRepliesExpanded && comment.parent_id === null,
-    maxDepth: maxDepth - currentDepth,
-  }
+  // Gate the fetch at the caller by passing null when conditions are not met;
+  // the hook self-disables on null commentId. This prevents N+1 fetches per
+  // rendered comment (including child comments at depth > 0).
+  const shouldFetchThread =
+    showReplies && comment.reply_count > 0 && showRepliesExpanded && comment.parent_id === null
   const { data: replies = [], isLoading: isLoadingReplies } = useCommentThread(
-    comment.id,
+    shouldFetchThread ? comment.id : null,
   ) as unknown as {
     data: CommentWithDetails[]
     isLoading: boolean
