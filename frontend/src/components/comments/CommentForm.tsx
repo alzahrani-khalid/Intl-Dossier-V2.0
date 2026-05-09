@@ -97,10 +97,10 @@ export function CommentForm({
         onSubmit?.(updatedComment)
       } else {
         const comment = (await createComment.mutateAsync({
-          entityType,
-          entityId,
+          entity_type: entityType,
+          entity_id: entityId,
           content: content.trim(),
-          parentId,
+          parent_id: parentId,
           visibility,
         })) as CommentWithDetails
         onSubmit?.(comment)
