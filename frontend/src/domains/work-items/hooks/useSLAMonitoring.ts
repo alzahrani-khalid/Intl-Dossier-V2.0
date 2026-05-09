@@ -6,6 +6,7 @@
  * All API calls go through the work-items repository → shared apiClient.
  */
 
+import { useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '@/lib/supabase'
@@ -141,7 +142,7 @@ export function useCreateSLAPolicy() {
   return useMutation({
     mutationFn: (input: SLAPolicyInput) => repoCreateSLAPolicy(input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
     },
   })
 }
@@ -153,8 +154,8 @@ export function useUpdateSLAPolicy() {
     mutationFn: ({ id, ...input }: Partial<SLAPolicyInput> & { id: string }) =>
       repoUpdateSLAPolicy(id, input),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
-      queryClient.invalidateQueries({ queryKey: ['sla', 'policies', variables.id] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'policies', variables.id] })
     },
   })
 }
@@ -165,7 +166,7 @@ export function useDeleteSLAPolicy() {
   return useMutation({
     mutationFn: (policyId: string) => repoDeleteSLAPolicy(policyId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
     },
   })
 }
@@ -200,7 +201,7 @@ export function useAcknowledgeEscalation() {
   return useMutation({
     mutationFn: (escalationId: string) => acknowledgeSLAEscalation(escalationId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
     },
   })
 }
@@ -212,7 +213,7 @@ export function useResolveEscalation() {
     mutationFn: ({ escalationId, notes }: { escalationId: string; notes?: string }) =>
       resolveSLAEscalation(escalationId, notes),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
     },
   })
 }
@@ -227,7 +228,7 @@ export function useCheckSLABreaches() {
   return useMutation({
     mutationFn: () => checkSLABreaches(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla'] })
     },
   })
 }
@@ -236,35 +237,36 @@ export function useCheckSLABreaches() {
 // Realtime Subscription Hook
 // ============================================
 
+// CR-14: subscriptions are side-effects, not queries. Using useQuery's queryFn
+// to create channels meant the cleanup never ran — every navigation leaked
+// two Supabase channels into the realtime client's subscription map. Switched
+// to useEffect with an explicit removeChannel cleanup so the channels are
+// torn down when the consuming component unmounts.
 export function useSLARealtimeUpdates(onUpdate?: () => void): void {
   const queryClient = useQueryClient()
 
-  useQuery({
-    queryKey: ['sla', 'realtime'],
-    queryFn: async () => {
-      const eventsChannel = supabase
-        .channel('sla-events-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'sla_events' }, () => {
-          queryClient.invalidateQueries({ queryKey: ['sla', 'dashboard'] })
-          queryClient.invalidateQueries({ queryKey: ['sla', 'at-risk'] })
-          queryClient.invalidateQueries({ queryKey: ['sla', 'breached'] })
-          onUpdate?.()
-        })
-        .subscribe()
+  useEffect(() => {
+    const eventsChannel = supabase
+      .channel('sla-events-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'sla_events' }, () => {
+        void queryClient.invalidateQueries({ queryKey: ['sla', 'dashboard'] })
+        void queryClient.invalidateQueries({ queryKey: ['sla', 'at-risk'] })
+        void queryClient.invalidateQueries({ queryKey: ['sla', 'breached'] })
+        onUpdate?.()
+      })
+      .subscribe()
 
-      const escalationsChannel = supabase
-        .channel('sla-escalations-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'sla_escalations' }, () => {
-          queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
-          onUpdate?.()
-        })
-        .subscribe()
+    const escalationsChannel = supabase
+      .channel('sla-escalations-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'sla_escalations' }, () => {
+        void queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
+        onUpdate?.()
+      })
+      .subscribe()
 
-      return { eventsChannel, escalationsChannel }
-    },
-    staleTime: STALE_TIME.STATIC,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  })
+    return () => {
+      void supabase.removeChannel(eventsChannel)
+      void supabase.removeChannel(escalationsChannel)
+    }
+  }, [queryClient, onUpdate])
 }
