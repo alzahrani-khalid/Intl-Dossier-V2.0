@@ -25,7 +25,7 @@ export function useRequestEdit() {
       return data
     },
     onSuccess: (_, { afterActionId }) => {
-      queryClient.invalidateQueries({ queryKey: ['after-action', afterActionId] })
+      void queryClient.invalidateQueries({ queryKey: ['after-action', afterActionId] })
     },
   })
 }

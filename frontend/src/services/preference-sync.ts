@@ -98,7 +98,7 @@ export function usePreferenceSync(userId?: string) {
       } as StoredPreferences
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['preferences', userId] })
+      void queryClient.invalidateQueries({ queryKey: ['preferences', userId] })
     },
   })
 
@@ -140,4 +140,3 @@ export function usePreferenceSync(userId?: string) {
     fetchRemotePreferences: () => remotePreferences,
   }
 }
-

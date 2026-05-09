@@ -108,7 +108,7 @@ export function useDuplicateScan() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: duplicateKeys.candidates() })
+      void queryClient.invalidateQueries({ queryKey: duplicateKeys.candidates() })
     },
   })
 }
@@ -155,18 +155,18 @@ export function useMergeDuplicates() {
     },
     onSuccess: (data) => {
       // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: duplicateKeys.candidates() })
+      void queryClient.invalidateQueries({ queryKey: duplicateKeys.candidates() })
       if (data.candidate_id) {
-        queryClient.invalidateQueries({
+        void queryClient.invalidateQueries({
           queryKey: duplicateKeys.candidate(data.candidate_id),
         })
       }
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: duplicateKeys.history(data.primary_entity_id),
       })
       // Also invalidate entity queries
-      queryClient.invalidateQueries({ queryKey: ['persons'] })
-      queryClient.invalidateQueries({ queryKey: ['organizations'] })
+      void queryClient.invalidateQueries({ queryKey: ['persons'] })
+      void queryClient.invalidateQueries({ queryKey: ['organizations'] })
     },
   })
 }
@@ -200,8 +200,8 @@ export function useDismissDuplicate() {
       }
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: duplicateKeys.candidates() })
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({ queryKey: duplicateKeys.candidates() })
+      void queryClient.invalidateQueries({
         queryKey: duplicateKeys.candidate(data.candidate_id),
       })
     },
