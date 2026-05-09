@@ -534,17 +534,14 @@ router.put(
       }
 
       if (req.body.commitments) {
-        await supabase
-          .from('commitments')
-          .delete()
-          .eq('after_action_id' as never, id)
+        await supabase.from('aa_commitments').delete().eq('after_action_id', id)
         if (req.body.commitments.length > 0) {
           const commitmentsData = req.body.commitments.map((c: Record<string, unknown>) => ({
             ...c,
             after_action_id: id,
             dossier_id: currentRecord.dossier_id,
-          }))
-          await supabase.from('commitments').insert(commitmentsData)
+          })) as Database['public']['Tables']['aa_commitments']['Insert'][]
+          await supabase.from('aa_commitments').insert(commitmentsData)
         }
       }
 
@@ -797,10 +794,7 @@ router.delete(
           .from('decisions')
           .delete()
           .eq('after_action_id' as never, id),
-        supabase
-          .from('commitments')
-          .delete()
-          .eq('after_action_id' as never, id),
+        supabase.from('aa_commitments').delete().eq('after_action_id', id),
         supabase
           .from('risks')
           .delete()
