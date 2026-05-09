@@ -73,7 +73,7 @@ export function CommentItem({
 }: CommentItemProps) {
   const { t } = useTranslation('comments')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   const [isReplying, setIsReplying] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -182,11 +182,7 @@ const locale = isRTL ? ar : enUS
       return
     }
 
-    await deleteComment.mutateAsync({
-      commentId: comment.id,
-      entityType: comment.entity_type,
-      entityId: comment.entity_id,
-    })
+    await deleteComment.mutateAsync(comment.id)
 
     onDelete?.(comment.id)
   }
@@ -292,12 +288,7 @@ const locale = isRTL ? ar : enUS
 
           {/* Reactions and reply button */}
           <div className="flex items-center gap-2 mt-2 flex-wrap">
-            <ReactionPicker
-              commentId={comment.id}
-              entityType={comment.entity_type}
-              entityId={comment.entity_id}
-              reactions={comment.reactions}
-            />
+            <ReactionPicker commentId={comment.id} reactions={comment.reactions} />
 
             {canReply && (
               <Button

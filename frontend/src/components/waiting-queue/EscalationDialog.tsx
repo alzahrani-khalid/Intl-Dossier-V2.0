@@ -100,7 +100,7 @@ export function EscalationDialog({
 }: EscalationDialogProps) {
   const { t } = useTranslation(['common', 'waitingQueue'])
   const { isRTL } = useDirection()
-const { toast } = useToast()
+  const { toast } = useToast()
 
   const [selectedRecipientId, setSelectedRecipientId] = useState<string>('')
   const [reason, setReason] = useState<string>('')
@@ -145,7 +145,7 @@ const { toast } = useToast()
 
       // Otherwise, use the hook mutation
       await escalate.mutateAsync({
-        assignmentId,
+        assignment_id: assignmentId,
         reason: reason.trim(),
       })
 

@@ -225,13 +225,15 @@ export function TagHierarchyManager({
     try {
       await updateTag.mutateAsync({
         id: editingTag.id,
-        name_en: formData.name_en,
-        name_ar: formData.name_ar,
-        parent_id: formData.parent_id,
-        color: formData.color,
-        icon: formData.icon,
-        description_en: formData.description_en || undefined,
-        description_ar: formData.description_ar || undefined,
+        data: {
+          name_en: formData.name_en,
+          name_ar: formData.name_ar,
+          parent_id: formData.parent_id,
+          color: formData.color,
+          icon: formData.icon,
+          description_en: formData.description_en || undefined,
+          description_ar: formData.description_ar || undefined,
+        },
       })
 
       toast({
@@ -277,8 +279,8 @@ export function TagHierarchyManager({
 
     try {
       await mergeTags.mutateAsync({
-        source_tag_id: tagToMerge.id,
-        target_tag_id: mergeTargetId,
+        sourceId: tagToMerge.id,
+        targetId: mergeTargetId,
       })
 
       toast({

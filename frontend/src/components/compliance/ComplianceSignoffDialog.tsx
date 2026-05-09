@@ -91,7 +91,11 @@ export function ComplianceSignoffDialog({
     }
 
     try {
-      await signoffMutation.mutateAsync(input)
+      const { violation_id, ...rest } = input
+      await signoffMutation.mutateAsync({
+        violationId: violation_id,
+        data: { ...rest },
+      })
       toast.success(t('messages.signoffSuccess'))
       reset()
       onOpenChange(false)
@@ -119,7 +123,12 @@ export function ComplianceSignoffDialog({
 
   const dialogFooter = (
     <>
-      <Button type="button" variant="outline" onClick={handleClose} className="min-h-11 w-full sm:w-auto">
+      <Button
+        type="button"
+        variant="outline"
+        onClick={handleClose}
+        className="min-h-11 w-full sm:w-auto"
+      >
         {t('signoff.cancel')}
       </Button>
       <Button
@@ -150,111 +159,113 @@ export function ComplianceSignoffDialog({
       maxWidth="sm:max-w-lg"
       footer={dialogFooter}
     >
-
-        {/* Violation Summary */}
-        <div className={`rounded-lg border p-4 ${severityColors.bg} ${severityColors.border}`}>
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <p className={`font-medium ${severityColors.text}`}>{getRuleName()}</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                {isRTL
-                  ? violation.entity_name_ar || violation.entity_name_en
-                  : violation.entity_name_en || violation.entity_name_ar}
-              </p>
-            </div>
-            <Badge variant="outline" className={`${severityColors.bg} ${severityColors.text}`}>
-              {t(`severity.${violation.severity}`)}
-            </Badge>
+      {/* Violation Summary */}
+      <div className={`rounded-lg border p-4 ${severityColors.bg} ${severityColors.border}`}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className={`font-medium ${severityColors.text}`}>{getRuleName()}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {isRTL
+                ? violation.entity_name_ar || violation.entity_name_en
+                : violation.entity_name_en || violation.entity_name_ar}
+            </p>
           </div>
+          <Badge variant="outline" className={`${severityColors.bg} ${severityColors.text}`}>
+            {t(`severity.${violation.severity}`)}
+          </Badge>
         </div>
+      </div>
 
-        <Separator />
+      <Separator />
 
-        <form id="compliance-signoff-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          {/* Action Selection */}
-          <div className="space-y-3">
-            <Label>{t('signoff.action')}</Label>
-            <RadioGroup
-              defaultValue="approve"
-              onValueChange={(_value) => {
-                // This is handled by react-hook-form
-              }}
-              className="grid grid-cols-2 gap-3"
-            >
-              {(['approve', 'reject', 'escalate', 'waive'] as SignoffAction[]).map((action) => {
-                const Icon = ACTION_ICONS[action]
-                return (
-                  <div key={action} className="relative">
-                    <RadioGroupItem
-                      value={action}
-                      id={`action-${action}`}
-                      className="peer sr-only"
-                      {...register('action')}
-                    />
-                    <Label
-                      htmlFor={`action-${action}`}
-                      className={`flex items-center gap-2 rounded-lg border-2 p-3 cursor-pointer transition-colors
+      <form
+        id="compliance-signoff-form"
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+      >
+        {/* Action Selection */}
+        <div className="space-y-3">
+          <Label>{t('signoff.action')}</Label>
+          <RadioGroup
+            defaultValue="approve"
+            onValueChange={(_value) => {
+              // This is handled by react-hook-form
+            }}
+            className="grid grid-cols-2 gap-3"
+          >
+            {(['approve', 'reject', 'escalate', 'waive'] as SignoffAction[]).map((action) => {
+              const Icon = ACTION_ICONS[action]
+              return (
+                <div key={action} className="relative">
+                  <RadioGroupItem
+                    value={action}
+                    id={`action-${action}`}
+                    className="peer sr-only"
+                    {...register('action')}
+                  />
+                  <Label
+                    htmlFor={`action-${action}`}
+                    className={`flex items-center gap-2 rounded-lg border-2 p-3 cursor-pointer transition-colors
                           peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5
                           hover:bg-muted/50`}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span className="text-sm font-medium">{t(`signoffActions.${action}`)}</span>
-                    </Label>
-                  </div>
-                )
-              })}
-            </RadioGroup>
-          </div>
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className="text-sm font-medium">{t(`signoffActions.${action}`)}</span>
+                  </Label>
+                </div>
+              )
+            })}
+          </RadioGroup>
+        </div>
 
-          {/* Justification */}
-          <div className="space-y-2">
-            <Label htmlFor="justification">
-              {t('signoff.justification')}
-              <span className="text-destructive ms-1">*</span>
-            </Label>
-            <Textarea
-              id="justification"
-              placeholder={t('signoff.justificationPlaceholder')}
-              rows={4}
-              {...register('justification', {
-                required: t('validation.justificationRequired'),
-              })}
-              className={errors.justification ? 'border-destructive' : ''}
-            />
-            {errors.justification && (
-              <p className="text-sm text-destructive">{errors.justification.message}</p>
-            )}
-          </div>
-
-          {/* Conditions (optional) */}
-          <div className="space-y-2">
-            <Label htmlFor="conditions">{t('signoff.conditions')}</Label>
-            <Textarea
-              id="conditions"
-              placeholder={t('signoff.conditionsPlaceholder')}
-              rows={2}
-              {...register('conditions')}
-            />
-          </div>
-
-          {/* Waiver expiration (only for waive action) */}
-          {selectedAction === 'waive' && (
-            <div className="space-y-2">
-              <Label htmlFor="waiver_valid_until" className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                {t('signoff.waiverValidUntil')}
-              </Label>
-              <Input
-                id="waiver_valid_until"
-                type="date"
-                min={new Date().toISOString().split('T')[0]}
-                {...register('waiver_valid_until')}
-              />
-              <p className="text-xs text-muted-foreground">{t('signoff.waiverScopeSingle')}</p>
-            </div>
+        {/* Justification */}
+        <div className="space-y-2">
+          <Label htmlFor="justification">
+            {t('signoff.justification')}
+            <span className="text-destructive ms-1">*</span>
+          </Label>
+          <Textarea
+            id="justification"
+            placeholder={t('signoff.justificationPlaceholder')}
+            rows={4}
+            {...register('justification', {
+              required: t('validation.justificationRequired'),
+            })}
+            className={errors.justification ? 'border-destructive' : ''}
+          />
+          {errors.justification && (
+            <p className="text-sm text-destructive">{errors.justification.message}</p>
           )}
+        </div>
 
-        </form>
+        {/* Conditions (optional) */}
+        <div className="space-y-2">
+          <Label htmlFor="conditions">{t('signoff.conditions')}</Label>
+          <Textarea
+            id="conditions"
+            placeholder={t('signoff.conditionsPlaceholder')}
+            rows={2}
+            {...register('conditions')}
+          />
+        </div>
+
+        {/* Waiver expiration (only for waive action) */}
+        {selectedAction === 'waive' && (
+          <div className="space-y-2">
+            <Label htmlFor="waiver_valid_until" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {t('signoff.waiverValidUntil')}
+            </Label>
+            <Input
+              id="waiver_valid_until"
+              type="date"
+              min={new Date().toISOString().split('T')[0]}
+              {...register('waiver_valid_until')}
+            />
+            <p className="text-xs text-muted-foreground">{t('signoff.waiverScopeSingle')}</p>
+          </div>
+        )}
+      </form>
     </AdaptiveDialog>
   )
 }

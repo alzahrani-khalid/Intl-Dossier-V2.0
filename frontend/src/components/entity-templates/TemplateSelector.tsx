@@ -104,7 +104,7 @@ export function TemplateSelector({
   // Handle favorite toggle
   const handleToggleFavorite = useCallback(
     (template: EntityTemplate) => {
-      toggleFavorite.mutate(template.id)
+      toggleFavorite.mutate({ templateId: template.id })
     },
     [toggleFavorite],
   )

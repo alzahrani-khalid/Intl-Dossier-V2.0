@@ -175,22 +175,21 @@ export function RelationshipSidebar({
   // Parse relationships into linked dossiers grouped by tier
   const linkedDossiers = useMemo((): LinkedDossier[] => {
     if (relationshipsData == null) return []
-    const rawData = relationshipsData as { data?: Record<string, unknown>[] }
-    const relationships = rawData.data ?? []
+    const relationships = relationshipsData.data ?? []
     if (!Array.isArray(relationships)) return []
 
     return relationships.map((rel) => {
-      const isSource = (rel.source_dossier_id as string) === dossierId
+      const isSource = rel.source_dossier_id === dossierId
       const linked = isSource ? rel.target_dossier : rel.source_dossier
       const linkedObj = (linked ?? {}) as Record<string, unknown>
-      const relType = (rel.relationship_type as string) ?? 'related_to'
+      const relType = rel.relationship_type ?? 'related_to'
 
       return {
         id: (linkedObj.id as string) ?? '',
         type: (linkedObj.type as string) ?? 'country',
         name_en: (linkedObj.name_en as string) ?? '',
         name_ar: (linkedObj.name_ar as string | null) ?? null,
-        relationshipId: (rel.id as string) ?? '',
+        relationshipId: rel.id ?? '',
         relationshipType: relType,
         tier: TIER_CLASSIFICATION[relType] ?? 'informational',
       }

@@ -121,7 +121,12 @@ export function useInfluenceNetworkData(
 ) {
   return useQuery<NetworkVisualizationData | undefined>({
     queryKey: [...influenceKeys.all, 'network-data', id, _params],
-    queryFn: () => Promise.resolve<NetworkVisualizationData | undefined>({ nodes: [], edges: [] }),
+    queryFn: () =>
+      Promise.resolve<NetworkVisualizationData | undefined>({
+        nodes: [],
+        edges: [],
+        statistics: { total_nodes: 0, total_edges: 0, avg_connections: 0, density: 0 },
+      }),
     enabled: options?.enabled !== false && Boolean(id),
     staleTime: 5 * 60 * 1000,
   })

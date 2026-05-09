@@ -177,10 +177,32 @@ export interface SLAConfiguration {
   escalation_hours: number
 }
 
+export interface SLAPreview {
+  response_hours: number
+  resolution_hours: number
+  escalation_hours: number
+  acknowledgmentMinutes: number
+  resolutionHours: number
+  businessHoursOnly: boolean
+}
+
+const toSLAPreview = (config: {
+  response_hours: number
+  resolution_hours: number
+  escalation_hours: number
+}): SLAPreview => ({
+  response_hours: config.response_hours,
+  resolution_hours: config.resolution_hours,
+  escalation_hours: config.escalation_hours,
+  acknowledgmentMinutes: Math.round(config.response_hours * 60),
+  resolutionHours: config.resolution_hours,
+  businessHoursOnly: false,
+})
+
 export const useGetSLAPreview = (urgency: string, requestType?: string, sensitivity?: string) => {
   return useQuery({
     queryKey: ['intake', 'sla', urgency, requestType, sensitivity],
-    queryFn: async () => {
+    queryFn: async (): Promise<SLAPreview> => {
       const { data, error } = await supabase.rpc('find_sla_configuration', {
         p_urgency: urgency,
         p_request_type: requestType ?? null,
@@ -190,11 +212,11 @@ export const useGetSLAPreview = (urgency: string, requestType?: string, sensitiv
       if (error) throw error
 
       if (data && data.length > 0) {
-        return {
+        return toSLAPreview({
           response_hours: data[0].response_hours,
           resolution_hours: data[0].resolution_hours,
           escalation_hours: data[0].escalation_hours,
-        }
+        })
       }
 
       // Default SLA based on urgency
@@ -229,7 +251,7 @@ export const useGetSLAPreview = (urgency: string, requestType?: string, sensitiv
         },
       }
 
-      return defaults[urgency] || defaults.medium
+      return toSLAPreview(defaults[urgency] ?? defaults.medium!)
     },
     enabled: Boolean(urgency),
   })

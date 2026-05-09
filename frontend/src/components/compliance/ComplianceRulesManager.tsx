@@ -148,7 +148,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
 
   const handleAcknowledge = async (violation: ComplianceViolation) => {
     try {
-      await acknowledgeMutation.mutateAsync(violation.id)
+      await acknowledgeMutation.mutateAsync({ violationId: violation.id, data: {} })
       toast.success(t('messages.violationAcknowledged'))
     } catch {
       toast.error(t('messages.error'))
