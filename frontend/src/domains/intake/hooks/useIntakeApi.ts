@@ -124,7 +124,7 @@ export const useDuplicateCandidates = (ticketId: string, threshold = 0.65) => {
   })
 }
 
-export const useMergeTickets = (ticketId: string) => {
+export const useMergeTickets = (_ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({

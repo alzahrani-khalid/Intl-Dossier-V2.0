@@ -21,6 +21,7 @@ import {
   type FilterCount,
   type SearchSuggestion,
   type HistorySuggestion,
+  type EnhancedSearchAction,
   enhancedSearchReducer,
   defaultEnhancedSearchState,
   getSuggestionAtIndex,
@@ -180,7 +181,7 @@ export function useEnhancedSearch(
   handleFocus: () => void
   handleBlur: () => void
   clearQuery: () => void
-  dispatch: React.Dispatch<ReturnType<typeof enhancedSearchReducer> extends infer S ? { type: string; payload?: unknown } : never>
+  dispatch: React.Dispatch<EnhancedSearchAction>
 } {
   const debounceMs = options?.debounceMs ?? 300
   const minQueryLength = options?.minQueryLength ?? 2

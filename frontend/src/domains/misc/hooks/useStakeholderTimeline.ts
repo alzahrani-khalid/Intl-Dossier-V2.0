@@ -63,11 +63,7 @@ export function useTimelineCategories() {
 
 /* Stub exports – removed during refactoring, still imported by components */
 
-export function useStakeholderInteractionMutations(): {
-  addInteraction: ReturnType<typeof useMutation>
-  updateInteraction: ReturnType<typeof useMutation>
-  deleteInteraction: ReturnType<typeof useMutation>
-} {
+export function useStakeholderInteractionMutations() {
   const queryClient = useQueryClient()
   const addInteraction = useMutation({
     mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ success: true }),

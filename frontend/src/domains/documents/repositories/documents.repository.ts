@@ -7,6 +7,8 @@
  */
 
 import { apiGet, apiPost } from '@/lib/api-client'
+import type { ExportableEntityType } from '@/types/export-import.types'
+import type { ExportFormat } from '@/types/bulk-actions.types'
 
 // ============================================================================
 // Document Fetching
@@ -48,8 +50,8 @@ export async function getDocuments(filters?: {
 // ============================================================================
 
 export async function exportData(request: {
-  entityType: string
-  format: string
+  entityType: ExportableEntityType
+  format: ExportFormat
   [key: string]: unknown
 }): Promise<{
   content: string
@@ -57,8 +59,8 @@ export async function exportData(request: {
   contentType: string
   recordCount: number
   exportedAt: string
-  entityType: string
-  format: string
+  entityType: ExportableEntityType
+  format: ExportFormat
 }> {
   return apiPost(`/data-export`, request)
 }
