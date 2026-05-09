@@ -80,10 +80,16 @@ export function useApplyEntityTemplate() {
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-export function useContextAwareTemplates(params?: Record<string, unknown>) {
-  return useQuery({
-    queryKey: [...templateKeys.all, 'context-aware', params],
-    queryFn: () => Promise.resolve([]),
+import type { EntityTemplate } from '@/types/entity-template.types'
+
+export interface ContextAwareTemplatesResult {
+  templates: EntityTemplate[]
+}
+
+export function useContextAwareTemplates(_params?: Record<string, unknown>) {
+  return useQuery<ContextAwareTemplatesResult>({
+    queryKey: [...templateKeys.all, 'context-aware', _params],
+    queryFn: () => Promise.resolve<ContextAwareTemplatesResult>({ templates: [] }),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -98,8 +104,10 @@ export function useToggleFavorite() {
   })
 }
 
-export function useApplyTemplate() {
-  return useMutation({
-    mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ success: true }),
-  })
+export function useApplyTemplate(): {
+  applyTemplate: (template: EntityTemplate) => Record<string, unknown>
+} {
+  return {
+    applyTemplate: (_template: EntityTemplate) => ({}),
+  }
 }

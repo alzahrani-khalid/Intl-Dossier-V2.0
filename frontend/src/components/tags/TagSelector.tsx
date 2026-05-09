@@ -40,19 +40,9 @@ import type {
 import { getTagName, TAG_SUGGESTION_REASON_LABELS } from '@/types/tag-hierarchy.types'
 import { useDirection } from '@/hooks/useDirection'
 
-// Local typed shim narrowing the stub useEntityTagging / useTagsFlat / useTagSearch
-// hook returns. The hooks are refactor stubs in @/domains/* (UseQueryResult<unknown>);
-// the hook surface is owned by 47-07. Component-side typed shim keeps consumer clean.
-interface EntityTaggingShim {
-  tags: EntityTagAssignment[]
-  suggestions: TagSuggestion[]
-  isLoadingTags: boolean
-  assignTag: (tagId: string, opts?: { is_auto_assigned?: boolean }) => Promise<unknown>
-  unassignTag: (tagId: string) => Promise<unknown>
-  isAssigning: boolean
-  isUnassigning: boolean
-}
-
+// useTagsFlat / useTagSearch return the raw API hierarchy result; consumer-side
+// shim narrows them to the TagCategory shape used by the dropdown. (Underlying
+// hooks remain unmigrated; full type-at-source is a follow-up.)
 interface TagSearchResultData {
   data: TagCategory[]
 }
@@ -98,7 +88,7 @@ export function TagSelector({
     unassignTag,
     isAssigning,
     isUnassigning,
-  } = useEntityTagging() as unknown as EntityTaggingShim
+  } = useEntityTagging()
 
   const { data: allTags } = useTagsFlat() as unknown as { data: TagCategory[] | undefined }
   // Stub useTagSearch takes (query: string), not an options object.

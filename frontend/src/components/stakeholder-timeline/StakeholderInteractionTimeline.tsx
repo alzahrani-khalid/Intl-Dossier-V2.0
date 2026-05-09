@@ -57,28 +57,11 @@ import type {
 } from '@/types/stakeholder-interaction.types'
 import { useDirection } from '@/hooks/useDirection'
 
-// Local typed shim narrowing the stub useStakeholderTimeline +
-// useStakeholderInteractionMutations hook returns. Hook surface owned by 47-07.
-interface StakeholderTimelineShim {
-  events: StakeholderTimelineEvent[]
-  isLoading: boolean
-  isFetchingNextPage: boolean
-  hasNextPage: boolean
-  error: Error | null
-  fetchNextPage: () => Promise<unknown> | void
-  refetch: () => Promise<unknown>
-  filters: IFilters
-  setFilters: (filters: IFilters) => void
-  stats: {
-    total_interactions: number
-    key_moments_count: number
-    last_interaction_date: string | null
-    most_common_type: string | null
-    avg_sentiment: number
-  } | null
-  isLoadingStats: boolean
-}
-
+// Stub useStakeholderInteractionMutations is internally still a stub returning
+// `Promise.resolve({ success: true })` from each mutation; this shim narrows the
+// return shape to the typed contract until the real implementation lands. The
+// other shim (StakeholderTimelineShim) became redundant in 47-08 once the
+// underlying useStakeholderTimeline hook returns the rich state object.
 interface StakeholderInteractionMutationsShim {
   createInteraction: (req: CreateInteractionRequest) => Promise<unknown>
   isCreating: boolean
@@ -283,7 +266,7 @@ export function StakeholderInteractionTimeline({
     setFilters,
     stats,
     isLoadingStats,
-  } = useStakeholderTimeline(stakeholderId) as unknown as StakeholderTimelineShim
+  } = useStakeholderTimeline(stakeholderId)
 
   // Stub useStakeholderInteractionMutations takes 0 args; the (stakeholderType,
   // stakeholderId) intent is preserved as void above for clarity.

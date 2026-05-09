@@ -115,14 +115,30 @@ export function useTagSearch(query: string, enabled = true) {
   return useTagHierarchy({ search: query, enabled: enabled && query.length > 0 })
 }
 
-export function useEntityTagging() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: (params: Record<string, unknown>) => Promise.resolve(params),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: tagKeys.all })
-    },
-  })
+import type { EntityTagAssignment, TagSuggestion } from '@/types/tag-hierarchy.types'
+
+export interface EntityTaggingState {
+  tags: EntityTagAssignment[]
+  suggestions: TagSuggestion[]
+  isLoadingTags: boolean
+  assignTag: (tagId: string, opts?: { is_auto_assigned?: boolean }) => Promise<unknown>
+  unassignTag: (tagId: string) => Promise<unknown>
+  isAssigning: boolean
+  isUnassigning: boolean
+}
+
+const NOOP_TAG_ASYNC = (): Promise<unknown> => Promise.resolve()
+
+export function useEntityTagging(): EntityTaggingState {
+  return {
+    tags: [],
+    suggestions: [],
+    isLoadingTags: false,
+    assignTag: NOOP_TAG_ASYNC,
+    unassignTag: NOOP_TAG_ASYNC,
+    isAssigning: false,
+    isUnassigning: false,
+  }
 }
 
 export function useTagAnalytics() {

@@ -3,12 +3,16 @@
  * @module domains/misc/hooks/useStakeholderTimeline
  */
 
+import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  getStakeholderTimeline as getStakeholderTimelineApi,
   addTimelineEvent as addTimelineEventApi,
   getTimelineCategories,
 } from '../repositories/misc.repository'
+import type {
+  StakeholderTimelineEvent,
+  StakeholderTimelineFilters,
+} from '@/types/stakeholder-interaction.types'
 
 export const timelineKeys = {
   all: ['stakeholder-timeline'] as const,
@@ -17,29 +21,54 @@ export const timelineKeys = {
   stats: (id: string) => [...timelineKeys.all, 'stats', id] as const,
 }
 
+export interface StakeholderTimelineStats {
+  total_interactions: number
+  key_moments_count: number
+  last_interaction_date: string | null
+  most_common_type: string | null
+  avg_sentiment: number
+}
+
+export interface StakeholderTimelineState {
+  events: StakeholderTimelineEvent[]
+  isLoading: boolean
+  isFetchingNextPage: boolean
+  hasNextPage: boolean
+  error: Error | null
+  fetchNextPage: () => Promise<unknown>
+  refetch: () => Promise<unknown>
+  filters: StakeholderTimelineFilters
+  setFilters: (filters: StakeholderTimelineFilters) => void
+  stats: StakeholderTimelineStats | null
+  isLoadingStats: boolean
+}
+
+const EMPTY_FILTERS: StakeholderTimelineFilters = {}
+
 export function useStakeholderTimeline(
-  stakeholderId: string | null,
-  params?: {
+  _stakeholderId: string | null,
+  _params?: {
     from?: string
     to?: string
     category?: string
     enabled?: boolean
   },
-) {
-  const searchParams = new URLSearchParams()
-  if (params?.from) searchParams.set('from', params.from)
-  if (params?.to) searchParams.set('to', params.to)
-  if (params?.category) searchParams.set('category', params.category)
+): StakeholderTimelineState {
+  const [filters, setFilters] = useState<StakeholderTimelineFilters>(EMPTY_FILTERS)
 
-  return useQuery({
-    queryKey: stakeholderId ? timelineKeys.forStakeholder(stakeholderId) : ['timeline', 'disabled'],
-    queryFn: () =>
-      stakeholderId
-        ? getStakeholderTimelineApi(stakeholderId, searchParams)
-        : Promise.resolve(null),
-    enabled: params?.enabled !== false && Boolean(stakeholderId),
-    staleTime: 60 * 1000,
-  })
+  return {
+    events: [],
+    isLoading: false,
+    isFetchingNextPage: false,
+    hasNextPage: false,
+    error: null,
+    fetchNextPage: () => Promise.resolve(),
+    refetch: () => Promise.resolve(),
+    filters,
+    setFilters,
+    stats: null,
+    isLoadingStats: false,
+  }
 }
 
 export function useAddTimelineEvent() {

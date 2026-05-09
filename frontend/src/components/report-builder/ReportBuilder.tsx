@@ -46,87 +46,8 @@ import {
   useCreateSchedule,
 } from '@/hooks/useReportBuilder'
 
-import type {
-  ReportField,
-  SavedReport,
-  ReportConfiguration,
-  ReportColumn,
-  ReportFilter,
-  ReportAggregation,
-  ReportEntityType,
-  VisualizationType,
-  VisualizationConfig,
-  ReportPreviewResponse,
-} from '@/types/report-builder.types'
+import type { ReportField, SavedReport } from '@/types/report-builder.types'
 import { useDirection } from '@/hooks/useDirection'
-
-// Local typed shim for the stub useReportBuilderState hook return shape.
-// The hook is a stub (frontend/src/domains/misc/hooks/useReportBuilder.ts) that returns
-// `UseQueryResult<unknown>`; the component below consumes a richer state-machine API.
-// This shim narrows the destructure target so tsc passes; runtime behavior is unaffected
-// because the underlying stub returns an object containing these methods.
-interface ReportBuilderStateShim {
-  configuration: ReportConfiguration
-  selectedEntities: ReportEntityType[]
-  availableFields: ReportField[]
-  isDirty: boolean
-  savedReportId: string | undefined
-  toggleEntity: (entity: ReportEntityType) => void
-  addColumn: (field: ReportField) => void
-  removeColumn: (id: string) => void
-  updateColumn: (id: string, updates: Partial<ReportColumn>) => void
-  reorderColumns: (sourceIndex: number, destinationIndex: number) => void
-  addFilter: (filter: Omit<ReportFilter, 'id'>) => void
-  removeFilter: (id: string) => void
-  updateFilter: (id: string, updates: Partial<ReportFilter>) => void
-  setFilterLogic: (logic: 'and' | 'or') => void
-  addGrouping: (field: ReportField) => void
-  removeGrouping: (id: string) => void
-  addAggregation: (aggregation: Omit<ReportAggregation, 'id'>) => void
-  removeAggregation: (id: string) => void
-  addSort: (fieldId: string, direction: 'asc' | 'desc') => void
-  removeSort: (id: string) => void
-  updateSort: (sortId: string, direction: 'asc' | 'desc') => void
-  setVisualization: (type: VisualizationType) => void
-  updateVisualization: (updates: Partial<VisualizationConfig>) => void
-  resetConfiguration: () => void
-  loadConfiguration: (report: SavedReport) => void
-  markAsSaved: (id: string) => void
-}
-
-interface ReportsListShim {
-  data: SavedReport[]
-}
-
-interface CreateReportMutationShim {
-  mutateAsync: (data: Record<string, unknown>) => Promise<{ id: string }>
-  isPending: boolean
-}
-
-interface UpdateReportMutationShim {
-  mutateAsync: (data: Record<string, unknown>) => Promise<unknown>
-  isPending: boolean
-}
-
-interface DeleteReportMutationShim {
-  mutate: (id: string) => void
-}
-
-interface ToggleFavoriteMutationShim {
-  mutate: (params: { reportId: string; isFavorite: boolean }) => void
-}
-
-interface PreviewMutationShim {
-  mutate: (params: { configuration: ReportConfiguration; limit: number }) => void
-  data: ReportPreviewResponse | null | undefined
-  isPending: boolean
-  error: { message: string } | null
-}
-
-interface CreateScheduleMutationShim {
-  mutateAsync: (data: Record<string, unknown>) => Promise<unknown>
-  isPending: boolean
-}
 
 interface ReportBuilderProps {
   initialReportId?: string
@@ -135,7 +56,7 @@ interface ReportBuilderProps {
 export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-// Report builder state
+  // Report builder state
   const {
     configuration,
     selectedEntities,
@@ -163,21 +84,16 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
     resetConfiguration,
     loadConfiguration,
     markAsSaved,
-  } = useReportBuilderState(
-    initialReportId !== undefined ? { initialReportId } : undefined,
-  ) as unknown as ReportBuilderStateShim
+  } = useReportBuilderState(initialReportId !== undefined ? { initialReportId } : undefined)
 
   // API hooks
-  const { data: reportsData, isLoading: isLoadingReports } = useReports({ limit: 50 }) as unknown as {
-    data: ReportsListShim | undefined
-    isLoading: boolean
-  }
-  const createReportMutation = useCreateReport() as unknown as CreateReportMutationShim
-  const updateReportMutation = useUpdateReport() as unknown as UpdateReportMutationShim
-  const deleteReportMutation = useDeleteReport() as unknown as DeleteReportMutationShim
-  const toggleFavoriteMutation = useToggleFavorite() as unknown as ToggleFavoriteMutationShim
-  const previewMutation = useReportPreview() as unknown as PreviewMutationShim
-  const createScheduleMutation = useCreateSchedule() as unknown as CreateScheduleMutationShim
+  const { data: reportsData, isLoading: isLoadingReports } = useReports({ limit: 50 })
+  const createReportMutation = useCreateReport()
+  const updateReportMutation = useUpdateReport()
+  const deleteReportMutation = useDeleteReport()
+  const toggleFavoriteMutation = useToggleFavorite()
+  const previewMutation = useReportPreview()
+  const createScheduleMutation = useCreateSchedule()
 
   // UI state
   const [activeTab, setActiveTab] = useState<'builder' | 'preview' | 'saved'>('builder')

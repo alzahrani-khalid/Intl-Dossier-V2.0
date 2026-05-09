@@ -119,7 +119,13 @@ export function usePollingStats() {
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-import type { AvailabilityPoll } from '@/types/availability-polling.types'
+import type {
+  AvailabilityPoll,
+  CreatePollRequest,
+  PollDetailsResponse,
+  AutoScheduleResponse,
+  SubmitVoteRequest,
+} from '@/types/availability-polling.types'
 
 export interface PollsListResponse {
   polls: AvailabilityPoll[]
@@ -145,7 +151,7 @@ export function useMyPolls(params?: Record<string, unknown>) {
 export function useCreatePoll() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ id: '', success: true }),
+    mutationFn: (_req: CreatePollRequest) => Promise.resolve({ id: '' } as AvailabilityPoll),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: pollingKeys.all })
     },
@@ -153,9 +159,9 @@ export function useCreatePoll() {
 }
 
 export function usePollDetails(pollId: string | null) {
-  return useQuery({
+  return useQuery<PollDetailsResponse | undefined>({
     queryKey: [...pollingKeys.all, 'poll-details', pollId],
-    queryFn: () => Promise.resolve(null),
+    queryFn: () => Promise.resolve<PollDetailsResponse | undefined>(undefined),
     enabled: Boolean(pollId),
     staleTime: 5 * 60 * 1000,
   })
@@ -164,7 +170,8 @@ export function usePollDetails(pollId: string | null) {
 export function useSubmitVotes() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ success: true }),
+    mutationFn: (_req: { pollId: string; votes: SubmitVoteRequest[] }) =>
+      Promise.resolve({ success: true } as { success: boolean }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: pollingKeys.all })
     },
@@ -174,7 +181,8 @@ export function useSubmitVotes() {
 export function useClosePoll() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_pollId: string) => Promise.resolve({ success: true }),
+    mutationFn: (_args: { pollId: string; selectedSlotId?: string }) =>
+      Promise.resolve({ success: true } as { success: boolean }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: pollingKeys.all })
     },
@@ -183,6 +191,7 @@ export function useClosePoll() {
 
 export function useAutoSchedule() {
   return useMutation({
-    mutationFn: (_pollId: string) => Promise.resolve({ success: true }),
+    mutationFn: (_args: { pollId: string; slotId?: string }) =>
+      Promise.resolve({} as AutoScheduleResponse),
   })
 }

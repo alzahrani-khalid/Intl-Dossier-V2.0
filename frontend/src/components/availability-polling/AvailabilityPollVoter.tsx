@@ -20,26 +20,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils'
 
 import { usePollDetails, useSubmitVotes } from '@/hooks/useAvailabilityPolling'
-import type {
-  PollResponseType,
-  SubmitVoteRequest,
-  PollDetailsResponse,
-} from '@/types/availability-polling.types'
+import type { PollResponseType, SubmitVoteRequest } from '@/types/availability-polling.types'
 import { RESPONSE_COLORS, POLL_STATUS_COLORS } from '@/types/availability-polling.types'
 import { useDirection } from '@/hooks/useDirection'
-
-// Local typed shim narrowing the stub usePollDetails / useSubmitVotes hook returns.
-// Hook surface owned by 47-07.
-interface PollDetailsHookShim {
-  data: PollDetailsResponse | undefined
-  isLoading: boolean
-  error: unknown
-}
-
-interface SubmitVotesShim {
-  mutateAsync: (req: { pollId: string; votes: SubmitVoteRequest[] }) => Promise<unknown>
-  isPending: boolean
-}
 
 interface AvailabilityPollVoterProps {
   pollId: string
@@ -57,12 +40,8 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
   const { isRTL } = useDirection()
   const dateLocale = isRTL ? ar : enUS
 
-  const {
-    data: pollData,
-    isLoading,
-    error,
-  } = usePollDetails(pollId) as unknown as PollDetailsHookShim
-  const submitVotes = useSubmitVotes() as unknown as SubmitVotesShim
+  const { data: pollData, isLoading, error } = usePollDetails(pollId)
+  const submitVotes = useSubmitVotes()
 
   // Track votes locally
   const [votes, setVotes] = useState<Map<string, SlotVote>>(new Map())

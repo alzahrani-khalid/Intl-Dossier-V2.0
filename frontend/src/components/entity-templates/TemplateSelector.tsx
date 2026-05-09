@@ -29,18 +29,6 @@ import type {
 } from '@/types/entity-template.types'
 import { useDirection } from '@/hooks/useDirection'
 
-// Local typed shim narrowing the stub useContextAwareTemplates / useApplyTemplate
-// hook returns. Hook surface owned by 47-07.
-interface ContextAwareTemplatesShim {
-  data: { templates: EntityTemplate[] } | undefined
-  isLoading: boolean
-  error: unknown
-}
-
-interface ApplyTemplateShim {
-  applyTemplate: (template: EntityTemplate) => Record<string, unknown>
-}
-
 export interface TemplateSelectorProps {
   entityType: TemplateEntityType
   context?: TemplateContext
@@ -69,11 +57,9 @@ export function TemplateSelector({
   // Queries & Mutations
   // Stub useContextAwareTemplates takes `Record<string, unknown> | undefined`;
   // the entityType filter is wrapped to keep the call-site documented.
-  const { data, isLoading, error } = useContextAwareTemplates({
-    entityType,
-  }) as unknown as ContextAwareTemplatesShim
+  const { data, isLoading, error } = useContextAwareTemplates({ entityType })
   const toggleFavorite = useToggleFavorite()
-  const { applyTemplate } = useApplyTemplate() as unknown as ApplyTemplateShim
+  const { applyTemplate } = useApplyTemplate()
 
   // Filter templates by search
   const filteredTemplates =

@@ -93,12 +93,57 @@ export function useUpdateCalendarSettings() {
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-export function useCalendarSync() {
-  return useQuery({
-    queryKey: [...calendarKeys.all, 'sync'],
-    queryFn: () => Promise.resolve({ connected: false, providers: [] }),
-    staleTime: 5 * 60 * 1000,
-  })
+import type {
+  ExternalCalendarConnection,
+  ExternalCalendarProvider,
+  CalendarSyncConflict,
+  ICalFeedSubscription,
+} from '@/types/calendar-sync.types'
+
+export interface CalendarSyncState {
+  connections: ExternalCalendarConnection[]
+  isLoadingConnections: boolean
+  conflicts: CalendarSyncConflict[]
+  icalSubscriptions: ICalFeedSubscription[]
+  connectProvider: (provider: ExternalCalendarProvider, redirectUri: string) => Promise<void>
+  isConnecting: boolean
+  disconnectProvider: (id: string) => Promise<void>
+  updateConnection: (id: string, updates: Record<string, unknown>) => Promise<void>
+  triggerSync: (params: { connection_id: string }) => Promise<void>
+  isSyncing: boolean
+  resolveConflict: (params: { conflict_id: string; resolution: string }) => Promise<void>
+  isResolvingConflict: boolean
+  addICalFeed: (feed: Record<string, unknown>) => Promise<void>
+  isAddingIcal: boolean
+  updateICalFeed: (id: string, updates: Record<string, unknown>) => Promise<void>
+  removeICalFeed: (id: string) => Promise<void>
+  refreshICalFeed: (id: string) => Promise<void>
+  isRefreshingIcal: boolean
+}
+
+const NOOP_ASYNC = (): Promise<void> => Promise.resolve()
+
+export function useCalendarSync(): CalendarSyncState {
+  return {
+    connections: [],
+    isLoadingConnections: false,
+    conflicts: [],
+    icalSubscriptions: [],
+    connectProvider: NOOP_ASYNC,
+    isConnecting: false,
+    disconnectProvider: NOOP_ASYNC,
+    updateConnection: NOOP_ASYNC,
+    triggerSync: NOOP_ASYNC,
+    isSyncing: false,
+    resolveConflict: NOOP_ASYNC,
+    isResolvingConflict: false,
+    addICalFeed: NOOP_ASYNC,
+    isAddingIcal: false,
+    updateICalFeed: NOOP_ASYNC,
+    removeICalFeed: NOOP_ASYNC,
+    refreshICalFeed: NOOP_ASYNC,
+    isRefreshingIcal: false,
+  }
 }
 
 export function useExternalCalendars() {

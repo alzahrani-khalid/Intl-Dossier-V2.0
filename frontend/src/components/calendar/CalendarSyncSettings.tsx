@@ -58,31 +58,6 @@ import type {
   ICalFeedSubscription,
 } from '@/types/calendar-sync.types'
 
-// Local typed shim narrowing the stub useCalendarSync hook return.
-// Stub source: frontend/src/domains/briefings/hooks/useCalendarSync.ts (returns
-// UseQueryResult<unknown>); shim keeps the consumer type-clean without editing
-// the hook (47-07's surface).
-interface CalendarSyncShim {
-  connections: ExternalCalendarConnection[]
-  isLoadingConnections: boolean
-  conflicts: CalendarSyncConflict[]
-  icalSubscriptions: ICalFeedSubscription[]
-  connectProvider: (provider: ExternalCalendarProvider, redirectUri: string) => Promise<void>
-  isConnecting: boolean
-  disconnectProvider: (id: string) => Promise<void> | void
-  updateConnection: (id: string, updates: Record<string, unknown>) => Promise<void> | void
-  triggerSync: (params: { connection_id: string }) => Promise<void> | void
-  isSyncing: boolean
-  resolveConflict: (params: { conflict_id: string; resolution: string }) => Promise<void> | void
-  isResolvingConflict: boolean
-  addICalFeed: (feed: Record<string, unknown>) => Promise<void> | void
-  isAddingIcal: boolean
-  updateICalFeed: (id: string, updates: Record<string, unknown>) => Promise<void> | void
-  removeICalFeed: (id: string) => Promise<void> | void
-  refreshICalFeed: (id: string) => Promise<void> | void
-  isRefreshingIcal: boolean
-}
-
 interface ExternalCalendarShape {
   id: string
   name: string
@@ -721,7 +696,7 @@ export function CalendarSyncSettings() {
     removeICalFeed,
     refreshICalFeed,
     isRefreshingIcal,
-  } = useCalendarSync() as unknown as CalendarSyncShim
+  } = useCalendarSync()
 
   const handleConnect = async (provider: ExternalCalendarProvider) => {
     const redirectUri = `${window.location.origin}/settings/calendar/callback`

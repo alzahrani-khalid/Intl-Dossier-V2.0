@@ -45,33 +45,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { useOnboardingChecklist } from '@/hooks/useOnboardingChecklist'
-import type {
-  OnboardingChecklistItem,
-  OnboardingChecklistProps,
-  RoleChecklist,
-} from '@/types/onboarding.types'
+import type { OnboardingChecklistItem, OnboardingChecklistProps } from '@/types/onboarding.types'
 
-// Local typed shim narrowing the stub useOnboardingChecklist hook return.
-// Stub origin: @/hooks/useOnboardingChecklist re-exports a refactor stub from
-// @/domains/* (UseQueryResult<unknown>); the hook surface is owned by 47-07.
-interface OnboardingChecklistShim {
-  checklist: RoleChecklist | null
-  isLoading: boolean
-  completedCount: number
-  totalCount: number
-  completionPercentage: number
-  estimatedTimeRemaining: number
-  isFullyCompleted: boolean
-  isDismissed: boolean
-  completeItem: (itemId: string) => Promise<void> | void
-  skipItem: (itemId: string) => Promise<void> | void
-  dismissOnboarding: () => Promise<void> | void
-  resumeOnboarding: () => Promise<void> | void
-  resetProgress: () => Promise<void> | void
-  isItemCompleted: (itemId: string) => boolean
-  isItemSkipped: (itemId: string) => boolean
-  isItemLocked: (itemId: string) => boolean
-}
 import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for checklist items
@@ -370,7 +345,7 @@ export function OnboardingChecklist({
     isItemCompleted,
     isItemSkipped,
     isItemLocked,
-  } = useOnboardingChecklist() as unknown as OnboardingChecklistShim
+  } = useOnboardingChecklist()
 
   const [showCompleted, setShowCompleted] = useState(false)
 
