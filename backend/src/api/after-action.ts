@@ -525,10 +525,7 @@ router.put(
       // In production, use diff logic to minimize database operations
 
       if (req.body.decisions) {
-        await supabase
-          .from('decisions')
-          .delete()
-          .eq('after_action_id' as never, id)
+        await supabase.from('decisions').delete().eq('after_action_id', id)
         if (req.body.decisions.length > 0) {
           const decisionsData = req.body.decisions.map((d: Record<string, unknown>) => ({
             ...d,
@@ -551,10 +548,7 @@ router.put(
       }
 
       if (req.body.risks) {
-        await supabase
-          .from('risks')
-          .delete()
-          .eq('after_action_id' as never, id)
+        await supabase.from('risks').delete().eq('after_action_id', id)
         if (req.body.risks.length > 0) {
           const risksData = req.body.risks.map((r: Record<string, unknown>) => ({
             ...r,
@@ -565,10 +559,7 @@ router.put(
       }
 
       if (req.body.follow_up_actions) {
-        await supabase
-          .from('follow_up_actions')
-          .delete()
-          .eq('after_action_id' as never, id)
+        await supabase.from('follow_up_actions').delete().eq('after_action_id', id)
         if (req.body.follow_up_actions.length > 0) {
           const followUpsData = req.body.follow_up_actions.map((f: Record<string, unknown>) => ({
             ...f,
@@ -795,23 +786,11 @@ router.delete(
 
       // Delete nested entities (cascade)
       await Promise.all([
-        supabase
-          .from('decisions')
-          .delete()
-          .eq('after_action_id' as never, id),
+        supabase.from('decisions').delete().eq('after_action_id', id),
         supabase.from('aa_commitments').delete().eq('after_action_id', id),
-        supabase
-          .from('risks')
-          .delete()
-          .eq('after_action_id' as never, id),
-        supabase
-          .from('follow_up_actions')
-          .delete()
-          .eq('after_action_id' as never, id),
-        supabase
-          .from('attachments')
-          .delete()
-          .eq('after_action_id' as never, id),
+        supabase.from('risks').delete().eq('after_action_id', id),
+        supabase.from('follow_up_actions').delete().eq('after_action_id', id),
+        supabase.from('attachments').delete().eq('after_action_id', id),
       ])
 
       // Delete main record
