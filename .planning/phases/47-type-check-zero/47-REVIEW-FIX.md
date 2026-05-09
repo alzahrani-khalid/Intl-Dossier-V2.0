@@ -1,170 +1,159 @@
 ---
 phase: 47-type-check-zero
-fixed_at: 2026-05-09T19:30:00Z
+fixed_at: 2026-05-09T20:55:00Z
 review_path: .planning/phases/47-type-check-zero/47-REVIEW.md
-iteration: 1
-findings_in_scope: 16
-fixed: 14
-skipped: 2
+iteration: 2
+findings_in_scope: 20
+fixed: 8
+skipped: 12
 status: partial
 ---
 
-# Phase 47: Code Review Fix Report
+# Phase 47: Code Review Fix Report (Iteration 2)
 
-**Fixed at:** 2026-05-09
+**Fixed at:** 2026-05-09T20:55:00Z
 **Source review:** `.planning/phases/47-type-check-zero/47-REVIEW.md`
-**Iteration:** 1
+**Iteration:** 2
 
 **Summary:**
 
-- Findings in scope (CR + WR): 16
-- Fixed: 14
-- Skipped (require human judgment): 2
+- Findings in scope (CR + WR): 20
+- Fixed: 8
+- Skipped (out of typecheck-zero scope or require human judgment): 12
 - Phase goal (`pnpm typecheck` → 0 errors): **HOLDS**. Both `intake-backend` and `intake-frontend` `tsc --noEmit` pass cleanly after every commit and at HEAD.
+
+This iteration applied the fixes that are in-scope for the typecheck-zero milestone or are runtime-blocking bugs cheap to fix without coordinated migrations. The remaining findings were skipped with explicit rationales — they require either schema migrations, security architecture review, design-system sweeps, or feature-completion work that sits outside Phase 47's stated goal.
 
 ## Fixed Issues
 
-### CR-03: Backend `query.eq('after_action_id', id)` against `commitments` — column does not exist
-
-**Files modified:** `backend/src/api/after-action.ts`
-**Commit:** `09986501`
-**Applied fix:** Switched both cascade call sites (update at L540, delete at L803) from `commitments` to `aa_commitments`. Dropped both `as never` casts on the column literal. Added a typed `Insert[]` cast on the upsert payload so future schema drift surfaces at compile time.
-
-### CR-04: `tasks.service.ts` filters `tasks` by columns that don't exist (`related_commitment_id`, `related_after_action_id`)
-
-**Files modified:** `backend/src/services/tasks.service.ts`
-**Commit:** `7affbbc6`
-**Applied fix:** Rewrote three queries (`updateTaskStatusFromCommitment`, `getTasksByAfterAction`, `deleteTasksByAfterAction`) to filter by the schema's real linkage `work_item_id` + `work_item_type` (`'commitment'`|`'after_action'`). Dropped all three `as never` casts.
-
-### CR-05: `after-action.ts` filters `after_action_records` by non-existent columns (`status`, `confidentiality_level`)
-
-**Files modified:** `backend/src/api/after-action.ts`
-**Commit:** `dfc6ec13`
-**Applied fix:** Mapped `q.status` to the real column `publication_status` and `q.confidentiality_level` to the boolean `is_confidential` (any non-`public` value collapses to `true`). Documented the boolean ↔ four-state-enum impedance with an inline comment so the next reader knows the narrowing is deliberate, not a bug. Dropped both `as never` casts.
-
-### CR-06: `useAuditLogExport()` shim destructures fields that don't exist — runtime TypeError on user click
-
-**Files modified:** `frontend/src/components/audit-logs/AuditLogExport.tsx`
-**Commit:** `6517286f`
-**Applied fix:** Replaced the `{ exportLogs, isExporting }` shim with the real TanStack mutation API (`mutateAsync` + `isPending`). Dropped the `as unknown as { ... }` cast.
-
-### CR-07: `CommentForm.tsx` `updateComment.mutateAsync({ commentId, ... })` — wrong param shape, hidden by widening cast
+### CR-08: CommentForm sends camelCase fields to Edge Function that requires snake_case
 
 **Files modified:** `frontend/src/components/comments/CommentForm.tsx`
-**Commit:** `27783458`
-**Applied fix:** Dropped the `as unknown as { ... }` shim on both `useCreateComment` and `useUpdateComment`. Pass `{ id, data: { content, visibility } }` matching the hook's real signature. Added a guard `if (isEditing && editingComment)` so the editing branch can no longer fall through with a stale `editingComment`. **Logic-bug class — flagged for human verification of the param shape against the live backend route, since the review noted "the createComment call site is also worth a look; this review did not run end-to-end against the backend route."**
+**Commit:** `f86508ce`
+**Applied fix:** Renamed the `createComment.mutateAsync` payload keys from `entityType`/`entityId`/`parentId` to `entity_type`/`entity_id`/`parent_id` so the Supabase Edge Function's body destructure (`entity_type`, `entity_id`, `parent_id`) lands on real values instead of `undefined`. Comment creation now passes the validation guard at line 386 of `supabase/functions/entity-comments/index.ts` instead of returning HTTP 400.
 
-### WR-15: `optimisticLockingMiddleware('task_contributors')` would crash at runtime
+### CR-09: `updateCommentApi` calls `apiPut` (HTTP PUT) but Edge Function only handles PATCH
 
-**Files modified:** `backend/src/middleware/optimistic-locking.ts`
-**Commit:** `138039cf`
-**Applied fix:** Narrowed parameter from `'tasks' | 'task_contributors'` to `'tasks'` — all current callers pass `'tasks'` only. Dropped the `as never` casts on `is_deleted` filter and `false` literal. Future readers extending to `task_contributors` will hit a real type error.
+**Files modified:** `frontend/src/domains/misc/repositories/misc.repository.ts`
+**Commit:** `cffa04e2`
+**Applied fix:** Switched the `updateComment` repository function from `apiPut` to `apiPatch`. Added `apiPatch` to the import list (it was already exported from `lib/api-client.ts` at line 115). The Edge Function method dispatch in `supabase/functions/entity-comments/index.ts:552` only has `case 'PATCH'`; HTTP PUT requests previously fell through to the default response, breaking comment editing in production.
 
-### WR-16: `useUploadAttachment()` shim claims `mutateAsync: (data: FormData) => ...` — but `apiPost` JSON-stringifies
+### CR-10: `useGenerateBriefingPack` ignored the `language` parameter
 
-**Files modified:** `frontend/src/components/attachment-uploader/AttachmentUploader.tsx`
-**Commit:** `c163f6fe`
-**Applied fix:** Replaced the shim's param type with the real contract (`Record<string, unknown>`). Cast the FormData at the call site with a comment pointing at the open upload-pipeline bug. Per the review's explicit guidance, the actual multipart upload fix is left as a separate ticket — this commit only addresses the type-system lie.
+**Files modified:** `frontend/src/domains/briefings/hooks/useGenerateBriefingPack.ts`, `frontend/src/components/positions/BriefingPackGenerator.tsx`
+**Commit:** `bf5ae2b2`
+**Applied fix:** Replaced the `{ engagementId, options? }` mutation signature with a typed `{ engagementId, language: 'en'|'ar', options? }` shape. The hook merges `language` into the repository payload alongside any caller-supplied options, then types the return as `UseMutationResult<{ job_id: string }, Error, GenerateBriefingPackParams>`. Dropped the component-side `as unknown as { mutateAsync, isPending }` widening cast — the typed hook now exposes both fields directly. Bilingual selection now flows through to `apiPost('/engagements/:id/briefing-packs', { language, ... })`.
 
-### WR-17: `useAuditLogStatistics` shim destructures `{ statistics }` but hook returns `{ data }`
+### CR-14: `useSLARealtimeUpdates` leaked Supabase channels via `queryFn`
 
-**Files modified:** `frontend/src/components/audit-logs/AuditLogStatistics.tsx`
-**Commit:** `e199114a`
-**Applied fix:** Switched destructure to `{ data, isLoading, error }`, narrowed `data` via a single explicit cast to a local `AuditStatistics` type, and assigned to a `statistics` const for downstream readability.
+**Files modified:** `frontend/src/domains/work-items/hooks/useSLAMonitoring.ts`
+**Commit:** `1c3efff4`
+**Applied fix:** Migrated channel creation from `useQuery({ queryFn })` (which has no cleanup hook for side-effects) into `useEffect` with a `return () => { void supabase.removeChannel(...) }` cleanup. The previous shape leaked two channels per consuming component instance — TanStack's `gcTime` could not reach the realtime client's subscription map. Also prefixed all five `queryClient.invalidateQueries(...)` calls inside the realtime hook (and the seven other floating ones in the same file across the policy/escalation/breach mutations) with `void`, addressing WR-29 for this file.
 
-### WR-18: `useAuditLogDistinctValues` shim destructures `{ values }` but hook returns `{ data }`
+### WR-26: Four redundant `as never` cascades on existing columns in `after-action.ts`
 
-**Files modified:** `frontend/src/components/audit-logs/AuditLogFilters.tsx`
-**Commit:** `2f9a0b9a`
-**Applied fix:** Destructured `data` (renamed inline to `availableTables`) with `[]` default and a narrowed cast to `string[] | undefined`.
+**Files modified:** `backend/src/api/after-action.ts`
+**Commit:** `0d15151c`
+**Applied fix:** Dropped seven `query.eq('after_action_id' as never, id)` casts in the update and delete handlers covering the `decisions`, `risks`, `follow_up_actions`, and `attachments` cascades. Verified each column exists in `database.types.ts` — the casts were silencing nothing and matched the Phase 47 anti-pattern flag from CR-03's same-bug-class scan recommendation. Backend typecheck remains clean.
 
-### WR-19: Backend `digest-scheduler.ts` — `dateStr` used unchecked
+### WR-28: `useSearchUsersForMention` resolved `[]` — @-mention popup was silent
 
-**Files modified:** `backend/src/queues/digest-scheduler.ts`
-**Commit:** `76caef4a`
-**Applied fix:** Added `?? '1970-01-01'` defensive default at line 41, matching the pattern Phase 47 already applied at line 142.
+**Files modified:** `frontend/src/domains/misc/hooks/useComments.ts`, `frontend/src/domains/misc/repositories/misc.repository.ts`, `frontend/src/components/comments/MentionInput.tsx`
+**Commit:** `e763c5af`
+**Applied fix:** Added `searchUsersForMention(query, limit?)` to the misc repository, calling `GET /entity-comments/users/search?q=...` (the real Edge Function endpoint at line 176). Replaced the `Promise.resolve([])` stub in `useSearchUsersForMention` with a fetch that unwraps the `{ users: MentionUser[] }` response. Typed the hook return as `UseQueryResult<MentionUser[], Error>` so consumers no longer need a widening cast. Dropped the `as unknown as { data: MentionUser[]; isLoading: boolean }` cast in `MentionInput.tsx`.
 
-### WR-20: `applicationServerKey: applicationServerKey as BufferSource` cast — root cause documentation
+### WR-29: Floating `invalidateQueries` calls violate `no-floating-promises`
 
-**Files modified:** `frontend/src/services/push-subscription.ts`
-**Commit:** `21d53325`
-**Applied fix:** Per the review's recommendation ("None required for the cast itself. Optionally investigate the root tsc lib-version mismatch"), added a four-line inline comment naming the `@types/dom` lib-version mismatch. No behavior change; the cast is correct at runtime.
+**Files modified:** `frontend/src/hooks/useDuplicateDetection.ts`, `frontend/src/hooks/useEditWorkflow.ts`, `frontend/src/services/preference-sync.ts`, `frontend/src/domains/work-items/hooks/useSLAMonitoring.ts`
+**Commit:** `c62cb2b0` (and `1c3efff4` for the SLA file)
+**Applied fix:** Prefixed every bare `queryClient.invalidateQueries(...)` call with `void`. Eight call sites in `useDuplicateDetection.ts` (covering `requestDetection`, `mergeDuplicates`, `dismissDuplicate`), one in `useEditWorkflow.ts`, one in `preference-sync.ts`, plus the SLA-monitoring file (handled in the CR-14 commit). The project's lint config flags `no-floating-promises` as `error`; this is mechanical compliance with no runtime change.
 
-### WR-22: `BenchmarkPreview` shim widens stub data shape — stub returns `[]` instead of object
+### WR-32 + WR-34: Floating Promise from `startUpload` and `uploadFile`
 
-**Files modified:** `frontend/src/components/dashboard-widgets/BenchmarkPreview.tsx`, `frontend/src/domains/analytics/hooks/useOrganizationBenchmarks.ts`
-**Commit:** `35b62d0a`
-**Applied fix:** Moved the typed contract into the hook source: `useBenchmarkPreview` now returns `UseQueryResult<BenchmarkPreviewData>` and the stub resolves with the asserted object shape rather than `[]`. Component-side cast narrowed to the existing `OrganizationBenchmark` typed view.
-
-### WR-23: Five dossier-section components shim already-typed TanStack hooks
-
-**Files modified:** `frontend/src/components/dossier/TopicDossierDetail.tsx`, `frontend/src/components/dossier/sections/DecisionLogs.tsx`, `frontend/src/components/dossier/sections/InteractionHistory.tsx`, `frontend/src/components/dossier/sections/PositionsHeld.tsx`, `frontend/src/components/dossier/sections/OrganizationAffiliations.tsx`
-**Commit:** `aebb7032`
-**Applied fix:** Dropped all five `as unknown as { ... }` shims. The hooks already return strong types (`UseQueryResult<RelationshipsListResponse>`, `UseQueryResult<PersonFullProfile>`); the `PersonFullProfile` type already exposes the very fields the shims re-narrowed. Note: the review listed three of the files (`InteractionHistory`, `PositionsHeld`, `OrganizationAffiliations`) under the `useRelationshipsForDossier` banner, but those files actually shim `usePerson`. The pattern and fix are the same; all five are addressed in one commit. Full traceability is in the commit message.
-
-### WR-25: `BriefingPackJob` cast pattern — three casts of the same `briefingStatus.data`
-
-**Files modified:** `frontend/src/components/positions/BriefingPackGenerator.tsx`, `frontend/src/domains/briefings/hooks/useBriefingPackStatus.ts`, `frontend/src/domains/briefings/types/index.ts`
-**Commit:** `41a0ba7d`
-**Applied fix:** Consolidated at the hook source per the 47-08 charter. Extended `BriefingPackJob` with `file_url?` and `error_message?`. Typed `useBriefingPackStatus` as `UseQueryResult<BriefingPackJob | null>` and cast the repo's `unknown` return inside `queryFn` once. Dropped all three component-side casts; `briefingStatus.data` is now narrowed automatically.
+**Files modified:** `frontend/src/services/upload.ts`, `frontend/src/components/attachment-uploader/AttachmentUploader.tsx`
+**Commit:** `cb8e72a4`
+**Applied fix:** Added `void` prefix to four call sites — three in the upload Zustand store (`addUpload`, `resumeUpload`, `retryUpload`, all firing `get().startUpload(...)`) and one in `AttachmentUploader.handleFiles` (firing `uploadFile(...)`). The internal `try/catch` in both `startUpload` and `uploadFile` already surfaces failures via state, so `void` is the correct disposition — no behavior change, just satisfies the `no-floating-promises` rule.
 
 ## Skipped Issues
 
-### WR-21: `ChatContext` provider is now dead infrastructure (no consumer hook)
+### CR-11: `useAvailabilityPolling.ts` ships eight stubbed mutations — entire feature non-functional
 
-**File:** `frontend/src/contexts/ChatContext.tsx` (whole file post-Phase47)
-**Reason:** skipped — requires human judgment about feature roadmap
-**Original issue:** `ChatProvider` wraps the app at `routes/_protected.tsx:5`, but no component consumes the context (the `useChatContext` hook was deleted in Phase 47). Recomputed value dispatches on every chat state change for nothing.
-**Why skipped:** The file's docblock identifies it as "Feature: 033-ai-brief-generation, Task: T039". Deleting the entire context + provider risks removing planned-but-not-yet-wired infrastructure for the AI brief generation feature. The Karpathy "Surgical Changes" rule applies: if a file's intent is documented and the file is not yet broken, do not delete it without explicit confirmation. This is also outside the phase's narrow type-check-zero charter — the file already type-checks correctly. Recommended next step: confirm with the product owner of feature 033 whether the chat context will be consumed; if not, a follow-up commit can delete `ChatContext.tsx` and the wrapper in `_protected.tsx`.
+**File:** `frontend/src/domains/import/hooks/useAvailabilityPolling.ts:135-197`
+**Reason:** UX/feature scope, not a typecheck-zero fix. Mirrors the iteration-1 disposition of WR-24 (calendar-sync stubs) — wiring eight stub mutations to a real backend RPC is a feature-completion ticket, not a Phase 47 cleanup task. The review itself recommends "gate behind a feature flag, or render a 'not yet implemented' banner... long-term: wire to a real backend RPC." Both options require product-level decisions (which RPCs to add, what UX to gate, whether to ship stubbed UI at all). Phase 47's typecheck goal continues to hold; the runtime behavior is outside scope.
+**Original issue:** AvailabilityPollCreator/Voter/Results components render full UIs against `Promise.resolve(...)` stubs — voting "succeeds" but persists nothing.
 
-### WR-24: `useCalendarSync` returns `NOOP_ASYNC` for every action — UI is non-functional
+### CR-12: `POST /after-action/create` inserts six column names that do not exist
 
-**File:** `frontend/src/domains/briefings/hooks/useCalendarSync.ts:124-147`
-**Reason:** skipped — UX/feature scope, not a type-check fix
-**Original issue:** Eleven action callbacks all return `NOOP_ASYNC`. Users can click through the fully-styled CalendarSyncSettings page and nothing happens. The fix recommended by the review is a UI banner ("Calendar sync is not yet wired to a backend") OR a feature-flag gate that 404s the route.
-**Why skipped:** Both proposed fixes are user-facing UX changes outside the phase 47 type-check-zero charter. Adding a banner needs i18n keys (en + ar) and design-system review (`Alert` vs prototype banner pattern). Feature-flagging the route requires a flag-management decision. The review acknowledges the file already type-checks correctly. Recommended next step: file as a follow-up UX ticket against the calendar-sync feature owner.
+**File:** `backend/src/api/after-action.ts:294-304`
+**Reason:** Schema migration required, out of typecheck-zero scope. The handler uses `title`, `description`, `confidentiality_level`, `attendance_list`, `status`, `_version` — none exist on `after_action_records` (verified via `database.types.ts:773-841`: real columns are `attendees`, `is_confidential`, `notes`, `publication_status`, `version`; no `title` column at all). Fixing this requires:
+
+1. Either adding a `title` column via migration, or removing `title` from the API contract — a product decision.
+2. Cascading the column rename through the Zod schemas (`afterActionCreateSchema`, `afterActionUpdateSchema` in `after-action.types.ts:280-311`), the request shape on the frontend form, and 5+ handlers (LIST, GET, CREATE, UPDATE, PUBLISH, DELETE).
+3. Reconciling the four-state `confidentiality_level` enum with the boolean `is_confidential` column (CR-05's filter fix already documented this impedance).
+
+The bug is real and the create flow is broken at runtime, but it is a coordinated schema + Zod + handler migration that exceeds Phase 47's typecheck-zero scope. Tracker: open issue. Typecheck remains clean because Supabase's `.insert()` accepts excess properties without strict shape validation against `Insert`.
+**Original issue:** Every `POST /after-action/create` either silently drops user fields or returns 500 (depending on Postgrest version).
+
+### CR-13: LIST/GET/PUBLISH embed `commitments(*)` which has no FK to `after_action_records`
+
+**File:** `backend/src/api/after-action.ts:79-89, 184-195, 614-622`
+**Reason:** Coupled to CR-12's broader schema migration. The fix is a one-line replacement (`commitments:aa_commitments(*)`) but it must land alongside the column-name migration in the same handler — otherwise the publish path (which reads `record.commitments` from the embed result) becomes inconsistent with the rest of the schema-mismatch surface. Recommend bundling CR-12 + CR-13 + WR-27 + CR-15 into a single dedicated PR. Out of Phase 47 typecheck-zero scope.
+**Original issue:** Three Postgrest selects embed `commitments(...)` from `after_action_records`; runtime returns `PGRST200`.
+
+### CR-15: `version_snapshots` insert uses `as never` to hide a real type error
+
+**File:** `backend/src/api/after-action.ts:725-733`
+**Reason:** Coupled to CR-12. The `rec._version` value is wrong because the column is `version`, not `_version`; the `as never` cast on the table name and payload is suppressing the resulting type error. Once CR-12 lands and `rec.version` is read from the correct column, the cast can be removed safely with `version_number: rec.version ?? 1`. Fixing CR-15 in isolation would require duplicating the `_version` → `version` mapping logic that CR-12 needs to centralize. Out of scope until CR-12 lands.
+**Original issue:** `as never` cast on `version_snapshots` insert masks the schema mismatch.
+
+### WR-27: Update/publish handlers use legacy `_version`/`status`/`title` field names
+
+**File:** `backend/src/api/after-action.ts:426-430, 478, 630-637, 723-733, 780`
+**Reason:** Same migration scope as CR-12. The hand-authored `as unknown as { ... }` cast wrappers around `currentRecord` and `record` are honest annotations of the schema mismatch; their inline comments explicitly describe the legacy field-name drift. Removing them requires the schema migration that CR-12 + CR-13 + CR-15 collectively need. Out of typecheck-zero scope.
+**Original issue:** `current.status`/`current._version`/`current.title` reads against fictional shape — equality checks always fail, optimistic-locking always increments from 0.
+
+### WR-30: `auth.ts` Zustand store persists `user` and `mfaConfig` to localStorage
+
+**File:** `frontend/src/services/auth.ts:622-630`
+**Reason:** Security architecture decision, not a typecheck-zero fix. The review acknowledges this is a "pre-existing security design issue." Required actions per the review: confirm `mfaConfig.backupCodes` is hashed (likely requires reading backend MFA implementation); restrict `partialize` to identity claims only; switch to `sessionStorage`. These are product-level security tradeoffs that require sign-off from the security/auth owner — not a code review fix. Track separately.
+**Original issue:** XSS attacker can read role and backup codes from localStorage.
+
+### WR-31: Sentry redaction misses `clientSecret`, `refresh_token`, `access_token`, etc.
+
+**File:** `backend/src/lib/sentry.ts:73-89`
+**Reason:** Security improvement, not a typecheck issue. The review's regex sweep is reasonable but the production data shape needs to be validated against actual incoming requests before broad regex changes — over-aggressive redaction can also hide useful debugging context. Track separately for the security/observability owner.
+**Original issue:** Sensitive fields like `refresh_token`, `client_secret` reach Sentry untouched.
+
+### WR-33: `apiPost(formData)` JSON-stringifies, drops file payload
+
+**File:** `frontend/src/components/attachment-uploader/AttachmentUploader.tsx`, `frontend/src/lib/api-client.ts:81-93`
+**Reason:** Already explicitly deferred in iteration-1 fix-report ("the actual multipart upload fix is left as a separate ticket"). The review confirms this rationale. Multipart/form-data handling requires careful auth-header management, content-type detection, and integration testing — out of typecheck-zero scope and tracked separately.
+**Original issue:** File uploads "succeed" with HTTP 200 but the file never reaches storage.
+
+### WR-35: Component-level Tailwind color literals (`text-green-600`, etc.)
+
+**Files:** `frontend/src/components/audit-logs/AuditLogStatistics.tsx:32-34`, `frontend/src/components/positions/BriefingPackGenerator.tsx:196-198`, others
+**Reason:** Design-system drift. The review itself notes "this is design-system drift, not a Phase 47 regression; the ports were authored before Phase 47 cleanup." Replacing color literals with semantic tokens (`text-success`, `bg-success/10`) is a separate sweep that requires verifying the semantic-color mappings against the IntelDossier prototype. Out of typecheck-zero scope.
+**Original issue:** Direct `text-green-600`/`bg-green-50`/etc. classes bypass the design-system tokens.
+
+### WR-36: `cn('', className)` no-op pattern
+
+**Files:** `frontend/src/components/audit-logs/AuditLogStatistics.tsx:70, 93, 118`, others
+**Reason:** Pre-existing code-quality smell, not a typecheck-zero issue. The review explicitly classifies this as a "mechanical sweep" candidate. Changing it requires confirming each call site originally intended a default class and forgot, vs. a pattern that should just become `className` directly. Out of scope for Phase 47.
+**Original issue:** Empty string contributes nothing to `cn()`.
+
+### WR-37: `services/realtime.ts:reconnect` drops `filter` config
+
+**File:** `frontend/src/services/realtime.ts:161-171`
+**Reason:** Pre-existing infrastructure bug. The review notes "this is pre-existing but worth flagging because reconnect is exercised on every realtime heartbeat failure." Fix requires extending the `RealtimeSubscription` interface to track the original filter, then threading it through reconnect — a small but real refactor with potential cross-tenant data-leak implications worth a dedicated review. Out of typecheck-zero scope.
+**Original issue:** Filtered subscriptions become unfiltered after reconnect.
+
+### Note on iteration-1 carryover (WR-21, WR-24)
+
+The review's preserved catalog re-confirms that WR-21 (`ChatContext` is dead infrastructure) and WR-24 (`useCalendarSync` returns NOOP) remain reasonable Skip dispositions from iteration 1. No re-fix attempted in iteration 2.
 
 ---
 
-## Logic-bug verification flags
-
-The following commit is flagged as `fixed: requires human verification` because the change includes a logic refactor that Tier 1/2 verification (re-read + `tsc --noEmit`) cannot fully validate:
-
-- **CR-07 (`27783458`)** — fixed the `commentId` → `id` param shape and the `data: { content, visibility }` envelope. The review explicitly noted that the sibling `createComment.mutateAsync({...})` call at L108-114 was not validated against the live backend route. Recommend an end-to-end test of comment creation + edit before this phase exits the verifier stage.
-
-## Phase-goal verification
-
-After all 14 fix commits, ran `pnpm typecheck` (= `turbo run type-check` against both `intake-backend` and `intake-frontend`):
-
-```
-intake-backend:type-check  > tsc --noEmit  →  0 errors
-intake-frontend:type-check > tsc --noEmit  →  0 errors
-Tasks:    4 successful, 4 total
-```
-
-Phase 47's "type-check-zero" goal **continues to hold** post-fix. No new exceptions added to `47-EXCEPTIONS.md`.
-
-## Commit summary
-
-```
-41a0ba7d fix(47): WR-25 type useBriefingPackStatus at the hook source
-aebb7032 fix(47): WR-23 drop redundant shims on useRelationshipsForDossier/usePerson
-35b62d0a fix(47): WR-22 align BenchmarkPreview stub with asserted shape
-21d53325 fix(47): WR-20 document why applicationServerKey needs a BufferSource cast
-76caef4a fix(47): WR-19 add defensive default for dateStr in digest-scheduler
-2f9a0b9a fix(47): WR-18 destructure `data` from useAuditLogDistinctValues
-e199114a fix(47): WR-17 read TanStack `data` field in AuditLogStatistics
-c163f6fe fix(47): WR-16 stop codifying FormData as the upload param type
-138039cf fix(47): WR-15 narrow optimistic-locking middleware to tasks-only
-27783458 fix(47): CR-07 send correct param shape to useUpdateComment
-6517286f fix(47): CR-06 use TanStack mutation API in AuditLogExport
-dfc6ec13 fix(47): CR-05 align after-action list filter columns with schema
-7affbbc6 fix(47): CR-04 use work_item_id/work_item_type on tasks queries
-09986501 fix(47): CR-03 redirect cascade ops to aa_commitments table
-```
-
----
-
-_Fixed: 2026-05-09T19:30:00Z_
+_Fixed: 2026-05-09T20:55:00Z_
 _Fixer: Claude (gsd-code-fixer)_
-_Iteration: 1_
+_Iteration: 2_
