@@ -6,7 +6,7 @@
  * scenarios, multi-lang, sample data, onboarding, etc.
  */
 
-import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api-client'
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from '@/lib/api-client'
 
 // ============================================================================
 // Comments
@@ -21,7 +21,7 @@ export async function createComment(data: Record<string, unknown>): Promise<unkn
 }
 
 export async function updateComment(id: string, data: Record<string, unknown>): Promise<unknown> {
-  return apiPut(`/entity-comments/${id}`, data)
+  return apiPatch(`/entity-comments/${id}`, data)
 }
 
 export async function deleteComment(id: string): Promise<unknown> {
@@ -32,7 +32,10 @@ export async function getCommentThread(commentId: string): Promise<unknown> {
   return apiGet(`/entity-comments/${commentId}/thread`)
 }
 
-export async function reactToComment(commentId: string, data: Record<string, unknown>): Promise<unknown> {
+export async function reactToComment(
+  commentId: string,
+  data: Record<string, unknown>,
+): Promise<unknown> {
   return apiPost(`/entity-comments/${commentId}/reactions`, data)
 }
 
@@ -135,7 +138,10 @@ export async function createScenario(data: Record<string, unknown>): Promise<unk
   return apiPost('/scenario-sandbox', data)
 }
 
-export async function runScenario(scenarioId: string, data: Record<string, unknown>): Promise<unknown> {
+export async function runScenario(
+  scenarioId: string,
+  data: Record<string, unknown>,
+): Promise<unknown> {
   return apiPost(`/scenario-sandbox/${scenarioId}/run`, data)
 }
 
