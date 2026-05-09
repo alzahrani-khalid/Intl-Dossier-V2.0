@@ -113,11 +113,12 @@ export function useMentionUsers() {
 
 /* Stub hook – removed during refactoring, still imported by components */
 
-export function useSearchUsersForMention(query?: string) {
+export function useSearchUsersForMention(query?: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: [...commentKeys.all, 'mention-search', query],
     queryFn: () => Promise.resolve([]),
-    enabled: Boolean(query) && (query?.length ?? 0) > 0,
+    enabled:
+      options?.enabled !== false && Boolean(query) && (query?.length ?? 0) > 0,
     staleTime: 30 * 1000,
   })
 }

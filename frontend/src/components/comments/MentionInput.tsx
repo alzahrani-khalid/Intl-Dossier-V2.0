@@ -70,12 +70,12 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
       [ref],
     )
 
-    // Search users for mention
-    // Stub useSearchUsersForMention takes 0-1 args (a query string); the
-    // `{ enabled: ... }` options shape is unsupported and discarded.
-    void (showMentionList && mentionQuery.length >= 1)
+    // WR-05: hook accepts options.enabled — gate on popup visibility so the
+    // search doesn't fire when the user has dismissed the popup but is still
+    // typing (or has a residual mentionQuery from prior @-trigger).
     const { data: mentionUsers = [], isLoading: isSearching } = useSearchUsersForMention(
       mentionQuery,
+      { enabled: showMentionList && mentionQuery.length >= 1 },
     ) as unknown as { data: MentionUser[]; isLoading: boolean }
 
     // Reset selected index when users change (render-time adjustment)
