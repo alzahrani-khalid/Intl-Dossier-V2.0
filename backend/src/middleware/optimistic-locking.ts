@@ -34,10 +34,16 @@ export interface OptimisticLockConflict {
 }
 
 /**
- * Optimistic locking middleware for tasks table
+ * Optimistic locking middleware for the `tasks` table.
+ *
+ * The middleware is keyed on the `tasks` row shape (it reads `is_deleted`
+ * + `updated_at`). `task_contributors` does not have an `is_deleted`
+ * column, so this middleware would crash at runtime if it were used
+ * against that table — keep the parameter narrowed to `'tasks'`.
+ *
  * Usage: app.put('/tasks/:id', optimisticLockingMiddleware('tasks'), taskController.update)
  */
-export function optimisticLockingMiddleware(table: 'tasks' | 'task_contributors') {
+export function optimisticLockingMiddleware(table: 'tasks') {
   return async (req: OptimisticLockRequest, res: Response, next: NextFunction) => {
     try {
       const resourceId = req.params.id
@@ -57,7 +63,7 @@ export function optimisticLockingMiddleware(table: 'tasks' | 'task_contributors'
         .from(table)
         .select('updated_at')
         .eq('id', resourceId)
-        .eq('is_deleted' as never, false as never)
+        .eq('is_deleted', false)
         .single()
 
       if (error || !currentResource) {
@@ -83,7 +89,7 @@ export function optimisticLockingMiddleware(table: 'tasks' | 'task_contributors'
           .from(table)
           .select('*')
           .eq('id', resourceId)
-          .eq('is_deleted' as never, false as never)
+          .eq('is_deleted', false)
           .single()
 
         const conflict: OptimisticLockConflict = {
