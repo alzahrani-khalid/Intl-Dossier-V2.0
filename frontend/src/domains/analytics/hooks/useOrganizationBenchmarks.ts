@@ -46,10 +46,15 @@ export function useCurrentStats() {
 
 /* Stub hook – removed during refactoring, still imported by dashboard widgets */
 
+export interface BenchmarkPreviewData {
+  shouldShowPreview?: boolean
+  benchmarks?: unknown
+}
+
 export function useBenchmarkPreview(params?: Record<string, unknown>) {
-  return useQuery({
+  return useQuery<BenchmarkPreviewData>({
     queryKey: [...benchmarkKeys.all, 'preview', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve({ shouldShowPreview: false, benchmarks: undefined }),
     staleTime: STALE_TIME.NORMAL,
   })
 }
