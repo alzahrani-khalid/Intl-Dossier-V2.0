@@ -128,3 +128,57 @@ D-04 four-globbed-grep evidence for symbols that COULD NOT be deleted because at
 | Symbol                                                                           | Surface                                                 | Consumer                                                                                               | Reason deferred                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | -------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Tables`, `TablesInsert`, `TablesUpdate`, `Enums`, `CompositeTypes`, `Constants` | `backend/src/types/database.types.ts` lines 37369–37482 | None in-repo, but they are auto-generated Supabase helpers (regenerated on every `supabase gen types`) | RESEARCH §4.1 misidentified the file as `frontend/src/types/database.types.ts`. The errors actually originate in `backend/src/types/database.types.ts` and surface during `pnpm --filter intake-frontend type-check` because frontend deep-imports backend types. Owned by 47-02 — cross-workspace fence D-04 forbids 47-01 from editing backend source. 47-02 must allowlist the file with `@ts-nocheck` at the top (same strategy as Task 2 applied to the wrong file) to clear these 6 errors. |
+
+---
+
+## Phase-wide TYPE-04 reconciliation
+
+Captured at plan 47-03 Task 6 (commit `815fb203` — `ci(47-03): split type-check into its own CI job`). The reconciliation runs on the YAML-only commit because the wiring PR (plan Task 3) and branch-protection update (plan Task 4) are HUMAN-ACTION checkpoints and do not modify `frontend/src` or `backend/src` — so their merge cannot change the phase-wide suppression diff.
+
+**Scan command (phase-base anchor: `phase-47-base` → `41f28f16`):**
+
+```bash
+git diff phase-47-base..HEAD -- 'frontend/src' 'backend/src' \
+  | grep -E '^\+.*@ts-(ignore|expect-error)' | grep -vE '^\+\+\+' | wc -l   # = 0
+git diff phase-47-base..HEAD -- 'frontend/src' 'backend/src' \
+  | grep -E '^\+.*@ts-nocheck' | grep -vE '^\+\+\+' | wc -l                  # = 3
+```
+
+### Net-new `@ts-ignore` / `@ts-expect-error`: **0** (D-01 satisfied — TYPE-04 hard target met).
+
+### Net-new `@ts-nocheck`: **3** (all on auto-generated Supabase type files; all ledgered above).
+
+| File                                           | Added by     | Allowlist reason                                                                                                           |
+| ---------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `frontend/src/types/database.types.ts`         | 47-01 Task 2 | Auto-generated Supabase types; D-11 forbids tsconfig exclude. Defensive `@ts-nocheck` survives `supabase gen types` regen. |
+| `backend/src/types/database.types.ts`          | 47-02 Task 2 | Same — auto-generated Supabase root schema types.                                                                          |
+| `backend/src/types/contact-directory.types.ts` | 47-02 Task 2 | Same — auto-generated Supabase types for the `contact_directory` schema.                                                   |
+
+> **Note on plan-stated count:** the plan's Task 6 acceptance criterion expected `@ts-nocheck` count = **2**. The actual count is **3** because 47-02 Task 2 allowlisted both `database.types.ts` AND `contact-directory.types.ts` (the Supabase generator emits a separate file per schema). Both are documented in the seeded ledger above and in the 47-02 SUMMARY. The plan's expectation is stale relative to the 47-02 outcome; the ledger remains the source of truth (TYPE-04).
+
+### Pre-existing inline suppressions — byte-unchanged across the phase
+
+```bash
+git diff phase-47-base..HEAD -- frontend/src/components/intake-form/IntakeForm.tsx                       | wc -l   # = 0
+git diff phase-47-base..HEAD -- frontend/src/components/signature-visuals/__tests__/Icon.test.tsx        | wc -l   # = 0
+```
+
+Both pre-existing `// @ts-expect-error` lines remain in place at their original sites; the ledger row for each lives in `## Retained suppressions (TYPE-04 ledger)` above.
+
+### Final ledger summary
+
+| File                                                                | Suppression        | Reason                                                                                | Follow-up                                                             |
+| ------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `frontend/src/components/intake-form/IntakeForm.tsx`                | `@ts-expect-error` | Supabase chained `.from().select()` exceeds tsc's instantiation limit (pre-existing). | Track upstream Supabase issue or refactor the chain into a typed RPC. |
+| `frontend/src/components/signature-visuals/__tests__/Icon.test.tsx` | `@ts-expect-error` | Test-only runtime fallback for typing escapes (pre-existing).                         | Replace with a typed Icon factory once signature-visuals stabilizes.  |
+| `frontend/src/types/database.types.ts`                              | `@ts-nocheck`      | Auto-generated Supabase types; D-11 forbids tsconfig exclude.                         | Revisit if Supabase generator stops emitting unused helpers.          |
+| `backend/src/types/database.types.ts`                               | `@ts-nocheck`      | Auto-generated Supabase types (root schema).                                          | Revisit if Supabase generator stops emitting unused helpers.          |
+| `backend/src/types/contact-directory.types.ts`                      | `@ts-nocheck`      | Auto-generated Supabase types (`contact_directory` schema).                           | Revisit if Supabase generator stops emitting unused helpers.          |
+
+### Phase-wide diff audits (D-11 / planner-deferred)
+
+```bash
+git diff phase-47-base..HEAD -- backend/tsconfig.json   | wc -l   # = 0  (D-11 respected)
+git diff phase-47-base..HEAD -- frontend/tsconfig.json  | wc -l   # = 0  (D-11 respected)
+git diff phase-47-base..HEAD -- turbo.json              | wc -l   # = 0  (planner-deferred)
+```
