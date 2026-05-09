@@ -110,13 +110,12 @@ export interface ReportBuilderState {
 const EMPTY_CONFIGURATION: ReportConfiguration = {
   entities: [],
   columns: [],
-  filters: [],
-  filter_logic: 'and',
+  filters: { id: 'root', logic: 'and', filters: [], groups: [] },
   groupings: [],
   aggregations: [],
-  sort_order: [],
-  visualization: { type: 'table', config: {} },
-} as unknown as ReportConfiguration
+  sorting: [],
+  visualization: { type: 'table' },
+}
 
 export function useReportBuilderState(_params?: { initialReportId?: string }): ReportBuilderState {
   const [configuration] = useState<ReportConfiguration>(EMPTY_CONFIGURATION)
