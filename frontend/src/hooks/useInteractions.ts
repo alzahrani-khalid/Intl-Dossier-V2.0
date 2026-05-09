@@ -11,7 +11,6 @@ import {
   createNote,
   getNotesForContact,
   searchNotes,
-  updateNote,
   deleteNote,
   uploadAttachment,
   downloadAttachment,
@@ -100,69 +99,6 @@ export function useCreateNote() {
     onError: (error: InteractionAPIError) => {
       toast.error(
         t('contactDirectory.interactions.hooks.note_created_error', { error: error.message }),
-      )
-    },
-  })
-}
-
-/**
- * Hook to update an existing interaction note
- */
-function useUpdateNote() {
-  const queryClient = useQueryClient()
-  const { t } = useTranslation('contacts')
-
-  return useMutation({
-    mutationFn: ({
-      id,
-      updates,
-    }: {
-      id: string
-      contactId: string
-      updates: Partial<CreateInteractionNoteParams>
-    }) => updateNote(id, updates),
-    onMutate: async ({ id, contactId, updates }) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: interactionKeys.list(contactId) })
-
-      // Snapshot previous value for rollback
-      const previousNotes = queryClient.getQueryData<InteractionNoteResponse[]>(
-        interactionKeys.list(contactId),
-      )
-
-      // Optimistically update cache
-      if (previousNotes) {
-        const updatedNotes = previousNotes.map((note) =>
-          note.id === id
-            ? {
-                ...note,
-                ...updates,
-                updated_at: new Date().toISOString(),
-              }
-            : note,
-        )
-        queryClient.setQueryData<InteractionNoteResponse[]>(
-          interactionKeys.list(contactId),
-          updatedNotes,
-        )
-      }
-
-      return { previousNotes, contactId }
-    },
-    onSuccess: (_data, variables) => {
-      // Invalidate queries to refetch with server data
-      queryClient.invalidateQueries({ queryKey: interactionKeys.list(variables.contactId) })
-      queryClient.invalidateQueries({ queryKey: interactionKeys.searches() })
-
-      toast.success(t('contactDirectory.interactions.hooks.note_updated_success'))
-    },
-    onError: (error: InteractionAPIError, _variables, context) => {
-      // Rollback on error
-      if (context?.previousNotes && context?.contactId) {
-        queryClient.setQueryData(interactionKeys.list(context.contactId), context.previousNotes)
-      }
-      toast.error(
-        t('contactDirectory.interactions.hooks.note_updated_error', { error: error.message }),
       )
     },
   })
@@ -277,36 +213,4 @@ export function useDownloadAttachment() {
       )
     },
   })
-}
-
-/**
- * Hook to invalidate all interaction queries
- * Useful after batch operations or external changes
- */
-function useInvalidateInteractions() {
-  const queryClient = useQueryClient()
-
-  return (contactId?: string) => {
-    if (contactId) {
-      queryClient.invalidateQueries({ queryKey: interactionKeys.list(contactId) })
-    } else {
-      queryClient.invalidateQueries({ queryKey: interactionKeys.all })
-    }
-  }
-}
-
-/**
- * Hook to prefetch interaction notes for a contact
- * Useful for hover cards or preloading before navigation
- */
-function usePrefetchInteractionNotes() {
-  const queryClient = useQueryClient()
-
-  return (contactId: string) => {
-    queryClient.prefetchQuery({
-      queryKey: interactionKeys.list(contactId),
-      queryFn: () => getNotesForContact(contactId),
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    })
-  }
 }

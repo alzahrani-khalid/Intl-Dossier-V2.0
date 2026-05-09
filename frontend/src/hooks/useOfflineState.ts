@@ -76,28 +76,3 @@ export function useOfflineState(): OfflineState {
     lastOfflineAt,
   }
 }
-
-/**
- * Hook to detect offline state with optional callback
- *
- * @param {Function} onOnline - Optional callback when connection is restored
- * @param {Function} onOffline - Optional callback when connection is lost
- * @returns {OfflineState} Current offline state
- */
-function useOfflineStateWithCallback(onOnline?: () => void, onOffline?: () => void): OfflineState {
-  const offlineState = useOfflineState()
-
-  useEffect(() => {
-    if (offlineState.isOnline && offlineState.lastOnlineAt && onOnline) {
-      onOnline()
-    }
-  }, [offlineState.isOnline, offlineState.lastOnlineAt, onOnline])
-
-  useEffect(() => {
-    if (offlineState.isOffline && offlineState.lastOfflineAt && onOffline) {
-      onOffline()
-    }
-  }, [offlineState.isOffline, offlineState.lastOfflineAt, onOffline])
-
-  return offlineState
-}

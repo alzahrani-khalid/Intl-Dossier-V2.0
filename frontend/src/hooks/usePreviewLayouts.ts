@@ -12,10 +12,8 @@ import type {
   PreviewEntityType,
   PreviewContext,
   PreviewLayout,
-  PreviewLayoutConfig,
   PreviewLayoutFormValues,
   PreviewLayoutFieldFormValues,
-  GetPreviewLayoutResponse,
   GetEntityLayoutsResponse,
 } from '@/types/preview-layout.types'
 
@@ -36,26 +34,6 @@ export const previewLayoutKeys = {
 // =============================================================================
 // FETCH FUNCTIONS
 // =============================================================================
-
-/**
- * Fetch the effective layout for an entity type and context
- */
-async function fetchPreviewLayout(
-  entityType: PreviewEntityType,
-  context: PreviewContext = 'hover',
-): Promise<GetPreviewLayoutResponse | null> {
-  const { data, error } = await supabase.rpc('get_preview_layout', {
-    p_entity_type: entityType,
-    p_context: context,
-  })
-
-  if (error) {
-    console.error('Error fetching preview layout:', error)
-    throw error
-  }
-
-  return data?.[0] || null
-}
 
 /**
  * Fetch all layouts for an entity type
@@ -112,23 +90,6 @@ async function fetchLayoutWithFields(layoutId: string): Promise<PreviewLayout | 
 // =============================================================================
 // HOOKS
 // =============================================================================
-
-/**
- * Hook to get the effective preview layout for an entity type
- */
-function usePreviewLayout(
-  entityType: PreviewEntityType,
-  context: PreviewContext = 'hover',
-  options: { enabled?: boolean } = {},
-) {
-  return useQuery({
-    queryKey: previewLayoutKeys.detail(entityType, context),
-    queryFn: () => fetchPreviewLayout(entityType, context),
-    enabled: options.enabled !== false,
-    staleTime: 1000 * 60 * 10, // 10 minutes
-    gcTime: 1000 * 60 * 30, // 30 minutes
-  })
-}
 
 /**
  * Hook to get all layouts for an entity type (admin)
@@ -445,42 +406,3 @@ export function useReorderLayoutFields() {
 // =============================================================================
 // UTILITY FUNCTIONS
 // =============================================================================
-
-/**
- * Get display label based on language
- */
-function getLayoutLabel(
-  layout: { name_en: string; name_ar: string } | null,
-  isRTL: boolean,
-): string {
-  if (!layout) return ''
-  return isRTL ? layout.name_ar : layout.name_en
-}
-
-/**
- * Get field label based on language
- */
-function getFieldLabel(field: { label_en: string; label_ar: string }, isRTL: boolean): string {
-  return isRTL ? field.label_ar : field.label_en
-}
-
-/**
- * Apply default config for missing properties
- */
-function applyDefaultConfig(config: Partial<PreviewLayoutConfig> | null): PreviewLayoutConfig {
-  const defaults: PreviewLayoutConfig = {
-    showAvatar: true,
-    showStatus: true,
-    showEntityType: true,
-    showLastUpdated: true,
-    maxKeyDetails: 3,
-    maxTags: 3,
-    showRecentActivity: true,
-    showMatchScore: false,
-  }
-
-  return {
-    ...defaults,
-    ...(config || {}),
-  }
-}

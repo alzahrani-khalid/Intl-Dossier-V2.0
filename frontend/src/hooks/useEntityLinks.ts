@@ -13,7 +13,6 @@ import { intakeEntityLinksAPI, type EntityLinksAPIError } from '@/services/entit
 import type {
   EntityLink,
   CreateLinkRequest,
-  UpdateLinkRequest,
   LinkSource,
 } from '../../../backend/src/types/intake-entity-links.types'
 import { useToast } from './useToast'
@@ -125,83 +124,6 @@ export function useCreateEntityLink(intakeId: string) {
       toast({
         title: t('entityLinks.createSuccess'),
         description: t('entityLinks.createSuccessDescription'),
-      })
-    },
-  })
-}
-
-/**
- * Hook to update an existing entity link
- */
-function useUpdateEntityLink(intakeId: string, linkId: string) {
-  const { t } = useTranslation()
-  const { toast } = useToast()
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (data: UpdateLinkRequest) =>
-      intakeEntityLinksAPI.updateLink(intakeId, linkId, data),
-
-    // Optimistic update
-    onMutate: async (updatedData) => {
-      await queryClient.cancelQueries({
-        queryKey: entityLinksKeys.list(intakeId, false),
-      })
-
-      const previousLinks = queryClient.getQueryData<EntityLink[]>(
-        entityLinksKeys.list(intakeId, false),
-      )
-
-      if (previousLinks) {
-        queryClient.setQueryData<EntityLink[]>(
-          entityLinksKeys.list(intakeId, false),
-          previousLinks.map((link) =>
-            link.id === linkId
-              ? {
-                  ...link,
-                  ...updatedData,
-                  updated_at: new Date().toISOString(),
-                  _version: link._version + 1,
-                }
-              : link,
-          ),
-        )
-      }
-
-      return { previousLinks }
-    },
-
-    onError: (error: EntityLinksAPIError, _updatedData, context) => {
-      if (context?.previousLinks) {
-        queryClient.setQueryData(entityLinksKeys.list(intakeId, false), context.previousLinks)
-      }
-
-      // Handle optimistic locking conflicts
-      if (error.code === 'OPTIMISTIC_LOCK_FAILURE') {
-        toast({
-          variant: 'destructive',
-          title: t('entityLinks.conflictError'),
-          description: t('entityLinks.conflictErrorDescription'),
-        })
-      } else {
-        toast({
-          variant: 'destructive',
-          title: t('entityLinks.updateError'),
-          description: error.message || t('entityLinks.updateErrorDescription'),
-        })
-      }
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: entityLinksKeys.list(intakeId, false),
-      })
-    },
-
-    onSuccess: () => {
-      toast({
-        title: t('entityLinks.updateSuccess'),
-        description: t('entityLinks.updateSuccessDescription'),
       })
     },
   })
@@ -466,17 +388,5 @@ export function useCreateBatchEntityLinks(intakeId: string) {
         })
       }
     },
-  })
-}
-
-/**
- * Hook to fetch audit log for a link
- */
-function useEntityLinkAuditLog(intakeId: string, linkId: string) {
-  return useQuery({
-    queryKey: entityLinksKeys.auditLog(intakeId, linkId),
-    queryFn: () => intakeEntityLinksAPI.getAuditLog(intakeId, linkId),
-    enabled: !!intakeId && !!linkId,
-    staleTime: 1000 * 60, // 1 minute
   })
 }

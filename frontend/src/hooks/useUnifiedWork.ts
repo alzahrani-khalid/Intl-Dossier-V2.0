@@ -9,7 +9,6 @@ import type {
   TeamMemberWorkload,
   WorkItemSortBy,
   SortOrder,
-  UnifiedWorkItem,
 } from '@/types/unified-work.types'
 import {
   fetchWorkItems,
@@ -123,51 +122,6 @@ export function useInvalidateUnifiedWork() {
     },
     invalidateTeam: () => {
       queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.team() })
-    },
-  }
-}
-
-/**
- * Optimistic update helper for work item status changes
- */
-function useOptimisticWorkItemUpdate() {
-  const queryClient = useQueryClient()
-
-  return {
-    updateItem: (itemId: string, updates: Partial<UnifiedWorkItem>) => {
-      // Update all cached pages that might contain this item
-      queryClient.setQueriesData(
-        { queryKey: unifiedWorkKeys.items() },
-        (oldData: { pages: PaginatedWorkItems[] } | undefined) => {
-          if (!oldData) return oldData
-
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              items: page.items.map((item) =>
-                item.id === itemId ? { ...item, ...updates } : item,
-              ),
-            })),
-          }
-        },
-      )
-    },
-    removeItem: (itemId: string) => {
-      queryClient.setQueriesData(
-        { queryKey: unifiedWorkKeys.items() },
-        (oldData: { pages: PaginatedWorkItems[] } | undefined) => {
-          if (!oldData) return oldData
-
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              items: page.items.filter((item) => item.id !== itemId),
-            })),
-          }
-        },
-      )
     },
   }
 }

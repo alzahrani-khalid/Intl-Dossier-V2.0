@@ -15,10 +15,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useLocation } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import {
-  createNavigationGroups,
-  type NavigationItem,
-} from '@/components/layout/navigation-config'
+import { createNavigationGroups } from '@/components/layout/navigation-config'
 
 const STORAGE_KEY = 'recent_navigation'
 const MAX_ITEMS = 10
@@ -132,24 +129,21 @@ export function useRecentNavigation(): UseRecentNavigationReturn {
     return pathTitleMapRef.current
   }, [])
 
-  const addRecent = useCallback(
-    (item: Omit<RecentNavigationItem, 'timestamp'>) => {
-      const newItem: RecentNavigationItem = {
-        ...item,
-        timestamp: Date.now(),
-      }
+  const addRecent = useCallback((item: Omit<RecentNavigationItem, 'timestamp'>) => {
+    const newItem: RecentNavigationItem = {
+      ...item,
+      timestamp: Date.now(),
+    }
 
-      setRecentItems((prev) => {
-        // Remove duplicate by path
-        const filtered = prev.filter((existing) => existing.path !== newItem.path)
-        // Add to front, trim to max
-        const updated = [newItem, ...filtered].slice(0, MAX_ITEMS)
-        writeToStorage(updated)
-        return updated
-      })
-    },
-    [],
-  )
+    setRecentItems((prev) => {
+      // Remove duplicate by path
+      const filtered = prev.filter((existing) => existing.path !== newItem.path)
+      // Add to front, trim to max
+      const updated = [newItem, ...filtered].slice(0, MAX_ITEMS)
+      writeToStorage(updated)
+      return updated
+    })
+  }, [])
 
   const clearRecents = useCallback(() => {
     setRecentItems([])
@@ -209,13 +203,9 @@ function formatPathAsTitle(path: string): string {
     // Use the segment before UUID if available
     const secondLast = segments[segments.length - 2]
     if (secondLast != null) {
-      return secondLast
-        .replace(/[-_]/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase())
+      return secondLast.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
     }
   }
 
-  return last
-    .replace(/[-_]/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  return last.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }

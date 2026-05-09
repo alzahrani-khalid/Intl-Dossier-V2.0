@@ -592,22 +592,6 @@ export function useEntityComparison(entityType: DossierType | null, entityIds: s
 }
 
 /**
- * Hook to get field configurations for a dossier type
- */
-function useFieldConfigs(entityType: DossierType | null) {
-  return useMemo(() => {
-    if (!entityType) {
-      return { baseFields: BASE_FIELD_CONFIGS, extensionFields: [] }
-    }
-
-    return {
-      baseFields: BASE_FIELD_CONFIGS,
-      extensionFields: EXTENSION_FIELD_CONFIGS[entityType] || [],
-    }
-  }, [entityType])
-}
-
-/**
  * Hook to manage comparison filters
  */
 export function useComparisonFilters(initialFilters?: Partial<ComparisonFilters>) {

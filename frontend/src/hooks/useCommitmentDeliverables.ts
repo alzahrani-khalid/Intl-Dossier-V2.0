@@ -13,16 +13,11 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import {
   getCommitmentDeliverables,
-  getCommitmentDeliverable,
   createCommitmentDeliverable,
   bulkCreateDeliverables,
   updateCommitmentDeliverable,
   updateDeliverableStatus,
-  updateDeliverableProgress,
   deleteCommitmentDeliverable,
-  reorderDeliverables,
-  getCommitmentProgress,
-  hasDeliverables,
   getDeliverablesSummary,
 } from '@/services/commitment-deliverables.service'
 import {
@@ -76,73 +71,13 @@ export function useCommitmentDeliverables(
 // Single Deliverable Query Hook
 // ============================================================================
 
-/**
- * Hook to fetch a single deliverable by ID
- *
- * @param deliverableId - UUID of the deliverable
- * @param options - Hook options
- * @returns TanStack Query result
- */
-function useCommitmentDeliverable(
-  deliverableId: string,
-  options?: UseCommitmentDeliverablesOptions,
-) {
-  const { enabled = true } = options ?? {}
-
-  return useQuery<CommitmentDeliverable, Error>({
-    queryKey: commitmentDeliverableKeys.detail(deliverableId),
-    queryFn: () => getCommitmentDeliverable(deliverableId),
-    staleTime: 30 * 1000,
-    gcTime: 5 * 60 * 1000,
-    enabled: enabled && !!deliverableId,
-  })
-}
-
 // ============================================================================
 // Progress Query Hook
 // ============================================================================
 
-/**
- * Hook to get commitment progress from deliverables
- *
- * @param commitmentId - UUID of the commitment
- * @param options - Hook options
- * @returns TanStack Query result
- */
-function useCommitmentProgress(commitmentId: string, options?: UseCommitmentDeliverablesOptions) {
-  const { enabled = true } = options ?? {}
-
-  return useQuery<number, Error>({
-    queryKey: commitmentDeliverableKeys.progress(commitmentId),
-    queryFn: () => getCommitmentProgress(commitmentId),
-    staleTime: 30 * 1000,
-    gcTime: 5 * 60 * 1000,
-    enabled: enabled && !!commitmentId,
-  })
-}
-
 // ============================================================================
 // Has Deliverables Query Hook
 // ============================================================================
-
-/**
- * Hook to check if commitment has any deliverables
- *
- * @param commitmentId - UUID of the commitment
- * @param options - Hook options
- * @returns TanStack Query result
- */
-function useHasDeliverables(commitmentId: string, options?: UseCommitmentDeliverablesOptions) {
-  const { enabled = true } = options ?? {}
-
-  return useQuery<boolean, Error>({
-    queryKey: [...commitmentDeliverableKeys.list(commitmentId), 'has'],
-    queryFn: () => hasDeliverables(commitmentId),
-    staleTime: 30 * 1000,
-    gcTime: 5 * 60 * 1000,
-    enabled: enabled && !!commitmentId,
-  })
-}
 
 // ============================================================================
 // Summary Query Hook
@@ -354,43 +289,6 @@ export function useUpdateDeliverableStatus() {
 }
 
 // ============================================================================
-// Progress Update Mutation Hook
-// ============================================================================
-
-interface UpdateProgressInput {
-  deliverableId: string
-  commitmentId: string
-  progress: number
-}
-
-/**
- * Hook to update deliverable progress
- *
- * @returns TanStack Mutation result
- */
-function useUpdateDeliverableProgress() {
-  const queryClient = useQueryClient()
-  const { t } = useTranslation('commitment-deliverables')
-
-  return useMutation<CommitmentDeliverable, Error, UpdateProgressInput>({
-    mutationFn: ({ deliverableId, progress }) => updateDeliverableProgress(deliverableId, progress),
-    onSuccess: (data, variables) => {
-      queryClient.setQueryData(commitmentDeliverableKeys.detail(data.id), data)
-      queryClient.invalidateQueries({
-        queryKey: commitmentDeliverableKeys.list(variables.commitmentId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: commitmentDeliverableKeys.progress(variables.commitmentId),
-      })
-    },
-    onError: (error) => {
-      toast.error(t('messages.updateError'))
-      console.error('Progress update error:', error)
-    },
-  })
-}
-
-// ============================================================================
 // Delete Mutation Hook
 // ============================================================================
 
@@ -422,38 +320,6 @@ export function useDeleteDeliverable() {
     onError: (error) => {
       toast.error(t('messages.deleteError'))
       console.error('Delete deliverable error:', error)
-    },
-  })
-}
-
-// ============================================================================
-// Reorder Mutation Hook
-// ============================================================================
-
-interface ReorderDeliverablesInput {
-  commitmentId: string
-  orderedIds: string[]
-}
-
-/**
- * Hook to reorder deliverables
- *
- * @returns TanStack Mutation result
- */
-function useReorderDeliverables() {
-  const queryClient = useQueryClient()
-  const { t } = useTranslation('commitment-deliverables')
-
-  return useMutation<void, Error, ReorderDeliverablesInput>({
-    mutationFn: ({ commitmentId, orderedIds }) => reorderDeliverables(commitmentId, orderedIds),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: commitmentDeliverableKeys.list(variables.commitmentId),
-      })
-    },
-    onError: (error) => {
-      toast.error(t('messages.reorderError'))
-      console.error('Reorder deliverables error:', error)
     },
   })
 }

@@ -24,7 +24,11 @@ export function useTopics(
   params: UseTopicsParams = {},
 ): UseQueryResult<{ data: Array<Record<string, unknown>>; total?: number }, Error> {
   const { page = 1, limit = 20 } = params
-  return useDossiersByType('topic', page, limit) as UseQueryResult<
+  // Cast via `unknown`: useDossiersByType returns
+  // UseQueryResult<DossiersListResponse, DossierAPIError>; consumers of useTopics
+  // expect a generic shape with `data: Record<string, unknown>[]`. The runtime
+  // value is identical — only the static type differs.
+  return useDossiersByType('topic', page, limit) as unknown as UseQueryResult<
     { data: Array<Record<string, unknown>>; total?: number },
     Error
   >

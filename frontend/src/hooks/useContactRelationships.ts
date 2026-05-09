@@ -10,7 +10,6 @@ import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@ta
 import {
   createRelationship,
   getRelationshipsForContact,
-  deleteRelationship,
   getRelationshipStats,
   type RelationshipResponse,
   type CreateRelationshipInput,
@@ -87,66 +86,4 @@ export function useCreateRelationship() {
       toast.error(t('contactDirectory.relationships.created_error', { error: error.message }))
     },
   })
-}
-
-/**
- * Hook to delete a relationship
- */
-function useDeleteRelationship() {
-  const queryClient = useQueryClient()
-  const { t } = useTranslation('contacts')
-
-  return useMutation({
-    mutationFn: (relationshipId: string) => deleteRelationship(relationshipId),
-    onMutate: async (relationshipId) => {
-      // Find all relationship queries to update optimistically
-      const queryCache = queryClient.getQueryCache()
-      const queries = queryCache.findAll({ queryKey: relationshipKeys.lists() })
-
-      // Store previous values for rollback
-      const previousData: Record<string, RelationshipResponse[]> = {}
-
-      queries.forEach((query) => {
-        const data = query.state.data as RelationshipResponse[] | undefined
-        if (data) {
-          previousData[query.queryKey.join('|')] = data
-
-          // Optimistically remove the relationship
-          const updated = data.filter((rel) => rel.id !== relationshipId)
-          queryClient.setQueryData(query.queryKey, updated)
-        }
-      })
-
-      return { previousData }
-    },
-    onSuccess: () => {
-      // Invalidate all relationship queries to refetch
-      queryClient.invalidateQueries({ queryKey: relationshipKeys.all })
-
-      toast.success(t('contactDirectory.relationships.deleted_success'))
-    },
-    onError: (error: RelationshipAPIError, _variables, context) => {
-      // Rollback optimistic updates
-      if (context?.previousData) {
-        Object.entries(context.previousData).forEach(([key, data]) => {
-          const queryKey = key.split('|')
-          queryClient.setQueryData(queryKey, data)
-        })
-      }
-
-      toast.error(t('contactDirectory.relationships.deleted_error', { error: error.message }))
-    },
-  })
-}
-
-/**
- * Hook to invalidate all relationship queries
- * Useful after bulk operations or external changes
- */
-function useInvalidateRelationships() {
-  const queryClient = useQueryClient()
-
-  return () => {
-    queryClient.invalidateQueries({ queryKey: relationshipKeys.all })
-  }
 }

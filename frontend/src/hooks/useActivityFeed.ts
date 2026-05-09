@@ -298,7 +298,3 @@ export function useActivityPreferences(): UseActivityPreferencesReturn {
 // =============================================
 // FOLLOWED ACTIVITIES HOOK
 // =============================================
-
-function useFollowedActivities(): UseActivityFeedReturn {
-  return useActivityFeed({ followed_only: true })
-}

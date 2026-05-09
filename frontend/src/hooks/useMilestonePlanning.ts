@@ -350,37 +350,3 @@ export function useMilestonePlanning({
     refetch,
   }
 }
-
-/**
- * Hook for marking a milestone as complete
- */
-function useMarkMilestoneComplete(dossierId: string) {
-  const { t } = useTranslation('milestone-planning')
-  const queryClient = useQueryClient()
-  const queryKey = ['milestones', dossierId]
-
-  return useMutation({
-    mutationFn: async (id: string): Promise<void> => {
-      const { error } = await supabase
-        .from('planned_milestones')
-        .update({
-          status: 'completed' as MilestoneStatus,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-
-      if (error) {
-        throw new Error(error.message)
-      }
-    },
-    onSuccess: (_, _id) => {
-      queryClient.invalidateQueries({ queryKey })
-      toast.success(t('messages.updateSuccess'))
-    },
-    onError: (error: Error) => {
-      toast.error(t('messages.updateError'), {
-        description: error.message,
-      })
-    },
-  })
-}

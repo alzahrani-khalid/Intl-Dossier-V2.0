@@ -202,32 +202,6 @@ export function useAfterAction(id: string | undefined): UseQueryResult<AfterActi
   })
 }
 
-// Fetch after-actions list for a dossier
-function useAfterActions(
-  dossierId: string | undefined,
-  options?: {
-    status?: 'draft' | 'published' | 'edit_requested'
-    limit?: number
-    offset?: number
-  },
-): UseQueryResult<{ data: AfterActionRecord[]; total: number }, Error> {
-  const isReady = dossierId !== undefined && dossierId !== ''
-  return useQuery({
-    queryKey: ['after-actions', dossierId, options],
-    queryFn: async (): Promise<{ data: AfterActionRecord[]; total: number }> => {
-      if (!isReady) throw new Error('Dossier ID is required')
-
-      const { data, error } = await supabase.functions.invoke('after-actions-list', {
-        body: { dossier_id: dossierId, ...options },
-      })
-
-      if (error) throw error
-      return data as { data: AfterActionRecord[]; total: number }
-    },
-    enabled: isReady,
-  })
-}
-
 // Fetch after-actions list across every dossier the caller can read via RLS.
 // Backed by the `after-actions-list-all` Edge Function (Phase 42-01). Cache key
 // `['after-actions', 'all', options]` is intentionally distinct from the

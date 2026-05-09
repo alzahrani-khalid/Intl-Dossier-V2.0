@@ -486,7 +486,9 @@ export function useNotificationRealtime(onNewNotification?: (notification: Notif
       // Invalidate queries to refetch
       void queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.all })
 
-      const notification = payload.new as Notification
+      // Cast via `unknown`: payload.new is typed as Record<string, unknown> by the
+      // Supabase Realtime type; the runtime row matches the Notification shape.
+      const notification = payload.new as unknown as Notification
 
       // Fire category-aware toast
       dispatchNotificationToast(notification)

@@ -208,29 +208,3 @@ export function useDelegationsExpiringSoon() {
     },
   )
 }
-
-/**
- * Combined delegation hook for convenience
- *
- * Wraps individual hooks into a single object for components
- * that need multiple delegation operations.
- *
- * @param _userId - User ID (used for context, filtering handled by hooks)
- * @returns Combined delegation operations
- */
-function useDelegation(_userId?: string) {
-  const createDelegation = useDelegatePermissions()
-  const revokeResult = useRevokeDelegation()
-  const validateMutation = useMutation({
-    mutationFn: (data: { grantorId: string; granteeId: string; permissions: string[] }) =>
-      validateDelegation({ grantee_id: data.granteeId }),
-  })
-  const myDelegations = useMyDelegations({ type: 'all' })
-
-  return {
-    createDelegation,
-    revokeDelegation: revokeResult,
-    validateDelegation: validateMutation,
-    myDelegations,
-  }
-}
