@@ -38,7 +38,7 @@ function getUtcHourForLocalTime(localTime: string, timezone: string): number {
 
     // Create a reference date in the user's timezone
     const now = new Date()
-    const dateStr = now.toISOString().split('T')[0]
+    const dateStr = now.toISOString().split('T')[0] ?? '1970-01-01'
 
     // Use Intl.DateTimeFormat to get the timezone offset
     const formatter = new Intl.DateTimeFormat('en-US', {
