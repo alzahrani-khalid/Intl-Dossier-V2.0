@@ -112,13 +112,6 @@ export class PluginBuilder<T = Record<string, unknown>> {
   }
 }
 
-/**
- * Create a new plugin builder
- */
-function createPluginBuilder<T = Record<string, unknown>>(): PluginBuilder<T> {
-  return new PluginBuilder<T>()
-}
-
 // ============================================================================
 // Helper Functions
 // ============================================================================
@@ -191,22 +184,6 @@ export function textField(
 }
 
 /**
- * Create a bilingual text field definition
- */
-function bilingualField(
-  name: string,
-  label: BilingualField,
-  options?: Partial<Omit<ExtensionFieldDefinition, 'name' | 'label' | 'type'>>,
-): ExtensionFieldDefinition {
-  return {
-    name,
-    label,
-    type: 'bilingual',
-    ...options,
-  }
-}
-
-/**
  * Create a number field definition
  */
 export function numberField(
@@ -218,22 +195,6 @@ export function numberField(
     name,
     label,
     type: 'number',
-    ...options,
-  }
-}
-
-/**
- * Create a boolean field definition
- */
-function booleanField(
-  name: string,
-  label: BilingualField,
-  options?: Partial<Omit<ExtensionFieldDefinition, 'name' | 'label' | 'type'>>,
-): ExtensionFieldDefinition {
-  return {
-    name,
-    label,
-    type: 'boolean',
     ...options,
   }
 }
@@ -255,22 +216,6 @@ export function dateField(
 }
 
 /**
- * Create a datetime field definition
- */
-function datetimeField(
-  name: string,
-  label: BilingualField,
-  options?: Partial<Omit<ExtensionFieldDefinition, 'name' | 'label' | 'type'>>,
-): ExtensionFieldDefinition {
-  return {
-    name,
-    label,
-    type: 'datetime',
-    ...options,
-  }
-}
-
-/**
  * Create an enum field definition
  */
 export function enumField(
@@ -284,24 +229,6 @@ export function enumField(
     label,
     type: 'enum',
     enumValues: values,
-    ...options,
-  }
-}
-
-/**
- * Create an array field definition
- */
-function arrayField(
-  name: string,
-  label: BilingualField,
-  itemType: Omit<ExtensionFieldDefinition, 'name' | 'label'>,
-  options?: Partial<Omit<ExtensionFieldDefinition, 'name' | 'label' | 'type' | 'arrayItemType'>>,
-): ExtensionFieldDefinition {
-  return {
-    name,
-    label,
-    type: 'array',
-    arrayItemType: itemType,
     ...options,
   }
 }
@@ -326,38 +253,4 @@ export function relationship(
     cardinality: options?.cardinality || 'many-to-many',
     ...options,
   }
-}
-
-/**
- * Create a one-to-one relationship
- */
-function oneToOneRelationship(
-  type: string,
-  label: BilingualField,
-  targetTypes: string[],
-  options?: Partial<
-    Omit<RelationshipDefinition, 'type' | 'label' | 'targetEntityTypes' | 'cardinality'>
-  >,
-): RelationshipDefinition {
-  return relationship(type, label, targetTypes, {
-    ...options,
-    cardinality: 'one-to-one',
-  })
-}
-
-/**
- * Create a one-to-many relationship
- */
-function oneToManyRelationship(
-  type: string,
-  label: BilingualField,
-  targetTypes: string[],
-  options?: Partial<
-    Omit<RelationshipDefinition, 'type' | 'label' | 'targetEntityTypes' | 'cardinality'>
-  >,
-): RelationshipDefinition {
-  return relationship(type, label, targetTypes, {
-    ...options,
-    cardinality: 'one-to-many',
-  })
 }

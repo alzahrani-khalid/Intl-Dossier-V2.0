@@ -181,32 +181,6 @@ export async function deleteRelationship(relationshipId: string): Promise<void> 
 }
 
 /**
- * Get relationships for a contact (direct Supabase query - fallback method)
- * Used when Edge Function is unavailable
- */
-async function getRelationshipsForContactDirect(
-  contactId: string,
-): Promise<RelationshipResponse[]> {
-  // Query relationships where contact is either from or to
-  const { data, error } = await supabase
-    .from('contact_relationships')
-    .select(
-      `
-      *,
-      from_contact:contacts!contact_relationships_from_contact_id_fkey(id, full_name, position, organization_id),
-      to_contact:contacts!contact_relationships_to_contact_id_fkey(id, full_name, position, organization_id)
-    `,
-    )
-    .or(`from_contact_id.eq.${contactId},to_contact_id.eq.${contactId}`)
-
-  if (error) {
-    throw new RelationshipAPIError(error.message, 500, error)
-  }
-
-  return data || []
-}
-
-/**
  * Get relationship statistics for a contact
  * Returns count by relationship type
  */

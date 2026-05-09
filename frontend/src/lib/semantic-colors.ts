@@ -72,12 +72,18 @@ export const dossierTypeColors: Record<string, ColorSet> = {
   },
 }
 
+const DEFAULT_DOSSIER_COLORS: ColorSet = {
+  bg: 'bg-primary/10',
+  text: 'text-primary',
+  border: 'border-primary/30',
+}
+
 /**
  * Returns a combined badge class string for a dossier type.
  * Includes bg + text for use in Badge / icon containers.
  */
 export function getDossierTypeBadgeClass(type: string): string {
-  const colors = dossierTypeColors[type] ?? dossierTypeColors.country
+  const colors = dossierTypeColors[type] ?? DEFAULT_DOSSIER_COLORS
   return `${colors.bg} ${colors.text}`
 }
 
@@ -164,11 +170,17 @@ export const statusColors: Record<string, ColorSet> = {
   },
 }
 
+const DEFAULT_STATUS_COLORS: ColorSet = {
+  bg: 'bg-muted',
+  text: 'text-muted-foreground',
+  border: 'border-muted',
+}
+
 /**
  * Returns a combined badge class string for a status value.
  */
 export function getStatusBadgeClass(status: string): string {
-  const colors = statusColors[status] ?? statusColors.todo
+  const colors = statusColors[status] ?? DEFAULT_STATUS_COLORS
   return `${colors.bg} ${colors.text}`
 }
 
@@ -207,11 +219,17 @@ export const priorityColors: Record<string, ColorSet> = {
   },
 }
 
+const DEFAULT_PRIORITY_COLORS: ColorSet = {
+  bg: 'bg-primary/10',
+  text: 'text-primary',
+  border: 'border-primary/30',
+}
+
 /**
  * Returns a combined badge class string for a priority value (bg + text).
  */
 export function getPriorityBadgeClass(priority: string): string {
-  const colors = priorityColors[priority] ?? priorityColors.medium
+  const colors = priorityColors[priority] ?? DEFAULT_PRIORITY_COLORS
   return `${colors.bg} ${colors.text}`
 }
 
@@ -258,11 +276,16 @@ export const activityTypeColors: Record<string, ColorPair> = {
   },
 }
 
+const DEFAULT_ACTIVITY_TYPE_COLORS: ColorPair = {
+  bg: 'bg-primary/10',
+  text: 'text-primary',
+}
+
 /**
  * Returns a combined badge class string for an activity type.
  */
 export function getActivityTypeBadgeClass(type: string): string {
-  const colors = activityTypeColors[type] ?? activityTypeColors.task
+  const colors = activityTypeColors[type] ?? DEFAULT_ACTIVITY_TYPE_COLORS
   return `${colors.bg} ${colors.text}`
 }
 

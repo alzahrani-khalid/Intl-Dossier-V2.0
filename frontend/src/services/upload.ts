@@ -432,12 +432,3 @@ export const validateFile = (file: File): { valid: boolean; error?: string } => 
 
   return { valid: true }
 }
-
-const getFileIcon = (type: string): string => {
-  if (type.startsWith('image/')) return '🖼️'
-  if (type.includes('pdf')) return '📄'
-  if (type.includes('word') || type.includes('document')) return '📝'
-  if (type.includes('excel') || type.includes('spreadsheet')) return '📊'
-  if (type.includes('text')) return '📄'
-  return '📁'
-}

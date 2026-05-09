@@ -207,27 +207,6 @@ export function captureMessage(
 }
 
 /**
- * Start a performance transaction
- */
-function startTransaction(name: string, op: string): ReturnType<typeof Sentry.startInactiveSpan> {
-  return Sentry.startInactiveSpan({
-    name,
-    op,
-  })
-}
-
-/**
- * React Error Boundary wrapper from Sentry
- * Use this instead of a custom error boundary for automatic Sentry integration
- */
-const SentryErrorBoundary = Sentry.ErrorBoundary
-
-/**
- * Sentry React profiler for performance monitoring
- */
-const SentryProfiler = Sentry.withProfiler
-
-/**
  * Initialize web-vitals reporting for dev-time debugging
  * Reports LCP, INP, CLS to console in development
  * In production, Sentry browserTracingIntegration captures these automatically

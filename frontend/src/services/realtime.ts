@@ -1,4 +1,3 @@
-import React from 'react'
 import type {
   RealtimeChannel,
   RealtimePostgresChangesPayload,
@@ -8,7 +7,6 @@ import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { supabase } from '../lib/supabase'
-import type { PresenceData } from '@/types/common.types'
 
 // Generic record type for realtime payloads
 type RealtimeRecord = Record<string, unknown>
@@ -305,101 +303,9 @@ setupConnectionMonitoringFn = setupConnectionMonitoring
 export { initializeRealtimeMonitoring }
 
 // Hook for easy subscription management
-function useRealtimeSubscription() {
-  const { subscribe, unsubscribe, unsubscribeAll, isConnected, connectionStatus } =
-    useRealtimeStore()
-
-  return {
-    subscribe,
-    unsubscribe,
-    unsubscribeAll,
-    isConnected,
-    connectionStatus,
-  }
-}
-
 // Specific hooks for common subscriptions
-function useTableSubscription<T extends Record<string, unknown> = RealtimeRecord>(
-  table: string,
-  event: 'INSERT' | 'UPDATE' | 'DELETE' | '*',
-  callback: (payload: RealtimePostgresChangesPayload<T>) => void,
-  filter?: string,
-) {
-  const { subscribe, unsubscribe } = useRealtimeStore()
-
-  React.useEffect(() => {
-    const subscriptionId = subscribe({
-      table,
-      event,
-      callback: callback as (payload: RealtimePostgresChangesPayload<RealtimeRecord>) => void,
-      filter,
-    })
-
-    return () => {
-      unsubscribe(subscriptionId)
-    }
-  }, [table, event, filter, subscribe, unsubscribe])
-}
-
 // Presence management for collaborative features
-function usePresence(channelName: string) {
-  const [presence, setPresence] = React.useState<Map<string, PresenceData[]>>(new Map())
-  const [isOnline, setIsOnline] = React.useState(false)
-
-  React.useEffect(() => {
-    // Initialize monitoring on first presence subscription
-    initializeRealtimeMonitoring()
-
-    const channel = supabase.channel(channelName, {
-      config: {
-        presence: {
-          key: crypto.randomUUID(),
-        },
-      },
-    })
-
-    channel
-      .on('presence', { event: 'sync' }, () => {
-        const newPresence = channel.presenceState()
-        setPresence(new Map(Object.entries(newPresence)) as unknown as Map<string, PresenceData[]>)
-      })
-      .on('presence', { event: 'join' }, ({ key: _key, newPresences: _newPresences }) => {
-        // User joined
-      })
-      .on('presence', { event: 'leave' }, ({ key: _key, leftPresences: _leftPresences }) => {
-        // User left
-      })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          await channel.track({
-            user_id: crypto.randomUUID(),
-            online_at: new Date().toISOString(),
-          })
-          setIsOnline(true)
-        } else {
-          setIsOnline(false)
-        }
-      })
-
-    return () => {
-      channel.unsubscribe()
-    }
-  }, [channelName])
-
-  return {
-    presence,
-    isOnline,
-    track: (data: PresenceData) => {
-      const channel = supabase.channel(channelName)
-      return channel.track(data)
-    },
-  }
-}
-
 // Export the Supabase client for direct use
 export { supabase }
 
 // Export utility functions
-const getConnectionStatus = () => useRealtimeStore.getState().connectionStatus
-const getSubscriptions = () => useRealtimeStore.getState().subscriptions
-const isRealtimeConnected = () => useRealtimeStore.getState().isConnected

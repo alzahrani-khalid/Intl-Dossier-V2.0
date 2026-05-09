@@ -651,17 +651,6 @@ supabase.auth.onAuthStateChange(async (event, _session) => {
 
 // Export utilities
 export const getCurrentUser = () => useAuthStore.getState().user
-const isAuthenticated = () => useAuthStore.getState().isAuthenticated
-const getSession = () => useAuthStore.getState().session
-const hasRole = (role: AuthUser['role']) => {
-  const user = getCurrentUser()
-  return user?.role === role
-}
-const hasAnyRole = (roles: AuthUser['role'][]) => {
-  const user = getCurrentUser()
-  return user ? roles.includes(user.role) : false
-}
-
 // Export Supabase client
 export { supabase }
 

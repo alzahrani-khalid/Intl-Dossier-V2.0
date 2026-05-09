@@ -399,12 +399,3 @@ export function getCountryCode(countryName: string | null | undefined): string |
   const normalized = countryName.toLowerCase().trim()
   return countryCodeMap[normalized] || null
 }
-
-/**
- * Check if a country name is valid (has a corresponding code)
- * @param countryName - Country name to validate
- * @returns true if country name maps to a valid code
- */
-function isValidCountry(countryName: string | null | undefined): boolean {
-  return getCountryCode(countryName) !== null
-}

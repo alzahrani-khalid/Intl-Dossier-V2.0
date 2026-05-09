@@ -22,11 +22,11 @@ export const applyTokens = (set: TokenSet): (() => void) => {
   const root = document.documentElement
   const previous = new Map<string, string | null>()
 
-  for (const name of Object.keys(set)) {
+  for (const [name, value] of Object.entries(set)) {
     // Capture pre-write value so the returned cleanup can restore it.
     const prior = root.style.getPropertyValue(name)
     previous.set(name, prior === '' ? null : prior)
-    root.style.setProperty(name, set[name])
+    root.style.setProperty(name, value)
   }
 
   return (): void => {

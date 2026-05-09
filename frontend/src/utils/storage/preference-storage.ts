@@ -102,46 +102,6 @@ export function clearStoredPreferences(): void {
 }
 
 /**
- * Get system color mode preference
- */
-function getSystemColorMode(): 'light' | 'dark' {
-  if (typeof window === 'undefined') return 'light'
-
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
-
-/**
- * Get system language preference
- */
-function getSystemLanguage(): 'en' | 'ar' {
-  if (typeof window === 'undefined') return 'en'
-
-  const browserLang = navigator.language.toLowerCase()
-  return browserLang.startsWith('ar') ? 'ar' : 'en'
-}
-
-/**
- * Watch for storage changes from other tabs
- */
-function watchStorageChanges(
-  callback: (preferences: StoredPreferences | null) => void,
-): () => void {
-  const handleStorageChange = (event: StorageEvent) => {
-    if (event.key === STORAGE_KEY) {
-      const newValue = event.newValue ? JSON.parse(event.newValue) : null
-      callback(newValue)
-    }
-  }
-
-  window.addEventListener('storage', handleStorageChange)
-
-  // Return cleanup function
-  return () => {
-    window.removeEventListener('storage', handleStorageChange)
-  }
-}
-
-/**
  * Convenience object for preference storage operations
  */
 export const preferenceStorage = {

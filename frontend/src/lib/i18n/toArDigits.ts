@@ -13,5 +13,5 @@ const AR_DIGITS = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'] a
 export function toArDigits(input: string | number, lang: string): string {
   const s = String(input)
   if (lang !== 'ar') return s
-  return s.replace(/[0-9]/g, (d) => AR_DIGITS[Number(d)])
+  return s.replace(/[0-9]/g, (d) => AR_DIGITS[Number(d)] ?? d)
 }

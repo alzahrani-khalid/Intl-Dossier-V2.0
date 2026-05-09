@@ -5,8 +5,6 @@
  * Projects represent initiatives, research activities, or collaborations.
  */
 
-import type { BaseDossier } from '../../types/plugin.types'
-
 // ============================================================================
 // Enums
 // ============================================================================
@@ -72,12 +70,6 @@ export interface ProjectExtension {
   completion_percentage?: number
 }
 
-/**
- * Full project type (base + extension)
- */
-type Project = BaseDossier & ProjectExtension
-
-// ============================================================================
 // Labels
 // ============================================================================
 

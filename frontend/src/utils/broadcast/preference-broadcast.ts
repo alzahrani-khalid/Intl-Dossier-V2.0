@@ -142,21 +142,3 @@ class PreferenceBroadcaster {
 
 // Export singleton instance
 export const preferenceBroadcaster = new PreferenceBroadcaster()
-
-/**
- * React hook for preference broadcasting
- */
-function usePreferenceBroadcast() {
-  const broadcast = (preferences: StoredPreferences) => {
-    preferenceBroadcaster.broadcast(preferences)
-  }
-
-  const subscribe = (listener: (preferences: StoredPreferences) => void) => {
-    return preferenceBroadcaster.subscribe(listener)
-  }
-
-  return {
-    broadcast,
-    subscribe,
-  }
-}

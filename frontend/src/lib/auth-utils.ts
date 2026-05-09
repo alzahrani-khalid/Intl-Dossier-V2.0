@@ -43,17 +43,3 @@ export async function getAuthHeaders(): Promise<HeadersInit> {
   }
 }
 
-/**
- * Make an authenticated fetch request to an Edge Function
- * Handles token refresh automatically
- */
-async function authFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  const headers = await getAuthHeaders()
-  return fetch(url, {
-    ...options,
-    headers: {
-      ...headers,
-      ...options.headers,
-    },
-  })
-}
