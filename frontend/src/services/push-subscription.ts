@@ -72,7 +72,7 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
 
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: applicationServerKey.buffer as ArrayBuffer,
+      applicationServerKey: applicationServerKey as BufferSource,
     })
 
     const subscriptionJson = subscription.toJSON()
