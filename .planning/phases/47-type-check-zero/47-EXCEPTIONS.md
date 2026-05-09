@@ -81,7 +81,51 @@ Composition: TS6133 + TS6196 = **160 / 498 = 32.1%** deletion-eligible (D-03 def
 
 ## Frontend final histogram
 
-(populated by 47-01 Task 10 / Final)
+Captured at plan 47-11 completion by running `pnpm --filter intake-frontend run type-check:summary`.
+
+```
+(empty — `tsc --noEmit` exits 0 with no errors)
+```
+
+Total: **0** errors. Frontend type-check: **PASS**.
+
+Frontend baseline → final: **1580 → 0** (100%).
+
+Composition of fixes (47-04 through 47-11):
+
+- 47-04..47-09 (Wave 2 cluster sweeps): types/\* + components/** + domains/** + pages/** + routes/** — ~1446 errors cleared via D-03 deletions, typed-at-source migrations, and hook contract alignment.
+- 47-10 (atomic services/lib/utils/store/contexts/design-system sweep): 119 errors cleared. 102 dead exports deleted across 39 files via reusable Python script with D-04 four-globbed-grep verification; 4 surgical real-type fixes (semantic-colors, applyTokens, toArDigits, push-subscription); 9 cascade unused-import deletions.
+- 47-11 (final residual + shim cleanup, this plan): 15 residual errors cleared in components/** and domains/misc/**; 19 of 20 typed shims retired by typing the underlying domain hooks at source. SLAConfiguration extended with camelCase preview fields (acknowledgmentMinutes / resolutionHours / businessHoursOnly) so the byte-immutable IntakeForm.tsx call sites compile. NetworkVisualizationData stub now returns the complete type with statistics. Multiple call sites aligned to typed hook contracts (useDeleteComment string, useToggleReaction { commentId, emoji }, useAcknowledgeViolation { violationId, data }, useToggleFavorite { templateId }, useUpdateTag { id, data }, useMergeTags { sourceId, targetId }, useEscalateAssignment { assignment_id }). usePauseSLA accepts string, useResumeSLA accepts void.
+
+### Cumulative D-01 / D-04 verification (47-11 Task 1)
+
+- `pnpm --filter intake-frontend type-check; echo $?` → 0
+- `git diff phase-47-base..HEAD -- frontend/src | grep -E '^\+.*@ts-(ignore|expect-error)' | wc -l` → 0
+- `git diff 86be1f4f^..HEAD -- backend/src | wc -l` → 0 (47-11 made zero edits to backend; phase-wide backend changes belong to plan 47-02 per D-04 routing)
+- `git diff phase-47-base..HEAD -- frontend/src/components/intake-form/IntakeForm.tsx | wc -l` → 0
+- `git diff phase-47-base..HEAD -- frontend/src/components/signature-visuals/__tests__/Icon.test.tsx | wc -l` → 0
+
+Frontend half of Phase 47 closed. Backend (47-02) and CI gate (47-03) already complete; phase 47 is now closed end-to-end.
+
+### 47-11 shim retirement summary
+
+19 of 20 typed shims listed in 47-08-SUMMARY "Shim Cleanup Candidates" retired:
+
+| Component shim retired                                                                               | Underlying hook now returns                                                                                                      |
+| ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| AvailabilityPollResults `PollDetailsHookShim` / `PollMutationShim<close>` / `PollMutationShim<auto>` | `usePollDetails<PollDetailsResponse>`, typed close + autoSchedule mutations                                                      |
+| AvailabilityPollVoter `PollDetailsHookShim` / `SubmitVotesShim`                                      | typed `useSubmitVotes({ pollId, votes })`                                                                                        |
+| AvailabilityPollCreator `UseCreatePollShim`                                                          | typed `useCreatePoll(CreatePollRequest) → AvailabilityPoll`                                                                      |
+| ReportBuilder × 7 (state + reports list + 5 mutation shims + preview shim)                           | typed `useReportBuilderState() → ReportBuilderState` and matching mutations                                                      |
+| CalendarSyncSettings `CalendarSyncShim`                                                              | typed `useCalendarSync() → CalendarSyncState`                                                                                    |
+| StakeholderInteractionTimeline `StakeholderTimelineShim`                                             | typed `useStakeholderTimeline() → StakeholderTimelineState`                                                                      |
+| TagSelector `EntityTaggingShim`                                                                      | typed `useEntityTagging() → EntityTaggingState`                                                                                  |
+| TemplateSelector `ContextAwareTemplatesShim` / `ApplyTemplateShim`                                   | typed `useContextAwareTemplates() → ContextAwareTemplatesResult` and `useApplyTemplate()` returning `{ applyTemplate }` directly |
+| OnboardingChecklist `OnboardingChecklistShim`                                                        | typed `useOnboardingChecklist() → OnboardingChecklistState`                                                                      |
+
+Retained as-is (1 of 20):
+
+- StakeholderInteractionTimeline `StakeholderInteractionMutationsShim` — 47-08 SUMMARY notes the underlying `useStakeholderInteractionMutations` is internally still a stub that returns `Promise.resolve({ success: true })`; the shim narrows the result shape until the real implementation lands.
 
 ## Backend final histogram
 
