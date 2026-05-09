@@ -14,6 +14,7 @@ import {
 import type {
   StakeholderInfluenceSummary,
   StakeholderInfluenceDetail,
+  StakeholderInfluenceListParams,
   NetworkVisualizationData,
   NetworkOverviewStatistics,
   KeyConnector,
@@ -93,7 +94,7 @@ export function useCompareInfluence() {
  * build passes while consumers are migrated.                         *
  * ------------------------------------------------------------------ */
 
-export function useStakeholderInfluenceList(params?: Record<string, unknown>) {
+export function useStakeholderInfluenceList(params?: StakeholderInfluenceListParams) {
   return useQuery<PaginatedResponse<StakeholderInfluenceSummary>>({
     queryKey: [...influenceKeys.all, 'list', params],
     queryFn: () =>
