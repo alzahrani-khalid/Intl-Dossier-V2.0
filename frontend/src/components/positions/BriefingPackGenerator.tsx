@@ -14,6 +14,7 @@ import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useGenerateBriefingPack } from '@/hooks/useGenerateBriefingPack'
 import { useBriefingPackStatus } from '@/hooks/useBriefingPackStatus'
+import type { BriefingPackJob } from '@/domains/briefings'
 
 export interface BriefingPackGeneratorProps {
   engagementId: string
@@ -44,35 +45,32 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
     mutateAsync: (vars: { engagementId: string; language: string }) => Promise<{ job_id: string }>
     isPending: boolean
   }
-  // Stub useBriefingPackStatus takes (jobId: string).
-  const briefingStatus = useBriefingPackStatus(jobId || '') as unknown as {
-    status: 'pending' | 'completed' | 'failed' | 'success' | 'error'
-    briefingPack?: { file_url?: string }
-    error: string | null
-  }
-  const jobStatus =
-    briefingStatus.status !== 'pending'
-      ? {
-          status: briefingStatus.status,
-          file_url: briefingStatus.briefingPack?.file_url,
-          error_message: briefingStatus.error,
-        }
-      : null
+  // WR-02/WR-03: read the *server's* job status from .data (BriefingPackJob),
+  // not TanStack's QueryStatus from .status (which is only pending|error|success
+  // and would never produce 'completed'|'failed'). Restore the polling gate
+  // via options.enabled so we stop polling once the job leaves 'generating'.
+  const briefingStatus = useBriefingPackStatus(jobId, {
+    enabled: Boolean(jobId) && status === 'generating',
+  })
+  const job = briefingStatus.data as BriefingPackJob | null | undefined
+  const jobFileUrl = (briefingStatus.data as { file_url?: string } | null | undefined)?.file_url
+  const jobErrorMessage = (briefingStatus.data as { error_message?: string } | null | undefined)
+    ?.error_message
 
   // Handle job status updates
   useEffect(() => {
-    if (!jobStatus) return
+    if (!job) return
 
-    if (jobStatus.status === 'completed') {
+    if (job.status === 'completed') {
       setStatus('completed')
-      setFileUrl(jobStatus.file_url ?? null)
+      setFileUrl(jobFileUrl ?? null)
       setJobId(null)
-    } else if (jobStatus.status === 'failed') {
+    } else if (job.status === 'failed') {
       setStatus('failed')
-      setErrorMessage(jobStatus.error_message || t('positions.briefing.error'))
+      setErrorMessage(jobErrorMessage ?? t('positions.briefing.error'))
       setJobId(null)
     }
-  }, [jobStatus, t])
+  }, [job, jobFileUrl, jobErrorMessage, t])
 
   // Handle generation
   const handleGenerate = async () => {
