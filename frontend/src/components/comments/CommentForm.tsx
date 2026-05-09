@@ -70,31 +70,22 @@ export function CommentForm({
   )
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  // Stub useCreateComment / useUpdateComment return UseMutationResult<unknown>;
-  // shims narrow their data types to the contract documented in @/types/comment.types.
-  const createComment = useCreateComment() as unknown as {
-    mutateAsync: (params: Record<string, unknown>) => Promise<CommentWithDetails>
-    isPending: boolean
-  }
-  const updateComment = useUpdateComment() as unknown as {
-    mutateAsync: (params: Record<string, unknown>) => Promise<Partial<CommentWithDetails>>
-    isPending: boolean
-  }
+  const createComment = useCreateComment()
+  const updateComment = useUpdateComment()
 
   const isEditing = !!editingComment
   const isSubmitting = createComment.isPending || updateComment.isPending
   const canSubmit = content.trim().length > 0 && content.length <= maxLength && !isSubmitting
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (): Promise<void> => {
     if (!canSubmit) return
 
     try {
-      if (isEditing) {
-        const result = await updateComment.mutateAsync({
-          commentId: editingComment.id,
-          content: content.trim(),
-          visibility,
-        })
+      if (isEditing && editingComment) {
+        const result = (await updateComment.mutateAsync({
+          id: editingComment.id,
+          data: { content: content.trim(), visibility },
+        })) as Partial<CommentWithDetails>
         // Create a CommentWithDetails from the result
         const updatedComment: CommentWithDetails = {
           ...editingComment,
@@ -105,17 +96,17 @@ export function CommentForm({
         }
         onSubmit?.(updatedComment)
       } else {
-        const comment = await createComment.mutateAsync({
+        const comment = (await createComment.mutateAsync({
           entityType,
           entityId,
           content: content.trim(),
           parentId,
           visibility,
-        })
+        })) as CommentWithDetails
         onSubmit?.(comment)
         setContent('')
       }
-    } catch (error) {
+    } catch (_error) {
       // Error handling is done in the mutation
     }
   }, [
@@ -150,10 +141,7 @@ export function CommentForm({
   }, [defaultVisibility, onCancel])
 
   return (
-    <div
-      className={cn('space-y-3', compact && 'space-y-2')}
-      data-testid="comment-form"
-    >
+    <div className={cn('space-y-3', compact && 'space-y-2')} data-testid="comment-form">
       {/* Textarea with @mention support */}
       <MentionInput
         ref={textareaRef}
