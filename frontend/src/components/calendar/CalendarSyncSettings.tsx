@@ -150,9 +150,8 @@ function ConnectionCard({
   const [isExpanded, setIsExpanded] = useState(false)
   const [showDisconnectDialog, setShowDisconnectDialog] = useState(false)
 
-  // Stub hook signature is `(): UseQueryResult<unknown>` (no params); we discard
-  // the (connectionId, isExpanded) intent since the stub has no use for it (47-07's surface).
-  void (isExpanded ? connection.id : undefined)
+  // Stub hook signature is `(): UseQueryResult<unknown>` (no params); we
+  // narrow the unknown to ExternalCalendarShape[] for the consumer below.
   const { data: calendars } = useExternalCalendars() as unknown as {
     data: ExternalCalendarShape[] | undefined
   }
@@ -752,7 +751,7 @@ export function CalendarSyncSettings() {
                 connection={connection}
                 onSync={() => triggerSync({ connection_id: connection.id })}
                 onDisconnect={() => disconnectProvider(connection.id)}
-                onUpdateSettings={(updates) => updateConnection(connection.id, updates as any)}
+                onUpdateSettings={(updates) => updateConnection(connection.id, updates)}
                 isSyncing={isSyncing}
               />
             ))}
@@ -788,7 +787,7 @@ export function CalendarSyncSettings() {
                 subscription={subscription}
                 onRefresh={() => refreshICalFeed(subscription.id)}
                 onRemove={() => removeICalFeed(subscription.id)}
-                onUpdate={(updates) => updateICalFeed(subscription.id, updates as any)}
+                onUpdate={(updates) => updateICalFeed(subscription.id, updates)}
                 isRefreshing={isRefreshingIcal}
               />
             ))}
