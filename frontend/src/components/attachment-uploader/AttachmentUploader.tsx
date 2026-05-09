@@ -173,8 +173,8 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
       setFiles((prev) => [...prev, attachmentFile])
 
-      // Start upload
-      uploadFile(attachmentFile)
+      // Start upload (async; internal try/catch surfaces errors via state)
+      void uploadFile(attachmentFile)
     }
   }
 

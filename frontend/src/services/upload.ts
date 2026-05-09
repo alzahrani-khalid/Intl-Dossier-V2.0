@@ -130,7 +130,7 @@ export const useUploadStore = create<UploadState & UploadActions>()(
 
       // Start upload if we have capacity
       if (activeUploads < maxConcurrentUploads) {
-        get().startUpload(uploadId, options)
+        void get().startUpload(uploadId, options)
       }
 
       return uploadId
@@ -153,7 +153,7 @@ export const useUploadStore = create<UploadState & UploadActions>()(
       const upload = uploads.get(uploadId)
 
       if (upload && upload.status === 'paused' && activeUploads < maxConcurrentUploads) {
-        get().startUpload(uploadId, upload.options!)
+        void get().startUpload(uploadId, upload.options!)
       }
     },
 
@@ -178,7 +178,7 @@ export const useUploadStore = create<UploadState & UploadActions>()(
         upload.error = undefined
         uploads.set(uploadId, upload)
         set({ uploads: new Map(uploads) })
-        get().startUpload(uploadId, upload.options!)
+        void get().startUpload(uploadId, upload.options!)
       }
     },
 
