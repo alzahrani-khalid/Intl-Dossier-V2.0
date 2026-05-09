@@ -125,7 +125,7 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 
 ### Phases (summary)
 
-- [ ] **Phase 47: Type-Check Zero** — Drive frontend + backend `pnpm type-check` to zero and restore type-check as a PR-blocking CI gate
+- [x] **Phase 47: Type-Check Zero** — Drive frontend + backend `pnpm type-check` to zero and restore type-check as a PR-blocking CI gate (completed 2026-05-09)
 - [ ] **Phase 48: Lint & Config Alignment** — Drive frontend + backend `pnpm lint` to zero, purge Aceternity references from `frontend/eslint.config.js`, align `no-restricted-imports` with the CLAUDE.md primitive cascade, restore lint as a PR-blocking CI gate
 - [ ] **Phase 49: Bundle Budget Reset** — Lower `frontend/.size-limit.json` Total JS ceiling to a real budget (≤500 KB initial-route gzip proposal), route-split heavy chunks via `React.lazy()`, audit the vendor super-chunk, restore `size-limit` as a PR-blocking CI gate
 
@@ -150,11 +150,11 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 3. The type-check job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single TS error in either workspace fails the merge check on `main`.
 4. Net new `@ts-ignore` / `@ts-expect-error` suppressions added during v6.2 are zero outside documented exceptions; any retained suppression carries an inline reason and an issue/follow-up reference.
 
-**Plans:** 2/11 plans executed
+**Plans:** 11/11 plans complete
 
 - [x] 47-01-frontend-type-fix-PLAN.md — Drive frontend type-check from 1580 to 0 errors (TYPE-01, TYPE-04 frontend half)
 - [x] 47-02-backend-type-fix-PLAN.md — Drive backend type-check from 498 to 0 errors (TYPE-02, TYPE-04 backend half)
-- [ ] 47-03-ci-gate-and-branch-protection-PLAN.md — Split type-check into dedicated CI job, set branch protection on main, smoke-test (TYPE-03, TYPE-04 phase reconciliation)
+- [x] 47-03-ci-gate-and-branch-protection-PLAN.md — Split type-check into dedicated CI job, set branch protection on main, smoke-test (TYPE-03, TYPE-04 phase reconciliation)
 
 #### Phase 48: Lint & Config Alignment
 
@@ -203,7 +203,7 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 | 26-32 | v5.0      | —              | Shipped     | 2026-04-18 |
 | 33-43 | v6.0      | —              | Shipped     | 2026-05-06 |
 | 44-46 | v6.1      | 14/14          | Shipped     | 2026-05-08 |
-| 47    | v6.2      | 2/11           | In Progress |            |
+| 47    | v6.2      | 11/11          | Complete    | 2026-05-09 |
 | 48    | v6.2      | 0/0            | Not started | -          |
 | 49    | v6.2      | 0/0            | Not started | -          |
 

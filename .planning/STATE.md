@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v6.2
 milestone_name: Type-Check, Lint & Bundle Reset
 status: executing
-stopped_at: Phase 47 plans created (3 plans, validated)
-last_updated: '2026-05-08T18:33:19.483Z'
-last_activity: 2026-05-08 -- Phase 47 execution started
+stopped_at: Phase 47 waves 2+3 complete; 47-03 PARTIAL (deferred to v6.2 milestone merge)
+last_updated: '2026-05-09T00:00:00.000Z'
+last_activity: 2026-05-09 -- Phase 47 waves 2+3 close; frontend tsc 1580→0, backend 0
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 11
-  completed_plans: 1
-  percent: 9
+  completed_plans: 10
+  percent: 91
 ---
 
 # Project State
@@ -21,18 +21,40 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-08)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 47 — type-check-zero
+**Current focus:** Phase 47 — type-check-zero (10/11 plans complete; 47-03 deferred to milestone merge)
 
 ## Current Position
 
-Phase: 47 (type-check-zero) — EXECUTING
-Plan: 1 of 11
-Status: Executing Phase 47
-Last activity: 2026-05-08 -- Phase 47 execution started
+Phase: 47 (type-check-zero) — WAVE 2+3 COMPLETE; 47-03 DEFERRED
+Plan: 10 of 11 complete (1 PARTIAL)
+Status: Frontend tsc 0 ✓ ; Backend tsc 0 ✓ ; CI workflow split staged on DesignV2 ; Branch protection awaits milestone merge
+Last activity: 2026-05-09 -- Phase 47 waves 2+3 close; frontend tsc 1580→0, backend 0
 
 ## Next Action
 
-Wave 1 complete (47-02 backend type-check 498 → 0). Wave 2 deferred per user — 8 plans (47-03 + 47-04..47-10) covering frontend gap closure + CI gate. Paused to ship Wave 1 first.
+Phase 47 type-fix work is fully landed on DesignV2. TYPE-01, TYPE-02, TYPE-04 satisfied. TYPE-03 (PR-blocking gate on main + branch protection) deferred to v6.2 milestone merge of DesignV2 → main because main is 753 commits behind and a focused 47-03 PR-vs-main violates D-08 (CI births red against main's pre-fix code).
+
+1. Open v6.2 milestone PR DesignV2 → main when ready to ship the milestone. The new `type-check` job goes green on first post-merge run because 1580 frontend + 498 backend errors are already cleared on DesignV2.
+2. After merge, run 47-03 deferred Tasks 4 + 5: `gh api -X PUT branches/main/protection` with contexts `["Lint", "type-check"]` and `enforce_admins: true`; then 2 deliberately-broken smoke PRs (frontend + backend) to prove the gate BLOCKS.
+3. Re-open 47-03 as a follow-up plan to flip its SUMMARY from PARTIAL → SUCCESS with PR URLs + protection JSON + BLOCKED smoke-test evidence.
+4. Phase 48 (lint-and-config-alignment) can begin once milestone merge is done — depends on Phase 47.
+
+### Wave 2+3 plan summary
+
+| Plan  | Status    | Frontend tsc Δ | Notes                                                                                            |
+| ----- | --------- | -------------- | ------------------------------------------------------------------------------------------------ |
+| 47-04 | ✓         | 1564 → 1191    | types/\* (-373) — pure deletion (TS6196 file-local)                                              |
+| 47-05 | ✓         | 1191 → 1184    | tasks/kanban/entity-links (-7) — 4 file-local symbols                                            |
+| 47-06 | ✓         | 1184 → 649     | components/\*\* remainder (-535) — 6 sub-waves; 21 component-side typed shims for stub hooks     |
+| 47-07 | ✓         | 649 → 496      | hooks/\*\* (-153) — 12 unused hooks deleted, tail typed                                          |
+| 47-08 | ✓         | 496 → 310      | domains/\*\* (-186, with cascade) — typed stub hooks at source                                   |
+| 47-09 | ✓         | 310 → 134      | pages/routes (-176) — useQuery<T> parametrization sweep                                          |
+| 47-10 | ✓         | 134 → 15       | services/lib/utils tail (-119) — 102 declarations deleted                                        |
+| 47-11 | ✓         | 15 → 0         | Final residual + 19/20 shims retired at hook source                                              |
+| 47-03 | ⏸ PARTIAL | n/a            | Tasks 1, 2, 6 done locally (commits 815fb203 + e45b9075). Tasks 3-5 deferred to milestone merge. |
+
+D-01 hard target: 0 net-new `@ts-(ignore|expect-error)` across phase 47 ✓
+D-04 cross-workspace fence: 0 backend/src edits in any frontend plan's commit range ✓
 
 1. Push DesignV2 to verify backend-zero in CI.
 2. Resume with `/gsd-execute-phase 47 --wave 2` (or `--gaps-only` for the 47-04..47-10 frontend cluster). 47-03 is `autonomous: false` and will pause for GitHub branch-protection + smoke-test PRs.
