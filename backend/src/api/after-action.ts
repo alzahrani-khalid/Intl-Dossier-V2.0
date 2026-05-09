@@ -96,13 +96,18 @@ router.get(
         query = query.eq('engagement_id', q.engagement_id)
       }
       if (q.status) {
-        query = query.eq('status' as never, q.status as never)
+        query = query.eq('publication_status', q.status)
       }
       if (q.created_by) {
         query = query.eq('created_by', q.created_by)
       }
       if (q.confidentiality_level) {
-        query = query.eq('confidentiality_level' as never, q.confidentiality_level as never)
+        // The schema column is `is_confidential: boolean`; the request enum is a
+        // four-state UX classifier (`public | internal | confidential | secret`).
+        // Until the schema is migrated to a true four-state column, map any non-
+        // public value to `is_confidential = true`.
+        const isConfidential = q.confidentiality_level !== 'public'
+        query = query.eq('is_confidential', isConfidential)
       }
       if (q.date_from) {
         query = query.gte('created_at', q.date_from)
