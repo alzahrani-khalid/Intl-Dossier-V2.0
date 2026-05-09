@@ -47,14 +47,12 @@ export async function mentionUsers(data: Record<string, unknown>): Promise<unkno
 // ============================================================================
 // Stakeholder Timeline
 // ============================================================================
-
-export async function getStakeholderTimeline(
-  stakeholderId: string,
-  params?: URLSearchParams,
-): Promise<unknown> {
-  const query = params?.toString()
-  return apiGet(`/stakeholder-timeline/${stakeholderId}${query ? `?${query}` : ''}`)
-}
+//
+// CR-02 follow-up: getStakeholderTimeline / getTimelineStats /
+// getTimelineExport / compareTimelines were dead code after Phase 47 stubbed
+// useStakeholderTimeline. Removed to make the stub status unambiguous —
+// restore live data here when the consumer hook (and its rich options
+// shape) is wired back to a real backend endpoint.
 
 export async function addTimelineEvent(
   stakeholderId: string,
@@ -65,21 +63,6 @@ export async function addTimelineEvent(
 
 export async function getTimelineCategories(): Promise<unknown> {
   return apiGet('/stakeholder-timeline/categories')
-}
-
-export async function getTimelineExport(
-  stakeholderId: string,
-  format: string,
-): Promise<unknown> {
-  return apiGet(`/stakeholder-timeline/${stakeholderId}/export?format=${format}`)
-}
-
-export async function getTimelineStats(stakeholderId: string): Promise<unknown> {
-  return apiGet(`/stakeholder-timeline/${stakeholderId}/stats`)
-}
-
-export async function compareTimelines(stakeholderIds: string[]): Promise<unknown> {
-  return apiPost('/stakeholder-timeline/compare', { stakeholder_ids: stakeholderIds })
 }
 
 // ============================================================================
