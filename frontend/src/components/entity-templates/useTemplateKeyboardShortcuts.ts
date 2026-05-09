@@ -40,14 +40,13 @@ export function useTemplateKeyboardShortcuts(
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  // Stub useEntityTemplates takes 0-1 args; the second `{ enabled }` is unsupported.
-  void enabled
-  const { data } = useEntityTemplates({ entityType }) as unknown as {
+  // WR-04: useEntityTemplates accepts { entityType?, enabled? } at the hook
+  // source — pass `enabled` through so templates only load when shortcuts
+  // are active.
+  const { data } = useEntityTemplates({ entityType, enabled }) as unknown as {
     data: { templates: EntityTemplate[] } | undefined
   }
-  const { applyTemplate } = useApplyTemplate() as unknown as {
-    applyTemplate: (template: EntityTemplate) => Record<string, unknown>
-  }
+  const { applyTemplate } = useApplyTemplate()
 
   // Get templates with keyboard shortcuts
   const shortcutTemplates = data?.templates?.filter((t) => t.keyboard_shortcut) || []

@@ -94,20 +94,21 @@ export function QuickEntryDialog({
   // Refs
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Stub useEntityTemplates takes `Record<string, unknown> | undefined`; the
-  // (entityType, options) signature is unsupported and consolidated.
+  // WR-04: useEntityTemplates accepts { entityType?, enabled? } at the hook
+  // source — gate the fetch on dialog visibility so templates only load when
+  // the dialog is open.
   void context
-  void open
   const { data, isLoading } = useEntityTemplates({
     entityType: selectedEntityType,
+    enabled: open,
   }) as unknown as {
     data: { templates: EntityTemplate[] } | undefined
     isLoading: boolean
   }
 
-  const { applyTemplate } = useApplyTemplate() as unknown as {
-    applyTemplate: (template: EntityTemplate) => Record<string, unknown>
-  }
+  // WR-09: useApplyTemplate already returns the precise shape — drop the
+  // redundant cast.
+  const { applyTemplate } = useApplyTemplate()
 
   // Filter templates by search query
   const filteredTemplates =
