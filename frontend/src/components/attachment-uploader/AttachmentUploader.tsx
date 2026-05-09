@@ -42,8 +42,14 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   const [dragActive, setDragActive] = useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
 
+  // The hook accepts `Record<string, unknown>` and apiPost JSON-stringifies
+  // the body. JSON.stringify on a FormData yields `{}`, so the file payload
+  // never reaches the server. We pass the FormData here for parity with the
+  // intended multipart contract; fixing the upload pipeline (multipart-aware
+  // fetch path) is tracked as a separate bug — do not codify FormData as
+  // the param type.
   const uploadMutation = useUploadAttachment() as unknown as {
-    mutateAsync: (data: FormData) => Promise<{ id: string }>
+    mutateAsync: (data: Record<string, unknown>) => Promise<{ id: string }>
   }
   const deleteMutation = useDeleteAttachment()
 
@@ -108,7 +114,12 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
         )
       }, 200)
 
-      const result = await uploadMutation.mutateAsync(formData)
+      // FormData is passed positionally to match the multipart contract once
+      // the upload pipeline is fixed; the cast is intentional (see hook shim
+      // comment above).
+      const result = await uploadMutation.mutateAsync(
+        formData as unknown as Record<string, unknown>,
+      )
 
       clearInterval(progressInterval)
 
