@@ -98,13 +98,13 @@ export function AuditLogFilters({
 }: AuditLogFiltersProps) {
   const { t } = useTranslation('audit-logs')
   const { isRTL } = useDirection()
-const [searchValue, setSearchValue] = useState(filters.search || '')
+  const [searchValue, setSearchValue] = useState(filters.search || '')
   const [datePreset, setDatePreset] = useState<DateRangePreset>('last_30_days')
   const [showCustomDates, setShowCustomDates] = useState(false)
 
   // Get available tables for filter dropdown
-  const { values: availableTables } = useAuditLogDistinctValues('table_name') as unknown as {
-    values: string[]
+  const { data: availableTables = [] } = useAuditLogDistinctValues('table_name') as unknown as {
+    data: string[] | undefined
   }
 
   // Count active filters
