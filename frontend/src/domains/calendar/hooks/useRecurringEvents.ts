@@ -153,9 +153,7 @@ export function useRemoveException() {
 // NOTIFICATIONS
 // ==============================================================================
 
-export function useEventNotifications(
-  options?: { unreadOnly?: boolean; limit?: number },
-): ReturnType<typeof useQuery> {
+export function useEventNotifications(options?: { unreadOnly?: boolean; limit?: number }) {
   return useQuery({
     queryKey: ['event-notifications', options],
     queryFn: () => calendarRepo.getEventNotifications(options),

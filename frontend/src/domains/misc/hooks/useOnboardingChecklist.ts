@@ -16,7 +16,7 @@ export const onboardingKeys = {
   checklist: () => [...onboardingKeys.all, 'checklist'] as const,
 }
 
-export function useOnboardingChecklist(options?: { enabled?: boolean }): ReturnType<typeof useQuery> {
+export function useOnboardingChecklist(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: onboardingKeys.checklist(),
     queryFn: () => getOnboardingChecklist(),
@@ -25,27 +25,33 @@ export function useOnboardingChecklist(options?: { enabled?: boolean }): ReturnT
   })
 }
 
-export function useUpdateChecklistItem(): ReturnType<typeof useMutation> {
+export function useUpdateChecklistItem() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: { itemId: string; data: Record<string, unknown> }) =>
       updateChecklistItemApi(params.itemId, params.data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: onboardingKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: onboardingKeys.all })
+    },
   })
 }
 
-export function useDismissOnboarding(): ReturnType<typeof useMutation> {
+export function useDismissOnboarding() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () => dismissOnboardingApi(),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: onboardingKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: onboardingKeys.all })
+    },
   })
 }
 
-export function useResetOnboarding(): ReturnType<typeof useMutation> {
+export function useResetOnboarding() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () => resetOnboardingApi(),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: onboardingKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: onboardingKeys.all })
+    },
   })
 }

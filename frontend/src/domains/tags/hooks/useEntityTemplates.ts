@@ -22,10 +22,7 @@ export const templateKeys = {
   detail: (id: string) => [...templateKeys.all, 'detail', id] as const,
 }
 
-export function useEntityTemplates(params?: {
-  entityType?: string
-  enabled?: boolean
-}): ReturnType<typeof useQuery> {
+export function useEntityTemplates(params?: { entityType?: string; enabled?: boolean }) {
   const searchParams = new URLSearchParams()
   if (params?.entityType) searchParams.set('entity_type', params.entityType)
 
@@ -37,7 +34,7 @@ export function useEntityTemplates(params?: {
   })
 }
 
-export function useEntityTemplate(id: string | null): ReturnType<typeof useQuery> {
+export function useEntityTemplate(id: string | null) {
   return useQuery({
     queryKey: id ? templateKeys.detail(id) : ['entity-templates', 'disabled'],
     queryFn: () => (id ? getEntityTemplate(id) : Promise.resolve(null)),
@@ -45,7 +42,7 @@ export function useEntityTemplate(id: string | null): ReturnType<typeof useQuery
   })
 }
 
-export function useCreateEntityTemplate(): ReturnType<typeof useMutation> {
+export function useCreateEntityTemplate() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createEntityTemplateApi(data),
@@ -55,7 +52,7 @@ export function useCreateEntityTemplate(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateEntityTemplate(): ReturnType<typeof useMutation> {
+export function useUpdateEntityTemplate() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => updateEntityTemplateApi(data),
@@ -65,7 +62,7 @@ export function useUpdateEntityTemplate(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteEntityTemplate(): ReturnType<typeof useMutation> {
+export function useDeleteEntityTemplate() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteEntityTemplateApi(id),
@@ -75,7 +72,7 @@ export function useDeleteEntityTemplate(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useApplyEntityTemplate(): ReturnType<typeof useMutation> {
+export function useApplyEntityTemplate() {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => applyEntityTemplateApi(data),
   })
@@ -83,9 +80,7 @@ export function useApplyEntityTemplate(): ReturnType<typeof useMutation> {
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-export function useContextAwareTemplates(
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
+export function useContextAwareTemplates(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: [...templateKeys.all, 'context-aware', params],
     queryFn: () => Promise.resolve([]),
@@ -93,7 +88,7 @@ export function useContextAwareTemplates(
   })
 }
 
-export function useToggleFavorite(): ReturnType<typeof useMutation> {
+export function useToggleFavorite() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_params: { templateId: string }) => Promise.resolve({ success: true }),
@@ -103,7 +98,7 @@ export function useToggleFavorite(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useApplyTemplate(): ReturnType<typeof useMutation> {
+export function useApplyTemplate() {
   return useMutation({
     mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ success: true }),
   })

@@ -32,7 +32,7 @@ export interface CreateRelationshipInput {
 // Hook Implementation
 // ============================================================================
 
-export function useCreateRelationship(parentDossierId: string): ReturnType<typeof useMutation> {
+export function useCreateRelationship(parentDossierId: string) {
   const queryClient = useQueryClient()
 
   return useMutation({

@@ -31,16 +31,12 @@ export interface UpdateSuggestionActionResult {
 // Hook Implementation
 // ============================================================================
 
-export function useUpdateSuggestionAction(): ReturnType<typeof useMutation> {
+export function useUpdateSuggestionAction() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (params: UpdateSuggestionActionParams) =>
-      WorkItemsRepo.updateSuggestionAction(
-        params.engagementId,
-        params.suggestionId,
-        params.action,
-      ),
+      WorkItemsRepo.updateSuggestionAction(params.engagementId, params.suggestionId, params.action),
     onSuccess: (_data, variables: UpdateSuggestionActionParams) => {
       queryClient.invalidateQueries({
         queryKey: ['position-suggestions', variables.engagementId],

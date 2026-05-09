@@ -9,11 +9,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '@/lib/supabase'
-import type {
-  SLAPolicyInput,
-  SLAEntityType,
-  SLAEscalationStatus,
-} from '@/types/sla.types'
+import type { SLAPolicyInput, SLAEntityType, SLAEscalationStatus } from '@/types/sla.types'
 import {
   getSLADashboard,
   getSLAComplianceByType,
@@ -41,7 +37,7 @@ export interface SLADashboardParams {
   endDate?: string
 }
 
-export function useSLADashboard(params: SLADashboardParams = {}): ReturnType<typeof useQuery> {
+export function useSLADashboard(params: SLADashboardParams = {}) {
   return useQuery({
     queryKey: ['sla', 'dashboard', params],
     queryFn: () =>
@@ -55,9 +51,7 @@ export function useSLADashboard(params: SLADashboardParams = {}): ReturnType<typ
   })
 }
 
-export function useSLAComplianceByType(
-  params: SLADashboardParams = {},
-): ReturnType<typeof useQuery> {
+export function useSLAComplianceByType(params: SLADashboardParams = {}) {
   return useQuery({
     queryKey: ['sla', 'compliance', 'type', params],
     queryFn: () =>
@@ -74,9 +68,7 @@ export interface SLAComplianceByAssigneeParams extends SLADashboardParams {
   limit?: number
 }
 
-export function useSLAComplianceByAssignee(
-  params: SLAComplianceByAssigneeParams = {},
-): ReturnType<typeof useQuery> {
+export function useSLAComplianceByAssignee(params: SLAComplianceByAssigneeParams = {}) {
   return useQuery({
     queryKey: ['sla', 'compliance', 'assignee', params],
     queryFn: () =>
@@ -99,7 +91,7 @@ export interface SLAAtRiskParams {
   limit?: number
 }
 
-export function useSLAAtRiskItems(params: SLAAtRiskParams = {}): ReturnType<typeof useQuery> {
+export function useSLAAtRiskItems(params: SLAAtRiskParams = {}) {
   return useQuery({
     queryKey: ['sla', 'at-risk', params],
     queryFn: () =>
@@ -113,7 +105,7 @@ export function useSLAAtRiskItems(params: SLAAtRiskParams = {}): ReturnType<type
   })
 }
 
-export function useSLABreachedItems(): ReturnType<typeof useQuery> {
+export function useSLABreachedItems() {
   return useQuery({
     queryKey: ['sla', 'breached'],
     queryFn: () => getSLABreachedItems(),
@@ -126,7 +118,7 @@ export function useSLABreachedItems(): ReturnType<typeof useQuery> {
 // Policy Management Hooks
 // ============================================
 
-export function useSLAPolicies(): ReturnType<typeof useQuery> {
+export function useSLAPolicies() {
   return useQuery({
     queryKey: ['sla', 'policies'],
     queryFn: () => getSLAPolicies(),
@@ -134,7 +126,7 @@ export function useSLAPolicies(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useSLAPolicy(policyId: string | undefined): ReturnType<typeof useQuery> {
+export function useSLAPolicy(policyId: string | undefined) {
   return useQuery({
     queryKey: ['sla', 'policies', policyId],
     queryFn: () => getSLAPolicy(policyId!),
@@ -143,7 +135,7 @@ export function useSLAPolicy(policyId: string | undefined): ReturnType<typeof us
   })
 }
 
-export function useCreateSLAPolicy(): ReturnType<typeof useMutation> {
+export function useCreateSLAPolicy() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -154,7 +146,7 @@ export function useCreateSLAPolicy(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateSLAPolicy(): ReturnType<typeof useMutation> {
+export function useUpdateSLAPolicy() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -167,7 +159,7 @@ export function useUpdateSLAPolicy(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteSLAPolicy(): ReturnType<typeof useMutation> {
+export function useDeleteSLAPolicy() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -188,7 +180,7 @@ export interface SLAEscalationsParams {
   limit?: number
 }
 
-export function useSLAEscalations(params: SLAEscalationsParams = {}): ReturnType<typeof useQuery> {
+export function useSLAEscalations(params: SLAEscalationsParams = {}) {
   return useQuery({
     queryKey: ['sla', 'escalations', params],
     queryFn: () =>
@@ -202,7 +194,7 @@ export function useSLAEscalations(params: SLAEscalationsParams = {}): ReturnType
   })
 }
 
-export function useAcknowledgeEscalation(): ReturnType<typeof useMutation> {
+export function useAcknowledgeEscalation() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -213,7 +205,7 @@ export function useAcknowledgeEscalation(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useResolveEscalation(): ReturnType<typeof useMutation> {
+export function useResolveEscalation() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -229,7 +221,7 @@ export function useResolveEscalation(): ReturnType<typeof useMutation> {
 // Manual Breach Check Hook
 // ============================================
 
-export function useCheckSLABreaches(): ReturnType<typeof useMutation> {
+export function useCheckSLABreaches() {
   const queryClient = useQueryClient()
 
   return useMutation({

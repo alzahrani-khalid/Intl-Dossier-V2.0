@@ -20,10 +20,7 @@ export const disclosureKeys = {
   progress: () => [...disclosureKeys.all, 'progress'] as const,
 }
 
-export function useProgressiveDisclosure(params?: {
-  featureArea?: string
-  enabled?: boolean
-}): ReturnType<typeof useQuery> {
+export function useProgressiveDisclosure(params?: { featureArea?: string; enabled?: boolean }) {
   const searchParams = new URLSearchParams()
   if (params?.featureArea) searchParams.set('feature_area', params.featureArea)
 
@@ -35,15 +32,17 @@ export function useProgressiveDisclosure(params?: {
   })
 }
 
-export function useUpdateDisclosureState(): ReturnType<typeof useMutation> {
+export function useUpdateDisclosureState() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => updateDisclosureStateApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: disclosureKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: disclosureKeys.all })
+    },
   })
 }
 
-export function useFeatureGates(): ReturnType<typeof useQuery> {
+export function useFeatureGates() {
   return useQuery({
     queryKey: disclosureKeys.gates(),
     queryFn: () => getFeatureGates(),
@@ -51,15 +50,17 @@ export function useFeatureGates(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useUnlockFeature(): ReturnType<typeof useMutation> {
+export function useUnlockFeature() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => unlockFeatureApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: disclosureKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: disclosureKeys.all })
+    },
   })
 }
 
-export function useUserProgress(): ReturnType<typeof useQuery> {
+export function useUserProgress() {
   return useQuery({
     queryKey: disclosureKeys.progress(),
     queryFn: () => getUserProgress(),
@@ -67,7 +68,7 @@ export function useUserProgress(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useRecordInteraction(): ReturnType<typeof useMutation> {
+export function useRecordInteraction() {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => recordInteractionApi(data),
   })

@@ -171,7 +171,7 @@ export function useArchiveEngagement() {
 export function useEngagementParticipants(
   engagementId: string,
   options?: Omit<UseQueryOptions<{ data: EngagementParticipant[] }, Error>, 'queryKey' | 'queryFn'>,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: engagementKeys.participants(engagementId),
     queryFn: async (): Promise<{ data: EngagementParticipant[] }> => {
@@ -239,7 +239,7 @@ export function useRemoveEngagementParticipant() {
 export function useEngagementAgenda(
   engagementId: string,
   options?: Omit<UseQueryOptions<{ data: EngagementAgendaItem[] }, Error>, 'queryKey' | 'queryFn'>,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: engagementKeys.agenda(engagementId),
     queryFn: async (): Promise<{ data: EngagementAgendaItem[] }> => {

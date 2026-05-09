@@ -17,7 +17,7 @@ export const scenarioKeys = {
   results: (id: string) => [...scenarioKeys.all, 'results', id] as const,
 }
 
-export function useScenarios(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useScenarios(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -32,7 +32,7 @@ export function useScenarios(params?: Record<string, unknown>): ReturnType<typeo
   })
 }
 
-export function useCreateScenario(): ReturnType<typeof useMutation> {
+export function useCreateScenario() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createScenarioApi(data),
@@ -42,14 +42,14 @@ export function useCreateScenario(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useRunScenario(): ReturnType<typeof useMutation> {
+export function useRunScenario() {
   return useMutation({
     mutationFn: (params: { scenarioId: string; data: Record<string, unknown> }) =>
       runScenarioApi(params.scenarioId, params.data),
   })
 }
 
-export function useScenarioResults(scenarioId: string | null): ReturnType<typeof useQuery> {
+export function useScenarioResults(scenarioId: string | null) {
   return useQuery({
     queryKey: scenarioId ? scenarioKeys.results(scenarioId) : ['scenario', 'disabled'],
     queryFn: () => (scenarioId ? getScenarioResults(scenarioId) : Promise.resolve(null)),
@@ -59,7 +59,7 @@ export function useScenarioResults(scenarioId: string | null): ReturnType<typeof
 
 /* Stub hooks – removed during refactoring, still imported by routes */
 
-export function useUpdateScenario(): ReturnType<typeof useMutation> {
+export function useUpdateScenario() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_params: { scenarioId: string; data: Record<string, unknown> }) =>
@@ -70,7 +70,7 @@ export function useUpdateScenario(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteScenario(): ReturnType<typeof useMutation> {
+export function useDeleteScenario() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_scenarioId: string) => Promise.resolve({ success: true }),
@@ -80,7 +80,7 @@ export function useDeleteScenario(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useCloneScenario(): ReturnType<typeof useMutation> {
+export function useCloneScenario() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_scenarioId: string) => Promise.resolve({ success: true }),
@@ -90,7 +90,7 @@ export function useCloneScenario(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useCompareScenarios(scenarioIds?: string[]): ReturnType<typeof useQuery> {
+export function useCompareScenarios(scenarioIds?: string[]) {
   return useQuery({
     queryKey: [...scenarioKeys.all, 'compare', scenarioIds],
     queryFn: () => Promise.resolve([]),

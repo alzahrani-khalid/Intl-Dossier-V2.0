@@ -28,7 +28,7 @@ export const topicKeys = {
 export function useTopicSubtopics(
   topicId: string,
   options?: Omit<UseQueryOptions<DossierWithExtension[], Error>, 'queryKey' | 'queryFn'>,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: topicKeys.subtopics(topicId),
     queryFn: () => TopicsRepo.getTopicSubtopics(topicId),

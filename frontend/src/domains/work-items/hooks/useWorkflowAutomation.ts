@@ -39,7 +39,7 @@ export const workflowKeys = {
 // Query Hooks
 // =============================================================================
 
-export function useWorkflowRules(params: WorkflowRulesListParams = {}): ReturnType<typeof useQuery> {
+export function useWorkflowRules(params: WorkflowRulesListParams = {}) {
   return useQuery({
     queryKey: workflowKeys.rulesList(params),
     queryFn: () => WorkItemsRepo.getWorkflowRules(params),
@@ -67,7 +67,7 @@ export function useInfiniteWorkflowRules(
   })
 }
 
-export function useWorkflowRule(id: string, enabled = true): ReturnType<typeof useQuery> {
+export function useWorkflowRule(id: string, enabled = true) {
   return useQuery({
     queryKey: workflowKeys.rule(id),
     queryFn: () => WorkItemsRepo.getWorkflowRule(id),
@@ -76,9 +76,7 @@ export function useWorkflowRule(id: string, enabled = true): ReturnType<typeof u
   })
 }
 
-export function useWorkflowExecutions(
-  params: WorkflowExecutionsListParams = {},
-): ReturnType<typeof useQuery> {
+export function useWorkflowExecutions(params: WorkflowExecutionsListParams = {}) {
   return useQuery({
     queryKey: workflowKeys.executionsList(params),
     queryFn: () => WorkItemsRepo.getWorkflowExecutions(params),
@@ -87,7 +85,7 @@ export function useWorkflowExecutions(
   })
 }
 
-export function useRuleExecutions(ruleId: string, enabled = true): ReturnType<typeof useQuery> {
+export function useRuleExecutions(ruleId: string, enabled = true) {
   return useQuery({
     queryKey: workflowKeys.ruleExecutions(ruleId),
     queryFn: () => WorkItemsRepo.getWorkflowExecutions({ rule_id: ruleId, limit: 50 }),
@@ -96,7 +94,7 @@ export function useRuleExecutions(ruleId: string, enabled = true): ReturnType<ty
   })
 }
 
-export function useNotificationTemplates(): ReturnType<typeof useQuery> {
+export function useNotificationTemplates() {
   return useQuery({
     queryKey: workflowKeys.templates(),
     queryFn: WorkItemsRepo.getNotificationTemplates,
@@ -109,7 +107,7 @@ export function useNotificationTemplates(): ReturnType<typeof useQuery> {
 // Mutation Hooks
 // =============================================================================
 
-export function useCreateWorkflowRule(): ReturnType<typeof useMutation> {
+export function useCreateWorkflowRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -120,7 +118,7 @@ export function useCreateWorkflowRule(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateWorkflowRule(): ReturnType<typeof useMutation> {
+export function useUpdateWorkflowRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -133,7 +131,7 @@ export function useUpdateWorkflowRule(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteWorkflowRule(): ReturnType<typeof useMutation> {
+export function useDeleteWorkflowRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -144,7 +142,7 @@ export function useDeleteWorkflowRule(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useToggleWorkflowRule(): ReturnType<typeof useMutation> {
+export function useToggleWorkflowRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -157,7 +155,7 @@ export function useToggleWorkflowRule(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDuplicateWorkflowRule(): ReturnType<typeof useMutation> {
+export function useDuplicateWorkflowRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -188,13 +186,13 @@ export function useDuplicateWorkflowRule(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useTestWorkflowRule(): ReturnType<typeof useMutation> {
+export function useTestWorkflowRule() {
   return useMutation({
     mutationFn: WorkItemsRepo.testWorkflowRule,
   })
 }
 
-export function useTriggerWorkflow(): ReturnType<typeof useMutation> {
+export function useTriggerWorkflow() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -205,7 +203,7 @@ export function useTriggerWorkflow(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useRetryWorkflowExecution(): ReturnType<typeof useMutation> {
+export function useRetryWorkflowExecution() {
   const queryClient = useQueryClient()
 
   return useMutation({

@@ -6,7 +6,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { refreshData } from '../repositories/misc.repository'
 
-export function usePullToRefresh(): ReturnType<typeof useMutation> {
+export function usePullToRefresh() {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => refreshData(data),
   })

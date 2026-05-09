@@ -49,7 +49,7 @@ export function useRelationship(
     UseQueryOptions<RelationshipWithDossiers, RelationshipAPIError>,
     'queryKey' | 'queryFn'
   >,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: relationshipKeys.detail(id),
     queryFn: () => RelationshipsRepo.getRelationship(id),
@@ -63,7 +63,7 @@ export function useRelationships(
     UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>,
     'queryKey' | 'queryFn'
   >,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: relationshipKeys.list(filters),
     queryFn: () => RelationshipsRepo.listRelationships(filters),
@@ -79,7 +79,7 @@ export function useRelationshipsForDossier(
     UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>,
     'queryKey' | 'queryFn'
   >,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: relationshipKeys.forDossier(dossierId, page, page_size),
     queryFn: () => RelationshipsRepo.getRelationshipsForDossier(dossierId, page, page_size),
@@ -96,7 +96,7 @@ export function useRelationshipsByType(
     UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>,
     'queryKey' | 'queryFn'
   >,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: relationshipKeys.byType(dossierId, relationshipType, page, page_size),
     queryFn: () =>
@@ -109,7 +109,7 @@ export function useRelationshipsByType(
 // Mutation Hooks
 // ============================================================================
 
-export function useCreateRelationship(): ReturnType<typeof useMutation> {
+export function useCreateRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -133,7 +133,7 @@ export function useCreateRelationship(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateRelationship(): ReturnType<typeof useMutation> {
+export function useUpdateRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -182,7 +182,7 @@ export function useUpdateRelationship(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteRelationship(): ReturnType<typeof useMutation> {
+export function useDeleteRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -293,13 +293,7 @@ export interface GraphData {
 export const graphKeys = {
   all: ['graph'] as const,
   traversal: (startDossierId: string, maxDegrees: number, relationshipType?: string) =>
-    [
-      ...graphKeys.all,
-      'traversal',
-      startDossierId,
-      maxDegrees,
-      relationshipType || 'all',
-    ] as const,
+    [...graphKeys.all, 'traversal', startDossierId, maxDegrees, relationshipType || 'all'] as const,
 }
 
 async function fetchGraphData(
@@ -357,7 +351,7 @@ export function useGraphData(
   maxDegrees: number = 2,
   relationshipType?: string,
   options?: Omit<UseQueryOptions<GraphData, RelationshipAPIError>, 'queryKey' | 'queryFn'>,
-): ReturnType<typeof useQuery> {
+) {
   const { t } = useTranslation()
 
   return useQuery({

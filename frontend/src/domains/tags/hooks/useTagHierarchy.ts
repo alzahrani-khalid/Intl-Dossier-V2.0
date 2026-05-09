@@ -23,7 +23,7 @@ export function useTagHierarchy(params?: {
   search?: string
   parentId?: string
   enabled?: boolean
-}): ReturnType<typeof useQuery> {
+}) {
   const searchParams = new URLSearchParams()
   if (params?.search) searchParams.set('search', params.search)
   if (params?.parentId) searchParams.set('parent_id', params.parentId)
@@ -36,7 +36,7 @@ export function useTagHierarchy(params?: {
   })
 }
 
-export function useCreateTag(): ReturnType<typeof useMutation> {
+export function useCreateTag() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createTagApi(data),
@@ -46,7 +46,7 @@ export function useCreateTag(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateTag(): ReturnType<typeof useMutation> {
+export function useUpdateTag() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: { id: string; data: Record<string, unknown> }) =>
@@ -57,7 +57,7 @@ export function useUpdateTag(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteTag(): ReturnType<typeof useMutation> {
+export function useDeleteTag() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteTagApi(id),
@@ -67,15 +67,15 @@ export function useDeleteTag(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useTagHierarchyTree(): ReturnType<typeof useQuery> {
+export function useTagHierarchyTree() {
   return useTagHierarchy()
 }
 
-export function useTagsFlat(enabled = true): ReturnType<typeof useQuery> {
+export function useTagsFlat(enabled = true) {
   return useTagHierarchy({ enabled })
 }
 
-export function useTagMergeHistory(): ReturnType<typeof useQuery> {
+export function useTagMergeHistory() {
   return useQuery({
     queryKey: [...tagKeys.all, 'mergeHistory'] as const,
     queryFn: () => Promise.resolve([]),
@@ -83,7 +83,7 @@ export function useTagMergeHistory(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useTagRenameHistory(): ReturnType<typeof useQuery> {
+export function useTagRenameHistory() {
   return useQuery({
     queryKey: [...tagKeys.all, 'renameHistory'] as const,
     queryFn: () => Promise.resolve([]),
@@ -91,11 +91,11 @@ export function useTagRenameHistory(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useTagSearch(query: string, enabled = true): ReturnType<typeof useQuery> {
+export function useTagSearch(query: string, enabled = true) {
   return useTagHierarchy({ search: query, enabled: enabled && query.length > 0 })
 }
 
-export function useEntityTagging(): ReturnType<typeof useMutation> {
+export function useEntityTagging() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: Record<string, unknown>) => Promise.resolve(params),
@@ -105,7 +105,7 @@ export function useEntityTagging(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useTagAnalytics(): ReturnType<typeof useQuery> {
+export function useTagAnalytics() {
   return useQuery({
     queryKey: [...tagKeys.all, 'analytics'] as const,
     queryFn: () => Promise.resolve({ totalTags: 0, categories: [], usage: [] }),
@@ -113,7 +113,7 @@ export function useTagAnalytics(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useRefreshTagAnalytics(): ReturnType<typeof useMutation> {
+export function useRefreshTagAnalytics() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () => Promise.resolve(),
@@ -123,7 +123,7 @@ export function useRefreshTagAnalytics(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useMergeTags(): ReturnType<typeof useMutation> {
+export function useMergeTags() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: { sourceId: string; targetId: string }) => Promise.resolve(params),

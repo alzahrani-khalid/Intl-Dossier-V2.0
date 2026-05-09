@@ -17,7 +17,7 @@ export const briefingPackKeys = {
 export function useBriefingPackStatus(
   jobId: string | null,
   options?: { enabled?: boolean; refetchInterval?: number },
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: jobId ? briefingPackKeys.jobStatus(jobId) : ['briefing-packs', 'disabled'],
     queryFn: () => (jobId ? getBriefingPackStatus(jobId) : Promise.resolve(null)),

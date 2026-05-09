@@ -25,7 +25,7 @@ export function useStakeholderTimeline(
     category?: string
     enabled?: boolean
   },
-): ReturnType<typeof useQuery> {
+) {
   const searchParams = new URLSearchParams()
   if (params?.from) searchParams.set('from', params.from)
   if (params?.to) searchParams.set('to', params.to)
@@ -42,7 +42,7 @@ export function useStakeholderTimeline(
   })
 }
 
-export function useAddTimelineEvent(): ReturnType<typeof useMutation> {
+export function useAddTimelineEvent() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: { stakeholderId: string; data: Record<string, unknown> }) =>
@@ -53,7 +53,7 @@ export function useAddTimelineEvent(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useTimelineCategories(): ReturnType<typeof useQuery> {
+export function useTimelineCategories() {
   return useQuery({
     queryKey: timelineKeys.categories(),
     queryFn: () => getTimelineCategories(),

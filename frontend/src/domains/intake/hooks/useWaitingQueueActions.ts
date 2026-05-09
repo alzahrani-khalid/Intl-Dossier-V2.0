@@ -16,13 +16,12 @@ import {
   acknowledgeEscalation as acknowledgeEscalationApi,
   resolveEscalation as resolveEscalationApi,
 } from '../repositories/intake.repository'
-import type { Assignment } from '@/components/waiting-queue/AssignmentDetailsModal'
 
 // ============================================================================
 // Assignment Details (uses Supabase directly, not API)
 // ============================================================================
 
-function useAssignmentDetails(assignmentId: string | null): ReturnType<typeof useQuery> {
+function useAssignmentDetails(assignmentId: string | null) {
   return useQuery({
     queryKey: ['assignment-details', assignmentId],
     queryFn: async () => {
@@ -57,7 +56,7 @@ export interface SendReminderResponse {
   reminder_id?: string
 }
 
-export function useReminderAction(): ReturnType<typeof useMutation> {
+export function useReminderAction() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -88,7 +87,7 @@ export interface SendBulkRemindersResponse {
   total: number
 }
 
-export function useBulkReminderAction(): ReturnType<typeof useMutation> {
+export function useBulkReminderAction() {
   return useMutation({
     mutationFn: async (data: Record<string, unknown>): Promise<SendBulkRemindersResponse> => {
       return sendBulkRemindersApi(data) as Promise<SendBulkRemindersResponse>
@@ -96,7 +95,7 @@ export function useBulkReminderAction(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useBulkReminderJobStatus(jobId: string | null, enabled = true): ReturnType<typeof useQuery> {
+export function useBulkReminderJobStatus(jobId: string | null, enabled = true) {
   return useQuery({
     queryKey: ['bulk-reminder-status', jobId],
     queryFn: () => getReminderJobStatusApi(jobId!) as Promise<BulkReminderJob>,
@@ -125,12 +124,14 @@ export interface EscalationAPIError {
   details?: string
 }
 
-export function useEscalationAction(): ReturnType<typeof useMutation> {
+export function useEscalationAction() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: EscalateAssignmentRequest): Promise<EscalateAssignmentResponse> => {
-      return escalateAssignmentApi(data as unknown as Record<string, unknown>) as Promise<EscalateAssignmentResponse>
+      return escalateAssignmentApi(
+        data as unknown as Record<string, unknown>,
+      ) as Promise<EscalateAssignmentResponse>
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['waiting-queue'] })
@@ -138,7 +139,7 @@ export function useEscalationAction(): ReturnType<typeof useMutation> {
   })
 }
 
-function useAcknowledgeEscalation(): ReturnType<typeof useMutation> {
+function useAcknowledgeEscalation() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -151,7 +152,7 @@ function useAcknowledgeEscalation(): ReturnType<typeof useMutation> {
   })
 }
 
-function useResolveEscalation(): ReturnType<typeof useMutation> {
+function useResolveEscalation() {
   const queryClient = useQueryClient()
 
   return useMutation({

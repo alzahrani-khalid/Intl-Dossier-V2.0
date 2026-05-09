@@ -18,7 +18,7 @@ export const reportKeys = {
   history: (params?: Record<string, unknown>) => [...reportKeys.all, 'history', params] as const,
 }
 
-export function useReportTemplates(): ReturnType<typeof useQuery> {
+export function useReportTemplates() {
   return useQuery({
     queryKey: reportKeys.templates(),
     queryFn: () => getReportTemplates(),
@@ -26,7 +26,7 @@ export function useReportTemplates(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useGenerateReport(): ReturnType<typeof useMutation> {
+export function useGenerateReport() {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => generateReportApi(data),
   })
@@ -38,7 +38,7 @@ export function useReportStatus(
     enabled?: boolean
     refetchInterval?: number
   },
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: reportId ? reportKeys.status(reportId) : ['report-builder', 'disabled'],
     queryFn: () => (reportId ? getReportStatus(reportId) : Promise.resolve(null)),
@@ -47,7 +47,7 @@ export function useReportStatus(
   })
 }
 
-export function useReportHistory(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useReportHistory(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -64,9 +64,7 @@ export function useReportHistory(params?: Record<string, unknown>): ReturnType<t
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-export function useReportBuilderState(
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
+export function useReportBuilderState(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: [...reportKeys.all, 'builder-state', params],
     queryFn: () => Promise.resolve({ fields: [], filters: [], sorting: [] }),
@@ -74,7 +72,7 @@ export function useReportBuilderState(
   })
 }
 
-export function useReports(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useReports(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: [...reportKeys.all, 'reports', params],
     queryFn: () => Promise.resolve([]),
@@ -82,7 +80,7 @@ export function useReports(params?: Record<string, unknown>): ReturnType<typeof 
   })
 }
 
-export function useCreateReport(): ReturnType<typeof useMutation> {
+export function useCreateReport() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ id: '', success: true }),
@@ -92,7 +90,7 @@ export function useCreateReport(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateReport(): ReturnType<typeof useMutation> {
+export function useUpdateReport() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ success: true }),
@@ -102,7 +100,7 @@ export function useUpdateReport(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteReport(): ReturnType<typeof useMutation> {
+export function useDeleteReport() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_id: string) => Promise.resolve({ success: true }),
@@ -112,7 +110,7 @@ export function useDeleteReport(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useReportToggleFavorite(): ReturnType<typeof useMutation> {
+export function useReportToggleFavorite() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_params: { reportId: string }) => Promise.resolve({ success: true }),
@@ -122,7 +120,7 @@ export function useReportToggleFavorite(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useReportPreview(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useReportPreview(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: [...reportKeys.all, 'preview', params],
     queryFn: () => Promise.resolve(null),
@@ -130,7 +128,7 @@ export function useReportPreview(params?: Record<string, unknown>): ReturnType<t
   })
 }
 
-export function useCreateSchedule(): ReturnType<typeof useMutation> {
+export function useCreateSchedule() {
   return useMutation({
     mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ id: '', success: true }),
   })

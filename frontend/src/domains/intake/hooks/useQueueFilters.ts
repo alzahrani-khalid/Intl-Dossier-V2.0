@@ -64,14 +64,14 @@ export function useQueueFilters(): {
     setFilters({})
   }, [])
 
-  const hasActiveFilters = Object.values(filters).some((v) =>
-    v !== undefined && v !== '' && v !== null,
+  const hasActiveFilters = Object.values(filters).some(
+    (v) => v !== undefined && v !== '' && v !== null,
   )
 
   return { filters, setFilter, clearFilters, hasActiveFilters }
 }
 
-export function useFilteredAssignments(filters: FilterCriteria): ReturnType<typeof useQuery> {
+export function useFilteredAssignments(filters: FilterCriteria) {
   const params = new URLSearchParams()
   if (filters.status) params.set('status', filters.status)
   if (filters.urgency) params.set('urgency', filters.urgency)
@@ -89,7 +89,7 @@ export function useFilteredAssignments(filters: FilterCriteria): ReturnType<type
   })
 }
 
-function useFilterPreferences(): ReturnType<typeof useQuery> {
+function useFilterPreferences() {
   return useQuery({
     queryKey: ['queue-filters', 'preferences'],
     queryFn: () => getFilterPreferences(),
@@ -97,7 +97,7 @@ function useFilterPreferences(): ReturnType<typeof useQuery> {
   })
 }
 
-function useSaveFilterPreferences(): ReturnType<typeof useMutation> {
+function useSaveFilterPreferences() {
   const queryClient = useQueryClient()
 
   return useMutation({

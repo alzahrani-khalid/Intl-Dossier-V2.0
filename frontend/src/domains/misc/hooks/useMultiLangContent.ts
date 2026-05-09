@@ -22,7 +22,7 @@ export function useMultiLangContent(
     language?: string
     enabled?: boolean
   },
-): ReturnType<typeof useQuery> {
+) {
   const searchParams = new URLSearchParams()
   searchParams.set('entity_type', entityType)
   searchParams.set('entity_id', entityId)
@@ -36,7 +36,7 @@ export function useMultiLangContent(
   })
 }
 
-export function useSaveTranslation(): ReturnType<typeof useMutation> {
+export function useSaveTranslation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => saveTranslationApi(data),
@@ -48,7 +48,7 @@ export function useSaveTranslation(): ReturnType<typeof useMutation> {
 
 /* Stub hook – removed during refactoring, still imported by components */
 
-export function useSupportedLanguages(): ReturnType<typeof useQuery> {
+export function useSupportedLanguages() {
   return useQuery({
     queryKey: [...multiLangKeys.all, 'supported-languages'],
     queryFn: () =>

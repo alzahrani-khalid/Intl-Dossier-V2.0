@@ -30,7 +30,7 @@ export const webhookKeys = {
   templates: () => [...webhookKeys.all, 'templates'] as const,
 }
 
-export function useWebhooks(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useWebhooks(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -45,7 +45,7 @@ export function useWebhooks(params?: Record<string, unknown>): ReturnType<typeof
   })
 }
 
-export function useWebhook(id: string | null): ReturnType<typeof useQuery> {
+export function useWebhook(id: string | null) {
   return useQuery({
     queryKey: id ? webhookKeys.detail(id) : ['webhooks', 'disabled'],
     queryFn: () => (id ? getWebhook(id) : Promise.resolve(null)),
@@ -53,7 +53,7 @@ export function useWebhook(id: string | null): ReturnType<typeof useQuery> {
   })
 }
 
-export function useCreateWebhook(): ReturnType<typeof useMutation> {
+export function useCreateWebhook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createWebhookApi(data),
@@ -63,7 +63,7 @@ export function useCreateWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateWebhook(): ReturnType<typeof useMutation> {
+export function useUpdateWebhook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => updateWebhookApi(data),
@@ -73,7 +73,7 @@ export function useUpdateWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteWebhook(): ReturnType<typeof useMutation> {
+export function useDeleteWebhook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteWebhookApi(id),
@@ -83,7 +83,7 @@ export function useDeleteWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useToggleWebhook(): ReturnType<typeof useMutation> {
+export function useToggleWebhook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => toggleWebhookApi(data),
@@ -93,15 +93,13 @@ export function useToggleWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useTestWebhook(): ReturnType<typeof useMutation> {
+export function useTestWebhook() {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => testWebhookApi(data),
   })
 }
 
-export function useWebhookDeliveries(
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
+export function useWebhookDeliveries(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -116,7 +114,7 @@ export function useWebhookDeliveries(
   })
 }
 
-export function useWebhookStats(webhookId: string, days: number = 30): ReturnType<typeof useQuery> {
+export function useWebhookStats(webhookId: string, days: number = 30) {
   return useQuery({
     queryKey: webhookKeys.stats(webhookId),
     queryFn: () => getWebhookStatsApi(webhookId, days),
@@ -125,7 +123,7 @@ export function useWebhookStats(webhookId: string, days: number = 30): ReturnTyp
   })
 }
 
-export function useWebhookTemplates(): ReturnType<typeof useQuery> {
+export function useWebhookTemplates() {
   return useQuery({
     queryKey: webhookKeys.templates(),
     queryFn: () => getWebhookTemplatesApi(),

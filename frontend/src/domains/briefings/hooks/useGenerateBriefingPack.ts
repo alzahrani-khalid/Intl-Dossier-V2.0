@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { generateBriefingPack } from '../repositories/briefings.repository'
 import { briefingPackKeys } from './useBriefingPackStatus'
 
-export function useGenerateBriefingPack(): ReturnType<typeof useMutation> {
+export function useGenerateBriefingPack() {
   const queryClient = useQueryClient()
 
   return useMutation({

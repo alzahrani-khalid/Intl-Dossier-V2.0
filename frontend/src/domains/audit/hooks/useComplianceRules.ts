@@ -23,7 +23,7 @@ export const complianceKeys = {
   check: (params?: Record<string, unknown>) => [...complianceKeys.all, 'check', params] as const,
 }
 
-export function useComplianceRules(params?: { enabled?: boolean }): ReturnType<typeof useQuery> {
+export function useComplianceRules(params?: { enabled?: boolean }) {
   return useQuery({
     queryKey: complianceKeys.list(),
     queryFn: () => getComplianceRulesApi(),
@@ -32,7 +32,7 @@ export function useComplianceRules(params?: { enabled?: boolean }): ReturnType<t
   })
 }
 
-export function useComplianceRule(id: string | null): ReturnType<typeof useQuery> {
+export function useComplianceRule(id: string | null) {
   return useQuery({
     queryKey: id ? complianceKeys.detail(id) : ['compliance', 'disabled'],
     queryFn: () => (id ? getComplianceRule(id) : Promise.resolve(null)),
@@ -40,7 +40,7 @@ export function useComplianceRule(id: string | null): ReturnType<typeof useQuery
   })
 }
 
-export function useCreateComplianceRule(): ReturnType<typeof useMutation> {
+export function useCreateComplianceRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -51,7 +51,7 @@ export function useCreateComplianceRule(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateComplianceRule(): ReturnType<typeof useMutation> {
+export function useUpdateComplianceRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -63,7 +63,7 @@ export function useUpdateComplianceRule(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteComplianceRule(): ReturnType<typeof useMutation> {
+export function useDeleteComplianceRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -74,7 +74,7 @@ export function useDeleteComplianceRule(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useRunComplianceCheck(): ReturnType<typeof useMutation> {
+export function useRunComplianceCheck() {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => runComplianceCheckApi(data),
   })
@@ -82,7 +82,7 @@ export function useRunComplianceCheck(): ReturnType<typeof useMutation> {
 
 /* Stub hook – removed during refactoring, still imported by compliance components */
 
-export function useSignoffViolation(): ReturnType<typeof useMutation> {
+export function useSignoffViolation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_params: { violationId: string; data: Record<string, unknown> }) =>
@@ -93,9 +93,7 @@ export function useSignoffViolation(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useComplianceViolations(
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
+export function useComplianceViolations(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: [...complianceKeys.all, 'violations', params],
     queryFn: () => Promise.resolve([]),
@@ -103,9 +101,7 @@ export function useComplianceViolations(
   })
 }
 
-export function useComplianceTemplates(
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
+export function useComplianceTemplates(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: [...complianceKeys.all, 'templates', params],
     queryFn: () => Promise.resolve([]),
@@ -113,7 +109,7 @@ export function useComplianceTemplates(
   })
 }
 
-export function useAcknowledgeViolation(): ReturnType<typeof useMutation> {
+export function useAcknowledgeViolation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_params: { violationId: string; data: Record<string, unknown> }) =>

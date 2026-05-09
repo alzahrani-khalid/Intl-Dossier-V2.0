@@ -10,41 +10,34 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import {
   createTicket as createTicketApi,
-  listTickets,
   getTicket as getTicketApi,
   getTriageSuggestions as getTriageSuggestionsApi,
   applyTriage as applyTriageApi,
-  assignTicket as assignTicketApi,
   convertTicket as convertTicketApi,
   findDuplicates as findDuplicatesApi,
   mergeTickets as mergeTicketsApi,
   closeTicket as closeTicketApi,
   uploadAttachment as uploadAttachmentApi,
   deleteAttachment as deleteAttachmentApi,
-  getIntakeHealth,
-  getAIHealth,
 } from '../repositories/intake.repository'
 import type {
   TicketResponse,
   TicketDetailResponse,
-  TicketListResponse,
   CreateTicketRequest,
-  UpdateTicketRequest,
   ApplyTriageRequest,
-  AssignTicketRequest,
   ConvertTicketRequest,
   MergeTicketsRequest,
   CloseTicketRequest,
   TriageSuggestions,
   DuplicateCandidate,
-  Attachment,
 } from '@/types/intake'
 
 // Query keys
 export const intakeKeys = {
   all: ['intake'] as const,
   tickets: () => [...intakeKeys.all, 'tickets'] as const,
-  ticketList: (filters?: Record<string, unknown>) => [...intakeKeys.tickets(), 'list', filters] as const,
+  ticketList: (filters?: Record<string, unknown>) =>
+    [...intakeKeys.tickets(), 'list', filters] as const,
   ticket: (id: string) => [...intakeKeys.tickets(), 'detail', id] as const,
   triage: (id: string) => [...intakeKeys.tickets(), 'triage', id] as const,
   duplicates: (id: string) => [...intakeKeys.tickets(), 'duplicates', id] as const,
@@ -53,7 +46,7 @@ export const intakeKeys = {
   aiHealth: () => [...intakeKeys.all, 'ai-health'] as const,
 }
 
-export const useCreateTicket = (): ReturnType<typeof useMutation> => {
+export const useCreateTicket = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -77,7 +70,7 @@ export const useCreateTicket = (): ReturnType<typeof useMutation> => {
   })
 }
 
-export const useTicket = (ticketId: string): ReturnType<typeof useQuery> => {
+export const useTicket = (ticketId: string) => {
   return useQuery({
     queryKey: intakeKeys.ticket(ticketId),
     queryFn: () => getTicketApi(ticketId) as Promise<TicketDetailResponse>,
@@ -85,7 +78,7 @@ export const useTicket = (ticketId: string): ReturnType<typeof useQuery> => {
   })
 }
 
-export const useTriageSuggestions = (ticketId: string): ReturnType<typeof useQuery> => {
+export const useTriageSuggestions = (ticketId: string) => {
   return useQuery({
     queryKey: intakeKeys.triage(ticketId),
     queryFn: () => getTriageSuggestionsApi(ticketId) as Promise<TriageSuggestions>,
@@ -93,7 +86,7 @@ export const useTriageSuggestions = (ticketId: string): ReturnType<typeof useQue
   })
 }
 
-export const useApplyTriage = (ticketId: string): ReturnType<typeof useMutation> => {
+export const useApplyTriage = (ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -107,12 +100,15 @@ export const useApplyTriage = (ticketId: string): ReturnType<typeof useMutation>
   })
 }
 
-export const useConvertTicket = (ticketId: string): ReturnType<typeof useMutation> => {
+export const useConvertTicket = (ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: ConvertTicketRequest): Promise<unknown> => {
-      return convertTicketApi({ ...data, ticket_id: ticketId } as unknown as Record<string, unknown>)
+      return convertTicketApi({ ...data, ticket_id: ticketId } as unknown as Record<
+        string,
+        unknown
+      >)
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
@@ -120,7 +116,7 @@ export const useConvertTicket = (ticketId: string): ReturnType<typeof useMutatio
   })
 }
 
-export const useDuplicateCandidates = (ticketId: string, threshold = 0.65): ReturnType<typeof useQuery> => {
+export const useDuplicateCandidates = (ticketId: string, threshold = 0.65) => {
   return useQuery({
     queryKey: intakeKeys.duplicates(ticketId),
     queryFn: () => findDuplicatesApi(ticketId, threshold) as Promise<DuplicateCandidate[]>,
@@ -128,7 +124,7 @@ export const useDuplicateCandidates = (ticketId: string, threshold = 0.65): Retu
   })
 }
 
-export const useMergeTickets = (ticketId: string): ReturnType<typeof useMutation> => {
+export const useMergeTickets = (ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -141,7 +137,7 @@ export const useMergeTickets = (ticketId: string): ReturnType<typeof useMutation
   })
 }
 
-export const useCloseTicket = (ticketId: string): ReturnType<typeof useMutation> => {
+export const useCloseTicket = (ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -155,7 +151,7 @@ export const useCloseTicket = (ticketId: string): ReturnType<typeof useMutation>
   })
 }
 
-export const useUploadAttachment = (): ReturnType<typeof useMutation> => {
+export const useUploadAttachment = () => {
   return useMutation({
     mutationFn: async (data: Record<string, unknown>): Promise<unknown> => {
       return uploadAttachmentApi(data)
@@ -163,7 +159,7 @@ export const useUploadAttachment = (): ReturnType<typeof useMutation> => {
   })
 }
 
-export const useDeleteAttachment = (): ReturnType<typeof useMutation> => {
+export const useDeleteAttachment = () => {
   return useMutation({
     mutationFn: async (attachmentId: string): Promise<unknown> => {
       return deleteAttachmentApi(attachmentId)
@@ -181,11 +177,7 @@ export interface SLAConfiguration {
   escalation_hours: number
 }
 
-export const useGetSLAPreview = (
-  urgency: string,
-  requestType?: string,
-  sensitivity?: string,
-): ReturnType<typeof useQuery> => {
+export const useGetSLAPreview = (urgency: string, requestType?: string, sensitivity?: string) => {
   return useQuery({
     queryKey: ['intake', 'sla', urgency, requestType, sensitivity],
     queryFn: async () => {
@@ -207,10 +199,34 @@ export const useGetSLAPreview = (
 
       // Default SLA based on urgency
       const defaults: Record<string, SLAConfiguration> = {
-        critical: { id: 'default', urgency: 'critical', response_hours: 1, resolution_hours: 4, escalation_hours: 2 },
-        high: { id: 'default', urgency: 'high', response_hours: 4, resolution_hours: 24, escalation_hours: 8 },
-        medium: { id: 'default', urgency: 'medium', response_hours: 8, resolution_hours: 48, escalation_hours: 24 },
-        low: { id: 'default', urgency: 'low', response_hours: 24, resolution_hours: 120, escalation_hours: 48 },
+        critical: {
+          id: 'default',
+          urgency: 'critical',
+          response_hours: 1,
+          resolution_hours: 4,
+          escalation_hours: 2,
+        },
+        high: {
+          id: 'default',
+          urgency: 'high',
+          response_hours: 4,
+          resolution_hours: 24,
+          escalation_hours: 8,
+        },
+        medium: {
+          id: 'default',
+          urgency: 'medium',
+          response_hours: 8,
+          resolution_hours: 48,
+          escalation_hours: 24,
+        },
+        low: {
+          id: 'default',
+          urgency: 'low',
+          response_hours: 24,
+          resolution_hours: 120,
+          escalation_hours: 48,
+        },
       }
 
       return defaults[urgency] || defaults.medium
@@ -219,7 +235,7 @@ export const useGetSLAPreview = (
   })
 }
 
-export const usePauseSLA = (ticketId: string): ReturnType<typeof useMutation> => {
+export const usePauseSLA = (ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -238,7 +254,7 @@ export const usePauseSLA = (ticketId: string): ReturnType<typeof useMutation> =>
   })
 }
 
-export const useResumeSLA = (ticketId: string): ReturnType<typeof useMutation> => {
+export const useResumeSLA = (ticketId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
