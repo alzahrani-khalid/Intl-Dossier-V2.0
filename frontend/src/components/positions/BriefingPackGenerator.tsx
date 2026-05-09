@@ -38,12 +38,10 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   // Mutations and queries
-  // Stub useGenerateBriefingPack returns UseMutationResult<unknown>; component-side
-  // typed shim narrows the return shape (47-07's surface).
-  const generateMutation = useGenerateBriefingPack() as unknown as {
-    mutateAsync: (vars: { engagementId: string; language: string }) => Promise<{ job_id: string }>
-    isPending: boolean
-  }
+  // CR-10: hook now exposes a typed UseMutationResult that accepts
+  // { engagementId, language, options? } and forwards `language` to the
+  // repository payload. No widening cast needed.
+  const generateMutation = useGenerateBriefingPack()
   // WR-02/WR-03: read the *server's* job status from .data (BriefingPackJob),
   // not TanStack's QueryStatus from .status (which is only pending|error|success
   // and would never produce 'completed'|'failed'). Restore the polling gate
