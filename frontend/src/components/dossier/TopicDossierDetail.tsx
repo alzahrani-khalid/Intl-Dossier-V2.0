@@ -34,7 +34,7 @@ interface TopicDossierDetailProps {
 function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier'] }) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const extension = dossier.extension as TopicExtension | undefined
+  const extension = dossier.extension as TopicExtension | undefined
 
   // Fetch parent topic name if parent_theme_id exists
   const parentRelationships = useRelationshipsForDossier(
@@ -111,11 +111,8 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
 
-  const { data, isLoading } = useRelationshipsForDossier(dossierId) as unknown as {
-    data: { data: RelationshipWithDossiers[] } | undefined
-    isLoading: boolean
-  }
-  const relationships = data?.data || []
+  const { data, isLoading } = useRelationshipsForDossier(dossierId)
+  const relationships: RelationshipWithDossiers[] = data?.data ?? []
 
   if (isLoading) {
     return (
