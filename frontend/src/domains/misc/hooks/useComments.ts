@@ -3,7 +3,7 @@
  * @module domains/misc/hooks/useComments
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, type UseQueryResult } from '@tanstack/react-query'
 import {
   getComments as getCommentsApi,
   createComment as createCommentApi,
@@ -13,7 +13,9 @@ import {
   reactToComment as reactToCommentApi,
   resolveComment as resolveCommentApi,
   mentionUsers as mentionUsersApi,
+  searchUsersForMention as searchUsersForMentionApi,
 } from '../repositories/misc.repository'
+import type { MentionUser, SearchUsersResponse } from '@/types/comment.types'
 
 export const commentKeys = {
   all: ['comments'] as const,
@@ -111,14 +113,21 @@ export function useMentionUsers() {
   })
 }
 
-/* Stub hook – removed during refactoring, still imported by components */
-
-export function useSearchUsersForMention(query?: string, options?: { enabled?: boolean }) {
-  return useQuery({
+// WR-28: wired to the real Edge Function endpoint
+// (GET /entity-comments/users/search?q=...). The endpoint returns
+// { users: MentionUser[] }; this hook unwraps to MentionUser[] so consumers
+// can use `data` directly without further narrowing.
+export function useSearchUsersForMention(
+  query?: string,
+  options?: { enabled?: boolean },
+): UseQueryResult<MentionUser[], Error> {
+  return useQuery<MentionUser[], Error>({
     queryKey: [...commentKeys.all, 'mention-search', query],
-    queryFn: () => Promise.resolve([]),
-    enabled:
-      options?.enabled !== false && Boolean(query) && (query?.length ?? 0) > 0,
+    queryFn: async () => {
+      const response = (await searchUsersForMentionApi(query ?? '')) as SearchUsersResponse
+      return response.users ?? []
+    },
+    enabled: options?.enabled !== false && Boolean(query) && (query?.length ?? 0) > 0,
     staleTime: 30 * 1000,
   })
 }

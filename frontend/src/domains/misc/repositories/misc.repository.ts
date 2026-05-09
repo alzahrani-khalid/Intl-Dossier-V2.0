@@ -47,6 +47,16 @@ export async function mentionUsers(data: Record<string, unknown>): Promise<unkno
   return apiPost('/entity-comments/mentions', data)
 }
 
+// WR-28: search users for @mention popup. Edge Function endpoint:
+// GET /entity-comments/users/search?q=X (returns { users: MentionUser[] })
+export async function searchUsersForMention(query: string, limit?: number): Promise<unknown> {
+  const params = new URLSearchParams({ q: query })
+  if (typeof limit === 'number') {
+    params.set('limit', String(limit))
+  }
+  return apiGet(`/entity-comments/users/search?${params.toString()}`)
+}
+
 // ============================================================================
 // Stakeholder Timeline
 // ============================================================================
