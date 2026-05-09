@@ -20,7 +20,7 @@ interface CountryExtensionWithExtra extends CountryExtension {
 const regions = ['Asia', 'Europe', 'Africa', 'Americas', 'Oceania']
 
 export default function Countries() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [regionFilter, setRegionFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
@@ -65,8 +65,6 @@ export default function Countries() {
   const suspendedCount = filteredCountries.filter(
     (c) => c.status === ('suspended' as string),
   ).length
-
-  const isRTL = i18n.dir() === 'rtl'
 
   // Loading state
   if (isLoading) {

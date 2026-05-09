@@ -20,6 +20,7 @@ export interface FilterCriteria {
   assignee?: string
   dateRange?: { from: string; to: string }
   search?: string
+  sort_by?: string
 }
 
 const STORAGE_KEY = 'queue-filters'
@@ -47,8 +48,11 @@ function saveFiltersToStorage(filters: FilterCriteria): void {
 export function useQueueFilters(): {
   filters: FilterCriteria
   setFilter: (key: keyof FilterCriteria, value: unknown) => void
+  updateFilters: (next: Partial<FilterCriteria>) => void
   clearFilters: () => void
   hasActiveFilters: boolean
+  hasFilters: boolean
+  filterCount: number
 } {
   const [filters, setFilters] = useState<FilterCriteria>(loadFiltersFromStorage)
 
@@ -60,15 +64,38 @@ export function useQueueFilters(): {
     setFilters((prev) => ({ ...prev, [key]: value }))
   }, [])
 
+  const updateFilters = useCallback((next: Partial<FilterCriteria>) => {
+    setFilters((prev) => ({ ...prev, ...next }))
+  }, [])
+
   const clearFilters = useCallback(() => {
     setFilters({})
   }, [])
 
-  const hasActiveFilters = Object.values(filters).some(
+  const filterCount = Object.values(filters).filter(
     (v) => v !== undefined && v !== '' && v !== null,
-  )
+  ).length
+  const hasActiveFilters = filterCount > 0
 
-  return { filters, setFilter, clearFilters, hasActiveFilters }
+  return {
+    filters,
+    setFilter,
+    updateFilters,
+    clearFilters,
+    hasActiveFilters,
+    hasFilters: hasActiveFilters,
+    filterCount,
+  }
+}
+
+export interface FilteredAssignmentsResponse {
+  data: unknown[]
+  pagination?: {
+    total_count?: number
+    limit?: number
+    offset?: number
+    has_more?: boolean
+  }
 }
 
 export function useFilteredAssignments(filters: FilterCriteria) {
@@ -82,9 +109,9 @@ export function useFilteredAssignments(filters: FilterCriteria) {
     params.set('to', filters.dateRange.to)
   }
 
-  return useQuery({
+  return useQuery<FilteredAssignmentsResponse>({
     queryKey: ['queue-filters', 'assignments', filters],
-    queryFn: () => getFilteredAssignments(params),
+    queryFn: () => getFilteredAssignments(params) as Promise<FilteredAssignmentsResponse>,
     staleTime: 30 * 1000,
   })
 }

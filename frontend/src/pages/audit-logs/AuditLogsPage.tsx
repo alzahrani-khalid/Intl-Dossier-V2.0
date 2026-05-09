@@ -11,7 +11,7 @@
  * Mobile-first and RTL-ready
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Shield,
@@ -40,9 +40,101 @@ import {
   AuditLogExport,
   AuditLogStatistics,
 } from '@/components/audit-logs'
-import { useAuditLogs } from '@/hooks/useAuditLogs'
-import type { AuditLogEntry } from '@/types/audit-log.types'
+import { useAuditLogs as useAuditLogsQuery } from '@/hooks/useAuditLogs'
+import type {
+  AuditLogEntry,
+  AuditLogFilters as AuditLogFiltersType,
+  AuditLogPagination,
+} from '@/types/audit-log.types'
 import { useDirection } from '@/hooks/useDirection'
+
+// Page-level adapter: wraps the underlying useQuery into the page's expected
+// `{ logs, total, hasMore, filters, pagination, setFilters, ... }` shape.
+// The adapter is intentionally local to this file to keep the change in plan
+// scope (frontend/src/pages/**); the underlying useQuery hook lives in
+// frontend/src/domains/audit/hooks/useAuditLogs.ts.
+interface AuditLogsApiResponse {
+  data?: AuditLogEntry[]
+  total?: number
+  hasMore?: boolean
+}
+
+function useAuditLogs(): {
+  logs: AuditLogEntry[]
+  isLoading: boolean
+  isFetchingNextPage: boolean
+  error: Error | null
+  total: number
+  hasMore: boolean
+  filters: AuditLogFiltersType
+  pagination: AuditLogPagination
+  setFilters: (filters: AuditLogFiltersType) => void
+  clearFilters: () => void
+  setPagination: (pagination: AuditLogPagination) => void
+  nextPage: () => void
+  prevPage: () => void
+  refetch: () => void
+} {
+  const [filters, setFiltersState] = useState<AuditLogFiltersType>({})
+  const [pagination, setPagination] = useState<AuditLogPagination>({ limit: 25, offset: 0 })
+
+  const queryParams = useMemo(
+    () => ({
+      page: Math.floor(pagination.offset / pagination.limit) + 1,
+      limit: pagination.limit,
+      action: filters.operation,
+      entity_type: filters.table_name,
+      user_id: filters.user_id,
+      from: filters.date_from,
+      to: filters.date_to,
+    }),
+    [filters, pagination],
+  )
+
+  const query = useAuditLogsQuery(queryParams)
+  const data = query.data as AuditLogsApiResponse | undefined
+
+  const logs: AuditLogEntry[] = data?.data ?? []
+  const total: number = data?.total ?? 0
+  const hasMore: boolean = data?.hasMore ?? false
+
+  const setFilters = useCallback((next: AuditLogFiltersType) => {
+    setFiltersState(next)
+    setPagination((prev) => ({ ...prev, offset: 0 }))
+  }, [])
+
+  const clearFilters = useCallback(() => {
+    setFiltersState({})
+    setPagination((prev) => ({ ...prev, offset: 0 }))
+  }, [])
+
+  const nextPage = useCallback(() => {
+    setPagination((prev) => ({ ...prev, offset: prev.offset + prev.limit }))
+  }, [])
+
+  const prevPage = useCallback(() => {
+    setPagination((prev) => ({ ...prev, offset: Math.max(0, prev.offset - prev.limit) }))
+  }, [])
+
+  return {
+    logs,
+    isLoading: query.isLoading,
+    isFetchingNextPage: query.isFetching && !query.isLoading,
+    error: query.error as Error | null,
+    total,
+    hasMore,
+    filters,
+    pagination,
+    setFilters,
+    clearFilters,
+    setPagination,
+    nextPage,
+    prevPage,
+    refetch: () => {
+      void query.refetch()
+    },
+  }
+}
 
 // =============================================
 // COMPONENT

@@ -32,8 +32,6 @@ const myWorkSearchSchema = z.object({
   assignee: z.string().uuid().optional(),
 })
 
-type MyWorkSearchParams = z.infer<typeof myWorkSearchSchema>
-
 export const Route = createFileRoute('/_protected/my-work/')({
   component: MyWorkDashboard,
   validateSearch: (search) => myWorkSearchSchema.parse(search),

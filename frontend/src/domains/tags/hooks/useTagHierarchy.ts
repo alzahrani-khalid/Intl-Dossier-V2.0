@@ -75,18 +75,38 @@ export function useTagsFlat(enabled = true) {
   return useTagHierarchy({ enabled })
 }
 
+export interface TagMergeHistoryEntry {
+  id: string
+  source_tag_name_en: string
+  source_tag_name_ar: string
+  target_tag_id: string
+  merged_at: string
+  assignments_transferred: number
+  merge_reason?: string
+}
+
+export interface TagRenameHistoryEntry {
+  id: string
+  old_name_en: string
+  old_name_ar: string
+  new_name_en: string
+  new_name_ar: string
+  renamed_at: string
+  rename_reason?: string
+}
+
 export function useTagMergeHistory() {
-  return useQuery({
+  return useQuery<TagMergeHistoryEntry[]>({
     queryKey: [...tagKeys.all, 'mergeHistory'] as const,
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve<TagMergeHistoryEntry[]>([]),
     staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useTagRenameHistory() {
-  return useQuery({
+  return useQuery<TagRenameHistoryEntry[]>({
     queryKey: [...tagKeys.all, 'renameHistory'] as const,
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve<TagRenameHistoryEntry[]>([]),
     staleTime: 5 * 60 * 1000,
   })
 }

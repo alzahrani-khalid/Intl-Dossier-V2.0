@@ -10,6 +10,11 @@ import {
   runScenario as runScenarioApi,
   getScenarioResults,
 } from '../repositories/misc.repository'
+import type {
+  Scenario,
+  ScenarioComparisonData,
+  PaginatedResponse,
+} from '@/types/scenario-sandbox.types'
 
 export const scenarioKeys = {
   all: ['scenario-sandbox'] as const,
@@ -25,9 +30,9 @@ export function useScenarios(params?: Record<string, unknown>) {
     })
   }
 
-  return useQuery({
+  return useQuery<PaginatedResponse<Scenario>>({
     queryKey: scenarioKeys.list(params),
-    queryFn: () => getScenariosApi(searchParams),
+    queryFn: () => getScenariosApi(searchParams) as Promise<PaginatedResponse<Scenario>>,
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -62,7 +67,7 @@ export function useScenarioResults(scenarioId: string | null) {
 export function useUpdateScenario() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_params: { scenarioId: string; data: Record<string, unknown> }) =>
+    mutationFn: (_params: { id: string; data: Record<string, unknown> }) =>
       Promise.resolve({ success: true }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: scenarioKeys.all })
@@ -83,18 +88,19 @@ export function useDeleteScenario() {
 export function useCloneScenario() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_scenarioId: string) => Promise.resolve({ success: true }),
+    mutationFn: (_params: { id: string; data: Record<string, unknown> }) =>
+      Promise.resolve({ success: true }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: scenarioKeys.all })
     },
   })
 }
 
-export function useCompareScenarios(scenarioIds?: string[]) {
-  return useQuery({
+export function useCompareScenarios(scenarioIds?: string[], options?: { enabled?: boolean }) {
+  return useQuery<ScenarioComparisonData>({
     queryKey: [...scenarioKeys.all, 'compare', scenarioIds],
-    queryFn: () => Promise.resolve([]),
-    enabled: Boolean(scenarioIds) && (scenarioIds?.length ?? 0) > 1,
+    queryFn: () => Promise.resolve<ScenarioComparisonData>({ scenarios: [], total_scenarios: 0 }),
+    enabled: options?.enabled !== false && Boolean(scenarioIds) && (scenarioIds?.length ?? 0) > 1,
     staleTime: 5 * 60 * 1000,
   })
 }

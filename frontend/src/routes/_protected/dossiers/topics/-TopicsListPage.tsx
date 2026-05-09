@@ -4,7 +4,7 @@
  * Renders GenericListPage inside ListPageShell with useTopics adapter.
  */
 
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, type ReactElement } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { BookOpen } from 'lucide-react'
@@ -26,7 +26,7 @@ const TOPIC_STATUS_CHIP: Record<string, string> = {
 
 const TOPICS_ROUTE = '/_protected/dossiers/topics/'
 
-export function TopicsListPage(): JSX.Element {
+export function TopicsListPage(): ReactElement {
   const { t } = useTranslation(['topics', 'list-pages'])
   const { isRTL } = useDirection()
   const { page, search } = useSearch({ from: TOPICS_ROUTE })

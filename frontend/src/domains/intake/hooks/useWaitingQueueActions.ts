@@ -79,6 +79,11 @@ export interface BulkReminderJob {
   total: number
   sent: number
   failed: number
+  // Detailed progress fields used by the WaitingQueue page
+  processed_items: number
+  successful_items: number
+  failed_items: number
+  total_items: number
 }
 
 export interface SendBulkRemindersResponse {

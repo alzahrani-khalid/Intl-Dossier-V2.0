@@ -7,7 +7,7 @@
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, type ReactElement } from 'react'
 import {
   ListPageShell,
   DossierTable,
@@ -30,7 +30,7 @@ export const Route = createFileRoute('/_protected/dossiers/organizations/')({
   }),
 })
 
-function OrganizationsListPage(): JSX.Element {
+function OrganizationsListPage(): ReactElement {
   const { t, i18n } = useTranslation(['organizations', 'list-pages'])
   const isArabic = i18n.language.startsWith('ar')
   const { page, search } = Route.useSearch()

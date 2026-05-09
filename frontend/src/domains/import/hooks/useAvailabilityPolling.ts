@@ -119,18 +119,25 @@ export function usePollingStats() {
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
+import type { AvailabilityPoll } from '@/types/availability-polling.types'
+
+export interface PollsListResponse {
+  polls: AvailabilityPoll[]
+  total?: number
+}
+
 export function usePolls(params?: Record<string, unknown>) {
-  return useQuery({
+  return useQuery<PollsListResponse>({
     queryKey: [...pollingKeys.all, 'polls', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve<PollsListResponse>({ polls: [] }),
     staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useMyPolls(params?: Record<string, unknown>) {
-  return useQuery({
+  return useQuery<PollsListResponse>({
     queryKey: [...pollingKeys.all, 'my-polls', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve<PollsListResponse>({ polls: [] }),
     staleTime: 5 * 60 * 1000,
   })
 }

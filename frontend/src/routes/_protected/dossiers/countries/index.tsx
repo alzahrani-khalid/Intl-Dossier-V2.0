@@ -7,12 +7,8 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { useCallback, useMemo } from 'react'
-import {
-  ListPageShell,
-  DossierTable,
-  ToolbarSearch,
-} from '@/components/list-page'
+import { useCallback, useMemo, type ReactElement } from 'react'
+import { ListPageShell, DossierTable, ToolbarSearch } from '@/components/list-page'
 import type { DossierTableRow } from '@/components/list-page'
 import { useCountries } from '@/hooks/useCountries'
 
@@ -30,7 +26,7 @@ export const Route = createFileRoute('/_protected/dossiers/countries/')({
   }),
 })
 
-function CountriesListRoute(): JSX.Element {
+function CountriesListRoute(): ReactElement {
   const { page, search } = Route.useSearch()
   const navigate = Route.useNavigate()
 
@@ -58,7 +54,14 @@ function CountriesListRoute(): JSX.Element {
     [navigate],
   )
 
-  return <CountriesListPage page={page} search={search} onSearchChange={onSearchChange} onRowClick={onRowClick} />
+  return (
+    <CountriesListPage
+      page={page}
+      search={search}
+      onSearchChange={onSearchChange}
+      onRowClick={onRowClick}
+    />
+  )
 }
 
 export interface CountriesListPageProps {
@@ -73,7 +76,7 @@ export function CountriesListPage({
   search,
   onSearchChange,
   onRowClick,
-}: CountriesListPageProps): JSX.Element {
+}: CountriesListPageProps): ReactElement {
   const { t, i18n } = useTranslation(['countries', 'list-pages'])
   const isArabic = i18n.language.startsWith('ar')
   const query = useCountries({ page, limit: 20, search })

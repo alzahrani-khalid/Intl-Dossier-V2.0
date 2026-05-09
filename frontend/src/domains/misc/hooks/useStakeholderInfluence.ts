@@ -11,6 +11,15 @@ import {
   getInfluenceHistory as getInfluenceHistoryApi,
   compareInfluence as compareInfluenceApi,
 } from '../repositories/misc.repository'
+import type {
+  StakeholderInfluenceSummary,
+  StakeholderInfluenceDetail,
+  NetworkVisualizationData,
+  NetworkOverviewStatistics,
+  KeyConnector,
+  InfluenceReport,
+  PaginatedResponse,
+} from '@/types/stakeholder-influence.types'
 
 export const influenceKeys = {
   all: ['stakeholder-influence'] as const,
@@ -85,74 +94,87 @@ export function useCompareInfluence() {
  * ------------------------------------------------------------------ */
 
 export function useStakeholderInfluenceList(params?: Record<string, unknown>) {
-  return useQuery({
+  return useQuery<PaginatedResponse<StakeholderInfluenceSummary>>({
     queryKey: [...influenceKeys.all, 'list', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () =>
+      Promise.resolve<PaginatedResponse<StakeholderInfluenceSummary>>({
+        data: [],
+        pagination: { limit: 0, offset: 0, has_more: false },
+      }),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useStakeholderInfluenceDetail(id: string | null) {
-  return useQuery({
+export function useStakeholderInfluenceDetail(id: string | null, options?: { enabled?: boolean }) {
+  return useQuery<StakeholderInfluenceDetail | undefined>({
     queryKey: [...influenceKeys.all, 'detail', id],
-    queryFn: () => Promise.resolve(null),
-    enabled: Boolean(id),
+    queryFn: () => Promise.resolve<StakeholderInfluenceDetail | undefined>(undefined),
+    enabled: options?.enabled !== false && Boolean(id),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useInfluenceNetworkData(params?: Record<string, unknown>) {
-  return useQuery({
-    queryKey: [...influenceKeys.all, 'network-data', params],
-    queryFn: () => Promise.resolve({ nodes: [], edges: [] }),
+export function useInfluenceNetworkData(
+  id: string | null,
+  _params?: Record<string, unknown>,
+  options?: { enabled?: boolean },
+) {
+  return useQuery<NetworkVisualizationData | undefined>({
+    queryKey: [...influenceKeys.all, 'network-data', id, _params],
+    queryFn: () => Promise.resolve<NetworkVisualizationData | undefined>({ nodes: [], edges: [] }),
+    enabled: options?.enabled !== false && Boolean(id),
     staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useTopInfluencers(params?: Record<string, unknown>) {
-  return useQuery({
+  return useQuery<StakeholderInfluenceSummary[]>({
     queryKey: [...influenceKeys.all, 'top-influencers', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve<StakeholderInfluenceSummary[]>([]),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useKeyConnectors(params?: Record<string, unknown>) {
-  return useQuery({
-    queryKey: [...influenceKeys.all, 'key-connectors', params],
-    queryFn: () => Promise.resolve([]),
+export function useKeyConnectors(_limit?: number, _minScore?: number) {
+  return useQuery<KeyConnector[]>({
+    queryKey: [...influenceKeys.all, 'key-connectors', _limit, _minScore],
+    queryFn: () => Promise.resolve<KeyConnector[]>([]),
     staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useNetworkStatistics(params?: Record<string, unknown>) {
-  return useQuery({
+  return useQuery<NetworkOverviewStatistics | undefined>({
     queryKey: [...influenceKeys.all, 'network-statistics', params],
-    queryFn: () => Promise.resolve({}),
+    queryFn: () => Promise.resolve<NetworkOverviewStatistics | undefined>(undefined),
     staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useInfluenceReports(params?: Record<string, unknown>) {
-  return useQuery({
+  return useQuery<PaginatedResponse<InfluenceReport>>({
     queryKey: [...influenceKeys.all, 'reports', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () =>
+      Promise.resolve<PaginatedResponse<InfluenceReport>>({
+        data: [],
+        pagination: { limit: 0, offset: 0, has_more: false },
+      }),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useInfluenceReport(id: string | null) {
-  return useQuery({
+export function useInfluenceReport(id: string | null, options?: { enabled?: boolean }) {
+  return useQuery<InfluenceReport | undefined>({
     queryKey: [...influenceKeys.all, 'report', id],
-    queryFn: () => Promise.resolve(null),
-    enabled: Boolean(id),
+    queryFn: () => Promise.resolve<InfluenceReport | undefined>(undefined),
+    enabled: options?.enabled !== false && Boolean(id),
     staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useCalculateInfluenceScores() {
   return useMutation({
-    mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ success: true }),
+    mutationFn: (_params?: Record<string, unknown>) => Promise.resolve({ success: true }),
   })
 }
 

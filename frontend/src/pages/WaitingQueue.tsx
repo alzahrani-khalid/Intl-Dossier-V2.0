@@ -210,8 +210,8 @@ function WaitingQueuePageInner() {
   const { data: response, isLoading } = useFilteredAssignments(filters)
 
   // Extract items and pagination from response
-  const items: WaitingItem[] = response?.data || []
-  const pagination = response?.pagination
+  const items: WaitingItem[] = (response?.data as WaitingItem[] | undefined) ?? []
+  const pagination = response?.pagination as { total_count?: number } | undefined
 
   // T089: Supabase Realtime subscriptions for assignment status changes
   useEffect(() => {

@@ -327,9 +327,9 @@ function EngagementDetailPage() {
         {/* Lifecycle Stepper Bar — below header, above tabs */}
         <div className="mb-6">
           <LifecycleStepperBar
+            engagementId={engagement.id}
             currentStage={(engagement.lifecycle_stage as LifecycleStage) ?? 'intake'}
-            transitions={lifecycleTransitions}
-            onTransition={handleLifecycleTransition}
+            onTransition={(stage: LifecycleStage) => handleLifecycleTransition(stage)}
             disabled={isTransitioning}
           />
         </div>

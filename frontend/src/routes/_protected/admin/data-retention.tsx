@@ -656,7 +656,7 @@ function DataRetentionPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => releaseLegalHold.mutate(hold.id)}
+                              onClick={() => releaseLegalHold.mutate({ id: hold.id })}
                               disabled={releaseLegalHold.isPending}
                             >
                               <Unlock className="h-4 w-4 me-2" />
@@ -863,11 +863,14 @@ function DataRetentionPage() {
           if (!open) setSelectedPolicy(null)
         }}
         policy={selectedPolicy}
-        onSave={(data) => {
+        onSave={(data: RetentionPolicyInput) => {
           if (selectedPolicy) {
-            updatePolicy.mutate({ id: selectedPolicy.id, updates: data })
+            updatePolicy.mutate({
+              id: selectedPolicy.id,
+              data: data as unknown as Record<string, unknown>,
+            })
           } else {
-            createPolicy.mutate(data)
+            createPolicy.mutate(data as unknown as Record<string, unknown>)
           }
           setShowPolicyDialog(false)
           setSelectedPolicy(null)
@@ -879,8 +882,8 @@ function DataRetentionPage() {
       <LegalHoldDialog
         open={showLegalHoldDialog}
         onOpenChange={setShowLegalHoldDialog}
-        onSave={(data) => {
-          createLegalHold.mutate(data)
+        onSave={(data: LegalHoldInput) => {
+          createLegalHold.mutate(data as unknown as Record<string, unknown>)
           setShowLegalHoldDialog(false)
         }}
         isLoading={createLegalHold.isPending}
@@ -890,8 +893,8 @@ function DataRetentionPage() {
       <ProcessorDialog
         open={showProcessorDialog}
         onOpenChange={setShowProcessorDialog}
-        onRun={(config) => {
-          runProcessor.mutate(config)
+        onRun={(config: ProcessorConfig) => {
+          runProcessor.mutate(config as unknown as Record<string, unknown>)
           setShowProcessorDialog(false)
         }}
         isLoading={runProcessor.isPending}

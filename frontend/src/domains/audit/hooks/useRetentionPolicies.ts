@@ -27,6 +27,14 @@ import {
   applyRetentionPolicy as applyRetentionPolicyApi,
   createManualHold as createManualHoldApi,
 } from '../repositories/audit.repository'
+import type {
+  RetentionPolicy,
+  LegalHold,
+  RetentionStatistics,
+  PendingRetentionAction,
+  ExpiringEntity,
+  RetentionExecutionLog,
+} from '@/types/retention-policy.types'
 
 export const retentionKeys = {
   all: ['retention'] as const,
@@ -58,9 +66,9 @@ export function useRetentionPolicies(params?: Record<string, unknown>) {
     })
   }
 
-  return useQuery({
+  return useQuery<RetentionPolicy[]>({
     queryKey: retentionKeys.policyList(params),
-    queryFn: () => getRetentionPoliciesApi(searchParams),
+    queryFn: () => getRetentionPoliciesApi(searchParams) as Promise<RetentionPolicy[]>,
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -116,9 +124,9 @@ export function useLegalHolds(params?: Record<string, unknown>) {
     })
   }
 
-  return useQuery({
+  return useQuery<LegalHold[]>({
     queryKey: retentionKeys.legalHoldList(params),
-    queryFn: () => getLegalHoldsApi(searchParams),
+    queryFn: () => getLegalHoldsApi(searchParams) as Promise<LegalHold[]>,
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -177,9 +185,9 @@ export function useDeleteLegalHold() {
 // ============================================================================
 
 export function useRetentionStatistics() {
-  return useQuery({
+  return useQuery<RetentionStatistics[]>({
     queryKey: retentionKeys.statistics(),
-    queryFn: () => getRetentionStatistics(),
+    queryFn: () => getRetentionStatistics() as Promise<RetentionStatistics[]>,
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -192,9 +200,9 @@ export function usePendingActions(params?: Record<string, unknown>) {
     })
   }
 
-  return useQuery({
+  return useQuery<PendingRetentionAction[]>({
     queryKey: retentionKeys.pendingActions(params),
-    queryFn: () => getPendingActionsApi(searchParams),
+    queryFn: () => getPendingActionsApi(searchParams) as Promise<PendingRetentionAction[]>,
     staleTime: 60 * 1000,
   })
 }
@@ -207,17 +215,17 @@ export function useExpiringRecords(params?: Record<string, unknown>) {
     })
   }
 
-  return useQuery({
+  return useQuery<ExpiringEntity[]>({
     queryKey: retentionKeys.expiring(params),
-    queryFn: () => getExpiringRecordsApi(searchParams),
+    queryFn: () => getExpiringRecordsApi(searchParams) as Promise<ExpiringEntity[]>,
     staleTime: 60 * 1000,
   })
 }
 
 export function useExecutionLog() {
-  return useQuery({
+  return useQuery<RetentionExecutionLog[]>({
     queryKey: retentionKeys.executionLog(),
-    queryFn: () => getExecutionLog(),
+    queryFn: () => getExecutionLog() as Promise<RetentionExecutionLog[]>,
     staleTime: 30 * 1000,
   })
 }

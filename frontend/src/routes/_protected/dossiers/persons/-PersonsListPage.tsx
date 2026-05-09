@@ -7,15 +7,10 @@
  * - VIP detection: importance_level >= 4 (PersonListItem)
  */
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactElement } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import {
-  ListPageShell,
-  PersonsGrid,
-  ToolbarSearch,
-  type PersonCard,
-} from '@/components/list-page'
+import { ListPageShell, PersonsGrid, ToolbarSearch, type PersonCard } from '@/components/list-page'
 import { usePersons } from '@/hooks/usePersons'
 import { useDirection } from '@/hooks/useDirection'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
@@ -52,8 +47,7 @@ const toCard = (raw: PersonRecord, isRTL: boolean): PersonCard => {
         ? raw.organization
         : undefined
   const is_vip =
-    raw.is_vip === true ||
-    (typeof raw.importance_level === 'number' && raw.importance_level >= 4)
+    raw.is_vip === true || (typeof raw.importance_level === 'number' && raw.importance_level >= 4)
   return { id, name_en, name_ar, role, organization, is_vip }
 }
 
@@ -67,7 +61,7 @@ const extractList = (raw: unknown): PersonRecord[] => {
   return []
 }
 
-function PersonsListPage(): JSX.Element {
+function PersonsListPage(): ReactElement {
   const { t } = useTranslation(['persons', 'list-pages'])
   const { isRTL } = useDirection()
   const navigate = useNavigate()
