@@ -570,10 +570,12 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       grouped[type].push(d)
     }
 
-    // Return in defined order, limiting to 5 per type
-    return DOSSIER_TYPE_ORDER.filter(
-      (type) => grouped[type] != null && grouped[type]!.length > 0,
-    ).map((type) => ({ type, items: grouped[type]!.slice(0, 5) }))
+    // Return in defined order, limiting to 5 per type. WR-13: avoid `!`
+    // non-null assertions — `Array.filter` doesn't propagate narrowing
+    // into `.map`, so use a single-pass shape that ts can verify directly.
+    return DOSSIER_TYPE_ORDER.map((type) => ({ type, items: grouped[type] ?? [] }))
+      .filter((entry) => entry.items.length > 0)
+      .map(({ type, items }) => ({ type, items: items.slice(0, 5) }))
   }, [dossiers, searchQuery])
 
   // Helper to navigate - uses type assertion for routes that may not be in the router yet
