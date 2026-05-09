@@ -148,18 +148,21 @@ export class TasksService {
     // Dispatch assignment notification (D-05: AFTER successful DB write, outside transaction)
     if (data.assignee_id && data.assignee_id !== input.created_by) {
       try {
-        await enqueueNotification({
-          userId: data.assignee_id,
-          type: 'task_assigned',
-          title: 'New task assigned',
-          message: `You have been assigned: ${data.title}`,
-          category: 'assignments',
-          priority: data.priority === 'urgent' ? 'high' : 'normal',
-          actionUrl: `/tasks/${data.id}`,
-          sourceType: 'task',
-          sourceId: data.id,
-          data: { taskId: data.id },
-        }, 'task-assigned')
+        await enqueueNotification(
+          {
+            userId: data.assignee_id,
+            type: 'task_assigned',
+            title: 'New task assigned',
+            message: `You have been assigned: ${data.title}`,
+            category: 'assignments',
+            priority: data.priority === 'urgent' ? 'high' : 'normal',
+            actionUrl: `/tasks/${data.id}`,
+            sourceType: 'task',
+            sourceId: data.id,
+            data: { taskId: data.id },
+          },
+          'task-assigned',
+        )
       } catch (err) {
         logError('Failed to enqueue assignment notification', err as Error)
       }
@@ -383,18 +386,21 @@ export class TasksService {
       data.assignee_id !== input.updated_by
     ) {
       try {
-        await enqueueNotification({
-          userId: data.assignee_id,
-          type: 'task_assigned',
-          title: 'Task assigned to you',
-          message: `You have been assigned: ${data.title}`,
-          category: 'assignments',
-          priority: data.priority === 'urgent' ? 'high' : 'normal',
-          actionUrl: `/tasks/${data.id}`,
-          sourceType: 'task',
-          sourceId: data.id,
-          data: { taskId: data.id },
-        }, 'task-reassigned')
+        await enqueueNotification(
+          {
+            userId: data.assignee_id,
+            type: 'task_assigned',
+            title: 'Task assigned to you',
+            message: `You have been assigned: ${data.title}`,
+            category: 'assignments',
+            priority: data.priority === 'urgent' ? 'high' : 'normal',
+            actionUrl: `/tasks/${data.id}`,
+            sourceType: 'task',
+            sourceId: data.id,
+            data: { taskId: data.id },
+          },
+          'task-reassigned',
+        )
       } catch (err) {
         logError('Failed to enqueue reassignment notification', err as Error)
       }
@@ -654,18 +660,21 @@ export class TaskCreationService {
     // Dispatch assignment notification for commitment-created task (D-05: AFTER successful DB write)
     if (data.assignee_id && data.assignee_id !== createdBy) {
       try {
-        await enqueueNotification({
-          userId: data.assignee_id,
-          type: 'task_assigned',
-          title: 'New task assigned',
-          message: `You have been assigned: ${data.title}`,
-          category: 'assignments',
-          priority: data.priority === 'urgent' ? 'high' : 'normal',
-          actionUrl: `/tasks/${data.id}`,
-          sourceType: 'task',
-          sourceId: data.id,
-          data: { taskId: data.id },
-        }, 'task-assigned')
+        await enqueueNotification(
+          {
+            userId: data.assignee_id,
+            type: 'task_assigned',
+            title: 'New task assigned',
+            message: `You have been assigned: ${data.title}`,
+            category: 'assignments',
+            priority: data.priority === 'urgent' ? 'high' : 'normal',
+            actionUrl: `/tasks/${data.id}`,
+            sourceType: 'task',
+            sourceId: data.id,
+            data: { taskId: data.id },
+          },
+          'task-assigned',
+        )
       } catch (err) {
         logError('Failed to enqueue commitment task notification', err as Error)
       }
@@ -688,7 +697,8 @@ export class TaskCreationService {
           updated_at: new Date().toISOString(),
           completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
         })
-        .eq('related_commitment_id' as never, commitmentId)
+        .eq('work_item_id', commitmentId)
+        .eq('work_item_type', 'commitment')
 
       if (error) {
         logger.error('Failed to update task status', { commitmentId, error: error.message })
@@ -713,7 +723,8 @@ export class TaskCreationService {
       const { data, error } = await this.supabase
         .from('tasks')
         .select('*')
-        .eq('related_after_action_id' as never, afterActionId)
+        .eq('work_item_id', afterActionId)
+        .eq('work_item_type', 'after_action')
         .order('created_at', { ascending: false })
 
       if (error) {
@@ -743,7 +754,8 @@ export class TaskCreationService {
       const { error } = await this.supabase
         .from('tasks')
         .delete()
-        .eq('related_after_action_id' as never, afterActionId)
+        .eq('work_item_id', afterActionId)
+        .eq('work_item_type', 'after_action')
 
       if (error) {
         logger.error('Failed to delete tasks', { afterActionId, error: error.message })
