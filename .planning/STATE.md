@@ -56,9 +56,6 @@ Phase 47 type-fix work is fully landed on DesignV2. TYPE-01, TYPE-02, TYPE-04 sa
 D-01 hard target: 0 net-new `@ts-(ignore|expect-error)` across phase 47 ✓
 D-04 cross-workspace fence: 0 backend/src edits in any frontend plan's commit range ✓
 
-1. Push DesignV2 to verify backend-zero in CI.
-2. Resume with `/gsd-execute-phase 47 --wave 2` (or `--gaps-only` for the 47-04..47-10 frontend cluster). 47-03 is `autonomous: false` and will pause for GitHub branch-protection + smoke-test PRs.
-
 ## v6.2 Phase Map (3 phases, 12 requirements)
 
 | Phase | Name                      | Requirements  | Count |
