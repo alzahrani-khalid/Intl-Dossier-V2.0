@@ -14,7 +14,6 @@ import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useGenerateBriefingPack } from '@/hooks/useGenerateBriefingPack'
 import { useBriefingPackStatus } from '@/hooks/useBriefingPackStatus'
-import type { BriefingPackJob } from '@/domains/briefings'
 
 export interface BriefingPackGeneratorProps {
   engagementId: string
@@ -49,13 +48,14 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
   // not TanStack's QueryStatus from .status (which is only pending|error|success
   // and would never produce 'completed'|'failed'). Restore the polling gate
   // via options.enabled so we stop polling once the job leaves 'generating'.
+  // WR-25: useBriefingPackStatus is now typed at the hook source as
+  // UseQueryResult<BriefingPackJob | null>, so .data is already narrowed.
   const briefingStatus = useBriefingPackStatus(jobId, {
     enabled: Boolean(jobId) && status === 'generating',
   })
-  const job = briefingStatus.data as BriefingPackJob | null | undefined
-  const jobFileUrl = (briefingStatus.data as { file_url?: string } | null | undefined)?.file_url
-  const jobErrorMessage = (briefingStatus.data as { error_message?: string } | null | undefined)
-    ?.error_message
+  const job = briefingStatus.data
+  const jobFileUrl = job?.file_url
+  const jobErrorMessage = job?.error_message
 
   // Handle job status updates
   useEffect(() => {
