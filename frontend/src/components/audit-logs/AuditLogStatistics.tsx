@@ -51,22 +51,19 @@ interface AuditLogStatisticsProps {
 export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStatisticsProps) {
   const { t } = useTranslation('audit-logs')
   const { isRTL } = useDirection()
-// Stub useAuditLogStatistics takes 0-1 args; the (dateFrom, dateTo) intent is preserved
-// as void but the call is consolidated to the single options shape that the stub accepts.
-void dateTo
-const { statistics, isLoading, error } = useAuditLogStatistics(
-  dateFrom ? { dateFrom, dateTo } : undefined,
-) as unknown as {
-  statistics: {
+  // Stub useAuditLogStatistics takes 0-1 args; the (dateFrom, dateTo) intent is
+  // consolidated into the single options shape that the stub accepts.
+  type AuditStatistics = {
     by_operation?: Array<{ operation: string; count: number; percentage: number }>
     by_table?: Array<{ table: string; count: number; percentage: number }>
     total_count?: number
     total_events?: number
     period?: { from?: string; to?: string }
   }
-  isLoading: boolean
-  error: unknown
-}
+  const { data, isLoading, error } = useAuditLogStatistics(
+    dateFrom ? { dateFrom, dateTo } : undefined,
+  )
+  const statistics = data as AuditStatistics | undefined
 
   if (isLoading) {
     return (
@@ -161,7 +158,9 @@ const { statistics, isLoading, error } = useAuditLogStatistics(
                   <div className="text-lg font-bold">
                     {item.count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                   </div>
-                  <div className="text-xs">{String(t(`operations.${item.operation}`, { defaultValue: item.operation }))}</div>
+                  <div className="text-xs">
+                    {String(t(`operations.${item.operation}`, { defaultValue: item.operation }))}
+                  </div>
                 </div>
               )
             })}
