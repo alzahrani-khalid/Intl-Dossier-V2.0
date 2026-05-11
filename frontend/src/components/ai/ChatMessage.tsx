@@ -47,13 +47,11 @@ export function ChatMessage({
   onCitationClick,
   className,
 }: ChatMessageProps) {
-const { isRTL } = useDirection()
-const isUser = role === 'user'
+  const { isRTL } = useDirection()
+  const isUser = role === 'user'
 
   return (
-    <div
-      className={cn('flex gap-3 p-4', isUser ? 'flex-row-reverse' : 'flex-row', className)}
-    >
+    <div className={cn('flex gap-3 p-4', isUser ? 'flex-row-reverse' : 'flex-row', className)}>
       {/* Avatar */}
       <Avatar className={cn('h-8 w-8 shrink-0', isUser ? 'bg-primary' : 'bg-muted')}>
         <AvatarFallback className={isUser ? 'text-primary-foreground' : ''}>
@@ -81,9 +79,9 @@ const isUser = role === 'user'
         <div
           className={cn(
             'rounded-2xl px-4 py-3',
-            isUser ? 'bg-primary text-primary-foreground rounded-br-md' : 'bg-muted rounded-bl-md',
-            isRTL && isUser && 'rounded-br-2xl rounded-bl-md',
-            isRTL && !isUser && 'rounded-bl-2xl rounded-br-md',
+            isUser ? 'bg-primary text-primary-foreground rounded-ee-md' : 'bg-muted rounded-es-md',
+            isRTL && isUser && 'rounded-ee-2xl rounded-es-md',
+            isRTL && !isUser && 'rounded-es-2xl rounded-ee-md',
           )}
         >
           <p className={cn('text-sm whitespace-pre-wrap', isStreaming && 'animate-pulse')}>
