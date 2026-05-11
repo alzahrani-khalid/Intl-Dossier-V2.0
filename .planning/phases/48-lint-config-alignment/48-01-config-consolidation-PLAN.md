@@ -17,12 +17,18 @@ autonomous: true
 requirements: [LINT-08]
 must_haves:
   truths:
-    - 'The repo has exactly one ESLint flat config — root `eslint.config.mjs`; `frontend/eslint.config.js` no longer exists on disk'
-    - '`eslint.config.mjs` contains zero references to Aceternity wrappers or `kibo-ui` recommendations'
-    - 'Workspace `lint` scripts invoke ESLint with explicit `-c ../eslint.config.mjs --max-warnings 0`'
-    - 'Three orphan Aceternity wrapper files (`3d-card.tsx`, `bento-grid.tsx`, `floating-navbar.tsx`) are removed from `frontend/src/components/ui/`'
-    - 'The `phase-48-base` git tag is created on the wave-base SHA so D-17 net-new eslint-disable scan in 48-03 has an anchor'
-    - 'Running `pnpm exec eslint -c eslint.config.mjs frontend/src --max-warnings 0` after this plan reports ≤30 problems (post-carve-out baseline, down from 215)'
+    - 'D-01: The repo has exactly one ESLint flat config — root `eslint.config.mjs`; `frontend/eslint.config.js` no longer exists on disk'
+    - 'D-02: Workspace `lint` scripts (frontend + backend `package.json`) invoke ESLint with explicit `-c ../eslint.config.mjs`'
+    - 'D-03: Root `ignores:` block adds `frontend/design-system/inteldossier_handoff_design/**` (prototype handoff) and `**/contact-directory.types.ts` (supabase-generated); existing `**/database.types.ts` and `**/routeTree.gen.ts` preserved'
+    - 'D-04: Existing `frontend/src/components/ui/**` primitive carve-out (no-restricted-syntax: off, no-explicit-any: off, rtl-friendly/no-physical-properties: off) is byte-unchanged'
+    - 'D-05 / D-06: `eslint.config.mjs` contains zero references to Aceternity recommendations; `no-restricted-imports` policy is inverted to ban `aceternity-ui`, `@aceternity/*`, `kibo-ui`, `@kibo-ui/*` and the four banned paths with single shared no-emoji message'
+    - 'D-07: Three orphan Aceternity wrapper files (`3d-card.tsx`, `bento-grid.tsx`, `floating-navbar.tsx`) are removed from `frontend/src/components/ui/`; `floating-action-button.tsx` and `floating-dock.tsx` stay'
+    - 'D-08: `@/components/ui/link-preview` appears in banned-paths even with no file on disk (forward-looking)'
+    - 'D-10: Every new ignore-glob / carve-out in `eslint.config.mjs` has an inline rationale comment (glob + suppressed-violation count + reason)'
+    - 'D-11: Workspace `lint` scripts include `--max-warnings 0` so a single warning fails the workspace lint'
+    - 'D-13: `contact-directory.types.ts` is supabase-generated per file line-1 self-description (RESEARCH §6); added to ignores; `@ts-nocheck` directive NOT removed'
+    - 'D-17 (anchor): The `phase-48-base` git tag is created on the wave-base SHA so the net-new eslint-disable scan in 48-03 has an anchor'
+    - 'Running `pnpm exec eslint -c eslint.config.mjs frontend/src --max-warnings 0` after this plan reports ≤35 problems (down from 215; the residual is 12 require()-in-mock + 8 RTL physical properties + 9 stale eslint-disable + 4 rounded-bl/br + 1 unused import + buffer for newly-uncovered violations — all 48-02 scope)'
   artifacts:
     - path: 'eslint.config.mjs'
       provides: 'Single canonical flat config; ignores include `**/contact-directory.types.ts` and `frontend/design-system/inteldossier_handoff_design/**`; frontend override block has inverted `no-restricted-imports` rule banning Aceternity + Kibo UI'
@@ -63,18 +69,18 @@ phase_decisions_locked:
   D-09_no_rule_expansion: 'All `TODO(Phase 2+)` disabled rules in root config stay byte-unchanged. No new rules enabled.'
   D-11_max_warnings_zero: '`--max-warnings 0` enforced in per-workspace lint scripts.'
   D-13_contact_directory_provenance: 'contact-directory.types.ts is supabase-generated per file line-1 self-description (RESEARCH §6). Added to ignores; `@ts-nocheck` directive NOT removed.'
-  RESEARCH_8_5_tests_carve_out: 'Add `**/__tests__/**` to ignores of every check-file/* block (RESEARCH §3 Path A) to clear the 96 folder-naming violations with inline rationale per D-10.'
+  RESEARCH_8_5_carve_outs: 'Add 5 carve-outs to ignores of every frontend check-file/filename-naming-convention block (RESEARCH §3 Path A): `**/__tests__/**` (96 folder-naming + nested-file violations), `**/signature-visuals/flags/**` (~24 ISO 3166-1 alpha-2 codepoint files), `**/hooks/**` (camelCase per React convention; rename deferred per D-09), `**/utils/**` (camelCase per Node convention — getISOWeek, relativeTime, toArDigits), `**/config/**` (camelCase config exports; rename deferred per D-09). Each gets an inline rationale comment per D-10 (glob, suppressed-count, reason). Cumulative effect: clears ~180 of 215 baseline problems; residual ~30–35 are call-site fixes owned by 48-02.'
   turbo_globalDependencies_addition: 'Add `eslint.config.mjs` to `turbo.json` globalDependencies so workspace lint cache invalidates when root config changes (RESEARCH §11.3 recommendation).'
 ---
 
 <objective>
-Consolidate ESLint configuration to a single source of truth — the root `eslint.config.mjs` — by deleting the `frontend/eslint.config.js` shadow file, inverting the `no-restricted-imports` policy to ban Aceternity / Kibo UI per the CLAUDE.md primitive cascade, deleting three orphan Aceternity wrapper files, adding the prototype handoff and the supabase-generated `contact-directory.types.ts` to the root `ignores:` block, and carving out `**/__tests__/**` from the check-file naming rules (Path A from RESEARCH §3, which clears 96 folder-naming violations and reduces the post-consolidation fix list from 215 to ≤30 call-site edits).
+Consolidate ESLint configuration to a single source of truth — the root `eslint.config.mjs` — by deleting the `frontend/eslint.config.js` shadow file, inverting the `no-restricted-imports` policy to ban Aceternity / Kibo UI per the CLAUDE.md primitive cascade, deleting three orphan Aceternity wrapper files, adding the prototype handoff and the supabase-generated `contact-directory.types.ts` to the root `ignores:` block, and applying the 5 frontend check-file/filename-naming-convention carve-outs from RESEARCH §3 Path A + Open-Question Q1 resolution (`**/__tests__/**`, `**/signature-visuals/flags/**`, `**/hooks/**`, `**/utils/**`, `**/config/**`, each with inline rationale comments per D-10) — which together clear ~180 of the 215 baseline violations and leave a residual ≤35 call-site fixes owned by 48-02.
 
 Also establish Phase 48's audit anchor — the `phase-48-base` git tag — and wire `eslint.config.mjs` into `turbo.json` `globalDependencies` so workspace lint caches invalidate when the root config changes.
 
 Purpose: closes LINT-08 in full (no Aceternity references; banned-paths list aligned with CLAUDE.md cascade; rule messages no longer recommend a banned library) and shrinks the violation-fixes surface area that 48-02 must drive to zero.
 
-Output: a single canonical root config; workspace `lint` scripts pinned to it with `--max-warnings 0`; three Aceternity wrappers gone; the `phase-48-base` tag in place; the test naming carve-out applied.
+Output: a single canonical root config; workspace `lint` scripts pinned to it with `--max-warnings 0`; three Aceternity wrappers gone; the `phase-48-base` tag in place; all 5 frontend filename-naming carve-outs applied with inline rationales.
 </objective>
 
 <execution_context>
@@ -231,8 +237,18 @@ Output: a single canonical root config; workspace `lint` scripts pinned to it wi
 
     Local `@/components/kibo-ui/*` paths are NOT banned — RESEARCH §9.2 confirmed these are internal repo primitives, not the upstream npm package. Leave them importable.
 
-    **Edit 4 — Extend `**/__tests__/**` carve-out across all check-file/* blocks (RESEARCH §3 Path A + §8.5):**
-    For every block in `eslint.config.mjs` that has `plugins: { 'check-file': checkFile }` and a `files:` glob targeting production source (frontend `components/**`, frontend `hooks/**`, frontend `types/**`, frontend `lib/**`, backend `services/**`, backend `models/**`, backend `api/**`, backend `middleware/**`), add `'**/__tests__/**'` to that block's `ignores:` array if not already present. The existing frontend components block (~lines 200–223) already has `'frontend/src/components/__tests__/**'` and `'frontend/src/components/**/index.ts'`; add the global `'**/__tests__/**'` entry alongside. Each addition gets the inline rationale comment per D-10: `// __tests__ is vitest convention; PascalCase rule applies to production source, not test colocation.` This carve-out collapses the 96 folder-naming-convention errors from the baseline.
+    **Edit 4 — Extend 5 carve-outs across all frontend check-file/filename-naming-convention blocks (RESEARCH §3 Path A + §8.5 + Open-Question Q1 resolution):**
+    For every block in `eslint.config.mjs` that has `plugins: { 'check-file': checkFile }` and a `files:` glob targeting frontend production source (frontend `components/**`, frontend `hooks/**`, frontend `types/**`, frontend `lib/**`), extend that block's `ignores:` array with the 5 entries below (in this order, each with the trailing inline rationale comment per D-10). The existing frontend components block (~lines 200–223) already has `'frontend/src/components/__tests__/**'` and `'frontend/src/components/**/index.ts'`; the 5 new entries go alongside as a contiguous rationale block. Backend check-file/* blocks get the `'**/__tests__/**'` entry only (the other 4 are frontend-specific paths).
+
+    The 5 carve-outs (frontend) — add ALL in this single Edit 4 commit so the rationale block stays contiguous:
+
+    1. `'**/__tests__/**',` with comment `// vitest convention; PascalCase rule applies to production source, not test colocation (clears 96 violations)`
+    2. `'**/signature-visuals/flags/**',` with comment `// ISO 3166-1 alpha-2 codepoint files; lowercase is intentional per ISO standard (clears ~24 violations)`
+    3. `'**/hooks/**',` with comment `// hook files use camelCase per React convention; rename is deferred to future hardening phase per D-09`
+    4. `'**/utils/**',` with comment `// utility files use camelCase per Node convention (getISOWeek, relativeTime, toArDigits); rename deferred per D-09`
+    5. `'**/config/**',` with comment `// config exports use camelCase; rename deferred per D-09`
+
+    Combined effect: collapses ~180 of the 215 baseline violations (96 test folder-naming + ~24 flag files + ~45 hooks/utils/config filename-naming-convention errors + nested test-file fallout). The residual ~30–35 problems are call-site fixes owned by 48-02 (12 require-imports, 8 RTL physical properties, 9 unused eslint-disable, 4 rounded-bl/br, 1 unused import, plus buffer).
 
     **Edit 5 — Update workspace `lint` scripts (D-02 + D-11):**
     - In `frontend/package.json`, change the `scripts.lint` value from `"eslint src/**/*.{ts,tsx}"` to `"eslint -c ../eslint.config.mjs --max-warnings 0 src/**/*.{ts,tsx}"`.
@@ -270,6 +286,10 @@ Output: a single canonical root config; workspace `lint` scripts pinned to it wi
       grep -cE "eslint -c \\.\\./eslint\\.config\\.mjs --max-warnings 0" backend/package.json
       grep -c "eslint.config.mjs" turbo.json
       grep -c "'\\*\\*/__tests__/\\*\\*'" eslint.config.mjs
+      grep -c "'\\*\\*/signature-visuals/flags/\\*\\*'" eslint.config.mjs
+      grep -c "'\\*\\*/hooks/\\*\\*'" eslint.config.mjs
+      grep -c "'\\*\\*/utils/\\*\\*'" eslint.config.mjs
+      grep -c "'\\*\\*/config/\\*\\*'" eslint.config.mjs
     </automated>
   </verify>
   <acceptance_criteria>
@@ -284,7 +304,11 @@ Output: a single canonical root config; workspace `lint` scripts pinned to it wi
     - `grep -cE "eslint -c \\.\\./eslint\\.config\\.mjs --max-warnings 0" frontend/package.json` returns 1.
     - `grep -cE "eslint -c \\.\\./eslint\\.config\\.mjs --max-warnings 0" backend/package.json` returns 1.
     - `grep -c "eslint.config.mjs" turbo.json` returns 1 (the new `globalDependencies` entry).
-    - `grep -c "'\\*\\*/__tests__/\\*\\*'" eslint.config.mjs` returns ≥1 (the new test-folder carve-out — exact count depends on how many check-file blocks you extended; minimum 1 in the frontend components block).
+    - `grep -c "'\\*\\*/__tests__/\\*\\*'" eslint.config.mjs` returns ≥1 (the test-folder carve-out — exact count depends on how many check-file blocks you extended; minimum 1 in the frontend components block).
+    - `grep -c "'\\*\\*/signature-visuals/flags/\\*\\*'" eslint.config.mjs` returns ≥1 (frontend flag-files carve-out per Open-Question Q1 resolution).
+    - `grep -c "'\\*\\*/hooks/\\*\\*'" eslint.config.mjs` returns ≥1 (frontend hooks naming carve-out per D-09 deferred-rename posture).
+    - `grep -c "'\\*\\*/utils/\\*\\*'" eslint.config.mjs` returns ≥1 (frontend utils naming carve-out per D-09).
+    - `grep -c "'\\*\\*/config/\\*\\*'" eslint.config.mjs` returns ≥1 (frontend config naming carve-out per D-09).
     - `pnpm exec eslint -c eslint.config.mjs --print-config frontend/src/App.tsx 2>&1 | grep -E '"no-restricted-imports"' | head -1` produces output containing `"aceternity-ui"` (rule is active on frontend sources).
     - `pnpm exec eslint -c eslint.config.mjs backend/src/types/contact-directory.types.ts 2>&1` produces no error output OR output contains `"ignored"`/`"ignore"` (file is now matched by `ignores:` — backend lint stops emitting the `@ts-nocheck` ban-ts-comment error from this file).
   </acceptance_criteria>
@@ -345,10 +369,10 @@ Output: a single canonical root config; workspace `lint` scripts pinned to it wi
 </task>
 
 <task type="auto">
-  <name>Task 4: Re-baseline lint against root config and confirm post-consolidation surface ≤30 problems</name>
+  <name>Task 4: Re-baseline lint against root config and confirm post-consolidation surface ≤35 problems</name>
   <files>(no files; verification only — output captured to ephemeral /tmp paths)</files>
   <read_first>
-    - .planning/phases/48-lint-config-alignment/48-RESEARCH.md §1 (post-consolidation expected baseline ~30 frontend + 2 backend errors after the test-folder carve-out clears 96 + 1 backend ignore clears 1), §3 (rule histogram), §4 (backend baseline)
+    - .planning/phases/48-lint-config-alignment/48-RESEARCH.md §1 (post-consolidation expected baseline ≤35 frontend + 2 backend errors after the 5 frontend carve-outs clear ~180 + 1 backend ignore clears 1), §3 (rule histogram), §4 (backend baseline)
     - .planning/phases/48-lint-config-alignment/48-VALIDATION.md per-task verification map
   </read_first>
   <action>
@@ -358,10 +382,11 @@ Output: a single canonical root config; workspace `lint` scripts pinned to it wi
        ```
        pnpm --filter intake-frontend lint > /tmp/48-01-frontend-lint.txt 2>&1; echo "exit=$?" >> /tmp/48-01-frontend-lint.txt
        ```
-       Expected: non-zero exit (still ~30 problems before 48-02 fixes), but specifically:
+       Expected: non-zero exit (still ≤35 problems before 48-02 fixes), but specifically:
        - 0 folder-naming errors (the `**/__tests__/**` carve-out cleared the 96 from RESEARCH §3).
+       - 0 filename-naming-convention errors against `signature-visuals/flags/**`, `hooks/**`, `utils/**`, `config/**` (cleared by the 4 additional carve-outs added in Edit 4).
        - 0 errors referencing `3d-card.tsx`, `bento-grid.tsx`, or `floating-navbar.tsx` (files no longer exist).
-       - The residual histogram should be dominated by: `@typescript-eslint/no-require-imports` (~12), `no-restricted-syntax` (~8), `rtl-friendly/no-physical-properties` (~4 warnings), `Unused eslint-disable directive` (~9 warnings), `unused-imports/no-unused-imports` (~1), plus a residual cluster of filename-naming-convention errors from hooks/lib/flags files that 48-02 will address.
+       - The residual histogram should be dominated by: `@typescript-eslint/no-require-imports` (~12 in mock files), `no-restricted-syntax` (~8 RTL physical properties), `rtl-friendly/no-physical-properties` (~4 `rounded-bl-*`/`rounded-br-*`), `Unused eslint-disable directive` (~9), `unused-imports/no-unused-imports` (~1) — all 48-02 scope.
     2. Run backend lint and capture:
        ```
        pnpm --filter intake-backend lint > /tmp/48-01-backend-lint.txt 2>&1; echo "exit=$?" >> /tmp/48-01-backend-lint.txt
@@ -395,7 +420,7 @@ Output: a single canonical root config; workspace `lint` scripts pinned to it wi
     - `grep -cE 'folder-naming-convention' /tmp/48-01-frontend-lint.txt` returns 0 (the 96 folder-naming errors are gone — RESEARCH §3 Path A carve-out worked).
     - `grep -cE '3d-card\\.tsx|bento-grid\\.tsx|floating-navbar\\.tsx' /tmp/48-01-frontend-lint.txt` returns 0 (orphan files cannot show up in lint output because they don't exist).
     - `grep -cE 'contact-directory\\.types\\.ts.*ban-ts-comment' /tmp/48-01-backend-lint.txt` returns 0 (file is now ignored).
-    - The total frontend problem count (errors + warnings) reported in `/tmp/48-01-frontend-lint.txt` is strictly less than 215 (the RESEARCH §3 pre-consolidation baseline). Documented expected range: 25–50 (depends on whether the discretionary hooks/lib/flags carve-outs were applied in Task 2's Edit 4 scope; the planner's recommendation in RESEARCH §3 is to apply them, in which case the count drops below 35).
+    - After Edit 4 lands, `pnpm exec eslint -c eslint.config.mjs frontend/src --max-warnings 0 -f json | jq '[.[].messages | length] | add'` returns ≤35. The 5 carve-outs (`**/__tests__/**` + flags + hooks + utils + config) clear ~180 naming errors; the residual ~30–35 problems are call-site fixes owned by 48-02.
     - The backend problem count is exactly 2 (errors remaining: `event.service.ts:48` empty-interface, `signature.service.ts:353` no-console).
   </acceptance_criteria>
   <done>Post-consolidation lint baseline captured; 48-02 has a precise per-rule histogram to drive call-site fixes against.</done>
@@ -414,7 +439,7 @@ After all tasks complete:
 - Three orphan Aceternity wrapper files are deleted; `floating-action-button.tsx` and `floating-dock.tsx` are preserved.
 - `pnpm --filter frontend type-check` and `pnpm --filter backend type-check` both exit 0 (Phase 47 zero-state preserved).
 - Backend lint surface reduced from 3 errors to 2 (contact-directory.types.ts cleared via ignore).
-- Frontend lint surface reduced from 215 problems to a smaller residual (target ≤50; expected ~30 after RESEARCH §3 carve-outs).
+- Frontend lint surface reduced from 215 problems to ≤35 residual (the 5 Edit-4 carve-outs clear ~180 naming errors; the remainder is 48-02's call-site fix scope).
 </verification>
 
 <success_criteria>
@@ -424,7 +449,7 @@ After all tasks complete:
   - `no-restricted-imports` is aligned with the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom).
   - Rule messages no longer recommend a banned library.
 - All four conditions verified by grep assertions in Task 2 acceptance criteria.
-- The post-consolidation lint baseline (≤50 problems frontend, 2 backend) is captured and gives 48-02 a precise fix list.
+- The post-consolidation lint baseline (≤35 problems frontend, 2 backend) is captured and gives 48-02 a precise fix list.
 - Phase 47 type-check zero-state is preserved (no TS regressions from file deletions or config changes).
   </success_criteria>
 

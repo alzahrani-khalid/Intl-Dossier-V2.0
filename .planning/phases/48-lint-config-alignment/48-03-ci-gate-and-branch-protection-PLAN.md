@@ -11,12 +11,10 @@ autonomous: false
 requirements: [LINT-09]
 must_haves:
   truths:
-    - 'Branch protection on `main` requires `Lint` (capital L) alongside the existing `type-check` + `Security Scan` checks'
-    - '`enforce_admins: true` is preserved (Phase 47 D-09 posture carries forward)'
-    - 'A frontend smoke PR with a deliberate `text-left` JSX violation shows `Lint` check `bucket=fail` AND `mergeStateStatus=BLOCKED`'
-    - 'A backend smoke PR with a deliberate `console.log` violation shows `Lint` check `bucket=fail` AND `mergeStateStatus=BLOCKED`'
-    - 'Both smoke PRs are closed with `gh pr close --delete-branch` (never merged)'
-    - 'D-17 net-new `eslint-disable` count across the phase (phase-48-base..HEAD) is 0'
+    - 'D-14: Single `Lint` job in `.github/workflows/ci.yml` covering both workspaces is preserved (no new job; turbo fan-out parallelizes the workspaces inside the single job)'
+    - 'D-15: Branch protection on `main` requires `Lint` (capital L) alongside the existing `type-check` + `Security Scan` checks; `enforce_admins: true` is preserved (Phase 47 D-09 posture carries forward)'
+    - 'D-16: A frontend smoke PR with a deliberate `text-left` JSX violation shows `Lint` check `bucket=fail` AND `mergeStateStatus=BLOCKED`; a backend smoke PR with a deliberate `console.log` violation shows the same. Both smoke PRs are closed with `gh pr close --delete-branch` (never merged).'
+    - 'D-17: Net-new `eslint-disable` count across the phase (phase-48-base..HEAD) is 0'
     - 'Phase 47 outstanding follow-up #1 (deferred smoke PRs) is resolved by analogy in STATE.md'
   artifacts:
     - path: '(GitHub repo settings — branch protection on `main`)'

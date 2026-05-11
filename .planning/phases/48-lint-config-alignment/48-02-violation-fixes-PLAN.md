@@ -25,13 +25,13 @@ autonomous: true
 requirements: [LINT-06, LINT-07]
 must_haves:
   truths:
+    - 'D-10: Every warning resolution in this plan is a call-site fix; no rule is downgraded without an inline rationale recorded in `eslint.config.mjs`'
+    - 'D-12: Top-signal rules fixed at the call site — no `text-left`, `text-right`, `ml-*`, `mr-*`, `pl-*`, `pr-*`, `rounded-bl-*`, `rounded-br-*`, `rounded-tl-*`, `rounded-tr-*` literals in modified test fixtures or `ChatMessage.tsx`'
+    - 'D-13: Backend three errors fixed at source — `event.service.ts:48` declares `UpdateEventDto` as a type alias (not empty interface); `signature.service.ts:353` uses Winston (`logInfo` or `logger.info`) instead of `console.log`; `contact-directory.types.ts` ignore handled in 48-01'
+    - 'D-17: Zero net-new `eslint-disable` directives introduced — verified by 48-03 diff scan against phase-48-base'
     - '`pnpm --filter intake-frontend lint` exits 0 on a clean clone'
     - '`pnpm --filter intake-backend lint` exits 0 on a clean clone'
     - 'Phase 47 type-check zero-state is preserved across both workspaces (no regressions)'
-    - 'Zero net-new `eslint-disable` directives introduced (D-17 — verified by 48-03 diff scan against phase-48-base)'
-    - 'No `text-left`, `text-right`, `ml-*`, `mr-*`, `pl-*`, `pr-*`, `rounded-bl-*`, `rounded-br-*`, `rounded-tl-*`, `rounded-tr-*` literals in modified test fixtures or `ChatMessage.tsx`'
-    - 'Backend `signature.service.ts` uses Winston (`logInfo` or `logger.info`) instead of `console.log`'
-    - 'Backend `event.service.ts:48` declares `UpdateEventDto` as a type alias, not an empty interface'
   artifacts:
     - path: 'frontend/src/components/ai/ChatMessage.tsx'
       provides: 'RTL-safe logical border-radius classes (rounded-es-* / rounded-ee-*) replacing the four physical rounded-bl-* / rounded-br-* literals at lines 84–86'

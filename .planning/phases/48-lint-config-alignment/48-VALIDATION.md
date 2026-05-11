@@ -1,9 +1,9 @@
 ---
 phase: 48
 slug: lint-config-alignment
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: approved
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-11
 ---
 
@@ -88,4 +88,4 @@ _Discretionary (not required):_ `pnpm lint:summary` script — analogue of Phase
 - [ ] Feedback latency < 14s (full suite wall-clock)
 - [ ] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved 2026-05-11
