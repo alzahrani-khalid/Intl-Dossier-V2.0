@@ -33,6 +33,20 @@
     "commitment": "Commitment",
     "intake": "Intake"
   },
+  "source": {
+    "task": "Task",
+    "commitment": "Commitment",
+    "intake": "Intake"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "due": {
+    "today": "Today"
+  },
   "card": {
     "overdue": "Overdue",
     "dueToday": "Due today",
@@ -53,8 +67,15 @@
     "priority": "Priority",
     "allPriorities": "All priorities",
     "overdueOnly": "Overdue only",
-    "clear": "Clear filters"
+    "clear": "Clear filters",
+    "byStatus": "By status",
+    "byDossier": "By dossier",
+    "byOwner": "By owner",
+    "comingSoon": "Coming soon",
+    "search": "Search work items…"
   },
+  "overdueChip": "{{count}} overdue",
+  "emptyColumn": "No items",
   "sorting": {
     "label": "Sort by",
     "deadline": "Deadline",
@@ -87,7 +108,10 @@
     "loadMore": "Load more",
     "refresh": "Refresh",
     "openItem": "Open item",
-    "editItem": "Edit item"
+    "editItem": "Edit item",
+    "newItem": "New item",
+    "listView": "List view",
+    "addToColumn": "Add to {{column}}"
   },
   "context": {
     "personal": "My Work",

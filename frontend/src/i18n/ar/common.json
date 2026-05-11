@@ -32,6 +32,17 @@
     "info": "معلومات"
   },
   "common": {
+    "actions": {
+      "previous": "السابق",
+      "next": "التالي",
+      "expand": "توسيع",
+      "collapse": "طي",
+      "openMenu": "فتح القائمة",
+      "closeDialog": "إغلاق الحوار",
+      "toggleSection": "تبديل القسم",
+      "viewMore": "عرض المزيد",
+      "remove": "إزالة"
+    },
     "appTitle": "نظام الدوسيهات الدولية للهيئة العامة للإحصاء",
     "save": "حفظ",
     "cancel": "إلغاء",
@@ -119,7 +130,7 @@
     "intakeQueue": "قائمة الاستقبال",
     "waitingQueue": "قائمة الانتظار",
     "browse": "تصفح",
-    "dashboard": "لوحة القيادة",
+    "dashboard": "الموقف",
     "assignments": "تكليفاتي",
     "intake": "قائمة الاستقبال",
     "approvals": "الموافقات",
@@ -168,7 +179,7 @@
     "awaitingResponse": "بانتظار الرد",
     "main": "الرئيسية",
     "operations": "العمليات",
-    "tasks": "المهام",
+    "tasks": "مكتبي",
     "activity": "النشاط",
     "advancedSearch": "البحث المتقدم",
     "availabilityPolling": "استطلاع التوفر",
@@ -385,7 +396,17 @@
   "reports": {
     "selectTemplate": "اختر قالب التقرير",
     "selectTemplateDesc": "اختر قالب تقرير لإنشائه",
-    "parameters": "المعاملات",
+    "parameters": {
+      "country": "البلد",
+      "dateRange": "نطاق التاريخ",
+      "status": "الحالة",
+      "includeExpiring": "تضمين التي تنتهي قريباً",
+      "period": "الفترة",
+      "confidenceLevel": "مستوى الثقة",
+      "classification": "التصنيف",
+      "organization": "المنظمة",
+      "reportPeriod": "فترة التقرير"
+    },
     "parametersDesc": "تكوين معاملات التقرير",
     "format": "الصيغة",
     "generateReport": "إنشاء التقرير",
@@ -405,17 +426,6 @@
       "organizationProfileDesc": "معلومات تفصيلية عن المنظمة",
       "executiveDashboard": "لوحة التحكم التنفيذية",
       "executiveDashboardDesc": "نظرة عامة عالية المستوى للمسؤولين التنفيذيين"
-    },
-    "parameters": {
-      "country": "البلد",
-      "dateRange": "نطاق التاريخ",
-      "status": "الحالة",
-      "includeExpiring": "تضمين التي تنتهي قريباً",
-      "period": "الفترة",
-      "confidenceLevel": "مستوى الثقة",
-      "classification": "التصنيف",
-      "organization": "المنظمة",
-      "reportPeriod": "فترة التقرير"
     },
     "periods": {
       "thisMonth": "هذا الشهر",
@@ -733,7 +743,41 @@
     "viewDetails": "عرض التفاصيل",
     "sendReminder": "إرسال تذكير",
     "escalate": "تصعيد",
-    "bulkActions": "إجراءات جماعية",
+    "bulkActions": {
+      "toolbar": "إجراءات جماعية",
+      "sendReminders": "إرسال تذكيرات",
+      "sending": "جاري إرسال التذكيرات...",
+      "clear": "مسح",
+      "clearSelection": "مسح التحديد",
+      "selectedCount": "{{count}} محدد",
+      "maxItems": "(الحد الأقصى {{max}})",
+      "maxReached": "تم الوصول إلى الحد الأقصى للتحديد",
+      "maxReachedDesc": "يمكنك تحديد ما يصل إلى 100 عنصر في المرة الواحدة",
+      "selectItem": "تحديد {{id}}",
+      "processing": "قيد المعالجة",
+      "jobCreated": "تم إنشاء مهمة تذكير جماعي لـ {{count}} عنصر",
+      "skippedSome": "تم وضع {{sent}} تذكير في قائمة الانتظار، تم تخطي {{skipped}} (لا يوجد مكلف)",
+      "completed": "مكتمل",
+      "summary": "تم إرسال {{success}} بنجاح، فشل {{failed}} (إجمالي {{total}})",
+      "failed": "فشل",
+      "failedDesc": "واجهت عملية التذكير الجماعي خطأ",
+      "selectionCleared": "تم مسح التحديد",
+      "selectionClearedDesc": "تم إلغاء تحديد جميع العناصر",
+      "noAssignees": "لا يوجد مكلفون صالحون",
+      "noAssigneesDesc": "جميع العناصر المحددة ليس لها مكلفون. لا يمكن إرسال تذكيرات.",
+      "error": "فشل الإجراء الجماعي",
+      "errorDesc": "حدث خطأ أثناء معالجة طلبك",
+      "escalate": "تصعيد",
+      "cancel": "إلغاء",
+      "maxSelectionExceeded": "الحد الأقصى للتحديد هو {{max}} عنصر",
+      "jobStatus": "حالة المهمة",
+      "queued": "في قائمة الانتظار",
+      "progress": "التقدم: {{processed}}/{{total}}",
+      "viewResults": "عرض النتائج",
+      "successfulIds": "نجح",
+      "failedIds": "فشل",
+      "skippedIds": "تم التخطي"
+    },
     "selectAll": "تحديد الكل",
     "clearSelection": "مسح التحديد",
     "selectedCount": "{{count}} محدد",
@@ -885,44 +929,6 @@
       "acknowledged": "تم الإقرار في {{date}}",
       "resolve": "حل",
       "resolved": "تم الحل في {{date}}"
-    },
-    "bulkActions": {
-      "toolbar": "إجراءات جماعية",
-      "sendReminders": "إرسال تذكيرات",
-      "sending": "جاري إرسال التذكيرات...",
-      "clear": "مسح",
-      "clearSelection": "مسح التحديد",
-      "selectedCount": "{{count}} محدد",
-      "maxItems": "(الحد الأقصى {{max}})",
-      "maxReached": "تم الوصول إلى الحد الأقصى للتحديد",
-      "maxReachedDesc": "يمكنك تحديد ما يصل إلى 100 عنصر في المرة الواحدة",
-      "selectItem": "تحديد {{id}}",
-      "processing": "معالجة التذكيرات الجماعية",
-      "jobCreated": "تم إنشاء مهمة تذكير جماعي لـ {{count}} عنصر",
-      "skippedSome": "تم وضع {{sent}} تذكير في قائمة الانتظار، تم تخطي {{skipped}} (لا يوجد مكلف)",
-      "completed": "اكتملت التذكيرات الجماعية",
-      "summary": "تم إرسال {{success}} بنجاح، فشل {{failed}} (إجمالي {{total}})",
-      "failed": "فشلت العملية الجماعية",
-      "failedDesc": "واجهت عملية التذكير الجماعي خطأ",
-      "selectionCleared": "تم مسح التحديد",
-      "selectionClearedDesc": "تم إلغاء تحديد جميع العناصر",
-      "noAssignees": "لا يوجد مكلفون صالحون",
-      "noAssigneesDesc": "جميع العناصر المحددة ليس لها مكلفون. لا يمكن إرسال تذكيرات.",
-      "error": "فشل الإجراء الجماعي",
-      "errorDesc": "حدث خطأ أثناء معالجة طلبك",
-      "escalate": "تصعيد",
-      "cancel": "إلغاء",
-      "maxSelectionExceeded": "الحد الأقصى للتحديد هو {{max}} عنصر",
-      "jobStatus": "حالة المهمة",
-      "queued": "في قائمة الانتظار",
-      "processing": "قيد المعالجة",
-      "completed": "مكتمل",
-      "failed": "فشل",
-      "progress": "التقدم: {{processed}}/{{total}}",
-      "viewResults": "عرض النتائج",
-      "successfulIds": "نجح",
-      "failedIds": "فشل",
-      "skippedIds": "تم التخطي"
     },
     "errors": {
       "loadFailed": "فشل تحميل التكليفات",
@@ -1091,5 +1097,116 @@
     "forum": "دوسيه منتدى",
     "working_group": "دوسيه مجموعة عمل",
     "topic": "دوسيه موضوع"
+  },
+  "tweaks": {
+    "title": "تخصيص",
+    "subtitle": "اضبط هذا النموذج مباشرةً",
+    "open": "فتح التعديلات",
+    "close": "إغلاق التعديلات",
+    "direction": {
+      "label": "الاتجاه التصميمي",
+      "chancery": {
+        "name": "المستشارية",
+        "tagline": "Editorial · serif · composed"
+      },
+      "situation": {
+        "name": "غرفة العمليات",
+        "tagline": "Intelligence terminal · dense · mono"
+      },
+      "ministerial": {
+        "name": "وزاري",
+        "tagline": "Government-formal · clean · restrained"
+      },
+      "bureau": {
+        "name": "مكتب",
+        "tagline": "Warm neutrals · document-forward · SaaS-clean"
+      }
+    },
+    "mode": {
+      "label": "السمة",
+      "light": "فاتح",
+      "dark": "داكن"
+    },
+    "hue": {
+      "label": "درجة اللون المميّز"
+    },
+    "density": {
+      "label": "الكثافة",
+      "comfortable": "مريح",
+      "compact": "متوسط",
+      "dense": "كثيف"
+    },
+    "classification": {
+      "label": "شريط التصنيف",
+      "on": "تشغيل",
+      "off": "إيقاف"
+    },
+    "locale": {
+      "label": "اتجاه القراءة",
+      "en": "LTR · الإنجليزية",
+      "ar": "RTL · العربية"
+    },
+    "shortcuts": {
+      "label": "الاختصارات",
+      "searchAny": "ابحث في أي شيء",
+      "newEngagement": "مشاركة جديدة",
+      "newBrief": "ملخص جديد"
+    },
+    "loader": {
+      "label": "شاشة التحميل",
+      "preview": "عرض لفترة وجيزة"
+    }
+  },
+  "shell": {
+    "appName": "دوسييه",
+    "workspace": "الهيئة العامة للإحصاء · الشراكات الدولية",
+    "brand": {
+      "mark": "شعار دوسييه"
+    },
+    "user": {
+      "noRole": "عضو"
+    },
+    "footer": {
+      "sync": "الإصدار ٢٫٠ · متزامن"
+    },
+    "search": {
+      "placeholder": "ابحث في الملفات والمهام والأشخاص…",
+      "kbd": "⌘K"
+    },
+    "direction": {
+      "chancery": "دواوين",
+      "situation": "غرفة العمليات",
+      "ministerial": "وزاري",
+      "bureau": "مكتب"
+    },
+    "theme": {
+      "toggle": "تبديل المظهر"
+    },
+    "notifications": {
+      "open": "فتح الإشعارات",
+      "count": "{{count}} إشعارات غير مقروءة"
+    },
+    "tweaks": "تخصيص",
+    "menu": {
+      "open": "فتح قائمة التنقل",
+      "close": "إغلاق قائمة التنقل"
+    },
+    "main": {
+      "region": "المحتوى الرئيسي"
+    },
+    "classification": {
+      "workspace": "الهيئة العامة للإحصاء",
+      "handleSecurely": "يُتداول عبر قنوات آمنة",
+      "session": "الجلسة:"
+    },
+    "empty": {
+      "noNav": {
+        "title": "لا توجد فضاءات متاحة",
+        "body": "تواصل مع مسؤول النظام لطلب الوصول."
+      }
+    },
+    "error": {
+      "mount": "تعذّر تحميل الفضاء. أعد التحميل للمحاولة."
+    }
   }
 }

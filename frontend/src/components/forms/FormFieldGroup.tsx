@@ -229,8 +229,6 @@ export function FormFieldGroup({
   className,
   children,
 }: FormFieldGroupProps) {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
 
   // Container styling
   const containerClasses = cn(

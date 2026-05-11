@@ -13,18 +13,26 @@ import { Link } from '@tanstack/react-router'
 import { useDossierPositionLinks } from '@/hooks/useDossierPositionLinks'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ExternalLink } from 'lucide-react'
+import type { Position } from '@/types/position'
 
 interface PositionTrackerCardProps {
   dossierId: string
 }
 
-export function PositionTrackerCard({
-  dossierId,
-}: PositionTrackerCardProps): React.ReactElement {
+// The hook augments each Position with link_type and may also include
+// optional summary_* / title_* fields fetched off the join.
+type PositionWithLink = Position & {
+  link_type?: 'primary' | 'related' | 'reference'
+  summary_en?: string
+  summary_ar?: string
+}
+
+export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
   const { positions, isLoading } = useDossierPositionLinks(dossierId)
+  const positionsWithLink = positions as PositionWithLink[] | undefined
 
   if (isLoading) {
     return (
@@ -39,12 +47,8 @@ export function PositionTrackerCard({
   }
 
   // Separate our positions (primary) from counterpart positions (related/reference)
-  const ourPositions = positions?.filter(
-    (p: Record<string, unknown>) => p.link_type === 'primary',
-  ) ?? []
-  const counterpartPositions = positions?.filter(
-    (p: Record<string, unknown>) => p.link_type !== 'primary',
-  ) ?? []
+  const ourPositions = positionsWithLink?.filter((p) => p.link_type === 'primary') ?? []
+  const counterpartPositions = positionsWithLink?.filter((p) => p.link_type !== 'primary') ?? []
 
   const hasPositions = (positions?.length ?? 0) > 0
 
@@ -88,14 +92,14 @@ export function PositionTrackerCard({
                 </p>
               ) : (
                 <div className="space-y-2">
-                  {ourPositions.slice(0, 3).map((pos: Record<string, unknown>) => (
-                    <div key={pos.id as string} className="text-xs">
+                  {ourPositions.slice(0, 3).map((pos) => (
+                    <div key={pos.id} className="text-xs">
                       <p className="font-medium truncate">
-                        {(isRTL ? pos.title_ar : pos.title_en) as string || (pos.title_en as string)}
+                        {(isRTL ? pos.title_ar : pos.title_en) || pos.title_en}
                       </p>
                       {pos.summary_en && (
                         <p className="text-muted-foreground line-clamp-2 mt-0.5">
-                          {(isRTL ? pos.summary_ar : pos.summary_en) as string}
+                          {isRTL ? pos.summary_ar : pos.summary_en}
                         </p>
                       )}
                     </div>
@@ -115,14 +119,14 @@ export function PositionTrackerCard({
                 </p>
               ) : (
                 <div className="space-y-2">
-                  {counterpartPositions.slice(0, 3).map((pos: Record<string, unknown>) => (
-                    <div key={pos.id as string} className="text-xs">
+                  {counterpartPositions.slice(0, 3).map((pos) => (
+                    <div key={pos.id} className="text-xs">
                       <p className="font-medium truncate">
-                        {(isRTL ? pos.title_ar : pos.title_en) as string || (pos.title_en as string)}
+                        {(isRTL ? pos.title_ar : pos.title_en) || pos.title_en}
                       </p>
                       {pos.summary_en && (
                         <p className="text-muted-foreground line-clamp-2 mt-0.5">
-                          {(isRTL ? pos.summary_ar : pos.summary_en) as string}
+                          {isRTL ? pos.summary_ar : pos.summary_en}
                         </p>
                       )}
                     </div>

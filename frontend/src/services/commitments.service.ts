@@ -21,7 +21,6 @@ import type {
   EvidenceUploadResponse,
   EvidenceUrlResponse,
   CommitmentStatus,
-  CommitmentPriority,
 } from '@/types/commitment.types'
 
 // Re-export types for convenience
@@ -416,62 +415,9 @@ export async function getEvidenceUrl(proofUrl: string): Promise<EvidenceUrlRespo
   }
 }
 
-/**
- * Delete a commitment (soft delete by setting status to cancelled)
- * Note: Full deletion may be restricted by RLS policies
- *
- * @param commitmentId - UUID of the commitment
- * @param reason - Reason for deletion/cancellation
- */
-async function deleteCommitment(commitmentId: string, reason: string): Promise<void> {
-  await cancelCommitment({ id: commitmentId, reason })
-}
-
 // ============================================================================
 // Utility Functions
 // ============================================================================
-
-/**
- * Get commitment status color for UI
- *
- * @param status - Commitment status
- * @returns Tailwind CSS color classes
- */
-function getCommitmentStatusColor(status: CommitmentStatus): string {
-  switch (status) {
-    case 'completed':
-      return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20'
-    case 'in_progress':
-      return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-    case 'pending':
-      return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20'
-    case 'cancelled':
-      return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20'
-    default:
-      return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20'
-  }
-}
-
-/**
- * Get commitment priority color for UI
- *
- * @param priority - Commitment priority
- * @returns Tailwind CSS color class
- */
-function getCommitmentPriorityColor(priority: CommitmentPriority): string {
-  switch (priority) {
-    case 'urgent':
-      return 'text-red-600 dark:text-red-400'
-    case 'high':
-      return 'text-orange-600 dark:text-orange-400'
-    case 'medium':
-      return 'text-yellow-600 dark:text-yellow-400'
-    case 'low':
-      return 'text-green-600 dark:text-green-400'
-    default:
-      return 'text-gray-600 dark:text-gray-400'
-  }
-}
 
 /**
  * Check if commitment is overdue

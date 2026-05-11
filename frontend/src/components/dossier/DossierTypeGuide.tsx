@@ -370,7 +370,6 @@ export function DossierTypeGuideGrid({
   className?: string
 }) {
   const { t } = useTranslation('dossier')
-  const { isRTL } = useDirection()
 
   const types: DossierType[] = [
     'country',

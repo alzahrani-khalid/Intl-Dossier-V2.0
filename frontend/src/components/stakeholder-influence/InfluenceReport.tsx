@@ -85,7 +85,6 @@ function FindingCard({
   finding: { en: string; ar: string }
   type?: 'info' | 'warning' | 'success'
 }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const icons = {
     info: AlertCircle,
@@ -116,7 +115,6 @@ function RecommendationCard({
   recommendation: { en: string; ar: string }
   index: number
 }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
   const text = isRTL ? recommendation.ar : recommendation.en
 

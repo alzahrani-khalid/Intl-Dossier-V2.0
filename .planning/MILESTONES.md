@@ -1,5 +1,63 @@
 # Milestones
 
+## v6.1 Hardening & Reconciliation (Shipped: 2026-05-08)
+
+**Delivered:** v6.0 debt closure: verification/archive reconciliation, repaired bundle-budget enforcement, schema and staging seed closure, and regenerated visual baselines for the deferred dashboard/list/drawer surfaces.
+
+**Phases completed:** 3 phases (44-46), 14 plans, 25 tasks
+
+**Key accomplishments:**
+
+- Backfilled explicit v6.0 verification evidence for TOKEN, THEME, SHELL, VIZ, BOARD, and LIST requirements.
+- Reconciled active and archived v6.0 planning truth: REQUIREMENTS, ROADMAP, final audit caveats, and Storybook deferral via ADR-006.
+- Restored truthful `size-limit` enforcement with stable Vite chunk globs, zero-match detection, and CI parity.
+- Closed WR-02..WR-06 source/accessibility anti-patterns with focused lint and axe evidence in English and Arabic.
+- Shipped tenant-scoped `intelligence_digest` schema, deterministic dashboard seed rows, digest hook, and VIP country ISO projection.
+- Regenerated 24 visual baselines across dashboard widgets, list pages, and dossier drawer, with PASS review rows and no-update replay.
+
+**Known deferred items at close:** 10 acknowledged items (see `.planning/STATE.md` Deferred Items), including the historical dashboard max-depth debug session, seven stale quick-task artifacts, the v6.1 kickoff todo, and the missing v6.1 milestone audit file.
+
+**Archive:** `.planning/milestones/v6.1-ROADMAP.md` · `.planning/milestones/v6.1-REQUIREMENTS.md` · `.planning/milestones/v6.1-phases/`
+
+---
+
+## v6.0 Design System Adoption (Shipped: 2026-05-06)
+
+**Phases completed:** 11 phases (33-43), 121/121 executable plans complete (33-08 superseded by ADR-006), 66 tasks
+**Timeline:** 17 days (2026-04-19 → 2026-05-06)
+**Audit:** `.planning/milestones/v6.0-MILESTONE-AUDIT.md` (status: tech_debt — no critical blockers); Phase 44 reconciliation evidence is recorded in `.planning/phases/44-documentation-toolchain-anti-patterns/44-final-audit.md`
+
+**Key accomplishments:**
+
+- OKLCH-driven token engine across 4 design directions (Chancery / Situation Room / Ministerial / Bureau) × light/dark × accent hue × density, bridged to Tailwind v4 `@theme` and HeroUI v3 semantics with zero per-component overrides
+- Self-hosted typography stack (Fraunces / Space Grotesk / Public Sans / Inter / IBM Plex Sans / IBM Plex Mono / JetBrains Mono / Tajawal) via `@fontsource/*` — zero `fonts.googleapis.com` requests; verbatim Tajawal RTL cascade
+- New shell chrome: 256px sidebar with 2px accent bar (`inset-inline-start:0`), 56px topbar with `⌘K` search + direction switcher + Tweaks button, direction-specific classification element, and ≤1024px overlay-drawer with RTL flip
+- Tweaks drawer with Direction/Mode/Hue/Density/Classification/Locale controls and `localStorage` persistence; legacy `/themes` route + `pages/Themes.tsx` + `components/theme-selector/` removed
+- Signature visual primitives: `<GlobeLoader>` (d3-geo orthographic + 3 whirl rings), `<GlobeSpinner>`, `<FullscreenLoader>`, `<DossierGlyph>` (24 hand-drawn flag SVGs + symbol fallbacks), `<Sparkline>` (RTL-flipped polyline), `<Donut>` (stacked dasharray segments)
+- Dashboard rebuilt verbatim to `reference/dashboard.png`: 8 widgets (KpiStrip / WeekAhead / OverdueCommitments / Digest / SlaHealth / VipVisits / MyTasks / RecentDossiers / ForumsStrip) wired to real domain hooks with zero placeholder data; legacy `OperationsHub.tsx` deleted (75/75 vitest)
+- Kanban (`kcards` with overdue inline-start border + done opacity) + 7×5 calendar grid (event pills, today accent, RTL nav)
+- Seven list pages (Countries / Organizations / Persons / Forums / Topics / Working Groups / Engagements) on shared `ListPageShell` + `GenericListPage` with filter pills + `<GlobeSpinner>` load-more; `EngagementsListPage` swap from 266 LOC → 16 LOC
+- 720px dossier drawer (DOSSIER + CONFIDENTIAL chips, mini-KPI strip, italic-serif summary, Upcoming/Activity/Commitments) with focus trap + ESC + RTL slide flip + ≤640px full-screen
+- Five remaining pages reskinned: Briefs (auto-fill card grid), After-actions (`.tbl` 6-column), Tasks (`.tasks-list` with checkbox + glyph + priority chip), Activity (`time · icon · "who action what in where"` timeline), Settings (240+1fr nav grid + 9-section vertical nav)
+- Hard cross-phase QA gate (Phase 43): `pnpm lint` zero `eslint-plugin-rtl-friendly` violations across 13+ routes; axe-core 30/30 across EN/AR; responsive 60/60 across 6 breakpoints; keyboard 26 + 4 acknowledged-skip; focus-outline 8/8; `docs/rtl-icons.md` enumerates 11 mirrored-icon entries; CI `qa-sweep` gate live in `.github/workflows/e2e.yml`
+- Two design tokens raised to clear WCAG AA (`inkFaint` 3.14 → 5.07; `--accent-fg` 4.38 → 5.28); `--sla-bad` darkened to `oklch(46% 0.18 25)`; FOUC bootstrap byte-mirror invariant preserved
+- Playwright `globalSetup` + `storageState` + `chromium-no-auth` project replace brittle `loginForListPages` helper across 9 dossier-drawer specs
+
+**Known deferred items at close:** 9 historical items, with documentation/toolchain reconciliation handled by Phase 44 (see `.planning/phases/44-documentation-toolchain-anti-patterns/44-final-audit.md`)
+
+**Tech debt (see audit for details):**
+
+- Backfilled VERIFICATION.md files now exist for phases 33, 34, 36, 37, 39, and 40; Phase 44 final audit reports `phases_missing_verification: []` and `requirements_partial_verification_gap: 0`
+- Visual-regression baselines for Phases 38, 40, and 41 were regenerated and human-reviewed in Phase 46 (`.planning/phases/46-visual-baseline-regeneration/46-VALIDATION.md`)
+- Schema/seed work deferred: `intelligence_digest` table (DIGEST-SOURCE-COMPROMISE), VIP person ISO join in RPC, `060-dashboard-demo.sql` seed for 4 BLOCKED-BY-SEED specs
+- size-limit budget gate repaired with current measured Vite output budgets in `frontend/.size-limit.json`; the historical 815 KB ceiling remains aspirational, not the enforced gate
+- Phase 43 WR-02..WR-06 source/lint/browser closure is recorded in Phase 44 summaries and final audit
+- Plan 33-08 Storybook deferral is formalized by ADR-006, which names the replacement coverage and revisit trigger
+
+**Archive:** `.planning/milestones/v6.0-ROADMAP.md` · `.planning/milestones/v6.0-REQUIREMENTS.md` · `.planning/milestones/v6.0-MILESTONE-AUDIT.md`
+
+---
+
 ## v4.1 Post-Launch Fixes (Shipped: 2026-04-12)
 
 **Phases completed:** 2 phases (24-25), 7 plans, 6 quick tasks

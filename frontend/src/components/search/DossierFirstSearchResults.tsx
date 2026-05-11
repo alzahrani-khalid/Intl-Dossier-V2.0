@@ -541,7 +541,6 @@ export function DossierFirstSearchResults({
   onWorkItemClick,
 }: DossierFirstSearchResultsProps) {
   const { t } = useTranslation('dossier-search')
-  const { isRTL } = useDirection()
 
   const [dossiersExpanded, setDossiersExpanded] = React.useState(true)
   const [workExpanded, setWorkExpanded] = React.useState(true)

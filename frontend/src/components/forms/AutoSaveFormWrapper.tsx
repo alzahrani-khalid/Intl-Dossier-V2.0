@@ -121,14 +121,12 @@ interface DraftBannerProps<T extends Record<string, unknown>> {
   draft: FormDraft<T>
   onRestore: () => void
   onDiscard: () => void
-  isRTL: boolean
 }
 
 function DraftBanner<T extends Record<string, unknown>>({
   draft,
   onRestore,
   onDiscard,
-  isRTL,
 }: DraftBannerProps<T>) {
   const { t } = useTranslation('common')
 
@@ -208,7 +206,7 @@ interface ProgressIndicatorProps {
   isRTL: boolean
 }
 
-function ProgressIndicator({ progress, isRTL }: ProgressIndicatorProps) {
+function ProgressIndicator({ progress}: ProgressIndicatorProps) {
   const { t } = useTranslation('common')
 
   return (
@@ -392,7 +390,6 @@ export function AutoSaveFormWrapper<T extends Record<string, unknown>>({
               draft={autoSave.draft}
               onRestore={handleRestore}
               onDiscard={handleDiscard}
-              isRTL={isRTL}
             />
           )}
         </AnimatePresence>

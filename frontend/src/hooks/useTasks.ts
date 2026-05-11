@@ -13,7 +13,6 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useCallback } from 'react'
 import {
   tasksAPI,
   type CreateTaskRequest,
@@ -23,15 +22,6 @@ import {
 } from '@/services/tasks-api'
 import type { Database } from '../../../backend/src/types/database.types'
 import { useToast } from './useToast'
-import { useOfflineState } from './useOfflineState'
-import {
-  saveTaskDraft,
-  getTaskDraft,
-  clearTaskDraft,
-  getAllTaskDrafts,
-  clearStaleDrafts,
-  isIndexedDBSupported,
-} from '@/utils/local-storage'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -56,7 +46,7 @@ export const tasksKeys = {
 /**
  * Hook to fetch tasks with filtering and pagination
  */
-function useTasks(filters: TaskFilters = {}) {
+export function useTasks(filters: TaskFilters = {}) {
   return useQuery({
     queryKey: tasksKeys.list(filters),
     queryFn: () => tasksAPI.getTasks(filters),
@@ -100,59 +90,6 @@ export function useContributedTasks(filters: Omit<TaskFilters, 'filter'> = {}) {
     queryFn: () => tasksAPI.getContributedTasks(filters),
     staleTime: 1000 * 60 * 2, // 2 minutes (contributors change less frequently)
     gcTime: 1000 * 60 * 10, // 10 minutes
-  })
-}
-
-/**
- * Hook to fetch tasks for an engagement (kanban board)
- */
-function useEngagementTasks(engagementId: string) {
-  return useQuery({
-    queryKey: tasksKeys.engagement(engagementId),
-    queryFn: () => tasksAPI.getEngagementTasks(engagementId),
-    enabled: !!engagementId,
-    staleTime: 1000 * 30, // 30 seconds (more frequent for kanban boards)
-    gcTime: 1000 * 60 * 5, // 5 minutes
-  })
-}
-
-/**
- * Hook to fetch tasks linked to a work item
- */
-function useWorkItemTasks(
-  workItemType: 'dossier' | 'position' | 'ticket' | 'generic',
-  workItemId: string,
-) {
-  return useQuery({
-    queryKey: tasksKeys.workItem(workItemType, workItemId),
-    queryFn: () => tasksAPI.getWorkItemTasks(workItemType, workItemId),
-    enabled: !!workItemId && !!workItemType,
-    staleTime: 1000 * 60 * 2, // 2 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
-  })
-}
-
-/**
- * Hook to fetch overdue tasks
- */
-function useOverdueTasks(assigneeId?: string) {
-  return useQuery({
-    queryKey: tasksKeys.overdue(assigneeId),
-    queryFn: () => tasksAPI.getOverdueTasks(assigneeId),
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 15, // 15 minutes
-  })
-}
-
-/**
- * Hook to fetch tasks approaching deadline
- */
-function useTasksApproachingDeadline(hours: number = 4, assigneeId?: string) {
-  return useQuery({
-    queryKey: tasksKeys.approaching(hours, assigneeId),
-    queryFn: () => tasksAPI.getTasksApproachingDeadline(hours, assigneeId),
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 15, // 15 minutes
   })
 }
 
@@ -307,114 +244,6 @@ export function useUpdateTask(options?: {
 }
 
 /**
- * Hook to update task workflow stage (for kanban drag-and-drop)
- */
-function useUpdateWorkflowStage() {
-  const { t } = useTranslation()
-  const { toast } = useToast()
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({
-      taskId,
-      workflow_stage,
-      last_known_updated_at,
-    }: {
-      taskId: string
-      workflow_stage: UpdateTaskRequest['workflow_stage']
-      last_known_updated_at?: string
-    }) => tasksAPI.updateWorkflowStage(taskId, workflow_stage, last_known_updated_at),
-
-    // Auto-retry on optimistic lock conflicts
-    retry: (failureCount, error) => {
-      if (error instanceof OptimisticLockConflictError) {
-        return failureCount < 3
-      }
-      return false
-    },
-
-    retryDelay: (attemptIndex) => Math.min(1000, 100 * Math.pow(2, attemptIndex)),
-
-    onError: (error) => {
-      if (!(error instanceof OptimisticLockConflictError)) {
-        toast({
-          title: t('tasks.update_failed'),
-          description: error.message,
-          variant: 'destructive',
-        })
-      }
-    },
-
-    onSuccess: (updatedTask) => {
-      queryClient.setQueryData(tasksKeys.detail(updatedTask.id), updatedTask)
-      queryClient.invalidateQueries({ queryKey: tasksKeys.lists() })
-
-      if (updatedTask.engagement_id) {
-        queryClient.invalidateQueries({
-          queryKey: tasksKeys.engagement(updatedTask.engagement_id),
-        })
-      }
-    },
-  })
-}
-
-/**
- * Hook to mark task as completed
- */
-function useCompleteTask() {
-  const { t } = useTranslation()
-  const { toast } = useToast()
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({
-      taskId,
-      last_known_updated_at,
-    }: {
-      taskId: string
-      last_known_updated_at?: string
-    }) => tasksAPI.completeTask(taskId, last_known_updated_at),
-
-    // Auto-retry on optimistic lock conflicts
-    retry: (failureCount, error) => {
-      if (error instanceof OptimisticLockConflictError) {
-        return failureCount < 3
-      }
-      return false
-    },
-
-    retryDelay: (attemptIndex) => Math.min(1000, 100 * Math.pow(2, attemptIndex)),
-
-    onSuccess: (completedTask) => {
-      queryClient.setQueryData(tasksKeys.detail(completedTask.id), completedTask)
-      queryClient.invalidateQueries({ queryKey: tasksKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: tasksKeys.myTasks() })
-
-      if (completedTask.engagement_id) {
-        queryClient.invalidateQueries({
-          queryKey: tasksKeys.engagement(completedTask.engagement_id),
-        })
-      }
-
-      toast({
-        title: t('tasks.completed'),
-        description: t('tasks.completed_success'),
-      })
-    },
-
-    onError: (error) => {
-      if (!(error instanceof OptimisticLockConflictError)) {
-        toast({
-          title: t('tasks.complete_failed'),
-          description: error.message,
-          variant: 'destructive',
-        })
-      }
-    },
-  })
-}
-
-/**
  * Hook to delete a task (soft delete)
  */
 export function useDeleteTask() {
@@ -444,183 +273,4 @@ export function useDeleteTask() {
       })
     },
   })
-}
-
-/**
- * Hook to automatically recover task drafts from IndexedDB on mount (T115)
- * - Checks IndexedDB for any unsaved drafts
- * - Attempts to save them when connectivity is restored
- * - Cleans up stale drafts (older than 7 days)
- *
- * Usage: Call this hook once in the root App component
- */
-function useTaskDraftRecovery() {
-  const { t } = useTranslation()
-  const { toast } = useToast()
-  const { isOnline } = useOfflineState()
-  const updateTask = useUpdateTask()
-
-  // Attempt to recover drafts when coming online
-  const recoverDrafts = useCallback(async () => {
-    if (!isIndexedDBSupported()) {
-      return
-    }
-
-    try {
-      // Get all pending drafts
-      const drafts = await getAllTaskDrafts()
-
-      if (drafts.length === 0) {
-        return
-      }
-
-      // Attempt to save each draft
-      let successCount = 0
-      let failureCount = 0
-
-      for (const draft of drafts) {
-        try {
-          // Attempt to update task with draft data
-          await updateTask.mutateAsync({
-            taskId: draft.taskId,
-            data: {
-              ...draft.updates,
-              // Include original updated_at for optimistic locking if available
-              ...(draft.originalUpdatedAt && {
-                last_known_updated_at: draft.originalUpdatedAt,
-              }),
-            } as UpdateTaskRequest,
-          })
-
-          // Clear draft on success
-          await clearTaskDraft(draft.taskId)
-          successCount++
-        } catch (error) {
-          failureCount++
-
-          // If it's an optimistic lock conflict, keep the draft for manual resolution
-          if (!(error instanceof OptimisticLockConflictError)) {
-            // For other errors, clear the draft to avoid endless retry loops
-            await clearTaskDraft(draft.taskId)
-          }
-        }
-      }
-
-      // Show summary toast
-      if (successCount > 0) {
-        toast({
-          title: t('tasks.drafts_recovered'),
-          description: t('tasks.drafts_recovered_message', {
-            count: successCount,
-          }),
-        })
-      }
-
-      if (failureCount > 0) {
-        toast({
-          title: t('tasks.drafts_recovery_partial'),
-          description: t('tasks.drafts_recovery_partial_message', {
-            failed: failureCount,
-          }),
-          variant: 'default',
-        })
-      }
-
-      // Clean up stale drafts
-      await clearStaleDrafts()
-    } catch (_error) {
-      // Error during draft recovery
-    }
-  }, [isOnline, updateTask, toast, t])
-
-  // Trigger recovery when coming online
-  useEffect(() => {
-    if (isOnline) {
-      recoverDrafts()
-    }
-  }, [isOnline, recoverDrafts])
-
-  return {
-    recoverDrafts,
-  }
-}
-
-/**
- * Hook to persist task updates to IndexedDB when offline (T114)
- *
- * Usage:
- * ```tsx
- * const { saveOfflineDraft } = useTaskOfflineDraft(taskId);
- *
- * const handleSave = async () => {
- *   if (isOffline) {
- *     await saveOfflineDraft({ title: newTitle });
- *     toast({ title: 'Saved offline, will sync when online' });
- *   } else {
- *     await updateTask.mutateAsync({ taskId, data: { title: newTitle } });
- *   }
- * };
- * ```
- */
-function useTaskOfflineDraft(taskId: string) {
-  const { isOffline } = useOfflineState()
-  const { toast } = useToast()
-  const { t } = useTranslation()
-
-  const saveOfflineDraft = useCallback(
-    async (updates: Partial<UpdateTaskRequest>, originalUpdatedAt?: string) => {
-      if (!isIndexedDBSupported()) {
-        console.warn('[TaskOfflineDraft] IndexedDB not supported')
-        return
-      }
-
-      try {
-        await saveTaskDraft(taskId, updates, originalUpdatedAt)
-
-        toast({
-          title: t('tasks.draft_saved'),
-          description: t('tasks.draft_saved_offline_message'),
-        })
-      } catch (_error) {
-        toast({
-          title: t('tasks.draft_save_failed'),
-          description: t('tasks.draft_save_failed_message'),
-          variant: 'destructive',
-        })
-      }
-    },
-    [taskId, toast, t],
-  )
-
-  const loadDraft = useCallback(async () => {
-    if (!isIndexedDBSupported()) {
-      return null
-    }
-
-    try {
-      const draft = await getTaskDraft(taskId)
-      return draft
-    } catch (_error) {
-      return null
-    }
-  }, [taskId])
-
-  const clearDraft = useCallback(async () => {
-    if (!isIndexedDBSupported()) {
-      return
-    }
-
-    try {
-      await clearTaskDraft(taskId)
-    } catch (_error) {
-      // Error clearing draft
-    }
-  }, [taskId])
-
-  return {
-    isOffline,
-    saveOfflineDraft,
-    loadDraft,
-    clearDraft,
-  }
 }

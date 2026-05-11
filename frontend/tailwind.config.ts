@@ -1,5 +1,23 @@
 import type { Config } from 'tailwindcss'
 
+/**
+ * Tailwind v4 config — SLIM.
+ *
+ * Plan 33-06 moved colors to `@theme` in `frontend/src/index.css` (single source
+ * of truth). Per RESEARCH Gotcha #2, duplicating color definitions here would
+ * conflict with @theme — so this file no longer defines `extend.colors` or
+ * `borderRadius` (the latter is derived from --radius via calc() and exposed
+ * via @theme's --radius-*).
+ *
+ * What remains here:
+ *   - content globs (v4 still scans JS/TSX)
+ *   - darkMode strategy ('class')
+ *   - breakpoints
+ *   - container alignment
+ *   - fontFamily + typography scale (density tokens)
+ *   - keyframes + animation
+ *   - RTL logical-property utilities
+ */
 const config: Config = {
   darkMode: ['class'],
   content: [
@@ -10,12 +28,12 @@ const config: Config = {
   ],
   theme: {
     screens: {
-      xs: '320px', // Extra-small devices
-      sm: '640px', // Standard Tailwind: tablets
-      md: '768px', // Standard Tailwind: small laptops
-      lg: '1024px', // Standard Tailwind: desktops
-      xl: '1280px', // Standard Tailwind: large desktops
-      '2xl': '1536px', // Standard Tailwind: extra-large screens
+      xs: '320px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
     },
     container: {
       center: true,
@@ -25,128 +43,24 @@ const config: Config = {
       },
     },
     extend: {
-      colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'var(--heroui-accent)',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'var(--heroui-accent)',
-          foreground: 'var(--heroui-accent-foreground)',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'var(--heroui-danger)',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        success: {
-          DEFAULT: 'var(--heroui-success)',
-          foreground: 'hsl(var(--success-foreground))',
-        },
-        warning: {
-          DEFAULT: 'var(--heroui-warning)',
-          foreground: 'hsl(var(--warning-foreground))',
-        },
-        info: {
-          DEFAULT: 'hsl(var(--info))',
-          foreground: 'hsl(var(--info-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-        sidebar: {
-          DEFAULT: 'hsl(var(--sidebar))',
-          foreground: 'hsl(var(--sidebar-foreground))',
-          primary: 'hsl(var(--sidebar-primary))',
-          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-          accent: 'hsl(var(--sidebar-accent))',
-          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-          border: 'hsl(var(--sidebar-border))',
-          ring: 'hsl(var(--sidebar-ring))',
-        },
-        // Modern Navigation Colors
-        'icon-rail': {
-          DEFAULT: 'var(--icon-rail-bg)',
-          hover: 'var(--icon-rail-hover)',
-          'active-bg': 'var(--icon-rail-active-bg)',
-          'active-indicator': 'var(--icon-rail-active-indicator)',
-          icon: 'var(--icon-rail-icon)',
-          'icon-active': 'var(--icon-rail-icon-active)',
-          border: 'var(--icon-rail-border)',
-        },
-        panel: {
-          DEFAULT: 'var(--panel-bg)',
-          border: 'var(--panel-border)',
-          text: 'var(--panel-text)',
-          'text-muted': 'var(--panel-text-muted)',
-          hover: 'var(--panel-hover)',
-          active: 'var(--panel-active)',
-          'active-text': 'var(--panel-active-text)',
-        },
-        badge: {
-          DEFAULT: 'var(--badge-bg)',
-          text: 'var(--badge-text)',
-        },
-        content: {
-          DEFAULT: 'var(--content-bg)',
-          card: 'var(--content-card-bg)',
-          border: 'var(--content-border)',
-          text: 'var(--content-text)',
-          'text-muted': 'var(--content-text-muted)',
-        },
-        chart: {
-          '1': 'hsl(var(--chart-1))',
-          '2': 'hsl(var(--chart-2))',
-          '3': 'hsl(var(--chart-3))',
-          '4': 'hsl(var(--chart-4))',
-          '5': 'hsl(var(--chart-5))',
-        },
-      },
-      borderRadius: {
-        '3xl': 'calc(var(--radius) * 3)',
-        '2xl': 'calc(var(--radius) * 2)',
-        xl: 'calc(var(--radius) * 1.5)',
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) * 0.75)',
-        sm: 'calc(var(--radius) * 0.5)',
-        xs: 'calc(var(--radius) * 0.25)',
-        field: 'var(--field-radius)',
-      },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         serif: ['var(--font-serif)', 'serif'],
         mono: ['var(--font-mono)', 'monospace'],
       },
       fontSize: {
-        '3xs': 'var(--text-3xs)', // 9px
-        '2xs': 'var(--text-2xs)', // 10px
-        xs: 'var(--text-xs)', // 11px
-        sm: 'var(--text-sm)', // 12px
-        base: 'var(--text-base)', // 13px
-        lg: 'var(--text-lg)', // 14px
-        xl: 'var(--text-xl)', // 16px
-        '2xl': 'var(--text-2xl)', // 18px
-        '3xl': 'var(--text-3xl)', // 20px
-        '4xl': 'var(--text-4xl)', // 24px
-        '5xl': 'var(--text-5xl)', // 30px
-        metric: 'var(--text-metric)', // 56px
+        '3xs': 'var(--text-3xs)',
+        '2xs': 'var(--text-2xs)',
+        xs: 'var(--text-xs)',
+        sm: 'var(--text-sm)',
+        base: 'var(--text-base)',
+        lg: 'var(--text-lg)',
+        xl: 'var(--text-xl)',
+        '2xl': 'var(--text-2xl)',
+        '3xl': 'var(--text-3xl)',
+        '4xl': 'var(--text-4xl)',
+        '5xl': 'var(--text-5xl)',
+        metric: 'var(--text-metric)',
       },
       lineHeight: {
         tight: 'var(--leading-tight)',
@@ -189,34 +103,19 @@ const config: Config = {
         'slide-in-from-right': 'slide-in-from-right 0.2s ease-out',
         'slide-in-from-left': 'slide-in-from-left 0.2s ease-out',
       },
-      boxShadow: {
-        '2xs': '0 0 0 1px hsl(var(--shadow-2xs) / 0.05)',
-        xs: '0 1px 2px 0 hsl(var(--shadow-xs) / 0.05)',
-        sm: '0 1px 3px 0 hsl(var(--shadow-sm) / 0.1), 0 1px 2px 0 hsl(var(--shadow-sm) / 0.06)',
-        DEFAULT:
-          '0 4px 6px -1px hsl(var(--shadow) / 0.1), 0 2px 4px -1px hsl(var(--shadow) / 0.06)',
-        md: '0 10px 15px -3px hsl(var(--shadow-md) / 0.1), 0 4px 6px -2px hsl(var(--shadow-md) / 0.05)',
-        lg: '0 20px 25px -5px hsl(var(--shadow-lg) / 0.1), 0 10px 10px -5px hsl(var(--shadow-lg) / 0.04)',
-        xl: '0 25px 50px -12px hsl(var(--shadow-xl) / 0.25)',
-        '2xl': '0 35px 60px -15px hsl(var(--shadow-2xl) / 0.3)',
-      },
     },
   },
   plugins: [
-    // RTL support plugin (Tailwind v4 has built-in logical properties)
+    // RTL direction helpers
     ({ addUtilities }: any) => {
       addUtilities({
-        '.rtl': {
-          direction: 'rtl',
-        },
-        '.ltr': {
-          direction: 'ltr',
-        },
+        '.rtl': { direction: 'rtl' },
+        '.ltr': { direction: 'ltr' },
       })
     },
-    // Logical properties utilities
+    // Logical-property utilities for bilingual layout
     ({ addUtilities }: any) => {
-      const logicalUtilities = {
+      addUtilities({
         '.ms-auto': { 'margin-inline-start': 'auto' },
         '.me-auto': { 'margin-inline-end': 'auto' },
         '.ps-0': { 'padding-inline-start': '0' },
@@ -263,11 +162,9 @@ const config: Config = {
           'border-start-end-radius': 'var(--radius)',
           'border-end-end-radius': 'var(--radius)',
         },
-      }
-      addUtilities(logicalUtilities)
+      })
     },
   ],
-  // Enable RTL support
   future: {
     hoverOnlyWhenSupported: true,
   },

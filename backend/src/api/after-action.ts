@@ -74,6 +74,8 @@ router.get(
         filters: req.query,
       })
 
+      const q = req.query as unknown as z.infer<typeof listQuerySchema>
+
       let query = supabase.from('after_action_records').select(
         `
           *,
@@ -87,36 +89,39 @@ router.get(
       )
 
       // Apply filters
-      if (req.query.dossier_id) {
-        query = query.eq('dossier_id', req.query.dossier_id)
+      if (q.dossier_id) {
+        query = query.eq('dossier_id', q.dossier_id)
       }
-      if (req.query.engagement_id) {
-        query = query.eq('engagement_id', req.query.engagement_id)
+      if (q.engagement_id) {
+        query = query.eq('engagement_id', q.engagement_id)
       }
-      if (req.query.status) {
-        query = query.eq('status', req.query.status)
+      if (q.status) {
+        query = query.eq('publication_status', q.status)
       }
-      if (req.query.created_by) {
-        query = query.eq('created_by', req.query.created_by)
+      if (q.created_by) {
+        query = query.eq('created_by', q.created_by)
       }
-      if (req.query.confidentiality_level) {
-        query = query.eq('confidentiality_level', req.query.confidentiality_level)
+      if (q.confidentiality_level) {
+        // The schema column is `is_confidential: boolean`; the request enum is a
+        // four-state UX classifier (`public | internal | confidential | secret`).
+        // Until the schema is migrated to a true four-state column, map any non-
+        // public value to `is_confidential = true`.
+        const isConfidential = q.confidentiality_level !== 'public'
+        query = query.eq('is_confidential', isConfidential)
       }
-      if (req.query.date_from) {
-        query = query.gte('created_at', req.query.date_from)
+      if (q.date_from) {
+        query = query.gte('created_at', q.date_from)
       }
-      if (req.query.date_to) {
-        query = query.lte('created_at', req.query.date_to)
+      if (q.date_to) {
+        query = query.lte('created_at', q.date_to)
       }
-      if (req.query.search) {
-        query = query.or(
-          `title.ilike.%${req.query.search}%,description.ilike.%${req.query.search}%`,
-        )
+      if (q.search) {
+        query = query.or(`title.ilike.%${q.search}%,description.ilike.%${q.search}%`)
       }
 
       // Pagination and sorting
-      const limit = req.query.limit || 20
-      const offset = req.query.offset || 0
+      const limit = q.limit || 20
+      const offset = q.offset || 0
       query = query.order('created_at', { ascending: false }).range(offset, offset + limit - 1)
 
       const { data, error, count } = await query
@@ -138,7 +143,7 @@ router.get(
         totalCount: count,
       })
 
-      res.json({
+      return res.json({
         data: data || [],
         pagination: {
           total: count || 0,
@@ -151,7 +156,7 @@ router.get(
       logger.error('Error listing after-action records', {
         error: error instanceof Error ? error.message : 'Unknown error',
       })
-      next(error)
+      return next(error)
     }
   },
 )
@@ -171,7 +176,7 @@ router.get(
         return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      const { id } = req.params
+      const { id } = req.params as { id: string }
 
       logger.info('Fetching after-action record', { id, userId })
 
@@ -241,7 +246,7 @@ router.get(
       logger.error('Error fetching after-action record', {
         error: error instanceof Error ? error.message : 'Unknown error',
       })
-      next(error)
+      return next(error)
     }
   },
 )
@@ -278,7 +283,8 @@ router.post(
         return res.status(404).json({ error: 'Engagement not found' })
       }
 
-      if (engagement.dossier_id !== req.body.dossier_id) {
+      const engagementRow = engagement as unknown as { id: string; dossier_id: string }
+      if (engagementRow.dossier_id !== req.body.dossier_id) {
         return res.status(400).json({
           error: 'Engagement does not belong to the specified dossier',
         })
@@ -320,7 +326,7 @@ router.post(
       const promises = []
 
       if (req.body.decisions && req.body.decisions.length > 0) {
-        const decisionsData = req.body.decisions.map((d) => ({
+        const decisionsData = req.body.decisions.map((d: Record<string, unknown>) => ({
           ...d,
           after_action_id: afterActionId,
         }))
@@ -328,7 +334,7 @@ router.post(
       }
 
       if (req.body.commitments && req.body.commitments.length > 0) {
-        const commitmentsData = req.body.commitments.map((c) => ({
+        const commitmentsData = req.body.commitments.map((c: Record<string, unknown>) => ({
           ...c,
           after_action_id: afterActionId,
           dossier_id: req.body.dossier_id,
@@ -337,7 +343,7 @@ router.post(
       }
 
       if (req.body.risks && req.body.risks.length > 0) {
-        const risksData = req.body.risks.map((r) => ({
+        const risksData = req.body.risks.map((r: Record<string, unknown>) => ({
           ...r,
           after_action_id: afterActionId,
         }))
@@ -345,7 +351,7 @@ router.post(
       }
 
       if (req.body.follow_up_actions && req.body.follow_up_actions.length > 0) {
-        const followUpsData = req.body.follow_up_actions.map((f) => ({
+        const followUpsData = req.body.follow_up_actions.map((f: Record<string, unknown>) => ({
           ...f,
           after_action_id: afterActionId,
         }))
@@ -379,7 +385,7 @@ router.post(
       logger.error('Error creating after-action record', {
         error: error instanceof Error ? error.message : 'Unknown error',
       })
-      next(error)
+      return next(error)
     }
   },
 )
@@ -399,7 +405,7 @@ router.put(
         return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const clientUpdatedAt = req.body.updated_at as string | undefined
 
       logger.info('Updating after-action record', { id, userId })
@@ -415,20 +421,28 @@ router.put(
         return res.status(404).json({ error: 'After-action record not found' })
       }
 
+      // Cast to wider shape: hand-authored after-action types use legacy `_version`
+      // and `status` field names that haven't been merged back into Supabase generated types.
+      const current = currentRecord as unknown as {
+        status?: string
+        _version?: number
+        updated_at?: string | null
+      }
+
       // Validate status is draft
-      if (currentRecord.status !== AfterActionStatus.DRAFT) {
+      if (current.status !== AfterActionStatus.DRAFT) {
         return res.status(400).json({
           error: 'Only draft records can be updated without approval',
         })
       }
 
       // Validate optimistic locking via _version (legacy)
-      if (currentRecord._version !== req.body._version) {
+      if (current._version !== req.body._version) {
         return res.status(409).json({
           error: 'CONFLICT',
           message: 'This record was modified by another user.',
-          serverUpdatedAt: currentRecord.updated_at,
-          currentVersion: currentRecord._version,
+          serverUpdatedAt: current.updated_at,
+          currentVersion: current._version,
           providedVersion: req.body._version,
         })
       }
@@ -437,21 +451,21 @@ router.put(
       if (
         typeof clientUpdatedAt === 'string' &&
         clientUpdatedAt.length > 0 &&
-        currentRecord.updated_at != null
+        current.updated_at != null
       ) {
         const clientTime = new Date(clientUpdatedAt).getTime()
-        const serverTime = new Date(currentRecord.updated_at as string).getTime()
+        const serverTime = new Date(current.updated_at as string).getTime()
         if (clientTime !== serverTime) {
           logger.warn('Optimistic lock conflict via updated_at', {
             id,
             userId,
             clientUpdatedAt,
-            serverUpdatedAt: currentRecord.updated_at,
+            serverUpdatedAt: current.updated_at,
           })
           return res.status(409).json({
             error: 'CONFLICT',
             message: 'This record was modified by another user.',
-            serverUpdatedAt: currentRecord.updated_at,
+            serverUpdatedAt: current.updated_at,
           })
         }
       }
@@ -461,7 +475,7 @@ router.put(
       const { updated_at: _clientTs, ...bodyWithoutTimestamp } = req.body
       const updateData = {
         ...bodyWithoutTimestamp,
-        _version: currentRecord._version + 1,
+        _version: (current._version ?? 0) + 1,
         updated_by: userId,
         updated_at: now,
       }
@@ -472,8 +486,8 @@ router.put(
       let updateQuery = supabase.from('after_action_records').update(updateData).eq('id', id)
 
       // Add updated_at guard to close TOCTOU gap
-      if (currentRecord.updated_at != null) {
-        updateQuery = updateQuery.eq('updated_at', currentRecord.updated_at as string)
+      if (current.updated_at != null) {
+        updateQuery = updateQuery.eq('updated_at', current.updated_at as string)
       }
 
       const { data: updatedRecord, error: updateError } = await updateQuery.select().single()
@@ -513,7 +527,7 @@ router.put(
       if (req.body.decisions) {
         await supabase.from('decisions').delete().eq('after_action_id', id)
         if (req.body.decisions.length > 0) {
-          const decisionsData = req.body.decisions.map((d) => ({
+          const decisionsData = req.body.decisions.map((d: Record<string, unknown>) => ({
             ...d,
             after_action_id: id,
           }))
@@ -522,21 +536,21 @@ router.put(
       }
 
       if (req.body.commitments) {
-        await supabase.from('commitments').delete().eq('after_action_id', id)
+        await supabase.from('aa_commitments').delete().eq('after_action_id', id)
         if (req.body.commitments.length > 0) {
-          const commitmentsData = req.body.commitments.map((c) => ({
+          const commitmentsData = req.body.commitments.map((c: Record<string, unknown>) => ({
             ...c,
             after_action_id: id,
             dossier_id: currentRecord.dossier_id,
-          }))
-          await supabase.from('commitments').insert(commitmentsData)
+          })) as Database['public']['Tables']['aa_commitments']['Insert'][]
+          await supabase.from('aa_commitments').insert(commitmentsData)
         }
       }
 
       if (req.body.risks) {
         await supabase.from('risks').delete().eq('after_action_id', id)
         if (req.body.risks.length > 0) {
-          const risksData = req.body.risks.map((r) => ({
+          const risksData = req.body.risks.map((r: Record<string, unknown>) => ({
             ...r,
             after_action_id: id,
           }))
@@ -547,7 +561,7 @@ router.put(
       if (req.body.follow_up_actions) {
         await supabase.from('follow_up_actions').delete().eq('after_action_id', id)
         if (req.body.follow_up_actions.length > 0) {
-          const followUpsData = req.body.follow_up_actions.map((f) => ({
+          const followUpsData = req.body.follow_up_actions.map((f: Record<string, unknown>) => ({
             ...f,
             after_action_id: id,
           }))
@@ -562,7 +576,7 @@ router.put(
       logger.error('Error updating after-action record', {
         error: error instanceof Error ? error.message : 'Unknown error',
       })
-      next(error)
+      return next(error)
     }
   },
 )
@@ -582,7 +596,7 @@ router.post(
         return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      const { id } = req.params
+      const { id } = req.params as { id: string }
 
       logger.info('Publishing after-action record', { id, userId })
 
@@ -602,15 +616,26 @@ router.post(
         return res.status(404).json({ error: 'After-action record not found' })
       }
 
+      // Cast to wider shape: legacy `_version`/`status`/`title` field names not in
+      // current Supabase generated types. Same wrapper as the update handler above.
+      const rec = record as unknown as {
+        status?: string
+        title?: string
+        engagement_id?: string
+        dossier_id?: string
+        _version?: number
+        commitments?: Array<{ owner_id?: string; description?: string }>
+      }
+
       // Validate status is draft
-      if (record.status !== AfterActionStatus.DRAFT) {
+      if (rec.status !== AfterActionStatus.DRAFT) {
         return res.status(400).json({
           error: 'Only draft records can be published',
         })
       }
 
       // Validate completeness (basic validation - customize as needed)
-      if (!record.title || !record.engagement_id || !record.dossier_id) {
+      if (!rec.title || !rec.engagement_id || !rec.dossier_id) {
         return res.status(400).json({
           error: 'Record is incomplete - title, engagement, and dossier are required',
         })
@@ -642,13 +667,14 @@ router.post(
       }
 
       // Create tasks from commitments
-      if (record.commitments && record.commitments.length > 0) {
-        const taskResult = await taskCreationService.createTasksFromCommitments({
+      const recCommitments = rec.commitments
+      if (recCommitments && recCommitments.length > 0) {
+        const taskResult = (await taskCreationService.createTasksFromCommitments({
           afterActionId: id,
-          dossierId: record.dossier_id,
-          commitments: record.commitments,
+          dossierId: rec.dossier_id!,
+          commitments: recCommitments as never,
           createdBy: userId,
-        })
+        })) as unknown as { success: boolean; tasksCreated?: number; errors?: string[] }
 
         if (!taskResult.success) {
           logger.warn('Task creation had errors during publish', {
@@ -663,11 +689,15 @@ router.post(
         }
 
         // Queue notifications for commitment owners
-        const notificationResult = await notificationService.notifyCommitmentOwners(
+        const notificationResult = (await notificationService.notifyCommitmentOwners(
           id,
-          record.title,
-          record.commitments,
-        )
+          rec.title!,
+          recCommitments,
+        )) as unknown as {
+          success: boolean
+          totalQueued?: number
+          errors?: string[]
+        }
 
         if (!notificationResult.success) {
           logger.warn('Notification queueing had errors during publish', {
@@ -685,17 +715,17 @@ router.post(
       // Create version snapshot
       const snapshotData = {
         after_action_id: id,
-        version_number: record._version,
+        version_number: rec._version,
         snapshot_data: record,
         version_reason: 'Initial publication',
         created_by: userId,
       }
 
-      await supabase.from('version_snapshots').insert(snapshotData)
+      await supabase.from('version_snapshots' as never).insert(snapshotData as never)
 
       logger.info('After-action record published successfully', { id, userId })
 
-      res.json({
+      return res.json({
         data: publishedRecord,
         message: 'After-action record published successfully',
       })
@@ -703,7 +733,7 @@ router.post(
       logger.error('Error publishing after-action record', {
         error: error instanceof Error ? error.message : 'Unknown error',
       })
-      next(error)
+      return next(error)
     }
   },
 )
@@ -723,7 +753,7 @@ router.delete(
         return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      const { id } = req.params
+      const { id } = req.params as { id: string }
 
       logger.info('Deleting after-action record', { id, userId })
 
@@ -738,15 +768,17 @@ router.delete(
         return res.status(404).json({ error: 'After-action record not found' })
       }
 
+      const recDel = record as unknown as { status?: string; created_by?: string }
+
       // Validate status is draft
-      if (record.status !== AfterActionStatus.DRAFT) {
+      if (recDel.status !== AfterActionStatus.DRAFT) {
         return res.status(400).json({
           error: 'Only draft records can be deleted',
         })
       }
 
       // Validate user is creator
-      if (record.created_by !== userId) {
+      if (recDel.created_by !== userId) {
         return res.status(403).json({
           error: 'Only the creator can delete this record',
         })
@@ -755,7 +787,7 @@ router.delete(
       // Delete nested entities (cascade)
       await Promise.all([
         supabase.from('decisions').delete().eq('after_action_id', id),
-        supabase.from('commitments').delete().eq('after_action_id', id),
+        supabase.from('aa_commitments').delete().eq('after_action_id', id),
         supabase.from('risks').delete().eq('after_action_id', id),
         supabase.from('follow_up_actions').delete().eq('after_action_id', id),
         supabase.from('attachments').delete().eq('after_action_id', id),
@@ -785,7 +817,7 @@ router.delete(
       logger.error('Error deleting after-action record', {
         error: error instanceof Error ? error.message : 'Unknown error',
       })
-      next(error)
+      return next(error)
     }
   },
 )
@@ -803,13 +835,13 @@ router.post(
   '/:id/request-edit',
   requirePermission(['edit_after_actions']),
   validate({ params: idParamSchema, body: editRequestSchema }),
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
-      res.status(501).json({
+      return res.status(501).json({
         error: 'Edit request feature not yet implemented (User Story 4)',
       })
     } catch (error) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -822,13 +854,13 @@ router.post(
   '/:id/approve-edit',
   requirePermission(['approve_edits']),
   validate({ params: idParamSchema, body: editApprovalSchema }),
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
-      res.status(501).json({
+      return res.status(501).json({
         error: 'Edit approval feature not yet implemented (User Story 4)',
       })
     } catch (error) {
-      next(error)
+      return next(error)
     }
   },
 )

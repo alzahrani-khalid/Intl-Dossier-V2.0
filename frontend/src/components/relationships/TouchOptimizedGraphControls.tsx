@@ -284,8 +284,6 @@ export const FloatingZoomIndicator = memo(function FloatingZoomIndicator({
   isVisible: boolean
   className?: string
 }) {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
 
   return (
     <AnimatePresence>
@@ -331,7 +329,6 @@ export const MobileTouchControls = memo(function MobileTouchControls({
   className?: string
 }) {
   const { t } = useTranslation('relationships')
-  const { isRTL } = useDirection()
 
   const isAtMinZoom = zoomLevel <= minZoom + 0.05
   const isAtMaxZoom = zoomLevel >= maxZoom - 0.05

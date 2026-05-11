@@ -58,7 +58,7 @@ export class DocumentService {
   }
 
   // Missing methods for API endpoints
-  async findAll(filters?: any) {
+  async findAll(_filters?: any) {
     const { data, error } = await supabaseAdmin
       .from('documents')
       .select('*')

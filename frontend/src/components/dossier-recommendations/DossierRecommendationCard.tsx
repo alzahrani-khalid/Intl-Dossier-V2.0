@@ -130,7 +130,6 @@ function SimilarityBadge({ score }: { score: number }) {
 }
 
 function PriorityIndicator({ priority }: { priority: number }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const label = PRIORITY_LABELS[priority]
 
@@ -165,7 +164,6 @@ function DossierTypeBadge({ type }: { type: DossierType }) {
 }
 
 function ReasonBreakdownItem({ reason }: { reason: ReasonBreakdown }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
   const Icon = reasonIcons[reason.reason] || FileText
   const label = REASON_LABELS[reason.reason]

@@ -75,7 +75,6 @@ export function SettingsItem({
   children,
   className,
 }: SettingsItemProps) {
-const { isRTL } = useDirection()
 
   return (
     <div
@@ -111,7 +110,6 @@ interface SettingsGroupProps {
  * Group of related settings with optional title
  */
 export function SettingsGroup({ title, children, className }: SettingsGroupProps) {
-const { isRTL } = useDirection()
 
   return (
     <div className={cn('space-y-3 sm:space-y-4', className)}>

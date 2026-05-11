@@ -15,14 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
 import { AvailabilityPollCreator } from '@/components/availability-polling/AvailabilityPollCreator'
-import {
-  CalendarDays,
-  Plus,
-  CalendarCheck,
-  CalendarClock,
-  Milestone,
-  Loader2,
-} from 'lucide-react'
+import { CalendarDays, Plus, CalendarCheck, CalendarClock, Milestone, Loader2 } from 'lucide-react'
 
 interface CalendarEvent {
   id: string
@@ -88,24 +81,24 @@ export default function CalendarTab(): ReactElement {
     // Use lifecycle transition timestamp, not eng.updated_at (Codex P2 fix)
     if (eng.lifecycle_stage && lifecycleHistory?.length) {
       const latestTransition = lifecycleHistory[lifecycleHistory.length - 1]
-      const stageLabel =
-        i18n.language === 'ar'
-          ? `مرحلة: ${eng.lifecycle_stage}`
-          : `Current Stage: ${eng.lifecycle_stage}`
-      items.push({
-        id: 'lifecycle',
-        title: stageLabel,
-        date: latestTransition.transitioned_at,
-        type: 'lifecycle',
-        icon: Milestone,
-        badgeLabel: eng.lifecycle_stage,
-      })
+      if (latestTransition) {
+        const stageLabel =
+          i18n.language === 'ar'
+            ? `مرحلة: ${eng.lifecycle_stage}`
+            : `Current Stage: ${eng.lifecycle_stage}`
+        items.push({
+          id: 'lifecycle',
+          title: stageLabel,
+          date: latestTransition.transitioned_at,
+          type: 'lifecycle',
+          icon: Milestone,
+          badgeLabel: eng.lifecycle_stage,
+        })
+      }
     }
 
     // Sort chronologically
-    items.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    )
+    items.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
     return items
   }, [engagement, lifecycleHistory, i18n.language])
@@ -179,17 +172,12 @@ export default function CalendarTab(): ReactElement {
   }
 
   return (
-    <div
-      className="space-y-4 p-4 sm:p-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className="space-y-4 p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <CalendarDays className="h-5 w-5 text-muted-foreground" />
-          <span className="text-sm font-medium text-foreground">
-            {dateRange}
-          </span>
+          <span className="text-sm font-medium text-foreground">{dateRange}</span>
         </div>
         <div className="flex items-center gap-2 self-start sm:self-auto">
           {/* Schedule Poll -- ABSORB-05, D-15 */}
@@ -276,17 +264,12 @@ function EventSection({
         {events.map((event) => {
           const Icon = event.icon
           return (
-            <div
-              key={event.id}
-              className="flex items-start gap-3 rounded-md border bg-card p-3"
-            >
+            <div key={event.id} className="flex items-start gap-3 rounded-md border bg-card p-3">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
                 <Icon className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">
-                  {event.title}
-                </p>
+                <p className="text-sm font-medium text-foreground">{event.title}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {dateFormatter.format(new Date(event.date))}
                 </p>

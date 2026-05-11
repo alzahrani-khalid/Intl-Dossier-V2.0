@@ -384,9 +384,7 @@ function PersonsListPage() {
                       </div>
 
                       {/* Arrow */}
-                      <ChevronRight
-                        className={`h-5 w-5 text-muted-foreground flex-shrink-0 ${isRTL ? 'rotate-180' : ''}`}
-                      />
+                      <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0 icon-flip" />
                     </div>
                   </CardContent>
                 </Card>

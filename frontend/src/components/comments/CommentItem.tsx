@@ -73,7 +73,7 @@ export function CommentItem({
 }: CommentItemProps) {
   const { t } = useTranslation('comments')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   const [isReplying, setIsReplying] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -90,11 +90,17 @@ const locale = isRTL ? ar : enUS
   const deleteComment = useDeleteComment()
 
   // Fetch thread replies if this is a root comment
-  const { data: replies = [], isLoading: isLoadingReplies } = useCommentThread(comment.id, {
-    enabled:
-      showReplies && comment.reply_count > 0 && showRepliesExpanded && comment.parent_id === null,
-    maxDepth: maxDepth - currentDepth,
-  })
+  // Gate the fetch at the caller by passing null when conditions are not met;
+  // the hook self-disables on null commentId. This prevents N+1 fetches per
+  // rendered comment (including child comments at depth > 0).
+  const shouldFetchThread =
+    showReplies && comment.reply_count > 0 && showRepliesExpanded && comment.parent_id === null
+  const { data: replies = [], isLoading: isLoadingReplies } = useCommentThread(
+    shouldFetchThread ? comment.id : null,
+  ) as unknown as {
+    data: CommentWithDetails[]
+    isLoading: boolean
+  }
 
   const isAuthor = currentUserId === comment.author_id
   const canEdit = isAuthor
@@ -175,11 +181,7 @@ const locale = isRTL ? ar : enUS
       return
     }
 
-    await deleteComment.mutateAsync({
-      commentId: comment.id,
-      entityType: comment.entity_type,
-      entityId: comment.entity_id,
-    })
+    await deleteComment.mutateAsync(comment.id)
 
     onDelete?.(comment.id)
   }
@@ -285,12 +287,7 @@ const locale = isRTL ? ar : enUS
 
           {/* Reactions and reply button */}
           <div className="flex items-center gap-2 mt-2 flex-wrap">
-            <ReactionPicker
-              commentId={comment.id}
-              entityType={comment.entity_type}
-              entityId={comment.entity_id}
-              reactions={comment.reactions}
-            />
+            <ReactionPicker commentId={comment.id} reactions={comment.reactions} />
 
             {canReply && (
               <Button

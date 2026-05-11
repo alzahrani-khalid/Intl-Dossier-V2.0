@@ -29,15 +29,16 @@ import AgingIndicator from '@/components/waiting-queue/AgingIndicator';
 // Extend matchers
 expect.extend(toHaveNoViolations);
 
+// Stable QueryClient at module scope — avoids creating a new cache on every render.
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+    mutations: { retry: false },
+  },
+});
+
 // Test wrapper with providers
 function TestWrapper({ children }: { children: React.ReactNode }) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false },
-      mutations: { retry: false },
-    },
-  });
-
   return (
     <QueryClientProvider client={queryClient}>
       <I18nextProvider i18n={i18n}>

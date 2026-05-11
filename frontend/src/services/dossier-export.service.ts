@@ -10,7 +10,6 @@ import { supabase } from '@/lib/supabase'
 import type {
   DossierExportRequest,
   DossierExportResponse,
-  DossierExportFormat,
 } from '@/types/dossier-export.types'
 
 // =============================================================================
@@ -88,24 +87,6 @@ export async function exportDossier(request: DossierExportRequest): Promise<Doss
 }
 
 /**
- * Quick export with default settings
- */
-async function quickExportDossier(
-  dossierId: string,
-  format: DossierExportFormat = 'pdf',
-): Promise<DossierExportResponse> {
-  const { DEFAULT_EXPORT_CONFIG } = await import('@/types/dossier-export.types')
-
-  return exportDossier({
-    dossier_id: dossierId,
-    config: {
-      ...DEFAULT_EXPORT_CONFIG,
-      format,
-    },
-  })
-}
-
-/**
  * Download the exported file
  */
 export async function downloadExportedFile(downloadUrl: string, fileName: string): Promise<void> {
@@ -133,86 +114,6 @@ export async function downloadExportedFile(downloadUrl: string, fileName: string
       'DOWNLOAD_FAILED',
       error instanceof Error ? error.message : 'Unknown error',
     )
-  }
-}
-
-/**
- * Get estimated export size based on dossier content
- */
-async function getExportEstimate(dossierId: string): Promise<{
-  estimated_pages: number
-  estimated_size_kb: number
-  sections_with_content: string[]
-}> {
-  try {
-    // Fetch counts from various tables
-    const [
-      { count: relCount },
-      { count: posCount },
-      { count: mouCount },
-      { count: workCount },
-      { count: eventCount },
-      { count: contactCount },
-    ] = await Promise.all([
-      supabase
-        .from('dossier_relationships')
-        .select('id', { count: 'exact', head: true })
-        .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`),
-      supabase
-        .from('positions')
-        .select('id', { count: 'exact', head: true })
-        .contains('dossier_ids', [dossierId]),
-      supabase
-        .from('mous')
-        .select('id', { count: 'exact', head: true })
-        .contains('dossier_ids', [dossierId]),
-      supabase
-        .from('work_item_dossiers')
-        .select('id', { count: 'exact', head: true })
-        .eq('dossier_id', dossierId),
-      supabase
-        .from('calendar_entries')
-        .select('id', { count: 'exact', head: true })
-        .eq('dossier_id', dossierId),
-      supabase
-        .from('key_contacts')
-        .select('id', { count: 'exact', head: true })
-        .eq('dossier_id', dossierId),
-    ])
-
-    const sectionsWithContent: string[] = ['overview', 'executive_summary']
-
-    if ((relCount || 0) > 0) sectionsWithContent.push('relationships')
-    if ((posCount || 0) > 0) sectionsWithContent.push('positions')
-    if ((mouCount || 0) > 0) sectionsWithContent.push('mous')
-    if ((workCount || 0) > 0) sectionsWithContent.push('commitments')
-    if ((eventCount || 0) > 0) sectionsWithContent.push('events')
-    if ((contactCount || 0) > 0) sectionsWithContent.push('contacts')
-
-    // Estimate pages (rough calculation)
-    const totalItems =
-      (relCount || 0) +
-      (posCount || 0) +
-      (mouCount || 0) +
-      (workCount || 0) +
-      (eventCount || 0) +
-      (contactCount || 0)
-
-    const estimatedPages = Math.max(3, Math.ceil(totalItems / 10) + 2)
-    const estimatedSizeKb = estimatedPages * 50 // ~50KB per page
-
-    return {
-      estimated_pages: estimatedPages,
-      estimated_size_kb: estimatedSizeKb,
-      sections_with_content: sectionsWithContent,
-    }
-  } catch (error) {
-    console.error('Estimate error:', error)
-    return {
-      estimated_pages: 5,
-      estimated_size_kb: 250,
-      sections_with_content: ['overview', 'executive_summary'],
-    }
   }
 }
 

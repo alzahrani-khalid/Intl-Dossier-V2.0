@@ -143,7 +143,7 @@ export async function createEntityLink(
     }
 
     // Step 9: Auto-increment link_order
-    const { data: maxOrderResult, error: orderError } = await supabaseAdmin
+    const { data: maxOrderResult } = await supabaseAdmin
       .from('intake_entity_links')
       .select('link_order')
       .eq('intake_id', intakeId)
@@ -265,7 +265,7 @@ export async function getEntityLinks(
  */
 export async function updateEntityLink(
   linkId: string,
-  userId: string,
+  _userId: string,
   data: UpdateLinkRequest
 ): Promise<EntityLink> {
   try {
@@ -530,7 +530,7 @@ async function getEntityMetadata(
  */
 export async function deleteEntityLink(
   linkId: string,
-  userId: string
+  _userId: string
 ): Promise<EntityLink> {
   try {
     const { data: deletedLink, error } = await supabaseAdmin
@@ -576,7 +576,7 @@ export async function deleteEntityLink(
  */
 export async function restoreEntityLink(
   linkId: string,
-  userId: string
+  _userId: string
 ): Promise<EntityLink> {
   try {
     const { data: restoredLink, error} = await supabaseAdmin
@@ -765,7 +765,7 @@ export async function getEntityIntakes(
  */
 export async function reorderEntityLinks(
   intakeId: string,
-  userId: string,
+  _userId: string,
   linkOrders: Array<{ link_id: string; link_order: number }>
 ): Promise<EntityLink[]> {
   try {
@@ -918,6 +918,7 @@ export async function createBatchLinks(
     // Step 2: Process each link individually (allows partial failures)
     for (let i = 0; i < links.length; i++) {
       const linkData = links[i];
+      if (!linkData) continue;
 
       try {
         // Use existing createEntityLink function for each link
@@ -925,15 +926,15 @@ export async function createBatchLinks(
         const createdLink = await createEntityLink(intakeId, userId, {
           ...linkData,
           intake_id: intakeId,
-        });
+        } as CreateLinkRequest);
 
         succeeded.push(createdLink);
       } catch (linkError: any) {
         // Capture individual link failures
         failed.push({
           index: i,
-          entity_type: linkData.entity_type,
-          entity_id: linkData.entity_id,
+          entity_type: linkData.entity_type as EntityType,
+          entity_id: linkData.entity_id ?? '',
           error: {
             code: linkError.code || 'CREATE_FAILED',
             message: linkError.message || 'Failed to create link',
@@ -1456,7 +1457,8 @@ export async function migrateIntakeLinksToPosition(
       }
     }
 
-    const auditLinkId = migratedLinks.length > 0 ? migratedLinks[0].id : sourceIntakeId;
+    const auditLinkId =
+      migratedLinks.length > 0 ? (migratedLinks[0]?.id ?? sourceIntakeId) : sourceIntakeId;
     await createAuditLog(
       auditLinkId,
       'created',

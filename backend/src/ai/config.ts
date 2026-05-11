@@ -246,11 +246,6 @@ export function getProviderConfig(provider: AIProvider): AIProviderConfig | null
   return config?.enabled ? config : null
 }
 
-function getDefaultProvider(): AIProviderConfig | null {
-  const defaultProvider = aiConfig.routing.defaultProvider
-  return getProviderConfig(defaultProvider)
-}
-
 export function getPrivateProvider(): AIProviderConfig | null {
   const privateProvider = aiConfig.routing.privateProvider
   return privateProvider ? getProviderConfig(privateProvider) : null

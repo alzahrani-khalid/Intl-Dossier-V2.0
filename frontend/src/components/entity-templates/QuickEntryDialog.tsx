@@ -84,7 +84,7 @@ export function QuickEntryDialog({
 }: QuickEntryDialogProps) {
   const { t } = useTranslation('entity-templates')
   const { isRTL } = useDirection()
-// State
+  // State
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [selectedEntityType, setSelectedEntityType] = useState<TemplateEntityType>(
@@ -94,12 +94,20 @@ export function QuickEntryDialog({
   // Refs
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Fetch templates for selected entity type
-  const { data, isLoading } = useEntityTemplates(selectedEntityType, {
-    context,
+  // WR-04: useEntityTemplates accepts { entityType?, enabled? } at the hook
+  // source — gate the fetch on dialog visibility so templates only load when
+  // the dialog is open.
+  void context
+  const { data, isLoading } = useEntityTemplates({
+    entityType: selectedEntityType,
     enabled: open,
-  })
+  }) as unknown as {
+    data: { templates: EntityTemplate[] } | undefined
+    isLoading: boolean
+  }
 
+  // WR-09: useApplyTemplate already returns the precise shape — drop the
+  // redundant cast.
   const { applyTemplate } = useApplyTemplate()
 
   // Filter templates by search query
@@ -233,9 +241,7 @@ export function QuickEntryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="max-h-[80vh] max-w-lg overflow-hidden p-0"
-      >
+      <DialogContent className="max-h-[80vh] max-w-lg overflow-hidden p-0">
         <DialogHeader className="border-b px-4 py-3">
           <DialogTitle className="flex items-center gap-2 text-base">
             <Command className="h-4 w-4" />

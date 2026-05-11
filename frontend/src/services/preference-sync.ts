@@ -7,7 +7,10 @@ import { preferenceStorage, type StoredPreferences } from '../utils/storage/pref
 interface UserPreference {
   id?: string
   user_id: string
-  theme: 'canvas' | 'azure' | 'lavender' | 'bluesky' | 'ocean' | 'sunset'
+  // `theme` widened to string: row may hold legacy names (canvas/azure/…) or
+  // new Direction values (chancery/situation/ministerial/bureau). Phase 33
+  // D-10 wipe runs on DesignProvider mount; design-system layer owns parsing.
+  theme: string
   color_mode: 'light' | 'dark'
   language: 'en' | 'ar'
   created_at?: string
@@ -68,7 +71,7 @@ export function usePreferenceSync(userId?: string) {
       // Then sync to Supabase
       const upsertData: Partial<UserPreference> = {
         user_id: userId,
-        theme: preferences.theme || 'canvas',
+        theme: preferences.theme || 'chancery',
         color_mode: preferences.colorMode || 'light',
         language: preferences.language || 'en',
       }
@@ -95,7 +98,7 @@ export function usePreferenceSync(userId?: string) {
       } as StoredPreferences
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['preferences', userId] })
+      void queryClient.invalidateQueries({ queryKey: ['preferences', userId] })
     },
   })
 
@@ -137,49 +140,3 @@ export function usePreferenceSync(userId?: string) {
     fetchRemotePreferences: () => remotePreferences,
   }
 }
-
-/**
- * Setup real-time subscription for preference changes
- */
-function usePreferenceSubscription(userId?: string) {
-  const queryClient = useQueryClient()
-
-  useEffect(() => {
-    if (!userId) return undefined
-
-    const subscription = supabase
-      .channel(`preferences:${userId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'user_preferences',
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload) => {
-          // Invalidate and refetch
-          queryClient.invalidateQueries({ queryKey: ['preferences', userId] })
-
-          // Update local storage
-          if (payload.new) {
-            const newPrefs = payload.new as UserPreference
-            preferenceStorage.save({
-              theme: newPrefs.theme,
-              colorMode: newPrefs.color_mode,
-              language: newPrefs.language,
-              updatedAt: newPrefs.updated_at,
-            })
-          }
-        },
-      )
-      .subscribe()
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [userId, queryClient])
-}
-
-// Add missing import
-import { useEffect } from 'react'

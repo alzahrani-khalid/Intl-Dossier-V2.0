@@ -57,7 +57,7 @@ export interface IntelligenceReportInput {
   dossier_id?: string
 }
 
-class IntelligenceReportModel {
+export class IntelligenceReportModel {
   static validate(data: Partial<IntelligenceReportInput>): string[] {
     const errors: string[] = []
 

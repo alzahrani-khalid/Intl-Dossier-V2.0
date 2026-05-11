@@ -9,7 +9,17 @@
   "venue": "Venue",
   "participants": "Participants",
   "sessions": "Sessions",
-  "status": "Status",
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "completed": "Completed",
+    "planned": "Planned",
+    "cancelled": "Cancelled",
+    "scheduled": "Scheduled",
+    "ongoing": "Ongoing",
+    "archived": "Archived",
+    "on_hold": "On Hold"
+  },
   "virtual": "Virtual",
   "addForum": "Add Forum",
   "editForum": "Edit Forum",

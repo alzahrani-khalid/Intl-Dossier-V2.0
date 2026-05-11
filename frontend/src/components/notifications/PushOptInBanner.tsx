@@ -1,3 +1,4 @@
+import type React from 'react'
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bell } from 'lucide-react'
@@ -17,7 +18,7 @@ interface PushOptInBannerProps {
  */
 export default function PushOptInBanner({
   hasActionableNotification,
-}: PushOptInBannerProps): JSX.Element | null {
+}: PushOptInBannerProps): React.ReactElement | null {
   const { t } = useTranslation('push-notifications')
   const { isRTL } = useDirection()
   const { toast } = useToast()

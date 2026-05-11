@@ -176,11 +176,6 @@ export interface TimeSeriesDataPoint {
   label?: string
 }
 
-interface MultiSeriesDataPoint {
-  date: string
-  [key: string]: number | string
-}
-
 // ============================================================================
 // Dashboard Summary Types
 // ============================================================================
@@ -208,24 +203,11 @@ export interface AnalyticsSummary {
 
 export type ExportFormat = 'csv' | 'xlsx' | 'pdf' | 'png'
 
-interface ExportOptions {
-  format: ExportFormat
-  includeCharts: boolean
-  dateRange: DateRange
-  sections: ExportSection[]
-}
-
 export type ExportSection = 'summary' | 'engagements' | 'relationships' | 'commitments' | 'workload'
 
 // ============================================================================
 // API Request/Response Types
 // ============================================================================
-
-interface AnalyticsDashboardRequest {
-  timeRange: TimeRange
-  customDateRange?: DateRange
-  endpoint: 'summary' | 'engagements' | 'relationships' | 'commitments' | 'workload' | 'export'
-}
 
 export interface AnalyticsDashboardResponse {
   success: true
@@ -252,21 +234,9 @@ export interface AnalyticsErrorResponse {
   }
 }
 
-type AnalyticsResponse = AnalyticsDashboardResponse | AnalyticsErrorResponse
-
 // ============================================================================
 // Chart Configuration Types
 // ============================================================================
-
-interface ChartConfig {
-  type: 'line' | 'bar' | 'pie' | 'donut' | 'area' | 'radar'
-  title: string
-  titleAr: string
-  showLegend: boolean
-  showGrid: boolean
-  colors: string[]
-  animate: boolean
-}
 
 export const DEFAULT_CHART_COLORS = [
   '#3B82F6', // blue
@@ -315,50 +285,3 @@ export interface AnalyticsUrlState {
 // ============================================================================
 // Helper Functions
 // ============================================================================
-
-/**
- * Calculate date range from time range option
- */
-function getDateRangeFromTimeRange(timeRange: TimeRange): DateRange {
-  const end = new Date()
-  const start = new Date()
-
-  switch (timeRange) {
-    case '7d':
-      start.setDate(start.getDate() - 7)
-      break
-    case '30d':
-      start.setDate(start.getDate() - 30)
-      break
-    case '90d':
-      start.setDate(start.getDate() - 90)
-      break
-    case '365d':
-      start.setDate(start.getDate() - 365)
-      break
-    default:
-      start.setDate(start.getDate() - 30)
-  }
-
-  return {
-    start: start.toISOString(),
-    end: end.toISOString(),
-  }
-}
-
-/**
- * Format percentage with sign
- */
-function formatPercentageChange(value: number): string {
-  const sign = value > 0 ? '+' : ''
-  return `${sign}${value.toFixed(1)}%`
-}
-
-/**
- * Get trend direction from percentage change
- */
-function getTrendDirection(change: number): 'up' | 'down' | 'neutral' {
-  if (change > 1) return 'up'
-  if (change < -1) return 'down'
-  return 'neutral'
-}

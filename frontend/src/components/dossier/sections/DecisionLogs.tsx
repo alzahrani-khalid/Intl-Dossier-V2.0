@@ -26,8 +26,8 @@ interface DecisionLogsProps {
 export function DecisionLogs({ dossier }: DecisionLogsProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { data, isLoading } = useRelationshipsForDossier(dossier.id)
-  const allRelationships = data?.data || []
+  const { data, isLoading } = useRelationshipsForDossier(dossier.id)
+  const allRelationships: RelationshipWithDossiers[] = data?.data ?? []
 
   // Filter for engagement-type related dossiers
   const engagementRelationships = allRelationships.filter((rel: RelationshipWithDossiers) => {
@@ -47,9 +47,7 @@ const { data, isLoading } = useRelationshipsForDossier(dossier.id)
 
   if (engagementRelationships.length === 0) {
     return (
-      <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-      >
+      <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center">
         <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
           <FileText className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
         </div>

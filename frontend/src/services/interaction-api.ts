@@ -274,14 +274,6 @@ export async function uploadAttachment(
 }
 
 /**
- * Get public URL for attachment
- */
-async function getAttachmentUrl(path: string): Promise<string> {
-  const { data } = supabase.storage.from('contact-files').getPublicUrl(path)
-  return data.publicUrl
-}
-
-/**
  * Download attachment
  * Returns a Blob of the file
  */
@@ -293,42 +285,4 @@ export async function downloadAttachment(path: string): Promise<Blob> {
   }
 
   return data
-}
-
-/**
- * Delete attachment from storage
- */
-async function deleteAttachment(path: string): Promise<void> {
-  const { error } = await supabase.storage.from('contact-files').remove([path])
-
-  if (error) {
-    throw new InteractionAPIError(`Failed to delete file: ${error.message}`, 500, error)
-  }
-}
-
-/**
- * Get interaction notes (direct Supabase query - fallback method)
- * Used when Edge Function is unavailable
- */
-async function getNotesForContactDirect(contactId: string): Promise<InteractionNoteResponse[]> {
-  const { data, error } = await supabase
-    .from('interaction_notes')
-    .select(
-      `
-      *,
-      contact:contacts!contact_id (
-        id,
-        full_name,
-        organization:organizations (name)
-      )
-    `,
-    )
-    .eq('contact_id', contactId)
-    .order('date', { ascending: false })
-
-  if (error) {
-    throw new InteractionAPIError(error.message, 500, error)
-  }
-
-  return data || []
 }

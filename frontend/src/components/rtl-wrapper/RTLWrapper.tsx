@@ -1,13 +1,14 @@
 import { useEffect, useMemo, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getDirection } from '@/i18n'
-import { useUIStore } from '@/store/uiStore'
 
 interface RTLWrapperProps {
   children: ReactNode
 }
 
 export function RTLWrapper({ children }: RTLWrapperProps) {
-  const { language } = useUIStore()
+  const { i18n } = useTranslation()
+  const language = i18n.language
   const direction = useMemo(() => getDirection(language), [language])
 
   useEffect(() => {

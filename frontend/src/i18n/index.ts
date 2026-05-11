@@ -8,6 +8,8 @@ import enIntake from './en/intake.json'
 import arIntake from './ar/intake.json'
 import enDossiers from './en/dossiers.json'
 import arDossiers from './ar/dossiers.json'
+import enListPages from './en/list-pages.json'
+import arListPages from './ar/list-pages.json'
 import enDossier from './en/dossier.json'
 import arDossier from './ar/dossier.json'
 import enPositions from './en/positions.json'
@@ -184,6 +186,9 @@ import enWorkspace from './en/workspace.json'
 import arWorkspace from './ar/workspace.json'
 import enDossierShell from './en/dossier-shell.json'
 import arDossierShell from './ar/dossier-shell.json'
+// Phase 41 Wave 0: dossier quick-look drawer namespace
+import enDossierDrawer from './en/dossier-drawer.json'
+import arDossierDrawer from './ar/dossier-drawer.json'
 import enElectedOfficials from './en/elected-officials.json'
 import arElectedOfficials from './ar/elected-officials.json'
 // Plan 31-02: per-type wizard guidance namespaces (D-13)
@@ -203,6 +208,13 @@ import enPersonWizard from './en/person-wizard.json'
 import arPersonWizard from './ar/person-wizard.json'
 import enElectedOfficialWizard from './en/elected-official-wizard.json'
 import arElectedOfficialWizard from './ar/elected-official-wizard.json'
+// Phase 42 Wave 0: page-scoped namespaces for Briefs / After-actions / Tasks reskins
+import enBriefsPage from './en/briefs-page.json'
+import arBriefsPage from './ar/briefs-page.json'
+import enAfterActionsPage from './en/after-actions-page.json'
+import arAfterActionsPage from './ar/after-actions-page.json'
+import enTasksPage from './en/tasks-page.json'
+import arTasksPage from './ar/tasks-page.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -213,6 +225,7 @@ const resources = {
     common: enCommon,
     intake: enIntake,
     dossiers: enDossiers,
+    'list-pages': enListPages,
     dossier: enDossier,
     positions: enPositions,
     assignments: enAssignments,
@@ -301,6 +314,7 @@ const resources = {
     'operations-hub': enOperationsHub,
     workspace: enWorkspace,
     'dossier-shell': enDossierShell,
+    'dossier-drawer': enDossierDrawer,
     'elected-officials': enElectedOfficials,
     // Plan 31-02: per-type wizard guidance namespaces (D-13)
     'country-wizard': enCountryWizard,
@@ -311,12 +325,17 @@ const resources = {
     'working-group-wizard': enWorkingGroupWizard,
     'person-wizard': enPersonWizard,
     'elected-official-wizard': enElectedOfficialWizard,
+    // Phase 42 Wave 0: page-scoped namespaces
+    'briefs-page': enBriefsPage,
+    'after-actions-page': enAfterActionsPage,
+    'tasks-page': enTasksPage,
   },
   ar: {
     translation: arCommon,
     common: arCommon,
     intake: arIntake,
     dossiers: arDossiers,
+    'list-pages': arListPages,
     dossier: arDossier,
     positions: arPositions,
     assignments: arAssignments,
@@ -405,6 +424,7 @@ const resources = {
     'operations-hub': arOperationsHub,
     workspace: arWorkspace,
     'dossier-shell': arDossierShell,
+    'dossier-drawer': arDossierDrawer,
     'elected-officials': arElectedOfficials,
     // Plan 31-02: per-type wizard guidance namespaces (D-13)
     'country-wizard': arCountryWizard,
@@ -415,6 +435,10 @@ const resources = {
     'working-group-wizard': arWorkingGroupWizard,
     'person-wizard': arPersonWizard,
     'elected-official-wizard': arElectedOfficialWizard,
+    // Phase 42 Wave 0: page-scoped namespaces
+    'briefs-page': arBriefsPage,
+    'after-actions-page': arAfterActionsPage,
+    'tasks-page': arTasksPage,
   },
 }
 
@@ -425,6 +449,7 @@ i18n
     resources,
     fallbackLng: 'en',
     debug: false,
+    showSupportNotice: false,
     supportedLngs: supportedLanguages,
 
     interpolation: {
@@ -434,6 +459,8 @@ i18n
     detection: {
       order: ['localStorage', 'cookie', 'htmlTag', 'navigator'],
       caches: ['localStorage', 'cookie'],
+      lookupLocalStorage: 'id.locale',
+      lookupCookie: 'id.locale',
     },
 
     react: {

@@ -1,0 +1,336 @@
+/* Phase 39 — kanban board styles ported verbatim from
+   /tmp/inteldossier-handoff/.../app.css#L390-411
+   BOARD-02: .kcard.overdue uses border-inline-start (RTL-correct).
+   Use only logical-direction CSS properties here so RTL flips automatically. */
+
+.kcard {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 11px;
+  margin-bottom: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  transition:
+    border-color 0.12s,
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+
+.kcard:hover {
+  border-color: var(--ink-faint);
+  transform: translateY(-1px);
+}
+
+.kcard.overdue {
+  border-inline-start: 3px solid var(--danger);
+}
+
+.kcard.done {
+  opacity: 0.55;
+}
+
+.kcard-top {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.kcard-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.kcard-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.kcard-dossier {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ink-mute);
+  min-width: 0;
+}
+
+.kcard-dossier > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kcard-foot .font-mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.kcard-owner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .kcard {
+    min-height: 44px;
+  }
+}
+
+/* Phase 39 Plan 02 — column shell, ported from
+   /tmp/inteldossier-handoff/.../app.css column block.
+   All physical-direction rules forbidden — RTL flips automatically. */
+
+.col {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0;
+  width: 300px;
+  min-width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 78vh;
+  overflow: hidden;
+}
+
+.col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.col-head h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  flex-grow: 1;
+}
+
+.col-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.col-add {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink-mute);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.col-add:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.col-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: auto;
+  padding: 10px;
+}
+
+.col-empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 12px;
+}
+
+/* Phase 39 Plan 03 — toolbar (search + filter pills + overdue chip + new-item button)
+   Tokens only. Logical-direction CSS only. No physical left/right padding/margin. */
+
+.board-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  flex-wrap: wrap;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-pill {
+  min-height: 44px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  font-size: 12px;
+  color: var(--ink-mute);
+  cursor: pointer;
+}
+
+.filter-pill[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+
+.filter-pill[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.overdue-chip {
+  padding: 4px 10px;
+  background: transparent;
+  color: var(--danger);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.board-search {
+  flex-grow: 1;
+  min-height: 44px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.board-search::placeholder {
+  color: var(--ink-faint);
+}
+
+.new-item-btn {
+  min-height: 44px;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Phase 39 Plan 04 — page composer layout.
+   Logical-direction CSS only — RTL handled by `dir` attribute on .workboard-page. */
+
+.workboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 1.25);
+  padding: var(--pad) 24px 60px;
+  max-width: 1400px;
+  margin-inline: auto;
+}
+
+.board-columns {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 8px;
+  min-width: 0;
+}
+
+/* Skeleton shape-match — column-head + 3 kcard rows per column. */
+.workboard-skeleton-head {
+  height: 28px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+.workboard-skeleton-card {
+  height: 92px;
+  margin-bottom: 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* Phase 39 Plan 39-08 — shape-matching loading skeletons (SP-3).
+   Layout-stable: every skeleton has explicit height + width via class. */
+
+.board-toolbar-skeleton {
+  height: 48px;
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+.workboard-skeleton-head-title {
+  height: 14px;
+  width: 80px;
+  border-radius: 4px;
+}
+
+.workboard-skeleton-head-count {
+  height: 12px;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.kcard-skeleton {
+  height: 80px;
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: var(--radius-sm);
+}
+
+/* Phase 39 Plan 39-07 — mobile horizontal-scroll + snap for kanban columns.
+   RTL: in dir=rtl, flexbox lays the first column on the RIGHT — first column
+   lands on the right edge naturally (forceRTL handles direction).
+   No transform: scaleX or other manual RTL flips. */
+
+@media (max-width: 640px) {
+  .workboard-page {
+    padding: 14px 14px 40px;
+  }
+  .board-toolbar {
+    align-items: stretch;
+  }
+  .board-search,
+  .new-item-btn {
+    width: 100%;
+  }
+  .board-columns {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .col {
+    width: min(300px, calc(100vw - 28px));
+    min-width: min(300px, calc(100vw - 28px));
+    scroll-snap-align: start;
+  }
+}

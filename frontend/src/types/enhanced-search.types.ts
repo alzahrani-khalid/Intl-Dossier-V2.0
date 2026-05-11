@@ -32,18 +32,6 @@ export interface HistorySuggestion {
   created_at: string
 }
 
-interface SearchSuggestionsResponse {
-  suggestions: CategorizedSuggestions
-  query: string
-  entity_types: string[]
-  took_ms: number
-}
-
-interface PopularSearch {
-  query: string
-  count: number
-}
-
 // =============================================================================
 // Search History Types
 // =============================================================================
@@ -57,28 +45,6 @@ export interface SearchHistoryItem {
   created_at: string
 }
 
-interface SearchHistoryResponse {
-  history: SearchHistoryItem[]
-  count: number
-}
-
-interface AddSearchHistoryRequest {
-  query: string
-  entity_types: string[]
-  result_count: number
-  filters?: Record<string, unknown>
-}
-
-interface AddSearchHistoryResponse {
-  success: boolean
-  history_id: string
-}
-
-interface ClearSearchHistoryResponse {
-  success: boolean
-  deleted_count: number
-}
-
 // =============================================================================
 // Adaptive Filter Types
 // =============================================================================
@@ -90,18 +56,6 @@ export interface FilterCount {
 }
 
 export type FilterType = 'status' | 'type' | 'tag' | 'date_range' | 'sensitivity_level'
-
-interface FilterCountsRequest {
-  cache_key: string
-  entity_types: string[]
-  base_query?: string
-  compute_if_missing?: boolean
-}
-
-interface FilterCountsResponse {
-  filter_counts: FilterCount[]
-  from_cache: boolean
-}
 
 export interface AdaptiveFilter {
   type: FilterType
@@ -150,80 +104,13 @@ export type EnhancedSearchAction =
 // Fuzzy Matching Types
 // =============================================================================
 
-interface FuzzyMatchResult {
-  text: string
-  score: number
-  matchedIndices: number[]
-}
-
-interface FuzzyMatchOptions {
-  threshold?: number // Minimum similarity score (0-1)
-  ignoreCase?: boolean
-  ignoreAccents?: boolean
-  maxResults?: number
-}
-
 // =============================================================================
 // UI Component Props Types
 // =============================================================================
 
-interface EnhancedSearchInputProps {
-  value: string
-  onChange: (value: string) => void
-  onSearch: (query: string) => void
-  onSuggestionSelect?: (suggestion: SearchSuggestion | HistorySuggestion) => void
-  entityTypes?: string[]
-  placeholder?: string
-  autoFocus?: boolean
-  showHistory?: boolean
-  showPopular?: boolean
-  className?: string
-  debounceMs?: number
-}
-
-interface SuggestionDropdownProps {
-  suggestions: CategorizedSuggestions | null
-  isOpen: boolean
-  isLoading: boolean
-  selectedIndex: number
-  query: string
-  onSelect: (suggestion: SearchSuggestion | HistorySuggestion) => void
-  onClose: () => void
-  className?: string
-}
-
-interface AdaptiveFiltersProps {
-  filters: AdaptiveFilter[]
-  selectedFilters: Record<FilterType, string[]>
-  onFilterChange: (filterType: FilterType, values: string[]) => void
-  isLoading?: boolean
-  className?: string
-}
-
 // =============================================================================
 // Constants
 // =============================================================================
-
-const SUGGESTION_TYPE_LABELS: Record<
-  SuggestionType,
-  { label_en: string; label_ar: string; icon: string }
-> = {
-  title: { label_en: 'Titles', label_ar: 'العناوين', icon: 'file-text' },
-  tag: { label_en: 'Tags', label_ar: 'الوسوم', icon: 'tag' },
-  keyword: { label_en: 'Keywords', label_ar: 'الكلمات المفتاحية', icon: 'key' },
-  name: { label_en: 'Names', label_ar: 'الأسماء', icon: 'user' },
-  topic: { label_en: 'Topics', label_ar: 'المواضيع', icon: 'bookmark' },
-  popular: { label_en: 'Popular', label_ar: 'الأكثر بحثاً', icon: 'trending-up' },
-  history: { label_en: 'Recent', label_ar: 'الأخيرة', icon: 'clock' },
-}
-
-const FILTER_TYPE_LABELS: Record<FilterType, { label_en: string; label_ar: string }> = {
-  status: { label_en: 'Status', label_ar: 'الحالة' },
-  type: { label_en: 'Type', label_ar: 'النوع' },
-  tag: { label_en: 'Tags', label_ar: 'الوسوم' },
-  date_range: { label_en: 'Date', label_ar: 'التاريخ' },
-  sensitivity_level: { label_en: 'Sensitivity', label_ar: 'الحساسية' },
-}
 
 // Default enhanced search state
 export const defaultEnhancedSearchState: EnhancedSearchState = {
@@ -564,30 +451,4 @@ export interface FilterPresetsSectionProps {
   maxVisible?: number
   /** Additional CSS classes */
   className?: string
-}
-
-/**
- * Response from the filter presets API
- */
-interface FilterPresetsResponse {
-  /** List of available presets */
-  presets: FilterPreset[]
-  /** Whether these are personalized based on user behavior */
-  is_personalized: boolean
-  /** Timestamp of when presets were generated */
-  generated_at: string
-}
-
-/**
- * Smart preset with analytics data
- */
-interface SmartFilterPreset extends FilterPreset {
-  /** How often this preset has been used by the user */
-  user_usage_count: number
-  /** How often this preset is used organization-wide */
-  org_usage_count: number
-  /** Click-through rate */
-  ctr: number
-  /** Average results returned */
-  avg_results: number
 }

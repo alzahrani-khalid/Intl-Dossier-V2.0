@@ -70,19 +70,6 @@ export interface Scenario {
 }
 
 /**
- * Scenario with computed fields
- */
-interface ScenarioWithStats extends Scenario {
-  variable_count: number
-  outcome_count: number
-  positive_outcomes: number
-  negative_outcomes: number
-  avg_probability: number | null
-  is_owner: boolean
-  collaborator_count: number
-}
-
-/**
  * Scenario variable (what-if change)
  */
 export interface ScenarioVariable {
@@ -134,19 +121,6 @@ export interface ScenarioComparison {
   created_by: string
   created_at: string
   updated_at: string
-}
-
-/**
- * Scenario snapshot (for versioning)
- */
-interface ScenarioSnapshot {
-  id: string
-  scenario_id: string
-  version: number
-  title_en: string
-  title_ar: string
-  snapshot_data: unknown
-  created_at: string
 }
 
 /**
@@ -367,32 +341,6 @@ export interface SuccessResponse {
 // UI State Types
 // ============================================================================
 
-/**
- * Variable form state
- */
-interface VariableFormState {
-  name_en: string
-  name_ar: string
-  change_type: VariableChangeType
-  target_entity_type: string
-  target_entity_id: string
-  original_value: string
-  modified_value: string
-}
-
-/**
- * Outcome form state
- */
-interface OutcomeFormState {
-  title_en: string
-  title_ar: string
-  description_en: string
-  description_ar: string
-  impact_level: ImpactLevel
-  probability_score: number
-  is_positive: boolean
-}
-
 // ============================================================================
 // Constants
 // ============================================================================
@@ -441,15 +389,6 @@ export const IMPACT_LEVEL_LABELS: Record<ImpactLevel, { en: string; ar: string }
   critical: { en: 'Critical', ar: 'حرج' },
 }
 
-/**
- * Collaborator role labels
- */
-const COLLABORATOR_ROLE_LABELS: Record<CollaboratorRole, { en: string; ar: string }> = {
-  owner: { en: 'Owner', ar: 'المالك' },
-  editor: { en: 'Editor', ar: 'المحرر' },
-  viewer: { en: 'Viewer', ar: 'المشاهد' },
-}
-
 // ============================================================================
 // Helper Functions
 // ============================================================================
@@ -468,20 +407,6 @@ export function getStatusColor(status: ScenarioStatus): string {
 }
 
 /**
- * Get scenario type icon name
- */
-function getScenarioTypeIcon(type: ScenarioType): string {
-  const icons: Record<ScenarioType, string> = {
-    stakeholder_engagement: 'Users',
-    policy_change: 'FileText',
-    relationship_impact: 'GitBranch',
-    resource_allocation: 'DollarSign',
-    strategic_planning: 'Target',
-  }
-  return icons[type]
-}
-
-/**
  * Get impact level color
  */
 export function getImpactLevelColor(level: ImpactLevel): string {
@@ -491,20 +416,6 @@ export function getImpactLevelColor(level: ImpactLevel): string {
     moderate: 'text-yellow-500 dark:text-yellow-400',
     high: 'text-orange-500 dark:text-orange-400',
     critical: 'text-red-500 dark:text-red-400',
-  }
-  return colors[level]
-}
-
-/**
- * Get impact level background color
- */
-function getImpactLevelBgColor(level: ImpactLevel): string {
-  const colors: Record<ImpactLevel, string> = {
-    minimal: 'bg-gray-100 dark:bg-gray-800',
-    low: 'bg-blue-100 dark:bg-blue-900/30',
-    moderate: 'bg-yellow-100 dark:bg-yellow-900/30',
-    high: 'bg-orange-100 dark:bg-orange-900/30',
-    critical: 'bg-red-100 dark:bg-red-900/30',
   }
   return colors[level]
 }

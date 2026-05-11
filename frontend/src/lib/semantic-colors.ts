@@ -75,9 +75,13 @@ export const dossierTypeColors: Record<string, ColorSet> = {
 /**
  * Returns a combined badge class string for a dossier type.
  * Includes bg + text for use in Badge / icon containers.
+ *
+ * WR-07: Fallback to the canonical 'country' entry rather than a parallel
+ * DEFAULT_*_COLORS constant — keeps the canonical map as the single source
+ * of pixel truth and prevents drift.
  */
 export function getDossierTypeBadgeClass(type: string): string {
-  const colors = dossierTypeColors[type] ?? dossierTypeColors.country
+  const colors = dossierTypeColors[type] ?? dossierTypeColors.country!
   return `${colors.bg} ${colors.text}`
 }
 
@@ -166,9 +170,13 @@ export const statusColors: Record<string, ColorSet> = {
 
 /**
  * Returns a combined badge class string for a status value.
+ *
+ * WR-07: Fallback to the canonical 'todo' entry (muted) rather than a parallel
+ * DEFAULT_STATUS_COLORS constant — preserves pre-Phase47 fallback semantics
+ * and prevents pixel drift.
  */
 export function getStatusBadgeClass(status: string): string {
-  const colors = statusColors[status] ?? statusColors.todo
+  const colors = statusColors[status] ?? statusColors.todo!
   return `${colors.bg} ${colors.text}`
 }
 
@@ -209,9 +217,13 @@ export const priorityColors: Record<string, ColorSet> = {
 
 /**
  * Returns a combined badge class string for a priority value (bg + text).
+ *
+ * WR-07: Fallback to the canonical 'medium' entry (primary-tinted) rather
+ * than a parallel DEFAULT_PRIORITY_COLORS constant — preserves pre-Phase47
+ * fallback semantics.
  */
 export function getPriorityBadgeClass(priority: string): string {
-  const colors = priorityColors[priority] ?? priorityColors.medium
+  const colors = priorityColors[priority] ?? priorityColors.medium!
   return `${colors.bg} ${colors.text}`
 }
 
@@ -260,9 +272,12 @@ export const activityTypeColors: Record<string, ColorPair> = {
 
 /**
  * Returns a combined badge class string for an activity type.
+ *
+ * WR-07: Fallback to the canonical 'task' entry (primary-tinted) rather
+ * than a parallel DEFAULT_ACTIVITY_TYPE_COLORS constant.
  */
 export function getActivityTypeBadgeClass(type: string): string {
-  const colors = activityTypeColors[type] ?? activityTypeColors.task
+  const colors = activityTypeColors[type] ?? activityTypeColors.task!
   return `${colors.bg} ${colors.text}`
 }
 

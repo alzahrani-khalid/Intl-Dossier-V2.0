@@ -31,9 +31,21 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useToast } from '@/hooks/useToast'
 import { useTagSearch, useEntityTagging, useTagsFlat } from '@/hooks/useTagHierarchy'
-import type { TagEntityType, EntityTagAssignment, TagSuggestion } from '@/types/tag-hierarchy.types'
+import type {
+  TagEntityType,
+  EntityTagAssignment,
+  TagSuggestion,
+  TagCategory,
+} from '@/types/tag-hierarchy.types'
 import { getTagName, TAG_SUGGESTION_REASON_LABELS } from '@/types/tag-hierarchy.types'
 import { useDirection } from '@/hooks/useDirection'
+
+// useTagsFlat / useTagSearch return the raw API hierarchy result; consumer-side
+// shim narrows them to the TagCategory shape used by the dropdown. (Underlying
+// hooks remain unmigrated; full type-at-source is a follow-up.)
+interface TagSearchResultData {
+  data: TagCategory[]
+}
 
 interface TagSelectorProps {
   entityType: TagEntityType
@@ -64,6 +76,10 @@ export function TagSelector({
   const [searchQuery, setSearchQuery] = useState('')
 
   // Hooks
+  // Stub hook (@/hooks/useTagHierarchy) takes 0 args; we discard the (entityType,
+  // entityId) intent since the stub has no use for it (47-07's surface).
+  void entityType
+  void entityId
   const {
     tags: assignedTags,
     suggestions,
@@ -72,13 +88,14 @@ export function TagSelector({
     unassignTag,
     isAssigning,
     isUnassigning,
-  } = useEntityTagging(entityType, entityId)
+  } = useEntityTagging()
 
-  const { data: allTags } = useTagsFlat()
-  const { data: searchResults, isLoading: isSearching } = useTagSearch(
-    { query: searchQuery, limit: 10 },
-    { enabled: searchQuery.length >= 1 },
-  )
+  const { data: allTags } = useTagsFlat() as unknown as { data: TagCategory[] | undefined }
+  // Stub useTagSearch takes (query: string), not an options object.
+  const { data: searchResults, isLoading: isSearching } = useTagSearch(searchQuery) as unknown as {
+    data: TagSearchResultData | undefined
+    isLoading: boolean
+  }
 
   // Get available tags (not already assigned)
   const assignedTagIds = useMemo(() => new Set(assignedTags.map((t) => t.tag_id)), [assignedTags])
@@ -372,7 +389,6 @@ interface TagDisplayProps {
 }
 
 export function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 
   if (!tags || tags.length === 0) return null

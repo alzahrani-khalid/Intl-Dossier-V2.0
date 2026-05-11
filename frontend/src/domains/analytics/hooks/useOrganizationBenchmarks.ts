@@ -23,7 +23,7 @@ export function useOrganizationBenchmarks(params?: {
   timeRange?: string
   metric?: string
   enabled?: boolean
-}): ReturnType<typeof useQuery> {
+}) {
   const searchParams = new URLSearchParams()
   if (params?.timeRange) searchParams.set('time_range', params.timeRange)
   if (params?.metric) searchParams.set('metric', params.metric)
@@ -36,7 +36,7 @@ export function useOrganizationBenchmarks(params?: {
   })
 }
 
-export function useCurrentStats(): ReturnType<typeof useQuery> {
+export function useCurrentStats() {
   return useQuery({
     queryKey: benchmarkKeys.currentStats(),
     queryFn: () => getCurrentStats(),
@@ -46,10 +46,15 @@ export function useCurrentStats(): ReturnType<typeof useQuery> {
 
 /* Stub hook – removed during refactoring, still imported by dashboard widgets */
 
-export function useBenchmarkPreview(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
-  return useQuery({
+export interface BenchmarkPreviewData {
+  shouldShowPreview?: boolean
+  benchmarks?: unknown
+}
+
+export function useBenchmarkPreview(params?: Record<string, unknown>) {
+  return useQuery<BenchmarkPreviewData>({
     queryKey: [...benchmarkKeys.all, 'preview', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve({ shouldShowPreview: false, benchmarks: undefined }),
     staleTime: STALE_TIME.NORMAL,
   })
 }

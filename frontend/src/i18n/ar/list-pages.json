@@ -1,0 +1,21 @@
+{
+  "loading": "جاري تحميل الدوسيهات",
+  "empty": "لا توجد دوسيهات",
+  "search": {
+    "placeholder": "ابحث في الدوسيهات..."
+  },
+  "table": {
+    "aria": "الدوسيهات",
+    "name": "الاسم",
+    "engagements": "المشاركات",
+    "lastTouch": "آخر تحديث",
+    "sensitivity": "الحساسية"
+  },
+  "sensitivity": {
+    "public": "عام",
+    "internal": "داخلي",
+    "restricted": "مقيّد",
+    "confidential": "سري",
+    "unknown": "غير معروف"
+  }
+}

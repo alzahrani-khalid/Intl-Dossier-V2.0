@@ -38,34 +38,37 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   // Mutations and queries
+  // CR-10: hook now exposes a typed UseMutationResult that accepts
+  // { engagementId, language, options? } and forwards `language` to the
+  // repository payload. No widening cast needed.
   const generateMutation = useGenerateBriefingPack()
-  const briefingStatus = useBriefingPackStatus({
-    jobId: jobId || '',
-    enabled: !!jobId && status === 'generating',
+  // WR-02/WR-03: read the *server's* job status from .data (BriefingPackJob),
+  // not TanStack's QueryStatus from .status (which is only pending|error|success
+  // and would never produce 'completed'|'failed'). Restore the polling gate
+  // via options.enabled so we stop polling once the job leaves 'generating'.
+  // WR-25: useBriefingPackStatus is now typed at the hook source as
+  // UseQueryResult<BriefingPackJob | null>, so .data is already narrowed.
+  const briefingStatus = useBriefingPackStatus(jobId, {
+    enabled: Boolean(jobId) && status === 'generating',
   })
-  const jobStatus =
-    briefingStatus.status !== 'pending'
-      ? {
-          status: briefingStatus.status,
-          file_url: briefingStatus.briefingPack?.file_url,
-          error_message: briefingStatus.error,
-        }
-      : null
+  const job = briefingStatus.data
+  const jobFileUrl = job?.file_url
+  const jobErrorMessage = job?.error_message
 
   // Handle job status updates
   useEffect(() => {
-    if (!jobStatus) return
+    if (!job) return
 
-    if (jobStatus.status === 'completed') {
+    if (job.status === 'completed') {
       setStatus('completed')
-      setFileUrl(jobStatus.file_url ?? null)
+      setFileUrl(jobFileUrl ?? null)
       setJobId(null)
-    } else if (jobStatus.status === 'failed') {
+    } else if (job.status === 'failed') {
       setStatus('failed')
-      setErrorMessage(jobStatus.error_message || t('positions.briefing.error'))
+      setErrorMessage(jobErrorMessage ?? t('positions.briefing.error'))
       setJobId(null)
     }
-  }, [jobStatus, t])
+  }, [job, jobFileUrl, jobErrorMessage, t])
 
   // Handle generation
   const handleGenerate = async () => {

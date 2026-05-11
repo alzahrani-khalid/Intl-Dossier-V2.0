@@ -49,7 +49,6 @@ import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { getDossierTypeBadgeClass, getStatusBadgeClass } from '@/lib/semantic-colors'
 import type { DossierWithExtension, DossierType, DossierStatus } from '@/services/dossier-api'
 import { Link } from '@tanstack/react-router'
-import { WorldMapHighlight } from '@/components/dossier/WorldMapHighlight'
 
 interface UniversalDossierCardProps {
   dossier: DossierWithExtension
@@ -141,17 +140,7 @@ export function UniversalDossierCard({
         tabIndex={-1}
       />
 
-      {/* Country type: Show map as background */}
-      {dossier.type === 'country' && (dossier.extension as any)?.iso_code_2 && (
-        <div className="absolute inset-0 pointer-events-none opacity-10">
-          <WorldMapHighlight
-            countryCode={(dossier.extension as any).iso_code_2}
-            className="h-full"
-          />
-        </div>
-      )}
-
-      <CardHeader className="flex flex-col gap-2 sm:gap-3 p-3 sm:p-4 relative z-10">
+<CardHeader className="flex flex-col gap-2 sm:gap-3 p-3 sm:p-4 relative z-10">
         {/* Person type: Show avatar with info */}
         {dossier.type === 'person' && (dossier.extension as any)?.photo_url ? (
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">

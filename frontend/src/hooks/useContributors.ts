@@ -11,11 +11,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import {
-  contributorsAPI,
-  type AddContributorRequest,
-  type AddMultipleContributorsRequest,
-} from '@/services/contributors-api'
+import { contributorsAPI, type AddContributorRequest } from '@/services/contributors-api'
 import type { Database } from '../../../backend/src/types/database.types'
 import { useToast } from './useToast'
 import { tasksKeys } from './useTasks'
@@ -43,58 +39,6 @@ export function useTaskContributors(taskId: string) {
     queryKey: contributorsKeys.task(taskId),
     queryFn: () => contributorsAPI.getTaskContributors(taskId),
     enabled: !!taskId,
-    staleTime: 1000 * 60 * 2, // 2 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
-  })
-}
-
-/**
- * Hook to fetch contributor history for a task (including removed)
- */
-function useContributorHistory(taskId: string) {
-  return useQuery({
-    queryKey: contributorsKeys.taskHistory(taskId),
-    queryFn: () => contributorsAPI.getContributorHistory(taskId),
-    enabled: !!taskId,
-    staleTime: 1000 * 60 * 5, // 5 minutes (history changes less frequently)
-    gcTime: 1000 * 60 * 15, // 15 minutes
-  })
-}
-
-/**
- * Hook to fetch tasks where user is a contributor
- */
-function useUserContributorTasks(userId: string) {
-  return useQuery({
-    queryKey: contributorsKeys.user(userId),
-    queryFn: () => contributorsAPI.getUserContributorTasks(userId),
-    enabled: !!userId,
-    staleTime: 1000 * 60 * 2, // 2 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
-  })
-}
-
-/**
- * Hook to get contributor count for a task
- */
-function useContributorCount(taskId: string) {
-  return useQuery({
-    queryKey: contributorsKeys.count(taskId),
-    queryFn: () => contributorsAPI.getContributorCount(taskId),
-    enabled: !!taskId,
-    staleTime: 1000 * 60 * 1, // 1 minute
-    gcTime: 1000 * 60 * 5, // 5 minutes
-  })
-}
-
-/**
- * Hook to check if user is a contributor on a task
- */
-function useIsContributor(taskId: string, userId: string) {
-  return useQuery({
-    queryKey: contributorsKeys.isContributor(taskId, userId),
-    queryFn: () => contributorsAPI.isContributor(taskId, userId),
-    enabled: !!taskId && !!userId,
     staleTime: 1000 * 60 * 2, // 2 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
   })
@@ -181,43 +125,6 @@ export function useAddContributor(taskId: string) {
 }
 
 /**
- * Hook to add multiple contributors to a task
- */
-function useAddMultipleContributors(taskId: string) {
-  const { t } = useTranslation()
-  const { toast } = useToast()
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (data: AddMultipleContributorsRequest) =>
-      contributorsAPI.addMultipleContributors(taskId, data),
-
-    onSuccess: (contributors) => {
-      // Invalidate queries to refetch with real data
-      queryClient.invalidateQueries({ queryKey: contributorsKeys.task(taskId) })
-      queryClient.invalidateQueries({ queryKey: contributorsKeys.count(taskId) })
-      queryClient.invalidateQueries({ queryKey: contributorsKeys.taskHistory(taskId) })
-      queryClient.invalidateQueries({ queryKey: tasksKeys.detail(taskId) })
-
-      toast({
-        title: t('contributors.added_multiple'),
-        description: t('contributors.added_multiple_success', {
-          count: contributors.length,
-        }),
-      })
-    },
-
-    onError: (error: any) => {
-      toast({
-        title: t('contributors.add_failed'),
-        description: error.message,
-        variant: 'destructive',
-      })
-    },
-  })
-}
-
-/**
  * Hook to remove a contributor from a task
  */
 export function useRemoveContributor(taskId: string) {
@@ -275,42 +182,6 @@ export function useRemoveContributor(taskId: string) {
       toast({
         title: t('contributors.removed'),
         description: t('contributors.removed_success'),
-      })
-    },
-  })
-}
-
-/**
- * Hook to remove multiple contributors from a task
- */
-function useRemoveMultipleContributors(taskId: string) {
-  const { t } = useTranslation()
-  const { toast } = useToast()
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (userIds: string[]) => contributorsAPI.removeMultipleContributors(taskId, userIds),
-
-    onSuccess: (_, userIds) => {
-      // Invalidate queries to refetch with real data
-      queryClient.invalidateQueries({ queryKey: contributorsKeys.task(taskId) })
-      queryClient.invalidateQueries({ queryKey: contributorsKeys.count(taskId) })
-      queryClient.invalidateQueries({ queryKey: contributorsKeys.taskHistory(taskId) })
-      queryClient.invalidateQueries({ queryKey: tasksKeys.detail(taskId) })
-
-      toast({
-        title: t('contributors.removed_multiple'),
-        description: t('contributors.removed_multiple_success', {
-          count: userIds.length,
-        }),
-      })
-    },
-
-    onError: (error: any) => {
-      toast({
-        title: t('contributors.remove_failed'),
-        description: error.message,
-        variant: 'destructive',
       })
     },
   })

@@ -115,26 +115,6 @@ export interface DuplicateCandidate {
 }
 
 /**
- * Duplicate candidate with entity details (for display)
- */
-interface DuplicateCandidateWithEntities extends DuplicateCandidate {
-  source_dossier?: {
-    id: string
-    name_en: string
-    name_ar: string
-    type: string
-    status: string
-  }
-  target_dossier?: {
-    id: string
-    name_en: string
-    name_ar: string
-    type: string
-    status: string
-  }
-}
-
-/**
  * Duplicate candidate list item (compact)
  */
 export interface DuplicateCandidateListItem {
@@ -221,35 +201,6 @@ export interface MergeHistoryRecord {
   undo_expires_at?: string
 }
 
-/**
- * Merge preview showing what will be transferred
- */
-interface MergePreview {
-  primary_entity: {
-    id: string
-    name_en: string
-    name_ar: string
-    type: DuplicateEntityType
-  }
-  duplicate_entity: {
-    id: string
-    name_en: string
-    name_ar: string
-    type: DuplicateEntityType
-  }
-  fields_to_merge: Array<{
-    field: string
-    primary_value: unknown
-    duplicate_value: unknown
-    recommended_resolution: 'primary' | 'duplicate' | 'merge'
-  }>
-  relationships_to_transfer: number
-  roles_to_transfer: number
-  affiliations_to_transfer: number
-  engagements_to_transfer: number
-  documents_to_transfer: number
-}
-
 // ============================================================================
 // Settings Types
 // ============================================================================
@@ -297,16 +248,6 @@ export interface SettingsUpdateRequest {
 // ============================================================================
 
 /**
- * Request to search for duplicates
- */
-interface DuplicateSearchParams {
-  entity_id: string
-  type: DuplicateEntityType
-  threshold?: number
-  limit?: number
-}
-
-/**
  * Request to list duplicate candidates
  */
 export interface DuplicateCandidatesListParams {
@@ -349,16 +290,6 @@ export interface DuplicateScanResponse {
 }
 
 /**
- * Request to merge duplicates
- */
-interface MergeRequest {
-  primary_entity_id: string
-  duplicate_entity_id: string
-  field_resolutions?: Record<string, FieldResolution>
-  reason?: string
-}
-
-/**
  * Response from merge operation
  */
 export interface MergeResponse {
@@ -369,76 +300,13 @@ export interface MergeResponse {
   merged_entity_id: string
 }
 
-/**
- * Request to dismiss a duplicate candidate
- */
-interface DismissRequest {
-  reason?: string
-}
-
-/**
- * Response from dismiss operation
- */
-interface DismissResponse {
-  success: boolean
-  candidate_id: string
-}
-
 // ============================================================================
 // UI Component Types
 // ============================================================================
 
-/**
- * Props for duplicate candidate card
- */
-interface DuplicateCandidateCardProps {
-  candidate: DuplicateCandidateListItem
-  onMerge: (candidate: DuplicateCandidateListItem) => void
-  onDismiss: (candidate: DuplicateCandidateListItem) => void
-  onViewDetails: (candidate: DuplicateCandidateListItem) => void
-  isLoading?: boolean
-}
-
-/**
- * Props for merge dialog
- */
-interface MergeDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  candidate: DuplicateCandidateListItem | null
-  onMerge: (
-    primaryId: string,
-    duplicateId: string,
-    resolutions?: Record<string, FieldResolution>,
-  ) => void
-  isLoading?: boolean
-}
-
-/**
- * Entity comparison data for merge preview
- */
-interface EntityComparisonData {
-  field: string
-  label_en: string
-  label_ar: string
-  primary_value: unknown
-  duplicate_value: unknown
-  is_different: boolean
-  can_merge: boolean
-}
-
 // ============================================================================
 // Helper Functions Types
 // ============================================================================
-
-/**
- * Get confidence level from score
- */
-function getConfidenceLevel(score: number): ConfidenceLevel {
-  if (score >= CONFIDENCE_THRESHOLDS.high) return 'high'
-  if (score >= CONFIDENCE_THRESHOLDS.medium) return 'medium'
-  return 'low'
-}
 
 /**
  * Get confidence level color
@@ -463,25 +331,4 @@ export const CONFIDENCE_LEVEL_LABELS: Record<ConfidenceLevel, { en: string; ar: 
   high: { en: 'High Confidence', ar: 'ثقة عالية' },
   medium: { en: 'Medium Confidence', ar: 'ثقة متوسطة' },
   low: { en: 'Low Confidence', ar: 'ثقة منخفضة' },
-}
-
-/**
- * Labels for duplicate status
- */
-const DUPLICATE_STATUS_LABELS: Record<DuplicateCandidateStatus, { en: string; ar: string }> = {
-  pending: { en: 'Pending Review', ar: 'في انتظار المراجعة' },
-  confirmed: { en: 'Confirmed Duplicate', ar: 'تكرار مؤكد' },
-  not_duplicate: { en: 'Not a Duplicate', ar: 'ليس تكراراً' },
-  merged: { en: 'Merged', ar: 'تم الدمج' },
-  auto_dismissed: { en: 'Auto-Dismissed', ar: 'مرفوض تلقائياً' },
-}
-
-/**
- * Labels for detection source
- */
-const DETECTION_SOURCE_LABELS: Record<DetectionSource, { en: string; ar: string }> = {
-  auto_scan: { en: 'Automatic Scan', ar: 'فحص تلقائي' },
-  on_create: { en: 'On Creation', ar: 'عند الإنشاء' },
-  manual_search: { en: 'Manual Search', ar: 'بحث يدوي' },
-  bulk_import: { en: 'Bulk Import', ar: 'استيراد مجمع' },
 }

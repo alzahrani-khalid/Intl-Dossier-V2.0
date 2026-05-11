@@ -13,6 +13,20 @@ interface TriageSuggestion {
   model_name?: string
 }
 
+// Local typed shim narrowing the stub useTriageSuggestions hook return.
+// The hook (re-exported from @/hooks/useIntakeApi) returns UseQueryResult<unknown>
+// because its underlying domain stub has not been re-typed yet (47-06 scope ends at
+// components/**; the hook surface is owned by 47-07).
+interface TriageSuggestionsData {
+  requestType?: string
+  sensitivity?: import('@/types/intake').Sensitivity
+  urgency?: import('@/types/intake').Urgency
+  suggestedAssignee?: string
+  suggestedUnit?: string
+  confidenceScores?: Record<string, number>
+  modelInfo?: { modelName?: string; name?: string }
+}
+
 interface TriagePanelProps {
   ticketId: string
   onSuccess?: () => void
@@ -26,7 +40,11 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
   const [overrideReason, setOverrideReason] = useState('')
 
   // Fetch AI triage suggestions using the hook
-  const { data: suggestions, isLoading, error } = useTriageSuggestions(ticketId)
+  const { data: suggestions, isLoading, error } = useTriageSuggestions(ticketId) as unknown as {
+    data: TriageSuggestionsData | undefined
+    isLoading: boolean
+    error: unknown
+  }
 
   // Check AI health (disabled for now - falls back to checking suggestions response)
   // const { data: aiHealthData } = useAIHealthCheck();

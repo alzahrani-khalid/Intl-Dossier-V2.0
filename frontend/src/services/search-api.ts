@@ -275,33 +275,3 @@ export async function autocompleteDossiers(
     query: suggestResponse.query.original,
   }
 }
-
-/**
- * Search within a specific dossier type
- */
-async function searchByType(
-  type: DossierType,
-  query: string,
-  page?: number,
-  page_size?: number,
-): Promise<SearchResponse> {
-  return searchDossiers({
-    query,
-    types: [type],
-    page,
-    page_size,
-  })
-}
-
-/**
- * Quick search (default sort by relevance, first page only)
- */
-async function quickSearch(query: string): Promise<SearchResponse> {
-  return searchDossiers({
-    query,
-    page: 1,
-    page_size: 10,
-    sort_by: 'relevance',
-    sort_order: 'desc',
-  })
-}

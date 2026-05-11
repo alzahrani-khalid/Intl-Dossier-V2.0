@@ -16,7 +16,7 @@
 export const USERS_COLUMNS = {
   /** User profile data for auth and settings */
   PROFILE:
-    'id, full_name, role, language_preference, timezone, avatar_url, is_active, mfa_enabled, last_login_at, mfa_backup_codes, default_organization_id',
+    'id, full_name, role, language_preference, timezone, avatar_url, is_active, mfa_enabled, last_login_at, mfa_backup_codes, default_organization_id, job_title_en, job_title_ar',
   /** Minimal user info for display (e.g., assignee names) */
   MINIMAL: 'id, full_name, email',
   /** User info with username for fallback display */
@@ -57,13 +57,16 @@ export const TASKS_COLUMNS = {
 // COMMITMENTS TABLE (aa_commitments)
 // =============================================================================
 export const COMMITMENTS_COLUMNS = {
-  /** List view columns */
+  /** List view columns. Note: `aa_commitments.dossier_id` has NO FK to
+   *  `dossiers`, so PostgREST embeds (`dossier:dossiers!dossier_id(...)`)
+   *  return a 400. Consumers needing the dossier name must do a separate
+   *  batched lookup — see `usePersonalCommitments.ts` for the pattern. */
   LIST: 'id, dossier_id, after_action_id, title, description, due_date, owner_type, owner_user_id, owner_contact_id, priority, status, tracking_mode, proof_required, proof_url, evidence_submitted_at, completed_at, completion_notes, status_changed_at, created_by, updated_by, created_at, updated_at',
   /** Detail view with all fields */
   DETAIL:
     'id, dossier_id, after_action_id, title, description, due_date, owner_type, owner_user_id, owner_contact_id, priority, status, tracking_mode, proof_required, proof_url, evidence_submitted_at, completed_at, completion_notes, status_changed_at, created_by, updated_by, created_at, updated_at',
   /** Summary for dashboard widgets */
-  SUMMARY: 'id, title, status, priority, due_date, deadline, assignee_id, created_at',
+  SUMMARY: 'id, title, description, status, priority, due_date, owner_user_id, created_at, updated_at',
 } as const
 
 // =============================================================================

@@ -76,6 +76,11 @@ export interface TimelineEvent {
   engagement_name: string | null
   engagement_name_ar: string | null
   lifecycle_stage: LifecycleStage | null
+  person_id: string | null
+  person_name: string | null
+  person_name_ar: string | null
+  person_role: string | null
+  person_iso: string | null
 }
 
 export type TimelineGroup = 'today' | 'tomorrow' | 'this_week' | 'next_week'

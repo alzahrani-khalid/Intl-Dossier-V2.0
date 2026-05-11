@@ -3,8 +3,6 @@
  * Provides contextual error messages with recovery suggestions
  */
 
-import { z } from 'zod'
-
 // =============================================================================
 // VALIDATION ERROR TYPES
 // =============================================================================
@@ -28,55 +26,6 @@ export interface FieldValidationConfig {
   patternName?: string
   custom?: (value: string) => ValidationResult | null
 }
-
-// =============================================================================
-// COMMON PATTERNS WITH CONTEXTUAL MESSAGES
-// =============================================================================
-
-const ValidationPatterns = {
-  email: {
-    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    name: 'email',
-    messageKey: 'validation.email.invalid',
-    suggestionKey: 'validation.email.suggestion',
-  },
-  phone: {
-    pattern: /^\+?[\d\s-()]{7,20}$/,
-    name: 'phone',
-    messageKey: 'validation.phone.invalid',
-    suggestionKey: 'validation.phone.suggestion',
-  },
-  url: {
-    pattern: /^https?:\/\/.+\..+/,
-    name: 'url',
-    messageKey: 'validation.url.invalid',
-    suggestionKey: 'validation.url.suggestion',
-  },
-  alphanumeric: {
-    pattern: /^[a-zA-Z0-9\s]+$/,
-    name: 'alphanumeric',
-    messageKey: 'validation.alphanumeric.invalid',
-    suggestionKey: 'validation.alphanumeric.suggestion',
-  },
-  arabicText: {
-    pattern: /^[\u0600-\u06FF\s\d.,!?؟،]+$/,
-    name: 'arabic',
-    messageKey: 'validation.arabic.invalid',
-    suggestionKey: 'validation.arabic.suggestion',
-  },
-  noSpecialChars: {
-    pattern: /^[^<>{}[\]\\]+$/,
-    name: 'noSpecialChars',
-    messageKey: 'validation.specialChars.invalid',
-    suggestionKey: 'validation.specialChars.suggestion',
-  },
-  dateFormat: {
-    pattern: /^\d{4}-\d{2}-\d{2}$/,
-    name: 'dateFormat',
-    messageKey: 'validation.dateFormat.invalid',
-    suggestionKey: 'validation.dateFormat.suggestion',
-  },
-} as const
 
 // =============================================================================
 // VALIDATION FUNCTIONS
@@ -328,68 +277,6 @@ export function calculatePasswordStrength(password: string): StrengthResult {
 // ZOD SCHEMA HELPERS WITH CONTEXTUAL MESSAGES
 // =============================================================================
 
-/**
- * Creates a Zod string schema with contextual validation messages
- */
-function createContextualStringSchema(options: {
-  required?: boolean
-  minLength?: number
-  maxLength?: number
-  pattern?: { regex: RegExp; name: string }
-}) {
-  let schema = z.string()
-
-  if (options.required) {
-    schema = schema.min(1, { message: 'validation.required' })
-  }
-
-  if (options.minLength) {
-    schema = schema.min(options.minLength, {
-      message: `validation.minLength|min:${options.minLength}`,
-    })
-  }
-
-  if (options.maxLength) {
-    schema = schema.max(options.maxLength, {
-      message: `validation.maxLength|max:${options.maxLength}`,
-    })
-  }
-
-  if (options.pattern) {
-    schema = schema.regex(options.pattern.regex, {
-      message: `validation.${options.pattern.name}.invalid`,
-    })
-  }
-
-  return schema
-}
-
-/**
- * Creates an email schema with contextual messages
- */
-function createEmailSchema(required = true) {
-  let schema = z.string()
-
-  if (required) {
-    schema = schema.min(1, { message: 'validation.required' })
-  }
-
-  return schema.email({ message: 'validation.email.invalid' })
-}
-
-/**
- * Creates a URL schema with contextual messages
- */
-function createUrlSchema(required = false) {
-  let schema = z.string()
-
-  if (required) {
-    schema = schema.min(1, { message: 'validation.required' })
-  }
-
-  return schema.url({ message: 'validation.url.invalid' }).or(z.literal(''))
-}
-
 // =============================================================================
 // FORM-LEVEL VALIDATION
 // =============================================================================
@@ -400,57 +287,4 @@ export interface FormValidationState {
   warnings: Record<string, ValidationResult>
   touched: Set<string>
   dirty: Set<string>
-}
-
-/**
- * Creates initial form validation state
- */
-function createFormValidationState(): FormValidationState {
-  return {
-    isValid: true,
-    errors: {},
-    warnings: {},
-    touched: new Set(),
-    dirty: new Set(),
-  }
-}
-
-/**
- * Updates form validation state with field result
- */
-function updateFormValidationState(
-  state: FormValidationState,
-  fieldName: string,
-  result: ValidationResult,
-  options?: { touched?: boolean; dirty?: boolean },
-): FormValidationState {
-  const newState = { ...state }
-
-  // Update touched/dirty sets
-  if (options?.touched) {
-    newState.touched = new Set([...state.touched, fieldName])
-  }
-  if (options?.dirty) {
-    newState.dirty = new Set([...state.dirty, fieldName])
-  }
-
-  // Update errors/warnings
-  if (result.severity === 'error' && !result.isValid) {
-    newState.errors = { ...state.errors, [fieldName]: result }
-    delete newState.warnings[fieldName]
-  } else if (result.severity === 'warning') {
-    newState.warnings = { ...state.warnings, [fieldName]: result }
-    const { [fieldName]: _, ...restErrors } = state.errors
-    newState.errors = restErrors
-  } else {
-    const { [fieldName]: _err, ...restErrors } = state.errors
-    const { [fieldName]: _warn, ...restWarnings } = state.warnings
-    newState.errors = restErrors
-    newState.warnings = restWarnings
-  }
-
-  // Update overall validity
-  newState.isValid = Object.keys(newState.errors).length === 0
-
-  return newState
 }

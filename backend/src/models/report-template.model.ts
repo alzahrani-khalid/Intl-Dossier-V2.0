@@ -131,28 +131,33 @@ export class ReportTemplateModel {
   static calculateNextRun(cronExpression: string, from: Date = new Date()): Date {
     // Simplified next run calculation for common patterns
     const parts = cronExpression.split(' ')
-    const [minute, hour, dayOfMonth, month, dayOfWeek] = parts.map((p) =>
-      p === '*' ? null : parseInt(p, 10),
-    )
+    const parsedParts = parts.map((p) => (p === '*' ? null : parseInt(p, 10)))
+    const minute = parsedParts[0]
+    const hour = parsedParts[1]
+    const dayOfMonth = parsedParts[2]
+    const dayOfWeek = parsedParts[4]
 
     const next = new Date(from)
 
-    if (minute !== null) next.setMinutes(minute)
-    if (hour !== null) next.setHours(hour)
+    if (minute !== null && minute !== undefined) next.setMinutes(minute)
+    if (hour !== null && hour !== undefined) next.setHours(hour)
 
     // Daily
-    if (dayOfMonth === null && dayOfWeek === null) {
+    if (
+      (dayOfMonth === null || dayOfMonth === undefined) &&
+      (dayOfWeek === null || dayOfWeek === undefined)
+    ) {
       if (next <= from) {
         next.setDate(next.getDate() + 1)
       }
     }
     // Weekly
-    else if (dayOfWeek !== null) {
+    else if (dayOfWeek !== null && dayOfWeek !== undefined) {
       const daysUntilNext = (dayOfWeek - next.getDay() + 7) % 7 || 7
       next.setDate(next.getDate() + daysUntilNext)
     }
     // Monthly
-    else if (dayOfMonth !== null) {
+    else if (dayOfMonth !== null && dayOfMonth !== undefined) {
       next.setDate(dayOfMonth)
       if (next <= from) {
         next.setMonth(next.getMonth() + 1)

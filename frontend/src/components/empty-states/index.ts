@@ -37,7 +37,6 @@ export {
   VideoTutorial,
   type VideoTutorialProps,
   type TranscriptSegment,
-  type VideoTranscriptSegment,
 } from './VideoTutorial'
 
 export {

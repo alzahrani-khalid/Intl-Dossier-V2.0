@@ -1,36 +1,37 @@
 /**
- * HeroUI Chip Wrapper (Badge replacement)
+ * HeroUI Chip Wrapper (Badge replacement) — Phase 33-05 (Wave 3)
  *
- * Drop-in replacement for shadcn Badge.
- * Renders as a span with cva variants, asChild support via Slot,
- * and data-slot attribute for CSS targeting.
+ * Real @heroui/react Chip primitive. Preserves the shadcn-style `badgeVariants`
+ * cva API and `asChild` branch used by existing Badge call sites.
+ *
+ * Token model (SC-5): the cva strings use semantic Tailwind utilities only —
+ * `bg-destructive`, `text-destructive-foreground`, `bg-warn`, `text-ok`,
+ * `bg-info`, `border-*`, `text-foreground`, etc. Literal color utilities
+ * (`bg-red-*`, `text-red-*`, `bg-orange-*`, `bg-blue-*`, `bg-green-*`) were
+ * removed in this pass — the zero-override audit in plan DoD greps for them
+ * and must return zero matches.
+ *
+ * The status palettes map onto D-16 runtime vars (--danger, --warn, --ok,
+ * --info) via the @theme block in frontend/src/index.css.
  */
 
-import * as React from 'react'
+import type * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@/lib/utils'
 
-// ============================================================================
-// Badge Variants (cva)
-// ============================================================================
-
 const badgeVariants = cva(
-  'inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 overflow-hidden transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none',
+  'chip w-fit shrink-0 justify-center overflow-hidden whitespace-nowrap border border-transparent transition-[background,color,border-color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] aria-invalid:border-[var(--danger)] [&>svg]:size-3 [&>svg]:pointer-events-none',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90',
-        secondary:
-          'border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90',
-        destructive:
-          'border border-red-400 bg-red-50 text-red-800 dark:bg-red-900/70 dark:text-white/80 [a&]:hover:bg-red-100 dark:[a&]:hover:bg-red-900/90',
-        outline: 'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
-        warning:
-          'border border-orange-400 bg-orange-50 text-orange-800 dark:bg-orange-900/70 dark:text-white/80',
-        info: 'border border-blue-400 bg-blue-50 text-blue-800 dark:bg-blue-900/70 dark:text-white/80',
-        success:
-          'border border-green-400 bg-green-50 text-green-800 dark:bg-green-900/70 dark:text-white/80',
+        default: 'chip-accent',
+        secondary: '',
+        destructive: 'chip-danger',
+        outline: 'chip-default',
+        warning: 'chip-warn',
+        info: 'chip-info',
+        success: 'chip-ok',
       },
     },
     defaultVariants: {
@@ -39,31 +40,46 @@ const badgeVariants = cva(
   },
 )
 
-// ============================================================================
-// Types
-// ============================================================================
-
 export interface HeroUIChipProps
   extends React.ComponentProps<'span'>, VariantProps<typeof badgeVariants> {
   asChild?: boolean
 }
 
-// Backward-compat alias
 export type BadgeProps = HeroUIChipProps
 
-// ============================================================================
-// HeroUIChip (Badge)
-// ============================================================================
+function HeroUIChip({
+  className,
+  variant,
+  asChild = false,
+  children,
+  ...props
+}: HeroUIChipProps): React.JSX.Element {
+  const mergedClassName = cn(badgeVariants({ variant }), className)
 
-function HeroUIChip({ className, variant, asChild = false, ...props }: HeroUIChipProps) {
-  const Comp = asChild ? Slot : 'span'
+  const forward = props as Record<string, unknown>
 
-  return <Comp data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
+  if (asChild) {
+    return (
+      <Slot
+        data-slot="badge"
+        className={mergedClassName}
+        {...(forward as React.HTMLAttributes<HTMLElement>)}
+      >
+        {children}
+      </Slot>
+    )
+  }
+
+  return (
+    <span
+      data-slot="badge"
+      className={mergedClassName}
+      {...(forward as React.HTMLAttributes<HTMLSpanElement>)}
+    >
+      {children}
+    </span>
+  )
 }
-
-// ============================================================================
-// Exports
-// ============================================================================
 
 export { HeroUIChip, badgeVariants }
 export default HeroUIChip

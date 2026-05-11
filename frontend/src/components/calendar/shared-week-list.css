@@ -1,0 +1,83 @@
+/* Phase 39 shared week-list — MIRROR of dashboard.css .week-list block.
+   Source-of-truth: frontend/src/pages/Dashboard/widgets/dashboard.css (lines 228-301)
+   Any change to .week-list rules MUST be made in dashboard.css FIRST and copied here.
+   39-09 enforces this with a checksum-style grep gate.
+
+   Tokens only. NO hex codes. NO physical-direction CSS. */
+
+/* === BEGIN: copy of .week-list block from dashboard.css (228-301) === */
+.week-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.week-row {
+  background: var(--surface);
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 14px;
+  padding: 12px 14px;
+  align-items: center;
+  transition: background 0.1s;
+  cursor: pointer;
+}
+.week-row:hover {
+  background: var(--line-soft);
+}
+.week-date {
+  text-align: center;
+  border-inline-end: 1px solid var(--line);
+  padding-inline-end: 12px;
+}
+.week-day {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.week-dd {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.week-time {
+  font-size: 11px;
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+.week-body {
+  min-width: 0;
+}
+.week-title {
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  margin-bottom: 2px;
+}
+.week-meta {
+  font-size: 12px;
+  color: var(--ink-mute);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.week-meta .sep {
+  color: var(--ink-faint);
+}
+.week-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+/* === END copy === */

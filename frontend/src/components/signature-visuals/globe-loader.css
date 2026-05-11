@@ -1,0 +1,58 @@
+/* Phase 37 — Globe loader animations.
+ * Whirl ring durations: 3.2s / 5.5s / 8s (LOCKED by VIZ-01 — do NOT change).
+ * Halo: 2.4s ease-in-out infinite (handoff loader.jsx reference).
+ * Reduced-motion: full-stop per D-14 + D-16.
+ */
+.gl-host {
+  position: relative;
+  display: inline-block;
+  width: var(--gl-size, 120px);
+  height: var(--gl-size, 120px);
+}
+.gl-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  transform-origin: center;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.gl-ring-1 { animation-name: gl-whirl; animation-duration: 3.2s; }
+.gl-ring-2 { animation-name: gl-whirl; animation-duration: 5.5s; }
+.gl-ring-3 { animation-name: gl-whirl; animation-duration: 8s; }
+.gl-halo {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 18%, transparent), transparent 70%);
+  animation: gl-halo 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+.gl-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+@keyframes gl-whirl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes gl-halo {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 0.85; transform: scale(1.04); }
+}
+
+/* GlobeSpinner shared keyframes (plan 04 consumes these) */
+.gs-whirl { transform-origin: center; animation: gs-whirl 1.4s linear infinite; }
+.gs-globe { transform-origin: center; animation: gs-globe 2.8s linear infinite reverse; }
+@keyframes gs-whirl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes gs-globe { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* D-14 / D-16: reduced-motion = full stop */
+@media (prefers-reduced-motion: reduce) {
+  .gl-ring-1, .gl-ring-2, .gl-ring-3, .gl-halo,
+  .gs-whirl, .gs-globe {
+    animation: none !important;
+  }
+}
+
+/* D-08 fallback: browsers without backdrop-filter get a solid-ish layer (95% bg). */
+@supports not (backdrop-filter: blur(3px)) {
+  [data-testid="fullscreen-loader-backdrop"] {
+    background: color-mix(in srgb, var(--bg) 95%, transparent) !important;
+  }
+}

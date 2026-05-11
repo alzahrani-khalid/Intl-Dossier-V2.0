@@ -1,9 +1,10 @@
 // T052: UnifiedCalendar component
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCalendarEvents, type CalendarEvent } from '@/hooks/useCalendarEvents'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Select,
   SelectContent,
@@ -12,20 +13,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { ChevronLeft, ChevronRight, Clock, Plus } from 'lucide-react'
-import {
-  format,
-  startOfMonth,
-  endOfMonth,
-  eachDayOfInterval,
-  isSameMonth,
-  isSameDay,
-  addMonths,
-  subMonths,
-} from 'date-fns'
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns'
 import { CalendarEmptyWizard, type EventTemplate } from './CalendarEmptyWizard'
 import { CalendarEntryForm } from './CalendarEntryForm'
+import { CalendarMonthGrid } from './CalendarMonthGrid'
+import { WeekListMobile } from './WeekListMobile'
 import { useDirection } from '@/hooks/useDirection'
+import './calendar.css'
 
 interface UnifiedCalendarProps {
   linkedItemType?: string
@@ -50,7 +45,19 @@ export function UnifiedCalendar({
 }: UnifiedCalendarProps) {
   const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
-const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [currentMonth, setCurrentMonth] = useState(new Date())
+  // Phase 39 Plan 39-07: media-query gate. Use window.matchMedia directly
+  // (no useMediaQuery hook in this repo). Default to false on first paint
+  // (desktop-first SSR-safe), then sync after mount and on viewport change.
+  const [isMobile, setIsMobile] = useState<boolean>(false)
+  useEffect((): (() => void) | undefined => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined
+    const mql = window.matchMedia('(max-width: 640px)')
+    setIsMobile(mql.matches)
+    const handler = (e: MediaQueryListEvent): void => setIsMobile(e.matches)
+    mql.addEventListener('change', handler)
+    return (): void => mql.removeEventListener('change', handler)
+  }, [])
   const [entryTypeFilter, setEntryTypeFilter] = useState<string | undefined>(undefined)
   const [showWizard, setShowWizard] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
@@ -75,24 +82,6 @@ const [currentMonth, setCurrentMonth] = useState(new Date())
   // Use prop events if provided, otherwise use hook events
   const events = propEvents ?? hookEvents
   const isLoading = propIsLoading ?? hookIsLoading
-
-  // Generate calendar days
-  const calendarDays = useMemo(() => {
-    return eachDayOfInterval({ start: monthStart, end: monthEnd })
-  }, [monthStart, monthEnd])
-
-  // Group events by day
-  const eventsByDay = useMemo(() => {
-    const grouped = new Map<string, typeof events>()
-    events.forEach((event) => {
-      const day = format(new Date(event.start_datetime), 'yyyy-MM-dd')
-      if (!grouped.has(day)) {
-        grouped.set(day, [])
-      }
-      grouped.get(day)?.push(event)
-    })
-    return grouped
-  }, [events])
 
   const handlePreviousMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1))
@@ -136,9 +125,24 @@ const [currentMonth, setCurrentMonth] = useState(new Date())
 
   if (isLoading) {
     return (
-      <Card className="p-8 text-center">
-        <p className="text-muted-foreground">{t('common.loading')}</p>
-      </Card>
+      <div className="cal-skeleton" aria-busy="true" aria-live="polite">
+        {isMobile ? (
+          <div className="week-list-mobile">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <Skeleton key={i} className="cal-row-skeleton" />
+            ))}
+          </div>
+        ) : (
+          <div className="cal-grid">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <Skeleton key={`dow-${i}`} className="cal-dow-skeleton" />
+            ))}
+            {Array.from({ length: 35 }).map((_, i) => (
+              <Skeleton key={`cell-${i}`} className="cal-cell-skeleton" />
+            ))}
+          </div>
+        )}
+      </div>
     )
   }
 
@@ -195,7 +199,7 @@ const [currentMonth, setCurrentMonth] = useState(new Date())
               variant="outline"
               size="sm"
               onClick={handlePreviousMonth}
-              className={isRTL ? 'rotate-180' : ''}
+              className="icon-flip min-h-11 min-w-11"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -206,7 +210,7 @@ const [currentMonth, setCurrentMonth] = useState(new Date())
               variant="outline"
               size="sm"
               onClick={handleNextMonth}
-              className={isRTL ? 'rotate-180' : ''}
+              className="icon-flip min-h-11 min-w-11"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -249,80 +253,19 @@ const [currentMonth, setCurrentMonth] = useState(new Date())
         </div>
       </Card>
 
-      {/* Calendar Grid */}
+      {/* Calendar Grid — Phase 39 Plan 39-05 surgery: month view delegated to CalendarMonthGrid */}
+      {/* Phase 39 Plan 39-07: <640px → WeekListMobile, ≥640px → CalendarMonthGrid */}
       <Card className="p-2 sm:p-4">
-        {/* Weekday Headers */}
-        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
-          {[0, 1, 2, 3, 4, 5, 6].map((day) => (
-            <div
-              key={day}
-              className="text-center text-xs sm:text-sm font-medium text-muted-foreground py-2"
-            >
-              {format(new Date(2024, 0, day + 1), 'EEE')}
-            </div>
-          ))}
-        </div>
-
-        {/* Calendar Days */}
-        <div className="grid grid-cols-7 gap-1 sm:gap-2">
-          {calendarDays.map((day) => {
-            const dateKey = format(day, 'yyyy-MM-dd')
-            const dayEvents = eventsByDay.get(dateKey) || []
-            const isToday = isSameDay(day, new Date())
-
-            return (
-              <div
-                key={dateKey}
-                className={`
- min-h-16 sm:min-h-24 p-1 sm:p-2 border rounded-lg
- ${!isSameMonth(day, currentMonth) ? 'opacity-40' : ''}
- ${isToday ? 'border-primary bg-primary/5' : 'border-border'}
- `}
-              >
-                <div className="flex flex-col h-full">
-                  <div
-                    className={`
- text-xs sm:text-sm font-medium mb-1
- ${isToday ? 'text-primary' : 'text-foreground'}
- `}
-                  >
-                    {format(day, 'd')}
-                  </div>
-
-                  <div className="flex-1 overflow-y-auto space-y-1">
-                    {dayEvents.slice(0, 3).map((event) => (
-                      <button
-                        key={event.id}
-                        type="button"
-                        className="w-full text-start text-xs px-1 py-0.5 rounded bg-accent hover:bg-accent/80 cursor-pointer truncate"
-                        title={
-                          isRTL
-                            ? event.title_ar || event.title_en
-                            : event.title_en || event.title_ar
-                        }
-                        onClick={() => onEventClick?.(event)}
-                      >
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-2 w-2 sm:h-3 sm:w-3 shrink-0" />
-                          <span className="truncate">
-                            {isRTL
-                              ? event.title_ar || event.title_en
-                              : event.title_en || event.title_ar}
-                          </span>
-                        </div>
-                      </button>
-                    ))}
-                    {dayEvents.length > 3 && (
-                      <div className="text-xs text-muted-foreground ps-1">
-                        +{dayEvents.length - 3} {t('more')}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+        {isMobile ? (
+          <WeekListMobile events={events} onEventClick={onEventClick} />
+        ) : (
+          <CalendarMonthGrid
+            currentMonth={currentMonth}
+            events={events}
+            onEventClick={onEventClick}
+            onMonthChange={setCurrentMonth}
+          />
+        )}
       </Card>
 
       {/* Events List (Mobile-friendly alternative view) */}

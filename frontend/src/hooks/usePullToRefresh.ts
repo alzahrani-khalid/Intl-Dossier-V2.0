@@ -17,7 +17,6 @@
  */
 
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useHapticFeedback } from './useHapticFeedback'
 
 export type PullToRefreshState = 'idle' | 'pulling' | 'ready' | 'refreshing' | 'complete'
@@ -66,9 +65,6 @@ export interface PullToRefreshResult {
 }
 
 export function usePullToRefresh(config: PullToRefreshConfig): PullToRefreshResult {
-  const { i18n } = useTranslation()
-  const _isRTL = i18n.language === 'ar'
-
   const {
     pullThreshold = 80,
     maxPull = 150,

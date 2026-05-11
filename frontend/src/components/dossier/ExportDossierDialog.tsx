@@ -54,7 +54,7 @@ export function ExportDossierDialog({
 }: ExportDossierDialogProps) {
   const { t } = useTranslation('dossier-export')
   const { isRTL } = useDirection()
-// Export configuration state
+  // Export configuration state
   const [format, setFormat] = useState<DossierExportFormat>('pdf')
   const [language, setLanguage] = useState<ExportLanguage>('both')
   const [sections, setSections] = useState<ExportSectionConfig[]>(DEFAULT_EXPORT_SECTIONS)
@@ -111,12 +111,10 @@ export function ExportDossierDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent
-        className="max-w-md sm:max-w-lg md:max-w-xl max-h-[90vh] overflow-y-auto"
-      >
+      <DialogContent className="max-w-md sm:max-w-lg md:max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
+            <FileText className="h-5 w-5 text-[var(--accent)]" />
             {t('title', { defaultValue: 'Export Briefing Pack' })}
           </DialogTitle>
           <DialogDescription>
@@ -127,9 +125,9 @@ export function ExportDossierDialog({
         </DialogHeader>
 
         {/* Dossier Info */}
-        <div className="rounded-lg bg-muted/50 p-3 sm:p-4">
+        <div className="rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--line-soft)] p-3 sm:p-4">
           <p className="font-medium text-sm sm:text-base line-clamp-1">{dossierName}</p>
-          <p className="text-xs sm:text-sm text-muted-foreground capitalize">
+          <p className="text-xs capitalize text-[var(--ink-mute)] sm:text-sm">
             {t(`type.${dossierType}`, { defaultValue: dossierType })}
           </p>
         </div>
@@ -138,19 +136,19 @@ export function ExportDossierDialog({
         {isExporting && progress && (
           <div className="space-y-3 py-4">
             <div className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              <Loader2 className="h-4 w-4 animate-spin text-[var(--accent)]" />
               <span className="text-sm">{isRTL ? progress.message_ar : progress.message_en}</span>
             </div>
             <Progress value={progress.progress} className="h-2" />
-            <p className="text-xs text-muted-foreground text-center">{progress.progress}%</p>
+            <p className="text-center text-xs text-[var(--ink-mute)]">{progress.progress}%</p>
           </div>
         )}
 
         {/* Success State */}
         {progress?.status === 'ready' && (
-          <div className="flex items-center gap-3 rounded-lg bg-green-50 dark:bg-green-950/30 p-4">
-            <CheckCircle2 className="h-5 w-5 text-green-600" />
-            <span className="text-sm text-green-700 dark:text-green-400">
+          <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--ok)] bg-[var(--ok-soft)] p-4">
+            <CheckCircle2 className="h-5 w-5 text-[var(--ok)]" />
+            <span className="text-sm text-[var(--ok)]">
               {t('success', { defaultValue: 'Export complete! Download starting...' })}
             </span>
           </div>
@@ -158,9 +156,9 @@ export function ExportDossierDialog({
 
         {/* Error State */}
         {error && (
-          <div className="flex items-center gap-3 rounded-lg bg-red-50 dark:bg-red-950/30 p-4">
-            <AlertCircle className="h-5 w-5 text-red-600" />
-            <span className="text-sm text-red-700 dark:text-red-400">{error.message}</span>
+          <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--danger)] bg-[var(--danger-soft)] p-4">
+            <AlertCircle className="h-5 w-5 text-[var(--danger)]" />
+            <span className="text-sm text-[var(--danger)]">{error.message}</span>
           </div>
         )}
 
@@ -180,10 +178,10 @@ export function ExportDossierDialog({
                 <Label
                   htmlFor="pdf"
                   className={cn(
-                    'flex items-center justify-center gap-2 rounded-lg border-2 p-3 sm:p-4 cursor-pointer transition-colors',
+                    'flex cursor-pointer items-center justify-center gap-2 rounded-[var(--radius-sm)] border p-3 transition-colors sm:p-4',
                     format === 'pdf'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-muted hover:border-primary/50',
+                      ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-ink)]'
+                      : 'border-[var(--line)] hover:border-[var(--ink-faint)]',
                   )}
                 >
                   <RadioGroupItem value="pdf" id="pdf" className="sr-only" />
@@ -193,10 +191,10 @@ export function ExportDossierDialog({
                 <Label
                   htmlFor="docx"
                   className={cn(
-                    'flex items-center justify-center gap-2 rounded-lg border-2 p-3 sm:p-4 cursor-pointer transition-colors',
+                    'flex cursor-pointer items-center justify-center gap-2 rounded-[var(--radius-sm)] border p-3 transition-colors sm:p-4',
                     format === 'docx'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-muted hover:border-primary/50',
+                      ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-ink)]'
+                      : 'border-[var(--line)] hover:border-[var(--ink-faint)]',
                   )}
                 >
                   <RadioGroupItem value="docx" id="docx" className="sr-only" />
@@ -221,10 +219,10 @@ export function ExportDossierDialog({
                     key={lang}
                     htmlFor={`lang-${lang}`}
                     className={cn(
-                      'flex items-center gap-2 rounded-lg border-2 px-4 py-2 cursor-pointer transition-colors',
+                      'flex cursor-pointer items-center gap-2 rounded-[var(--radius-sm)] border px-4 py-2 transition-colors',
                       language === lang
-                        ? 'border-primary bg-primary/5'
-                        : 'border-muted hover:border-primary/50',
+                        ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-ink)]'
+                        : 'border-[var(--line)] hover:border-[var(--ink-faint)]',
                     )}
                   >
                     <RadioGroupItem value={lang} id={`lang-${lang}`} className="sr-only" />
@@ -244,7 +242,7 @@ export function ExportDossierDialog({
             <Button
               variant="ghost"
               size="sm"
-              className="w-full justify-between text-muted-foreground"
+              className="w-full justify-between"
               onClick={() => setShowAdvanced(!showAdvanced)}
             >
               <span>{t('advanced.label', { defaultValue: 'Advanced Options' })}</span>
@@ -257,7 +255,7 @@ export function ExportDossierDialog({
 
             {/* Advanced Options */}
             {showAdvanced && (
-              <div className="space-y-4 rounded-lg bg-muted/30 p-4">
+              <div className="space-y-4 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--line-soft)] p-4">
                 {/* Document Options */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">

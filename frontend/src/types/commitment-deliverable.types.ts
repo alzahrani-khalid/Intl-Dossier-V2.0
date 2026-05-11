@@ -67,15 +67,6 @@ export interface CommitmentDeliverable {
 }
 
 /**
- * Deliverable with computed properties for UI display
- */
-interface CommitmentDeliverableWithComputedProps extends CommitmentDeliverable {
-  isOverdue: boolean
-  daysUntilDue: number
-  displayTitle: string // Based on current language
-}
-
-/**
  * Input for creating a new deliverable
  */
 export interface CreateCommitmentDeliverableInput {
@@ -353,16 +344,6 @@ export const VALID_DELIVERABLE_STATUS_TRANSITIONS: Record<
   completed: [], // Cannot change from completed
   blocked: ['in_progress', 'cancelled'],
   cancelled: [], // Cannot change from cancelled
-}
-
-/**
- * Check if a status transition is valid
- */
-function isValidDeliverableStatusTransition(
-  from: CommitmentDeliverableStatus,
-  to: CommitmentDeliverableStatus,
-): boolean {
-  return VALID_DELIVERABLE_STATUS_TRANSITIONS[from].includes(to)
 }
 
 /**

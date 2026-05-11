@@ -18,6 +18,24 @@
   "search": {
     "placeholder": "Search engagements..."
   },
+  "filter": {
+    "all": "All",
+    "meeting": "Meeting",
+    "call": "Call",
+    "travel": "Travel",
+    "event": "Event",
+    "aria": "Filter engagements"
+  },
+  "week": {
+    "of": "Week of"
+  },
+  "row": {
+    "openAria": "Open engagement: {{title}}"
+  },
+  "loadMore": {
+    "cta": "Load more",
+    "loading": "Loading…"
+  },
   "filters": {
     "title": "Filters",
     "type": "Type",

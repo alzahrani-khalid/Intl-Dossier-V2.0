@@ -225,9 +225,14 @@ export function BenchmarkPreview({
 }: BenchmarkPreviewProps) {
   const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-const { data: rawData, isLoading } = useBenchmarkPreview()
-  const data = (rawData ?? {}) as { shouldShowPreview?: boolean; benchmarks?: Record<string, unknown>[] }
-  const dismissPreview = (): void => { window.dispatchEvent(new Event('benchmark-preview-dismissed')) }
+  const { data: rawData, isLoading } = useBenchmarkPreview()
+  const data = (rawData ?? {}) as {
+    shouldShowPreview?: boolean
+    benchmarks?: OrganizationBenchmark
+  }
+  const dismissPreview = (): void => {
+    window.dispatchEvent(new Event('benchmark-preview-dismissed'))
+  }
   const [isVisible, setIsVisible] = useState(true)
 
   // Listen for dismiss events

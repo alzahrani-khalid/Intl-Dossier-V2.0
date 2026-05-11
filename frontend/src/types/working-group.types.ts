@@ -82,43 +82,6 @@ export type DecisionStatus =
   | 'withdrawn'
 
 // Labels for UI display
-const WORKING_GROUP_TYPE_LABELS: Record<WorkingGroupType, { en: string; ar: string }> = {
-  committee: { en: 'Committee', ar: 'لجنة' },
-  task_force: { en: 'Task Force', ar: 'فريق عمل' },
-  advisory_board: { en: 'Advisory Board', ar: 'مجلس استشاري' },
-  technical_group: { en: 'Technical Group', ar: 'مجموعة فنية' },
-  steering_committee: { en: 'Steering Committee', ar: 'لجنة توجيهية' },
-}
-
-const MEMBER_ROLE_LABELS: Record<MemberRole, { en: string; ar: string }> = {
-  chair: { en: 'Chair', ar: 'رئيس' },
-  co_chair: { en: 'Co-Chair', ar: 'رئيس مشارك' },
-  vice_chair: { en: 'Vice Chair', ar: 'نائب الرئيس' },
-  secretary: { en: 'Secretary', ar: 'أمين السر' },
-  member: { en: 'Member', ar: 'عضو' },
-  observer: { en: 'Observer', ar: 'مراقب' },
-  advisor: { en: 'Advisor', ar: 'مستشار' },
-  liaison: { en: 'Liaison', ar: 'ضابط اتصال' },
-}
-
-const DELIVERABLE_STATUS_LABELS: Record<DeliverableStatus, { en: string; ar: string }> = {
-  pending: { en: 'Pending', ar: 'قيد الانتظار' },
-  in_progress: { en: 'In Progress', ar: 'قيد التنفيذ' },
-  review: { en: 'Under Review', ar: 'قيد المراجعة' },
-  completed: { en: 'Completed', ar: 'مكتمل' },
-  cancelled: { en: 'Cancelled', ar: 'ملغى' },
-  deferred: { en: 'Deferred', ar: 'مؤجل' },
-}
-
-const MEETING_FREQUENCY_LABELS: Record<MeetingFrequency, { en: string; ar: string }> = {
-  weekly: { en: 'Weekly', ar: 'أسبوعي' },
-  biweekly: { en: 'Bi-weekly', ar: 'كل أسبوعين' },
-  monthly: { en: 'Monthly', ar: 'شهري' },
-  quarterly: { en: 'Quarterly', ar: 'ربع سنوي' },
-  biannually: { en: 'Bi-annually', ar: 'نصف سنوي' },
-  annually: { en: 'Annually', ar: 'سنوي' },
-  as_needed: { en: 'As Needed', ar: 'حسب الحاجة' },
-}
 
 // ============================================================================
 // BASE TYPES

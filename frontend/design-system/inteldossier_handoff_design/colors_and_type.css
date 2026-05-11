@@ -1,0 +1,176 @@
+/* ============================================================
+   IntelDossier — Foundational Tokens
+   ============================================================
+   Distilled from src/themes.jsx + src/app.css of the prototype.
+   IntelDossier ships FOUR design directions; this file documents
+   the BUREAU direction (default, light) as the canonical baseline.
+   Switch directions by setting the .dir-* class on <body> and
+   re-applying tokens via buildTokens() in themes.jsx.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap');
+
+:root {
+  /* ───────── Type families ─────────
+     IntelDossier maps three roles (display / body / mono) per
+     direction. Bureau (default) keeps things SaaS-clean: Inter
+     for everything Latin, JetBrains Mono for tabular data,
+     Tajawal whenever the document switches to RTL. */
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+  --font-arabic:  'Tajawal', system-ui, sans-serif;
+
+  /* ───────── Type scale (semantic) ─────────
+     Numbers are the base; direction overrides (.dir-chancery
+     etc.) re-style page-titles, card-titles, KPIs, labels. */
+  --t-page-title:   28px;  /* h1 — page header */
+  --t-card-title:   16px;  /* h2 — card header */
+  --t-kpi-value:    36px;  /* dashboard KPI numbers */
+  --t-body:         13px;  /* body, table cells, buttons */
+  --t-meta:         12px;  /* secondary lines */
+  --t-label:        10.5px;/* uppercase labels */
+  --t-mono-small:   11px;  /* tabular metrics, kbd */
+  --t-mono-tiny:    10px;  /* digest tags, ribbons */
+
+  --tracking-tight:    -0.02em;  /* h1, KPI */
+  --tracking-display:  -0.005em; /* card title, body emphasis */
+  --tracking-label:    0.1em;    /* uppercase labels */
+  --tracking-ribbon:   0.15em;   /* classification ribbons */
+
+  --line-h-tight: 1.1;
+  --line-h-snug:  1.35;
+  --line-h-body:  1.5;
+
+  /* ───────── Color: surfaces (BUREAU light) ───────── */
+  --bg:             #f7f6f4;  /* warm-neutral canvas */
+  --surface:        #ffffff;  /* card */
+  --surface-raised: #ffffff;  /* drawers, popovers */
+  --sidebar-bg:     #ffffff;  /* nav rail */
+  --sidebar-ink:    #2a2520;
+
+  /* ───────── Color: ink ─────────
+     Strict 3-step ink ramp. Never use raw black. */
+  --ink:        #1a1714;  /* primary text */
+  --ink-mute:   #6b6459;  /* secondary text, icons */
+  --ink-faint:  #9a9082;  /* labels, disabled */
+
+  /* ───────── Color: lines ─────────
+     `--line` = visible card edge. `--line-soft` = inner
+     dividers (table rows, chip backgrounds). */
+  --line:       #e8e4dc;
+  --line-soft:  #efece3;
+
+  /* ───────── Color: accent (hue-driven) ─────────
+     Bureau default hue = 32 (institutional terracotta).
+     `--accent` is fixed-luminance for buttons; `--accent-ink`
+     is mode-aware for text on neutral surfaces; `--accent-soft`
+     is the pale tint used as chip background. */
+  --accent:      oklch(58% 0.14 32);
+  --accent-ink:  oklch(42% 0.15 32);
+  --accent-soft: oklch(92% 0.05 32);
+  --accent-fg:   oklch(99% 0.01 32);
+
+  /* ───────── Color: semantic ─────────
+     Each role has paired solid + soft. Solids hit AA on white;
+     softs are chip/banner backgrounds. */
+  --danger:      oklch(52% 0.18 25);
+  --danger-soft: oklch(95% 0.04 25);
+  --warn:        oklch(62% 0.14 75);
+  --warn-soft:   oklch(95% 0.05 75);
+  --ok:          oklch(52% 0.12 155);
+  --ok-soft:     oklch(94% 0.04 155);
+  --info:        oklch(50% 0.14 230);
+  --info-soft:   oklch(94% 0.04 230);
+
+  /* ───────── Color: SLA palette ─────────
+     Used in donuts/legends. on-track = accent (in-tune with theme),
+     at-risk = accent + 55° hue shift, breached = always red. */
+  --sla-ok:        oklch(58% 0.14 32);
+  --sla-ok-soft:   oklch(94% 0.05 32);
+  --sla-risk:      oklch(60% 0.13 87);
+  --sla-risk-soft: oklch(95% 0.05 87);
+  /* Plan 41-09: darkened to 46%/0.18 for WCAG AA — see frontend/src/index.css
+     line 158 comment for byte-sync rationale. The handoff README treats this
+     file as the design-system source of truth; this divergence is intentional
+     and recorded in .planning/phases/41-dossier-drawer/41-09-SUMMARY.md. */
+  --sla-bad:       oklch(46% 0.18 25);
+  --sla-bad-soft:  oklch(95% 0.05 25);
+
+  /* ───────── Density (Comfortable) ─────────
+     Three density modes; tweak panel selects one. */
+  --row-h: 52px;
+  --pad:   20px;
+  --gap:   16px;
+
+  /* ───────── Shape (Bureau) ─────────
+     Bureau is the most rounded (8/12/16). Chancery flattens
+     everything to 2px. Situation uses 2/3/4. Ministerial 6/10/14. */
+  --radius-sm: 8px;
+  --radius:    12px;
+  --radius-lg: 16px;
+
+  /* ───────── Spacing scale ─────────
+     Used inline; no aliases. Multiples of 4. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ───────── Elevation ─────────
+     IntelDossier uses borders + soft shadows over heavy drop
+     shadows. Drawers get the largest. */
+  --shadow-sm: 0 1px 2px rgba(20,18,15,0.04);
+  --shadow:    0 4px 12px rgba(20,18,15,0.06);
+  --shadow-lg: -12px 0 40px rgba(20,18,15,0.15);
+
+  /* ───────── Motion ───────── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur:      220ms;
+}
+
+/* ============================================================
+   Semantic class shortcuts — useful when not driving via the
+   prototype's full app.css. Drop these onto bare elements to
+   get the IntelDossier voice.
+   ============================================================ */
+
+.t-page-title {
+  font-family: var(--font-display);
+  font-size: var(--t-page-title);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--line-h-tight);
+  margin: 0;
+}
+.t-card-title {
+  font-family: var(--font-display);
+  font-size: var(--t-card-title);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+}
+.t-body  { font-size: var(--t-body); line-height: var(--line-h-body); color: var(--ink); }
+.t-meta  { font-size: var(--t-meta); color: var(--ink-mute); }
+.t-label {
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.t-mono { font-family: var(--font-mono); }
+
+/* ============================================================
+   RTL fallback — Tajawal beats every other family when the
+   document is set to RTL. Fraunces, Space Grotesk and Plex
+   lack Arabic coverage; without this they would tofu.
+   ============================================================ */
+html[dir="rtl"], html[dir="rtl"] body, html[dir="rtl"] * {
+  font-family: var(--font-arabic);
+}

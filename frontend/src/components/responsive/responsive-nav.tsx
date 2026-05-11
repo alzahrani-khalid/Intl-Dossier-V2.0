@@ -8,7 +8,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet'
 import { Button } from '../ui/button'
 import { useResponsive } from '../../hooks/useResponsive'
-import { useDirection } from '../../hooks/useTheme'
+import { useDirection } from '@/hooks/useDirection'
 import { cn } from '../../lib/utils'
 import { Menu } from 'lucide-react'
 

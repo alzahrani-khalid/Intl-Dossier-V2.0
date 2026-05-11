@@ -30,7 +30,7 @@ export function useAuditLogs(params?: {
   from?: string
   to?: string
   enabled?: boolean
-}): ReturnType<typeof useQuery> {
+}) {
   const searchParams = new URLSearchParams()
   if (params?.page) searchParams.set('page', params.page.toString())
   if (params?.limit) searchParams.set('limit', params.limit.toString())
@@ -48,7 +48,7 @@ export function useAuditLogs(params?: {
   })
 }
 
-export function useAuditLogDetail(logId: string | null): ReturnType<typeof useQuery> {
+export function useAuditLogDetail(logId: string | null) {
   return useQuery({
     queryKey: logId ? auditLogKeys.detail(logId) : ['audit-logs', 'disabled'],
     queryFn: () => (logId ? getAuditLogDetails(logId) : Promise.resolve(null)),
@@ -56,7 +56,7 @@ export function useAuditLogDetail(logId: string | null): ReturnType<typeof useQu
   })
 }
 
-export function useAuditLogStats(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useAuditLogStats(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -71,7 +71,7 @@ export function useAuditLogStats(params?: Record<string, unknown>): ReturnType<t
   })
 }
 
-export function useExportAuditLogs(): ReturnType<typeof useMutation> {
+export function useExportAuditLogs() {
   return useMutation({
     mutationFn: (params: Record<string, unknown>) => exportAuditLogsApi(params),
   })
@@ -79,7 +79,7 @@ export function useExportAuditLogs(): ReturnType<typeof useMutation> {
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-export function useAuditLogDistinctValues(field?: string): ReturnType<typeof useQuery> {
+export function useAuditLogDistinctValues(field?: string) {
   return useQuery({
     queryKey: [...auditLogKeys.all, 'distinct-values', field],
     queryFn: () => Promise.resolve([]),
@@ -87,9 +87,7 @@ export function useAuditLogDistinctValues(field?: string): ReturnType<typeof use
   })
 }
 
-export function useAuditLogStatistics(
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
+export function useAuditLogStatistics(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: [...auditLogKeys.all, 'statistics', params],
     queryFn: () => Promise.resolve({}),
@@ -97,7 +95,7 @@ export function useAuditLogStatistics(
   })
 }
 
-export function useAuditLogExport(): ReturnType<typeof useMutation> {
+export function useAuditLogExport() {
   return useMutation({
     mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ url: '', success: true }),
   })

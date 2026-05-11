@@ -3,14 +3,12 @@
  * Custom hooks for managing granular field-level permissions
  */
 
-import { useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type {
   FieldPermission,
   FieldDefinition,
   ResolvedFieldPermission,
-  BulkPermissionCheck,
   FieldPermissionAudit,
   FieldPermissionEntityType,
   CreateFieldPermissionRequest,
@@ -18,7 +16,6 @@ import type {
   ListFieldPermissionsParams,
   ListFieldDefinitionsParams,
   GetAuditLogsParams,
-  FieldWithPermission,
 } from '@/types/field-permission.types'
 
 // Query Keys
@@ -74,28 +71,6 @@ async function fetchResolvedPermissions(
   entityId?: string,
 ): Promise<ResolvedFieldPermission[]> {
   const params = new URLSearchParams({ entity_type: entityType })
-  if (entityId) params.set('entity_id', entityId)
-
-  const { data, error } = await supabase.functions.invoke(
-    `field-permissions/check?${params.toString()}`,
-    {
-      method: 'GET',
-    },
-  )
-
-  if (error) throw error
-  return data.data
-}
-
-async function checkFieldPermissionsBulk(
-  entityType: FieldPermissionEntityType,
-  fieldNames: string[],
-  entityId?: string,
-): Promise<BulkPermissionCheck[]> {
-  const params = new URLSearchParams({
-    entity_type: entityType,
-    field_names: fieldNames.join(','),
-  })
   if (entityId) params.set('entity_id', entityId)
 
   const { data, error } = await supabase.functions.invoke(
@@ -205,23 +180,6 @@ export function useResolvedPermissions(
 }
 
 /**
- * Hook to check bulk field permissions
- */
-function useBulkPermissionCheck(
-  entityType: FieldPermissionEntityType,
-  fieldNames: string[],
-  entityId?: string,
-  enabled = true,
-) {
-  return useQuery({
-    queryKey: [...fieldPermissionKeys.resolvedForEntity(entityType, entityId), fieldNames],
-    queryFn: () => checkFieldPermissionsBulk(entityType, fieldNames, entityId),
-    staleTime: 5 * 60 * 1000,
-    enabled: enabled && fieldNames.length > 0,
-  })
-}
-
-/**
  * Hook to create a field permission
  */
 export function useCreateFieldPermission() {
@@ -273,138 +231,4 @@ export function useFieldPermissionAudit(params: GetAuditLogsParams = {}) {
     queryFn: () => fetchAuditLogs(params),
     staleTime: 2 * 60 * 1000, // 2 minutes
   })
-}
-
-/**
- * Hook to get fields with permissions merged (definitions + resolved permissions)
- */
-function useFieldsWithPermissions(entityType: FieldPermissionEntityType, entityId?: string) {
-  const { data: definitions, isLoading: definitionsLoading } = useFieldDefinitions({
-    entity_type: entityType,
-  })
-
-  const { data: resolvedPermissions, isLoading: permissionsLoading } = useResolvedPermissions(
-    entityType,
-    entityId,
-  )
-
-  const fieldsWithPermissions = useMemo<FieldWithPermission[]>(() => {
-    if (!definitions) return []
-
-    const permissionMap = new Map(resolvedPermissions?.map((p) => [p.field_name, p]) ?? [])
-
-    return definitions.map((def) => {
-      const resolved = permissionMap.get(def.field_name)
-      return {
-        ...def,
-        can_view: resolved?.can_view ?? def.default_visible,
-        can_edit: resolved?.can_edit ?? def.default_editable,
-        permission_source: resolved ? 'role' : 'default',
-      }
-    })
-  }, [definitions, resolvedPermissions])
-
-  return {
-    data: fieldsWithPermissions,
-    isLoading: definitionsLoading || permissionsLoading,
-  }
-}
-
-/**
- * Hook to check if user can view/edit a specific field
- */
-function useFieldPermission(
-  entityType: FieldPermissionEntityType,
-  fieldName: string,
-  entityId?: string,
-) {
-  const { data: permissions, isLoading } = useResolvedPermissions(entityType, entityId)
-
-  const permission = useMemo(() => {
-    if (!permissions) {
-      return { can_view: true, can_edit: true }
-    }
-
-    const found = permissions.find((p) => p.field_name === fieldName)
-    return found
-      ? { can_view: found.can_view, can_edit: found.can_edit }
-      : { can_view: true, can_edit: true }
-  }, [permissions, fieldName])
-
-  return {
-    ...permission,
-    isLoading,
-  }
-}
-
-/**
- * Hook to filter visible fields from a data object
- */
-function useVisibleFields<T extends Record<string, unknown>>(
-  data: T | null | undefined,
-  entityType: FieldPermissionEntityType,
-  entityId?: string,
-): { visibleData: Partial<T>; hiddenFields: string[]; isLoading: boolean } {
-  const { data: permissions, isLoading } = useResolvedPermissions(entityType, entityId)
-
-  return useMemo(() => {
-    if (!data || !permissions) {
-      return {
-        visibleData: data ?? {},
-        hiddenFields: [],
-        isLoading,
-      }
-    }
-
-    const permissionMap = new Map(permissions.map((p) => [p.field_name, p.can_view]))
-
-    const visibleData: Partial<T> = {}
-    const hiddenFields: string[] = []
-
-    for (const key of Object.keys(data)) {
-      const canView = permissionMap.get(key) ?? true
-      if (canView) {
-        visibleData[key as keyof T] = data[key as keyof T]
-      } else {
-        hiddenFields.push(key)
-      }
-    }
-
-    return { visibleData, hiddenFields, isLoading }
-  }, [data, permissions, isLoading])
-}
-
-/**
- * Hook to get editable fields from a data object
- */
-function useEditableFields(
-  entityType: FieldPermissionEntityType,
-  entityId?: string,
-): { editableFields: Set<string>; isLoading: boolean } {
-  const { data: permissions, isLoading } = useResolvedPermissions(entityType, entityId)
-
-  const editableFields = useMemo(() => {
-    if (!permissions) return new Set<string>()
-
-    return new Set(permissions.filter((p) => p.can_edit).map((p) => p.field_name))
-  }, [permissions])
-
-  return { editableFields, isLoading }
-}
-
-/**
- * Utility function to check field permission synchronously (for use in non-React contexts)
- * This requires the permissions to be pre-fetched
- */
-function checkFieldPermission(
-  permissions: ResolvedFieldPermission[] | undefined,
-  fieldName: string,
-  action: 'view' | 'edit',
-): boolean {
-  if (!permissions) return true
-
-  const permission = permissions.find((p) => p.field_name === fieldName)
-  if (!permission) return true
-
-  return action === 'view' ? permission.can_view : permission.can_edit
 }

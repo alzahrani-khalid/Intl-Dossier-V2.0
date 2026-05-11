@@ -13,6 +13,7 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "type-check": "tsc --noEmit",
+    "type-check:summary": "tsc --noEmit 2>&1 | grep -oE 'TS[0-9]+' | sort | uniq -c | sort -rn || true",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "migrate": "supabase migration up",

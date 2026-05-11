@@ -57,6 +57,18 @@ import type {
 } from '@/types/stakeholder-interaction.types'
 import { useDirection } from '@/hooks/useDirection'
 
+// Stub useStakeholderInteractionMutations is internally still a stub returning
+// `Promise.resolve({ success: true })` from each mutation; this shim narrows the
+// return shape to the typed contract until the real implementation lands. The
+// other shim (StakeholderTimelineShim) became redundant in 47-08 once the
+// underlying useStakeholderTimeline hook returns the rich state object.
+interface StakeholderInteractionMutationsShim {
+  createInteraction: (req: CreateInteractionRequest) => Promise<unknown>
+  isCreating: boolean
+  createAnnotation: (req: CreateAnnotationRequest) => Promise<unknown>
+  isAnnotating: boolean
+}
+
 /**
  * Loading skeleton for timeline
  */
@@ -133,7 +145,7 @@ function StatsOverviewCard({
 }) {
   const { t } = useTranslation('stakeholder-interactions')
   const { isRTL } = useDirection()
-if (isLoading) {
+  if (isLoading) {
     return (
       <Card className={className}>
         <CardContent className="pt-6">
@@ -235,6 +247,13 @@ export function StakeholderInteractionTimeline({
     useState<StakeholderTimelineEvent | null>(null)
 
   // Hooks
+  // Stub useStakeholderTimeline takes (stakeholderId: string); the rich options
+  // shape is documented intent for the eventual hook (owned by 47-07). Discard
+  // the rest of the options for now.
+  void stakeholderType
+  void initialFilters
+  void itemsPerPage
+  void showStats
   const {
     events,
     isLoading,
@@ -247,16 +266,12 @@ export function StakeholderInteractionTimeline({
     setFilters,
     stats,
     isLoadingStats,
-  } = useStakeholderTimeline({
-    stakeholderType,
-    stakeholderId,
-    initialFilters,
-    itemsPerPage,
-    enableStats: showStats,
-  })
+  } = useStakeholderTimeline(stakeholderId)
 
+  // Stub useStakeholderInteractionMutations takes 0 args; the (stakeholderType,
+  // stakeholderId) intent is preserved as void above for clarity.
   const { createInteraction, isCreating, createAnnotation, isAnnotating } =
-    useStakeholderInteractionMutations(stakeholderType, stakeholderId)
+    useStakeholderInteractionMutations() as unknown as StakeholderInteractionMutationsShim
 
   // Handlers
   const handleSearch = useCallback(
@@ -413,7 +428,7 @@ export function StakeholderInteractionTimeline({
             <StakeholderTimelineFilters
               filters={filters}
               onFiltersChange={handleFiltersChange}
-              availableEventTypes={getAvailableInteractionTypes(stakeholderType)}
+              availableEventTypes={getAvailableInteractionTypes()}
               className="mb-6"
             />
           </m.div>

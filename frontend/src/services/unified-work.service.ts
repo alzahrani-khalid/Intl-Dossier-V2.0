@@ -1,7 +1,6 @@
 // Feature 032: Unified Work Management Service
 import { supabase } from '@/lib/supabase'
 import type {
-  UnifiedWorkItem,
   UserWorkSummary,
   UserProductivityMetrics,
   TeamMemberWorkload,
@@ -148,79 +147,4 @@ export async function fetchTeamWorkload(): Promise<TeamMemberWorkload[]> {
   const data = await response.json()
   // Returns empty array for non-managers (is_manager: false)
   return data.team_members || []
-}
-
-/**
- * Direct RPC call for work items (alternative to Edge Function)
- */
-async function fetchWorkItemsRPC(
-  filters: WorkItemFilters = {},
-  cursor?: WorkItemCursor,
-  limit = 50,
-  sortBy: WorkItemSortBy = 'deadline',
-  sortOrder: SortOrder = 'asc',
-): Promise<UnifiedWorkItem[]> {
-  const { data, error } = await supabase.rpc('get_unified_work_items', {
-    p_sources: filters.sources,
-    p_tracking_types: filters.trackingTypes,
-    p_statuses: filters.statuses,
-    p_priorities: filters.priorities,
-    p_is_overdue: filters.isOverdue,
-    p_dossier_id: filters.dossierId,
-    p_search_query: filters.searchQuery,
-    p_cursor_deadline: cursor?.deadline,
-    p_cursor_id: cursor?.id,
-    p_limit: limit,
-    p_sort_by: sortBy,
-    p_sort_order: sortOrder,
-  })
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return data || []
-}
-
-/**
- * Direct RPC call for work summary
- */
-async function fetchUserWorkSummaryRPC(): Promise<UserWorkSummary | null> {
-  const { data, error } = await supabase.rpc('get_user_work_summary')
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return data?.[0] || null
-}
-
-/**
- * Direct RPC call for productivity metrics
- */
-async function fetchUserProductivityMetricsRPC(): Promise<UserProductivityMetrics | null> {
-  const { data, error } = await supabase.rpc('get_user_productivity_metrics')
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return data?.[0] || null
-}
-
-/**
- * Direct RPC call for team workload
- */
-async function fetchTeamWorkloadRPC(): Promise<TeamMemberWorkload[]> {
-  const { data, error } = await supabase.rpc('get_team_workload')
-
-  if (error) {
-    // Handle unauthorized access gracefully
-    if (error.message.includes('Unauthorized')) {
-      return []
-    }
-    throw new Error(error.message)
-  }
-
-  return data || []
 }

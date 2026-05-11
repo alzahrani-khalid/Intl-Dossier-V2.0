@@ -100,31 +100,6 @@ export interface ErrorContext {
 // API ERROR TYPES
 // =============================================================================
 
-/**
- * Structured API error response
- */
-interface ApiActionableError {
-  /** HTTP status code */
-  status: number
-  /** Error code for categorization */
-  code: string
-  /** Human-readable message */
-  message: string
-  /** Detailed errors per field */
-  fieldErrors?: Record<
-    string,
-    {
-      message: string
-      suggestion?: string
-      autoFix?: string
-    }
-  >
-  /** Suggested retry delay in ms */
-  retryAfter?: number
-  /** Whether the error is recoverable */
-  recoverable?: boolean
-}
-
 // =============================================================================
 // FIELD HIGHLIGHT
 // =============================================================================
@@ -146,11 +121,6 @@ export interface FieldHighlight {
 // =============================================================================
 // ERROR REGISTRY
 // =============================================================================
-
-/**
- * Registry of error codes to actionable error generators
- */
-type ErrorRegistry = Record<string, (context: ErrorContext) => ActionableError>
 
 // =============================================================================
 // HOOK RETURN TYPES

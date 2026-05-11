@@ -46,6 +46,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useOnboardingChecklist } from '@/hooks/useOnboardingChecklist'
 import type { OnboardingChecklistItem, OnboardingChecklistProps } from '@/types/onboarding.types'
+
 import { useDirection } from '@/hooks/useDirection'
 
 // Icon mapping for checklist items
@@ -327,7 +328,7 @@ export function OnboardingChecklist({
   const { t } = useTranslation('onboarding')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
-const {
+  const {
     checklist,
     isLoading,
     completedCount,
@@ -396,9 +397,7 @@ const {
   // If dismissed, show resume option
   if (isDismissed) {
     return (
-      <div
-        className={cn('flex items-center justify-center p-4', className)}
-      >
+      <div className={cn('flex items-center justify-center p-4', className)}>
         <Button variant="outline" onClick={resumeOnboarding} className="min-h-11">
           <RotateCcw className={cn('w-4 h-4', isRTL ? 'ms-2' : 'me-2')} />
           {t('checklist.resume')}

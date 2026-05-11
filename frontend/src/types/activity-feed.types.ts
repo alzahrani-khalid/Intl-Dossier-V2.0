@@ -144,20 +144,9 @@ export type DateRangePreset =
   | 'last_month'
   | 'custom'
 
-interface DateRangeFilter {
-  preset: DateRangePreset
-  from?: string
-  to?: string
-}
-
 // =============================================
 // PAGINATION
 // =============================================
-
-interface ActivityPagination {
-  cursor?: string
-  limit?: number
-}
 
 // =============================================
 // API RESPONSE
@@ -282,25 +271,6 @@ export interface UseActivityPreferencesReturn {
 // CONFIGURATION
 // =============================================
 
-interface ActivityActionConfig {
-  type: ActivityActionType
-  icon: string // Lucide icon name
-  color: string // Tailwind color class
-  bgColor: string // Tailwind bg color class
-  label_en: string
-  label_ar: string
-}
-
-interface ActivityEntityConfig {
-  type: ActivityEntityType
-  icon: string // Lucide icon name
-  color: string // Tailwind color class
-  label_en: string
-  label_ar: string
-  plural_en: string
-  plural_ar: string
-}
-
 // =============================================
 // COMPONENT PROPS
 // =============================================
@@ -325,23 +295,5 @@ export interface ActivityFiltersProps {
   showDateRange?: boolean
   showUserFilter?: boolean
   showSearch?: boolean
-  className?: string
-}
-
-interface ActivityItemProps {
-  activity: ActivityItem
-  compact?: boolean
-  showEntityType?: boolean
-  onClick?: () => void
-  className?: string
-}
-
-interface FollowButtonProps {
-  entityType: ActivityEntityType
-  entityId: string
-  entityNameEn: string
-  entityNameAr?: string
-  size?: 'sm' | 'md' | 'lg'
-  variant?: 'default' | 'outline' | 'ghost'
   className?: string
 }

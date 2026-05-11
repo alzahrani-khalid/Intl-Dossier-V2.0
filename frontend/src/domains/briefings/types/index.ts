@@ -9,6 +9,8 @@ export interface BriefingPackJob {
   progress: number
   created_at: string
   completed_at?: string
+  file_url?: string
+  error_message?: string
 }
 
 export interface CalendarEvent {

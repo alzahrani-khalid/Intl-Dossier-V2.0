@@ -183,7 +183,10 @@ function IntakeDialog({
   const [requestType, setRequestType] = React.useState<string>('engagement')
   const [urgency, setUrgency] = React.useState<string>('medium')
 
-  const createTicket = useCreateTicket()
+  const createTicket = useCreateTicket() as unknown as {
+    mutateAsync: (params: Record<string, unknown>) => Promise<{ id: string } | undefined>
+    isPending: boolean
+  }
   const createLinks = useCreateWorkItemDossierLinks()
 
   const isSubmitting = createTicket.isPending || createLinks.isPending
@@ -1094,7 +1097,6 @@ export function AddToDossierDialogs({
   onClose,
   dossierContext,
 }: AddToDossierDialogsProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const commonProps = {
     dossier,

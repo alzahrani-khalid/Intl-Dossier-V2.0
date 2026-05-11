@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/authStore'
 import { switchLanguage } from '@/i18n'
-import { useTheme } from '@/hooks/useTheme'
+import { useMode } from '@/design-system/hooks/useMode'
 import {
   SettingsLayout,
   SettingsSectionWrapper,
@@ -45,8 +45,11 @@ const settingsSchema = z.object({
 
   // Appearance
   color_mode: z.enum(['light', 'dark', 'system']),
-  theme: z.enum(['canvas', 'ocean', 'sunset', 'azure', 'lavender']),
-  display_density: z.enum(['compact', 'comfortable', 'spacious']),
+  theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau']),
+  // WR-07: 42-03 R-03 renamed the third density value from 'spacious' to 'dense'.
+  // The DesignProvider migration shim only reads localStorage, so persisting
+  // 'spacious' to the DB would survive the migration forever.
+  display_density: z.enum(['compact', 'comfortable', 'dense']),
 
   // Notifications
   notifications_push: z.boolean(),
@@ -80,7 +83,7 @@ type SettingsFormValues = z.infer<typeof settingsSchema>
 export function SettingsPage() {
   const { t } = useTranslation('settings')
   const { user } = useAuthStore()
-  const { setColorMode } = useTheme()
+  const { setMode: setColorMode } = useMode()
   const queryClient = useQueryClient()
 
   // Active section state
@@ -123,7 +126,7 @@ export function SettingsPage() {
 
         // Appearance
         color_mode: data.color_mode || 'system',
-        theme: data.theme || 'canvas',
+        theme: data.theme || 'chancery',
         display_density: data.display_density || 'comfortable',
 
         // Notifications
@@ -223,10 +226,17 @@ export function SettingsPage() {
         await switchLanguage(values.language_preference)
       }
 
-      // Apply color mode change — pass 'system' directly so ThemeProvider
-      // can track OS preference changes, instead of resolving it here.
+      // Apply color mode change — DesignProvider tracks only 'light' | 'dark',
+      // so resolve 'system' against the user's OS preference here.
       if (values.color_mode !== settings?.color_mode) {
-        setColorMode(values.color_mode as 'light' | 'dark' | 'system')
+        const resolved: 'light' | 'dark' =
+          values.color_mode === 'system'
+            ? typeof window !== 'undefined' &&
+              window.matchMedia?.('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+            : values.color_mode
+        setColorMode(resolved)
       }
 
       // Apply accessibility settings
@@ -238,8 +248,12 @@ export function SettingsPage() {
 
       toast.success(t('savedSuccessfully'))
     },
-    onError: () => {
-      toast.error(t('saveError'))
+    onError: (error: unknown) => {
+      const detail = error instanceof Error ? error.message : null
+      console.error(error)
+      toast.error(t('saveError'), {
+        description: detail ?? undefined,
+      })
     },
   })
 
@@ -276,6 +290,7 @@ export function SettingsPage() {
     <SettingsLayout
       activeSection={activeSection}
       onSectionChange={handleSectionChange}
+      isLoading={isLoading}
       hasChanges={hasChanges}
       isSaving={saveMutation.isPending}
       onSave={handleSave}

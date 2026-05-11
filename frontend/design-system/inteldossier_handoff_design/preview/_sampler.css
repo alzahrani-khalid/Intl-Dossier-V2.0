@@ -1,0 +1,15 @@
+/* Direction-sampler card — wider mini-brand strip showing
+   each direction's signature title, accent, button, chip,
+   shape and divider all in one read. */
+.sampler { padding: 22px 24px; display:flex; flex-direction:column; gap:14px; }
+.sampler-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; }
+.sampler-tag {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: #9a9082; font-weight: 600;
+  font-family: Inter, sans-serif;
+}
+.sampler-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.sampler-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: rgba(0,0,0,0.5);
+  letter-spacing: 0;
+}

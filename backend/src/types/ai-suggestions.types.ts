@@ -36,31 +36,6 @@ export interface AcceptSuggestionRequest {
   notes?: string // Optional user notes when accepting
 }
 
-// AI configuration
-interface AIConfig {
-  // AnythingLLM API configuration
-  api_url: string
-  api_key: string
-  workspace_slug: string
-
-  // Embedding configuration
-  embedding_model: string // e.g., 'text-embedding-ada-002'
-  embedding_dimensions: number // e.g., 1536
-
-  // Chat configuration
-  chat_model?: string // e.g., 'gpt-3.5-turbo'
-
-  // Suggestion parameters
-  max_suggestions: number
-  min_confidence_threshold: number
-
-  // Rate limiting
-  rate_limit_per_minute: number
-
-  // Timeout
-  timeout_ms: number
-}
-
 // Vector embedding
 export interface VectorEmbedding {
   intake_id?: string
@@ -72,40 +47,6 @@ export interface VectorEmbedding {
   updated_at: string
 }
 
-// Intake embedding
-interface IntakeEmbedding extends VectorEmbedding {
-  intake_id: string
-}
-
-// Entity embedding
-interface EntityEmbedding extends VectorEmbedding {
-  entity_type: EntityType
-  entity_id: string
-  metadata: {
-    name: string
-    description?: string
-    classification_level?: number
-    last_linked_at?: string
-    org_id: string
-  }
-}
-
-// Vector similarity search result
-interface VectorSearchResult {
-  entity_type: EntityType
-  entity_id: string
-  entity_name: string
-  entity_description?: string
-  entity_updated_at?: string
-  similarity_score: number // Cosine similarity (0-1)
-  metadata?: {
-    name?: string
-    description?: string
-    classification_level?: number
-    last_linked_at?: string
-  }
-}
-
 // AI suggestion generation result
 export interface SuggestionGenerationResult {
   intake_id: string
@@ -114,49 +55,3 @@ export interface SuggestionGenerationResult {
   ai_service_available: boolean
 }
 
-// AnythingLLM API request
-interface AnythingLLMRequest {
-  message: string
-  mode: 'chat' | 'query'
-  workspace_slug: string
-}
-
-// AnythingLLM API response
-interface AnythingLLMResponse {
-  success: boolean
-  response?: string
-  error?: string
-}
-
-// Embedding generation request
-interface EmbeddingRequest {
-  text: string
-  model?: string
-}
-
-// Embedding generation response
-interface EmbeddingResponse {
-  embedding: number[]
-  model: string
-  dimensions: number
-  data?: Array<{
-    embedding: number[]
-    index: number
-  }>
-}
-
-// Ranked suggestion with combined scoring
-interface RankedSuggestion {
-  entity_type: EntityType
-  entity_id: string
-  entity_name: string
-  entity_description?: string
-  entity_updated_at?: string
-  suggested_link_type: LinkType
-  confidence_score: number // AI confidence (0-1)
-  recency_score: number // Recency score (0-1)
-  alphabetical_score: number // Alphabetical score (0-1)
-  combined_score: number // Weighted combination
-  rank: number // Final ranking (1, 2, 3...)
-  reasoning: string // AI-generated explanation
-}

@@ -130,7 +130,6 @@ import { Route as ProtectedDossiersPersonsIndexRouteImport } from './routes/_pro
 import { Route as ProtectedDossiersOrganizationsIndexRouteImport } from './routes/_protected/dossiers/organizations/index'
 import { Route as ProtectedDossiersForumsIndexRouteImport } from './routes/_protected/dossiers/forums/index'
 import { Route as ProtectedDossiersEngagementsIndexRouteImport } from './routes/_protected/dossiers/engagements/index'
-import { Route as ProtectedDossiersElectedOfficialsCreateRouteImport } from './routes/_protected/dossiers/elected-officials/create'
 import { Route as ProtectedDossiersElectedOfficialsIndexRouteImport } from './routes/_protected/dossiers/elected-officials/index'
 import { Route as ProtectedDossiersCountriesIndexRouteImport } from './routes/_protected/dossiers/countries/index'
 import { Route as ProtectedSettingsCalendarCallbackRouteImport } from './routes/_protected/settings/calendar/callback'
@@ -156,6 +155,7 @@ import { Route as ProtectedDossiersForumsCreateRouteImport } from './routes/_pro
 import { Route as ProtectedDossiersForumsIdRouteImport } from './routes/_protected/dossiers/forums/$id'
 import { Route as ProtectedDossiersEngagementsCreateRouteImport } from './routes/_protected/dossiers/engagements/create'
 import { Route as ProtectedDossiersEngagementsIdRouteImport } from './routes/_protected/dossiers/engagements/$id'
+import { Route as ProtectedDossiersElectedOfficialsCreateRouteImport } from './routes/_protected/dossiers/elected-officials/create'
 import { Route as ProtectedDossiersElectedOfficialsIdRouteImport } from './routes/_protected/dossiers/elected-officials/$id'
 import { Route as ProtectedDossiersCountriesCreateRouteImport } from './routes/_protected/dossiers/countries/create'
 import { Route as ProtectedDossiersCountriesIdRouteImport } from './routes/_protected/dossiers/countries/$id'
@@ -864,12 +864,6 @@ const ProtectedDossiersEngagementsIndexRoute =
     path: '/dossiers/engagements/',
     getParentRoute: () => ProtectedRoute,
   } as any)
-const ProtectedDossiersElectedOfficialsCreateRoute =
-  ProtectedDossiersElectedOfficialsCreateRouteImport.update({
-    id: '/dossiers/elected-officials/create',
-    path: '/dossiers/elected-officials/create',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedDossiersElectedOfficialsIndexRoute =
   ProtectedDossiersElectedOfficialsIndexRouteImport.update({
     id: '/dossiers/elected-officials/',
@@ -1018,6 +1012,12 @@ const ProtectedDossiersEngagementsIdRoute =
   ProtectedDossiersEngagementsIdRouteImport.update({
     id: '/dossiers/engagements/$id',
     path: '/dossiers/engagements/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersElectedOfficialsCreateRoute =
+  ProtectedDossiersElectedOfficialsCreateRouteImport.update({
+    id: '/dossiers/elected-officials/create',
+    path: '/dossiers/elected-officials/create',
     getParentRoute: () => ProtectedRoute,
   } as any)
 const ProtectedDossiersElectedOfficialsIdRoute =
@@ -1685,11 +1685,11 @@ export interface FileRoutesByTo {
   '/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
   '/dossiers/$id/overview': typeof ProtectedDossiersIdOverviewRoute
   '/dossiers/countries/create': typeof ProtectedDossiersCountriesCreateRoute
+  '/dossiers/elected-officials/create': typeof ProtectedDossiersElectedOfficialsCreateRoute
   '/dossiers/engagements/$id': typeof ProtectedDossiersEngagementsIdRoute
   '/dossiers/engagements/create': typeof ProtectedDossiersEngagementsCreateRoute
   '/dossiers/forums/create': typeof ProtectedDossiersForumsCreateRoute
   '/dossiers/organizations/create': typeof ProtectedDossiersOrganizationsCreateRoute
-  '/dossiers/elected-officials/create': typeof ProtectedDossiersElectedOfficialsCreateRoute
   '/dossiers/persons/create': typeof ProtectedDossiersPersonsCreateRoute
   '/dossiers/topics/create': typeof ProtectedDossiersTopicsCreateRoute
   '/dossiers/working_groups/create': typeof ProtectedDossiersWorking_groupsCreateRoute
@@ -3559,13 +3559,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersTopicsIdRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/dossiers/elected-officials/create': {
-      id: '/_protected/dossiers/elected-officials/create'
-      path: '/dossiers/elected-officials/create'
-      fullPath: '/dossiers/elected-officials/create'
-      preLoaderRoute: typeof ProtectedDossiersElectedOfficialsCreateRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/dossiers/persons/create': {
       id: '/_protected/dossiers/persons/create'
       path: '/dossiers/persons/create'
@@ -3620,6 +3613,13 @@ declare module '@tanstack/react-router' {
       path: '/dossiers/engagements/$id'
       fullPath: '/dossiers/engagements/$id'
       preLoaderRoute: typeof ProtectedDossiersEngagementsIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dossiers/elected-officials/create': {
+      id: '/_protected/dossiers/elected-officials/create'
+      path: '/dossiers/elected-officials/create'
+      fullPath: '/dossiers/elected-officials/create'
+      preLoaderRoute: typeof ProtectedDossiersElectedOfficialsCreateRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/elected-officials/$id': {

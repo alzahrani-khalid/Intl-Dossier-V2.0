@@ -10,12 +10,16 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ## Current State
 
-**Shipped:** v5.0 Dossier Creation UX (2026-04-18) — 7 phases, 28 plans, 45/45 requirements satisfied, audit PASSED.
+**Shipped:** v6.0 Design System Adoption (2026-05-06) — 11 phases, 121 plans, 52/52 requirements satisfied (25 fully verified + 27 covered by SUMMARY frontmatter and Phase 43 cross-phase QA sweep), audit status `tech_debt` (no critical blockers).
+
+**Shipped:** v6.1 Hardening & Reconciliation (2026-05-08) — Phases 44-46 complete. Closed v6.0 documentation/toolchain drift, schema and staging seed gaps, and deferred visual-regression baselines for Phases 38, 40, and 41.
 
 <details>
 <summary>Shipped milestones</summary>
 
-- v5.0 Dossier Creation UX (2026-04-18): 8 per-type creation wizards, unified `CreateDossierHub`, legacy wizard removed, person-native identity refactor — see `.planning/milestones/v5.0-ROADMAP.md` and `.planning/v5.0-MILESTONE-AUDIT.md`
+- v6.1 Hardening & Reconciliation (2026-05-08): v6.0 verification backfill, archive sync, size-limit CI gate repair, WR-02..WR-06 closure, Storybook deferral ADR, intelligence digest schema/seed closure, VIP ISO projection, and visual baseline regeneration for Phases 38/40/41
+- v6.0 Design System Adoption (2026-05-06): OKLCH token engine (4 directions × mode × hue × density), Tweaks drawer, self-hosted typography stack, new shell chrome, signature visual primitives, verbatim dashboard, kanban + calendar reskin, 7 list pages, 720px dossier drawer, 5 remaining pages reskinned, hard cross-phase QA gate (axe + responsive + keyboard + focus-outline) — see `.planning/milestones/v6.0-ROADMAP.md` and `.planning/milestones/v6.0-MILESTONE-AUDIT.md`
+- v5.0 Dossier Creation UX (2026-04-18): 8 per-type creation wizards, unified `CreateDossierHub`, legacy wizard removed, person-native identity refactor
 - v4.1 Post-Launch Fixes (2026-04-12): 87-finding audit, semantic colors, PageHeader unification, 100% Arabic parity
 - v4.0 Live Operations (2026-04-09): Production deployment, notifications (in-app + email + push), seed data, E2E testing
 - v3.0 Connected Workflow (2026-04-06): Hub-and-spoke architecture, engagement lifecycle, Operations Hub, DossierShell
@@ -23,11 +27,50 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-**Tech debt carried from v5.0:** `DossierTypeSelector` orphan cleanup, Playwright E2E runtime (CI env), bilingual UAT sweeps — see `.planning/v5.0-MILESTONE-AUDIT.md` §6.1. Prior tech debt in `.planning/milestones/v4.0-MILESTONE-AUDIT.md` (NOTIF-04 digest scheduler, TEST-05/10/11 E2E coverage, corporate infra items).
+**v6.0 debt closure status:** Phase 44 closed missing per-phase VERIFICATION.md backfill, v6.0 archive sync, size-limit chunk-glob drift, Phase 43 WR-02..WR-06 anti-patterns, and Plan 33-08 Storybook deferral via ADR-006. Phase 45 closed deferred schema/seed work: intelligence digest table + seed rows, VIP person ISO projection, and staging seed-dependent drawer specs. Phase 46 closed visual-regression baselines for Phases 38/40/41 with committed PNGs, human review, and focused CI replay. v6.1 artifacts are archived under `.planning/milestones/v6.1-*`.
 
-## Next Milestone Goals
+## Current Milestone: v6.2 Type-Check, Lint & Bundle Reset
 
-_TBD — run `/gsd-new-milestone` to begin the next milestone cycle._
+**Goal:** Restore code-quality gates and bundle budget on `main` before v7.0 Intelligence Engine work begins.
+
+**Target features:**
+
+- Type-check zero across frontend (1580 TS errors) + backend (498 TS errors); type-check restored as blocking CI gate
+- Lint zero across frontend (52 errors + 671 warnings) + backend (3 errors); Aceternity references purged from `frontend/eslint.config.js`; `no-restricted-imports` aligned with CLAUDE.md primitive cascade
+- Bundle budget reset (Total JS 2.42 MB gzip → ≤500 KB initial-route proposal); route-split heavy chunks; size-limit gate restored as PR-blocking with a real ceiling
+
+**Key context:**
+
+- All numbers measured fresh on `main` 2026-05-08 — see `.planning/notes/v6.2-rationale.md`
+- Open research question Q1 (`.planning/research/questions.md`): are TS/lint failures auto-suppressed in CI today? — must be answered before Phase 47 plan-phase
+- v7.0 Intelligence Engine deferred — seed trigger updated to "v6.2 ships"
+- Phase numbering continues from v6.1 (last phase 46) → v6.2 starts at phase 47
+
+## Last Milestone: v6.1 Hardening & Reconciliation
+
+**Completed in Phase 44:**
+
+- Backfill VERIFICATION.md for 6 phases (33, 34, 36, 37, 39, 40)
+- Repair `size-limit` chunk-glob configuration so current Vite output budgets are enforced again; the historical 815 KB target remains aspirational
+- Close Phase 43 anti-patterns (WR-02..WR-06): `aria-label` shadows, dead `??` branches, invalid `hsl(var(--*))` wrap, redundant Checkbox label, `t('calendar.form.*')` namespace mismatch
+- Sync REQUIREMENTS.md `[x]` checkboxes and ROADMAP progress table with SUMMARY frontmatter
+- Formalize Plan 33-08 Storybook deferral through ADR-006 with replacement coverage and revisit trigger
+
+**Completed in Phase 45:**
+
+- Created `intelligence_digest` schema/RLS/source-controlled seed rows and `useIntelligenceDigest`
+- Added VIP person ISO projection and country glyph rendering in `VipVisits`
+- Applied Phase 45 migrations to staging project `zkrcjzdemdmwhearhfgg` through MCP and verified seeded rows with MCP SQL
+- Passed Phase 41 seed-dependent dossier drawer Playwright specs
+
+**Completed in Phase 46:**
+
+- Regenerated 8 dashboard widget baselines, 14 list-page baselines, and 2 dossier-drawer baselines
+- Completed the 24-row human review log in `.planning/milestones/v6.1-phases/46-visual-baseline-regeneration/46-VALIDATION.md`
+- Added focused Phase 46 visual regression replay to `.github/workflows/e2e.yml`
+- Closed VIS-01..04 in REQUIREMENTS, ROADMAP, MILESTONES, and the v6.0 audit
+
+**Archive:** `.planning/milestones/v6.1-ROADMAP.md`, `.planning/milestones/v6.1-REQUIREMENTS.md`, `.planning/milestones/v6.1-phases/`
 
 ## Requirements
 
@@ -81,9 +124,33 @@ _TBD — run `/gsd-new-milestone` to begin the next milestone cycle._
 - ✓ Unified `CreateDossierHub` at `/dossiers/create` + legacy wizard removal — v5.0 Phase 31
 - ✓ Person-native identity fields (honorific, split names, nationality, DOB, gender) — v5.0 Phase 32
 
+- ✓ OKLCH token engine: 4 directions × light/dark × accent hue × density, Tailwind v4 `@theme` + HeroUI v3 semantic bridge — v6.0 Phase 33 (TOKEN-01..06)
+- ✓ Tweaks drawer with `localStorage` persistence + `/themes` route removal — v6.0 Phase 34 (THEME-01..04)
+- ✓ Per-direction self-hosted typography stack with Tajawal RTL cascade, zero Google Fonts CDN — v6.0 Phase 35 (TYPO-01..04)
+- ✓ 256px sidebar + 56px topbar + direction-specific classification element + responsive overlay-drawer + GASTAT brand mark — v6.0 Phase 36 (SHELL-01..05)
+- ✓ Signature visual primitives: GlobeLoader / GlobeSpinner / FullscreenLoader / DossierGlyph (24 flags) / Sparkline / Donut — v6.0 Phase 37 (VIZ-01..05)
+- ✓ Dashboard rebuilt pixel-exact to reference, 8 widgets wired to real domain hooks, zero mock data — v6.0 Phase 38 (DASH-01..09)
+- ✓ Kanban kcards (overdue inline-start border, done opacity) + 7×5 calendar grid with token-driven event pills — v6.0 Phase 39 (BOARD-01..03)
+- ✓ Seven list pages on shared `ListPageShell` + `GenericListPage` with RTL chevron, filter pills, GlobeSpinner load-more — v6.0 Phase 40 (LIST-01..04)
+- ✓ 720px dossier drawer with focus trap + ESC + RTL slide flip + ≤640px full-screen — v6.0 Phase 41 (DRAWER-01..03)
+- ✓ Briefs / After-actions / Tasks / Activity / Settings pages reskinned to handoff anatomy with WCAG AA bidirectional — v6.0 Phase 42 (PAGE-01..05)
+- ✓ Hard cross-phase QA gate: zero `eslint-plugin-rtl-friendly` violations, axe-core 30/30, responsive 60/60, keyboard 26 + 4 acknowledged-skip, focus-outline 8/8, `docs/rtl-icons.md` — v6.0 Phase 43 (QA-01..04)
+- ✓ v6.1 documentation/toolchain reconciliation: v6.0 verification backfill, archive sync, size-limit CI gate repair, WR-02..WR-06 closure, Storybook deferral ADR — v6.1 Phase 44 (DOC-01..08, TOOL-01..03, LINT-01..05, STORY-01)
+- ✓ v6.1 schema and seed closure: intelligence_digest, dashboard digest hook, VIP ISO join, staging MCP apply, and seed-dependent drawer specs — v6.1 Phase 45 (DATA-01..04)
+- ✓ v6.1 visual baseline regeneration: Phase 38 widget baselines, Phase 40 EN/AR list-page baselines, Phase 41 drawer baselines, human review, and focused CI replay — v6.1 Phase 46 (VIS-01..04)
+
 ### Active
 
-_None — v5.0 shipped 2026-04-18. Run `/gsd-new-milestone` to define the next milestone._
+- ⏳ Frontend `pnpm type-check` exits 0 with no `// @ts-ignore` / `// @ts-expect-error` regressions added — v6.2 Phase 47
+- ⏳ Backend `pnpm type-check` exits 0 with no suppression escape hatches added — v6.2 Phase 47
+- ⏳ Type-check job restored as blocking CI gate on PRs and `main` builds — v6.2 Phase 47
+- ⏳ Frontend `pnpm lint` exits 0 (52 errors + 671 warnings → 0); `unused-imports` warnings either fixed or rule downgraded with rationale — v6.2 Phase 48
+- ⏳ Backend `pnpm lint` exits 0 (3 errors + 1 warning → 0) — v6.2 Phase 48
+- ⏳ `frontend/eslint.config.js` contains zero references to Aceternity (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` aligned with CLAUDE.md primitive cascade — v6.2 Phase 48
+- ⏳ Lint job restored as blocking CI gate on PRs and `main` builds — v6.2 Phase 48
+- ⏳ `frontend/.size-limit.json` Total JS ceiling lowered from 2.43 MB to a real budget (≤500 KB initial-route proposal) and PR-blocking — v6.2 Phase 49
+- ⏳ Heavy chunks route-split via `React.lazy()` so the initial route loads under the new budget — v6.2 Phase 49
+- ⏳ Vendor super-chunk audited and documented; rationale for any chunk > 100 KB recorded in `.size-limit.json` comments or sibling note — v6.2 Phase 49
 
 ### Out of Scope
 
@@ -101,7 +168,7 @@ _None — v5.0 shipped 2026-04-18. Run `/gsd-new-milestone` to define the next m
 - **Security:** Supabase-first auth with RBAC hierarchy, Zod validation on all routes, RLS on all tables, CSP hardened
 - **RTL:** useDirection() hook, LtrIsolate wrapper, eslint-plugin-rtl-friendly, zero physical CSS properties
 - **Responsive:** Mobile-first across all pages, 44px touch targets, card view fallbacks, RelationshipSidebar → BottomSheet on mobile
-- **Known tech debt:** See milestone audit files in `.planning/milestones/` (v2.0, v3.0, v4.0)
+- **Known tech debt:** See milestone audit files in `.planning/milestones/` and acknowledged open artifacts in `.planning/STATE.md` Deferred Items
 
 ## Constraints
 
@@ -113,30 +180,40 @@ _None — v5.0 shipped 2026-04-18. Run `/gsd-new-milestone` to define the next m
 
 ## Key Decisions
 
-| Decision                          | Rationale                                       | Outcome    |
-| --------------------------------- | ----------------------------------------------- | ---------- |
-| Full stack scope                  | Backend and frontend both need quality pass     | ✓ Good     |
-| Quality before features           | Fragile foundation makes new features risky     | ✓ Good     |
-| No new features in this milestone | Keeps scope focused on hardening                | ✓ Good     |
-| Supabase-first auth               | Unified auth strategy, JWT as fallback          | ✓ Good     |
-| Domain repository pattern         | Consistent data flow, zero raw fetch            | ✓ Good     |
-| useDirection() over prop drilling | Centralized RTL, no per-component dir=          | ✓ Good     |
-| size-limit as hard CI gate        | Bundle budget enforced, Lighthouse advisory     | ✓ Good     |
-| ESLint strict rules deferred      | 4500+ violations too large for this milestone   | ⚠️ Revisit |
-| rtl-friendly at warn level        | Error-level no-restricted-syntax covers it      | ⚠️ Revisit |
-| Lifecycle guides, not gates       | Diplomatic work is non-linear; skip/revert OK   | ✓ Good     |
-| Hub-and-spoke architecture        | Matches how diplomatic staff actually work      | ✓ Good     |
-| DossierShell shared layout        | Consistent UX across all 8 dossier types        | ✓ Good     |
-| Feature absorption over deletion  | Redirect old routes, absorb into context        | ✓ Good     |
-| Elected Officials via persons     | Query persons with subtype filter, no new table | ✓ Good     |
-| Kibo-UI KanbanProvider            | Better DX than raw @dnd-kit/core for kanban     | ✓ Good     |
-| Supabase Realtime for dashboard   | 1s debounce on tasks+transitions tables         | ✓ Good     |
-| BullMQ for async notification     | Decouple dispatch from triggering action        | ✓ Good     |
-| Resend for transactional email    | Simple API, bilingual HTML templates            | ✓ Good     |
-| nginx + certbot over Caddy        | Existing config, lower migration risk           | ✓ Good     |
-| VAPID push with soft-ask pattern  | Better UX than cold browser permission dialog   | ✓ Good     |
-| Playwright POM + CI sharding      | Maintainable E2E with parallelized CI runs      | ✓ Good     |
-| Plans 20-02–05 deferred to corp   | Corporate infra migration pending               | — Pending  |
+| Decision                              | Rationale                                                                                                            | Outcome       |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Full stack scope                      | Backend and frontend both need quality pass                                                                          | ✓ Good        |
+| Quality before features               | Fragile foundation makes new features risky                                                                          | ✓ Good        |
+| No new features in this milestone     | Keeps scope focused on hardening                                                                                     | ✓ Good        |
+| Supabase-first auth                   | Unified auth strategy, JWT as fallback                                                                               | ✓ Good        |
+| Domain repository pattern             | Consistent data flow, zero raw fetch                                                                                 | ✓ Good        |
+| useDirection() over prop drilling     | Centralized RTL, no per-component dir=                                                                               | ✓ Good        |
+| size-limit as hard CI gate            | Bundle budget enforced, Lighthouse advisory                                                                          | ✓ Good        |
+| ESLint strict rules deferred          | 4500+ violations too large for this milestone                                                                        | ⚠️ Revisit    |
+| rtl-friendly at warn level            | Error-level no-restricted-syntax covers it                                                                           | ⚠️ Revisit    |
+| Lifecycle guides, not gates           | Diplomatic work is non-linear; skip/revert OK                                                                        | ✓ Good        |
+| Hub-and-spoke architecture            | Matches how diplomatic staff actually work                                                                           | ✓ Good        |
+| DossierShell shared layout            | Consistent UX across all 8 dossier types                                                                             | ✓ Good        |
+| Feature absorption over deletion      | Redirect old routes, absorb into context                                                                             | ✓ Good        |
+| Elected Officials via persons         | Query persons with subtype filter, no new table                                                                      | ✓ Good        |
+| Kibo-UI KanbanProvider                | Better DX than raw @dnd-kit/core for kanban                                                                          | ✓ Good        |
+| Supabase Realtime for dashboard       | 1s debounce on tasks+transitions tables                                                                              | ✓ Good        |
+| BullMQ for async notification         | Decouple dispatch from triggering action                                                                             | ✓ Good        |
+| Resend for transactional email        | Simple API, bilingual HTML templates                                                                                 | ✓ Good        |
+| nginx + certbot over Caddy            | Existing config, lower migration risk                                                                                | ✓ Good        |
+| VAPID push with soft-ask pattern      | Better UX than cold browser permission dialog                                                                        | ✓ Good        |
+| Playwright POM + CI sharding          | Maintainable E2E with parallelized CI runs                                                                           | ✓ Good        |
+| Plans 20-02–05 deferred to corp       | Corporate infra migration pending                                                                                    | — Pending     |
+| OKLCH token engine over HSL           | Better perceptual uniformity for accent math; clean dark/light flips per direction                                   | ✓ Good (v6.0) |
+| HeroUI v3 + Tailwind v4 `@theme`      | Single token bridge instead of per-component overrides; semantic mapping accent→primary                              | ✓ Good (v6.0) |
+| Self-hosted fonts via @fontsource     | Zero CDN traffic + offline-friendly + bundled by Vite                                                                | ✓ Good (v6.0) |
+| Replace v5 themes (no coexistence)    | Strategy (i) — clean cut over coexistence; eliminates token cascade conflicts                                        | ✓ Good (v6.0) |
+| FOUC bootstrap byte-mirror invariant  | Inline synchronous bootstrap.js paints first-frame tokens; literal palette must byte-match `tokens/directions.ts`    | ✓ Good (v6.0) |
+| Phase 43 as cross-phase QA gate       | Final phase enforces lint + axe + responsive + keyboard + focus-outline across all v6.0 routes — not per-phase       | ✓ Good (v6.0) |
+| Playwright globalSetup + storageState | Replaces brittle per-test login helper; eliminates Class D login-form bleed-through across qa-sweep specs            | ✓ Good (v6.0) |
+| `.touch-44` utility + 7 call-sites    | Single CSS class with logical `min-inline-size`/`min-block-size`; applied to existing components without refactoring | ✓ Good (v6.0) |
+| 6 phases ship without VERIFICATION.md | Phase 43 cross-phase sweep covered them indirectly; Phase 44 backfilled explicit verification                        | ✓ Closed      |
+| Visual baselines deferred to operator | Phase 46 regenerated and committed baselines on a seeded dev machine with human review and CI replay                 | ✓ Closed      |
 
 ## Evolution
 
@@ -159,4 +236,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-18 after v5.0 milestone archive_
+_Last updated: 2026-05-08 — v6.2 Type-Check, Lint & Bundle Reset opened (phase numbering 47+)_

@@ -416,26 +416,6 @@ export interface ExportProgress {
 }
 
 /**
- * Validation error codes
- */
-const VALIDATION_ERROR_CODES = {
-  REQUIRED_FIELD: 'required_field',
-  INVALID_TYPE: 'invalid_type',
-  INVALID_FORMAT: 'invalid_format',
-  INVALID_ENUM: 'invalid_enum',
-  MAX_LENGTH_EXCEEDED: 'max_length_exceeded',
-  MIN_VALUE: 'min_value',
-  MAX_VALUE: 'max_value',
-  PATTERN_MISMATCH: 'pattern_mismatch',
-  DUPLICATE_ROW: 'duplicate_row',
-  DUPLICATE_IDENTIFIER: 'duplicate_identifier',
-  INVALID_REFERENCE: 'invalid_reference',
-  ENCODING_ERROR: 'encoding_error',
-  PARSE_ERROR: 'parse_error',
-  CONFLICT_DETECTED: 'conflict_detected',
-} as const
-
-/**
  * Hook options for useExportData
  */
 export interface UseExportDataOptions {

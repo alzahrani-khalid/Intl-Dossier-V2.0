@@ -60,24 +60,22 @@ function StatCard({
   label,
   value,
   variant = 'default',
-  isRTL,
 }: {
   icon: React.ElementType
   label: string
   value: number
   variant?: 'default' | 'warning' | 'success'
-  isRTL: boolean
 }) {
   const variantStyles = {
-    default: statVariantStyles.default.card,
-    warning: statVariantStyles.warning.card,
-    success: statVariantStyles.success.card,
+    default: statVariantStyles['default']!.card,
+    warning: statVariantStyles['warning']!.card,
+    success: statVariantStyles['success']!.card,
   }
 
   const iconStyles = {
-    default: statVariantStyles.default.icon,
-    warning: statVariantStyles.warning.icon,
-    success: statVariantStyles.success.icon,
+    default: statVariantStyles['default']!.icon,
+    warning: statVariantStyles['warning']!.icon,
+    success: statVariantStyles['success']!.icon,
   }
 
   return (
@@ -333,39 +331,29 @@ export function DossierOverview({
             icon={Network}
             label={t('stats.relatedDossiers')}
             value={stats.related_dossiers_count}
-            isRTL={isRTL}
           />
-          <StatCard
-            icon={FileStack}
-            label={t('stats.documents')}
-            value={stats.documents_count}
-            isRTL={isRTL}
-          />
+          <StatCard icon={FileStack} label={t('stats.documents')} value={stats.documents_count} />
           <StatCard
             icon={ClipboardList}
             label={t('stats.workItems')}
             value={stats.work_items_count}
-            isRTL={isRTL}
           />
           <StatCard
             icon={Clock}
             label={t('stats.pendingWork')}
             value={stats.pending_work_items}
             variant={stats.pending_work_items > 0 ? 'warning' : 'default'}
-            isRTL={isRTL}
           />
           <StatCard
             icon={AlertCircle}
             label={t('stats.overdueWork')}
             value={stats.overdue_work_items}
             variant={stats.overdue_work_items > 0 ? 'warning' : 'success'}
-            isRTL={isRTL}
           />
           <StatCard
             icon={Calendar}
             label={t('stats.upcomingEvents')}
             value={stats.upcoming_events_count}
-            isRTL={isRTL}
           />
         </div>
       </section>

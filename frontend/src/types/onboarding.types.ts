@@ -189,11 +189,6 @@ export interface OnboardingActions {
 }
 
 /**
- * Combined onboarding context value
- */
-interface OnboardingContextValue extends OnboardingState, OnboardingActions {}
-
-/**
  * Props for OnboardingChecklist component
  */
 export interface OnboardingChecklistProps {
@@ -245,38 +240,4 @@ export interface OnboardingEmptyStateProps {
   onCreate?: () => void
   /** Additional CSS classes */
   className?: string
-}
-
-/**
- * Database table structure for user_onboarding_progress
- */
-interface UserOnboardingProgressRow {
-  id: string
-  user_id: string
-  role: UserRole
-  items_progress: Record<string, ChecklistItemProgress>
-  milestones_achieved: MilestoneAchievement[]
-  is_completed: boolean
-  completed_at: string | null
-  is_dismissed: boolean
-  dismissed_at: string | null
-  created_at: string
-  updated_at: string
-}
-
-/**
- * API request for updating progress
- */
-interface UpdateProgressRequest {
-  itemId: string
-  action: 'complete' | 'skip' | 'uncomplete'
-}
-
-/**
- * API response for onboarding endpoints
- */
-interface OnboardingResponse {
-  success: boolean
-  data?: OnboardingProgress
-  error?: string
 }

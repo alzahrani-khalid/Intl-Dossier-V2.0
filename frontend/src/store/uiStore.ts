@@ -46,8 +46,6 @@ export interface Notification {
   read: boolean
 }
 
-type ModalState = Record<string, boolean>
-
 export type { SupportedLanguage } from '../i18n'
 
 export const useUIStore = create<UIState>()(

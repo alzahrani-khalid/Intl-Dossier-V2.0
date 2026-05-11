@@ -32,6 +32,17 @@
     "info": "Information"
   },
   "common": {
+    "actions": {
+      "previous": "Previous",
+      "next": "Next",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "openMenu": "Open menu",
+      "closeDialog": "Close dialog",
+      "toggleSection": "Toggle section",
+      "viewMore": "View more",
+      "remove": "Remove"
+    },
     "appTitle": "GASTAT International Dossier System",
     "save": "Save",
     "cancel": "Cancel",
@@ -107,7 +118,7 @@
     "dossiersHub": "Dossiers Hub",
     "allDossiers": "All Dossiers",
     "workingGroups": "Working Groups",
-    "persons": "Persons",
+    "persons": "People",
     "topics": "Topics",
     "electedOfficials": "Elected Officials",
     "relationshipGraph": "Relationship Graph",
@@ -119,13 +130,13 @@
     "intakeQueue": "Intake Queue",
     "waitingQueue": "Waiting Queue",
     "browse": "Browse",
-    "dashboard": "Dashboard",
+    "dashboard": "Situation",
     "assignments": "My Assignments",
     "intake": "Intake Queue",
     "approvals": "Approvals",
     "dossiers": "Dossiers",
     "positions": "Positions",
-    "afterActions": "After Actions",
+    "afterActions": "After-Actions",
     "projects": "Projects",
     "organizations": "Organizations",
     "countries": "Countries",
@@ -168,7 +179,7 @@
     "awaitingResponse": "Awaiting Response",
     "main": "Main",
     "operations": "Operations",
-    "tasks": "Tasks",
+    "tasks": "My Desk",
     "activity": "Activity",
     "advancedSearch": "Advanced Search",
     "availabilityPolling": "Availability Polling",
@@ -385,7 +396,17 @@
   "reports": {
     "selectTemplate": "Select Report Template",
     "selectTemplateDesc": "Choose a report template to generate",
-    "parameters": "Parameters",
+    "parameters": {
+      "country": "Country",
+      "dateRange": "Date Range",
+      "status": "Status",
+      "includeExpiring": "Include Expiring Soon",
+      "period": "Period",
+      "confidenceLevel": "Confidence Level",
+      "classification": "Classification",
+      "organization": "Organization",
+      "reportPeriod": "Report Period"
+    },
     "parametersDesc": "Configure report parameters",
     "format": "Format",
     "generateReport": "Generate Report",
@@ -405,17 +426,6 @@
       "organizationProfileDesc": "Detailed organization information",
       "executiveDashboard": "Executive Dashboard",
       "executiveDashboardDesc": "High-level overview for executives"
-    },
-    "parameters": {
-      "country": "Country",
-      "dateRange": "Date Range",
-      "status": "Status",
-      "includeExpiring": "Include Expiring Soon",
-      "period": "Period",
-      "confidenceLevel": "Confidence Level",
-      "classification": "Classification",
-      "organization": "Organization",
-      "reportPeriod": "Report Period"
     },
     "periods": {
       "thisMonth": "This Month",
@@ -733,7 +743,41 @@
     "viewDetails": "View Details",
     "sendReminder": "Send Reminder",
     "escalate": "Escalate",
-    "bulkActions": "Bulk Actions",
+    "bulkActions": {
+      "toolbar": "Bulk Actions",
+      "sendReminders": "Send Reminders",
+      "sending": "Sending reminders...",
+      "clear": "Clear",
+      "clearSelection": "Clear Selection",
+      "selectedCount": "{{count}} selected",
+      "maxItems": "(max {{max}})",
+      "maxReached": "Maximum selection reached",
+      "maxReachedDesc": "You can only select up to 100 items at a time",
+      "selectItem": "Select {{id}}",
+      "processing": "Processing",
+      "jobCreated": "Bulk reminder job created for {{count}} items",
+      "skippedSome": "{{sent}} reminders queued, {{skipped}} skipped (no assignee)",
+      "completed": "Completed",
+      "summary": "{{success}} sent successfully, {{failed}} failed ({{total}} total)",
+      "failed": "Failed",
+      "failedDesc": "The bulk reminder operation encountered an error",
+      "selectionCleared": "Selection cleared",
+      "selectionClearedDesc": "All items have been deselected",
+      "noAssignees": "No valid assignees",
+      "noAssigneesDesc": "All selected items have no assignees. Cannot send reminders.",
+      "error": "Bulk action failed",
+      "errorDesc": "An error occurred while processing your request",
+      "escalate": "Escalate",
+      "cancel": "Cancel",
+      "maxSelectionExceeded": "Maximum selection is {{max}} items",
+      "jobStatus": "Job Status",
+      "queued": "Queued",
+      "progress": "Progress: {{processed}}/{{total}}",
+      "viewResults": "View Results",
+      "successfulIds": "Successful",
+      "failedIds": "Failed",
+      "skippedIds": "Skipped"
+    },
     "selectAll": "Select All",
     "clearSelection": "Clear Selection",
     "selectedCount": "{{count}} selected",
@@ -885,44 +929,6 @@
       "acknowledged": "Acknowledged on {{date}}",
       "resolve": "Resolve",
       "resolved": "Resolved on {{date}}"
-    },
-    "bulkActions": {
-      "toolbar": "Bulk Actions",
-      "sendReminders": "Send Reminders",
-      "sending": "Sending reminders...",
-      "clear": "Clear",
-      "clearSelection": "Clear Selection",
-      "selectedCount": "{{count}} selected",
-      "maxItems": "(max {{max}})",
-      "maxReached": "Maximum selection reached",
-      "maxReachedDesc": "You can only select up to 100 items at a time",
-      "selectItem": "Select {{id}}",
-      "processing": "Processing bulk reminders",
-      "jobCreated": "Bulk reminder job created for {{count}} items",
-      "skippedSome": "{{sent}} reminders queued, {{skipped}} skipped (no assignee)",
-      "completed": "Bulk reminders completed",
-      "summary": "{{success}} sent successfully, {{failed}} failed ({{total}} total)",
-      "failed": "Bulk operation failed",
-      "failedDesc": "The bulk reminder operation encountered an error",
-      "selectionCleared": "Selection cleared",
-      "selectionClearedDesc": "All items have been deselected",
-      "noAssignees": "No valid assignees",
-      "noAssigneesDesc": "All selected items have no assignees. Cannot send reminders.",
-      "error": "Bulk action failed",
-      "errorDesc": "An error occurred while processing your request",
-      "escalate": "Escalate",
-      "cancel": "Cancel",
-      "maxSelectionExceeded": "Maximum selection is {{max}} items",
-      "jobStatus": "Job Status",
-      "queued": "Queued",
-      "processing": "Processing",
-      "completed": "Completed",
-      "failed": "Failed",
-      "progress": "Progress: {{processed}}/{{total}}",
-      "viewResults": "View Results",
-      "successfulIds": "Successful",
-      "failedIds": "Failed",
-      "skippedIds": "Skipped"
     },
     "errors": {
       "loadFailed": "Failed to load assignments",
@@ -1091,5 +1097,116 @@
     "forum": "Forum Dossier",
     "working_group": "Working Group Dossier",
     "topic": "Topic Dossier"
+  },
+  "tweaks": {
+    "title": "Tweaks",
+    "subtitle": "Live-configure this prototype",
+    "open": "Open tweaks",
+    "close": "Close tweaks",
+    "direction": {
+      "label": "Design direction",
+      "chancery": {
+        "name": "Chancery",
+        "tagline": "Editorial · serif · composed"
+      },
+      "situation": {
+        "name": "Situation Room",
+        "tagline": "Intelligence terminal · dense · mono"
+      },
+      "ministerial": {
+        "name": "Ministerial",
+        "tagline": "Government-formal · clean · restrained"
+      },
+      "bureau": {
+        "name": "Bureau",
+        "tagline": "Warm neutrals · document-forward · SaaS-clean"
+      }
+    },
+    "mode": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "hue": {
+      "label": "Accent hue"
+    },
+    "density": {
+      "label": "Density",
+      "comfortable": "Comfortable",
+      "compact": "Compact",
+      "dense": "Dense"
+    },
+    "classification": {
+      "label": "Classification ribbon",
+      "on": "On",
+      "off": "Off"
+    },
+    "locale": {
+      "label": "Reading direction",
+      "en": "LTR · English",
+      "ar": "RTL · عربي"
+    },
+    "shortcuts": {
+      "label": "Shortcuts",
+      "searchAny": "Search anything",
+      "newEngagement": "New engagement",
+      "newBrief": "New brief"
+    },
+    "loader": {
+      "label": "Loading state",
+      "preview": "Preview for 2s"
+    }
+  },
+  "shell": {
+    "appName": "IntelDossier",
+    "workspace": "GASTAT · International Partnerships",
+    "brand": {
+      "mark": "IntelDossier brand mark"
+    },
+    "user": {
+      "noRole": "Member"
+    },
+    "footer": {
+      "sync": "v2.0 · Synced"
+    },
+    "search": {
+      "placeholder": "Search dossiers, tasks, people…",
+      "kbd": "⌘K"
+    },
+    "direction": {
+      "chancery": "Chancery",
+      "situation": "Situation Room",
+      "ministerial": "Ministerial",
+      "bureau": "Bureau"
+    },
+    "theme": {
+      "toggle": "Toggle theme"
+    },
+    "notifications": {
+      "open": "Open notifications",
+      "count": "{{count}} unread notifications"
+    },
+    "tweaks": "Tweaks",
+    "menu": {
+      "open": "Open navigation menu",
+      "close": "Close navigation menu"
+    },
+    "main": {
+      "region": "Main content"
+    },
+    "classification": {
+      "workspace": "GASTAT",
+      "handleSecurely": "Handle via secure channels",
+      "session": "Session:"
+    },
+    "empty": {
+      "noNav": {
+        "title": "No workspaces available",
+        "body": "Contact your administrator to request access."
+      }
+    },
+    "error": {
+      "mount": "The workspace couldn't load. Refresh to retry."
+    }
   }
 }

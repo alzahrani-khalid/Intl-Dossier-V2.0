@@ -1,0 +1,17 @@
+{
+  "title": "After-actions",
+  "subtitle": "Captured decisions, commitments, and notes from past engagements.",
+  "columns": {
+    "engagement": "ENGAGEMENT",
+    "date": "DATE",
+    "dossier": "DOSSIER",
+    "decisions": "DECISIONS",
+    "commitments": "COMMITMENTS"
+  },
+  "empty": {
+    "heading": "No after-action records yet"
+  },
+  "error": {
+    "list": "Could not load after-action records. Try refreshing the page."
+  }
+}

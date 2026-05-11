@@ -24,11 +24,6 @@ export type WGSuggestionType =
 export type SuggestedEntityType = 'organization' | 'person'
 
 /**
- * Suggestion status
- */
-type WGSuggestionStatus = 'pending' | 'accepted' | 'rejected' | 'expired'
-
-/**
  * Member roles available
  */
 export type MemberRole =
@@ -200,20 +195,6 @@ export const MEMBER_ROLE_LABELS: Record<MemberRole, { en: string; ar: string }> 
   observer: { en: 'Observer', ar: 'مراقب' },
   advisor: { en: 'Advisor', ar: 'مستشار' },
   liaison: { en: 'Liaison', ar: 'منسق' },
-}
-
-/**
- * Icons for suggestion types
- */
-const WG_SUGGESTION_TYPE_ICONS: Record<WGSuggestionType, string> = {
-  parent_forum_member: 'users',
-  related_engagement: 'calendar',
-  past_collaboration: 'history',
-  lead_org_affiliate: 'building2',
-  topic_expertise: 'lightbulb',
-  country_representation: 'flag',
-  organizational_mandate: 'file-text',
-  role_seniority: 'crown',
 }
 
 /**

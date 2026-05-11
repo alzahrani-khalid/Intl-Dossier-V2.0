@@ -54,7 +54,7 @@ export function EngagementStageGroup({
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger asChild>
         <button
-          className="flex items-center gap-3 w-full min-h-11 p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+          className="flex items-center gap-3 w-full min-h-11 min-w-11 p-3 rounded-[var(--radius-sm)] hover:bg-muted/50 transition-colors cursor-pointer"
           aria-expanded={isOpen}
           aria-controls={contentId}
         >
@@ -65,9 +65,11 @@ export function EngagementStageGroup({
           <ChevronDown
             className={cn(
               'text-muted-foreground shrink-0 transition-transform duration-200',
+              // .icon-flip handles the RTL mirror via CSS scaleX(-1) (gated on
+              // html[dir='rtl']). The rotate-180 below is the disclosure
+              // semantic (open vs closed) and composes with .icon-flip.
+              'icon-flip',
               isOpen && 'rotate-180',
-              isRTL && !isOpen && 'rotate-0',
-              isRTL && isOpen && 'rotate-180',
             )}
             size={16}
           />
@@ -84,7 +86,7 @@ export function EngagementStageGroup({
             return (
               <div
                 key={engagement.id}
-                className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 cursor-pointer min-h-11 transition-colors"
+                className="flex items-center gap-2 p-2 rounded-[var(--radius-sm)] hover:bg-muted/50 cursor-pointer min-h-11 transition-colors"
                 role="button"
                 tabIndex={0}
                 onClick={(): void => {

@@ -90,7 +90,6 @@ interface TypeDistributionProps {
 }
 
 function TypeDistribution({ data }: TypeDistributionProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const total = Object.values(data).reduce((sum, count) => sum + count, 0)
   if (total === 0) return null

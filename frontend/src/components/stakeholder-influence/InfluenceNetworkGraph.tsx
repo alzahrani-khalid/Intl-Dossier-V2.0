@@ -84,7 +84,6 @@ const TYPE_ICONS: Record<string, typeof User> = {
 // ============================================================================
 
 function InfluenceNode({ data }: { data: Record<string, unknown> }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const isCenter = data.isCenter as boolean
   const tier = data.tier as InfluenceTier
@@ -143,7 +142,6 @@ const isCenter = data.isCenter as boolean
 // ============================================================================
 
 function DetailedInfluenceNode({ data }: { data: Record<string, unknown> }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 
   const tier = data.tier as InfluenceTier

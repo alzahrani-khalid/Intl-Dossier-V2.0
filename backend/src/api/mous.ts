@@ -111,7 +111,7 @@ router.get('/', validate({ query: mouFiltersSchema }), async (req, res, next) =>
     })
   } catch (error) {
     logError('Failed to fetch MoUs', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -120,7 +120,7 @@ router.get('/', validate({ query: mouFiltersSchema }), async (req, res, next) =>
  * @desc Get MoU statistics
  * @access Private
  */
-router.get('/stats', async (req, res, next) => {
+router.get('/stats', async (_req, res, next) => {
   try {
     // Get statistics by fetching counts
     const { data: active } = await supabaseAdmin
@@ -147,7 +147,7 @@ router.get('/stats', async (req, res, next) => {
     res.json(stats)
   } catch (error) {
     logError('Failed to fetch MoU statistics', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -163,7 +163,7 @@ router.get('/expiring', async (req, res, next) => {
     res.json({ data: expiring, total: expiring.length })
   } catch (error) {
     logError('Failed to fetch expiring MoUs', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -174,7 +174,7 @@ router.get('/expiring', async (req, res, next) => {
  */
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
     const mou = await mouService.getMoUById(id)
 
     if (!mou) {
@@ -187,7 +187,7 @@ router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) =
     res.json(mou)
   } catch (error) {
     logError('Failed to fetch MoU', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -220,7 +220,7 @@ router.post(
       })
     } catch (error) {
       logError('Failed to create MoU', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -239,7 +239,7 @@ router.put(
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const updates = req.body
       const lang = getRequestLanguage(req)
 
@@ -261,7 +261,7 @@ router.put(
       })
     } catch (error) {
       logError('Failed to update MoU', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -277,7 +277,7 @@ router.delete(
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const lang = getRequestLanguage(req)
 
       // Delete MoU using supabaseAdmin directly
@@ -300,7 +300,7 @@ router.delete(
       })
     } catch (error) {
       logError('Failed to delete MoU', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -312,14 +312,14 @@ router.delete(
  */
 router.get('/:id/deliverables', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
     // Get MoU and extract deliverables
     const mou = await mouService.getMoUById(id)
     const deliverables = mou?.deliverables || []
     res.json({ data: deliverables, total: deliverables.length })
   } catch (error) {
     logError('Failed to fetch MoU deliverables', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -340,7 +340,7 @@ router.patch(
   }),
   async (req, res, next) => {
     try {
-      const { id, deliverableId } = req.params
+      const { id, deliverableId } = req.params as { id: string; deliverableId: string }
       const updates = req.body
       const lang = getRequestLanguage(req)
 
@@ -356,7 +356,7 @@ router.patch(
       })
     } catch (error) {
       logError('Failed to update deliverable', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -379,7 +379,7 @@ router.post(
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params
+      const { id } = req.params as { id: string }
       const renewalData = req.body
       const lang = getRequestLanguage(req)
 
@@ -401,7 +401,7 @@ router.post(
       })
     } catch (error) {
       logError('Failed to renew MoU', error as Error)
-      next(error)
+      return next(error)
     }
   },
 )
@@ -413,7 +413,7 @@ router.post(
  */
 router.get('/:id/timeline', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
     // Get timeline from audit logs
     const { data: timeline, error } = await supabaseAdmin
       .from('audit_logs')
@@ -426,7 +426,7 @@ router.get('/:id/timeline', validate({ params: idParamSchema }), async (req, res
     res.json({ data: timeline, total: timeline.length })
   } catch (error) {
     logError('Failed to fetch MoU timeline', error as Error)
-    next(error)
+    return next(error)
   }
 })
 
@@ -437,12 +437,12 @@ router.get('/:id/timeline', validate({ params: idParamSchema }), async (req, res
  */
 router.get('/:id/performance', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.params as { id: string }
     const metrics = await mouService.calculateMoUPerformance(id)
     res.json(metrics)
   } catch (error) {
     logError('Failed to fetch MoU performance metrics', error as Error)
-    next(error)
+    return next(error)
   }
 })
 

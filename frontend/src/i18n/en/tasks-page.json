@@ -1,0 +1,28 @@
+{
+  "title": "My desk",
+  "subtitle": "Tasks assigned to you and tasks you contribute to.",
+  "cta": {
+    "newTask": "New task"
+  },
+  "tabs": {
+    "assigned": "Assigned",
+    "contributed": "Contributed"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "due": {
+    "today": "Today",
+    "overdue": "{{count}}d overdue"
+  },
+  "empty": {
+    "heading": "No tasks on your desk"
+  },
+  "error": {
+    "list": "Could not load tasks. Try refreshing the page.",
+    "update": "Could not update task. Changes were reverted."
+  }
+}

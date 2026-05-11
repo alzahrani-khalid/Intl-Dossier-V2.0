@@ -13,7 +13,7 @@ export function requireAuthHeader(req: Request, res: Response, next: NextFunctio
     return sendError(res, 401, 'UNAUTHORIZED', 'Authentication required', 'المصادقة مطلوبة')
   }
   ;(req as any).token = token
-  next()
+  return next()
 }
 
 export function sendError(

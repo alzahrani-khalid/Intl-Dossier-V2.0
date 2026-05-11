@@ -27,7 +27,7 @@ export const pollingKeys = {
   stats: () => [...pollingKeys.all, 'stats'] as const,
 }
 
-export function usePollingConfigs(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function usePollingConfigs(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -42,7 +42,7 @@ export function usePollingConfigs(params?: Record<string, unknown>): ReturnType<
   })
 }
 
-export function usePollingConfig(id: string | null): ReturnType<typeof useQuery> {
+export function usePollingConfig(id: string | null) {
   return useQuery({
     queryKey: id ? pollingKeys.detail(id) : ['availability-polling', 'disabled'],
     queryFn: () => (id ? getPollingConfig(id) : Promise.resolve(null)),
@@ -50,7 +50,7 @@ export function usePollingConfig(id: string | null): ReturnType<typeof useQuery>
   })
 }
 
-export function useCreatePollingConfig(): ReturnType<typeof useMutation> {
+export function useCreatePollingConfig() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createPollingConfigApi(data),
@@ -60,7 +60,7 @@ export function useCreatePollingConfig(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdatePollingConfig(): ReturnType<typeof useMutation> {
+export function useUpdatePollingConfig() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: { id: string; data: Record<string, unknown> }) =>
@@ -71,7 +71,7 @@ export function useUpdatePollingConfig(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeletePollingConfig(): ReturnType<typeof useMutation> {
+export function useDeletePollingConfig() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deletePollingConfigApi(id),
@@ -81,7 +81,7 @@ export function useDeletePollingConfig(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useTriggerPoll(): ReturnType<typeof useMutation> {
+export function useTriggerPoll() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => triggerPollApi(id),
@@ -91,10 +91,7 @@ export function useTriggerPoll(): ReturnType<typeof useMutation> {
   })
 }
 
-export function usePollingHistory(
-  id: string | null,
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
+export function usePollingHistory(id: string | null, params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -112,7 +109,7 @@ export function usePollingHistory(
   })
 }
 
-export function usePollingStats(): ReturnType<typeof useQuery> {
+export function usePollingStats() {
   return useQuery({
     queryKey: pollingKeys.stats(),
     queryFn: () => getPollingStatsApi(),
@@ -122,63 +119,79 @@ export function usePollingStats(): ReturnType<typeof useQuery> {
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-export function usePolls(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
-  return useQuery({
+import type {
+  AvailabilityPoll,
+  CreatePollRequest,
+  PollDetailsResponse,
+  AutoScheduleResponse,
+  SubmitVoteRequest,
+} from '@/types/availability-polling.types'
+
+export interface PollsListResponse {
+  polls: AvailabilityPoll[]
+  total?: number
+}
+
+export function usePolls(params?: Record<string, unknown>) {
+  return useQuery<PollsListResponse>({
     queryKey: [...pollingKeys.all, 'polls', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve<PollsListResponse>({ polls: [] }),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useMyPolls(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
-  return useQuery({
+export function useMyPolls(params?: Record<string, unknown>) {
+  return useQuery<PollsListResponse>({
     queryKey: [...pollingKeys.all, 'my-polls', params],
-    queryFn: () => Promise.resolve([]),
+    queryFn: () => Promise.resolve<PollsListResponse>({ polls: [] }),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useCreatePoll(): ReturnType<typeof useMutation> {
+export function useCreatePoll() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ id: '', success: true }),
+    mutationFn: (_req: CreatePollRequest) => Promise.resolve({ id: '' } as AvailabilityPoll),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: pollingKeys.all })
     },
   })
 }
 
-export function usePollDetails(pollId: string | null): ReturnType<typeof useQuery> {
-  return useQuery({
+export function usePollDetails(pollId: string | null) {
+  return useQuery<PollDetailsResponse | undefined>({
     queryKey: [...pollingKeys.all, 'poll-details', pollId],
-    queryFn: () => Promise.resolve(null),
+    queryFn: () => Promise.resolve<PollDetailsResponse | undefined>(undefined),
     enabled: Boolean(pollId),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useSubmitVotes(): ReturnType<typeof useMutation> {
+export function useSubmitVotes() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ success: true }),
+    mutationFn: (_req: { pollId: string; votes: SubmitVoteRequest[] }) =>
+      Promise.resolve({ success: true } as { success: boolean }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: pollingKeys.all })
     },
   })
 }
 
-export function useClosePoll(): ReturnType<typeof useMutation> {
+export function useClosePoll() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_pollId: string) => Promise.resolve({ success: true }),
+    mutationFn: (_args: { pollId: string; selectedSlotId?: string }) =>
+      Promise.resolve({ success: true } as { success: boolean }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: pollingKeys.all })
     },
   })
 }
 
-export function useAutoSchedule(): ReturnType<typeof useMutation> {
+export function useAutoSchedule() {
   return useMutation({
-    mutationFn: (_pollId: string) => Promise.resolve({ success: true }),
+    mutationFn: (_args: { pollId: string; slotId?: string }) =>
+      Promise.resolve({} as AutoScheduleResponse),
   })
 }

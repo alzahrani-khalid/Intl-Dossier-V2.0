@@ -50,7 +50,7 @@ router.get('/signals/:type', async (req, res, next) => {
 })
 
 // GET /api/intelligence/opportunities/:countryId
-router.get('/opportunities', async (req, res, next) => {
+router.get('/opportunities', async (_req, res, next) => {
   try {
     const opportunities = await intelligenceService.identifyOpportunities(undefined)
     res.json({ opportunities })

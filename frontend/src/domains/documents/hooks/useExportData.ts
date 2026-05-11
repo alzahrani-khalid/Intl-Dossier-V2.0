@@ -376,8 +376,10 @@ export function useExportData(options: UseExportDataOptions = {}): UseExportData
           message_ar: t('progress.fetching'),
         })
 
-        // Call export via repository
-        const result = await DocumentsRepo.exportData(request)
+        // Call export via repository.
+        // Spread into a fresh object so the TS index-signature contract
+        // ({ [key: string]: unknown; entityType; format }) accepts ExportRequest.
+        const result = await DocumentsRepo.exportData({ ...request })
 
         setProgress({
           stage: 'generating',
@@ -392,7 +394,8 @@ export function useExportData(options: UseExportDataOptions = {}): UseExportData
           const worksheet = workbook.addWorksheet(request.entityType)
 
           const lines = result.content.replace(/^\uFEFF/, '').split('\r\n')
-          const headers = lines[0].split(',').map((h: string) => h.replace(/^"|"$/g, ''))
+          const firstLine = lines[0] ?? ''
+          const headers = firstLine.split(',').map((h: string) => h.replace(/^"|"$/g, ''))
 
           worksheet.addRow(headers)
 
@@ -405,9 +408,10 @@ export function useExportData(options: UseExportDataOptions = {}): UseExportData
           }
 
           for (let i = 1; i < lines.length; i++) {
-            if (lines[i].trim()) {
+            const line = lines[i]
+            if (line && line.trim()) {
               const values =
-                lines[i]
+                line
                   .match(/(?:^|,)("(?:[^"]*(?:""[^"]*)*)"|[^,]*)/g)
                   ?.map((v: string) =>
                     v.replace(/^,/, '').replace(/^"|"$/g, '').replace(/""/g, '"'),

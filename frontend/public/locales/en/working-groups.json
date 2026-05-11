@@ -1,0 +1,17 @@
+{
+  "title": "Working Groups",
+  "subtitle": "Committees and task forces",
+  "row": {
+    "meta": "Meta"
+  },
+  "status": {
+    "active": "Active",
+    "completed": "Completed",
+    "on_hold": "On hold"
+  },
+  "empty": {
+    "title": "No working groups yet",
+    "description": "Working group dossiers will appear here."
+  },
+  "loading": "Loading working groups…"
+}

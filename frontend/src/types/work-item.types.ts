@@ -140,26 +140,6 @@ export interface KanbanData {
 // ============================================
 
 /**
- * Request parameters for fetching Kanban data
- */
-interface KanbanRequest {
-  action: 'list' | 'update-status'
-
-  // For 'list' action
-  context_type?: KanbanContextType
-  context_id?: string
-  column_mode?: KanbanColumnMode
-  source_filter?: WorkSource[]
-  limit_per_column?: number // default 50
-
-  // For 'update-status' action
-  item_id?: string
-  source?: WorkSource
-  new_status?: WorkStatus
-  new_workflow_stage?: WorkflowStage
-}
-
-/**
  * Successful list response
  */
 export interface KanbanListResponse {
@@ -206,62 +186,19 @@ export interface KanbanErrorResponse {
   }
 }
 
-type KanbanResponse = KanbanListResponse | KanbanUpdateResponse | KanbanErrorResponse
-
 // ============================================
 // Status Transition Types
 // ============================================
-
-/**
- * Valid status transitions per source type
- */
-interface StatusTransitionRules {
-  task: Record<WorkflowStage, WorkflowStage[]>
-  commitment: Record<WorkStatus, WorkStatus[]>
-  intake: Record<string, string[]>
-}
-
-/**
- * Status update mutation variables
- */
-interface StatusUpdateVariables {
-  itemId: string
-  source: WorkSource
-  newStatus: string
-  newWorkflowStage?: WorkflowStage
-}
 
 // ============================================
 // Filter & Sort Types
 // ============================================
 
 /**
- * Filter state for Kanban board
- */
-interface KanbanFilters {
-  sources?: WorkSource[]
-  statuses?: string[]
-  priorities?: Priority[]
-  isOverdue?: boolean
-  searchQuery?: string
-}
-
-/**
  * Sort options
  */
 export type KanbanSortBy = 'deadline' | 'created_at' | 'priority'
 export type SortOrder = 'asc' | 'desc'
-
-/**
- * URL state for Kanban board
- */
-interface KanbanUrlState {
-  mode?: KanbanColumnMode
-  sources?: WorkSource[]
-  search?: string
-  sortBy?: KanbanSortBy
-  sortOrder?: SortOrder
-}
 
 // ============================================
 // Realtime Event Types
@@ -300,14 +237,6 @@ export interface WipLimits {
   [columnKey: string]: number
 }
 
-/**
- * Default WIP limits
- */
-const DEFAULT_WIP_LIMITS: WipLimits = {
-  in_progress: 5,
-  review: 3,
-}
-
 // ============================================
 // Bulk Operations Types
 // ============================================
@@ -316,15 +245,6 @@ const DEFAULT_WIP_LIMITS: WipLimits = {
  * Bulk action types
  */
 export type BulkActionType = 'move' | 'assign' | 'delete' | 'updatePriority'
-
-/**
- * Bulk operation payload
- */
-interface BulkOperationPayload {
-  itemIds: string[]
-  action: BulkActionType
-  targetValue?: string // column key, assignee id, priority, etc.
-}
 
 /**
  * Selected items state
@@ -358,47 +278,9 @@ export interface UnifiedKanbanBoardProps {
   enableWipWarnings?: boolean
 }
 
-/**
- * Props for UnifiedKanbanColumn component
- */
-interface UnifiedKanbanColumnProps {
-  column: KanbanColumn
-  items: WorkItem[]
-  isLoading?: boolean
-  hasMore?: boolean
-  onLoadMore?: () => void
-}
-
-/**
- * Props for UnifiedKanbanCard component
- */
-interface UnifiedKanbanCardProps {
-  item: WorkItem
-  isDragging?: boolean
-  onClick?: (item: WorkItem) => void
-}
-
 // ============================================
 // Utility Types
 // ============================================
-
-/**
- * Map source to its primary status field
- */
-type SourceStatusField = {
-  task: 'workflow_stage'
-  commitment: 'status'
-  intake: 'status'
-}
-
-/**
- * Get the status type for a given source
- */
-type StatusForSource<S extends WorkSource> = S extends 'task'
-  ? WorkflowStage
-  : S extends 'commitment'
-    ? WorkStatus
-    : string
 
 // ============================================
 // Unified Work Types (from Feature 032)

@@ -2,113 +2,137 @@ import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Save, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { SettingsNavigation, SettingsTabs } from './SettingsNavigation'
-import { SettingsSectionId } from '@/types/settings.types'
-import { useDirection } from '@/hooks/useDirection'
+import { SettingsNavigation } from './SettingsNavigation'
+import type { SettingsSectionId } from '@/types/settings.types'
 
 interface SettingsLayoutProps {
-  /** Children sections to render */
-  children: ReactNode
   /** Currently active section */
   activeSection: SettingsSectionId
   /** Callback when section changes */
   onSectionChange: (section: SettingsSectionId) => void
+  /** Whether settings data is still loading */
+  isLoading?: boolean
   /** Whether there are unsaved changes */
   hasChanges?: boolean
   /** Whether saving is in progress */
   isSaving?: boolean
   /** Save handler */
   onSave?: () => void
+  /** Children sections to render */
+  children: ReactNode
 }
 
 /**
- * Main layout component for Settings page
- * Provides responsive sidebar/tabs navigation
- * Mobile-first, RTL-safe implementation
+ * Phase 42-09 — Settings page layout (handoff 240+1fr two-column chrome).
+ *
+ * Desktop (≥768px): CSS Grid — 240px nav card + 1fr content card.
+ * Mobile  (≤768px): the `@media (max-width: 768px)` block in index.css
+ * collapses the grid into a single column with a horizontal pill nav
+ * (Plan 03 ported the rule).
+ *
+ * Each section root carries `data-loading` so Playwright fixtures can
+ * await page-readiness without `networkidle`.
+ *
+ * The `dir` attribute is wired off `i18n.language === 'ar'` (RTL) per
+ * the project-wide pattern; the inner card uses logical-property CSS
+ * (`text-start`, `inset-inline-start`, `border-block-end`) so the
+ * accent bar / pill underline flip correctly.
  */
 export function SettingsLayout({
-  children,
   activeSection,
   onSectionChange,
+  isLoading = false,
   hasChanges = false,
   isSaving = false,
   onSave,
-}: SettingsLayoutProps) {
-  const { t } = useTranslation('settings')
-  const { isRTL } = useDirection()
+  children,
+}: SettingsLayoutProps): React.JSX.Element {
+  const { t, i18n } = useTranslation('settings')
+  const isRTL = i18n.language === 'ar'
+
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('pageTitle')}</h1>
-          <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
-            {t('pageDescription')}
-          </p>
+    <section
+      role="region"
+      aria-label={t('pageTitle')}
+      dir={isRTL ? 'rtl' : 'ltr'}
+      data-loading={isLoading ? 'true' : 'false'}
+      className="page settings-layout"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '240px 1fr',
+        gap: 'var(--gap)',
+      }}
+    >
+      <h1 className="sr-only">{t('pageTitle')}</h1>
+      <SettingsNavigation activeSection={activeSection} onChange={onSectionChange} />
+
+      <div className="card">
+        <div
+          className="card-head"
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: 16,
+          }}
+        >
+          <div>
+            <div className="card-title">
+              {/* WR-06: section IDs are hyphenated (`data-privacy`, `email-digest`)
+                  but settings.json uses camelCase (`dataPrivacy`, `emailDigest`).
+                  Translate the ID to the camelCase JSON key first; fall back to
+                  the nav label only if the camelCase section is also missing. */}
+              {t(`${navLabelKey(activeSection)}.title`, {
+                defaultValue: t(`nav.${navLabelKey(activeSection)}`),
+              })}
+            </div>
+            <div className="card-sub">
+              {t(`${navLabelKey(activeSection)}.description`, { defaultValue: '' })}
+            </div>
+          </div>
+          {hasChanges && onSave && (
+            <Button onClick={onSave} disabled={isSaving} className="min-h-11 min-w-32 shrink-0">
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                  {t('saving')}
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 me-2" />
+                  {t('save')}
+                </>
+              )}
+            </Button>
+          )}
         </div>
-
-        {/* Save button - always visible when changes exist */}
-        {hasChanges && onSave && (
-          <Button
-            onClick={onSave}
-            disabled={isSaving}
-            className="min-h-11 min-w-32 self-end sm:self-auto"
-          >
-            {isSaving ? (
-              <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                {t('saving')}
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4 me-2" />
-                {t('save')}
-              </>
-            )}
-          </Button>
-        )}
+        {children}
       </div>
-
-      {/* Mobile: Horizontal scrollable tabs */}
-      <div className="lg:hidden mb-6">
-        <SettingsTabs activeSection={activeSection} onSectionChange={onSectionChange} />
-      </div>
-
-      {/* Main content area */}
-      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-        {/* Desktop: Sidebar navigation */}
-        <aside className="hidden lg:block lg:w-64 shrink-0">
-          <Card className="sticky top-24">
-            <CardContent className="p-3">
-              <SettingsNavigation
-                activeSection={activeSection}
-                onSectionChange={onSectionChange}
-                variant="sidebar"
-              />
-            </CardContent>
-          </Card>
-        </aside>
-
-        {/* Content area */}
-        <main className="flex-1 min-w-0 space-y-6">{children}</main>
-      </div>
-
-      {/* Mobile: Bottom safe area padding for dock */}
-      <div className="lg:hidden h-20" aria-hidden="true" />
-    </div>
+    </section>
   )
 }
 
 /**
- * Wrapper for conditionally rendering sections based on active state
+ * Maps the legacy `SettingsSectionId` values onto the camelCase i18n nav-label
+ * keys used in `settings.json` (post-D-09 rename). Used by both the layout
+ * card-title fallback and the navigation component.
  */
+function navLabelKey(id: SettingsSectionId): string {
+  if (id === 'security') return 'accessAndSecurity'
+  if (id === 'data-privacy') return 'dataPrivacy'
+  if (id === 'email-digest') return 'emailDigest'
+  return id
+}
+
+/* ----------------------------------------------------------------------------
+ * Wrapper + skeleton + empty-state — preserved from the pre-reskin layout for
+ * SettingsPage compatibility.  Visual chrome is reduced to the bare minimum so
+ * the inner card does the styling.
+ * -------------------------------------------------------------------------- */
+
 interface SettingsSectionWrapperProps {
-  /** Section ID to check */
   sectionId: SettingsSectionId
-  /** Currently active section */
   activeSection: SettingsSectionId
-  /** Children to render when active */
   children: ReactNode
 }
 
@@ -116,44 +140,43 @@ export function SettingsSectionWrapper({
   sectionId,
   activeSection,
   children,
-}: SettingsSectionWrapperProps) {
+}: SettingsSectionWrapperProps): React.JSX.Element | null {
   if (sectionId !== activeSection) {
     return null
   }
-
   return <>{children}</>
 }
 
-/**
- * Loading skeleton for settings section
- */
-export function SettingsSectionSkeleton() {
+export function SettingsSectionSkeleton(): React.JSX.Element {
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="space-y-4 animate-pulse">
-          <div className="h-6 bg-muted rounded w-1/3" />
-          <div className="h-4 bg-muted rounded w-2/3" />
-          <div className="space-y-3 pt-4">
-            {[0, 1, 2, 3].map((n) => (
-              <div key={n} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="space-y-2 flex-1">
-                  <div className="h-4 bg-muted rounded w-1/4" />
-                  <div className="h-3 bg-muted rounded w-1/2" />
-                </div>
-                <div className="h-6 w-10 bg-muted rounded-full" />
-              </div>
-            ))}
+    <div className="space-y-4 animate-pulse" data-testid="settings-skeleton">
+      <div className="h-6 rounded" style={{ background: 'var(--line-soft)', width: '33%' }} />
+      <div className="h-4 rounded" style={{ background: 'var(--line-soft)', width: '66%' }} />
+      <div className="space-y-3 pt-4">
+        {[0, 1, 2, 3].map((n) => (
+          <div
+            key={n}
+            className="flex items-center justify-between p-4 rounded-lg"
+            style={{ border: '1px solid var(--line)' }}
+          >
+            <div className="space-y-2 flex-1">
+              <div
+                className="h-4 rounded"
+                style={{ background: 'var(--line-soft)', width: '25%' }}
+              />
+              <div
+                className="h-3 rounded"
+                style={{ background: 'var(--line-soft)', width: '50%' }}
+              />
+            </div>
+            <div className="h-6 w-10 rounded-full" style={{ background: 'var(--line-soft)' }} />
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        ))}
+      </div>
+    </div>
   )
 }
 
-/**
- * Empty state component for settings sections
- */
 interface SettingsEmptyStateProps {
   icon?: React.ElementType
   title: string
@@ -166,15 +189,18 @@ export function SettingsEmptyState({
   title,
   description,
   action,
-}: SettingsEmptyStateProps) {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
-
+}: SettingsEmptyStateProps): React.JSX.Element {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      {Icon && <Icon className="h-12 w-12 text-muted-foreground/50 mb-4" />}
-      <h3 className="text-lg font-medium">{title}</h3>
-      {description && <p className="text-sm text-muted-foreground mt-1 max-w-sm">{description}</p>}
+      {Icon && <Icon className="h-12 w-12 mb-4" style={{ color: 'var(--ink-faint)' }} />}
+      <h3 className="text-lg font-medium" style={{ color: 'var(--ink)' }}>
+        {title}
+      </h3>
+      {description && (
+        <p className="text-sm mt-1 max-w-sm" style={{ color: 'var(--ink-mute)' }}>
+          {description}
+        </p>
+      )}
       {action && <div className="mt-4">{action}</div>}
     </div>
   )

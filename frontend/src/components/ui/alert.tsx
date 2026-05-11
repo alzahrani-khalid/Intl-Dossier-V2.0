@@ -4,13 +4,13 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const alertVariants = cva(
-  'relative w-full rounded-lg border p-4 [&>svg~*]:ps-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:start-4 [&>svg]:top-4 [&>svg]:text-foreground',
+  'relative w-full rounded-[var(--radius)] border p-4 text-[var(--ink)] [&>svg~*]:ps-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:start-4 [&>svg]:top-4',
   {
     variants: {
       variant: {
-        default: 'bg-background text-foreground',
+        default: 'border-[var(--line)] bg-[var(--surface)] [&>svg]:text-[var(--ink-mute)]',
         destructive:
-          'border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive',
+          'border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger)] [&>svg]:text-[var(--danger)]',
       },
     },
     defaultVariants: {
@@ -29,11 +29,7 @@ Alert.displayName = 'Alert'
 
 const AlertTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h5
-      ref={ref}
-      className={cn('mb-1 font-medium leading-none tracking-tight', className)}
-      {...props}
-    />
+    <h5 ref={ref} className={cn('card-title mb-1 leading-none', className)} {...props} />
   ),
 )
 AlertTitle.displayName = 'AlertTitle'

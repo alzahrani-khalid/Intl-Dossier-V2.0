@@ -10,7 +10,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState, useCallback, useEffect } from 'react'
 import { intakeEntityLinksAPI, type EntitySearchFilters } from '@/services/entity-links-api'
-import type { EntitySearchResult } from '../../../backend/src/types/intake-entity-links.types'
 
 /**
  * Debounced value hook
@@ -149,37 +148,6 @@ export function useEntitySearchState(
     // Search query result
     ...searchQuery,
   }
-}
-
-/**
- * Hook to get entity intakes (reverse lookup)
- * For displaying all intake tickets linked to an entity
- */
-function useEntityIntakes(
-  entityType: string,
-  entityId: string,
-  filters?: {
-    status?: string[]
-    from_date?: string
-    to_date?: string
-    page?: number
-    limit?: number
-  },
-) {
-  return useQuery({
-    queryKey: ['entity-intakes', entityType, entityId, filters],
-    queryFn: () => intakeEntityLinksAPI.getEntityIntakes(entityType as any, entityId, filters),
-    enabled: !!entityType && !!entityId,
-    staleTime: 1000 * 60 * 2, // 2 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
-  })
-}
-
-/**
- * Type guard to check if results are available
- */
-function hasSearchResults(data: EntitySearchResult[] | undefined): data is EntitySearchResult[] {
-  return Array.isArray(data) && data.length > 0
 }
 
 /**

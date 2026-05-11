@@ -139,6 +139,50 @@ export default tseslint.config(
       'rtl-friendly/no-physical-properties': 'off',
     },
   },
+  // Phase 40 + Phase 43 — reinforce logical-properties enforcement on the full v6.0 surface.
+  // Global rules above already block physical RTL classes; this block re-asserts the
+  // contract on every v6.0-touched route, page, component, and hook so drift is caught
+  // at the source. Per QA-01.
+  {
+    files: [
+      // Phase 40 list-pages
+      'src/components/list-page/**/*.{ts,tsx}',
+      'src/routes/_protected/dossiers/{countries,organizations,forums,topics,working_groups}/index.tsx',
+      'src/routes/_protected/{persons,engagements}/index.tsx',
+      'src/routes/_protected/dossiers/engagements/index.tsx',
+      'src/pages/{Persons,Engagements}/**/*.{ts,tsx}',
+      'src/pages/{persons,engagements}/**/*.{ts,tsx}',
+      'src/hooks/{useCountries,useOrganizations,useEngagementsInfinite}.ts',
+      // Phase 38 dashboard
+      'src/routes/_protected/dashboard.tsx',
+      'src/pages/Dashboard/**/*.{ts,tsx}',
+      // Phase 39 kanban + calendar
+      'src/routes/_protected/{kanban,calendar}.tsx',
+      'src/components/unified-kanban/**/*.{ts,tsx}',
+      'src/components/calendar/UnifiedCalendar.tsx',
+      'src/components/calendar/{CalendarMonthGrid,CalendarEventPill,WeekListMobile}.tsx',
+      // Phase 41 dossier-drawer
+      'src/components/dossier/DossierDrawer/**/*.{ts,tsx}',
+      'src/components/dossier/DossierShell.tsx',
+      // Phase 42 remaining pages
+      'src/routes/_protected/{briefs,activity,settings}.tsx',
+      'src/routes/_protected/{after-actions,tasks}/index.tsx',
+      'src/pages/{Briefs,activity,settings}/**/*.{ts,tsx}',
+      'src/pages/MyTasks.tsx',
+      'src/components/{briefs,activity,after-actions}/**/*.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "Literal[value=/\\b(ml-|mr-|pl-|pr-|text-left|text-right|rounded-l-|rounded-r-|left-|right-)\\b/]",
+          message:
+            'v6.0 surface (Phase 38–42): physical RTL classes are forbidden. Use logical properties (ms-/me-/ps-/pe-/text-start/text-end/rounded-s-/rounded-e-/start-/end-).',
+        },
+      ],
+    },
+  },
   // Disabled/backup files are exempt from all rules
   {
     files: ['**/*.disabled', '**/*.bak*', '**/.!*'],

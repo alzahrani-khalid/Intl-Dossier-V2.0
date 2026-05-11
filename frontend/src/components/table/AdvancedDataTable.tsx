@@ -90,12 +90,10 @@ export function AdvancedDataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState('')
-  const [viewMode, setViewMode] = React.useState<ViewMode>(isMobile ? 'card' : 'table')
-
-  // Auto-switch view mode when viewport changes
-  React.useEffect(() => {
-    setViewMode(isMobile ? 'card' : 'table')
-  }, [isMobile])
+  // null = follow viewport; user toggle takes over once set.
+  const [viewModeOverride, setViewModeOverride] = React.useState<ViewMode | null>(null)
+  const viewMode: ViewMode = viewModeOverride ?? (isMobile ? 'card' : 'table')
+  const setViewMode = setViewModeOverride
 
   // Add selection column if enabled
   const tableColumns = React.useMemo(() => {
@@ -178,8 +176,8 @@ export function AdvancedDataTable<TData, TValue>({
         key={row.id}
         className={cn(
           'transition-colors',
-          onRowClick && 'cursor-pointer hover:bg-accent/50 active:bg-accent',
-          row.getIsSelected() && 'ring-2 ring-primary bg-primary/5',
+          onRowClick && 'cursor-pointer hover:bg-[var(--line-soft)] active:bg-[var(--line-soft)]',
+          row.getIsSelected() && 'ring-2 ring-[var(--accent)] bg-[var(--accent-soft)]',
         )}
         onClick={() => onRowClick?.(row.original)}
       >
@@ -210,7 +208,7 @@ export function AdvancedDataTable<TData, TValue>({
 
           {/* Card Details */}
           {displayCells.length > 0 && (
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2 border-t border-border">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-[var(--line)] pt-2">
               {displayCells.map((cell) => (
                 <div key={cell.id} className="space-y-0.5">
                   <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">
@@ -313,7 +311,7 @@ export function AdvancedDataTable<TData, TValue>({
         <div className="flex gap-2">
           {/* View Toggle */}
           {enableViewToggle && (
-            <div className="flex items-center rounded-md border border-input p-0.5 sm:hidden">
+            <div className="flex items-center rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface)] p-0.5 sm:hidden">
               <Button
                 variant={viewMode === 'card' ? 'secondary' : 'ghost'}
                 size="sm"
@@ -394,7 +392,7 @@ export function AdvancedDataTable<TData, TValue>({
 
       {/* Table View */}
       {viewMode === 'table' && (
-        <div className="rounded-lg border border-border overflow-hidden">
+        <div className="card overflow-hidden p-0">
           <div className="overflow-x-auto scrollbar-thin touch-pan-x">
             <Table>
               <TableHeader>
@@ -434,7 +432,7 @@ export function AdvancedDataTable<TData, TValue>({
                       key={row.id}
                       data-state={row.getIsSelected() && 'selected'}
                       className={cn(
-                        onRowClick && 'cursor-pointer hover:bg-accent/50',
+                        onRowClick && 'cursor-pointer hover:bg-[var(--line-soft)]',
                         'transition-colors',
                       )}
                       onClick={() => onRowClick?.(row.original)}

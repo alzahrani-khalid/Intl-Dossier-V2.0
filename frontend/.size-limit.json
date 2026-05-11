@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Initial JS (entry point)",
+    "path": "dist/assets/app-*.js",
+    "limit": "517 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "React vendor",
+    "path": "dist/assets/react-vendor-*.js",
+    "limit": "349 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "TanStack vendor",
+    "path": "dist/assets/tanstack-vendor-*.js",
+    "limit": "51 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "Total JS",
+    "path": "dist/assets/*.js",
+    "limit": "2.43 MB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "signature-visuals/d3-geospatial",
+    "path": "dist/assets/signature-visuals-d3-*.js",
+    "limit": "55 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "signature-visuals/static-primitives",
+    "path": "dist/assets/signature-visuals-static-*.js",
+    "limit": "64 KB",
+    "gzip": true,
+    "running": false
+  }
+]

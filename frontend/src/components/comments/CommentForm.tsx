@@ -77,16 +77,15 @@ export function CommentForm({
   const isSubmitting = createComment.isPending || updateComment.isPending
   const canSubmit = content.trim().length > 0 && content.length <= maxLength && !isSubmitting
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (): Promise<void> => {
     if (!canSubmit) return
 
     try {
-      if (isEditing) {
-        const result = await updateComment.mutateAsync({
-          commentId: editingComment.id,
-          content: content.trim(),
-          visibility,
-        })
+      if (isEditing && editingComment) {
+        const result = (await updateComment.mutateAsync({
+          id: editingComment.id,
+          data: { content: content.trim(), visibility },
+        })) as Partial<CommentWithDetails>
         // Create a CommentWithDetails from the result
         const updatedComment: CommentWithDetails = {
           ...editingComment,
@@ -97,17 +96,17 @@ export function CommentForm({
         }
         onSubmit?.(updatedComment)
       } else {
-        const comment = await createComment.mutateAsync({
-          entityType,
-          entityId,
+        const comment = (await createComment.mutateAsync({
+          entity_type: entityType,
+          entity_id: entityId,
           content: content.trim(),
-          parentId,
+          parent_id: parentId,
           visibility,
-        })
+        })) as CommentWithDetails
         onSubmit?.(comment)
         setContent('')
       }
-    } catch (error) {
+    } catch (_error) {
       // Error handling is done in the mutation
     }
   }, [
@@ -142,10 +141,7 @@ export function CommentForm({
   }, [defaultVisibility, onCancel])
 
   return (
-    <div
-      className={cn('space-y-3', compact && 'space-y-2')}
-      data-testid="comment-form"
-    >
+    <div className={cn('space-y-3', compact && 'space-y-2')} data-testid="comment-form">
       {/* Textarea with @mention support */}
       <MentionInput
         ref={textareaRef}

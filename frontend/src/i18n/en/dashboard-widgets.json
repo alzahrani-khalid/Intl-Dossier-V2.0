@@ -1,4 +1,101 @@
 {
+  "hero": {
+    "fallbackName": "there",
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "afternoon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}"
+    },
+    "subtitle": "Portfolio overview",
+    "classification": "GASTAT · Restricted · Transmitted over secure channels",
+    "actions": {
+      "newEngagement": "New engagement",
+      "newRequest": "New request"
+    }
+  },
+  "kpi": {
+    "activeEngagements": "Active Engagements",
+    "openCommitments": "Open Commitments",
+    "slaAtRisk": "SLA at Risk",
+    "weekAhead": "Week Ahead",
+    "activeMeta": "5 this week · 3 travel",
+    "openMeta": "11 due this week",
+    "slaMeta": "4 breached · 5 amber",
+    "weekAheadMeta": "2 VIP visits · 1 travel",
+    "strip": "Key metrics"
+  },
+  "weekAhead": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "this_week": "This Week",
+    "next_week": "Next Week",
+    "title": "Week Ahead",
+    "empty": "No upcoming events",
+    "status": {
+      "scheduled": "Scheduled",
+      "confirmed": "Confirmed",
+      "pending": "Pending",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "overdue": {
+    "title": "Overdue Commitments",
+    "empty": "No overdue commitments",
+    "expand": "Show more",
+    "collapse": "Show less"
+  },
+  "digest": {
+    "title": "Intelligence Digest",
+    "tag": "Source",
+    "refresh": "Refresh digest",
+    "empty": {
+      "heading": "Digest is ready for seeded publications.",
+      "body": "Apply the dashboard demo seed, then refresh the digest."
+    },
+    "error": "Digest could not load. Check the staging seed and try again."
+  },
+  "sla": {
+    "title": "SLA Health",
+    "legend_ok": "On track",
+    "legend_risk": "At risk",
+    "legend_bad": "Breached"
+  },
+  "vip": {
+    "title": "VIP Visits",
+    "empty": {
+      "heading": "No VIP visits with country data.",
+      "body": "Add VIP participant data to the dashboard seed, then refresh the widget."
+    },
+    "error": "VIP visits could not load. Check event data and try again."
+  },
+  "myTasks": {
+    "title": "My Tasks",
+    "empty": "No tasks assigned",
+    "due": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "overdue": "Overdue"
+    }
+  },
+  "recent": {
+    "title": "Recent Dossiers",
+    "empty": "No recent dossiers"
+  },
+  "forums": {
+    "title": "Forums",
+    "empty": "No active forums",
+    "status": {
+      "active": "Active",
+      "scheduled": "Scheduled",
+      "archived": "Archived"
+    }
+  },
+  "error": {
+    "load_failed": "Couldn't load widget",
+    "retry": "Retry"
+  },
   "title": "Dashboard",
   "customDashboard": "Custom Dashboard",
   "editMode": "Edit Mode",
@@ -249,7 +346,7 @@
   },
 
   "actions": {
-    "viewAll": "View All",
+    "viewAll": "View all VIP visits",
     "refresh": "Refresh",
     "expand": "Expand",
     "collapse": "Collapse",

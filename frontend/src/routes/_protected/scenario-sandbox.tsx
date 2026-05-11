@@ -60,7 +60,7 @@ export const Route = createFileRoute('/_protected/scenario-sandbox')({
 function ScenarioSandboxPage() {
   const { t } = useTranslation('scenario-sandbox')
   const { isRTL } = useDirection()
-// State
+  // State
   const [activeTab, setActiveTab] = useState('scenarios')
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<ScenarioStatus | 'all'>('all')
@@ -113,9 +113,12 @@ function ScenarioSandboxPage() {
   // Handlers
   const handleCreateScenario = async (data: CreateScenarioRequest) => {
     if (editingScenario) {
-      await updateScenario.mutateAsync({ id: editingScenario.id, data })
+      await updateScenario.mutateAsync({
+        id: editingScenario.id,
+        data: data as unknown as Record<string, unknown>,
+      })
     } else {
-      await createScenario.mutateAsync(data)
+      await createScenario.mutateAsync(data as unknown as Record<string, unknown>)
     }
     setIsFormOpen(false)
     setEditingScenario(undefined)

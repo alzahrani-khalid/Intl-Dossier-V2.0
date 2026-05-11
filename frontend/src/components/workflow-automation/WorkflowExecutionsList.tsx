@@ -51,7 +51,12 @@ const locale = isRTL ? ar : enUS
   const { data, isLoading, isError, refetch } = useWorkflowExecutions({
     rule_id: ruleId,
     limit: 50,
-  })
+  }) as unknown as {
+    data: { data: WorkflowExecution[] } | undefined
+    isLoading: boolean
+    isError: boolean
+    refetch: () => Promise<unknown>
+  }
 
   const retryMutation = useRetryWorkflowExecution()
 

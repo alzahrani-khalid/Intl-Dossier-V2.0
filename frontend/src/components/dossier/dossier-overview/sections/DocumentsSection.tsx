@@ -123,7 +123,7 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
 /**
  * Empty state component
  */
-function EmptyState({ type, isRTL }: { type?: DossierDocumentType | 'all'; isRTL: boolean }) {
+function EmptyState({ type }: { type?: DossierDocumentType | 'all' }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
@@ -151,7 +151,7 @@ function DocumentList({
   emptyType?: DossierDocumentType | 'all'
 }) {
   if (documents.length === 0) {
-    return <EmptyState type={emptyType} isRTL={isRTL} />
+    return <EmptyState type={emptyType} />
   }
 
   return (
@@ -206,7 +206,7 @@ export function DocumentsSection({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">
-          <EmptyState type="all" isRTL={isRTL} />
+          <EmptyState type="all" />
         </CardContent>
       </Card>
     )

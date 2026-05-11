@@ -65,7 +65,6 @@ interface GraphVisualizationProps {
 
 // T086: Memoized custom node component to prevent unnecessary re-renders
 const DossierNode = memo(({ data }: { data: NodeData }) => {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const name = isRTL ? data.name_ar : data.name_en
 

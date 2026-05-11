@@ -32,7 +32,6 @@ import {
 } from '@/components/dashboard-widgets'
 import { useWidgetDashboard } from '@/hooks/useWidgetDashboard'
 import { toast } from 'sonner'
-import { useDirection } from '@/hooks/useDirection'
 
 /**
  * Page header component
@@ -42,14 +41,12 @@ function DashboardHeader({
   onToggleEditMode,
   onAddWidget,
   onResetLayout,
-  isRTL,
   t,
 }: {
   isEditMode: boolean
   onToggleEditMode: () => void
   onAddWidget: () => void
   onResetLayout: () => void
-  isRTL: boolean
   t: (key: string) => string
 }) {
   return (
@@ -178,7 +175,6 @@ function LoadingSkeleton() {
  */
 export function CustomDashboardPage() {
   const { t } = useTranslation('dashboard-widgets')
-  const { isRTL } = useDirection()
   const {
     widgets,
     widgetData,
@@ -231,7 +227,6 @@ export function CustomDashboardPage() {
         onToggleEditMode={toggleEditMode}
         onAddWidget={() => setIsLibraryOpen(true)}
         onResetLayout={handleResetLayout}
-        isRTL={isRTL}
         t={t}
       />
 

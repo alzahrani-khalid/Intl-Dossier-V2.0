@@ -37,7 +37,15 @@ const [entityId, setEntityId] = useState('')
   const [dryRun, setDryRun] = useState(true)
   const [testResult, setTestResult] = useState<WorkflowTestResponse['data'] | null>(null)
 
-  const testMutation = useTestWorkflowRule()
+  const testMutation = useTestWorkflowRule() as unknown as {
+    mutate: (
+      vars: Record<string, unknown>,
+      options?: { onSuccess?: (response: WorkflowTestResponse) => void },
+    ) => void
+    isPending: boolean
+    isError: boolean
+    error: Error | null
+  }
 
   const handleTest = () => {
     if (!rule) return

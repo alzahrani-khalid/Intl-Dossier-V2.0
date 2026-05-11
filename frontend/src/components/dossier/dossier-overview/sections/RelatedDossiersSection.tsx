@@ -92,7 +92,7 @@ function RelatedDossierCard({ dossier, isRTL }: { dossier: RelatedDossier; isRTL
 /**
  * Empty state component
  */
-function EmptyState({ isRTL }: { isRTL: boolean }) {
+function EmptyState() {
   const { t } = useTranslation('dossier-overview')
 
   return (
@@ -154,7 +154,7 @@ export function RelatedDossiersSection({
     return (
       <Card className={className}>
         <CardContent className="p-4 sm:p-6">
-          <EmptyState isRTL={isRTL} />
+          <EmptyState />
         </CardContent>
       </Card>
     )

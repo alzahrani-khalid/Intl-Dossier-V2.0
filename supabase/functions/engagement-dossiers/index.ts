@@ -363,7 +363,7 @@ async function listEngagements(supabaseClient: any, url: URL) {
   const { count } = await supabaseClient
     .from('dossiers')
     .select('id', { count: 'exact', head: true })
-    .eq('type', 'engagement_dossier')
+    .eq('type', 'engagement')
     .neq('status', 'archived');
 
   return new Response(
@@ -442,7 +442,7 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
   const { data: dossier, error: dossierError } = await supabaseClient
     .from('dossiers')
     .insert({
-      type: 'engagement_dossier',
+      type: 'engagement',
       name_en: body.name_en,
       name_ar: body.name_ar,
       description_en: body.description_en || null,
@@ -539,7 +539,7 @@ async function updateEngagement(req: Request, supabaseClient: any, user: any, id
     .from('dossiers')
     .update(dossierUpdate)
     .eq('id', id)
-    .eq('type', 'engagement_dossier')
+    .eq('type', 'engagement')
     .select()
     .single();
 
@@ -602,7 +602,7 @@ async function archiveEngagement(supabaseClient: any, user: any, id: string) {
       updated_by: user.id,
     })
     .eq('id', id)
-    .eq('type', 'engagement_dossier');
+    .eq('type', 'engagement');
 
   if (error) {
     console.error('Error archiving engagement:', error);
@@ -1172,7 +1172,7 @@ async function handlePromoteIntake(req: Request, supabaseClient: any, user: any)
   const { data: dossier, error: dossierError } = await supabaseClient
     .from('dossiers')
     .insert({
-      type: 'engagement_dossier',
+      type: 'engagement',
       name_en: body.title_en,
       name_ar: body.title_ar,
       status: 'active',

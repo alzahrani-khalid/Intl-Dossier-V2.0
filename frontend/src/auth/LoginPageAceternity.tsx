@@ -7,7 +7,6 @@ import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '../store/authStore'
 import { Eye, EyeOff, Loader2, Globe, Mail, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { LanguageSwitcher } from '../components/language-switcher/LanguageSwitcher'
 import { FormInputAceternity } from '../components/forms/FormInputAceternity'
 import { FormCheckboxAceternity } from '../components/forms/FormCheckboxAceternity'
 
@@ -54,11 +53,6 @@ export function LoginPageAceternity() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-muted p-4">
       <div className="w-full max-w-md">
-        {/* Language toggle */}
-        <div className="mb-4 flex justify-end">
-          <LanguageSwitcher />
-        </div>
-
         {/* Login card */}
         <div className="rounded-2xl bg-card p-4 sm:p-6 lg:p-8 shadow-xl">
           {/* Logo and title */}

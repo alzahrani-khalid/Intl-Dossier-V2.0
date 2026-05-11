@@ -14,6 +14,8 @@ export interface AuthUser {
   name?: string
   role?: string
   avatar?: string
+  jobTitleEn?: string
+  jobTitleAr?: string
 }
 
 export interface AuthState {
@@ -27,7 +29,7 @@ export interface AuthState {
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
   clearError: () => void
-  handleAuthStateChange: (event: AuthChangeEvent, session: Session | null) => void
+  handleAuthStateChange: (event: AuthChangeEvent, session: Session | null) => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -67,6 +69,8 @@ export const useAuthStore = create<AuthState>()(
                 name: profile?.full_name || data.user.email?.split('@')[0],
                 role: userRole,
                 avatar: profile?.avatar_url,
+                jobTitleEn: profile?.job_title_en ?? undefined,
+                jobTitleAr: profile?.job_title_ar ?? undefined,
               },
               isAuthenticated: true,
               isLoading: false,
@@ -129,13 +133,21 @@ export const useAuthStore = create<AuthState>()(
           } = await supabase.auth.getSession()
 
           if (session?.user) {
+            const { data: profile } = await supabase
+              .from('users')
+              .select(COLUMNS.USERS.PROFILE)
+              .eq('id', session.user.id)
+              .single()
+
             set({
               user: {
                 id: session.user.id,
                 email: session.user.email || '',
-                name: session.user.user_metadata?.name,
-                role: session.user.user_metadata?.role,
-                avatar: session.user.user_metadata?.avatar_url,
+                name: profile?.full_name || session.user.user_metadata?.name,
+                role: profile?.role || session.user.user_metadata?.role,
+                avatar: profile?.avatar_url || session.user.user_metadata?.avatar_url,
+                jobTitleEn: profile?.job_title_en ?? undefined,
+                jobTitleAr: profile?.job_title_ar ?? undefined,
               },
               isAuthenticated: true,
               isLoading: false,
@@ -158,7 +170,7 @@ export const useAuthStore = create<AuthState>()(
 
       clearError: () => set({ error: null }),
 
-      handleAuthStateChange: (event: AuthChangeEvent, session: Session | null) => {
+      handleAuthStateChange: async (event: AuthChangeEvent, session: Session | null) => {
         // Handle auth state changes from Supabase (token refresh, sign out, etc.)
         if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED') {
           clearSentryUser()
@@ -171,7 +183,13 @@ export const useAuthStore = create<AuthState>()(
           })
         } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session?.user) {
-            const userRole = session.user.user_metadata?.role
+            const { data: profile } = await supabase
+              .from('users')
+              .select(COLUMNS.USERS.PROFILE)
+              .eq('id', session.user.id)
+              .single()
+
+            const userRole = profile?.role || session.user.user_metadata?.role
 
             // Update Sentry user context on auth state change
             setSentryUser({
@@ -188,9 +206,11 @@ export const useAuthStore = create<AuthState>()(
               user: {
                 id: session.user.id,
                 email: session.user.email || '',
-                name: session.user.user_metadata?.name,
+                name: profile?.full_name || session.user.user_metadata?.name,
                 role: userRole,
-                avatar: session.user.user_metadata?.avatar_url,
+                avatar: profile?.avatar_url || session.user.user_metadata?.avatar_url,
+                jobTitleEn: profile?.job_title_en ?? undefined,
+                jobTitleAr: profile?.job_title_ar ?? undefined,
               },
               isAuthenticated: true,
               isLoading: false,

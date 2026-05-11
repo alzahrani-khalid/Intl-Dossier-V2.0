@@ -140,14 +140,13 @@ export function useAIFieldAssist(): UseAIFieldAssistReturn {
             return
           }
 
-          const errorData = await response.json().catch(() => ({}))
+          const errorData = (await response.json().catch(() => ({}))) as {
+            error?: { message_en?: string; message?: string }
+          }
+          const errObj = errorData.error
           throw new Error(
-            (errorData as Record<string, unknown>)?.error
-              ? String(
-                  ((errorData as Record<string, Record<string, string>>).error).message_en ||
-                    ((errorData as Record<string, Record<string, string>>).error).message ||
-                    'Failed to generate fields',
-                )
+            errObj
+              ? String(errObj.message_en || errObj.message || 'Failed to generate fields')
               : 'Failed to generate fields',
           )
         }

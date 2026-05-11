@@ -64,7 +64,7 @@ export interface UseCommitmentOptions {
  * @param options - Hook options with filters
  * @returns TanStack Query result
  */
-function useCommitments(options?: UseCommitmentsOptions) {
+export function useCommitments(options?: UseCommitmentsOptions) {
   const { enabled = true, ...filters } = options ?? {}
 
   return useQuery<CommitmentsListResponse, Error>({

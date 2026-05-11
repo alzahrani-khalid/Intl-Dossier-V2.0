@@ -22,20 +22,20 @@ router.get('/', validate({ query: paginationSchema }), async (req, res, next) =>
     const result = await organizationService.findAll(req.query)
     res.json(result)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 })
 
 // GET /api/organizations/:id
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const org = await organizationService.findById(req.params.id)
+    const org = await organizationService.findById(req.params.id as string)
     if (!org) {
       return res.status(404).json({ error: 'Organization not found' })
     }
-    res.json(org)
+    return res.json(org)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 })
 
@@ -50,9 +50,9 @@ router.post(
         ...req.body,
         created_by: req.user?.id,
       })
-      res.status(201).json(org)
+      return res.status(201).json(org)
     } catch (error) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -64,10 +64,10 @@ router.put(
   validate({ params: idParamSchema, body: createOrgSchema.partial() }),
   async (req, res, next) => {
     try {
-      const org = await organizationService.update(req.params.id, req.body)
-      res.json(org)
+      const org = await organizationService.update(req.params.id as string, req.body)
+      return res.json(org)
     } catch (error) {
-      next(error)
+      return next(error)
     }
   },
 )
@@ -79,10 +79,10 @@ router.delete(
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      await organizationService.delete(req.params.id)
-      res.json({ message: 'Organization deleted successfully' })
+      await organizationService.delete(req.params.id as string)
+      return res.json({ message: 'Organization deleted successfully' })
     } catch (error) {
-      next(error)
+      return next(error)
     }
   },
 )

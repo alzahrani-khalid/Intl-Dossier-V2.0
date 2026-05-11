@@ -6,7 +6,7 @@
  * Includes file upload, validation, conflict resolution, and import execution.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDropzone } from 'react-dropzone'
 import {
@@ -44,6 +44,7 @@ import type {
   ImportMode,
   ConflictResolution,
   ImportRequest,
+  UseImportDataReturn,
 } from '@/types/export-import.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
@@ -65,11 +66,14 @@ export function ImportDialog({
 }: ImportDialogProps) {
   const { t } = useTranslation('export-import')
   const { isRTL } = useDirection()
-const [step, setStep] = useState<ImportStep>('upload')
+  const [step, setStep] = useState<ImportStep>('upload')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [mode, setMode] = useState<ImportMode>('upsert')
   const [conflictResolution, setConflictResolution] = useState<ConflictResolution>('skip')
 
+  // Stub useImportData takes 0 args; the rich options shape is owned by 47-07.
+  // Local typed shim narrows the return to UseImportDataReturn.
+  void { entityType, defaultMode: mode, defaultConflictResolution: conflictResolution }
   const {
     uploadFile,
     executeImport,
@@ -80,14 +84,15 @@ const [step, setStep] = useState<ImportStep>('upload')
     isValidating,
     isImporting,
     reset: resetHook,
-  } = useImportData({
-    entityType,
-    defaultMode: mode,
-    defaultConflictResolution: conflictResolution,
-    onSuccess: () => {
+  } = useImportData() as unknown as UseImportDataReturn
+
+  // Notify caller on import completion (preserves the documented onImportComplete contract;
+  // wired via importResponse since the hook no longer accepts callback options).
+  useEffect(() => {
+    if (importResponse?.success) {
       onImportComplete?.()
-    },
-  })
+    }
+  }, [importResponse, onImportComplete])
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -165,9 +170,7 @@ const [step, setStep] = useState<ImportStep>('upload')
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent
-        className="sm:max-w-[600px] max-h-[90vh] overflow-hidden flex flex-col"
-      >
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Upload className="h-5 w-5" />

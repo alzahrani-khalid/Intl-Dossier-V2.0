@@ -38,7 +38,7 @@ interface SlotVote {
 export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPollVoterProps) {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? ar : enUS
+  const dateLocale = isRTL ? ar : enUS
 
   const { data: pollData, isLoading, error } = usePollDetails(pollId)
   const submitVotes = useSubmitVotes()

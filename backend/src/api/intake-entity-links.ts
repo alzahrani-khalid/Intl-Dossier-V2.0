@@ -18,7 +18,11 @@ import {
   getIntakeAuditLogs,
   migrateIntakeLinksToPosition,
 } from '../services/link.service'
-import type { CreateLinkRequest, UpdateLinkRequest } from '../types/intake-entity-links.types'
+import type {
+  CreateLinkRequest,
+  EntityType,
+  UpdateLinkRequest,
+} from '../types/intake-entity-links.types'
 
 const router = Router()
 
@@ -28,7 +32,7 @@ const router = Router()
  */
 router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params
+    const { intake_id } = req.params as { intake_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -122,7 +126,7 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
  */
 router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params
+    const { intake_id } = req.params as { intake_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -216,7 +220,7 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
  */
 router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params
+    const { intake_id } = req.params as { intake_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -297,7 +301,7 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
  */
 router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params
+    const { intake_id } = req.params as { intake_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -359,7 +363,7 @@ router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
  */
 router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Response) => {
   try {
-    const { intake_id, link_id } = req.params
+    const { intake_id, link_id } = req.params as { intake_id: string; link_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -443,7 +447,7 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
  */
 router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params
+    const { intake_id } = req.params as { intake_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -550,7 +554,7 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
  */
 router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Response) => {
   try {
-    const { intake_id, link_id } = req.params
+    const { link_id } = req.params as { intake_id: string; link_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -611,7 +615,7 @@ router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Res
  */
 router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, res: Response) => {
   try {
-    const { intake_id, link_id } = req.params
+    const { link_id } = req.params as { intake_id: string; link_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -672,7 +676,7 @@ router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, re
  */
 router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params
+    const { intake_id } = req.params as { intake_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -720,7 +724,7 @@ router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response)
  */
 router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res: Response) => {
   try {
-    const { entity_type, entity_id } = req.params
+    const { entity_type, entity_id } = req.params as { entity_type: string; entity_id: string }
     const userId = req.user?.id
 
     if (!userId) {
@@ -734,6 +738,12 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
     }
 
     // Get user profile for clearance level
+    if (!req.supabase) {
+      return res.status(500).json({
+        success: false,
+        error: { code: 'INTERNAL_ERROR', message: 'Supabase client not initialized' },
+      })
+    }
     const { data: userProfile } = await req.supabase
       .from('profiles')
       .select('clearance_level')
@@ -792,7 +802,7 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
     }
 
     // Get entity intakes with reverse lookup
-    const result = await getEntityIntakes(entity_type, entity_id, {
+    const result = await getEntityIntakes(entity_type as EntityType, entity_id, {
       page,
       pageSize,
       linkType: linkType as any,

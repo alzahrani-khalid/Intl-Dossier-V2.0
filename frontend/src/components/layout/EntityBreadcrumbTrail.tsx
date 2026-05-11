@@ -53,7 +53,6 @@ const entityIcons: Record<EntityType, React.ComponentType<{ className?: string }
   forum: Users,
   working_group: Users,
   topic: MessageSquare,
-  elected_official: User,
 }
 
 /** Map entity types to colors */
@@ -67,7 +66,6 @@ const entityColors: Record<EntityType, string> = {
   forum: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300',
   working_group: 'bg-pink-100 text-pink-600 dark:bg-pink-900 dark:text-pink-300',
   topic: 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300',
-  elected_official: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900 dark:text-cyan-300',
 }
 
 interface EntityBreadcrumbItemProps {

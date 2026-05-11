@@ -27,6 +27,17 @@
     "no": "No",
     "selectAll": "Select All",
     "clearAll": "Clear All",
+    "actions": {
+      "previous": "Previous",
+      "next": "Next",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "openMenu": "Open menu",
+      "closeDialog": "Close dialog",
+      "toggleSection": "Toggle section",
+      "viewMore": "View more",
+      "remove": "Remove"
+    },
     "all": "All",
     "noData": "No data available",
     "noResults": "No results found.",

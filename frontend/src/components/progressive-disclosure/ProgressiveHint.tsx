@@ -93,7 +93,6 @@ function InlineHint({
   onDismiss,
   onAction,
   className,
-  isRTL,
 }: Omit<InternalHintProps, 'variant' | 'position' | 'children' | 'delayMs'>) {
   const { t } = useTranslation('progressive-disclosure')
   const sizes = sizeConfig[size]
@@ -163,7 +162,6 @@ function ExpandableHint({
   onExpand,
   onAction,
   className,
-  isRTL,
 }: Omit<InternalHintProps, 'variant' | 'position' | 'children' | 'delayMs'>) {
   const { t } = useTranslation('progressive-disclosure')
   const [isExpanded, setIsExpanded] = useState(false)
@@ -273,7 +271,6 @@ function CardHint({
   onDismiss,
   onAction,
   className,
-  isRTL,
 }: Omit<InternalHintProps, 'variant' | 'position' | 'children' | 'delayMs' | 'onExpand'>) {
   const { t } = useTranslation('progressive-disclosure')
   const sizes = sizeConfig[size]
@@ -451,11 +448,14 @@ export function ProgressiveHint({
   className,
   delayMs,
 }: ProgressiveHintProps) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(true)
   const hasTrackedShow = useRef(false)
 
+  // Stub useProgressiveDisclosure returns UseQueryResult<unknown>; the hook surface
+  // is owned by 47-07. Local typed shim mirrors the in-component contract: a richer
+  // hint-state machine (shouldShowHint returns { shouldShow, ... }; record* are
+  // async with optional context/page args).
   const {
     shouldShowHint,
     recordHintShown,
@@ -463,7 +463,18 @@ const [isVisible, setIsVisible] = useState(true)
     recordHintExpanded,
     recordActionTaken,
     preferences,
-  } = useProgressiveDisclosure()
+  } = useProgressiveDisclosure() as unknown as {
+    shouldShowHint: (hintId: string, contextType?: HintContextType) => { shouldShow: boolean }
+    recordHintShown: (
+      hintId: string,
+      contextType?: HintContextType,
+      pageContext?: string,
+    ) => Promise<unknown>
+    recordHintDismissed: (hintId: string) => Promise<unknown>
+    recordHintExpanded: (hintId: string) => Promise<unknown>
+    recordActionTaken: (hintId: string) => Promise<unknown>
+    preferences: { hintsEnabled?: boolean; hintDelayMs?: number } | null
+  }
 
   // Resolve hint definition if string ID is passed
   const hintDefinition =

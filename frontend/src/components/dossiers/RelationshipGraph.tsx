@@ -18,6 +18,7 @@ import {
 import '@xyflow/react/dist/style.css'
 
 import { useRelationshipsForDossier } from '@/hooks/useRelationships'
+import type { RelationshipWithDossiers } from '@/services/relationship-api'
 import { useTouchGraphControls } from '@/hooks/useTouchGraphControls'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { Card } from '@/components/ui/card'
@@ -67,7 +68,13 @@ const [relationshipTypeFilter, setRelationshipTypeFilter] = useState<string | un
     undefined,
   )
 
-  const { data: relationshipsData, isLoading, error } = useRelationshipsForDossier(dossierId)
+  const { data: relationshipsData, isLoading, error } = useRelationshipsForDossier(
+    dossierId,
+  ) as unknown as {
+    data: { data: RelationshipWithDossiers[] } | undefined
+    isLoading: boolean
+    error: unknown
+  }
   const relationships = relationshipsData?.data || []
 
   // Transform relationships to React Flow nodes and edges

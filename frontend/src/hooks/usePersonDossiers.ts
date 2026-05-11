@@ -15,7 +15,6 @@ import {
   updateDossier,
   getDossiersByType,
   type CreateDossierRequest,
-  type UpdateDossierRequest,
   type DossierWithExtension,
   type DossiersListResponse,
   DossierAPIError,
@@ -141,77 +140,6 @@ export function useCreatePersonDossier() {
 }
 
 /**
- * Hook to update a person dossier
- */
-function useUpdatePersonDossier() {
-  const queryClient = useQueryClient()
-  const { t } = useTranslation('contacts')
-
-  return useMutation({
-    mutationFn: async ({
-      id,
-      updates,
-    }: {
-      id: string
-      updates: {
-        name_en?: string
-        name_ar?: string
-        description_en?: string
-        description_ar?: string
-        metadata?: Partial<PersonMetadata>
-        tags?: string[]
-        status?: 'active' | 'inactive' | 'archived'
-      }
-    }) => {
-      const request: UpdateDossierRequest = {
-        ...updates,
-        metadata: updates.metadata as Record<string, unknown> | undefined,
-      }
-      return updateDossier(id, request)
-    },
-    onMutate: async ({ id, updates }) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: dossierKeys.detail(id) })
-
-      // Snapshot previous value
-      const previousDossier = queryClient.getQueryData<PersonDossier>(dossierKeys.detail(id))
-
-      // Optimistic update
-      if (previousDossier) {
-        queryClient.setQueryData<PersonDossier>(dossierKeys.detail(id), {
-          ...previousDossier,
-          ...updates,
-          metadata: {
-            ...previousDossier.metadata,
-            ...updates.metadata,
-          },
-          updated_at: new Date().toISOString(),
-        })
-      }
-
-      return { previousDossier }
-    },
-    onSuccess: (data, variables) => {
-      // Replace optimistic update with actual data
-      queryClient.setQueryData(dossierKeys.detail(variables.id), data)
-
-      // Invalidate lists
-      queryClient.invalidateQueries({ queryKey: dossierKeys.byType('person') })
-      queryClient.invalidateQueries({ queryKey: dossierKeys.lists() })
-
-      toast.success(t('hooks.contact_updated_success', { name: data.name_en }))
-    },
-    onError: (error: DossierAPIError, variables, context) => {
-      // Rollback on error
-      if (context?.previousDossier) {
-        queryClient.setQueryData(dossierKeys.detail(variables.id), context.previousDossier)
-      }
-      toast.error(t('hooks.contact_updated_error', { error: error.message }))
-    },
-  })
-}
-
-/**
  * Hook to archive a person dossier (soft delete)
  */
 export function useArchivePersonDossier() {
@@ -236,16 +164,4 @@ export function useArchivePersonDossier() {
       toast.error(t('hooks.contact_archived_error', { error: error.message }))
     },
   })
-}
-
-/**
- * Hook to invalidate all person dossier queries
- */
-function useInvalidatePersonDossiers() {
-  const queryClient = useQueryClient()
-
-  return () => {
-    queryClient.invalidateQueries({ queryKey: dossierKeys.byType('person') })
-    queryClient.invalidateQueries({ queryKey: dossierKeys.lists() })
-  }
 }

@@ -1,13 +1,40 @@
 import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
-import { MainLayout } from '@/components/layout/MainLayout'
+import { AppShell } from '@/components/layout/AppShell'
 import { useAuthStore, supabase } from '../store/authStore'
 import { ChatDock } from '@/components/ai/ChatDock'
 import { ChatProvider } from '@/contexts/ChatContext'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { OnboardingTourTrigger } from '@/components/guided-tours'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { DossierDrawer } from '@/components/dossier/DossierDrawer'
+// Phase 41 (D-02 / 41-RESEARCH §7 Path A): validateSearch whitelists drawer params on
+// the protected layout route so any deep-link to a child route can open the dossier
+// quick-look drawer via ?dossier=<id>&dossierType=<type>.
+const VALID_DOSSIER_TYPES = [
+  'country',
+  'organization',
+  'forum',
+  'engagement',
+  'topic',
+  'working_group',
+  'person',
+  'elected_official',
+] as const
+
+type ValidDossierType = (typeof VALID_DOSSIER_TYPES)[number]
+
+function isValidDrawerDossierType(value: unknown): value is ValidDossierType {
+  return typeof value === 'string' && (VALID_DOSSIER_TYPES as readonly string[]).includes(value)
+}
 
 export const Route = createFileRoute('/_protected')({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { dossier?: string; dossierType?: ValidDossierType } => ({
+    dossier:
+      typeof search.dossier === 'string' && search.dossier.length > 0 ? search.dossier : undefined,
+    dossierType: isValidDrawerDossierType(search.dossierType) ? search.dossierType : undefined,
+  }),
   beforeLoad: async () => {
     try {
       // Check actual Supabase session, not just localStorage
@@ -58,13 +85,16 @@ function ProtectedLayout(): React.ReactElement {
 
   return (
     <ChatProvider>
-      <MainLayout>
+      <AppShell>
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>
-      </MainLayout>
+      </AppShell>
       <ErrorBoundary>
         <ChatDock onCitationClick={handleCitationClick} />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <DossierDrawer />
       </ErrorBoundary>
       <OnboardingTourTrigger
         autoStartDelay={1000}

@@ -167,7 +167,7 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
 /**
  * Empty state component
  */
-function EmptyState({ isRTL }: { isRTL: boolean }) {
+function EmptyState() {
   const { t } = useTranslation('dossier-overview')
 
   return (
@@ -218,7 +218,7 @@ export function KeyContactsSection({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">
-          <EmptyState isRTL={isRTL} />
+          <EmptyState />
         </CardContent>
       </Card>
     )

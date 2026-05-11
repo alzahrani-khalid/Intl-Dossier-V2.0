@@ -21,6 +21,22 @@
     "security": "الأمان"
   },
 
+  "nav": {
+    "profile": "الملف الشخصي",
+    "general": "عام",
+    "appearance": "المظهر",
+    "notifications": "الإشعارات",
+    "accessAndSecurity": "الوصول والأمان",
+    "accessibility": "إمكانية الوصول",
+    "dataPrivacy": "البيانات والخصوصية",
+    "emailDigest": "ملخص البريد",
+    "integrations": "التكاملات"
+  },
+
+  "errors": {
+    "save": "تعذر حفظ التغييرات. راجع الحقول المحددة وحاول مرة أخرى."
+  },
+
   "profile": {
     "title": "إعدادات الملف الشخصي",
     "description": "إدارة معلوماتك الشخصية وصورة الملف الشخصي",
@@ -91,7 +107,40 @@
     "comfortable": "مريح",
     "comfortableDesc": "مسافات متوازنة",
     "spacious": "واسع",
-    "spaciousDesc": "مساحة تنفس أكبر"
+    "spaciousDesc": "مساحة تنفس أكبر",
+    "direction": {
+      "label": "اتجاه التصميم",
+      "help": "اختر الطابع البصري.",
+      "bureau": "Bureau",
+      "chancery": "Chancery",
+      "situation": "Situation Room",
+      "ministerial": "Ministerial"
+    },
+    "mode": {
+      "label": "النمط",
+      "light": "فاتح",
+      "dark": "داكن"
+    },
+    "hue": {
+      "label": "درجة اللون",
+      "help": "0–360°"
+    },
+    "density": {
+      "label": "الكثافة",
+      "comfortable": "مريح",
+      "compact": "مدمج",
+      "dense": "كثيف"
+    }
+  },
+
+  "emailDigest": {
+    "title": "ملخص البريد",
+    "description": "تكوين ملخصات البريد الإلكتروني المجدولة"
+  },
+
+  "integrations": {
+    "title": "التكاملات",
+    "description": "ربط الروبوتات والخدمات الخارجية"
   },
 
   "notifications": {

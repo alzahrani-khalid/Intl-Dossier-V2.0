@@ -6,14 +6,11 @@
  * All API calls go through the work-items repository → shared apiClient.
  */
 
+import { useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '@/lib/supabase'
-import type {
-  SLAPolicyInput,
-  SLAEntityType,
-  SLAEscalationStatus,
-} from '@/types/sla.types'
+import type { SLAPolicyInput, SLAEntityType, SLAEscalationStatus } from '@/types/sla.types'
 import {
   getSLADashboard,
   getSLAComplianceByType,
@@ -41,7 +38,7 @@ export interface SLADashboardParams {
   endDate?: string
 }
 
-export function useSLADashboard(params: SLADashboardParams = {}): ReturnType<typeof useQuery> {
+export function useSLADashboard(params: SLADashboardParams = {}) {
   return useQuery({
     queryKey: ['sla', 'dashboard', params],
     queryFn: () =>
@@ -55,9 +52,7 @@ export function useSLADashboard(params: SLADashboardParams = {}): ReturnType<typ
   })
 }
 
-export function useSLAComplianceByType(
-  params: SLADashboardParams = {},
-): ReturnType<typeof useQuery> {
+export function useSLAComplianceByType(params: SLADashboardParams = {}) {
   return useQuery({
     queryKey: ['sla', 'compliance', 'type', params],
     queryFn: () =>
@@ -74,9 +69,7 @@ export interface SLAComplianceByAssigneeParams extends SLADashboardParams {
   limit?: number
 }
 
-export function useSLAComplianceByAssignee(
-  params: SLAComplianceByAssigneeParams = {},
-): ReturnType<typeof useQuery> {
+export function useSLAComplianceByAssignee(params: SLAComplianceByAssigneeParams = {}) {
   return useQuery({
     queryKey: ['sla', 'compliance', 'assignee', params],
     queryFn: () =>
@@ -99,7 +92,7 @@ export interface SLAAtRiskParams {
   limit?: number
 }
 
-export function useSLAAtRiskItems(params: SLAAtRiskParams = {}): ReturnType<typeof useQuery> {
+export function useSLAAtRiskItems(params: SLAAtRiskParams = {}) {
   return useQuery({
     queryKey: ['sla', 'at-risk', params],
     queryFn: () =>
@@ -113,7 +106,7 @@ export function useSLAAtRiskItems(params: SLAAtRiskParams = {}): ReturnType<type
   })
 }
 
-export function useSLABreachedItems(): ReturnType<typeof useQuery> {
+export function useSLABreachedItems() {
   return useQuery({
     queryKey: ['sla', 'breached'],
     queryFn: () => getSLABreachedItems(),
@@ -126,7 +119,7 @@ export function useSLABreachedItems(): ReturnType<typeof useQuery> {
 // Policy Management Hooks
 // ============================================
 
-export function useSLAPolicies(): ReturnType<typeof useQuery> {
+export function useSLAPolicies() {
   return useQuery({
     queryKey: ['sla', 'policies'],
     queryFn: () => getSLAPolicies(),
@@ -134,7 +127,7 @@ export function useSLAPolicies(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useSLAPolicy(policyId: string | undefined): ReturnType<typeof useQuery> {
+export function useSLAPolicy(policyId: string | undefined) {
   return useQuery({
     queryKey: ['sla', 'policies', policyId],
     queryFn: () => getSLAPolicy(policyId!),
@@ -143,37 +136,37 @@ export function useSLAPolicy(policyId: string | undefined): ReturnType<typeof us
   })
 }
 
-export function useCreateSLAPolicy(): ReturnType<typeof useMutation> {
+export function useCreateSLAPolicy() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (input: SLAPolicyInput) => repoCreateSLAPolicy(input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
     },
   })
 }
 
-export function useUpdateSLAPolicy(): ReturnType<typeof useMutation> {
+export function useUpdateSLAPolicy() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ id, ...input }: Partial<SLAPolicyInput> & { id: string }) =>
       repoUpdateSLAPolicy(id, input),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
-      queryClient.invalidateQueries({ queryKey: ['sla', 'policies', variables.id] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'policies', variables.id] })
     },
   })
 }
 
-export function useDeleteSLAPolicy(): ReturnType<typeof useMutation> {
+export function useDeleteSLAPolicy() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (policyId: string) => repoDeleteSLAPolicy(policyId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'policies'] })
     },
   })
 }
@@ -188,7 +181,7 @@ export interface SLAEscalationsParams {
   limit?: number
 }
 
-export function useSLAEscalations(params: SLAEscalationsParams = {}): ReturnType<typeof useQuery> {
+export function useSLAEscalations(params: SLAEscalationsParams = {}) {
   return useQuery({
     queryKey: ['sla', 'escalations', params],
     queryFn: () =>
@@ -202,25 +195,25 @@ export function useSLAEscalations(params: SLAEscalationsParams = {}): ReturnType
   })
 }
 
-export function useAcknowledgeEscalation(): ReturnType<typeof useMutation> {
+export function useAcknowledgeEscalation() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (escalationId: string) => acknowledgeSLAEscalation(escalationId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
     },
   })
 }
 
-export function useResolveEscalation(): ReturnType<typeof useMutation> {
+export function useResolveEscalation() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ escalationId, notes }: { escalationId: string; notes?: string }) =>
       resolveSLAEscalation(escalationId, notes),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
     },
   })
 }
@@ -229,13 +222,13 @@ export function useResolveEscalation(): ReturnType<typeof useMutation> {
 // Manual Breach Check Hook
 // ============================================
 
-export function useCheckSLABreaches(): ReturnType<typeof useMutation> {
+export function useCheckSLABreaches() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: () => checkSLABreaches(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sla'] })
+      void queryClient.invalidateQueries({ queryKey: ['sla'] })
     },
   })
 }
@@ -244,35 +237,36 @@ export function useCheckSLABreaches(): ReturnType<typeof useMutation> {
 // Realtime Subscription Hook
 // ============================================
 
+// CR-14: subscriptions are side-effects, not queries. Using useQuery's queryFn
+// to create channels meant the cleanup never ran — every navigation leaked
+// two Supabase channels into the realtime client's subscription map. Switched
+// to useEffect with an explicit removeChannel cleanup so the channels are
+// torn down when the consuming component unmounts.
 export function useSLARealtimeUpdates(onUpdate?: () => void): void {
   const queryClient = useQueryClient()
 
-  useQuery({
-    queryKey: ['sla', 'realtime'],
-    queryFn: async () => {
-      const eventsChannel = supabase
-        .channel('sla-events-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'sla_events' }, () => {
-          queryClient.invalidateQueries({ queryKey: ['sla', 'dashboard'] })
-          queryClient.invalidateQueries({ queryKey: ['sla', 'at-risk'] })
-          queryClient.invalidateQueries({ queryKey: ['sla', 'breached'] })
-          onUpdate?.()
-        })
-        .subscribe()
+  useEffect(() => {
+    const eventsChannel = supabase
+      .channel('sla-events-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'sla_events' }, () => {
+        void queryClient.invalidateQueries({ queryKey: ['sla', 'dashboard'] })
+        void queryClient.invalidateQueries({ queryKey: ['sla', 'at-risk'] })
+        void queryClient.invalidateQueries({ queryKey: ['sla', 'breached'] })
+        onUpdate?.()
+      })
+      .subscribe()
 
-      const escalationsChannel = supabase
-        .channel('sla-escalations-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'sla_escalations' }, () => {
-          queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
-          onUpdate?.()
-        })
-        .subscribe()
+    const escalationsChannel = supabase
+      .channel('sla-escalations-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'sla_escalations' }, () => {
+        void queryClient.invalidateQueries({ queryKey: ['sla', 'escalations'] })
+        onUpdate?.()
+      })
+      .subscribe()
 
-      return { eventsChannel, escalationsChannel }
-    },
-    staleTime: STALE_TIME.STATIC,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  })
+    return () => {
+      void supabase.removeChannel(eventsChannel)
+      void supabase.removeChannel(escalationsChannel)
+    }
+  }, [queryClient, onUpdate])
 }

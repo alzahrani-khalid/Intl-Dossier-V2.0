@@ -47,7 +47,7 @@ export function WorkflowRulesList({
 }: WorkflowRulesListProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-// Filter state
+  // Filter state
   const [filters, setFilters] = useState<WorkflowRulesListParams>({
     page: 1,
     limit: 20,
@@ -55,10 +55,17 @@ export function WorkflowRulesList({
   const [searchQuery, setSearchQuery] = useState('')
 
   // Queries
+  // Stub useWorkflowRules returns UseQueryResult<unknown>; component-side typed shim
+  // narrows the return shape (47-07's surface).
   const { data, isLoading, isError, refetch } = useWorkflowRules({
     ...filters,
     search: searchQuery || undefined,
-  })
+  }) as unknown as {
+    data: { data: WorkflowRule[]; pagination: { total_pages: number } } | undefined
+    isLoading: boolean
+    isError: boolean
+    refetch: () => Promise<unknown>
+  }
 
   // Mutations
   const toggleMutation = useToggleWorkflowRule()

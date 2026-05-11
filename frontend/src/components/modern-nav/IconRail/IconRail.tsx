@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useLocation } from '@tanstack/react-router'
 import { IconButton } from './IconButton'
 import { cn } from '@/lib/utils'
-import { useTheme } from '@/components/theme-provider/theme-provider'
+import { useMode } from '@/design-system/hooks/useMode'
 import { useDirection } from '@/hooks/useDirection'
 
 export interface IconRailItem {
@@ -76,7 +76,7 @@ export function IconRail({
   const { isRTL } = useDirection()
   const navigate = useNavigate()
   const location = useLocation()
-  const { colorMode, setColorMode } = useTheme()
+  const { mode: colorMode, setMode: setColorMode } = useMode()
 
   // Default navigation items - 5 main categories
   const defaultItems: IconRailItem[] = [

@@ -176,11 +176,9 @@ function WorkItemCard({ item, isRTL }: { item: DossierWorkItem; isRTL: boolean }
 function StatusBreakdown({
   breakdown,
   total,
-  isRTL,
 }: {
   breakdown: Record<WorkItemStatus, number>
   total: number
-  isRTL: boolean
 }) {
   const { t } = useTranslation('dossier-overview')
 
@@ -225,7 +223,7 @@ function StatusBreakdown({
 /**
  * Empty state component
  */
-function EmptyState({ source, isRTL }: { source?: WorkItemSource | 'all'; isRTL: boolean }) {
+function EmptyState({ source}: { source?: WorkItemSource | 'all'; isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
@@ -331,7 +329,7 @@ export function WorkItemsSection({
 
       <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
         {/* Status Breakdown */}
-        <StatusBreakdown breakdown={data.status_breakdown} total={data.total_count} isRTL={isRTL} />
+        <StatusBreakdown breakdown={data.status_breakdown} total={data.total_count} />
 
         {/* Urgent Items Alert */}
         {data.urgent_items.length > 0 && (

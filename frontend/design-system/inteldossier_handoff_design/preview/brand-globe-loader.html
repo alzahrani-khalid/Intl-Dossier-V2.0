@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css"/>
+<style>
+@keyframes gs-rot { to { transform: rotate(360deg); } }
+@keyframes gs-counter { to { transform: rotate(-360deg); } }
+.gs { color:#1a1714 }
+.gs-whirl  { transform-origin:50% 50%; animation: gs-rot 1.4s linear infinite; }
+.gs-globe  { transform-origin:50% 50%; animation: gs-counter 6s linear infinite; }
+</style></head>
+<body>
+<div class="dscard">
+  <div class="tlabel" style="margin-bottom:14px;">GlobeSpinner — inline brand loader at 16/20/24/32/48px</div>
+  <div style="display:flex;gap:24px;align-items:flex-end;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <span class="gs"><svg viewBox="0 0 40 40" width="16" height="16"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+      <div style="font-family:JetBrains Mono;font-size:10px;color:#9a9082">16</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <span class="gs"><svg viewBox="0 0 40 40" width="20" height="20"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+      <div style="font-family:JetBrains Mono;font-size:10px;color:#9a9082">20</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <span class="gs"><svg viewBox="0 0 40 40" width="24" height="24"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+      <div style="font-family:JetBrains Mono;font-size:10px;color:#9a9082">24</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <span class="gs"><svg viewBox="0 0 40 40" width="32" height="32"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+      <div style="font-family:JetBrains Mono;font-size:10px;color:#9a9082">32</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <span class="gs"><svg viewBox="0 0 40 40" width="48" height="48"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+      <div style="font-family:JetBrains Mono;font-size:10px;color:#9a9082">48</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-inline-start:auto;font-size:13px;color:#6b6459">
+      <span class="gs"><svg viewBox="0 0 40 40" width="14" height="14"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/></g></svg></span>
+      Refreshing digest…
+    </div>
+  </div>
+  <div style="font-size:11.5px;color:#6b6459;margin-top:14px;line-height:1.5">Inline use: 14–20px next to a label. 32–48px for empty states. Full-bleed 120px <code style="font-family:JetBrains Mono">GlobeLoader</code> uses live d3 + world-atlas.</div>
+</div>
+</body></html>

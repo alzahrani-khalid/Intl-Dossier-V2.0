@@ -174,7 +174,7 @@ export function CalendarEmptyWizard({
 }: CalendarEmptyWizardProps) {
   const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
-const { user } = useAuth()
+  const { user } = useAuth()
 
   const [step, setStep] = useState<'welcome' | 'templates' | 'quick-create'>('welcome')
   const [selectedTemplate, setSelectedTemplate] = useState<EventTemplate | null>(null)
@@ -287,7 +287,7 @@ const { user } = useAuth()
                         key={template.id}
                         onClick={() => handleTemplateSelect(template)}
                         className={cn(
-                          'flex items-center gap-2 px-3 py-2 rounded-lg border transition-all hover:shadow-sm',
+                          'flex items-center gap-2 px-3 py-2 min-h-11 rounded-lg border transition-all hover:shadow-sm',
                           template.bgColor,
                           'hover:ring-2 hover:ring-primary/20',
                         )}

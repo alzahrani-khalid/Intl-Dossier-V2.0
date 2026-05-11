@@ -33,7 +33,7 @@ export const validate = (schema: {
   query?: z.ZodSchema
   params?: z.ZodSchema
 }) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       if (schema.body) {
         const result = await schema.body.parseAsync(req.body)
@@ -79,20 +79,20 @@ export const idParamSchema = z.object({
   id: z.string().uuid(),
 })
 
-const searchQuerySchema = z.object({
+export const searchQuerySchema = z.object({
   q: z.string().min(1).max(200),
   lang: z.enum(['en', 'ar']).optional(),
   ...paginationSchema.shape,
 })
 
 // Bilingual field validation
-const bilingualFieldSchema = z.object({
+export const bilingualFieldSchema = z.object({
   en: z.string(),
   ar: z.string(),
 })
 
 // Date range validation
-const dateRangeSchema = z
+export const dateRangeSchema = z
   .object({
     startDate: z.string().datetime().optional(),
     endDate: z.string().datetime().optional(),
@@ -102,7 +102,7 @@ const dateRangeSchema = z
   })
 
 // File upload validation
-const fileUploadSchema = z.object({
+export const fileUploadSchema = z.object({
   mimetype: z.string().min(1, 'Invalid mimetype'),
   size: z.number().max(10 * 1024 * 1024), // 10MB max
 })

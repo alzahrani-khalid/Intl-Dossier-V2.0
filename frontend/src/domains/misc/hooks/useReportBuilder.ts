@@ -18,7 +18,7 @@ export const reportKeys = {
   history: (params?: Record<string, unknown>) => [...reportKeys.all, 'history', params] as const,
 }
 
-export function useReportTemplates(): ReturnType<typeof useQuery> {
+export function useReportTemplates() {
   return useQuery({
     queryKey: reportKeys.templates(),
     queryFn: () => getReportTemplates(),
@@ -26,7 +26,7 @@ export function useReportTemplates(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useGenerateReport(): ReturnType<typeof useMutation> {
+export function useGenerateReport() {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => generateReportApi(data),
   })
@@ -38,7 +38,7 @@ export function useReportStatus(
     enabled?: boolean
     refetchInterval?: number
   },
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: reportId ? reportKeys.status(reportId) : ['report-builder', 'disabled'],
     queryFn: () => (reportId ? getReportStatus(reportId) : Promise.resolve(null)),
@@ -47,7 +47,7 @@ export function useReportStatus(
   })
 }
 
-export function useReportHistory(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useReportHistory(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -64,35 +64,114 @@ export function useReportHistory(params?: Record<string, unknown>): ReturnType<t
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-export function useReportBuilderState(
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
-  return useQuery({
-    queryKey: [...reportKeys.all, 'builder-state', params],
-    queryFn: () => Promise.resolve({ fields: [], filters: [], sorting: [] }),
+import { useState } from 'react'
+import type {
+  ReportColumn,
+  ReportConfiguration,
+  ReportEntityType,
+  ReportField,
+  ReportFilter,
+  ReportAggregation,
+  ReportPreviewResponse,
+  SavedReport,
+  VisualizationConfig,
+  VisualizationType,
+} from '@/types/report-builder.types'
+
+export interface ReportBuilderState {
+  configuration: ReportConfiguration
+  selectedEntities: ReportEntityType[]
+  availableFields: ReportField[]
+  isDirty: boolean
+  savedReportId: string | undefined
+  toggleEntity: (entity: ReportEntityType) => void
+  addColumn: (field: ReportField) => void
+  removeColumn: (id: string) => void
+  updateColumn: (id: string, updates: Partial<ReportColumn>) => void
+  reorderColumns: (sourceIndex: number, destinationIndex: number) => void
+  addFilter: (filter: Omit<ReportFilter, 'id'>) => void
+  removeFilter: (id: string) => void
+  updateFilter: (id: string, updates: Partial<ReportFilter>) => void
+  setFilterLogic: (logic: 'and' | 'or') => void
+  addGrouping: (field: ReportField) => void
+  removeGrouping: (id: string) => void
+  addAggregation: (aggregation: Omit<ReportAggregation, 'id'>) => void
+  removeAggregation: (id: string) => void
+  addSort: (fieldId: string, direction: 'asc' | 'desc') => void
+  removeSort: (id: string) => void
+  updateSort: (sortId: string, direction: 'asc' | 'desc') => void
+  setVisualization: (type: VisualizationType) => void
+  updateVisualization: (updates: Partial<VisualizationConfig>) => void
+  resetConfiguration: () => void
+  loadConfiguration: (report: SavedReport) => void
+  markAsSaved: (id: string) => void
+}
+
+const EMPTY_CONFIGURATION: ReportConfiguration = {
+  entities: [],
+  columns: [],
+  filters: { id: 'root', logic: 'and', filters: [], groups: [] },
+  groupings: [],
+  aggregations: [],
+  sorting: [],
+  visualization: { type: 'table' },
+}
+
+export function useReportBuilderState(_params?: { initialReportId?: string }): ReportBuilderState {
+  const [configuration] = useState<ReportConfiguration>(EMPTY_CONFIGURATION)
+  return {
+    configuration,
+    selectedEntities: [],
+    availableFields: [],
+    isDirty: false,
+    savedReportId: undefined,
+    toggleEntity: () => {},
+    addColumn: () => {},
+    removeColumn: () => {},
+    updateColumn: () => {},
+    reorderColumns: () => {},
+    addFilter: () => {},
+    removeFilter: () => {},
+    updateFilter: () => {},
+    setFilterLogic: () => {},
+    addGrouping: () => {},
+    removeGrouping: () => {},
+    addAggregation: () => {},
+    removeAggregation: () => {},
+    addSort: () => {},
+    removeSort: () => {},
+    updateSort: () => {},
+    setVisualization: () => {},
+    updateVisualization: () => {},
+    resetConfiguration: () => {},
+    loadConfiguration: () => {},
+    markAsSaved: () => {},
+  }
+}
+
+export interface ReportsListResult {
+  data: SavedReport[]
+}
+
+export function useReports(_params?: Record<string, unknown>) {
+  return useQuery<ReportsListResult>({
+    queryKey: [...reportKeys.all, 'reports', _params],
+    queryFn: () => Promise.resolve<ReportsListResult>({ data: [] }),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useReports(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
-  return useQuery({
-    queryKey: [...reportKeys.all, 'reports', params],
-    queryFn: () => Promise.resolve([]),
-    staleTime: 5 * 60 * 1000,
-  })
-}
-
-export function useCreateReport(): ReturnType<typeof useMutation> {
+export function useCreateReport() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ id: '', success: true }),
+    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ id: '' } as { id: string }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: reportKeys.all })
     },
   })
 }
 
-export function useUpdateReport(): ReturnType<typeof useMutation> {
+export function useUpdateReport() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ success: true }),
@@ -102,7 +181,7 @@ export function useUpdateReport(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteReport(): ReturnType<typeof useMutation> {
+export function useDeleteReport() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_id: string) => Promise.resolve({ success: true }),
@@ -112,26 +191,29 @@ export function useDeleteReport(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useReportToggleFavorite(): ReturnType<typeof useMutation> {
+export function useReportToggleFavorite() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (_params: { reportId: string }) => Promise.resolve({ success: true }),
+    mutationFn: (_params: { reportId: string; isFavorite: boolean }) =>
+      Promise.resolve({ success: true }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: reportKeys.all })
     },
   })
 }
 
-export function useReportPreview(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
-  return useQuery({
-    queryKey: [...reportKeys.all, 'preview', params],
-    queryFn: () => Promise.resolve(null),
-    staleTime: 60 * 1000,
+export function useReportPreview(_params?: Record<string, unknown>) {
+  return useMutation<
+    ReportPreviewResponse,
+    { message: string },
+    { configuration: ReportConfiguration; limit: number }
+  >({
+    mutationFn: (_args) => Promise.resolve<ReportPreviewResponse>({} as ReportPreviewResponse),
   })
 }
 
-export function useCreateSchedule(): ReturnType<typeof useMutation> {
+export function useCreateSchedule() {
   return useMutation({
-    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ id: '', success: true }),
+    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ id: '' } as { id: string }),
   })
 }

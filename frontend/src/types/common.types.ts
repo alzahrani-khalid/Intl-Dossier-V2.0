@@ -43,30 +43,7 @@ export type DynamicFields = Record<string, JsonValue>
  */
 export type Metadata = Record<string, JsonValue>
 
-/**
- * Audit log changes
- * Use instead of `Record<string, any>` for tracking field changes
- */
-interface AuditChange {
-  field: string
-  old_value: JsonValue
-  new_value: JsonValue
-}
 export type AuditChanges = Record<string, { old: JsonValue; new: JsonValue }>
-
-/**
- * Generic callback payload for realtime subscriptions
- * Use instead of `any` in callback signatures
- */
-interface RealtimePayload<T = JsonObject> {
-  schema: string
-  table: string
-  commit_timestamp: string
-  eventType: 'INSERT' | 'UPDATE' | 'DELETE'
-  new: T
-  old: T | null
-  errors: string[] | null
-}
 
 /**
  * Presence data for collaborative features
@@ -77,30 +54,6 @@ export interface PresenceData {
   online_at?: string
   [key: string]: JsonValue | undefined
 }
-
-/**
- * Report parameters
- * Use instead of `Record<string, any>` for report configuration
- */
-type ReportParameters = Record<string, JsonValue>
-
-/**
- * Navigation state
- * Use instead of `Record<string, any>` for URL query parameters
- */
-type NavigationState = Record<string, string | string[] | number | boolean | null | undefined>
-
-/**
- * Generic filter state
- * Use for typed filter objects
- */
-type FilterState<T extends string = string> = Record<T, JsonValue>
-
-/**
- * Database row with dynamic fields
- * Use for rows that may have additional unknown columns
- */
-type DatabaseRow<T extends object = object> = T & Record<string, JsonValue>
 
 /**
  * Type guard to check if a value is a JsonObject
@@ -128,17 +81,6 @@ export function isJsonPrimitive(value: unknown): value is JsonPrimitive {
  */
 export function isJsonValue(value: unknown): value is JsonValue {
   return isJsonPrimitive(value) || isJsonArray(value) || isJsonObject(value)
-}
-
-/**
- * Safe type assertion for unknown data
- * Returns the value as JsonValue if valid, undefined otherwise
- */
-function toJsonValue(value: unknown): JsonValue | undefined {
-  if (isJsonValue(value)) {
-    return value
-  }
-  return undefined
 }
 
 /**
@@ -177,11 +119,4 @@ export interface ForesightSpecificFields {
   topic?: string
   timeHorizon?: 'short' | 'medium' | 'long'
   stakeholders?: string
-}
-
-type TypeSpecificFieldsMap = {
-  engagement: EngagementSpecificFields
-  position: PositionSpecificFields
-  mou_action: MouActionSpecificFields
-  foresight: ForesightSpecificFields
 }

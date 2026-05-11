@@ -58,7 +58,8 @@ export function EngagementsByStageCard({
   // Group engagements by lifecycle stage from metadata
   const stageGroups: Record<string, number> = {}
   for (const eng of engagements) {
-    const stage = (eng as Record<string, unknown>).notes_en?.toString()?.toLowerCase() ?? 'intake'
+    const stage =
+      (eng as unknown as Record<string, unknown>).notes_en?.toString()?.toLowerCase() ?? 'intake'
     const normalizedStage = STAGE_ORDER.includes(stage) ? stage : 'intake'
     stageGroups[normalizedStage] = (stageGroups[normalizedStage] ?? 0) + 1
   }

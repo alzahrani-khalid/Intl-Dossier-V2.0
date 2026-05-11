@@ -27,7 +27,7 @@ export function useContextualSuggestions(params: {
   field?: string
   context?: string
   enabled?: boolean
-}): ReturnType<typeof useQuery> {
+}) {
   const searchParams = new URLSearchParams()
   searchParams.set('entity_type', params.entityType)
   searchParams.set('entity_id', params.entityId)

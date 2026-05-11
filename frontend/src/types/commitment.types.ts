@@ -76,17 +76,6 @@ export interface Commitment {
 }
 
 /**
- * Commitment with computed properties for UI display
- */
-interface CommitmentWithComputedProps extends Commitment {
-  isOverdue: boolean
-  daysOverdue: number
-  daysUntilDue: number
-  ownerName?: string
-  dossierName?: string
-}
-
-/**
  * Status history entry for audit trail
  */
 export interface CommitmentStatusHistory {
@@ -317,8 +306,3 @@ export const ALLOWED_EVIDENCE_TYPES = [
  * Maximum evidence file size in bytes (10MB)
  */
 export const MAX_EVIDENCE_SIZE = 10 * 1024 * 1024
-
-/**
- * Default page size for pagination
- */
-const DEFAULT_PAGE_SIZE = 20

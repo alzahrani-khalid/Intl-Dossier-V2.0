@@ -1,48 +1,44 @@
 /**
- * HeroUI Button Wrapper
+ * HeroUI Button Wrapper — Phase 33-05 (Wave 3)
  *
- * Drop-in replacement for shadcn Button with HeroUI v3 styling.
- * Supports full React.ButtonHTMLAttributes, asChild via Slot, and buttonVariants.
+ * Real @heroui/react Button primitive, wrapped to preserve the shadcn-style
+ * cva API (variant / size / asChild) used by 250+ existing call sites.
  *
- * Variant Mapping (shadcn -> HeroUI classes):
- * - default    -> bg-primary text-primary-foreground
- * - destructive -> bg-destructive text-white
- * - outline    -> border bg-background
- * - secondary  -> bg-secondary text-secondary-foreground
- * - ghost      -> hover:bg-accent hover:text-accent-foreground
- * - link       -> text-primary underline-offset-4 hover:underline
+ * Token model (SC-5): the cva class strings reference semantic Tailwind
+ * utilities only (bg-primary, bg-destructive, text-primary-foreground, ...).
+ * Those names resolve through the D-16 @theme remap in frontend/src/index.css
+ * and the HeroUI bridge (`--heroui-*` → `var(--accent)`, `var(--danger)` …)
+ * to the runtime tokens written by DesignProvider (Plan 33-02) and the FOUC
+ * bootstrap (Plan 33-03). No literal color utilities (`bg-red-*`, `text-blue-*`
+ * etc.) are allowed anywhere in this file — the zero-override audit in DoD
+ * greps for them.
  */
 
-import * as React from 'react'
+import type * as React from 'react'
+import { Button as HeroUIButtonPrimitive } from '@heroui/react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
-// ============================================================================
-// buttonVariants - CVA function (same API as shadcn)
-// ============================================================================
-
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "btn shrink-0 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-[var(--danger)] [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-        destructive:
-          'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-        outline:
-          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
-        secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
-        link: 'text-primary underline-offset-4 hover:underline',
+        default: 'btn-primary',
+        destructive: 'btn-danger',
+        outline: '',
+        secondary: 'btn-secondary',
+        ghost: 'btn-ghost',
+        link: 'card-link min-h-0 border-transparent bg-transparent p-0 hover:underline',
       },
       size: {
-        default: 'min-h-11 sm:min-h-9 h-9 px-4 py-2 has-[>svg]:px-3',
-        sm: 'min-h-11 sm:min-h-8 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
-        lg: 'min-h-11 sm:min-h-10 h-10 rounded-md px-6 has-[>svg]:px-4',
-        icon: 'min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 size-9',
-        'icon-sm': 'min-h-11 min-w-11 sm:min-h-8 sm:min-w-8 size-8',
-        'icon-lg': 'min-h-11 min-w-11 sm:min-h-10 sm:min-w-10 size-10',
+        default: 'min-h-11 sm:min-h-9',
+        sm: 'min-h-11 sm:min-h-8 gap-1.5 px-3 text-xs',
+        lg: 'min-h-11 sm:min-h-10 px-6 text-sm',
+        icon: 'min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 size-9 p-0',
+        'icon-sm': 'min-h-11 min-w-11 sm:min-h-8 sm:min-w-8 size-8 p-0',
+        'icon-lg': 'min-h-11 min-w-11 sm:min-h-10 sm:min-w-10 size-10 p-0',
       },
     },
     defaultVariants: {
@@ -52,31 +48,26 @@ const buttonVariants = cva(
   },
 )
 
-// ============================================================================
-// Props
-// ============================================================================
-
 export interface HeroUIButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+  extends
+    Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean
-  /** Whether the button is in a loading state */
+  /** Whether the button is in a loading state — disables interactivity + dims visually. */
   loading?: boolean
-  /** Whether the button contains only an icon */
+  /** Whether the button contains only an icon. */
   isIconOnly?: boolean
-  /** Whether the button should take full width */
+  /** Whether the button should take full width. */
   fullWidth?: boolean
-  /** Slot for HeroUI Modal close behavior */
+  /** Slot for HeroUI Modal close behavior. */
   slot?: string
-  /** React 19 ref prop */
+  /** Legacy disabled flag; translated to React Aria `isDisabled` internally. */
+  disabled?: boolean
+  /** React 19 ref prop. */
   ref?: React.Ref<HTMLButtonElement>
 }
 
-// Keep backward-compat alias
 export type ButtonProps = HeroUIButtonProps
-
-// ============================================================================
-// HeroUIButton - Main wrapper component
-// ============================================================================
 
 function HeroUIButton({
   className,
@@ -86,32 +77,50 @@ function HeroUIButton({
   loading = false,
   disabled,
   fullWidth,
+  isIconOnly,
   children,
   ref,
   ...props
-}: HeroUIButtonProps) {
-  const Comp = asChild ? Slot : 'button'
+}: HeroUIButtonProps): React.JSX.Element {
+  const mergedClassName = cn(
+    buttonVariants({ variant, size }),
+    fullWidth === true && 'w-full',
+    loading === true && 'opacity-70 pointer-events-none',
+    className,
+  )
+
+  // `props` is the residual of a broad ButtonHTMLAttributes interface.
+  // Slot accepts a narrower surface and HeroUI's ButtonRoot extends a React
+  // Aria button (also narrower — no `form`, `formAction`, `name`, etc.).
+  // The spread is runtime-safe (DOM forwarding) so we widen via cast.
+  const forward = props as Record<string, unknown>
+
+  if (asChild) {
+    return (
+      <Slot
+        data-slot="button"
+        className={mergedClassName}
+        ref={ref as React.Ref<HTMLElement>}
+        {...(forward as React.HTMLAttributes<HTMLElement>)}
+      >
+        {children}
+      </Slot>
+    )
+  }
 
   return (
-    <Comp
+    <HeroUIButtonPrimitive
       data-slot="button"
-      className={cn(
-        buttonVariants({ variant, size, className }),
-        fullWidth && 'w-full',
-        loading && 'opacity-70 pointer-events-none',
-      )}
+      className={mergedClassName}
+      isDisabled={disabled === true || loading === true}
+      isIconOnly={isIconOnly}
       ref={ref}
-      disabled={disabled || loading}
-      {...props}
+      {...(forward as React.ComponentProps<typeof HeroUIButtonPrimitive>)}
     >
       {children}
-    </Comp>
+    </HeroUIButtonPrimitive>
   )
 }
-
-// ============================================================================
-// Exports
-// ============================================================================
 
 HeroUIButton.displayName = 'HeroUIButton'
 

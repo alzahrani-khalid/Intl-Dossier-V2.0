@@ -99,7 +99,6 @@ export function AnalyticsPreviewOverlay({
   className,
 }: AnalyticsPreviewOverlayProps) {
   const { t } = useTranslation('analytics')
-  const { isRTL } = useDirection()
 const config = chartConfigs[chartType]
   const Icon = config.icon
 
@@ -217,7 +216,6 @@ const config = chartConfigs[chartType]
  * Shows a stylized placeholder visualization representing the chart type
  */
 function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 
   const config = chartConfigs[chartType]

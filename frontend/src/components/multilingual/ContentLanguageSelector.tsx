@@ -65,7 +65,6 @@ export function ContentLanguageSelector({
   size = 'default',
 }: ContentLanguageSelectorProps) {
   const { i18n } = useTranslation('multilingual')
-  const { isRTL } = useDirection()
 // Determine which languages to show
   const languages = useMemo(() => {
     if (showAllLanguages) {
@@ -152,7 +151,6 @@ export function ContentLanguageTabs({
   disabled = false,
   className,
 }: ContentLanguageTabsProps) {
-  const { isRTL } = useDirection()
 
   return (
     <div

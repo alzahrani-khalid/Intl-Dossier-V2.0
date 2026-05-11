@@ -428,7 +428,7 @@ export class MoUService {
       }
 
       deliverables[deliverableIndex] = {
-        ...deliverables[deliverableIndex],
+        ...(deliverables[deliverableIndex] as NonNullable<(typeof deliverables)[number]>),
         ...updates,
       }
 

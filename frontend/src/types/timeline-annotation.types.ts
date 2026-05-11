@@ -72,17 +72,6 @@ export interface UpdateAnnotationRequest {
 }
 
 /**
- * Annotation filter options
- */
-interface AnnotationFilters {
-  types?: AnnotationType[]
-  colors?: AnnotationColor[]
-  visibility?: AnnotationVisibility[]
-  created_by?: string
-  event_ids?: string[]
-}
-
-/**
  * Zoom level configuration
  */
 export type TimelineZoomLevel = 'day' | 'week' | 'month' | 'quarter' | 'year' | 'all'

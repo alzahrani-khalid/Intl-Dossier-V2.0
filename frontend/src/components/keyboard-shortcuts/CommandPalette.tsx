@@ -570,10 +570,12 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       grouped[type].push(d)
     }
 
-    // Return in defined order, limiting to 5 per type
-    return DOSSIER_TYPE_ORDER.filter(
-      (type) => grouped[type] != null && grouped[type].length > 0,
-    ).map((type) => ({ type, items: grouped[type].slice(0, 5) }))
+    // Return in defined order, limiting to 5 per type. WR-13: avoid `!`
+    // non-null assertions — `Array.filter` doesn't propagate narrowing
+    // into `.map`, so use a single-pass shape that ts can verify directly.
+    return DOSSIER_TYPE_ORDER.map((type) => ({ type, items: grouped[type] ?? [] }))
+      .filter((entry) => entry.items.length > 0)
+      .map(({ type, items }) => ({ type, items: items.slice(0, 5) }))
   }, [dossiers, searchQuery])
 
   // Helper to navigate - uses type assertion for routes that may not be in the router yet
@@ -952,16 +954,6 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   }, [isCommandPaletteOpen])
 
   // Get category label
-  const getCategoryLabel = (category: string): string => {
-    const labels: Record<string, string> = {
-      navigation: t('categories.navigation', 'Navigation'),
-      actions: t('categories.actions', 'Actions'),
-      editing: t('categories.editing', 'Editing'),
-      view: t('categories.view', 'View'),
-      help: t('categories.help', 'Help'),
-    }
-    return labels[category] || category
-  }
 
   // Get icon for a shortcut
   const getShortcutIcon = (shortcut: KeyboardShortcut): React.ElementType => {
@@ -1134,7 +1126,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                     {entityRecentItems.slice(0, 5).map((item) => {
                       let RecentIcon: React.ElementType = Clock
                       if (item.dossierType != null && item.dossierType in dossierTypeIcons) {
-                        RecentIcon = dossierTypeIcons[item.dossierType as DossierType]
+                        RecentIcon = dossierTypeIcons[item.dossierType as DossierType] || Clock
                       } else if (item.type in workTypeIcons) {
                         RecentIcon = workTypeIcons[item.type] || Clock
                       }

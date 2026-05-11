@@ -33,6 +33,20 @@
     "commitment": "التزام",
     "intake": "طلب"
   },
+  "source": {
+    "task": "مهمة",
+    "commitment": "التزام",
+    "intake": "طلب"
+  },
+  "priority": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالٍ",
+    "urgent": "عاجل"
+  },
+  "due": {
+    "today": "اليوم"
+  },
   "card": {
     "overdue": "متأخر",
     "dueToday": "مستحق اليوم",
@@ -53,8 +67,15 @@
     "priority": "الأولوية",
     "allPriorities": "جميع الأولويات",
     "overdueOnly": "المتأخرة فقط",
-    "clear": "مسح التصفية"
+    "clear": "مسح التصفية",
+    "byStatus": "بالحالة",
+    "byDossier": "بالملف",
+    "byOwner": "بالمسؤول",
+    "comingSoon": "قريبًا",
+    "search": "بحث في عناصر العمل…"
   },
+  "overdueChip": "{{count}} متأخر",
+  "emptyColumn": "لا توجد عناصر",
   "sorting": {
     "label": "ترتيب حسب",
     "deadline": "تاريخ الاستحقاق",
@@ -87,7 +108,10 @@
     "loadMore": "تحميل المزيد",
     "refresh": "تحديث",
     "openItem": "فتح العنصر",
-    "editItem": "تعديل العنصر"
+    "editItem": "تعديل العنصر",
+    "newItem": "عنصر جديد",
+    "listView": "عرض القائمة",
+    "addToColumn": "إضافة إلى {{column}}"
   },
   "context": {
     "personal": "أعمالي",

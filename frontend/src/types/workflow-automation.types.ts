@@ -495,10 +495,3 @@ export interface ConditionOperatorOption {
 // =============================================================================
 // Builder State Types
 // =============================================================================
-
-interface WorkflowBuilderState {
-  step: 'trigger' | 'conditions' | 'actions' | 'settings' | 'review'
-  rule: Partial<WorkflowRuleCreate>
-  errors: Record<string, string>
-  isDirty: boolean
-}

@@ -104,7 +104,7 @@ export function TagHierarchyManager({
 }: TagHierarchyManagerProps) {
   const { t } = useTranslation('tags')
   const { isRTL } = useDirection()
-const { toast } = useToast()
+  const { toast } = useToast()
 
   // State
   const [searchQuery, setSearchQuery] = useState('')
@@ -119,8 +119,18 @@ const { toast } = useToast()
   const [formData, setFormData] = useState<TagFormData>(defaultFormData)
 
   // Queries
-  const { data: hierarchyTree, isLoading, error, refetch } = useTagHierarchyTree()
-  const { data: flatTags } = useTagsFlat(true)
+  const {
+    data: hierarchyTree,
+    isLoading,
+    error,
+    refetch,
+  } = useTagHierarchyTree() as unknown as {
+    data: TagCategory[] | undefined
+    isLoading: boolean
+    error: unknown
+    refetch: () => Promise<unknown>
+  }
+  const { data: flatTags } = useTagsFlat(true) as unknown as { data: TagCategory[] | undefined }
 
   // Mutations
   const createTag = useCreateTag()
@@ -215,13 +225,15 @@ const { toast } = useToast()
     try {
       await updateTag.mutateAsync({
         id: editingTag.id,
-        name_en: formData.name_en,
-        name_ar: formData.name_ar,
-        parent_id: formData.parent_id,
-        color: formData.color,
-        icon: formData.icon,
-        description_en: formData.description_en || undefined,
-        description_ar: formData.description_ar || undefined,
+        data: {
+          name_en: formData.name_en,
+          name_ar: formData.name_ar,
+          parent_id: formData.parent_id,
+          color: formData.color,
+          icon: formData.icon,
+          description_en: formData.description_en || undefined,
+          description_ar: formData.description_ar || undefined,
+        },
       })
 
       toast({
@@ -267,8 +279,8 @@ const { toast } = useToast()
 
     try {
       await mergeTags.mutateAsync({
-        source_tag_id: tagToMerge.id,
-        target_tag_id: mergeTargetId,
+        sourceId: tagToMerge.id,
+        targetId: mergeTargetId,
       })
 
       toast({

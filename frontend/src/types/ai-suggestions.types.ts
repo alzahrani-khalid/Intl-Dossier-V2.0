@@ -38,21 +38,6 @@ export interface GenerateSuggestionsRequest {
 }
 
 /**
- * Response payload for AI suggestion generation
- */
-interface GenerateSuggestionsResponse {
-  /** List of AI suggestions */
-  suggestions: AILinkSuggestion[]
-  /** Metadata about the generation */
-  metadata?: {
-    /** Whether the result was served from cache */
-    cache_hit?: boolean
-    /** Processing time in milliseconds */
-    processing_time_ms?: number
-  }
-}
-
-/**
  * Request payload for accepting an AI suggestion
  */
 export interface AcceptSuggestionRequest {
@@ -64,19 +49,4 @@ export interface AcceptSuggestionRequest {
   entity_type: string
   /** Link type to create */
   link_type: string
-}
-
-/**
- * Response payload for accepting an AI suggestion
- */
-interface AcceptSuggestionResponse {
-  /** The created link */
-  link: {
-    id: string
-    intake_id: string
-    entity_id: string
-    entity_type: string
-    link_type: string
-    created_at: string
-  }
 }

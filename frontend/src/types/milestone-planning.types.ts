@@ -137,19 +137,6 @@ export interface MilestoneTemplate {
 }
 
 /**
- * Milestone planning state for a dossier
- */
-interface MilestonePlanningState {
-  milestones: PlannedMilestone[]
-  is_planning_mode: boolean
-  selected_milestone_id?: string
-  filter_type?: MilestoneType
-  filter_status?: MilestoneStatus
-  sort_by: 'target_date' | 'priority' | 'created_at'
-  sort_direction: 'asc' | 'desc'
-}
-
-/**
  * Create milestone request
  */
 export interface CreateMilestoneRequest {
@@ -298,19 +285,3 @@ export const MILESTONE_TEMPLATES: MilestoneTemplate[] = [
     color: 'amber',
   },
 ]
-
-/**
- * Get icon for milestone type
- */
-function getMilestoneIcon(type: MilestoneType): string {
-  const template = MILESTONE_TEMPLATES.find((t) => t.type === type)
-  return template?.icon || 'Flag'
-}
-
-/**
- * Get color for milestone type
- */
-function getMilestoneColor(type: MilestoneType): string {
-  const template = MILESTONE_TEMPLATES.find((t) => t.type === type)
-  return template?.color || 'gray'
-}

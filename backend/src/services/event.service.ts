@@ -277,7 +277,7 @@ export class EventService {
     addedBy: string
   ): Promise<Event> {
     try {
-      const { data, error } = await supabaseAdmin
+      const { error } = await supabaseAdmin
         .from('event_attendees')
         .insert({
           event_id: eventId,

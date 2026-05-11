@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Globe loader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #f5f1ea;          /* warm off-white (bureau canvas) */
+    --ink: #1a1814;
+    --ink-mute: #6b6355;
+    --ink-faint: #a89f8e;
+    --line: #e5ddd0;
+    --line-soft: #eee6d8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 56px;
+    max-width: 960px;
+    width: 100%;
+  }
+
+  .row {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .cap {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ============ Loader ============ */
+  .loader {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+
+  /* Soft halo directly behind the globe */
+  .loader::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 45%,
+      rgba(26,24,20,0.06) 0%,
+      rgba(26,24,20,0.02) 40%,
+      transparent 70%);
+    z-index: 0;
+  }
+
+  .globe {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    z-index: 2;
+  }
+
+  .globe svg { width: 100%; height: 100%; display: block; }
+
+  /* Globe elements — monochrome */
+  .sphere {
+    fill: transparent;
+    stroke: var(--ink);
+    stroke-width: 1.1;
+    opacity: 0.85;
+  }
+  .graticule {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 0.45;
+    opacity: 0.18;
+  }
+  .country {
+    fill: var(--ink);
+    stroke: var(--ink);
+    stroke-width: 0.3;
+    stroke-linejoin: round;
+    opacity: 0.78;
+  }
+
+  /* ============ Whirl rings ============ */
+  .whirl {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .whirl svg {
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 50%;
+  }
+  .whirl .ring {
+    fill: none;
+    stroke: var(--ink);
+    stroke-linecap: round;
+  }
+
+  /* Three rings, each rotating at a different speed / direction */
+  .whirl.r1 svg { animation: spin 3.2s linear infinite; }
+  .whirl.r2 svg { animation: spin 5.5s linear infinite reverse; }
+  .whirl.r3 svg { animation: spin 8s linear infinite; }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* Pulse the halo subtly */
+  .loader::after {
+    content: '';
+    position: absolute;
+    inset: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+    opacity: 0;
+    animation: pulse 2.4s ease-out infinite;
+    z-index: 0;
+  }
+  @keyframes pulse {
+    0%   { opacity: 0.08; transform: scale(0.95); }
+    70%  { opacity: 0.0;  transform: scale(1.2); }
+    100% { opacity: 0.0;  transform: scale(1.2); }
+  }
+
+  /* ============ Usage demos ============ */
+  .demo-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 28px;
+    width: 320px;
+    height: 220px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .demo-card .cap-tl {
+    position: absolute; top: 14px; left: 14px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .demo-overlay {
+    position: absolute; inset: 0;
+    background: rgba(245,241,234,0.82);
+    backdrop-filter: blur(2px);
+    display: grid; place-items: center;
+  }
+
+  .demo-card.inline .cap-tl { color: var(--ink-mute); }
+  .demo-card.inline {
+    background: var(--bg);
+  }
+
+  /* Small variant */
+  .loader.sm { width: 120px; height: 120px; }
+  .loader.sm .globe { width: 72px; height: 72px; }
+  .loader.sm::after { inset: 18px; }
+
+  .grid-intro {
+    text-align: center;
+    max-width: 540px;
+    color: var(--ink-mute);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .grid-intro h1 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--ink);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .divider {
+    width: 100%;
+    border-top: 1px solid var(--line);
+    margin: 0;
+  }
+
+  /* Dark surface preview */
+  .surface-dark {
+    background: #0b0a08;
+    color: #f5f1ea;
+  }
+  .surface-dark .sphere,
+  .surface-dark .graticule,
+  .surface-dark .country,
+  .surface-dark .whirl .ring,
+  .surface-dark .loader::after {
+    stroke: #f5f1ea;
+  }
+  .surface-dark .country { fill: #f5f1ea; }
+  .surface-dark .cap-tl { color: rgba(245,241,234,0.5); }
+
+  /* ======== Inline spinner styles ======== */
+  .gs { display: inline-flex; align-items: center; color: var(--ink); }
+  .gs-whirl {
+    transform-origin: 20px 20px;
+    transform-box: fill-box;
+    animation: gs-spin 1.4s linear infinite;
+  }
+  .gs-globe {
+    transform-origin: 20px 20px;
+    transform-box: fill-box;
+    animation: gs-spin 2.8s linear infinite reverse;
+  }
+  @keyframes gs-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .demo-btn {
+    background: var(--ink);
+    color: var(--bg);
+    border: 0;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+  }
+  .demo-tablerow {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="grid-intro">
+    <h1>Globe loader</h1>
+    <div>Real country outlines (Natural Earth via TopoJSON), orthographic projection, spinning on its axis. Three concentric whirl rings rotate around it at offset cadences. Fully monochrome, 200 × 200.</div>
+  </div>
+
+  <!-- PRIMARY -->
+  <div class="stage">
+    <div id="loader-main" class="loader"></div>
+    <div class="cap">200 × 200 · Primary</div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- USAGE DEMOS -->
+  <div class="row">
+    <div class="stage">
+      <div class="demo-card">
+        <span class="cap-tl">Dossier · loading</span>
+        <div class="demo-overlay">
+          <div id="loader-demo-1" class="loader sm"></div>
+        </div>
+      </div>
+      <div class="cap">Overlay on card</div>
+    </div>
+
+    <div class="stage">
+      <div class="demo-card inline">
+        <span class="cap-tl">Empty state</span>
+        <div id="loader-demo-2" class="loader sm"></div>
+      </div>
+      <div class="cap">Inline placeholder</div>
+    </div>
+
+    <div class="stage">
+      <div class="demo-card surface-dark">
+        <span class="cap-tl">Situation · syncing</span>
+        <div id="loader-demo-3" class="loader sm"></div>
+      </div>
+      <div class="cap">On dark surface</div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- SMALL SPINNER VARIANT -->
+  <div class="grid-intro">
+    <h1>Inline spinner</h1>
+    <div>For loading data, busy buttons, table rows. Pure SVG/CSS — no map data needed at small sizes. Color follows <code>currentColor</code>.</div>
+  </div>
+
+  <div class="row" style="align-items:center; gap:48px;">
+    <!-- Size scale -->
+    <div class="stage">
+      <div style="display:flex; gap:24px; align-items:center; height:64px;">
+        <span class="gs" style="font-size:14px;"><svg viewBox="0 0 40 40" width="14" height="14"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+        <span class="gs" style="font-size:20px;"><svg viewBox="0 0 40 40" width="20" height="20"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+        <span class="gs" style="font-size:32px;"><svg viewBox="0 0 40 40" width="32" height="32"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+        <span class="gs" style="font-size:48px;"><svg viewBox="0 0 40 40" width="48" height="48"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg></span>
+      </div>
+      <div class="cap">14 · 20 · 32 · 48</div>
+    </div>
+
+    <!-- In a button -->
+    <div class="stage">
+      <button class="demo-btn">
+        <svg viewBox="0 0 40 40" width="14" height="14" style="margin-right:8px; vertical-align:-2px;"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg>
+        Refreshing dossier
+      </button>
+      <div class="cap">Busy button</div>
+    </div>
+
+    <!-- In a table row -->
+    <div class="stage">
+      <div class="demo-tablerow">
+        <svg viewBox="0 0 40 40" width="14" height="14"><g class="gs-whirl"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 90" opacity="0.55"/></g><g class="gs-globe"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.85"/><ellipse cx="20" cy="20" rx="11" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/><ellipse cx="20" cy="20" rx="4.5" ry="11" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/></g></svg>
+        <span>LOADING MORE ROWS</span>
+      </div>
+      <div class="cap">Table footer</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/d3@7.8.5/dist/d3.min.js"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+(async () => {
+  // Load world map (countries at 110m resolution — small, fast, still gives
+  // recognizable outlines at a 120px globe).
+  const worldUrl = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
+  let countries = null;
+  try {
+    const world = await fetch(worldUrl).then(r => r.json());
+    countries = topojson.feature(world, world.objects.countries);
+  } catch (e) {
+    console.warn('Failed to load world atlas, falling back to placeholder', e);
+  }
+
+  const graticule = d3.geoGraticule10();
+
+  function mountLoader(el) {
+    el.innerHTML = '';
+
+    // Three whirl rings behind the globe
+    const whirls = [
+      { cls: 'r1', r: 88, dash: '3 7',  sw: 1.2, op: 0.38, gap: 0.78 }, // outer — broken
+      { cls: 'r2', r: 72, dash: '1 4',  sw: 0.8, op: 0.26, gap: 0.92 }, // mid — dotted
+      { cls: 'r3', r: 58, dash: '14 6', sw: 0.7, op: 0.20, gap: 0.65 }, // inner — long dashes
+    ];
+    for (const w of whirls) {
+      const wrap = document.createElement('div');
+      wrap.className = `whirl ${w.cls}`;
+      wrap.innerHTML = `
+        <svg viewBox="-100 -100 200 200">
+          <circle class="ring" r="${w.r}"
+            stroke-width="${w.sw}"
+            stroke-dasharray="${w.dash}"
+            stroke-dashoffset="0"
+            opacity="${w.op}"
+            pathLength="${Math.round(100 * w.gap)}"
+            stroke-linecap="round"/>
+        </svg>`;
+      el.appendChild(wrap);
+    }
+
+    // Globe container
+    const globe = document.createElement('div');
+    globe.className = 'globe';
+    el.appendChild(globe);
+
+    const svg = d3.select(globe).append('svg').attr('viewBox', '-100 -100 200 200');
+    const projection = d3.geoOrthographic()
+      .scale(96)
+      .translate([0, 0])
+      .clipAngle(90);
+    const path = d3.geoPath(projection);
+
+    // Sphere outline
+    svg.append('path').datum({ type: 'Sphere' }).attr('class', 'sphere').attr('d', path);
+    // Graticule
+    svg.append('path').datum(graticule).attr('class', 'graticule').attr('d', path);
+    // Countries
+    let landSel;
+    if (countries) {
+      landSel = svg.append('g').attr('class', 'land')
+        .selectAll('path')
+        .data(countries.features)
+        .enter().append('path')
+        .attr('class', 'country');
+    }
+
+    // Animate rotation
+    const start = performance.now();
+    const rotSpeed = 16; // deg/sec
+    function tick(now) {
+      const t = (now - start) / 1000;
+      const lambda = (t * rotSpeed) % 360 - 180; // yaw
+      const phi = -18; // slight tilt (northern hemisphere up)
+      projection.rotate([lambda, phi]);
+
+      svg.select('.sphere').attr('d', path);
+      svg.select('.graticule').attr('d', path);
+      if (landSel) landSel.attr('d', path);
+
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  ['loader-main', 'loader-demo-1', 'loader-demo-2', 'loader-demo-3']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) mountLoader(el);
+    });
+})();
+</script>
+
+</body>
+</html>

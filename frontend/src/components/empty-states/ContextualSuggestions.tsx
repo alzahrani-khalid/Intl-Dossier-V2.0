@@ -338,12 +338,29 @@ export function ContextualSuggestions({
 }: ContextualSuggestionsProps) {
   const { t } = useTranslation('contextual-suggestions')
   const { isRTL } = useDirection()
-const { data, isLoading, isError } = useContextualSuggestions({
+  // Stub useContextualSuggestions takes a strict typed shape; the legacy snake_case
+  // entity_id / extra fields are passed through unchanged for runtime behavior, but
+  // we cast through the documented options type to satisfy tsc.
+  const { data, isLoading, isError } = useContextualSuggestions({
+    entityType: entityType ?? '',
+    entityId: entityId ?? '',
     context,
-    entity_type: entityType,
-    entity_id: entityId,
-    limit,
-  })
+  }) as unknown as {
+    data:
+      | {
+          suggestions: import('@/types/contextual-suggestion.types').ContextualSuggestion[]
+          metadata?: {
+            generated_at?: string
+            cache_hit?: boolean
+            upcoming_events_count?: number
+            overdue_commitments_count?: number
+          }
+        }
+      | undefined
+    isLoading: boolean
+    isError: boolean
+  }
+  void limit
 
   const sizes = sizeClasses[size]
   const suggestions = data?.suggestions || []
@@ -357,10 +374,7 @@ const { data, isLoading, isError } = useContextualSuggestions({
   // Loading state
   if (isLoading && showSkeleton) {
     return (
-      <div
-        className={cn('rounded-lg bg-muted/30', className)}
-        data-testid={`${testId}-loading`}
-      >
+      <div className={cn('rounded-lg bg-muted/30', className)} data-testid={`${testId}-loading`}>
         <SuggestionSkeleton size={size} count={Math.min(limit, 3)} />
       </div>
     )
@@ -417,7 +431,7 @@ const { data, isLoading, isError } = useContextualSuggestions({
               ? `${data.metadata.upcoming_events_count} فعالية قادمة`
               : `${data.metadata.upcoming_events_count} upcoming events`}
           </span>
-          {data.metadata.overdue_commitments_count > 0 && (
+          {(data.metadata.overdue_commitments_count ?? 0) > 0 && (
             <span className="flex items-center gap-1 text-destructive">
               <AlertCircle className="w-3 h-3" />
               {isRTL

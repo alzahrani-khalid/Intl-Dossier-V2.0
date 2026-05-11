@@ -87,29 +87,6 @@ export function useUploadBusinessCard(): UseMutationResult<
 }
 
 /**
- * Hook to prefetch OCR capabilities (for feature detection)
- * Can be used to check if cloud OCR is available
- */
-function useOCRCapabilities() {
-  // This could be expanded to check server capabilities
-  // For now, we assume OCR is always available
-  return {
-    tesseractAvailable: true,
-    googleVisionAvailable: true, // Requires user consent
-    languagesSupported: ['en', 'ar'],
-  }
-}
-
-/**
- * Utility function to check if OCR confidence is acceptable
- * @param confidence - Confidence score (0-100)
- * @returns boolean indicating if confidence is acceptable
- */
-function isConfidenceAcceptable(confidence: number): boolean {
-  return confidence >= 70 // 70% threshold for acceptable confidence
-}
-
-/**
  * Get confidence level label for UI
  */
 export function getConfidenceLevel(confidence: number): 'high' | 'medium' | 'low' {

@@ -159,71 +159,6 @@ export interface Attachment {
 }
 
 /**
- * Version snapshot entity
- */
-interface VersionSnapshot {
-  id?: string
-  after_action_id: string
-  version_number: number
-  snapshot_data: Record<string, unknown>
-  change_diff?: Record<string, unknown>
-  version_reason?: string
-  created_by?: string
-  created_at?: Date | string
-  approved_by?: string
-  approved_at?: Date | string
-}
-
-/**
- * After-action record entity (main)
- */
-interface AfterActionRecord {
-  id?: string
-  engagement_id: string
-  dossier_id: string
-  title: string
-  description?: string
-  confidentiality_level: ConfidentialityLevel
-  status: AfterActionStatus
-  attendance_list: AttendanceRecord[]
-  created_by?: string
-  created_at?: Date | string
-  updated_by?: string
-  updated_at?: Date | string
-  published_by?: string
-  published_at?: Date | string
-  edit_requested_by?: string
-  edit_requested_at?: Date | string
-  edit_request_reason?: string
-  edit_approved_by?: string
-  edit_approved_at?: Date | string
-  edit_rejection_reason?: string
-  _version: number
-
-  // Nested entities (for full record retrieval)
-  decisions?: Decision[]
-  commitments?: Commitment[]
-  risks?: Risk[]
-  follow_up_actions?: FollowUpAction[]
-  attachments?: Attachment[]
-}
-
-/**
- * External contact entity
- */
-interface ExternalContact {
-  id?: string
-  email: string
-  name: string
-  organization?: string
-  email_enabled: boolean
-  contact_notes?: string
-  created_by?: string
-  created_at?: Date | string
-  updated_at?: Date | string
-}
-
-/**
  * Zod Validation Schemas
  */
 
@@ -401,9 +336,3 @@ export const editApprovalSchema = z.object({
   feedback: z.string().max(1000, 'Feedback must be at most 1000 characters').optional(),
 })
 
-// Export types inferred from schemas
-type AfterActionCreateInput = z.infer<typeof afterActionCreateSchema>
-type AfterActionUpdateInput = z.infer<typeof afterActionUpdateSchema>
-type ExternalContactInput = z.infer<typeof externalContactSchema>
-type EditRequestInput = z.infer<typeof editRequestSchema>
-type EditApprovalInput = z.infer<typeof editApprovalSchema>

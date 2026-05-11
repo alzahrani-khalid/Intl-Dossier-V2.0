@@ -261,7 +261,7 @@ interface WorkingGroupScheduleProps {
   i18n: { language: string }
 }
 
-function WorkingGroupSchedule({ dossier, isRTL, t, i18n }: WorkingGroupScheduleProps) {
+function WorkingGroupSchedule({ dossier, t, i18n }: WorkingGroupScheduleProps) {
   // Extract next meeting date if available
   const nextMeetingDate =
     dossier.type === 'forum' ? dossier.extension?.next_meeting_date : undefined

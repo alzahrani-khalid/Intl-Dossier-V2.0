@@ -27,6 +27,17 @@
     "no": "لا",
     "selectAll": "تحديد الكل",
     "clearAll": "مسح الكل",
+    "actions": {
+      "previous": "السابق",
+      "next": "التالي",
+      "expand": "توسيع",
+      "collapse": "طي",
+      "openMenu": "فتح القائمة",
+      "closeDialog": "إغلاق الحوار",
+      "toggleSection": "تبديل القسم",
+      "viewMore": "عرض المزيد",
+      "remove": "إزالة"
+    },
     "all": "الكل",
     "noData": "لا توجد بيانات متاحة",
     "language": "اللغة",

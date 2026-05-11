@@ -37,10 +37,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import {
-  AdaptiveDialog,
-  AdaptiveDialogBody,
-} from '@/components/ui/adaptive-dialog'
+import { AdaptiveDialog, AdaptiveDialogBody } from '@/components/ui/adaptive-dialog'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { cn } from '@/lib/utils'
 import {
@@ -178,22 +175,21 @@ export function RelationshipSidebar({
   // Parse relationships into linked dossiers grouped by tier
   const linkedDossiers = useMemo((): LinkedDossier[] => {
     if (relationshipsData == null) return []
-    const rawData = relationshipsData as { data?: Record<string, unknown>[] }
-    const relationships = rawData.data ?? []
+    const relationships = relationshipsData.data ?? []
     if (!Array.isArray(relationships)) return []
 
     return relationships.map((rel) => {
-      const isSource = (rel.source_dossier_id as string) === dossierId
+      const isSource = rel.source_dossier_id === dossierId
       const linked = isSource ? rel.target_dossier : rel.source_dossier
       const linkedObj = (linked ?? {}) as Record<string, unknown>
-      const relType = (rel.relationship_type as string) ?? 'related_to'
+      const relType = rel.relationship_type ?? 'related_to'
 
       return {
         id: (linkedObj.id as string) ?? '',
         type: (linkedObj.type as string) ?? 'country',
         name_en: (linkedObj.name_en as string) ?? '',
         name_ar: (linkedObj.name_ar as string | null) ?? null,
-        relationshipId: (rel.id as string) ?? '',
+        relationshipId: rel.id ?? '',
         relationshipType: relType,
         tier: TIER_CLASSIFICATION[relType] ?? 'informational',
       }
@@ -250,16 +246,13 @@ export function RelationshipSidebar({
   // ============================================================================
 
   const sidebarContent = (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full min-h-0 flex-col bg-[var(--surface)] text-[var(--ink)]">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-3 border-b">
-        <span className="text-sm font-semibold">{t('header.relationships')}</span>
+      <div className="drawer-head flex items-center justify-between gap-2 border-b border-[var(--line)] px-3 py-3">
+        <span className="card-title min-w-0 truncate">{t('header.relationships')}</span>
         <Popover open={isQuickAddOpen} onOpenChange={setIsQuickAddOpen}>
           <PopoverTrigger asChild>
-            <Button
-              size="sm"
-              className="min-h-11 gap-1 bg-primary text-primary-foreground"
-            >
+            <Button size="sm" className="min-h-10 gap-1">
               <Plus className="h-4 w-4" />
               <span className="text-xs">{t('sidebar.linkDossier')}</span>
             </Button>
@@ -277,22 +270,20 @@ export function RelationshipSidebar({
 
       {/* Mini relationship graph -- desktop only (not shown in mobile sheet) */}
       {open && dossier != null && (
-        <div className="px-2 pb-2 border-b">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">
-            {t('sidebar.relationshipMap')}
-          </h3>
+        <div className="border-b border-[var(--line)] px-2 pb-2">
+          <h3 className="label mb-2 px-1">{t('sidebar.relationshipMap')}</h3>
           {/* useDossier returns DossierWithExtension; MiniRelationshipGraph expects Dossier
               from dossier-type-guards. Both share the same structural shape. */}
           <MiniRelationshipGraph
             dossier={dossier as unknown as Dossier}
             maxHeight="160px"
-            className="rounded-md border"
+            className="rounded-[var(--radius-sm)] border border-[var(--line)]"
             key={String(open)}
           />
           <Button
             variant="ghost"
             size="sm"
-            className="w-full mt-2 min-h-11"
+            className="mt-2 min-h-10 w-full"
             onClick={() => setGraphModalOpen(true)}
           >
             <Expand className="me-2 h-4 w-4" />
@@ -316,16 +307,14 @@ export function RelationshipSidebar({
         ) : linkedDossiers.length === 0 ? (
           /* Empty state */
           <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
-            <Link2 className="h-10 w-10 text-muted-foreground/40 mb-3" />
-            <p className="text-sm font-medium text-muted-foreground">
-              {t('sidebar.emptyTitle')}
-            </p>
-            <p className="text-xs text-muted-foreground/70 mt-1">
-              {t('sidebar.emptyBody')}
-            </p>
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--line-soft)]">
+              <Link2 className="h-5 w-5 text-[var(--ink-faint)]" />
+            </div>
+            <p className="text-sm font-medium text-[var(--ink-mute)]">{t('sidebar.emptyTitle')}</p>
+            <p className="mt-1 text-xs text-[var(--ink-faint)]">{t('sidebar.emptyBody')}</p>
             <Button
               size="sm"
-              className="mt-4 min-h-11 gap-1 bg-primary text-primary-foreground"
+              className="mt-4 min-h-10 gap-1"
               onClick={() => setIsQuickAddOpen(true)}
             >
               <Plus className="h-4 w-4" />
@@ -345,7 +334,7 @@ export function RelationshipSidebar({
                   {/* Tier header */}
                   <button
                     type="button"
-                    className="flex w-full items-center gap-2 px-2 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground rounded-md transition-colors min-h-11"
+                    className="flex min-h-10 w-full items-center gap-2 rounded-[var(--radius-sm)] px-2 py-1.5 text-xs font-medium text-[var(--ink-mute)] transition-colors hover:bg-[var(--line-soft)] hover:text-[var(--ink)]"
                     onClick={() => toggleTier(tier)}
                     aria-expanded={!isCollapsed}
                     aria-controls={`tier-${tier}`}
@@ -357,9 +346,7 @@ export function RelationshipSidebar({
                       )}
                     />
                     <span>{TIER_LABELS[tier]}</span>
-                    <span className="bg-primary/10 text-primary text-xs rounded-full px-2">
-                      {items.length}
-                    </span>
+                    <span className="chip chip-accent px-2 py-0 text-[10px]">{items.length}</span>
                   </button>
 
                   {/* Tier items */}
@@ -372,32 +359,28 @@ export function RelationshipSidebar({
                     >
                       {items.map((item) => {
                         const Icon = DOSSIER_TYPE_ICONS[item.type] ?? Globe
-                        const displayName = isRTL
-                          ? (item.name_ar ?? item.name_en)
-                          : item.name_en
+                        const displayName = isRTL ? (item.name_ar ?? item.name_en) : item.name_en
 
                         return (
                           <div
                             key={item.relationshipId}
-                            className="group flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-muted/50 transition-colors"
+                            className="group flex items-center gap-2 rounded-[var(--radius-sm)] px-2 py-1.5 transition-colors hover:bg-[var(--line-soft)]"
                           >
                             <Link
                               to={getDossierDetailPath(item.id, item.type) + '/overview'}
-                              className="flex flex-1 items-center gap-2 min-w-0 min-h-11"
+                              className="flex min-h-10 min-w-0 flex-1 items-center gap-2"
                             >
-                              <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                              <Icon className="h-4 w-4 shrink-0 text-[var(--ink-faint)]" />
                               <div className="min-w-0 flex-1">
-                                <span className="text-sm truncate block">
-                                  {displayName}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
+                                <span className="text-sm truncate block">{displayName}</span>
+                                <span className="text-xs text-[var(--ink-mute)]">
                                   {item.relationshipType.replace(/_/g, ' ')}
                                 </span>
                               </div>
                             </Link>
                             <button
                               type="button"
-                              className="opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-destructive/10 hover:text-destructive transition-opacity min-h-11 min-w-11 flex items-center justify-center"
+                              className="flex min-h-10 min-w-10 items-center justify-center rounded-[var(--radius-sm)] p-1 text-[var(--ink-faint)] opacity-0 transition-opacity hover:bg-[var(--danger-soft)] hover:text-[var(--danger)] group-hover:opacity-100"
                               onClick={() => setRemoveTarget(item)}
                               aria-label={`Remove ${displayName}`}
                             >
@@ -431,12 +414,12 @@ export function RelationshipSidebar({
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  className="relative p-2 rounded-md hover:bg-muted transition-colors min-h-11 min-w-11 flex items-center justify-center"
+                  className="relative flex min-h-10 min-w-10 items-center justify-center rounded-[var(--radius-sm)] p-2 transition-colors hover:bg-[var(--line-soft)]"
                   onClick={onToggle}
                 >
-                  <Icon className="h-4 w-4 text-muted-foreground" />
+                  <Icon className="h-4 w-4 text-[var(--ink-mute)]" />
                   {count > 1 && (
-                    <span className="absolute -top-0.5 -end-0.5 bg-primary text-primary-foreground text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
+                    <span className="absolute -top-0.5 -end-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--accent)] text-[10px] text-[var(--accent-fg)]">
                       {count}
                     </span>
                   )}
@@ -461,18 +444,18 @@ export function RelationshipSidebar({
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          'flex-col border-s bg-sidebar transition-[width] duration-[250ms] ease-in-out overflow-hidden',
-          open ? 'w-[280px]' : 'w-12 bg-muted',
+          'flex-col overflow-hidden border-s border-[var(--line)] bg-[var(--surface)] transition-[width] duration-[250ms] ease-in-out',
+          open ? 'w-[280px]' : 'w-12 bg-[var(--line-soft)]',
           className,
         )}
         aria-expanded={open}
       >
         {/* Toggle button */}
-        <div className="flex justify-center py-2 border-b">
+        <div className="flex justify-center border-b border-[var(--line)] py-2">
           <Button
             variant="ghost"
             size="icon"
-            className="min-h-11 min-w-11"
+            className="min-h-10 min-w-10"
             onClick={onToggle}
             aria-label={open ? t('sidebar.collapse') : t('sidebar.expand')}
           >
@@ -525,9 +508,7 @@ export function RelationshipSidebar({
         })}
       >
         <AdaptiveDialogBody>
-          <p className="text-sm text-muted-foreground mb-4">
-            {t('sidebar.removeConfirmBody')}
-          </p>
+          <p className="card-sub mb-4">{t('sidebar.removeConfirmBody')}</p>
           <div className="flex items-center justify-end gap-2">
             <Button
               variant="outline"

@@ -26,45 +26,6 @@ const providerHealth = new Map<
 const HEALTH_CHECK_INTERVAL = 60000 // 1 minute
 const HEALTH_FAILURE_THRESHOLD = 3
 
-// Retry configuration (T062)
-const MAX_RETRIES = 3
-const BASE_RETRY_DELAY = 1000 // 1 second
-const MAX_RETRY_DELAY = 30000 // 30 seconds
-
-/**
- * Check if an error is retryable
- */
-function isRetryableError(error: unknown): boolean {
-  if (error instanceof Error) {
-    const message = error.message.toLowerCase()
-    // Rate limit errors
-    if (message.includes('rate limit') || message.includes('429')) return true
-    // Temporary server errors
-    if (message.includes('502') || message.includes('503') || message.includes('504')) return true
-    // Timeout errors
-    if (message.includes('timeout') || message.includes('timed out')) return true
-    // Connection errors
-    if (message.includes('econnreset') || message.includes('econnrefused')) return true
-  }
-  return false
-}
-
-/**
- * Calculate retry delay with exponential backoff and jitter
- */
-function getRetryDelay(attempt: number): number {
-  const exponentialDelay = BASE_RETRY_DELAY * Math.pow(2, attempt)
-  const jitter = Math.random() * 1000 // Add up to 1 second of jitter
-  return Math.min(exponentialDelay + jitter, MAX_RETRY_DELAY)
-}
-
-/**
- * Sleep for a given number of milliseconds
- */
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
 export interface LLMRouterConfig {
   organizationId: string
   userId: string

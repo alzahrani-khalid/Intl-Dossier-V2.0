@@ -21,7 +21,7 @@ export function useAnalyticsDashboard(params?: {
   entityType?: string
   metric?: string
   enabled?: boolean
-}): ReturnType<typeof useQuery> {
+}) {
   const searchParams = new URLSearchParams()
   if (params?.timeRange) searchParams.set('time_range', params.timeRange)
   if (params?.entityType) searchParams.set('entity_type', params.entityType)
@@ -38,7 +38,7 @@ export function useAnalyticsDashboard(params?: {
 
 /* Stub hook – removed during refactoring, still imported by pages */
 
-export function useAnalyticsExport(): ReturnType<typeof useMutation> {
+export function useAnalyticsExport() {
   return useMutation({
     mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ url: '', success: true }),
   })

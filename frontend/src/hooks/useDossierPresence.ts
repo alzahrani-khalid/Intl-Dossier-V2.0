@@ -376,24 +376,3 @@ export function useDossierPresence(
     touch,
   }
 }
-
-/**
- * Check if a section is locked by another user
- */
-function isSectionLocked(
-  sectionId: string,
-  sectionLocks: Map<string, DossierPresenceUser>,
-  currentUserId?: string,
-): { locked: boolean; lockedBy?: DossierPresenceUser } {
-  const lockHolder = sectionLocks.get(sectionId)
-
-  if (!lockHolder) {
-    return { locked: false }
-  }
-
-  if (lockHolder.user_id === currentUserId) {
-    return { locked: false } // Current user holds the lock
-  }
-
-  return { locked: true, lockedBy: lockHolder }
-}

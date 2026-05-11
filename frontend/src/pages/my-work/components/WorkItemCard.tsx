@@ -29,7 +29,7 @@ interface WorkItemCardProps {
 export function WorkItemCard({ item }: WorkItemCardProps) {
   const { t } = useTranslation('my-work')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   // Source icon and color
   const sourceConfig: Record<WorkSource, { icon: LucideIcon; color: string; label: string }> = {
@@ -217,9 +217,7 @@ const locale = isRTL ? ar : enUS
             </div>
 
             {/* Chevron */}
-            <ChevronRight
-              className={cn('h-4 w-4 text-muted-foreground shrink-0', isRTL && 'rotate-180')}
-            />
+            <ChevronRight className={cn('h-4 w-4 text-muted-foreground shrink-0 icon-flip')} />
           </div>
         </CardContent>
       </Card>

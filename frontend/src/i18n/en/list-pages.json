@@ -1,0 +1,21 @@
+{
+  "loading": "Loading dossiers",
+  "empty": "No dossiers found",
+  "search": {
+    "placeholder": "Search dossiers..."
+  },
+  "table": {
+    "aria": "Dossiers",
+    "name": "Name",
+    "engagements": "Engagements",
+    "lastTouch": "Last touch",
+    "sensitivity": "Sensitivity"
+  },
+  "sensitivity": {
+    "public": "Public",
+    "internal": "Internal",
+    "restricted": "Restricted",
+    "confidential": "Confidential",
+    "unknown": "Unknown"
+  }
+}

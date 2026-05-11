@@ -139,7 +139,7 @@ function StakeholderInfluencePage() {
   }
 
   const handleCalculateScores = () => {
-    calculateScores.mutate()
+    calculateScores.mutate({})
   }
 
   const handleCreateReport = async (data: {
@@ -408,7 +408,7 @@ function StakeholderInfluencePage() {
                     </div>
                   ) : (
                     <div className="space-y-1">
-                      {topInfluencers?.data?.slice(0, 5).map((s) => (
+                      {topInfluencers?.slice(0, 5).map((s) => (
                         <button
                           key={s.dossier_id}
                           className={cn(
@@ -454,7 +454,7 @@ function StakeholderInfluencePage() {
                     </div>
                   ) : (
                     <div className="space-y-1">
-                      {keyConnectors?.data?.slice(0, 5).map((c) => (
+                      {keyConnectors?.slice(0, 5).map((c) => (
                         <button
                           key={c.dossier_id}
                           className={cn(

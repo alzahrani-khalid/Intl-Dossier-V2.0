@@ -19,6 +19,13 @@ import {
   getWebhookStats as getWebhookStatsApi,
   getWebhookTemplates as getWebhookTemplatesApi,
 } from '../repositories/import.repository'
+import type {
+  Webhook,
+  WebhookListResponse,
+  WebhookDeliveryListResponse,
+  WebhookStats,
+  WebhookTemplate,
+} from '@/types/webhook.types'
 
 export const webhookKeys = {
   all: ['webhooks'] as const,
@@ -30,7 +37,7 @@ export const webhookKeys = {
   templates: () => [...webhookKeys.all, 'templates'] as const,
 }
 
-export function useWebhooks(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useWebhooks(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -38,22 +45,22 @@ export function useWebhooks(params?: Record<string, unknown>): ReturnType<typeof
     })
   }
 
-  return useQuery({
+  return useQuery<WebhookListResponse>({
     queryKey: webhookKeys.list(params),
-    queryFn: () => getWebhooksApi(searchParams),
+    queryFn: () => getWebhooksApi(searchParams) as Promise<WebhookListResponse>,
     staleTime: 60 * 1000,
   })
 }
 
-export function useWebhook(id: string | null): ReturnType<typeof useQuery> {
-  return useQuery({
+export function useWebhook(id: string | null) {
+  return useQuery<Webhook | null>({
     queryKey: id ? webhookKeys.detail(id) : ['webhooks', 'disabled'],
-    queryFn: () => (id ? getWebhook(id) : Promise.resolve(null)),
+    queryFn: () => (id ? (getWebhook(id) as Promise<Webhook>) : Promise.resolve(null)),
     enabled: Boolean(id),
   })
 }
 
-export function useCreateWebhook(): ReturnType<typeof useMutation> {
+export function useCreateWebhook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createWebhookApi(data),
@@ -63,7 +70,7 @@ export function useCreateWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateWebhook(): ReturnType<typeof useMutation> {
+export function useUpdateWebhook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => updateWebhookApi(data),
@@ -73,7 +80,7 @@ export function useUpdateWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeleteWebhook(): ReturnType<typeof useMutation> {
+export function useDeleteWebhook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteWebhookApi(id),
@@ -83,7 +90,7 @@ export function useDeleteWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useToggleWebhook(): ReturnType<typeof useMutation> {
+export function useToggleWebhook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => toggleWebhookApi(data),
@@ -93,15 +100,13 @@ export function useToggleWebhook(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useTestWebhook(): ReturnType<typeof useMutation> {
+export function useTestWebhook() {
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => testWebhookApi(data),
   })
 }
 
-export function useWebhookDeliveries(
-  params?: Record<string, unknown>,
-): ReturnType<typeof useQuery> {
+export function useWebhookDeliveries(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -109,26 +114,26 @@ export function useWebhookDeliveries(
     })
   }
 
-  return useQuery({
+  return useQuery<WebhookDeliveryListResponse>({
     queryKey: webhookKeys.deliveries(params),
-    queryFn: () => getWebhookDeliveriesApi(searchParams),
+    queryFn: () => getWebhookDeliveriesApi(searchParams) as Promise<WebhookDeliveryListResponse>,
     staleTime: 30 * 1000,
   })
 }
 
-export function useWebhookStats(webhookId: string, days: number = 30): ReturnType<typeof useQuery> {
-  return useQuery({
+export function useWebhookStats(webhookId: string, days: number = 30) {
+  return useQuery<WebhookStats>({
     queryKey: webhookKeys.stats(webhookId),
-    queryFn: () => getWebhookStatsApi(webhookId, days),
+    queryFn: () => getWebhookStatsApi(webhookId, days) as Promise<WebhookStats>,
     enabled: Boolean(webhookId),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useWebhookTemplates(): ReturnType<typeof useQuery> {
-  return useQuery({
+export function useWebhookTemplates() {
+  return useQuery<WebhookTemplate[]>({
     queryKey: webhookKeys.templates(),
-    queryFn: () => getWebhookTemplatesApi(),
+    queryFn: () => getWebhookTemplatesApi() as Promise<WebhookTemplate[]>,
     staleTime: 30 * 60 * 1000,
   })
 }

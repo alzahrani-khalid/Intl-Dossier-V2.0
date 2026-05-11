@@ -1,16 +1,12 @@
 /**
- * Unified Kanban Components
- * Feature: 034-unified-kanban + kanban-task-board
+ * Unified Kanban Utilities (legacy components removed in Phase 39 / Plan 09)
  *
- * Barrel exports for all unified kanban components and utilities
+ * The legacy unified-kanban React components (UnifiedKanbanBoard, EnhancedKanbanBoard,
+ * UnifiedKanbanColumn, UnifiedKanbanCard, UnifiedKanbanHeader, swimlane-utils, wip-limits)
+ * were superseded by the Phase 39 WorkBoard pipeline at frontend/src/pages/WorkBoard/.
+ * Only column-definitions and status-transitions utility re-exports remain — they are
+ * still consumed by useUnifiedKanban hooks and other downstream code.
  */
-
-// Main components
-export { UnifiedKanbanBoard } from './UnifiedKanbanBoard'
-export { EnhancedKanbanBoard } from './EnhancedKanbanBoard'
-export { UnifiedKanbanColumn, UnifiedKanbanColumnSkeleton } from './UnifiedKanbanColumn'
-export { UnifiedKanbanCardContent, UnifiedKanbanCardSkeleton } from './UnifiedKanbanCard'
-export { UnifiedKanbanHeader } from './UnifiedKanbanHeader'
 
 // Column definition utilities
 export {
@@ -41,24 +37,3 @@ export {
   COMMITMENT_TRANSITIONS,
   INTAKE_TRANSITIONS,
 } from './utils/status-transitions'
-
-// Swimlane utilities
-export {
-  groupIntoSwimlanes,
-  getSwimlanColumnItems,
-  getSwimlaneColor,
-  getSwimlaneBackground,
-} from './utils/swimlane-utils'
-
-// WIP limit utilities
-export {
-  checkWipLimit,
-  wouldExceedWipLimit,
-  getWipWarningLevel,
-  getWipIndicatorColor,
-  getWipProgressColor,
-  calculateColumnWipStats,
-  getColumnsOverWip,
-  type WipStatus,
-  type WipWarningLevel,
-} from './utils/wip-limits'

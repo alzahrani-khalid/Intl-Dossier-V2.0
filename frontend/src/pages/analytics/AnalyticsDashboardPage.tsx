@@ -47,9 +47,81 @@ import {
   generateSampleWorkloadDistribution,
   generateSampleAnalyticsSummary,
 } from '@/components/analytics'
-import { useAnalyticsDashboard, useAnalyticsExport } from '@/hooks/useAnalyticsDashboard'
-import type { TimeRange, AnalyticsUrlState } from '@/types/analytics.types'
+import {
+  useAnalyticsDashboard as useAnalyticsDashboardQuery,
+  useAnalyticsExport as useAnalyticsExportMutation,
+} from '@/hooks/useAnalyticsDashboard'
+import type {
+  TimeRange,
+  AnalyticsUrlState,
+  AnalyticsSummary,
+  EngagementMetrics,
+  RelationshipHealthTrends,
+  CommitmentFulfillment,
+  WorkloadDistribution,
+} from '@/types/analytics.types'
 import { TIME_RANGE_OPTIONS } from '@/types/analytics.types'
+
+interface AnalyticsDashboardData {
+  summary?: AnalyticsSummary
+  engagements?: EngagementMetrics
+  relationships?: RelationshipHealthTrends
+  commitments?: CommitmentFulfillment
+  workload?: WorkloadDistribution
+}
+
+// Page-level adapter: wraps the underlying useQuery into the page's expected
+// `{ summary, engagements, relationships, commitments, workload, ... }` shape.
+function useAnalyticsDashboard(
+  timeRange: TimeRange,
+  entityType: string | undefined,
+  metric: string,
+): {
+  summary?: AnalyticsSummary
+  engagements?: EngagementMetrics
+  relationships?: RelationshipHealthTrends
+  commitments?: CommitmentFulfillment
+  workload?: WorkloadDistribution
+  isLoading: boolean
+  isError: boolean
+  error: Error | null
+  refetch: () => void
+} {
+  const query = useAnalyticsDashboardQuery({ timeRange, entityType, metric })
+  const data = query.data as AnalyticsDashboardData | undefined
+
+  return {
+    summary: data?.summary,
+    engagements: data?.engagements,
+    relationships: data?.relationships,
+    commitments: data?.commitments,
+    workload: data?.workload,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error as Error | null,
+    refetch: () => {
+      void query.refetch()
+    },
+  }
+}
+
+function useAnalyticsExport(): {
+  exportData: (
+    timeRange: TimeRange,
+    entityType: string | undefined,
+    format: 'json' | 'csv',
+  ) => Promise<string>
+} {
+  const mutation = useAnalyticsExportMutation()
+  return {
+    exportData: async (timeRange, entityType, format) => {
+      const result = await mutation.mutateAsync({ timeRange, entityType, format })
+      // The export endpoint returns a URL or a stringified payload; we return a
+      // best-effort JSON representation so the page can wrap it in a Blob.
+      return JSON.stringify(result)
+    },
+  }
+}
 
 interface AnalyticsDashboardPageProps {
   initialState?: AnalyticsUrlState

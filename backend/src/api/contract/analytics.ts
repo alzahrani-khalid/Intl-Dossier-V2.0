@@ -1,16 +1,18 @@
 import { Router } from 'express'
-import rateLimit from 'express-rate-limit'
+import type { Request } from 'express'
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit'
 import { clusteringService } from '../../services/clustering.service'
 import { ok, requireAuthHeader, sendError, getAuthToken } from './helpers'
 
 const router = Router()
+const getRequestKey = (req: Request) => getAuthToken(req) || ipKeyGenerator(req.ip || 'unknown')
 
 const limiter = rateLimit({
   windowMs: 60_000,
   max: 6,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => getAuthToken(req) || req.ip || 'unknown',
+  keyGenerator: getRequestKey,
 })
 
 router.post('/cluster', requireAuthHeader, limiter, (req, res) => {

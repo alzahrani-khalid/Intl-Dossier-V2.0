@@ -23,7 +23,7 @@ interface OrganizationAffiliationsProps {
 export function OrganizationAffiliations({ dossierId }: OrganizationAffiliationsProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { data: personData, isLoading, isError } = usePerson(dossierId)
+  const { data: personData, isLoading, isError } = usePerson(dossierId)
 
   // Format date range
   const formatDateRange = (startDate?: string, endDate?: string): string => {
@@ -75,9 +75,7 @@ const { data: personData, isLoading, isError } = usePerson(dossierId)
 
   if (isError || !personData) {
     return (
-      <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-      >
+      <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center">
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-destructive/10 flex items-center justify-center">
             <Building2 className="h-8 w-8 sm:h-10 sm:w-10 text-destructive" />
@@ -95,9 +93,7 @@ const { data: personData, isLoading, isError } = usePerson(dossierId)
 
   if (!hasAffiliations) {
     return (
-      <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-      >
+      <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center">
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
             <Building2 className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />

@@ -49,7 +49,7 @@ export const personKeys = {
 export function usePersons(
   params?: PersonSearchParams,
   options?: Omit<UseQueryOptions<PersonListResponse, Error>, 'queryKey' | 'queryFn'>,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: personKeys.list(params),
     queryFn: () => PersonsRepo.getPersons(params),
@@ -66,7 +66,7 @@ export function usePersons(
 export function usePerson(
   id: string,
   options?: Omit<UseQueryOptions<PersonFullProfile, Error>, 'queryKey' | 'queryFn'>,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: personKeys.detail(id),
     queryFn: () => PersonsRepo.getPerson(id),
@@ -85,7 +85,7 @@ export function usePersonNetwork(
   id: string,
   depth: number = 1,
   options?: Omit<UseQueryOptions<PersonNetwork, Error>, 'queryKey' | 'queryFn'>,
-): ReturnType<typeof useQuery> {
+) {
   return useQuery({
     queryKey: personKeys.network(id, depth),
     queryFn: () => PersonsRepo.getPersonNetwork(id, depth),
@@ -99,7 +99,7 @@ export function usePersonNetwork(
 // Create Person Hook
 // ============================================================================
 
-export function useCreatePerson(): ReturnType<typeof useMutation> {
+export function useCreatePerson() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -120,7 +120,7 @@ export function useCreatePerson(): ReturnType<typeof useMutation> {
 // Update Person Hook
 // ============================================================================
 
-export function useUpdatePerson(): ReturnType<typeof useMutation> {
+export function useUpdatePerson() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -163,7 +163,7 @@ export function useUpdatePerson(): ReturnType<typeof useMutation> {
 // Archive Person Hook
 // ============================================================================
 
-export function useArchivePerson(): ReturnType<typeof useMutation> {
+export function useArchivePerson() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -184,7 +184,7 @@ export function useArchivePerson(): ReturnType<typeof useMutation> {
 // Person Roles Hooks
 // ============================================================================
 
-export function useAddPersonRole(): ReturnType<typeof useMutation> {
+export function useAddPersonRole() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -202,7 +202,7 @@ export function useAddPersonRole(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeletePersonRole(): ReturnType<typeof useMutation> {
+export function useDeletePersonRole() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -224,7 +224,7 @@ export function useDeletePersonRole(): ReturnType<typeof useMutation> {
 // Person Affiliations Hooks
 // ============================================================================
 
-export function useAddPersonAffiliation(): ReturnType<typeof useMutation> {
+export function useAddPersonAffiliation() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -247,18 +247,13 @@ export function useAddPersonAffiliation(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeletePersonAffiliation(): ReturnType<typeof useMutation> {
+export function useDeletePersonAffiliation() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
   return useMutation({
-    mutationFn: ({
-      personId,
-      affiliationId,
-    }: {
-      personId: string
-      affiliationId: string
-    }) => PersonsRepo.deletePersonAffiliation(personId, affiliationId),
+    mutationFn: ({ personId, affiliationId }: { personId: string; affiliationId: string }) =>
+      PersonsRepo.deletePersonAffiliation(personId, affiliationId),
     onSuccess: (_: unknown, { personId }) => {
       queryClient.invalidateQueries({ queryKey: personKeys.detail(personId) })
       queryClient.invalidateQueries({ queryKey: personKeys.affiliations(personId) })
@@ -274,7 +269,7 @@ export function useDeletePersonAffiliation(): ReturnType<typeof useMutation> {
 // Person Relationships Hooks
 // ============================================================================
 
-export function useAddPersonRelationship(): ReturnType<typeof useMutation> {
+export function useAddPersonRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
@@ -299,18 +294,13 @@ export function useAddPersonRelationship(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDeletePersonRelationship(): ReturnType<typeof useMutation> {
+export function useDeletePersonRelationship() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('persons')
 
   return useMutation({
-    mutationFn: ({
-      personId,
-      relationshipId,
-    }: {
-      personId: string
-      relationshipId: string
-    }) => PersonsRepo.deletePersonRelationship(personId, relationshipId),
+    mutationFn: ({ personId, relationshipId }: { personId: string; relationshipId: string }) =>
+      PersonsRepo.deletePersonRelationship(personId, relationshipId),
     onSuccess: (_: unknown, { personId }) => {
       queryClient.invalidateQueries({ queryKey: personKeys.detail(personId) })
       queryClient.invalidateQueries({ queryKey: personKeys.relationships(personId) })

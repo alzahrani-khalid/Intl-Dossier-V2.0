@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css"/></head>
+<body>
+<div class="dscard">
+  <div class="tlabel" style="margin-bottom:8px;">SLA palette — derives from accent so the donut reflects current theme</div>
+  <div style="display:flex;align-items:center;gap:24px;margin-top:10px;">
+    <svg width="140" height="140" viewBox="0 0 42 42" style="flex-shrink:0;">
+      <circle cx="21" cy="21" r="15.9" fill="none" stroke="#efece3" stroke-width="6"/>
+      <circle cx="21" cy="21" r="15.9" fill="none" stroke="oklch(58% 0.14 32)" stroke-width="6" stroke-dasharray="62 100" transform="rotate(-90 21 21)"/>
+      <circle cx="21" cy="21" r="15.9" fill="none" stroke="oklch(60% 0.13 87)" stroke-width="6" stroke-dasharray="22 100" stroke-dashoffset="-62" transform="rotate(-90 21 21)"/>
+      <circle cx="21" cy="21" r="15.9" fill="none" stroke="oklch(54% 0.20 25)" stroke-width="6" stroke-dasharray="16 100" stroke-dashoffset="-84" transform="rotate(-90 21 21)"/>
+      <text x="21" y="22" text-anchor="middle" font-size="6" font-weight="600" fill="#1a1714" font-family="Inter">62%</text>
+      <text x="21" y="27" text-anchor="middle" font-size="2.5" fill="#6b6459" font-family="Inter">on track</text>
+    </svg>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;"><span style="width:14px;height:14px;border-radius:3px;background:oklch(58% 0.14 32)"></span><div><div style="font-size:13px;font-weight:600">On track</div><div style="font-size:11px;color:#6b6459;font-family:JetBrains Mono">--sla-ok · accent hue</div></div></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="width:14px;height:14px;border-radius:3px;background:oklch(60% 0.13 87)"></span><div><div style="font-size:13px;font-weight:600">At risk</div><div style="font-size:11px;color:#6b6459;font-family:JetBrains Mono">--sla-risk · hue + 55°</div></div></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="width:14px;height:14px;border-radius:3px;background:oklch(54% 0.20 25)"></span><div><div style="font-size:13px;font-weight:600">Breached</div><div style="font-size:11px;color:#6b6459;font-family:JetBrains Mono">--sla-bad · hue locked at 25°</div></div></div>
+    </div>
+  </div>
+</div>
+</body></html>

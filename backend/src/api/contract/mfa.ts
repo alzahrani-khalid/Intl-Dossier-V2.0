@@ -1,30 +1,33 @@
 import { Router } from 'express'
-import rateLimit from 'express-rate-limit'
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit'
+import type { Request } from 'express'
 import { mfaService } from '../../services/mfa.service'
 import { ok, requireAuthHeader, sendError, getAuthToken } from './helpers'
 
 const router = Router()
+
+const getRequestKey = (req: Request) => getAuthToken(req) || ipKeyGenerator(req.ip || 'unknown')
 
 const enrollLimiter = rateLimit({
   windowMs: 60_000,
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => getAuthToken(req) || req.ip || 'unknown',
+  keyGenerator: getRequestKey,
 })
 const verifyLimiter = rateLimit({
   windowMs: 60_000,
   max: 6,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => getAuthToken(req) || req.ip || 'unknown',
+  keyGenerator: getRequestKey,
 })
 const codesLimiter = rateLimit({
   windowMs: 60_000,
   max: 3,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => getAuthToken(req) || req.ip || 'unknown',
+  keyGenerator: getRequestKey,
 })
 
 // POST /auth/mfa/enroll

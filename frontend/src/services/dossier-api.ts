@@ -32,10 +32,6 @@ export type DossierType =
   | 'working_group'
   | 'person'
 
-/**
- * Person subtype discriminator for distinguishing standard persons from elected officials
- */
-type PersonSubtype = 'standard' | 'elected_official'
 export type DossierStatus = 'active' | 'inactive' | 'archived' | 'deleted'
 
 /**

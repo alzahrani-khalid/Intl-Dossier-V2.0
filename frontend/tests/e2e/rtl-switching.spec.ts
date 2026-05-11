@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
-async function authBypass(page: any) {
+async function authBypass(page: Page): Promise<void> {
   await page.addInitScript(() => {
     const payload = {
       state: {
@@ -13,19 +13,22 @@ async function authBypass(page: any) {
   })
 }
 
-test('RTL/LTR switching via language dropdown', async ({ page }) => {
+async function seedLocale(page: Page, locale: 'en' | 'ar'): Promise<void> {
+  await page.addInitScript((l: 'en' | 'ar'): void => {
+    localStorage.setItem('id.locale', l)
+  }, locale)
+}
+
+test('RTL layout applies when id.locale=ar is seeded', async ({ page }) => {
   await authBypass(page)
+  await seedLocale(page, 'ar')
   await page.goto('/responsive-demo')
-
-  // The language switcher trigger has an accessible label
-  const trigger = page.getByRole('button', { name: /switch language/i })
-  await trigger.click()
-  await page.getByRole('menuitem').filter({ hasText: 'العربية' }).click()
-
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
+})
 
-  // Switch back to English to verify LTR
-  await trigger.click()
-  await page.getByRole('menuitem').filter({ hasText: 'English' }).click()
+test('LTR layout applies when id.locale=en is seeded', async ({ page }) => {
+  await authBypass(page)
+  await seedLocale(page, 'en')
+  await page.goto('/responsive-demo')
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr')
 })

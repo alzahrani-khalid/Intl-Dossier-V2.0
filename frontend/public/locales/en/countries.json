@@ -1,0 +1,21 @@
+{
+  "title": "Countries",
+  "subtitle": "All country dossiers",
+  "table": {
+    "name": "Country",
+    "engagements": "Engagements",
+    "lastTouch": "Last updated",
+    "sensitivity": "Sensitivity"
+  },
+  "sensitivity": {
+    "public": "Public",
+    "internal": "Internal",
+    "restricted": "Restricted",
+    "confidential": "Confidential"
+  },
+  "empty": {
+    "title": "No countries yet",
+    "description": "Country dossiers will appear here."
+  },
+  "loading": "Loading countries…"
+}

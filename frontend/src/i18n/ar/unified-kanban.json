@@ -86,8 +86,15 @@
     "overdueOnly": "المتأخرة فقط",
     "clear": "مسح التصفية",
     "clearFilters": "مسح جميع التصفيات",
-    "searchPlaceholder": "البحث في عناصر العمل..."
+    "searchPlaceholder": "البحث في عناصر العمل...",
+    "byStatus": "بالحالة",
+    "byDossier": "بالملف",
+    "byOwner": "بالمالك",
+    "comingSoon": "قريباً",
+    "search": "البحث في عناصر العمل…"
   },
+  "overdueChip": "{{count}} متأخر",
+  "emptyColumn": "لا توجد عناصر",
   "priority": {
     "urgent": "عاجل",
     "high": "عالي",
@@ -126,7 +133,10 @@
     "loadMore": "تحميل المزيد",
     "refresh": "تحديث",
     "openItem": "فتح العنصر",
-    "editItem": "تعديل العنصر"
+    "editItem": "تعديل العنصر",
+    "newItem": "عنصر جديد",
+    "listView": "عرض القائمة",
+    "addToColumn": "إضافة إلى {{column}}"
   },
   "context": {
     "personal": "أعمالي",

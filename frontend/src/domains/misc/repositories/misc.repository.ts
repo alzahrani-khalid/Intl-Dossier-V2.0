@@ -6,7 +6,7 @@
  * scenarios, multi-lang, sample data, onboarding, etc.
  */
 
-import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api-client'
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from '@/lib/api-client'
 
 // ============================================================================
 // Comments
@@ -21,7 +21,7 @@ export async function createComment(data: Record<string, unknown>): Promise<unkn
 }
 
 export async function updateComment(id: string, data: Record<string, unknown>): Promise<unknown> {
-  return apiPut(`/entity-comments/${id}`, data)
+  return apiPatch(`/entity-comments/${id}`, data)
 }
 
 export async function deleteComment(id: string): Promise<unknown> {
@@ -32,7 +32,10 @@ export async function getCommentThread(commentId: string): Promise<unknown> {
   return apiGet(`/entity-comments/${commentId}/thread`)
 }
 
-export async function reactToComment(commentId: string, data: Record<string, unknown>): Promise<unknown> {
+export async function reactToComment(
+  commentId: string,
+  data: Record<string, unknown>,
+): Promise<unknown> {
   return apiPost(`/entity-comments/${commentId}/reactions`, data)
 }
 
@@ -44,17 +47,25 @@ export async function mentionUsers(data: Record<string, unknown>): Promise<unkno
   return apiPost('/entity-comments/mentions', data)
 }
 
+// WR-28: search users for @mention popup. Edge Function endpoint:
+// GET /entity-comments/users/search?q=X (returns { users: MentionUser[] })
+export async function searchUsersForMention(query: string, limit?: number): Promise<unknown> {
+  const params = new URLSearchParams({ q: query })
+  if (typeof limit === 'number') {
+    params.set('limit', String(limit))
+  }
+  return apiGet(`/entity-comments/users/search?${params.toString()}`)
+}
+
 // ============================================================================
 // Stakeholder Timeline
 // ============================================================================
-
-export async function getStakeholderTimeline(
-  stakeholderId: string,
-  params?: URLSearchParams,
-): Promise<unknown> {
-  const query = params?.toString()
-  return apiGet(`/stakeholder-timeline/${stakeholderId}${query ? `?${query}` : ''}`)
-}
+//
+// CR-02 follow-up: getStakeholderTimeline / getTimelineStats /
+// getTimelineExport / compareTimelines were dead code after Phase 47 stubbed
+// useStakeholderTimeline. Removed to make the stub status unambiguous —
+// restore live data here when the consumer hook (and its rich options
+// shape) is wired back to a real backend endpoint.
 
 export async function addTimelineEvent(
   stakeholderId: string,
@@ -65,21 +76,6 @@ export async function addTimelineEvent(
 
 export async function getTimelineCategories(): Promise<unknown> {
   return apiGet('/stakeholder-timeline/categories')
-}
-
-export async function getTimelineExport(
-  stakeholderId: string,
-  format: string,
-): Promise<unknown> {
-  return apiGet(`/stakeholder-timeline/${stakeholderId}/export?format=${format}`)
-}
-
-export async function getTimelineStats(stakeholderId: string): Promise<unknown> {
-  return apiGet(`/stakeholder-timeline/${stakeholderId}/stats`)
-}
-
-export async function compareTimelines(stakeholderIds: string[]): Promise<unknown> {
-  return apiPost('/stakeholder-timeline/compare', { stakeholder_ids: stakeholderIds })
 }
 
 // ============================================================================
@@ -152,7 +148,10 @@ export async function createScenario(data: Record<string, unknown>): Promise<unk
   return apiPost('/scenario-sandbox', data)
 }
 
-export async function runScenario(scenarioId: string, data: Record<string, unknown>): Promise<unknown> {
+export async function runScenario(
+  scenarioId: string,
+  data: Record<string, unknown>,
+): Promise<unknown> {
   return apiPost(`/scenario-sandbox/${scenarioId}/run`, data)
 }
 

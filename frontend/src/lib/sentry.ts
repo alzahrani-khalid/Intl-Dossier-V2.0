@@ -29,11 +29,8 @@ export function initSentry(): void {
     import.meta.env.VITE_SENTRY_RELEASE ||
     `intl-dossier-frontend@${import.meta.env.VITE_APP_VERSION || '1.0.0'}`
 
-  // Don't initialize if no DSN configured
+  // Don't initialize if no DSN configured (expected in local dev)
   if (!dsn) {
-    if (import.meta.env.DEV) {
-      console.warn('[Sentry] No DSN configured, error tracking disabled')
-    }
     return
   }
 
@@ -210,33 +207,12 @@ export function captureMessage(
 }
 
 /**
- * Start a performance transaction
- */
-function startTransaction(name: string, op: string): ReturnType<typeof Sentry.startInactiveSpan> {
-  return Sentry.startInactiveSpan({
-    name,
-    op,
-  })
-}
-
-/**
- * React Error Boundary wrapper from Sentry
- * Use this instead of a custom error boundary for automatic Sentry integration
- */
-const SentryErrorBoundary = Sentry.ErrorBoundary
-
-/**
- * Sentry React profiler for performance monitoring
- */
-const SentryProfiler = Sentry.withProfiler
-
-/**
  * Initialize web-vitals reporting for dev-time debugging
  * Reports LCP, INP, CLS to console in development
  * In production, Sentry browserTracingIntegration captures these automatically
  */
 export function initWebVitalsReporting(): void {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.DEV && import.meta.env.VITE_LOG_WEB_VITALS === 'true') {
     import('web-vitals').then(({ onLCP, onINP, onCLS }) => {
       onLCP((metric) => console.warn('[Web Vitals] LCP:', metric.value.toFixed(0), 'ms'))
       onINP((metric) => console.warn('[Web Vitals] INP:', metric.value.toFixed(0), 'ms'))

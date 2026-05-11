@@ -57,6 +57,14 @@ import type {
   CalendarSyncConflict,
   ICalFeedSubscription,
 } from '@/types/calendar-sync.types'
+
+interface ExternalCalendarShape {
+  id: string
+  name: string
+  is_primary?: boolean
+  color?: string
+  sync_enabled?: boolean
+}
 import {
   CALENDAR_PROVIDERS,
   SYNC_DIRECTION_OPTIONS,
@@ -142,7 +150,11 @@ function ConnectionCard({
   const [isExpanded, setIsExpanded] = useState(false)
   const [showDisconnectDialog, setShowDisconnectDialog] = useState(false)
 
-  const { data: calendars } = useExternalCalendars(isExpanded ? connection.id : undefined)
+  // Stub hook signature is `(): UseQueryResult<unknown>` (no params); we
+  // narrow the unknown to ExternalCalendarShape[] for the consumer below.
+  const { data: calendars } = useExternalCalendars() as unknown as {
+    data: ExternalCalendarShape[] | undefined
+  }
 
   const providerConfig = CALENDAR_PROVIDERS[connection.provider]
 
@@ -385,7 +397,6 @@ function ConnectProviderDialog({
   isConnecting,
 }: ConnectProviderDialogProps) {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
 
   const providers: ExternalCalendarProvider[] = ['google_calendar', 'outlook', 'exchange']
 
@@ -439,7 +450,6 @@ interface ICalFeedDialogProps {
 
 function ICalFeedDialog({ open, onOpenChange, onAdd, isAdding }: ICalFeedDialogProps) {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
   const [feedUrl, setFeedUrl] = useState('')
   const [feedName, setFeedName] = useState('')
   const [color, setColor] = useState('#3B82F6')
@@ -528,7 +538,6 @@ function ICalSubscriptionCard({
   isRefreshing,
 }: ICalSubscriptionCardProps) {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
 
   return (
     <Card className="w-full">
@@ -663,7 +672,6 @@ function ConflictCard({ conflict, onResolve, isResolving }: ConflictCardProps) {
 
 export function CalendarSyncSettings() {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
 
   const [showConnectDialog, setShowConnectDialog] = useState(false)
   const [showICalDialog, setShowICalDialog] = useState(false)
@@ -743,7 +751,7 @@ export function CalendarSyncSettings() {
                 connection={connection}
                 onSync={() => triggerSync({ connection_id: connection.id })}
                 onDisconnect={() => disconnectProvider(connection.id)}
-                onUpdateSettings={(updates) => updateConnection(connection.id, updates as any)}
+                onUpdateSettings={(updates) => updateConnection(connection.id, updates)}
                 isSyncing={isSyncing}
               />
             ))}
@@ -779,7 +787,7 @@ export function CalendarSyncSettings() {
                 subscription={subscription}
                 onRefresh={() => refreshICalFeed(subscription.id)}
                 onRemove={() => removeICalFeed(subscription.id)}
-                onUpdate={(updates) => updateICalFeed(subscription.id, updates as any)}
+                onUpdate={(updates) => updateICalFeed(subscription.id, updates)}
                 isRefreshing={isRefreshingIcal}
               />
             ))}

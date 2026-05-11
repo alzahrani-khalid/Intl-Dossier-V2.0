@@ -183,43 +183,9 @@ export interface PreviewLayout {
   updated_at: string
 }
 
-/**
- * Simplified layout for listing
- */
-interface PreviewLayoutSummary {
-  layout_id: string
-  context: PreviewContext
-  name_en: string
-  name_ar: string
-  description_en?: string
-  description_ar?: string
-  is_default: boolean
-  layout_config: PreviewLayoutConfig
-  field_count: number
-  created_at: string
-  updated_at: string
-}
-
 // =============================================================================
 // USER PREFERENCES
 // =============================================================================
-
-/**
- * User-specific preview preferences
- */
-interface UserPreviewPreference {
-  id: string
-  user_id: string
-  entity_type: PreviewEntityType
-  context: PreviewContext
-  custom_layout_id?: string
-  /** Field visibility overrides: { field_key: boolean } */
-  field_visibility: Record<string, boolean>
-  /** Field order overrides: { field_key: sort_order } */
-  field_order: Record<string, number>
-  created_at: string
-  updated_at: string
-}
 
 // =============================================================================
 // API RESPONSE TYPES

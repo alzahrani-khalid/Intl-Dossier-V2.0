@@ -154,24 +154,6 @@ export function useScheduledReports() {
 }
 
 // Hook: Get single schedule
-function useScheduledReport(id: string) {
-  return useQuery({
-    queryKey: QUERY_KEYS.schedule(id),
-    queryFn: async () => {
-      // Note: We don't join with custom_reports here due to RLS infinite recursion
-      const { data, error } = await supabase
-        .from('report_schedules')
-        .select('*')
-        .eq('id', id)
-        .single()
-
-      if (error) throw error
-      return data as ReportSchedule
-    },
-    enabled: !!id,
-  })
-}
-
 // Hook: Get recipients for a schedule
 export function useScheduleRecipients(scheduleId: string) {
   return useQuery({
@@ -387,27 +369,6 @@ export function useAddRecipient() {
 }
 
 // Hook: Update recipient
-function useUpdateRecipient() {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async ({ id, ...input }: Partial<ScheduleRecipient> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('report_schedule_recipients')
-        .update(input)
-        .eq('id', id)
-        .select()
-        .single()
-
-      if (error) throw error
-      return data as ScheduleRecipient
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.recipients(data.schedule_id) })
-    },
-  })
-}
-
 // Hook: Remove recipient
 export function useRemoveRecipient() {
   const queryClient = useQueryClient()
@@ -447,27 +408,6 @@ export function useAddCondition() {
 }
 
 // Hook: Update condition
-function useUpdateCondition() {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async ({ id, ...input }: Partial<DeliveryCondition> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('report_delivery_conditions')
-        .update(input)
-        .eq('id', id)
-        .select()
-        .single()
-
-      if (error) throw error
-      return data as DeliveryCondition
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.conditions(data.schedule_id) })
-    },
-  })
-}
-
 // Hook: Remove condition
 export function useRemoveCondition() {
   const queryClient = useQueryClient()

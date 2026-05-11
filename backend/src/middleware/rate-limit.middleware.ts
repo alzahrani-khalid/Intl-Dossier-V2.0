@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../types/express.d.ts" />
-import rateLimit from 'express-rate-limit'
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit'
 import { Request, Response, NextFunction } from 'express'
 import { logWarn, logError } from '../utils/logger'
 import { supabaseAdmin as supabase } from '../config/supabase'
@@ -11,6 +11,10 @@ import type Redis from 'ioredis'
 const RATE_LIMIT_WINDOW_MS = 60 * 1000 // 1 minute
 const DEFAULT_RATE_LIMIT_MAX_REQUESTS = 300 // 300 requests per minute as per requirements
 const SEARCH_RATE_LIMIT_MAX_REQUESTS = 60 // 60 requests per minute for search
+
+function getIpRateLimitKey(req: Request): string {
+  return ipKeyGenerator(req.ip || req.connection.remoteAddress || 'unknown')
+}
 
 // Normalize resetTime from express-rate-limit (can be number, Date, or undefined)
 function normalizeResetMs(reset: number | Date | undefined, fallbackWindowMs: number): number {
@@ -188,7 +192,11 @@ class TokenBucketRateLimiter {
 const tokenBucketLimiter = new TokenBucketRateLimiter(redis)
 
 // Enhanced rate limiting middleware with database policies
-const dynamicRateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+export const dynamicRateLimitMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     // Skip rate limiting for health checks and static assets
     if (
@@ -205,7 +213,8 @@ const dynamicRateLimitMiddleware = async (req: Request, res: Response, next: Nex
 
     if (!policy) {
       // No policy found, use default rate limiting
-      return rateLimitMiddleware(req, res, next)
+      rateLimitMiddleware(req, res, next)
+      return
     }
 
     // Generate key for rate limiting
@@ -294,8 +303,7 @@ export const rateLimitMiddleware = rateLimit({
   },
   keyGenerator: (req: Request) => {
     const userId = (req as any).user?.id
-    const ip = req.ip || req.connection.remoteAddress || 'unknown'
-    return userId ? `user:${userId}` : `ip:${ip}`
+    return userId ? `user:${userId}` : `ip:${getIpRateLimitKey(req)}`
   },
 })
 
@@ -390,8 +398,7 @@ export const createRoleBasedRateLimit = (role: string) => {
     },
     keyGenerator: (req: Request) => {
       const userId = (req as any).user?.id
-      const ip = req.ip || req.connection.remoteAddress || 'unknown'
-      return userId ? `user:${userId}:${role}` : `ip:${ip}:${role}`
+      return userId ? `user:${userId}:${role}` : `ip:${getIpRateLimitKey(req)}:${role}`
     },
     handler: (req: Request, res: Response) => {
       const resetMs = normalizeResetMs(req.rateLimit?.resetTime, RATE_LIMIT_WINDOW_MS)
@@ -414,7 +421,7 @@ export const createRoleBasedRateLimit = (role: string) => {
 const roleLimiters = new Map<string, ReturnType<typeof rateLimit>>()
 
 // Middleware to apply rate limiting based on user role
-const roleBasedRateLimit = (req: Request, res: Response, next: NextFunction) => {
+export const roleBasedRateLimit = (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = (req as any).user
     const role = user?.role || 'guest'
@@ -439,7 +446,7 @@ export const aiLimiter = aiRateLimitMiddleware
 export const dynamicLimiter = (role: string) => createRoleBasedRateLimit(role)
 
 // Search rate limiting — 60 req/min (matching original search-rate-limit.ts)
-const searchRateLimit = rateLimit({
+export const searchRateLimit = rateLimit({
   windowMs: RATE_LIMIT_WINDOW_MS,
   max: SEARCH_RATE_LIMIT_MAX_REQUESTS,
   message: {
@@ -464,7 +471,6 @@ const searchRateLimit = rateLimit({
   },
   keyGenerator: (req: Request) => {
     const userId = (req as any).user?.id
-    const ip = req.ip || req.connection.remoteAddress || 'unknown'
-    return userId ? `search:user:${userId}` : `search:ip:${ip}`
+    return userId ? `search:user:${userId}` : `search:ip:${getIpRateLimitKey(req)}`
   },
 })

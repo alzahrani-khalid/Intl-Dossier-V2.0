@@ -1,0 +1,20 @@
+{
+  "search": {
+    "placeholder": "بحث…"
+  },
+  "loadMore": {
+    "button": "تحميل المزيد",
+    "loading": "جارٍ تحميل المزيد من الارتباطات…"
+  },
+  "pill": {
+    "all": "الكل",
+    "confirmed": "مؤكد",
+    "travel": "سفر",
+    "pending": "قيد الانتظار"
+  },
+  "shownCount": "معروض",
+  "empty": {
+    "title": "لا توجد سجلات بعد",
+    "description": "ستظهر السجلات بمجرد إنشائها."
+  }
+}

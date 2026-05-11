@@ -264,50 +264,6 @@ export interface BulkActionUndoToastProps {
 }
 
 /**
- * Toolbar props for bulk actions
- */
-interface BulkActionsToolbarProps<T extends BulkSelectableItem = BulkSelectableItem> {
-  /** Selection state */
-  selection: BulkSelectionState
-  /** Available actions */
-  actions: BulkActionDefinition<T>[]
-  /** Entity type for display */
-  entityType: BulkActionEntityType
-  /** Action state */
-  actionState: BulkActionState
-  /** Callback when action is triggered */
-  onActionClick: (action: BulkActionDefinition<T>) => void
-  /** Callback to clear selection */
-  onClearSelection: () => void
-  /** Callback to select all visible items */
-  onSelectAll?: () => void
-  /** Whether component is disabled */
-  disabled?: boolean
-  /** Additional CSS classes */
-  className?: string
-}
-
-/**
- * Selectable data table props
- */
-interface SelectableDataTableProps<T extends BulkSelectableItem> {
-  /** Data items */
-  data: T[]
-  /** Column definitions */
-  columns: SelectableColumnDef<T>[]
-  /** Selection state */
-  selection: BulkSelectionState
-  /** Callback when selection changes */
-  onSelectionChange: (ids: Set<string>) => void
-  /** ID field name (default: 'id') */
-  idField?: keyof T
-  /** Whether selection is disabled */
-  selectionDisabled?: boolean
-  /** Row render function for custom rendering */
-  renderRow?: (item: T, isSelected: boolean) => React.ReactNode
-}
-
-/**
  * Column definition for selectable data table
  */
 export interface SelectableColumnDef<T> {

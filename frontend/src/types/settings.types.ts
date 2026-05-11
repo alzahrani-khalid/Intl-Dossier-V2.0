@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import type { Direction } from '@/design-system/tokens/types'
+
 /**
  * Settings Section IDs
  */
@@ -20,14 +22,21 @@ export type SettingsSectionId =
 export type ColorMode = 'light' | 'dark' | 'system'
 
 /**
- * Theme options
+ * Theme options — Phase 33 token engine directions.
+ *
+ * `ThemeName` is retained as an alias of `Direction` for back-compat with the
+ * `UserSettings.theme` field name (DB column). New code should import
+ * `Direction` from `@/design-system/tokens/types` directly.
  */
-export type ThemeName = 'canvas' | 'ocean' | 'sunset' | 'azure' | 'lavender' | 'bluesky'
+export type ThemeName = Direction
 
 /**
- * Display density options
+ * Display density options.
+ *
+ * WR-07: 42-03 R-03 renamed the third value from 'spacious' to 'dense'.
+ * The DesignProvider migrates legacy localStorage values on read.
  */
-export type DisplayDensity = 'compact' | 'comfortable' | 'spacious'
+export type DisplayDensity = 'compact' | 'comfortable' | 'dense'
 
 /**
  * Focus indicator style options
@@ -56,8 +65,6 @@ export const profileSettingsSchema = z.object({
   avatar_url: z.string().url().optional().nullable(),
 })
 
-type ProfileSettings = z.infer<typeof profileSettingsSchema>
-
 /**
  * General settings schema
  */
@@ -68,18 +75,14 @@ export const generalSettingsSchema = z.object({
   start_of_week: z.enum(['sunday', 'monday', 'saturday']),
 })
 
-type GeneralSettings = z.infer<typeof generalSettingsSchema>
-
 /**
  * Appearance settings schema
  */
 export const appearanceSettingsSchema = z.object({
   color_mode: z.enum(['light', 'dark', 'system']),
-  theme: z.enum(['canvas', 'ocean', 'sunset', 'azure', 'lavender', 'bluesky']),
-  display_density: z.enum(['compact', 'comfortable', 'spacious']),
+  theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau']),
+  display_density: z.enum(['compact', 'comfortable', 'dense']),
 })
-
-type AppearanceSettings = z.infer<typeof appearanceSettingsSchema>
 
 /**
  * Notification settings schema
@@ -95,8 +98,6 @@ export const notificationSettingsSchema = z.object({
   notifications_mentions: z.boolean(),
 })
 
-type NotificationSettings = z.infer<typeof notificationSettingsSchema>
-
 /**
  * Accessibility settings schema
  */
@@ -109,8 +110,6 @@ export const accessibilitySettingsSchema = z.object({
   screen_reader: z.boolean(),
 })
 
-type AccessibilitySettings = z.infer<typeof accessibilitySettingsSchema>
-
 /**
  * Security settings schema
  */
@@ -118,8 +117,6 @@ export const securitySettingsSchema = z.object({
   mfa_enabled: z.boolean(),
   session_timeout: z.number().min(5).max(480),
 })
-
-type SecuritySettings = z.infer<typeof securitySettingsSchema>
 
 /**
  * Combined user settings type
@@ -168,35 +165,12 @@ export interface UserSettings {
 }
 
 /**
- * Settings section navigation item
- */
-interface SettingsNavItem {
-  id: SettingsSectionId
-  labelKey: string
-  icon: React.ComponentType<{ className?: string }>
-  description?: string
-}
-
-/**
  * Timezone option
  */
 export interface TimezoneOption {
   value: string
   label: string
   offset: string
-}
-
-/**
- * Active session info
- */
-interface ActiveSession {
-  id: string
-  device: string
-  browser: string
-  ip_address: string
-  location?: string
-  last_active: string
-  is_current: boolean
 }
 
 /**
@@ -219,7 +193,7 @@ export const defaultUserSettings: UserSettings = {
 
   // Appearance
   color_mode: 'system',
-  theme: 'canvas',
+  theme: 'chancery',
   display_density: 'comfortable',
 
   // Notifications

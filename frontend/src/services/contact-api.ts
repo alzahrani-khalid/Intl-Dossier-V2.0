@@ -95,58 +95,6 @@ export interface ContactCreateInput {
 }
 
 /**
- * Search contacts with filters
- */
-async function searchContacts(params: ContactSearchParams): Promise<ContactListResponse> {
-  const {
-    query,
-    organization_id,
-    tags,
-    sort_by = 'name',
-    sort_order = 'asc',
-    page = 1,
-    per_page = 20,
-  } = params
-
-  let queryBuilder = supabase
-    .from('contacts')
-    .select('*, organization:organizations!organization_id(id, name, name_ar)', {
-      count: 'exact',
-    })
-
-  if (query) {
-    queryBuilder = queryBuilder.or(
-      `first_name.ilike.%${query}%,last_name.ilike.%${query}%,email_addresses.cs.{${query}}`,
-    )
-  }
-
-  if (organization_id) {
-    queryBuilder = queryBuilder.eq('organization_id', organization_id)
-  }
-
-  if (tags && tags.length > 0) {
-    queryBuilder = queryBuilder.overlaps('tags', tags)
-  }
-
-  const sortColumn = sort_by === 'name' ? 'first_name' : sort_by
-  queryBuilder = queryBuilder
-    .order(sortColumn, { ascending: sort_order === 'asc' })
-    .range((page - 1) * per_page, page * per_page - 1)
-
-  const { data, error, count } = await queryBuilder
-
-  if (error) throw error
-
-  return {
-    contacts: (data || []) as unknown as ContactResponse[],
-    total: count || 0,
-    page,
-    per_page,
-    total_pages: Math.ceil((count || 0) / per_page),
-  }
-}
-
-/**
  * Check for duplicate contacts before creating
  */
 export async function checkDuplicates(input: ContactCreateInput): Promise<DuplicateWarning[]> {

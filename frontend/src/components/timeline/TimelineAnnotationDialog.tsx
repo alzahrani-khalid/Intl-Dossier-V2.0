@@ -342,7 +342,6 @@ export function TimelineAnnotationBadge({
   onDelete?: () => void
   className?: string
 }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
   const TypeIcon = annotationTypes.find((t) => t.type === annotation.type)?.icon || MessageSquare
 

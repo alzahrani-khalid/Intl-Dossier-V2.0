@@ -56,7 +56,7 @@ interface ReportBuilderProps {
 export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-// Report builder state
+  // Report builder state
   const {
     configuration,
     selectedEntities,
@@ -84,7 +84,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
     resetConfiguration,
     loadConfiguration,
     markAsSaved,
-  } = useReportBuilderState(initialReportId)
+  } = useReportBuilderState(initialReportId !== undefined ? { initialReportId } : undefined)
 
   // API hooks
   const { data: reportsData, isLoading: isLoadingReports } = useReports({ limit: 50 })

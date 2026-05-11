@@ -75,7 +75,7 @@ export function AvailabilityPollCreator({
 }: AvailabilityPollCreatorProps) {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-const createPoll = useCreatePoll()
+  const createPoll = useCreatePoll()
 
   // Default values
   const defaultDeadline = format(addDays(new Date(), 7), "yyyy-MM-dd'T'HH:mm")

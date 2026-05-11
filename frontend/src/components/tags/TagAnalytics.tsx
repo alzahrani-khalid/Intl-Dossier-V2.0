@@ -39,11 +39,51 @@ interface TagAnalyticsProps {
   className?: string
 }
 
+// Local typed shim narrowing the stub useTagAnalytics hook return.
+// The hook is a refactor stub (frontend/src/domains/*/useTagHierarchy.ts) returning
+// UseQueryResult<unknown>; the hook surface is owned by 47-07. Component-side typed
+// shim keeps this consumer type-clean.
+interface TagAnalyticsRow {
+  is_active: boolean
+  total_assignments: number
+  auto_assigned_count: number
+  avg_confidence: number | null
+  dossier_count: number
+  document_count: number
+  brief_count: number
+  engagement_count: number
+  hierarchy_level: number
+  // Plus the fields needed to render rows (TagWithUsage shape):
+  id: string
+  tag_id: string
+  name_en: string
+  name_ar: string
+  color: string
+  parent_tag_id?: string | null
+}
+
+interface TagAnalyticsResponse {
+  data: TagAnalyticsRow[]
+}
+
 export function TagAnalytics({ className }: TagAnalyticsProps) {
   const { t } = useTranslation('tags')
   const { isRTL } = useDirection()
-const { data: analytics, isLoading, error, refetch } = useTagAnalytics()
-  const refreshAnalytics = useRefreshTagAnalytics()
+  const {
+    data: analytics,
+    isLoading,
+    error,
+    refetch,
+  } = useTagAnalytics() as unknown as {
+    data: TagAnalyticsResponse | undefined
+    isLoading: boolean
+    error: unknown
+    refetch: () => Promise<unknown>
+  }
+  const refreshAnalytics = useRefreshTagAnalytics() as unknown as {
+    mutateAsync: () => Promise<unknown>
+    isPending: boolean
+  }
 
   // Computed stats
   const stats = useMemo(() => {

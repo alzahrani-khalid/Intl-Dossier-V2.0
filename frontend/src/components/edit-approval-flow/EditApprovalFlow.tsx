@@ -34,7 +34,7 @@ interface EditApprovalFlowProps {
   className?: string
 }
 
-type DiffKind = 'N' | 'D' | 'E'
+type DiffKind = 'N' | 'D' | 'E' | 'A'
 
 interface DiffItem {
   kind: DiffKind

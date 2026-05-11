@@ -27,7 +27,7 @@ export function Table({ className, ...props }: React.HTMLAttributes<HTMLTableEle
     <table
       data-slot="table"
       role="table"
-      className={cn('w-full caption-bottom text-sm', className)}
+      className={cn('tbl caption-bottom', className)}
       {...props}
     />
   )
@@ -37,25 +37,11 @@ export function TableHeader({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return (
-    <thead
-      data-slot="table-header"
-      role="rowgroup"
-      className={cn('[&_tr]:border-b', className)}
-      {...props}
-    />
-  )
+  return <thead data-slot="table-header" role="rowgroup" className={cn(className)} {...props} />
 }
 
 export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return (
-    <tbody
-      data-slot="table-body"
-      role="rowgroup"
-      className={cn('[&_tr:last-child]:border-0', className)}
-      {...props}
-    />
-  )
+  return <tbody data-slot="table-body" role="rowgroup" className={cn(className)} {...props} />
 }
 
 export function TableFooter({
@@ -66,7 +52,7 @@ export function TableFooter({
     <tfoot
       data-slot="table-footer"
       role="rowgroup"
-      className={cn('bg-muted/50 border-t font-medium [&>tr]:last:border-b-0', className)}
+      className={cn('border-t border-[var(--line)] font-medium', className)}
       {...props}
     />
   )
@@ -77,10 +63,7 @@ export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTable
     <tr
       data-slot="table-row"
       role="row"
-      className={cn(
-        'border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
-        className,
-      )}
+      className={cn('transition-colors data-[state=selected]:bg-[var(--accent-soft)]', className)}
       {...props}
     />
   )
@@ -91,10 +74,7 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
     <th
       data-slot="table-head"
       role="columnheader"
-      className={cn(
-        'h-10 px-2 text-start align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]',
-        className,
-      )}
+      className={cn('align-middle [&:has([role=checkbox])]:pe-0', className)}
       {...props}
     />
   )
@@ -105,10 +85,7 @@ export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTa
     <td
       data-slot="table-cell"
       role="cell"
-      className={cn(
-        'p-2 align-middle [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]',
-        className,
-      )}
+      className={cn('align-middle [&:has([role=checkbox])]:pe-0', className)}
       {...props}
     />
   )

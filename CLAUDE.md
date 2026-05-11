@@ -1,10 +1,86 @@
 # Intl-DossierV2.0 Development Guidelines
 
-Last updated: 2026-03-26
+Last updated: 2026-05-01
+
+## Visual Design Source of Truth (READ BEFORE ANY UI WORK)
+
+The canonical visual design is the **IntelDossier prototype** at:
+
+```
+frontend/design-system/inteldossier_handoff_design/
+├── README.md             <-- voice, content rules, visual foundations
+├── colors_and_type.css   <-- foundational tokens (Bureau light)
+├── handoff/app.css       <-- production stylesheet (the prototype)
+└── src/
+    ├── themes.jsx        <-- token builder (4 directions × theme × density × hue)
+    ├── app.css           <-- production stylesheet (full prototype)
+    ├── icons.jsx         <-- 38-glyph stroked icon set
+    ├── glyph.jsx         <-- DossierGlyph (circular flag system)
+    ├── loader.jsx        <-- GlobeSpinner / GlobeLoader
+    ├── dashboard.jsx     <-- canonical Card / KPI / list patterns
+    ├── pages.jsx         <-- canonical page templates
+    └── shell.jsx         <-- topbar, sidebar, layout
+```
+
+The runtime port lives at **`frontend/src/design-system/`**
+(`DesignProvider.tsx`, `tokens/{directions,densities,buildTokens,applyTokens}.ts`,
+hooks). The FOUC bootstrap that paints first-frame tokens is at
+`frontend/public/bootstrap.js` — its palette/font literals must byte-match
+`tokens/directions.ts`.
+
+**Default direction: Bureau.** Ignore Chancery, Situation, and Ministerial
+unless a task explicitly references them.
+
+### Required reading order before building or modifying any UI
+
+1. `frontend/design-system/inteldossier_handoff_design/README.md` — voice,
+   content rules, visual foundations
+2. `frontend/design-system/inteldossier_handoff_design/colors_and_type.css` —
+   token names and exact values
+3. The closest matching component in
+   `frontend/design-system/inteldossier_handoff_design/src/`
+
+If you cannot identify a closest match, **ask before inventing**.
+
+### Design rules — non-negotiable
+
+- All colors via `var(--*)` tokens or the `@theme`-mapped Tailwind utilities
+  (`bg-bg`, `bg-surface`, `text-ink`, `border-line`, `bg-accent`, etc.).
+  **No raw hex. No Tailwind color literals** like `text-blue-500`.
+- Borders are `1px solid var(--line)`. **No drop-shadows on cards.**
+  Shadow is reserved for drawers (`var(--shadow-lg)`) and hovered list rows.
+- **No gradient backgrounds.** Surfaces are flat.
+- Buttons follow `.btn-primary` / `.btn-ghost` from the prototype's `app.css`.
+  Do not introduce new button variants without an explicit ask.
+- Row heights use `var(--row-h)` (density-aware). Tables and lists must
+  obey it.
+- Corner radii come from `--radius-sm / --radius / --radius-lg`. Bureau
+  radii are 8/12/16. Do not hard-code px.
+- **No emoji in user-visible copy.** Emoji is allowed only as data input
+  (e.g. flag codepoints).
+- **No marketing voice.** Banned: "Discover", "Easily", "Unleash",
+  exclamation marks, "you're in!", first-person plural ("we"). Sentence
+  case for titles and buttons; UPPERCASE only for classification ribbons,
+  mono labels, and table-column headers.
+- Dates: `Tue 28 Apr` (day-first, no comma). Times: `14:30 GST`.
+  SLA windows: `T-3` / `T+2` (mono-formatted).
+
+### Definition of Done — UI checklist
+
+Before declaring any UI task complete:
+
+- [ ] All colors resolve to design tokens (no raw hex; no `text-blue-500`)
+- [ ] Borders are `1px solid var(--line)`; no card shadows
+- [ ] Row heights use `var(--row-h)`
+- [ ] Buttons mirror prototype `.btn-primary` / `.btn-ghost`
+- [ ] Logical properties for spacing (`ms-*`, `ps-*`, `text-start`)
+- [ ] No emoji in copy; no marketing voice
+- [ ] Tested at 1024px and 1400px (the actual analyst-workstation widths)
+- [ ] RTL: rendered with `dir="rtl"` and verified Tajawal applies
 
 ## Core Tech Stack
 
-- **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS v4, HeroUI v3 (React Aria), i18next, React Flow (network graphs)
+- **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS v4, IntelDossier Design System (`frontend/design-system/inteldossier_handoff_design/`), i18next, React Flow (network graphs)
 - **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
 - **Database**: PostgreSQL 15+ with pgvector, pg_trgm, pg_tsvector extensions
 - **AI/ML**: AnythingLLM (self-hosted), vector embeddings (1536 dimensions)
@@ -26,36 +102,39 @@ supabase/         # Migrations, seed data, Edge Functions
 - **Test**: `pnpm test`, `pnpm lint`, `pnpm typecheck`
 - **DB**: `pnpm db:migrate`, `pnpm db:seed`, `pnpm db:reset`
 
-## Mobile-First & Responsive Design (MANDATORY)
+## Responsive Design
 
-### Core Principles
+IntelDossier is a **desktop-primary analyst workstation**. The default
+target is 1280–1400px. Mobile is a secondary surface for read-only
+review.
 
-- **ALWAYS** start with mobile layout (320px+), then scale up
-- **NEVER** write desktop-first CSS or components
-- **Breakpoints**: base (0-640px) → sm (640px+) → md (768px+) → lg (1024px+) → xl (1280px+) → 2xl (1536px+)
-- **Touch targets**: Minimum 44x44px (`min-h-11 min-w-11`)
-- **Spacing**: Min 8px gap between interactive elements
+### Breakpoints
 
-### Essential Patterns
+| Width     | Treatment                                                  |
+| --------- | ---------------------------------------------------------- |
+| 1400px+   | Full layout (sidebar + 2:1 dashboard grid + dossier rail)  |
+| 1024–1399 | Full layout, max-page-width 1400 enforced                  |
+| 768–1023  | Collapse sidebar to icon rail; KPI strip 2×2               |
+| 320–767   | Read-only mobile: stacked, no edit forms, no drag-and-drop |
 
-```tsx
-// Responsive container, grid, flexbox, typography
-<div className="container mx-auto px-4 sm:px-6 lg:px-8">
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-    <Button className="h-11 px-4 sm:h-10 sm:px-6 md:h-12 md:px-8">
-  </div>
-</div>
-```
+### Rules
+
+- Build for 1280px first, verify at 1024px, then degrade gracefully
+  to 768. Below 768 is read-only.
+- Touch targets at 44×44 only on `< 768px`. Above that, density tokens
+  (`--row-h`) drive sizing.
+- Use logical properties (`ms-*`, `ps-*`) so RTL works without re-styling.
+- Never hide critical analyst content behind a mobile-toggle. If the
+  feature can't fit at 768, omit it on mobile entirely.
 
 ## Arabic RTL Support Guidelines (MANDATORY)
 
 ### RTL Detection & Implementation
 
 ```tsx
-import { useTranslation } from 'react-i18next';
-const { i18n } = useTranslation();
-const isRTL = i18n.language === 'ar';
+import { useTranslation } from 'react-i18next'
+const { i18n } = useTranslation()
+const isRTL = i18n.language === 'ar'
 ```
 
 ### RTL-Safe Tailwind Classes (REQUIRED)
@@ -79,11 +158,11 @@ const isRTL = i18n.language === 'ar';
 ### RTL Component Template
 
 ```tsx
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 
 export function ResponsiveRTLComponent() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
     <div
@@ -97,95 +176,46 @@ export function ResponsiveRTLComponent() {
       {/* Flip directional icons */}
       <ChevronRight className={isRTL ? 'rotate-180' : ''} />
     </div>
-  );
+  )
 }
 ```
 
-## UI Component Guidelines
+## Component Library Strategy
 
-### HeroUI v3 Component Strategy (MANDATORY - HIGHEST PRIORITY)
+**The IntelDossier prototype is the visual source of truth.** The
+component cascade below is for **interactive primitives only** —
+unstyled or minimally-styled building blocks (focus management,
+keyboard handling, ARIA). Visual styling, color, spacing, type,
+borders, and shadows always come from the prototype tokens.
 
-**⚠️ HeroUI v3 is in BETA** - Expect breaking changes. Migration from v2 to v3 is NOT yet available.
+**Primitive cascade (in order):**
 
-**Component Selection Hierarchy** - **ALWAYS** follow this order (NO EXCEPTIONS):
+1. **HeroUI v3** — for accessible primitives (Modal, Popover, Combobox,
+   etc.). Override its color/spacing/radius via the design tokens; never
+   accept its default chrome.
+2. **Radix UI** (already in via `@radix-ui/react-slot`) — for headless
+   primitives HeroUI doesn't cover.
+3. **Build it yourself**, mirroring a prototype component, if no
+   primitive fits.
 
-1. **HeroUI v3 (Primary)**: https://heroui-react-v3.vercel.app/docs/react
-   - Built on **React Aria Components** (accessibility-first)
-   - Requires **Tailwind CSS v4** (NOT v3)
-   - Uses **compound component pattern** (e.g., `Card.Header`, `Modal.Body`)
-   - No Provider component needed (unlike v2)
-   - **Install**: `pnpm add @heroui/react @heroui/styles`
-   - **MCP Available**: Use `heroui-react` MCP tools for docs and component info
+**Banned without explicit user request:**
 
-2. **Aceternity UI (Secondary)**: https://ui.aceternity.com/components
-   - **130+ components** with advanced animations
-   - Use for animated/decorative components not in HeroUI
-   - **Install**: `npx shadcn@latest add https://ui.aceternity.com/registry/[component].json --yes`
+- Aceternity UI — animation-heavy, marketing aesthetic. Conflicts with
+  IntelDossier's restrained motion language. Do not install or import.
+- Kibo UI — different visual system. Do not install or import.
+- shadcn/ui defaults — the wrappers in `components/ui/heroui-*.tsx` exist
+  for API compatibility, not visual fidelity. Re-skin them via tokens.
 
-3. **Kibo-UI (Tertiary)**: https://www.kibo-ui.com
-   - Use ONLY if HeroUI AND Aceternity don't have equivalent
-   - **Install**: `npx shadcn@latest add @kibo-ui/[component]`
+If a feature seems to require Aceternity-style motion or shadcn defaults,
+**stop and ask** before installing anything.
 
-4. **shadcn/ui (Last Resort)**: https://ui.shadcn.com
-   - Use ONLY if all above don't have the component
-   - **Install**: `npx shadcn@latest add [component]`
+### Component file locations
 
-### HeroUI v3 Drop-In Replacement Pattern
-
-We use a **shadcn re-export pattern** for seamless migration:
-
-```
-frontend/src/components/ui/
-├── button.tsx          → re-exports from heroui-button.tsx
-├── card.tsx            → re-exports from heroui-card.tsx
-├── badge.tsx           → re-exports from heroui-chip.tsx
-├── skeleton.tsx        → re-exports from heroui-skeleton.tsx
-├── heroui-button.tsx   → HeroUI Button with cva + Slot (asChild support)
-├── heroui-card.tsx     → HeroUI Card as plain divs
-├── heroui-chip.tsx     → HeroUI Chip as Badge (span)
-├── heroui-skeleton.tsx → HeroUI Skeleton with animate-pulse
-├── heroui-modal.tsx    → HeroUI Modal with Dialog-compatible API
-└── heroui-forms.tsx    → TextField, TextArea, Checkbox, Switch wrappers
-```
-
-**Key Design Decisions**:
-
-- Wrappers render as **plain HTML elements** (div/span/button), NOT HeroUI primitives
-- This ensures full `React.HTMLAttributes` compatibility
-- `buttonVariants` exported via `cva` (same API as shadcn)
-- `asChild` supported via `@radix-ui/react-slot`
-
-### HeroUI v3 Gotchas
-
-- **Compound components**: `Card.Header`, `Modal.Body`, `Tooltip.Content`, etc.
-- **Dropdown placement**: Space-separated (`"bottom start"` NOT `"bottom-start"`)
-- **Theme**: `light`/`dark`/`system` via `.dark` class on `<html>`
-- **Component APIs**: Use `heroui-react` MCP tools or `/heroui-react` skill for full docs
-
-### Before Writing ANY Component
-
-1. Check HeroUI v3 → Aceternity UI → Kibo-UI → shadcn/ui (in order)
-2. Must be mobile-first with RTL logical properties
-
-### Component File Locations
-
-- **HeroUI wrappers**: `frontend/src/components/ui/heroui-*.tsx`
-- **Re-exports (shadcn compat)**: `frontend/src/components/ui/*.tsx`
-- **Configuration**: `frontend/components.json`
-
-### Key Dependencies
-
-- ✅ `@heroui/react` - HeroUI v3 components
-- ✅ `@heroui/styles` - HeroUI styling system
-- ✅ `@radix-ui/react-slot` - For `asChild` prop support
-- ✅ `class-variance-authority` (cva) - Variant management
-- ✅ `clsx` - Conditional classnames utility
-- ✅ `tailwind-merge` - Merge Tailwind classes
-
-### Aceternity UI (Secondary - For Animations)
-
-- For animated/decorative components (sparkles, aurora, typewriter, 3D cards, marquee)
-- **Install**: `npx shadcn@latest add https://ui.aceternity.com/registry/[component].json --yes`
+- **Token-bound primitives**: `frontend/src/components/ui/`
+- **Design-system port**: `frontend/src/design-system/` (DesignProvider,
+  tokens, hooks)
+- **FOUC bootstrap**: `frontend/public/bootstrap.js` (palette + font literals
+  must byte-match `tokens/directions.ts`)
 
 ## Work Management Terminology (MANDATORY)
 
@@ -237,16 +267,16 @@ Kanban board positions for tasks:
 
 ```typescript
 // Always use unified types from work-item.types.ts
-import type { WorkItem, WorkSource, Priority, TrackingType } from '@/types/work-item.types';
+import type { WorkItem, WorkSource, Priority, TrackingType } from '@/types/work-item.types'
 
 // Always use unified i18n namespace
-import { useTranslation } from 'react-i18next';
-const { t } = useTranslation('unified-kanban');
+import { useTranslation } from 'react-i18next'
+const { t } = useTranslation('unified-kanban')
 
 // Correct terminology
-t('priority.urgent'); // NOT 'priority.critical'
-t('status.in_progress'); // Consistent naming
-t('columns.todo'); // Workflow stage for display
+t('priority.urgent') // NOT 'priority.critical'
+t('status.in_progress') // Consistent naming
+t('columns.todo') // Workflow stage for display
 ```
 
 ### Database Column Naming
@@ -290,37 +320,37 @@ The system is built around **dossiers** as the central organizing concept. All f
 
 ```typescript
 // URL generation for dossier routes
-import { getDossierRouteSegment } from '@/lib/dossier-routes';
-const route = getDossierRouteSegment('country'); // Returns 'countries'
+import { getDossierRouteSegment } from '@/lib/dossier-routes'
+const route = getDossierRouteSegment('country') // Returns 'countries'
 
 // Type validation
-import { isValidDossierType } from '@/lib/dossier-type-guards';
+import { isValidDossierType } from '@/lib/dossier-type-guards'
 if (isValidDossierType(type)) {
   /* type-safe usage */
 }
 
 // Dossier context inheritance hook
-import { useResolveDossierContext } from '@/hooks/useResolveDossierContext';
-const { dossiers, inheritanceSource } = useResolveDossierContext(parentType, parentId);
+import { useResolveDossierContext } from '@/hooks/useResolveDossierContext'
+const { dossiers, inheritanceSource } = useResolveDossierContext(parentType, parentId)
 ```
 
 ### Component Usage
 
 ```tsx
 // Display dossier context badge on work items
-import { DossierContextBadge } from '@/components/Dossier/DossierContextBadge';
-<DossierContextBadge
+import { DossierContextBadge } from '@/components/Dossier/DossierContextBadge'
+;<DossierContextBadge
   dossier={dossier}
   inheritanceSource="direct" // or 'engagement', 'after_action', etc.
-/>;
+/>
 
 // Universal card for any dossier type
-import { UniversalDossierCard } from '@/components/Dossier/UniversalDossierCard';
-<UniversalDossierCard dossier={dossier} />;
+import { UniversalDossierCard } from '@/components/Dossier/UniversalDossierCard'
+;<UniversalDossierCard dossier={dossier} />
 
 // Type selector for dossier creation
-import { DossierTypeSelector } from '@/components/Dossier/DossierTypeSelector';
-<DossierTypeSelector value={type} onChange={setType} />;
+import { DossierTypeSelector } from '@/components/Dossier/DossierTypeSelector'
+;<DossierTypeSelector value={type} onChange={setType} />
 ```
 
 ### Database Linking Pattern
@@ -413,7 +443,7 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 ### Constraints
 
-- **Tech stack**: Must stay within current stack (React 19, Express, Supabase, TanStack, HeroUI v3, Tailwind v4) — no framework migrations
+- **Tech stack**: Must stay within current stack (React 19, Express, Supabase, TanStack, Tailwind v4) — no framework migrations. The brand/component layer is the IntelDossier Design System at `frontend/design-system/inteldossier_handoff_design/`; component libraries below it are an implementation detail and may be swapped to serve the design system.
 - **Backwards compatibility**: All existing features must continue working after cleanup — no regressions
 - **Bilingual**: Arabic (RTL) and English (LTR) must both work correctly after every change
 - **Database**: Supabase managed PostgreSQL — migrations via Supabase MCP, no direct DB access changes
@@ -509,16 +539,16 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 ## Key Layers
 
-| Layer | Location | Purpose |
-|-------|----------|---------|
-| Domain | `backend/src/core/domain/` | Business logic, entities (framework-agnostic) |
-| Ports/Adapters | `backend/src/core/ports/`, `backend/src/adapters/` | Contracts + Supabase/AI/email implementations |
-| API | `backend/src/api/` (60+ files) | Express routers, feature-based |
-| Middleware | `backend/src/middleware/` | Auth, rate-limit, security headers |
-| Routes | `frontend/src/routes/` (100+ files) | TanStack Router, `__root.tsx` → `_protected.tsx` → feature routes |
-| Domains | `frontend/src/domains/{feature}/` | Types, repositories, hooks, services per feature |
-| Components | `frontend/src/components/ui/` | HeroUI wrappers + re-exports (shadcn compat) |
-| State | `frontend/src/contexts/`, `frontend/src/providers/` | Auth/theme/language contexts |
+| Layer          | Location                                            | Purpose                                                             |
+| -------------- | --------------------------------------------------- | ------------------------------------------------------------------- |
+| Domain         | `backend/src/core/domain/`                          | Business logic, entities (framework-agnostic)                       |
+| Ports/Adapters | `backend/src/core/ports/`, `backend/src/adapters/`  | Contracts + Supabase/AI/email implementations                       |
+| API            | `backend/src/api/` (60+ files)                      | Express routers, feature-based                                      |
+| Middleware     | `backend/src/middleware/`                           | Auth, rate-limit, security headers                                  |
+| Routes         | `frontend/src/routes/` (100+ files)                 | TanStack Router, `__root.tsx` → `_protected.tsx` → feature routes   |
+| Domains        | `frontend/src/domains/{feature}/`                   | Types, repositories, hooks, services per feature                    |
+| Components     | `frontend/src/components/ui/`                       | App component primitives bound to IntelDossier Design System tokens |
+| State          | `frontend/src/contexts/`, `frontend/src/providers/` | Auth/theme/language contexts                                        |
 
 ## Data Flow
 
@@ -565,3 +595,90 @@ Do not make direct repo edits outside a GSD workflow unless the user explicitly 
 > This section is managed by `generate-claude-profile` -- do not edit manually.
 
 <!-- GSD:profile-end -->
+
+<!-- Karpathy-Skills:start -->
+
+## Karpathy Coding Principles
+
+Source: https://github.com/forrestchang/andrej-karpathy-skills (CLAUDE.md)
+
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+### 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+### 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+### 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+<!-- Karpathy-Skills:end -->
+
+# graphify
+
+This project has a graphify knowledge graph at graphify-out/.
+
+Rules:
+
+- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
+- If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
+- After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)

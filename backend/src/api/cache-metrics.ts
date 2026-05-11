@@ -65,25 +65,29 @@ router.get('/metrics', async (_req: Request, res: Response, next: NextFunction) 
  * GET /cache/metrics/:entityType
  * Get metrics for a specific entity type
  */
-router.get('/metrics/:entityType', validate({ params: entityTypeParamSchema }), (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const entityType = req.params.entityType as CacheableEntityType
-    const metrics = getEntityMetrics(entityType)
-    const ttl = CACHE_TTL[entityType] ?? CACHE_TTL.default
+router.get(
+  '/metrics/:entityType',
+  validate({ params: entityTypeParamSchema }),
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const entityType = req.params.entityType as CacheableEntityType
+      const metrics = getEntityMetrics(entityType)
+      const ttl = CACHE_TTL[entityType] ?? CACHE_TTL.default
 
-    res.json({
-      success: true,
-      data: {
-        entityType,
-        metrics,
-        ttlSeconds: ttl,
-      },
-    })
-  } catch (error) {
-    logError(`Error fetching metrics for ${req.params.entityType}`, error as Error)
-    next(error)
-  }
-})
+      res.json({
+        success: true,
+        data: {
+          entityType,
+          metrics,
+          ttlSeconds: ttl,
+        },
+      })
+    } catch (error) {
+      logError(`Error fetching metrics for ${req.params.entityType}`, error as Error)
+      next(error)
+    }
+  },
+)
 
 /**
  * POST /cache/reset
@@ -156,63 +160,71 @@ router.get('/health', async (_req: Request, res: Response) => {
  * DELETE /cache/clear/:pattern
  * Clear cache entries matching a pattern (requires admin permissions)
  */
-router.delete('/clear/:pattern', validate({ params: clearPatternParamSchema }), async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const pattern = req.params.pattern || '*'
-    // In production, you'd want to check for admin permissions here
+router.delete(
+  '/clear/:pattern',
+  validate({ params: clearPatternParamSchema }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const pattern = req.params.pattern || '*'
+      // In production, you'd want to check for admin permissions here
 
-    const keysToDelete = await redis.keys(pattern)
-    if (keysToDelete.length > 0) {
-      await cacheHelpers.del(keysToDelete)
+      const keysToDelete = await redis.keys(pattern)
+      if (keysToDelete.length > 0) {
+        await cacheHelpers.del(keysToDelete)
+      }
+
+      logInfo(`Cache cleared for pattern: ${pattern}, ${keysToDelete.length} keys deleted`)
+
+      res.json({
+        success: true,
+        message: `Cleared ${keysToDelete.length} cache entries matching pattern "${pattern}"`,
+        keysDeleted: keysToDelete.length,
+      })
+    } catch (error) {
+      logError(`Error clearing cache for pattern ${req.params.pattern}`, error as Error)
+      next(error)
     }
-
-    logInfo(`Cache cleared for pattern: ${pattern}, ${keysToDelete.length} keys deleted`)
-
-    res.json({
-      success: true,
-      message: `Cleared ${keysToDelete.length} cache entries matching pattern "${pattern}"`,
-      keysDeleted: keysToDelete.length,
-    })
-  } catch (error) {
-    logError(`Error clearing cache for pattern ${req.params.pattern}`, error as Error)
-    next(error)
-  }
-})
+  },
+)
 
 /**
  * GET /cache/keys/:prefix
  * List cache keys with a specific prefix (for debugging)
  */
-router.get('/keys/:prefix', validate({ params: keysPrefixParamSchema, query: keysQuerySchema }), async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const prefix = req.params.prefix
-    const limit = (req.query as { limit: number }).limit
+router.get(
+  '/keys/:prefix',
+  validate({ params: keysPrefixParamSchema, query: keysQuerySchema }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const prefix = req.params.prefix
+      const limit = (req.query as unknown as { limit: number }).limit
 
-    const keys = await redis.keys(`${prefix}*`)
-    const limitedKeys = keys.slice(0, limit)
+      const keys = await redis.keys(`${prefix}*`)
+      const limitedKeys = keys.slice(0, limit)
 
-    // Get TTL for each key
-    const keysWithTTL = await Promise.all(
-      limitedKeys.map(async (key) => {
-        const ttl = await redis.ttl(key)
-        return { key, ttlSeconds: ttl }
-      }),
-    )
+      // Get TTL for each key
+      const keysWithTTL = await Promise.all(
+        limitedKeys.map(async (key) => {
+          const ttl = await redis.ttl(key)
+          return { key, ttlSeconds: ttl }
+        }),
+      )
 
-    res.json({
-      success: true,
-      data: {
-        prefix,
-        totalKeys: keys.length,
-        showing: limitedKeys.length,
-        keys: keysWithTTL,
-      },
-    })
-  } catch (error) {
-    logError(`Error listing cache keys for prefix ${req.params.prefix}`, error as Error)
-    next(error)
-  }
-})
+      res.json({
+        success: true,
+        data: {
+          prefix,
+          totalKeys: keys.length,
+          showing: limitedKeys.length,
+          keys: keysWithTTL,
+        },
+      })
+    } catch (error) {
+      logError(`Error listing cache keys for prefix ${req.params.prefix}`, error as Error)
+      next(error)
+    }
+  },
+)
 
 /**
  * GET /cache/summary

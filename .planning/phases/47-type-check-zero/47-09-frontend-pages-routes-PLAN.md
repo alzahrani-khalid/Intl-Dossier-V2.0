@@ -1,0 +1,223 @@
+---
+phase: 47
+plan: 09
+type: execute
+wave: 2
+depends_on: [47-01]
+gap_closure: true
+files_modified:
+  - frontend/src/pages/persons/PersonDetailPage.tsx
+  - frontend/src/pages/webhooks/WebhooksPage.tsx
+  - frontend/src/pages/audit-logs/AuditLogsPage.tsx
+  - frontend/src/pages/WaitingQueue.tsx
+  - frontend/src/routes/_protected/admin/data-retention.tsx
+  - frontend/src/routes/_protected/stakeholder-influence.tsx
+  - frontend/src/pages/**
+  - frontend/src/routes/**
+  - .planning/phases/47-type-check-zero/47-EXCEPTIONS.md
+autonomous: true
+requirements: [TYPE-01, TYPE-04]
+must_haves:
+  truths:
+    - 'pnpm --filter intake-frontend type-check 2>&1 | grep -E "^src/(pages|routes)/" | wc -l returns 0'
+    - 'frontend/src/routeTree.gen.ts byte-unchanged (already @ts-nocheck — generated file)'
+    - 'No edits to backend/src — cross-workspace fence (D-04) holds'
+    - 'No net-new @ts-(ignore|expect-error) introduced'
+    - 'No new bare `as any` casts'
+  artifacts:
+    - path: 'frontend/src/pages/persons/PersonDetailPage.tsx'
+      provides: 'Type-clean (35 errors → 0)'
+    - path: 'frontend/src/routes/_protected/admin/data-retention.tsx'
+      provides: 'Type-clean (29 errors → 0)'
+  key_links:
+    - from: 'frontend/src/{pages,routes}/**'
+      to: 'frontend tsc --noEmit gate'
+      via: 'pnpm --filter intake-frontend type-check'
+      pattern: 'tsc --noEmit'
+phase_decisions_locked:
+  D-01_no_new_suppressions: 'No @ts-ignore / @ts-expect-error introduced.'
+  D-03_deletion_first: 'TS6133 / TS6196 → DELETE.'
+  D-04_cross_workspace_fence: 'No edits to backend/src.'
+threat_model:
+  T-47-02:
+    category: Tampering
+    component: 'frontend/src/{pages,routes}/* deletions'
+    disposition: mitigate
+    mitigation: 'D-04 four-globbed-grep before export deletion.'
+  T-47-03:
+    category: Tampering
+    component: 'every code-fix in this plan'
+    disposition: mitigate
+    mitigation: 'suppression-diff = 0.'
+  T-47-04:
+    category: Tampering
+    component: 'frontend/src/routeTree.gen.ts (pre-existing @ts-nocheck)'
+    disposition: mitigate
+    mitigation: 'File NOT edited by this plan; acceptance grep confirms first line still @ts-nocheck and file byte-unchanged.'
+---
+
+<objective>
+Source: 47-01 PLAN.md Task 8.
+
+Drive `pnpm --filter intake-frontend type-check 2>&1 | grep -E '^src/(pages|routes)/'` from ~216 errors (pages 142 + routes 74 per RESEARCH §7.2) to 0. Same playbook: D-03 + D-04, top-down. **Skip `routeTree.gen.ts`** — pre-existing `@ts-nocheck`.
+
+**Purpose:** TYPE-01 phase-goal slice. Pages + routes is the largest aggregate cluster after components.
+
+**Output:** src/pages/_ and src/routes/_ type-clean; routeTree.gen.ts byte-unchanged; no new suppressions; backend/src untouched.
+</objective>
+
+<execution_context>
+@$HOME/.claude/get-shit-done/workflows/execute-plan.md
+@$HOME/.claude/get-shit-done/templates/summary.md
+</execution_context>
+
+<context>
+@.planning/STATE.md
+@.planning/ROADMAP.md
+@.planning/REQUIREMENTS.md
+@.planning/phases/47-type-check-zero/47-CONTEXT.md
+@.planning/phases/47-type-check-zero/47-RESEARCH.md
+@.planning/phases/47-type-check-zero/47-VALIDATION.md
+@.planning/phases/47-type-check-zero/47-EXCEPTIONS.md
+@.planning/phases/47-type-check-zero/47-01-frontend-type-fix-SUMMARY.md
+@./CLAUDE.md
+@frontend/tsconfig.json
+@frontend/package.json
+
+<interfaces>
+<!-- Top-error files per RESEARCH §7.1 — process in this order: -->
+frontend/src/pages/persons/PersonDetailPage.tsx                       (35)
+frontend/src/routes/_protected/admin/data-retention.tsx               (29)
+frontend/src/pages/webhooks/WebhooksPage.tsx                          (22)
+frontend/src/routes/_protected/stakeholder-influence.tsx              (22)
+frontend/src/pages/audit-logs/AuditLogsPage.tsx                       (20)
+frontend/src/pages/WaitingQueue.tsx                                   (17)
+
+<!-- D-04 verification recipe -->
+
+grep -rn "<SymbolName>" frontend/src backend/src 2>/dev/null
+grep -rn "<SymbolName>" supabase/functions 2>/dev/null
+grep -rn "<SymbolName>" tests 2>/dev/null
+grep -rn "<SymbolName>" shared 2>/dev/null
+
+<!-- DO NOT EDIT in this plan: -->
+
+backend/src/\*\* // cross-workspace fence
+frontend/src/routeTree.gen.ts // pre-existing @ts-nocheck (generated; SKIP)
+frontend/src/types/database.types.ts // already @ts-nocheck (47-01 Task 2)
+
+<!-- Routes file errors are usually TS6133 (unused loader return) or TS2339 (missing property on TanStack Router context). -->
+</interfaces>
+</context>
+
+<threat_model>
+
+## Trust Boundaries
+
+| Boundary                 | Description                                                                 |
+| ------------------------ | --------------------------------------------------------------------------- |
+| frontend → backend types | Some pages/routes import from `backend/src/types/*`.                        |
+| Generated → source       | `routeTree.gen.ts` is regenerated by TanStack Router; hand-edits are wiped. |
+| Source code → CI gate    | Adding `@ts-ignore` / `@ts-expect-error` defeats TYPE-01.                   |
+
+## STRIDE Threat Register
+
+| Threat ID | Category  | Component                                 | Disposition | Mitigation Plan                                                                                                 |
+| --------- | --------- | ----------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------- |
+| T-47-02   | Tampering | `frontend/src/{pages,routes}/*` deletions | mitigate    | D-04 four-globbed-grep before export deletion. backend/src diff = 0.                                            |
+| T-47-03   | Tampering | every code-fix in this plan               | mitigate    | suppression-diff = 0.                                                                                           |
+| T-47-04   | Tampering | `frontend/src/routeTree.gen.ts`           | mitigate    | This plan does NOT edit it; acceptance grep confirms first line still `@ts-nocheck` and file is byte-unchanged. |
+
+</threat_model>
+
+<tasks>
+
+<task type="auto">
+  <name>Task 1: src/pages/* + src/routes/* (~216 errors, skip routeTree.gen.ts)</name>
+  <files>frontend/src/pages/**, frontend/src/routes/**, .planning/phases/47-type-check-zero/47-EXCEPTIONS.md</files>
+  <read_first>
+    - .planning/phases/47-type-check-zero/47-RESEARCH.md §7.2 (pages 142, routes 74), §7.1 (top files listed in <interfaces>)
+    - .planning/phases/47-type-check-zero/47-CONTEXT.md D-01, D-03, D-04
+    - .planning/phases/47-type-check-zero/47-01-frontend-type-fix-SUMMARY.md (Deviation 2: pnpm filter is `intake-frontend`)
+    - frontend/src/routeTree.gen.ts (FIRST LINE ONLY — confirm `@ts-nocheck` is still at top; do NOT read further; do NOT edit this file)
+    - frontend/src/pages/persons/PersonDetailPage.tsx (35 errors)
+    - frontend/src/routes/_protected/admin/data-retention.tsx (29 errors)
+  </read_first>
+  <action>
+    1. **Capture baseline:**
+       ```bash
+       git rev-parse phase-47-base   # MUST return SHA
+       pnpm --filter intake-frontend type-check 2>&1 | grep -E '^src/(pages|routes)/' > /tmp/47-09-pages-routes-baseline.txt
+       wc -l /tmp/47-09-pages-routes-baseline.txt
+       pnpm --filter intake-frontend type-check 2>&1 | grep -E '^src/(pages|routes)/' | grep -oE '^[^(]+\.tsx?' | sort | uniq -c | sort -rn
+       ```
+
+    2. **Confirm routeTree.gen.ts is intact** before starting work and skip it for the rest of the task:
+       ```bash
+       head -1 frontend/src/routeTree.gen.ts | grep -c "@ts-nocheck"   # must return 1
+       ```
+
+    3. **Process top files first** (PersonDetailPage.tsx → data-retention.tsx → others by error count).
+
+    4. **Common pages/routes error patterns:**
+       - **TS6133 (unused loader return / unused import):** delete it.
+       - **TS2339 (missing property on TanStack Router context / loader data):** narrow via the route's loader return type. NEVER widen with `as any`.
+       - **TS6196 (unused exported route helper):** D-04 four-globbed-grep → delete or ledger.
+       - **TS7006 (untyped callback parameter in `loader: async (ctx) => ...`)**: annotate ctx with the imported type from TanStack Router.
+
+    5. **Forbidden:**
+       - `@ts-ignore` / `@ts-expect-error`
+       - bare `as any`
+       - editing `frontend/src/routeTree.gen.ts`
+       - editing `backend/src/**`
+
+    6. **Re-run histogram every 3-5 files:**
+       ```bash
+       pnpm --filter intake-frontend type-check 2>&1 | grep -E '^src/(pages|routes)/' | wc -l
+       ```
+
+    7. **Single commit at task end.** Commit message: `fix(47-09): src/pages/* + src/routes/* — N→0 errors`.
+
+  </action>
+  <verify>
+    <automated>
+      pnpm --filter intake-frontend type-check 2>&1 | grep -E '^src/(pages|routes)/' | wc -l   # returns 0
+      head -1 frontend/src/routeTree.gen.ts | grep -c "@ts-nocheck"   # returns 1 (preserved)
+      git diff phase-47-base..HEAD -- frontend/src/routeTree.gen.ts | wc -l   # returns 0 (byte-unchanged)
+      git diff phase-47-base..HEAD -- backend/src | wc -l   # returns 0
+      git diff phase-47-base..HEAD -- frontend/src | grep -E '^\+.*@ts-(ignore|expect-error)' | wc -l   # returns 0
+      git diff phase-47-base..HEAD -- frontend/src | grep -cE '^\+.*\bas any\b'   # returns 0
+      head -1 frontend/src/types/database.types.ts | grep -c "@ts-nocheck"   # returns 1
+    </automated>
+  </verify>
+  <acceptance_criteria>
+    - `pnpm --filter intake-frontend type-check 2>&1 | grep -E '^src/(pages|routes)/' | wc -l` returns 0.
+    - `git diff phase-47-base..HEAD -- frontend/src/routeTree.gen.ts | wc -l` returns 0.
+    - `head -1 frontend/src/routeTree.gen.ts | grep -c '@ts-nocheck'` returns 1.
+    - `git diff phase-47-base..HEAD -- backend/src | wc -l` returns 0.
+    - `git diff phase-47-base..HEAD -- frontend/src | grep -E '^\+.*@ts-(ignore|expect-error)' | wc -l` returns 0.
+    - `git diff phase-47-base..HEAD -- frontend/src | grep -cE '^\+.*\bas any\b'` returns 0.
+    - 47-EXCEPTIONS.md pre-existing 4 ledger rows byte-unchanged.
+  </acceptance_criteria>
+  <done>src/pages/* and src/routes/* type-clean; routeTree.gen.ts byte-unchanged.</done>
+</task>
+
+</tasks>
+
+<verification>
+- Pages + routes error count = 0.
+- routeTree.gen.ts byte-unchanged.
+- backend/src diff empty.
+- No new suppressions.
+</verification>
+
+<success_criteria>
+
+- TYPE-01 (slice): pages + routes cleared. ✅
+- TYPE-04: zero net-new; routeTree.gen.ts preserved. ✅
+- D-04: backend/src untouched. ✅
+  </success_criteria>
+
+<output>
+After completion, create `.planning/phases/47-type-check-zero/47-09-frontend-pages-routes-SUMMARY.md` covering: pre/post error count, top files fixed, routeTree.gen.ts preservation proof, fence verification.
+</output>

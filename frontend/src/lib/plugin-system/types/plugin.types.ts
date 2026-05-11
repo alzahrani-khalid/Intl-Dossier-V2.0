@@ -52,17 +52,6 @@ export interface BaseDossier {
   updated_by?: string
 }
 
-/**
- * Base list item for entity lists
- */
-interface BaseListItem {
-  id: string
-  name_en: string
-  name_ar: string
-  status: EntityStatus
-  type: string
-}
-
 // ============================================================================
 // Plugin Manifest Types
 // ============================================================================
@@ -501,35 +490,6 @@ export interface BadgeDefinition<T = Record<string, unknown>> {
 // ============================================================================
 // API & Data Hook Types
 // ============================================================================
-
-/**
- * Search parameters for listing entities
- */
-interface EntitySearchParams {
-  search?: string
-  status?: EntityStatus
-  sensitivity_level?: SensitivityLevel
-  tags?: string[]
-  page?: number
-  limit?: number
-  sort_by?: string
-  sort_order?: 'asc' | 'desc'
-  [key: string]: unknown
-}
-
-/**
- * List response type
- */
-interface EntityListResponse<T = Record<string, unknown>> {
-  data: Array<BaseDossier & T>
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-    has_more: boolean
-  }
-}
 
 /**
  * Plugin data hooks for custom API integration

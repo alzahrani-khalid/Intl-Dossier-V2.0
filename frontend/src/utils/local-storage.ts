@@ -247,25 +247,6 @@ export async function clearStaleDrafts(): Promise<number> {
 }
 
 /**
- * Clears all task drafts from IndexedDB
- *
- * @returns {Promise<void>}
- */
-async function clearAllTaskDrafts(): Promise<void> {
-  const db = await openDB()
-  const transaction = db.transaction([STORE_NAME], 'readwrite')
-  const store = transaction.objectStore(STORE_NAME)
-
-  await new Promise<void>((resolve, reject) => {
-    const request = store.clear()
-    request.onsuccess = () => resolve()
-    request.onerror = () => reject(new Error('Failed to clear all drafts'))
-  })
-
-  db.close()
-}
-
-/**
  * Checks if IndexedDB is supported
  *
  * @returns {boolean} True if IndexedDB is supported

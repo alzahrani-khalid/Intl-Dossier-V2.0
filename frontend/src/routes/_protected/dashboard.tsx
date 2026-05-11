@@ -32,9 +32,13 @@ const FIRST_RUN_DISMISSED_KEY = 'intl-dossier:first-run-dismissed'
 const ONBOARDING_SEEN_KEY = 'intl-dossier-onboarding-seen'
 const TOUR_POLL_INTERVAL_MS = 500
 
-const OperationsHub = lazy(() =>
-  import('@/pages/Dashboard/OperationsHub').then((m) => ({
-    default: m.OperationsHub,
+// Phase 38 (38-00): Route mounts the new Dashboard composer (verbatim port from
+// inteldossier handoff). Phase 38 Plan 09 deleted the legacy OperationsHub.tsx
+// page; the operations-hub domain hooks/types/repositories are kept because
+// KpiStrip, SlaHealth, WeekAhead, and useVipVisits still consume them.
+const Dashboard = lazy(() =>
+  import('@/pages/Dashboard').then((m) => ({
+    default: m.Dashboard,
   })),
 )
 
@@ -102,7 +106,7 @@ function OperationsHubRoute(): React.ReactElement {
           </div>
         }
       >
-        <OperationsHub />
+        <Dashboard />
       </Suspense>
 
       <FirstRunModal

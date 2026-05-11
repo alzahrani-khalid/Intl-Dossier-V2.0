@@ -15,8 +15,6 @@ import {
   getTeamStats,
   getInvitationTemplates,
   sendTeamInvitation,
-  getMyInvitations,
-  respondToInvitation,
   type TeamStats,
   type InvitationTemplate,
   type TeamInvitation,
@@ -159,24 +157,6 @@ export interface UseMyInvitationsOptions {
   enabled?: boolean
 }
 
-/**
- * Hook to fetch the current user's invitations (sent and received)
- *
- * @param options - Hook options
- * @returns TanStack Query result with invitations array
- */
-function useMyInvitations(options: UseMyInvitationsOptions = {}) {
-  const { enabled = true } = options
-
-  return useQuery<TeamInvitation[], Error>({
-    queryKey: teamCollaborationKeys.invitations(),
-    queryFn: getMyInvitations,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 15 * 60 * 1000, // 15 minutes
-    enabled,
-  })
-}
-
 // ============================================================================
 // useRespondToInvitation Hook
 // ============================================================================
@@ -184,52 +164,6 @@ function useMyInvitations(options: UseMyInvitationsOptions = {}) {
 export interface RespondToInvitationParams {
   invitationId: string
   status: 'accepted' | 'declined'
-}
-
-/**
- * Hook to respond to a team invitation
- *
- * @returns Mutation for responding to invitations
- */
-function useRespondToInvitation() {
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return useMutation<TeamInvitation, Error, RespondToInvitationParams>({
-    mutationFn: ({ invitationId, status }) => respondToInvitation(invitationId, status),
-    onSuccess: (_data, variables) => {
-      // Invalidate invitations list
-      queryClient.invalidateQueries({ queryKey: teamCollaborationKeys.invitations() })
-
-      // Show success toast
-      const accepted = variables.status === 'accepted'
-      toast({
-        title: accepted
-          ? isRTL
-            ? 'تم قبول الدعوة'
-            : 'Invitation Accepted'
-          : isRTL
-            ? 'تم رفض الدعوة'
-            : 'Invitation Declined',
-        description: accepted
-          ? isRTL
-            ? 'مرحباً بك في الفريق!'
-            : 'Welcome to the team!'
-          : isRTL
-            ? 'تم رفض الدعوة بنجاح'
-            : 'Invitation declined successfully',
-      })
-    },
-    onError: (error) => {
-      toast({
-        title: isRTL ? 'فشلت العملية' : 'Operation Failed',
-        description: error.message,
-        variant: 'destructive',
-      })
-    },
-  })
 }
 
 // ============================================================================

@@ -1,0 +1,382 @@
+/* ============================================================
+   IntelDossier — frontend/app.css
+   ============================================================
+   Replaces the existing 60-line shadcn-default app.css.
+   Ports BUREAU (light + dark) tokens from the prototype's
+   themes.jsx + colors_and_type.css.
+
+   How it composes with Tailwind v4:
+   - All tokens live in :root (light) and .dark (dark).
+   - Tailwind utilities like bg-background / text-foreground /
+     border-line resolve through these CSS variables. Wire them
+     in tailwind.config.ts (or @theme in v4) — see comment at
+     bottom for the mapping.
+
+   Direction switching: add .dir-bureau (default), .dir-chancery,
+   .dir-situation, or .dir-ministerial to <body>. The prototype's
+   buildTokens() can override at runtime; the static blocks below
+   match the most common (Bureau / Comfortable / hue=32) baseline.
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* ───────── Fonts ───────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap');
+
+/* ============================================================
+   ROOT — Bureau, light, comfortable, hue 32 (terracotta)
+   ============================================================ */
+:root {
+  /* Type families */
+  --font-sans:    'Inter', system-ui, sans-serif;
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+  --font-arabic:  'Tajawal', system-ui, sans-serif;
+
+  /* Type scale (semantic) */
+  --t-page-title:   28px;
+  --t-card-title:   16px;
+  --t-kpi-value:    36px;
+  --t-body:         13px;
+  --t-meta:         12px;
+  --t-label:        10.5px;
+  --t-mono-small:   11px;
+  --t-mono-tiny:    10px;
+
+  --tracking-tight:    -0.02em;
+  --tracking-display:  -0.005em;
+  --tracking-label:    0.1em;
+  --tracking-ribbon:   0.15em;
+
+  --leading-tight:  1.1;
+  --leading-snug:   1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Surfaces — Bureau light */
+  --bg:             #f7f6f4;
+  --background:     #f7f6f4;   /* alias for shadcn-style consumers */
+  --surface:        #ffffff;
+  --surface-raised: #ffffff;
+  --card:           #ffffff;
+  --popover:        #ffffff;
+  --sidebar-bg:     #ffffff;
+  --sidebar-ink:    #2a2520;
+
+  /* Ink (3-step ramp) */
+  --ink:        #1a1714;
+  --ink-mute:   #6b6459;
+  --ink-faint:  #9a9082;
+  --foreground: #1a1714;             /* alias */
+  --card-foreground: #1a1714;
+  --popover-foreground: #1a1714;
+  --muted:           #efece3;
+  --muted-foreground: #6b6459;
+
+  /* Lines */
+  --line:       #e8e4dc;
+  --line-soft:  #efece3;
+  --border:     #e8e4dc;             /* alias */
+  --input:      #e8e4dc;
+
+  /* Accent (Bureau terracotta, hue 32) */
+  --accent:      oklch(58% 0.14 32);
+  --accent-ink:  oklch(42% 0.15 32);
+  --accent-soft: oklch(92% 0.05 32);
+  --accent-fg:   oklch(99% 0.01 32);
+  --accent-foreground: oklch(99% 0.01 32);
+  --primary:           oklch(58% 0.14 32);
+  --primary-foreground: oklch(99% 0.01 32);
+  --ring:              oklch(58% 0.14 32);
+
+  /* Semantic */
+  --danger:      oklch(52% 0.18 25);
+  --danger-soft: oklch(95% 0.04 25);
+  --warn:        oklch(62% 0.14 75);
+  --warn-soft:   oklch(95% 0.05 75);
+  --ok:          oklch(52% 0.12 155);
+  --ok-soft:     oklch(94% 0.04 155);
+  --info:        oklch(50% 0.14 230);
+  --info-soft:   oklch(94% 0.04 230);
+  --destructive: oklch(52% 0.18 25);  /* alias for shadcn */
+  --destructive-foreground: oklch(99% 0.01 25);
+
+  /* SLA palette */
+  --sla-ok:        oklch(58% 0.14 32);
+  --sla-ok-soft:   oklch(94% 0.05 32);
+  --sla-risk:      oklch(60% 0.13 87);
+  --sla-risk-soft: oklch(95% 0.05 87);
+  /* Plan 41-09: light-mode --sla-bad darkened to 46%/0.18 for WCAG AA.
+     --sla-bad-soft unchanged. Dark-mode override at line ~202 unchanged. */
+  --sla-bad:       oklch(46% 0.18 25);
+  --sla-bad-soft:  oklch(95% 0.05 25);
+
+  /* Density — Comfortable */
+  --row-h: 52px;
+  --pad:   20px;
+  --gap:   16px;
+
+  /* Shape — Bureau */
+  --radius-sm: 8px;
+  --radius:    12px;
+  --radius-lg: 16px;
+
+  /* Spacing scale (multiples of 4) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Elevation — borders > shadows; shadow only for drawers */
+  --shadow-sm: 0 1px 2px rgba(20,18,15,0.04);
+  --shadow:    0 4px 12px rgba(20,18,15,0.06);
+  --shadow-lg: -12px 0 40px rgba(20,18,15,0.15);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur:      220ms;
+}
+
+/* ============================================================
+   DENSITY MODES — toggle via .density-{mode} on <body>
+   ============================================================ */
+.density-compact { --row-h: 40px; --pad: 14px; --gap: 12px; }
+.density-dense   { --row-h: 32px; --pad: 10px; --gap:  8px; }
+
+/* ============================================================
+   DARK MODE — Bureau dark
+   ============================================================ */
+.dark {
+  --bg:             #161310;
+  --background:     #161310;
+  --surface:        #1d1915;
+  --surface-raised: #24201b;
+  --card:           #1d1915;
+  --popover:        #24201b;
+  --sidebar-bg:     #100d0a;
+  --sidebar-ink:    #ddd3c4;
+
+  --ink:                 #f2ece3;
+  --ink-mute:            #b8ac9c;
+  --ink-faint:           #857c6e;
+  --foreground:          #f2ece3;
+  --card-foreground:     #f2ece3;
+  --popover-foreground:  #f2ece3;
+  --muted:               #201c18;
+  --muted-foreground:    #b8ac9c;
+
+  --line:      #2a2520;
+  --line-soft: #201c18;
+  --border:    #2a2520;
+  --input:     #2a2520;
+
+  --accent:      oklch(58% 0.14 32);
+  --accent-ink:  oklch(72% 0.12 32);
+  --accent-soft: oklch(25% 0.08 32);
+  --accent-fg:   oklch(99% 0.01 32);
+  --accent-foreground: oklch(99% 0.01 32);
+  --primary:           oklch(58% 0.14 32);
+  --primary-foreground: oklch(99% 0.01 32);
+  --ring:              oklch(72% 0.12 32);
+
+  --danger:      oklch(70% 0.16 25);
+  --danger-soft: oklch(25% 0.09 25);
+  --warn:        oklch(78% 0.14 75);
+  --warn-soft:   oklch(25% 0.08 75);
+  --ok:          oklch(72% 0.14 155);
+  --ok-soft:     oklch(22% 0.06 155);
+  --info:        oklch(72% 0.13 230);
+  --info-soft:   oklch(22% 0.07 230);
+  --destructive: oklch(70% 0.16 25);
+  --destructive-foreground: oklch(99% 0.01 25);
+
+  --sla-ok:        oklch(58% 0.14 32);
+  --sla-ok-soft:   oklch(28% 0.08 32);
+  --sla-risk:      oklch(74% 0.13 87);
+  --sla-risk-soft: oklch(26% 0.08 87);
+  --sla-bad:       oklch(68% 0.18 25);
+  --sla-bad-soft:  oklch(27% 0.09 25);
+}
+
+/* ============================================================
+   BASE LAYER
+   ============================================================ */
+@layer base {
+  * {
+    border-color: var(--line);
+    outline-color: color-mix(in oklch, var(--accent) 50%, transparent);
+  }
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--t-body);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* RTL fallback — Tajawal beats every other family in RTL.
+     Inter / JetBrains Mono lack Arabic coverage. */
+  html[dir="rtl"],
+  html[dir="rtl"] body,
+  html[dir="rtl"] * {
+    font-family: var(--font-arabic);
+  }
+}
+
+/* ============================================================
+   TYPOGRAPHY HELPERS — drop on bare elements to inherit voice
+   ============================================================ */
+.t-page-title {
+  font-family: var(--font-display);
+  font-size: var(--t-page-title);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+  margin: 0;
+}
+.t-card-title {
+  font-family: var(--font-display);
+  font-size: var(--t-card-title);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  color: var(--ink);
+}
+.t-body  { font-size: var(--t-body); line-height: var(--leading-normal); color: var(--ink); }
+.t-meta  { font-size: var(--t-meta); color: var(--ink-mute); }
+.t-label {
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.t-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   PRIMITIVES — match the prototype's app.css contract.
+   These class names are what Claude Code should reach for first
+   instead of inventing new variants.
+   ============================================================ */
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  /* No drop-shadow on cards — that's a prototype rule. */
+}
+.card-pad { padding: var(--pad); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-sm);
+  font: 500 var(--t-body)/1 var(--font-body);
+  letter-spacing: var(--tracking-display);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+.btn:hover { border-color: var(--ink-faint); }
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+.btn-primary:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--ink) 12%, var(--accent));
+}
+.btn-primary:active {
+  background: color-mix(in srgb, var(--ink) 22%, var(--accent));
+}
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ink);
+}
+.btn-ghost:hover {
+  background: var(--line-soft);
+  border-color: transparent;
+}
+
+/* Hairline divider — use in place of border-bottom on rows */
+.hairline { box-shadow: inset 0 -1px 0 var(--line); }
+
+/* List row — obeys density */
+.row {
+  height: var(--row-h);
+  display: flex;
+  align-items: center;
+  padding-inline: var(--pad);
+  gap: var(--gap);
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.row:hover { background: var(--line-soft); }
+
+/* Classification ribbon — uppercase, mono-spaced */
+.ribbon {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-tiny);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-ribbon);
+  color: var(--ink-faint);
+}
+
+/* ============================================================
+   TAILWIND v4 @theme MAPPING
+   ============================================================
+   Tailwind v4 reads tokens from `@theme`. Add this block to
+   `frontend/src/index.css` (or wherever your @theme lives) so
+   utilities like bg-background, text-foreground, border-line
+   resolve to the variables above.
+
+   @theme inline {
+     --color-background:   var(--bg);
+     --color-foreground:   var(--ink);
+     --color-card:         var(--surface);
+     --color-card-foreground: var(--ink);
+     --color-popover:      var(--surface-raised);
+     --color-popover-foreground: var(--ink);
+     --color-primary:      var(--accent);
+     --color-primary-foreground: var(--accent-fg);
+     --color-muted:        var(--line-soft);
+     --color-muted-foreground: var(--ink-mute);
+     --color-accent:       var(--accent-soft);
+     --color-accent-foreground: var(--accent-ink);
+     --color-destructive:  var(--danger);
+     --color-destructive-foreground: oklch(99% 0.01 25);
+     --color-border:       var(--line);
+     --color-input:        var(--line);
+     --color-ring:         var(--accent);
+
+     --radius-sm:          var(--radius-sm);
+     --radius-md:          var(--radius);
+     --radius-lg:          var(--radius-lg);
+
+     --font-sans:          var(--font-body);
+     --font-mono:          var(--font-mono);
+   }
+   ============================================================ */

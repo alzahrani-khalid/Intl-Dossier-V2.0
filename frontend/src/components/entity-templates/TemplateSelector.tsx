@@ -45,7 +45,7 @@ export function TemplateSelector({
 }: TemplateSelectorProps) {
   const { t } = useTranslation('entity-templates')
   const { isRTL } = useDirection()
-// State
+  // State
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [showShortcuts, setShowShortcuts] = useState(false)
@@ -55,9 +55,9 @@ export function TemplateSelector({
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Queries & Mutations
-  const { data, isLoading, error } = useContextAwareTemplates(entityType, {
-    enabled: true,
-  })
+  // Stub useContextAwareTemplates takes `Record<string, unknown> | undefined`;
+  // the entityType filter is wrapped to keep the call-site documented.
+  const { data, isLoading, error } = useContextAwareTemplates({ entityType })
   const toggleFavorite = useToggleFavorite()
   const { applyTemplate } = useApplyTemplate()
 
@@ -90,7 +90,7 @@ export function TemplateSelector({
   // Handle favorite toggle
   const handleToggleFavorite = useCallback(
     (template: EntityTemplate) => {
-      toggleFavorite.mutate(template.id)
+      toggleFavorite.mutate({ templateId: template.id })
     },
     [toggleFavorite],
   )

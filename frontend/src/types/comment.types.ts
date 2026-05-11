@@ -42,21 +42,6 @@ export type CommentReactionEmoji =
   | '💡'
   | '🔥'
 
-const COMMENT_REACTION_EMOJIS: CommentReactionEmoji[] = [
-  '👍',
-  '👎',
-  '❤️',
-  '🎉',
-  '😄',
-  '😕',
-  '🚀',
-  '👀',
-  '✅',
-  '❓',
-  '💡',
-  '🔥',
-]
-
 // Author info embedded in comments
 export interface CommentAuthor {
   id: string
@@ -169,22 +154,6 @@ export interface SearchUsersResponse {
 }
 
 // API Request types
-interface CreateCommentRequest {
-  entity_type: CommentableEntityType
-  entity_id: string
-  content: string
-  parent_id?: string
-  visibility?: CommentVisibility
-}
-
-interface UpdateCommentRequest {
-  content: string
-  visibility?: CommentVisibility
-}
-
-interface ToggleReactionRequest {
-  emoji: CommentReactionEmoji
-}
 
 // Query parameters
 export interface GetCommentsParams {
@@ -195,11 +164,6 @@ export interface GetCommentsParams {
   include_replies?: boolean
 }
 
-interface SearchUsersParams {
-  query: string
-  limit?: number
-}
-
 // Notification types
 export type CommentNotificationType =
   | 'mention' // User was @mentioned
@@ -207,42 +171,13 @@ export type CommentNotificationType =
   | 'reaction' // Reaction to user's comment
   | 'thread_update' // Update in a thread user participated in
 
-interface CommentNotification {
-  id: string
-  user_id: string
-  comment_id: string
-  notification_type: CommentNotificationType
-  actor_id: string
-  entity_type: CommentableEntityType
-  entity_id: string
-  is_read: boolean
-  read_at: string | null
-  email_sent: boolean
-  email_sent_at: string | null
-  created_at: string
-}
-
 // Comment attachment
-interface CommentAttachment {
-  id: string
-  comment_id: string
-  file_name: string
-  file_type: string
-  file_size: number
-  storage_path: string
-  thumbnail_path: string | null
-  created_at: string
-}
 
 // Error response
 export interface CommentError {
   code: string
   message_en: string
   message_ar?: string
-}
-
-interface CommentErrorResponse {
-  error: CommentError
 }
 
 // Utility types for component props

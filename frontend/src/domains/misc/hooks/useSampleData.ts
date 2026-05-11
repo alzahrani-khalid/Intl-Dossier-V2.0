@@ -22,7 +22,7 @@ export const sampleDataKeys = {
   status: () => [...sampleDataKeys.all, 'status'] as const,
 }
 
-export function useSampleDataSets(): ReturnType<typeof useQuery> {
+export function useSampleDataSets() {
   return useQuery({
     queryKey: sampleDataKeys.sets(),
     queryFn: () => getSampleDataSets(),
@@ -31,7 +31,7 @@ export function useSampleDataSets(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useSampleDataStatus(): ReturnType<typeof useQuery> {
+export function useSampleDataStatus() {
   return useQuery({
     queryKey: sampleDataKeys.status(),
     queryFn: () => getSampleDataStatus(),
@@ -40,7 +40,7 @@ export function useSampleDataStatus(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useLoadSampleData(): ReturnType<typeof useMutation> {
+export function useLoadSampleData() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => loadSampleDataApi(data),
@@ -50,7 +50,7 @@ export function useLoadSampleData(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useClearSampleData(): ReturnType<typeof useMutation> {
+export function useClearSampleData() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () => clearSampleDataApi(),
@@ -77,10 +77,11 @@ export function useSampleData(): UseSampleDataReturn {
   const loadMutation = useLoadSampleData()
   const clearMutation = useClearSampleData()
 
-  const setsResponse = setsQuery.data as { templates?: SampleDataTemplate[] } | SampleDataTemplate[] | undefined
-  const templates = Array.isArray(setsResponse)
-    ? setsResponse
-    : setsResponse?.templates ?? []
+  const setsResponse = setsQuery.data as
+    | { templates?: SampleDataTemplate[] }
+    | SampleDataTemplate[]
+    | undefined
+  const templates = Array.isArray(setsResponse) ? setsResponse : (setsResponse?.templates ?? [])
   const status = statusQuery.data as SampleDataStatus | undefined
 
   return {

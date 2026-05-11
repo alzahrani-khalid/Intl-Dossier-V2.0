@@ -4,7 +4,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import type { Database } from '../../../../backend/src/types/database.types'
-import { useDirection } from '@/hooks/useDirection'
 
 type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
 
@@ -36,8 +35,7 @@ export function ContributorsList({
   className = '',
 }: ContributorsListProps) {
   const { t } = useTranslation()
-  const { isRTL } = useDirection()
-// Filter out removed contributors
+  // Filter out removed contributors
   const activeContributors = contributors.filter((c) => !c.removed_at)
 
   // Split contributors into displayed and overflow
@@ -111,50 +109,4 @@ export function ContributorsList({
 function getInitials(userId: string): string {
   // Extract first 2 characters of UUID as placeholder
   return userId.substring(0, 2).toUpperCase()
-}
-
-/**
- * Compact variant for displaying on cards (kanban, task lists)
- * Shows only avatars with overflow count
- */
-interface ContributorsAvatarGroupProps {
-  contributors: TaskContributor[]
-  maxDisplay?: number
-  className?: string
-}
-
-function ContributorsAvatarGroup({
-  contributors,
-  maxDisplay = 3,
-  className = '',
-}: ContributorsAvatarGroupProps) {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
-
-  const activeContributors = contributors.filter((c) => !c.removed_at)
-  const displayedContributors = activeContributors.slice(0, maxDisplay)
-  const overflowCount = Math.max(0, activeContributors.length - maxDisplay)
-
-  if (activeContributors.length === 0) {
-    return null
-  }
-
-  return (
-    <div
-      className={`flex ${isRTL ? 'flex-row-reverse' : 'flex-row'} -space-x-2 ${className}`}
-    >
-      {displayedContributors.map((contributor) => (
-        <Avatar key={contributor.id} className="size-8 sm:size-10 border-2 border-background">
-          <AvatarImage src={`/avatars/${contributor.user_id}.png`} />
-          <AvatarFallback className="text-xs">{getInitials(contributor.user_id)}</AvatarFallback>
-        </Avatar>
-      ))}
-
-      {overflowCount > 0 && (
-        <div className="flex items-center justify-center size-8 sm:size-10 rounded-full border-2 border-background bg-muted text-xs font-medium">
-          +{overflowCount}
-        </div>
-      )}
-    </div>
-  )
 }

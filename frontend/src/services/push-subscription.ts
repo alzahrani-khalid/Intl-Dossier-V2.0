@@ -70,9 +70,14 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
 
     const registration = await navigator.serviceWorker.ready
 
+    // Note: a `Uint8Array` IS a `BufferSource` at runtime, but the
+    // `@types/dom` lib version pinned by this project narrows
+    // `applicationServerKey` to a more specific shape than current TS DOM
+    // typings expose. Track the lib-version mismatch as a separate
+    // tooling concern; the cast here is correct at runtime.
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey,
+      applicationServerKey: applicationServerKey as BufferSource,
     })
 
     const subscriptionJson = subscription.toJSON()

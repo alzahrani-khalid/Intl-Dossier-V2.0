@@ -15,17 +15,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useToggleReaction } from '@/hooks/useComments'
 import { cn } from '@/lib/utils'
-import type {
-  CommentableEntityType,
-  CommentReactionEmoji,
-  CommentReactions,
-} from '@/types/comment.types'
+import type { CommentReactionEmoji, CommentReactions } from '@/types/comment.types'
 import { useDirection } from '@/hooks/useDirection'
 
 interface ReactionPickerProps {
   commentId: string
-  entityType: CommentableEntityType
-  entityId: string
   reactions: CommentReactions
   userReactions?: CommentReactionEmoji[]
   compact?: boolean
@@ -65,23 +59,19 @@ const EMPTY_USER_REACTIONS: CommentReactionEmoji[] = []
 
 export function ReactionPicker({
   commentId,
-  entityType,
-  entityId,
   reactions,
   userReactions = EMPTY_USER_REACTIONS,
   compact = false,
 }: ReactionPickerProps) {
   const { t } = useTranslation('comments')
   const { isRTL } = useDirection()
-const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const toggleReaction = useToggleReaction()
 
   const handleReactionClick = async (emoji: CommentReactionEmoji) => {
     await toggleReaction.mutateAsync({
       commentId,
       emoji,
-      entityType,
-      entityId,
     })
     setIsOpen(false)
   }

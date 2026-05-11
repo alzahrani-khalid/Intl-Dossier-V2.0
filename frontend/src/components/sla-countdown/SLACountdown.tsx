@@ -49,9 +49,6 @@ export function SLACountdown({
   const pauseMutation = usePauseSLA(ticketId)
   const resumeMutation = useResumeSLA(ticketId)
 
-  // Map eventType to slaType expected by the API
-  const slaType = eventType === 'acknowledgment' ? 'acknowledgment' : 'resolution'
-
   // Calculate initial remaining time
   useEffect(() => {
     const calculateRemaining = () => {
@@ -169,30 +166,24 @@ export function SLACountdown({
   // Handle pause confirmation with reason
   const handlePauseConfirm = useCallback(
     (reason: string) => {
-      pauseMutation.mutate(
-        { slaType, reason },
-        {
-          onSuccess: () => {
-            setIsPaused(true)
-            setPauseDialogOpen(false)
-          },
+      pauseMutation.mutate(reason, {
+        onSuccess: () => {
+          setIsPaused(true)
+          setPauseDialogOpen(false)
         },
-      )
+      })
     },
-    [pauseMutation, slaType],
+    [pauseMutation],
   )
 
   // Handle resume
   const handleResume = useCallback(() => {
-    resumeMutation.mutate(
-      { slaType },
-      {
-        onSuccess: () => {
-          setIsPaused(false)
-        },
+    resumeMutation.mutate(undefined, {
+      onSuccess: () => {
+        setIsPaused(false)
       },
-    )
-  }, [resumeMutation, slaType])
+    })
+  }, [resumeMutation])
 
   // Format accumulated pause time
   const formatPauseTime = (minutes: number): string => {

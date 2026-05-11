@@ -37,10 +37,11 @@ interface AuditLogExportProps {
 export function AuditLogExport({ filters, disabled = false, className }: AuditLogExportProps) {
   const { t } = useTranslation('audit-logs')
   const { isRTL } = useDirection()
-const { exportLogs, isExporting } = useAuditLogExport()
+  const exportMutation = useAuditLogExport()
+  const isExporting = exportMutation.isPending
 
-  const handleExport = async (format: ExportFormat) => {
-    await exportLogs({ format, filters })
+  const handleExport = async (format: ExportFormat): Promise<void> => {
+    await exportMutation.mutateAsync({ format, filters })
   }
 
   return (

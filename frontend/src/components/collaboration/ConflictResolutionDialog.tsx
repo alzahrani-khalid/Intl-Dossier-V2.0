@@ -120,12 +120,10 @@ const StrategyButton = memo(function StrategyButton({
   strategy,
   onClick,
   disabled,
-  isRTL,
 }: {
   strategy: ConflictResolutionStrategy
   onClick: () => void
   disabled?: boolean
-  isRTL: boolean
 }) {
   const Icon = STRATEGY_ICONS[strategy.type]
 
@@ -248,7 +246,6 @@ export function ConflictResolutionDialog({
                 strategy={strategy}
                 onClick={() => onResolve(strategy)}
                 disabled={isResolving}
-                isRTL={isRTL}
               />
             ))}
           </div>
@@ -277,7 +274,6 @@ export function ConflictBanner({
   className?: string
 }) {
   const { t } = useTranslation('collaboration')
-  const { isRTL } = useDirection()
 
   return (
     <div

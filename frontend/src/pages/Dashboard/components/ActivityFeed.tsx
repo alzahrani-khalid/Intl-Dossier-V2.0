@@ -59,7 +59,7 @@ export function ActivityFeed({
       <div
         role="region"
         aria-label={t('zones.activity.title')}
-        className="rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+        className="rounded-[var(--radius)] border border-destructive/30 bg-destructive/5 p-4"
       >
         <p className="text-sm text-destructive mb-2">
           {t('error.load_failed', { zone: t('zones.activity.title') })}
@@ -75,9 +75,7 @@ export function ActivityFeed({
   if (items.length === 0) {
     return (
       <div role="region" aria-label={t('zones.activity.title')}>
-        <p className="text-sm text-muted-foreground py-4">
-          {t('zones.activity.empty')}
-        </p>
+        <p className="text-sm text-muted-foreground py-4">{t('zones.activity.empty')}</p>
       </div>
     )
   }

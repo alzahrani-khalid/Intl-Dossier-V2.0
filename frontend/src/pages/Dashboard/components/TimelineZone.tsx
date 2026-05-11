@@ -58,8 +58,8 @@ export function TimelineZone({
         {Array.from({ length: 2 }, (_, i) => (
           <div key={i} className="space-y-2">
             <Skeleton className="h-5 w-24" />
-            <Skeleton className="h-12 rounded-lg" />
-            <Skeleton className="h-12 rounded-lg" />
+            <Skeleton className="h-12 rounded-[var(--radius-sm)]" />
+            <Skeleton className="h-12 rounded-[var(--radius-sm)]" />
           </div>
         ))}
       </div>
@@ -72,7 +72,7 @@ export function TimelineZone({
       <div
         role="region"
         aria-label={t('zones.timeline.title')}
-        className="rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+        className="rounded-[var(--radius)] border border-destructive/30 bg-destructive/5 p-4"
       >
         <p className="text-sm text-destructive mb-2">
           {t('error.load_failed', { zone: t('zones.timeline.title') })}
@@ -85,33 +85,25 @@ export function TimelineZone({
   }
 
   // Check if all groups are empty
-  const hasAnyEvents = DAY_GROUP_ORDER.some(
-    (group) => (events[group]?.length ?? 0) > 0,
-  )
+  const hasAnyEvents = DAY_GROUP_ORDER.some((group) => (events[group]?.length ?? 0) > 0)
 
   if (!hasAnyEvents) {
     return (
       <div role="region" aria-label={t('zones.timeline.title')}>
-        <p className="text-sm text-muted-foreground py-4">
-          {t('zones.timeline.empty')}
-        </p>
+        <p className="text-sm text-muted-foreground py-4">{t('zones.timeline.empty')}</p>
       </div>
     )
   }
 
   // Non-empty groups only
-  const nonEmptyGroups = DAY_GROUP_ORDER.filter(
-    (group) => (events[group]?.length ?? 0) > 0,
-  )
+  const nonEmptyGroups = DAY_GROUP_ORDER.filter((group) => (events[group]?.length ?? 0) > 0)
 
   return (
     <div role="region" aria-label={t('zones.timeline.title')} className="space-y-4">
       {nonEmptyGroups.map((group, groupIndex) => {
         const groupEvents = events[group] ?? []
         const isExpanded = expandedGroups[group] ?? false
-        const visibleEvents = isExpanded
-          ? groupEvents
-          : groupEvents.slice(0, MAX_VISIBLE_EVENTS)
+        const visibleEvents = isExpanded ? groupEvents : groupEvents.slice(0, MAX_VISIBLE_EVENTS)
         const hasMore = groupEvents.length > MAX_VISIBLE_EVENTS
 
         return (

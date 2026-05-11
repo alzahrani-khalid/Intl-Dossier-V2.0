@@ -4,7 +4,10 @@
 // Feature: recurring-event-patterns - Added recurrence pattern support
 import { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCreateCalendarEvent } from '@/hooks/useCreateCalendarEvent'
+import {
+  useCreateCalendarEvent,
+  type CreateCalendarEventInput,
+} from '@/hooks/useCreateCalendarEvent'
 import { useUpdateCalendarEvent } from '@/hooks/useUpdateCalendarEvent'
 import { useDossiers } from '@/hooks/useDossier'
 import { useConflictCheck, useGenerateSuggestions } from '@/hooks/useCalendarConflicts'
@@ -49,7 +52,11 @@ import {
 } from './ConflictResolution'
 import type { ParticipantConflictInfo } from './ConflictResolution'
 import { RecurrencePatternEditor } from './RecurrencePatternEditor'
-import type { ConflictCheckRequest } from '@/types/calendar-conflict.types'
+import type {
+  ConflictCheckRequest,
+  ReschedulingSuggestion,
+  ReschedulingSuggestionResponse,
+} from '@/types/calendar-conflict.types'
 import type { CreateRecurrenceRuleInput } from '@/types/recurrence.types'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -80,6 +87,43 @@ interface CalendarEntryFormProps {
   onCancel?: () => void
 }
 
+type CalendarEntryType = CreateCalendarEventInput['entry_type']
+type CalendarParticipantInput = {
+  participant_type: 'person_dossier' | 'organization_dossier'
+  participant_id: string
+}
+type CalendarEventFormInput = CreateCalendarEventInput & {
+  participants: CalendarParticipantInput[]
+}
+type AcceptedReschedulingSuggestion =
+  | ReschedulingSuggestion
+  | ReschedulingSuggestionResponse['suggestions'][number]
+
+const CALENDAR_ENTRY_TYPES: readonly CalendarEntryType[] = [
+  'internal_meeting',
+  'deadline',
+  'reminder',
+  'holiday',
+  'training',
+  'review',
+  'other',
+]
+
+function toCalendarEntryType(value: string | undefined): CalendarEntryType {
+  return CALENDAR_ENTRY_TYPES.includes(value as CalendarEntryType)
+    ? (value as CalendarEntryType)
+    : 'internal_meeting'
+}
+
+function getStringField(source: unknown, key: string): string | undefined {
+  if (source === null || typeof source !== 'object') {
+    return undefined
+  }
+
+  const value = (source as Record<string, unknown>)[key]
+  return typeof value === 'string' ? value : undefined
+}
+
 /**
  * Extract initials from name (handles both English and Arabic)
  */
@@ -103,9 +147,11 @@ export function CalendarEntryForm({
   onSuccess,
   onCancel,
 }: CalendarEntryFormProps) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
-const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_meeting')
+  const [entryType, setEntryType] = useState<CalendarEntryType>(
+    toCalendarEntryType(initialData?.entry_type),
+  )
   const [titleEn, setTitleEn] = useState(initialData?.title_en || '')
   const [titleAr, setTitleAr] = useState(initialData?.title_ar || '')
   const [descriptionEn, setDescriptionEn] = useState(initialData?.description_en || '')
@@ -231,7 +277,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
   const handleReschedule = useCallback(() => {
     handleGenerateSuggestions()
     setShowSideBySideComparison(false)
-  }, [])
+  }, [handleGenerateSuggestions])
 
   // Handle adjust duration - update end datetime
   const handleAdjustDuration = useCallback(
@@ -248,7 +294,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
   )
 
   // Apply a suggestion to the form
-  const handleAcceptSuggestion = useCallback((suggestion: any) => {
+  const handleAcceptSuggestion = useCallback((suggestion: AcceptedReschedulingSuggestion) => {
     if (suggestion.suggested_start) {
       // Convert ISO to datetime-local format
       const startDate = new Date(suggestion.suggested_start)
@@ -277,12 +323,12 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
     e.preventDefault()
 
     if (!startDatetime) {
-      alert(t('calendar.form.start_datetime_required'))
+      alert(t('form.start_datetime_required'))
       return
     }
 
-    const eventData = {
-      entry_type: entryType as any,
+    const eventData: CalendarEventFormInput = {
+      entry_type: entryType,
       title_en: titleEn || undefined,
       title_ar: titleAr || undefined,
       description_en: descriptionEn || undefined,
@@ -331,7 +377,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
       onSuccess?.()
     } catch (err) {
       console.error('Failed to save calendar entry:', err)
-      alert(t('calendar.form.save_failed'))
+      alert(t('form.save_failed'))
     }
   }
 
@@ -342,28 +388,30 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
       <div className="flex items-center gap-2 mb-6">
         <CalendarIcon className="h-5 w-5" />
         <h2 className="text-lg sm:text-xl font-semibold">
-          {isEditing ? t('calendar.form.edit_event') : t('calendar.form.create_event')}
+          {isEditing ? t('form.edit_event') : t('form.create_event')}
         </h2>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Event Type */}
         <div className="flex flex-col gap-2">
-          <Label htmlFor="entry-type">{t('calendar.form.entry_type')}</Label>
-          <Select value={entryType} onValueChange={setEntryType} disabled={isPending}>
+          <Label htmlFor="entry-type">{t('form.entry_type')}</Label>
+          <Select
+            value={entryType}
+            onValueChange={(value): void => setEntryType(toCalendarEntryType(value))}
+            disabled={isPending}
+          >
             <SelectTrigger id="entry-type">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="internal_meeting">
-                {t('calendar.types.internal_meeting')}
-              </SelectItem>
-              <SelectItem value="deadline">{t('calendar.types.deadline')}</SelectItem>
-              <SelectItem value="reminder">{t('calendar.types.reminder')}</SelectItem>
-              <SelectItem value="holiday">{t('calendar.types.holiday')}</SelectItem>
-              <SelectItem value="training">{t('calendar.types.training')}</SelectItem>
-              <SelectItem value="review">{t('calendar.types.review')}</SelectItem>
-              <SelectItem value="other">{t('calendar.types.other')}</SelectItem>
+              <SelectItem value="internal_meeting">{t('types.internal_meeting')}</SelectItem>
+              <SelectItem value="deadline">{t('types.deadline')}</SelectItem>
+              <SelectItem value="reminder">{t('types.reminder')}</SelectItem>
+              <SelectItem value="holiday">{t('types.holiday')}</SelectItem>
+              <SelectItem value="training">{t('types.training')}</SelectItem>
+              <SelectItem value="review">{t('types.review')}</SelectItem>
+              <SelectItem value="other">{t('types.other')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -371,23 +419,23 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
         {/* Titles */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="title-en">{t('calendar.form.title_en')}</Label>
+            <Label htmlFor="title-en">{t('form.title_en')}</Label>
             <Input
               id="title-en"
               value={titleEn}
               onChange={(e) => setTitleEn(e.target.value)}
-              placeholder={t('calendar.form.title_en_placeholder')}
+              placeholder={t('form.title_en_placeholder')}
               disabled={isPending}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="title-ar">{t('calendar.form.title_ar')}</Label>
+            <Label htmlFor="title-ar">{t('form.title_ar')}</Label>
             <Input
               id="title-ar"
               value={titleAr}
               onChange={(e) => setTitleAr(e.target.value)}
-              placeholder={t('calendar.form.title_ar_placeholder')}
+              placeholder={t('form.title_ar_placeholder')}
               disabled={isPending}
             />
           </div>
@@ -396,24 +444,24 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
         {/* Descriptions */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="desc-en">{t('calendar.form.description_en')}</Label>
+            <Label htmlFor="desc-en">{t('form.description_en')}</Label>
             <Textarea
               id="desc-en"
               value={descriptionEn}
               onChange={(e) => setDescriptionEn(e.target.value)}
-              placeholder={t('calendar.form.description_en_placeholder')}
+              placeholder={t('form.description_en_placeholder')}
               rows={3}
               disabled={isPending}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="desc-ar">{t('calendar.form.description_ar')}</Label>
+            <Label htmlFor="desc-ar">{t('form.description_ar')}</Label>
             <Textarea
               id="desc-ar"
               value={descriptionAr}
               onChange={(e) => setDescriptionAr(e.target.value)}
-              placeholder={t('calendar.form.description_ar_placeholder')}
+              placeholder={t('form.description_ar_placeholder')}
               rows={3}
               disabled={isPending}
             />
@@ -425,7 +473,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
           <div className="flex flex-col gap-2">
             <Label htmlFor="start-datetime" className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
-              {t('calendar.form.start_datetime')}
+              {t('form.start_datetime')}
               <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -439,7 +487,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="end-datetime">{t('calendar.form.end_datetime')}</Label>
+            <Label htmlFor="end-datetime">{t('form.end_datetime')}</Label>
             <Input
               id="end-datetime"
               type="datetime-local"
@@ -453,24 +501,26 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
         {/* All Day & Location */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
-            <Checkbox
-              id="all-day"
-              checked={allDay}
-              onCheckedChange={(checked) => setAllDay(checked as boolean)}
-              disabled={isPending}
-            />
+            <span className="touch-44">
+              <Checkbox
+                id="all-day"
+                checked={allDay}
+                onCheckedChange={(checked) => setAllDay(checked as boolean)}
+                disabled={isPending}
+              />
+            </span>
             <Label htmlFor="all-day" className="cursor-pointer">
-              {t('calendar.form.all_day')}
+              {t('form.all_day')}
             </Label>
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="location">{t('calendar.form.location')}</Label>
+            <Label htmlFor="location">{t('form.location')}</Label>
             <Input
               id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder={t('calendar.form.location_placeholder')}
+              placeholder={t('form.location_placeholder')}
               disabled={isPending}
             />
           </div>
@@ -480,7 +530,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            <Label>{t('calendar.form.participants')}</Label>
+            <Label>{t('form.participants')}</Label>
           </div>
 
           {/* Selected participants */}
@@ -519,7 +569,10 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="h-5 w-5 p-0 hover:bg-transparent"
+                    className="min-h-11 min-w-11 p-0 hover:bg-transparent"
+                    aria-label={t('form.remove_participant', {
+                      name: participant.participant_name || participant.participant_id,
+                    })}
                     onClick={() => {
                       setParticipants(
                         participants.filter((p) => p.participant_id !== participant.participant_id),
@@ -527,7 +580,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
                     }}
                     disabled={isPending}
                   >
-                    <X className="h-3 w-3" />
+                    <X className="h-3 w-3" aria-hidden="true" />
                   </Button>
                 </Badge>
               ))}
@@ -544,20 +597,22 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
                 disabled={isPending}
               >
                 <Users className="h-4 w-4 me-2" />
-                {t('calendar.form.add_participant')}
+                {t('form.add_participant')}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full sm:w-80 p-0" align={isRTL ? 'end' : 'start'}>
               <Command>
-                <CommandInput placeholder={t('calendar.form.search_participants')} />
-                <CommandEmpty>{t('calendar.form.no_participants_found')}</CommandEmpty>
+                <CommandInput placeholder={t('form.search_participants')} />
+                <CommandEmpty>{t('form.no_participants_found')}</CommandEmpty>
 
                 {/* Person dossiers */}
                 {personDossiers?.data && personDossiers.data.length > 0 && (
-                  <CommandGroup heading={t('calendar.form.people')}>
+                  <CommandGroup heading={t('form.people')}>
                     {personDossiers.data.map((person) => {
                       const displayName = isRTL ? person.name_ar : person.name_en
                       const isSelected = participants.some((p) => p.participant_id === person.id)
+                      const photoUrl = getStringField(person.extension, 'photo_url')
+                      const title = getStringField(person.extension, 'title')
 
                       return (
                         <CommandItem
@@ -571,7 +626,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
                                   participant_type: 'person_dossier',
                                   participant_id: person.id,
                                   participant_name: displayName || person.id,
-                                  participant_photo: (person.extension as any)?.photo_url,
+                                  participant_photo: photoUrl,
                                 },
                               ])
                             }
@@ -580,12 +635,9 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
                           disabled={isSelected}
                         >
                           <div className="flex items-center gap-2 flex-1">
-                            {(person.extension as any)?.photo_url ? (
+                            {photoUrl ? (
                               <Avatar className="h-6 w-6">
-                                <AvatarImage
-                                  src={(person.extension as any).photo_url}
-                                  alt={displayName || ''}
-                                />
+                                <AvatarImage src={photoUrl} alt={displayName || ''} />
                                 <AvatarFallback className="text-xs">
                                   {displayName ? getInitials(displayName) : 'VIP'}
                                 </AvatarFallback>
@@ -597,10 +649,8 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
                             )}
                             <div className="flex flex-col">
                               <span className="text-sm">{displayName}</span>
-                              {(person.extension as any)?.title && (
-                                <span className="text-xs text-muted-foreground">
-                                  {(person.extension as any).title}
-                                </span>
+                              {title && (
+                                <span className="text-xs text-muted-foreground">{title}</span>
                               )}
                             </div>
                           </div>
@@ -613,7 +663,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
 
                 {/* Organization dossiers */}
                 {orgDossiers?.data && orgDossiers.data.length > 0 && (
-                  <CommandGroup heading={t('calendar.form.organizations')}>
+                  <CommandGroup heading={t('form.organizations')}>
                     {orgDossiers.data.map((org) => {
                       const displayName = isRTL ? org.name_ar : org.name_en
                       const isSelected = participants.some((p) => p.participant_id === org.id)
@@ -656,18 +706,18 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
 
         {/* Reminder */}
         <div className="flex flex-col gap-2">
-          <Label htmlFor="reminder">{t('calendar.form.reminder')}</Label>
+          <Label htmlFor="reminder">{t('form.reminder')}</Label>
           <Select value={reminderMinutes} onValueChange={setReminderMinutes} disabled={isPending}>
             <SelectTrigger id="reminder">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="0">{t('calendar.form.no_reminder')}</SelectItem>
-              <SelectItem value="5">5 {t('calendar.form.minutes_before')}</SelectItem>
-              <SelectItem value="15">15 {t('calendar.form.minutes_before')}</SelectItem>
-              <SelectItem value="30">30 {t('calendar.form.minutes_before')}</SelectItem>
-              <SelectItem value="60">1 {t('calendar.form.hour_before')}</SelectItem>
-              <SelectItem value="1440">1 {t('calendar.form.day_before')}</SelectItem>
+              <SelectItem value="0">{t('form.no_reminder')}</SelectItem>
+              <SelectItem value="5">5 {t('form.minutes_before')}</SelectItem>
+              <SelectItem value="15">15 {t('form.minutes_before')}</SelectItem>
+              <SelectItem value="30">30 {t('form.minutes_before')}</SelectItem>
+              <SelectItem value="60">1 {t('form.hour_before')}</SelectItem>
+              <SelectItem value="1440">1 {t('form.day_before')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -686,9 +736,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
         {isEditing && initialData?.recurrence_pattern && (
           <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg border">
             <Repeat className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">
-              {t('calendar.series.partOfSeries')}
-            </span>
+            <span className="text-sm text-muted-foreground">{t('series.partOfSeries')}</span>
           </div>
         )}
 
@@ -772,7 +820,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
             >
               <AlertTriangle className="h-4 w-4 text-warning me-2" />
               <span className="text-sm">
-                {t('calendar.conflicts.hasConflicts', { count: conflictData.total_conflicts })}
+                {t('conflicts.hasConflicts', { count: conflictData.total_conflicts })}
               </span>
             </Button>
           )}
@@ -783,7 +831,7 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
               <span className="text-sm text-warning">
-                {t('calendar.conflicts.hasConflicts', { count: conflictData.total_conflicts })}
+                {t('conflicts.hasConflicts', { count: conflictData.total_conflicts })}
               </span>
               <Button
                 type="button"
@@ -811,15 +859,15 @@ const [entryType, setEntryType] = useState(initialData?.entry_type || 'internal_
               disabled={isPending}
               className="w-full sm:w-auto"
             >
-              {t('common.cancel')}
+              {t('common.cancel', { ns: 'translation' })}
             </Button>
           )}
           <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
             {isPending
-              ? t('common.saving')
+              ? t('common.saving', { ns: 'translation' })
               : isEditing
-                ? t('calendar.form.update_event')
-                : t('calendar.form.create_event')}
+                ? t('form.update_event')
+                : t('form.create_event')}
           </Button>
         </div>
       </form>

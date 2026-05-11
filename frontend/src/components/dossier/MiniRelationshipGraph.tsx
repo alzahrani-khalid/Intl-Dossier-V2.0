@@ -136,7 +136,6 @@ interface MiniNodeData {
 }
 
 const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const name = isRTL ? data.name_ar || data.name_en : data.name_en
 
@@ -513,7 +512,12 @@ export function MiniRelationshipGraph({
     {
       enabled: !isCollapsed, // Only fetch when expanded
     },
-  )
+  ) as unknown as {
+    data: { data: RelationshipWithDossiers[] } | undefined
+    isLoading: boolean
+    isError: boolean
+    refetch: () => Promise<unknown>
+  }
 
   // Transform relationships into nodes and edges format
   const data = useMemo(() => {

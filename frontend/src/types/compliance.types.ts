@@ -291,26 +291,6 @@ export interface ComplianceRuleTemplate {
 }
 
 /**
- * Compliance check log entry
- */
-interface ComplianceCheckLog {
-  id: string
-  entity_type: ComplianceEntityType
-  entity_id: string
-  action_type: string
-  rules_checked: number
-  violations_found: number
-  blocking_violations: number
-  violation_ids: string[]
-  check_passed: boolean
-  blocked: boolean
-  checked_by?: string
-  checked_at: string
-  check_duration_ms?: number
-  check_details: Record<string, unknown>
-}
-
-/**
  * Compliance exemption
  */
 export interface ComplianceExemption {
@@ -595,19 +575,6 @@ export const SEVERITY_COLORS: Record<
 }
 
 /**
- * Labels for violation status
- */
-const VIOLATION_STATUS_LABELS: Record<ViolationStatus, { en: string; ar: string }> = {
-  pending: { en: 'Pending', ar: 'قيد الانتظار' },
-  acknowledged: { en: 'Acknowledged', ar: 'تم الإقرار' },
-  signed_off: { en: 'Signed Off', ar: 'تمت الموافقة' },
-  waived: { en: 'Waived', ar: 'تم التنازل' },
-  resolved: { en: 'Resolved', ar: 'تم الحل' },
-  escalated: { en: 'Escalated', ar: 'تم التصعيد' },
-  expired: { en: 'Expired', ar: 'منتهية الصلاحية' },
-}
-
-/**
  * Color mappings for violation status
  */
 export const VIOLATION_STATUS_COLORS: Record<
@@ -652,59 +619,8 @@ export const VIOLATION_STATUS_COLORS: Record<
 }
 
 /**
- * Labels for sign-off actions
- */
-const SIGNOFF_ACTION_LABELS: Record<SignoffAction, { en: string; ar: string }> = {
-  approve: { en: 'Approve', ar: 'موافقة' },
-  reject: { en: 'Reject', ar: 'رفض' },
-  request_info: { en: 'Request Information', ar: 'طلب معلومات' },
-  escalate: { en: 'Escalate', ar: 'تصعيد' },
-  waive: { en: 'Waive', ar: 'تنازل' },
-}
-
-/**
- * Labels for entity types
- */
-const ENTITY_TYPE_LABELS: Record<ComplianceEntityType, { en: string; ar: string }> = {
-  engagement: { en: 'Engagement', ar: 'مشاركة' },
-  commitment: { en: 'Commitment', ar: 'التزام' },
-  relationship: { en: 'Relationship', ar: 'علاقة' },
-  person: { en: 'Person', ar: 'شخص' },
-  organization: { en: 'Organization', ar: 'منظمة' },
-  country: { en: 'Country', ar: 'دولة' },
-  all: { en: 'All Entities', ar: 'جميع الكيانات' },
-}
-
-/**
- * Helper to check if a severity requires immediate attention
- */
-function requiresImmediateAttention(severity: ComplianceSeverity): boolean {
-  return severity === 'critical' || severity === 'blocking'
-}
-
-/**
  * Helper to check if a violation can be signed off
  */
 export function canSignOff(violation: ComplianceViolation): boolean {
   return violation.status === 'pending' || violation.status === 'acknowledged'
-}
-
-/**
- * Helper to get severity rank for sorting
- */
-function getSeverityRank(severity: ComplianceSeverity): number {
-  const ranks: Record<ComplianceSeverity, number> = {
-    blocking: 4,
-    critical: 3,
-    warning: 2,
-    info: 1,
-  }
-  return ranks[severity]
-}
-
-/**
- * Helper to check if an entity has blocking violations
- */
-function hasBlockingViolations(summary: EntityComplianceSummary): boolean {
-  return summary.blocking_violations > 0
 }

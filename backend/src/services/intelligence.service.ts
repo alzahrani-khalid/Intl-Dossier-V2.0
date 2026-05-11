@@ -2,7 +2,7 @@ import { supabaseAdmin } from '../config/supabase'
 import { logInfo, logError } from '../utils/logger'
 
 export class IntelligenceService {
-  async detectSignals(entityType: string, timeframe: number = 30) {
+  async detectSignals(_entityType: string, timeframe: number = 30) {
     try {
       const startDate = new Date()
       startDate.setDate(startDate.getDate() - timeframe)
@@ -51,7 +51,7 @@ export class IntelligenceService {
     }
   }
 
-  async identifyOpportunities(countryId?: string) {
+  async identifyOpportunities(_countryId?: string) {
     const opportunities = []
 
     // Check for countries without recent engagement
@@ -73,7 +73,7 @@ export class IntelligenceService {
     return opportunities
   }
 
-  async analyzeTrends(metric: string, period: number = 90) {
+  async analyzeTrends(metric: string, _period: number = 90) {
     // Trend analysis implementation
     return {
       metric,
@@ -165,7 +165,9 @@ export class IntelligenceService {
         .slice(0, 5)
         .map((s) => s.trim())
 
-      return keyPoints.length > 0 ? keyPoints : [sentences[0]?.trim()].filter(Boolean)
+      return keyPoints.length > 0
+        ? keyPoints
+        : ([sentences[0]?.trim()].filter(Boolean) as string[])
     } catch (error) {
       logError('Failed to extract key points', error as Error)
       throw error

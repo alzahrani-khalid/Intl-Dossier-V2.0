@@ -54,7 +54,7 @@ export function AvailabilityPollResults({
 }: AvailabilityPollResultsProps) {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? ar : enUS
+  const dateLocale = isRTL ? ar : enUS
 
   const { data: pollData, isLoading, error } = usePollDetails(pollId)
   const closePoll = useClosePoll()

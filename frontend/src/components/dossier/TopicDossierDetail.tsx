@@ -34,7 +34,7 @@ interface TopicDossierDetailProps {
 function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier'] }) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const extension = dossier.extension as TopicExtension | undefined
+  const extension = dossier.extension as TopicExtension | undefined
 
   // Fetch parent topic name if parent_theme_id exists
   const parentRelationships = useRelationshipsForDossier(
@@ -112,7 +112,7 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
   const { isRTL } = useDirection()
 
   const { data, isLoading } = useRelationshipsForDossier(dossierId)
-  const relationships = data?.data || []
+  const relationships: RelationshipWithDossiers[] = data?.data ?? []
 
   if (isLoading) {
     return (
@@ -335,7 +335,19 @@ function Subtopics({ dossierId }: { dossierId: string }) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
 
-  const { data: subtopics, isLoading } = useTopicSubtopics(dossierId)
+  const { data: subtopics, isLoading } = useTopicSubtopics(dossierId) as unknown as {
+    data:
+      | Array<{
+          id: string
+          name_en?: string
+          name_ar?: string
+          description_en?: string
+          description_ar?: string
+          extension?: unknown
+        }>
+      | undefined
+    isLoading: boolean
+  }
 
   if (isLoading) {
     return (
@@ -444,7 +456,6 @@ function Subtopics({ dossierId }: { dossierId: string }) {
  */
 export function TopicDossierDetail({ dossier }: TopicDossierDetailProps) {
   const { t } = useTranslation('dossier')
-  const { isRTL } = useDirection()
 
   // Session storage for section collapse state
   const [policyOpen, setPolicyOpen] = useSessionStorage(`topic-${dossier.id}-policy-open`, true)

@@ -110,27 +110,6 @@ export interface TimelineFilters {
 }
 
 /**
- * Timeline configuration per dossier type
- */
-interface TimelineConfig {
-  dossier_type:
-    | 'Country'
-    | 'Organization'
-    | 'Person'
-    | 'Engagement'
-    | 'Forum'
-    | 'WorkingGroup'
-    | 'Topic'
-  available_event_types: TimelineEventType[]
-  default_event_types: TimelineEventType[]
-  show_filters: boolean
-  show_search: boolean
-  show_date_range: boolean
-  enable_realtime: boolean
-  items_per_page: number
-}
-
-/**
  * Timeline API response
  */
 export interface TimelineResponse {
@@ -150,24 +129,6 @@ export type DateRangePreset =
   | 'last_year'
   | 'all_time'
   | 'custom'
-
-/**
- * Date range filter configuration
- */
-interface DateRangeConfig {
-  preset: DateRangePreset
-  custom_from?: string
-  custom_to?: string
-}
-
-/**
- * Timeline event card state
- */
-interface TimelineCardState {
-  isExpanded: boolean
-  isLoading: boolean
-  error?: string
-}
 
 /**
  * Timeline hook return type

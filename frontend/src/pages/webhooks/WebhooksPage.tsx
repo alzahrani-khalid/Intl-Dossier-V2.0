@@ -90,7 +90,6 @@ import {
 import type {
   Webhook,
   WebhookCreate,
-  WebhookUpdate,
   WebhookEventType,
   WebhookAuthType,
   WebhookHttpMethod,
@@ -557,7 +556,6 @@ interface WebhookFormDialogProps {
 
 function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFormDialogProps) {
   const { t } = useTranslation('webhooks')
-  const { isRTL } = useDirection()
 
   // Form state
   const [formData, setFormData] = useState<Partial<WebhookCreate>>({
@@ -585,13 +583,16 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
 
   const handleSubmit = () => {
     if (mode === 'create') {
-      createWebhook.mutate(formData as WebhookCreate, {
+      createWebhook.mutate(formData as unknown as Record<string, unknown>, {
         onSuccess: () => onOpenChange(false),
       })
     } else if (initialData?.id) {
-      updateWebhook.mutate({ ...formData, id: initialData.id } as WebhookUpdate, {
-        onSuccess: () => onOpenChange(false),
-      })
+      updateWebhook.mutate(
+        { ...formData, id: initialData.id } as unknown as Record<string, unknown>,
+        {
+          onSuccess: () => onOpenChange(false),
+        },
+      )
     }
   }
 

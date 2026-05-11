@@ -79,7 +79,7 @@ const organizationTypes: Record<OrganizationRow['type'], string> = {
 }
 
 export default function Organizations() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [typeFilter, setTypeFilter] = useState<'all' | OrganizationRow['type']>('all')
   const [statusFilter, setStatusFilter] = useState<'all' | OrganizationRow['status']>('all')
@@ -106,8 +106,6 @@ export default function Organizations() {
   const hierarchyCount = new Set(
     filteredOrganizations.filter((org) => Boolean(org.parent)).map((org) => org.parent),
   ).size
-
-  const isRTL = i18n.dir() === 'rtl'
 
   return (
     <div className="space-y-6">

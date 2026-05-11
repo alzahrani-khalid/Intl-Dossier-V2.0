@@ -113,6 +113,109 @@ _A living document updated after each milestone. Lessons feed forward into futur
 
 ---
 
+## Milestone: v6.0 — Design System Adoption
+
+**Shipped:** 2026-05-06
+**Phases:** 11 (33-43) | **Plans:** 121 | **Wave count:** 39
+**Timeline:** ~18 days (2026-04-18 → 2026-05-06)
+
+### What Was Built
+
+- **Token engine (Phase 33):** OKLCH-driven 4-direction (Chancery / Situation Room / Ministerial / Bureau) × light/dark × hue × density token system; Tailwind v4 `@theme` + HeroUI v3 semantic bridge; FOUC bootstrap byte-matched to `tokens/directions.ts`
+- **Tweaks drawer (Phase 34):** Topbar drawer with Direction/Mode/Hue/Density/Classification/Locale + `localStorage` persistence; legacy `/themes` route removed
+- **Typography stack (Phase 35):** Self-hosted per-direction font stacks (Fraunces / Space Grotesk / Public Sans / Inter / IBM Plex / JetBrains Mono / Tajawal) with RTL display-font override
+- **Shell chrome (Phase 36):** 256px sidebar + 56px topbar + classification ribbon, GASTAT brand mark, responsive overlay-drawer
+- **Signature visuals (Phase 37):** GlobeLoader / GlobeSpinner / FullscreenLoader / DossierGlyph (24 flags) / Sparkline / Donut primitives (94/94 tests)
+- **Dashboard verbatim (Phase 38):** 8 widgets pixel-exact to handoff (75/75 tests, 9/9 DASH requirements)
+- **Kanban + Calendar (Phase 39):** 8 widgets sequential on DesignV2 (77/77 tests, 4 visual+a11y E2E specs activated, 8 legacy files deleted)
+- **List pages (Phase 40):** 7 dossier-type list pages (countries/orgs/persons/forums/topics/working_groups/engagements) + 11 gap-closure plans + AUTH-FIX (66/66 vitest, 6 E2E specs, ESLint logical-properties enforcement, 815 KB size-limit)
+- **Dossier drawer (Phase 41):** Drawer composer + DossierShell + RelationshipSidebar
+- **Remaining pages (Phase 42):** Briefs / After-actions / Tasks / Activity / Settings — 12 plans, 4 Critical + 13 Warning fixed across 3 review iterations
+- **RTL/a11y/responsive sweep (Phase 43):** Full v6.0 surface gate — qa-sweep CI job (axe + responsive + keyboard + focus-outline), `.touch-44` utility, `.icon-flip` migration, sidebar contrast remediation, `<main>` scrollable-region focus, `docs/rtl-icons.md` (94/4/0 UAT)
+
+### What Worked
+
+- **Handoff prototype as single source of truth.** `frontend/design-system/inteldossier_handoff_design/` with `app.css` + `dashboard.jsx` + `pages.jsx` removed all "what should this look like?" questions
+- **Token-first architecture (Phase 33 before everything).** Every later phase consumed `var(--*)` directly; zero per-component overrides needed for accent/mode/density swaps
+- **Wave-based parallelism on independent surfaces.** Phase 38 ran 6 widgets in parallel worktrees (75/75 tests in single phase); Phase 40 executed 7 list pages in parallel
+- **Gap-closure plans as a first-class loop.** Phase 40 shipped 11 gap-closure plans (40-12..40-22) to address verifier findings before declaring PASS, instead of carrying defects forward
+- **CI-anchored quality gates.** Phase 43's qa-sweep job catches RTL physical-property violations, axe WCAG AA failures, touch-target undersizing, and focus-outline regressions automatically — no human gate
+- **Multi-iteration review-fix loop.** Phase 42 ran 3 review iterations (15+2+0 findings) before reaching `clean` — caught partial-fix and regression-from-fix patterns that single-pass review missed
+- **`.icon-flip` canonicalization.** A single CSS rule (`html[dir='rtl'] .icon-flip { transform: scaleX(-1) }`) replaced ad-hoc `isRTL && 'rotate-180'` patches; codemod-friendly migration
+
+### What Was Inefficient
+
+- **Subagent context exhaustion on monolithic plans.** Phase 40-02a hit whole-plan subagent context exhaustion twice; rescued by inline orchestration after splitting α/β/γ. Lesson: cap plans at ~600 lines or pre-split for parallelism
+- **Plan-vs-real-shape drift.** Repeated Rule-3 deviations (Donut `value+variants[3]` not `segments[]`, `EngagementListItem` field names, `useUpdateTask` not `useUpdateTaskStatus`). Lesson: planner should grep the actual hook signature before writing the plan, not trust spec assumptions
+- **Type-discriminator drift.** Phase 40-22 G11 plan named 1 site, 5 needed the same fix (3 `.eq` + 2 `.insert`). Same-bug-class scan saves a follow-up plan (now in `feedback_engagement_type_discriminator_drift.md`)
+- **Local env vs CI env mismatch.** Phase 43 was blocked locally on `VITE_SUPABASE_*` for ~2 sessions; runtime gates only flipped when CI env wiring landed (commit 420631c9). Lesson: gate plans should require CI-green proof, not local proof
+- **Visual-baseline gates need an operator phase.** Phase 40 baselines (14 PNGs × 7 pages) deferred to HUMAN-UAT for ~5 days because no agent had Doppler+Playwright in env. Lesson: budget an explicit "operator wave" at end of any visual-heavy phase
+- **Stale STATE.md.** State file said "Phase 43 context gathered" days after Phase 43 actually verified. Lesson: the milestone-close workflow needs a STATE.md updater step (now part of `/gsd:progress` Route A)
+
+### Key Lessons
+
+1. **Token-first beats component-first.** Phases 33-37 ate ~5 days but unlocked 6 reskin phases at high velocity; trying to reskin first then extract tokens would have re-done every page
+2. **Gap-closure plans inside the phase, not after.** Treating verifier findings as new plans (40-12..40-22) instead of "follow-ups in next phase" kept the milestone closeable
+3. **The CI gate beats the human gate.** Phase 43's qa-sweep is the canonical example: 4 sweeps × 15 routes × 2 locales runs faster than any human can audit and never forgets a route
+4. **Plan against real types, not spec types.** When `useFoo` returns `{ data, pagination }`, planning against `{ foos }` costs ~30 min per call site to reconcile. Run `tsc --noEmit` on the plan's imports before signing it off
+5. **Audit `rotate-180` survivors after any class-rename refactor.** Gap-5 (Tailwind v4 dropped `rotate-180` utility because no transform anchor) cost a full UAT cycle. A grep-gate as part of the codemod would have caught it
+
+### Cost Observations
+
+- **Model mix:** Opus for planning/execution/orchestration; Sonnet for verification, code-review, gap-closure agents; CodeFixer agents for atomic-commit review fixes
+- **Sessions:** ~25 sessions across 11 phases (vs v3.0's ~8 across 6); reflects the breadth of the design system surface (4 directions × 13+ routes)
+- **Worktree parallelism:** Phase 38 (6 widgets), Phase 40 (7 list pages), Phase 41 (drawer + shell + relationship) ran each wave in parallel — without worktrees this milestone would have been ~45 days
+
+---
+
+## Milestone: v6.1 — Hardening & Reconciliation
+
+**Shipped:** 2026-05-08
+**Phases:** 3 | **Plans:** 14 | **Tasks:** 25
+**Timeline:** 2 days (2026-05-07 → 2026-05-08)
+
+### What Was Built
+
+- v6.0 verification backfill for phases 33, 34, 36, 37, 39, and 40, with archive/requirements/roadmap sync.
+- Repaired `size-limit` enforcement around real Vite chunk globs and CI parity.
+- Closed Phase 43 anti-patterns WR-02..WR-06 and formalized Storybook deferral through ADR-006.
+- Added `intelligence_digest` schema/RLS/seed data, dashboard digest hook, and VIP ISO projection.
+- Regenerated 24 visual baselines across dashboard widgets, list pages, and dossier drawer with human review and focused replay.
+
+### What Worked
+
+- **Debt-focused milestone scope:** Keeping v6.1 limited to reconciliation prevented feature creep before v7.0 planning.
+- **Archive-first evidence:** Phase 44 directly repaired historical truth sources, which made later schema and visual closure easier to verify.
+- **Seed before visual replay:** Phase 45’s staging seed closure gave Phase 46 stable visual inputs.
+- **Human-review log:** The 24-row baseline review table made visual acceptance auditable instead of implicit.
+
+### What Was Inefficient
+
+- **No v6.1 milestone audit artifact:** The close proceeded with the missing audit acknowledged in STATE.md; future closes should run `$gsd-audit-milestone` before completion.
+- **Old open artifacts persisted:** The dashboard debug session, stale quick tasks, and kickoff todo remained visible at close and had to be explicitly deferred.
+- **Summary extraction is noisy:** Some generated accomplishment candidates included code-review finding labels, requiring manual cleanup in MILESTONES.md.
+
+### Patterns Established
+
+- **Hardening milestone as bridge:** A short reconciliation milestone can close audit debt and unblock the next feature milestone without expanding product scope.
+- **Visual operator wave:** Visual-heavy phases should reserve a final operator/replay plan with Doppler, seeded data, no-update replay, and review rows.
+- **Audit-open gate:** Milestone close should surface stale artifacts as first-class deferred items rather than hiding them.
+
+### Key Lessons
+
+1. Run milestone audit before archive, not during archive.
+2. Treat visual baselines as release artifacts: seed, capture, review, replay, and link the evidence.
+3. Curate generated milestone accomplishments before committing them; raw summary extraction is useful input, not final copy.
+4. Keep historical phase directories archived with their milestone to make active `.planning/phases/` reflect only current work.
+
+### Cost Observations
+
+- Model mix: Opus for orchestration and planning; review/fix agents used for scoped quality checks.
+- Sessions: ~3 sessions across 3 phases.
+- Notable: A tightly-scoped hardening milestone moved faster than feature milestones because success criteria were concrete and evidence-driven.
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -120,19 +223,24 @@ _A living document updated after each milestone. Lessons feed forward into futur
 | Milestone | Phases | Plans | Timeline | Key Change                                                                        |
 | --------- | ------ | ----- | -------- | --------------------------------------------------------------------------------- |
 | v2.0      | 7      | 29    | 185 days | First milestone — established GSD workflow, verification reports, milestone audit |
-| v3.0      | 6      | 28    | 9 days   | Worktree parallelism, 20x velocity boost, established shell/absorption patterns  |
+| v3.0      | 6      | 28    | 9 days   | Worktree parallelism, 20x velocity boost, established shell/absorption patterns   |
+| v6.0      | 11     | 121   | 18 days  | Token-first architecture, gap-closure-as-plan, CI-anchored qa-sweep gate          |
+| v6.1      | 3      | 14    | 2 days   | Hardening bridge milestone, audit-open close gate, visual operator replay         |
 
 ### Cumulative Quality
 
-| Milestone | Quality Gates                                      | Tech Debt Items | Requirements Met |
-| --------- | -------------------------------------------------- | --------------- | ---------------- |
-| v2.0      | 5 (ESLint, Prettier, Knip, size-limit, pre-commit) | 12              | 29/29            |
-| v3.0      | Same 5 + VERIFICATION.md per phase                 | +5 (v3.0)       | 45/45            |
+| Milestone | Quality Gates                                                                                                        | Tech Debt Items                                                                                                                                                          | Requirements Met |
+| --------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
+| v2.0      | 5 (ESLint, Prettier, Knip, size-limit, pre-commit)                                                                   | 12                                                                                                                                                                       | 29/29            |
+| v3.0      | Same 5 + VERIFICATION.md per phase                                                                                   | +5 (v3.0)                                                                                                                                                                | 45/45            |
+| v6.0      | Same + qa-sweep CI (axe, responsive, kbd, focus) + eslint-plugin-rtl-friendly + size-limit signature-visuals budgets | +9 deferred (DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED/REVIEW, DASH-COMPONENTS-DEAD, JSON-key-uniqueness, WR-03 SR shadowing) | 52/52            |
+| v6.1      | Same + focused visual replay for deferred dashboard/list/drawer baselines                                            | 10 acknowledged open artifacts at close (historical/stale items plus missing v6.1 audit)                                                                                 | 25/25            |
 
 ### Top Lessons (Verified Across Milestones)
 
-1. Dependency-ordered phases prevent rework — each phase builds on clean output from the prior one (v2.0, v3.0)
-2. Verification reports are non-negotiable — they catch real issues that "done" status masks (v2.0, v3.0)
-3. Reference-then-replicate is the fastest pattern — build one exemplar, copy across remaining targets (v2.0 domains, v3.0 dossier shells)
-4. ROADMAP metadata drifts without automation — both milestones had stale progress tables (v2.0, v3.0)
-5. Velocity compounds on established patterns — v3.0 was 20x faster than v2.0 because infrastructure was already in place
+1. Dependency-ordered phases prevent rework — each phase builds on clean output from the prior one (v2.0, v3.0, v6.0 token-first)
+2. Verification reports are non-negotiable — they catch real issues that "done" status masks (v2.0, v3.0, v6.0)
+3. Reference-then-replicate is the fastest pattern — build one exemplar, copy across remaining targets (v2.0 domains, v3.0 dossier shells, v6.0 list pages)
+4. ROADMAP / STATE metadata drifts without automation — three milestones in a row had stale progress tables (v2.0, v3.0, v6.0)
+5. Velocity compounds on established patterns — v3.0 was 20x faster than v2.0; v6.0 sustained that rate across 4x the plan count by leaning on prior infrastructure
+6. **CI-anchored gates beat human gates** (new in v6.0) — automated sweeps catch what human review forgets and run on every PR

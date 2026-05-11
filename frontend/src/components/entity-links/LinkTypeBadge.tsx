@@ -75,7 +75,7 @@ export function LinkTypeBadge({
 }: LinkTypeBadgeProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const config = LINK_TYPE_CONFIG[linkType] || LINK_TYPE_CONFIG.related
+  const config = LINK_TYPE_CONFIG[linkType] || LINK_TYPE_CONFIG.related
 
   // Determine if icon should be shown (default: desktop only for space optimization)
   const displayIcon = showIcon ?? false // Hidden by default on mobile, can be overridden
@@ -126,25 +126,4 @@ const config = LINK_TYPE_CONFIG[linkType] || LINK_TYPE_CONFIG.related
       <span className="inline-block whitespace-nowrap">{t(translationKey)}</span>
     </Badge>
   )
-}
-
-/**
- * Helper function to get link type label for non-component contexts
- */
-function getLinkTypeLabel(linkType: EntityLink['link_type'], t: (key: string) => string): string {
-  return t(`entityLinks.linkTypes.${linkType}`)
-}
-
-/**
- * Helper to get link type icon
- */
-function getLinkTypeIcon(linkType: EntityLink['link_type']): string {
-  return LINK_TYPE_CONFIG[linkType]?.icon || LINK_TYPE_CONFIG.related.icon
-}
-
-/**
- * Helper to get link type color class
- */
-function getLinkTypeColorClass(linkType: EntityLink['link_type']): string {
-  return LINK_TYPE_CONFIG[linkType]?.colorClass || LINK_TYPE_CONFIG.related.colorClass
 }

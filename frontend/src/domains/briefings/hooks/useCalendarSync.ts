@@ -23,7 +23,7 @@ export const calendarKeys = {
   settings: () => [...calendarKeys.all, 'settings'] as const,
 }
 
-export function useCalendarStatus(options?: { enabled?: boolean }): ReturnType<typeof useQuery> {
+export function useCalendarStatus(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: calendarKeys.status(),
     queryFn: () => getCalendarStatus(),
@@ -37,7 +37,7 @@ export function useCalendarEvents(params?: {
   to?: string
   source?: string
   enabled?: boolean
-}): ReturnType<typeof useQuery> {
+}) {
   const searchParams = new URLSearchParams()
   if (params?.from) searchParams.set('from', params.from)
   if (params?.to) searchParams.set('to', params.to)
@@ -51,7 +51,7 @@ export function useCalendarEvents(params?: {
   })
 }
 
-export function useSyncCalendar(): ReturnType<typeof useMutation> {
+export function useSyncCalendar() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => syncCalendarApi(data),
@@ -61,7 +61,7 @@ export function useSyncCalendar(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useConnectCalendar(): ReturnType<typeof useMutation> {
+export function useConnectCalendar() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => connectCalendarApi(data),
@@ -71,7 +71,7 @@ export function useConnectCalendar(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useDisconnectCalendar(): ReturnType<typeof useMutation> {
+export function useDisconnectCalendar() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (provider: string) => disconnectCalendarApi(provider),
@@ -81,7 +81,7 @@ export function useDisconnectCalendar(): ReturnType<typeof useMutation> {
   })
 }
 
-export function useUpdateCalendarSettings(): ReturnType<typeof useMutation> {
+export function useUpdateCalendarSettings() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => updateCalendarSettingsApi(data),
@@ -93,15 +93,60 @@ export function useUpdateCalendarSettings(): ReturnType<typeof useMutation> {
 
 /* Stub hooks – removed during refactoring, still imported by components */
 
-export function useCalendarSync(): ReturnType<typeof useQuery> {
-  return useQuery({
-    queryKey: [...calendarKeys.all, 'sync'],
-    queryFn: () => Promise.resolve({ connected: false, providers: [] }),
-    staleTime: 5 * 60 * 1000,
-  })
+import type {
+  ExternalCalendarConnection,
+  ExternalCalendarProvider,
+  CalendarSyncConflict,
+  ICalFeedSubscription,
+} from '@/types/calendar-sync.types'
+
+export interface CalendarSyncState {
+  connections: ExternalCalendarConnection[]
+  isLoadingConnections: boolean
+  conflicts: CalendarSyncConflict[]
+  icalSubscriptions: ICalFeedSubscription[]
+  connectProvider: (provider: ExternalCalendarProvider, redirectUri: string) => Promise<void>
+  isConnecting: boolean
+  disconnectProvider: (id: string) => Promise<void>
+  updateConnection: (id: string, updates: Record<string, unknown>) => Promise<void>
+  triggerSync: (params: { connection_id: string }) => Promise<void>
+  isSyncing: boolean
+  resolveConflict: (params: { conflict_id: string; resolution: string }) => Promise<void>
+  isResolvingConflict: boolean
+  addICalFeed: (feed: Record<string, unknown>) => Promise<void>
+  isAddingIcal: boolean
+  updateICalFeed: (id: string, updates: Record<string, unknown>) => Promise<void>
+  removeICalFeed: (id: string) => Promise<void>
+  refreshICalFeed: (id: string) => Promise<void>
+  isRefreshingIcal: boolean
 }
 
-export function useExternalCalendars(): ReturnType<typeof useQuery> {
+const NOOP_ASYNC = (): Promise<void> => Promise.resolve()
+
+export function useCalendarSync(): CalendarSyncState {
+  return {
+    connections: [],
+    isLoadingConnections: false,
+    conflicts: [],
+    icalSubscriptions: [],
+    connectProvider: NOOP_ASYNC,
+    isConnecting: false,
+    disconnectProvider: NOOP_ASYNC,
+    updateConnection: NOOP_ASYNC,
+    triggerSync: NOOP_ASYNC,
+    isSyncing: false,
+    resolveConflict: NOOP_ASYNC,
+    isResolvingConflict: false,
+    addICalFeed: NOOP_ASYNC,
+    isAddingIcal: false,
+    updateICalFeed: NOOP_ASYNC,
+    removeICalFeed: NOOP_ASYNC,
+    refreshICalFeed: NOOP_ASYNC,
+    isRefreshingIcal: false,
+  }
+}
+
+export function useExternalCalendars() {
   return useQuery({
     queryKey: [...calendarKeys.all, 'external'],
     queryFn: () => Promise.resolve([]),
@@ -109,7 +154,7 @@ export function useExternalCalendars(): ReturnType<typeof useQuery> {
   })
 }
 
-export function useCompleteOAuthCallback(): ReturnType<typeof useMutation> {
+export function useCompleteOAuthCallback() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ success: true }),

@@ -101,7 +101,6 @@ function AnnotationBadge({
   annotation: TimelineAnnotation
   onClick?: () => void
 }) {
-  const { t } = useTranslation()
   const { isRTL } = useDirection()
 const colorMap: Record<string, string> = {
     blue: 'bg-blue-100 text-blue-700 border-blue-200',

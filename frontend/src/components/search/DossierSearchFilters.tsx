@@ -25,7 +25,6 @@ import { Globe, Building2, Users, Briefcase, Target, BookOpen, User, Filter, X }
 import { cn } from '@/lib/utils'
 import type { DossierType } from '@/lib/dossier-type-guards'
 import type { DossierSearchFilters as FilterState } from '@/types/dossier-search.types'
-import { useDirection } from '@/hooks/useDirection'
 
 // Dossier type icons
 const typeIcons: Record<DossierType | 'all', React.ComponentType<{ className?: string }>> = {
@@ -55,7 +54,6 @@ export function DossierSearchFilters({
   className,
 }: DossierSearchFiltersProps) {
   const { t } = useTranslation('dossier-search')
-  const { isRTL } = useDirection()
 // Handle type filter change
   const handleTypeChange = (value: string) => {
     if (value === 'all') {
@@ -267,68 +265,3 @@ export function DossierSearchFilters({
 }
 
 // Export filter chip component for alternative layout
-function DossierTypeChips({
-  selectedType,
-  onChange,
-  counts,
-  disabled = false,
-}: {
-  selectedType: DossierType | 'all'
-  onChange: (type: DossierType | 'all') => void
-  counts?: Record<DossierType | 'all', number>
-  disabled?: boolean
-}) {
-  const { t } = useTranslation('dossier-search')
-  const { isRTL } = useDirection()
-
-  const types: (DossierType | 'all')[] = [
-    'all',
-    'country',
-    'organization',
-    'forum',
-    'engagement',
-    'topic',
-    'working_group',
-    'person',
-  ]
-
-  return (
-    <div className="flex flex-wrap gap-2" role="tablist">
-      {types.map((type) => {
-        const Icon = typeIcons[type]
-        const isSelected = selectedType === type
-        const count = counts?.[type]
-
-        return (
-          <button
-            key={type}
-            onClick={() => onChange(type)}
-            disabled={disabled}
-            role="tab"
-            aria-selected={isSelected}
-            className={cn(
-              'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium',
-              'transition-colors',
-              'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-              isSelected
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700',
-              disabled && 'cursor-not-allowed opacity-50',
-            )}
-          >
-            <Icon className="size-4" />
-            <span>{type === 'all' ? t('filters.allTypes') : t(`types.${type}`)}</span>
-            {count !== undefined && count > 0 && (
-              <Badge
-                variant={isSelected ? 'secondary' : 'outline'}
-                className="ms-1 px-1.5 py-0 text-xs"
-              >
-                {count}
-              </Badge>
-            )}
-          </button>
-        )
-      })}
-    </div>
-  )
-}

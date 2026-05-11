@@ -93,40 +93,6 @@ export interface Dossier {
 }
 
 /**
- * @deprecated Use CreateDossierRequest from '@/services/dossier-api' instead
- */
-interface DossierCreate {
-  name_en: string
-  name_ar: string
-  type: DossierTypeCanonical
-  sensitivity_level?: SensitivityLevel
-  description_en?: string
-  description_ar?: string
-  summary_en?: string
-  summary_ar?: string
-  tags?: string[]
-  review_cadence?: string
-}
-
-/**
- * @deprecated Define update type locally or use UpdateDossierRequest from dossier-api
- */
-interface DossierUpdate {
-  version?: number
-  name_en?: string
-  name_ar?: string
-  status?: DossierStatusCanonical
-  sensitivity_level?: SensitivityLevel
-  description_en?: string
-  description_ar?: string
-  summary_en?: string
-  summary_ar?: string
-  tags?: string[]
-  review_cadence?: string
-  last_review_date?: string
-}
-
-/**
  * Dossier statistics summary
  */
 export interface DossierStats {
@@ -178,19 +144,6 @@ export interface BriefContent {
     title: string
     content: string
   }>
-}
-
-interface Brief {
-  id: string
-  dossier_id: string
-  content_en: BriefContent
-  content_ar: BriefContent
-  date_range_start: string | null
-  date_range_end: string | null
-  generated_by: GeneratedBy
-  generated_at: string
-  generated_by_user_id: string | null
-  is_template: boolean
 }
 
 export interface BriefSummary {
@@ -247,21 +200,6 @@ export interface DossierListResponse {
   pagination: CursorPagination
 }
 
-/**
- * @deprecated Use TimelineResponse from '@/types/timeline.types' instead
- */
-interface TimelineEventResponse {
-  data: TimelineEvent[]
-  pagination: CursorPagination
-}
-
-interface DossierDetailResponse extends Dossier {
-  stats?: DossierStats
-  owners?: DossierOwner[]
-  contacts?: KeyContact[]
-  recent_briefs?: BriefSummary[]
-}
-
 export interface DossierFilters {
   type?: DossierTypeCanonical
   status?: DossierStatusCanonical
@@ -269,17 +207,6 @@ export interface DossierFilters {
   owner_id?: string
   tags?: string[]
   search?: string
-  cursor?: string
-  limit?: number
-}
-
-/**
- * @deprecated Use TimelineFilters from '@/types/timeline.types' instead
- */
-interface TimelineFilters {
-  event_type?: EventType[]
-  start_date?: string
-  end_date?: string
   cursor?: string
   limit?: number
 }
@@ -297,18 +224,4 @@ export interface ErrorDetail {
 
 export interface ApiError {
   error: ErrorDetail
-}
-
-interface ConflictError extends ApiError {
-  error: ErrorDetail & {
-    current_version: number
-  }
-}
-
-interface BriefGenerationFallback {
-  error: ErrorDetail
-  fallback: {
-    template: BriefTemplate
-    pre_populated_data: Record<string, unknown>
-  }
 }

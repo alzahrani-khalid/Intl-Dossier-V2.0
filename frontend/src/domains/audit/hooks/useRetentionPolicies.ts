@@ -27,18 +27,30 @@ import {
   applyRetentionPolicy as applyRetentionPolicyApi,
   createManualHold as createManualHoldApi,
 } from '../repositories/audit.repository'
+import type {
+  RetentionPolicy,
+  LegalHold,
+  RetentionStatistics,
+  PendingRetentionAction,
+  ExpiringEntity,
+  RetentionExecutionLog,
+} from '@/types/retention-policy.types'
 
 export const retentionKeys = {
   all: ['retention'] as const,
   policies: () => [...retentionKeys.all, 'policies'] as const,
-  policyList: (params?: Record<string, unknown>) => [...retentionKeys.policies(), 'list', params] as const,
+  policyList: (params?: Record<string, unknown>) =>
+    [...retentionKeys.policies(), 'list', params] as const,
   policy: (id: string) => [...retentionKeys.policies(), 'detail', id] as const,
   legalHolds: () => [...retentionKeys.all, 'legal-holds'] as const,
-  legalHoldList: (params?: Record<string, unknown>) => [...retentionKeys.legalHolds(), 'list', params] as const,
+  legalHoldList: (params?: Record<string, unknown>) =>
+    [...retentionKeys.legalHolds(), 'list', params] as const,
   legalHold: (id: string) => [...retentionKeys.legalHolds(), 'detail', id] as const,
   statistics: () => [...retentionKeys.all, 'statistics'] as const,
-  pendingActions: (params?: Record<string, unknown>) => [...retentionKeys.all, 'pending', params] as const,
-  expiring: (params?: Record<string, unknown>) => [...retentionKeys.all, 'expiring', params] as const,
+  pendingActions: (params?: Record<string, unknown>) =>
+    [...retentionKeys.all, 'pending', params] as const,
+  expiring: (params?: Record<string, unknown>) =>
+    [...retentionKeys.all, 'expiring', params] as const,
   executionLog: () => [...retentionKeys.all, 'execution-log'] as const,
 }
 
@@ -46,7 +58,7 @@ export const retentionKeys = {
 // Policy Hooks
 // ============================================================================
 
-export function useRetentionPolicies(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useRetentionPolicies(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -54,14 +66,14 @@ export function useRetentionPolicies(params?: Record<string, unknown>): ReturnTy
     })
   }
 
-  return useQuery({
+  return useQuery<RetentionPolicy[]>({
     queryKey: retentionKeys.policyList(params),
-    queryFn: () => getRetentionPoliciesApi(searchParams),
+    queryFn: () => getRetentionPoliciesApi(searchParams) as Promise<RetentionPolicy[]>,
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useRetentionPolicy(id: string | null): ReturnType<typeof useQuery> {
+export function useRetentionPolicy(id: string | null) {
   return useQuery({
     queryKey: id ? retentionKeys.policy(id) : ['retention', 'disabled'],
     queryFn: () => (id ? getRetentionPolicy(id) : Promise.resolve(null)),
@@ -69,28 +81,34 @@ export function useRetentionPolicy(id: string | null): ReturnType<typeof useQuer
   })
 }
 
-export function useCreateRetentionPolicy(): ReturnType<typeof useMutation> {
+export function useCreateRetentionPolicy() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createRetentionPolicyApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.policies() }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.policies() })
+    },
   })
 }
 
-export function useUpdateRetentionPolicy(): ReturnType<typeof useMutation> {
+export function useUpdateRetentionPolicy() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: { id: string; data: Record<string, unknown> }) =>
       updateRetentionPolicyApi(params.id, params.data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.policies() }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.policies() })
+    },
   })
 }
 
-export function useDeleteRetentionPolicy(): ReturnType<typeof useMutation> {
+export function useDeleteRetentionPolicy() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteRetentionPolicyApi(id),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.policies() }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.policies() })
+    },
   })
 }
 
@@ -98,7 +116,7 @@ export function useDeleteRetentionPolicy(): ReturnType<typeof useMutation> {
 // Legal Hold Hooks
 // ============================================================================
 
-export function useLegalHolds(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useLegalHolds(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -106,14 +124,14 @@ export function useLegalHolds(params?: Record<string, unknown>): ReturnType<type
     })
   }
 
-  return useQuery({
+  return useQuery<LegalHold[]>({
     queryKey: retentionKeys.legalHoldList(params),
-    queryFn: () => getLegalHoldsApi(searchParams),
+    queryFn: () => getLegalHoldsApi(searchParams) as Promise<LegalHold[]>,
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useLegalHold(id: string | null): ReturnType<typeof useQuery> {
+export function useLegalHold(id: string | null) {
   return useQuery({
     queryKey: id ? retentionKeys.legalHold(id) : ['retention', 'legal-hold', 'disabled'],
     queryFn: () => (id ? getLegalHold(id) : Promise.resolve(null)),
@@ -121,36 +139,44 @@ export function useLegalHold(id: string | null): ReturnType<typeof useQuery> {
   })
 }
 
-export function useCreateLegalHold(): ReturnType<typeof useMutation> {
+export function useCreateLegalHold() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createLegalHoldApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() })
+    },
   })
 }
 
-export function useUpdateLegalHold(): ReturnType<typeof useMutation> {
+export function useUpdateLegalHold() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: { id: string; data: Record<string, unknown> }) =>
       updateLegalHoldApi(params.id, params.data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() })
+    },
   })
 }
 
-export function useReleaseLegalHold(): ReturnType<typeof useMutation> {
+export function useReleaseLegalHold() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => releaseLegalHoldApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() })
+    },
   })
 }
 
-export function useDeleteLegalHold(): ReturnType<typeof useMutation> {
+export function useDeleteLegalHold() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteLegalHoldApi(id),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() })
+    },
   })
 }
 
@@ -158,15 +184,15 @@ export function useDeleteLegalHold(): ReturnType<typeof useMutation> {
 // Statistics & Execution Hooks
 // ============================================================================
 
-export function useRetentionStatistics(): ReturnType<typeof useQuery> {
-  return useQuery({
+export function useRetentionStatistics() {
+  return useQuery<RetentionStatistics[]>({
     queryKey: retentionKeys.statistics(),
-    queryFn: () => getRetentionStatistics(),
+    queryFn: () => getRetentionStatistics() as Promise<RetentionStatistics[]>,
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export function usePendingActions(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function usePendingActions(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -174,14 +200,14 @@ export function usePendingActions(params?: Record<string, unknown>): ReturnType<
     })
   }
 
-  return useQuery({
+  return useQuery<PendingRetentionAction[]>({
     queryKey: retentionKeys.pendingActions(params),
-    queryFn: () => getPendingActionsApi(searchParams),
+    queryFn: () => getPendingActionsApi(searchParams) as Promise<PendingRetentionAction[]>,
     staleTime: 60 * 1000,
   })
 }
 
-export function useExpiringRecords(params?: Record<string, unknown>): ReturnType<typeof useQuery> {
+export function useExpiringRecords(params?: Record<string, unknown>) {
   const searchParams = new URLSearchParams()
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -189,41 +215,47 @@ export function useExpiringRecords(params?: Record<string, unknown>): ReturnType
     })
   }
 
-  return useQuery({
+  return useQuery<ExpiringEntity[]>({
     queryKey: retentionKeys.expiring(params),
-    queryFn: () => getExpiringRecordsApi(searchParams),
+    queryFn: () => getExpiringRecordsApi(searchParams) as Promise<ExpiringEntity[]>,
     staleTime: 60 * 1000,
   })
 }
 
-export function useExecutionLog(): ReturnType<typeof useQuery> {
-  return useQuery({
+export function useExecutionLog() {
+  return useQuery<RetentionExecutionLog[]>({
     queryKey: retentionKeys.executionLog(),
-    queryFn: () => getExecutionLog(),
+    queryFn: () => getExecutionLog() as Promise<RetentionExecutionLog[]>,
     staleTime: 30 * 1000,
   })
 }
 
-export function useRunRetentionProcessor(): ReturnType<typeof useMutation> {
+export function useRunRetentionProcessor() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => runRetentionProcessorApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.all })
+    },
   })
 }
 
-export function useApplyRetentionPolicy(): ReturnType<typeof useMutation> {
+export function useApplyRetentionPolicy() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => applyRetentionPolicyApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.all }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.all })
+    },
   })
 }
 
-export function useCreateManualHold(): ReturnType<typeof useMutation> {
+export function useCreateManualHold() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: Record<string, unknown>) => createManualHoldApi(data),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() }) },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: retentionKeys.legalHolds() })
+    },
   })
 }

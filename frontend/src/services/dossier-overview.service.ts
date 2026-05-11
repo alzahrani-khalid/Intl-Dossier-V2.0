@@ -174,8 +174,10 @@ interface CommitmentRow {
   description_ar?: string
   status: string
   priority: string | null
-  deadline: string | null
-  responsible_user_id: string | null
+  deadline?: string | null
+  due_date?: string | null
+  responsible_user_id?: string | null
+  owner_user_id?: string | null
   created_at: string
   updated_at: string
 }
@@ -626,37 +628,60 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
     })
   }
 
-  // Fetch commitments
-  if (commitmentIds.length > 0) {
-    const { data: commitments } = await supabase
-      .from('commitments')
+  // Fetch commitments. aa_commitments is the canonical commitments table; some
+  // legacy rows are linked through work_item_dossiers, while seeded drawer
+  // fixtures are linked directly by dossier_id.
+  const commitmentsById = new Map<string, CommitmentRow>()
+  const addCommitments = (rows: CommitmentRow[] | null | undefined): void => {
+    ;(rows || []).forEach((row) => commitmentsById.set(row.id, row))
+  }
+
+  const { data: directCommitments } = await supabase
+    .from('aa_commitments')
+    .select(COLUMNS.COMMITMENTS.SUMMARY)
+    .eq('dossier_id', dossierId)
+    .limit(limit)
+
+  addCommitments(directCommitments as unknown as CommitmentRow[])
+
+  if (commitmentIds.length > 0 && commitmentsById.size < limit) {
+    const { data: linkedCommitments } = await supabase
+      .from('aa_commitments')
       .select(COLUMNS.COMMITMENTS.SUMMARY)
       .in('id', commitmentIds)
       .limit(limit)
 
-    ;((commitments || []) as unknown as CommitmentRow[]).forEach((c) => {
-      const isOverdue =
-        c.deadline &&
-        new Date(c.deadline) < now &&
-        c.status !== 'completed' &&
-        c.status !== 'cancelled'
-      allWorkItems.push({
-        id: c.id,
-        source: 'commitment',
-        title_en: c.title_en || c.title || '',
-        title_ar: c.title_ar || null,
-        description_en: c.description_en || c.description || null,
-        description_ar: c.description_ar || null,
-        status: isOverdue ? 'overdue' : (c.status as WorkItemStatus),
-        priority: (c.priority || 'medium') as WorkItemPriority,
-        deadline: c.deadline,
-        assignee_id: c.responsible_user_id,
-        assignee_name: null,
-        inheritance_source: linkMap[c.id] || 'direct',
-        created_at: c.created_at,
-        updated_at: c.updated_at,
+    addCommitments(linkedCommitments as unknown as CommitmentRow[])
+  }
+
+  if (commitmentsById.size > 0) {
+    Array.from(commitmentsById.values())
+      .slice(0, limit)
+      .forEach((c) => {
+        const deadline = c.deadline ?? c.due_date ?? null
+        const assigneeId = c.responsible_user_id ?? c.owner_user_id ?? null
+        const isOverdue =
+          deadline &&
+          new Date(deadline) < now &&
+          c.status !== 'completed' &&
+          c.status !== 'cancelled'
+        allWorkItems.push({
+          id: c.id,
+          source: 'commitment',
+          title_en: c.title_en || c.title || '',
+          title_ar: c.title_ar || null,
+          description_en: c.description_en || c.description || null,
+          description_ar: c.description_ar || null,
+          status: isOverdue ? 'overdue' : (c.status as WorkItemStatus),
+          priority: (c.priority || 'medium') as WorkItemPriority,
+          deadline,
+          assignee_id: assigneeId,
+          assignee_name: null,
+          inheritance_source: linkMap[c.id] || 'direct',
+          created_at: c.created_at,
+          updated_at: c.updated_at,
+        })
       })
-    })
   }
 
   // Fetch intake tickets

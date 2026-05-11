@@ -207,7 +207,7 @@ class EmbeddingsService {
         return null
       }
 
-      const data = await response.json()
+      const data = (await response.json()) as { embeddings: number[][] }
       return data.embeddings
     } catch (error) {
       logger.error('Edge Function request failed', { error })
@@ -248,8 +248,8 @@ class EmbeddingsService {
         return null
       }
 
-      const data = await response.json()
-      return data.data.map((item: { embedding: number[] }) => item.embedding)
+      const data = (await response.json()) as { data: Array<{ embedding: number[] }> }
+      return data.data.map((item) => item.embedding)
     } catch (error) {
       logger.error('OpenAI request failed', { error })
       return null

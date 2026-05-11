@@ -12,9 +12,10 @@ import { RealtimeStatus } from './components/realtime-status/RealtimeStatus'
 import { AuthProvider, useAuth } from './contexts/auth.context'
 import { AuthListenerManager } from './components/auth/AuthListenerManager'
 import { RTLWrapper } from './components/rtl-wrapper/RTLWrapper'
-import { ThemeProvider } from './components/theme-provider/theme-provider'
 import { LanguageProvider } from './components/language-provider/language-provider'
 import { ThemeErrorBoundary } from './components/theme-error-boundary/ThemeErrorBoundary'
+import { DesignProvider } from './design-system/DesignProvider'
+import { TweaksDisclosureProvider, TweaksDrawer } from '@/components/tweaks'
 import './i18n'
 
 function AppRouter() {
@@ -30,23 +31,31 @@ function App() {
         <AuthProvider>
           <AuthListenerManager />
           <ThemeErrorBoundary
-            fallbackTheme="canvas"
+            fallbackDirection="bureau"
             fallbackColorMode="light"
             fallbackLanguage="en"
           >
-            <ThemeProvider initialTheme="canvas" initialColorMode="light">
-              <LanguageProvider initialLanguage="en">
-                <LazyMotion features={domAnimation}>
-                  <RTLWrapper>
-                    <AppRouter />
-                    <OfflineIndicator />
-                    <RealtimeStatus />
-                    <Toaster position="top-right" />
-                    <SonnerToaster position="top-right" richColors closeButton />
-                  </RTLWrapper>
-                </LazyMotion>
-              </LanguageProvider>
-            </ThemeProvider>
+            <DesignProvider
+              initialDirection="bureau"
+              initialMode="light"
+              initialHue={32}
+              initialDensity="comfortable"
+            >
+              <TweaksDisclosureProvider>
+                <LanguageProvider initialLanguage="en">
+                  <LazyMotion features={domAnimation}>
+                    <RTLWrapper>
+                      <AppRouter />
+                      <OfflineIndicator />
+                      <RealtimeStatus />
+                      <Toaster position="top-right" />
+                      <SonnerToaster position="top-right" richColors closeButton />
+                      <TweaksDrawer />
+                    </RTLWrapper>
+                  </LazyMotion>
+                </LanguageProvider>
+              </TweaksDisclosureProvider>
+            </DesignProvider>
           </ThemeErrorBoundary>
         </AuthProvider>
       </QueryClientProvider>

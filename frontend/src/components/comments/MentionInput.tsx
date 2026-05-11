@@ -48,7 +48,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
   ) {
     const { t } = useTranslation('comments')
     const { isRTL } = useDirection()
-const [mentionQuery, setMentionQuery] = useState('')
+    const [mentionQuery, setMentionQuery] = useState('')
     const [showMentionList, setShowMentionList] = useState(false)
     const [mentionStartIndex, setMentionStartIndex] = useState<number | null>(null)
     const [selectedIndex, setSelectedIndex] = useState(0)
@@ -70,7 +70,10 @@ const [mentionQuery, setMentionQuery] = useState('')
       [ref],
     )
 
-    // Search users for mention
+    // WR-05: hook accepts options.enabled — gate on popup visibility so the
+    // search doesn't fire when the user has dismissed the popup but is still
+    // typing (or has a residual mentionQuery from prior @-trigger).
+    // WR-28: hook now exposes a typed UseQueryResult<MentionUser[]>.
     const { data: mentionUsers = [], isLoading: isSearching } = useSearchUsersForMention(
       mentionQuery,
       { enabled: showMentionList && mentionQuery.length >= 1 },

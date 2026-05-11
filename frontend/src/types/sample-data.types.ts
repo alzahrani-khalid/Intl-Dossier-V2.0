@@ -69,12 +69,6 @@ export interface RemoveSampleDataResponse {
   message_ar: string
 }
 
-type TemplateSlug =
-  | 'trade-relations'
-  | 'cultural-exchange'
-  | 'security-cooperation'
-  | 'diplomatic-relations'
-
 // Color mapping for templates
 export const templateColors: Record<string, string> = {
   emerald:
