@@ -22,23 +22,23 @@ When choosing UI components, follow this hierarchy:
 
 These components come from [ui.aceternity.com](https://ui.aceternity.com) and provide rich animations and interactions.
 
-| Component                   | File                                | Description                               |
-| --------------------------- | ----------------------------------- | ----------------------------------------- |
-| 3D Card                     | `3d-card.tsx`                       | Interactive 3D hover effect card          |
-| Animated Tooltip            | `animated-tooltip.tsx`              | Animated avatar tooltips on hover         |
-| Background Boxes            | `background-boxes.tsx`              | Animated grid background effect           |
-| Bento Grid                  | `bento-grid.tsx`                    | Modern dashboard-style grid layout        |
-| Expandable Card             | `expandable-card.tsx`               | Card that expands on click with animation |
-| File Upload                 | `file-upload.tsx`                   | Animated drag-and-drop file upload        |
-| Floating Dock               | `floating-dock.tsx`                 | macOS-style dock navigation               |
-| Floating Navbar             | `floating-navbar.tsx`               | Scroll-reactive floating navigation       |
-| Layout Grid                 | `layout-grid.tsx`                   | Interactive image layout grid             |
-| Link Preview                | `link-preview.tsx`                  | Hover-triggered link preview cards        |
-| Moving Border               | `moving-border.tsx`                 | Animated gradient border effect           |
-| Placeholders & Vanish Input | `placeholders-and-vanish-input.tsx` | Animated input with rotating placeholders |
-| Text Generate Effect        | `text-generate-effect.tsx`          | Word-by-word text animation               |
-| Timeline                    | `timeline.tsx`                      | Scroll-animated vertical timeline         |
-| World Map                   | `world-map.tsx`                     | Interactive dotted world map              |
+| Component                   | File                                | Description                                             |
+| --------------------------- | ----------------------------------- | ------------------------------------------------------- |
+| ~~3D Card~~                 | ~~`3d-card.tsx`~~                   | _Deleted in Phase 48 per CONTEXT D-07 (zero importers)_ |
+| Animated Tooltip            | `animated-tooltip.tsx`              | Animated avatar tooltips on hover                       |
+| Background Boxes            | `background-boxes.tsx`              | Animated grid background effect                         |
+| ~~Bento Grid~~              | ~~`bento-grid.tsx`~~                | _Deleted in Phase 48 per CONTEXT D-07 (zero importers)_ |
+| Expandable Card             | `expandable-card.tsx`               | Card that expands on click with animation               |
+| File Upload                 | `file-upload.tsx`                   | Animated drag-and-drop file upload                      |
+| Floating Dock               | `floating-dock.tsx`                 | macOS-style dock navigation                             |
+| ~~Floating Navbar~~         | ~~`floating-navbar.tsx`~~           | _Deleted in Phase 48 per CONTEXT D-07 (zero importers)_ |
+| Layout Grid                 | `layout-grid.tsx`                   | Interactive image layout grid                           |
+| Link Preview                | `link-preview.tsx`                  | Hover-triggered link preview cards                      |
+| Moving Border               | `moving-border.tsx`                 | Animated gradient border effect                         |
+| Placeholders & Vanish Input | `placeholders-and-vanish-input.tsx` | Animated input with rotating placeholders               |
+| Text Generate Effect        | `text-generate-effect.tsx`          | Word-by-word text animation                             |
+| Timeline                    | `timeline.tsx`                      | Scroll-animated vertical timeline                       |
+| World Map                   | `world-map.tsx`                     | Interactive dotted world map                            |
 
 ### Kibo-UI Components (1)
 
@@ -169,7 +169,7 @@ npx shadcn@latest add [component]
 
 ```tsx
 import { Button } from '@/components/ui/button'
-import { BentoGrid } from '@/components/ui/bento-grid'
+import { Skeleton } from '@/components/ui/skeleton'
 ```
 
 ### 2. Mobile-First & RTL Requirements
