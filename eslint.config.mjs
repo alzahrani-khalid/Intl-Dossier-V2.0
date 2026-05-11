@@ -101,15 +101,36 @@ export default tseslint.config(
 
       // CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom).
       // Aceternity and Kibo UI are banned without explicit user request (D-05/D-06).
+      //
+      // 48-02 narrowing: minimatch in `patterns.group` performs path-component contains
+      // matching, which over-matches the LOCAL alias `@/components/kibo-ui/*` (a repo
+      // primitive co-located under components/, not the upstream npm package). Use `paths`
+      // for exact-name match on the npm package shape, and reserve `patterns` for the
+      // scoped-package shape and the explicit local deleted-component paths. Per CLAUDE.md
+      // the local `kibo-ui` dir is *also* banned in the long run, but the refactor of the
+      // two existing kibo-ui kanban call sites (TasksTab, EngagementKanbanDialog) exceeds
+      // 48-02 lint-zero scope and is tracked as a deferred follow-up item in the SUMMARY.
       'no-restricted-imports': [
         'error',
         {
+          paths: [
+            {
+              name: 'aceternity-ui',
+              message:
+                'Banned by CLAUDE.md primitive cascade. Use HeroUI v3 → Radix → custom. If no primitive fits, ask before installing.',
+            },
+            {
+              name: 'kibo-ui',
+              message:
+                'Banned by CLAUDE.md primitive cascade. Use HeroUI v3 → Radix → custom. If no primitive fits, ask before installing.',
+            },
+          ],
           patterns: [
             {
               group: [
-                'aceternity-ui',
+                'aceternity-ui/*',
                 '@aceternity/*',
-                'kibo-ui',
+                'kibo-ui/*',
                 '@kibo-ui/*',
                 '@/components/ui/3d-card',
                 '@/components/ui/bento-grid',
@@ -229,11 +250,26 @@ export default tseslint.config(
       'frontend/src/components/ui/**',
       'frontend/src/components/__tests__/**',
       'frontend/src/components/**/index.ts',
+      'frontend/src/components/**/index.tsx', // 48-02 scope-expansion: index.tsx re-exports follow same pattern as index.ts (catches kibo-ui/kanban/index.tsx)
       '**/__tests__/**', // vitest convention; PascalCase rule applies to production source, not test colocation (clears 96 violations)
       '**/signature-visuals/flags/**', // ISO 3166-1 alpha-2 codepoint files; lowercase is intentional per ISO standard (clears ~24 violations)
       '**/hooks/**', // hook files use camelCase per React convention; rename is deferred to future hardening phase per D-09
       '**/utils/**', // utility files use camelCase per Node convention (getISOWeek, relativeTime, toArDigits); rename deferred per D-09
       '**/config/**', // config exports use camelCase; rename deferred per D-09
+      // 48-02 scope-expansion (D-09 renames deferred, D-10 inline rationale): the codebase
+      // mixes PascalCase React components with kebab-case data/schema/config files and
+      // camelCase hooks across components/**. The five carve-outs below mirror the existing
+      // five above — same shape, broader path inventory. Each glob is paired with a brief
+      // rationale and the violation count it clears.
+      '**/schemas/**', // zod schema files use kebab-case (*.schema.ts); 8 files in components/dossier/wizard/schemas/ clears 8 violations
+      '**/defaults/**', // form-default factories use kebab-case (base.defaults.ts); clears 1 violation
+      '**/components/**/*-*.{ts,tsx}', // kebab-case file names inside components (nav-main, responsive-card, validation-badge, language-provider, navigation-config, workflow-config, sample-data, tour-definitions, honorific-map, use-tweaks-open); 13 violations
+      '**/components/**/use[A-Z]*.{ts,tsx}', // camelCase hook files outside hooks/ dir (useActiveFilters, useTemplateKeyboardShortcuts); 2 violations
+      '**/components/signature-visuals/{ensureWorld,globeLoaderSignal}.ts', // camelCase utility files paired with their PascalCase React component (GlobeLoader); 2 violations
+      '**/components/modern-nav/navigationData.ts', // camelCase data file; rename deferred per D-09; 1 violation
+      '**/components/list-page/sensitivity.ts', // lowercase enum-like file; rename deferred per D-09; 1 violation
+      '**/components/guided-tours/types.ts', // lowercase types barrel inside guided-tours/; matches kebab-case norm for shared types; 1 violation
+      '**/components/tweaks/persistence.test.tsx', // colocated test file outside __tests__/ dir; rename deferred per D-09; 1 violation
     ],
     plugins: { 'check-file': checkFile },
     rules: {
@@ -241,6 +277,22 @@ export default tseslint.config(
         'error',
         {
           'frontend/src/components/**/': 'KEBAB_CASE',
+        },
+        {
+          // 48-02 scope-expansion: PascalCase folder names that group their PascalCase
+          // React components co-located alongside helpers; renames deferred per D-09
+          // because Tanstack Router and routeTree.gen.ts paths reference these directly.
+          // Listed via ignoreWords (check-file folder rule API) — same intent as the
+          // file-level ignores above.
+          ignoreWords: [
+            'FirstRun', // 2 violations
+            'ConflictResolution', // 4 violations
+            'DossierDrawer', // 11 violations
+            'Dashboard', // 2 violations
+            'ExpandedPanel', // 7 violations
+            'IconRail', // 2 violations
+            'NavigationShell', // 1 violation
+          ],
         },
       ],
       'check-file/filename-naming-convention': [
@@ -321,6 +373,12 @@ export default tseslint.config(
       '**/hooks/**', // hook files use camelCase per React convention; rename is deferred to future hardening phase per D-09
       '**/utils/**', // utility files use camelCase per Node convention (getISOWeek, relativeTime, toArDigits); rename deferred per D-09
       '**/config/**', // config exports use camelCase; rename deferred per D-09
+      // 48-02 scope-expansion: camelCase utility files in lib/date and lib/i18n.
+      // Each function-named file exports a single utility (getISOWeek, relativeTime,
+      // toArDigits); the camelCase filename mirrors the exported function name.
+      // Renames deferred per D-09 (would require updating every importer).
+      'frontend/src/lib/date/getISOWeek.ts', // 1 violation
+      'frontend/src/lib/i18n/{relativeTime,toArDigits}.ts', // 2 violations
     ],
     plugins: { 'check-file': checkFile },
     rules: {
