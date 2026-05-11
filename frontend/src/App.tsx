@@ -51,6 +51,8 @@ function App() {
                       <Toaster position="top-right" />
                       <SonnerToaster position="top-right" richColors closeButton />
                       <TweaksDrawer />
+                      {/* SMOKE TEST — DO NOT MERGE. Triggers no-restricted-syntax `text-left` rule. */}
+                      <div className="text-left">smoke</div>
                     </RTLWrapper>
                   </LazyMotion>
                 </LanguageProvider>
