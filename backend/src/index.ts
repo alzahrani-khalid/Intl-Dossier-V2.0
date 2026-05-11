@@ -178,3 +178,5 @@ process.on('SIGINT', async () => {
 })
 
 export default app
+
+console.log("smoke-test")
