@@ -64,3 +64,7 @@ function App() {
 }
 
 export default App
+
+// SMOKE TEST — DO NOT MERGE. Triggers no-restricted-syntax `text-left` rule.
+const _smokeTest = <div className="text-left">x</div>
+
