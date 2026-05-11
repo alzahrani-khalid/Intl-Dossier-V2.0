@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 
 describe('useCreateDossierWizard', () => {
-  it('should be importable', () => {
-    const mod = require('../useCreateDossierWizard')
+  it('should be importable', async () => {
+    const mod = await import('../useCreateDossierWizard')
     expect(mod.useCreateDossierWizard).toBeDefined()
     expect(typeof mod.useCreateDossierWizard).toBe('function')
   })
