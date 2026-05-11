@@ -171,7 +171,11 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 3. `frontend/eslint.config.js` contains zero references to Aceternity (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` is aligned with the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom) and rule messages no longer recommend a banned library.
 4. The lint job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single lint error in either workspace fails the merge check on `main`.
 
-**Plans:** TBD
+**Plans:** 3 plans (planned 2026-05-11)
+
+- [ ] 48-01-config-consolidation-PLAN.md — Delete `frontend/eslint.config.js` shadow config, invert `no-restricted-imports` to ban Aceternity/Kibo UI per CLAUDE.md cascade, delete 3 orphan Aceternity wrappers, add prototype handoff + supabase-generated `contact-directory.types.ts` to root ignores, wire `eslint.config.mjs` into `turbo.json` globalDependencies, create `phase-48-base` git tag (LINT-08)
+- [ ] 48-02-violation-fixes-PLAN.md — Drive remaining ~30 frontend call-site lint violations + 2 backend errors to zero: `require()` → `vi.importActual` (12 errors / 7 test files), physical Tailwind → logical classes (12 violations / 3 files), 9 stale `eslint-disable` directives deleted, 1 unused import, backend empty-interface → type alias, backend `console.log` → Winston `logInfo` (LINT-06, LINT-07)
+- [ ] 48-03-ci-gate-and-branch-protection-PLAN.md — Add `Lint` to branch protection `required_status_checks.contexts` via gh api PUT (read-then-merge-then-write per 47-03 §6); open two D-16 smoke PRs (frontend `text-left` + backend `console.log`) and verify `mergeStateStatus=BLOCKED`; run phase-wide D-17 net-new `eslint-disable` audit; resolve STATE.md Phase 47 outstanding follow-up #1 by analogy (LINT-09)
 
 #### Phase 49: Bundle Budget Reset
 
@@ -204,11 +208,11 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 | 33-43 | v6.0      | —              | Shipped     | 2026-05-06 |
 | 44-46 | v6.1      | 14/14          | Shipped     | 2026-05-08 |
 | 47    | v6.2      | 11/11          | Complete    | 2026-05-09 |
-| 48    | v6.2      | 0/0            | Not started | -          |
+| 48    | v6.2      | 0/3            | Planned     | -          |
 | 49    | v6.2      | 0/0            | Not started | -          |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-05-08 — v6.2 Type-Check, Lint & Bundle Reset opened (phases 47-49)_
+_Roadmap last updated: 2026-05-11 — Phase 48 planned (3 plans: config-consolidation, violation-fixes, ci-gate-and-branch-protection)_
