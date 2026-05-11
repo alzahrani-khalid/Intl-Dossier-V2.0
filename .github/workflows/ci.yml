@@ -9,7 +9,7 @@ on:
 env:
   # Vite 7+ and @vitejs/plugin-react 5 require Node >= 20.19.0.
   # Backend uses ts-node ESM features as well.
-  NODE_VERSION: '20.19.0'
+  NODE_VERSION: '22.13.0'
   # pnpm version must match packageManager field in package.json
   PNPM_VERSION: '10.29.1'
 
