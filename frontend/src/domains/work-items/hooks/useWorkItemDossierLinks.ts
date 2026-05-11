@@ -63,7 +63,6 @@ async function fetchWorkItemDossierLinks(
   }
 
   // Transform the response to include dossier info
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const links: WorkItemDossierLink[] = (data ?? []).map((item: any) => ({
     id: item.id,
     work_item_type: item.work_item_type,
