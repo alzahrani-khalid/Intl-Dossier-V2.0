@@ -14,7 +14,7 @@
     "test:qa-sweep": "playwright test qa-sweep-axe.spec.ts qa-sweep-responsive.spec.ts qa-sweep-keyboard.spec.ts qa-sweep-focus-outline.spec.ts --reporter=list",
     "docs:rtl-icons": "playwright test qa-sweep-icon-screenshots.spec.ts --update-snapshots --reporter=list",
     "test:a11y": "vitest run --config vitest.a11y.config.ts",
-    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint": "eslint -c ../eslint.config.mjs --max-warnings 0 src/**/*.{ts,tsx}",
     "format": "prettier --write src/**/*.{ts,tsx}",
     "type-check": "tsc --noEmit",
     "type-check:summary": "tsc --noEmit 2>&1 | grep -oE 'TS[0-9]+' | sort | uniq -c | sort -rn || true",
