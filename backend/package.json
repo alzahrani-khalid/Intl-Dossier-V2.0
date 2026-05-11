@@ -10,7 +10,7 @@
     "start": "node dist/index.js",
     "test": "vitest --config ./vitest.config.ts",
     "test:coverage": "vitest --coverage --config ./vitest.config.ts",
-    "lint": "eslint -c ../eslint.config.mjs --max-warnings 0 src/**/*.ts",
+    "lint": "cd .. && eslint -c eslint.config.mjs --max-warnings 0 'backend/src/**/*.ts'",
     "format": "prettier --write src/**/*.ts",
     "type-check": "tsc --noEmit",
     "type-check:summary": "tsc --noEmit 2>&1 | grep -oE 'TS[0-9]+' | sort | uniq -c | sort -rn || true",
