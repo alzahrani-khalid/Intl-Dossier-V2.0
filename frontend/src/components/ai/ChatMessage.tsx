@@ -13,7 +13,6 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { User, Bot, ExternalLink } from 'lucide-react'
 import { ToolResultCard } from './ToolResultCard'
-import { useDirection } from '@/hooks/useDirection'
 
 export interface Citation {
   type: string
@@ -47,7 +46,6 @@ export function ChatMessage({
   onCitationClick,
   className,
 }: ChatMessageProps) {
-  const { isRTL } = useDirection()
   const isUser = role === 'user'
 
   return (
@@ -80,8 +78,6 @@ export function ChatMessage({
           className={cn(
             'rounded-2xl px-4 py-3',
             isUser ? 'bg-primary text-primary-foreground rounded-ee-md' : 'bg-muted rounded-es-md',
-            isRTL && isUser && 'rounded-ee-2xl rounded-es-md',
-            isRTL && !isUser && 'rounded-es-2xl rounded-ee-md',
           )}
         >
           <p className={cn('text-sm whitespace-pre-wrap', isStreaming && 'animate-pulse')}>

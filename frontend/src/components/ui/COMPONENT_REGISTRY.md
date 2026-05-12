@@ -1,102 +1,84 @@
 # UI Component Registry
 
-> **Last Updated:** 2025-01-23
-> **Total Components:** 68
+> **Last Updated:** 2026-05-12 (Phase 48 — aligned with CLAUDE.md primitive cascade)
 
-This document serves as the canonical registry of all UI components in the project, categorizing them by source library and providing guidelines for component selection.
+This document is the canonical registry of UI primitives in the project. The visual source of truth is the **IntelDossier prototype** at `frontend/design-system/inteldossier_handoff_design/`. Primitives in this directory are token-bound — visual styling, color, spacing, type, borders, and shadows always come from the prototype tokens (`var(--*)` or `@theme`-mapped Tailwind utilities).
 
 ## Component Hierarchy (Selection Order)
 
-When choosing UI components, follow this hierarchy:
+Per CLAUDE.md "Component Library Strategy":
 
-1. **Aceternity UI** (Primary) - Use for all animated, interactive components
-2. **Kibo-UI** (Secondary) - Use only when Aceternity doesn't have equivalent
-3. **shadcn/ui** (Tertiary) - Use only for basic primitives not available elsewhere
-4. **Custom** (Last Resort) - Build custom only when no library has the component
+1. **HeroUI v3** (Primary) — accessible primitives (Modal, Popover, Combobox, etc.). Override colors/spacing/radius via design tokens; never accept default chrome.
+2. **Radix UI** (Secondary) — headless primitives HeroUI doesn't cover (already in via `@radix-ui/react-slot`).
+3. **Custom** (Tertiary) — build mirroring a prototype component if no primitive fits.
+
+### Banned without explicit user request
+
+- **Aceternity UI** — animation-heavy, marketing aesthetic. Conflicts with IntelDossier's restrained motion language. Do not install or import. Existing legacy files are scheduled for removal.
+- **Kibo UI** — different visual system. Do not install or import. The local `@/components/kibo-ui/*` alias is a legacy re-export and is also banned for new code.
+- **shadcn/ui defaults** — the wrappers in `components/ui/heroui-*.tsx` exist for API compatibility, not visual fidelity. Re-skin them via tokens.
+
+If a feature seems to require Aceternity-style motion or shadcn defaults, **stop and ask** before installing anything.
 
 ---
 
 ## Component Inventory
 
-### Aceternity UI Components (19)
+### HeroUI v3 wrappers (token-bound)
 
-These components come from [ui.aceternity.com](https://ui.aceternity.com) and provide rich animations and interactions.
+| Component | File           | Notes                                                                                   |
+| --------- | -------------- | --------------------------------------------------------------------------------------- |
+| (To-do)   | `heroui-*.tsx` | Wrappers exist for API compatibility; re-skin via design tokens before relying on them. |
 
-| Component                   | File                                | Description                                             |
-| --------------------------- | ----------------------------------- | ------------------------------------------------------- |
-| ~~3D Card~~                 | ~~`3d-card.tsx`~~                   | _Deleted in Phase 48 per CONTEXT D-07 (zero importers)_ |
-| Animated Tooltip            | `animated-tooltip.tsx`              | Animated avatar tooltips on hover                       |
-| Background Boxes            | `background-boxes.tsx`              | Animated grid background effect                         |
-| ~~Bento Grid~~              | ~~`bento-grid.tsx`~~                | _Deleted in Phase 48 per CONTEXT D-07 (zero importers)_ |
-| Expandable Card             | `expandable-card.tsx`               | Card that expands on click with animation               |
-| File Upload                 | `file-upload.tsx`                   | Animated drag-and-drop file upload                      |
-| Floating Dock               | `floating-dock.tsx`                 | macOS-style dock navigation                             |
-| ~~Floating Navbar~~         | ~~`floating-navbar.tsx`~~           | _Deleted in Phase 48 per CONTEXT D-07 (zero importers)_ |
-| Layout Grid                 | `layout-grid.tsx`                   | Interactive image layout grid                           |
-| Link Preview                | `link-preview.tsx`                  | Hover-triggered link preview cards                      |
-| Moving Border               | `moving-border.tsx`                 | Animated gradient border effect                         |
-| Placeholders & Vanish Input | `placeholders-and-vanish-input.tsx` | Animated input with rotating placeholders               |
-| Text Generate Effect        | `text-generate-effect.tsx`          | Word-by-word text animation                             |
-| Timeline                    | `timeline.tsx`                      | Scroll-animated vertical timeline                       |
-| World Map                   | `world-map.tsx`                     | Interactive dotted world map                            |
+### Radix-based primitives (shadcn shells, re-skinned via tokens)
 
-### Kibo-UI Components (1)
+These are Radix-based primitives. Token-bind their visual chrome before use; do not accept defaults.
 
-These components come from [kibo-ui.com](https://www.kibo-ui.com) and provide specialized functionality.
+| Component           | File                      |
+| ------------------- | ------------------------- |
+| Accordion           | `accordion.tsx`           |
+| Alert               | `alert.tsx`               |
+| Alert Dialog        | `alert-dialog.tsx`        |
+| Avatar              | `avatar.tsx`              |
+| Badge               | `badge.tsx`               |
+| Button              | `button.tsx`              |
+| Calendar            | `calendar.tsx`            |
+| Card                | `card.tsx`                |
+| Checkbox            | `checkbox.tsx`            |
+| Collapsible         | `collapsible.tsx`         |
+| Command             | `command.tsx`             |
+| Dialog              | `dialog.tsx`              |
+| Drawer              | `drawer.tsx`              |
+| Dropdown Menu       | `dropdown-menu.tsx`       |
+| Form                | `form.tsx`                |
+| Hover Card          | `hover-card.tsx`          |
+| Input               | `input.tsx`               |
+| Label               | `label.tsx`               |
+| Navigation Menu     | `navigation-menu.tsx`     |
+| Pagination          | `pagination.tsx`          |
+| Popover             | `popover.tsx`             |
+| Progress            | `progress.tsx`            |
+| Radio Group         | `radio-group.tsx`         |
+| Scroll Area         | `scroll-area.tsx`         |
+| Select              | `select.tsx`              |
+| Separator           | `separator.tsx`           |
+| Sheet               | `sheet.tsx`               |
+| Sidebar             | `sidebar.tsx`             |
+| Sidebar Collapsible | `sidebar-collapsible.tsx` |
+| Skeleton            | `skeleton.tsx`            |
+| Slider              | `slider.tsx`              |
+| Switch              | `switch.tsx`              |
+| Table               | `table.tsx`               |
+| Tabs                | `tabs.tsx`                |
+| Textarea            | `textarea.tsx`            |
+| Toast               | `toast.tsx`               |
+| Toggle              | `toggle.tsx`              |
+| Toggle Group        | `toggle-group.tsx`        |
+| Tooltip             | `tooltip.tsx`             |
 
-| Component | File         | Description                |
-| --------- | ------------ | -------------------------- |
-| Kanban    | `kanban.tsx` | Drag-and-drop Kanban board |
+### Custom (Tertiary — mirror prototype patterns)
 
-### shadcn/ui Components (42)
-
-These are Radix-based primitives from [ui.shadcn.com](https://ui.shadcn.com). Use only when Aceternity/Kibo alternatives don't exist.
-
-| Component           | File                      | Aceternity Alternative?         |
-| ------------------- | ------------------------- | ------------------------------- |
-| Accordion           | `accordion.tsx`           | No                              |
-| Alert               | `alert.tsx`               | No                              |
-| Alert Dialog        | `alert-dialog.tsx`        | Consider Aceternity Modal       |
-| Avatar              | `avatar.tsx`              | Use Animated Tooltip for groups |
-| Badge               | `badge.tsx`               | No                              |
-| Button              | `button.tsx`              | Consider Moving Border Button   |
-| Calendar            | `calendar.tsx`            | No                              |
-| Card                | `card.tsx`                | Consider 3D Card, Bento Grid    |
-| Checkbox            | `checkbox.tsx`            | No                              |
-| Collapsible         | `collapsible.tsx`         | No                              |
-| Command             | `command.tsx`             | No                              |
-| Dialog              | `dialog.tsx`              | Consider Aceternity Modal       |
-| Drawer              | `drawer.tsx`              | No                              |
-| Dropdown Menu       | `dropdown-menu.tsx`       | No                              |
-| Form                | `form.tsx`                | No (use with Aceternity inputs) |
-| Hover Card          | `hover-card.tsx`          | Use Link Preview                |
-| Input               | `input.tsx`               | Use Placeholders & Vanish Input |
-| Label               | `label.tsx`               | No                              |
-| Navigation Menu     | `navigation-menu.tsx`     | Use Floating Navbar             |
-| Pagination          | `pagination.tsx`          | No                              |
-| Popover             | `popover.tsx`             | Use Link Preview                |
-| Progress            | `progress.tsx`            | No                              |
-| Radio Group         | `radio-group.tsx`         | No                              |
-| Scroll Area         | `scroll-area.tsx`         | No                              |
-| Select              | `select.tsx`              | No                              |
-| Separator           | `separator.tsx`           | No                              |
-| Sheet               | `sheet.tsx`               | No                              |
-| Sidebar             | `sidebar.tsx`             | Use Floating Dock               |
-| Sidebar Collapsible | `sidebar-collapsible.tsx` | Use Floating Dock               |
-| Skeleton            | `skeleton.tsx`            | No                              |
-| Slider              | `slider.tsx`              | No                              |
-| Switch              | `switch.tsx`              | No                              |
-| Table               | `table.tsx`               | No                              |
-| Tabs                | `tabs.tsx`                | Consider Aceternity Tabs        |
-| Textarea            | `textarea.tsx`            | No                              |
-| Toast               | `toast.tsx`               | No                              |
-| Toggle              | `toggle.tsx`              | No                              |
-| Toggle Group        | `toggle-group.tsx`        | No                              |
-| Tooltip             | `tooltip.tsx`             | Use Animated Tooltip            |
-
-### Custom Components (14)
-
-Project-specific components built for mobile-first and RTL support.
+Project-specific components built for the IntelDossier design system, mobile-first, and RTL.
 
 | Component                 | File                            | Description                       |
 | ------------------------- | ------------------------------- | --------------------------------- |
@@ -116,50 +98,34 @@ Project-specific components built for mobile-first and RTL support.
 
 ---
 
-## Migration Recommendations
+## Banned — legacy / scheduled for removal
 
-The following shadcn/ui components should be considered for Aceternity upgrades:
+These files exist on disk for historical reasons. **Do not import them in new code.** The lint config (`no-restricted-imports`) bans the upstream npm packages; remaining local re-exports are tracked for refactor to HeroUI v3 / Radix primitives.
 
-### High Priority (Visual Impact)
+### Aceternity UI (BANNED)
 
-1. **Card** → **3D Card** or **Bento Grid** for dashboard cards
-2. **Input** → **Placeholders & Vanish Input** for forms
-3. **Tooltip** → **Animated Tooltip** for user avatars/lists
-4. **Dialog** → Consider Aceternity modal with backdrop blur
+Phase 48 deleted three orphan wrappers (`3d-card.tsx`, `bento-grid.tsx`, `floating-navbar.tsx`). The remaining files below are legacy and will be removed as their call sites migrate to HeroUI / Radix.
 
-### Medium Priority (UX Enhancement)
+| Component                   | File                                |
+| --------------------------- | ----------------------------------- |
+| Animated Tooltip            | `animated-tooltip.tsx`              |
+| Background Boxes            | `background-boxes.tsx`              |
+| Expandable Card             | `expandable-card.tsx`               |
+| File Upload                 | `file-upload.tsx`                   |
+| Floating Dock               | `floating-dock.tsx`                 |
+| Layout Grid                 | `layout-grid.tsx`                   |
+| Link Preview                | `link-preview.tsx`                  |
+| Moving Border               | `moving-border.tsx`                 |
+| Placeholders & Vanish Input | `placeholders-and-vanish-input.tsx` |
+| Text Generate Effect        | `text-generate-effect.tsx`          |
+| Timeline                    | `timeline.tsx`                      |
+| World Map                   | `world-map.tsx`                     |
 
-1. **Navigation Menu** → **Floating Navbar** for scroll-reactive nav
-2. **Hover Card** → **Link Preview** for rich link previews
-3. **Sidebar** → **Floating Dock** for navigation
+### Kibo-UI (BANNED)
 
-### Low Priority (Keep shadcn/ui)
-
-- Form primitives (checkbox, radio, select, switch)
-- Layout utilities (separator, scroll-area)
-- Feedback components (alert, badge, toast)
-
----
-
-## Installation Commands
-
-### Aceternity UI
-
-```bash
-npx shadcn@latest add "https://ui.aceternity.com/registry/[component].json" --yes
-```
-
-### Kibo-UI
-
-```bash
-npx shadcn@latest add "@kibo-ui/[component]"
-```
-
-### shadcn/ui (Last Resort)
-
-```bash
-npx shadcn@latest add [component]
-```
+| Component | File         | Active call sites (refactor pending)                                                                                                                  |
+| --------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kanban    | `kanban.tsx` | `pages/engagements/workspace/TasksTab.tsx`, `components/assignments/EngagementKanbanDialog.tsx` — both queued for HeroUI/Radix + @dnd-kit replacement |
 
 ---
 
@@ -172,21 +138,22 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 ```
 
-### 2. Mobile-First & RTL Requirements
+### 2. Token binding (non-negotiable)
 
-All components must support:
+All colors via `var(--*)` tokens or the `@theme`-mapped Tailwind utilities (`bg-bg`, `bg-surface`, `text-ink`, `border-line`, `bg-accent`, etc.). No raw hex. No Tailwind color literals like `text-blue-500`.
 
-- Logical properties (ms-_, me-_, ps-_, pe-_)
-- 44px minimum touch targets
-- RTL direction via `dir` attribute
+### 3. Mobile-first & RTL
 
-### 3. Framer Motion Dependency
+- Logical properties only: `ms-*`, `me-*`, `ps-*`, `pe-*`, `text-start`, `text-end`, `rounded-s-*`, `rounded-e-*`
+- 44×44 minimum touch targets below 768px; density tokens (`--row-h`) above
+- Render with `dir={isRTL ? 'rtl' : 'ltr'}` on containers
+- Never use `textAlign: "right"`; use `writingDirection: "rtl"` (RN) or logical text utilities (web)
 
-Aceternity components require `motion/react`:
+---
 
-```tsx
-import { motion } from 'motion/react'
-```
+## Installation
+
+New primitives are added by extending HeroUI v3 wrappers or wrapping Radix headless primitives. **Do not** add Aceternity or Kibo packages — both are banned by `no-restricted-imports` in `eslint.config.mjs` and by CLAUDE.md.
 
 ---
 
@@ -194,9 +161,12 @@ import { motion } from 'motion/react'
 
 Before adding a new component:
 
-- [ ] Check Aceternity UI catalog first
-- [ ] Check Kibo-UI if Aceternity doesn't have it
-- [ ] Only use shadcn/ui for basic primitives
-- [ ] Ensure mobile-first responsive design
-- [ ] Verify RTL support with logical properties
-- [ ] Add to this registry with source annotation
+- [ ] Check HeroUI v3 first (use `mcp__heroui-react__list_components` or v3 docs)
+- [ ] Check Radix headless primitives next
+- [ ] Build custom only when no primitive fits — mirror the closest match in `frontend/design-system/inteldossier_handoff_design/src/`
+- [ ] Token-bind all colors via `var(--*)` — no raw hex, no Tailwind color literals
+- [ ] Borders `1px solid var(--line)`; no card shadows; no gradient backgrounds
+- [ ] Logical properties for spacing and text direction
+- [ ] 44×44 touch targets below 768px; row heights via `var(--row-h)` above
+- [ ] Render and test at 1024px and 1400px; verify RTL with `dir="rtl"` and Tajawal font
+- [ ] Add to this registry under the correct tier
