@@ -16,6 +16,11 @@ import { LanguageProvider } from './components/language-provider/language-provid
 import { ThemeErrorBoundary } from './components/theme-error-boundary/ThemeErrorBoundary'
 import { DesignProvider } from './design-system/DesignProvider'
 import { TweaksDisclosureProvider, TweaksDrawer } from '@/components/tweaks'
+// SMOKE TEST (DO NOT MERGE): force a world-atlas dataset onto the
+// signature-visuals/d3-geospatial sub-chunk, pushing it past its 55 KB gz
+// ceiling. Phase 49 Plan 03 D-12 sub-vendor proof.
+import { __smoke_subvendor_marker__ } from './components/kanban/_smoke-dnd-bloat'
+console.warn('smoke', __smoke_subvendor_marker__)
 import './i18n'
 
 function AppRouter() {
