@@ -16,6 +16,11 @@ import { LanguageProvider } from './components/language-provider/language-provid
 import { ThemeErrorBoundary } from './components/theme-error-boundary/ThemeErrorBoundary'
 import { DesignProvider } from './design-system/DesignProvider'
 import { TweaksDisclosureProvider, TweaksDrawer } from '@/components/tweaks'
+// SMOKE TEST (DO NOT MERGE): inflate the eager entry chunk (`app-*.js`) past
+// its 450 KB gz ceiling so the `Bundle Size Check (size-limit)` CI gate
+// rejects this PR. Phase 49 Plan 03 D-12 proof.
+import { __smoke_marker__ } from './_smoke-bloat-initial'
+console.warn('smoke', __smoke_marker__)
 import './i18n'
 
 function AppRouter() {
