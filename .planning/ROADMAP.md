@@ -192,7 +192,13 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 3. The vendor super-chunk is audited; every chunk > 100 KB has a documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
 4. `size-limit` runs as a PR-blocking CI gate; a PR that adds ≥1 KB to any measured chunk is rejected on `main`.
 
-**Plans:** TBD
+**Plans:** 3 plans
+
+Plans:
+
+- [ ] 49-01-audit-and-budget-calibration-PLAN.md — Create phase-49-base diff anchor; run ANALYZE=true audit (top-20 chunks + lazy() candidates → 49-BUNDLE-AUDIT.md); re-baseline .size-limit.json ceilings per D-01..D-03; scaffold frontend/docs/bundle-budget.md (BUNDLE-01, BUNDLE-04)
+- [ ] 49-02-vendor-decomp-and-lazy-PLAN.md — Extend manualChunks with heroui/sentry/dnd-vendor branches (D-07); add strict ===1 entries to assert-size-limit-matches.mjs; convert audit-identified ≥30 KB gz non-initial components to React.lazy() with D-13 Suspense fallbacks; append sub-vendor + residual rows to bundle-budget.md (BUNDLE-02, BUNDLE-04)
+- [ ] 49-03-ci-gate-and-smoke-PLAN.md — Add Bundle Size Check (size-limit) to main branch protection via gh api PUT (D-10); run two D-12 smoke PRs (initial-JS overflow + sub-vendor overflow) and verify mergeStateStatus=BLOCKED; run phase-wide D-14 audit (zero net-new suppressions + zero ceiling raises); close out STATE.md + ROADMAP.md for Phase 49 + v6.2 milestone (BUNDLE-03)
 
 ## Progress
 
