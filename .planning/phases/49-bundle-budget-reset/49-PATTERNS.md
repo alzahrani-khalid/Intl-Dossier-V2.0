@@ -134,12 +134,12 @@ if (id.includes('@dnd-kit')) {
 
 **What changes vs analog** (D-01 / D-02 / D-03 / D-07):
 
-- `Initial JS (entry point)` `limit`: `"517 KB"` → `"450 KB"` (D-01)
-- `React vendor` `limit`: `"349 KB"` → `"350 KB"` (D-03 — measured 347 + 5 KB → 352, rounded to 350 per CONTEXT line)
-- `TanStack vendor` `limit`: `"51 KB"` → `"55 KB"` (D-03 — measured 50.1 + 5 KB)
-- `Total JS` `limit`: `"2.43 MB"` → `"1.8 MB"` (D-02, with escalation path if audit shows unattainable)
-- `signature-visuals/d3-geospatial` `limit`: `"55 KB"` → `"56 KB"` (D-03 — measured 54.15 + headroom)
-- `signature-visuals/static-primitives` `limit`: `"64 KB"` → `"12 KB"` (D-03 — dropped from oversized symbolic to measured 9 + 3 KB tight per RESEARCH Q3)
+- `Initial JS (entry point)` `limit`: `"517 KB"` → `"450 KB"` (D-01; LOWERED)
+- `React vendor` `limit`: `"349 KB"` UNCHANGED (D-03 `min(current, measured+5)` — current 349 already tighter than mechanical 352)
+- `TanStack vendor` `limit`: `"51 KB"` UNCHANGED (D-03 `min` — current already tighter than mechanical 55)
+- `Total JS` `limit`: `"2.43 MB"` → `"1.8 MB"` (D-02, with escalation path if audit shows unattainable; LOWERED)
+- `signature-visuals/d3-geospatial` `limit`: `"55 KB"` UNCHANGED (D-03 `min` — current already tighter than mechanical 56)
+- `signature-visuals/static-primitives` `limit`: `"64 KB"` → `"12 KB"` (D-03 — only existing entry that lowers beyond Initial/Total; symbolic oversized dropped to measured 9 + 3 KB tight per RESEARCH Q3)
 - **ADD** new entries (D-07) — placeholders `<measured + 5>` MUST be replaced post-audit:
 
 ```json
@@ -579,8 +579,8 @@ the production build. Sibling to `.size-limit.json` per Phase 49 D-09.
 | Chunk                | Ceiling (gz) | Measured (gz) | Last audited | Rationale                                                                                                                                                                                                         |
 | -------------------- | ------------ | ------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Initial JS (`app-*`) | 450 KB       | 411.98 KB     | 2026-05-XX   | Entry route — TanStack Router shell + provider tree + i18n init. Lazy boundaries below cut growth here.                                                                                                           |
-| React vendor         | 350 KB       | 347.13 KB     | 2026-05-XX   | react + react-dom + scheduler — near native floor. Cannot be reduced without dropping React itself.                                                                                                               |
-| TanStack vendor      | 55 KB        | 50.1 KB       | 2026-05-XX   | @tanstack/react-router + react-query + react-table + react-virtual — all on the initial path.                                                                                                                     |
+| React vendor         | 349 KB       | 347.13 KB     | 2026-05-XX   | react + react-dom + scheduler — near native floor. Cannot be reduced without dropping React itself. Ceiling held at current per D-03 `min`.                                                                       |
+| TanStack vendor      | 51 KB        | 50.1 KB       | 2026-05-XX   | @tanstack/react-router + react-query + react-table + react-virtual — all on the initial path. Ceiling held at current per D-03 `min`.                                                                             |
 | HeroUI vendor        | TBD          | TBD           | 2026-05-XX   | Primary primitive cascade per CLAUDE.md §Component Library Strategy. Eager because most routes render a HeroUI primitive on first paint.                                                                          |
 | Sentry vendor        | TBD          | TBD           | 2026-05-XX   | @sentry/react — error tracking. Init is `requestIdleCallback`-deferred at `main.tsx:24`, so this chunk is non-blocking despite the size. Keep its own chunk so a Sentry upgrade doesn't cache-bust other vendors. |
 | DnD vendor           | TBD          | TBD           | 2026-05-XX   | @dnd-kit/\* — only loaded on kanban + reorder routes; separate chunk avoids cache-busting the initial path on dnd-kit minor upgrades.                                                                             |

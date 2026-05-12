@@ -151,6 +151,7 @@ Replaces ad-hoc spinner classes (`text-muted-foreground`, hardcoded sizes) seen 
 Required shape:
 import { GlobeSpinner } from '@/components/signature-visuals'
 <Suspense fallback={
+
 <div className="flex items-center justify-center" style={{
           minHeight: 'var(--row-h)',
           border: '1px solid var(--line)',
@@ -640,6 +641,101 @@ EOF
     - Source: `git status --porcelain | wc -l` returns 0 (working tree clean post-commit).
   </acceptance_criteria>
   <done>Post-Plan-02 build + assert + size-limit all exit 0; D-14 partial audit clean; Plan 02 changes committed atomically; Plan 03 may now start.</done>
+</task>
+
+<task id="T-49-09" type="auto">
+  <action>
+    **Plan 02 SUMMARY — handoff artifact for Plan 03 preflight.**
+
+    Create `.planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md` capturing the moment the size-limit gate becomes locally green (the binding pre-CI proof that Plan 03 can safely flip to PR-blocking). Plan 03 Task 1 step 1 (`ls .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md`) gates on this file existing — without it, Plan 03 STOPS.
+
+    1. Capture pre/post `pnpm -C frontend size-limit` output. The "pre" snapshot is the post-Plan-01 state (size-limit exits non-zero, lazy() not yet landed); the "post" snapshot is the current state (exits 0).
+       - `pnpm -C frontend size-limit > /tmp/49-02-sizelimit-post.txt 2>&1; echo $? >> /tmp/49-02-sizelimit-post.txt`
+
+    2. Capture lazy() conversion list:
+       - `git diff phase-49-base -- 'frontend/src' | grep -E '^\+.*React\.lazy' | grep -vE '^\+\+\+' > /tmp/49-02-lazy-additions.txt`
+
+    3. Capture sub-vendor measurements:
+       - Identify each new chunk's gz: `for n in heroui sentry dnd; do f=$(ls frontend/dist/assets/${n}-vendor-*.js 2>/dev/null | head -1); test -n "$f" && printf "%s %s\n" "$n" "$(gzip -c "$f" | wc -c | awk '{printf "%.1f KB", $1/1024}')"; done > /tmp/49-02-subvendor-measured.txt`
+
+    4. Author `49-02-SUMMARY.md` with the following required sections:
+
+       # Phase 49 — Plan 02 SUMMARY: Vendor Decomposition + Lazy Conversion
+
+       **Plan:** 49-02-vendor-decomp-and-lazy
+       **Verdict:** SUCCESS | SUCCESS-WITH-DEVIATION | FAIL
+       **Date:** <YYYY-MM-DD>
+       **Commit SHA:** <git rev-parse HEAD>
+
+       ## Sub-vendor measurements + locked ceilings
+       | Chunk | Measured (gz) | Locked ceiling | Source |
+       | --- | --- | --- | --- |
+       | heroui-vendor | <X.X KB> | <X+5 KB> | D-07 |
+       | sentry-vendor | <X.X KB> | <X+5 KB> | D-07 |
+       | dnd-vendor | <X.X KB> | <X+5 KB> | D-07 |
+       | tiptap-vendor | <X.X KB or "not added"> | <X+5 KB or "n/a"> | D-07 (optional) |
+       | exceljs-vendor | <X.X KB or "not added"> | <X+5 KB or "n/a"> | D-07 (optional) |
+
+       ## Components converted to React.lazy()
+       | Component | File path | Measured gz | Fallback shape |
+       | --- | --- | --- | --- |
+       | <name> | frontend/src/... | <X KB> | <GlobeSpinner | fallback={null} | token-styled skeleton> |
+       ...
+
+       ## Pre/post size-limit
+       - Pre (post-Plan-01, pre-lazy()): `pnpm size-limit` exit=<N>
+       - Post (Plan-02 close): `pnpm size-limit` exit=0
+       - Initial JS post-Plan-02: <X.XX KB gz> (ceiling 450 KB)
+       - Total JS post-Plan-02: <X.XX MB gz> (ceiling 1.8 MB or escalated)
+
+       ## Residual vendor chunk (D-08)
+       - Size: <X.X KB gz>
+       - Disposition: <under 100 KB — note only | over 100 KB — full table in bundle-budget.md>
+
+       ## E2E deferrals
+       <Any test:e2e deferral with reason per Phase 40-23 precedent. If none: "None.">
+
+       ## Visual baselines requiring re-capture
+       <Any visual baseline files affected by lazy() conversion / Suspense fallback timing per RESEARCH Pitfall 5. If none: "None.">
+
+       ## Deviations
+       <Any planner-discretion calls — optional sub-vendor adds, lazy() candidates dropped due to E2E regression, etc. If none: "None.">
+
+       ## Handoff
+       Plan 03 may now start. The size-limit gate is LOCALLY green (`pnpm -C frontend size-limit` exits 0); ready to be flipped to PR-blocking via branch-protection PUT in 49-03 Task 2.
+
+    5. Commit:
+       - `gsd-sdk query commit "docs(49-02): Plan 02 SUMMARY — vendor decomp + lazy close-out" --files ".planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md"`
+
+  </action>
+  <read_first>
+    - .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md (lazy() candidate source list)
+    - frontend/.size-limit.json (locked ceilings)
+    - .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md (analog SUMMARY structure)
+    - .planning/phases/48-lint-config-alignment/48-02-*-PLAN.md SUMMARY (if exists; closer analog than 47)
+  </read_first>
+  <verify>
+    <automated>
+      test -f .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md
+      grep -c "^## Sub-vendor measurements" .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md
+      grep -c "^## Components converted to React.lazy" .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md
+      grep -c "^## Pre/post size-limit" .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md
+      grep -c "^## Residual vendor chunk" .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md
+      grep -c "^## Handoff" .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md
+      grep -cE "Verdict:.*(SUCCESS|FAIL)" .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md
+      grep -c "<placeholder>" .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md
+      git log --oneline -1 -- .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md | wc -l
+    </automated>
+  </verify>
+  <acceptance_criteria>
+    - Source: `test -f .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md` exits 0.
+    - Source: Each of `grep -c "^## Sub-vendor measurements"`, `^## Components converted to React.lazy`, `^## Pre/post size-limit`, `^## Residual vendor chunk`, `^## Handoff` returns 1.
+    - Source: `grep -cE "Verdict:.*(SUCCESS|FAIL)"` returns ≥1 (verdict is concrete).
+    - Source: `grep -c "<placeholder>" .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md` returns 0.
+    - Behavior: `git log --oneline -1 -- .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md | wc -l` returns 1.
+    - Audit (T-49-09): Plan 03 Task 1 preflight step 1 (`ls .planning/phases/49-bundle-budget-reset/49-02-SUMMARY.md`) succeeds when this task is complete.
+  </acceptance_criteria>
+  <done>49-02-SUMMARY.md exists with all required sections populated; verdict is concrete; no placeholders remain; commit landed.</done>
 </task>
 
 </tasks>

@@ -33,7 +33,7 @@ Detail: `.planning/notes/v6.2-rationale.md`.
 
 - [ ] **BUNDLE-01** — `frontend/.size-limit.json` Total JS ceiling is lowered from 2.43 MB to ≤500 KB initial-route gzip; the value is documented as the real budget, not aspirational.
 - [ ] **BUNDLE-02** — The initial route loads under the new BUNDLE-01 budget; heavy chunks are route-split via `React.lazy()` based on the Phase 49 audit.
-- [ ] **BUNDLE-03** — `size-limit` runs as a PR-blocking CI gate; a PR that adds ≥1 KB to any measured chunk is rejected.
+- [ ] **BUNDLE-03** — `size-limit` runs as a PR-blocking CI gate; a PR that pushes any measured chunk above its locked per-chunk ceiling (D-01..D-03 + D-07 sub-vendor entries) is rejected. The per-chunk ceiling is the binding budget; `size-limit`'s native fail-on-exceed is the enforcement mechanism. Per-chunk slack between measured size and ceiling (D-03 documents this slack) is the documented absorption budget — tighter ceilings catch smaller deltas.
 - [ ] **BUNDLE-04** — Vendor super-chunk audited; every chunk > 100 KB has documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
 
 ## Out of Scope

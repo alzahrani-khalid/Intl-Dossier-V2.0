@@ -26,13 +26,13 @@ Measured baseline on `main` 2026-05-12:
 
 - **D-01:** Lock the **Initial JS (entry app chunk) ceiling at 450 KB gz** in `.size-limit.json` — ~10% headroom over the 411.98 KB measured baseline. Justifies the BUNDLE-01 "≤500 KB initial-route gzip proposal" while making the budget enforceable (not aspirational). A PR that pushes initial to 451 KB is rejected.
 - **D-02:** Lock the **Total JS ceiling at 1.8 MB gz** in `.size-limit.json` — ~25% reduction from the 2.42 MB baseline. This is the real ceiling BUNDLE-01 calls for ("real budget, not aspirational"). Achievement path: vendor super-chunk decomposition (D-07..D-09) + route-split (D-04..D-06) recovers the gap. If the audit shows 1.8 MB is unattainable inside the phase, the planner escalates with measured numbers before raising the ceiling — never silently.
-- **D-03:** Re-baseline per-chunk ceilings to **current measured size + 5 KB headroom each** (not the current symbolic +5 KB padding above measured). Targets:
-  - `React vendor` — 350 KB gz (current 347)
-  - `TanStack vendor` — 55 KB gz (current 50.1)
-  - `signature-visuals/d3-geospatial` — 56 KB gz (current 54.15)
-  - `signature-visuals/static-primitives` — 12 KB gz (current 9; oversized symbolic 64 dropped)
-  - Sub-vendor chunks from D-07..D-09 — each ceiling = measured + 5 KB
-    Tight ceilings make BUNDLE-03's "≥1 KB delta = reject" real. Loose ceilings absorb drift silently.
+- **D-03:** Re-baseline per-chunk ceilings to **`min(current ceiling, measured + 5 KB)`** — never raise an existing ceiling, only lower. Where the current ceiling is already tighter than `measured + 5 KB`, keep it (tighter is better; satisfies the BUNDLE-03 enforcement spirit without absorbing drift). Targets (current → locked):
+  - `React vendor` — 349 KB gz unchanged (measured 347; current already tight at +2 KB)
+  - `TanStack vendor` — 51 KB gz unchanged (measured 50.1; current already tight at +0.9 KB)
+  - `signature-visuals/d3-geospatial` — 55 KB gz unchanged (measured 54.15; current already tight at +0.85 KB)
+  - `signature-visuals/static-primitives` — **64 KB → 12 KB** (measured 9; the only existing entry that needed lowering; symbolic oversized 64 dropped)
+  - Sub-vendor chunks added in D-07 (heroui/sentry/dnd; optional pdf/editor) — each new ceiling = `measured + 5 KB` (these are additions, not raises)
+    Tight ceilings make BUNDLE-03's "above-ceiling = reject" rule bite at small deltas. Loose ceilings absorb drift silently up to the slack budget; the slack between measured and ceiling is the documented absorption budget.
 
 ### Route-split + component lazy() scope (BUNDLE-02)
 
@@ -57,7 +57,7 @@ Measured baseline on `main` 2026-05-12:
 ### CI gate restoration (BUNDLE-03)
 
 - **D-10:** Add `Bundle Size Check (size-limit)` to the required-contexts list on `main` branch protection alongside `Lint`, `type-check`, and `Security Scan`. The job already exists in `.github/workflows/ci.yml` (lines 270–296) with `needs: [lint, type-check]` — that chain stays. The only change is the GitHub branch-protection setting (API/UI), not the workflow file. `enforce_admins: true` stays — Phase 47 D-09 / Phase 48 D-15 posture carries forward.
-- **D-11:** size-limit's native fail-on-exceed behavior already enforces BUNDLE-03's "≥1 KB delta = reject" — a PR that pushes any measured chunk above its ceiling fails the `pnpm -C frontend size-limit` step → fails the `bundle-size-check` job → blocks merge via D-10. No custom delta calculator needed. Per-chunk ceilings (D-03) determine how strict the gate is.
+- **D-11:** size-limit's native fail-on-exceed behavior IS the BUNDLE-03 enforcement — a PR that pushes any measured chunk above its locked ceiling fails the `pnpm -C frontend size-limit` step → fails the `bundle-size-check` job → blocks merge via D-10. No custom baseline-delta calculator. Per-chunk ceilings (D-03 measured-or-tighter + D-07 sub-vendors measured + 5 KB) determine strictness: a PR adding less than the per-chunk slack passes silently; a PR pushing over the ceiling is rejected. Reviewers tighten ceilings further during PR review if a drift pattern emerges.
 - **D-12:** **Two smoke PRs prove the gate BLOCKS** — mirrors Phase 48 D-16. PR-A: add an eager dynamic import of a heavy lib (e.g., `import * as d3 from 'd3'` at the top of `frontend/src/App.tsx`) to push Initial JS > 450 KB. PR-B: add a dummy import that pushes one sub-vendor chunk > its D-03 ceiling. Each PR must show `Bundle Size Check (size-limit)` as **failed** and `mergeStateStatus: BLOCKED`. Both close out the BUNDLE-03 acceptance evidence.
 
 ### Suspense fallback (carried into D-06 lazy work)
@@ -86,7 +86,7 @@ Measured baseline on `main` 2026-05-12:
 ### Phase scope and requirements
 
 - `.planning/ROADMAP.md` §"Phase 49: Bundle Budget Reset" — Goal, depends-on, success criteria.
-- `.planning/REQUIREMENTS.md` §"Bundle (BUNDLE)" — BUNDLE-01..04 verbatim, including the "real budget, not aspirational" and "≥1 KB delta = reject" rules.
+- `.planning/REQUIREMENTS.md` §"Bundle (BUNDLE)" — BUNDLE-01..04 verbatim, including the "real budget, not aspirational" and "above-ceiling = reject" rules.
 - `.planning/notes/v6.2-rationale.md` — Why v6.2 fixes bundle drift before v7.0; the historical 200 KB v2.0 target lineage and the 815 KB / 2.43 MB ceiling drift story.
 - `.planning/STATE.md` — Phase 48 closure note; v6.2 phase map (47/48/49) and the v7.0 trigger ("v6.2 ships").
 

@@ -20,13 +20,13 @@ The branch-protection update is a single `gh api PUT` against `repos/alzahrani-k
 
 **D-02:** Lock the Total JS ceiling at **1.8 MB gz** in `.size-limit.json` — ~25% reduction from the 2.42 MB baseline. Achievement path: vendor super-chunk decomposition (D-07..D-09) + route-split (D-04..D-06). If the audit shows 1.8 MB is unattainable inside the phase, the planner escalates with measured numbers before raising the ceiling — never silently.
 
-**D-03:** Re-baseline per-chunk ceilings to **current measured size + 5 KB headroom each**:
+**D-03:** Re-baseline per-chunk ceilings to **`min(current ceiling, measured + 5 KB)`** — never raise, only lower:
 
-- React vendor — 350 KB gz (current 347)
-- TanStack vendor — 55 KB gz (current 50.1)
-- signature-visuals/d3-geospatial — 56 KB gz (current 54.15) (note: current ceiling is 55; bump to 56 per D-03 rule)
-- signature-visuals/static-primitives — 12 KB gz (current 9; oversized symbolic 64 dropped)
-- Sub-vendor chunks from D-07..D-09 — each ceiling = measured + 5 KB
+- React vendor — 349 KB gz UNCHANGED (current already tighter than mechanical 350)
+- TanStack vendor — 51 KB gz UNCHANGED (current already tighter than mechanical 55)
+- signature-visuals/d3-geospatial — 55 KB gz UNCHANGED (current already tighter than mechanical 56)
+- signature-visuals/static-primitives — 12 KB gz (current 64 LOWERED; measured 9 + 3 KB; oversized symbolic dropped — only existing entry that lowers beyond Initial/Total)
+- Sub-vendor chunks from D-07..D-09 — each new ceiling = `measured + 5 KB` (additions, not raises)
 
 **D-04:** Route-level code-splitting is **already satisfied** by `TanStackRouterVite({ autoCodeSplitting: true })` in `vite.config.ts`. Phase 49 does **not** add manual route-level `React.lazy()` per route file.
 
@@ -42,7 +42,7 @@ The branch-protection update is a single `gh api PUT` against `repos/alzahrani-k
 
 **D-10:** Add `Bundle Size Check (size-limit)` to required-contexts on `main` branch protection alongside existing `Lint`, `type-check`, `Security Scan`. `enforce_admins: true` preserved.
 
-**D-11:** size-limit's native fail-on-exceed enforces BUNDLE-03's "≥1 KB delta = reject". No custom delta calculator. Per-chunk ceilings (D-03) determine strictness.
+**D-11:** size-limit's native fail-on-exceed IS the BUNDLE-03 enforcement — any measured chunk pushed above its locked ceiling rejects. No custom baseline-delta script. Per-chunk ceilings (D-03 measured-or-tighter + D-07 sub-vendors measured + 5 KB) determine strictness: per-chunk slack between measured and ceiling is the documented absorption budget; tighter ceilings catch smaller deltas.
 
 **D-12:** **Two smoke PRs prove the gate BLOCKS** — PR-A: push Initial JS > 450 KB. PR-B: push one sub-vendor chunk > its ceiling. Each PR must show `Bundle Size Check (size-limit)` as failed and `mergeStateStatus: BLOCKED`.
 
@@ -71,7 +71,7 @@ The branch-protection update is a single `gh api PUT` against `repos/alzahrani-k
 | --------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | BUNDLE-01 | `.size-limit.json` Total JS ceiling lowered from 2.43 MB to ≤500 KB initial-route gzip; documented as real budget         | D-01..D-03 ceiling values + § Standard Stack (size-limit native enforcement). `.size-limit.json` rewrite shape in § Code Examples.                   |
 | BUNDLE-02 | Initial route loads under BUNDLE-01 budget; heavy chunks route-split via `React.lazy()` based on Phase 49 audit           | § Architecture Patterns (lazy() conversion mechanics). 8 existing call-site patterns in codebase. ANALYZE=true wired in `vite.config.ts:43`.         |
-| BUNDLE-03 | `size-limit` runs as PR-blocking CI gate; ≥1 KB delta rejected                                                            | D-10..D-12. § Code Examples (branch-protection `gh api PUT` payload verbatim from Phase 47 Task 4). Two-smoke-PR pattern in § Architecture Patterns. |
+| BUNDLE-03 | `size-limit` runs as PR-blocking CI gate; above-ceiling reject (per-chunk slack is documented absorption budget)          | D-10..D-12. § Code Examples (branch-protection `gh api PUT` payload verbatim from Phase 47 Task 4). Two-smoke-PR pattern in § Architecture Patterns. |
 | BUNDLE-04 | Vendor super-chunk audited; every chunk >100 KB has documented rationale in sibling note `frontend/docs/bundle-budget.md` | D-07..D-09. § Architecture Patterns (sub-vendor decomposition + bundle-budget.md table schema).                                                      |
 
 ## Project Constraints (from CLAUDE.md)
@@ -261,14 +261,14 @@ manualChunks: (id) => {
   {
     "name": "React vendor",
     "path": "dist/assets/react-vendor-*.js",
-    "limit": "350 KB",
+    "limit": "349 KB",
     "gzip": true,
     "running": false
   },
   {
     "name": "TanStack vendor",
     "path": "dist/assets/tanstack-vendor-*.js",
-    "limit": "55 KB",
+    "limit": "51 KB",
     "gzip": true,
     "running": false
   },
@@ -303,7 +303,7 @@ manualChunks: (id) => {
   {
     "name": "signature-visuals/d3-geospatial",
     "path": "dist/assets/signature-visuals-d3-*.js",
-    "limit": "56 KB",
+    "limit": "55 KB",
     "gzip": true,
     "running": false
   },
@@ -524,8 +524,8 @@ the production build. Sibling to `.size-limit.json` per Phase 49 D-09.
 | Chunk                | Ceiling (gz) | Measured (gz) | Last audited | Rationale                                                                                                                                                                                                         |
 | -------------------- | ------------ | ------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Initial JS (`app-*`) | 450 KB       | 411.98 KB     | 2026-05-XX   | Entry route — TanStack Router shell + provider tree + i18n init. Lazy boundaries below cut growth here.                                                                                                           |
-| React vendor         | 350 KB       | 347.13 KB     | 2026-05-XX   | react + react-dom + scheduler — near native floor. Cannot be reduced without dropping React itself.                                                                                                               |
-| TanStack vendor      | 55 KB        | 50.1 KB       | 2026-05-XX   | @tanstack/react-router + react-query + react-table + react-virtual — all on the initial path.                                                                                                                     |
+| React vendor         | 349 KB       | 347.13 KB     | 2026-05-XX   | react + react-dom + scheduler — near native floor. Cannot be reduced without dropping React itself. Ceiling held at current per D-03 `min` (tighter than mechanical +5KB).                                        |
+| TanStack vendor      | 51 KB        | 50.1 KB       | 2026-05-XX   | @tanstack/react-router + react-query + react-table + react-virtual — all on the initial path. Ceiling held at current per D-03 `min`.                                                                             |
 | HeroUI vendor        | TBD          | TBD           | 2026-05-XX   | Primary primitive cascade per CLAUDE.md §Component Library Strategy. Eager because most routes render a HeroUI primitive on first paint.                                                                          |
 | Sentry vendor        | TBD          | TBD           | 2026-05-XX   | @sentry/react — error tracking. Init is `requestIdleCallback`-deferred at `main.tsx:24`, so this chunk is non-blocking despite the size. Keep its own chunk so a Sentry upgrade doesn't cache-bust other vendors. |
 | DnD vendor           | TBD          | TBD           | 2026-05-XX   | @dnd-kit/\* — only loaded on kanban + reorder routes; separate chunk avoids cache-busting the initial path on dnd-kit minor upgrades.                                                                             |
@@ -785,17 +785,17 @@ function globToRegExp(pattern) {
 
 ### Phase Requirements → Test Map
 
-| Req ID    | Behavior                                                      | Test Type   | Automated Command                                                                                                                                                           | File Exists?                                                |
-| --------- | ------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| BUNDLE-01 | Total JS ceiling locked at 1.8 MB gz; Initial JS at 450 KB gz | unit        | `pnpm -C frontend size-limit` (post-build)                                                                                                                                  | ✅ `frontend/.size-limit.json` exists; Phase 49 rewrites it |
-| BUNDLE-01 | Ceilings documented as real budget, not aspirational          | doc check   | `grep -E "limit.*(1\.8 MB\|450 KB)" frontend/.size-limit.json`                                                                                                              | ✅ file exists; D-01..D-03 rewrite values                   |
-| BUNDLE-02 | Initial route loads under 450 KB gz                           | unit        | `pnpm -C frontend size-limit \| grep "Initial JS"` (exit 0)                                                                                                                 | ✅                                                          |
-| BUNDLE-02 | Heavy chunks route-split via React.lazy() based on audit      | code review | `git diff --stat .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md` shows audit; `grep -r "React.lazy\|lazy(" frontend/src --include="*.tsx"` shows new boundaries | ✅ 28 existing lazy() sites — verified via grep             |
-| BUNDLE-02 | E2E suite passes against new lazy boundaries                  | E2E         | `pnpm -C frontend exec playwright test --project=chromium-en`                                                                                                               | ✅ Playwright config + spec files exist                     |
-| BUNDLE-03 | size-limit runs as PR-blocking CI gate                        | integration | `gh api repos/alzahrani-khalid/Intl-Dossier-V2.0/branches/main/protection/required_status_checks --jq '.contexts \| sort'` MUST include `"Bundle Size Check (size-limit)"`  | ✅ via Phase 47/48 protection mechanism                     |
-| BUNDLE-03 | A PR adding ≥1 KB rejected on main (gate BLOCKS)              | smoke E2E   | Two smoke PRs (D-12); each `gh pr view --json mergeStateStatus -q .mergeStateStatus` returns `"BLOCKED"`                                                                    | ✅ pattern proven in Phase 47/48                            |
-| BUNDLE-04 | Vendor super-chunk audited; every chunk >100 KB has rationale | doc check   | `wc -l frontend/docs/bundle-budget.md` > 20; each chunk in `pnpm size-limit \| grep -E ">100 KB"` appears in the doc                                                        | ❌ Wave 0 — create `frontend/docs/bundle-budget.md`         |
-| BUNDLE-04 | Audit summary committed to `.planning/`                       | doc check   | `test -f .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md`                                                                                                        | ❌ Wave 0 — author the artifact                             |
+| Req ID    | Behavior                                                                        | Test Type   | Automated Command                                                                                                                                                           | File Exists?                                                |
+| --------- | ------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| BUNDLE-01 | Total JS ceiling locked at 1.8 MB gz; Initial JS at 450 KB gz                   | unit        | `pnpm -C frontend size-limit` (post-build)                                                                                                                                  | ✅ `frontend/.size-limit.json` exists; Phase 49 rewrites it |
+| BUNDLE-01 | Ceilings documented as real budget, not aspirational                            | doc check   | `grep -E "limit.*(1\.8 MB\|450 KB)" frontend/.size-limit.json`                                                                                                              | ✅ file exists; D-01..D-03 rewrite values                   |
+| BUNDLE-02 | Initial route loads under 450 KB gz                                             | unit        | `pnpm -C frontend size-limit \| grep "Initial JS"` (exit 0)                                                                                                                 | ✅                                                          |
+| BUNDLE-02 | Heavy chunks route-split via React.lazy() based on audit                        | code review | `git diff --stat .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md` shows audit; `grep -r "React.lazy\|lazy(" frontend/src --include="*.tsx"` shows new boundaries | ✅ 28 existing lazy() sites — verified via grep             |
+| BUNDLE-02 | E2E suite passes against new lazy boundaries                                    | E2E         | `pnpm -C frontend exec playwright test --project=chromium-en`                                                                                                               | ✅ Playwright config + spec files exist                     |
+| BUNDLE-03 | size-limit runs as PR-blocking CI gate                                          | integration | `gh api repos/alzahrani-khalid/Intl-Dossier-V2.0/branches/main/protection/required_status_checks --jq '.contexts \| sort'` MUST include `"Bundle Size Check (size-limit)"`  | ✅ via Phase 47/48 protection mechanism                     |
+| BUNDLE-03 | A PR pushing any measured chunk over its ceiling rejected on main (gate BLOCKS) | smoke E2E   | Two smoke PRs (D-12); each `gh pr view --json mergeStateStatus -q .mergeStateStatus` returns `"BLOCKED"`                                                                    | ✅ pattern proven in Phase 47/48                            |
+| BUNDLE-04 | Vendor super-chunk audited; every chunk >100 KB has rationale                   | doc check   | `wc -l frontend/docs/bundle-budget.md` > 20; each chunk in `pnpm size-limit \| grep -E ">100 KB"` appears in the doc                                                        | ❌ Wave 0 — create `frontend/docs/bundle-budget.md`         |
+| BUNDLE-04 | Audit summary committed to `.planning/`                                         | doc check   | `test -f .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md`                                                                                                        | ❌ Wave 0 — author the artifact                             |
 
 ### Sampling Rate
 

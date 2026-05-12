@@ -15,7 +15,7 @@ must_haves:
   truths:
     - 'D-05: `ANALYZE=true pnpm -C frontend build` emits `frontend/dist/stats.html`; top-20 chunks + lazy() candidates are captured in `.planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md`'
     - 'D-01: `frontend/.size-limit.json` Initial JS ceiling reads `"limit": "450 KB"` (was 517 KB)'
-    - 'D-03: Per-chunk ceilings rebased to measured + 5 KB (React 350 / TanStack 55 / d3-geospatial 56 / static-primitives 12)'
+    - 'D-03: Per-chunk ceilings rebased via `min(current, measured + 5 KB)` — React 349 UNCHANGED / TanStack 51 UNCHANGED / d3-geospatial 55 UNCHANGED / static-primitives 64→12 LOWERED'
     - 'D-02: Total JS ceiling reads `"limit": "1.8 MB"` (was 2.43 MB) — OR the planner-authored escalation block is filed in `49-BUNDLE-AUDIT.md` with measured numbers proving 1.8 MB unattainable inside the phase'
     - 'D-09: `frontend/docs/bundle-budget.md` scaffold exists with table header `| chunk | gz size | ceiling | rationale | last-audited |` and rows for every chunk >100 KB gz (Initial / React / TanStack at minimum; sub-vendor rows added in Plan 02)'
     - 'D-14: Zero new `eslint-disable` / `@ts-ignore` / `@ts-expect-error` introduced in this plan; zero size-limit ceilings raised vs `main` baseline (only lowered)'
@@ -44,7 +44,7 @@ must_haves:
 phase_decisions_locked:
   D-01_initial_ceiling: 'Initial JS ceiling = 450 KB gz (10% headroom over 411.98 KB measured baseline). NOT 500 KB; NOT 517 KB. Verbatim in `.size-limit.json`.'
   D-02_total_ceiling: 'Total JS ceiling = 1.8 MB gz. If audit shows unattainable, planner-authored escalation block in 49-BUNDLE-AUDIT.md documents measured projected Total JS post-Plan-02 + escalation rationale BEFORE this plan raises the ceiling. Never silently increase.'
-  D-03_per_chunk_ceilings: 'Re-baseline ceilings to measured + 5 KB. React 350 KB / TanStack 55 KB / d3-geospatial 56 KB / static-primitives 12 KB. Sub-vendor entries are NOT added in this plan — Plan 02 adds them after manualChunks branches land (avoids assert-size-limit-matches.mjs failing on empty globs).'
+  D-03_per_chunk_ceilings: '`min(current ceiling, measured + 5 KB)` — never raise, only lower. React stays at 349 KB (current already tighter than 350 mechanical formula). TanStack stays at 51 KB. d3-geospatial stays at 55 KB. static-primitives is the only existing entry that lowers: 64 KB → 12 KB (symbolic oversized dropped to measured 9 + 3 KB). Sub-vendor entries (heroui/sentry/dnd) are NOT added in this plan — Plan 02 adds them after manualChunks branches land (avoids assert-size-limit-matches.mjs failing on empty globs). Sub-vendor ceilings in Plan 02 = measured + 5 KB (these are additions, not raises).'
   D-05_audit_artifact: 'Audit fires from a clean ANALYZE=true production build. `dist/stats.html` is the source; `49-BUNDLE-AUDIT.md` is the committed summary. Audit runs pre-Plan-02 manualChunks changes — baseline snapshot.'
   D-09_rationale_doc: 'Sibling note `frontend/docs/bundle-budget.md` (not inline JSON comments — `.size-limit.json` is raw JSON read by `assert-size-limit-matches.mjs:39`). This plan creates the scaffold + Initial/React/TanStack rows; Plan 02 appends sub-vendor rows.'
   D-14_phase_tag: '`phase-49-base` git tag created at `main` HEAD before any phase work. Diff anchor for the phase-close D-14 net-new audit run in Plan 03 final wave.'
@@ -55,7 +55,7 @@ Create the audit-and-budget-calibration foundation for Phase 49. Three deliverab
 
 1. **`phase-49-base` git tag** at `main` HEAD — diff anchor for the D-14 phase-close audit (Plan 03 final wave).
 2. **`.planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md`** — one-shot audit snapshot from `ANALYZE=true pnpm -C frontend build`. Lists top-20 chunks by gz, suspected `app` chunk eager-import culprits, and ranks ≥30 KB gz non-initial-path components as lazy() candidates. Plan 02 D-06 consumes this ranking — without it, lazy() picks are guesswork (CONTEXT D-05).
-3. **`frontend/.size-limit.json` re-baselined** per D-01 / D-02 / D-03 (Initial 517→450 / Total 2.43 MB→1.8 MB / React 349→350 / TanStack 51→55 / d3-geospatial 55→56 / static-primitives 64→12). No sub-vendor entries added here — Plan 02 adds them in lockstep with the manualChunks branches.
+3. **`frontend/.size-limit.json` re-baselined** per D-01 / D-02 / D-03 (Initial 517→450 / Total 2.43 MB→1.8 MB / static-primitives 64→12; React 349 UNCHANGED, TanStack 51 UNCHANGED, d3-geospatial 55 UNCHANGED per D-03 `min(current, measured + 5 KB)` — never raise, only lower). No sub-vendor entries added here — Plan 02 adds them in lockstep with the manualChunks branches.
 4. **`frontend/docs/bundle-budget.md` scaffold** — table header `| chunk | gz size | ceiling | rationale | last-audited |` with Initial / React vendor / TanStack vendor / Total JS rows. Plan 02 appends HeroUI / Sentry / DnD rows after their measurements.
 
 Purpose: real budget, not aspirational (BUNDLE-01); documented rationale for every chunk >100 KB gz (BUNDLE-04); audit numbers feed Plan 02 lazy() picks and Plan 03 escalation paper trail. This plan is audit-first — Plan 02 cannot start without the artifact.
@@ -94,14 +94,14 @@ Output: phase-49-base tag, audit snapshot artifact, re-baselined ceiling JSON, r
 { "name": "signature-visuals/static-primitives", "path": "dist/assets/signature-visuals-static-*.js", "limit": "64 KB", "gzip": true, "running": false }
 ]
 
-Target post-Plan-01 ceilings (per D-01..D-03; Plan 02 will append heroui/sentry/dnd entries):
+Target post-Plan-01 ceilings (per D-01..D-03 `min(current, measured+5)` rule; Plan 02 will append heroui/sentry/dnd entries):
 
-Initial JS (entry point) → "450 KB" (was 517 KB; D-01 — 411.98 KB measured + 10% headroom)
-React vendor → "350 KB" (was 349 KB; D-03 — 347 KB measured + ~5 KB)
-TanStack vendor → "55 KB" (was 51 KB; D-03 — 50.1 KB measured + ~5 KB)
-Total JS → "1.8 MB" (was 2.43 MB; D-02 — see escalation path below)
-signature-visuals/d3-geospatial → "56 KB" (was 55 KB; D-03 — 54.15 KB measured + ~2 KB)
-signature-visuals/static-primitives → "12 KB" (was 64 KB; D-03 — 9 KB measured + 3 KB; oversized symbolic dropped)
+Initial JS (entry point) → "450 KB" (was 517 KB; D-01 — 411.98 KB measured + 10% headroom; LOWERED)
+React vendor → "349 KB" UNCHANGED (measured 347; current already tighter than mechanical 350 — D-03 `min` keeps current)
+TanStack vendor → "51 KB" UNCHANGED (measured 50.1; current already tighter than mechanical 55 — D-03 `min` keeps current)
+Total JS → "1.8 MB" (was 2.43 MB; D-02 — see escalation path below; LOWERED)
+signature-visuals/d3-geospatial → "55 KB" UNCHANGED (measured 54.15; current already tighter than mechanical 56 — D-03 `min` keeps current)
+signature-visuals/static-primitives → "12 KB" (was 64 KB; D-03 — 9 KB measured + 3 KB; oversized symbolic dropped; LOWERED — only existing entry needing lowering beyond Initial/Total)
 
 D-02 escalation rule (verbatim from CONTEXT.md):
 If the audit shows the projected post-Plan-02 Total JS is >1.8 MB, this plan
@@ -300,9 +300,13 @@ not the post-decomp split. Plan 02 may run a second audit pass post-decomp; not 
        - Sub-vendor decomposition list confirmed (heroui, sentry, dnd): <yes — all present in tree | partial — `<name>` not present>
        - Optional sub-vendors per CONTEXT: <pdf-vendor / editor-vendor verdict — present? worth splitting?>
 
-    6. Verify the audit table is populated with real numbers (no `<placeholder>` text remains for filled rows):
-       - `grep -c "^| 1 |" .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md` returns ≥4 (at least four table sections have a populated row 1).
-       - `grep -c "<placeholder>" .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md` returns 0 (no unfilled markers).
+    6. Verify the audit is populated with real numbers (section-specific row-count checks — only "Top 20 chunks" and "Proposed lazy() conversions" are rank-based tables; "Suspected app chunk eager-import culprits", "Residual vendor super-chunk composition", "D-02 ceiling attainability check", "Decision" use name-based rows or free text):
+       - `awk '/^## Top 20 chunks/,/^## Suspected/' .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md | grep -cE '^\| [0-9]+ \|'` returns ≥5 (top-20 table has ≥5 ranked data rows — full top 20 ideal, ≥5 is the floor).
+       - `awk '/^## Suspected.*eager-import/,/^## Residual/' .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md | grep -c '^| '` returns ≥3 (header row + separator + ≥1 culprit; counts data rows generously).
+       - `awk '/^## Residual.*vendor.*super-chunk/,/^## Proposed/' .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md | grep -cE '^\| @(heroui|sentry|dnd-kit)'` returns 3 (the three required D-07 sub-vendor rows are populated by name).
+       - `awk '/^## Proposed lazy/,/^## D-02/' .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md | grep -cE '^\| [0-9]+ \|'` returns ≥1 (at least one ranked lazy() candidate; zero candidates means lazy() phase work is empty and Plan 02 has nothing to do).
+       - `grep -cE "D-02 attainability verdict: (ATTAINABLE|NOT ATTAINABLE)" .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md` returns 1 (the verdict line is concrete, not `<verdict>`).
+       - `grep -c "<placeholder>" .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md` returns 0 (no unfilled markers anywhere).
 
   </action>
   <verify>
@@ -363,8 +367,8 @@ not the post-decomp split. Plan 02 may run a second audit pass post-decomp; not 
        | Chunk | gz size | Ceiling | Rationale | Last audited |
        | --- | --- | --- | --- | --- |
        | Initial JS (`app-*`) | <measured KB from audit> | 450 KB | Entry route — TanStack Router shell + provider tree + i18n init. Lazy boundaries below cut growth here. | <YYYY-MM-DD> |
-       | React vendor | <measured> | 350 KB | react + react-dom + scheduler — near native floor. Cannot be reduced without dropping React itself. | <YYYY-MM-DD> |
-       | TanStack vendor | <measured> | 55 KB | @tanstack/react-router + react-query + react-table + react-virtual — all on the initial path. | <YYYY-MM-DD> |
+       | React vendor | <measured> | 349 KB | react + react-dom + scheduler — near native floor. Cannot be reduced without dropping React itself. Ceiling kept at current (tighter than mechanical D-03 +5KB). | <YYYY-MM-DD> |
+       | TanStack vendor | <measured> | 51 KB | @tanstack/react-router + react-query + react-table + react-virtual — all on the initial path. Ceiling kept at current (tighter than mechanical D-03 +5KB). | <YYYY-MM-DD> |
        | Total JS | <measured> | <1.8 MB or escalated value from 49-BUNDLE-AUDIT.md> | Sum of all `dist/assets/*.js` gzipped. Computed ceiling = max(1.8 MB, sum-of-per-chunk-ceilings × 1.05). | <YYYY-MM-DD> |
 
        <!-- Plan 02 appends rows here for HeroUI vendor / Sentry vendor / DnD vendor
@@ -440,12 +444,14 @@ not the post-decomp split. Plan 02 may run a second audit pass post-decomp; not 
 
        | Entry name | Current limit | New limit | Source decision |
        | --- | --- | --- | --- |
-       | Initial JS (entry point) | "517 KB" | "450 KB" | D-01 |
-       | React vendor | "349 KB" | "350 KB" | D-03 (347 measured + ~3 KB) |
-       | TanStack vendor | "51 KB" | "55 KB" | D-03 (50.1 measured + ~5 KB) |
-       | Total JS | "2.43 MB" | "1.8 MB" OR escalated value | D-02 + audit verdict |
-       | signature-visuals/d3-geospatial | "55 KB" | "56 KB" | D-03 (54.15 measured + headroom) |
-       | signature-visuals/static-primitives | "64 KB" | "12 KB" | D-03 (9 measured + 3 KB; symbolic oversized dropped) |
+       | Initial JS (entry point) | "517 KB" | "450 KB" | D-01 (lowered) |
+       | React vendor | "349 KB" | "349 KB" UNCHANGED | D-03 `min(current, measured+5)` — current already tighter than 350 |
+       | TanStack vendor | "51 KB" | "51 KB" UNCHANGED | D-03 `min(current, measured+5)` — current already tighter than 55 |
+       | Total JS | "2.43 MB" | "1.8 MB" OR escalated value | D-02 + audit verdict (lowered) |
+       | signature-visuals/d3-geospatial | "55 KB" | "55 KB" UNCHANGED | D-03 `min(current, measured+5)` — current already tighter than 56 |
+       | signature-visuals/static-primitives | "64 KB" | "12 KB" | D-03 (9 measured + 3 KB; symbolic oversized dropped — the only existing entry that needed lowering) |
+
+       D-03 rule: **never raise an existing ceiling, only lower.** Where the current ceiling is already tighter than `measured + 5 KB`, keep it. The audit (Task 2) confirms current measured values are still ≤ current ceilings; if a chunk has drifted such that current measured > current ceiling, the executor STOPS and re-runs the audit on a clean rebuild before locking anything.
 
        Use `Edit` tool for each replacement. Do NOT rewrite the whole file via `Write` — surgical edits keep diff noise low and make the T-49-01 audit trivial (`git diff phase-49-base..HEAD -- frontend/.size-limit.json` shows only `limit` lines changed).
 
@@ -478,9 +484,9 @@ not the post-decomp split. Plan 02 may run a second audit pass post-decomp; not 
       pnpm -C frontend build
       node frontend/scripts/assert-size-limit-matches.mjs
       grep -c '"limit": "450 KB"' frontend/.size-limit.json
-      grep -c '"limit": "350 KB"' frontend/.size-limit.json
+      grep -c '"limit": "349 KB"' frontend/.size-limit.json
+      grep -c '"limit": "51 KB"' frontend/.size-limit.json
       grep -c '"limit": "55 KB"' frontend/.size-limit.json
-      grep -c '"limit": "56 KB"' frontend/.size-limit.json
       grep -c '"limit": "12 KB"' frontend/.size-limit.json
       git diff phase-49-base -- frontend/.size-limit.json | grep -c '^[+-]'
     </automated>
@@ -489,12 +495,12 @@ not the post-decomp split. Plan 02 may run a second audit pass post-decomp; not 
     - Source: `frontend/.size-limit.json` parses as valid JSON (`node -e 'JSON.parse(...)'` exits 0).
     - Source: `jq '. | length' frontend/.size-limit.json` returns `6` (entry count unchanged from pre-Plan-01).
     - Source: `grep -c '"limit": "450 KB"' frontend/.size-limit.json` returns 1 (Initial JS — D-01).
-    - Source: `grep -c '"limit": "350 KB"' frontend/.size-limit.json` returns 1 (React vendor — D-03).
-    - Source: `grep -c '"limit": "55 KB"' frontend/.size-limit.json` returns 1 (TanStack vendor — D-03).
-    - Source: `grep -c '"limit": "56 KB"' frontend/.size-limit.json` returns 1 (d3-geospatial — D-03).
-    - Source: `grep -c '"limit": "12 KB"' frontend/.size-limit.json` returns 1 (static-primitives — D-03).
+    - Source: `grep -c '"limit": "349 KB"' frontend/.size-limit.json` returns 1 (React vendor — D-03 `min` keeps current).
+    - Source: `grep -c '"limit": "51 KB"' frontend/.size-limit.json` returns 1 (TanStack vendor — D-03 `min` keeps current).
+    - Source: `grep -c '"limit": "55 KB"' frontend/.size-limit.json` returns 1 (d3-geospatial — D-03 `min` keeps current).
+    - Source: `grep -c '"limit": "12 KB"' frontend/.size-limit.json` returns 1 (static-primitives — D-03 LOWERED from 64).
     - Source: `grep -c '"limit": "1.8 MB"' frontend/.size-limit.json` returns 1 OR `49-BUNDLE-AUDIT.md` contains `## Escalation (D-02)` (per D-02 attainability verdict).
-    - Source: `grep -cE '"limit": "(517 KB|349 KB|51 KB|2\.43 MB|64 KB)"' frontend/.size-limit.json` returns 0 (no pre-phase ceiling values remain).
+    - Source: `grep -cE '"limit": "(517 KB|2\.43 MB|64 KB)"' frontend/.size-limit.json` returns 0 (the three pre-phase values that LOWER are gone — 517→450, 2.43 MB→1.8 MB or escalated, 64→12).
     - Behavior: `pnpm -C frontend build; echo $?` returns 0 (production build still succeeds — JSON shape unchanged).
     - Behavior: `node frontend/scripts/assert-size-limit-matches.mjs; echo $?` returns 0 (every glob still resolves to ≥1 built file — Plan 01 does not add new globs).
     - Source: `git log -1 --pretty=%s` includes `docs(49-01):` and references `audit snapshot + bundle-budget scaffold + size-limit re-baseline`.
@@ -502,6 +508,88 @@ not the post-decomp split. Plan 02 may run a second audit pass post-decomp; not 
     - Audit (T-49-04): if Total JS ceiling > 1.8 MB, `grep -c "## Escalation (D-02)" 49-BUNDLE-AUDIT.md` returns 1.
   </acceptance_criteria>
   <done>.size-limit.json re-baselined per D-01..D-03; D-02 ceiling locked at 1.8 MB or escalated with paper trail; JSON parses; build + assert-script still exit 0; commit landed.</done>
+</task>
+
+<task id="T-49-05" type="auto">
+  <action>
+    **Plan 01 SUMMARY — handoff artifact for Plan 03 preflight.**
+
+    Create `.planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md` with the audit snapshot, ceiling-rewrite verdict, and explicit handoff to Plan 02. Plan 03 Task 1 step 1 (`ls .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md`) gates on this file existing — without it, Plan 03 STOPS.
+
+    1. Read audit verdict from `.planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md` (`## D-02 ceiling attainability check` section).
+
+    2. Compute pre/post ceiling diff:
+       - `git diff phase-49-base -- frontend/.size-limit.json | grep -E '^[+-].*"limit":'` captures the surgical changes.
+
+    3. Author `49-01-SUMMARY.md` with the following required sections:
+
+       # Phase 49 — Plan 01 SUMMARY: Audit + Budget Calibration
+
+       **Plan:** 49-01-audit-and-budget-calibration
+       **Verdict:** SUCCESS | SUCCESS-WITH-DEVIATION | FAIL
+       **Date:** <YYYY-MM-DD>
+       **Audit git SHA:** <git rev-parse HEAD when audit ran>
+       **phase-49-base anchor:** <git rev-parse phase-49-base>
+
+       ## Audit snapshot
+       - Top 5 chunks by gz size (one-line each, from `49-BUNDLE-AUDIT.md`):
+         1. <name> — <gz size>
+         2. ...
+
+       ## D-02 attainability verdict
+       - Verdict: <ATTAINABLE — Total JS locked at 1.8 MB | NOT ATTAINABLE — escalated to <X.XX MB>>
+       - Escalation block present in `49-BUNDLE-AUDIT.md`: <yes | no — not needed>
+
+       ## Ceiling diff (`.size-limit.json` pre → post)
+       | Entry | Pre | Post | Direction | Source |
+       | --- | --- | --- | --- | --- |
+       | Initial JS | 517 KB | 450 KB | LOWERED | D-01 |
+       | Total JS | 2.43 MB | 1.8 MB OR <escalated> | LOWERED | D-02 |
+       | static-primitives | 64 KB | 12 KB | LOWERED | D-03 |
+       | React vendor | 349 KB | 349 KB | UNCHANGED | D-03 `min` |
+       | TanStack vendor | 51 KB | 51 KB | UNCHANGED | D-03 `min` |
+       | d3-geospatial | 55 KB | 55 KB | UNCHANGED | D-03 `min` |
+
+       ## Lazy() candidates ranked for Plan 02
+       - Count: <N>
+       - Top 3 by est. gz win: <name> (<est. KB>), <name> (<est. KB>), <name> (<est. KB>)
+
+       ## Deviations
+       <Any audit numbers materially different from CONTEXT baseline, OR escalation block fired, OR planner-discretion calls made — bullet list. If none: "None.">
+
+       ## Handoff
+       Plan 02 may now start. It reads `49-BUNDLE-AUDIT.md` for lazy() candidates and appends sub-vendor rows to `frontend/docs/bundle-budget.md` after measuring heroui/sentry/dnd chunks.
+
+    4. Commit:
+       - `gsd-sdk query commit "docs(49-01): Plan 01 SUMMARY — audit + budget calibration close-out" --files ".planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md"`
+
+  </action>
+  <read_first>
+    - .planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md (Task 2 output — source of audit numbers)
+    - frontend/.size-limit.json (Task 4 output — source of post ceilings)
+    - .planning/phases/47-type-check-zero/47-01-*-PLAN.md SUMMARY structure (if exists; otherwise model on 48-01 SUMMARY)
+    - .planning/phases/48-lint-config-alignment/48-01-*-PLAN.md SUMMARY structure (closer analog)
+  </read_first>
+  <verify>
+    <automated>
+      test -f .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md
+      grep -c "^## Audit snapshot" .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md
+      grep -c "^## D-02 attainability verdict" .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md
+      grep -c "^## Ceiling diff" .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md
+      grep -c "^## Handoff" .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md
+      grep -cE "Verdict:.*(SUCCESS|FAIL)" .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md
+      git log --oneline -1 -- .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md | wc -l
+    </automated>
+  </verify>
+  <acceptance_criteria>
+    - Source: `test -f .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md` exits 0.
+    - Source: `grep -c "^## Audit snapshot"` returns 1; `grep -c "^## D-02 attainability verdict"` returns 1; `grep -c "^## Ceiling diff"` returns 1; `grep -c "^## Handoff"` returns 1.
+    - Source: `grep -cE "Verdict:.*(SUCCESS|FAIL)"` returns ≥1 (verdict is concrete, not `<placeholder>`).
+    - Source: `grep -c "<placeholder>" .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md` returns 0 (no unfilled markers).
+    - Behavior: `git log --oneline -1 -- .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md | wc -l` returns 1 (commit landed).
+    - Audit (T-49-05): Plan 03 Task 1 preflight step 1 (`ls .planning/phases/49-bundle-budget-reset/49-01-SUMMARY.md`) succeeds when this task is complete.
+  </acceptance_criteria>
+  <done>49-01-SUMMARY.md exists with all required sections populated; verdict is concrete; no placeholders remain; commit landed.</done>
 </task>
 
 </tasks>

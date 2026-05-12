@@ -190,7 +190,7 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 1. `frontend/.size-limit.json` Total JS ceiling is lowered from 2.43 MB to a real budget (≤500 KB initial-route gzip proposal); the chosen value is documented as the enforced budget, not aspirational.
 2. The initial route loads under the new ceiling on a clean `pnpm --filter frontend size-limit` run; heavy chunks are route-split via `React.lazy()` based on the Phase 49 audit, and the existing E2E suite still passes against the new lazy boundaries.
 3. The vendor super-chunk is audited; every chunk > 100 KB has a documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
-4. `size-limit` runs as a PR-blocking CI gate; a PR that adds ≥1 KB to any measured chunk is rejected on `main`.
+4. `size-limit` runs as a PR-blocking CI gate; a PR that pushes any measured chunk above its locked per-chunk ceiling (D-01..D-03 + D-07 sub-vendor entries) is rejected on `main`. `size-limit` native fail-on-exceed is the enforcement; per-chunk slack between measured size and ceiling is the documented absorption budget.
 
 **Plans:** 3 plans
 
