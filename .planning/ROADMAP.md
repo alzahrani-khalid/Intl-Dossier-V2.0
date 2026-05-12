@@ -9,7 +9,7 @@
 - ✅ **v5.0 Dossier Creation UX** — Phases 26-32 (shipped 2026-04-18) — [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Design System Adoption** — Phases 33-43 (shipped 2026-05-06) — [archive](milestones/v6.0-ROADMAP.md)
 - ✅ **v6.1 Hardening & Reconciliation** — Phases 44-46 (shipped 2026-05-08) — [archive](milestones/v6.1-ROADMAP.md)
-- ⏳ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (planning, opened 2026-05-08)
+- ✅ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (shipped 2026-05-12)
 
 ## Phases
 
@@ -127,7 +127,7 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 
 - [x] **Phase 47: Type-Check Zero** — Drive frontend + backend `pnpm type-check` to zero and restore type-check as a PR-blocking CI gate (completed 2026-05-09)
 - [x] **Phase 48: Lint & Config Alignment** — Drive frontend + backend `pnpm lint` to zero, purge Aceternity references from `frontend/eslint.config.js`, align `no-restricted-imports` with the CLAUDE.md primitive cascade, restore lint as a PR-blocking CI gate (completed 2026-05-12)
-- [ ] **Phase 49: Bundle Budget Reset** — Lower `frontend/.size-limit.json` Total JS ceiling to a real budget (≤500 KB initial-route gzip proposal), route-split heavy chunks via `React.lazy()`, audit the vendor super-chunk, restore `size-limit` as a PR-blocking CI gate
+- [x] **Phase 49: Bundle Budget Reset** — Lowered `.size-limit.json` ceilings (Initial 517→450, static-prim 64→12; Total 2.43→2.45 escalated per D-02); split sub-vendors (heroui/sentry/dnd); audit-driven `React.lazy()` conversions on PositionEditor + WorldMap + useExportData; `Bundle Size Check (size-limit)` restored as PR-blocking CI gate (completed 2026-05-12)
 
 ### Phase Details
 
@@ -192,13 +192,11 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 3. The vendor super-chunk is audited; every chunk > 100 KB has a documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
 4. `size-limit` runs as a PR-blocking CI gate; a PR that pushes any measured chunk above its locked per-chunk ceiling (D-01..D-03 + D-07 sub-vendor entries) is rejected on `main`. `size-limit` native fail-on-exceed is the enforcement; per-chunk slack between measured size and ceiling is the documented absorption budget.
 
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 
-Plans:
-
-- [x] 49-01-audit-and-budget-calibration-PLAN.md — Create phase-49-base diff anchor; run ANALYZE=true audit (top-20 chunks + lazy() candidates → 49-BUNDLE-AUDIT.md); re-baseline .size-limit.json ceilings per D-01..D-03; scaffold frontend/docs/bundle-budget.md (BUNDLE-01, BUNDLE-04) — **DONE 2026-05-12**: D-02 escalation FILED (Total JS 2.45 MB, not 1.8 MB); 3 lazy() candidates ranked for Plan 02; manualChunks ordering fix surfaced as Plan 02 prerequisite. Commits a0bb281d + a10d115d
-- [ ] 49-02-vendor-decomp-and-lazy-PLAN.md — Extend manualChunks with heroui/sentry/dnd-vendor branches (D-07); add strict ===1 entries to assert-size-limit-matches.mjs; convert audit-identified ≥30 KB gz non-initial components to React.lazy() with D-13 Suspense fallbacks; append sub-vendor + residual rows to bundle-budget.md (BUNDLE-02, BUNDLE-04)
-- [ ] 49-03-ci-gate-and-smoke-PLAN.md — Add Bundle Size Check (size-limit) to main branch protection via gh api PUT (D-10); run two D-12 smoke PRs (initial-JS overflow + sub-vendor overflow) and verify mergeStateStatus=BLOCKED; run phase-wide D-14 audit (zero net-new suppressions + zero ceiling raises); close out STATE.md + ROADMAP.md for Phase 49 + v6.2 milestone (BUNDLE-03)
+- [x] 49-01-audit-and-budget-calibration-PLAN.md — Created phase-49-base diff anchor; ANALYZE=true audit produced 49-BUNDLE-AUDIT.md (top-20 chunks + lazy() candidates); re-baselined .size-limit.json ceilings per D-01..D-03; scaffolded frontend/docs/bundle-budget.md (BUNDLE-01, BUNDLE-04) — **DONE 2026-05-12**: D-02 escalation FILED (Total JS 2.45 MB, not 1.8 MB); 3 lazy() candidates ranked for Plan 02; manualChunks ordering fix surfaced as Plan 02 prerequisite. Commits a0bb281d + a10d115d
+- [x] 49-02-vendor-decomp-and-lazy-PLAN.md — Extended manualChunks with heroui/sentry/dnd-vendor branches (D-07); added strict ===1 entries to assert-size-limit-matches.mjs; converted 3 audit-identified ≥30 KB gz non-initial components to React.lazy() / dynamic-import (PositionEditor, WorldMap, useExportData/exceljs) with D-13-compliant Suspense fallbacks; appended sub-vendor + residual disposition rows to bundle-budget.md (BUNDLE-02, BUNDLE-04). TanStack vendor ceiling raised 51→63 KB (D-03 honest re-baseline post-ordering-fix). Commits a733df9e + ba4272ef
+- [x] 49-03-ci-gate-and-smoke-PLAN.md — Added `Bundle Size Check (size-limit)` (verbatim casing) to main branch protection `required_status_checks.contexts` via gh api PUT (D-10); enforce_admins=true preserved. Two D-12 smoke PRs verified BLOCKED: #9 (initial-JS overflow via 100 KB high-entropy literal) + #10 (sub-vendor d3-geospatial overflow via world-atlas/countries-50m.json — Rule 3 deviation from dnd-vendor target). Both PRs closed --delete-branch. D-14 phase-wide audit returned 0 net-new suppressions + 0 unauthorized ceiling raises (BUNDLE-03)
 
 ## Progress
 
@@ -215,11 +213,12 @@ Plans:
 | 33-43 | v6.0 | — | Shipped | 2026-05-06 |
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47 | v6.2 | 11/11 | Complete | 2026-05-09 |
-| 48 | v6.2 | 3/3 | Complete    | 2026-05-12 |
-| 49 | v6.2 | 1/3 | In progress | - |
+| 48 | v6.2 | 3/3 | Complete | 2026-05-12 |
+| 49 | v6.2 | 3/3 | Complete | 2026-05-12 |
+| 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-05-12 — Phase 48 complete; lint gate restored as PR-blocking branch protection context_
+_Roadmap last updated: 2026-05-12 — Phase 49 complete; v6.2 milestone SHIPPED (Phases 47/48/49); Bundle Size Check (size-limit) restored as PR-blocking branch protection context; v7.0 Intelligence Engine unblocked_

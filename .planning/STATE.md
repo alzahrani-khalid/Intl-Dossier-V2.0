@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.2
 milestone_name: Type-Check, Lint & Bundle Reset
-status: executing
-stopped_at: Phase 49 Plan 01 complete (audit + budget calibration; D-02 escalation FILED)
-last_updated: '2026-05-12T09:55:00.000Z'
-last_activity: 2026-05-12 -- Phase 49 Plan 01 complete (Total JS locked at 2.45 MB; lazy() candidates ranked for Plan 02)
+status: shipped
+stopped_at: Phase 49 Plan 03 complete (CI gate + smoke close-out; v6.2 milestone SHIPPED)
+last_updated: '2026-05-12T15:30:00.000Z'
+last_activity: 2026-05-12 -- Phase 49 SUCCESS (3/3 plans); Bundle Size Check (size-limit) live on main branch protection; v6.2 SHIPPED
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 17
-  completed_plans: 15
-  percent: 88
+  completed_plans: 17
+  percent: 100
 ---
 
 # Project State
@@ -25,16 +25,16 @@ See: .planning/PROJECT.md (updated 2026-05-08)
 
 ## Current Position
 
-Phase: 49
-Plan: 49-02 (next — vendor decomp + lazy)
-Status: Plan 49-01 complete (audit + budget calibration); 49-02 unblocked
-Last activity: 2026-05-12 -- Phase 49 Plan 01 complete (D-02 escalation FILED, Total JS locked at 2.45 MB)
+Phase: 49 (bundle-budget-reset) — SUCCESS (3/3 plans)
+Plan: — (Phase 49 closed; v6.2 milestone SHIPPED)
+Status: Initial JS ceiling 450 KB gz ✓ ; Total JS ceiling 2.45 MB gz (escalated per D-02) ✓ ; HeroUI/Sentry/DnD sub-vendors split ✓ ; Audit-driven React.lazy() conversions landed ✓ ; CI Bundle Size Check job + branch protection live on main (4 contexts with enforce_admins=true) ; Two D-12 smoke PRs verified BLOCKED
+Last activity: 2026-05-12 -- Phase 49 SUCCESS (3/3 plans); v6.2 SHIPPED
 
 ## Next Action
 
-Phase 48 is closed. The root ESLint config is canonical, both workspace lint commands exit 0 on the DesignV2 baseline, and branch protection on `main` now requires `Lint`, `type-check`, and `Security Scan` with `enforce_admins: true`. Smoke PRs #7 and #8 proved a lint regression in either workspace leaves `mergeStateStatus=BLOCKED`.
+Phase 49 closed Phase 49 D-12 smoke PRs (#9 initial-JS overflow, #10 sub-vendor d3-geospatial overflow) both showed `Bundle Size Check (size-limit)=fail` + `mergeStateStatus=BLOCKED` and were closed --delete-branch. D-14 phase-wide audit returned 0 net-new suppressions, 0 unauthorized ceiling raises. `Bundle Size Check (size-limit)` is now a required context on `main` branch protection alongside `Lint`, `type-check`, `Security Scan`; `enforce_admins=true` preserved.
 
-Next phase: **Phase 49 — bundle-budget-reset (BUNDLE-01..04)** is unblocked. The bundle work can now ride on a typed and linted baseline with PR-blocking quality gates.
+Next milestone: **v6.2 Type-Check, Lint & Bundle Reset** is now SHIPPED (Phases 47, 48, 49 all complete). v7.0 Intelligence Engine is unblocked.
 
 ### Outstanding follow-ups (small)
 
@@ -77,7 +77,9 @@ D-04 cross-workspace fence: 0 backend/src edits in any frontend plan's commit ra
 | ----- | --------- | -------------- | ------ | --------- |
 | 47 | v6.2 | 11/11 | Complete | 2026-05-09 |
 | 48 | v6.2 | 3/3 | Complete | 2026-05-12 |
-| 49 | v6.2 | 1/3 | In progress | - |
+| 49 | v6.2 | 3/3 | Complete | 2026-05-12 |
+
+**v6.2 milestone SHIPPED 2026-05-12** (3 phases, 12 requirements). v7.0 Intelligence Engine unblocked.
 
 **Dependency graph summary:**
 
@@ -369,6 +371,8 @@ Items acknowledged and deferred at v6.1 milestone close on 2026-05-08:
 - [v6.2/48-02]: Frontend and backend lint were driven to zero through source-level fixes plus D-09/D-10 carve-outs with inline rationale. Scope included `require()` -> ESM-native import patterns, physical Tailwind class fixes, 9 stale `eslint-disable` deletions, one unused import deletion, backend `empty-interface` -> type alias, and backend `console.log` -> Winston `logInfo`. No rule downgrades.
 - [v6.2/48-03]: Branch protection on `main` now requires `Lint`, `type-check`, and `Security Scan` with `enforce_admins=true`. Smoke PRs #7 and #8 verified `Lint=fail`, `type-check=pass`, `Security Scan=pass`, and `mergeStateStatus=BLOCKED`; both PRs were closed without merge and branches deleted. D-17 phase-wide audit returned 0 net-new `eslint-disable` directives and resolves Phase 47 outstanding follow-up #1 by analogy.
 - [v6.2/49-01]: Phase 49 Plan 01 complete — `phase-49-base` tag at `origin/main` HEAD `7fc9e7564…`. `.size-limit.json` re-baselined: Initial 517→450 (D-01), static-prim 64→12 (D-03 LOWERED), Total 2.43 MB→**2.45 MB** (D-02 escalation FILED — 1.8 MB unattainable inside Phase 49 scope; requires out-of-scope dep removal of exceljs/tiptap/dotted-map). Audit surfaced critical Plan 02 prerequisite: existing `manualChunks` `react` substring rule mis-classifies @heroui (8.26 kB), @dnd-kit (28.45 kB), @radix-ui (80.69 kB) into react-vendor — Plan 02 D-07 must place scoped-package rules BEFORE the `react` match or `assert-size-limit-matches.mjs` will fail. Lazy() candidates ranked for Plan 02: ExportData/exceljs (256 kB), PositionEditor/tiptap (140 kB), WorldMap/dotted-map (112 kB) — all single-consumer heavy-dep gates. Commits: `a0bb281d` (audit + scaffold + ceiling rewrite), `a10d115d` (SUMMARY).
+- [v6.2/49-02]: Phase 49 Plan 02 complete — `manualChunks` extended with `heroui-vendor` (3.55 KB / 9 KB ceiling), `sentry-vendor` (3.93 KB / 9 KB), `dnd-vendor` (16.55 KB / 22 KB) per D-07. Ordering fix applied (scoped-package rules placed BEFORE the `react` substring match per Plan 01 audit critical finding) — React vendor measured drop 347→280 KB (~67 KB tree-shake unblock); TanStack vendor measured rise 50→57 KB forced ceiling raise 51→63 KB (D-03 honest re-baseline, paper trail in 49-02-SUMMARY Deviation §2). Optional `tiptap-vendor` / `exceljs-vendor` NOT added (audit Decision conditional approval; deps remain in residual vendor table per D-08). Audit-driven lazy() conversions: 3 components (PositionEditor + WorldMap via React.lazy + Suspense; useExportData via dynamic `await import('exceljs')` per hook-not-component pattern). Total deferred from initial path ~508 KB gz. `pnpm size-limit` exits 0 on 9-entry post-Plan-02 baseline. Commits: `a733df9e` (vendor decomp + lazy), `ba4272ef` (SUMMARY).
+- [v6.2/49-03]: Phase 49 Plan 03 complete — `Bundle Size Check (size-limit)` (verbatim casing) added to `main` branch protection `required_status_checks.contexts` alongside `Lint`, `type-check`, `Security Scan`; `enforce_admins=true` preserved. Both D-12 smoke PRs (PR #9 initial-JS overflow via 100 KB high-entropy literal; PR #10 sub-vendor d3-geospatial overflow via world-atlas/countries-50m.json import — Rule 3 deviation from dnd-vendor target due to insufficient headroom) showed `Bundle Size Check (size-limit) bucket=fail` + `mergeStateStatus=BLOCKED`. Both PRs closed with `--delete-branch` BEFORE this STATE update. D-14 phase-wide audit (phase-49-base..HEAD): 0 net-new `eslint-disable*`, 0 net-new `@ts-(ignore|expect-error|nocheck)`, 0 unauthorized ceiling raises (2 raises documented with paper trails: TanStack 51→63 KB Plan 02 D-03 + Total 2.43→2.45 MB Plan 01 D-02). v6.2 milestone SHIPPED.
 
 ### Pending Todos
 
@@ -387,10 +391,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-12T06:38:52.806Z
-Stopped at: Phase 49 context gathered
-Resume file: .planning/phases/49-bundle-budget-reset/49-CONTEXT.md
-Resume command: /gsd-plan-phase 49
+Last session: 2026-05-12T15:30:00.000Z
+Stopped at: Phase 49 SUCCESS (3/3 plans); v6.2 milestone SHIPPED
+Resume file: None — v6.2 closed; v7.0 Intelligence Engine kickoff is next.
+Resume command: (no resume needed — v6.2 milestone shipped)
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
 
