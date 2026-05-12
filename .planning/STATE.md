@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v6.2
 milestone_name: Type-Check, Lint & Bundle Reset
 status: executing
-stopped_at: Phase 49 context gathered
-last_updated: '2026-05-12T07:26:31.911Z'
-last_activity: 2026-05-12 -- Phase 49 planning complete
+stopped_at: Phase 49 Plan 01 complete (audit + budget calibration; D-02 escalation FILED)
+last_updated: '2026-05-12T09:55:00.000Z'
+last_activity: 2026-05-12 -- Phase 49 Plan 01 complete (Total JS locked at 2.45 MB; lazy() candidates ranked for Plan 02)
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 17
-  completed_plans: 14
-  percent: 82
+  completed_plans: 15
+  percent: 88
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-08)
 ## Current Position
 
 Phase: 49
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-05-12 -- Phase 49 planning complete
+Plan: 49-02 (next — vendor decomp + lazy)
+Status: Plan 49-01 complete (audit + budget calibration); 49-02 unblocked
+Last activity: 2026-05-12 -- Phase 49 Plan 01 complete (D-02 escalation FILED, Total JS locked at 2.45 MB)
 
 ## Next Action
 
@@ -77,7 +77,7 @@ D-04 cross-workspace fence: 0 backend/src edits in any frontend plan's commit ra
 | ----- | --------- | -------------- | ------ | --------- |
 | 47 | v6.2 | 11/11 | Complete | 2026-05-09 |
 | 48 | v6.2 | 3/3 | Complete | 2026-05-12 |
-| 49 | v6.2 | 0/0 | Not started | - |
+| 49 | v6.2 | 1/3 | In progress | - |
 
 **Dependency graph summary:**
 
@@ -368,6 +368,7 @@ Items acknowledged and deferred at v6.1 milestone close on 2026-05-08:
 - [v6.2/48-01]: Root `eslint.config.mjs` is the single canonical config; `frontend/eslint.config.js` was deleted because its shadow position diverged local lint counts from the ROADMAP baseline. `no-restricted-imports` was inverted to ban Aceternity/Kibo UI per the CLAUDE.md primitive cascade.
 - [v6.2/48-02]: Frontend and backend lint were driven to zero through source-level fixes plus D-09/D-10 carve-outs with inline rationale. Scope included `require()` -> ESM-native import patterns, physical Tailwind class fixes, 9 stale `eslint-disable` deletions, one unused import deletion, backend `empty-interface` -> type alias, and backend `console.log` -> Winston `logInfo`. No rule downgrades.
 - [v6.2/48-03]: Branch protection on `main` now requires `Lint`, `type-check`, and `Security Scan` with `enforce_admins=true`. Smoke PRs #7 and #8 verified `Lint=fail`, `type-check=pass`, `Security Scan=pass`, and `mergeStateStatus=BLOCKED`; both PRs were closed without merge and branches deleted. D-17 phase-wide audit returned 0 net-new `eslint-disable` directives and resolves Phase 47 outstanding follow-up #1 by analogy.
+- [v6.2/49-01]: Phase 49 Plan 01 complete — `phase-49-base` tag at `origin/main` HEAD `7fc9e7564…`. `.size-limit.json` re-baselined: Initial 517→450 (D-01), static-prim 64→12 (D-03 LOWERED), Total 2.43 MB→**2.45 MB** (D-02 escalation FILED — 1.8 MB unattainable inside Phase 49 scope; requires out-of-scope dep removal of exceljs/tiptap/dotted-map). Audit surfaced critical Plan 02 prerequisite: existing `manualChunks` `react` substring rule mis-classifies @heroui (8.26 kB), @dnd-kit (28.45 kB), @radix-ui (80.69 kB) into react-vendor — Plan 02 D-07 must place scoped-package rules BEFORE the `react` match or `assert-size-limit-matches.mjs` will fail. Lazy() candidates ranked for Plan 02: ExportData/exceljs (256 kB), PositionEditor/tiptap (140 kB), WorldMap/dotted-map (112 kB) — all single-consumer heavy-dep gates. Commits: `a0bb281d` (audit + scaffold + ceiling rewrite), `a10d115d` (SUMMARY).
 
 ### Pending Todos
 

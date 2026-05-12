@@ -196,7 +196,7 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 
 Plans:
 
-- [ ] 49-01-audit-and-budget-calibration-PLAN.md — Create phase-49-base diff anchor; run ANALYZE=true audit (top-20 chunks + lazy() candidates → 49-BUNDLE-AUDIT.md); re-baseline .size-limit.json ceilings per D-01..D-03; scaffold frontend/docs/bundle-budget.md (BUNDLE-01, BUNDLE-04)
+- [x] 49-01-audit-and-budget-calibration-PLAN.md — Create phase-49-base diff anchor; run ANALYZE=true audit (top-20 chunks + lazy() candidates → 49-BUNDLE-AUDIT.md); re-baseline .size-limit.json ceilings per D-01..D-03; scaffold frontend/docs/bundle-budget.md (BUNDLE-01, BUNDLE-04) — **DONE 2026-05-12**: D-02 escalation FILED (Total JS 2.45 MB, not 1.8 MB); 3 lazy() candidates ranked for Plan 02; manualChunks ordering fix surfaced as Plan 02 prerequisite. Commits a0bb281d + a10d115d
 - [ ] 49-02-vendor-decomp-and-lazy-PLAN.md — Extend manualChunks with heroui/sentry/dnd-vendor branches (D-07); add strict ===1 entries to assert-size-limit-matches.mjs; convert audit-identified ≥30 KB gz non-initial components to React.lazy() with D-13 Suspense fallbacks; append sub-vendor + residual rows to bundle-budget.md (BUNDLE-02, BUNDLE-04)
 - [ ] 49-03-ci-gate-and-smoke-PLAN.md — Add Bundle Size Check (size-limit) to main branch protection via gh api PUT (D-10); run two D-12 smoke PRs (initial-JS overflow + sub-vendor overflow) and verify mergeStateStatus=BLOCKED; run phase-wide D-14 audit (zero net-new suppressions + zero ceiling raises); close out STATE.md + ROADMAP.md for Phase 49 + v6.2 milestone (BUNDLE-03)
 
@@ -216,7 +216,7 @@ Plans:
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47 | v6.2 | 11/11 | Complete | 2026-05-09 |
 | 48 | v6.2 | 3/3 | Complete    | 2026-05-12 |
-| 49 | v6.2 | 0/0 | Not started | - |
+| 49 | v6.2 | 1/3 | In progress | - |
 
 <!-- gsd:progress:end -->
 
