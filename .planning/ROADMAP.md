@@ -209,7 +209,7 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 | 33-43 | v6.0 | — | Shipped | 2026-05-06 |
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47 | v6.2 | 11/11 | Complete | 2026-05-09 |
-| 48 | v6.2 | 3/3 | Complete | 2026-05-12 |
+| 48 | v6.2 | 3/3 | Complete    | 2026-05-12 |
 | 49 | v6.2 | 0/0 | Not started | - |
 
 <!-- gsd:progress:end -->
