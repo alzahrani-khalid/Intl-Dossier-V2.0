@@ -135,21 +135,38 @@ export default defineConfig({
           }
 
           if (id.includes('node_modules')) {
+            // Scoped-package rules must come BEFORE the `react` substring match.
+            // Without this ordering, paths like `@heroui/react/*`, `@sentry/react/*`,
+            // `@dnd-kit/*?react*`, `@radix-ui/react-*` are mis-classified into
+            // react-vendor (Phase 49 Plan 01 audit: 117 KB leaked across these scopes).
+            // HeroUI primitive cascade per CLAUDE.md §Component Library Strategy (D-07)
+            if (id.includes('@heroui')) {
+              return 'heroui-vendor'
+            }
+            // Sentry error tracking; init is requestIdleCallback-deferred at main.tsx:24
+            // so non-initial-path. Cache-isolated per D-09.
+            if (id.includes('@sentry')) {
+              return 'sentry-vendor'
+            }
+            // @dnd-kit kanban + reorder; non-initial-path
+            if (id.includes('@dnd-kit')) {
+              return 'dnd-vendor'
+            }
+            // Radix UI - headless components (kept before react match for the same reason)
+            if (id.includes('@radix-ui')) {
+              return 'radix-vendor'
+            }
+            // TanStack ecosystem - routing, query, table (before react: @tanstack/react-* contains 'react')
+            if (id.includes('@tanstack')) {
+              return 'tanstack-vendor'
+            }
             // React core - rarely changes, cache well
             if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
               return 'react-vendor'
             }
-            // TanStack ecosystem - routing, query, table
-            if (id.includes('@tanstack')) {
-              return 'tanstack-vendor'
-            }
             // Framer Motion - animation library
             if (id.includes('framer-motion') || id.includes('motion')) {
               return 'motion-vendor'
-            }
-            // Radix UI - headless components
-            if (id.includes('@radix-ui')) {
-              return 'radix-vendor'
             }
             // Signature visuals geospatial dependencies
             if (

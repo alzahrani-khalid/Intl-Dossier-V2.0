@@ -3,6 +3,7 @@
  * Position detail/editor page with approval chain, consistency panel, and attachments
  */
 
+import { Suspense, lazy } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
@@ -13,7 +14,10 @@ import { usePosition } from '@/hooks/usePosition'
 import { useUpdatePosition } from '@/hooks/useUpdatePosition'
 import { useSubmitPosition } from '@/hooks/useSubmitPosition'
 import { usePositionNavigation } from '@/hooks/useEntityNavigation'
-import { PositionEditor } from '@/components/position-editor/PositionEditor'
+import { GlobeSpinner } from '@/components/signature-visuals'
+// Phase 49 D-06: PositionEditor pulls in tiptap/prosemirror chain (~140 KB gz).
+// Lazy-loaded so it only enters the chunk graph when the editor tab actually mounts.
+const PositionEditor = lazy(() => import('@/components/position-editor/PositionEditor'))
 import {
   ApprovalChain,
   type ApprovalChainConfig as ComponentApprovalChainConfig,
@@ -176,12 +180,27 @@ function PositionDetailPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <Card className="p-6">
-                <PositionEditor
-                  initialData={position}
-                  onSave={handleSave}
-                  readOnly={position.status !== 'draft'}
-                  autoSaveInterval={30000}
-                />
+                <Suspense
+                  fallback={
+                    <div
+                      className="flex items-center justify-center"
+                      style={{
+                        minHeight: 'var(--row-h)',
+                        border: '1px solid var(--line)',
+                        borderRadius: 'var(--radius)',
+                      }}
+                    >
+                      <GlobeSpinner size={16} />
+                    </div>
+                  }
+                >
+                  <PositionEditor
+                    initialData={position}
+                    onSave={handleSave}
+                    readOnly={position.status !== 'draft'}
+                    autoSaveInterval={30000}
+                  />
+                </Suspense>
               </Card>
 
               <Card className="p-6">

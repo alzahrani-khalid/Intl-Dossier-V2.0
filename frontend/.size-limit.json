@@ -16,7 +16,28 @@
   {
     "name": "TanStack vendor",
     "path": "dist/assets/tanstack-vendor-*.js",
-    "limit": "51 KB",
+    "limit": "63 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "HeroUI vendor",
+    "path": "dist/assets/heroui-vendor-*.js",
+    "limit": "9 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "Sentry vendor",
+    "path": "dist/assets/sentry-vendor-*.js",
+    "limit": "9 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "DnD vendor",
+    "path": "dist/assets/dnd-vendor-*.js",
+    "limit": "22 KB",
     "gzip": true,
     "running": false
   },

@@ -552,3 +552,7 @@ export function PositionEditor({
     </div>
   )
 }
+
+// Default export added for React.lazy() compatibility (Phase 49 D-06).
+// Named export `PositionEditor` is preserved for direct imports.
+export default PositionEditor
