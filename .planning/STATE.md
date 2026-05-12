@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v6.2
 milestone_name: Type-Check, Lint & Bundle Reset
-status: ready_to_plan
-stopped_at: Phase 49 ready
-last_updated: '2026-05-12T08:51:35+03:00'
-last_activity: 2026-05-12 -- Phase 48 completed; Lint gate live on main
+status: planning
+stopped_at: Phase 49 context gathered
+last_updated: '2026-05-12T06:38:52.813Z'
+last_activity: 2026-05-12
 progress:
   total_phases: 3
-  completed_phases: 3
+  completed_phases: 2
   total_plans: 14
   completed_plans: 14
   percent: 100
@@ -386,9 +386,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-11T09:07:18.164Z
-Stopped at: Phase 49 ready
-Resume file: .planning/ROADMAP.md
+Last session: 2026-05-12T06:38:52.806Z
+Stopped at: Phase 49 context gathered
+Resume file: .planning/phases/49-bundle-budget-reset/49-CONTEXT.md
 Resume command: /gsd-plan-phase 49
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
