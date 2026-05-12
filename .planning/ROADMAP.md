@@ -126,7 +126,7 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 ### Phases (summary)
 
 - [x] **Phase 47: Type-Check Zero** — Drive frontend + backend `pnpm type-check` to zero and restore type-check as a PR-blocking CI gate (completed 2026-05-09)
-- [ ] **Phase 48: Lint & Config Alignment** — Drive frontend + backend `pnpm lint` to zero, purge Aceternity references from `frontend/eslint.config.js`, align `no-restricted-imports` with the CLAUDE.md primitive cascade, restore lint as a PR-blocking CI gate
+- [x] **Phase 48: Lint & Config Alignment** — Drive frontend + backend `pnpm lint` to zero, purge Aceternity references from `frontend/eslint.config.js`, align `no-restricted-imports` with the CLAUDE.md primitive cascade, restore lint as a PR-blocking CI gate (completed 2026-05-12)
 - [ ] **Phase 49: Bundle Budget Reset** — Lower `frontend/.size-limit.json` Total JS ceiling to a real budget (≤500 KB initial-route gzip proposal), route-split heavy chunks via `React.lazy()`, audit the vendor super-chunk, restore `size-limit` as a PR-blocking CI gate
 
 ### Phase Details
@@ -171,11 +171,11 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 3. `frontend/eslint.config.js` contains zero references to Aceternity (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` is aligned with the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom) and rule messages no longer recommend a banned library.
 4. The lint job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single lint error in either workspace fails the merge check on `main`.
 
-**Plans:** 3 plans (planned 2026-05-11)
+**Plans:** 3/3 plans complete
 
-- [ ] 48-01-config-consolidation-PLAN.md — Delete `frontend/eslint.config.js` shadow config, invert `no-restricted-imports` to ban Aceternity/Kibo UI per CLAUDE.md cascade, delete 3 orphan Aceternity wrappers, add prototype handoff + supabase-generated `contact-directory.types.ts` to root ignores, wire `eslint.config.mjs` into `turbo.json` globalDependencies, create `phase-48-base` git tag (LINT-08)
-- [ ] 48-02-violation-fixes-PLAN.md — Drive remaining ~30 frontend call-site lint violations + 2 backend errors to zero: `require()` → `vi.importActual` (12 errors / 7 test files), physical Tailwind → logical classes (12 violations / 3 files), 9 stale `eslint-disable` directives deleted, 1 unused import, backend empty-interface → type alias, backend `console.log` → Winston `logInfo` (LINT-06, LINT-07)
-- [ ] 48-03-ci-gate-and-branch-protection-PLAN.md — Add `Lint` to branch protection `required_status_checks.contexts` via gh api PUT (read-then-merge-then-write per 47-03 §6); open two D-16 smoke PRs (frontend `text-left` + backend `console.log`) and verify `mergeStateStatus=BLOCKED`; run phase-wide D-17 net-new `eslint-disable` audit; resolve STATE.md Phase 47 outstanding follow-up #1 by analogy (LINT-09)
+- [x] 48-01-config-consolidation-PLAN.md — Delete `frontend/eslint.config.js` shadow config, invert `no-restricted-imports` to ban Aceternity/Kibo UI per CLAUDE.md cascade, delete 3 orphan Aceternity wrappers, add prototype handoff + supabase-generated `contact-directory.types.ts` to root ignores, wire `eslint.config.mjs` into `turbo.json` globalDependencies, create `phase-48-base` git tag (LINT-08)
+- [x] 48-02-violation-fixes-PLAN.md — Drive remaining ~30 frontend call-site lint violations + 2 backend errors to zero: `require()` → `vi.importActual` (12 errors / 7 test files), physical Tailwind → logical classes (12 violations / 3 files), 9 stale `eslint-disable` directives deleted, 1 unused import, backend empty-interface → type alias, backend `console.log` → Winston `logInfo` (LINT-06, LINT-07)
+- [x] 48-03-ci-gate-and-branch-protection-PLAN.md — Add `Lint` to branch protection `required_status_checks.contexts` via gh api PUT (read-then-merge-then-write per 47-03 §6); open two D-16 smoke PRs (frontend `text-left` + backend `console.log`) and verify `mergeStateStatus=BLOCKED`; run phase-wide D-17 net-new `eslint-disable` audit; resolve STATE.md Phase 47 outstanding follow-up #1 by analogy (LINT-09)
 
 #### Phase 49: Bundle Budget Reset
 
@@ -198,21 +198,22 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 
 <!-- gsd:progress:start -->
 
-| Phase | Milestone | Plans Complete | Status      | Completed  |
-| ----- | --------- | -------------- | ----------- | ---------- |
-| 1-7   | v2.0      | —              | Shipped     | 2026-03-28 |
-| 8-13  | v3.0      | —              | Shipped     | 2026-04-06 |
-| 14-23 | v4.0      | —              | Shipped     | 2026-04-09 |
-| 24-25 | v4.1      | —              | Shipped     | 2026-04-12 |
-| 26-32 | v5.0      | —              | Shipped     | 2026-04-18 |
-| 33-43 | v6.0      | —              | Shipped     | 2026-05-06 |
-| 44-46 | v6.1      | 14/14          | Shipped     | 2026-05-08 |
-| 47    | v6.2      | 11/11          | Complete    | 2026-05-09 |
-| 48    | v6.2      | 0/3            | Planned     | -          |
-| 49    | v6.2      | 0/0            | Not started | -          |
+<!-- prettier-ignore -->
+| Phase | Milestone | Plans Complete | Status | Completed |
+| ----- | --------- | -------------- | ------ | --------- |
+| 1-7 | v2.0 | — | Shipped | 2026-03-28 |
+| 8-13 | v3.0 | — | Shipped | 2026-04-06 |
+| 14-23 | v4.0 | — | Shipped | 2026-04-09 |
+| 24-25 | v4.1 | — | Shipped | 2026-04-12 |
+| 26-32 | v5.0 | — | Shipped | 2026-04-18 |
+| 33-43 | v6.0 | — | Shipped | 2026-05-06 |
+| 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
+| 47 | v6.2 | 11/11 | Complete | 2026-05-09 |
+| 48 | v6.2 | 3/3 | Complete | 2026-05-12 |
+| 49 | v6.2 | 0/0 | Not started | - |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-05-11 — Phase 48 planned (3 plans: config-consolidation, violation-fixes, ci-gate-and-branch-protection)_
+_Roadmap last updated: 2026-05-12 — Phase 48 complete; lint gate restored as PR-blocking branch protection context_

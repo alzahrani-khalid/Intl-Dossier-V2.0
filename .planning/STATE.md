@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v6.2
 milestone_name: Type-Check, Lint & Bundle Reset
 status: executing
-stopped_at: Phase 48 context gathered
-last_updated: "2026-05-11T09:48:27.229Z"
-last_activity: 2026-05-11 -- Phase 48 planning complete
+stopped_at: Phase 49 ready
+last_updated: '2026-05-12T08:51:35+03:00'
+last_activity: 2026-05-12 -- Phase 48 completed; Lint gate live on main
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 14
-  completed_plans: 11
-  percent: 79
+  completed_plans: 14
+  percent: 100
 ---
 
 # Project State
@@ -21,31 +21,29 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-08)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 48 — lint-and-config-alignment (Phase 47 SUCCESS; v6.2 milestone PR merged + branch protection live)
+**Current focus:** Phase 49 — bundle-budget-reset
 
 ## Current Position
 
-Phase: 47 (type-check-zero) — SUCCESS (11/11 plans)
-Status: Ready to execute
-Last activity: 2026-05-11 -- Phase 48 planning complete
+Phase: 48 (lint-and-config-alignment) — SUCCESS (3/3 plans)
+Plan: 3 of 3 complete
+Status: Frontend lint 0; backend lint 0; CI `Lint` job is required on `main` alongside `type-check` + `Security Scan` with `enforce_admins=true`; two D-16 smoke PRs verified BLOCKED.
+Last activity: 2026-05-12 -- Phase 48 completed; Lint gate live on main
 
 ## Next Action
 
-Phase 47 is closed. v6.2 milestone PR (`DesignV2 → main`, #4) merged 2026-05-11 at `f351f264`. `type-check` ran green on the merge tree. Branch protection on `main` requires `type-check` + `Security Scan` with `enforce_admins: true`. **Lint was excluded from required contexts** because it is currently red on pre-existing rot scheduled for phase 48; adding it would block every PR.
+Phase 48 is closed. The root ESLint config is canonical, both workspace lint commands exit 0 on the DesignV2 baseline, and branch protection on `main` now requires `Lint`, `type-check`, and `Security Scan` with `enforce_admins: true`. Smoke PRs #7 and #8 proved a lint regression in either workspace leaves `mergeStateStatus=BLOCKED`.
+
+Next phase: **Phase 49 — bundle-budget-reset (BUNDLE-01..04)** is unblocked. The bundle work can now ride on a typed and linted baseline with PR-blocking quality gates.
 
 ### Outstanding follow-ups (small)
 
-1. **47-03 Task 5 smoke PRs** (deferred): two deliberately-broken PRs (frontend + backend) to prove the gate BLOCKS. Optional belt-and-suspenders; protection API response already confirms gate configuration.
+1. **47-03 Task 5 smoke PRs** — RESOLVED 2026-05-12 by analogy via Phase 48 D-16 smoke PRs. Same gate-blocks-on-required-context proof applies to both `type-check` and `Lint` via the same protection mechanism. Phase 48 frontend PR https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/pull/7 and backend PR https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/pull/8 both showed `Lint: fail`, `type-check: pass`, `Security Scan: pass`, and `mergeStateStatus: BLOCKED`. Phase 47 #1 closed.
 2. **Update CLAUDE.md Node note**: change "Node.js 20.19.0+" → "Node.js 22.13.0+" to match the new engines floor (chore commit, not blocking).
 
 ### Next phase
 
-**Phase 48 — lint-and-config-alignment (LINT-06..09)** is unblocked. Phase 47 work (type-check at zero, CI workflow split, branch protection) is the foundation. Phase 48 will:
-
-- Clear the pre-existing Lint failures so the `Lint` context can be added as a required gate.
-- Restore the gated downstream jobs (Build, Bundle Size Check, Lighthouse, Docker, RTL+Responsive, A11y) that are currently SKIPPED because they need `Lint` green.
-
-Then **Phase 49 — bundle-budget-reset** (BUNDLE-01..04) closes v6.2.
+**Phase 49 — bundle-budget-reset (BUNDLE-01..04)** is next. It lowers the symbolic 2.43 MB Total JS ceiling to a real enforced budget, route-splits heavy chunks, audits the vendor super-chunk, and restores `size-limit` as a PR-blocking CI gate.
 
 ### Wave 2+3 plan summary
 
@@ -71,6 +69,15 @@ D-04 cross-workspace fence: 0 backend/src edits in any frontend plan's commit ra
 | 47    | type-check-zero           | TYPE-01..04   | 4     |
 | 48    | lint-and-config-alignment | LINT-06..09   | 4     |
 | 49    | bundle-budget-reset       | BUNDLE-01..04 | 4     |
+
+### v6.2 Execution Progress
+
+<!-- prettier-ignore -->
+| Phase | Milestone | Plans Complete | Status | Completed |
+| ----- | --------- | -------------- | ------ | --------- |
+| 47 | v6.2 | 11/11 | Complete | 2026-05-09 |
+| 48 | v6.2 | 3/3 | Complete | 2026-05-12 |
+| 49 | v6.2 | 0/0 | Not started | - |
 
 **Dependency graph summary:**
 
@@ -357,6 +364,9 @@ Items acknowledged and deferred at v6.1 milestone close on 2026-05-08:
 - [v6.0/35-04]: Two legacy weight references (`--text-weight`, `--display-weight`) folded into existing Tailwind-scale `--font-normal` (400) / `--font-semibold` (600) — same rendered weight, different token name. Preserves paint behavior after `:root` var cleanup.
 - [v6.0/35-05 FINDING]: LanguageProvider still reads pre-Phase-34 localStorage keys (`user-preferences`, `i18nextLng`, `ui-storage`) and **overrides** bootstrap.js's `html.dir='rtl'` on mount. Phase 34 didn't finish the migration — LanguageProvider is the lone holdout. Playwright spec works around it by seeding all three keys; real cleanup belongs to Phase 36 or a targeted debug session.
 - [v6.0/35-05]: `typography.spec.ts` lives at root `tests/e2e/` not `frontend/tests/e2e/` (Phase 33-09 precedent — root `playwright.config.ts` has `testDir: './tests/e2e'`). Vitest drift guards stay at `frontend/tests/unit/design-system/`. Fixture HTML at `frontend/tests/e2e/fixtures/typo-04-fixture.html` (Vite doc root = `frontend/`, serves it via `/tests/e2e/fixtures/...`).
+- [v6.2/48-01]: Root `eslint.config.mjs` is the single canonical config; `frontend/eslint.config.js` was deleted because its shadow position diverged local lint counts from the ROADMAP baseline. `no-restricted-imports` was inverted to ban Aceternity/Kibo UI per the CLAUDE.md primitive cascade.
+- [v6.2/48-02]: Frontend and backend lint were driven to zero through source-level fixes plus D-09/D-10 carve-outs with inline rationale. Scope included `require()` -> ESM-native import patterns, physical Tailwind class fixes, 9 stale `eslint-disable` deletions, one unused import deletion, backend `empty-interface` -> type alias, and backend `console.log` -> Winston `logInfo`. No rule downgrades.
+- [v6.2/48-03]: Branch protection on `main` now requires `Lint`, `type-check`, and `Security Scan` with `enforce_admins=true`. Smoke PRs #7 and #8 verified `Lint=fail`, `type-check=pass`, `Security Scan=pass`, and `mergeStateStatus=BLOCKED`; both PRs were closed without merge and branches deleted. D-17 phase-wide audit returned 0 net-new `eslint-disable` directives and resolves Phase 47 outstanding follow-up #1 by analogy.
 
 ### Pending Todos
 
@@ -376,9 +386,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-11T09:07:18.164Z
-Stopped at: Phase 48 context gathered
-Resume file: .planning/phases/48-lint-config-alignment/48-CONTEXT.md
-Resume command: /gsd-new-milestone
+Stopped at: Phase 49 ready
+Resume file: .planning/ROADMAP.md
+Resume command: /gsd-plan-phase 49
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
 

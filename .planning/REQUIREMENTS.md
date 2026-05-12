@@ -24,10 +24,10 @@ Detail: `.planning/notes/v6.2-rationale.md`.
 
 ### Lint (LINT, continued from v6.1)
 
-- [ ] **LINT-06** — Frontend `pnpm lint` exits 0 on a clean clone (52 errors + 671 warnings → 0). Warnings either fixed at the call site or the rule is downgraded with a written rationale recorded in `eslint.config.js`.
-- [ ] **LINT-07** — Backend `pnpm lint` exits 0 on a clean clone (3 errors + 1 warning → 0).
-- [ ] **LINT-08** — `frontend/eslint.config.js` removes all Aceternity references (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` is aligned with the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom). Rule messages no longer recommend a banned library.
-- [ ] **LINT-09** — Lint job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single lint error cannot merge to `main`.
+- [x] **LINT-06** — Frontend `pnpm lint` exits 0 on a clean clone (52 errors + 671 warnings → 0). Warnings either fixed at the call site or the rule is downgraded with a written rationale recorded in `eslint.config.js`.
+- [x] **LINT-07** — Backend `pnpm lint` exits 0 on a clean clone (3 errors + 1 warning → 0).
+- [x] **LINT-08** — `frontend/eslint.config.js` removes all Aceternity references (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` is aligned with the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom). Rule messages no longer recommend a banned library.
+- [x] **LINT-09** — Lint job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single lint error cannot merge to `main`.
 
 ### Bundle (BUNDLE)
 
@@ -56,10 +56,10 @@ Detail: `.planning/notes/v6.2-rationale.md`.
 | TYPE-02   | Phase 47 | Not started |
 | TYPE-03   | Phase 47 | Not started |
 | TYPE-04   | Phase 47 | Not started |
-| LINT-06   | Phase 48 | Not started |
-| LINT-07   | Phase 48 | Not started |
-| LINT-08   | Phase 48 | Not started |
-| LINT-09   | Phase 48 | Not started |
+| LINT-06   | Phase 48 | Satisfied   |
+| LINT-07   | Phase 48 | Satisfied   |
+| LINT-08   | Phase 48 | Satisfied   |
+| LINT-09   | Phase 48 | Satisfied   |
 | BUNDLE-01 | Phase 49 | Not started |
 | BUNDLE-02 | Phase 49 | Not started |
 | BUNDLE-03 | Phase 49 | Not started |
@@ -69,4 +69,4 @@ _Phase column filled by the roadmapper after roadmap approval (2026-05-08)._
 
 ---
 
-_Last updated: 2026-05-08 — v6.2 roadmap approved; traceability mapped to Phases 47-49_
+_Last updated: 2026-05-12 — Phase 48 LINT-06..09 satisfied_
