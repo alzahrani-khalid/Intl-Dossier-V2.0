@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v6.2
-milestone_name: Type-Check, Lint & Bundle Reset
-status: archived
-stopped_at: v6.2 milestone archived; planning next milestone
-last_updated: '2026-05-13T12:00:00.000Z'
-last_activity: 2026-05-13 -- v6.2 milestone archived (ROADMAP collapsed, REQUIREMENTS deleted, MILESTONES + RETROSPECTIVE updated, PROJECT evolved, v6.2 git tag created)
+milestone: v6.3
+milestone_name: Carryover Sweep & v7.0 Prep
+status: planning
+last_updated: '2026-05-13T07:33:49.433Z'
+last_activity: 2026-05-13
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 17
-  completed_plans: 17
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 
 ## Current Position
 
-Phase: 49 (bundle-budget-reset) — SUCCESS (3/3 plans)
-Plan: — (Phase 49 closed; v6.2 milestone SHIPPED)
-Status: Initial JS ceiling 450 KB gz ✓ ; Total JS ceiling 2.45 MB gz (escalated per D-02) ✓ ; HeroUI/Sentry/DnD sub-vendors split ✓ ; Audit-driven React.lazy() conversions landed ✓ ; CI Bundle Size Check job + branch protection live on main (4 contexts with enforce_admins=true) ; Two D-12 smoke PRs verified BLOCKED
-Last activity: 2026-05-12 -- Phase 49 SUCCESS (3/3 plans); v6.2 SHIPPED
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-13 — Milestone v6.3 started
 
 ## Next Action
 

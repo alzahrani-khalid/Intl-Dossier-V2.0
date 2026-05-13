@@ -26,11 +26,19 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Next Milestone Goals
+## Current Milestone: v6.3 Carryover Sweep & v7.0 Prep
 
-**Planning next milestone.** Run `/gsd-new-milestone` to scope.
+**Goal:** Close v6.2 carryover debt, harden test/design gates, and lay v7.0 Intelligence Engine schema groundwork — clean runway before feature work.
 
-The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`) is now unblocked — its trigger "v6.2 ships" is satisfied. Candidate scope: structured signals model, multi-dossier AI correlation, alerting, briefings beyond one-shot, structured digest. Capture and prioritize via `/gsd-new-milestone`.
+**Target features:**
+
+- HeroUI v3 Kanban migration: `TasksTab.tsx` + `EngagementKanbanDialog.tsx` migrate to HeroUI v3 Kanban + `@dnd-kit/core`; remove `@/components/kibo-ui/kanban` + dep
+- Design-token compliance gate: ESLint rule banning raw hex + Tailwind color literals in `frontend/src/`; fix all violations (`WorldMapVisualization.tsx:193`, `PositionEditor.tsx`); PR-blocking CI context
+- Test infrastructure hardening: Fix `frontend/tests/setup.ts:6` `vi.mock("react-i18next")` factory (add `initReactI18next`); audit other module-eval failures; vitest setup review; restore 4 wizard tests
+- Bundle micro-tightening + tag provenance: React vendor ceiling 349 → ~285 KB (D-03 min rule); re-tag `phase-47/48/49-base` with `-a -s`; CLAUDE.md Node note `20.19.0+` → `22.13.0+`
+- Intelligence Engine schema groundwork: `intelligence_signal` + `intelligence_digest` tables, source enum, polymorphic dossier linking, RLS, FKs, indexes — schema-only, no API, no UI
+
+The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`) is unblocked but deferred until v6.3 ships its schema groundwork.
 
 **Carryover tech debt from v6.2** (queue for next milestone or quick-tasks):
 
@@ -123,7 +131,7 @@ The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`
 
 ### Active
 
-(None — planning next milestone via `/gsd-new-milestone`. v7.0 Intelligence Engine seed unblocked.)
+(v6.3 requirements defined via `/gsd-new-milestone`. See `.planning/REQUIREMENTS.md` for REQ-ID list.)
 
 ### Out of Scope
 
@@ -219,4 +227,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-13 — v6.2 Type-Check, Lint & Bundle Reset shipped; archive at `.planning/milestones/v6.2-*`. Next milestone planning open._
+_Last updated: 2026-05-13 — v6.3 Carryover Sweep & v7.0 Prep started. Phase numbering continues from 50._
