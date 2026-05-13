@@ -1225,17 +1225,19 @@ test-frontend:
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should `frontend/tests/integration/*` directory entirely move to the integration runner, or are some salvageable as unit tests?**
    - What we know: 5 files reference deleted modules (`theme-provider`, `i18n/config`, `LanguageToggle`, `DossierCard`, `theme-selector`) — all class-D dead.
    - What's unclear: Are there other FE tests in `tests/integration/` that work today and just need a different runner?
    - Recommendation: Plan 50-01 deletes the 5 dead files. Plan 50-04 audit decides whether any others survive — if so, FE gets its own `vitest.integration.config.ts`.
+   - **RESOLVED:** Plan 50-04 audit decides per-file; Phase 50 does NOT move FE integration tests wholesale; default FE runner continues to glob via `frontend/vitest.config.ts` include. Any FE `tests/integration/*` survivors stay in the default runner unless individually flagged in the audit; a dedicated FE `vitest.integration.config.ts` is deferred to a follow-up phase unless and until evidence in `50-TEST-AUDIT.md` justifies it.
 
 2. **Does `Tests (integration)` workflow job NEED a Postgres service container today (D-13 advisory-only)?**
    - What we know: Existing `test-e2e` job (line 119-167) provisions `postgres:16-alpine` for Playwright. The BE integration suite hits `127.0.0.1:54321` (Supabase, not Postgres directly).
    - What's unclear: Whether the integration suite needs a full Supabase stack (which CI doesn't have) or whether the tests are written against a fake-Supabase via env-var swap.
    - Recommendation: Plan 50-05 sets `Tests (integration)` as `continue-on-error: true` + `if: false` (disabled by default) on first land; promote to advisory-running once dev-env contract is documented in Phase 51+.
+   - **RESOLVED:** Plan 50-05 lands `Tests (integration)` with `continue-on-error: true` AND runs unconditionally (no `if: false`); the job IS NOT added to `required_status_checks.contexts`. `if: false` is deferred to a follow-up phase. The advisory-running job will surface its own failure as a CI warning until the dev-env contract is documented; this is preferred over silent gating because it keeps the integration surface visible to reviewers.
 
 ---
 
