@@ -57,4 +57,27 @@
 
 ## Traceability
 
-(Filled in by roadmapper — maps each REQ-ID to its phase.)
+| REQ-ID    | Phase    | Status  |
+| --------- | -------- | ------- |
+| TEST-01   | Phase 50 | Pending |
+| TEST-02   | Phase 50 | Pending |
+| TEST-03   | Phase 50 | Pending |
+| TEST-04   | Phase 50 | Pending |
+| DESIGN-01 | Phase 51 | Pending |
+| DESIGN-02 | Phase 51 | Pending |
+| DESIGN-03 | Phase 51 | Pending |
+| DESIGN-04 | Phase 51 | Pending |
+| KANBAN-01 | Phase 52 | Pending |
+| KANBAN-02 | Phase 52 | Pending |
+| KANBAN-03 | Phase 52 | Pending |
+| KANBAN-04 | Phase 52 | Pending |
+| BUNDLE-05 | Phase 53 | Pending |
+| BUNDLE-06 | Phase 53 | Pending |
+| BUNDLE-07 | Phase 53 | Pending |
+| INTEL-01  | Phase 54 | Pending |
+| INTEL-02  | Phase 54 | Pending |
+| INTEL-03  | Phase 54 | Pending |
+| INTEL-04  | Phase 54 | Pending |
+| INTEL-05  | Phase 54 | Pending |
+
+**Coverage:** 20/20 v6.3 requirements mapped — every REQ-ID assigned to exactly one phase. No orphans, no duplicates.

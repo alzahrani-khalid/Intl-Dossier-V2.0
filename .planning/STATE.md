@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
 status: planning
-last_updated: '2026-05-13T07:33:49.433Z'
+last_updated: '2026-05-13T11:00:00.000Z'
 last_activity: 2026-05-13
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-13)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Planning next milestone — v7.0 Intelligence Engine seed unblocked. Run `/gsd-new-milestone` to scope.
+**Current focus:** v6.3 Carryover Sweep & v7.0 Prep — roadmap drafted (Phases 50-54). Next: `/gsd-plan-phase 50` to plan Test Infrastructure Repair.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 50 (test-infrastructure-repair) — planned, not started
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-13 — Milestone v6.3 started
+Status: Roadmap drafted (5 phases, 20 REQ-IDs); awaiting plan-phase
+Last activity: 2026-05-13 — v6.3 ROADMAP.md written (Phases 50-54), 100% requirement coverage validated
 
 ## Next Action
 
@@ -60,6 +60,26 @@ Next milestone: **v6.2 Type-Check, Lint & Bundle Reset** is now SHIPPED (Phases 
 
 D-01 hard target: 0 net-new `@ts-(ignore|expect-error)` across phase 47 ✓
 D-04 cross-workspace fence: 0 backend/src edits in any frontend plan's commit range ✓
+
+## v6.3 Phase Map (5 phases, 20 requirements)
+
+| Phase | Name                             | Requirements  | Count |
+| ----- | -------------------------------- | ------------- | ----- |
+| 50    | test-infrastructure-repair       | TEST-01..04   | 4     |
+| 51    | design-token-compliance-gate     | DESIGN-01..04 | 4     |
+| 52    | heroui-v3-kanban-migration       | KANBAN-01..04 | 4     |
+| 53    | bundle-tightening-tag-provenance | BUNDLE-05..07 | 3     |
+| 54    | intelligence-engine-schema       | INTEL-01..05  | 5     |
+
+**Dependency graph summary:**
+
+- Phase 50 (TEST infra) is the entry phase — no deps; unblocks downstream verification across all other phases.
+- Phase 51 (DESIGN gate) depends on Phase 50 — needs green test infra so lint-driven fixes don't mask test regressions.
+- Phase 52 (KANBAN migration) depends on Phases 50 + 51 — migrated kanban code must be born design-token-compliant.
+- Phase 53 (BUNDLE tighten) depends on Phases 50 + 52 — Kanban migration may shift vendor chunk composition; tighten after migration is locked.
+- Phase 54 (INTEL schema) is parallel-safe — independent of Phases 51-53; soft-depends on Phase 50 only for green tests during type regen. May execute in parallel with any of 51-53 once 50 is green.
+
+**Coverage:** 20/20 v6.3 REQ-IDs mapped to exactly one phase. No orphans, no duplicates. See `.planning/REQUIREMENTS.md` Traceability section.
 
 ## v6.2 Phase Map (3 phases, 12 requirements)
 
