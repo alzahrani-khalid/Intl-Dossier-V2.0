@@ -9,7 +9,7 @@ phase_49_base: 8ecd12a7e6fb8299b8dfd448d0efc895bdea36fe
 final_commits:
   - ba1b84b9 # Task 4 — D-14 reconciliation + 49-EXCEPTIONS.md
   - c97a43e4 # Task 5 — STATE.md + ROADMAP.md close-out
-requirements_addressed: [BUNDLE-03, BUNDLE-04]
+requirements-completed: [BUNDLE-03, BUNDLE-04]
 files_modified:
   - .planning/phases/49-bundle-budget-reset/49-EXCEPTIONS.md
   - .planning/STATE.md
