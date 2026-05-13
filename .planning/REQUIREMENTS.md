@@ -17,10 +17,10 @@ Detail: `.planning/notes/v6.2-rationale.md`.
 
 ### Type-check (TYPE)
 
-- [ ] **TYPE-01** — Frontend `pnpm type-check` exits 0 on a clean clone (1580 errors → 0). Suppression escape hatches (`@ts-ignore`, `@ts-expect-error`) must not be used to mask errors; deletions or real fixes only.
-- [ ] **TYPE-02** — Backend `pnpm type-check` exits 0 on a clean clone (498 errors → 0). Same suppression rule as TYPE-01.
-- [ ] **TYPE-03** — Type-check job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single TS error cannot merge to `main`.
-- [ ] **TYPE-04** — Any retained `@ts-ignore` / `@ts-expect-error` suppression is documented inline with a reason and an issue or follow-up reference; net new suppressions added during v6.2 are zero outside documented exceptions.
+- [x] **TYPE-01** — Frontend `pnpm type-check` exits 0 on a clean clone (1580 errors → 0). Suppression escape hatches (`@ts-ignore`, `@ts-expect-error`) must not be used to mask errors; deletions or real fixes only.
+- [x] **TYPE-02** — Backend `pnpm type-check` exits 0 on a clean clone (498 errors → 0). Same suppression rule as TYPE-01.
+- [x] **TYPE-03** — Type-check job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single TS error cannot merge to `main`.
+- [x] **TYPE-04** — Any retained `@ts-ignore` / `@ts-expect-error` suppression is documented inline with a reason and an issue or follow-up reference; net new suppressions added during v6.2 are zero outside documented exceptions.
 
 ### Lint (LINT, continued from v6.1)
 
@@ -31,10 +31,10 @@ Detail: `.planning/notes/v6.2-rationale.md`.
 
 ### Bundle (BUNDLE)
 
-- [ ] **BUNDLE-01** — `frontend/.size-limit.json` Total JS ceiling is lowered from 2.43 MB to ≤500 KB initial-route gzip; the value is documented as the real budget, not aspirational.
-- [ ] **BUNDLE-02** — The initial route loads under the new BUNDLE-01 budget; heavy chunks are route-split via `React.lazy()` based on the Phase 49 audit.
-- [ ] **BUNDLE-03** — `size-limit` runs as a PR-blocking CI gate; a PR that pushes any measured chunk above its locked per-chunk ceiling (D-01..D-03 + D-07 sub-vendor entries) is rejected. The per-chunk ceiling is the binding budget; `size-limit`'s native fail-on-exceed is the enforcement mechanism. Per-chunk slack between measured size and ceiling (D-03 documents this slack) is the documented absorption budget — tighter ceilings catch smaller deltas.
-- [ ] **BUNDLE-04** — Vendor super-chunk audited; every chunk > 100 KB has documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
+- [x] **BUNDLE-01** — `frontend/.size-limit.json` Total JS ceiling is lowered from 2.43 MB to ≤500 KB initial-route gzip; the value is documented as the real budget, not aspirational.
+- [x] **BUNDLE-02** — The initial route loads under the new BUNDLE-01 budget; heavy chunks are route-split via `React.lazy()` based on the Phase 49 audit.
+- [x] **BUNDLE-03** — `size-limit` runs as a PR-blocking CI gate; a PR that pushes any measured chunk above its locked per-chunk ceiling (D-01..D-03 + D-07 sub-vendor entries) is rejected. The per-chunk ceiling is the binding budget; `size-limit`'s native fail-on-exceed is the enforcement mechanism. Per-chunk slack between measured size and ceiling (D-03 documents this slack) is the documented absorption budget — tighter ceilings catch smaller deltas.
+- [x] **BUNDLE-04** — Vendor super-chunk audited; every chunk > 100 KB has documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
 
 ## Out of Scope
 
@@ -50,23 +50,23 @@ Detail: `.planning/notes/v6.2-rationale.md`.
 
 ## Traceability
 
-| REQ-ID    | Phase    | Status      |
-| --------- | -------- | ----------- |
-| TYPE-01   | Phase 47 | Not started |
-| TYPE-02   | Phase 47 | Not started |
-| TYPE-03   | Phase 47 | Not started |
-| TYPE-04   | Phase 47 | Not started |
-| LINT-06   | Phase 48 | Satisfied   |
-| LINT-07   | Phase 48 | Satisfied   |
-| LINT-08   | Phase 48 | Satisfied   |
-| LINT-09   | Phase 48 | Satisfied   |
-| BUNDLE-01 | Phase 49 | Not started |
-| BUNDLE-02 | Phase 49 | Not started |
-| BUNDLE-03 | Phase 49 | Not started |
-| BUNDLE-04 | Phase 49 | Not started |
+| REQ-ID    | Phase    | Status    |
+| --------- | -------- | --------- |
+| TYPE-01   | Phase 47 | Satisfied |
+| TYPE-02   | Phase 47 | Satisfied |
+| TYPE-03   | Phase 47 | Satisfied |
+| TYPE-04   | Phase 47 | Satisfied |
+| LINT-06   | Phase 48 | Satisfied |
+| LINT-07   | Phase 48 | Satisfied |
+| LINT-08   | Phase 48 | Satisfied |
+| LINT-09   | Phase 48 | Satisfied |
+| BUNDLE-01 | Phase 49 | Satisfied |
+| BUNDLE-02 | Phase 49 | Satisfied |
+| BUNDLE-03 | Phase 49 | Satisfied |
+| BUNDLE-04 | Phase 49 | Satisfied |
 
 _Phase column filled by the roadmapper after roadmap approval (2026-05-08)._
 
 ---
 
-_Last updated: 2026-05-12 — Phase 48 LINT-06..09 satisfied_
+_Last updated: 2026-05-13 — v6.2 milestone paperwork closure: TYPE-01..04 + BUNDLE-01..04 Satisfied_
