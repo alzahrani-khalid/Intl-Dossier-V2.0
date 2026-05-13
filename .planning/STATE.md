@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v6.2
 milestone_name: Type-Check, Lint & Bundle Reset
-status: shipped
-stopped_at: Phase 49 Plan 03 complete (CI gate + smoke close-out; v6.2 milestone SHIPPED)
-last_updated: '2026-05-13T06:55:00.000Z'
-last_activity: 2026-05-13 -- Completed quick task 260513-dds: v6.2 paperwork closure (47-VERIFICATION.md + SUMMARY frontmatter + REQUIREMENTS.md traceability)
+status: archived
+stopped_at: v6.2 milestone archived; planning next milestone
+last_updated: '2026-05-13T12:00:00.000Z'
+last_activity: 2026-05-13 -- v6.2 milestone archived (ROADMAP collapsed, REQUIREMENTS deleted, MILESTONES + RETROSPECTIVE updated, PROJECT evolved, v6.2 git tag created)
 progress:
   total_phases: 3
   completed_phases: 3
@@ -18,10 +18,10 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-08)
+See: .planning/PROJECT.md (updated 2026-05-13)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 49 — bundle-budget-reset
+**Current focus:** Planning next milestone — v7.0 Intelligence Engine seed unblocked. Run `/gsd-new-milestone` to scope.
 
 ## Current Position
 

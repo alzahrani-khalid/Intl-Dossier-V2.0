@@ -216,25 +216,88 @@ _A living document updated after each milestone. Lessons feed forward into futur
 
 ---
 
+## Milestone: v6.2 — Type-Check, Lint & Bundle Reset
+
+**Shipped:** 2026-05-12
+**Phases:** 3 (47-49) | **Plans:** 17 | **Timeline:** 5 days (2026-05-08 → 2026-05-13)
+**Audit:** passed (re-audit confirmed 2026-05-13 after paperwork closure)
+
+### What Was Built
+
+- Frontend `pnpm type-check` 1580 → 0 errors via deletion-first (60 type files, 102 dead exports across 39 service/lib files) and typed-at-source (19 of 20 shims retired by tightening underlying domain hook return types)
+- Backend `pnpm type-check` 498 → 0 errors via systemic patterns: ParsedQs argument narrowing (`String(req.query.foo ?? '')`), TS7030 return-path discipline (`return res.status(...).json(...)` on every branch), and allowlisted Supabase codegen (`@ts-nocheck` ledgered in EXCEPTIONS.md, not `tsconfig` exclude)
+- Frontend lint 723 problems → 0; backend lint 4 → 0; 0 net-new `eslint-disable` directives phase-wide
+- Deleted `frontend/eslint.config.js` shadow config; inverted `no-restricted-imports` to ban Aceternity + Kibo UI per CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom); 3 orphan Aceternity wrappers removed; workspace lint scripts pinned to root with `--max-warnings 0`
+- Bundle Initial-route ceiling 517 → 450 KB; static-prim 64 → 12 KB; manualChunks ordering fix (scoped-package rules before `id.includes("react")` substring rule); heroui/sentry/dnd sub-vendor decomposition with `===1` strict assertions in `assert-size-limit-matches.mjs`; 3 audit-identified ≥30 KB gz components converted to `React.lazy()` / dynamic-import
+- `type-check`, `Lint`, and `Bundle Size Check (size-limit)` restored as PR-blocking branch-protection contexts on `main` with `enforce_admins=true` preserved; 6 smoke PRs proved `mergeStateStatus=BLOCKED`
+
+### What Worked
+
+- **Phase-base git tags as suppression-diff anchors** (`phase-47-base`, `phase-48-base`, `phase-49-base`) replaced unreliable `git merge-base main HEAD` for D-01 net-new-suppression audits — stable reference point across long-running phases
+- **Mechanical AST-aware deletion via reusable Python scripts** drove TS6133/TS6196 cluster fixes in single atomic commits per cluster (types → components → hooks → domains → pages → services), with D-04 four-globbed-grep verification on every cross-file deletion
+- **Cascade strategy** — clearing one cluster (`src/types/*` 1580 → 1191) unblocked downstream clusters because consumer-side errors went away when source-level unused declarations were deleted; total frontend dropped 1580 → 15 by Plan 47-10 with only one residual cluster left for 47-11
+- **Branch-protection PUT mechanics** (read-then-merge-then-write via `gh api`) established in Phase 47 reused verbatim in Phases 48 + 49 — three CI gates added consistently with `enforce_admins=true` preserved
+- **D-02 honest ceiling escalation** — Plan 49-01 surfaced that the 1.8 MB Total JS proposal was unattainable inside Phase 49 scope; locked at measured 2.45 MB with documented paper trail instead of shipping an aspirational ceiling
+- **Smoke PR-as-evidence** — 2 smoke PRs per CI gate (frontend + backend lint, initial-JS + sub-vendor for bundle) proved BLOCKING behavior on real branch protection, closed `--delete-branch` after evidence captured
+
+### What Was Inefficient
+
+- **Plan 47-01 + 47-02 only delivered the baseline** — the actual 1580 → 0 + 498 → 0 work spread across 9 more plans (47-04..47-11). Pre-execution scoping under-estimated the cluster decomposition needed; future type-check phases should plan cluster-by-cluster from the start
+- **`manualChunks` substring rule mis-classification** was only surfaced in Plan 49-01 audit, not in Phase 49 plan-phase research. The `id.includes("react")` rule swept @heroui/@dnd-kit/@radix-ui into react-vendor; ordering fix forced a TanStack vendor ceiling re-baseline 51 → 63 KB. Pre-execution audit pass on `vite.config.ts` chunk rules would have caught this
+- **D-02 1.8 MB Total JS target was aspirational** — landed too early in Phase 49 plan-phase before measurement; escalation cost Plan 01 cycles; future bundle phases should measure-first then propose-ceiling, not the reverse
+- **Smoke PR trip-wire substitution required twice** — Plan 49-03 PR-A (umbrella `d3` package not installed; sub-packages only) and PR-B (dnd-vendor headroom too narrow); both required ad-hoc substitution. Pre-flight measurement of trip-wire mass against ceiling slack would have caught the mismatch
+- **Wave-3 executor commit `4fd65d60` edited orchestrator-owned STATE/ROADMAP/REQUIREMENTS fields** — values were correct, but process boundary violation required Deviation #4 documentation in 48-03-SUMMARY.md
+
+### Patterns Established
+
+- **Phase-base git tag as diff anchor** for net-new-suppression / net-new-eslint-disable audits — reusable across any phase that needs a stable diff window
+- **D-01 net-new-suppression audit** (`git diff <phase-base>..HEAD -- <workspace>/src | grep -E "^\\+.*@ts-(ignore|expect-error)" | wc -l → 0`) — applied consistently in 47/48/49 with phase-wide reconciliation in the final CI-gate plan
+- **EXCEPTIONS.md ledger pattern** — retained suppressions documented inline with reason + issue/follow-up reference; per-phase ledger seeded in baseline plan, sealed in final-confirm plan
+- **Typed-at-source migration** — tighten underlying domain hook return types so consumer sees real type without cast; deprecates "stub then narrow with `as unknown as ShimType` at the destructure boundary" pattern from 47-06/47-08
+- **Root flat-config as single source of truth** with workspace scripts pinned via CWD fix (`cd .. && eslint -c eslint.config.mjs`) so flat-config basePath resolves correctly; turbo.json globalDependencies includes the root config
+- **`size-limit` native fail-on-exceed IS the enforcement** — no custom delta calculator; per-chunk ceilings are binding; slack between measured and ceiling is documented absorption budget
+- **Branch-protection context casing must be verbatim** — `Bundle Size Check (size-limit)` matches `ci.yml:271` `name:` field exactly; case mismatch silently fails the required-context check
+
+### Key Lessons
+
+1. **Cluster-decompose pre-execution, not mid-phase** — Phase 47's 11 plans emerged from execution discovery; future high-error-count type-check phases should ship a cluster-decomposition audit alongside RESEARCH.md
+2. **Audit chunk-routing rules before writing budget proposals** — substring-matching rules (`id.includes("react")`) silently mis-classify scoped packages; the order of `if` branches in `manualChunks` is load-bearing
+3. **Measure-then-propose for bundle ceilings** — aspirational ceilings (1.8 MB Total JS, 200 KB Initial) burn plan cycles when measured reality is 2.45 MB and 450 KB; honest baselines with documented slack ship faster
+4. **Pre-flight trip-wire mass against ceiling slack** — smoke PRs need mass > slack to BLOCK; check before opening the PR or substitute mid-flight (Phase 49 hit this twice)
+5. **Branch-protection PUT mechanics are reusable** — the read-then-merge-then-write `gh api` pattern from Phase 47 transferred verbatim to Phases 48 and 49; codify this as a CI-gate-restoration sub-recipe
+6. **Process-boundary respect** — executor commits should not edit orchestrator-owned planning fields even when values are correct; surface for orchestrator merge instead
+
+### Cost Observations
+
+- Plans: 17 (47: 11 + 48: 3 + 49: 3) — Phase 47 cluster-decomposition drove most of the count
+- Commits: 146 across 5 days
+- Files changed: 840 (+26,094 / -105,035); large delete reflects type-check unused-export purge across `src/types/*`, `src/services/*`, `src/lib/*`
+- Notable: Mechanical deletion via reusable Python scripts handled the long tail of unused declarations at near-zero per-deletion cost; D-04 four-globbed-grep verification kept the deletion rate safe
+- Re-audit needed after paperwork closure: prior 2026-05-13T06:34:55Z audit returned `gaps_found` (paperwork-only); closed by commits c54c2291 / 148d9a68 / c7df4b56 / c37c1901; final audit at 2026-05-13T11:00:00Z returned `passed`
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
 
-| Milestone | Phases | Plans | Timeline | Key Change                                                                        |
-| --------- | ------ | ----- | -------- | --------------------------------------------------------------------------------- |
-| v2.0      | 7      | 29    | 185 days | First milestone — established GSD workflow, verification reports, milestone audit |
-| v3.0      | 6      | 28    | 9 days   | Worktree parallelism, 20x velocity boost, established shell/absorption patterns   |
-| v6.0      | 11     | 121   | 18 days  | Token-first architecture, gap-closure-as-plan, CI-anchored qa-sweep gate          |
-| v6.1      | 3      | 14    | 2 days   | Hardening bridge milestone, audit-open close gate, visual operator replay         |
+| Milestone | Phases | Plans | Timeline | Key Change                                                                                                       |
+| --------- | ------ | ----- | -------- | ---------------------------------------------------------------------------------------------------------------- |
+| v2.0      | 7      | 29    | 185 days | First milestone — established GSD workflow, verification reports, milestone audit                                |
+| v3.0      | 6      | 28    | 9 days   | Worktree parallelism, 20x velocity boost, established shell/absorption patterns                                  |
+| v6.0      | 11     | 121   | 18 days  | Token-first architecture, gap-closure-as-plan, CI-anchored qa-sweep gate                                         |
+| v6.1      | 3      | 14    | 2 days   | Hardening bridge milestone, audit-open close gate, visual operator replay                                        |
+| v6.2      | 3      | 17    | 5 days   | Quality-gate reset, phase-base git-tag diff anchors, typed-at-source over shims, 3 PR-blocking CI gates restored |
 
 ### Cumulative Quality
 
-| Milestone | Quality Gates                                                                                                        | Tech Debt Items                                                                                                                                                          | Requirements Met |
-| --------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
-| v2.0      | 5 (ESLint, Prettier, Knip, size-limit, pre-commit)                                                                   | 12                                                                                                                                                                       | 29/29            |
-| v3.0      | Same 5 + VERIFICATION.md per phase                                                                                   | +5 (v3.0)                                                                                                                                                                | 45/45            |
-| v6.0      | Same + qa-sweep CI (axe, responsive, kbd, focus) + eslint-plugin-rtl-friendly + size-limit signature-visuals budgets | +9 deferred (DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED/REVIEW, DASH-COMPONENTS-DEAD, JSON-key-uniqueness, WR-03 SR shadowing) | 52/52            |
-| v6.1      | Same + focused visual replay for deferred dashboard/list/drawer baselines                                            | 10 acknowledged open artifacts at close (historical/stale items plus missing v6.1 audit)                                                                                 | 25/25            |
+| Milestone | Quality Gates                                                                                                        | Tech Debt Items                                                                                                                                                                                                                                                                                          | Requirements Met |
+| --------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| v2.0      | 5 (ESLint, Prettier, Knip, size-limit, pre-commit)                                                                   | 12                                                                                                                                                                                                                                                                                                       | 29/29            |
+| v3.0      | Same 5 + VERIFICATION.md per phase                                                                                   | +5 (v3.0)                                                                                                                                                                                                                                                                                                | 45/45            |
+| v6.0      | Same + qa-sweep CI (axe, responsive, kbd, focus) + eslint-plugin-rtl-friendly + size-limit signature-visuals budgets | +9 deferred (DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED/REVIEW, DASH-COMPONENTS-DEAD, JSON-key-uniqueness, WR-03 SR shadowing)                                                                                                                                 | 52/52            |
+| v6.1      | Same + focused visual replay for deferred dashboard/list/drawer baselines                                            | 10 acknowledged open artifacts at close (historical/stale items plus missing v6.1 audit)                                                                                                                                                                                                                 | 25/25            |
+| v6.2      | Same + type-check + Lint + Bundle Size Check (size-limit) restored as PR-blocking branch-protection contexts on main | Tech debt at close: 1 retained shim (`useStakeholderInteractionMutations`), 2 kibo-ui kanban imports (HeroUI v3 deferred), React vendor ceiling loose, Node version note drift, pre-existing design-rule violations queued for sweep, 4 wizard-test setup bug (pre-existing), lightweight tag provenance | 12/12            |
 
 ### Top Lessons (Verified Across Milestones)
 
@@ -244,3 +307,6 @@ _A living document updated after each milestone. Lessons feed forward into futur
 4. ROADMAP / STATE metadata drifts without automation — three milestones in a row had stale progress tables (v2.0, v3.0, v6.0)
 5. Velocity compounds on established patterns — v3.0 was 20x faster than v2.0; v6.0 sustained that rate across 4x the plan count by leaning on prior infrastructure
 6. **CI-anchored gates beat human gates** (new in v6.0) — automated sweeps catch what human review forgets and run on every PR
+7. **Phase-base git tags as suppression-diff anchors** (new in v6.2) — replace unreliable `git merge-base main HEAD`; stable across long-running phases; reusable for net-new-suppression / net-new-eslint-disable audits
+8. **Measure-then-propose for bundle ceilings** (new in v6.2) — aspirational ceilings burn plan cycles; honest baselines with documented slack ship faster
+9. **Branch-protection PUT mechanics are a reusable sub-recipe** (new in v6.2) — read-then-merge-then-write `gh api` pattern transferred verbatim across 3 CI gates in 5 days
