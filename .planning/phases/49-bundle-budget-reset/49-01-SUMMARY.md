@@ -8,7 +8,7 @@ duration_minutes: 12
 audit_git_sha: 38109357885beb36079ea703d83343cedcedd38f
 phase_49_base: 7fc9e7564ce01afee067277045573f192163f6d2
 final_commit: a0bb281dac9984c9492d2ae316c78b53f3884583
-requirements_addressed: [BUNDLE-01, BUNDLE-04]
+requirements-completed: [BUNDLE-01, BUNDLE-04]
 files_modified:
   - frontend/.size-limit.json
   - frontend/docs/bundle-budget.md
