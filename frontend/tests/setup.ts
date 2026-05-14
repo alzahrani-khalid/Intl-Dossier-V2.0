@@ -6,6 +6,33 @@ import { server } from './mocks/server'
 vi.stubEnv('VITE_SUPABASE_URL', 'http://localhost:54321')
 vi.stubEnv('VITE_SUPABASE_ANON_KEY', 'test-anon-key')
 
+// jsdom polyfill: ResizeObserver (used by @radix-ui/react-use-size + signature-visuals)
+if (typeof ResizeObserver === 'undefined') {
+  globalThis.ResizeObserver = class ResizeObserver {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+  }
+}
+
+// jsdom polyfill: matchMedia (used by useResponsive + Tailwind breakpoint hooks)
+if (typeof window !== 'undefined' && typeof window.matchMedia === 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    configurable: true,
+    value: (query: string): MediaQueryList => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+  })
+}
+
 // Global i18n mock
 vi.mock('react-i18next', async () => {
   const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next')
