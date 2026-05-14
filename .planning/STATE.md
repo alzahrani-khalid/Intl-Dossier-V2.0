@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
-status: ready
-stopped_at: Phase 50 Plan 50-13a (post-split)
-last_updated: '2026-05-14T19:00:00.000Z'
-last_activity: 2026-05-14 -- Phase 50 Plan 50-13 split into 50-13a/13b after ceiling halt; executing 50-13a next
+status: in_progress
+stopped_at: Phase 50 Plan 50-05 branch-protection human-verify checkpoint
+last_updated: '2026-05-14T19:58:18.000Z'
+last_activity: 2026-05-14 -- Phase 50 default frontend/backend tests green locally; Plan 50-05 code-side CI/lint enforcement committed at 720d135a; branch-protection smoke checkpoint pending
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 10
-  completed_plans: 6
-  percent: 60
+  completed_plans: 9
+  percent: 90
 ---
 
 # Project State
@@ -26,42 +26,39 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 50 (test-infrastructure-repair) — EXECUTING
-Plan: 50-13a
-Status: Ready to execute 50-13a (post-split from 50-13 ceiling halt)
-Last activity: 2026-05-14 -- Phase 50 Plan 50-13 split into 50-13a/13b after ceiling halt; executing 50-13a next
+Plan: 50-05
+Status: Stopped at branch-protection human-verify checkpoint after code-side CI/lint enforcement commit
+Last activity: 2026-05-14 -- Phase 50 default frontend/backend tests green locally; Plan 50-05 code-side CI/lint enforcement committed at 720d135a; branch-protection smoke checkpoint pending
 
 ## Current Blocker
 
-Plan 50-13 was split into 50-13a (original 6-file scope; ≤8 ceiling honored) and 50-13b (7-file tests/component/ i18n cluster). Operator ratified DISCOVERY option 2. Original plan archived at `.planning/phases/50-test-infrastructure-repair/50-13-PLAN.archived.md`. Next: execute 50-13a. Original ceiling-halt context preserved at `.planning/phases/50-test-infrastructure-repair/50-13-DISCOVERY.md`.
+Plan 50-05 Task 3 remains blocked on the explicit human-verify branch-protection and smoke-PR checkpoint. The code-side work is committed at `720d135a`:
 
-Live command:
+- `.github/workflows/ci.yml` replaces the old aggregate `Unit Tests` job with `Tests (frontend)`, `Tests (backend)`, and advisory `Tests (integration)`.
+- `eslint.config.mjs` adds the D-15 mock-factory guard for the global frontend test harness plus the bad fixture.
+- `scripts/lint.mjs` preserves workspace `pnpm lint` and enables `pnpm lint <path>` for targeted D-15 verification.
+- `tools/eslint-fixtures/bad-vi-mock.ts` is the expected-failing regression fixture.
 
-`pnpm --filter intake-frontend exec vitest --run --reporter=default`
+Read-only GitHub state at stop: `main` branch protection has `enforce_admins=true` and required contexts `type-check`, `Security Scan`, `Lint`, and `Bundle Size Check (size-limit)`. Do not add `Tests (frontend)` / `Tests (backend)` until both new jobs are green on GitHub at least once. Do not add `Tests (integration)` to required contexts.
 
-Result: `Test Files 13 failed | 141 passed | 4 skipped (158)`, `Tests 147 failed | 1177 passed | 25 todo (1349)`.
+Latest local gates:
 
-The previous 50-06/50-07/50-08 split was superseded by the 50-09..50-13 replan. Wave 2, Wave 3, and Plan 50-12 repair plans are complete:
+- `pnpm --filter intake-frontend test --run` — `Test Files 154 passed | 4 skipped (158)`, `Tests 1219 passed | 25 todo (1244)`.
+- `pnpm --filter intake-backend test --run` — `Test Files 15 passed (15)`, `Tests 214 passed (214)`.
+- `pnpm lint` — exits 0.
+- `pnpm lint tools/eslint-fixtures/bad-vi-mock.ts` — exits 1 with the D-15 message, as intended.
 
-- 50-09: provider/polyfill repair summary present.
-- 50-11: a11y/performance outlier repair summary present.
-- 50-10: Wave-3 i18n/default-runner repair summary present; six owned files passed and the frontend default-runner residual dropped from 26 to 20 failed files.
-- 50-12: design/route/dashboard repair summary present; seven owned files passed and the frontend default-runner residual dropped from 20 to 13 failed files.
-- Scoped Wave 2 gate passed: `pnpm --filter intake-frontend exec vitest --run --reporter=default tests/a11y tests/accessibility tests/performance` returned 2 files / 48 tests passed.
-- Scoped 50-10 gate passed: `pnpm --filter intake-frontend exec vitest --run --reporter=default tests/component/AfterActionForm.test.tsx tests/component/CommitmentList.test.tsx tests/component/DecisionList.test.tsx tests/component/TaskCard.test.tsx tests/component/SLAIndicator.test.tsx tests/unit/FormInput.test.tsx` returned 6 files / 141 tests passed.
-
-Backend Plan 50-03 is complete:
-
-`pnpm --filter intake-backend test --run --reporter=verbose`
-
-Result: `Test Files 15 passed (15)`, `Tests 214 passed (214)`.
+Handoff details are in `.planning/phases/50-test-infrastructure-repair/.continue-here.md`.
 
 ## Next Action
 
-Replan or ratify the Plan 50-13 scope before execution resumes:
+Continue Plan 50-05 Task 3:
 
-1. Ratify a 13-file scope expansion for Plan 50-13.
-2. Split the residual into 50-13a/50-13b bounded plans.
-3. Explicitly move selected files out of the default runner as `split-to-integration` with audit/CI updates.
+1. Push/land commit `720d135a` through the intended review path.
+2. Verify GitHub Actions shows `Tests (frontend)` and `Tests (backend)` green on that commit.
+3. Capture current branch-protection pre-state.
+4. PUT branch protection preserving existing settings and adding required contexts `Tests (frontend)` and `Tests (backend)`.
+5. Run the smoke PR proof and write `50-05-SUMMARY.md`.
 
 ### Outstanding follow-ups (small)
 

@@ -158,14 +158,14 @@ Plans:
 
 - [x] 50-01-PLAN.md — FE cascade unblock + i18n factory + 11 dead-import deletions (Wave 1)
 - [x] 50-03-PLAN.md — BE global mocks + integration runner split + per-file triage (Wave 1)
-- [ ] 50-04-PLAN.md — 50-TEST-AUDIT.md + frontend/docs/test-setup.md + backend/docs/test-setup.md (Wave 5)
-- [ ] 50-05-PLAN.md — CI jobs + D-13 branch protection + D-15 ESLint rule (Wave 6)
+- [x] 50-04-PLAN.md — 50-TEST-AUDIT.md + frontend/docs/test-setup.md + backend/docs/test-setup.md (Wave 5)
+- [ ] 50-05-PLAN.md — CI jobs + D-13 branch protection + D-15 ESLint rule (Wave 6; code-side commit `720d135a` done, branch-protection checkpoint pending)
 - [x] 50-09-PLAN.md — Cross-cutting polyfills + provider migration (Wave 2)
 - [x] 50-10-PLAN.md — i18n-text drift batched fix (Wave 3)
 - [x] 50-11-PLAN.md — a11y/perf outliers (Wave 3)
 - [x] 50-12-PLAN.md — design-system + route harness (Wave 3)
-- [ ] 50-13a-PLAN.md — phase-exit-0 original 6-file scope; useCountryAutoFill + 5 residual files (Wave 4)
-- [ ] 50-13b-PLAN.md — 7-file tests/component/ i18n cluster + downstream 50-04/05 depends_on rewire (Wave 4)
+- [x] 50-13a-PLAN.md — phase-exit-0 original 6-file scope; useCountryAutoFill + 5 residual files (Wave 4)
+- [x] 50-13b-PLAN.md — 7-file tests/component/ i18n cluster + downstream 50-04/05 depends_on rewire (Wave 4)
 
 ### Phase 51: Design-Token Compliance Gate
 
