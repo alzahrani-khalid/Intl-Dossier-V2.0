@@ -30,9 +30,9 @@ dotenv.config({ path: path.resolve(__dirname, '..', '.env.test') })
 const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:5173'
 
 export default defineConfig({
-  testDir: path.resolve(__dirname, 'tests/e2e'),
-  // Only pick up spec files — not mocks, fixtures, __screenshots__, etc.
-  testMatch: /.*\.spec\.ts$/,
+  testDir: path.resolve(__dirname, 'tests'),
+  // Only pick up E2E and Playwright-owned accessibility specs.
+  testMatch: ['e2e/**/*.spec.ts', 'accessibility/**/*.spec.ts'],
   // Plan 43-12: pre-authenticate ONCE per Playwright run; qa-sweep specs
   // consume the persisted storageState so parallel workers never race the
   // login form into a route's render assertions (43-VERIFICATION Class D).
