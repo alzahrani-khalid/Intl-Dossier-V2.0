@@ -34,8 +34,8 @@ vi.mock('react-i18next', async () => {
         // Translate explicit forum keys first (they override defaultValue).
         if (k === 'forums:status.active') return 'Active'
         if (k === 'forums:status.cancelled') return 'Cancelled'
-        if (k === 'forums:title') return 'Forums'
-        if (k === 'forums:subtitle') return 'Multi-party conferences'
+        if (k === 'forums:pageTitle') return 'Forums'
+        if (k === 'forums:pageSubtitle') return 'Multi-party conferences'
         if (k === 'forums:empty.title') return 'No forums yet'
         if (k === 'forums:empty.description') return 'Forum dossiers will appear here.'
         // Fall back to defaultValue for unknown keys.

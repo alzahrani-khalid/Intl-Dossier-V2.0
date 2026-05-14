@@ -31,7 +31,9 @@ describe('MonitoringDashboard', () => {
 
   it('renders headings', async () => {
     render(<MonitoringDashboard />)
-    expect(await screen.findByText(/Monitoring Dashboard/i)).toBeInTheDocument()
-    expect(await screen.findByText(/Health/i)).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: /Monitoring Dashboard/i }),
+    ).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 2, name: /^Health$/i })).toBeInTheDocument()
   })
 })
