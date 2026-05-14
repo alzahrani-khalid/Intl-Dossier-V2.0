@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
 status: executing
-stopped_at: Phase 50 context gathered
-last_updated: '2026-05-14T10:43:19.000Z'
-last_activity: 2026-05-14 -- Phase 50 Wave 2 complete; executing 50-10 next
+stopped_at: Phase 50 Plan 50-12 next
+last_updated: '2026-05-14T11:18:17.000Z'
+last_activity: 2026-05-14 -- Phase 50 Plan 50-10 complete; executing 50-12 next
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 9
-  completed_plans: 3
-  percent: 33
+  completed_plans: 4
+  percent: 44
 ---
 
 # Project State
@@ -26,17 +26,19 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 50 (test-infrastructure-repair) — EXECUTING
-Plan: 50-10
+Plan: 50-12
 Status: Executing Phase 50 residual frontend repairs
-Last activity: 2026-05-14 -- Phase 50 Wave 2 complete; executing 50-10 next
+Last activity: 2026-05-14 -- Phase 50 Plan 50-10 complete; executing 50-12 next
 
 ## Current Blocker
 
-No active blocker. The previous 50-06/50-07/50-08 split was superseded by the 50-09..50-13 replan. Wave 2 repair plans are complete:
+No active blocker. The previous 50-06/50-07/50-08 split was superseded by the 50-09..50-13 replan. Wave 2 and Plan 50-10 repair plans are complete:
 
 - 50-09: provider/polyfill repair summary present.
 - 50-11: a11y/performance outlier repair summary present.
+- 50-10: Wave-3 i18n/default-runner repair summary present; six owned files passed and the frontend default-runner residual dropped from 26 to 20 failed files.
 - Scoped Wave 2 gate passed: `pnpm --filter intake-frontend exec vitest --run --reporter=default tests/a11y tests/accessibility tests/performance` returned 2 files / 48 tests passed.
+- Scoped 50-10 gate passed: `pnpm --filter intake-frontend exec vitest --run --reporter=default tests/component/AfterActionForm.test.tsx tests/component/CommitmentList.test.tsx tests/component/DecisionList.test.tsx tests/component/TaskCard.test.tsx tests/component/SLAIndicator.test.tsx tests/unit/FormInput.test.tsx` returned 6 files / 141 tests passed.
 
 Backend Plan 50-03 is complete:
 
