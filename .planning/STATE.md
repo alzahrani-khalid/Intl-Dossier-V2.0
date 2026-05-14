@@ -436,6 +436,7 @@ None yet.
 | #          | Description                                                                                                      | Date       | Commit     | Directory                                                                                                           |
 | ---------- | ---------------------------------------------------------------------------------------------------------------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
 | 260513-dds | Close v6.2 paperwork gaps: 47-VERIFICATION.md + SUMMARY frontmatter backfill + REQUIREMENTS.md traceability flip | 2026-05-13 | `8b5bec1b` | [260513-dds-close-v6-2-paperwork-gaps-write-47-verif](./quick/260513-dds-close-v6-2-paperwork-gaps-write-47-verif/) |
+| 260514-tv7 | Split Phase 50 Plan 50-13 into 50-13a + 50-13b after ceiling halt                                                | 2026-05-14 | `8f811709` | [260514-tv7-split-phase-50-plan-50-13-into-50-13a-50](./quick/260514-tv7-split-phase-50-plan-50-13-into-50-13a-50/) |
 
 ## Session Continuity
 
