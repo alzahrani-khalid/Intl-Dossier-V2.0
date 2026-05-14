@@ -152,15 +152,20 @@ Full details: [v6.2-ROADMAP.md](milestones/v6.2-ROADMAP.md)
 3. A repo-wide module-eval audit produces a logged inventory of any remaining setup-time failures across frontend + backend test suites (fixed in-phase or queued with rationale).
 4. `frontend/docs/test-setup.md` documents the vitest setup contract, common mock-factory pitfalls, and the `react-i18next` precedent so new contributors don't regress it.
 
-**Plans:** 5 plans across 4 waves
+**Plans:** 10 plans across 4 waves
 
 Plans:
 
-- [ ] 50-01-PLAN.md — FE cascade unblock: vitest.config include/exclude + D-05 react-i18next factory + 11 dead-import deletions (Wave 1, parallel with 50-03)
-- [ ] 50-02-PLAN.md — FE per-file regressions: useCountryAutoFill mock-shape + impl null-guards + 5 product/test triage files (Wave 2)
-- [ ] 50-03-PLAN.md — BE global mocks (D-07/D-08) + D-03 integration runner split + per-file triage (Wave 1, parallel with 50-01)
-- [ ] 50-04-PLAN.md — 50-TEST-AUDIT.md + frontend/docs/test-setup.md + backend/docs/test-setup.md (Wave 3)
-- [ ] 50-05-PLAN.md — CI jobs (Tests frontend/backend/integration) + D-13 branch protection PATCH + D-15 ESLint rule + bad fixture (Wave 4)
+- [x] 50-01-PLAN.md — FE cascade unblock + i18n factory + 11 dead-import deletions (Wave 1)
+- [x] 50-03-PLAN.md — BE global mocks + integration runner split + per-file triage (Wave 1)
+- [ ] 50-04-PLAN.md — 50-TEST-AUDIT.md + frontend/docs/test-setup.md + backend/docs/test-setup.md (Wave 5)
+- [ ] 50-05-PLAN.md — CI jobs + D-13 branch protection + D-15 ESLint rule (Wave 6)
+- [x] 50-09-PLAN.md — Cross-cutting polyfills + provider migration (Wave 2)
+- [x] 50-10-PLAN.md — i18n-text drift batched fix (Wave 3)
+- [x] 50-11-PLAN.md — a11y/perf outliers (Wave 3)
+- [x] 50-12-PLAN.md — design-system + route harness (Wave 3)
+- [ ] 50-13a-PLAN.md — phase-exit-0 original 6-file scope; useCountryAutoFill + 5 residual files (Wave 4)
+- [ ] 50-13b-PLAN.md — 7-file tests/component/ i18n cluster + downstream 50-04/05 depends_on rewire (Wave 4)
 
 ### Phase 51: Design-Token Compliance Gate
 
