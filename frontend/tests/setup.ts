@@ -3,6 +3,9 @@ import { beforeAll, afterEach, afterAll, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import { server } from './mocks/server'
 
+vi.stubEnv('VITE_SUPABASE_URL', 'http://localhost:54321')
+vi.stubEnv('VITE_SUPABASE_ANON_KEY', 'test-anon-key')
+
 // Global i18n mock
 vi.mock('react-i18next', async () => {
   const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next')
