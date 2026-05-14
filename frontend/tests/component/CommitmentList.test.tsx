@@ -43,6 +43,12 @@ describe('CommitmentList', () => {
     mockOnChange.mockClear()
   })
 
+  const getCommitmentCard = (title: string) => {
+    const card = screen.getByText(title).closest('[data-slot="card"]')
+    expect(card).toBeInTheDocument()
+    return card as HTMLElement
+  }
+
   describe('Rendering', () => {
     it('renders title and add button', () => {
       render(<CommitmentList commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />)
@@ -83,7 +89,7 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const internalCommitmentCard = screen.getByText('Commitment 1').closest('div')!.parentElement!
+      const internalCommitmentCard = getCommitmentCard('Commitment 1')
       const userDropdown = within(internalCommitmentCard).getByText('Assigned To *')
 
       expect(userDropdown).toBeInTheDocument()
@@ -99,7 +105,7 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const externalCommitmentCard = screen.getByText('Commitment 2').closest('div')!.parentElement!
+      const externalCommitmentCard = getCommitmentCard('Commitment 2')
 
       expect(within(externalCommitmentCard).getByText('Contact Email *')).toBeInTheDocument()
       expect(within(externalCommitmentCard).getByText('Contact Name *')).toBeInTheDocument()
@@ -117,7 +123,7 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const internalCommitmentCard = screen.getByText('Commitment 1').closest('div')!.parentElement!
+      const internalCommitmentCard = getCommitmentCard('Commitment 1')
       const externalRadio = within(internalCommitmentCard).getByLabelText('External')
 
       await user.click(externalRadio)
@@ -142,7 +148,7 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const externalCommitmentCard = screen.getByText('Commitment 2').closest('div')!.parentElement!
+      const externalCommitmentCard = getCommitmentCard('Commitment 2')
       const internalRadio = within(externalCommitmentCard).getByLabelText('Internal')
 
       await user.click(internalRadio)
@@ -192,10 +198,8 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const internalCommitmentCard = screen.getByText('Commitment 1').closest('div')!.parentElement!
-      const statusTrigger = within(internalCommitmentCard).getByRole('combobox', {
-        name: /status/i,
-      })
+      const internalCommitmentCard = getCommitmentCard('Commitment 1')
+      const statusTrigger = internalCommitmentCard.querySelector('#status-0')
 
       expect(statusTrigger).toBeDisabled()
     })
@@ -209,10 +213,8 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const externalCommitmentCard = screen.getByText('Commitment 2').closest('div')!.parentElement!
-      const statusTrigger = within(externalCommitmentCard).getByRole('combobox', {
-        name: /status/i,
-      })
+      const externalCommitmentCard = getCommitmentCard('Commitment 2')
+      const statusTrigger = externalCommitmentCard.querySelector('#status-1')
 
       expect(statusTrigger).not.toBeDisabled()
     })
@@ -241,11 +243,12 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const highConfidenceBadge = screen.getByText('90% confidence').parentElement
-      const mediumConfidenceBadge = screen.getByText('70% confidence').parentElement
+      const highConfidenceBadge = screen.getByText('90% confidence')
+      const mediumConfidenceBadge = screen.getByText('70% confidence')
 
-      expect(highConfidenceBadge).toHaveClass('badge-default')
-      expect(mediumConfidenceBadge).toHaveClass('badge-secondary')
+      expect(highConfidenceBadge).toHaveClass('chip-accent')
+      expect(mediumConfidenceBadge).toHaveAttribute('data-slot', 'badge')
+      expect(mediumConfidenceBadge).not.toHaveClass('chip-accent')
     })
   })
 
@@ -262,8 +265,10 @@ describe('CommitmentList', () => {
       // Date picker validation is handled by the Calendar component's disabled prop
       // The actual validation logic is: date < new Date()
       // This is tested by verifying the disabled prop is passed correctly
-      const internalCommitmentCard = screen.getByText('Commitment 1').closest('div')!.parentElement!
-      const dueDateButton = within(internalCommitmentCard).getByRole('button', { name: /Feb 1/ })
+      const internalCommitmentCard = getCommitmentCard('Commitment 1')
+      const dueDateButton = within(internalCommitmentCard).getByRole('button', {
+        name: /February 1st, 2025/,
+      })
 
       expect(dueDateButton).toBeInTheDocument()
     })
@@ -387,7 +392,7 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const externalCommitmentCard = screen.getByText('Commitment 2').closest('div')!.parentElement!
+      const externalCommitmentCard = getCommitmentCard('Commitment 2')
       const emailInput = within(externalCommitmentCard).getByLabelText(
         'Contact Email *',
       ) as HTMLInputElement
@@ -405,7 +410,7 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const externalCommitmentCard = screen.getByText('Commitment 2').closest('div')!.parentElement!
+      const externalCommitmentCard = getCommitmentCard('Commitment 2')
       const nameInput = within(externalCommitmentCard).getByLabelText(
         'Contact Name *',
       ) as HTMLInputElement
@@ -423,7 +428,7 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const externalCommitmentCard = screen.getByText('Commitment 2').closest('div')!.parentElement!
+      const externalCommitmentCard = getCommitmentCard('Commitment 2')
       const orgInput = within(externalCommitmentCard).getByLabelText(
         'Organization',
       ) as HTMLInputElement
@@ -434,21 +439,7 @@ describe('CommitmentList', () => {
   })
 
   describe('RTL Support', () => {
-    it('applies RTL direction when language is Arabic', () => {
-      vi.mock('react-i18next', async () => {
-        const actual = await vi.importActual('react-i18next')
-        return {
-          ...actual,
-          useTranslation: () => ({
-            t: (key: string) => key,
-            i18n: {
-              language: 'ar',
-              changeLanguage: vi.fn().mockResolvedValue(undefined),
-            },
-          }),
-        }
-      })
-
+    it('relies on the global direction provider instead of input dir attributes', () => {
       render(
         <CommitmentList
           commitments={mockCommitments}
@@ -460,7 +451,7 @@ describe('CommitmentList', () => {
       const descriptionInput = screen.getByDisplayValue(
         'Complete project documentation',
       ) as HTMLTextAreaElement
-      expect(descriptionInput).toHaveAttribute('dir', 'rtl')
+      expect(descriptionInput).not.toHaveAttribute('dir')
     })
   })
 })
