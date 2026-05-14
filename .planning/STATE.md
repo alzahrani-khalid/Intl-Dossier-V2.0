@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
 status: blocked
-stopped_at: Phase 50 Wave 2 blocked by frontend residual scope
-last_updated: '2026-05-14T06:37:24.000Z'
-last_activity: 2026-05-14 -- Phase 50 50-03 complete; 50-01 partial with 34 frontend failed files
+stopped_at: Phase 50 Plan 50-06 Task 4 ceiling failed
+last_updated: '2026-05-14T08:22:00.000Z'
+last_activity: 2026-05-14 -- Phase 50 50-06 partial; frontend residual 30 failed files exceeds <=15 gate
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 5
+  total_plans: 8
   completed_plans: 1
-  percent: 20
+  percent: 13
 ---
 
 # Project State
@@ -25,14 +25,22 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 
 ## Current Position
 
-Phase: 50 (test-infrastructure-repair) — EXECUTING
-Plan: 1 of 5 complete (50-03); 50-01 partial
-Status: Blocked before Wave 2
-Last activity: 2026-05-14 -- Phase 50 50-03 complete; 50-01 partial with 34 frontend failed files
+Phase: 50 (test-infrastructure-repair) — BLOCKED
+Plan: 50-06 partial
+Status: Blocked at Plan 50-06 Task 4 ceiling
+Last activity: 2026-05-14 -- Phase 50 50-06 partial; frontend residual 30 failed files exceeds <=15 gate
 
 ## Current Blocker
 
-Phase 50 cannot proceed to Wave 2 under the current 50-02 plan. Plan 50-02 sets an upper-bound stop condition of 15 residual frontend failing files after 50-01. The refreshed frontend default runner on 2026-05-14 returned 34 failed files:
+Phase 50 cannot proceed under the current 50-06/50-07/50-08 split. Plan 50-06 Task 4 requires the frontend default runner to be at `<=15` failing files after the cross-cutting setup fixes. After commits `ef2fbcfe`, `3ef2eecc`, `53ee68a6`, and `7c74ba16`, the refreshed frontend default runner on 2026-05-14 returned 30 failed files:
+
+`pnpm --filter intake-frontend exec vitest --run --reporter=default`
+
+Result: `Test Files 30 failed | 126 passed | 4 skipped (160)`, `Tests 371 failed | 961 passed | 25 todo (1357)`.
+
+See `.planning/phases/50-test-infrastructure-repair/50-06-BLOCKER.md`.
+
+Previous blocker context: Plan 50-02 set an upper-bound stop condition of 15 residual frontend failing files after 50-01. The refreshed frontend default runner on 2026-05-14 returned 34 failed files:
 
 `pnpm --filter intake-frontend test --run --reporter=verbose`
 
