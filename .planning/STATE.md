@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
-status: executing
-stopped_at: Phase 50 Plan 50-12 next
-last_updated: '2026-05-14T11:18:17.000Z'
-last_activity: 2026-05-14 -- Phase 50 Plan 50-10 complete; executing 50-12 next
+status: blocked
+stopped_at: Phase 50 Plan 50-13 ceiling gate
+last_updated: '2026-05-14T18:09:40.000Z'
+last_activity: 2026-05-14 -- Phase 50 Plan 50-13 Task 0 halted; frontend default runner has 13 failing files, exceeding the <=8 ceiling
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 9
-  completed_plans: 4
-  percent: 44
+  completed_plans: 5
+  percent: 56
 ---
 
 # Project State
@@ -26,17 +26,26 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 50 (test-infrastructure-repair) — EXECUTING
-Plan: 50-12
-Status: Executing Phase 50 residual frontend repairs
-Last activity: 2026-05-14 -- Phase 50 Plan 50-10 complete; executing 50-12 next
+Plan: 50-13
+Status: Blocked on Plan 50-13 ceiling gate
+Last activity: 2026-05-14 -- Phase 50 Plan 50-13 Task 0 halted; frontend default runner has 13 failing files, exceeding the <=8 ceiling
 
 ## Current Blocker
 
-No active blocker. The previous 50-06/50-07/50-08 split was superseded by the 50-09..50-13 replan. Wave 2 and Plan 50-10 repair plans are complete:
+Plan 50-13 cannot proceed as written. Task 0 re-ran the frontend default runner and found 13 failing files, which exceeds the plan's <=8 ceiling. See `.planning/phases/50-test-infrastructure-repair/50-13-DISCOVERY.md`.
+
+Live command:
+
+`pnpm --filter intake-frontend exec vitest --run --reporter=default`
+
+Result: `Test Files 13 failed | 141 passed | 4 skipped (158)`, `Tests 147 failed | 1177 passed | 25 todo (1349)`.
+
+The previous 50-06/50-07/50-08 split was superseded by the 50-09..50-13 replan. Wave 2, Wave 3, and Plan 50-12 repair plans are complete:
 
 - 50-09: provider/polyfill repair summary present.
 - 50-11: a11y/performance outlier repair summary present.
 - 50-10: Wave-3 i18n/default-runner repair summary present; six owned files passed and the frontend default-runner residual dropped from 26 to 20 failed files.
+- 50-12: design/route/dashboard repair summary present; seven owned files passed and the frontend default-runner residual dropped from 20 to 13 failed files.
 - Scoped Wave 2 gate passed: `pnpm --filter intake-frontend exec vitest --run --reporter=default tests/a11y tests/accessibility tests/performance` returned 2 files / 48 tests passed.
 - Scoped 50-10 gate passed: `pnpm --filter intake-frontend exec vitest --run --reporter=default tests/component/AfterActionForm.test.tsx tests/component/CommitmentList.test.tsx tests/component/DecisionList.test.tsx tests/component/TaskCard.test.tsx tests/component/SLAIndicator.test.tsx tests/unit/FormInput.test.tsx` returned 6 files / 141 tests passed.
 
@@ -48,9 +57,11 @@ Result: `Test Files 15 passed (15)`, `Tests 214 passed (214)`.
 
 ## Next Action
 
-Phase 49 closed Phase 49 D-12 smoke PRs (#9 initial-JS overflow, #10 sub-vendor d3-geospatial overflow) both showed `Bundle Size Check (size-limit)=fail` + `mergeStateStatus=BLOCKED` and were closed --delete-branch. D-14 phase-wide audit returned 0 net-new suppressions, 0 unauthorized ceiling raises. `Bundle Size Check (size-limit)` is now a required context on `main` branch protection alongside `Lint`, `type-check`, `Security Scan`; `enforce_admins=true` preserved.
+Replan or ratify the Plan 50-13 scope before execution resumes:
 
-Next milestone: **v6.2 Type-Check, Lint & Bundle Reset** is now SHIPPED (Phases 47, 48, 49 all complete). v7.0 Intelligence Engine is unblocked.
+1. Ratify a 13-file scope expansion for Plan 50-13.
+2. Split the residual into 50-13a/50-13b bounded plans.
+3. Explicitly move selected files out of the default runner as `split-to-integration` with audit/CI updates.
 
 ### Outstanding follow-ups (small)
 
