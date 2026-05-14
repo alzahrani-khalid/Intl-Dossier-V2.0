@@ -134,6 +134,7 @@ vi.mock('react-i18next', async () => {
           'tasks.sla.progress': 'Progress',
           'tasks.sla.safe': 'Safe',
           'tasks.sla.warning': 'Warning',
+          'validation.required': 'Required',
           'work_item.dossier': 'Dossier',
         }
         return translations[key] ?? key
@@ -141,6 +142,7 @@ vi.mock('react-i18next', async () => {
       i18n: {
         language: 'en',
         changeLanguage: vi.fn().mockResolvedValue(undefined),
+        dir: vi.fn(() => document.documentElement.dir || 'ltr'),
       },
     }),
     Trans: ({ children }: any) => children,
