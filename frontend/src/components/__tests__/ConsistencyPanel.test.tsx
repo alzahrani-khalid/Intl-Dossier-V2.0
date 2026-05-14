@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { ConsistencyPanel } from '../consistency-panel/ConsistencyPanel'
-import '../../../i18n'
+import '../../i18n'
 
 // Mock data
 const mockConsistencyCheck = {
