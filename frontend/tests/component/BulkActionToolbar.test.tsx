@@ -1,30 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { renderWithProviders as render, screen, fireEvent } from '@tests/utils/render'
 import { BulkActionToolbar } from '@/components/waiting-queue/BulkActionToolbar'
-
-// Mock i18next
-vi.mock('react-i18next', async () => {
-  const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next')
-
-  return {
-    ...actual,
-    useTranslation: () => ({
-      t: (key: string, options?: any) => {
-        const translations: Record<string, string> = {
-          'bulk_actions.selected': `${options?.count || 0} items selected`,
-          'bulk_actions.send_reminders': 'Send Reminders',
-          'bulk_actions.clear_selection': 'Clear Selection',
-          'bulk_actions.select_all': 'Select All',
-        }
-        return translations[key] || key
-      },
-      i18n: {
-        language: 'en',
-        changeLanguage: vi.fn().mockResolvedValue(undefined),
-      },
-    }),
-  }
-})
 
 describe('BulkActionToolbar Component Tests (T041)', () => {
   const mockOnSendReminders = vi.fn()
