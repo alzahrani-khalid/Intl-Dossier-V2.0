@@ -33,6 +33,15 @@ if (typeof window !== 'undefined' && typeof window.matchMedia === 'undefined') {
   })
 }
 
+// jsdom defines scrollTo as a not-implemented stub, so replace it with a no-op.
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'scrollTo', {
+    writable: true,
+    configurable: true,
+    value: vi.fn(),
+  })
+}
+
 // Global i18n mock
 vi.mock('react-i18next', async () => {
   const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next')
