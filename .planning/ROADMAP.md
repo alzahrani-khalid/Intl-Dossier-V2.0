@@ -159,7 +159,7 @@ Plans:
 - [x] 50-01-PLAN.md — FE cascade unblock + i18n factory + 11 dead-import deletions (Wave 1)
 - [x] 50-03-PLAN.md — BE global mocks + integration runner split + per-file triage (Wave 1)
 - [x] 50-04-PLAN.md — 50-TEST-AUDIT.md + frontend/docs/test-setup.md + backend/docs/test-setup.md (Wave 5)
-- [ ] 50-05-PLAN.md — CI jobs + D-13 branch protection + D-15 ESLint rule (Wave 6; code-side commit `720d135a` done, branch-protection checkpoint pending)
+- [x] 50-05-PLAN.md — CI jobs + D-13 branch protection + D-15 ESLint rule (Wave 6; PR #11 CLOSED, branch protection re-verified)
 - [x] 50-09-PLAN.md — Cross-cutting polyfills + provider migration (Wave 2)
 - [x] 50-10-PLAN.md — i18n-text drift batched fix (Wave 3)
 - [x] 50-11-PLAN.md — a11y/perf outliers (Wave 3)
@@ -183,9 +183,17 @@ Plans:
 
 Plans:
 
+**Wave 1**
+
 - [ ] 51-01-rule-activation-tier-b-PLAN.md — ESLint D-05 selectors (hex + palette + TemplateElement) + D-03 Tier-B carve-out + phase-51-base tag + regression fixture (Wave 1; severity ships at `warn`)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 51-02-tier-a-named-anchors-PLAN.md — Tier-A swap WorldMapVisualization.tsx + PositionEditor.tsx with visual-parity verification (Wave 2; parallel with 51-03)
 - [ ] 51-03-tier-a-mechanical-sweep-PLAN.md — Tier-A mechanical sweep ~80-120 files + 51-DESIGN-AUDIT.md scaffold (Wave 2; parallel with 51-02)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
 - [ ] 51-04-tier-c-severity-flip-smoke-pr-PLAN.md — Tier-C disables + audit population + severity flip `warn`→`error` + smoke PR (mergeStateStatus=BLOCKED) + 51-SUMMARY.md (Wave 3; one human-verify checkpoint)
 
 **UI hint:** yes

@@ -38,6 +38,7 @@ must_haves:
     - 'Bureau-light visual parity holds on a random sample of 5+ Tier-A files (status badges keep their hue family, success/warning/danger/info semantic intent preserved).'
     - '`pnpm typecheck` exits 0 after the sweep — no TS regressions introduced by mechanical swaps.'
     - 'Karpathy §3 surgical-change posture: `git diff --stat` shows ONLY className changes; no JSX-structure edits, no import re-orderings, no adjacent code refactoring.'
+    - 'Each 25-file mid-Task-2 progress checkpoint commit body contains `warnings_remaining: <N>` and N is monotonically non-increasing across checkpoints (W2 scope-sanity guard).'
   artifacts:
     - path: '.planning/phases/51-design-token-compliance-gate/51-DESIGN-AUDIT.md'
       provides: 'Initial scaffold with Tier-A worklist + Tier-C disposition table (Tier-C rows populated by Plan 51-04 Task 1)'
@@ -189,7 +190,7 @@ Audit-file scaffold shape (51-PATTERNS.md §`.planning/phases/.../51-DESIGN-AUDI
 
 | Threat ID | Category               | Component                                        | Disposition | Mitigation Plan                                                                                                                                                                                                                                                                                                                                                                              |
 | --------- | ---------------------- | ------------------------------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| T-51-11   | Tampering              | Mass mechanical swap across 80-120 files         | mitigate    | Per-file eslint verification gate before commit (`pnpm exec eslint <file>` exits 0 with zero D-05 warnings). Spot-check 5+ random Tier-A files visually on Bureau-light at 1280px (UI-SPEC §Visual Fidelity Guarantee item 1).                                                                                                                                                               |
+| T-51-11   | Tampering              | Mass mechanical swap across 80-120 files         | mitigate    | Per-file eslint verification gate before commit (`pnpm exec eslint <file>` exits 0 with zero D-05 warnings). Spot-check 5+ random Tier-A files visually on Bureau-light at 1280px (UI-SPEC §Visual Fidelity Guarantee item 1). PLUS 25-file mid-Task-2 progress checkpoint (W2 scope-sanity guard) — monotone-non-increasing warning count required to continue.                             |
 | T-51-12   | Information Disclosure | DossierTypeGuide.tsx → semantic-colors.ts drift  | mitigate    | DossierTypeGuide is a token showcase — cross-check `dossierTypeColors` in `frontend/src/lib/semantic-colors.ts` BEFORE swap. If the showcase displays the literal palette colors (intentional reference), it belongs in Tier-B carve-out (escalate); if it displays Bureau token colors via the existing map, mechanical swap stands.                                                        |
 | T-51-13   | Denial of Service      | DuplicateComparison.tsx diff-highlight colors    | mitigate    | This file has 39 hits with potentially context-dependent diff highlights (added/removed/changed). Pre-classify by reading the file: if highlight semantics map cleanly to `bg-success/10` (added) + `bg-danger/10` (removed) + `bg-warning/10` (changed), it's Tier-A. If diff colors are intentional Tailwind palette references for git-diff visual parity, push to Tier-C with rationale. |
 | T-51-14   | Elevation of Privilege | Karpathy §3 boundary drift                       | mitigate    | Per-file `git diff --stat` review: line delta should equal palette literal count ±2. Larger deltas indicate adjacent-code refactoring crept in. Reject the commit and isolate the swap.                                                                                                                                                                                                      |
@@ -251,7 +252,7 @@ All threats scored low or mitigated.
 </task>
 
 <task type="auto" tdd="false">
-  <name>Task 2: Mechanical token-swap pass across all Tier-A files</name>
+  <name>Task 2: Mechanical token-swap pass across all Tier-A files (with 25-file progress checkpoints)</name>
   <files>~80-120 files enumerated in 51-DESIGN-AUDIT.md §Tier-A Worklist (post-Task 1 frozen list)</files>
   <read_first>
     - .planning/phases/51-design-token-compliance-gate/51-DESIGN-AUDIT.md §Tier-A Worklist (the frozen file enumeration from Task 1)
@@ -293,6 +294,34 @@ All threats scored low or mitigated.
 
     Step 2f — Verify the surgical-change posture: `git diff --stat <file>` should show line delta ≤ (palette literal count + 1 or 2 for re-flow). Larger deltas mean adjacent code was touched — revert and isolate.
 
+    **Step 2g — Mid-Task-2 progress checkpoint (W2 scope-sanity guard, MANDATORY every 25 files):**
+
+    After every 25 files have been committed during this Task 2 sweep:
+
+      1. Capture the workspace design-token warning delta:
+         WARNINGS_REMAINING=$(pnpm --filter frontend lint 2>&1 | grep -c "design-token")
+         echo "warnings_remaining: $WARNINGS_REMAINING"
+
+      2. Compare against the prior checkpoint's warning count (stored from the previous 25-file checkpoint).
+
+      3. **Monotone-non-increasing invariant:** the current count MUST be ≤ the prior checkpoint's count. If the count is HIGHER than the prior 25-file checkpoint, STOP and emit:
+
+         ## CHECKPOINT: design-token warning count regressed at file N — investigate before continuing
+
+         Investigate what regressed: (a) a swap re-introduced a banned palette literal, (b) a new file landed via rebase carrying palette literals, (c) the cookbook mapping was applied incorrectly. Do not continue Task 2 until the count is monotonically non-increasing again.
+
+      4. **Commit body requirement:** each 25-file-batch commit body MUST contain a line of the form `warnings_remaining: <N>` where N is the post-batch workspace design-token warning count. This makes the checkpoint trail auditable via `git log --format=%B phase-51-base..HEAD | grep warnings_remaining`.
+
+      Example commit body:
+
+         refactor(51-03): tier-a token swap — admin routes batch 2
+
+         Files swapped (25): routes/_protected/admin/system.tsx, ...
+
+         warnings_remaining: 2417
+
+      5. The first checkpoint (after the first 25-file batch) establishes the baseline; subsequent checkpoints must reduce monotonically.
+
     Karpathy §3 surgical-change boundary (applies to EVERY Tier-A file):
     - ONLY change className strings (and the tiptap-style `class:` strings inside object literals).
     - Do NOT reflow JSX, rename props, refactor component logic.
@@ -300,13 +329,13 @@ All threats scored low or mitigated.
     - Do NOT introduce new font-family or textAlign declarations (RTL rule).
     - Match existing style: single quotes (per Prettier config), no semicolon (per Prettier config), trailing commas.
 
-    Commit cadence: 5-10 files per commit with message `refactor(51-03): tier-a token swap — <subdir or feature name>`. Each commit message lists the swapped files.
+    Commit cadence: 5-10 files per commit with message `refactor(51-03): tier-a token swap — <subdir or feature name>`. Each commit message lists the swapped files. Every 25 files (cumulative across batches), the commit body MUST include the `warnings_remaining: <N>` line per Step 2g.
 
     DO NOT commit any file whose post-swap eslint output shows non-zero D-05 warnings.
 
   </action>
   <verify>
-    <automated>pnpm exec eslint -c eslint.config.mjs $(awk -F'|' '/^\|.*\.(tsx?|ts)\s*\|/{gsub(/^[[:space:]]*|[[:space:]]*$/,"",$2); print "frontend/src/"$2}' .planning/phases/51-design-token-compliance-gate/51-DESIGN-AUDIT.md 2>/dev/null | grep -v Worklist | head -120) 2>&amp;1 | grep -cE "no-restricted-syntax" | grep -qx 0</automated>
+    <automated>pnpm exec eslint -c eslint.config.mjs $(awk -F'|' '/^\|.*\.(tsx?|ts)\s*\|/{gsub(/^[[:space:]]*|[[:space:]]*$/,"",$2); print "frontend/src/"$2}' .planning/phases/51-design-token-compliance-gate/51-DESIGN-AUDIT.md 2>/dev/null | grep -v Worklist | head -120) 2>&amp;1 | grep -cE "no-restricted-syntax" | grep -qx 0 &amp;&amp; git log --format=%B phase-51-base..HEAD | grep -c "warnings_remaining:" | awk '{ if ($1 >= 1) exit 0; else exit 1 }'</automated>
   </verify>
   <done>
     Every file in the Tier-A worklist passes `pnpm exec eslint -c eslint.config.mjs <file>` with 0 D-05 warnings.
@@ -314,6 +343,7 @@ All threats scored low or mitigated.
     No new files created under `frontend/src/` (no new components, no new hooks).
     No new imports added in any Tier-A file (verify via `git diff phase-51-base..HEAD -- frontend/src/ | grep -E '^\+import' | wc -l` returns 0 for the Plan 51-03 commit range, OR each new import is explicitly justified in a DEVIATION row).
     `51-DESIGN-AUDIT.md §Tier-A Worklist` is consistent with the actual swapped file set — any reclassifications recorded in §Tier-C reclassifications subsection.
+    At least one `warnings_remaining: <N>` line exists in the Plan 51-03 commit log (W2 mid-Task-2 checkpoint evidence); each subsequent checkpoint's N is monotonically non-increasing.
   </done>
 </task>
 
@@ -377,6 +407,7 @@ After all three tasks complete:
 - Karpathy §3 surgical-change posture: `git diff` shows ONLY className edits; no new files, no new imports outside justified DEVIATION rows.
 - No file overlap with Plan 51-02's two named anchors.
 - No file overlap with Plan 51-01's Tier-B carve-out.
+- Mid-Task-2 25-file progress checkpoints recorded in commit bodies as `warnings_remaining: <N>`; N monotonically non-increasing across checkpoints (W2 scope-sanity guard satisfied).
   </verification>
 
 <success_criteria>
@@ -395,4 +426,5 @@ After completion, create `.planning/phases/51-design-token-compliance-gate/51-03
 - Any Tier-C reclassifications (files moved from Tier-A → Tier-C during sweep).
 - Workspace name confirmation (`intake-frontend` vs `frontend` per STATE.md Phase 39 note).
 - `51-DESIGN-AUDIT.md` Tier-A Worklist count vs Plan-01 sweep-delta estimate (sanity check on classification fidelity).
+- W2 progress checkpoint trail: list of `warnings_remaining: <N>` values from commit log, monotonically non-increasing.
 </output>

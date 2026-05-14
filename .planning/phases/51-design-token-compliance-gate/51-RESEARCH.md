@@ -875,32 +875,37 @@ return (
 
 **These assumptions need user confirmation only if the Tier-A mapping for `text-blue-*` (A6) or the WorldMap SVG approach (A1) is contentious. Everything else is verifiable at execute time.**
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Template-literal coverage scope — selector vs. punt forward.**
    - What we know: 12 files in frontend/src have palette literals inside untagged template strings; Phase 48 RTL selectors share this blind spot today.
    - What's unclear: Whether to add the third selector (`TemplateElement[value.raw=/.../]`) in Phase 51 or accept it as a known carry-forward.
    - Recommendation: **Add the companion selector.** The 12 files include `routes/_protected/admin/system.tsx` (Tier-A candidate at 23 hits) and `pages/word-assistant/WordAssistantPage.tsx` (status indicator) — leaving the coverage gap means the rule's promise ("design tokens only") isn't fully delivered. The extra selector is one config-line; the coverage cost is high.
+   - **RESOLVED:** Ship the TemplateElement companion selector — implemented as Plan 51-01 Task 2 step (c) (the `TemplateElement[value.raw=...]` palette selector appended alongside the Literal hex + Literal palette selectors in the same `no-restricted-syntax` array).
 
 2. **Smoke PR style — JSX literal injection vs. permanent fixture file.**
    - What we know: Phase 48 D-16 used real-component JSX injection (PRs #7/#8). Phase 50 D-15 used a permanent fixture file (`tools/eslint-fixtures/bad-vi-mock.ts`).
    - What's unclear: Phase 51 D-10 says "real component"; planner discretion permits either or both.
    - Recommendation: **Both.** The smoke PR is the one-time gate-block proof per D-10; the fixture is the ongoing CI-time regression guard. Both are cheap.
+   - **RESOLVED:** In-tree JSX literal injection per Phase 48 PR #7 donor — implemented as Plan 51-04 Task 4 (smoke branch `smoke/phase-51-design-token-gate`, deliberate `<div className="bg-red-500">smoke</div>` inside an existing rendered JSX subtree, NEVER module scope per Pitfall 3). The permanent fixture is shipped separately in Plan 51-01 Task 4.
 
 3. **`WorldMap` lineColor approach — `var()` reference vs. `getComputedStyle` runtime read.**
    - What we know: SVG presentation attributes accept `var()` in current browsers, but `dotted-map`'s opacity layer is opaque.
    - What's unclear: Whether `var()` survives the WorldMap render pipeline.
    - Recommendation: **Try `var()` first** (one-line change: `lineColor="var(--accent)"`); fall back to a runtime `useTokenColor()` hook only if rendering fails. The runtime hook adds complexity Phase 51 doesn't need if the simpler path works.
+   - **RESOLVED:** Recipe A/B/C `var(--accent)` via `getComputedStyle` spike — implemented as Plan 51-02 Task 1 (the SPIKE → CHOOSE RECIPE → SWAP three-step approach; executor commits to Recipe A `lineColor="var(--accent)"`, B `getComputedStyle(documentElement).getPropertyValue('--accent')`, or C `graphEdgeColors` import after dev-page verification).
 
 4. **`semantic-colors.ts` Tier-B inclusion — defensive vs. strict.**
    - What we know: The file uses token utilities (`bg-primary/10`, `text-warning`) — these PASS the new selectors. The `graphNodeColors` / `graphEdgeColors` maps return `'var(--heroui-accent)'` strings — these are NOT hex/palette literals, so they ALSO PASS.
    - What's unclear: Whether to include `semantic-colors.ts` in the Tier-B allowlist defensively or leave it under the rule.
    - Recommendation: **Leave it under the rule.** All current strings pass; including it in Tier-B suggests it has design-rule-violating literals when it doesn't. If a future addition violates the rule, that's the right place for it to surface and be fixed.
+   - **RESOLVED:** Tier-B via `components/ui/**` carve-out + token-map files (semantic-colors.ts intentionally NOT in carve-out) — implemented as Plan 51-01 Task 3 (the D-03 Tier-B override block enumerates explicit chart/flag/token-map files; `semantic-colors.ts` is deliberately omitted because its current content passes the new selectors).
 
 5. **`51-DESIGN-AUDIT.md` row count expectation.**
    - What we know: ~145 Tier-C files post-classification estimated.
    - What's unclear: How the future-cleanup phase breakdown should anticipate this volume. 200–250 across 2–4 phases (per CONTEXT deferred section) may be an underestimate if Tier-C count comes in higher.
    - Recommendation: Audit Tier-C row count BEFORE Phase 51 ships; if >175, propose the cleanup phases now via a roadmap PR so v6.4 / v7.x can schedule them.
+   - **RESOLVED:** Histogram-driven; freeze ~80-120 Tier-A rows in `51-DESIGN-AUDIT.md` — implemented as Plan 51-03 Task 1 (live `rg -c` histogram with Tier-B exclusions + classification heuristic; the frozen Tier-A worklist seeds Plan 51-04 Task 1's Tier-C delta calculation).
 
 ## Environment Availability
 

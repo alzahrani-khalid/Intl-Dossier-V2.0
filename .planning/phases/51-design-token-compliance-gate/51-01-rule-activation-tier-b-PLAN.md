@@ -28,7 +28,8 @@ must_haves:
     - "eslint.config.mjs contains a new override block with files: [...] and rules: { 'no-restricted-syntax': 'off' } covering the D-03 Tier-B file enumeration."
     - 'tools/eslint-fixtures/bad-design-token.tsx exists, contains one banned palette literal and one raw hex literal, and `pnpm lint tools/eslint-fixtures/bad-design-token.tsx` exits non-zero.'
     - 'Git tag phase-51-base exists at the pre-edit HEAD and is pushed to origin.'
-    - 'Workspace `pnpm lint` exits 0 after this plan lands (rule is WARN, not ERROR, so existing violations surface as warnings but do not block).'
+    - 'Phase 50 smoke PR #11 is CLOSED before any Phase 51 source edit lands (D-14 pre-flight invariant).'
+    - 'Workspace `pnpm lint` exits 0 after this plan lands (D-05 selectors at WARN, RTL selectors UNCHANGED at ERROR per D-15 invariant; existing palette/hex violations surface as warnings but do not block).'
   artifacts:
     - path: 'eslint.config.mjs'
       provides: 'D-05 rule selectors (3 new entries: hex Literal + palette Literal + palette TemplateElement) and D-03 Tier-B carve-out block'
@@ -38,8 +39,8 @@ must_haves:
       contains: 'bg-red-500'
   key_links:
     - from: 'eslint.config.mjs frontend override block (lines 70-200)'
-      to: 'the existing no-restricted-syntax array at lines 148-198'
-      via: 'append three new selector entries before the closing ]'
+      to: 'the existing no-restricted-syntax array at lines 148-198 (Phase 48 RTL selectors kept at error per D-15) PLUS a NEW second no-restricted-syntax array holding the D-05 selectors at warn'
+      via: 'add a second `no-restricted-syntax` entry in the same rules object holding the 3 new D-05 selectors at warn severity'
       pattern: "Literal\\[value=/.*#\\[0-9a-fA-F\\]"
     - from: 'eslint.config.mjs (new Tier-B override block inserted after line 221)'
       to: 'the D-03 enumerated Tier-B file globs'
@@ -61,10 +62,16 @@ fixture mirroring `tools/eslint-fixtures/bad-vi-mock.ts`.
 **Sequencing decision:** the new selectors land at SEVERITY `warn`, NOT `error`. Reason:
 the workspace contains ~2,950 palette literals and 337 raw-hex hits across `frontend/src/`
 today; flipping to `error` here would fail `pnpm lint` workspace-wide before Plans 51-02
-and 51-03 swap Tier-A literals and Plan 51-04 lands Tier-C disables. Plan 51-04 Task 4
+and 51-03 swap Tier-A literals and Plan 51-04 lands Tier-C disables. Plan 51-04 Task 3
 performs the final `warn → error` flip after all swaps and disables are in place.
 Verification still works under `warn`: ESLint exits 0 but emits the rule messages so
 executors of Plan 51-04 can run the smoke PR with `error` and observe `Lint=fail`.
+
+**Severity-isolation invariant (W4 revision):** the 11 Phase 48 RTL selectors remain at
+`'error'` for the entire Phase 51 duration. The D-05 selectors land in a SEPARATE
+`no-restricted-syntax` array at `'warn'`. Phase 48 D-15 invariant (RTL selectors PR-blocking)
+is preserved unchanged across Plans 51-02, 51-03, 51-04 Tasks 1-2. Plan 51-04 Task 3 flips
+ONLY the D-05 array from `warn → error`; the RTL array is never touched.
 
 Purpose: stand up the policy and Tier-B carve-out in a single self-contained change that
 later plans can branch off without coupling. Tier-A swap plans (51-02 / 51-03) are
@@ -73,9 +80,10 @@ severity to `error`, lands per-Literal disables, runs the smoke PR, and writes
 `51-SUMMARY.md`.
 
 Output: rule selectors live in the same `eslint.config.mjs` frontend override block as the
-eleven Phase 48 RTL selectors; Tier-B block lives after the existing `components/ui/**`
-carve-out at lines 215-221; fixture lives at `tools/eslint-fixtures/bad-design-token.tsx`
-under the existing test-fixtures glob at line 227; phase-51-base tag at the pre-edit HEAD.
+eleven Phase 48 RTL selectors (split into two `no-restricted-syntax` arrays — RTL at error,
+D-05 at warn); Tier-B block lives after the existing `components/ui/**` carve-out at lines
+215-221; fixture lives at `tools/eslint-fixtures/bad-design-token.tsx` under the existing
+test-fixtures glob at line 227; phase-51-base tag at the pre-edit HEAD.
 </objective>
 
 <execution_context>
@@ -156,9 +164,9 @@ From 51-UI-SPEC.md §Copywriting Contract (verbatim ESLint rule messages — sin
 
 From 51-PATTERNS.md §"eslint.config.mjs (root, modify)":
 
-- New selectors append AFTER the existing line 197 (border-r-) selector, BEFORE the closing `]` at line 198.
+- New selectors go in a SEPARATE second `no-restricted-syntax` array entry, NOT appended to the RTL array. The RTL array keeps its 11 selectors at `'error'` untouched. The new D-05 array sits adjacent in the same rules object.
 - New Tier-B block inserts AFTER line 221 (closing brace of components/ui carve-out) and BEFORE line 224 (test-mock guard block).
-- Severity at this plan stage is `warn`, not `error` — Plan 51-04 flips to `error`.
+- Severity at this plan stage is `warn` (for D-05 only), not `error` — Plan 51-04 Task 3 flips JUST the D-05 array to `error`.
   </interfaces>
   </context>
 
@@ -182,11 +190,42 @@ From 51-PATTERNS.md §"eslint.config.mjs (root, modify)":
 | T-51-04   | Elevation of Privilege | Rule bypass via `// eslint-disable-next-line` abuse | mitigate    | D-12 zero net-new disable rule: grep diff for new `eslint-disable` strings; count MUST equal Tier-C row count in `51-DESIGN-AUDIT.md`. Per-Literal disables only, never file-top blanket. Verification step in Plan 51-04 Task 5.                                                                             |
 | T-51-05   | Information Disclosure | Tier-B over-match via wildcard glob                 | mitigate    | Tier-B enumeration uses explicit filenames (not `**Chart.tsx` wildcards) for chart palettes per PATTERNS.md §"Notes for the planner" → Pitfall 6. Future chart files entering `analytics/` MUST be added explicitly.                                                                                          |
 | T-51-06   | Repudiation            | phase-51-base tag drift                             | mitigate    | Tag is created idempotently at HEAD before any source edit (`git tag phase-51-base $(git rev-parse HEAD)`) and pushed to origin. D-12 diff-grep in Plan 51-04 anchors to this exact ref.                                                                                                                      |
+| T-51-23   | Repudiation            | Phase 50-05 smoke PR re-opened mid-Phase-51         | mitigate    | Pre-flight task (Task 0) verifies `gh pr view 11 --json state -q .state` returns `CLOSED` before any source edit. If non-closed, STOP and surface the discrepancy per D-14 invariant.                                                                                                                         |
 
 All threats scored low or mitigated; none reach the high-severity bar (likelihood ≥3 AND impact ≥3) that would block this plan.
 </threat_model>
 
 <tasks>
+
+<task type="auto">
+  <name>Task 0: D-14 pre-flight — confirm Phase 50-05 smoke PR #11 is CLOSED</name>
+  <files>(none — read-only GitHub state probe)</files>
+  <read_first>
+    - .planning/phases/51-design-token-compliance-gate/51-CONTEXT.md §"D-14" (Phase 50 dependency invariant — Phase 51 only proceeds after Phase 50 ships)
+    - .planning/phases/51-design-token-compliance-gate/51-RESEARCH.md §"Phase 50 branch-protection state" (A3 — STATE.md's "Phase 50 paused" may be stale documentation; live `gh` API is the truth source)
+  </read_first>
+  <action>
+    Run a one-shot guard before any source edit or git-tag operation:
+      gh pr view 11 --json state -q .state | grep -q CLOSED
+
+    Acceptance criterion: command exits 0. The Phase 50-05 smoke PR (`Phase 50 smoke: tests gate proof (DO NOT MERGE)` per the live `gh pr view 11` capture) must be in CLOSED state before Phase 51 modifies `eslint.config.mjs`.
+
+    If the command exits non-zero (PR is OPEN, MERGED to non-main, or doesn't exist):
+      STOP execution and emit:
+        ## CHECKPOINT: Phase 50-05 smoke PR not closed — confirm Phase 50 shipped before proceeding per D-14
+
+      Surface this to the user. Do not proceed to Task 1.
+
+    This task is the D-14 gate. Phase 50 must be sealed (smoke PR closed, branch protection re-verified) before Phase 51 reaches into the same `eslint.config.mjs` file. Skipping this gate risks landing Phase 51's D-05 selectors on top of an incomplete Phase 50 lint policy.
+
+    No files modified. No source edits. Read-only verification.
+
+  </action>
+  <verify>
+    <automated>gh pr view 11 --json state -q .state | grep -q CLOSED</automated>
+  </verify>
+  <done>`gh pr view 11 --json state -q .state` returns `CLOSED`. Task is a pure pre-flight gate — no commits, no source edits.</done>
+</task>
 
 <task type="auto">
   <name>Task 1: Set phase-51-base git tag</name>
@@ -208,28 +247,68 @@ All threats scored low or mitigated; none reach the high-severity bar (likelihoo
 </task>
 
 <task type="auto" tdd="false">
-  <name>Task 2: Append D-05 selectors to no-restricted-syntax array (severity: warn)</name>
+  <name>Task 2: Add D-05 selectors in a SEPARATE no-restricted-syntax array (severity: warn) — preserves RTL selectors at error</name>
   <files>eslint.config.mjs</files>
   <read_first>
     - eslint.config.mjs (lines 1-200, full frontend override block including the 11 Phase 48 RTL selectors at lines 148-198)
     - .planning/phases/51-design-token-compliance-gate/51-PATTERNS.md §"eslint.config.mjs (root, modify)" pattern-assignment section (the verbatim selector shapes)
     - .planning/phases/51-design-token-compliance-gate/51-UI-SPEC.md §"Lint Rule Contract" §Selector 1 + §Selector 2 + §Copywriting Contract
     - .planning/phases/51-design-token-compliance-gate/51-RESEARCH.md §"Pattern 1: Adjacent no-restricted-syntax selectors" + §"Code Examples"
+    - .planning/phases/48-lint-config-alignment/48-CONTEXT.md §"D-15" (PR-blocking Lint context invariant — RTL selectors must stay at error)
   </read_first>
   <action>
-    Edit eslint.config.mjs frontend override block. Two structural changes:
+    Edit eslint.config.mjs frontend override block. ONE structural change (split-array approach per W4 revision):
 
-    1) Change the existing line 149 severity from `'error'` to `'warn'` (the first element of the no-restricted-syntax array). Rationale: ALL eleven Phase 48 RTL selectors share this severity, and the codebase is currently green at `error` — flipping to `warn` keeps RTL warnings non-blocking during the Phase 51 Tier-A sweep waves. The final flip back to `error` (covering both RTL and the new D-05 selectors) happens in Plan 51-04 Task 4 AFTER the Tier-A + Tier-C waves land.
+    SPLIT the existing `'no-restricted-syntax': [...]` block into TWO sibling entries in the same `rules: { ... }` object. ESLint flat config does NOT allow two keys named `'no-restricted-syntax'` in the same `rules` object — the second silently overrides the first. So the actual implementation is one of:
 
-       NOTE: if the executor concludes that downgrading the existing RTL selectors from `error` to `warn` is too broad, the alternative is to split the no-restricted-syntax block into two arrays — one for the existing RTL rules at `error`, one for the new D-05 rules at `warn`. Either path is acceptable; the alternative requires duplicating the array literal and adding a second `'no-restricted-syntax': [...]` entry. Default path: severity flip on the existing array. Document the chosen path in the commit message.
+      (Implementation Option 1 — RECOMMENDED) Append the 3 new D-05 selectors INTO the existing array, but emit them with a per-selector severity override is NOT supported by ESLint. Instead, keep the existing array at `'error'` (with RTL selectors UNCHANGED) and add the D-05 selectors as a single combined block at the same severity. BUT this conflicts with the warn-first sequencing. Therefore use Implementation Option 2.
 
-    2) Append three new selector entries inside the no-restricted-syntax array AFTER the existing line 197 (the `border-r-` RTL selector) and BEFORE the closing `]` at line 198:
+      (Implementation Option 2 — REQUIRED) Create a SECOND rules object via a new flat-config entry in the array exported by `eslint.config.mjs`. Pattern:
+
+        // After the existing frontend override block ending around line 200, insert:
+        {
+          files: ['frontend/**/*.{ts,tsx}'],
+          rules: {
+            'no-restricted-syntax': [
+              'warn',
+              { selector: 'Literal[value=/#[0-9a-fA-F]{3,8}\\b/]', message: '<raw hex msg from UI-SPEC>' },
+              { selector: 'Literal[value=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]', message: '<palette msg from UI-SPEC>' },
+              { selector: 'TemplateElement[value.raw=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]', message: '<template companion msg from UI-SPEC>' },
+            ],
+          },
+        },
+
+    ESLint flat-config merges rule severity/options when the SAME rule appears in multiple matching config entries — the LAST matching entry wins for that rule. Therefore: putting the D-05 array in a NEW config entry that comes AFTER the Phase 48 RTL entry would override the RTL severity to `warn` and lose the 11 RTL selectors entirely.
+
+    The CORRECT approach: keep ALL 14 selectors in the ORIGINAL `no-restricted-syntax` array (11 RTL + 3 D-05), with severity at `'error'` so RTL stays PR-blocking. Then add a SEPARATE override block scoped ONLY to the new D-05 selectors at `warn`. ESLint does NOT support per-selector severity within one `no-restricted-syntax` array — severity is set ONCE for the whole array.
+
+    Given the ESLint constraint, the ACTUAL split-array implementation (W4 fix) is:
+
+      Step 2a: KEEP the existing RTL array at line 148-198 verbatim, severity remains `'error'`. DO NOT modify line 149's severity. DO NOT append the 3 new selectors to this array.
+
+      Step 2b: Add a NEW frontend-scoped config entry AFTER line 200 (end of the existing frontend override block) but BEFORE line 215 (components/ui carve-out). This new entry has its own `rules: { 'no-restricted-syntax': ['warn', ...3 D-05 selectors...] }` block. Per ESLint flat-config merge semantics: the LAST entry whose `files` glob matches `frontend/**/*.{ts,tsx}` and which sets `'no-restricted-syntax'` wins — BUT the components/ui carve-out at line 215 sets `'no-restricted-syntax': 'off'` for that subtree, demonstrating that flat-config OVERRIDE per-file works.
+
+      Critical: because both arrays match the SAME `frontend/**/*.{ts,tsx}` glob, the SECOND array's `'warn'` severity + 3 selectors would OVERRIDE the first array's `'error'` severity + 11 RTL selectors. This is unacceptable (D-15 violation).
+
+      Resolution: the executor MUST verify via `pnpm exec eslint --print-config frontend/src/App.tsx | jq '.rules["no-restricted-syntax"]'` that the resolved config contains all 14 selectors. If the resolved array contains only the 3 D-05 selectors, ESLint flat-config does NOT merge `no-restricted-syntax` arrays across entries — it replaces. In that case, the ONLY viable implementation is:
+
+        Combine ALL 14 selectors (11 RTL + 3 D-05) into the SINGLE existing array. Set the shared severity to `'warn'` for the Phase 51 duration (Plans 51-02, 51-03, 51-04 Tasks 1-2). Plan 51-04 Task 3 flips ALL 14 back to `'error'` simultaneously.
+
+      D-15 preservation under combined-array path: the RTL selectors stay PR-blocking via the SECOND severity-isolated mechanism: in the NEW Tier-B carve-out block (Task 3), do NOT include `'no-restricted-syntax': 'off'` for components/ui (it's already 'off' there). Workspace lint at warn means RTL warnings surface but don't fail CI. THIS IS A PHASE 48 D-15 INVARIANT REGRESSION for the Phase 51 duration only.
+
+      ALTERNATE resolution (RECOMMENDED if D-15 regression is unacceptable): use ESLint's `--max-warnings 0` flag in CI's Lint job. With `--max-warnings 0`, ANY warning fails CI — preserving RTL PR-blocking AND giving D-05 a path to `warn` severity before the Plan 51-04 flip. Check whether the existing CI Lint job already uses `--max-warnings 0` (RESEARCH §"CI Lint job command" — verify at execute time). If yes, the combined-array path is safe. If no, the Phase 51 duration is a D-15-relaxed window with RTL warnings non-blocking until Plan 51-04 Task 3.
+
+      DEFAULT PATH per this plan: combined-array with the CI `--max-warnings 0` invariant verified at execute time. The executor MUST run `grep -rn 'pnpm lint' .github/workflows/` to confirm the Lint job invocation includes `--max-warnings 0` or equivalent. If absent, escalate as a DEVIATION row in the 51-01-SUMMARY.md before committing the warn flip.
+
+    Append three new selector entries inside the existing no-restricted-syntax array AFTER the existing line 197 (the `border-r-` RTL selector) and BEFORE the closing `]` at line 198:
 
        (a) RAW HEX selector — selector string: `Literal[value=/#[0-9a-fA-F]{3,8}\\b/]`. Message verbatim from 51-UI-SPEC.md §Copywriting Contract row 1 (the long-form text starting with "Raw hex colors are not allowed in frontend/src...").
 
        (b) TAILWIND PALETTE Literal selector — selector string (exact regex, with `\\s`, `\\d`, and `\\b` double-escaped because the config file uses JS string literals): `Literal[value=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]`. Message verbatim from 51-UI-SPEC.md §Copywriting Contract row 2.
 
        (c) TEMPLATE ELEMENT companion selector — same regex against `TemplateElement[value.raw=...]` instead of `Literal[value=...]`. Closes the template-literal blind spot per RESEARCH §"Pitfall 1". Short message: cite the template-literal coverage extension; name `text-accent / text-danger / text-success / text-warning / text-info / text-ink* / bg-surface / border-line` as canonical swaps.
+
+    Change the array severity (line 149) from `'error'` to `'warn'` for the Phase 51 duration. Plan 51-04 Task 3 flips back to `'error'`. The D-15 RTL invariant is preserved across this warn window via CI `--max-warnings 0` (or by escalating a DEVIATION if absent).
 
     Style rules: single quotes, no trailing semicolon inside the array, comma after each `}` per existing array shape (lines 153, 157, etc.). Match the column / indent of the existing RTL selectors. No emoji, no exclamation marks, sentence case (Phase 48 D-06 + CLAUDE.md §"No marketing voice").
 
@@ -244,7 +323,9 @@ All threats scored low or mitigated; none reach the high-severity bar (likelihoo
     `grep -c "Literal\[value=/#\[0-9a-fA-F\]{3,8}" eslint.config.mjs` returns 1.
     `grep -c "TemplateElement\[value.raw" eslint.config.mjs` returns 1.
     `grep -c "(text\|bg\|border\|ring\|fill\|stroke" eslint.config.mjs` returns at least 2 (Literal palette selector + TemplateElement companion both share the same banned palette enumeration).
-    The first element of the no-restricted-syntax array is the string literal `'warn'`.
+    `pnpm exec eslint --print-config frontend/src/App.tsx | jq '.rules["no-restricted-syntax"][0]'` returns `'warn'` (severity flipped from error for the Phase 51 duration).
+    The resolved `no-restricted-syntax` rule contains all 14 selectors (11 RTL + 3 D-05).
+    If CI Lint job lacks `--max-warnings 0`: a DEVIATION row in 51-01-SUMMARY.md acknowledges the D-15 RTL-warning-non-blocking window for the Phase 51 duration.
   </done>
 </task>
 
@@ -318,7 +399,7 @@ All threats scored low or mitigated; none reach the high-severity bar (likelihoo
     - Optional: one banned palette inside a template literal (e.g., `` className={`text-red-500 ${flag ? 'x' : ''}`} ``) — fires the TemplateElement companion. Recommended to include all three for full coverage.
     - The literals must live inside a rendered JSX subtree so noUnusedLocals (TS6133) does not also fire — assign to a `const _bad = <div>...</div>` and `export {}` at file end (donor: bad-vi-mock.ts uses `export {}` pattern implicitly via no-default-export).
 
-    Severity at this plan stage is `warn`, so `pnpm lint` against the fixture will exit 0 with warnings. After Plan 51-04 Task 4 flips severity to `error`, the same `pnpm lint <fixture>` will exit non-zero. Plan 51-04 Task 6 will pin the fixture's expected exit code as the regression guard. Do NOT add a separate override block for the fixture — it rides under the existing `tools/eslint-fixtures/**/*.{ts,tsx}` glob at eslint.config.mjs line 227.
+    Severity at this plan stage is `warn`, so `pnpm lint` against the fixture will exit 0 with warnings. After Plan 51-04 Task 3 flips severity to `error`, the same `pnpm lint <fixture>` will exit non-zero. Plan 51-04 Task 5 will pin the fixture's expected exit code as the regression guard. Do NOT add a separate override block for the fixture — it rides under the existing `tools/eslint-fixtures/**/*.{ts,tsx}` glob at eslint.config.mjs line 227.
 
     No imports beyond React types if needed (the file is JSX so the implicit React 19 JSX transform handles `<div>` without an `import React`).
 
@@ -348,7 +429,7 @@ All threats scored low or mitigated; none reach the high-severity bar (likelihoo
 
     1) `node --input-type=module -e "import('./eslint.config.mjs').then(()=>console.log('OK')).catch(e=>{console.error(e);process.exit(1)})"` — must print `OK`. Confirms the config parses.
 
-    2) `pnpm lint` workspace-wide — must exit 0. Severity is `warn` so existing palette literals across frontend/src/ surface as warnings but DO NOT fail the lint. Capture the warning count for the plan summary (the count should roughly match the RESEARCH §"Sweep delta" estimate of ~2,950 palette + ~337 hex, minus Tier-B carve-out hits).
+    2) `pnpm lint` workspace-wide — must exit 0 (exit-code gate). Severity is `warn` so existing palette literals across frontend/src/ surface as warnings but DO NOT fail the lint. Capture the warning count for the plan summary (the count should roughly match the RESEARCH §"Sweep delta" estimate of ~2,950 palette + ~337 hex, minus Tier-B carve-out hits).
 
     3) `pnpm exec eslint tools/eslint-fixtures/bad-design-token.tsx 2>&amp;1` — must surface at least one of the new D-05 rule messages. Even at `warn`, ESLint prints the rule message text.
 
@@ -360,10 +441,10 @@ All threats scored low or mitigated; none reach the high-severity bar (likelihoo
 
   </action>
   <verify>
-    <automated>pnpm lint 2>&amp;1 | tail -1 | grep -qiE "(passed|success|no problems)|^$" &amp;&amp; pnpm exec eslint tools/eslint-fixtures/bad-design-token.tsx 2>&amp;1 | grep -cE "(Raw hex|Tailwind palette|not allowed)" | grep -qE "^[1-9]"</automated>
+    <automated>pnpm lint; test $? -eq 0 &amp;&amp; pnpm exec eslint tools/eslint-fixtures/bad-design-token.tsx 2>&amp;1 | grep -cE "(Raw hex|Tailwind palette|not allowed)" | grep -qE "^[1-9]"</automated>
   </verify>
   <done>
-    `pnpm lint` exit code is 0.
+    `pnpm lint` exit code is 0 (exit-code gate, not output-string parsing).
     The eslint command against the bad fixture surfaces at least one D-05 rule message (raw hex / palette / TemplateElement).
     The eslint command against `frontend/src/components/position-editor/PositionEditor.tsx` surfaces multiple D-05 palette warnings — confirms the rule is active and visible across Tier-A scope.
     `node --input-type=module -e "import('./eslint.config.mjs')..."` prints `OK`.
@@ -373,12 +454,13 @@ All threats scored low or mitigated; none reach the high-severity bar (likelihoo
 </tasks>
 
 <verification>
-After all five tasks complete:
+After all six tasks complete (Task 0 D-14 pre-flight + Tasks 1-5):
 
+- `gh pr view 11 --json state -q .state` returned `CLOSED` (D-14 pre-flight satisfied before any source edit).
 - `git rev-parse phase-51-base` returns the pre-edit HEAD SHA; tag is pushed to origin.
-- `eslint.config.mjs` parses without error; contains 3 new selector entries (Literal hex, Literal palette, TemplateElement palette) and 1 new Tier-B override block.
+- `eslint.config.mjs` parses without error; contains 3 new selector entries (Literal hex, Literal palette, TemplateElement palette) at `'warn'` severity within the same array as the 11 RTL selectors (all 14 share one severity per ESLint constraint) and 1 new Tier-B override block.
 - `tools/eslint-fixtures/bad-design-token.tsx` exists and triggers the new selectors.
-- `pnpm lint` workspace-wide exits 0 with warnings (severity is `warn` until Plan 51-04 Task 4 flips to `error`).
+- `pnpm lint` workspace-wide exits 0 with warnings (severity is `warn` until Plan 51-04 Task 3 flips to `error`).
 - The Tier-B file enumeration matches the D-03 list exactly; semantic-colors.ts is intentionally NOT carved out; index.css / modern-nav-tokens.css are NOT in the array (they're outside the rule glob already).
 - No new ESLint plugin dependencies introduced.
 - No new GHA workflow file changes.
@@ -388,6 +470,7 @@ After all five tasks complete:
 <success_criteria>
 
 - Plan 51-01 ships the policy structure for the entire phase (DESIGN-01 + DESIGN-02 mechanism in place; rule fires, just at warn severity until Plan 51-04).
+- D-14 pre-flight gate (Task 0) confirms Phase 50-05 PR #11 is CLOSED before any source edit.
 - All four downstream plans (51-02, 51-03, 51-04) can read this plan's outputs without reverse engineering: the selectors exist, the Tier-B carve-out exists, the fixture exists, the base tag exists.
 - Karpathy §3 surgical-change posture: only `eslint.config.mjs` (3 chunks) + `tools/eslint-fixtures/bad-design-token.tsx` (1 new file) are touched.
 - No code under `frontend/src/` modified by this plan.
@@ -395,8 +478,10 @@ After all five tasks complete:
 
 <output>
 After completion, create `.planning/phases/51-design-token-compliance-gate/51-01-SUMMARY.md` capturing:
+- Phase 50-05 PR #11 CLOSED confirmation (Task 0 evidence).
 - Final commit SHA for the config + fixture changes.
 - `pnpm lint` warning count delta (zero before this plan; ~3,287 after — the rule's surface area exposed at warn severity).
 - The 4 verification outputs from Task 5.
 - Confirmation that no Tier-A or Tier-C source edits leaked into this plan (`git diff phase-51-base..HEAD -- frontend/src` returns empty).
+- DEVIATION row if CI Lint job lacks `--max-warnings 0` and RTL warnings are non-blocking for the Phase 51 duration.
 </output>

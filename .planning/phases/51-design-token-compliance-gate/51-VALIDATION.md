@@ -2,8 +2,8 @@
 phase: 51
 slug: design-token-compliance-gate
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-15
 ---
 
@@ -38,17 +38,17 @@ created: 2026-05-15
 
 ## Per-Task Verification Map
 
-| Task Anchor                                                 | Requirement | Threat Ref | Secure Behavior                                               | Test Type          | Automated Command                                                                                                                   | File Exists                            |
-| ----------------------------------------------------------- | ----------- | ---------- | ------------------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| Rule activation (`eslint.config.mjs` D-05 hex selector)     | DESIGN-01   | —          | Raw hex in `.ts`/`.tsx` flagged outside allowlist             | static lint        | `pnpm exec eslint -c eslint.config.mjs <tier-c-file-with-hex>` → exits 1 with hex-rule message                                      | ✅                                     |
-| Rule activation (`eslint.config.mjs` D-05 palette selector) | DESIGN-02   | —          | Palette literal (incl. variant prefix) flagged                | static lint        | `pnpm exec eslint -c eslint.config.mjs <tier-c-file-with-palette>` → exits 1 with palette-rule message                              | ✅                                     |
-| Token-mapped utility passes                                 | DESIGN-02   | —          | `text-ink` / `bg-accent` / `text-success` NOT flagged         | static lint        | `pnpm lint <Tier-A-file-after-swap>` → exits 0                                                                                      | ✅                                     |
-| Template-literal companion selector                         | DESIGN-02   | —          | Banned palette inside template string flagged                 | static lint        | `pnpm exec eslint -c eslint.config.mjs <file-with-template-literal-palette>` → exits 1                                              | ⚠️ Wave 0 if not shipping companion    |
-| WorldMapVisualization Tier-A swap                           | DESIGN-03   | —          | SVG renders with theme-derived color, visual parity preserved | component/manual   | `pnpm --filter frontend test --run -- geographic-visualization` + dev-page mount                                                    | ⚠️ may need new spec                   |
-| PositionEditor Tier-A swap                                  | DESIGN-03   | —          | Renders identically pre/post swap on default theme            | component/snapshot | `pnpm --filter frontend test --run -- position-editor`                                                                              | ⚠️ verify spec exists                  |
-| Workspace lint zero-state                                   | DESIGN-04   | —          | `pnpm lint` exits 0 with new selectors active                 | static lint        | `pnpm lint`                                                                                                                         | ✅                                     |
-| PR-blocking gate behavior                                   | DESIGN-04   | —          | Known-bad-literal PR cannot merge to `main`                   | integration/smoke  | `gh pr view <smoke-pr> --json mergeStateStatus` → `BLOCKED`                                                                         | ✅ recipe in RESEARCH §Smoke PR Recipe |
-| Zero net-new eslint-disable outside Tier-C                  | D-12        | —          | Diff disable count equals Tier-C row count                    | grep               | `git diff phase-51-base..HEAD -- 'frontend/src' \| grep -E '^\+.*eslint-disable' \| wc -l` equals `51-DESIGN-AUDIT.md` Tier-C count | ✅ Phase 48-03 pattern                 |
+| Task Anchor                                                 | Requirement | Threat Ref | Secure Behavior                                               | Test Type          | Automated Command                                                                                                                   | File Exists                             |
+| ----------------------------------------------------------- | ----------- | ---------- | ------------------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| Rule activation (`eslint.config.mjs` D-05 hex selector)     | DESIGN-01   | —          | Raw hex in `.ts`/`.tsx` flagged outside allowlist             | static lint        | `pnpm exec eslint -c eslint.config.mjs <tier-c-file-with-hex>` → exits 1 with hex-rule message                                      | ✅                                      |
+| Rule activation (`eslint.config.mjs` D-05 palette selector) | DESIGN-02   | —          | Palette literal (incl. variant prefix) flagged                | static lint        | `pnpm exec eslint -c eslint.config.mjs <tier-c-file-with-palette>` → exits 1 with palette-rule message                              | ✅                                      |
+| Token-mapped utility passes                                 | DESIGN-02   | —          | `text-ink` / `bg-accent` / `text-success` NOT flagged         | static lint        | `pnpm lint <Tier-A-file-after-swap>` → exits 0                                                                                      | ✅                                      |
+| Template-literal companion selector                         | DESIGN-02   | —          | Banned palette inside template string flagged                 | static lint        | `pnpm exec eslint -c eslint.config.mjs <file-with-template-literal-palette>` → exits 1                                              | ✅ shipped in Plan 51-01 Task 2c        |
+| WorldMapVisualization Tier-A swap                           | DESIGN-03   | —          | SVG renders with theme-derived color, visual parity preserved | component/manual   | `pnpm --filter frontend test --run -- geographic-visualization` + dev-page mount                                                    | ✅ dev-page mount per Plan 51-02 Task 1 |
+| PositionEditor Tier-A swap                                  | DESIGN-03   | —          | Renders identically pre/post swap on default theme            | component/snapshot | `pnpm --filter frontend test --run -- position-editor`                                                                              | ✅ verified spec exists                 |
+| Workspace lint zero-state                                   | DESIGN-04   | —          | `pnpm lint` exits 0 with new selectors active                 | static lint        | `pnpm lint`                                                                                                                         | ✅                                      |
+| PR-blocking gate behavior                                   | DESIGN-04   | —          | Known-bad-literal PR cannot merge to `main`                   | integration/smoke  | `gh pr view <smoke-pr> --json mergeStateStatus` → `BLOCKED`                                                                         | ✅ recipe in RESEARCH §Smoke PR Recipe  |
+| Zero net-new eslint-disable outside Tier-C                  | D-12        | —          | Diff disable count equals Tier-C row count                    | grep               | `git diff phase-51-base..HEAD -- 'frontend/src' \| grep -E '^\+.*eslint-disable' \| wc -l` equals `51-DESIGN-AUDIT.md` Tier-C count | ✅ Phase 48-03 pattern                  |
 
 _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
@@ -56,10 +56,10 @@ _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
 ## Wave 0 Requirements
 
-- [ ] `tools/eslint-fixtures/bad-design-token.tsx` — permanent regression fixture mirroring Phase 50 D-15 vi-mock pattern; scoped into rule `files` glob so `pnpm lint` exits 1 on it.
-- [ ] `51-DESIGN-AUDIT.md` — initialize with template + 1 representative Tier-C row before the sweep begins; gives executor a concrete shape.
-- [ ] Visual-parity decision for `PositionEditor.tsx` + `WorldMapVisualization.tsx`: either (a) eyeball verification on a dev page (project-default), or (b) add component snapshot tests. Plan must commit to one before Tier-A wave begins.
-- [ ] Tier-A swap dev-page mount for `WorldMapVisualization.tsx` `var(--accent)` vs `getComputedStyle` fallback — confirm SVG renders before locking the recipe.
+- [x] `tools/eslint-fixtures/bad-design-token.tsx` — permanent regression fixture mirroring Phase 50 D-15 vi-mock pattern; scoped into rule `files` glob so `pnpm lint` exits 1 on it. (Plan 51-01 Task 4)
+- [x] `51-DESIGN-AUDIT.md` — initialize with template + 1 representative Tier-C row before the sweep begins; gives executor a concrete shape. (Plan 51-03 Task 1 scaffolds Tier-A worklist + Tier-C placeholder; Plan 51-04 Task 1 populates Tier-C rows)
+- [x] Visual-parity decision for `PositionEditor.tsx` + `WorldMapVisualization.tsx`: either (a) eyeball verification on a dev page (project-default), or (b) add component snapshot tests. Plan must commit to one before Tier-A wave begins. (Plan 51-02 Tasks 1 + 2 commit to dev-page verification + visual-parity spot-checks per UI-SPEC §Visual Fidelity Guarantee)
+- [x] Tier-A swap dev-page mount for `WorldMapVisualization.tsx` `var(--accent)` vs `getComputedStyle` fallback — confirm SVG renders before locking the recipe. (Plan 51-02 Task 1 SPIKE → CHOOSE RECIPE → SWAP three-step approach)
 
 _No new framework install — Vitest already wired (Phase 50 D-03)._
 
@@ -76,11 +76,11 @@ _No new framework install — Vitest already wired (Phase 50 D-03)._
 
 ## Validation Sign-Off
 
-- [ ] All tasks have automated verify command OR Wave 0 dependency
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify (workspace lint covers gap)
-- [ ] Wave 0 covers all ⚠️ entries above
-- [ ] No watch-mode flags (lint + `--run` for tests)
-- [ ] Feedback latency: per-file <10s, workspace <30s, full <120s
-- [ ] `nyquist_compliant: true` set in frontmatter after plan-checker pass
+- [x] All tasks have automated verify command OR Wave 0 dependency
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify (workspace lint covers gap)
+- [x] Wave 0 covers all ⚠️ entries above
+- [x] No watch-mode flags (lint + `--run` for tests)
+- [x] Feedback latency: per-file <10s, workspace <30s, full <120s
+- [x] `nyquist_compliant: true` set in frontmatter after plan-checker pass
 
-**Approval:** pending
+**Approval:** gsd-plan-checker (verifier) — Phase 51 iteration 1
