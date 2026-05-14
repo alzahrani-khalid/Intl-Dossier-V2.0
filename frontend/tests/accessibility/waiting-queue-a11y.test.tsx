@@ -227,7 +227,7 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
       const button = screen.getByRole('button')
       expect(button).toHaveAttribute('aria-label')
       const ariaLabel = button.getAttribute('aria-label')
-      expect(ariaLabel).toBe('waitingQueue.reminder.button.label')
+      expect(ariaLabel).toBe('Send follow-up reminder')
     })
 
     it('should be disabled when cooldown is active', () => {
@@ -299,7 +299,7 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
       )
 
       const toolbar = screen.getByRole('toolbar')
-      expect(toolbar).toHaveTextContent('waitingQueue.bulkActions.selectedCount')
+      expect(toolbar).toHaveTextContent('3 items selected')
     })
 
     it('should support keyboard navigation for all actions', async () => {
@@ -311,10 +311,10 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
       )
 
       const sendRemindersButton = screen.getByRole('button', {
-        name: 'waitingQueue.bulkActions.sendReminders',
+        name: 'Send Reminders',
       })
       const clearButton = screen.getByRole('button', {
-        name: 'waitingQueue.bulkActions.clearSelection',
+        name: 'Clear Selection',
       })
 
       // Tab through buttons
@@ -332,12 +332,8 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
         </TestWrapper>,
       )
 
-      expect(
-        screen.getByRole('button', { name: 'waitingQueue.bulkActions.sendReminders' }),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByRole('button', { name: 'waitingQueue.bulkActions.clearSelection' }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Send Reminders' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Clear Selection' })).toBeInTheDocument()
     })
   })
 
@@ -377,7 +373,7 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
     it('should announce filter results to screen readers', async () => {
       renderFilterPanel()
 
-      expect(screen.getByText('waitingQueue.filters.showingResults')).toBeInTheDocument()
+      expect(screen.getByText('Showing 3 results')).toBeInTheDocument()
     })
   })
 
@@ -504,7 +500,7 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
         </TestWrapper>,
       )
 
-      expect(screen.getByRole('button')).toHaveAccessibleName('waitingQueue.reminder.button.label')
+      expect(screen.getByRole('button')).toHaveAccessibleName('Send follow-up reminder')
     })
 
     it('should announce escalation creation to screen readers', () => {
@@ -518,7 +514,7 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
     it('should announce filter result count changes', () => {
       renderFilterPanel()
 
-      expect(screen.getByText('waitingQueue.filters.showingResults')).toBeInTheDocument()
+      expect(screen.getByText('Showing 3 results')).toBeInTheDocument()
     })
   })
 })

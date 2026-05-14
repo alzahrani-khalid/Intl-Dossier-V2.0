@@ -42,11 +42,11 @@ import { useDirection } from '@/hooks/useDirection'
 
 export interface EscalationDialogProps {
   /** Assignment ID to escalate */
-  assignmentId: string
+  assignmentId?: string
   /** Current assignee name */
-  assigneeName: string
+  assigneeName?: string
   /** Work item ID for display */
-  workItemId: string
+  workItemId?: string
   /** Whether dialog is open */
   isOpen: boolean
   /** Callback when dialog closes */
@@ -108,6 +108,11 @@ export function EscalationDialog({
 
   const escalate = useEscalationAction()
   const isLoading = escalate.isPending || externalLoading
+  const defaultRecipientId = escalationPath[0]?.user_id ?? ''
+  const effectiveSelectedRecipientId = selectedRecipientId || defaultRecipientId
+  const resolvedAssignmentId = assignmentId ?? assignment?.id ?? ''
+  const resolvedAssigneeName = assigneeName ?? assignment?.assignee_name ?? ''
+  const resolvedWorkItemId = workItemId ?? assignment?.work_item_id ?? ''
 
   // Reset state when dialog opens (using ref to detect open transition)
   const prevOpenRef = useRef(isOpen)
@@ -135,8 +140,8 @@ export function EscalationDialog({
       // If onEscalate callback provided (for testing), use it
       if (onEscalate) {
         onEscalate({
-          assignmentId,
-          recipientId: selectedRecipientId,
+          assignmentId: resolvedAssignmentId,
+          recipientId: effectiveSelectedRecipientId,
           reason: reason.trim(),
         })
         onClose()
@@ -145,7 +150,7 @@ export function EscalationDialog({
 
       // Otherwise, use the hook mutation
       await escalate.mutateAsync({
-        assignment_id: assignmentId,
+        assignment_id: resolvedAssignmentId,
         reason: reason.trim(),
       })
 
@@ -173,7 +178,7 @@ export function EscalationDialog({
     }
   }
 
-  const selectedRecipient = escalationPath.find((r) => r.user_id === selectedRecipientId)
+  const selectedRecipient = escalationPath.find((r) => r.user_id === effectiveSelectedRecipientId)
   const daysWaiting = assignment?.days_waiting || 0
 
   // Check if escalation path is empty
@@ -182,21 +187,17 @@ export function EscalationDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="px-4 sm:px-6 max-w-md sm:max-w-lg md:max-w-xl"
-        aria-labelledby="escalation-dialog-title"
-        aria-describedby="escalation-dialog-description"
+        className="ps-4 pe-4 sm:ps-6 sm:pe-6 max-w-md sm:max-w-lg md:max-w-xl"
+        dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
-          <DialogTitle
-            id="escalation-dialog-title"
-            className="flex items-center gap-2 text-lg sm:text-xl"
-          >
+          <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <ArrowUp
               className={`h-5 w-5 sm:h-6 sm:w-6 text-orange-600 ${isRTL ? 'rotate-180' : ''}`}
             />
             {t('waitingQueue.escalation.escalateAssignment', 'Escalate Assignment')}
           </DialogTitle>
-          <DialogDescription id="escalation-dialog-description" className="text-sm text-start">
+          <DialogDescription className="text-sm text-start">
             {t(
               'waitingQueue.escalation.dialogDescription',
               'Escalate this assignment to higher management for attention',
@@ -208,7 +209,7 @@ export function EscalationDialog({
           {/* Assignment Details */}
           <div className="rounded-lg bg-muted p-3 sm:p-4 space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-sm font-medium text-foreground">{workItemId}</span>
+              <span className="text-sm font-medium text-foreground">{resolvedWorkItemId}</span>
               {daysWaiting >= 7 && (
                 <Badge variant="destructive" className="gap-1">
                   <AlertTriangle className="h-3 w-3" />
@@ -217,7 +218,7 @@ export function EscalationDialog({
               )}
             </div>
             <div className="text-xs text-muted-foreground text-start">
-              {t('waitingQueue.assignmentDetails.assignee', 'Assignee')}: {assigneeName}
+              {t('waitingQueue.assignmentDetails.assignee', 'Assignee')}: {resolvedAssigneeName}
             </div>
           </div>
 
@@ -229,7 +230,7 @@ export function EscalationDialog({
                 {t(
                   'waitingQueue.escalation.noEscalationPathMessage',
                   'No manager configured for {{user}} in the organizational hierarchy.',
-                  { user: assigneeName },
+                  { user: resolvedAssigneeName },
                 )}
               </AlertDescription>
             </Alert>
@@ -242,7 +243,7 @@ export function EscalationDialog({
                 {t('waitingQueue.escalation.selectRecipient', 'Select Recipient')}
               </Label>
               <Select
-                value={selectedRecipientId}
+                value={effectiveSelectedRecipientId}
                 onValueChange={setSelectedRecipientId}
                 disabled={isLoading}
               >
@@ -336,7 +337,7 @@ export function EscalationDialog({
             variant="outline"
             onClick={onClose}
             disabled={isLoading}
-            className=" px-4 sm:px-6 w-full sm:w-auto"
+            className="h-11 min-w-11 ps-4 pe-4 sm:ps-6 sm:pe-6 w-full sm:w-auto"
             aria-label={t('common.cancel', 'Cancel')}
           >
             {t('common.cancel', 'Cancel')}
@@ -345,7 +346,7 @@ export function EscalationDialog({
             type="button"
             onClick={handleEscalate}
             disabled={isLoading || hasNoEscalationPath || !reason.trim()}
-            className=" px-4 sm:px-6 w-full sm:w-auto"
+            className="h-11 min-w-11 ps-4 pe-4 sm:ps-6 sm:pe-6 w-full sm:w-auto"
             aria-label={
               isLoading
                 ? t('waitingQueue.escalation.escalating', 'Escalating...')

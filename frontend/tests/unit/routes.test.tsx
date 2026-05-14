@@ -479,7 +479,7 @@ describe('Dossier Detail Route', () => {
     renderRouter(router, queryClient)
 
     await waitFor(() => {
-      expect(screen.getByText(/not found|404/i)).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /page not found/i })).toBeInTheDocument()
     })
   })
 })

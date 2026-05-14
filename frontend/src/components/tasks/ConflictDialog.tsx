@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { AlertCircle, RefreshCw, Save, X } from 'lucide-react'
 import type { Database } from '@/types/database.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -55,6 +56,7 @@ export function ConflictDialog({
   onCancel,
 }: ConflictDialogProps) {
   const { t } = useTranslation()
+  const { isRTL } = useDirection()
   // Get list of conflicting fields
   const conflictingFields = Object.keys(localChanges).filter(
     (key) => serverData && localChanges[key as keyof Task] !== serverData[key as keyof Task],
@@ -62,7 +64,10 @@ export function ConflictDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]">
+      <AlertDialogContent
+        className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]"
+        dir={isRTL ? 'rtl' : 'ltr'}
+      >
         <AlertDialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">

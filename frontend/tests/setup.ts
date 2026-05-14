@@ -49,7 +49,14 @@ vi.mock('react-i18next', async () => {
   return {
     ...actual,
     useTranslation: () => ({
-      t: (key: string, params?: any) => {
+      t: (key: string, paramsOrDefault?: any, options?: any) => {
+        const params =
+          paramsOrDefault && typeof paramsOrDefault === 'object' ? paramsOrDefault : options
+        const defaultValue =
+          typeof paramsOrDefault === 'string'
+            ? paramsOrDefault
+            : (paramsOrDefault?.defaultValue ?? options?.defaultValue)
+
         // Simple translation map for tests
         const translations: Record<string, string> = {
           'afterActions.ai.extractButton': 'AI Extract',
@@ -116,7 +123,10 @@ vi.mock('react-i18next', async () => {
           'afterActions.form.saveFailed': 'Failed to save draft',
           'afterActions.form.saving': 'Saving...',
           'afterActions.form.title': 'After-Action Record',
+          'common.cancel': 'Cancel',
+          'common.days': 'days',
           'common.selectDate': 'Select date',
+          'common.unknown': 'Unknown',
           'consistency.actions.accept': 'Accept Risk',
           'consistency.actions.escalate': 'Escalate to Admin',
           'consistency.actions.modify': 'Modify Position',
@@ -169,6 +179,24 @@ vi.mock('react-i18next', async () => {
           'status.in_progress': 'In Progress',
           'status.pending': 'Pending',
           'status.review': 'Review',
+          'tasks.conflict.cancelOption': 'Cancel',
+          'tasks.conflict.cancelOptionDescription':
+            'Discard your local changes and close the dialog.',
+          'tasks.conflict.conflictingFields': 'Conflicting Fields',
+          'tasks.conflict.description': 'This task was modified by another user.',
+          'tasks.conflict.forceSave': 'Force Save',
+          'tasks.conflict.forceSaveOption': 'Force Save',
+          'tasks.conflict.forceSaveOptionDescription':
+            'Overwrite the server version with your changes.',
+          'tasks.conflict.reload': 'Reload',
+          'tasks.conflict.reloadOption': 'Reload',
+          'tasks.conflict.reloadOptionDescription':
+            'Reload the latest server version and review changes.',
+          'tasks.conflict.theirChange': 'Their Change',
+          'tasks.conflict.title': 'Conflict Detected',
+          'tasks.conflict.yourChange': 'Your Change',
+          'tasks.noContributors': 'No contributors yet',
+          'tasks.removeContributor': 'Remove contributor',
           'tasks.sla.approaching': 'Approaching',
           'tasks.sla.breached': 'Breached',
           'tasks.sla.completed_late': 'Completed late',
@@ -177,15 +205,92 @@ vi.mock('react-i18next', async () => {
           'tasks.sla.progress': 'Progress',
           'tasks.sla.safe': 'Safe',
           'tasks.sla.warning': 'Warning',
+          'waitingQueue.aging.danger': 'Overdue',
+          'waitingQueue.aging.ok': 'Recent',
+          'waitingQueue.aging.warning': 'Needs Attention',
+          'waitingQueue.agingIndicator.days': 'days',
+          'waitingQueue.assignmentDetails.assignedAt': 'Assigned At',
+          'waitingQueue.assignmentDetails.assignee': 'Assignee',
+          'waitingQueue.assignmentDetails.daysWaiting': 'Days Waiting',
+          'waitingQueue.assignmentDetails.lastReminder': 'Last Reminder',
+          'waitingQueue.assignmentDetails.linkedItems': 'Linked Items',
+          'waitingQueue.assignmentDetails.noReminderSent': 'No reminder sent',
+          'waitingQueue.assignmentDetails.statusAndPriority': 'Status & Priority',
+          'waitingQueue.assignmentDetails.taskActions': 'Task',
+          'waitingQueue.assignmentDetails.timeline': 'Timeline',
+          'waitingQueue.assignmentDetails.viewFullDetails': 'View Full Details',
+          'waitingQueue.assignmentDetails.viewLinkedItems': 'View Linked Items',
+          'waitingQueue.assignmentDetails.viewTask': 'View Task',
+          'waitingQueue.assignmentDetails.workItemNotAvailable':
+            'The work item for this assignment is not available.',
+          'waitingQueue.bulkActions.clear': 'Clear Selection',
+          'waitingQueue.bulkActions.clearSelection': 'Clear Selection',
+          'waitingQueue.bulkActions.maxItems': `Max ${params?.max ?? 100} items`,
+          'waitingQueue.bulkActions.maxReached': 'Maximum selection reached',
+          'waitingQueue.bulkActions.selectedCount': `${params?.count ?? 0} items selected`,
+          'waitingQueue.bulkActions.sendReminders': 'Send Reminders',
+          'waitingQueue.bulkActions.sending': 'Sending...',
+          'waitingQueue.bulkActions.toolbar': 'Bulk actions',
+          'waitingQueue.escalation.escalate': 'Escalate',
+          'waitingQueue.escalation.escalateAssignment': 'Escalate Assignment',
+          'waitingQueue.escalation.escalating': 'Escalating...',
+          'waitingQueue.escalation.error': 'Failed to escalate assignment',
+          'waitingQueue.escalation.immediateManager': 'Immediate Manager',
+          'waitingQueue.escalation.reason': 'Reason',
+          'waitingQueue.escalation.reasonHint': 'Explain why escalation is needed',
+          'waitingQueue.escalation.reasonRequired': 'Please provide a reason for escalation',
+          'waitingQueue.escalation.selectRecipient': 'Select Recipient',
+          'waitingQueue.escalation.success': 'Assignment escalated successfully',
+          'waitingQueue.filters.active': 'filters applied',
+          'waitingQueue.filters.aging': 'Aging',
+          'waitingQueue.filters.assignee': 'Assignee',
+          'waitingQueue.filters.clearAll': 'Clear Filters',
+          'waitingQueue.filters.openFilters': 'Open filters',
+          'waitingQueue.filters.priority': 'Priority',
+          'waitingQueue.filters.priorities.high': 'High',
+          'waitingQueue.filters.priorities.low': 'Low',
+          'waitingQueue.filters.priorities.medium': 'Medium',
+          'waitingQueue.filters.priorities.urgent': 'Urgent',
+          'waitingQueue.filters.agingBuckets.0-2.label': '0-2 days',
+          'waitingQueue.filters.agingBuckets.3-6.label': '3-6 days',
+          'waitingQueue.filters.agingBuckets.7+.label': '7+ days',
+          'waitingQueue.filters.showingResults': `Showing ${params?.count ?? 0} results`,
+          'waitingQueue.filters.title': 'Filters',
+          'waitingQueue.filters.type': 'Type',
+          'waitingQueue.filters.types.dossier': 'Dossier',
+          'waitingQueue.filters.types.position': 'Position',
+          'waitingQueue.filters.types.task': 'Task',
+          'waitingQueue.filters.types.ticket': 'Ticket',
+          'waitingQueue.reminder.button.label': 'Send follow-up reminder',
+          'waitingQueue.reminder.button.send': 'Follow Up',
+          'waitingQueue.reminder.button.sending': 'Sending...',
+          'waitingQueue.reminder.button.sent': 'Sent!',
+          'waitingQueue.reminder.conflict.title': 'Assignment Changed',
+          'waitingQueue.reminder.cooldown.title': 'Cooldown Active',
+          'waitingQueue.reminder.error.title': 'Failed to Send Reminder',
+          'waitingQueue.reminder.noAssignee.title': 'No Assignee',
+          'waitingQueue.reminder.notFound.title': 'Assignment Not Found',
+          'waitingQueue.reminder.rateLimit.title': 'Rate Limit Exceeded',
+          'waitingQueue.reminder.success.title': 'Reminder Sent',
           'validation.required': 'Required',
           'work_item.dossier': 'Dossier',
         }
-        return translations[key] ?? key
+        const normalizedKey = key.replace(':', '.')
+        const resolved = translations[key] ?? translations[normalizedKey] ?? defaultValue ?? key
+
+        return String(resolved).replace(/\{\{(\w+)\}\}/g, (_, name: string) => {
+          if (params && typeof params === 'object' && params[name] != null) {
+            return String(params[name])
+          }
+          return ''
+        })
       },
       i18n: {
-        language: 'en',
+        get language() {
+          return localStorage.getItem('id.locale') === 'ar' ? 'ar' : 'en'
+        },
         changeLanguage: vi.fn().mockResolvedValue(undefined),
-        dir: vi.fn(() => document.documentElement.dir || 'ltr'),
+        dir: vi.fn(() => (localStorage.getItem('id.locale') === 'ar' ? 'rtl' : 'ltr')),
       },
     }),
     Trans: ({ children }: any) => children,

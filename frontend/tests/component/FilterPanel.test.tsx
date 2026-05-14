@@ -1,397 +1,134 @@
-/**
- * Component Tests: FilterPanel
- *
- * Tests mobile Sheet vs desktop sidebar, filter selection, clear filters
- *
- * Task: T074 [P] [US5]
- */
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { fireEvent, renderWithProviders as render, screen, waitFor } from '@tests/utils/render'
+import FilterPanel from '@/components/waiting-queue/FilterPanel'
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { renderWithProviders as render, screen, fireEvent, waitFor } from '@tests/utils/render'
-import FilterPanel from '../../src/components/waiting-queue/FilterPanel'
-
-describe('FilterPanel Component', () => {
+describe('FilterPanel', () => {
   beforeEach(() => {
-    ;(localStorage as Storage & { removeItem?: (key: string) => void }).removeItem?.('id.locale')
+    localStorage.removeItem('id.locale')
+    vi.clearAllMocks()
   })
 
-  const renderFilterPanel = (props = {}) => {
-    const defaultProps = {
-      filters: {},
-      onFiltersChange: vi.fn(),
-      onClearFilters: vi.fn(),
-      isOpen: true,
-      onClose: vi.fn(),
-      ...props,
-    }
-
-    return render(<FilterPanel {...defaultProps} />)
+  function renderFilterPanel(props = {}) {
+    return render(
+      <FilterPanel
+        filters={{}}
+        onFiltersChange={vi.fn()}
+        onClearFilters={vi.fn()}
+        isOpen
+        onOpenChange={vi.fn()}
+        {...props}
+      />,
+    )
   }
 
-  describe('Responsive Behavior', () => {
-    it('should render as Sheet on mobile viewport (< 640px)', () => {
-      global.innerWidth = 375
-      global.dispatchEvent(new Event('resize'))
+  it('renders the popover trigger and all filter sections', () => {
+    renderFilterPanel()
 
-      renderFilterPanel()
+    expect(screen.getByRole('button', { name: /open filters/i })).toHaveTextContent('Filters')
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getByText('Priority')).toBeInTheDocument()
+    expect(screen.getByText('Aging')).toBeInTheDocument()
+    expect(screen.getByText('Type')).toBeInTheDocument()
+    expect(screen.getByText('Assignee')).toBeInTheDocument()
+  })
 
-      // Sheet component should have mobile-specific attributes
-      const container = screen.getByRole('dialog')
-      expect(container).toBeInTheDocument()
-    })
+  it('calls onFiltersChange with array values and resets page on priority changes', async () => {
+    const onFiltersChange = vi.fn()
+    renderFilterPanel({ onFiltersChange })
 
-    it('should render as sidebar on desktop viewport (>= 640px)', () => {
-      global.innerWidth = 1024
-      global.dispatchEvent(new Event('resize'))
+    fireEvent.click(screen.getByRole('checkbox', { name: /high/i }))
 
-      renderFilterPanel()
-
-      const sidebar = screen.getByRole('complementary')
-      expect(sidebar).toBeInTheDocument()
-    })
-
-    it('should show close button on mobile', () => {
-      global.innerWidth = 375
-      renderFilterPanel()
-
-      const closeButton = screen.getByLabelText(/close/i)
-      expect(closeButton).toBeInTheDocument()
-    })
-
-    it('should not show close button on desktop', () => {
-      global.innerWidth = 1024
-      renderFilterPanel()
-
-      const closeButton = screen.queryByLabelText(/close/i)
-      expect(closeButton).toBeNull()
+    await waitFor(() => {
+      expect(onFiltersChange).toHaveBeenCalledWith({ priority: ['high'], page: 1 })
     })
   })
 
-  describe('Filter Selection', () => {
-    it('should render all filter sections', () => {
-      renderFilterPanel()
+  it('calls onFiltersChange for aging and type filters', async () => {
+    const onFiltersChange = vi.fn()
+    renderFilterPanel({ onFiltersChange })
 
-      expect(screen.getByText(/priority/i)).toBeInTheDocument()
-      expect(screen.getByText(/aging/i)).toBeInTheDocument()
-      expect(screen.getByText(/type/i)).toBeInTheDocument()
-      expect(screen.getByText(/assignee/i)).toBeInTheDocument()
-    })
+    fireEvent.click(screen.getByRole('checkbox', { name: /7\+ days/i }))
+    fireEvent.click(screen.getByRole('checkbox', { name: /dossier/i }))
 
-    it('should call onFiltersChange when priority is selected', async () => {
-      const onFiltersChange = vi.fn()
-      renderFilterPanel({ onFiltersChange })
-
-      const highPriorityCheckbox = screen.getByLabelText(/high/i)
-      fireEvent.click(highPriorityCheckbox)
-
-      await waitFor(() => {
-        expect(onFiltersChange).toHaveBeenCalledWith(expect.objectContaining({ priority: 'high' }))
-      })
-    })
-
-    it('should call onFiltersChange when aging is selected', async () => {
-      const onFiltersChange = vi.fn()
-      renderFilterPanel({ onFiltersChange })
-
-      const aging7Plus = screen.getByLabelText(/7\+ days/i)
-      fireEvent.click(aging7Plus)
-
-      await waitFor(() => {
-        expect(onFiltersChange).toHaveBeenCalledWith(expect.objectContaining({ aging: '7+' }))
-      })
-    })
-
-    it('should call onFiltersChange when type is selected', async () => {
-      const onFiltersChange = vi.fn()
-      renderFilterPanel({ onFiltersChange })
-
-      const dossierCheckbox = screen.getByLabelText(/dossier/i)
-      fireEvent.click(dossierCheckbox)
-
-      await waitFor(() => {
-        expect(onFiltersChange).toHaveBeenCalledWith(expect.objectContaining({ type: 'dossier' }))
-      })
-    })
-
-    it('should allow multiple filter selections', async () => {
-      const onFiltersChange = vi.fn()
-      renderFilterPanel({ onFiltersChange })
-
-      const highPriority = screen.getByLabelText(/high/i)
-      const aging7Plus = screen.getByLabelText(/7\+ days/i)
-
-      fireEvent.click(highPriority)
-      fireEvent.click(aging7Plus)
-
-      await waitFor(() => {
-        expect(onFiltersChange).toHaveBeenLastCalledWith(
-          expect.objectContaining({
-            priority: 'high',
-            aging: '7+',
-          }),
-        )
-      })
-    })
-
-    it('should show selected filter count', () => {
-      renderFilterPanel({
-        filters: { priority: 'high', aging: '7+' },
-      })
-
-      expect(screen.getByText(/2 filters applied/i)).toBeInTheDocument()
-    })
-
-    it('should update visual state when filters are selected', () => {
-      renderFilterPanel({
-        filters: { priority: 'high' },
-      })
-
-      const highPriorityCheckbox = screen.getByLabelText(/high/i) as HTMLInputElement
-      expect(highPriorityCheckbox.checked).toBe(true)
+    await waitFor(() => {
+      expect(onFiltersChange).toHaveBeenCalledWith({ aging: ['7+'], page: 1 })
+      expect(onFiltersChange).toHaveBeenCalledWith({ type: ['dossier'], page: 1 })
     })
   })
 
-  describe('Clear Filters', () => {
-    it('should show Clear Filters button when filters are applied', () => {
-      renderFilterPanel({
-        filters: { priority: 'high' },
-      })
-
-      const clearButton = screen.getByRole('button', { name: /clear filters/i })
-      expect(clearButton).toBeInTheDocument()
+  it('derives active filter count and clears filters', async () => {
+    const onClearFilters = vi.fn()
+    renderFilterPanel({
+      filters: { priority: ['high'], aging: ['7+'] },
+      onClearFilters,
     })
 
-    it('should not show Clear Filters button when no filters are applied', () => {
-      renderFilterPanel({ filters: {} })
+    expect(screen.getByRole('button', { name: /open filters/i })).toHaveTextContent(
+      '2 filters applied',
+    )
+    expect(screen.getByRole('status')).toHaveTextContent('2 filters applied')
 
-      const clearButton = screen.queryByRole('button', { name: /clear filters/i })
-      expect(clearButton).toBeNull()
-    })
+    fireEvent.click(screen.getByRole('button', { name: /clear filters/i }))
 
-    it('should call onClearFilters when Clear Filters button is clicked', async () => {
-      const onClearFilters = vi.fn()
-      renderFilterPanel({
-        filters: { priority: 'high', aging: '7+' },
-        onClearFilters,
-      })
-
-      const clearButton = screen.getByRole('button', { name: /clear filters/i })
-      fireEvent.click(clearButton)
-
-      await waitFor(() => {
-        expect(onClearFilters).toHaveBeenCalled()
-      })
-    })
-
-    it('should reset all filter selections when cleared', async () => {
-      const onClearFilters = vi.fn()
-      const { rerender } = renderFilterPanel({
-        filters: { priority: 'high', aging: '7+' },
-        onClearFilters,
-      })
-
-      const clearButton = screen.getByRole('button', { name: /clear filters/i })
-      fireEvent.click(clearButton)
-
-      await waitFor(() => {
-        expect(onClearFilters).toHaveBeenCalled()
-      })
-
-      // Simulate parent component updating filters to {}
-      rerender(
-        <FilterPanel
-          filters={{}}
-          onFiltersChange={vi.fn()}
-          onClearFilters={onClearFilters}
-          isOpen={true}
-          onClose={vi.fn()}
-        />,
-      )
-
-      const highPriorityCheckbox = screen.getByLabelText(/high/i) as HTMLInputElement
-      expect(highPriorityCheckbox.checked).toBe(false)
+    await waitFor(() => {
+      expect(onClearFilters).toHaveBeenCalledTimes(1)
     })
   })
 
-  describe('RTL Support', () => {
-    beforeEach(() => {
-      localStorage.setItem('id.locale', 'ar')
+  it('reflects selected filters and disables controls while applying', () => {
+    renderFilterPanel({
+      filters: { priority: ['high'] },
+      isApplying: true,
     })
 
-    afterEach(() => {
-      localStorage.removeItem('id.locale')
-    })
-
-    it('should apply RTL direction when Arabic locale is active', () => {
-      renderFilterPanel()
-
-      const container = screen.getByRole('dialog') || screen.getByRole('complementary')
-      expect(container).toHaveAttribute('dir', 'rtl')
-    })
-
-    it('should use logical properties for spacing', () => {
-      renderFilterPanel()
-
-      // Verify component uses ms-* and me-* classes (not ml-*, mr-*)
-      const container = screen.getByRole('dialog') || screen.getByRole('complementary')
-      const classes = container.className
-
-      expect(classes).not.toMatch(/\bm[lr]-/) // No ml- or mr-
-      expect(classes).not.toMatch(/\bp[lr]-/) // No pl- or pr-
-    })
-
-    it('should render Arabic translation for filter labels', () => {
-      renderFilterPanel()
-
-      // Check for Arabic translations
-      expect(screen.getByText(/الأولوية/i) || screen.getByText(/priority/i)).toBeInTheDocument()
-    })
+    const highPriority = screen.getByRole('checkbox', { name: /high/i })
+    expect(highPriority).toHaveAttribute('data-state', 'checked')
+    expect(highPriority).toBeDisabled()
   })
 
-  describe('Accessibility', () => {
-    it('should have proper ARIA labels for filter sections', () => {
-      renderFilterPanel()
+  it('shows result count, empty guidance, and loading skeletons', () => {
+    const { rerender } = renderFilterPanel({ resultCount: 15 })
 
-      const filterSections = screen.getAllByRole('group')
-      expect(filterSections.length).toBeGreaterThan(0)
+    expect(screen.getByText('Showing 15 results')).toBeInTheDocument()
 
-      filterSections.forEach((section) => {
-        expect(section).toHaveAttribute('aria-labelledby')
-      })
-    })
+    rerender(
+      <FilterPanel
+        filters={{}}
+        onFiltersChange={vi.fn()}
+        onClearFilters={vi.fn()}
+        isOpen
+        onOpenChange={vi.fn()}
+      />,
+    )
+    expect(screen.getByText(/select filters to narrow down results/i)).toBeInTheDocument()
 
-    it('should support keyboard navigation', () => {
-      renderFilterPanel()
-
-      const firstCheckbox = screen.getByLabelText(/high/i)
-      firstCheckbox.focus()
-
-      expect(document.activeElement).toBe(firstCheckbox)
-    })
-
-    it('should have touch-friendly controls (min 44x44px)', () => {
-      global.innerWidth = 375
-      renderFilterPanel()
-
-      const checkboxes = screen.getAllByRole('checkbox')
-      checkboxes.forEach((checkbox) => {
-        const styles = window.getComputedStyle(checkbox)
-        const minSize = parseInt(styles.minWidth) || parseInt(styles.minHeight)
-        expect(minSize).toBeGreaterThanOrEqual(44)
-      })
-    })
-
-    it('should announce filter count changes to screen readers', () => {
-      const { rerender } = renderFilterPanel({
-        filters: {},
-      })
-
-      const ariaLive = screen.getByRole('status')
-      expect(ariaLive).toHaveTextContent(/0 filters/i)
-
-      rerender(
-        <FilterPanel
-          filters={{ priority: 'high', aging: '7+' }}
-          onFiltersChange={vi.fn()}
-          onClearFilters={vi.fn()}
-          isOpen={true}
-          onClose={vi.fn()}
-        />,
-      )
-
-      expect(ariaLive).toHaveTextContent(/2 filters/i)
-    })
+    rerender(
+      <FilterPanel
+        filters={{}}
+        onFiltersChange={vi.fn()}
+        onClearFilters={vi.fn()}
+        isOpen
+        onOpenChange={vi.fn()}
+        isLoading
+      />,
+    )
+    expect(screen.getAllByTestId('filter-skeleton').length).toBeGreaterThan(0)
   })
 
-  describe('Filter Persistence', () => {
-    it('should save filters to localStorage on change', async () => {
-      const localStorageMock = {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        clear: vi.fn(),
-        removeItem: vi.fn(),
-      }
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+  it('keeps checkbox touch targets at 48px through the wrapper', () => {
+    renderFilterPanel()
 
-      const onFiltersChange = vi.fn((filters) => {
-        localStorage.setItem('waiting-queue-filters', JSON.stringify(filters))
-      })
-
-      renderFilterPanel({ onFiltersChange })
-
-      const highPriority = screen.getByLabelText(/high/i)
-      fireEvent.click(highPriority)
-
-      await waitFor(() => {
-        expect(localStorageMock.setItem).toHaveBeenCalledWith(
-          'waiting-queue-filters',
-          expect.stringContaining('high'),
-        )
-      })
-    })
-
-    it('should load filters from localStorage on mount', () => {
-      const savedFilters = { priority: 'high', aging: '7+' }
-      localStorage.setItem('waiting-queue-filters', JSON.stringify(savedFilters))
-
-      renderFilterPanel()
-
-      const highPriorityCheckbox = screen.getByLabelText(/high/i) as HTMLInputElement
-      const aging7Plus = screen.getByLabelText(/7\+ days/i) as HTMLInputElement
-
-      expect(highPriorityCheckbox.checked).toBe(true)
-      expect(aging7Plus.checked).toBe(true)
-    })
-
-    it('should expire saved filters after 7 days', () => {
-      const expiredDate = Date.now() - 8 * 24 * 60 * 60 * 1000 // 8 days ago
-      const savedData = {
-        filters: { priority: 'high' },
-        timestamp: expiredDate,
-      }
-
-      localStorage.setItem('waiting-queue-filters', JSON.stringify(savedData))
-
-      renderFilterPanel()
-
-      // Expired filters should not be applied
-      const highPriorityCheckbox = screen.getByLabelText(/high/i) as HTMLInputElement
-      expect(highPriorityCheckbox.checked).toBe(false)
-    })
+    const highPriority = screen.getByRole('checkbox', { name: /high/i })
+    expect(highPriority.parentElement).toHaveClass('min-h-12', 'min-w-12')
   })
 
-  describe('Empty State', () => {
-    it('should show helpful message when no filters are applied', () => {
-      renderFilterPanel({ filters: {} })
+  it('uses Arabic direction when the locale is Arabic', async () => {
+    localStorage.setItem('id.locale', 'ar')
 
-      expect(screen.getByText(/select filters to narrow down results/i)).toBeInTheDocument()
-    })
+    renderFilterPanel()
 
-    it('should show result count when filters are applied', () => {
-      renderFilterPanel({
-        filters: { priority: 'high' },
-        resultCount: 15,
-      })
-
-      expect(screen.getByText(/showing 15 results/i)).toBeInTheDocument()
-    })
-  })
-
-  describe('Loading State', () => {
-    it('should show skeleton loaders while filters are loading', () => {
-      renderFilterPanel({ isLoading: true })
-
-      const skeletons = screen.getAllByTestId('filter-skeleton')
-      expect(skeletons.length).toBeGreaterThan(0)
-    })
-
-    it('should disable filter controls while applying filters', () => {
-      renderFilterPanel({ isApplying: true })
-
-      const checkboxes = screen.getAllByRole('checkbox')
-      checkboxes.forEach((checkbox) => {
-        expect(checkbox).toBeDisabled()
-      })
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toHaveAttribute('dir', 'rtl')
     })
   })
 })

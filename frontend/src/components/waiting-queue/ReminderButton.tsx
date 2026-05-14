@@ -53,7 +53,7 @@ export function ReminderButton({
   const { mutate: sendReminder, isPending } = useReminderAction()
   const [showSuccess, setShowSuccess] = useState(false)
   const { isRTL } = useDirection()
-// Calculate if cooldown is active
+  // Calculate if cooldown is active
   const isCooldownActive = () => {
     if (!lastReminderSentAt) return false
 
@@ -129,9 +129,10 @@ export function ReminderButton({
             'waitingQueue.reminder.error.description',
             'An error occurred while sending the reminder. Please try again.',
           )
+          const errorCode = error?.error ?? error?.code
 
           // Handle specific error codes
-          if (error?.error === 'COOLDOWN_ACTIVE') {
+          if (errorCode === 'COOLDOWN_ACTIVE') {
             const hoursRemaining = error?.details?.hours_remaining || 24
             title = t('waitingQueue.reminder.cooldown.title', 'Cooldown Active')
             description = t(
@@ -139,25 +140,25 @@ export function ReminderButton({
               `Please wait {{hours}} more hours before sending another reminder.`,
               { hours: hoursRemaining },
             )
-          } else if (error?.error === 'RATE_LIMIT_EXCEEDED') {
+          } else if (errorCode === 'RATE_LIMIT_EXCEEDED') {
             title = t('waitingQueue.reminder.rateLimit.title', 'Rate Limit Exceeded')
             description = t(
               'waitingQueue.reminder.rateLimit.description',
               'You have sent too many reminders. Please wait a few minutes and try again.',
             )
-          } else if (error?.error === 'NO_ASSIGNEE') {
+          } else if (errorCode === 'NO_ASSIGNEE') {
             title = t('waitingQueue.reminder.noAssignee.title', 'No Assignee')
             description = t(
               'waitingQueue.reminder.noAssignee.description',
               'This assignment has no assignee. Please assign it first.',
             )
-          } else if (error?.error === 'ASSIGNMENT_NOT_FOUND') {
+          } else if (errorCode === 'ASSIGNMENT_NOT_FOUND') {
             title = t('waitingQueue.reminder.notFound.title', 'Assignment Not Found')
             description = t(
               'waitingQueue.reminder.notFound.description',
               'The assignment could not be found. It may have been deleted.',
             )
-          } else if (error?.error === 'VERSION_CONFLICT') {
+          } else if (errorCode === 'VERSION_CONFLICT') {
             title = t('waitingQueue.reminder.conflict.title', 'Assignment Changed')
             description = t(
               'waitingQueue.reminder.conflict.description',
@@ -187,6 +188,7 @@ export function ReminderButton({
       className={`min-h-11 min-w-11 gap-2 ${className}`}
       data-testid="reminder-button"
       aria-label={t('waitingQueue.reminder.button.label', 'Send follow-up reminder')}
+      aria-busy={isPending ? 'true' : undefined}
     >
       {isPending ? (
         <>

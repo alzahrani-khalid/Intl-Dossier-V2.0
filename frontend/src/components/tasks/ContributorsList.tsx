@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import type { Database } from '../../../../backend/src/types/database.types'
+import { useDirection } from '@/hooks/useDirection'
 
 type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
 
@@ -35,6 +36,7 @@ export function ContributorsList({
   className = '',
 }: ContributorsListProps) {
   const { t } = useTranslation()
+  const { isRTL } = useDirection()
   // Filter out removed contributors
   const activeContributors = contributors.filter((c) => !c.removed_at)
 
@@ -44,19 +46,28 @@ export function ContributorsList({
 
   if (activeContributors.length === 0) {
     return (
-      <div className="text-sm text-muted-foreground text-start">
+      <div
+        className="text-sm text-muted-foreground text-start"
+        data-testid="contributors-list"
+        dir={isRTL ? 'rtl' : 'ltr'}
+      >
         {t('tasks.noContributors', 'No contributors yet')}
       </div>
     )
   }
 
   return (
-    <div className={`flex flex-wrap gap-2 ${className}`}>
+    <div
+      className={`flex flex-wrap gap-2 ${className}`}
+      data-testid="contributors-list"
+      dir={isRTL ? 'rtl' : 'ltr'}
+      aria-live="polite"
+    >
       {displayedContributors.map((contributor) => (
         <div key={contributor.id} className="flex items-center gap-2 rounded-lg border p-2 ">
           {/* Avatar */}
           <Avatar className="size-8 sm:size-10">
-            <AvatarImage src={`/avatars/${contributor.user_id}.png`} />
+            <AvatarImage src={`/avatars/${contributor.user_id}.png`} alt={contributor.user_id} />
             <AvatarFallback className="text-xs sm:text-sm">
               {getInitials(contributor.user_id)}
             </AvatarFallback>

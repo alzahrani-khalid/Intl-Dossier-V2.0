@@ -64,31 +64,55 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
+
+  const countFilterValues = (value: unknown): number => {
+    if (Array.isArray(value)) return value.length
+    return value ? 1 : 0
+  }
+
+  const derivedFilterCount =
+    countFilterValues(filters.priority) +
+    countFilterValues(filters.aging) +
+    countFilterValues(filters.type) +
+    countFilterValues(filters.assignee)
+  const activeFilterCount = filterCount || derivedFilterCount
+  const hasActiveFilters = hasFilters || activeFilterCount > 0
+
   return (
     <Popover open={isOpen} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
         <Button
-          variant={hasFilters ? 'default' : 'outline'}
+          variant={hasActiveFilters ? 'default' : 'outline'}
           size="sm"
           className="h-9"
           aria-label={t('waitingQueue.filters.openFilters')}
         >
           <SlidersHorizontal className="h-4 w-4 me-2" />
-          {hasFilters
-            ? `${filterCount} ${t('waitingQueue.filters.active')}`
+          {hasActiveFilters
+            ? `${activeFilterCount} ${t('waitingQueue.filters.active')}`
             : t('waitingQueue.filters.title')}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[240px] p-0" align={isRTL ? 'end' : 'start'} side="bottom">
+      <PopoverContent
+        className="w-[240px] p-0"
+        align={isRTL ? 'end' : 'start'}
+        side="bottom"
+        dir={isRTL ? 'rtl' : 'ltr'}
+      >
         <div className="flex flex-col max-h-[520px]">
+          <div role="status" aria-live="polite" className="sr-only">
+            {activeFilterCount} {t('waitingQueue.filters.active')}
+          </div>
           {/* Compact Header */}
           <div className="flex items-center justify-between px-3 py-2.5 border-b">
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
               <h2 className="text-sm font-semibold">{t('waitingQueue.filters.title')}</h2>
-              {hasFilters && <span className="text-xs text-muted-foreground">({filterCount})</span>}
+              {hasActiveFilters && (
+                <span className="text-xs text-muted-foreground">({activeFilterCount})</span>
+              )}
             </div>
-            {hasFilters && (
+            {hasActiveFilters && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -106,6 +130,12 @@ export default function FilterPanel({
           {resultCount !== undefined && (
             <div className="px-3 py-2 bg-muted/50 text-xs text-muted-foreground">
               {t('waitingQueue.filters.showingResults', { count: resultCount })}
+            </div>
+          )}
+
+          {!hasActiveFilters && resultCount === undefined && !isLoading && (
+            <div className="px-3 py-2 text-xs text-muted-foreground">
+              Select filters to narrow down results.
             </div>
           )}
 

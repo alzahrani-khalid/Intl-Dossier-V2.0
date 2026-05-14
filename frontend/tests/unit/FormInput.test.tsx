@@ -11,6 +11,7 @@ describe('FormInput', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    localStorage.removeItem('id.locale')
     document.documentElement.dir = 'ltr'
     document.documentElement.lang = 'en'
   })
@@ -87,6 +88,7 @@ describe('FormInput', () => {
 
   it('should apply correct CSS classes for RTL layout', () => {
     document.documentElement.dir = 'rtl'
+    localStorage.setItem('id.locale', 'ar')
     const icon = <span data-testid="test-icon">search</span>
 
     render(<FormInput {...defaultProps} icon={icon} />)

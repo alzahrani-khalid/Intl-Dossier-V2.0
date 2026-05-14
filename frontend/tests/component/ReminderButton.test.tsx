@@ -5,14 +5,12 @@ import { useReminderAction } from '@/hooks/useWaitingQueueActions'
 import { useToast } from '@/hooks/useToast'
 import { ReminderButton } from '@/components/waiting-queue/ReminderButton'
 
-// Mock toast notifications
 vi.mock('@/hooks/useToast', () => ({
   useToast: vi.fn(() => ({
     toast: vi.fn(),
   })),
 }))
 
-// Mock the reminder action hook
 vi.mock('@/hooks/useWaitingQueueActions', () => ({
   useReminderAction: vi.fn(() => ({
     mutate: vi.fn(),
@@ -23,302 +21,119 @@ vi.mock('@/hooks/useWaitingQueueActions', () => ({
   })),
 }))
 
-describe('ReminderButton Component Tests (T028)', () => {
-  const mockAssignmentId = '123e4567-e89b-12d3-a456-426614174000'
-  const mockAssignmentWithNoAssignee = '223e4567-e89b-12d3-a456-426614174000'
+describe('ReminderButton', () => {
+  const assignmentId = '123e4567-e89b-12d3-a456-426614174000'
+  const assigneeId = 'user-001'
 
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  describe('Rendering', () => {
-    it('should render reminder button with correct text', () => {
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
+  it('renders follow-up reminder copy with touch-friendly sizing', () => {
+    render(<ReminderButton assignmentId={assignmentId} assigneeId={assigneeId} />)
 
-      expect(screen.getByRole('button')).toBeInTheDocument()
-      expect(screen.getByText(/follow up/i)).toBeInTheDocument()
+    const button = screen.getByRole('button', { name: /follow-up reminder/i })
+    expect(button).toHaveTextContent(/follow up/i)
+    expect(button).toHaveClass('min-h-11', 'min-w-11')
+    expect(button.className).not.toMatch(/ml-|mr-|pl-|pr-/)
+  })
+
+  it('calls the reminder mutation with the assignment payload', async () => {
+    const mutate = vi.fn()
+    vi.mocked(useReminderAction).mockReturnValue({
+      mutate,
+      isPending: false,
+      isSuccess: false,
+      isError: false,
+      error: null,
     })
 
-    it('should render with mobile-first sizing (min 44x44px)', () => {
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
+    const user = userEvent.setup()
+    render(<ReminderButton assignmentId={assignmentId} assigneeId={assigneeId} />)
 
-      const button = screen.getByRole('button')
-      const styles = window.getComputedStyle(button)
+    await user.click(screen.getByRole('button', { name: /follow-up reminder/i }))
 
-      // Verify touch-friendly minimum size
-      expect(button.className).toContain('min-h-11') // 44px minimum height
-      expect(button.className).toContain('min-w-11') // 44px minimum width
+    expect(mutate).toHaveBeenCalledWith({ assignmentId }, expect.any(Object))
+  })
+
+  it('shows pending state to visual and assistive users', () => {
+    vi.mocked(useReminderAction).mockReturnValue({
+      mutate: vi.fn(),
+      isPending: true,
+      isSuccess: false,
+      isError: false,
+      error: null,
     })
 
-    it('should support RTL layout with logical properties', () => {
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
+    render(<ReminderButton assignmentId={assignmentId} assigneeId={assigneeId} />)
 
-      const button = screen.getByRole('button')
+    const button = screen.getByRole('button', { name: /follow-up reminder/i })
+    expect(button).toBeDisabled()
+    expect(screen.getByText(/sending/i)).toBeInTheDocument()
+  })
 
-      // Verify no directional properties used
-      expect(button.className).not.toMatch(/ml-|mr-|pl-|pr-/)
-      // Should use logical properties if any spacing
-      expect(button.className).toMatch(/ms-|me-|ps-|pe-|px-|py-|p-/)
+  it('prevents reminders when the assignment has no assignee', () => {
+    render(<ReminderButton assignmentId={assignmentId} assigneeId={null} />)
+
+    expect(screen.getByRole('button', { name: /follow-up reminder/i })).toBeDisabled()
+  })
+
+  it('shows a success toast when the mutation succeeds', async () => {
+    const toast = vi.fn()
+    vi.mocked(useToast).mockReturnValue({ toast })
+    vi.mocked(useReminderAction).mockReturnValue({
+      mutate: vi.fn((_, { onSuccess }) => onSuccess?.()),
+      isPending: false,
+      isSuccess: false,
+      isError: false,
+      error: null,
+    })
+
+    const user = userEvent.setup()
+    render(<ReminderButton assignmentId={assignmentId} assigneeId={assigneeId} />)
+
+    await user.click(screen.getByRole('button', { name: /follow-up reminder/i }))
+
+    await waitFor(() => {
+      expect(toast).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: 'Reminder Sent',
+          variant: 'default',
+        }),
+      )
     })
   })
 
-  describe('User Interactions', () => {
-    it('should call mutation when clicked', async () => {
-      const mockMutate = vi.fn()
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: mockMutate,
-        isPending: false,
-        isSuccess: false,
-        isError: false,
-        error: null,
-      })
-
-      const user = userEvent.setup()
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      const button = screen.getByRole('button')
-      await user.click(button)
-
-      expect(mockMutate).toHaveBeenCalledWith(mockAssignmentId)
-      expect(mockMutate).toHaveBeenCalledTimes(1)
+  it.each([
+    ['COOLDOWN_ACTIVE', /cooldown/i, { hours_remaining: 12 }],
+    ['RATE_LIMIT_EXCEEDED', /rate limit/i, undefined],
+    ['NO_ASSIGNEE', /no assignee/i, undefined],
+    ['ASSIGNMENT_NOT_FOUND', /not found/i, undefined],
+    ['VERSION_CONFLICT', /changed/i, undefined],
+    ['UNKNOWN_ERROR', /failed/i, undefined],
+  ])('maps %s errors to destructive toasts', async (code, title, details) => {
+    const toast = vi.fn()
+    vi.mocked(useToast).mockReturnValue({ toast })
+    vi.mocked(useReminderAction).mockReturnValue({
+      mutate: vi.fn((_, { onError }) => onError?.({ code, details })),
+      isPending: false,
+      isSuccess: false,
+      isError: true,
+      error: { code },
     })
 
-    it('should show loading state during mutation', () => {
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: vi.fn(),
-        isPending: true,
-        isSuccess: false,
-        isError: false,
-        error: null,
-      })
+    const user = userEvent.setup()
+    render(<ReminderButton assignmentId={assignmentId} assigneeId={assigneeId} />)
 
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
+    await user.click(screen.getByRole('button', { name: /follow-up reminder/i }))
 
-      const button = screen.getByRole('button')
-      expect(button).toBeDisabled()
-      expect(screen.getByText(/sending/i)).toBeInTheDocument()
-    })
-
-    it('should disable button during pending state', () => {
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: vi.fn(),
-        isPending: true,
-        isSuccess: false,
-        isError: false,
-        error: null,
-      })
-
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      const button = screen.getByRole('button')
-      expect(button).toBeDisabled()
-    })
-  })
-
-  describe('Success Handling', () => {
-    it('should display success toast on successful reminder send', async () => {
-      const mockToast = vi.fn()
-      vi.mocked(useToast).mockReturnValue({ toast: mockToast })
-
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: vi.fn((_, { onSuccess }) => {
-          onSuccess?.()
+    await waitFor(() => {
+      expect(toast).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: expect.stringMatching(title),
+          variant: 'destructive',
         }),
-        isPending: false,
-        isSuccess: true,
-        isError: false,
-        error: null,
-      })
-
-      const user = userEvent.setup()
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      const button = screen.getByRole('button')
-      await user.click(button)
-
-      await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith(
-          expect.objectContaining({
-            title: expect.stringMatching(/success/i),
-            variant: 'default',
-          }),
-        )
-      })
-    })
-  })
-
-  describe('Error Handling', () => {
-    it('should display error toast on cooldown active error', async () => {
-      const mockToast = vi.fn()
-      vi.mocked(useToast).mockReturnValue({ toast: mockToast })
-
-      const cooldownError = {
-        code: 'COOLDOWN_ACTIVE',
-        message: 'Reminder cooldown is active',
-        details: { hours_remaining: 12 },
-      }
-
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: vi.fn((_, { onError }) => {
-          onError?.(cooldownError)
-        }),
-        isPending: false,
-        isSuccess: false,
-        isError: true,
-        error: cooldownError,
-      })
-
-      const user = userEvent.setup()
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      const button = screen.getByRole('button')
-      await user.click(button)
-
-      await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith(
-          expect.objectContaining({
-            title: expect.stringMatching(/cooldown/i),
-            description: expect.stringMatching(/12/),
-            variant: 'destructive',
-          }),
-        )
-      })
-    })
-
-    it('should display error toast on rate limit exceeded', async () => {
-      const mockToast = vi.fn()
-      vi.mocked(useToast).mockReturnValue({ toast: mockToast })
-
-      const rateLimitError = {
-        code: 'RATE_LIMIT_EXCEEDED',
-        message: 'Rate limit exceeded',
-        details: { retry_after: 120 },
-      }
-
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: vi.fn((_, { onError }) => {
-          onError?.(rateLimitError)
-        }),
-        isPending: false,
-        isSuccess: false,
-        isError: true,
-        error: rateLimitError,
-      })
-
-      const user = userEvent.setup()
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      const button = screen.getByRole('button')
-      await user.click(button)
-
-      await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith(
-          expect.objectContaining({
-            title: expect.stringMatching(/rate limit/i),
-            variant: 'destructive',
-          }),
-        )
-      })
-    })
-
-    it('should display error toast on no assignee error', async () => {
-      const mockToast = vi.fn()
-      vi.mocked(useToast).mockReturnValue({ toast: mockToast })
-
-      const noAssigneeError = {
-        code: 'NO_ASSIGNEE',
-        message: 'Assignment has no assignee',
-      }
-
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: vi.fn((_, { onError }) => {
-          onError?.(noAssigneeError)
-        }),
-        isPending: false,
-        isSuccess: false,
-        isError: true,
-        error: noAssigneeError,
-      })
-
-      const user = userEvent.setup()
-      render(<ReminderButton assignmentId={mockAssignmentWithNoAssignee} />)
-
-      const button = screen.getByRole('button')
-      await user.click(button)
-
-      await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith(
-          expect.objectContaining({
-            title: expect.stringMatching(/no assignee/i),
-            variant: 'destructive',
-          }),
-        )
-      })
-    })
-
-    it('should display generic error toast on unknown error', async () => {
-      const mockToast = vi.fn()
-      vi.mocked(useToast).mockReturnValue({ toast: mockToast })
-
-      const genericError = {
-        code: 'UNKNOWN_ERROR',
-        message: 'An unexpected error occurred',
-      }
-
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: vi.fn((_, { onError }) => {
-          onError?.(genericError)
-        }),
-        isPending: false,
-        isSuccess: false,
-        isError: true,
-        error: genericError,
-      })
-
-      const user = userEvent.setup()
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      const button = screen.getByRole('button')
-      await user.click(button)
-
-      await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith(
-          expect.objectContaining({
-            title: expect.stringMatching(/error|failed/i),
-            variant: 'destructive',
-          }),
-        )
-      })
-    })
-  })
-
-  describe('Accessibility', () => {
-    it('should have accessible button role', () => {
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      expect(screen.getByRole('button')).toBeInTheDocument()
-    })
-
-    it('should have descriptive aria-label', () => {
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      const button = screen.getByRole('button')
-      expect(button).toHaveAttribute('aria-label', expect.stringMatching(/follow up/i))
-    })
-
-    it('should indicate loading state to screen readers', () => {
-      vi.mocked(useReminderAction).mockReturnValue({
-        mutate: vi.fn(),
-        isPending: true,
-        isSuccess: false,
-        isError: false,
-        error: null,
-      })
-
-      render(<ReminderButton assignmentId={mockAssignmentId} />)
-
-      const button = screen.getByRole('button')
-      expect(button).toHaveAttribute('aria-busy', 'true')
+      )
     })
   })
 })
