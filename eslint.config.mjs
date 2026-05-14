@@ -220,6 +220,25 @@ export default tseslint.config(
     },
   },
 
+  // ── Test mocks: require importActual spread for vi.mock factories ─
+  {
+    files: [
+      'frontend/tests/**/*.{ts,tsx}',
+      'tools/eslint-fixtures/**/*.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.object.name='vi'][callee.property.name='mock'] > ArrowFunctionExpression:nth-child(2) > ObjectExpression:not(:has(SpreadElement))",
+          message:
+            'vi.mock(...) factory must spread vi.importActual(<id>). Pattern: async () => ({ ...(await vi.importActual<typeof import("mod")>("mod")), override: ... }). See frontend/docs/test-setup.md §The react-i18next mock contract.',
+        },
+      ],
+    },
+  },
+
   // ── Backend override ──────────────────────────────────────────────
   // Backend was never linted with these strict rules. They are disabled
   // here and tracked for incremental adoption in Phase 2+.
