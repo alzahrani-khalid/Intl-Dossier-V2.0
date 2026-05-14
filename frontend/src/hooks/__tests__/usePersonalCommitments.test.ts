@@ -11,11 +11,20 @@
  */
 
 import { renderHook } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createElement, type ReactElement, type ReactNode } from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { deriveSeverity, deriveInitials } from '../usePersonalCommitments'
 
 const useCommitmentsMock = vi.fn()
 const useAuthMock = vi.fn()
+const supabaseMocks = vi.hoisted(() => {
+  const inMock = vi.fn()
+  const selectMock = vi.fn(() => ({ in: inMock }))
+  const fromMock = vi.fn(() => ({ select: selectMock }))
+
+  return { fromMock, inMock, selectMock }
+})
 
 vi.mock('@/hooks/useCommitments', () => ({
   useCommitments: (opts?: unknown) => useCommitmentsMock(opts),
@@ -25,9 +34,29 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => useAuthMock(),
 }))
 
+vi.mock('@/lib/supabase', () => ({
+  supabase: {
+    from: supabaseMocks.fromMock,
+  },
+}))
+
 import { usePersonalCommitments } from '../usePersonalCommitments'
 
 const DAY_MS = 86_400_000
+
+function createWrapper(): ({ children }: { children: ReactNode }) => ReactElement {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+
+  return function HookWrapper({ children }: { children: ReactNode }): ReactElement {
+    return createElement(QueryClientProvider, { client: queryClient }, children)
+  }
+}
 
 function makeCommitment(overrides: Record<string, unknown>): Record<string, unknown> {
   const base = {
@@ -62,6 +91,10 @@ describe('usePersonalCommitments — Phase 38 adapter (T-38-09)', () => {
   beforeEach(() => {
     useCommitmentsMock.mockReset()
     useAuthMock.mockReset()
+    supabaseMocks.fromMock.mockClear()
+    supabaseMocks.selectMock.mockClear()
+    supabaseMocks.inMock.mockReset()
+    supabaseMocks.inMock.mockResolvedValue({ data: [], error: null })
     useAuthMock.mockReturnValue({ user: { id: 'me-42' } })
   })
 
@@ -72,7 +105,7 @@ describe('usePersonalCommitments — Phase 38 adapter (T-38-09)', () => {
       isError: false,
     })
 
-    renderHook(() => usePersonalCommitments())
+    renderHook(() => usePersonalCommitments(), { wrapper: createWrapper() })
 
     expect(useCommitmentsMock).toHaveBeenCalledTimes(1)
     const callArg = useCommitmentsMock.mock.calls[0][0] as Record<string, unknown>
@@ -82,7 +115,7 @@ describe('usePersonalCommitments — Phase 38 adapter (T-38-09)', () => {
 
   it('forwards loading/error state and undefined data while loading', () => {
     useCommitmentsMock.mockReturnValue({ data: undefined, isLoading: true, isError: false })
-    const { result } = renderHook(() => usePersonalCommitments())
+    const { result } = renderHook(() => usePersonalCommitments(), { wrapper: createWrapper() })
     expect(result.current.isLoading).toBe(true)
     expect(result.current.data).toBeUndefined()
   })
@@ -104,7 +137,7 @@ describe('usePersonalCommitments — Phase 38 adapter (T-38-09)', () => {
       isError: false,
     })
 
-    const { result } = renderHook(() => usePersonalCommitments())
+    const { result } = renderHook(() => usePersonalCommitments(), { wrapper: createWrapper() })
 
     expect(result.current.data).toBeDefined()
     const groups = result.current.data ?? []
@@ -133,7 +166,7 @@ describe('usePersonalCommitments — Phase 38 adapter (T-38-09)', () => {
     useAuthMock.mockReturnValue({ user: null })
     useCommitmentsMock.mockReturnValue({ data: undefined, isLoading: false, isError: false })
 
-    renderHook(() => usePersonalCommitments())
+    renderHook(() => usePersonalCommitments(), { wrapper: createWrapper() })
 
     const callArg = useCommitmentsMock.mock.calls[0][0] as Record<string, unknown>
     expect(callArg.enabled).toBe(false)
