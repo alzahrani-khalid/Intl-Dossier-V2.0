@@ -1,10 +1,11 @@
 ---
 phase: 51
 slug: design-token-compliance-gate
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-05-15
+reviewed_at: 2026-05-15T00:00:00Z
 ---
 
 # Phase 51 — UI Design Contract
@@ -61,7 +62,11 @@ untouched.
 | `--pad`      | 20 / 14 / 10 px                                 | same                                                     |
 | `--gap`      | 16 / 12 / 8 px                                  | same                                                     |
 
-Exceptions: none for this phase.
+Exceptions: `--pad` Compact (14px) and Dense (10px), plus `--gap` Compact (12px)
+and Dense (8px is a multiple of 4) are pre-existing density tokens from
+`tokens/densities.ts` — not introduced by this phase. The 14px and 10px values
+are inherited canonical density-aware paddings; do not flag as new non-multiple-of-4
+spacing decisions.
 
 ---
 
