@@ -178,8 +178,17 @@ Plans:
 2. ESLint flat config bans Tailwind color literals (`text-blue-*`, `bg-red-*`, `border-green-*`, etc.) in `frontend/src/**/*.{ts,tsx}` while permitting token-mapped utilities (`text-bg`, `text-ink`, `text-accent`).
 3. `WorldMapVisualization.tsx:193` raw hex `#3B82F6`, `PositionEditor.tsx` color literals, and any other violations surfaced by the sweep are replaced with token references; `pnpm lint` exits 0 workspace-wide with the new rules active.
 4. A new PR-blocking branch-protection context for design-token compliance is registered on `main` and verified to mark a smoke PR `mergeStateStatus=BLOCKED`.
-   **Plans:** TBD
-   **UI hint:** yes
+
+**Plans:** 4 plans across 3 waves
+
+Plans:
+
+- [ ] 51-01-rule-activation-tier-b-PLAN.md — ESLint D-05 selectors (hex + palette + TemplateElement) + D-03 Tier-B carve-out + phase-51-base tag + regression fixture (Wave 1; severity ships at `warn`)
+- [ ] 51-02-tier-a-named-anchors-PLAN.md — Tier-A swap WorldMapVisualization.tsx + PositionEditor.tsx with visual-parity verification (Wave 2; parallel with 51-03)
+- [ ] 51-03-tier-a-mechanical-sweep-PLAN.md — Tier-A mechanical sweep ~80-120 files + 51-DESIGN-AUDIT.md scaffold (Wave 2; parallel with 51-02)
+- [ ] 51-04-tier-c-severity-flip-smoke-pr-PLAN.md — Tier-C disables + audit population + severity flip `warn`→`error` + smoke PR (mergeStateStatus=BLOCKED) + 51-SUMMARY.md (Wave 3; one human-verify checkpoint)
+
+**UI hint:** yes
 
 ### Phase 52: HeroUI v3 Kanban Migration
 
