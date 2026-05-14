@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
-status: in_progress
-stopped_at: Phase 50 Plan 50-05 branch-protection human-verify checkpoint
-last_updated: '2026-05-14T19:58:18.000Z'
+status: paused
+stopped_at: Phase 51 context gathered
+last_updated: '2026-05-14T20:44:34.497Z'
 last_activity: 2026-05-14 -- Phase 50 default frontend/backend tests green locally; Plan 50-05 code-side CI/lint enforcement committed at 720d135a; branch-protection smoke checkpoint pending
 progress:
-  total_phases: 1
-  completed_phases: 0
-  total_plans: 10
-  completed_plans: 9
-  percent: 90
+  total_phases: 5
+  completed_phases: 4
+  total_plans: 27
+  completed_plans: 27
+  percent: 100
 ---
 
 # Project State
@@ -437,9 +437,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-13T11:17:50.438Z
-Stopped at: Phase 50 context gathered
-Resume file: .planning/phases/50-test-infrastructure-repair/50-CONTEXT.md
+Last session: 2026-05-14T20:44:34.490Z
+Stopped at: Phase 51 context gathered
+Resume file: .planning/phases/51-design-token-compliance-gate/51-CONTEXT.md
 Resume command: (no resume needed — v6.2 milestone shipped)
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
