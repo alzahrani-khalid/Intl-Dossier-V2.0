@@ -84,6 +84,7 @@ vi.mock('react-i18next', async () => {
       },
       i18n: {
         language: 'en',
+        changeLanguage: vi.fn().mockResolvedValue(undefined),
       },
     }),
     Trans: ({ children }: any) => children,

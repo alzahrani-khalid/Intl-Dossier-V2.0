@@ -5,28 +5,39 @@
 // buttons (≥44×44), today receives aria-current="date", events stack into the row
 // for the matching day via <CalendarEventPill>.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, cleanup, fireEvent, within } from '@testing-library/react'
+import {
+  renderWithProviders as render,
+  screen,
+  cleanup,
+  fireEvent,
+  within,
+} from '@tests/utils/render'
 import type { CalendarEvent } from '@/hooks/useCalendarEvents'
 
 // Mock i18n with a mutable language ref so each test can flip locale.
-const i18nState = { language: 'en' }
+const i18nState = { language: 'en', changeLanguage: vi.fn().mockResolvedValue(undefined) }
 
-vi.mock('react-i18next', () => ({
-  useTranslation: (): {
-    i18n: { language: string }
-    t: (k: string) => string
-  } => ({
-    i18n: i18nState,
-    t: (k: string): string => {
-      const map: Record<string, string> = {
-        'weeklist.previousWeek': 'Previous week',
-        'weeklist.nextWeek': 'Next week',
-        'weeklist.today': 'Today',
-      }
-      return map[k] ?? k
-    },
-  }),
-}))
+vi.mock('react-i18next', async () => {
+  const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next')
+
+  return {
+    ...actual,
+    useTranslation: (): {
+      i18n: typeof i18nState
+      t: (k: string) => string
+    } => ({
+      i18n: i18nState,
+      t: (k: string): string => {
+        const map: Record<string, string> = {
+          'weeklist.previousWeek': 'Previous week',
+          'weeklist.nextWeek': 'Next week',
+          'weeklist.today': 'Today',
+        }
+        return map[k] ?? k
+      },
+    }),
+  }
+})
 
 const makeEvent = (overrides: Partial<CalendarEvent> = {}): CalendarEvent =>
   ({
@@ -68,9 +79,7 @@ describe('WeekListMobile', (): void => {
 
   it('renders English day labels in en locale', async (): Promise<void> => {
     const { WeekListMobile } = await import('../WeekListMobile')
-    const { container } = render(
-      <WeekListMobile events={[]} onEventClick={(): void => {}} />,
-    )
+    const { container } = render(<WeekListMobile events={[]} onEventClick={(): void => {}} />)
     const text = container.textContent ?? ''
     // Labels (verbatim from CalendarMonthGrid DOW_EN)
     expect(text.includes('Sun')).toBeTruthy()
@@ -80,9 +89,7 @@ describe('WeekListMobile', (): void => {
   it('renders Arabic-Indic day numbers in ar locale', async (): Promise<void> => {
     i18nState.language = 'ar'
     const { WeekListMobile } = await import('../WeekListMobile')
-    const { container } = render(
-      <WeekListMobile events={[]} onEventClick={(): void => {}} />,
-    )
+    const { container } = render(<WeekListMobile events={[]} onEventClick={(): void => {}} />)
     const text = container.textContent ?? ''
     // The active week (Sun 2026-04-19 .. Sat 2026-04-25) contains digits
     // 19, 20, 21, 22, 23, 24, 25 — so '٢' must appear.
@@ -107,9 +114,7 @@ describe('WeekListMobile', (): void => {
 
   it('Prev button has accessible name and shifts the active week back 7 days', async (): Promise<void> => {
     const { WeekListMobile } = await import('../WeekListMobile')
-    const { container } = render(
-      <WeekListMobile events={[]} onEventClick={(): void => {}} />,
-    )
+    const { container } = render(<WeekListMobile events={[]} onEventClick={(): void => {}} />)
     const prev = screen.getByRole('button', { name: 'Previous week' })
     expect(prev).toBeTruthy()
     fireEvent.click(prev)
@@ -121,9 +126,7 @@ describe('WeekListMobile', (): void => {
 
   it('Next button has accessible name and shifts the active week forward 7 days', async (): Promise<void> => {
     const { WeekListMobile } = await import('../WeekListMobile')
-    const { container } = render(
-      <WeekListMobile events={[]} onEventClick={(): void => {}} />,
-    )
+    const { container } = render(<WeekListMobile events={[]} onEventClick={(): void => {}} />)
     const next = screen.getByRole('button', { name: 'Next week' })
     expect(next).toBeTruthy()
     fireEvent.click(next)
@@ -135,9 +138,7 @@ describe('WeekListMobile', (): void => {
 
   it('Today button has accessible name and jumps activeWeek back to current week', async (): Promise<void> => {
     const { WeekListMobile } = await import('../WeekListMobile')
-    const { container } = render(
-      <WeekListMobile events={[]} onEventClick={(): void => {}} />,
-    )
+    const { container } = render(<WeekListMobile events={[]} onEventClick={(): void => {}} />)
     const next = screen.getByRole('button', { name: 'Next week' })
     fireEvent.click(next)
     fireEvent.click(next)
@@ -149,11 +150,9 @@ describe('WeekListMobile', (): void => {
     expect(text.includes('25')).toBeTruthy()
   })
 
-  it("today's day row has aria-current=\"date\"", async (): Promise<void> => {
+  it('today\'s day row has aria-current="date"', async (): Promise<void> => {
     const { WeekListMobile } = await import('../WeekListMobile')
-    const { container } = render(
-      <WeekListMobile events={[]} onEventClick={(): void => {}} />,
-    )
+    const { container } = render(<WeekListMobile events={[]} onEventClick={(): void => {}} />)
     const todayRow = container.querySelector('li[aria-current="date"]')
     expect(todayRow).toBeTruthy()
   })
