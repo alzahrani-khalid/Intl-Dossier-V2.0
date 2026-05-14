@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
-status: blocked
-stopped_at: Phase 50 Plan 50-13 ceiling gate
-last_updated: '2026-05-14T18:09:40.000Z'
-last_activity: 2026-05-14 -- Phase 50 Plan 50-13 Task 0 halted; frontend default runner has 13 failing files, exceeding the <=8 ceiling
+status: ready
+stopped_at: Phase 50 Plan 50-13a (post-split)
+last_updated: '2026-05-14T19:00:00.000Z'
+last_activity: 2026-05-14 -- Phase 50 Plan 50-13 split into 50-13a/13b after ceiling halt; executing 50-13a next
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 9
-  completed_plans: 5
-  percent: 56
+  total_plans: 10
+  completed_plans: 6
+  percent: 60
 ---
 
 # Project State
@@ -26,13 +26,13 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 50 (test-infrastructure-repair) — EXECUTING
-Plan: 50-13
-Status: Blocked on Plan 50-13 ceiling gate
-Last activity: 2026-05-14 -- Phase 50 Plan 50-13 Task 0 halted; frontend default runner has 13 failing files, exceeding the <=8 ceiling
+Plan: 50-13a
+Status: Ready to execute 50-13a (post-split from 50-13 ceiling halt)
+Last activity: 2026-05-14 -- Phase 50 Plan 50-13 split into 50-13a/13b after ceiling halt; executing 50-13a next
 
 ## Current Blocker
 
-Plan 50-13 cannot proceed as written. Task 0 re-ran the frontend default runner and found 13 failing files, which exceeds the plan's <=8 ceiling. See `.planning/phases/50-test-infrastructure-repair/50-13-DISCOVERY.md`.
+Plan 50-13 was split into 50-13a (original 6-file scope; ≤8 ceiling honored) and 50-13b (7-file tests/component/ i18n cluster). Operator ratified DISCOVERY option 2. Original plan archived at `.planning/phases/50-test-infrastructure-repair/50-13-PLAN.archived.md`. Next: execute 50-13a. Original ceiling-halt context preserved at `.planning/phases/50-test-infrastructure-repair/50-13-DISCOVERY.md`.
 
 Live command:
 
