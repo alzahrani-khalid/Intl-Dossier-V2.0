@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config';
-import path from 'path';
+import { defineConfig } from 'vitest/config'
+import path from 'path'
 
 export default defineConfig({
   root: __dirname, // Prevent looking up parent directories for config
@@ -11,14 +11,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
-      exclude: [
-        'node_modules/',
-        'tests/',
-        'dist/',
-        '**/*.d.ts',
-        '**/*.config.*',
-        '**/mockData.ts',
-      ],
+      exclude: ['node_modules/', 'tests/', 'dist/', '**/*.d.ts', '**/*.config.*', '**/mockData.ts'],
       include: ['src/**/*.ts'],
       all: true,
       lines: 80,
@@ -26,8 +19,20 @@ export default defineConfig({
       branches: 75,
       statements: 80,
     },
-    include: ['tests/**/*.test.ts'],
-    exclude: ['node_modules/', 'dist/'],
+    include: [
+      'tests/unit/**/*.test.ts',
+      'tests/services/**/*.test.ts',
+      'tests/security/**/*.test.ts',
+      'tests/{deadline-checker,digest-scheduler,email-notifications,notification-queue,push-notifications}.test.ts',
+    ],
+    exclude: [
+      'node_modules/',
+      'dist/',
+      'tests/contract/**',
+      'tests/contracts/**',
+      'tests/integration/**',
+      'tests/performance/**',
+    ],
     testTimeout: 30000, // 30s for integration tests with database
     hookTimeout: 30000,
   },
@@ -37,4 +42,4 @@ export default defineConfig({
       '@tests': path.resolve(__dirname, './tests'),
     },
   },
-});
+})

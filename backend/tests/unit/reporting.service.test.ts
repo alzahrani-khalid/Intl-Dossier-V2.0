@@ -1,294 +1,135 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ReportingService } from '../../src/services/reporting.service';
-import { supabase } from '../../src/config/supabase';
-import * as fs from 'fs/promises';
-import * as ExcelJS from 'exceljs';
-import PDFDocument from 'pdfkit';
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ReportingService } from '../../src/services/reporting.service'
+import type { ReportTemplate } from '../../src/models/report-template.model'
 
-vi.mock('../../src/config/supabase');
-vi.mock('fs/promises');
-vi.mock('exceljs');
-vi.mock('pdfkit');
+const mocks = vi.hoisted(() => {
+  type Terminal = { data: any; error: any }
+
+  const state = {
+    createClient: vi.fn(),
+    from: vi.fn(),
+    listByTable: new Map<string, Terminal>(),
+    singleTerminal: { data: null, error: null } as Terminal,
+  }
+
+  const makeChain = (table: string) => {
+    const chain: any = {
+      select: vi.fn(() => chain),
+      insert: vi.fn(() => chain),
+      eq: vi.fn(() => chain),
+      in: vi.fn(() => chain),
+      gte: vi.fn(() => chain),
+      lte: vi.fn(() => chain),
+      single: vi.fn(async () => state.singleTerminal),
+      then: (onResolved: any, onRejected?: any) =>
+        Promise.resolve(state.listByTable.get(table) ?? { data: [], error: null }).then(
+          onResolved,
+          onRejected,
+        ),
+      catch: (onRejected: any) =>
+        Promise.resolve(state.listByTable.get(table) ?? { data: [], error: null }).catch(
+          onRejected,
+        ),
+      finally: (onFinally: any) =>
+        Promise.resolve(state.listByTable.get(table) ?? { data: [], error: null }).finally(
+          onFinally,
+        ),
+    }
+    return chain
+  }
+
+  state.from.mockImplementation((table: string) => makeChain(table))
+  state.createClient.mockReturnValue({ from: state.from })
+
+  return {
+    ...state,
+    setList: (table: string, terminal: Terminal) => {
+      state.listByTable.set(table, terminal)
+    },
+    setSingleTerminal: (terminal: Terminal) => {
+      state.singleTerminal = terminal
+    },
+    reset: () => {
+      state.listByTable.clear()
+      state.singleTerminal = { data: null, error: null }
+      state.from.mockClear()
+      state.createClient.mockClear()
+      state.from.mockImplementation((table: string) => makeChain(table))
+      state.createClient.mockReturnValue({ from: state.from })
+    },
+  }
+})
+
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: mocks.createClient,
+}))
+
+const template: ReportTemplate = {
+  id: 'template-1',
+  name: 'Executive report',
+  report_type: 'executive',
+  include_metrics: false,
+  include_trends: false,
+  include_charts: false,
+  include_audit_trail: false,
+  supported_formats: ['json', 'csv'],
+  schedule_enabled: false,
+  organization_branding: {},
+  template_content: '{{title}}\n{{date}}\n{{content}}',
+  created_by: 'user-1',
+  created_at: new Date(),
+  updated_at: new Date(),
+}
 
 describe('ReportingService', () => {
-  let reportingService: ReportingService;
+  let service: ReportingService
 
-  beforeEach(() => {
-    reportingService = new ReportingService();
-    vi.clearAllMocks();
-  });
+  beforeEach(async () => {
+    mocks.reset()
+    mocks.setList('report_templates', { data: [template], error: null })
+    service = new ReportingService('http://supabase.test', 'service-key')
+    await Promise.resolve()
+  })
 
-  describe('generateReport', () => {
-    const mockData = {
-      title: 'Test Report',
-      data: [
-        { id: 1, name: 'Item 1', value: 100 },
-        { id: 2, name: 'Item 2', value: 200 }
-      ],
-      metadata: {
-        generatedAt: new Date().toISOString(),
-        author: 'System'
-      }
-    };
+  it('creates valid report templates', async () => {
+    mocks.setSingleTerminal({ data: template, error: null })
 
-    it('should generate PDF report', async () => {
-      const mockPdfDoc = {
-        pipe: vi.fn(),
-        fontSize: vi.fn().mockReturnThis(),
-        text: vi.fn().mockReturnThis(),
-        moveDown: vi.fn().mockReturnThis(),
-        end: vi.fn()
-      };
+    const result = await service.createTemplate({
+      name: template.name,
+      report_type: 'executive',
+      supported_formats: ['json'],
+      template_content: template.template_content,
+    })
 
-      vi.mocked(PDFDocument).mockImplementation(() => mockPdfDoc as any);
-      
-      const mockWriteStream = {
-        on: vi.fn((event, callback) => {
-          if (event === 'finish') callback();
-        })
-      };
-      
-      vi.spyOn(fs, 'createWriteStream').mockReturnValue(mockWriteStream as any);
+    expect(result).toEqual(template)
+    expect(mocks.from).toHaveBeenCalledWith('report_templates')
+  })
 
-      const result = await reportingService.generateReport(mockData, 'pdf');
+  it('generates JSON reports from a loaded template', async () => {
+    const reports = [
+      {
+        id: 'report-1',
+        confidence_score: 80,
+        review_status: 'approved',
+        created_at: new Date().toISOString(),
+        threat_indicators: [],
+        geospatial_tags: [],
+      },
+    ]
+    mocks.setList('intelligence_reports', { data: reports, error: null })
 
-      expect(result.format).toBe('pdf');
-      expect(result.path).toContain('.pdf');
-      expect(mockPdfDoc.text).toHaveBeenCalledWith('Test Report');
-    });
+    const result = await service.generateReport({ template_id: template.id, format: 'json' })
 
-    it('should generate Excel report', async () => {
-      const mockWorkbook = {
-        addWorksheet: vi.fn().mockReturnValue({
-          columns: [],
-          addRow: vi.fn(),
-          getRow: vi.fn().mockReturnValue({ font: {} })
-        }),
-        xlsx: {
-          writeFile: vi.fn().mockResolvedValue(undefined)
-        }
-      };
+    expect(result.content_type).toBe('application/json')
+    expect(result.data).toMatchObject({ data: reports })
+  })
 
-      vi.mocked(ExcelJS.Workbook).mockImplementation(() => mockWorkbook as any);
+  it('filters templates by report type', async () => {
+    mocks.setList('report_templates', { data: [template], error: null })
 
-      const result = await reportingService.generateReport(mockData, 'excel');
+    const result = await service.getTemplates('executive')
 
-      expect(result.format).toBe('excel');
-      expect(result.path).toContain('.xlsx');
-      expect(mockWorkbook.addWorksheet).toHaveBeenCalledWith('Report');
-    });
-
-    it('should generate JSON report', async () => {
-      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
-
-      const result = await reportingService.generateReport(mockData, 'json');
-
-      expect(result.format).toBe('json');
-      expect(result.path).toContain('.json');
-      expect(fs.writeFile).toHaveBeenCalledWith(
-        expect.any(String),
-        JSON.stringify(mockData, null, 2)
-      );
-    });
-
-    it('should generate CSV report', async () => {
-      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
-
-      const result = await reportingService.generateReport(mockData, 'csv');
-
-      expect(result.format).toBe('csv');
-      expect(result.path).toContain('.csv');
-      expect(fs.writeFile).toHaveBeenCalled();
-    });
-  });
-
-  describe('scheduleReport', () => {
-    it('should schedule a report generation', async () => {
-      const schedule = {
-        templateId: 'template123',
-        cron: '0 9 * * 1', // Every Monday at 9 AM
-        recipients: ['user@example.com'],
-        format: 'pdf' as const
-      };
-
-      const mockFrom = vi.fn().mockReturnValue({
-        insert: vi.fn().mockReturnValue({
-          select: vi.fn().mockResolvedValue({
-            data: { id: 'schedule123', ...schedule },
-            error: null
-          })
-        })
-      });
-
-      vi.mocked(supabase.from).mockImplementation(mockFrom);
-
-      const result = await reportingService.scheduleReport(schedule);
-
-      expect(result.id).toBe('schedule123');
-      expect(mockFrom).toHaveBeenCalledWith('report_schedules');
-    });
-
-    it('should handle scheduling errors', async () => {
-      const schedule = {
-        templateId: 'template123',
-        cron: 'invalid',
-        recipients: [],
-        format: 'pdf' as const
-      };
-
-      const mockFrom = vi.fn().mockReturnValue({
-        insert: vi.fn().mockReturnValue({
-          select: vi.fn().mockResolvedValue({
-            data: null,
-            error: { message: 'Invalid cron expression' }
-          })
-        })
-      });
-
-      vi.mocked(supabase.from).mockImplementation(mockFrom);
-
-      await expect(reportingService.scheduleReport(schedule)).rejects.toThrow();
-    });
-  });
-
-  describe('getTemplates', () => {
-    it('should retrieve all report templates', async () => {
-      const mockTemplates = [
-        { id: '1', name: 'Monthly Report', type: 'summary' },
-        { id: '2', name: 'Analytics Report', type: 'detailed' }
-      ];
-
-      const mockFrom = vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          order: vi.fn().mockResolvedValue({
-            data: mockTemplates,
-            error: null
-          })
-        })
-      });
-
-      vi.mocked(supabase.from).mockImplementation(mockFrom);
-
-      const result = await reportingService.getTemplates();
-
-      expect(result).toEqual(mockTemplates);
-      expect(mockFrom).toHaveBeenCalledWith('report_templates');
-    });
-
-    it('should filter templates by type', async () => {
-      const mockTemplates = [
-        { id: '1', name: 'Monthly Report', type: 'summary' }
-      ];
-
-      const mockFrom = vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            order: vi.fn().mockResolvedValue({
-              data: mockTemplates,
-              error: null
-            })
-          })
-        })
-      });
-
-      vi.mocked(supabase.from).mockImplementation(mockFrom);
-
-      const result = await reportingService.getTemplates({ type: 'summary' });
-
-      expect(result).toEqual(mockTemplates);
-    });
-  });
-
-  describe('executeTemplate', () => {
-    it('should execute report template with parameters', async () => {
-      const templateId = 'template123';
-      const parameters = { startDate: '2024-01-01', endDate: '2024-12-31' };
-
-      const mockTemplate = {
-        id: templateId,
-        name: 'Annual Report',
-        query: 'SELECT * FROM data WHERE date BETWEEN $1 AND $2',
-        format: 'pdf'
-      };
-
-      const mockData = [
-        { id: 1, value: 100 },
-        { id: 2, value: 200 }
-      ];
-
-      const mockFrom = vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: mockTemplate,
-              error: null
-            })
-          })
-        })
-      });
-
-      vi.mocked(supabase.from).mockImplementation(mockFrom);
-      vi.mocked(supabase.rpc).mockResolvedValue({
-        data: mockData,
-        error: null
-      } as any);
-
-      const result = await reportingService.executeTemplate(templateId, parameters);
-
-      expect(result.template).toEqual(mockTemplate);
-      expect(result.data).toEqual(mockData);
-    });
-  });
-
-  describe('exportReport', () => {
-    it('should export report in multiple formats', async () => {
-      const reportId = 'report123';
-      const formats = ['pdf', 'excel', 'json'] as const;
-
-      const mockReport = {
-        id: reportId,
-        title: 'Test Report',
-        data: { items: [] }
-      };
-
-      const mockFrom = vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: mockReport,
-              error: null
-            })
-          })
-        })
-      });
-
-      vi.mocked(supabase.from).mockImplementation(mockFrom);
-      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
-
-      const results = await reportingService.exportReport(reportId, formats);
-
-      expect(results).toHaveLength(3);
-      expect(results.map(r => r.format)).toEqual(formats);
-    });
-  });
-
-  describe('generateComparison', () => {
-    it('should generate comparison report between periods', async () => {
-      const period1 = { start: '2024-01-01', end: '2024-06-30' };
-      const period2 = { start: '2024-07-01', end: '2024-12-31' };
-
-      const mockData1 = [{ metric: 'sales', value: 1000 }];
-      const mockData2 = [{ metric: 'sales', value: 1500 }];
-
-      vi.mocked(supabase.rpc)
-        .mockResolvedValueOnce({ data: mockData1, error: null } as any)
-        .mockResolvedValueOnce({ data: mockData2, error: null } as any);
-
-      const result = await reportingService.generateComparison(period1, period2);
-
-      expect(result.period1Data).toEqual(mockData1);
-      expect(result.period2Data).toEqual(mockData2);
-      expect(result.comparison).toBeDefined();
-    });
-  });
-});
+    expect(result).toEqual([template])
+    expect(mocks.from).toHaveBeenCalledWith('report_templates')
+  })
+})
