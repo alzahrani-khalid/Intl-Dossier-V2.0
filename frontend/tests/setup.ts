@@ -60,6 +60,7 @@ vi.mock('react-i18next', async () => {
           'afterActions.commitments.organization': 'Organization',
           'afterActions.commitments.orgPlaceholder': 'Enter organization',
           'afterActions.commitments.ownerType': 'Owner Type',
+          'afterActions.commitments.priorities.critical': 'Critical',
           'afterActions.commitments.priorities.high': 'High',
           'afterActions.commitments.priorities.low': 'Low',
           'afterActions.commitments.priorities.medium': 'Medium',
