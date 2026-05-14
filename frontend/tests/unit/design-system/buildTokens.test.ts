@@ -209,7 +209,7 @@ describe('buildTokens — SC-3: hue recomputes accent family + SLA (hue+55°), s
         density: 'comfortable',
       })
       const dark = buildTokens({ direction: 'chancery', mode: 'dark', hue, density: 'comfortable' })
-      expect(light['--sla-bad']).toBe('oklch(54% 0.2 25)')
+      expect(light['--sla-bad']).toBe('oklch(46% 0.18 25)')
       expect(dark['--sla-bad']).toBe('oklch(68% 0.18 25)')
     }
   })

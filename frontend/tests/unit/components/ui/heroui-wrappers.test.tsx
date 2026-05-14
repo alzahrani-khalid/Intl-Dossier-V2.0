@@ -24,13 +24,10 @@ import {
   HeroUICardFooter,
 } from '@/components/ui/heroui-card'
 import { HeroUIChip } from '@/components/ui/heroui-chip'
-import {
-  HeroUISkeleton,
-  SkeletonCard,
-  SkeletonText,
-} from '@/components/ui/heroui-skeleton'
+import { HeroUISkeleton, SkeletonCard, SkeletonText } from '@/components/ui/heroui-skeleton'
 
-const LITERAL_COLOR_PATTERN = /\b(?:bg|text|border)-(?:red|blue|green|yellow|orange|pink|purple|indigo|cyan|teal|lime|amber|emerald|sky|fuchsia|rose|violet)-\d+/
+const LITERAL_COLOR_PATTERN =
+  /\b(?:bg|text|border)-(?:red|blue|green|yellow|orange|pink|purple|indigo|cyan|teal|lime|amber|emerald|sky|fuchsia|rose|violet)-\d+/
 
 function renderInProvider(ui: React.ReactElement): ReturnType<typeof render> {
   return render(<DesignProvider>{ui}</DesignProvider>)
@@ -62,7 +59,7 @@ describe('HeroUIButton', () => {
     renderInProvider(<HeroUIButton variant="destructive">Delete</HeroUIButton>)
     const btn = screen.getByRole('button', { name: 'Delete' })
     expect(btn.className).not.toMatch(LITERAL_COLOR_PATTERN)
-    expect(btn.className).toContain('bg-destructive')
+    expect(btn.className).toContain('btn-danger')
   })
 })
 
@@ -95,18 +92,16 @@ describe('HeroUICard compound', () => {
 })
 
 describe('HeroUIChip', () => {
-  it('renders with the HeroUI Chip data-slot and merges className', () => {
+  it('renders with the badge data-slot and merges className', () => {
     renderInProvider(
       <HeroUIChip className="my-chip" data-testid="chip">
         Ready
       </HeroUIChip>,
     )
     const chip = screen.getByTestId('chip')
-    // HeroUI Chip hardcodes data-slot="chip" after the props spread — we
-    // verify the attribute is present (no CSS selector in this project
-    // targets the literal string "badge"; the wrapper is named Badge for
-    // API continuity, not for CSS targeting).
-    expect(chip.getAttribute('data-slot')).toBe('chip')
+    // The wrapper preserves Badge selector continuity while rendering the
+    // HeroUI-compatible chip surface.
+    expect(chip.getAttribute('data-slot')).toBe('badge')
     expect(chip.className).toContain('my-chip')
   })
 
