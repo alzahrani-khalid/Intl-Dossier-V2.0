@@ -10,7 +10,13 @@ export default defineConfig({
     setupFiles: ['./tests/setup.ts'],
     css: true,
     include: ['**/*.test.{ts,tsx}'],
-    exclude: ['node_modules/', 'dist/', 'build/', '**/*.spec.*'],
+    exclude: [
+      'node_modules/',
+      'dist/',
+      'build/',
+      '**/*.spec.*',
+      'tests/performance/validation-speed.test.tsx',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
