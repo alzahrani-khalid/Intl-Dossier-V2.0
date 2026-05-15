@@ -165,8 +165,10 @@ export default tseslint.config(
       ],
 
       // RTL enforcement: ban physical CSS properties (CLAUDE.md mandatory)
+      // Severity: Plan 51-04 D-05 flip warn -> error after Tier-A + Tier-C
+      // disables landed. Pre-flip gate (pnpm lint --max-warnings 0) was green.
       'no-restricted-syntax': [
-        'warn',
+        'error',
         {
           selector: 'Literal[value=/\\bml-/]',
           message: 'Use ms-* (margin-start) instead of ml-* for RTL support.',
