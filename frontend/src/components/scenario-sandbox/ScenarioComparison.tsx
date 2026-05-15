@@ -34,7 +34,7 @@ interface ScenarioComparisonProps {
 export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps) {
   const { t } = useTranslation('scenario-sandbox')
   const { isRTL } = useDirection()
-if (isLoading) {
+  if (isLoading) {
     return (
       <Card>
         <CardContent className="py-12">
@@ -155,7 +155,7 @@ if (isLoading) {
               {/* Positive Outcomes */}
               <tr className="border-b">
                 <td className="py-3 px-4">
-                  <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                  <div className="flex items-center gap-2 text-success dark:text-success">
                     <TrendingUp className="h-4 w-4" />
                     {t('analysis.stats.positiveOutcomes')}
                   </div>
@@ -166,14 +166,14 @@ if (isLoading) {
                       <span
                         className={
                           scenario.positive_outcomes === maxPositive && maxPositive > 0
-                            ? 'font-semibold text-green-600 dark:text-green-400'
+                            ? 'font-semibold text-success dark:text-success'
                             : ''
                         }
                       >
                         {scenario.positive_outcomes}
                       </span>
                       {scenario.positive_outcomes === maxPositive && maxPositive > 0 && (
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        <CheckCircle2 className="h-4 w-4 text-success" />
                       )}
                     </div>
                   </td>
@@ -183,7 +183,7 @@ if (isLoading) {
               {/* Negative Outcomes */}
               <tr className="border-b">
                 <td className="py-3 px-4">
-                  <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                  <div className="flex items-center gap-2 text-danger dark:text-danger">
                     <TrendingDown className="h-4 w-4" />
                     {t('analysis.stats.negativeOutcomes')}
                   </div>
@@ -194,9 +194,9 @@ if (isLoading) {
                       <span
                         className={
                           scenario.negative_outcomes === minNegative
-                            ? 'font-semibold text-green-600 dark:text-green-400'
+                            ? 'font-semibold text-success dark:text-success'
                             : scenario.negative_outcomes > 0
-                              ? 'text-red-600 dark:text-red-400'
+                              ? 'text-danger dark:text-danger'
                               : ''
                         }
                       >
@@ -204,7 +204,7 @@ if (isLoading) {
                       </span>
                       {scenario.negative_outcomes === minNegative &&
                         scenario.negative_outcomes < scenarios[0]!.negative_outcomes && (
-                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                          <CheckCircle2 className="h-4 w-4 text-success" />
                         )}
                     </div>
                   </td>
@@ -255,9 +255,9 @@ if (isLoading) {
                     <td key={scenario.id} className="py-3 px-4">
                       {total > 0 ? (
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 max-w-[120px] h-2 rounded-full bg-red-200 dark:bg-red-900/30 overflow-hidden">
+                          <div className="flex-1 max-w-[120px] h-2 rounded-full bg-danger/10 dark:bg-danger/30 overflow-hidden">
                             <div
-                              className="h-full bg-green-500 rounded-full"
+                              className="h-full bg-success rounded-full"
                               style={{ width: `${ratio}%` }}
                             />
                           </div>

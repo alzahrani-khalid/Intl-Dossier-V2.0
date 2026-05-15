@@ -69,7 +69,7 @@ export function ValidationIcon({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: 'spring', stiffness: 500, damping: 25 }}
       >
-        <CheckCircle2 className={cn(sizeClass, 'text-emerald-500', className)} />
+        <CheckCircle2 className={cn(sizeClass, 'text-success', className)} />
       </m.div>
     )
   }
@@ -82,7 +82,7 @@ export function ValidationIcon({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: 'spring', stiffness: 500, damping: 25 }}
       >
-        <AlertCircle className={cn(sizeClass, 'text-amber-500', className)} />
+        <AlertCircle className={cn(sizeClass, 'text-warning', className)} />
       </m.div>
     )
   }
@@ -95,7 +95,7 @@ export function ValidationIcon({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: 'spring', stiffness: 500, damping: 25 }}
       >
-        <XCircle className={cn(sizeClass, 'text-red-500', className)} />
+        <XCircle className={cn(sizeClass, 'text-danger', className)} />
       </m.div>
     )
   }
@@ -103,7 +103,7 @@ export function ValidationIcon({
   // Info state
   return (
     <m.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}>
-      <Info className={cn(sizeClass, 'text-blue-500', className)} />
+      <Info className={cn(sizeClass, 'text-info', className)} />
     </m.div>
   )
 }
@@ -127,7 +127,7 @@ export function ValidationMessage({
 }: ValidationMessageProps) {
   const { t } = useTranslation('validation')
   const { isRTL } = useDirection()
-if (!result || (!result.messageKey && !result.suggestion)) {
+  if (!result || (!result.messageKey && !result.suggestion)) {
     return null
   }
 
@@ -154,15 +154,15 @@ if (!result || (!result.messageKey && !result.suggestion)) {
   const allParams = { ...params, ...result.details }
 
   const severityStyles = {
-    error: 'text-red-600 dark:text-red-400',
-    warning: 'text-amber-600 dark:text-amber-400',
-    info: 'text-blue-600 dark:text-blue-400',
+    error: 'text-danger dark:text-danger',
+    warning: 'text-warning dark:text-warning',
+    info: 'text-info dark:text-info',
   }
 
   const bgStyles = {
-    error: 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800',
-    warning: 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800',
-    info: 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800',
+    error: 'bg-danger/10 dark:bg-danger/20 border-danger/30 dark:border-danger',
+    warning: 'bg-warning/10 dark:bg-warning/20 border-warning/30 dark:border-warning',
+    info: 'bg-info/10 dark:bg-info/20 border-info/30 dark:border-info',
   }
 
   return (
@@ -260,8 +260,8 @@ export function ValidationHint({ result, className }: ValidationHintProps) {
   const allParams = { ...params, ...result.details }
 
   const severityStyles = {
-    error: 'text-red-600 dark:text-red-400',
-    warning: 'text-amber-600 dark:text-amber-400',
+    error: 'text-danger dark:text-danger',
+    warning: 'text-warning dark:text-warning',
     info: 'text-muted-foreground',
   }
 
@@ -292,15 +292,14 @@ interface CharacterCountProps {
 }
 
 export function CharacterCount({ current, max, className }: CharacterCountProps) {
-
   const percentage = (current / max) * 100
   const remaining = max - current
 
   let colorClass = 'text-muted-foreground'
   if (percentage >= 100) {
-    colorClass = 'text-red-600 dark:text-red-400 font-medium'
+    colorClass = 'text-danger dark:text-danger font-medium'
   } else if (percentage >= 90) {
-    colorClass = 'text-amber-600 dark:text-amber-400'
+    colorClass = 'text-warning dark:text-warning'
   }
 
   return (
@@ -331,17 +330,17 @@ interface PasswordStrengthProps {
 }
 
 const strengthColors: Record<StrengthLevel, string> = {
-  weak: 'bg-red-500',
-  fair: 'bg-amber-500',
-  good: 'bg-blue-500',
-  strong: 'bg-emerald-500',
+  weak: 'bg-danger',
+  fair: 'bg-warning',
+  good: 'bg-info',
+  strong: 'bg-success',
 }
 
 const strengthTextColors: Record<StrengthLevel, string> = {
-  weak: 'text-red-600 dark:text-red-400',
-  fair: 'text-amber-600 dark:text-amber-400',
-  good: 'text-blue-600 dark:text-blue-400',
-  strong: 'text-emerald-600 dark:text-emerald-400',
+  weak: 'text-danger dark:text-danger',
+  fair: 'text-warning dark:text-warning',
+  good: 'text-info dark:text-info',
+  strong: 'text-success dark:text-success',
 }
 
 export function PasswordStrength({
@@ -420,8 +419,8 @@ export function ValidationSummary({ errors, className, onFieldClick }: Validatio
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        'rounded-lg border border-red-200 dark:border-red-800',
-        'bg-red-50 dark:bg-red-950/20 p-4',
+        'rounded-lg border border-danger/30 dark:border-danger',
+        'bg-danger/10 dark:bg-danger/20 p-4',
         className,
       )}
       role="alert"
@@ -429,7 +428,7 @@ export function ValidationSummary({ errors, className, onFieldClick }: Validatio
     >
       <h3
         id="validation-summary-title"
-        className="text-sm font-medium text-red-800 dark:text-red-200 flex items-center gap-2"
+        className="text-sm font-medium text-danger dark:text-danger flex items-center gap-2"
       >
         <XCircle className="h-4 w-4" />
         {t('summary.title', { count: errorEntries.length })}
@@ -459,7 +458,7 @@ export function ValidationSummary({ errors, className, onFieldClick }: Validatio
                 type="button"
                 onClick={() => onFieldClick?.(fieldName)}
                 className={cn(
-                  'text-sm text-red-700 dark:text-red-300 text-start',
+                  'text-sm text-danger dark:text-danger text-start',
                   'hover:underline underline-offset-2',
                   'flex items-center gap-2',
                 )}

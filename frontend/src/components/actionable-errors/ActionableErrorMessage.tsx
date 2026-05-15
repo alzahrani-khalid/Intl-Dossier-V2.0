@@ -52,30 +52,28 @@ const actionIcons: Record<ErrorActionType, React.ComponentType<{ className?: str
 
 const severityStyles = {
   error: {
-    container: 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800',
-    icon: 'text-red-500',
-    text: 'text-red-800 dark:text-red-200',
+    container: 'bg-danger/10 dark:bg-danger/30 border-danger/30 dark:border-danger',
+    icon: 'text-danger',
+    text: 'text-danger dark:text-danger',
     button:
-      'bg-red-100 hover:bg-red-200 dark:bg-red-900/50 dark:hover:bg-red-900 text-red-700 dark:text-red-300',
-    primaryButton: 'bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white',
+      'bg-danger/10 hover:bg-danger/10 dark:bg-danger/50 dark:hover:bg-danger text-danger dark:text-danger',
+    primaryButton: 'bg-danger hover:bg-danger dark:bg-danger dark:hover:bg-danger text-white',
   },
   warning: {
-    container: 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800',
-    icon: 'text-amber-500',
-    text: 'text-amber-800 dark:text-amber-200',
+    container: 'bg-warning/10 dark:bg-warning/30 border-warning/30 dark:border-warning',
+    icon: 'text-warning',
+    text: 'text-warning dark:text-warning',
     button:
-      'bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/50 dark:hover:bg-amber-900 text-amber-700 dark:text-amber-300',
-    primaryButton:
-      'bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 text-white',
+      'bg-warning/10 hover:bg-warning/10 dark:bg-warning/50 dark:hover:bg-warning text-warning dark:text-warning',
+    primaryButton: 'bg-warning hover:bg-warning dark:bg-warning dark:hover:bg-warning text-white',
   },
   info: {
-    container: 'bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800',
-    icon: 'text-blue-500',
-    text: 'text-blue-800 dark:text-blue-200',
+    container: 'bg-info/10 dark:bg-info/30 border-info/30 dark:border-info',
+    icon: 'text-info',
+    text: 'text-info dark:text-info',
     button:
-      'bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/50 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300',
-    primaryButton:
-      'bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white',
+      'bg-info/10 hover:bg-info/10 dark:bg-info/50 dark:hover:bg-info text-info dark:text-info',
+    primaryButton: 'bg-info hover:bg-info dark:bg-info dark:hover:bg-info text-white',
   },
 }
 
@@ -168,7 +166,7 @@ export function ActionableErrorMessage({
 }: ActionableErrorMessageProps) {
   const { t } = useTranslation('actionable-errors')
   const { isRTL } = useDirection()
-const [executingActions, setExecutingActions] = useState<Set<string>>(new Set())
+  const [executingActions, setExecutingActions] = useState<Set<string>>(new Set())
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set())
 
   const styles = severityStyles[error.severity]

@@ -51,7 +51,7 @@ export function BooleanLogicBuilder({
 }: BooleanLogicBuilderProps) {
   const { t } = useTranslation('advanced-search')
   const { isRTL } = useDirection()
-const availableFields = getFieldsForEntityTypes(entityTypes)
+  const availableFields = getFieldsForEntityTypes(entityTypes)
 
   const handleAddCondition = () => {
     if (availableFields.length === 0) return
@@ -209,13 +209,13 @@ const availableFields = getFieldsForEntityTypes(entityTypes)
     <div className={cn('flex flex-col gap-4', className)}>
       {/* Header with Logic Toggle */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <h3 className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
           {t('conditions.title')}
         </h3>
 
         <div className="flex items-center gap-2">
           {/* Logic Toggle */}
-          <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center gap-1 bg-muted dark:bg-muted rounded-lg p-1">
             <button
               type="button"
               onClick={() => onLogicChange('AND')}
@@ -223,7 +223,7 @@ const availableFields = getFieldsForEntityTypes(entityTypes)
                 'px-3 py-1 rounded text-sm font-medium transition-colors',
                 logic === 'AND'
                   ? 'bg-primary text-primary-foreground'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+                  : 'text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-muted-foreground',
               )}
             >
               {t('logic.and')}
@@ -235,7 +235,7 @@ const availableFields = getFieldsForEntityTypes(entityTypes)
                 'px-3 py-1 rounded text-sm font-medium transition-colors',
                 logic === 'OR'
                   ? 'bg-primary text-primary-foreground'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+                  : 'text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-muted-foreground',
               )}
             >
               {t('logic.or')}
@@ -252,7 +252,7 @@ const availableFields = getFieldsForEntityTypes(entityTypes)
       </div>
 
       {/* Logic Description */}
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-muted-foreground dark:text-muted-foreground">
         {logic === 'AND' ? t('logic.andDescription') : t('logic.orDescription')}
       </p>
 
@@ -268,8 +268,8 @@ const availableFields = getFieldsForEntityTypes(entityTypes)
               className={cn(
                 'flex flex-col sm:flex-row items-start sm:items-center gap-2 p-3 rounded-lg border',
                 condition.is_negated
-                  ? 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950'
-                  : 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800',
+                  ? 'border-danger/30 bg-danger/10 dark:border-danger dark:bg-danger'
+                  : 'border-line bg-muted dark:border-line dark:bg-muted',
               )}
             >
               {/* Negate Toggle */}
@@ -279,8 +279,8 @@ const availableFields = getFieldsForEntityTypes(entityTypes)
                 className={cn(
                   'flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors',
                   condition.is_negated
-                    ? 'bg-red-200 text-red-800 dark:bg-red-900 dark:text-red-200'
-                    : 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+                    ? 'bg-danger/10 text-danger dark:bg-danger dark:text-danger'
+                    : 'bg-muted text-muted-foreground dark:bg-muted dark:text-muted-foreground',
                 )}
                 aria-label={t('a11y.toggleNegate')}
               >
@@ -358,7 +358,7 @@ const availableFields = getFieldsForEntityTypes(entityTypes)
       {/* Active Filters Summary */}
       {conditions.length > 0 && (
         <div className="flex flex-wrap gap-2 pt-2 border-t">
-          <span className="text-xs text-gray-500 dark:text-gray-400 self-center">
+          <span className="text-xs text-muted-foreground dark:text-muted-foreground self-center">
             {t('filters.activeCount', { count: conditions.length })}:
           </span>
           {conditions.map((condition, index) => {

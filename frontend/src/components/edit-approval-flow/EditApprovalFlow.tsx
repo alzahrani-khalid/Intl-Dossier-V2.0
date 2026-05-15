@@ -119,13 +119,13 @@ export function EditApprovalFlow({
   const getDiffColor = (kind: DiffKind) => {
     switch (kind) {
       case 'N':
-        return 'border-green-500 bg-green-50'
+        return 'border-success bg-success/10'
       case 'D':
-        return 'border-red-500 bg-red-50'
+        return 'border-danger bg-danger/10'
       case 'E':
-        return 'border-yellow-500 bg-yellow-50'
+        return 'border-warning bg-warning/10'
       case 'A':
-        return 'border-blue-500 bg-blue-50'
+        return 'border-info bg-info/10'
       default:
         return ''
     }
@@ -232,20 +232,20 @@ export function EditApprovalFlow({
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {change.kind !== 'N' && (
                         <div>
-                          <p className="mb-1 font-semibold text-red-600">
+                          <p className="mb-1 font-semibold text-danger">
                             {t('afterActions.editFlow.currentVersion')}:
                           </p>
-                          <pre className="overflow-x-auto rounded border border-red-200 bg-red-50 p-2 text-xs">
+                          <pre className="overflow-x-auto rounded border border-danger/30 bg-danger/10 p-2 text-xs">
                             {renderDiffValue(change.lhs)}
                           </pre>
                         </div>
                       )}
                       {change.kind !== 'D' && (
                         <div>
-                          <p className="mb-1 font-semibold text-green-600">
+                          <p className="mb-1 font-semibold text-success">
                             {t('afterActions.editFlow.proposedVersion')}:
                           </p>
-                          <pre className="overflow-x-auto rounded border border-green-200 bg-green-50 p-2 text-xs">
+                          <pre className="overflow-x-auto rounded border border-success/30 bg-success/10 p-2 text-xs">
                             {renderDiffValue(change.rhs)}
                           </pre>
                         </div>
@@ -297,9 +297,9 @@ export function EditApprovalFlow({
 
       {/* Approval Form */}
       {action === 'approve' && (
-        <Card className="border-green-500">
+        <Card className="border-success">
           <CardHeader>
-            <CardTitle className="text-green-700">
+            <CardTitle className="text-success">
               {t('afterActions.editFlow.approveTitle')}
             </CardTitle>
           </CardHeader>
@@ -347,9 +347,9 @@ export function EditApprovalFlow({
 
       {/* Rejection Form */}
       {action === 'reject' && (
-        <Card className="border-red-500">
+        <Card className="border-danger">
           <CardHeader>
-            <CardTitle className="text-red-700">{t('afterActions.editFlow.rejectTitle')}</CardTitle>
+            <CardTitle className="text-danger">{t('afterActions.editFlow.rejectTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">

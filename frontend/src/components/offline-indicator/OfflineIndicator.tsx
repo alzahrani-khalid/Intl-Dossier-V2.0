@@ -20,13 +20,13 @@ export function OfflineIndicator() {
 
   return (
     <div className="fixed bottom-4 end-4 z-50">
-      <div className="max-w-sm rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+      <div className="max-w-sm rounded-lg border border-line bg-white p-4 shadow-lg dark:border-line dark:bg-muted">
         <div className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {isOnline ? (
-              <Wifi className="size-4 text-green-500" />
+              <Wifi className="size-4 text-success" />
             ) : (
-              <WifiOff className="size-4 text-red-500" />
+              <WifiOff className="size-4 text-danger" />
             )}
             <span className="text-sm font-medium">
               {isOnline ? t('realtime.connected') : t('offline.title')}
@@ -38,7 +38,7 @@ export function OfflineIndicator() {
         </div>
 
         {!isOnline && (
-          <p className="mb-3 text-xs text-gray-600 dark:text-gray-400">
+          <p className="mb-3 text-xs text-muted-foreground dark:text-muted-foreground">
             {t('offline.description')}
           </p>
         )}
@@ -61,7 +61,7 @@ export function OfflineIndicator() {
               <div className="space-y-2 text-xs">
                 {pendingActions.length > 0 && (
                   <div>
-                    <div className="mb-1 font-medium text-gray-700 dark:text-gray-300">
+                    <div className="mb-1 font-medium text-muted-foreground dark:text-muted-foreground">
                       Pending Actions:
                     </div>
                     <div className="space-y-1">
@@ -76,7 +76,9 @@ export function OfflineIndicator() {
                         </div>
                       ))}
                       {pendingActions.length > 3 && (
-                        <div className="text-gray-500">+{pendingActions.length - 3} more</div>
+                        <div className="text-muted-foreground">
+                          +{pendingActions.length - 3} more
+                        </div>
                       )}
                     </div>
                   </div>
@@ -84,27 +86,31 @@ export function OfflineIndicator() {
 
                 {failedActions.length > 0 && (
                   <div>
-                    <div className="mb-1 font-medium text-red-600 dark:text-red-400">
+                    <div className="mb-1 font-medium text-danger dark:text-danger">
                       Failed Actions:
                     </div>
                     <div className="space-y-1">
                       {failedActions.slice(0, 2).map((action) => (
-                        <div key={action.id} className="text-red-600 dark:text-red-400">
+                        <div key={action.id} className="text-danger dark:text-danger">
                           {action.method} {action.url}
                           {action.error && (
-                            <div className="truncate text-xs text-gray-500">{action.error}</div>
+                            <div className="truncate text-xs text-muted-foreground">
+                              {action.error}
+                            </div>
                           )}
                         </div>
                       ))}
                       {failedActions.length > 2 && (
-                        <div className="text-gray-500">+{failedActions.length - 2} more</div>
+                        <div className="text-muted-foreground">
+                          +{failedActions.length - 2} more
+                        </div>
                       )}
                     </div>
                   </div>
                 )}
 
                 {completedActions.length > 0 && (
-                  <div className="text-xs text-green-600 dark:text-green-400">
+                  <div className="text-xs text-success dark:text-success">
                     {completedActions.length} actions completed
                   </div>
                 )}

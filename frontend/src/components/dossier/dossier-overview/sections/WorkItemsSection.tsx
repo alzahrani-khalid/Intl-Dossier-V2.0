@@ -57,33 +57,33 @@ function getStatusConfig(status: WorkItemStatus) {
   > = {
     pending: {
       icon: Circle,
-      color: 'text-gray-500',
-      bgColor: 'bg-gray-100 dark:bg-gray-900',
+      color: 'text-muted-foreground',
+      bgColor: 'bg-muted dark:bg-muted',
     },
     in_progress: {
       icon: Timer,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-100 dark:bg-blue-900',
+      color: 'text-info',
+      bgColor: 'bg-info/10 dark:bg-info',
     },
     review: {
       icon: Clock,
-      color: 'text-yellow-500',
-      bgColor: 'bg-yellow-100 dark:bg-yellow-900',
+      color: 'text-warning',
+      bgColor: 'bg-warning/10 dark:bg-warning',
     },
     completed: {
       icon: CheckCircle,
-      color: 'text-green-500',
-      bgColor: 'bg-green-100 dark:bg-green-900',
+      color: 'text-success',
+      bgColor: 'bg-success/10 dark:bg-success',
     },
     cancelled: {
       icon: XCircle,
-      color: 'text-gray-400',
-      bgColor: 'bg-gray-100 dark:bg-gray-900',
+      color: 'text-muted-foreground',
+      bgColor: 'bg-muted dark:bg-muted',
     },
     overdue: {
       icon: AlertTriangle,
-      color: 'text-red-500',
-      bgColor: 'bg-red-100 dark:bg-red-900',
+      color: 'text-danger',
+      bgColor: 'bg-danger/10 dark:bg-danger',
     },
   }
   return configs[status] || configs.pending
@@ -135,7 +135,7 @@ function WorkItemCard({ item, isRTL }: { item: DossierWorkItem; isRTL: boolean }
               <Badge
                 variant="outline"
                 className={`text-xs ${
-                  item.status === 'overdue' ? 'border-red-500 text-red-500' : ''
+                  item.status === 'overdue' ? 'border-danger text-danger' : ''
                 }`}
               >
                 {t(`workItemStatus.${item.status}`)}
@@ -223,7 +223,7 @@ function StatusBreakdown({
 /**
  * Empty state component
  */
-function EmptyState({ source}: { source?: WorkItemSource | 'all'; isRTL: boolean }) {
+function EmptyState({ source }: { source?: WorkItemSource | 'all'; isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
@@ -333,21 +333,21 @@ export function WorkItemsSection({
 
         {/* Urgent Items Alert */}
         {data.urgent_items.length > 0 && (
-          <div className="p-3 border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 rounded-lg">
+          <div className="p-3 border border-warning/30 dark:border-warning bg-warning/10 dark:bg-warning rounded-lg">
             <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-              <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
+              <AlertTriangle className="h-4 w-4 text-warning dark:text-warning" />
+              <span className="text-sm font-medium text-warning dark:text-warning">
                 {t('workItems.urgentItems', { count: data.urgent_items.length })}
               </span>
             </div>
             <div className="space-y-2">
               {data.urgent_items.slice(0, 3).map((item) => (
-                <div key={item.id} className="text-sm text-amber-700 dark:text-amber-300">
+                <div key={item.id} className="text-sm text-warning dark:text-warning">
                   • {isRTL && item.title_ar ? item.title_ar : item.title_en}
                 </div>
               ))}
               {data.urgent_items.length > 3 && (
-                <p className="text-xs text-amber-600 dark:text-amber-400">
+                <p className="text-xs text-warning dark:text-warning">
                   +{data.urgent_items.length - 3} {t('workItems.more')}
                 </p>
               )}

@@ -70,22 +70,22 @@ function getInitials(name: string): string {
 function getStatusColor(status: PresenceStatus): string {
   switch (status) {
     case 'editing':
-      return 'bg-green-500'
+      return 'bg-success'
     case 'viewing':
-      return 'bg-blue-500'
+      return 'bg-info'
     case 'idle':
-      return 'bg-gray-400'
+      return 'bg-muted'
   }
 }
 
 function getStatusBorderColor(status: PresenceStatus): string {
   switch (status) {
     case 'editing':
-      return 'ring-green-500/30'
+      return 'ring-success/30'
     case 'viewing':
-      return 'ring-blue-500/30'
+      return 'ring-info/30'
     case 'idle':
-      return 'ring-gray-400/30'
+      return 'ring-line/30'
   }
 }
 
@@ -142,10 +142,7 @@ const UserAvatar = memo(function UserAvatar({
             )}
           </div>
         </TooltipTrigger>
-        <TooltipContent
-          side={isRTL ? 'right' : 'left'}
-          className="max-w-xs"
-        >
+        <TooltipContent side={isRTL ? 'right' : 'left'} className="max-w-xs">
           <div className="flex items-center gap-2">
             <StatusIcon className="h-4 w-4 text-muted-foreground" />
             <div>
@@ -233,7 +230,7 @@ export function ActiveViewers({
 }: ActiveViewersProps) {
   const { t } = useTranslation('collaboration')
   const { isRTL } = useDirection()
-const sizeClasses = SIZE_CLASSES[size]
+  const sizeClasses = SIZE_CLASSES[size]
 
   // Filter out current user and sort by status (editing first, then viewing, then idle)
   const otherViewers = viewers
@@ -290,7 +287,7 @@ const sizeClasses = SIZE_CLASSES[size]
       {editingCount > 0 && (
         <Badge
           variant="secondary"
-          className="gap-1 text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+          className="gap-1 text-xs bg-success/10 text-success dark:bg-success/30 dark:text-success"
         >
           <Pencil className="h-3 w-3" />
           <span>{t('editingCount', { count: editingCount })}</span>
@@ -334,8 +331,7 @@ export function ActiveViewersCompact({
           <div
             className={cn(
               'flex items-center gap-1.5 px-2 py-1 rounded-full bg-muted/50 text-muted-foreground text-sm',
-              editingCount > 0 &&
-                'bg-green-100/50 text-green-700 dark:bg-green-900/20 dark:text-green-400',
+              editingCount > 0 && 'bg-success/50 text-success dark:bg-success/20 dark:text-success',
               className,
             )}
           >

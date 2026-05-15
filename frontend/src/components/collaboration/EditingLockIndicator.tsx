@@ -72,11 +72,9 @@ const InlineLock = memo(function InlineLock({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div
-            className="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-500"
-          >
+          <div className="inline-flex items-center gap-1.5 text-warning dark:text-warning">
             {showAvatar ? (
-              <Avatar className="h-5 w-5 border border-amber-500/50">
+              <Avatar className="h-5 w-5 border border-warning/50">
                 <AvatarImage src={lockedBy.avatar} alt={lockedBy.name} />
                 <AvatarFallback
                   style={{ backgroundColor: lockedBy.color }}
@@ -117,8 +115,8 @@ const BannerLock = memo(function BannerLock({
     <div
       className={cn(
         'flex items-center gap-3 px-4 py-2 rounded-lg',
-        'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800',
-        'text-amber-800 dark:text-amber-200',
+        'bg-warning/10 dark:bg-warning/20 border border-warning/30 dark:border-warning',
+        'text-warning dark:text-warning',
       )}
       role="alert"
     >
@@ -134,19 +132,19 @@ const BannerLock = memo(function BannerLock({
             </AvatarFallback>
           </Avatar>
         )}
-        <Lock className="h-5 w-5 text-amber-600 dark:text-amber-500" />
+        <Lock className="h-5 w-5 text-warning dark:text-warning" />
       </div>
 
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium">{t('sectionLockedTitle', { name: lockedBy.name })}</p>
-        <p className="text-xs text-amber-600 dark:text-amber-400">
+        <p className="text-xs text-warning dark:text-warning">
           {sectionName
             ? t('editingSectionNamed', { section: sectionName })
             : t('editingThisSection')}
         </p>
       </div>
 
-      <Pencil className="h-4 w-4 animate-pulse text-amber-600 dark:text-amber-500" />
+      <Pencil className="h-4 w-4 animate-pulse text-warning dark:text-warning" />
     </div>
   )
 })
@@ -172,9 +170,9 @@ const BadgeLock = memo(function BadgeLock({
           <Badge
             variant="outline"
             className={cn(
-              'gap-1.5 border-amber-300 dark:border-amber-700',
-              'bg-amber-50 dark:bg-amber-900/20',
-              'text-amber-700 dark:text-amber-300',
+              'gap-1.5 border-warning/30 dark:border-warning',
+              'bg-warning/10 dark:bg-warning/20',
+              'text-warning dark:text-warning',
             )}
           >
             {showAvatar ? (
@@ -219,7 +217,7 @@ export function EditingLockIndicator({
 }: EditingLockIndicatorProps) {
   const { t } = useTranslation('collaboration')
   const { isRTL } = useDirection()
-const [showForceEditDialog, setShowForceEditDialog] = useState(false)
+  const [showForceEditDialog, setShowForceEditDialog] = useState(false)
 
   // Handler for force-edit button clicks - can be exposed via onForceEdit prop for parent components
   // Currently used internally for the dialog trigger, prefixed with underscore to indicate reserved for future use
@@ -246,11 +244,7 @@ const [showForceEditDialog, setShowForceEditDialog] = useState(false)
         )}
 
         {variant === 'banner' && (
-          <BannerLock
-            lockedBy={lockedBy}
-            sectionName={sectionName}
-            showAvatar={showAvatar}
-          />
+          <BannerLock lockedBy={lockedBy} sectionName={sectionName} showAvatar={showAvatar} />
         )}
 
         {variant === 'badge' && (
@@ -263,7 +257,7 @@ const [showForceEditDialog, setShowForceEditDialog] = useState(false)
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              <AlertTriangle className="h-5 w-5 text-warning" />
               {t('forceEditWarningTitle')}
             </AlertDialogTitle>
             <AlertDialogDescription>
@@ -274,7 +268,7 @@ const [showForceEditDialog, setShowForceEditDialog] = useState(false)
             <AlertDialogCancel>{t('cancel', { ns: 'common' })}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleForceEditConfirm}
-              className="bg-amber-600 hover:bg-amber-700"
+              className="bg-warning hover:bg-warning"
             >
               {t('forceEditConfirm')}
             </AlertDialogAction>

@@ -157,7 +157,7 @@ export function AvailabilityPollResults({
                   <span
                     className={cn(
                       'font-medium',
-                      responseStats.canClose ? 'text-green-600' : 'text-yellow-600',
+                      responseStats.canClose ? 'text-success' : 'text-warning',
                     )}
                   >
                     {responseStats.canClose
@@ -178,7 +178,7 @@ export function AvailabilityPollResults({
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <Trophy className="h-4 w-4 text-yellow-500" />
+              <Trophy className="h-4 w-4 text-warning" />
               {t('results.optimalSlots')}
             </CardTitle>
             <CardDescription>{t('results.optimalSlotsDescription')}</CardDescription>
@@ -196,8 +196,8 @@ export function AvailabilityPollResults({
                   key={optSlot.slot_id}
                   className={cn(
                     'transition-all',
-                    isSelected && 'border-2 border-green-500',
-                    isFirst && !isSelected && 'border-2 border-yellow-500',
+                    isSelected && 'border-2 border-success',
+                    isFirst && !isSelected && 'border-2 border-warning',
                   )}
                 >
                   <CardContent className="p-3 sm:p-4">
@@ -207,7 +207,7 @@ export function AvailabilityPollResults({
                         className={cn(
                           'flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm',
                           isFirst
-                            ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30'
+                            ? 'bg-warning/10 text-warning dark:bg-warning/30'
                             : 'bg-muted text-muted-foreground',
                         )}
                       >
@@ -219,12 +219,12 @@ export function AvailabilityPollResults({
                         <div className="font-medium flex items-center gap-2">
                           {format(startDate, 'EEEE, MMMM d', { locale: dateLocale })}
                           {isSelected && (
-                            <Badge variant="outline" className="text-green-600 border-green-600">
+                            <Badge variant="outline" className="text-success border-success">
                               {t('slots.selectedSlot')}
                             </Badge>
                           )}
                           {isFirst && !isSelected && (
-                            <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+                            <Badge variant="outline" className="text-warning border-warning">
                               {t('slots.bestSlot')}
                             </Badge>
                           )}
@@ -256,7 +256,7 @@ export function AvailabilityPollResults({
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <span className="flex items-center gap-0.5 text-green-600">
+                              <span className="flex items-center gap-0.5 text-success">
                                 <Check className="h-4 w-4" />
                                 {optSlot.available_count}
                               </span>
@@ -270,7 +270,7 @@ export function AvailabilityPollResults({
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <span className="flex items-center gap-0.5 text-yellow-600">
+                              <span className="flex items-center gap-0.5 text-warning">
                                 <HelpCircle className="h-4 w-4" />
                                 {optSlot.maybe_count}
                               </span>
@@ -284,7 +284,7 @@ export function AvailabilityPollResults({
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <span className="flex items-center gap-0.5 text-red-600">
+                              <span className="flex items-center gap-0.5 text-danger">
                                 <X className="h-4 w-4" />
                                 {optSlot.unavailable_count}
                               </span>
@@ -463,9 +463,9 @@ export function AvailabilityPollResults({
       )}
 
       {isPollScheduled && poll.scheduled_event_id && (
-        <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+        <Card className="bg-success/10 dark:bg-success/20 border-success/30 dark:border-success">
           <CardContent className="py-4">
-            <div className="flex items-center justify-center gap-2 text-green-700 dark:text-green-300">
+            <div className="flex items-center justify-center gap-2 text-success dark:text-success">
               <Calendar className="h-5 w-5" />
               <span className="font-medium">{t('notifications.pollScheduled')}</span>
             </div>

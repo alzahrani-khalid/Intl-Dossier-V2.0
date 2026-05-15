@@ -213,9 +213,9 @@ function AdminSystemPage() {
       />
 
       {/* Warning Banner */}
-      <Alert variant="default" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
-        <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-        <AlertDescription className="text-yellow-800 dark:text-yellow-200">
+      <Alert variant="default" className="border-warning bg-warning/10 dark:bg-warning/20">
+        <AlertCircle className="h-5 w-5 text-warning dark:text-warning" />
+        <AlertDescription className="text-warning dark:text-warning">
           <p className="font-medium">{t('system.warning', 'Admin Privileges Active')}</p>
           <p className="text-sm mt-1">
             {t('system.warningText', 'These operations modify system data. Use with caution.')}
@@ -228,8 +228,8 @@ function AdminSystemPage() {
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
-                <Globe className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              <div className="p-2 bg-success/10 dark:bg-success rounded-lg">
+                <Globe className="h-5 w-5 text-success dark:text-success" />
               </div>
               <div>
                 <CardTitle className="text-xl">
@@ -254,27 +254,27 @@ function AdminSystemPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 <span>{t('system.populateCountries.isoCodes', 'ISO Codes (2 & 3 letter)')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 <span>{t('system.populateCountries.capitals', 'Capital Cities')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 <span>{t('system.populateCountries.regions', 'Regions & Subregions')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 <span>{t('system.populateCountries.population', 'Population Data')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 <span>{t('system.populateCountries.area', 'Area (km²)')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 <span>{t('system.populateCountries.flags', 'Flag URLs')}</span>
               </div>
             </div>
@@ -333,7 +333,7 @@ function AdminSystemPage() {
                   )}
                 </span>
                 {progress && (
-                  <span className="text-lg font-bold text-emerald-600">{progress.percentage}%</span>
+                  <span className="text-lg font-bold text-success">{progress.percentage}%</span>
                 )}
               </div>
 
@@ -346,13 +346,13 @@ function AdminSystemPage() {
               {progress && (
                 <div className="grid grid-cols-3 gap-2 text-xs">
                   <div className="text-center p-2 bg-background rounded">
-                    <div className="font-bold text-blue-600">{progress.successful_items}</div>
+                    <div className="font-bold text-info">{progress.successful_items}</div>
                     <div className="text-muted-foreground">
                       {t('system.populateCountries.successful', 'Successful')}
                     </div>
                   </div>
                   <div className="text-center p-2 bg-background rounded">
-                    <div className="font-bold text-yellow-600">
+                    <div className="font-bold text-warning">
                       {progress.processed_items - progress.successful_items - progress.failed_items}
                     </div>
                     <div className="text-muted-foreground">
@@ -360,7 +360,7 @@ function AdminSystemPage() {
                     </div>
                   </div>
                   <div className="text-center p-2 bg-background rounded">
-                    <div className="font-bold text-red-600">{progress.failed_items}</div>
+                    <div className="font-bold text-danger">{progress.failed_items}</div>
                     <div className="text-muted-foreground">
                       {t('system.populateCountries.failed', 'Failed')}
                     </div>
@@ -385,12 +385,10 @@ function AdminSystemPage() {
           {result && (
             <Alert
               variant={result.success ? 'default' : 'destructive'}
-              className={
-                result.success ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : ''
-              }
+              className={result.success ? 'border-success bg-success/10 dark:bg-success/20' : ''}
             >
               {result.success ? (
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <CheckCircle2 className="h-5 w-5 text-success dark:text-success" />
               ) : (
                 <XCircle className="h-5 w-5" />
               )}
@@ -399,9 +397,7 @@ function AdminSystemPage() {
                   {/* Message */}
                   <p
                     className={
-                      result.success
-                        ? 'text-emerald-800 dark:text-emerald-200 font-medium'
-                        : 'font-medium'
+                      result.success ? 'text-success dark:text-success font-medium' : 'font-medium'
                     }
                   >
                     {isRTL ? result.message_ar : result.message_en}
@@ -411,7 +407,7 @@ function AdminSystemPage() {
                   {result.success && result.summary && (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
                       <div className="text-center p-2 bg-background rounded">
-                        <div className="text-2xl font-bold text-emerald-600">
+                        <div className="text-2xl font-bold text-success">
                           {result.summary.total}
                         </div>
                         <div className="text-xs text-muted-foreground">
@@ -419,7 +415,7 @@ function AdminSystemPage() {
                         </div>
                       </div>
                       <div className="text-center p-2 bg-background rounded">
-                        <div className="text-2xl font-bold text-blue-600">
+                        <div className="text-2xl font-bold text-info">
                           {result.summary.processed}
                         </div>
                         <div className="text-xs text-muted-foreground">
@@ -427,7 +423,7 @@ function AdminSystemPage() {
                         </div>
                       </div>
                       <div className="text-center p-2 bg-background rounded">
-                        <div className="text-2xl font-bold text-green-600">
+                        <div className="text-2xl font-bold text-success">
                           {result.summary.successful}
                         </div>
                         <div className="text-xs text-muted-foreground">
@@ -436,7 +432,7 @@ function AdminSystemPage() {
                       </div>
                       <div className="text-center p-2 bg-background rounded">
                         <div
-                          className={`text-2xl font-bold ${result.summary.failed > 0 ? 'text-red-600' : 'text-gray-400'}`}
+                          className={`text-2xl font-bold ${result.summary.failed > 0 ? 'text-danger' : 'text-muted-foreground'}`}
                         >
                           {result.summary.failed}
                         </div>
@@ -457,7 +453,7 @@ function AdminSystemPage() {
                       <ul className="mt-2 space-y-1 text-xs max-h-40 overflow-y-auto">
                         {result.errors.map((error, idx) => (
                           <li key={idx} className="flex items-start gap-2">
-                            <XCircle className="h-3 w-3 mt-0.5 flex-shrink-0 text-red-500" />
+                            <XCircle className="h-3 w-3 mt-0.5 flex-shrink-0 text-danger" />
                             <span>{error}</span>
                           </li>
                         ))}

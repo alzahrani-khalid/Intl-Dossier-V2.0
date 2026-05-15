@@ -36,7 +36,7 @@ export function FormDraftBanner({
 }: FormDraftBannerProps) {
   const { t } = useTranslation('form-auto-save')
   const { isRTL } = useDirection()
-// Format the saved time relative to now
+  // Format the saved time relative to now
   const savedTimeAgo = React.useMemo(() => {
     try {
       return formatDistanceToNow(new Date(draft.savedAt), {
@@ -56,7 +56,7 @@ export function FormDraftBanner({
         exit={{ opacity: 0, y: -20, height: 0 }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
         className={cn(
-          'overflow-hidden rounded-lg border bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800',
+          'overflow-hidden rounded-lg border bg-warning/10 border-warning/30 dark:bg-warning/20 dark:border-warning',
           className,
         )}
         role="alert"
@@ -66,14 +66,12 @@ export function FormDraftBanner({
           {/* Header with icon and dismiss button */}
           <div className="flex items-start justify-between gap-3 mb-3">
             <div className="flex items-center gap-3">
-              <div className="flex-shrink-0 p-2 rounded-full bg-amber-100 dark:bg-amber-900/30">
-                <FileText className="size-5 text-amber-600 dark:text-amber-400" />
+              <div className="flex-shrink-0 p-2 rounded-full bg-warning/10 dark:bg-warning/30">
+                <FileText className="size-5 text-warning dark:text-warning" />
               </div>
               <div>
-                <h3 className="font-medium text-amber-800 dark:text-amber-200">
-                  {t('banner.title')}
-                </h3>
-                <p className="text-sm text-amber-700 dark:text-amber-300 mt-0.5">
+                <h3 className="font-medium text-warning dark:text-warning">{t('banner.title')}</h3>
+                <p className="text-sm text-warning dark:text-warning mt-0.5">
                   {t('banner.savedTime', { time: savedTimeAgo })}
                 </p>
               </div>
@@ -83,15 +81,15 @@ export function FormDraftBanner({
             <button
               type="button"
               onClick={onDismiss}
-              className="min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+              className="min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-warning/10 dark:hover:bg-warning/30 transition-colors"
               aria-label={t('banner.dismiss')}
             >
-              <X className="size-5 text-amber-600 dark:text-amber-400" />
+              <X className="size-5 text-warning dark:text-warning" />
             </button>
           </div>
 
           {/* Progress info */}
-          <div className="flex items-center gap-4 mb-4 text-sm text-amber-700 dark:text-amber-300">
+          <div className="flex items-center gap-4 mb-4 text-sm text-warning dark:text-warning">
             <span>{t('banner.progress', { percentage: draft.progress })}</span>
             {typeof draft.currentStep === 'number' && typeof draft.totalSteps === 'number' && (
               <span>
@@ -110,7 +108,7 @@ export function FormDraftBanner({
               type="button"
               onClick={onRestore}
               disabled={isRestoring}
-              className="min-h-11 flex-1 bg-amber-600 hover:bg-amber-700 text-white"
+              className="min-h-11 flex-1 bg-warning hover:bg-warning text-white"
             >
               {isRestoring ? (
                 <Loader2 className="size-4 me-2 animate-spin" />
@@ -126,7 +124,7 @@ export function FormDraftBanner({
               variant="outline"
               onClick={onDiscard}
               disabled={isRestoring}
-              className="min-h-11 border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/30"
+              className="min-h-11 border-warning/30 text-warning hover:bg-warning/10 dark:border-warning dark:text-warning dark:hover:bg-warning/30"
             >
               <Trash2 className="size-4 me-2" />
               {t('banner.discard')}

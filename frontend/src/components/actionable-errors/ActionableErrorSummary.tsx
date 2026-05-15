@@ -34,9 +34,9 @@ function ErrorItem({ error, onAction, onFieldFocus, isRTL, index }: ErrorItemPro
   const primaryAction = error.actions.find((a) => a.primary) || error.actions[0]
 
   const severityColors = {
-    error: 'text-red-600 dark:text-red-400',
-    warning: 'text-amber-600 dark:text-amber-400',
-    info: 'text-blue-600 dark:text-blue-400',
+    error: 'text-danger dark:text-danger',
+    warning: 'text-warning dark:text-warning',
+    info: 'text-info dark:text-info',
   }
 
   return (
@@ -73,8 +73,8 @@ function ErrorItem({ error, onAction, onFieldFocus, isRTL, index }: ErrorItemPro
           onClick={() => onAction(primaryAction)}
           className={cn(
             'h-7 px-2 text-xs shrink-0',
-            'bg-red-100 hover:bg-red-200 dark:bg-red-900/50 dark:hover:bg-red-900',
-            'text-red-700 dark:text-red-300',
+            'bg-danger/10 hover:bg-danger/10 dark:bg-danger/50 dark:hover:bg-danger',
+            'text-danger dark:text-danger',
           )}
         >
           <Wand2 className="h-3 w-3 me-1" />
@@ -100,7 +100,7 @@ export function ActionableErrorSummary({
 }: ActionableErrorSummaryProps) {
   const { t } = useTranslation('actionable-errors')
   const { isRTL } = useDirection()
-const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   // Filter to only show actual errors (not warnings/info)
   const errorItems = useMemo(() => errors.filter((e) => e.severity === 'error'), [errors])
@@ -134,8 +134,8 @@ const [isExpanded, setIsExpanded] = useState(false)
       exit={{ opacity: 0, y: -10 }}
       className={cn(
         'rounded-lg border',
-        'bg-red-50 dark:bg-red-950/30',
-        'border-red-200 dark:border-red-800',
+        'bg-danger/10 dark:bg-danger/30',
+        'border-danger/30 dark:border-danger',
         'p-4 sm:p-5',
         className,
       )}
@@ -145,15 +145,15 @@ const [isExpanded, setIsExpanded] = useState(false)
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <XCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" aria-hidden="true" />
+          <XCircle className="h-5 w-5 text-danger shrink-0 mt-0.5" aria-hidden="true" />
           <div>
             <h3
               id="error-summary-title"
-              className="font-medium text-red-800 dark:text-red-200 text-sm sm:text-base"
+              className="font-medium text-danger dark:text-danger text-sm sm:text-base"
             >
               {t('summary.title', { count: errorItems.length })}
             </h3>
-            <p className="text-sm text-red-700 dark:text-red-300 opacity-80 mt-1">
+            <p className="text-sm text-danger dark:text-danger opacity-80 mt-1">
               {t('summary.description')}
             </p>
           </div>
@@ -166,7 +166,7 @@ const [isExpanded, setIsExpanded] = useState(false)
             variant="default"
             size="sm"
             onClick={onFixAll}
-            className={cn('shrink-0 gap-2', 'bg-red-600 hover:bg-red-700 text-white')}
+            className={cn('shrink-0 gap-2', 'bg-danger hover:bg-danger text-white')}
           >
             <Wand2 className="h-4 w-4" />
             <span className="hidden sm:inline">
@@ -178,7 +178,7 @@ const [isExpanded, setIsExpanded] = useState(false)
       </div>
 
       {/* Error list */}
-      <ul className="mt-4 divide-y divide-red-200 dark:divide-red-800">
+      <ul className="mt-4 divide-y divide-danger/30 dark:divide-danger/30">
         <AnimatePresence mode="popLayout">
           {visibleErrors.map((error, index) => (
             <ErrorItem
@@ -201,8 +201,8 @@ const [isExpanded, setIsExpanded] = useState(false)
           size="sm"
           onClick={() => setIsExpanded(!isExpanded)}
           className={cn(
-            'w-full mt-2 text-red-700 dark:text-red-300',
-            'hover:bg-red-100 dark:hover:bg-red-900/50',
+            'w-full mt-2 text-danger dark:text-danger',
+            'hover:bg-danger/10 dark:hover:bg-danger/50',
           )}
         >
           {isExpanded ? (
@@ -221,8 +221,8 @@ const [isExpanded, setIsExpanded] = useState(false)
 
       {/* Warnings section */}
       {warningItems.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-red-200 dark:border-red-800">
-          <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 text-sm">
+        <div className="mt-4 pt-4 border-t border-danger/30 dark:border-danger">
+          <div className="flex items-center gap-2 text-warning dark:text-warning text-sm">
             <AlertTriangle className="h-4 w-4" />
             <span>{t('warnings.count', { count: warningItems.length })}</span>
           </div>
@@ -234,7 +234,7 @@ const [isExpanded, setIsExpanded] = useState(false)
         <m.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400"
+          className="flex items-center gap-3 text-success dark:text-success"
         >
           <CheckCircle2 className="h-5 w-5" />
           <span className="text-sm font-medium">{t('allFixed')}</span>

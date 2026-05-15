@@ -69,16 +69,16 @@ export interface ActiveFiltersBarProps {
 function FilterChip({ filter, onRemove }: { filter: FilterChipConfig; onRemove: () => void }) {
   const variantStyles = {
     default: 'bg-secondary text-secondary-foreground',
-    warning: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300',
-    info: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
-    success: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
+    warning: 'bg-warning/10 dark:bg-warning/30 text-warning dark:text-warning',
+    info: 'bg-info/10 dark:bg-info/30 text-info dark:text-info',
+    success: 'bg-success/10 dark:bg-success/30 text-success dark:text-success',
   }
 
   const hoverStyles = {
     default: 'hover:bg-muted',
-    warning: 'hover:bg-amber-200 dark:hover:bg-amber-800',
-    info: 'hover:bg-blue-200 dark:hover:bg-blue-800',
-    success: 'hover:bg-green-200 dark:hover:bg-green-800',
+    warning: 'hover:bg-warning/10 dark:hover:bg-warning',
+    info: 'hover:bg-info/10 dark:hover:bg-info',
+    success: 'hover:bg-success/10 dark:hover:bg-success',
   }
 
   return (
@@ -146,10 +146,10 @@ function HiddenResultsWarning({
       exit={{ opacity: 0, y: -10 }}
       className={cn(
         'flex items-center gap-2 px-3 py-2',
-        'bg-amber-50 dark:bg-amber-950/50',
-        'border border-amber-200 dark:border-amber-800',
+        'bg-warning/10 dark:bg-warning/50',
+        'border border-warning/30 dark:border-warning',
         'rounded-lg',
-        'text-xs sm:text-sm text-amber-700 dark:text-amber-300',
+        'text-xs sm:text-sm text-warning dark:text-warning',
       )}
     >
       <AlertTriangle className={cn('size-4 flex-shrink-0', isRTL ? 'ms-1' : 'me-1')} />
@@ -182,7 +182,7 @@ export function ActiveFiltersBar({
 }: ActiveFiltersBarProps) {
   const { t } = useTranslation('active-filters')
   const { isRTL } = useDirection()
-// Don't render if no active filters
+  // Don't render if no active filters
   if (filters.length === 0) {
     return null
   }
@@ -194,9 +194,7 @@ export function ActiveFiltersBar({
     unfilteredTotal > totalResults
 
   return (
-    <div
-      className={cn('w-full', sticky && 'sticky top-0 z-10', className)}
-    >
+    <div className={cn('w-full', sticky && 'sticky top-0 z-10', className)}>
       {/* Main filter bar container */}
       <div
         className={cn(
@@ -217,7 +215,7 @@ export function ActiveFiltersBar({
             {hasHiddenResults && (
               <Badge
                 variant="outline"
-                className="text-xs px-1.5 py-0.5 text-amber-600 border-amber-300"
+                className="text-xs px-1.5 py-0.5 text-warning border-warning/30"
               >
                 <EyeOff className="size-3 me-1" />
                 {t('hiddenCount', { count: (unfilteredTotal || 0) - (totalResults || 0) })}

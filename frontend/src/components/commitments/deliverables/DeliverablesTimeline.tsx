@@ -39,7 +39,7 @@ export function DeliverablesTimeline({
 }: DeliverablesTimelineProps) {
   const { t } = useTranslation('commitment-deliverables')
   const { isRTL } = useDirection()
-const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editDeliverable, setEditDeliverable] = useState<CommitmentDeliverable | null>(null)
 
   const { data: deliverables, isLoading: isLoadingDeliverables } =
@@ -118,8 +118,8 @@ const [isDialogOpen, setIsDialogOpen] = useState(false)
           </Card>
           <Card className="p-2 sm:p-3">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600 dark:text-green-400" />
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-success/10 dark:bg-success/30 flex items-center justify-center">
+                <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-success dark:text-success" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t('stats.completed')}</p>
@@ -129,8 +129,8 @@ const [isDialogOpen, setIsDialogOpen] = useState(false)
           </Card>
           <Card className="p-2 sm:p-3">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 dark:text-blue-400" />
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-info/10 dark:bg-info/30 flex items-center justify-center">
+                <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-info dark:text-info" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t('stats.inProgress')}</p>
@@ -140,15 +140,15 @@ const [isDialogOpen, setIsDialogOpen] = useState(false)
           </Card>
           <Card className="p-2 sm:p-3">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-600 dark:text-red-400" />
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-danger/10 dark:bg-danger/30 flex items-center justify-center">
+                <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-danger dark:text-danger" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t('stats.overdue')}</p>
                 <p
                   className={cn(
                     'text-base sm:text-lg font-semibold',
-                    summary.overdue > 0 && 'text-red-600 dark:text-red-400',
+                    summary.overdue > 0 && 'text-danger dark:text-danger',
                   )}
                 >
                   {summary.overdue}
@@ -172,7 +172,7 @@ const [isDialogOpen, setIsDialogOpen] = useState(false)
             </div>
             <Progress value={summary.progress} className="h-2" />
             {summary.progress === 100 && (
-              <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center gap-1">
+              <p className="text-xs text-success dark:text-success mt-2 flex items-center gap-1">
                 <CheckCircle className="h-3 w-3" />
                 {t('progress.allComplete')}
               </p>

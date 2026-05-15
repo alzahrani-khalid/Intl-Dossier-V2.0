@@ -55,7 +55,7 @@ export function EnhancedUndoToast({
   void _entityType
   const { t } = useTranslation('bulk-actions')
   const { isRTL } = useDirection()
-const [remainingTime, setRemainingTime] = useState(undoTtl)
+  const [remainingTime, setRemainingTime] = useState(undoTtl)
   const [isUndoing, setIsUndoing] = useState(false)
   const [showSuccess, setShowSuccess] = useState(showSuccessFirst)
   const [isPaused, setIsPaused] = useState(false)
@@ -170,18 +170,18 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
     >
       <div
         className={cn(
-          'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg shadow-2xl overflow-hidden',
-          'border border-gray-700 dark:border-gray-300',
+          'bg-muted dark:bg-muted text-white dark:text-foreground rounded-lg shadow-2xl overflow-hidden',
+          'border border-line dark:border-line',
         )}
       >
         {/* Progress bar */}
-        <div className="h-1.5 bg-gray-700 dark:bg-gray-300">
+        <div className="h-1.5 bg-muted dark:bg-muted">
           <div
             className={cn(
               'h-full transition-all duration-100 ease-linear',
-              urgencyLevel === 'urgent' && 'bg-red-500 animate-pulse',
-              urgencyLevel === 'warning' && 'bg-yellow-500',
-              urgencyLevel === 'normal' && 'bg-blue-500',
+              urgencyLevel === 'urgent' && 'bg-danger animate-pulse',
+              urgencyLevel === 'warning' && 'bg-warning',
+              urgencyLevel === 'normal' && 'bg-info',
             )}
             style={{
               width: `${progressPercent}%`,
@@ -195,8 +195,8 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
           {/* Circular timer or success icon */}
           <div className="relative shrink-0">
             {showSuccess ? (
-              <div className="w-12 h-12 flex items-center justify-center bg-green-500/20 rounded-full">
-                <CheckCircle className="h-6 w-6 text-green-500 animate-in zoom-in-50 duration-300" />
+              <div className="w-12 h-12 flex items-center justify-center bg-success/20 rounded-full">
+                <CheckCircle className="h-6 w-6 text-success animate-in zoom-in-50 duration-300" />
               </div>
             ) : (
               <div className="w-12 h-12 flex items-center justify-center">
@@ -209,7 +209,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="3"
-                    className="text-gray-700 dark:text-gray-300"
+                    className="text-muted-foreground dark:text-muted-foreground"
                   />
                   {/* Progress circle */}
                   <circle
@@ -221,9 +221,9 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
                     strokeLinecap="round"
                     className={cn(
                       'transition-all duration-100',
-                      urgencyLevel === 'urgent' && 'text-red-500',
-                      urgencyLevel === 'warning' && 'text-yellow-500',
-                      urgencyLevel === 'normal' && 'text-blue-500',
+                      urgencyLevel === 'urgent' && 'text-danger',
+                      urgencyLevel === 'warning' && 'text-warning',
+                      urgencyLevel === 'normal' && 'text-info',
                     )}
                     style={{
                       stroke: 'currentColor',
@@ -236,7 +236,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
                 <span
                   className={cn(
                     'absolute inset-0 flex items-center justify-center text-sm font-bold',
-                    urgencyLevel === 'urgent' && 'text-red-500 animate-pulse',
+                    urgencyLevel === 'urgent' && 'text-danger animate-pulse',
                   )}
                 >
                   {remainingSeconds}
@@ -259,7 +259,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
                   })}
             </p>
             <div className="flex items-center gap-2 mt-0.5">
-              <p className="text-xs text-gray-400 dark:text-gray-600">
+              <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                 {showSuccess
                   ? t('undo.immediateUndo', { defaultValue: 'Click to undo' })
                   : isPaused
@@ -270,7 +270,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
                       })}
               </p>
               {!showSuccess && !isPaused && (
-                <Clock className="h-3 w-3 text-gray-500 dark:text-gray-500" />
+                <Clock className="h-3 w-3 text-muted-foreground dark:text-muted-foreground" />
               )}
             </div>
           </div>
@@ -284,9 +284,9 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
               disabled={isUndoing}
               className={cn(
                 'h-9 px-4 font-medium transition-all',
-                'bg-white dark:bg-gray-900 text-gray-900 dark:text-white',
-                'hover:bg-gray-100 dark:hover:bg-gray-800',
-                'focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900',
+                'bg-white dark:bg-muted text-foreground dark:text-white',
+                'hover:bg-muted dark:hover:bg-muted',
+                'focus:ring-2 focus:ring-accent/30 focus:ring-offset-2 focus:ring-offset-gray-900',
                 urgencyLevel === 'urgent' && 'animate-pulse',
               )}
             >
@@ -308,7 +308,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
               size="icon"
               onClick={onDismiss}
               disabled={isUndoing}
-              className="h-9 w-9 text-gray-400 hover:text-white dark:text-gray-600 dark:hover:text-gray-900"
+              className="h-9 w-9 text-muted-foreground hover:text-white dark:text-muted-foreground dark:hover:text-foreground"
               aria-label={t('accessibility.closeDialog')}
             >
               <X className="h-4 w-4" />
@@ -319,7 +319,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
         {/* Keyboard shortcut hint */}
         {!showSuccess && !isUndoing && (
           <div className="px-4 pb-3 -mt-1">
-            <p className="text-xs text-gray-500 dark:text-gray-500">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
               {t('undo.keyboardHint', {
                 defaultValue: 'Press Ctrl+Z to undo',
               })}

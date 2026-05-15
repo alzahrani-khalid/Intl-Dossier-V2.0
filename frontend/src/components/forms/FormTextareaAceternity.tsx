@@ -43,13 +43,13 @@ export function FormTextareaAceternity({
     // Resize behavior
     'resize-y',
     // Borders and colors
-    error ? 'border-red-500 dark:border-red-400' : 'border-input dark:border-gray-600',
+    error ? 'border-danger dark:border-danger' : 'border-input dark:border-line',
     'border rounded-lg',
     // Focus states
     'focus:ring-2 focus:border-transparent',
-    error ? 'focus:ring-red-500' : 'focus:ring-primary-500',
+    error ? 'focus:ring-danger/30' : 'focus:ring-primary-500',
     // Dark mode
-    'dark:bg-gray-700 dark:text-white',
+    'dark:bg-muted dark:text-white',
     // Disabled state
     'disabled:opacity-50 disabled:cursor-not-allowed',
     // Transitions
@@ -61,10 +61,10 @@ export function FormTextareaAceternity({
   const aceternityClasses = cn(
     textareaBaseClasses,
     // Aceternity enhancements
-    'bg-white dark:bg-zinc-800',
+    'bg-white dark:bg-muted',
     'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)]',
     'focus:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.2),_0px_1px_0px_0px_rgba(25,28,33,0.04),_0px_0px_0px_2px_rgba(var(--primary),0.3)]',
-    isFocused && 'bg-gray-50 dark:bg-zinc-700',
+    isFocused && 'bg-muted dark:bg-muted',
   )
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -85,7 +85,7 @@ export function FormTextareaAceternity({
           className={cn(
             'block font-medium text-start',
             'text-sm sm:text-base',
-            'text-gray-700 dark:text-gray-300',
+            'text-muted-foreground dark:text-muted-foreground',
           )}
           initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
@@ -93,7 +93,7 @@ export function FormTextareaAceternity({
         >
           {label}
           {required && (
-            <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+            <span className="text-danger ms-1" aria-label={t('validation.required')}>
               *
             </span>
           )}
@@ -103,8 +103,8 @@ export function FormTextareaAceternity({
         {showCharCount && maxLength && (
           <m.span
             className={cn(
-              'text-xs text-gray-500 dark:text-gray-400',
-              charCount > maxLength && 'text-red-500 dark:text-red-400',
+              'text-xs text-muted-foreground dark:text-muted-foreground',
+              charCount > maxLength && 'text-danger dark:text-danger',
             )}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -147,7 +147,7 @@ export function FormTextareaAceternity({
       {helpText && !error && (
         <m.p
           id={`${name}-help`}
-          className="text-sm text-gray-600 dark:text-gray-400 text-start"
+          className="text-sm text-muted-foreground dark:text-muted-foreground text-start"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2, delay: 0.15 }}
@@ -161,7 +161,7 @@ export function FormTextareaAceternity({
         {error && (
           <m.p
             id={`${name}-error`}
-            className="text-sm text-red-600 dark:text-red-400 text-start"
+            className="text-sm text-danger dark:text-danger text-start"
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}

@@ -55,7 +55,7 @@ export function ReschedulingSuggestions({
 }: ReschedulingSuggestionsProps) {
   const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
-const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
 
   const formatDateTime = (datetime: string) => {
     const date = new Date(datetime)
@@ -73,15 +73,15 @@ const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
   }
 
   const getScoreColor = (score: number) => {
-    if (score >= 0.8) return 'text-green-600 dark:text-green-400'
-    if (score >= 0.6) return 'text-yellow-600 dark:text-yellow-400'
-    return 'text-red-600 dark:text-red-400'
+    if (score >= 0.8) return 'text-success dark:text-success'
+    if (score >= 0.6) return 'text-warning dark:text-warning'
+    return 'text-danger dark:text-danger'
   }
 
   const getScoreBg = (score: number) => {
-    if (score >= 0.8) return 'bg-green-100 dark:bg-green-900/30'
-    if (score >= 0.6) return 'bg-yellow-100 dark:bg-yellow-900/30'
-    return 'bg-red-100 dark:bg-red-900/30'
+    if (score >= 0.8) return 'bg-success/10 dark:bg-success/30'
+    if (score >= 0.6) return 'bg-warning/10 dark:bg-warning/30'
+    return 'bg-danger/10 dark:bg-danger/30'
   }
 
   if (isLoading) {
@@ -171,7 +171,7 @@ const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
                       className={cn(
                         'p-3 sm:p-4 transition-colors',
                         isExpanded && 'bg-muted/50',
-                        isAccepted && 'bg-green-50 dark:bg-green-900/20',
+                        isAccepted && 'bg-success/10 dark:bg-success/20',
                       )}
                     >
                       <CollapsibleTrigger asChild>
@@ -227,7 +227,7 @@ const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
                               {isAccepted && (
                                 <Badge
                                   variant="secondary"
-                                  className="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                                  className="text-xs bg-success/10 text-success dark:bg-success dark:text-success"
                                 >
                                   <CheckCircle2 className="h-3 w-3 me-1" />
                                   {t('suggestions.accepted')}

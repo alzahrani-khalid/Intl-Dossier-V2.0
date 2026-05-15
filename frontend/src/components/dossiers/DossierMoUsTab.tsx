@@ -41,7 +41,7 @@ interface DossierMoUsTabProps {
 export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
   const { t } = useTranslation('dossiers')
   const { isRTL } = useDirection()
-// Fetch MoUs for this dossier using unified architecture
+  // Fetch MoUs for this dossier using unified architecture
   const {
     data: mous,
     isLoading,
@@ -65,18 +65,18 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
   const getStatusColor = (status: MoU['lifecycle_state']) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+        return 'bg-success/10 text-success dark:bg-success/20 dark:text-success'
       case 'draft':
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
+        return 'bg-warning/10 text-warning dark:bg-warning/20 dark:text-warning'
       case 'expired':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+        return 'bg-danger/10 text-danger dark:bg-danger/20 dark:text-danger'
       case 'cancelled':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
+        return 'bg-muted text-foreground dark:bg-muted dark:text-muted-foreground'
       case 'renewed':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+        return 'bg-info/10 text-info dark:bg-info/20 dark:text-info'
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
+        return 'bg-muted text-foreground dark:bg-muted dark:text-muted-foreground'
     }
   }
 
@@ -95,7 +95,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-40 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+          <div key={i} className="h-40 bg-muted dark:bg-muted rounded-lg animate-pulse" />
         ))}
       </div>
     )
@@ -105,11 +105,11 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
   if (error) {
     return (
       <div
-        className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center"
+        className="bg-danger/10 dark:bg-danger/20 border border-danger/30 dark:border-danger rounded-lg p-6 text-center"
         role="alert"
       >
-        <p className="text-red-800 dark:text-red-200">{t('mous.error_loading')}</p>
-        <p className="mt-2 text-sm text-red-700 dark:text-red-300">
+        <p className="text-danger dark:text-danger">{t('mous.error_loading')}</p>
+        <p className="mt-2 text-sm text-danger dark:text-danger">
           {error instanceof Error ? error.message : t('mous.error_generic')}
         </p>
       </div>
@@ -120,11 +120,11 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
   if (!mous || mous.length === 0) {
     return (
       <div className="text-center py-12">
-        <FileText className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+        <FileText className="mx-auto h-12 w-12 text-muted-foreground dark:text-muted-foreground" />
+        <h3 className="mt-2 text-sm font-medium text-foreground dark:text-white">
           {t('mous.no_mous')}
         </h3>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground">
           {t('mous.no_mous_description')}
         </p>
       </div>
@@ -148,7 +148,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
               <div className="flex-1 min-w-0">
                 {/* Title */}
                 <h4
-                  className={`text-base sm:text-lg font-medium text-gray-900 dark:text-white truncate ${
+                  className={`text-base sm:text-lg font-medium text-foreground dark:text-white truncate ${
                     isRTL ? 'text-end' : 'text-start'
                   }`}
                 >
@@ -158,7 +158,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
                 {/* Summary */}
                 {mou.description && (
                   <p
-                    className={`mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2 ${
+                    className={`mt-1 text-sm text-muted-foreground dark:text-muted-foreground line-clamp-2 ${
                       isRTL ? 'text-end' : 'text-start'
                     }`}
                   >
@@ -167,7 +167,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
                 )}
 
                 {/* Dates */}
-                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground dark:text-muted-foreground">
                   {/* Signed Date */}
                   {mou.dates?.signed && (
                     <div className="flex items-center gap-1">
@@ -221,7 +221,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
 
                 {/* Renewal Alert */}
                 {isApproachingRenewal(mou) && (
-                  <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400 text-sm">
+                  <div className="flex items-center gap-1 text-warning dark:text-warning text-sm">
                     <AlertCircle className="h-4 w-4" />
                     <span>{t('mous.renewal_required')}</span>
                   </div>

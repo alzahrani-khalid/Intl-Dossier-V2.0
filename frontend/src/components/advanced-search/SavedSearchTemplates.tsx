@@ -75,7 +75,7 @@ interface SavedSearchTemplatesProps {
 export function SavedSearchTemplates({ onApply, className }: SavedSearchTemplatesProps) {
   const { t } = useTranslation('advanced-search')
   const { isRTL } = useDirection()
-const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
+  const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
 
   const { data: quickTemplates, isLoading: loadingQuick } = useQuickTemplates()
   const { data: popularTemplates, isLoading: loadingPopular } = usePopularTemplates()
@@ -113,23 +113,26 @@ const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
         </div>
 
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+          <h4 className="text-sm font-medium text-foreground dark:text-muted-foreground truncate">
             {isRTL ? template.name_ar : template.name_en}
           </h4>
           {(template.description_en || template.description_ar) && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground truncate mt-0.5">
               {isRTL ? template.description_ar : template.description_en}
             </p>
           )}
           {template.use_count > 0 && (
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">
               {t('templates.useCount', { count: template.use_count })}
             </p>
           )}
         </div>
 
         <ChevronRight
-          className={cn('h-4 w-4 text-gray-400 shrink-0 self-center', isRTL && 'rotate-180')}
+          className={cn(
+            'h-4 w-4 text-muted-foreground shrink-0 self-center',
+            isRTL && 'rotate-180',
+          )}
         />
       </button>
     )
@@ -147,8 +150,8 @@ const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
     <div className={cn('flex flex-col gap-6', className)}>
       {/* Quick Templates */}
       <section>
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-          <Star className="h-4 w-4 text-yellow-500" />
+        <h3 className="text-sm font-medium text-muted-foreground dark:text-muted-foreground mb-3 flex items-center gap-2">
+          <Star className="h-4 w-4 text-warning" />
           {t('templates.quick')}
         </h3>
 
@@ -158,7 +161,7 @@ const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
           ) : quickTemplates?.data && quickTemplates.data.length > 0 ? (
             quickTemplates.data.map(renderTemplateCard)
           ) : (
-            <p className="text-sm text-gray-500 dark:text-gray-400 col-span-2">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground col-span-2">
               {t('templates.noTemplates')}
             </p>
           )}
@@ -167,8 +170,8 @@ const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
 
       {/* Popular Templates */}
       <section>
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-          <Users className="h-4 w-4 text-blue-500" />
+        <h3 className="text-sm font-medium text-muted-foreground dark:text-muted-foreground mb-3 flex items-center gap-2">
+          <Users className="h-4 w-4 text-info" />
           {t('templates.popular')}
         </h3>
 
@@ -178,7 +181,7 @@ const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
           ) : popularTemplates?.data && popularTemplates.data.length > 0 ? (
             popularTemplates.data.map(renderTemplateCard)
           ) : (
-            <p className="text-sm text-gray-500 dark:text-gray-400 col-span-2">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground col-span-2">
               {t('templates.noTemplates')}
             </p>
           )}
@@ -194,7 +197,7 @@ const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(null)
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleDelete} className="bg-danger hover:bg-danger">
               {t('templates.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>

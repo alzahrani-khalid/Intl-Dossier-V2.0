@@ -201,7 +201,7 @@ function ArrayFieldItemRow({
               'flex items-center justify-center',
               'h-11 w-8 sm:h-10',
               'cursor-grab active:cursor-grabbing',
-              'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300',
+              'text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground',
               'opacity-0 group-hover:opacity-100',
               'transition-opacity duration-200',
               disabled && 'pointer-events-none opacity-30',
@@ -225,14 +225,14 @@ function ArrayFieldItemRow({
               aria-invalid={!!displayError}
               className={cn(
                 'h-11 px-4 text-base sm:h-10',
-                displayError && 'border-red-500 focus-visible:ring-red-500',
+                displayError && 'border-danger focus-visible:ring-danger/30',
               )}
             />
             {displayError && (
               <div
                 className={cn(
                   'absolute top-1/2 -translate-y-1/2',
-                  'text-red-500',
+                  'text-danger',
                   isRTL ? 'start-3' : 'end-3',
                 )}
               >
@@ -248,7 +248,7 @@ function ArrayFieldItemRow({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mt-1 text-sm text-red-600 dark:text-red-400"
+                className="mt-1 text-sm text-danger dark:text-danger"
               >
                 {displayError}
               </m.p>
@@ -268,8 +268,8 @@ function ArrayFieldItemRow({
               'h-11 w-11 sm:h-10 sm:w-10',
               'shrink-0',
               'opacity-60 hover:opacity-100',
-              'hover:bg-red-50 hover:border-red-200 hover:text-red-600',
-              'dark:hover:bg-red-950 dark:hover:border-red-800 dark:hover:text-red-400',
+              'hover:bg-danger/10 hover:border-danger/30 hover:text-danger',
+              'dark:hover:bg-danger dark:hover:border-danger dark:hover:text-danger',
               'transition-all duration-200',
             )}
             aria-label={`Remove item ${index + 1}`}
@@ -307,7 +307,7 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
 }: ArrayFieldManagerProps<TFormValues>) {
   const { t } = useTranslation(['common', 'validation'])
   const { isRTL } = useDirection()
-// State for items
+  // State for items
   const [items, setItems] = useState<ArrayFieldItem[]>(() => {
     const initialValues = externalValues || (watch?.(name) as string[]) || ['']
     return initialValues.map((value) => ({
@@ -396,16 +396,16 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
     <div className={cn('space-y-3', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 sm:text-base">
+        <Label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground sm:text-base">
           {label}
           {minItems > 0 && (
-            <span className="ms-1 text-xs text-gray-500">
+            <span className="ms-1 text-xs text-muted-foreground">
               ({t('common:forms.min_items', { count: minItems })})
             </span>
           )}
         </Label>
 
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-xs text-muted-foreground dark:text-muted-foreground">
           {items.length} / {maxItems}
         </span>
       </div>
@@ -480,7 +480,9 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
       )}
 
       {/* Help text */}
-      {helpText && <p className="text-sm text-gray-600 dark:text-gray-400">{helpText}</p>}
+      {helpText && (
+        <p className="text-sm text-muted-foreground dark:text-muted-foreground">{helpText}</p>
+      )}
     </div>
   )
 }
