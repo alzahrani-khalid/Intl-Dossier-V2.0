@@ -39,7 +39,7 @@ export function PoliticalAnalysis({ reports, dossierId }: PoliticalAnalysisProps
   // Track expand/collapse state (must be before any early returns)
   const [isExpanded, setIsExpanded] = React.useState(false)
 
-// Get latest political report
+  // Get latest political report
   const latestReport = useMemo(() => {
     if (reports.length === 0) return null
     return reports.sort(
@@ -78,6 +78,7 @@ export function PoliticalAnalysis({ reports, dossierId }: PoliticalAnalysisProps
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PoliticalAnalysis */}
               <Users className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               <CardTitle className="text-base sm:text-lg">
                 {t('intelligence.types.political', 'Political Analysis')}
@@ -94,6 +95,7 @@ export function PoliticalAnalysis({ reports, dossierId }: PoliticalAnalysisProps
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PoliticalAnalysis */}
             <Scale className="mx-auto h-12 w-12 mb-3 text-gray-400" />
             <p className="text-sm">
               {t('intelligence.noPoliticalData', 'No political intelligence available')}
@@ -110,6 +112,7 @@ export function PoliticalAnalysis({ reports, dossierId }: PoliticalAnalysisProps
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PoliticalAnalysis */}
               <Users className="h-5 w-5 flex-shrink-0 text-purple-600 dark:text-purple-400" />
               <CardTitle className="text-base sm:text-lg truncate">
                 {t('intelligence.types.political', 'Political Analysis')}
@@ -134,6 +137,7 @@ export function PoliticalAnalysis({ reports, dossierId }: PoliticalAnalysisProps
         {/* Metadata Row */}
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {isStale && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PoliticalAnalysis
             <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
               {t('intelligence.stale', 'Stale Data')}
             </Badge>
@@ -181,6 +185,7 @@ export function PoliticalAnalysis({ reports, dossierId }: PoliticalAnalysisProps
               {Object.entries(latestReport.metrics).map(([key, value]) => (
                 <div key={key} className="bg-muted/50 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PoliticalAnalysis */}
                     <CheckCircle className="h-4 w-4 text-purple-600" />
                     <span className="text-xs font-medium text-muted-foreground capitalize">
                       {key.replace(/_/g, ' ')}

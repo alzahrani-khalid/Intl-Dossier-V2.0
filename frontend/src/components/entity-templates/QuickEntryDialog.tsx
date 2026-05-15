@@ -333,6 +333,7 @@ export function QuickEntryDialog({
                       <div className="flex items-center gap-2">
                         <span className="truncate font-medium">{name}</span>
                         {template.is_favorite && (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickEntryDialog
                           <Star className="h-3 w-3 shrink-0 fill-yellow-400 text-yellow-400" />
                         )}
                       </div>

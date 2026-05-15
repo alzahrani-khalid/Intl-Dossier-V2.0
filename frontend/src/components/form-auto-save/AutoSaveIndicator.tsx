@@ -29,7 +29,7 @@ import { useDirection } from '@/hooks/useDirection'
 export function AutoSaveIndicator({ status, className, compact = false }: AutoSaveIndicatorProps) {
   const { t } = useTranslation('form-auto-save')
   const { isRTL } = useDirection()
-const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = status
+  const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = status
 
   // Format the last saved time
   const lastSavedText = React.useMemo(() => {
@@ -66,8 +66,10 @@ const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = 
     },
     saved: {
       icon: Check,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AutoSaveIndicator
       iconClass: 'text-green-500',
       text: compact ? t('indicator.saved') : t('indicator.savedTime', { time: lastSavedText }),
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AutoSaveIndicator
       containerClass: 'text-green-600 dark:text-green-400',
     },
     unsaved: {
@@ -78,8 +80,10 @@ const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = 
     },
     error: {
       icon: AlertCircle,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AutoSaveIndicator
       iconClass: 'text-red-500',
       text: compact ? t('indicator.error') : t('indicator.errorDetail'),
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AutoSaveIndicator
       containerClass: 'text-red-600 dark:text-red-400',
     },
     unavailable: {

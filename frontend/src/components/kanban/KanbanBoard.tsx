@@ -47,17 +47,26 @@ const WORKFLOW_STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done
 // Hoisted outside component: pure functions with no state dependencies.
 // Prevents new function references on each render, enabling React.memo on child components.
 const STAGE_COLORS: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   todo: 'border-gray-300 bg-gray-50 dark:bg-gray-900',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   in_progress: 'border-blue-300 bg-blue-50 dark:bg-blue-950',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   review: 'border-purple-300 bg-purple-50 dark:bg-purple-950',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   done: 'border-green-300 bg-green-50 dark:bg-green-950',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   cancelled: 'border-red-300 bg-red-50 dark:bg-red-950',
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   urgent: 'bg-red-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   high: 'bg-orange-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   medium: 'bg-blue-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanBoard
   low: 'bg-gray-500',
 }
 

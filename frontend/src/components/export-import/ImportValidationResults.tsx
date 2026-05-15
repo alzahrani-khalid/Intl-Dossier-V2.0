@@ -42,9 +42,13 @@ interface ImportValidationResultsProps {
 }
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
   valid: <CheckCircle2 className="h-4 w-4 text-green-500" />,
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
   invalid: <XCircle className="h-4 w-4 text-red-500" />,
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
   warning: <AlertTriangle className="h-4 w-4 text-yellow-500" />,
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
   conflict: <AlertCircle className="h-4 w-4 text-blue-500" />,
   pending: <AlertCircle className="h-4 w-4 text-muted-foreground" />,
 }
@@ -55,13 +59,16 @@ const STATUS_BADGES: Record<
 > = {
   valid: {
     variant: 'default',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
     className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
   },
   invalid: { variant: 'destructive' },
   warning: {
     variant: 'secondary',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
     className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
   },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
   conflict: { variant: 'outline', className: 'border-blue-500 text-blue-600 dark:text-blue-400' },
   pending: { variant: 'secondary' },
 }
@@ -73,7 +80,7 @@ export function ImportValidationResults({
 }: ImportValidationResultsProps) {
   const { t } = useTranslation('export-import')
   const { isRTL } = useDirection()
-const [showAllErrors, setShowAllErrors] = useState(false)
+  const [showAllErrors, setShowAllErrors] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
 
   const toggleRowExpanded = (rowNumber: number) => {
@@ -132,20 +139,29 @@ const [showAllErrors, setShowAllErrors] = useState(false)
             {t('import.validation.summary.totalRows')}
           </div>
         </div>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
         <div className="rounded-lg border p-3 bg-green-50 dark:bg-green-900/20">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
           <div className="text-2xl font-bold text-green-600">{result.validRows}</div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
           <div className="text-xs text-green-700 dark:text-green-400">
             {t('import.validation.summary.validRows')}
           </div>
         </div>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
         <div className="rounded-lg border p-3 bg-red-50 dark:bg-red-900/20">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
           <div className="text-2xl font-bold text-red-600">{result.invalidRows}</div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
           <div className="text-xs text-red-700 dark:text-red-400">
             {t('import.validation.summary.invalidRows')}
           </div>
         </div>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
         <div className="rounded-lg border p-3 bg-yellow-50 dark:bg-yellow-900/20">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
           <div className="text-2xl font-bold text-yellow-600">{result.warningRows}</div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
           <div className="text-xs text-yellow-700 dark:text-yellow-400">
             {t('import.validation.summary.warningRows')}
           </div>
@@ -154,7 +170,9 @@ const [showAllErrors, setShowAllErrors] = useState(false)
 
       {/* Missing Columns Warning */}
       {result.missingRequiredColumns && result.missingRequiredColumns.length > 0 && (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
         <div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 p-4">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
           <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
             <XCircle className="h-5 w-5" />
             <span className="font-medium">
@@ -168,7 +186,9 @@ const [showAllErrors, setShowAllErrors] = useState(false)
 
       {/* Unmapped Columns Info */}
       {result.unmappedColumns && result.unmappedColumns.length > 0 && (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
         <div className="rounded-lg border border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 p-4">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
           <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
             <AlertTriangle className="h-5 w-5" />
             <span>Unmapped columns will be ignored: {result.unmappedColumns.join(', ')}</span>
@@ -247,8 +267,11 @@ const [showAllErrors, setShowAllErrors] = useState(false)
               <TableRow
                 key={row.row}
                 className={cn(
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
                   row.status === 'invalid' && 'bg-red-50/50 dark:bg-red-900/10',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
                   row.status === 'warning' && 'bg-yellow-50/50 dark:bg-yellow-900/10',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
                   row.status === 'conflict' && 'bg-blue-50/50 dark:bg-blue-900/10',
                 )}
               >
@@ -280,8 +303,10 @@ const [showAllErrors, setShowAllErrors] = useState(false)
                                   <span
                                     className={
                                       error.severity === 'error'
-                                        ? 'text-red-600'
-                                        : 'text-yellow-600'
+                                        ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
+                                          'text-red-600'
+                                        : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
+                                          'text-yellow-600'
                                     }
                                   >
                                     {getErrorMessage(error)}
@@ -303,6 +328,7 @@ const [showAllErrors, setShowAllErrors] = useState(false)
                       )}
                     </div>
                   ) : row.status === 'conflict' ? (
+                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
                     <div className="text-sm text-blue-600">
                       {t('errors.conflict_detected')}
                       {row.existingId && (
@@ -357,7 +383,9 @@ const [showAllErrors, setShowAllErrors] = useState(false)
         className={cn(
           'rounded-lg p-4 text-center',
           result.invalidRows === 0 &&
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
             'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
           result.invalidRows > 0 && 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400',
         )}
       >

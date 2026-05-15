@@ -143,7 +143,7 @@ function getTooltipPosition(
 export function TourOverlay() {
   const { t } = useTranslation('guided-tours')
   const { isRTL } = useDirection()
-const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, completeTour } =
+  const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, completeTour } =
     useTour()
 
   const [targetRect, setTargetRect] = useState<TargetRect | null>(null)
@@ -343,8 +343,11 @@ const { activeTour, currentStepIndex, isActive, nextStep, prevStep, skipTour, co
 
                 {/* Hint */}
                 {currentStep.hint && (
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TourOverlay
                   <div className="flex items-start gap-2 p-2.5 sm:p-3 rounded-xl bg-amber-50 border border-amber-100 mb-3 sm:mb-4">
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TourOverlay */}
                     <HelpCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TourOverlay */}
                     <p className="text-xs sm:text-sm text-amber-800 text-start">
                       {t(currentStep.hint)}
                     </p>
