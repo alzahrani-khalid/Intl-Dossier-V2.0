@@ -120,11 +120,17 @@ const colorOptions: Array<{
   label_en: string
   label_ar: string
 }> = [
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
   { color: 'blue', class: 'bg-blue-500', label_en: 'Blue', label_ar: 'أزرق' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
   { color: 'green', class: 'bg-green-500', label_en: 'Green', label_ar: 'أخضر' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
   { color: 'yellow', class: 'bg-yellow-500', label_en: 'Yellow', label_ar: 'أصفر' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
   { color: 'red', class: 'bg-red-500', label_en: 'Red', label_ar: 'أحمر' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
   { color: 'purple', class: 'bg-purple-500', label_en: 'Purple', label_ar: 'بنفسجي' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
   { color: 'orange', class: 'bg-orange-500', label_en: 'Orange', label_ar: 'برتقالي' },
 ]
 
@@ -172,7 +178,7 @@ export function StakeholderAnnotationDialog({
 }: StakeholderAnnotationDialogProps) {
   const { t } = useTranslation('stakeholder-interactions')
   const { isRTL } = useDirection()
-// Form state
+  // Form state
   const [annotationType, setAnnotationType] = useState<TimelineAnnotationType>('note')
   const [contentEn, setContentEn] = useState('')
   const [contentAr, setContentAr] = useState('')
@@ -217,9 +223,7 @@ export function StakeholderAnnotationDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-lg max-h-[90vh] overflow-y-auto"
-      >
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-start">{t('annotation.create_title')}</DialogTitle>
           <DialogDescription className="text-start">

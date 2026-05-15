@@ -367,6 +367,7 @@ export function StepUpMFA({
       <DialogContent className="max-w-md" aria-describedby="step-up-description">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StepUpMFA */}
             <Shield className="size-5 text-orange-500" aria-hidden="true" />
             <span>{t('stepUp.title')}</span>
           </DialogTitle>
@@ -375,9 +376,12 @@ export function StepUpMFA({
 
         {/* Reason for step-up */}
         {reason && (
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StepUpMFA
           <div className="rounded-md border border-amber-200 bg-amber-50 p-3">
             <div className="flex items-start gap-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StepUpMFA */}
               <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" aria-hidden="true" />
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StepUpMFA */}
               <p className="text-sm text-amber-900">{reason}</p>
             </div>
           </div>
@@ -506,5 +510,3 @@ export function StepUpMFA({
     </Dialog>
   )
 }
-
-

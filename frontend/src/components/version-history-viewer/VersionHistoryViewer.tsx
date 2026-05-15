@@ -129,10 +129,13 @@ export function VersionHistoryViewer({
   const getDiffColor = (kind: DiffKind) => {
     switch (kind) {
       case 'N':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer
         return 'text-green-600 bg-green-50'
       case 'D':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer
         return 'text-red-600 bg-red-50'
       case 'E':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer
         return 'text-yellow-600 bg-yellow-50'
       default:
         return ''
@@ -202,9 +205,11 @@ export function VersionHistoryViewer({
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {change.kind !== 'N' && (
                         <div>
+                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer */}
                           <p className="mb-1 font-semibold text-red-600">
                             {t('afterActions.versions.before')}:
                           </p>
+                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer */}
                           <pre className="overflow-x-auto rounded bg-red-50 p-2 text-xs">
                             {renderDiffValue(change.lhs)}
                           </pre>
@@ -212,9 +217,11 @@ export function VersionHistoryViewer({
                       )}
                       {change.kind !== 'D' && (
                         <div>
+                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer */}
                           <p className="mb-1 font-semibold text-green-600">
                             {t('afterActions.versions.after')}:
                           </p>
+                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer */}
                           <pre className="overflow-x-auto rounded bg-green-50 p-2 text-xs">
                             {renderDiffValue(change.rhs)}
                           </pre>
