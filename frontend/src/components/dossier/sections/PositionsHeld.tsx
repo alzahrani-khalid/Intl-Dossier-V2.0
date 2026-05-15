@@ -66,6 +66,7 @@ function RoleCard({ role, isCurrent, getDisplayValue, formatDateRange, t }: Role
               </div>
 
               {isCurrent && (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionsHeld
                 <Badge className="bg-green-500 text-white flex-shrink-0">
                   {t('sections.person.currentPosition', 'Current')}
                 </Badge>

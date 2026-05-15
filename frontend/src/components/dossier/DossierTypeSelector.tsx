@@ -51,42 +51,49 @@ const dossierTypeOptions: DossierTypeOption[] = [
   {
     type: 'country',
     icon: Globe,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
     colorClass: 'text-blue-600 dark:text-blue-400',
     descriptionKey: 'typeDescription.country',
   },
   {
     type: 'organization',
     icon: Building2,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
     colorClass: 'text-purple-600 dark:text-purple-400',
     descriptionKey: 'typeDescription.organization',
   },
   {
     type: 'person',
     icon: User,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
     colorClass: 'text-teal-600 dark:text-teal-400',
     descriptionKey: 'typeDescription.person',
   },
   {
     type: 'engagement',
     icon: Calendar,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
     colorClass: 'text-orange-600 dark:text-orange-400',
     descriptionKey: 'typeDescription.engagement',
   },
   {
     type: 'forum',
     icon: Users,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
     colorClass: 'text-green-600 dark:text-green-400',
     descriptionKey: 'typeDescription.forum',
   },
   {
     type: 'working_group',
     icon: Briefcase,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
     colorClass: 'text-indigo-600 dark:text-indigo-400',
     descriptionKey: 'typeDescription.working_group',
   },
   {
     type: 'topic',
     icon: Target,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
     colorClass: 'text-pink-600 dark:text-pink-400',
     descriptionKey: 'typeDescription.topic',
   },
@@ -100,7 +107,7 @@ export function DossierTypeSelector({
   disabled = false,
 }: DossierTypeSelectorProps) {
   const { t } = useTranslation(['dossier', 'contextual-help'])
-// Support both value and selectedType props
+  // Support both value and selectedType props
   const currentValue = selectedType ?? value
 
   return (
@@ -203,4 +210,3 @@ export function DossierTypeSelector({
     </div>
   )
 }
-

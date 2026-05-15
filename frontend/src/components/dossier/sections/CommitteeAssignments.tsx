@@ -20,7 +20,7 @@ interface CommitteeAssignmentsProps {
 export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { extension } = dossier
+  const { extension } = dossier
 
   const committees = extension.committee_assignments || []
 
@@ -28,10 +28,13 @@ const { extension } = dossier
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'chair':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments
         return <Crown className="h-4 w-4 text-yellow-500" />
       case 'vice_chair':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments
         return <UserCheck className="h-4 w-4 text-blue-500" />
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments
         return <User className="h-4 w-4 text-gray-500" />
     }
   }
@@ -70,6 +73,7 @@ const { extension } = dossier
         {activeCommittees.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments */}
               <span className="h-2 w-2 rounded-full bg-green-500"></span>
               {t('sections.electedOfficial.activeCommittees')}
             </h3>
@@ -101,6 +105,7 @@ const { extension } = dossier
         {inactiveCommittees.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments */}
               <span className="h-2 w-2 rounded-full bg-gray-400"></span>
               {t('sections.electedOfficial.pastCommittees')}
             </h3>
@@ -139,6 +144,7 @@ const { extension } = dossier
             </div>
             {activeCommittees.some((c) => c.role === 'chair') && (
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments */}
                 <Crown className="h-4 w-4 text-yellow-500" />
                 <span>
                   {t('sections.electedOfficial.chairPositions', {

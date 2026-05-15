@@ -40,10 +40,15 @@ export function ProfessionalProfile({ dossier }: ProfessionalProfileProps) {
   // Get importance badge variant with fallback labels
   const getImportanceBadge = (level?: number) => {
     const variants: Record<number, { label: string; className: string }> = {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProfessionalProfile
       1: { label: t('importance.regular', 'Regular'), className: 'bg-gray-100 text-gray-800' },
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProfessionalProfile
       2: { label: t('importance.important', 'Important'), className: 'bg-blue-100 text-blue-800' },
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProfessionalProfile
       3: { label: t('importance.key', 'Key Contact'), className: 'bg-yellow-100 text-yellow-800' },
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProfessionalProfile
       4: { label: t('importance.vip', 'VIP'), className: 'bg-purple-100 text-purple-800' },
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProfessionalProfile
       5: { label: t('importance.critical', 'Critical'), className: 'bg-red-100 text-red-800' },
     }
     return variants[level || 1] || variants[1]

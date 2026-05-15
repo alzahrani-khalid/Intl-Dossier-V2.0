@@ -20,21 +20,26 @@ interface ContactPreferencesSectionProps {
 export function ContactPreferencesSection({ dossier }: ContactPreferencesSectionProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { extension } = dossier
+  const { extension } = dossier
   const preferences = extension.contact_preferences
 
   // Get channel icon
   const getChannelIcon = (channel?: string) => {
     switch (channel) {
       case 'email':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
         return <Mail className="h-5 w-5 text-blue-500" />
       case 'phone':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
         return <Phone className="h-5 w-5 text-green-500" />
       case 'in_person':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
         return <Users className="h-5 w-5 text-purple-500" />
       case 'formal_letter':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
         return <FileText className="h-5 w-5 text-orange-500" />
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
         return <Mail className="h-5 w-5 text-gray-500" />
     }
   }
@@ -105,6 +110,7 @@ const { extension } = dossier
           {preferences?.best_time && (
             <div className="p-4 rounded-lg bg-muted/50">
               <div className="flex items-center gap-3 mb-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection */}
                 <Clock className="h-5 w-5 text-indigo-500" />
                 <span className="text-sm font-medium text-muted-foreground">
                   {t('sections.electedOfficial.bestTime')}
@@ -123,6 +129,7 @@ const { extension } = dossier
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               {t('sections.electedOfficial.schedulingNotes')}
             </h3>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection */}
             <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900">
               <p className="text-sm leading-relaxed">{schedulingNotes}</p>
             </div>
@@ -135,6 +142,7 @@ const { extension } = dossier
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               {t('sections.electedOfficial.protocolNotes')}
             </h3>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection */}
             <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900">
               <p className="text-sm leading-relaxed">{protocolNotes}</p>
             </div>

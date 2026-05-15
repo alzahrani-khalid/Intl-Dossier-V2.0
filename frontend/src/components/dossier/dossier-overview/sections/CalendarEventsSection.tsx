@@ -47,11 +47,17 @@ function getEventTypeIcon(type: CalendarEventType) {
  */
 function getEventTypeColor(type: CalendarEventType) {
   const colors: Record<CalendarEventType, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
     meeting: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
     deadline: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
     milestone: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
     reminder: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
     engagement: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
     review: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
   }
   return colors[type] || colors.meeting
@@ -197,11 +203,7 @@ function EventCard({
 /**
  * Empty state component
  */
-function EmptyState({
-  type,
-}: {
-  type?: 'upcoming' | 'today' | 'past' | 'all'
-}) {
+function EmptyState({ type }: { type?: 'upcoming' | 'today' | 'past' | 'all' }) {
   const { t } = useTranslation('dossier-overview')
 
   return (

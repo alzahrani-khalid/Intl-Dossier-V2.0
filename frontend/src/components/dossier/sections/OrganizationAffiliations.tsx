@@ -201,6 +201,7 @@ export function OrganizationAffiliations({ dossierId }: OrganizationAffiliations
                           {getAffiliationTypeLabel(affiliation.affiliation_type)}
                         </Badge>
                         {affiliation.is_active ? (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OrganizationAffiliations
                           <CheckCircle className="h-4 w-4 text-green-500" />
                         ) : (
                           <Circle className="h-4 w-4 text-muted-foreground" />

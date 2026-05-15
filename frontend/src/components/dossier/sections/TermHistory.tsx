@@ -20,7 +20,7 @@ interface TermHistoryProps {
 export function TermHistory({ dossier }: TermHistoryProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { extension } = dossier
+  const { extension } = dossier
 
   // Format date for display
   const formatDate = (dateString?: string) => {
@@ -90,8 +90,10 @@ const { extension } = dossier
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {extension.is_current_term ? (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TermHistory
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
               ) : (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TermHistory
                 <Circle className="h-5 w-5 text-gray-400" />
               )}
               <span className="font-medium">

@@ -136,20 +136,28 @@ function CountryFlag({
 function getTypeGradient(type: DossierType): string {
   switch (type) {
     case 'country':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'from-blue-500/90 via-blue-600/80 to-blue-700/70'
     case 'organization':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'from-purple-500/90 via-purple-600/80 to-purple-700/70'
     case 'forum':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'from-green-500/90 via-green-600/80 to-green-700/70'
     case 'engagement':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'from-orange-500/90 via-orange-600/80 to-orange-700/70'
     case 'topic':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'from-pink-500/90 via-pink-600/80 to-pink-700/70'
     case 'working_group':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'from-indigo-500/90 via-indigo-600/80 to-indigo-700/70'
     case 'person':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'from-teal-500/90 via-teal-600/80 to-teal-700/70'
     default:
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'from-gray-500/90 via-gray-600/80 to-gray-700/70'
   }
 }
@@ -160,12 +168,16 @@ function getTypeGradient(type: DossierType): string {
 function getStatusColor(status: DossierStatus): string {
   switch (status) {
     case 'active':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'bg-green-500/90 text-white'
     case 'inactive':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'bg-yellow-500/90 text-white'
     case 'archived':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'bg-gray-500/90 text-white'
     default:
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
       return 'bg-gray-500/90 text-white'
   }
 }
@@ -210,7 +222,7 @@ export function ExpandableDossierCard({
 }: ExpandableDossierCardProps) {
   const { t, i18n } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const id = useId()
+  const id = useId()
   const ref = useRef<HTMLDivElement>(null)
 
   const displayName = isRTL ? dossier.name_ar : dossier.name_en
@@ -240,10 +252,7 @@ const id = useId()
   })
 
   return (
-    <div
-      className={cn('w-full', className)}
-      onMouseEnter={onMouseEnter}
-    >
+    <div className={cn('w-full', className)} onMouseEnter={onMouseEnter}>
       {/* Collapsed State - Clickable Card */}
       <m.div
         layoutId={`card-${dossier.id}-${id}`}
@@ -346,6 +355,7 @@ const id = useId()
               <m.div
                 ref={ref}
                 layoutId={`card-${dossier.id}-${id}`}
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
                 className="w-full max-w-2xl h-full md:h-fit md:max-h-[90vh] flex flex-col bg-white dark:bg-neutral-900 rounded-3xl overflow-hidden shadow-2xl"
               >
                 {/* Close Button */}
@@ -358,9 +368,11 @@ const id = useId()
                   className={cn(
                     'absolute top-4 z-10',
                     'flex items-center justify-center',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard */
                     'bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm',
                     'rounded-full h-8 w-8 sm:h-10 sm:w-10',
                     'shadow-lg',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard */
                     'hover:bg-white dark:hover:bg-neutral-800',
                     'transition-colors duration-200',
                     isRTL ? 'start-4' : 'end-4',
@@ -368,6 +380,7 @@ const id = useId()
                   onClick={onDeactivate}
                   aria-label={t('action.close')}
                 >
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard */}
                   <X className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-700 dark:text-neutral-200" />
                 </m.button>
 
