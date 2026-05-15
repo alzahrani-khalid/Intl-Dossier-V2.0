@@ -7,6 +7,26 @@ import checkFile from 'eslint-plugin-check-file'
 import rtlFriendly from 'eslint-plugin-rtl-friendly'
 import eslintConfigPrettier from 'eslint-config-prettier'
 
+const designTokenSyntaxRestrictions = [
+  {
+    selector: 'Literal[value=/#[0-9a-fA-F]{3,8}\\b/]',
+    message:
+      'Raw hex colors are not allowed in frontend/src. Use a design token (var(--accent), var(--ink), var(--line), ...) or a token-mapped Tailwind utility (text-accent, text-ink, border-line). See frontend/src/index.css @theme block and CLAUDE.md Design rules - non-negotiable.',
+  },
+  {
+    selector:
+      'Literal[value=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]',
+    message:
+      'Tailwind palette literals (text-blue-*, bg-red-*, border-amber-*, ...) are not allowed in frontend/src. Use a token-mapped utility (text-accent, text-danger, text-success, text-warning, text-info, text-ink, bg-surface, border-line) or the semantic-colors.ts map. See frontend/src/index.css @theme block.',
+  },
+  {
+    selector:
+      'TemplateElement[value.raw=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]',
+    message:
+      'Tailwind palette literals are not allowed in frontend/src, including inside template literals. Use a token-mapped utility (text-accent, text-danger, text-success, text-warning, text-info, text-ink, bg-surface, border-line) or the semantic-colors.ts map.',
+  },
+]
+
 export default tseslint.config(
   // ── Global ignores ────────────────────────────────────────────────
   {
@@ -195,23 +215,7 @@ export default tseslint.config(
           selector: 'Literal[value=/\\bborder-r-/]',
           message: 'Use border-e-* instead of border-r-* for RTL support.',
         },
-        {
-          selector: 'Literal[value=/#[0-9a-fA-F]{3,8}\\b/]',
-          message:
-            'Raw hex colors are not allowed in frontend/src. Use a design token (var(--accent), var(--ink), var(--line), ...) or a token-mapped Tailwind utility (text-accent, text-ink, border-line). See frontend/src/index.css @theme block and CLAUDE.md Design rules - non-negotiable.',
-        },
-        {
-          selector:
-            'Literal[value=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]',
-          message:
-            'Tailwind palette literals (text-blue-*, bg-red-*, border-amber-*, ...) are not allowed in frontend/src. Use a token-mapped utility (text-accent, text-danger, text-success, text-warning, text-info, text-ink, bg-surface, border-line) or the semantic-colors.ts map. See frontend/src/index.css @theme block.',
-        },
-        {
-          selector:
-            'TemplateElement[value.raw=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]',
-          message:
-            'Tailwind palette literals are not allowed in frontend/src, including inside template literals. Use a token-mapped utility (text-accent, text-danger, text-success, text-warning, text-info, text-ink, bg-surface, border-line) or the semantic-colors.ts map.',
-        },
+        ...designTokenSyntaxRestrictions,
       ],
     },
   },
@@ -282,6 +286,14 @@ export default tseslint.config(
             'vi.mock(...) factory must spread vi.importActual(<id>). Pattern: async () => ({ ...(await vi.importActual<typeof import("mod")>("mod")), override: ... }). See frontend/docs/test-setup.md §The react-i18next mock contract.',
         },
       ],
+    },
+  },
+
+  // ── Design-token regression fixture: reuse D-05 selectors ────────
+  {
+    files: ['tools/eslint-fixtures/bad-design-token.tsx'],
+    rules: {
+      'no-restricted-syntax': ['warn', ...designTokenSyntaxRestrictions],
     },
   },
 
