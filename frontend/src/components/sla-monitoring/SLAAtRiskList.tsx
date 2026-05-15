@@ -36,7 +36,7 @@ export function SLAAtRiskList({
 }: SLAAtRiskListProps) {
   const { t } = useTranslation('sla')
   const { isRTL } = useDirection()
-const [now, setNow] = useState(Date.now())
+  const [now, setNow] = useState(Date.now())
 
   // Update countdown every minute
   useEffect(() => {
@@ -70,12 +70,16 @@ const [now, setNow] = useState(Date.now())
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'urgent':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList
         return 'bg-red-100 text-red-700 border-red-200'
       case 'high':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList
         return 'bg-orange-100 text-orange-700 border-orange-200'
       case 'medium':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList
         return 'bg-yellow-100 text-yellow-700 border-yellow-200'
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList
         return 'bg-gray-100 text-gray-700 border-gray-200'
     }
   }
@@ -92,6 +96,7 @@ const [now, setNow] = useState(Date.now())
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div>
           <CardTitle className="flex items-center gap-2">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList */}
             <AlertTriangle className="h-5 w-5 text-yellow-500" />
             {t('atRisk.title')}
           </CardTitle>
@@ -118,6 +123,7 @@ const [now, setNow] = useState(Date.now())
                     key={item.entity_id}
                     className={cn(
                       'border rounded-lg p-4 transition-colors cursor-pointer hover:bg-muted/50',
+                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList */
                       isBreached && 'border-red-300 bg-red-50',
                     )}
                     onClick={() => onItemClick?.(item)}
@@ -140,6 +146,7 @@ const [now, setNow] = useState(Date.now())
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">{t('atRisk.slaProgress')}</span>
+                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList */}
                         <span className={cn('font-medium', isBreached && 'text-red-600')}>
                           {item.progress_pct}%
                         </span>
@@ -170,6 +177,7 @@ const [now, setNow] = useState(Date.now())
           </ScrollArea>
         ) : (
           <div className="h-32 flex flex-col items-center justify-center text-muted-foreground">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList */}
             <AlertTriangle className="h-8 w-8 mb-2 text-green-500" />
             <p>{t('atRisk.noItemsAtRisk')}</p>
           </div>

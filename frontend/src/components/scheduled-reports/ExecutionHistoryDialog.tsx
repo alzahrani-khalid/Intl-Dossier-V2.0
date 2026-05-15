@@ -33,17 +33,19 @@ export function ExecutionHistoryDialog({
 }: ExecutionHistoryDialogProps) {
   const { t } = useTranslation('scheduled-reports')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   const { data: executions, isLoading } = useScheduleExecutions(scheduleId)
 
   const getStatusIcon = (status: ReportExecution['status']) => {
     switch (status) {
       case 'completed':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExecutionHistoryDialog
         return <CheckCircle2 className="h-5 w-5 text-green-500" />
       case 'failed':
         return <XCircle className="h-5 w-5 text-destructive" />
       case 'running':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExecutionHistoryDialog
         return <Clock className="h-5 w-5 text-blue-500 animate-pulse" />
       case 'pending':
         return <Clock className="h-5 w-5 text-muted-foreground" />
@@ -116,6 +118,7 @@ const locale = isRTL ? ar : enUS
                   {/* Stats */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 border-t">
                     <div className="flex items-center gap-2">
+                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExecutionHistoryDialog */}
                       <CheckCircle2 className="h-4 w-4 text-green-500" />
                       <div>
                         <p className="text-xs text-muted-foreground">{t('history.successful')}</p>
@@ -156,6 +159,7 @@ const locale = isRTL ? ar : enUS
 
                   {/* Conditions Result */}
                   {execution.conditions_met === false && (
+                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExecutionHistoryDialog
                     <div className="bg-amber-500/10 text-amber-700 dark:text-amber-400 text-sm p-2 rounded">
                       Conditions not met - delivery skipped
                     </div>

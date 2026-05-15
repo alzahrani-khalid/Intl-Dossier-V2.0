@@ -86,7 +86,7 @@ export function SavedReportsList({
 }: SavedReportsListProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<'all' | 'mine' | 'shared' | 'favorites'>('all')
   const [reportToDelete, setReportToDelete] = useState<string | null>(null)
 
@@ -206,6 +206,7 @@ const [search, setSearch] = useState('')
                             {isRTL ? report.nameAr || report.name : report.name}
                           </h4>
                           {report.isFavorite && (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedReportsList
                             <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
                           )}
                         </div>

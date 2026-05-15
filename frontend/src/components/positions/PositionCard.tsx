@@ -38,11 +38,8 @@ export const PositionCard: React.FC<PositionCardProps> = ({
   const locale = isRTL ? ar : enUS
 
   // Get localized title and content - handle both old and new schema
-  const title =
-    (position as any).topic || (isRTL ? position.title_ar : position.title_en)
-  const content =
-    (position as any).rationale ||
-    (isRTL ? position.content_ar : position.content_en)
+  const title = (position as any).topic || (isRTL ? position.title_ar : position.title_en)
+  const content = (position as any).rationale || (isRTL ? position.content_ar : position.content_en)
 
   // Get status from approval object or direct field
   const positionStatus = (position as any).approval?.status || position.status || 'draft'
@@ -81,14 +78,17 @@ export const PositionCard: React.FC<PositionCardProps> = ({
     const config = {
       primary: {
         label: 'Primary',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionCard
         className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
       },
       related: {
         label: 'Related',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionCard
         className: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
       },
       reference: {
         label: 'Reference',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionCard
         className: 'bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
       },
     }
@@ -144,9 +144,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
 
       <CardContent className="pb-3 flex-1 flex flex-col">
         {/* Content Preview */}
-        <p className="line-clamp-3 text-sm text-muted-foreground">
-          {contentPreview}
-        </p>
+        <p className="line-clamp-3 text-sm text-muted-foreground">{contentPreview}</p>
 
         {/* Metadata - Pushed to bottom of CardContent */}
         <div className="mt-auto pt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">

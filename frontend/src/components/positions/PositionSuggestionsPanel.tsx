@@ -61,6 +61,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
         label: t('positions.suggestions.relevance.high'),
         icon: TrendingUp,
         variant: 'default' as const,
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionSuggestionsPanel
         color: 'text-green-600 dark:text-green-400',
       }
     } else if (score >= 0.75) {
@@ -68,6 +69,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
         label: t('positions.suggestions.relevance.medium'),
         icon: Minus,
         variant: 'secondary' as const,
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionSuggestionsPanel
         color: 'text-yellow-600 dark:text-yellow-400',
       }
     } else {
@@ -75,6 +77,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
         label: t('positions.suggestions.relevance.low'),
         icon: TrendingDown,
         variant: 'outline' as const,
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionSuggestionsPanel
         color: 'text-blue-600 dark:text-blue-400',
       }
     }
@@ -213,9 +216,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
                         </div>
 
                         {/* Content Preview */}
-                        <p
-                          className="text-sm text-muted-foreground line-clamp-2"
-                        >
+                        <p className="text-sm text-muted-foreground line-clamp-2">
                           {getPositionPreview(suggestion.position)}
                         </p>
 

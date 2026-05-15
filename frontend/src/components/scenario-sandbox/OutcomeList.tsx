@@ -42,7 +42,7 @@ interface OutcomeListProps {
 export function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: OutcomeListProps) {
   const { t } = useTranslation('scenario-sandbox')
   const { isRTL } = useDirection()
-const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const handleConfirmDelete = () => {
     if (deleteId) {
@@ -86,12 +86,14 @@ const [deleteId, setDeleteId] = useState<string | null>(null)
               <CardTitle className="text-lg">{t('outcome.outcomes')}</CardTitle>
               <div className="flex items-center gap-3 text-sm">
                 {positiveOutcomes.length > 0 && (
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomeList
                   <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
                     <TrendingUp className="h-4 w-4" />
                     <span>{positiveOutcomes.length}</span>
                   </div>
                 )}
                 {negativeOutcomes.length > 0 && (
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomeList
                   <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
                     <TrendingDown className="h-4 w-4" />
                     <span>{negativeOutcomes.length}</span>
@@ -117,11 +119,13 @@ const [deleteId, setDeleteId] = useState<string | null>(null)
                 className="group flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
               >
                 <div
+                  /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomeList */
                   className={`flex h-9 w-9 items-center justify-center rounded-md shrink-0 ${
                     outcome.is_positive
                       ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
                       : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
                   }`}
+                  /* eslint-enable no-restricted-syntax */
                 >
                   {outcome.is_positive ? (
                     <TrendingUp className="h-4 w-4" />
@@ -141,11 +145,13 @@ const [deleteId, setDeleteId] = useState<string | null>(null)
                     </Badge>
                     <Badge
                       variant="secondary"
+                      /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomeList */
                       className={`text-xs ${
                         outcome.is_positive
                           ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                           : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                       }`}
+                      /* eslint-enable no-restricted-syntax */
                     >
                       {outcome.is_positive ? t('outcome.positive') : t('outcome.negative')}
                     </Badge>

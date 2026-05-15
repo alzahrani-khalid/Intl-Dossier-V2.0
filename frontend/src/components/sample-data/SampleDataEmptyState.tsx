@@ -33,7 +33,7 @@ export function SampleDataEmptyState({
 }: SampleDataEmptyStateProps) {
   const { t } = useTranslation('sample-data')
   const { isRTL } = useDirection()
-const [showTemplateSelector, setShowTemplateSelector] = useState(false)
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false)
 
   const handlePopulate = (templateSlug: string) => {
     onPopulate(templateSlug)
@@ -57,7 +57,9 @@ const [showTemplateSelector, setShowTemplateSelector] = useState(false)
             <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
           </div>
           {/* Decorative dots */}
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SampleDataEmptyState */}
           <div className="absolute -top-1 -end-1 h-3 w-3 rounded-full bg-amber-400 animate-pulse" />
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SampleDataEmptyState */}
           <div className="absolute -bottom-1 -start-1 h-2 w-2 rounded-full bg-emerald-400 animate-pulse delay-300" />
         </div>
 

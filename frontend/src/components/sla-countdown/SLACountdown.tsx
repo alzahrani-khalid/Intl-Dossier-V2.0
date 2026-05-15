@@ -130,13 +130,18 @@ export function SLACountdown({
 
   // Get status color based on remaining time percentage
   const getStatusColor = (): string => {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown
     if (isBreached) return 'bg-red-500 text-white'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown
     if (isPaused) return 'bg-gray-400 text-white'
 
     const percentRemaining = (remainingMinutes / targetMinutes) * 100
 
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown
     if (percentRemaining > 25) return 'bg-green-500 text-white'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown
     if (percentRemaining > 10) return 'bg-yellow-500 text-gray-900'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown
     return 'bg-orange-500 text-white'
   }
 
@@ -199,10 +204,12 @@ export function SLACountdown({
     <div className={`sla-countdown ${className}`}>
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown */}
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {eventType === 'acknowledgment' ? t('sla.acknowledgment') : t('sla.resolution')}
           </span>
           {isPaused && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown
             <span className="text-xs text-gray-500 dark:text-gray-400">{t('sla.paused')}</span>
           )}
         </div>
@@ -216,8 +223,10 @@ export function SLACountdown({
       </div>
 
       {/* Progress bar */}
+      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown */}
       <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
         <div
+          /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown */
           className={`h-full transition-all duration-1000 ${
             isBreached
               ? 'bg-red-500'
@@ -225,6 +234,7 @@ export function SLACountdown({
                 ? 'bg-gray-400'
                 : 'bg-gradient-to-r from-green-500 to-green-600'
           }`}
+          /* eslint-enable no-restricted-syntax */
           style={{ width: `${getProgressWidth()}%` }}
           role="progressbar"
           aria-valuenow={getProgressWidth()}
@@ -235,6 +245,7 @@ export function SLACountdown({
 
       {/* Target info and pause controls */}
       <div className="mt-1 flex items-center justify-between">
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown */}
         <div className="text-xs text-gray-500 dark:text-gray-400">
           {t('sla.target')}: {Math.floor(targetMinutes / 60)}h {targetMinutes % 60}m
           {accumulatedPauseMinutes > 0 && (
@@ -249,11 +260,13 @@ export function SLACountdown({
           <button
             onClick={isPaused ? handleResume : handlePauseClick}
             disabled={pauseMutation.isPending || resumeMutation.isPending}
+            /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLACountdown */
             className={`rounded px-2 py-1 text-xs font-medium transition-colors disabled:opacity-50 ${
               isPaused
                 ? 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50'
                 : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:hover:bg-yellow-900/50'
             }`}
+            /* eslint-enable no-restricted-syntax */
             aria-label={isPaused ? t('sla.resume') : t('sla.pause')}
           >
             {pauseMutation.isPending || resumeMutation.isPending ? (

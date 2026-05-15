@@ -53,37 +53,51 @@ const dossierTypeConfig: Record<
 > = {
   country: {
     icon: Globe,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-blue-600 dark:text-blue-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
   },
   organization: {
     icon: Building2,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-purple-600 dark:text-purple-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',
   },
   forum: {
     icon: Users,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-cyan-600 dark:text-cyan-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-cyan-100 dark:bg-cyan-900/30',
   },
   engagement: {
     icon: Briefcase,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-green-600 dark:text-green-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-green-100 dark:bg-green-900/30',
   },
   topic: {
     icon: Target,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-pink-600 dark:text-pink-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-pink-100 dark:bg-pink-900/30',
   },
   working_group: {
     icon: BookOpen,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-amber-600 dark:text-amber-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-amber-100 dark:bg-amber-900/30',
   },
   person: {
     icon: User,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-teal-600 dark:text-teal-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-teal-100 dark:bg-teal-900/30',
   },
 }
@@ -103,49 +117,63 @@ const relatedWorkTypeConfig: Record<
     icon: FileText,
     label_en: 'Position',
     label_ar: 'موقف',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-orange-600 dark:text-orange-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-orange-100 dark:bg-orange-900/30',
   },
   document: {
     icon: FileText,
     label_en: 'Document',
     label_ar: 'وثيقة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-indigo-600 dark:text-indigo-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
   },
   mou: {
     icon: ScrollText,
     label_en: 'MoU',
     label_ar: 'مذكرة تفاهم',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-red-600 dark:text-red-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-red-100 dark:bg-red-900/30',
   },
   engagement: {
     icon: Briefcase,
     label_en: 'Engagement',
     label_ar: 'مشاركة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-green-600 dark:text-green-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-green-100 dark:bg-green-900/30',
   },
   task: {
     icon: ListTodo,
     label_en: 'Task',
     label_ar: 'مهمة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-blue-600 dark:text-blue-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
   },
   commitment: {
     icon: TrendingUp,
     label_en: 'Commitment',
     label_ar: 'التزام',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-purple-600 dark:text-purple-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',
   },
   intake: {
     icon: Folder,
     label_en: 'Request',
     label_ar: 'طلب',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     color: 'text-cyan-600 dark:text-cyan-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     bgColor: 'bg-cyan-100 dark:bg-cyan-900/30',
   },
 }
@@ -153,6 +181,7 @@ const relatedWorkTypeConfig: Record<
 // Loading skeleton for dossier card
 function DossierCardSkeleton() {
   return (
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
       <div className="flex items-start gap-3">
         <Skeleton className="size-12 shrink-0 rounded-lg" />
@@ -177,6 +206,7 @@ function DossierCardSkeleton() {
 // Loading skeleton for related work item
 function WorkItemSkeleton() {
   return (
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
     <div className="rounded-lg border border-gray-200 p-3 dark:border-gray-700">
       <div className="flex items-start gap-3">
         <Skeleton className="size-10 shrink-0 rounded-lg" />
@@ -204,7 +234,7 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
   const { t } = useTranslation('dossier-search')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
-const config = dossierTypeConfig[dossier.type]
+  const config = dossierTypeConfig[dossier.type]
   const Icon = config.icon
 
   const name = isRTL ? dossier.name_ar : dossier.name_en
@@ -224,6 +254,7 @@ const config = dossierTypeConfig[dossier.type]
       const wasMatch = isMatch
       isMatch = !isMatch
       return wasMatch ? (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
         <mark key={key} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
           {part}
         </mark>
@@ -247,8 +278,11 @@ const config = dossierTypeConfig[dossier.type]
     <button
       onClick={handleClick}
       className={cn(
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         'w-full text-start rounded-lg border border-gray-200 p-4 transition-all',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         'hover:border-blue-500 hover:shadow-md dark:border-gray-700 dark:hover:border-blue-400',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
       )}
     >
@@ -286,18 +320,21 @@ const config = dossierTypeConfig[dossier.type]
           </div>
 
           {/* Name */}
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */}
           <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-gray-100">
             {highlightText(name, searchQuery)}
           </h3>
 
           {/* Description */}
           {description && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
             <p className="mb-2 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
               {description}
             </p>
           )}
 
           {/* Key stats */}
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */}
           <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
             {dossier.stats.total_engagements > 0 && (
               <span className="inline-flex items-center gap-1">
@@ -340,6 +377,7 @@ const config = dossierTypeConfig[dossier.type]
                 </Badge>
               ))}
               {dossier.tags.length > 3 && (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
                 <span className="text-xs text-gray-400">+{dossier.tags.length - 3}</span>
               )}
             </div>
@@ -383,6 +421,7 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
       const wasMatch = isMatch
       isMatch = !isMatch
       return wasMatch ? (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
         <mark key={key} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
           {part}
         </mark>
@@ -402,8 +441,11 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
     <button
       onClick={handleClick}
       className={cn(
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         'w-full text-start rounded-lg border border-gray-200 p-3 transition-all',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         'hover:border-blue-500 hover:shadow-md dark:border-gray-700 dark:hover:border-blue-400',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
       )}
     >
@@ -437,7 +479,9 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
             <Badge
               variant="outline"
               className={cn(
+                /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
                 'inline-flex items-center gap-1 border-gray-300 text-xs',
+                /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
                 'dark:border-gray-600',
               )}
             >
@@ -447,6 +491,7 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
 
             {/* Inheritance indicator */}
             {item.inheritance_source && item.inheritance_source !== 'direct' && (
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
               <span className="text-xs text-gray-400">
                 ({t(`inheritance.${item.inheritance_source}`)})
               </span>
@@ -454,11 +499,13 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
           </div>
 
           {/* Title */}
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */}
           <h4 className="mb-1 font-medium text-gray-900 dark:text-gray-100">
             {highlightText(title, searchQuery)}
           </h4>
 
           {/* Metadata row */}
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */}
           <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
             {item.deadline && (
               <span className="inline-flex items-center gap-1">
@@ -472,9 +519,13 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
                 variant="outline"
                 className={cn(
                   'text-xs',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
                   item.priority === 'urgent' && 'border-red-300 text-red-600',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
                   item.priority === 'high' && 'border-orange-300 text-orange-600',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
                   item.priority === 'medium' && 'border-yellow-300 text-yellow-600',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
                   item.priority === 'low' && 'border-gray-300 text-gray-600',
                 )}
               >
@@ -482,6 +533,7 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
               </Badge>
             )}
 
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */}
             {item.status && <span className="text-gray-400">{item.status}</span>}
           </div>
         </div>
@@ -505,13 +557,16 @@ function SectionHeader({ title, count, total, isExpanded, onToggle }: SectionHea
       onClick={onToggle}
       className={cn(
         'flex w-full items-center justify-between rounded-lg px-4 py-3',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         'bg-gray-50 dark:bg-gray-800/50',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         'hover:bg-gray-100 dark:hover:bg-gray-800',
         'transition-colors',
       )}
       aria-expanded={isExpanded}
     >
       <div className="flex items-center gap-2">
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */}
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
         <Badge variant="secondary" className="font-mono">
           {count}
@@ -519,6 +574,7 @@ function SectionHeader({ title, count, total, isExpanded, onToggle }: SectionHea
         </Badge>
       </div>
       <ChevronDown
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */
         className={cn('size-5 text-gray-500 transition-transform', isExpanded && 'rotate-180')}
       />
     </button>
@@ -550,9 +606,11 @@ export function DossierFirstSearchResults({
     return (
       <div className="py-12 text-center">
         <div className="mb-4 text-6xl">🔍</div>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */}
         <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
           {t('empty.title')}
         </h3>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults */}
         <p className="text-gray-600 dark:text-gray-400">{t('empty.description')}</p>
       </div>
     )
@@ -596,6 +654,7 @@ export function DossierFirstSearchResults({
                   <div className="pt-4 text-center">
                     <button
                       onClick={onLoadMoreDossiers}
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
                       className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                     >
                       {t('loadMore.dossiers')}
@@ -605,6 +664,7 @@ export function DossierFirstSearchResults({
               </>
             ) : (
               // No dossiers found
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
               <div className="py-6 text-center text-gray-500 dark:text-gray-400">
                 {t('empty.noDossiers')}
               </div>
@@ -649,6 +709,7 @@ export function DossierFirstSearchResults({
                   <div className="pt-4 text-center">
                     <button
                       onClick={onLoadMoreWork}
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
                       className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                     >
                       {t('loadMore.relatedWork')}
@@ -658,6 +719,7 @@ export function DossierFirstSearchResults({
               </>
             ) : (
               // No related work found
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierFirstSearchResults
               <div className="py-6 text-center text-gray-500 dark:text-gray-400">
                 {t('empty.noRelatedWork')}
               </div>

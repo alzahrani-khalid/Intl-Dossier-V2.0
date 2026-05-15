@@ -247,6 +247,7 @@ export function BotIntegrationsSettings() {
             {/* Hash */}
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center gap-3">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BotIntegrationsSettings */}
                 <div className="p-2 bg-[#4A154B] rounded-lg">
                   <Hash className="h-6 w-6 text-white" />
                 </div>
@@ -270,6 +271,7 @@ export function BotIntegrationsSettings() {
             {/* Teams */}
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center gap-3">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BotIntegrationsSettings */}
                 <div className="p-2 bg-[#5558AF] rounded-lg">
                   <MessageSquare className="h-6 w-6 text-white" />
                 </div>
@@ -365,6 +367,7 @@ function BotLinkCard({
   const { isRTL } = useDirection()
 
   const PlatformIcon = link.platform === 'slack' ? Hash : MessageSquare
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BotIntegrationsSettings
   const platformColor = link.platform === 'slack' ? '#4A154B' : '#5558AF'
 
   return (
