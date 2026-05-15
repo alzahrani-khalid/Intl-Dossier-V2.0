@@ -15,8 +15,8 @@
 
 ### Design-token compliance (DESIGN)
 
-- [ ] **DESIGN-01**: ESLint rule bans raw hex colors (`#[0-9a-fA-F]{3,8}`) in `frontend/src/**/*.{ts,tsx,css}` outside token definition files
-- [ ] **DESIGN-02**: ESLint rule bans Tailwind color literals (`text-blue-*`, `bg-red-*`, `border-green-*`, etc.) in `frontend/src/**/*.{ts,tsx}`; allows token-mapped utilities (`text-bg`, `text-ink`, `text-accent`)
+- [x] **DESIGN-01**: ESLint rule bans raw hex colors (`#[0-9a-fA-F]{3,8}`) in `frontend/src/**/*.{ts,tsx,css}` outside token definition files
+- [x] **DESIGN-02**: ESLint rule bans Tailwind color literals (`text-blue-*`, `bg-red-*`, `border-green-*`, etc.) in `frontend/src/**/*.{ts,tsx}`; allows token-mapped utilities (`text-bg`, `text-ink`, `text-accent`)
 - [ ] **DESIGN-03**: All existing violations fixed (`WorldMapVisualization.tsx:193` raw hex `#3B82F6`, `PositionEditor.tsx` color literals, plus any others surfaced by sweep)
 - [ ] **DESIGN-04**: Workspace `pnpm lint` exits 0 with new rules active; PR-blocking CI context registered on `main`
 
@@ -57,27 +57,27 @@
 
 ## Traceability
 
-| REQ-ID    | Phase    | Status  |
-| --------- | -------- | ------- |
-| TEST-01   | Phase 50 | Pending |
-| TEST-02   | Phase 50 | Pending |
-| TEST-03   | Phase 50 | Pending |
-| TEST-04   | Phase 50 | Pending |
-| DESIGN-01 | Phase 51 | Pending |
-| DESIGN-02 | Phase 51 | Pending |
-| DESIGN-03 | Phase 51 | Pending |
-| DESIGN-04 | Phase 51 | Pending |
-| KANBAN-01 | Phase 52 | Pending |
-| KANBAN-02 | Phase 52 | Pending |
-| KANBAN-03 | Phase 52 | Pending |
-| KANBAN-04 | Phase 52 | Pending |
-| BUNDLE-05 | Phase 53 | Pending |
-| BUNDLE-06 | Phase 53 | Pending |
-| BUNDLE-07 | Phase 53 | Pending |
-| INTEL-01  | Phase 54 | Pending |
-| INTEL-02  | Phase 54 | Pending |
-| INTEL-03  | Phase 54 | Pending |
-| INTEL-04  | Phase 54 | Pending |
-| INTEL-05  | Phase 54 | Pending |
+| REQ-ID    | Phase    | Status   |
+| --------- | -------- | -------- |
+| TEST-01   | Phase 50 | Pending  |
+| TEST-02   | Phase 50 | Pending  |
+| TEST-03   | Phase 50 | Pending  |
+| TEST-04   | Phase 50 | Pending  |
+| DESIGN-01 | Phase 51 | Complete |
+| DESIGN-02 | Phase 51 | Complete |
+| DESIGN-03 | Phase 51 | Pending  |
+| DESIGN-04 | Phase 51 | Pending  |
+| KANBAN-01 | Phase 52 | Pending  |
+| KANBAN-02 | Phase 52 | Pending  |
+| KANBAN-03 | Phase 52 | Pending  |
+| KANBAN-04 | Phase 52 | Pending  |
+| BUNDLE-05 | Phase 53 | Pending  |
+| BUNDLE-06 | Phase 53 | Pending  |
+| BUNDLE-07 | Phase 53 | Pending  |
+| INTEL-01  | Phase 54 | Pending  |
+| INTEL-02  | Phase 54 | Pending  |
+| INTEL-03  | Phase 54 | Pending  |
+| INTEL-04  | Phase 54 | Pending  |
+| INTEL-05  | Phase 54 | Pending  |
 
 **Coverage:** 20/20 v6.3 requirements mapped — every REQ-ID assigned to exactly one phase. No orphans, no duplicates.

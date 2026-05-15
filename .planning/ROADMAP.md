@@ -179,13 +179,13 @@ Plans:
 3. `WorldMapVisualization.tsx:193` raw hex `#3B82F6`, `PositionEditor.tsx` color literals, and any other violations surfaced by the sweep are replaced with token references; `pnpm lint` exits 0 workspace-wide with the new rules active.
 4. A new PR-blocking branch-protection context for design-token compliance is registered on `main` and verified to mark a smoke PR `mergeStateStatus=BLOCKED`.
 
-**Plans:** 4 plans across 3 waves
+**Plans:** 1/4 plans executed
 
 Plans:
 
 **Wave 1**
 
-- [ ] 51-01-rule-activation-tier-b-PLAN.md — ESLint D-05 selectors (hex + palette + TemplateElement) + D-03 Tier-B carve-out + phase-51-base tag + regression fixture (Wave 1; severity ships at `warn`)
+- [x] 51-01-rule-activation-tier-b-PLAN.md — ESLint D-05 selectors (hex + palette + TemplateElement) + D-03 Tier-B carve-out + phase-51-base tag + regression fixture (Wave 1; severity ships at `warn`)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -281,7 +281,7 @@ Phase 54 is independent of Phases 51–53 and may execute in parallel with any o
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50 | v6.3 | 0/0 | Not started | — |
-| 51 | v6.3 | 0/0 | Not started | — |
+| 51 | v6.3 | 1/4 | In Progress|  |
 | 52 | v6.3 | 0/0 | Not started | — |
 | 53 | v6.3 | 0/0 | Not started | — |
 | 54 | v6.3 | 0/0 | Not started | — |
