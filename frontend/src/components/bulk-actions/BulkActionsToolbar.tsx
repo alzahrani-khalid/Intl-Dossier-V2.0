@@ -97,7 +97,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
 }: BulkActionsToolbarProps<T>) {
   const { t } = useTranslation('bulk-actions')
   const { isRTL } = useDirection()
-const { selectedCount, maxReached } = selection
+  const { selectedCount, maxReached } = selection
   const isProcessing = actionState.status === 'processing'
 
   // Don't render if nothing selected
@@ -117,7 +117,9 @@ const { selectedCount, maxReached } = selection
     <div
       className={cn(
         'sticky top-0 z-10 flex flex-col gap-2 p-3 sm:p-4',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */
         'bg-blue-50 border-b border-blue-200',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */
         'dark:bg-blue-950 dark:border-blue-800',
         'sm:flex-row sm:items-center sm:justify-between sm:gap-4',
         className,
@@ -127,11 +129,13 @@ const { selectedCount, maxReached } = selection
     >
       {/* Selection Info */}
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */}
         <span className="text-sm font-medium text-blue-900 dark:text-blue-100 sm:text-base">
           {t('selection.selected', { count: selectedCount })} {entityLabel}
         </span>
 
         {maxReached && (
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar
           <span className="text-xs text-orange-600 dark:text-orange-400 sm:text-sm">
             {t('selection.maxReached')}
           </span>
@@ -143,6 +147,7 @@ const { selectedCount, maxReached } = selection
             size="sm"
             onClick={onSelectAll}
             disabled={disabled || isProcessing}
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar
             className="h-auto p-0 text-blue-600 dark:text-blue-400"
           >
             {t('selection.selectAll')}
@@ -162,6 +167,7 @@ const { selectedCount, maxReached } = selection
             size="sm"
             className={cn(
               'h-10 min-w-10 px-3 text-sm sm:h-11 sm:px-4',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */
               action.isDestructive && 'hover:bg-red-600 hover:text-white',
             )}
             aria-label={t(`actions.${action.id.replace(/-/g, '')}`)}
@@ -198,6 +204,7 @@ const { selectedCount, maxReached } = selection
                     disabled={disabled || isProcessing}
                     className={cn(
                       'gap-2',
+                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */
                       action.isDestructive && 'text-red-600 dark:text-red-400 focus:text-red-600',
                     )}
                   >
@@ -216,6 +223,7 @@ const { selectedCount, maxReached } = selection
           variant="ghost"
           size="sm"
           disabled={isProcessing}
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar
           className="h-10 min-w-10 px-3 sm:h-11 sm:px-4 text-gray-600 dark:text-gray-400"
           aria-label={t('selection.clearSelection')}
         >

@@ -26,11 +26,7 @@ import type {
   OptimisticLockConflict,
   ConflictResolutionStrategy,
 } from '@/hooks/useOptimisticLocking'
-import {
-  getConflictSummary,
-  formatFieldName,
-  formatFieldValue,
-} from '@/hooks/useOptimisticLocking'
+import { getConflictSummary, formatFieldName, formatFieldValue } from '@/hooks/useOptimisticLocking'
 import { AlertTriangle, Server, User, Combine, ArrowRight, Clock, FileWarning } from 'lucide-react'
 import type { JsonValue } from '@/types/common.types'
 import { useDirection } from '@/hooks/useDirection'
@@ -62,8 +58,11 @@ const STRATEGY_ICONS = {
 }
 
 const STRATEGY_COLORS = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog
   use_server: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog
   keep_local: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog
   manual_merge: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
 }
 
@@ -85,10 +84,13 @@ const FieldDiff = memo(function FieldDiff({
       <p className="text-sm font-medium mb-2">{formatFieldName(field)}</p>
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-2 items-center text-sm">
         {/* Your changes */}
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
         <div className="rounded bg-green-50 dark:bg-green-900/20 p-2 border border-green-200 dark:border-green-800">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
           <p className="text-xs text-green-600 dark:text-green-400 mb-1 font-medium">
             {t('yourChanges')}
           </p>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
           <p className="text-green-800 dark:text-green-200 break-words">
             {localStr || <span className="italic text-muted-foreground">{t('empty')}</span>}
           </p>
@@ -100,10 +102,13 @@ const FieldDiff = memo(function FieldDiff({
         </div>
 
         {/* Server state */}
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
         <div className="rounded bg-blue-50 dark:bg-blue-900/20 p-2 border border-blue-200 dark:border-blue-800">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
           <p className="text-xs text-blue-600 dark:text-blue-400 mb-1 font-medium">
             {t('serverState')}
           </p>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
           <p className="text-blue-800 dark:text-blue-200 break-words">
             {serverStr || <span className="italic text-muted-foreground">{t('empty')}</span>}
           </p>
@@ -163,7 +168,7 @@ export function ConflictResolutionDialog({
 }: ConflictResolutionDialogProps) {
   const { t } = useTranslation('collaboration')
   const { isRTL } = useDirection()
-// Get conflict summary for display
+  // Get conflict summary for display
   const summary = useMemo(() => {
     if (!conflict) return null
     return getConflictSummary(conflict)
@@ -197,6 +202,7 @@ export function ConflictResolutionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
         <DialogHeader>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
           <DialogTitle className="flex items-center gap-2 text-amber-600 dark:text-amber-500">
             <FileWarning className="h-5 w-5" />
             {t('conflictDetected')}
@@ -214,6 +220,7 @@ export function ConflictResolutionDialog({
         <ScrollArea className="flex-1 max-h-[300px] pe-4">
           <div className="space-y-3">
             <h4 className="text-sm font-medium flex items-center gap-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
               <AlertTriangle className="h-4 w-4 text-amber-500" />
               {t('conflictingFields', { count: summary.changes.length })}
             </h4>
@@ -279,16 +286,20 @@ export function ConflictBanner({
     <div
       className={cn(
         'flex items-center justify-between gap-3 px-4 py-3 rounded-lg',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */
         'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */
         'text-amber-800 dark:text-amber-200',
         className,
       )}
       role="alert"
     >
       <div className="flex items-center gap-2">
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
         <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-500 shrink-0" />
         <div>
           <p className="text-sm font-medium">{t('conflictDetected')}</p>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
           <p className="text-xs text-amber-600 dark:text-amber-400">
             {t('conflictBannerDescription')}
           </p>
@@ -299,6 +310,7 @@ export function ConflictBanner({
         variant="outline"
         size="sm"
         onClick={onResolve}
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog
         className="shrink-0 border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/40"
       >
         {t('resolveNow')}

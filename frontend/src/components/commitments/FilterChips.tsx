@@ -106,12 +106,14 @@ export function FilterChips({ filters, onRemoveFilter, onClearAll }: FilterChips
       {filters.overdue && (
         <Badge
           variant="secondary"
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterChips
           className="flex items-center gap-1 pe-1 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
         >
           <span>{t('filters.overdue')}</span>
           <button
             type="button"
             onClick={() => onRemoveFilter('overdue')}
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterChips
             className="ms-1 rounded-full hover:bg-red-200 dark:hover:bg-red-800 p-0.5 min-w-6 min-h-6 flex items-center justify-center"
             aria-label={`Remove ${t('filters.overdue')} filter`}
           >
