@@ -78,7 +78,7 @@ interface EscalationReport {
 export function EscalationDashboard() {
   const { t } = useTranslation('assignments')
   const { isRTL } = useDirection()
-// State for filters
+  // State for filters
   const [dateRange, setDateRange] = useState<{ start: Date; end: Date }>({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     end: new Date(),
@@ -232,6 +232,7 @@ export function EscalationDashboard() {
                   className={cn(
                     'flex items-center gap-1',
                     trend.direction === 'up' && 'text-destructive',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EscalationDashboard */
                     trend.direction === 'down' && 'text-green-600',
                   )}
                 >
@@ -400,7 +401,9 @@ export function EscalationDashboard() {
                           assignee.escalation_rate > 20 && 'bg-destructive/20 text-destructive',
                           assignee.escalation_rate <= 20 &&
                             assignee.escalation_rate > 10 &&
+                            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EscalationDashboard */
                             'bg-yellow-500/20 text-yellow-700',
+                          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EscalationDashboard */
                           assignee.escalation_rate <= 10 && 'bg-green-500/20 text-green-700',
                         )}
                       >

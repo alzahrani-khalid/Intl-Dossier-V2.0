@@ -24,7 +24,7 @@ interface DateRangeFilterProps {
 export function DateRangeFilter({ value, onChange, className }: DateRangeFilterProps) {
   const { t } = useTranslation('advanced-search')
   const { isRTL } = useDirection()
-const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const [mode, setMode] = useState<'preset' | 'custom'>(value?.preset ? 'preset' : 'custom')
 
   const presets: DatePreset[] = [
@@ -76,6 +76,7 @@ const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className={cn('flex flex-col gap-2', className)}>
+      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter */}
       <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
         {t('dateRange.title')}
       </label>
@@ -98,6 +99,7 @@ const [isOpen, setIsOpen] = useState(false)
                     e.stopPropagation()
                     handleClear()
                   }}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter
                   className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
                   aria-label={t('dateRange.clear')}
                 >
@@ -149,7 +151,8 @@ const [isOpen, setIsOpen] = useState(false)
                           'w-full text-start px-3 py-2 rounded-md text-sm transition-colors min-h-10',
                           isSelected
                             ? 'bg-primary text-primary-foreground'
-                            : 'hover:bg-gray-100 dark:hover:bg-gray-800',
+                            : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter */
+                              'hover:bg-gray-100 dark:hover:bg-gray-800',
                         )}
                       >
                         {label}
@@ -162,6 +165,7 @@ const [isOpen, setIsOpen] = useState(false)
               {mode === 'custom' && (
                 <div className="flex flex-col gap-3 mt-3">
                   <div>
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter */}
                     <label className="text-xs font-medium text-gray-500 mb-1 block">
                       {t('dateRange.from')}
                     </label>
@@ -173,6 +177,7 @@ const [isOpen, setIsOpen] = useState(false)
                     />
                   </div>
                   <div>
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter */}
                     <label className="text-xs font-medium text-gray-500 mb-1 block">
                       {t('dateRange.to')}
                     </label>

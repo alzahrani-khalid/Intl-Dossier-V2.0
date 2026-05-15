@@ -110,6 +110,7 @@ function FilterOption({ option, isSelected, onClick, isRTL, isLoading }: FilterO
       onClick={onClick}
       className={cn(
         'w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors min-h-10',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdaptiveFilters */
         'text-start hover:bg-gray-100 dark:hover:bg-gray-800',
         isSelected && 'bg-primary/10 text-primary',
       )}
@@ -170,6 +171,7 @@ function FilterSection({
       <CollapsibleTrigger asChild>
         <Button
           variant="ghost"
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdaptiveFilters
           className="w-full justify-between px-3 min-h-11 hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <span className="flex items-center gap-2">
@@ -215,7 +217,7 @@ export function AdaptiveFilters({
 }: AdaptiveFiltersProps) {
   const { t } = useTranslation('enhanced-search')
   const { isRTL } = useDirection()
-// Fetch filter counts
+  // Fetch filter counts
   const { data: filterCounts, isLoading } = useFilterCounts(cacheKey, entityTypes, baseQuery, {
     enabled: true,
   })

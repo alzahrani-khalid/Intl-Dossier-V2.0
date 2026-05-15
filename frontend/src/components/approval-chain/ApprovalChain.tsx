@@ -123,7 +123,7 @@ export function ApprovalChain({
 }: ApprovalChainProps) {
   const { t, i18n } = useTranslation('positions')
   const { isRTL } = useDirection()
-// Extract stages from config
+  // Extract stages from config
   const stages = approvalChainConfig?.stages || []
 
   if (stages.length === 0) {
@@ -141,7 +141,10 @@ export function ApprovalChain({
       <div className="relative">
         {/* Stages */}
         <div
-          className={cn('flex items-start gap-2 overflow-x-auto scrollbar-hide pb-4', isRTL && 'flex-row-reverse')}
+          className={cn(
+            'flex items-start gap-2 overflow-x-auto scrollbar-hide pb-4',
+            isRTL && 'flex-row-reverse',
+          )}
         >
           {stages.map((stage, index) => {
             const stageStatus = getStageStatus(stage.order, currentStage, status)
@@ -159,9 +162,12 @@ export function ApprovalChain({
                       className={cn(
                         'flex h-12 w-12 items-center justify-center rounded-full border-2 transition-all',
                         stageStatus === 'completed' &&
+                          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */
                           'bg-green-100 border-green-600 text-green-700',
                         stageStatus === 'current' &&
+                          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */
                           'bg-blue-100 border-blue-600 text-blue-700 ring-4 ring-blue-100',
+                        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */
                         stageStatus === 'pending' && 'bg-gray-100 border-gray-300 text-gray-400',
                       )}
                       role="img"
@@ -219,6 +225,7 @@ export function ApprovalChain({
                               <TooltipTrigger asChild>
                                 <Badge
                                   variant="outline"
+                                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain
                                   className="gap-1 border-green-600 text-xs text-green-700"
                                 >
                                   <Shield className="size-3" />
@@ -237,6 +244,7 @@ export function ApprovalChain({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
+                                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */}
                                 <div className="flex items-center justify-center gap-1 text-xs text-amber-600">
                                   <Users className="size-3" />
                                   <span>{t('approval.delegated')}</span>
@@ -269,6 +277,7 @@ export function ApprovalChain({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
+                                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */}
                                 <div className="flex items-center justify-center gap-1 text-xs text-purple-600">
                                   <Users className="size-3" />
                                   <span>{t('approval.reassigned')}</span>
@@ -296,6 +305,7 @@ export function ApprovalChain({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
+                                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */}
                                 <div className="flex cursor-help items-center justify-center gap-1 text-xs text-blue-600">
                                   <MessageSquare className="size-3" />
                                   <span>{t('approval.hasComments')}</span>
@@ -373,8 +383,10 @@ export function ApprovalChain({
         </div>
 
         {/* Progress bar */}
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */}
         <div className="relative mt-4 h-1 overflow-hidden rounded-full bg-gray-200">
           <div
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain
             className="absolute top-0 h-full rounded-full bg-blue-600 transition-all duration-500 ease-out"
             style={{
               width: `${((currentStage - 1) / (stages.length - 1)) * 100}%`,
@@ -395,12 +407,14 @@ export function ApprovalChain({
         <div className="mt-4 flex items-center justify-between text-sm">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */}
               <CheckCircle className="size-4 text-green-600" />
               <span className="text-muted-foreground">
                 {t('approval.completed')}: {currentStage - 1}
               </span>
             </div>
             <div className="flex items-center gap-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApprovalChain */}
               <Clock className="size-4 text-blue-600" />
               <span className="text-muted-foreground">
                 {t('approval.remaining')}: {stages.length - currentStage + 1}

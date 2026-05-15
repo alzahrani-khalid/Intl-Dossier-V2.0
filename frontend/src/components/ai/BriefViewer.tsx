@@ -77,9 +77,13 @@ ${brief.recommendations || ''}
   }
 
   const statusColors = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefViewer
     completed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefViewer
     partial: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefViewer
     failed: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefViewer
     generating: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
   }
 

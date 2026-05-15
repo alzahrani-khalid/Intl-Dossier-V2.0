@@ -22,9 +22,13 @@ export function KanbanTaskCard({ assignment }: KanbanTaskCardProps) {
 
   const slaStatus = getSLAStatus()
   const slaColors: Record<string, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanTaskCard
     overdue: 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-950',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanTaskCard
     urgent: 'text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-950',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanTaskCard
     warning: 'text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-950',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanTaskCard
     normal: 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950',
   }
 
