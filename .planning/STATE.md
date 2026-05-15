@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
-status: executing
-stopped_at: Phase 51 UI-SPEC approved
-last_updated: '2026-05-15T18:38:24.460Z'
-last_activity: 2026-05-15
+status: completed
+stopped_at: Phase 51 complete (design-token compliance gate sealed)
+last_updated: '2026-05-16T00:00:00.000Z'
+last_activity: 2026-05-16 -- Phase 51 sealed (commit 6a7c66dc)
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 31
-  completed_plans: 28
-  percent: 90
+  completed_plans: 31
+  percent: 100
 ---
 
 # Project State
@@ -25,40 +25,33 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 
 ## Current Position
 
-Phase: 51 (design-token-compliance-gate) — EXECUTING
-Plan: 2 of 4
-Status: Ready to execute
-Last activity: 2026-05-15
+Phase: 51 — COMPLETE (design-token compliance gate sealed)
+Plan: 4 of 4
+Status: Milestone v6.3 — all 5 phases complete, 31/31 plans sealed
+Last activity: 2026-05-16 -- Phase 51 sealed at commit 6a7c66dc
 
 ## Current Blocker
 
-Plan 50-05 Task 3 remains blocked on the explicit human-verify branch-protection and smoke-PR checkpoint. The code-side work is committed at `720d135a`:
+None — Phase 51 sealed. Plan 50-05 Task 3 follow-up superseded by Phase 51 smoke-PR evidence and the live `main` branch-protection re-verification captured in 51-SUMMARY.md (pre/post JSON byte-identical, MD5 `4ed9db6d47e9a49d2bdb501a8a5c18ac`).
 
-- `.github/workflows/ci.yml` replaces the old aggregate `Unit Tests` job with `Tests (frontend)`, `Tests (backend)`, and advisory `Tests (integration)`.
-- `eslint.config.mjs` adds the D-15 mock-factory guard for the global frontend test harness plus the bad fixture.
-- `scripts/lint.mjs` preserves workspace `pnpm lint` and enables `pnpm lint <path>` for targeted D-15 verification.
-- `tools/eslint-fixtures/bad-vi-mock.ts` is the expected-failing regression fixture.
+## Phase 51 Close Summary
 
-Read-only GitHub state at stop: `main` branch protection has `enforce_admins=true` and required contexts `type-check`, `Security Scan`, `Lint`, and `Bundle Size Check (size-limit)`. Do not add `Tests (frontend)` / `Tests (backend)` until both new jobs are green on GitHub at least once. Do not add `Tests (integration)` to required contexts.
-
-Latest local gates:
-
-- `pnpm --filter intake-frontend test --run` — `Test Files 154 passed | 4 skipped (158)`, `Tests 1219 passed | 25 todo (1244)`.
-- `pnpm --filter intake-backend test --run` — `Test Files 15 passed (15)`, `Tests 214 passed (214)`.
-- `pnpm lint` — exits 0.
-- `pnpm lint tools/eslint-fixtures/bad-vi-mock.ts` — exits 1 with the D-15 message, as intended.
-
-Handoff details are in `.planning/phases/50-test-infrastructure-repair/.continue-here.md`.
+- All 4 ROADMAP success criteria delivered (DESIGN-01..04).
+- D-05 selectors at `'error'` severity in `eslint.config.mjs`; workspace `pnpm lint --max-warnings 0` exits 0.
+- 271 Tier-C files annotated with per-Literal `eslint-disable-next-line` (2336 violations / 2245 disable lines after multi-Literal-on-one-line reconciliation).
+- Smoke PR #12 (closed, branch deleted): `Lint=FAILURE`, `mergeStateStatus=BLOCKED` (settled post-CI from BEHIND).
+- 7 user-approved deviations + 4 follow-ups documented in 51-SUMMARY.md §8 and §9.
 
 ## Next Action
 
-Continue Plan 50-05 Task 3:
+Open follow-ups recorded in 51-SUMMARY.md §9:
 
-1. Push/land commit `720d135a` through the intended review path.
-2. Verify GitHub Actions shows `Tests (frontend)` and `Tests (backend)` green on that commit.
-3. Capture current branch-protection pre-state.
-4. PUT branch protection preserving existing settings and adding required contexts `Tests (frontend)` and `Tests (backend)`.
-5. Run the smoke PR proof and write `50-05-SUMMARY.md`.
+1. Fix pre-existing test-assertion drift in `SLAIndicator.test.tsx` + `TaskCard.test.tsx` (palette literal → token utility class assertions).
+2. Promote Tier-C cleanup placeholders (`TBD-design-token-tier-c-cleanup-wave-N`) to roadmap entries.
+3. Optional: re-validate smoke gate from `main` after DesignV2 merges, upgrading evidence from BEHIND→BLOCKED capture path.
+4. Wire bad-fixture positive-failure CI check.
+
+Milestone v6.3 is now complete. Next milestone (v7.0) per ROADMAP.
 
 ### Outstanding follow-ups (small)
 
