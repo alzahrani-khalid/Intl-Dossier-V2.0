@@ -269,10 +269,15 @@ export const COUNTRY_COORDINATES: Record<string, GeoCoordinates> = {
  * Get color for intensity level
  */
 export const INTENSITY_COLORS: Record<EngagementIntensity, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   none: '#E5E7EB', // gray-200
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   low: '#93C5FD', // blue-300
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   medium: '#3B82F6', // blue-500
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   high: '#1D4ED8', // blue-700
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   very_high: '#1E3A8A', // blue-900
 }
 
@@ -280,10 +285,15 @@ export const INTENSITY_COLORS: Record<EngagementIntensity, string> = {
  * Get region colors for map
  */
 export const REGION_COLORS: Record<CountryRegion, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   africa: '#F59E0B', // amber-500
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   americas: '#10B981', // emerald-500
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   asia: '#3B82F6', // blue-500
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   europe: '#8B5CF6', // violet-500
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
   oceania: '#EC4899', // pink-500
 }
 

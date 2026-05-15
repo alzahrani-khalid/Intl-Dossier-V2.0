@@ -225,12 +225,15 @@ export function getRoleBadgeColor(role: MemberRole): string {
     case 'vice_chair':
       return 'bg-primary/80 text-primary-foreground'
     case 'secretary':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#wg-member-suggestion.types
       return 'bg-blue-500 text-white'
     case 'advisor':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#wg-member-suggestion.types
       return 'bg-amber-500 text-white'
     case 'observer':
       return 'bg-muted text-muted-foreground'
     case 'liaison':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#wg-member-suggestion.types
       return 'bg-purple-500 text-white'
     default:
       return 'bg-secondary text-secondary-foreground'

@@ -198,7 +198,9 @@ export const CHANGE_TYPE_CONFIG: Record<ChangeType, ChangeTypeConfig> = {
     type: 'create',
     label_en: 'Created',
     label_ar: 'تم الإنشاء',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     color: 'text-green-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     bgColor: 'bg-green-100 dark:bg-green-900/30',
     icon: 'Plus',
   },
@@ -206,7 +208,9 @@ export const CHANGE_TYPE_CONFIG: Record<ChangeType, ChangeTypeConfig> = {
     type: 'update',
     label_en: 'Updated',
     label_ar: 'تم التحديث',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     color: 'text-blue-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
     icon: 'Edit3',
   },
@@ -214,7 +218,9 @@ export const CHANGE_TYPE_CONFIG: Record<ChangeType, ChangeTypeConfig> = {
     type: 'delete',
     label_en: 'Deleted',
     label_ar: 'تم الحذف',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     color: 'text-red-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     bgColor: 'bg-red-100 dark:bg-red-900/30',
     icon: 'Trash2',
   },
@@ -222,7 +228,9 @@ export const CHANGE_TYPE_CONFIG: Record<ChangeType, ChangeTypeConfig> = {
     type: 'rollback',
     label_en: 'Rolled Back',
     label_ar: 'تم الاستعادة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     color: 'text-amber-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     bgColor: 'bg-amber-100 dark:bg-amber-900/30',
     icon: 'RotateCcw',
   },
@@ -240,24 +248,28 @@ export const FIELD_CATEGORY_CONFIG: Record<FieldCategory, FieldCategoryConfig> =
     category: 'base',
     label_en: 'Core Fields',
     label_ar: 'الحقول الأساسية',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     color: 'text-gray-600',
   },
   extension: {
     category: 'extension',
     label_en: 'Extended Fields',
     label_ar: 'الحقول الموسعة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     color: 'text-purple-600',
   },
   metadata: {
     category: 'metadata',
     label_en: 'Metadata',
     label_ar: 'البيانات الوصفية',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     color: 'text-gray-400',
   },
   relationship: {
     category: 'relationship',
     label_en: 'Relationships',
     label_ar: 'العلاقات',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
     color: 'text-indigo-600',
   },
 }

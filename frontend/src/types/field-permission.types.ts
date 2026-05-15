@@ -288,8 +288,12 @@ export const SENSITIVITY_LEVEL_CONFIG: {
   label_ar: string
   color: string
 }[] = [
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permission.types
   { value: 'low', label_en: 'Low', label_ar: 'منخفض', color: 'text-green-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permission.types
   { value: 'medium', label_en: 'Medium', label_ar: 'متوسط', color: 'text-yellow-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permission.types
   { value: 'high', label_en: 'High', label_ar: 'عالي', color: 'text-orange-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permission.types
   { value: 'critical', label_en: 'Critical', label_ar: 'حرج', color: 'text-red-600' },
 ]
