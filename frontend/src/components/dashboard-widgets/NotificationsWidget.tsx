@@ -60,22 +60,30 @@ function getCategoryColor(category: NotificationCategory) {
   switch (category) {
     case 'task-assigned':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationsWidget
         bg: 'bg-blue-100 dark:bg-blue-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationsWidget
         text: 'text-blue-600 dark:text-blue-400',
       }
     case 'deadline-approaching':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationsWidget
         bg: 'bg-amber-100 dark:bg-amber-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationsWidget
         text: 'text-amber-600 dark:text-amber-400',
       }
     case 'status-change':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationsWidget
         bg: 'bg-green-100 dark:bg-green-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationsWidget
         text: 'text-green-600 dark:text-green-400',
       }
     case 'mention':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationsWidget
         bg: 'bg-purple-100 dark:bg-purple-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationsWidget
         text: 'text-purple-600 dark:text-purple-400',
       }
     case 'system':
@@ -189,7 +197,7 @@ export function NotificationsWidget({
 }: NotificationsWidgetProps) {
   const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-const locale = isRTL ? 'ar-SA' : 'en-US'
+  const locale = isRTL ? 'ar-SA' : 'en-US'
 
   const { settings } = config
 

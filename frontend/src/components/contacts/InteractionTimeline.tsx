@@ -69,14 +69,19 @@ function getTypeIcon(type: string) {
 function getTypeColor(type: string): string {
   switch (type) {
     case 'meeting':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InteractionTimeline
       return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
     case 'email':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InteractionTimeline
       return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
     case 'call':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InteractionTimeline
       return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
     case 'conference':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InteractionTimeline
       return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
     default:
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InteractionTimeline
       return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
   }
 }
@@ -261,7 +266,7 @@ export function InteractionTimeline({
 }: InteractionTimelineProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   const { data: notes, isLoading, error } = useInteractionNotes(contactId)
   const deleteNoteMutation = useDeleteNote()
@@ -279,9 +284,7 @@ const locale = isRTL ? ar : enUS
 
   if (isLoading) {
     return (
-      <div
-        className={cn('flex items-center justify-center py-8', className)}
-      >
+      <div className={cn('flex items-center justify-center py-8', className)}>
         <div className="flex flex-col items-center gap-2">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
           <p className="text-sm text-muted-foreground">
@@ -304,9 +307,7 @@ const locale = isRTL ? ar : enUS
 
   if (!notes || notes.length === 0) {
     return (
-      <div
-        className={cn('flex flex-col items-center justify-center py-12 text-center', className)}
-      >
+      <div className={cn('flex flex-col items-center justify-center py-12 text-center', className)}>
         <FileText className="w-12 h-12 text-muted-foreground/50 mb-4" />
         <h3 className="text-base font-medium mb-2">
           {t('contactDirectory.interactions.no_notes_title')}

@@ -67,18 +67,28 @@ export function ConsistencyPanel({
 
   // Get consistency score color and label
   const getScoreColor = (score: number): string => {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     if (score >= 90) return 'text-green-600'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     if (score >= 75) return 'text-blue-600'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     if (score >= 60) return 'text-amber-600'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     if (score >= 40) return 'text-orange-600'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     return 'text-red-600'
   }
 
   const getScoreBackgroundColor = (score: number): string => {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     if (score >= 90) return 'bg-green-50'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     if (score >= 75) return 'bg-blue-50'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     if (score >= 60) return 'bg-amber-50'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     if (score >= 40) return 'bg-orange-50'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
     return 'bg-red-50'
   }
 
@@ -243,22 +253,30 @@ export function ConsistencyPanel({
 
         {/* Conflicts Section */}
         {!hasConflicts ? (
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel
           <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
             <CheckCircle className="size-5 shrink-0 text-green-600" />
             <div>
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
               <p className="text-sm font-medium text-green-900">{t('consistency.noConflicts')}</p>
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
               <p className="text-xs text-green-700">{t('consistency.noConflictsDescription')}</p>
             </div>
           </div>
         ) : (
           <div className="space-y-3">
             {/* Conflicts Header */}
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
             <div className="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
               <AlertTriangle className="size-5 shrink-0 text-amber-600" />
               <div>
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
                 <p className="text-sm font-medium text-amber-900">
                   {t('consistency.conflictsFound')} ({consistencyCheck.conflicts.length})
                 </p>
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
                 <p className="text-xs text-amber-700">
                   {t('consistency.conflictsFoundDescription')}
                 </p>
@@ -319,10 +337,13 @@ export function ConsistencyPanel({
                         )}
 
                         {/* Suggested Resolution */}
+                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
                         <div className="rounded-md border border-blue-200 bg-blue-50 p-3">
+                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
                           <p className="mb-1 text-xs font-medium text-blue-900">
                             {t('consistency.conflict.suggestedResolution')}
                           </p>
+                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConsistencyPanel */}
                           <p className="text-sm text-blue-800">{conflict.suggested_resolution}</p>
                         </div>
 

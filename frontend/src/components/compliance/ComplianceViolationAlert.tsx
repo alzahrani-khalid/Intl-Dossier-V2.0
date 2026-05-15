@@ -63,7 +63,7 @@ export function ComplianceViolationAlert({
 }: ComplianceViolationAlertProps) {
   const { t } = useTranslation('compliance')
   const { isRTL } = useDirection()
-const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const severityColors = SEVERITY_COLORS[violation.severity]
   const statusColors = VIOLATION_STATUS_COLORS[violation.status]
@@ -180,6 +180,7 @@ const [isOpen, setIsOpen] = useState(false)
                 {violation.rule?.requires_signoff && (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <FileCheck className="h-4 w-4" />
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ComplianceViolationAlert */}
                     <span className="font-medium text-orange-600 dark:text-orange-400">
                       {t('violations.requiresSignoff')}
                     </span>
@@ -229,7 +230,9 @@ const [isOpen, setIsOpen] = useState(false)
                 (isRTL
                   ? violation.rule.remediation_instructions_ar
                   : violation.rule.remediation_instructions_en) && (
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ComplianceViolationAlert
                   <div className="rounded-md bg-blue-50 dark:bg-blue-900/20 p-3 border border-blue-200 dark:border-blue-800">
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ComplianceViolationAlert */}
                     <p className="text-sm text-blue-700 dark:text-blue-300">
                       {isRTL
                         ? violation.rule.remediation_instructions_ar
@@ -269,5 +272,3 @@ const [isOpen, setIsOpen] = useState(false)
     </Card>
   )
 }
-
-

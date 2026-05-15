@@ -237,6 +237,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                 </div>
               ) : allViolations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ComplianceRulesManager */}
                   <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
                   <h3 className="text-lg font-medium">{t('violations.noViolations')}</h3>
                   <p className="text-muted-foreground mt-1">

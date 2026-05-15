@@ -66,17 +66,23 @@ function getSourceColor(source: TaskItem['source']) {
   switch (source) {
     case 'commitment':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskListWidget
         bg: 'bg-blue-100 dark:bg-blue-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskListWidget
         text: 'text-blue-600 dark:text-blue-400',
       }
     case 'task':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskListWidget
         bg: 'bg-green-100 dark:bg-green-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskListWidget
         text: 'text-green-600 dark:text-green-400',
       }
     case 'intake':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskListWidget
         bg: 'bg-purple-100 dark:bg-purple-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskListWidget
         text: 'text-purple-600 dark:text-purple-400',
       }
     default:
