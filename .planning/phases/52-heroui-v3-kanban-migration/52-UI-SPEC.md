@@ -1,12 +1,13 @@
 ---
 phase: 52
 slug: heroui-v3-kanban-migration
-status: draft
+status: approved
 shadcn_initialized: true
 preset: existing (frontend/components.json — style: new-york, baseColor: neutral)
 direction: bureau
 created: 2026-05-16
 revised: 2026-05-16 (typography + spacing reconciliation per checker BLOCK)
+reviewed_at: 2026-05-16T00:00:00Z
 ---
 
 # Phase 52 — UI Design Contract
