@@ -190,7 +190,7 @@ export function WorldMapVisualization({
               <WorldMap
                 dots={dots}
                 markers={markers}
-                lineColor="#3B82F6"
+                lineColor="var(--accent)"
                 theme="light"
                 showLabels={countries.length < 20}
                 animateConnections={connections.length < 50}
