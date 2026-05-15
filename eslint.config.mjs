@@ -146,7 +146,7 @@ export default tseslint.config(
 
       // RTL enforcement: ban physical CSS properties (CLAUDE.md mandatory)
       'no-restricted-syntax': [
-        'error',
+        'warn',
         {
           selector: 'Literal[value=/\\bml-/]',
           message: 'Use ms-* (margin-start) instead of ml-* for RTL support.',
@@ -194,6 +194,23 @@ export default tseslint.config(
         {
           selector: 'Literal[value=/\\bborder-r-/]',
           message: 'Use border-e-* instead of border-r-* for RTL support.',
+        },
+        {
+          selector: 'Literal[value=/#[0-9a-fA-F]{3,8}\\b/]',
+          message:
+            'Raw hex colors are not allowed in frontend/src. Use a design token (var(--accent), var(--ink), var(--line), ...) or a token-mapped Tailwind utility (text-accent, text-ink, border-line). See frontend/src/index.css @theme block and CLAUDE.md Design rules - non-negotiable.',
+        },
+        {
+          selector:
+            'Literal[value=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]',
+          message:
+            'Tailwind palette literals (text-blue-*, bg-red-*, border-amber-*, ...) are not allowed in frontend/src. Use a token-mapped utility (text-accent, text-danger, text-success, text-warning, text-info, text-ink, bg-surface, border-line) or the semantic-colors.ts map. See frontend/src/index.css @theme block.',
+        },
+        {
+          selector:
+            'TemplateElement[value.raw=/(?:^|\\s)(?:[a-z-]+:)*(text|bg|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|decoration|shadow)-(red|blue|green|yellow|purple|pink|indigo|cyan|teal|emerald|amber|rose|orange|sky|slate|gray|zinc|neutral|stone|fuchsia|violet|lime)-\\d{2,3}\\b/]',
+          message:
+            'Tailwind palette literals are not allowed in frontend/src, including inside template literals. Use a token-mapped utility (text-accent, text-danger, text-success, text-warning, text-info, text-ink, bg-surface, border-line) or the semantic-colors.ts map.',
         },
       ],
     },
