@@ -190,7 +190,7 @@ Plans:
 **Wave 2** _(blocked on Wave 1 completion)_
 
 - [ ] 51-02-tier-a-named-anchors-PLAN.md — Tier-A swap WorldMapVisualization.tsx + PositionEditor.tsx with visual-parity verification (Wave 2; parallel with 51-03)
-- [ ] 51-03-tier-a-mechanical-sweep-PLAN.md — Tier-A mechanical sweep ~80-120 files + 51-DESIGN-AUDIT.md scaffold (Wave 2; parallel with 51-02)
+- [ ] 51-03-tier-a-mechanical-sweep-PLAN.md — Tier-A mechanical sweep ~80-120 files + 51-DESIGN-AUDIT.md scaffold (Wave 2; parallel with 51-03)
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
@@ -209,8 +209,18 @@ Plans:
 2. A user can open `EngagementKanbanDialog` and perform the same drag/drop/column transitions/keyboard parity as the Tasks tab.
 3. `@/components/kibo-ui/kanban` directory and the kibo-ui npm dependency are deleted from the repo; `no-restricted-imports` bans both `kibo-ui` and the deleted local path; `pnpm lint` and `pnpm type-check` exit 0.
 4. EN + AR Playwright visual baselines for both Kanban surfaces are regenerated, human-reviewed, and committed; Kanban Playwright specs pass green in CI.
-   **Plans:** TBD
-   **UI hint:** yes
+
+**Plans:** 5 plans across 5 waves
+
+Plans:
+
+- [ ] 52-01-PLAN.md — Wave-0 test scaffolds (vitest stubs + 8 Playwright spec skeletons + ESLint regression fixture) (Wave 1)
+- [ ] 52-02-PLAN.md — Build new shared `frontend/src/components/kanban/*` primitive (5 components + barrel; native DragOverlay; WorkBoard sensor stack) (Wave 2)
+- [ ] 52-03-PLAN.md — Consumer migration (TasksTab + EngagementKanbanDialog import swap; STAGE_COLORS deletion; KanbanTaskCard Tier-C absorption) (Wave 3)
+- [ ] 52-04-PLAN.md — kibo-ui directory deletion + tunnel-rat removal + ESLint widen + check-deleted-components update + Phase 51 audit row closeout (Wave 4)
+- [ ] 52-05-PLAN.md — 8 visual baselines (EN+AR × 1280+768) + axe-core a11y + 12-spec regression anchor + human-verify checkpoint + 52-SUMMARY.md (Wave 5; one human-verify checkpoint)
+
+**UI hint:** yes
 
 ### Phase 53: Bundle Tightening + Tag Provenance
 
@@ -282,7 +292,7 @@ Phase 54 is independent of Phases 51–53 and may execute in parallel with any o
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50 | v6.3 | 0/0 | Not started | — |
 | 51 | v6.3 | 1/4 | In Progress|  |
-| 52 | v6.3 | 0/0 | Not started | — |
+| 52 | v6.3 | 0/5 | Planned | — |
 | 53 | v6.3 | 0/0 | Not started | — |
 | 54 | v6.3 | 0/0 | Not started | — |
 
@@ -290,4 +300,4 @@ Phase 54 is independent of Phases 51–53 and may execute in parallel with any o
 
 ---
 
-_Roadmap last updated: 2026-05-13 — v6.3 Carryover Sweep & v7.0 Prep planned (Phases 50-54). Phase numbering continues from v6.2._
+_Roadmap last updated: 2026-05-16 — Phase 52 planned (5 plans across 5 waves)._
