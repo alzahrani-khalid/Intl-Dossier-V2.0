@@ -237,6 +237,35 @@ export default tseslint.config(
     },
   },
 
+  // ── Design-token Tier-B carve-out (Phase 51 D-03 / D-13) ─────────
+  // Permanent design statements: token-definition and bootstrap files where
+  // raw hex is the design value, signature-visual flag SVGs, and chart / graph
+  // palettes that need a future chart-token phase rather than ad hoc swaps.
+  {
+    files: [
+      'frontend/src/design-system/tokens/directions.ts',
+      'frontend/public/bootstrap.js',
+      'frontend/src/components/signature-visuals/flags/**/*.{tsx,ts}',
+      'frontend/src/components/analytics/CommitmentFulfillmentChart.tsx',
+      'frontend/src/components/analytics/RelationshipHealthChart.tsx',
+      'frontend/src/components/analytics/WorkloadDistributionChart.tsx',
+      'frontend/src/components/analytics/EngagementMetricsChart.tsx',
+      'frontend/src/components/analytics/AnalyticsPreviewOverlay.tsx',
+      'frontend/src/components/analytics/ClusterVisualization.tsx',
+      'frontend/src/components/analytics/sample-data.ts',
+      'frontend/src/components/dashboard-widgets/ChartWidget.tsx',
+      'frontend/src/components/sla-monitoring/SLAComplianceChart.tsx',
+      'frontend/src/components/stakeholder-influence/InfluenceMetricsPanel.tsx',
+      'frontend/src/components/stakeholder-influence/InfluenceReport.tsx',
+      'frontend/src/components/relationships/RelationshipGraph.tsx',
+      'frontend/src/components/dossier/MiniRelationshipGraph.tsx',
+      'frontend/src/components/report-builder/ReportPreview.tsx',
+    ],
+    rules: {
+      'no-restricted-syntax': 'off',
+    },
+  },
+
   // ── Test mocks: require importActual spread for vi.mock factories ─
   {
     files: [
