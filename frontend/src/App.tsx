@@ -51,6 +51,7 @@ function App() {
                       <Toaster position="top-right" />
                       <SonnerToaster position="top-right" richColors closeButton />
                       <TweaksDrawer />
+                      <div className="bg-red-500">smoke</div>
                     </RTLWrapper>
                   </LazyMotion>
                 </LanguageProvider>
