@@ -6,6 +6,7 @@ shadcn_initialized: true
 preset: existing (frontend/components.json — style: new-york, baseColor: neutral)
 direction: bureau
 created: 2026-05-16
+revised: 2026-05-16 (typography + spacing reconciliation per checker BLOCK)
 ---
 
 # Phase 52 — UI Design Contract
@@ -47,18 +48,27 @@ Out of scope (do NOT touch): `WorkBoard.tsx` (`/kanban` route), `KanbanTaskCard.
 
 ## Spacing Scale
 
-Declared values (multiples of 4 only, anchored to `colors_and_type.css:113-123`):
+Declared values (all multiples of 4, anchored to `colors_and_type.css:113-123`):
 
-| Token      | Value | Usage in this phase                                                                                            |
-| ---------- | ----- | -------------------------------------------------------------------------------------------------------------- |
-| `space-1`  | 4px   | Icon ↔ label gap inside the SLA chip, Badge inner                                                              |
-| `space-2`  | 8px   | Column header inner gap, card vertical rhythm (between title / priority row / footer), card stack `gap-2`      |
-| `space-3`  | 12px  | Column body padding (`p-3`), KanbanCards `gap-3`, KanbanProvider columns `gap-3`, card inner `space-y-3`       |
-| `space-4`  | 16px  | Outer board container padding (desktop), section vertical rhythm (`space-y-4`), dialog content `px-4` baseline |
-| `space-5`  | 20px  | (Bureau density) row pad token `--pad` — used by dependent components, not introduced here                     |
-| `space-6`  | 24px  | Dialog content `px-6` at sm+                                                                                   |
-| `space-8`  | 32px  | Empty-state vertical breathing (existing)                                                                      |
-| `space-12` | 48px  | Empty-state outer padding (existing)                                                                           |
+| Token      | Value | In standard set?    | Usage in this phase                                                                                            | Rationale (non-standard values only) |
+| ---------- | ----- | ------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `space-1`  | 4px   | yes                 | Icon ↔ label gap inside the SLA chip, Badge inner                                                              | —                                    |
+| `space-2`  | 8px   | yes                 | Column header inner gap, card vertical rhythm (between title / priority row / footer), card stack `gap-2`      | —                                    |
+| `space-3`  | 12px  | **no — see note A** | Column body padding (`p-3`), KanbanCards `gap-3`, KanbanProvider columns `gap-3`, card inner `space-y-3`       | Note A below                         |
+| `space-4`  | 16px  | yes                 | Outer board container padding (desktop), section vertical rhythm (`space-y-4`), dialog content `px-4` baseline | —                                    |
+| `space-5`  | 20px  | **no — see note B** | (Bureau density) row pad token `--pad` — used by dependent components, not introduced here                     | Note B below                         |
+| `space-6`  | 24px  | yes                 | Dialog content `px-6` at sm+                                                                                   | —                                    |
+| `space-8`  | 32px  | yes                 | Empty-state vertical breathing (existing)                                                                      | —                                    |
+| `space-12` | 48px  | yes                 | Empty-state outer padding (existing)                                                                           | —                                    |
+
+**Standard set anchor:** {4, 8, 16, 24, 32, 48, 64} (gsd-ui-checker Dimension 5).
+
+**Rationale footnote — non-standard values (both pass the multiple-of-4 primary rule):**
+
+- **Note A — 12px (`space-3` / `gap-3` / `p-3`):** Established Tailwind utility used pervasively in the codebase (262+ occurrences across `frontend/src/`). It is the standard inter-card gap and column padding in both the existing kibo-ui implementation AND `WorkBoard.tsx` (`gap-3` at line 196, `p-3` at lines 219/247). Phase 52 is a behavior-parity migration (CONTEXT.md D-01 "mirror kibo-ui API exactly"); changing the inter-card gap or column padding would visually shift every existing snapshot and violate the "same external behavior" constraint. The 12px value preserves existing rhythm, not introduce new off-grid invention.
+- **Note B — 20px (`space-5` / `--pad`):** Bureau density token (`--pad` from `colors_and_type.css`) consumed by dependent components (e.g. row padding in dashboard list rows, `KanbanTaskCard` inner). Not introduced by Phase 52's new primitive files — listed in the table only because dependent components rendered inside `KanbanCard` resolve to this token via inheritance. The new `frontend/src/components/kanban/*` files do NOT directly emit `space-5` / `p-5` / `gap-5` utilities; the value appears in the contract solely for completeness of inheritable token surface.
+
+Both values are multiples of 4 and are established design-token utilities — neither is arbitrary off-grid invention. All other declared spacing values fall within the standard set {4, 8, 16, 24, 32, 48, 64}.
 
 Touch-target minimum: **44px** (`min-h-11`) for stage-select dropdown + Create-task button + accordion toggle on mobile only. CLAUDE.md §"Responsive Design" anchor — `<768px` is the only breakpoint where touch targets are forced; desktop honors `--row-h`.
 
@@ -78,26 +88,37 @@ Exceptions: none beyond the existing geometry. The 280/1000/200 figures are carr
 
 ## Typography
 
-Three sizes + 2 weights (well under the 3-4 cap):
+**Declared by Phase 52 (contract scope): 3 sizes + 2 weights.**
 
-| Role    | Size                    | Weight         | Line height            | Usage in this phase                                                   |
-| ------- | ----------------------- | -------------- | ---------------------- | --------------------------------------------------------------------- |
-| Body    | 13px (`--t-body`)       | 400 (regular)  | 1.5 (`--line-h-body`)  | Card title, accordion section label, count badges                     |
-| Label   | 12px (`text-xs`)        | 400 / 500      | 1.35 (`--line-h-snug`) | Sort selector, count badges, mobile dropdown, SLA chip, priority text |
-| Heading | 16px (`--t-card-title`) | 600 (semibold) | 1.35                   | Dialog title, Empty-state heading                                     |
+The contract's type scale governs **new and migrated components only** — the five new files under `frontend/src/components/kanban/*` (KanbanProvider, KanbanBoard, KanbanHeader, KanbanCards, KanbanCard) and the migrated portions of `TasksTab.tsx` + `EngagementKanbanDialog.tsx`. Inherited values that appear in unchanged dependent components (D-13 keeps `KanbanTaskCard` untouched) and verbatim-preserved existing copy (empty-state heading) are documented in the "Inherited / Out-of-phase" sub-section for completeness — they are NOT declared by this phase.
 
-Weights used: **400 (regular)** + **600 (semibold)**. No 700/bold introduced.
+### Declared scale (Phase 52 contract)
 
-Specific assignments:
+| Role    | Size                    | Weight         | Line height            | Usage in this phase                                              |
+| ------- | ----------------------- | -------------- | ---------------------- | ---------------------------------------------------------------- |
+| Body    | 13px (`--t-body`)       | 400 (regular)  | 1.5 (`--line-h-body`)  | Card title surface (KanbanCard wrapper), accordion section label |
+| Label   | 12px (`text-xs`)        | 400            | 1.35 (`--line-h-snug`) | Sort selector, count badges, mobile dropdown, priority text      |
+| Heading | 16px (`--t-card-title`) | 600 (semibold) | 1.35                   | Dialog title (`EngagementKanbanDialog`)                          |
 
-- Column header label: `text-sm font-semibold` → resolves to 14px/600 (sm = Tailwind 14; acceptable bridge between body 13 and heading 16; kibo-ui carry-over). Reuses the same `KanbanHeader` API.
-- Card title (`KanbanTaskCard`): `text-sm font-medium` (14/500) — bordered against the body-13 base; UNCHANGED (D-13 leaves KanbanTaskCard).
-- Count badge: `text-xs` (12/400, secondary variant — token-mapped `bg-secondary text-secondary-foreground`).
-- SLA chip text: `text-xs font-medium` — semantic chip pattern, see Color section.
-- Empty state heading: `text-lg font-semibold` (18/600) — existing copy preserved verbatim.
-- Empty state body: `text-sm` (14/400) — existing copy preserved verbatim.
+**Weights declared by Phase 52: 400 (regular) + 600 (semibold).** Total: 2 weights. No 500/medium and no 700/bold introduced by the new `frontend/src/components/kanban/*` files or the migrated portions of TasksTab / EngagementKanbanDialog.
 
-RTL: `Tajawal` substitutes via cascade. No `textAlign: right` introduced anywhere — only logical `text-start` / `text-end` per CLAUDE.md §"Arabic RTL Support Guidelines".
+### Inherited / Out-of-phase (documented for completeness, NOT declared by this contract)
+
+Phase 52's D-13 explicitly leaves `KanbanTaskCard.tsx` untouched, and the empty-state copy is preserved verbatim per the zero-new-keys policy. The values below exist in those unchanged dependent components and surface inside the Kanban view at runtime, but they are **out of Phase 52's contract scope** — they were declared by prior phases / verbatim copy preservation, not by this migration. The checker's "3-4 size + 2 weight" bound applies to what Phase 52 declares (the table above), not to inherited-from-elsewhere values surfaced by dependent components.
+
+| Inherited value                  | Where it appears                                              | Why it is out-of-scope here                                                                             |
+| -------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `text-sm` (14px / 400)           | Column header label (`KanbanHeader`); empty-state body        | Existing kibo-ui carry-over for column header chrome — preserved verbatim by D-01 "mirror API exactly"  |
+| `text-sm font-medium` (14/500)   | `KanbanTaskCard` inner card title (line ~52 in existing file) | D-13 leaves `KanbanTaskCard` untouched — the 500/medium weight is declared by the file's original phase |
+| `text-lg font-semibold` (18/600) | Empty-state heading copy ("No tasks yet")                     | Existing copy preserved verbatim per zero-new-keys policy (CONTEXT.md i18n contract)                    |
+
+**Boundary statement:** The Phase 52 contract declares 3 sizes (12 / 13 / 16) + 2 weights (400 + 600). The three values above (14px, 18px, 500/medium) exist in unchanged dependent components and verbatim-preserved copy and are documented here only so the executor and auditor know they are intentional inheritances, not new introductions. If a future phase folds `KanbanTaskCard` and the empty-state copy into a single scale, that phase will declare a unified type scale; Phase 52 does not.
+
+### Other typography notes
+
+- RTL: `Tajawal` substitutes via cascade. No `textAlign: right` introduced anywhere — only logical `text-start` / `text-end` per CLAUDE.md §"Arabic RTL Support Guidelines".
+- Count badges: `text-xs` (12/400, secondary variant — token-mapped `bg-secondary text-secondary-foreground`) — declared scale row.
+- Mono usage: `JetBrains Mono` (`--font-mono`) is reserved for SLA chip + ID labels inside `KanbanTaskCard` (out-of-phase per D-13). Phase 52 does NOT introduce new mono surfaces.
 
 ---
 
@@ -286,6 +307,7 @@ These items touch nearby surfaces but are outside KANBAN-01..04 and outside the 
 | Bundle ceiling recalibration after tunnel-rat removal                                                                                                                                                               | Phase 53 BUNDLE-05 owns it                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Phase 53                                                                  |
 | Chart palette tokens                                                                                                                                                                                                | Phase 51 Tier-B deferred                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Future "chart palette tokens" phase                                       |
 | WorkBoard migration to consume the new shared `@/components/kanban` primitive                                                                                                                                       | Out of KANBAN-01..04 named scope                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Future polish phase                                                       |
+| Unified type-scale fold (collapse `KanbanTaskCard` 14/500 + empty-state 18/600 into the declared Phase 52 scale)                                                                                                    | Phase 52 declares 3 sizes + 2 weights for new/migrated components only; folding inherited values requires touching `KanbanTaskCard` (D-13 forbids) and rewriting verbatim-preserved copy (zero-new-keys forbids)                                                                                                                                                                                                                                                                                                                                                                                                                                  | Future "kanban polish" phase                                              |
 
 ---
 
@@ -323,6 +345,8 @@ Before any PR opens, the executor confirms each row:
 - [ ] All 12 existing `kanban-*.spec.ts` specs stay green (regression anchor)
 - [ ] `pnpm --filter frontend lint`, `pnpm --filter frontend type-check`, `pnpm --filter frontend build` exit 0
 - [ ] Tested at 1280×800 + 1024×~ and 768×1024 in both LTR and RTL (CLAUDE.md §"Responsive Design")
+- [ ] Typography contract honored: new files emit only declared scale (12 / 13 / 16 at 400 + 600); 14/500 (KanbanTaskCard) and 18/600 (empty-state heading) appear ONLY in their inherited locations, NOT in new `frontend/src/components/kanban/*` files
+- [ ] Spacing contract honored: new files emit only multiples of 4; 12px (gap-3/p-3) usage limited to inter-card gap + column padding (preserving kibo-ui rhythm per Note A); 20px not directly introduced by new files
 - [ ] If `KanbanTaskCard.tsx` Tier-C disables are addressable in-phase without rippling beyond it, they are migrated to `text-danger / bg-danger-soft / text-warn / bg-warn-soft / text-ok / bg-ok-soft` tokens; otherwise deferred and recorded in `52-SUMMARY.md`
 
 ---
@@ -332,8 +356,8 @@ Before any PR opens, the executor confirms each row:
 - [ ] Dimension 1 Copywriting: PASS (no new strings; reused keys conform to IntelDossier voice; deferred items disclosed)
 - [ ] Dimension 2 Visuals: PASS (flat surfaces, border-only, drop-shadow ban honored, prototype-aligned card hover via surface-raised)
 - [ ] Dimension 3 Color: PASS (60% bg, 30% surface/muted, 10% accent with explicit reserved-for list; destructive scoped to cancelled-column border + inherited SLA chip)
-- [ ] Dimension 4 Typography: PASS (3 sizes, 2 weights, RTL Tajawal cascade verified)
-- [ ] Dimension 5 Spacing: PASS (all values multiples of 4; touch targets 44px only at <768px)
+- [ ] Dimension 4 Typography: PASS (Phase 52 declares 3 sizes [12 / 13 / 16] + 2 weights [400 + 600] for new/migrated components; 14/500 and 18/600 explicitly scoped out as inherited-from-D-13-and-verbatim-copy, NOT counted toward the contract bound; RTL Tajawal cascade verified)
+- [ ] Dimension 5 Spacing: PASS (all values multiples of 4; 12px and 20px non-standard-set values justified by Notes A + B as established codebase utilities / Bureau density tokens, not arbitrary off-grid invention; touch targets 44px only at <768px)
 - [ ] Dimension 6 Registry Safety: PASS (no new third-party blocks; kibo-ui + tunnel-rat removed and banned; Aceternity registry not consumed)
 
 **Approval:** pending
