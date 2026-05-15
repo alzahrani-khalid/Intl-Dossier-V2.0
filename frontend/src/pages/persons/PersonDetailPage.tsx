@@ -119,14 +119,19 @@ function PersonDetailPage() {
   const getImportanceColor = (level: ImportanceLevel) => {
     switch (level) {
       case 5:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonDetailPage
         return 'bg-red-500/10 text-red-600 border-red-200'
       case 4:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonDetailPage
         return 'bg-orange-500/10 text-orange-600 border-orange-200'
       case 3:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonDetailPage
         return 'bg-yellow-500/10 text-yellow-600 border-yellow-200'
       case 2:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonDetailPage
         return 'bg-blue-500/10 text-blue-600 border-blue-200'
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonDetailPage
         return 'bg-gray-500/10 text-gray-600 border-gray-200'
     }
   }

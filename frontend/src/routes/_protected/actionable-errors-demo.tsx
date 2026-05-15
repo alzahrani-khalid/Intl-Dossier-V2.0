@@ -31,7 +31,7 @@ export const Route = createFileRoute('/_protected/actionable-errors-demo')({
 function ActionableErrorsDemo() {
   const { t } = useTranslation('actionable-errors')
   const { isRTL } = useDirection()
-// Form state
+  // Form state
   const [formValues, setFormValues] = useState({
     email: '',
     website: '',
@@ -129,9 +129,7 @@ function ActionableErrorsDemo() {
   )
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-start">Actionable Errors Demo</h1>
@@ -180,6 +178,7 @@ function ActionableErrorsDemo() {
                   value={formValues.email}
                   onChange={(e) => handleFieldChange('email', e.target.value)}
                   placeholder="name@example.com"
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#actionable-errors-demo */
                   className={cn(getFieldError('email') && 'border-red-500 focus:ring-red-500')}
                   data-field-name="email"
                 />
@@ -211,6 +210,7 @@ function ActionableErrorsDemo() {
                   value={formValues.website}
                   onChange={(e) => handleFieldChange('website', e.target.value)}
                   placeholder="https://example.com"
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#actionable-errors-demo */
                   className={cn(getFieldError('website') && 'border-red-500 focus:ring-red-500')}
                   data-field-name="website"
                 />
@@ -242,6 +242,7 @@ function ActionableErrorsDemo() {
                   value={formValues.phone}
                   onChange={(e) => handleFieldChange('phone', e.target.value)}
                   placeholder="+1 (234) 567-8900"
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#actionable-errors-demo */
                   className={cn(getFieldError('phone') && 'border-red-500 focus:ring-red-500')}
                   data-field-name="phone"
                 />
@@ -302,6 +303,7 @@ function ActionableErrorsDemo() {
                   transition={{ delay: index * 0.05 }}
                   className="flex items-start gap-2 text-start"
                 >
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#actionable-errors-demo */}
                   <span className="text-emerald-500 mt-1">✓</span>
                   {feature}
                 </m.li>

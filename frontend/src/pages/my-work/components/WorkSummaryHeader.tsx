@@ -26,12 +26,13 @@ export function WorkSummaryHeader({
 }: WorkSummaryHeaderProps) {
   const { t } = useTranslation('my-work')
   const { isRTL } = useDirection()
-const stats = [
+  const stats = [
     {
       key: 'active',
       label: t('stats.totalActive', 'Total Active'),
       value: summary?.total_active || 0,
       icon: ListTodo,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkSummaryHeader
       color: 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30',
       filter: undefined, // No filter for "all active"
     },
@@ -40,6 +41,7 @@ const stats = [
       label: t('stats.overdue', 'Overdue'),
       value: summary?.overdue_count || 0,
       icon: AlertTriangle,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkSummaryHeader
       color: 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30',
       filter: 'overdue',
     },
@@ -48,6 +50,7 @@ const stats = [
       label: t('stats.dueToday', 'Due Today'),
       value: summary?.due_today || 0,
       icon: Calendar,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkSummaryHeader
       color: 'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30',
       filter: 'due-today',
     },
@@ -56,6 +59,7 @@ const stats = [
       label: t('stats.dueThisWeek', 'Due This Week'),
       value: summary?.due_this_week || 0,
       icon: CalendarDays,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkSummaryHeader
       color: 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30',
       filter: 'due-week',
     },
@@ -77,9 +81,7 @@ const stats = [
   }
 
   return (
-    <div
-      className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-3 sm:mb-4"
-    >
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-3 sm:mb-4">
       {stats.map((stat) => {
         const Icon = stat.icon
         const isActive = currentFilter === stat.filter || (stat.key === 'active' && !currentFilter)

@@ -201,14 +201,19 @@ function DataRetentionPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
         return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
       case 'draft':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
       case 'disabled':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100'
       case 'released':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
         return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
         return 'bg-gray-100 text-gray-800'
     }
   }
@@ -254,7 +259,9 @@ function DataRetentionPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention */}
               <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention */}
                 <Lock className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
@@ -270,7 +277,9 @@ function DataRetentionPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention */}
               <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention */}
                 <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div>
@@ -286,7 +295,9 @@ function DataRetentionPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention */}
               <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention */}
                 <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
               <div>
@@ -302,7 +313,9 @@ function DataRetentionPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention */}
               <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention */}
                 <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
@@ -392,6 +405,7 @@ function DataRetentionPage() {
                             </Badge>
                           )}
                           {stat.expiring_soon > 0 && (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
                             <Badge className="text-xs bg-yellow-100 text-yellow-800">
                               {stat.expiring_soon} expiring
                             </Badge>
@@ -447,8 +461,10 @@ function DataRetentionPage() {
                           </p>
                         </div>
                         {log.completed_at ? (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
                           <CheckCircle2 className="h-5 w-5 text-green-500" />
                         ) : (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
                           <RefreshCw className="h-5 w-5 text-yellow-500 animate-spin" />
                         )}
                       </div>
@@ -762,6 +778,7 @@ function DataRetentionPage() {
                         </div>
                         <Badge
                           variant="outline"
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
                           className="bg-yellow-50 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200"
                         >
                           {entity.days_until_expiration} days left
@@ -840,8 +857,10 @@ function DataRetentionPage() {
                         </TableCell>
                         <TableCell>
                           {log.completed_at ? (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
                             <CheckCircle2 className="h-5 w-5 text-green-500" />
                           ) : (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#data-retention
                             <RefreshCw className="h-5 w-5 text-yellow-500 animate-spin" />
                           )}
                         </TableCell>

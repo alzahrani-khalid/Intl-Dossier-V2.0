@@ -43,7 +43,7 @@ export function WorkItemFiltersBar({
 }: WorkItemFiltersBarProps) {
   const { t } = useTranslation('my-work')
   const { isRTL } = useDirection()
-const [localSearch, setLocalSearch] = useState(searchQuery)
+  const [localSearch, setLocalSearch] = useState(searchQuery)
 
   // Debounce search to avoid excessive API calls
   const debouncedSearch = useDebouncedCallback((value: string) => {
@@ -63,16 +63,19 @@ const [localSearch, setLocalSearch] = useState(searchQuery)
     {
       id: 'delivery',
       label: t('trackingType.delivery', 'Delivery'),
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemFiltersBar
       color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
     },
     {
       id: 'follow_up',
       label: t('trackingType.followUp', 'Follow-up'),
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemFiltersBar
       color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
     },
     {
       id: 'sla',
       label: t('trackingType.sla', 'SLA'),
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemFiltersBar
       color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
     },
   ]

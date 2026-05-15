@@ -411,6 +411,7 @@ export function ReportsPage() {
                       <div className="flex items-center gap-2">
                         {report.status === 'completed' ? (
                           <>
+                            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ReportsPage */}
                             <CheckCircle className="h-4 w-4 text-green-600" />
                             <Button size="sm" variant="ghost" asChild>
                               <a href={report.url} download>
@@ -419,6 +420,7 @@ export function ReportsPage() {
                             </Button>
                           </>
                         ) : (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ReportsPage
                           <Clock className="h-4 w-4 text-yellow-600 animate-pulse" />
                         )}
                       </div>
