@@ -20,7 +20,7 @@ interface ProductivityMetricsProps {
 export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsProps) {
   const { t } = useTranslation('my-work')
   const { isRTL } = useDirection()
-if (isLoading) {
+  if (isLoading) {
     return (
       <Card className="mb-3 sm:mb-4">
         <CardContent className="px-3 py-2 sm:px-4">
@@ -66,6 +66,7 @@ if (isLoading) {
       label: t('metrics.completed30d', 'Completed (30d)'),
       value: metrics?.completed_count_30d || 0,
       icon: CheckCircle2,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProductivityMetrics
       color: 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30',
       format: (v: number) => v.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
     },
@@ -74,6 +75,7 @@ if (isLoading) {
       label: t('metrics.onTimeRate', 'On-Time Rate'),
       value: metrics?.on_time_rate_30d || 0,
       icon: TrendingUp,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProductivityMetrics
       color: 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30',
       format: (v: number) => `${v}%`,
       showProgress: true,
@@ -83,6 +85,7 @@ if (isLoading) {
       label: t('metrics.avgCompletionTime', 'Avg Completion'),
       value: metrics?.avg_completion_hours_30d || 0,
       icon: Clock,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProductivityMetrics
       color: 'text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/30',
       format: formatCompletionTime,
     },

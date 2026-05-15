@@ -152,10 +152,12 @@ export function DelegationManagementPage() {
           </CardContent>
         </Card>
 
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationManagementPage */}
         <Card className={stats.expiring > 0 ? 'border-yellow-500/50' : ''}>
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-2">
               {stats.expiring > 0 ? (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationManagementPage
                 <AlertTriangle className="h-4 w-4 text-yellow-600" />
               ) : (
                 <Clock className="h-4 w-4" />
@@ -167,6 +169,7 @@ export function DelegationManagementPage() {
             {isLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationManagementPage
               <p className={`text-2xl font-bold ${stats.expiring > 0 ? 'text-yellow-600' : ''}`}>
                 {stats.expiring}
               </p>

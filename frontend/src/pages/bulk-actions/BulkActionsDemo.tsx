@@ -124,9 +124,13 @@ export function BulkActionsDemo() {
           <Badge
             variant="secondary"
             className={cn(
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsDemo */
               item.status === 'completed' && 'bg-green-100 text-green-800',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsDemo */
               item.status === 'in_progress' && 'bg-blue-100 text-blue-800',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsDemo */
               item.status === 'pending' && 'bg-yellow-100 text-yellow-800',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsDemo */
               item.status === 'cancelled' && 'bg-gray-100 text-gray-800',
             )}
           >
@@ -142,9 +146,13 @@ export function BulkActionsDemo() {
           <Badge
             variant="outline"
             className={cn(
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsDemo */
               item.priority === 'urgent' && 'border-red-500 text-red-600',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsDemo */
               item.priority === 'high' && 'border-orange-500 text-orange-600',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsDemo */
               item.priority === 'medium' && 'border-yellow-500 text-yellow-600',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsDemo */
               item.priority === 'low' && 'border-green-500 text-green-600',
             )}
           >

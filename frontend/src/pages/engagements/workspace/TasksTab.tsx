@@ -27,21 +27,20 @@ import { KanbanTaskCard } from '@/components/assignments/KanbanTaskCard'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import {
-  Plus,
-  ChevronDown,
-  ChevronUp,
-  ArrowDownUp,
-  ClipboardList,
-} from 'lucide-react'
+import { Plus, ChevronDown, ChevronUp, ArrowDownUp, ClipboardList } from 'lucide-react'
 
 const VISIBLE_STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done']
 
 const STAGE_COLORS: Record<WorkflowStage, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
   todo: 'bg-slate-100 dark:bg-slate-800',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
   in_progress: 'bg-blue-50 dark:bg-blue-950',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
   review: 'bg-amber-50 dark:bg-amber-950',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
   done: 'bg-emerald-50 dark:bg-emerald-950',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
   cancelled: 'bg-red-50 dark:bg-red-950',
 }
 
@@ -54,10 +53,7 @@ export default function TasksTab(): ReactElement {
   const { isRTL } = useDirection()
   const [sortBy, setSortBy] = useState<SortOption>('created_at')
 
-  const { columns, stats, handleDragEnd, isLoading } = useEngagementKanban(
-    engagementId,
-    sortBy,
-  )
+  const { columns, stats, handleDragEnd, isLoading } = useEngagementKanban(engagementId, sortBy)
 
   // Determine which stages to show (include cancelled only if non-empty)
   const activeStages = useMemo((): WorkflowStage[] => {
@@ -110,13 +106,7 @@ export default function TasksTab(): ReactElement {
       const item = kanbanData.find((a) => a.id === assignmentId)
       if (!item) return
 
-      const validStages: WorkflowStage[] = [
-        'todo',
-        'in_progress',
-        'review',
-        'done',
-        'cancelled',
-      ]
+      const validStages: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done', 'cancelled']
       const newStage = over.id as WorkflowStage
       if (validStages.includes(newStage) && item.column !== newStage) {
         handleDragEnd(assignmentId, newStage)
@@ -125,8 +115,7 @@ export default function TasksTab(): ReactElement {
     [kanbanData, handleDragEnd],
   )
 
-  const isEmpty =
-    !isLoading && (stats.total === 0 || !columns)
+  const isEmpty = !isLoading && (stats.total === 0 || !columns)
 
   // Loading state
   if (isLoading) {
@@ -145,9 +134,7 @@ export default function TasksTab(): ReactElement {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
         <ClipboardList className="h-12 w-12 text-muted-foreground/40 mb-4" />
-        <h3 className="text-lg font-semibold text-foreground mb-1">
-          {t('empty.tasks.heading')}
-        </h3>
+        <h3 className="text-lg font-semibold text-foreground mb-1">{t('empty.tasks.heading')}</h3>
         <p className="text-sm text-muted-foreground text-center max-w-sm mb-4">
           {t('empty.tasks.body')}
         </p>
@@ -233,9 +220,7 @@ export default function TasksTab(): ReactElement {
                         column={assignment.column}
                         className="bg-background hover:shadow-md transition-shadow border-border"
                       >
-                        {fullAssignment != null && (
-                          <KanbanTaskCard assignment={fullAssignment} />
-                        )}
+                        {fullAssignment != null && <KanbanTaskCard assignment={fullAssignment} />}
                       </KanbanCard>
                     )
                   }}
@@ -289,18 +274,14 @@ function MobileStageSection({
   onMoveToStage: (assignmentId: string, newStage: WorkflowStage) => void
 }): ReactElement {
   const { t: tAssign } = useTranslation('assignments')
-  const [expanded, setExpanded] = useState(
-    stage === 'todo' || stage === 'in_progress',
-  )
+  const [expanded, setExpanded] = useState(stage === 'todo' || stage === 'in_progress')
 
   const toggleExpanded = useCallback((): void => {
     setExpanded((prev) => !prev)
   }, [])
 
   return (
-    <div
-      className={`rounded-lg border ${STAGE_COLORS[stage]} overflow-hidden`}
-    >
+    <div className={`rounded-lg border ${STAGE_COLORS[stage]} overflow-hidden`}>
       <button
         type="button"
         onClick={toggleExpanded}
@@ -328,10 +309,7 @@ function MobileStageSection({
             </p>
           ) : (
             assignments.map((assignment) => (
-              <div
-                key={assignment.id}
-                className="rounded-md border bg-card p-3 space-y-2"
-              >
+              <div key={assignment.id} className="rounded-md border bg-card p-3 space-y-2">
                 <KanbanTaskCard assignment={assignment} />
 
                 {/* Move to dropdown */}
