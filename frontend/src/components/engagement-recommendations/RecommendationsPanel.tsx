@@ -72,7 +72,9 @@ function StatCard({ title, value, icon, trend, description, className }: StatCar
         <p className="text-xs text-muted-foreground truncate">{title}</p>
         <div className="flex items-center gap-1.5">
           <p className="text-lg font-bold">{value}</p>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel */}
           {trend === 'up' && <TrendingUp className="h-3.5 w-3.5 text-green-500" />}
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel */}
           {trend === 'down' && <TrendingUp className="h-3.5 w-3.5 text-red-500 rotate-180" />}
         </div>
         {description && <p className="text-xs text-muted-foreground">{description}</p>}
@@ -91,7 +93,7 @@ interface TypeDistributionProps {
 
 function TypeDistribution({ data }: TypeDistributionProps) {
   const { isRTL } = useDirection()
-const total = Object.values(data).reduce((sum, count) => sum + count, 0)
+  const total = Object.values(data).reduce((sum, count) => sum + count, 0)
   if (total === 0) return null
 
   const sortedTypes = Object.entries(data)
@@ -100,12 +102,19 @@ const total = Object.values(data).reduce((sum, count) => sum + count, 0)
     .slice(0, 4)
 
   const colors = [
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
     'bg-blue-500',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
     'bg-amber-500',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
     'bg-green-500',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
     'bg-purple-500',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
     'bg-red-500',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
     'bg-teal-500',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
     'bg-orange-500',
   ]
 
@@ -183,6 +192,7 @@ export function RecommendationsPanel({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel */}
             <Sparkles className="h-5 w-5 text-amber-500" />
             <CardTitle className="text-base sm:text-lg">{t('panelTitle')}</CardTitle>
           </div>
@@ -229,24 +239,29 @@ export function RecommendationsPanel({
                 <StatCard
                   title={t('pendingRecommendations')}
                   value={stats?.total_pending || 0}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
                   icon={<Clock className="h-5 w-5 text-amber-500" />}
                 />
                 <StatCard
                   title={t('criticalUrgency')}
                   value={stats?.critical_urgency_count || 0}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
                   icon={<AlertTriangle className="h-5 w-5 text-red-500" />}
                   className={
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel */
                     stats?.critical_urgency_count ? 'border-red-200 dark:border-red-900' : ''
                   }
                 />
                 <StatCard
                   title={t('acceptanceRate')}
                   value={`${Math.round(stats?.acceptance_rate || 0)}%`}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
                   icon={<CheckCircle className="h-5 w-5 text-green-500" />}
                 />
                 <StatCard
                   title={t('avgConfidence')}
                   value={formatConfidence(stats?.average_confidence || 0)}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
                   icon={<Sparkles className="h-5 w-5 text-purple-500" />}
                 />
               </>

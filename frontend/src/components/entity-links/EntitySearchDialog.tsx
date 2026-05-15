@@ -93,7 +93,7 @@ export function EntitySearchDialog({
 }: EntitySearchDialogProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-// State for selected entities (multi-select)
+  // State for selected entities (multi-select)
   const [selectedEntities, setSelectedEntities] = useState<EntitySearchResult[]>([])
   // State for which entity should be primary (only one allowed)
   const [primaryEntityKey, setPrimaryEntityKey] = useState<string | null>(null)
@@ -226,6 +226,7 @@ export function EntitySearchDialog({
                 className={cn(
                   'absolute top-1/2 -translate-y-1/2',
                   'h-4 w-4 sm:h-5 sm:w-5',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                   'text-slate-400',
                   isRTL ? 'end-3' : 'start-3',
                 )}
@@ -263,11 +264,13 @@ export function EntitySearchDialog({
           </div>
 
           {/* Entity type filters */}
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
           <div className={cn('px-4 py-3 sm:px-6', 'border-b bg-slate-50/50 dark:bg-slate-900/20')}>
             {/* Filter header with clear button */}
             <div
               className={cn('flex items-center justify-between mb-3', isRTL && 'flex-row-reverse')}
             >
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
               <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
                 {selectedTypes && selectedTypes.length > 0
                   ? `${selectedTypes.length} ${t('entityLinks.filtersSelected', { count: selectedTypes.length })}`
@@ -321,7 +324,9 @@ export function EntitySearchDialog({
               {/* Loading state */}
               {isLoading && (
                 <div className="flex items-center justify-center py-8">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <span className={cn('text-sm text-slate-500', isRTL ? 'me-3' : 'ms-3')}>
                     {t('common.loading')}
                   </span>
@@ -331,6 +336,7 @@ export function EntitySearchDialog({
               {/* Error state */}
               {error && (
                 <div className="text-center py-8">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <p className="text-sm text-red-600">{t('entityLinks.searchError')}</p>
                 </div>
               )}
@@ -338,12 +344,16 @@ export function EntitySearchDialog({
               {/* Empty state - no query yet */}
               {!isLoading && !error && query.length < 2 && (
                 <div className="text-center py-12">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 mb-4">
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                     <Search className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                   </div>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2">
                     {t('entityLinks.searchTitle', 'Find and link entities')}
                   </h3>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
                     {t(
                       'entityLinks.searchEmptyState',
@@ -356,15 +366,20 @@ export function EntitySearchDialog({
               {/* No results state */}
               {!isLoading && !error && query.length >= 2 && results?.length === 0 && (
                 <div className="text-center py-12">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 mb-4">
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                     <Search className="h-8 w-8 text-slate-400" />
                   </div>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2">
                     {t('entityLinks.noResultsTitle', 'No entities found')}
                   </h3>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto mb-4">
                     {t('entityLinks.noResults', `No entities match "${query}"`)}
                   </p>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */}
                   <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
                     <p>{t('entityLinks.searchTips', 'Try:')}</p>
                     <ul className="list-disc list-inside space-y-0.5">
@@ -398,10 +413,13 @@ export function EntitySearchDialog({
                           'border rounded-lg',
                           'transition-all duration-200',
                           !isAlreadyLinked &&
+                            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                             'hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer',
                           isSelected &&
+                            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                             'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700',
                           isAlreadyLinked &&
+                            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                             'bg-slate-50 dark:bg-slate-800 opacity-60 cursor-not-allowed',
 
                           // RTL support
@@ -432,6 +450,7 @@ export function EntitySearchDialog({
                             />
                           )}
                           {isAlreadyLinked && (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog
                             <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 mt-1 flex-shrink-0" />
                           )}
 
@@ -451,8 +470,10 @@ export function EntitySearchDialog({
                                   'transition-colors duration-200',
                                   'touch-manipulation',
                                   primaryEntityKey === entityKey
-                                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700'
-                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700',
+                                    ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
+                                      'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700'
+                                    : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
+                                      'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700',
                                 )}
                                 aria-label={t('entityLinks.setPrimary')}
                               >
@@ -460,11 +481,14 @@ export function EntitySearchDialog({
                                   className={cn(
                                     'w-3 h-3 rounded-full border-2 flex items-center justify-center',
                                     primaryEntityKey === entityKey
-                                      ? 'border-green-600 dark:border-green-400'
-                                      : 'border-slate-400',
+                                      ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
+                                        'border-green-600 dark:border-green-400'
+                                      : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
+                                        'border-slate-400',
                                   )}
                                 >
                                   {primaryEntityKey === entityKey && (
+                                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog
                                     <div className="w-1.5 h-1.5 rounded-full bg-green-600 dark:bg-green-400" />
                                   )}
                                 </div>
@@ -499,6 +523,7 @@ export function EntitySearchDialog({
                                 variant="outline"
                                 className={cn(
                                   'flex-shrink-0 text-xs',
+                                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                                   'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
                                 )}
                               >
@@ -510,6 +535,7 @@ export function EntitySearchDialog({
                                   variant="outline"
                                   className={cn(
                                     'flex-shrink-0 text-xs',
+                                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                                     'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800',
                                   )}
                                 >
@@ -522,6 +548,7 @@ export function EntitySearchDialog({
                             {entity.description && (
                               <p
                                 className={cn(
+                                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                                   'text-xs text-slate-600 dark:text-slate-400',
                                   'line-clamp-2',
                                   'text-start',
@@ -534,6 +561,7 @@ export function EntitySearchDialog({
                             {/* Metadata row */}
                             <div
                               className={cn(
+                                /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                                 'flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400',
                                 isRTL && 'flex-row-reverse',
                               )}
@@ -546,10 +574,13 @@ export function EntitySearchDialog({
                                     className={cn(
                                       'font-semibold',
                                       entity.similarity_score > 0.7
-                                        ? 'text-green-600 dark:text-green-400'
+                                        ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
+                                          'text-green-600 dark:text-green-400'
                                         : entity.similarity_score > 0.4
-                                          ? 'text-yellow-600 dark:text-yellow-400'
-                                          : 'text-slate-500',
+                                          ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
+                                            'text-yellow-600 dark:text-yellow-400'
+                                          : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
+                                            'text-slate-500',
                                     )}
                                   >
                                     {Math.round(entity.similarity_score * 100)}%
@@ -590,6 +621,7 @@ export function EntitySearchDialog({
             <div
               className={cn(
                 'px-4 py-3 sm:px-6 sm:py-4',
+                /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                 'border-t bg-slate-50/50 dark:bg-slate-900/20',
                 'space-y-2',
               )}
@@ -599,12 +631,14 @@ export function EntitySearchDialog({
                 <div
                   className={cn(
                     'flex items-start gap-2 p-2 sm:p-3',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                     'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg',
                     isRTL && 'flex-row-reverse',
                   )}
                 >
                   <div className="flex-shrink-0 mt-0.5">
                     <svg
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog
                       className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -621,6 +655,7 @@ export function EntitySearchDialog({
                   <div className="flex-1 min-w-0">
                     <p
                       className={cn(
+                        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                         'text-xs sm:text-sm text-amber-800 dark:text-amber-200',
                         'text-start',
                       )}
@@ -644,6 +679,7 @@ export function EntitySearchDialog({
               >
                 <span
                   className={cn(
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntitySearchDialog */
                     'text-sm font-medium text-slate-700 dark:text-slate-300',
                     'text-start',
                   )}

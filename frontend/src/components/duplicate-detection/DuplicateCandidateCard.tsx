@@ -47,7 +47,7 @@ export function DuplicateCandidateCard({
 }: DuplicateCandidateCardProps) {
   const { t } = useTranslation('duplicate-detection')
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? ar : enUS
+  const dateLocale = isRTL ? ar : enUS
 
   const scorePercentage = Math.round(candidate.overall_score * 100)
 
@@ -83,8 +83,11 @@ const dateLocale = isRTL ? ar : enUS
       <div
         className={cn(
           'absolute top-0 start-0 end-0 h-1',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateCandidateCard */
           candidate.confidence_level === 'high' && 'bg-red-500',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateCandidateCard */
           candidate.confidence_level === 'medium' && 'bg-yellow-500',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateCandidateCard */
           candidate.confidence_level === 'low' && 'bg-blue-500',
         )}
       />

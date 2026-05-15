@@ -134,7 +134,7 @@ export function RecommendationsList({
 }: RecommendationsListProps) {
   const { t } = useTranslation('engagement-recommendations')
   const { isRTL } = useDirection()
-// Filter state
+  // Filter state
   const [selectedTypes, setSelectedTypes] = useState<RecommendationType[]>([])
   const [selectedUrgencies, setSelectedUrgencies] = useState<RecommendationUrgency[]>([])
 
@@ -202,6 +202,7 @@ export function RecommendationsList({
       {(showFilters || showGenerateButton) && (
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsList */}
             <Sparkles className="h-5 w-5 text-amber-500" />
             <h2 className="text-lg font-semibold">{t('title')}</h2>
             {isFetching && !isLoading && (

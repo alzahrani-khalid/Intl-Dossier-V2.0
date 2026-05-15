@@ -83,7 +83,7 @@ const typeIcons: Record<RecommendationType, React.ComponentType<{ className?: st
 
 function UrgencyBadge({ urgency }: { urgency: RecommendationUrgency }) {
   const { isRTL } = useDirection()
-const label = URGENCY_LABELS[urgency]
+  const label = URGENCY_LABELS[urgency]
 
   return (
     <Badge
@@ -126,10 +126,13 @@ function HealthTrendIndicator({ trend, score }: { trend?: string; score?: number
     trend === 'improving' ? TrendingUp : trend === 'declining' ? TrendingDown : Minus
   const trendColor =
     trend === 'improving'
-      ? 'text-green-600 dark:text-green-400'
+      ? // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard
+        'text-green-600 dark:text-green-400'
       : trend === 'declining'
-        ? 'text-red-600 dark:text-red-400'
-        : 'text-gray-500'
+        ? // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard
+          'text-red-600 dark:text-red-400'
+        : // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard
+          'text-gray-500'
 
   return (
     <div className="flex items-center gap-2">
@@ -152,6 +155,7 @@ function ConfidenceIndicator({ score }: { score: number }) {
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex items-center gap-1.5">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard */}
             <Sparkles className="h-3.5 w-3.5 text-amber-500" />
             <span className="text-xs font-medium">{formatConfidence(score)}</span>
           </div>
@@ -255,7 +259,9 @@ export function RecommendationCard({
         className={cn(
           'relative overflow-hidden transition-all duration-200',
           'hover:shadow-md',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard */
           recommendation.urgency === 'critical' && 'border-red-300 dark:border-red-800',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard */
           recommendation.urgency === 'high' && 'border-orange-300 dark:border-orange-800',
           !isActionable && 'opacity-70',
           className,
@@ -265,10 +271,15 @@ export function RecommendationCard({
         <div
           className={cn(
             'absolute top-0 start-0 h-full w-1',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard */
             recommendation.priority >= 5 && 'bg-red-500',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard */
             recommendation.priority === 4 && 'bg-orange-500',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard */
             recommendation.priority === 3 && 'bg-yellow-500',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard */
             recommendation.priority === 2 && 'bg-blue-500',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationCard */
             recommendation.priority === 1 && 'bg-gray-400',
           )}
         />

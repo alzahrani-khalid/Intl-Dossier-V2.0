@@ -38,7 +38,11 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
   const [mergeReason, setMergeReason] = useState('')
 
   // Fetch duplicate candidates using the proper hook
-  const { data: response, isLoading, error } = useDuplicateCandidates(ticketId) as unknown as {
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useDuplicateCandidates(ticketId) as unknown as {
     data: { candidates?: DuplicateCandidate[] } | undefined
     isLoading: boolean
     error: unknown
@@ -102,7 +106,9 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
   if (isLoading) {
     return (
       <div className="py-8 text-center">
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
         <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
         <p className="mt-4 text-gray-600 dark:text-gray-400">
           {t('duplicates.loading', 'Checking for duplicates...')}
         </p>
@@ -112,6 +118,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
 
   if (error) {
     return (
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
       <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
         {t('duplicates.error', 'Failed to load duplicate candidates. Please try again.')}
       </div>
@@ -122,6 +129,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
     return (
       <div className="py-8 text-center">
         <div className="mb-4 text-6xl">✓</div>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
         <p className="text-lg text-gray-600 dark:text-gray-400">
           {t('duplicates.noDuplicates', 'No potential duplicates detected')}
         </p>
@@ -139,13 +147,17 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
     <div className="space-y-6">
       {/* Warning Banner for High Confidence Duplicates */}
       {highConfidence.length > 0 && (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
           <div className="mb-2 flex items-center gap-2">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
             <span className="text-xl text-red-600 dark:text-red-400">⚠️</span>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
             <h3 className="font-semibold text-red-800 dark:text-red-300">
               {t('duplicates.highConfidenceWarning', 'High Confidence Duplicates Detected')}
             </h3>
           </div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <p className="text-sm text-red-700 dark:text-red-400">
             {t(
               'duplicates.highConfidenceMessage',
@@ -159,6 +171,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {/* High Confidence Candidates */}
       {highConfidence.length > 0 && (
         <div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             {t('duplicates.highConfidence', 'High Confidence Duplicates')}
           </h3>
@@ -179,6 +192,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {/* Medium Confidence Candidates */}
       {mediumConfidence.length > 0 && (
         <div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             {t('duplicates.mediumConfidence', 'Possible Duplicates')}
           </h3>
@@ -199,17 +213,21 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {/* Merge Dialog */}
       {selectedCandidate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white shadow-xl dark:bg-gray-800">
             <div className="p-6">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
               <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
                 {t('duplicates.mergDialog.title', 'Merge Tickets')}
               </h2>
 
               <div className="mb-6 space-y-4">
                 <div>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
                   <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('duplicates.mergeDialog.primaryTicket', 'Select Primary Ticket')}
                   </label>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
                   <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
                     {t(
                       'duplicates.mergeDialog.primaryTicketHelp',
@@ -219,20 +237,26 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                   <div className="space-y-2">
                     <button
                       onClick={() => handleMerge(ticketId)}
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
                       className="w-full rounded-lg border-2 border-blue-500 bg-blue-50 p-3 text-start hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30"
                     >
+                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
                       <div className="font-medium text-gray-900 dark:text-white">
                         {t('duplicates.mergeDialog.currentTicket', 'Current Ticket')}
                       </div>
+                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
                       <div className="text-sm text-gray-600 dark:text-gray-400">{ticketId}</div>
                     </button>
                     <button
                       onClick={() => handleMerge(selectedCandidate.target_ticket_id)}
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
                       className="w-full rounded-lg border-2 border-gray-300 p-3 text-start hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
                     >
+                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
                       <div className="font-medium text-gray-900 dark:text-white">
                         {selectedCandidate.target_ticket.ticket_number}
                       </div>
+                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
                       <div className="text-sm text-gray-600 dark:text-gray-400">
                         {isRTL && selectedCandidate.target_ticket.title_ar
                           ? selectedCandidate.target_ticket.title_ar
@@ -243,6 +267,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                 </div>
 
                 <div>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
                   <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('duplicates.mergeDialog.reason', 'Reason for Merge')} *
                   </label>
@@ -254,6 +279,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                       'Explain why these tickets should be merged',
                     )}
                     rows={3}
+                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
                     className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
@@ -265,6 +291,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                     setSelectedCandidate(null)
                     setMergeReason('')
                   }}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
                   className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                 >
                   {t('common.cancel', 'Cancel')}
@@ -294,28 +321,35 @@ function DuplicateCandidateCard({
   const { isRTL } = useDirection()
 
   const getSimilarityColor = (score: number): string => {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
     if (score >= 0.8) return 'text-red-600 bg-red-100 dark:bg-red-900/20'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
     if (score >= 0.65) return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
     return 'text-green-600 bg-green-100 dark:bg-green-900/20'
   }
 
   return (
     <div
+      /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */
       className={`rounded-lg border-2 p-4 transition-all ${
         isSelected
           ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
           : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
       }`}
+      /* eslint-enable no-restricted-syntax */
     >
       <div className="mb-3 flex items-start justify-between">
         <div className="flex-1">
           <Link
             to={`/intake/tickets/${candidate.target_ticket_id}`}
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
             className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400"
             target="_blank"
           >
             {candidate.target_ticket.ticket_number} ↗
           </Link>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <h4 className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
             {isRTL && candidate.target_ticket.title_ar
               ? candidate.target_ticket.title_ar
@@ -329,6 +363,7 @@ function DuplicateCandidateCard({
         </div>
       </div>
 
+      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
       <p className="mb-3 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
         {isRTL && candidate.target_ticket.description_ar
           ? candidate.target_ticket.description_ar
@@ -337,25 +372,31 @@ function DuplicateCandidateCard({
 
       <div className="mb-4 grid grid-cols-3 gap-2">
         <div className="text-center">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <div className="mb-1 text-xs text-gray-500 dark:text-gray-400">
             {t('duplicates.titleSimilarity', 'Title')}
           </div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <div className="text-sm font-semibold text-gray-900 dark:text-white">
             {Math.round(candidate.title_similarity * 100)}%
           </div>
         </div>
         <div className="text-center">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <div className="mb-1 text-xs text-gray-500 dark:text-gray-400">
             {t('duplicates.contentSimilarity', 'Content')}
           </div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <div className="text-sm font-semibold text-gray-900 dark:text-white">
             {Math.round(candidate.content_similarity * 100)}%
           </div>
         </div>
         <div className="text-center">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <div className="mb-1 text-xs text-gray-500 dark:text-gray-400">
             {t('duplicates.metadataSimilarity', 'Metadata')}
           </div>
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison */}
           <div className="text-sm font-semibold text-gray-900 dark:text-white">
             {Math.round(candidate.metadata_similarity * 100)}%
           </div>
@@ -365,12 +406,14 @@ function DuplicateCandidateCard({
       <div className="flex gap-2">
         <button
           onClick={onSelect}
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
           className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
         >
           {t('duplicates.merge', 'Merge Tickets')}
         </button>
         <button
           onClick={onNotDuplicate}
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateComparison
           className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
         >
           {t('duplicates.notDuplicate', 'Not a Duplicate')}

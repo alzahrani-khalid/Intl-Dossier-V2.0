@@ -64,13 +64,15 @@ export function RelationshipGraph({
   const { t } = useTranslation('dossiers')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
-const [relationshipTypeFilter, setRelationshipTypeFilter] = useState<string | undefined>(
+  const [relationshipTypeFilter, setRelationshipTypeFilter] = useState<string | undefined>(
     undefined,
   )
 
-  const { data: relationshipsData, isLoading, error } = useRelationshipsForDossier(
-    dossierId,
-  ) as unknown as {
+  const {
+    data: relationshipsData,
+    isLoading,
+    error,
+  } = useRelationshipsForDossier(dossierId) as unknown as {
     data: { data: RelationshipWithDossiers[] } | undefined
     isLoading: boolean
     error: unknown
@@ -170,6 +172,7 @@ const [relationshipTypeFilter, setRelationshipTypeFilter] = useState<string | un
 
       // Create edge with custom component
       // Default color since relationship_strength doesn't exist in new schema
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RelationshipGraph
       const edgeColor = '#3b82f6' // Default blue color
 
       edges.push({
@@ -348,80 +351,83 @@ const [relationshipTypeFilter, setRelationshipTypeFilter] = useState<string | un
 
       {/* Network Graph - Enhanced Responsive with Touch Controls - Theme aware */}
       <LtrIsolate>
-      <Card className="relative h-[700px] sm:h-[800px] md:h-[900px] overflow-hidden shadow-xl border-2 border-border">
-        {/* Touch gesture container */}
-        <div
-          className="absolute inset-0 z-10 pointer-events-none"
-          {...touchHandlers}
-          style={{ pointerEvents: touchState.isGestureActive ? 'auto' : 'none' }}
-        />
-
-        <ReactFlow
-          key={graphKey}
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onNodeClick={onNodeClick}
-          onInit={onInit}
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-          fitView
-          fitViewOptions={{
-            padding: 0.2,
-            includeHiddenNodes: false,
-          }}
-          attributionPosition={isRTL ? 'bottom-left' : 'bottom-right'}
-          minZoom={0.1}
-          maxZoom={2.0}
-          defaultEdgeOptions={{
-            animated: false,
-          }}
-          proOptions={{ hideAttribution: true }}
-        >
-          <Background
-            variant={BackgroundVariant.Dots}
-            gap={20}
-            size={1.5}
-            color="hsl(var(--border))"
-            className="bg-background"
+        <Card className="relative h-[700px] sm:h-[800px] md:h-[900px] overflow-hidden shadow-xl border-2 border-border">
+          {/* Touch gesture container */}
+          <div
+            className="absolute inset-0 z-10 pointer-events-none"
+            {...touchHandlers}
+            style={{ pointerEvents: touchState.isGestureActive ? 'auto' : 'none' }}
           />
-        </ReactFlow>
 
-        {/* Floating Zoom Indicator - appears during pinch gestures */}
-        <FloatingZoomIndicator zoomLevel={touchState.zoomLevel} isVisible={touchState.isPinching} />
-
-        {/* Touch-optimized controls for desktop/tablet */}
-        <div className="hidden sm:block">
-          <TouchOptimizedGraphControls
-            zoomLevel={touchState.zoomLevel}
-            zoomPercentage={touchState.zoomPercentage}
-            isGestureActive={touchState.isGestureActive}
-            isPinching={touchState.isPinching}
-            isPanning={touchState.isPanning}
-            onZoomIn={zoomIn}
-            onZoomOut={zoomOut}
-            onReset={resetView}
-            onFitView={fitView}
+          <ReactFlow
+            key={graphKey}
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onNodeClick={onNodeClick}
+            onInit={onInit}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            fitView
+            fitViewOptions={{
+              padding: 0.2,
+              includeHiddenNodes: false,
+            }}
+            attributionPosition={isRTL ? 'bottom-left' : 'bottom-right'}
             minZoom={0.1}
-            maxZoom={2}
-            position={isRTL ? 'bottom-start' : 'bottom-end'}
-            showGestureHint={isTouchDevice}
-          />
-        </div>
+            maxZoom={2.0}
+            defaultEdgeOptions={{
+              animated: false,
+            }}
+            proOptions={{ hideAttribution: true }}
+          >
+            <Background
+              variant={BackgroundVariant.Dots}
+              gap={20}
+              size={1.5}
+              color="hsl(var(--border))"
+              className="bg-background"
+            />
+          </ReactFlow>
 
-        {/* Minimal controls for mobile */}
-        <div className="block sm:hidden">
-          <MobileTouchControls
+          {/* Floating Zoom Indicator - appears during pinch gestures */}
+          <FloatingZoomIndicator
             zoomLevel={touchState.zoomLevel}
-            onZoomIn={zoomIn}
-            onZoomOut={zoomOut}
-            onReset={resetView}
-            minZoom={0.1}
-            maxZoom={2}
+            isVisible={touchState.isPinching}
           />
-        </div>
-      </Card>
+
+          {/* Touch-optimized controls for desktop/tablet */}
+          <div className="hidden sm:block">
+            <TouchOptimizedGraphControls
+              zoomLevel={touchState.zoomLevel}
+              zoomPercentage={touchState.zoomPercentage}
+              isGestureActive={touchState.isGestureActive}
+              isPinching={touchState.isPinching}
+              isPanning={touchState.isPanning}
+              onZoomIn={zoomIn}
+              onZoomOut={zoomOut}
+              onReset={resetView}
+              onFitView={fitView}
+              minZoom={0.1}
+              maxZoom={2}
+              position={isRTL ? 'bottom-start' : 'bottom-end'}
+              showGestureHint={isTouchDevice}
+            />
+          </div>
+
+          {/* Minimal controls for mobile */}
+          <div className="block sm:hidden">
+            <MobileTouchControls
+              zoomLevel={touchState.zoomLevel}
+              onZoomIn={zoomIn}
+              onZoomOut={zoomOut}
+              onReset={resetView}
+              minZoom={0.1}
+              maxZoom={2}
+            />
+          </div>
+        </Card>
       </LtrIsolate>
     </div>
   )

@@ -411,12 +411,16 @@ function ActionableTipsSection({
 
       {/* Show filter removal button if filters are active */}
       {hasFilters && onClearFilters && (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions
         <div className="flex items-center gap-3 p-3 rounded-lg border bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions */}
           <Filter className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
           <div className="flex-1">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions */}
             <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
               {t('noResults.filtersActive', { count: activeFiltersCount })}
             </p>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions */}
             <p className="text-xs text-amber-600 dark:text-amber-400">
               {t('noResults.tryRemovingFilters')}
             </p>
@@ -425,6 +429,7 @@ function ActionableTipsSection({
             variant="outline"
             size="sm"
             onClick={onClearFilters}
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions
             className="min-h-9 border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/30"
           >
             <X className="h-4 w-4 me-1" />
@@ -502,7 +507,7 @@ export function IntelligentSearchSuggestions({
 }: IntelligentSearchSuggestionsProps) {
   const { t, i18n } = useTranslation('enhanced-search')
   const { isRTL } = useDirection()
-const language = i18n.language
+  const language = i18n.language
 
   const {
     data: suggestions,
@@ -537,9 +542,7 @@ const language = i18n.language
 
   if (isLoading) {
     return (
-      <div
-        className={cn('flex flex-col items-center justify-center py-8', className)}
-      >
+      <div className={cn('flex flex-col items-center justify-center py-8', className)}>
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         <p className="mt-2 text-sm text-muted-foreground">{t('noResults.findingSuggestions')}</p>
       </div>
@@ -550,10 +553,7 @@ const language = i18n.language
     // Even if suggestions failed, show filter presets if available
     if (shouldShowPresets) {
       return (
-        <div
-          className={cn('space-y-6', className)}
-          data-testid="intelligent-search-suggestions"
-        >
+        <div className={cn('space-y-6', className)} data-testid="intelligent-search-suggestions">
           <FilterPresetsSection
             presets={recommendedPresets}
             onApplyPreset={onApplyPreset}
@@ -580,10 +580,7 @@ const language = i18n.language
   }
 
   return (
-    <div
-      className={cn('space-y-6', className)}
-      data-testid="intelligent-search-suggestions"
-    >
+    <div className={cn('space-y-6', className)} data-testid="intelligent-search-suggestions">
       {/* Actionable Tips - Show first if there are filters to clear */}
       <ActionableTipsSection
         tips={suggestions.actionable_tips}
