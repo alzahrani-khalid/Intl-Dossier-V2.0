@@ -24,9 +24,13 @@ export function AssignmentQueuePage() {
 
   const getPriorityColor = (priority: string): string => {
     const colors = {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue
       urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue
       high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue
       normal: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue
       low: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
     }
     return colors[priority as keyof typeof colors] || colors.normal
@@ -70,26 +74,32 @@ export function AssignmentQueuePage() {
           </CardContent>
         </Card>
 
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue */}
         <Card className="border-red-200 dark:border-red-800">
           <CardHeader className="pb-3">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue */}
             <CardTitle className="text-sm font-medium text-red-700 dark:text-red-300">
               Urgent
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue */}
             <div className="text-2xl font-bold text-red-700 dark:text-red-300">
               {isLoading ? '...' : urgentCount}
             </div>
           </CardContent>
         </Card>
 
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue */}
         <Card className="border-orange-200 dark:border-orange-800">
           <CardHeader className="pb-3">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue */}
             <CardTitle className="text-sm font-medium text-orange-700 dark:text-orange-300">
               High
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue */}
             <div className="text-2xl font-bold text-orange-700 dark:text-orange-300">
               {isLoading ? '...' : highCount}
             </div>
@@ -202,6 +212,7 @@ export function AssignmentQueuePage() {
         ) : (
           <Card>
             <CardContent className="p-6 text-center text-muted-foreground">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AssignmentQueue */}
               <Clock className="mx-auto mb-2 size-12 text-blue-500" />
               <p>No items in queue</p>
             </CardContent>

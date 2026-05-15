@@ -33,18 +33,24 @@ const statusConfig: Record<
   WorkflowExecutionStatus,
   { icon: typeof CheckCircle2; color: string; bgColor: string }
 > = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
   completed: { icon: CheckCircle2, color: 'text-green-600', bgColor: 'bg-green-100' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
   failed: { icon: XCircle, color: 'text-red-600', bgColor: 'bg-red-100' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
   running: { icon: Loader2, color: 'text-blue-600', bgColor: 'bg-blue-100' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
   pending: { icon: Clock, color: 'text-yellow-600', bgColor: 'bg-yellow-100' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
   cancelled: { icon: XCircle, color: 'text-gray-600', bgColor: 'bg-gray-100' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
   paused: { icon: Clock, color: 'text-orange-600', bgColor: 'bg-orange-100' },
 }
 
 export function WorkflowExecutionsList({ ruleId }: WorkflowExecutionsListProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
@@ -210,15 +216,19 @@ function ExecutionCard({
                   <p className="font-medium">{execution.actions_executed}</p>
                 </div>
                 <div>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList */}
                   <span className="text-muted-foreground text-green-600">
                     {t('executionStatus.completed')}
                   </span>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList */}
                   <p className="font-medium text-green-600">{execution.actions_succeeded}</p>
                 </div>
                 <div>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList */}
                   <span className="text-muted-foreground text-red-600">
                     {t('executionStatus.failed')}
                   </span>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList */}
                   <p className="font-medium text-red-600">{execution.actions_failed}</p>
                 </div>
               </div>
@@ -251,10 +261,13 @@ function ExecutionCard({
                       >
                         <div className="flex items-center gap-2">
                           {entry.status === 'success' ? (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
                             <CheckCircle2 className="h-3 w-3 text-green-600" />
                           ) : entry.status === 'failed' ? (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
                             <XCircle className="h-3 w-3 text-red-600" />
                           ) : (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowExecutionsList
                             <Clock className="h-3 w-3 text-gray-600" />
                           )}
                           <span>{entry.type}</span>

@@ -193,7 +193,9 @@ export function EscalationDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <ArrowUp
+              /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EscalationDialog */
               className={`h-5 w-5 sm:h-6 sm:w-6 text-orange-600 ${isRTL ? 'rotate-180' : ''}`}
+              /* eslint-enable no-restricted-syntax */
             />
             {t('waitingQueue.escalation.escalateAssignment', 'Escalate Assignment')}
           </DialogTitle>

@@ -504,6 +504,7 @@ export const projectPlugin: EntityPlugin<ProjectExtension> = createPlugin<Projec
           if (entity.priority === 'critical') {
             return createElement(
               'span',
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-project-plugin
               { className: 'px-2 py-1 text-xs bg-red-100 text-red-800 rounded' },
               'Critical',
             )
@@ -511,6 +512,7 @@ export const projectPlugin: EntityPlugin<ProjectExtension> = createPlugin<Projec
           if (entity.priority === 'high') {
             return createElement(
               'span',
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-project-plugin
               { className: 'px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded' },
               'High Priority',
             )
@@ -529,6 +531,7 @@ export const projectPlugin: EntityPlugin<ProjectExtension> = createPlugin<Projec
           ) {
             return createElement(
               'span',
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-project-plugin
               { className: 'px-2 py-1 text-xs bg-red-100 text-red-800 rounded' },
               'Overdue',
             )

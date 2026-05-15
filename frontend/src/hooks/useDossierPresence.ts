@@ -53,13 +53,21 @@ export interface UseDossierPresenceOptions {
 
 // Predefined colors for user avatars (high contrast, accessible)
 const USER_COLORS = [
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   '#2563eb', // Blue
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   '#dc2626', // Red
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   '#16a34a', // Green
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   '#ea580c', // Orange
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   '#7c3aed', // Purple
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   '#0891b2', // Cyan
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   '#be185d', // Pink
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   '#4f46e5', // Indigo
 ]
 
@@ -68,6 +76,7 @@ function getUserColor(userId: string): string {
   const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   const color = USER_COLORS[hash % USER_COLORS.length]
   // Ensure we always return a valid color string
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useDossierPresence
   return color !== undefined ? color : '#2563eb'
 }
 

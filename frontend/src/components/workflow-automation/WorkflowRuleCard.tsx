@@ -43,7 +43,7 @@ export function WorkflowRuleCard({
 }: WorkflowRuleCardProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   const triggerOption = getTriggerTypeOption(rule.trigger_type)
   const entityOption = getEntityTypeOption(rule.entity_type)
@@ -65,6 +65,7 @@ const locale = isRTL ? ar : enUS
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-semibold text-base truncate">{name}</h3>
               {rule.is_active ? (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowRuleCard
                 <Badge variant="default" className="bg-green-500">
                   {t('filters.active')}
                 </Badge>

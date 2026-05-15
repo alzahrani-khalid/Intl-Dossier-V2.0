@@ -233,17 +233,20 @@ export function IntakeQueuePage() {
 
     if (hoursWaiting > 8)
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntakeQueue
         color: 'text-red-600',
         icon: AlertCircle,
         label: `${Math.floor(hoursWaiting)}h waiting`,
       }
     if (hoursWaiting > 4)
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntakeQueue
         color: 'text-orange-600',
         icon: Clock,
         label: `${Math.floor(hoursWaiting)}h waiting`,
       }
     return {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntakeQueue
       color: 'text-green-600',
       icon: CheckCircle2,
       label: `${Math.floor(hoursWaiting)}h waiting`,

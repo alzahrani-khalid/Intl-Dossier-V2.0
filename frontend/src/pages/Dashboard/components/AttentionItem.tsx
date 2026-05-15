@@ -27,6 +27,7 @@ const attentionItemVariants = cva(
       severity: {
         red: 'border-destructive/50 bg-destructive/5 hover:bg-destructive/10',
         orange: 'border-warning/50 bg-warning/5 hover:bg-warning/10',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AttentionItem
         yellow: 'border-yellow-500/50 bg-yellow-500/5 hover:bg-yellow-500/10',
       },
     },
@@ -43,6 +44,7 @@ const attentionItemVariants = cva(
 const severityBadgeColor: Record<AttentionSeverity, string> = {
   red: 'text-destructive',
   orange: 'text-warning',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AttentionItem
   yellow: 'text-yellow-600',
 }
 
