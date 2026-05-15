@@ -272,6 +272,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence */}
               <Users className="h-5 w-5 text-blue-600" />
               <div>
                 <p className="text-xs text-muted-foreground">{t('stakeholders', 'Stakeholders')}</p>
@@ -289,6 +290,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence */}
               <GitBranch className="h-5 w-5 text-purple-600" />
               <div>
                 <p className="text-xs text-muted-foreground">
@@ -308,6 +310,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence */}
               <TrendingUp className="h-5 w-5 text-amber-600" />
               <div>
                 <p className="text-xs text-muted-foreground">
@@ -327,6 +330,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence */}
               <BarChart3 className="h-5 w-5 text-green-600" />
               <div>
                 <p className="text-xs text-muted-foreground">{t('avg_influence', 'Avg Score')}</p>

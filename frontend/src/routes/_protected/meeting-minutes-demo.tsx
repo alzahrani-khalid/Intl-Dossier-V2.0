@@ -166,7 +166,7 @@ const sampleActionItems: MeetingActionItem[] = [
 function MeetingMinutesDemo() {
   const { t } = useTranslation('meeting-minutes')
   const { isRTL } = useDirection()
-const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
+  const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
   const [actionItems, setActionItems] = useState<MeetingActionItem[]>(sampleActionItems)
   const [extractText, setExtractText] = useState('')
   const [activeTab, setActiveTab] = useState('list')
@@ -248,6 +248,7 @@ const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
               <Users className="h-8 w-8 text-blue-500" />
               <div>
                 <p className="text-2xl font-bold">{attendees.length}</p>
@@ -260,6 +261,7 @@ const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
               <CheckSquare className="h-8 w-8 text-green-500" />
               <div>
                 <p className="text-2xl font-bold">{actionItems.length}</p>
@@ -272,6 +274,7 @@ const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
               <Sparkles className="h-8 w-8 text-purple-500" />
               <div>
                 <p className="text-2xl font-bold">
@@ -286,6 +289,7 @@ const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
               <Mic className="h-8 w-8 text-orange-500" />
               <div>
                 <p className="text-2xl font-bold">0</p>
@@ -368,6 +372,7 @@ const [attendees, setAttendees] = useState<MeetingAttendee[]>(sampleAttendees)
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
                 <Sparkles className="h-5 w-5 text-purple-500" />
                 {t('ai.title')}
               </CardTitle>

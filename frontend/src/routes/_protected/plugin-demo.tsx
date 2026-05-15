@@ -40,8 +40,8 @@ export const Route = createFileRoute('/_protected/plugin-demo')({
 // ============================================================================
 
 function PluginDemoPage() {
-const { isRTL } = useDirection()
-const [isInitialized, setIsInitialized] = useState(false)
+  const { isRTL } = useDirection()
+  const [isInitialized, setIsInitialized] = useState(false)
   const [plugins, setPlugins] = useState<EntityPlugin[]>([])
   const [entityTypes, setEntityTypes] = useState<string[]>([])
   const [selectedPlugin, setSelectedPlugin] = useState<EntityPlugin | null>(null)
@@ -106,9 +106,7 @@ const [isInitialized, setIsInitialized] = useState(false)
   void togglePlugin
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -149,8 +147,10 @@ const [isInitialized, setIsInitialized] = useState(false)
           <CardContent>
             <div className="flex items-center gap-2">
               {isInitialized ? (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
                 <CheckCircle className="h-5 w-5 text-green-500" />
               ) : (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
                 <XCircle className="h-5 w-5 text-red-500" />
               )}
               <span className="text-lg font-semibold">
@@ -320,6 +320,7 @@ const [isInitialized, setIsInitialized] = useState(false)
                             </TableCell>
                             <TableCell>
                               {field.required ? (
+                                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
                                 <CheckCircle className="h-4 w-4 text-green-500" />
                               ) : (
                                 <span className="text-muted-foreground">-</span>
@@ -380,6 +381,7 @@ const [isInitialized, setIsInitialized] = useState(false)
                         {isRTL ? 'قبل الإنشاء' : 'Before Create'}
                       </h4>
                       {selectedPlugin.validation?.beforeCreate ? (
+                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
                         <CheckCircle className="h-5 w-5 text-green-500" />
                       ) : (
                         <XCircle className="h-5 w-5 text-muted-foreground" />
@@ -390,6 +392,7 @@ const [isInitialized, setIsInitialized] = useState(false)
                         {isRTL ? 'قبل التحديث' : 'Before Update'}
                       </h4>
                       {selectedPlugin.validation?.beforeUpdate ? (
+                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
                         <CheckCircle className="h-5 w-5 text-green-500" />
                       ) : (
                         <XCircle className="h-5 w-5 text-muted-foreground" />
@@ -398,6 +401,7 @@ const [isInitialized, setIsInitialized] = useState(false)
                     <div className="p-4 rounded-lg border">
                       <h4 className="font-medium mb-2">{isRTL ? 'قبل الحذف' : 'Before Delete'}</h4>
                       {selectedPlugin.validation?.beforeDelete ? (
+                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
                         <CheckCircle className="h-5 w-5 text-green-500" />
                       ) : (
                         <XCircle className="h-5 w-5 text-muted-foreground" />

@@ -239,35 +239,56 @@ export interface AnalyticsErrorResponse {
 // ============================================================================
 
 export const DEFAULT_CHART_COLORS = [
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   '#3B82F6', // blue
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   '#10B981', // emerald
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   '#F59E0B', // amber
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   '#EF4444', // red
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   '#8B5CF6', // violet
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   '#EC4899', // pink
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   '#06B6D4', // cyan
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   '#84CC16', // lime
 ]
 
 export const HEALTH_LEVEL_COLORS: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   excellent: '#10B981',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   good: '#34D399',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   fair: '#FBBF24',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   poor: '#F97316',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   critical: '#EF4444',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   unknown: '#9CA3AF',
 }
 
 export const PRIORITY_COLORS: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   low: '#9CA3AF',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   medium: '#3B82F6',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   high: '#F59E0B',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   urgent: '#EF4444',
 }
 
 export const TREND_COLORS: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   improving: '#10B981',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   stable: '#9CA3AF',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#analytics.types
   declining: '#EF4444',
 }
 

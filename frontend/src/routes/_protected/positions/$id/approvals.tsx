@@ -69,12 +69,16 @@ function ApprovalTrackingPage() {
   const getActionIcon = (action: string) => {
     switch (action) {
       case 'approve':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#approvals-$id
         return <CheckCircle className="h-4 w-4 text-green-500" />
       case 'request_revisions':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#approvals-$id
         return <XCircle className="h-4 w-4 text-red-500" />
       case 'delegate':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#approvals-$id
         return <UserPlus className="h-4 w-4 text-blue-500" />
       case 'reassign':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#approvals-$id
         return <Users className="h-4 w-4 text-orange-500" />
       default:
         return null

@@ -77,6 +77,7 @@ function ElectedOfficialCommitteesTab(): ReactElement {
                 </TableCell>
                 <TableCell>
                   {committee.is_active ? (
+                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#committees
                     <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 rounded-full px-2 py-0.5 text-xs">
                       {t('committees.active')}
                     </Badge>
@@ -104,6 +105,7 @@ function ElectedOfficialCommitteesTab(): ReactElement {
                 {isRTL ? (committee.name_ar ?? committee.name_en) : committee.name_en}
               </h3>
               {committee.is_active ? (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#committees
                 <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 rounded-full px-2 py-0.5 text-xs flex-shrink-0">
                   {t('committees.active')}
                 </Badge>
