@@ -200,9 +200,11 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
 // Trend Icon Component
 const TrendIcon: React.FC<{ direction: 'up' | 'down' | 'stable' }> = ({ direction }) => {
   if (direction === 'up') {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionAnalyticsCard
     return <TrendingUp className="h-4 w-4 text-green-600" />
   }
   if (direction === 'down') {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionAnalyticsCard
     return <TrendingUp className="h-4 w-4 rotate-180 text-red-600" />
   }
   return <div className="h-4 w-4" /> // Stable - no icon

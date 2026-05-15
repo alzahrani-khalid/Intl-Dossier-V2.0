@@ -79,7 +79,7 @@ export function ActionItemsList({
 }: ActionItemsListProps) {
   const { t } = useTranslation('meeting-minutes')
   const { isRTL } = useDirection()
-const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
 
   const toggleExpanded = (id: string) => {
     setExpandedItems((prev) => {
@@ -224,6 +224,7 @@ const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
 
                         {/* AI Extracted */}
                         {item.ai_extracted && (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActionItemsList
                           <span className="flex items-center gap-1 text-xs text-purple-600 dark:text-purple-400">
                             <Sparkles className="h-3 w-3" />
                             {item.ai_confidence
@@ -236,6 +237,7 @@ const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
 
                         {/* Linked to Commitment */}
                         {item.linked_commitment_id && (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActionItemsList
                           <span className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
                             <Link2 className="h-3 w-3" />
                             {t('actionItems.linkedCommitment')}
@@ -244,6 +246,7 @@ const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
 
                         {/* Linked to Task */}
                         {item.linked_task_id && (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActionItemsList
                           <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
                             <Link2 className="h-3 w-3" />
                             {t('actionItems.linkedTask')}

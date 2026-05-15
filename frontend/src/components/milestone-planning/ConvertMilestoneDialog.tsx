@@ -34,19 +34,25 @@ const eventTypes = [
   {
     value: 'calendar',
     icon: Calendar,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
     color: 'text-blue-600 dark:text-blue-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
   },
   {
     value: 'commitment',
     icon: FileCheck2,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
     color: 'text-green-600 dark:text-green-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
     bgColor: 'bg-green-100 dark:bg-green-900/30',
   },
   {
     value: 'decision',
     icon: ClipboardList,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
     color: 'text-purple-600 dark:text-purple-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',
   },
 ]
@@ -59,7 +65,7 @@ export function ConvertMilestoneDialog({
 }: ConvertMilestoneDialogProps) {
   const { t } = useTranslation('milestone-planning')
   const { isRTL } = useDirection()
-const [selectedType, setSelectedType] = useState('calendar')
+  const [selectedType, setSelectedType] = useState('calendar')
   const [isConverting, setIsConverting] = useState(false)
 
   const title = isRTL ? milestone.title_ar : milestone.title_en

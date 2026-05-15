@@ -399,6 +399,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                 </span>
               )}
               {hasOpenCommentPeriod && (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationList
                 <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
                   <AlertCircle className="h-3.5 w-3.5" />
                   {t('commentPeriod.daysRemaining', { count: daysUntilCommentEnd })}

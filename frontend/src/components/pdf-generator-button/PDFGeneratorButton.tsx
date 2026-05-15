@@ -35,7 +35,7 @@ export function PDFGeneratorButton({
 }: PDFGeneratorButtonProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const [language, setLanguage] = useState<PDFLanguage>('both')
   const [status, setStatus] = useState<GenerationStatus>('idle')
   const [error, setError] = useState<string | null>(null)
@@ -162,6 +162,7 @@ const [open, setOpen] = useState(false)
           <DialogTitle className="flex items-center gap-2">
             <FileText className="size-5" />
             {t('afterActions.pdf.title')}
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
             {isConfidential && <Shield className="size-4 text-amber-500" />}
           </DialogTitle>
           <DialogDescription>{t('afterActions.pdf.description')}</DialogDescription>
@@ -170,8 +171,11 @@ const [open, setOpen] = useState(false)
         <div className="space-y-4 py-4">
           {/* Confidential Warning */}
           {isConfidential && status === 'idle' && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton
             <Alert className="border-amber-500">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
               <Shield className="size-4 text-amber-500" />
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
               <AlertDescription className="text-amber-700">
                 {t('afterActions.pdf.confidentialWarning')}
               </AlertDescription>
@@ -226,8 +230,11 @@ const [open, setOpen] = useState(false)
           )}
 
           {status === 'completed' && pdfUrl && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton
             <Alert className="border-green-500">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
               <CheckCircle className="size-4 text-green-500" />
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
               <AlertDescription className="text-green-700">
                 <div className="space-y-2">
                   <p>{t('afterActions.pdf.completed')}</p>

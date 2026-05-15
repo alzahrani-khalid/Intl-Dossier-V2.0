@@ -71,8 +71,8 @@ export function NavigationShell({
   className,
   defaultPanelOpen = true,
 }: NavigationShellProps) {
-const { isRTL } = useDirection()
-const location = useLocation()
+  const { isRTL } = useDirection()
+  const location = useLocation()
 
   // Panel state - only open by default on desktop (>=768px)
   const [isPanelOpen, setIsPanelOpen] = useState(() => {
@@ -136,9 +136,7 @@ const location = useLocation()
   }
 
   return (
-    <div
-      className={cn('flex h-screen w-full overflow-hidden', className)}
-    >
+    <div className={cn('flex h-screen w-full overflow-hidden', className)}>
       {/* Mobile Menu Button - Only visible on mobile */}
       <div className="fixed top-0 start-0 z-50 p-4 md:hidden">
         <Button
@@ -240,6 +238,7 @@ const location = useLocation()
           'rounded-e-[12px]',
         )}
         style={{
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NavigationShell */
           backgroundColor: '#f7f9fa',
           backgroundImage:
             'linear-gradient(rgba(247, 249, 250, 0.85), rgba(247, 249, 250, 0.85)), url(/white-texture.jpg)',

@@ -60,31 +60,37 @@ const quickAddTemplates: Array<{
   {
     type: 'engagement',
     icon: Users,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
     color: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
   },
   {
     type: 'policy_deadline',
     icon: FileText,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
     color: 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
   },
   {
     type: 'relationship_review',
     icon: RefreshCw,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
     color: 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
   },
   {
     type: 'document_due',
     icon: FileCheck,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
     color: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
   },
   {
     type: 'follow_up',
     icon: ArrowRight,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
     color: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400',
   },
   {
     type: 'renewal',
     icon: RotateCcw,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
     color: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
   },
 ]
@@ -102,7 +108,7 @@ export function MilestonePlannerEmptyState({
 }: MilestonePlannerEmptyStateProps) {
   const { t } = useTranslation('milestone-planning')
   const { isRTL } = useDirection()
-const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editMilestone, setEditMilestone] = useState<PlannedMilestone | null>(null)
   const [_selectedType, setSelectedType] = useState<MilestoneType | null>(null)
   const [convertMilestone, setConvertMilestone] = useState<PlannedMilestone | null>(null)
@@ -208,6 +214,7 @@ const [isDialogOpen, setIsDialogOpen] = useState(false)
 
           {/* Hint */}
           <div className="flex items-start gap-2 bg-muted/50 rounded-lg p-3 sm:p-4 max-w-md mb-8">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
             <Lightbulb className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
             <p className="text-xs sm:text-sm text-muted-foreground text-start">
               {t('emptyState.hint')}
@@ -272,7 +279,9 @@ const [isDialogOpen, setIsDialogOpen] = useState(false)
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
                 <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
                   <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
@@ -283,7 +292,9 @@ const [isDialogOpen, setIsDialogOpen] = useState(false)
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
                 <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
                   <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
@@ -294,11 +305,14 @@ const [isDialogOpen, setIsDialogOpen] = useState(false)
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
                 <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
                   <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 dark:text-red-400" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{t('stats.overdue')}</p>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
                   <p className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400">
                     {stats.overdue}
                   </p>

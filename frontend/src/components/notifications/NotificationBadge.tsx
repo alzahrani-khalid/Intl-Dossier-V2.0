@@ -27,6 +27,7 @@ export function NotificationBadge({
 
   const variantClasses = {
     default: 'bg-destructive text-destructive-foreground',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationBadge
     urgent: 'bg-red-600 text-white animate-pulse',
     muted: 'bg-muted text-muted-foreground',
   }

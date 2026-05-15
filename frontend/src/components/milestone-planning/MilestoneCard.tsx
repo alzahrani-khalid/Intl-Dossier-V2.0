@@ -63,28 +63,43 @@ const typeIcons: Record<MilestoneType, typeof Users> = {
 
 // Color mapping for milestone types
 const typeColors: Record<MilestoneType, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   engagement: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   policy_deadline: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   relationship_review: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   document_due: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   follow_up: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   renewal: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   custom: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400',
 }
 
 // Priority colors
 const priorityColors: Record<TimelinePriority, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   low: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
 }
 
 // Status colors
 const statusColors = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   planned: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   in_progress: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   completed: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   postponed: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
   cancelled: 'bg-gray-100 text-gray-500 dark:bg-gray-900/30 dark:text-gray-400',
 }
 
@@ -113,7 +128,7 @@ export function MilestoneCard({
 }: MilestoneCardProps) {
   const { t, i18n } = useTranslation('milestone-planning')
   const { isRTL } = useDirection()
-const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const TypeIcon = typeIcons[milestone.milestone_type]
   const daysUntil = getDaysUntil(milestone.target_date)
@@ -161,6 +176,7 @@ const [isExpanded, setIsExpanded] = useState(false)
       <Card
         className={cn(
           'transition-all duration-200 hover:shadow-md',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard */
           isOverdue && 'border-red-300 dark:border-red-700',
           milestone.status === 'completed' && 'opacity-75',
         )}
@@ -261,7 +277,9 @@ const [isExpanded, setIsExpanded] = useState(false)
                 <span
                   className={cn(
                     'font-medium',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard */
                     isOverdue && 'text-red-600 dark:text-red-400',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard */
                     isDueToday && 'text-amber-600 dark:text-amber-400',
                   )}
                 >

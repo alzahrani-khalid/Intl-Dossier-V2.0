@@ -42,8 +42,8 @@ export function IconButton({
   className,
   badge,
 }: IconButtonProps) {
-const { isRTL } = useDirection()
-return (
+  const { isRTL } = useDirection()
+  return (
     <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -100,6 +100,7 @@ return (
         <TooltipContent
           side={isRTL ? 'left' : 'right'}
           sideOffset={8}
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IconButton
           className="bg-gray-900 text-white border-gray-800"
         >
           <p className="text-sm font-medium">{tooltip}</p>

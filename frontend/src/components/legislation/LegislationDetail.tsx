@@ -78,7 +78,7 @@ interface LegislationDetailProps {
 export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps) {
   const { t } = useTranslation('legislation')
   const { isRTL } = useDirection()
-const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useState('overview')
 
   // Fetch data
   const { data: legislation, isLoading, error } = useLegislation(id)
@@ -133,8 +133,7 @@ const [activeTab, setActiveTab] = useState('overview')
     )
   }
 
-  const title =
-    isRTL && legislation.title_ar ? legislation.title_ar : legislation.title_en
+  const title = isRTL && legislation.title_ar ? legislation.title_ar : legislation.title_en
 
   const statusColors = STATUS_COLORS[legislation.status]
   const priorityColors = PRIORITY_COLORS[legislation.priority]
@@ -345,9 +344,11 @@ function CommentPeriodCard({ endDate }: { endDate: string }) {
   )
 
   return (
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail
     <Card className="border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20">
       <CardContent className="p-4">
         <p className="text-sm text-muted-foreground text-start">{t('commentPeriod.title')}</p>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail */}
         <p className="text-lg font-semibold text-amber-700 dark:text-amber-300 text-start">
           {t('commentPeriod.daysRemaining', { count: daysRemaining })}
         </p>
@@ -356,23 +357,14 @@ function CommentPeriodCard({ endDate }: { endDate: string }) {
   )
 }
 
-function OverviewTab({
-  legislation,
-}: {
-  legislation: LegislationWithDetails
-}) {
+function OverviewTab({ legislation }: { legislation: LegislationWithDetails }) {
   const { t } = useTranslation('legislation')
   const { isRTL } = useDirection()
 
-  const summary =
-    isRTL && legislation.summary_ar
-      ? legislation.summary_ar
-      : legislation.summary_en
+  const summary = isRTL && legislation.summary_ar ? legislation.summary_ar : legislation.summary_en
 
   const description =
-    isRTL && legislation.description_ar
-      ? legislation.description_ar
-      : legislation.description_en
+    isRTL && legislation.description_ar ? legislation.description_ar : legislation.description_en
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
@@ -611,9 +603,7 @@ function OverviewTab({
               <div>
                 <p className="text-muted-foreground text-start">{t('detail.lastUpdated')}</p>
                 <p className="font-medium text-start">
-                  {new Date(legislation.updated_at).toLocaleDateString(
-                    isRTL ? 'ar-SA' : 'en-US',
-                  )}
+                  {new Date(legislation.updated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
                 </p>
               </div>
             </div>
@@ -665,6 +655,7 @@ function DeadlinesTab({
             key={deadline.id}
             className={cn(
               deadline.is_completed && 'opacity-60',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail */
               isOverdue && 'border-red-300 dark:border-red-700',
             )}
           >
@@ -689,9 +680,7 @@ function DeadlinesTab({
                     )}
                   </div>
                   <h4 className="font-medium text-start">
-                    {isRTL && deadline.title_ar
-                      ? deadline.title_ar
-                      : deadline.title_en}
+                    {isRTL && deadline.title_ar ? deadline.title_ar : deadline.title_en}
                   </h4>
                   {deadline.description_en && (
                     <p className="text-sm text-muted-foreground text-start mt-1">
@@ -711,7 +700,9 @@ function DeadlinesTab({
                     <p
                       className={cn(
                         'text-sm',
+                        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail */
                         isOverdue && 'text-red-600 dark:text-red-400',
+                        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail */
                         isToday && 'text-amber-600 dark:text-amber-400',
                         !isOverdue && !isToday && 'text-muted-foreground',
                       )}
@@ -766,9 +757,7 @@ function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[] }) {
                 <Badge>{t(`amendments.status.${amendment.status}`)}</Badge>
               </div>
               <h4 className="font-medium text-start">
-                {isRTL && amendment.title_ar
-                  ? amendment.title_ar
-                  : amendment.title_en}
+                {isRTL && amendment.title_ar ? amendment.title_ar : amendment.title_en}
               </h4>
               {amendment.description_en && (
                 <p className="text-sm text-muted-foreground text-start">
@@ -780,9 +769,7 @@ function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[] }) {
               {amendment.proposed_date && (
                 <p className="text-sm text-muted-foreground text-start">
                   {t('amendments.form.proposedDate')}:{' '}
-                  {new Date(amendment.proposed_date).toLocaleDateString(
-                    isRTL ? 'ar-SA' : 'en-US',
-                  )}
+                  {new Date(amendment.proposed_date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
                 </p>
               )}
             </div>
@@ -840,9 +827,7 @@ function SponsorsTab({ sponsors }: { sponsors: LegislationSponsor[] }) {
                       </p>
                       {sponsor.title_en && (
                         <p className="text-sm text-muted-foreground text-start">
-                          {isRTL && sponsor.title_ar
-                            ? sponsor.title_ar
-                            : sponsor.title_en}
+                          {isRTL && sponsor.title_ar ? sponsor.title_ar : sponsor.title_en}
                         </p>
                       )}
                       {sponsor.affiliation_en && (
@@ -918,11 +903,7 @@ function RelatedTab({
   )
 }
 
-function HistoryTab({
-  statusHistory,
-}: {
-  statusHistory: LegislationStatusHistory[]
-}) {
+function HistoryTab({ statusHistory }: { statusHistory: LegislationStatusHistory[] }) {
   const { t } = useTranslation('legislation')
   const { isRTL } = useDirection()
 
@@ -977,9 +958,7 @@ function HistoryTab({
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground text-start">
-                  {new Date(entry.changed_at).toLocaleString(
-                    isRTL ? 'ar-SA' : 'en-US',
-                  )}
+                  {new Date(entry.changed_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                 </p>
                 {entry.change_reason && (
                   <p className="text-sm mt-2 text-start">

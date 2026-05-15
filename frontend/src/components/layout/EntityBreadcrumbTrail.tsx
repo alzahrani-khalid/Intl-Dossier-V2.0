@@ -57,14 +57,23 @@ const entityIcons: Record<EntityType, React.ComponentType<{ className?: string }
 
 /** Map entity types to colors */
 const entityColors: Record<EntityType, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   dossier: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   country: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   organization: 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   person: 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   engagement: 'bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-300',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   position: 'bg-teal-100 text-teal-600 dark:bg-teal-900 dark:text-teal-300',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   forum: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   working_group: 'bg-pink-100 text-pink-600 dark:bg-pink-900 dark:text-pink-300',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityBreadcrumbTrail
   topic: 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300',
 }
 
