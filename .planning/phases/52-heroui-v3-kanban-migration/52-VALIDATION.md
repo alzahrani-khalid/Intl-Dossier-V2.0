@@ -41,7 +41,7 @@ created: 2026-05-16
 | Task ID  | Plan | Wave | Requirement | Threat Ref | Secure Behavior                                                  | Test Type | Automated Command                                                                                      | File Exists | Status     |
 | -------- | ---- | ---- | ----------- | ---------- | ---------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------ | ----------- | ---------- |
 | 52-XX-01 | TBD  | 1    | KANBAN-01   | —          | Tasks tab board renders + drag persists                          | unit      | `pnpm --filter frontend test:unit -- src/components/kanban/__tests__/KanbanBoard.test.tsx`             | ❌ W0       | ⬜ pending |
-| 52-XX-02 | TBD  | 1    | KANBAN-01   | —          | Sortable column accepts pointer/touch/keyboard sensor events     | unit      | `pnpm --filter frontend test:unit -- src/components/kanban/__tests__/KanbanColumn.test.tsx`            | ❌ W0       | ⬜ pending |
+| 52-XX-02 | TBD  | 1    | KANBAN-01   | —          | Sortable column accepts pointer/touch/keyboard sensor events     | unit      | `pnpm --filter frontend test:unit -- src/components/kanban/__tests__/KanbanProvider.test.tsx`          | ❌ W0       | ⬜ pending |
 | 52-XX-03 | TBD  | 1    | KANBAN-01   | —          | KanbanCard renders Chip + Avatar + token-bound surface           | unit      | `pnpm --filter frontend test:unit -- src/components/kanban/__tests__/KanbanCard.test.tsx`              | ❌ W0       | ⬜ pending |
 | 52-XX-04 | TBD  | 2    | KANBAN-01   | —          | TasksTab drag mouse → persists via mutation                      | e2e       | `pnpm --filter frontend test:e2e -- tests/e2e/kanban/tasks-tab-drag.spec.ts`                           | ❌ W0       | ⬜ pending |
 | 52-XX-05 | TBD  | 2    | KANBAN-01   | —          | TasksTab drag keyboard (Space, Arrow, Space) → persists          | e2e       | `pnpm --filter frontend test:e2e -- tests/e2e/kanban/tasks-tab-keyboard.spec.ts`                       | ❌ W0       | ⬜ pending |
@@ -67,7 +67,7 @@ _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 ## Wave 0 Requirements
 
 - [ ] `frontend/src/components/kanban/__tests__/KanbanBoard.test.tsx` — unit stub for board composition (KANBAN-01)
-- [ ] `frontend/src/components/kanban/__tests__/KanbanColumn.test.tsx` — sensor + sortable list stub (KANBAN-01)
+- [ ] `frontend/src/components/kanban/__tests__/KanbanProvider.test.tsx` — sensor + sortable list stub (KANBAN-01)
 - [ ] `frontend/src/components/kanban/__tests__/KanbanCard.test.tsx` — token-bound card stub (KANBAN-01)
 - [ ] `frontend/src/components/kanban/__tests__/eslint-ban.test.ts` — assertion that `import 'kibo-ui'` and `import '@/components/kibo-ui/...'` are flagged (KANBAN-03)
 - [ ] `tests/e2e/kanban/tasks-tab-drag.spec.ts`, `tasks-tab-keyboard.spec.ts`, `tasks-tab-touch.spec.ts` — Playwright skeletons for KANBAN-01

@@ -214,10 +214,24 @@ Plans:
 
 Plans:
 
+**Wave 1**
+
 - [ ] 52-01-PLAN.md — Wave-0 test scaffolds (vitest stubs + 8 Playwright spec skeletons + ESLint regression fixture) (Wave 1)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 52-02-PLAN.md — Build new shared `frontend/src/components/kanban/*` primitive (5 components + barrel; native DragOverlay; WorkBoard sensor stack) (Wave 2)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
 - [ ] 52-03-PLAN.md — Consumer migration (TasksTab + EngagementKanbanDialog import swap; STAGE_COLORS deletion; KanbanTaskCard Tier-C absorption) (Wave 3)
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
 - [ ] 52-04-PLAN.md — kibo-ui directory deletion + tunnel-rat removal + ESLint widen + check-deleted-components update + Phase 51 audit row closeout (Wave 4)
+
+**Wave 5** _(blocked on Wave 4 completion)_
+
 - [ ] 52-05-PLAN.md — 8 visual baselines (EN+AR × 1280+768) + axe-core a11y + 12-spec regression anchor + human-verify checkpoint + 52-SUMMARY.md (Wave 5; one human-verify checkpoint)
 
 **UI hint:** yes
