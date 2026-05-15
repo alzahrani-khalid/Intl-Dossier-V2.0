@@ -3,6 +3,18 @@
 **Total Tier-A files:** 50
 **Total Tier-C files:** 271
 **Expected per-Literal disable count:** 2336
+**Observed `eslint-disable-next-line` lines added (D-12 diff scan):** 2245
+**Reconciliation note (Plan 51-04 Task 5, source-first):** The expected count (2336)
+sums the per-file `raw_hex_count + palette_literal_count` columns below, which count
+AST `Literal` and `TemplateElement` nodes. The observed diff count (2245) counts the
+`eslint-disable-next-line` _source lines_ added under `frontend/src/`. The 91-line
+delta is the documented multi-Literal-on-one-line edge case from Plan 51-04 Task 2
+done-criteria — when two or more banned Literals share a single source line, one
+`eslint-disable-next-line` comment covers them all (ESLint's per-line semantics).
+Per-file ESLint reruns on every Tier-C file return zero `no-restricted-syntax`
+warnings (every Literal is suppressed). Source-of-truth direction: source code first,
+audit doc reconciled to match — both counts are valid, the diff-grep value is the
+canonical D-12 audit number.
 
 ## Tier-A Worklist
 
