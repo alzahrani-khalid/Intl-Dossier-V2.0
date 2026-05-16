@@ -28,6 +28,7 @@ export const KanbanBoard = ({
         isCancelled === true && 'border-danger/30',
         className,
       )}
+      data-droppable-id={id}
       ref={setNodeRef}
     >
       {children}
