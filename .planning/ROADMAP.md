@@ -312,7 +312,7 @@ Phase 54 is independent of Phases 51–53 and may execute in parallel with any o
 | 50 | v6.3 | 0/0 | Not started | — |
 | 51 | v6.3 | 1/4 | In Progress|  |
 | 52 | v6.3 | 3/5 | In Progress|  |
-| 53 | v6.3 | 3/3 | Complete   | 2026-05-16 |
+| 53 | v6.3 | 3/3 | Complete    | 2026-05-16 |
 | 54 | v6.3 | 0/0 | Not started | — |
 
 <!-- gsd:progress:end -->

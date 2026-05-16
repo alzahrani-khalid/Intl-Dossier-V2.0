@@ -44,11 +44,11 @@ The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`
 
 - `useStakeholderInteractionMutations` shim retained (1 of 20) — type at source when underlying implementation lands
 - `TasksTab.tsx` + `EngagementKanbanDialog.tsx` still import `@/components/kibo-ui/kanban` — HeroUI v3 Kanban + @dnd-kit refactor deferred until HeroUI v3 stabilizes
-- React vendor ceiling 349 KB vs measured 279.91 KB — tighten to ~285 KB per D-03 min rule
-- CLAUDE.md Node note `Node.js 20.19.0+` → `22.13.0+` to match `package.json` engines
+- ~~React vendor ceiling 349 KB vs measured 279.91 KB — tighten to ~285 KB per D-03 min rule~~ — **closed by Phase 53** (BUNDLE-05, ceiling now 285 KB, measured 279.42 kB)
+- ~~CLAUDE.md Node note `Node.js 20.19.0+` → `22.13.0+` to match `package.json` engines~~ — **closed by Phase 53** (BUNDLE-07, both L84 + L483 now `Node.js 22.13.0+`)
 - Pre-existing design-rule violations: `WorldMapVisualization.tsx:193` raw hex `#3B82F6`; `PositionEditor.tsx` `text-blue-600` / `text-red-{600,800}` literals — queue for design-compliance sweep
 - 4 wizard tests fail at module evaluation — `frontend/tests/setup.ts:6` `vi.mock("react-i18next")` factory omits `initReactI18next`
-- `phase-47/48/49-base` lightweight tags — re-tag with `-a -s` for `git tag -v` provenance
+- ~~`phase-47/48/49-base` lightweight tags — re-tag with `-a -s` for `git tag -v` provenance~~ — **closed by Phase 53** (BUNDLE-06, all 3 now annotated + SSH-signed locally; `git push --force origin phase-NN-base` ×3 deferred to human operator per D-26)
 
 ## Requirements
 
@@ -227,4 +227,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-13 — v6.3 Carryover Sweep & v7.0 Prep started. Phase numbering continues from 50._
+_Last updated: 2026-05-16 — Phase 53 (bundle-tightening-tag-provenance) complete: BUNDLE-05/06/07 verified; React vendor ceiling 349 → 285 KB; phase-47/48/49-base tags signed; CLAUDE.md Node aligned. One sub-step deferred to human (D-26: force-push 3 tags to origin). Phase 54 (intelligence-engine-schema) is the last v6.3 phase._

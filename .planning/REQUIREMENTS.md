@@ -29,9 +29,9 @@
 
 ### Bundle + provenance (BUNDLE — continues from v6.2 BUNDLE-04)
 
-- [ ] **BUNDLE-05**: React vendor ceiling in `frontend/.size-limit.json` lowered 349 → ~285 KB gz per D-03 min rule (measured + slack documented in `frontend/docs/bundle-budget.md`)
-- [ ] **BUNDLE-06**: `phase-47-base` / `phase-48-base` / `phase-49-base` lightweight tags re-issued as annotated + signed (`-a -s`); `git tag -v` succeeds
-- [ ] **BUNDLE-07**: CLAUDE.md Node engine note updated `Node.js 20.19.0+` → `Node.js 22.13.0+` to match `package.json` engines
+- [x] **BUNDLE-05**: React vendor ceiling in `frontend/.size-limit.json` lowered 349 → 285 KB gz per D-03 min rule (measured 279.42 kB + 5 kB slack documented in `frontend/docs/bundle-budget.md`) — Phase 53 / commits `988e5f6b`, `cb79951b`
+- [x] **BUNDLE-06**: `phase-47-base` / `phase-48-base` / `phase-49-base` re-issued annotated + SSH-signed; `git tag -v` exits 0 locally with `Good "git" signature` for all three (origin force-push deferred D-26) — Phase 53 / commit `e808f04d`
+- [x] **BUNDLE-07**: CLAUDE.md Node engine note updated (`Node.js 18+ LTS` + `Node.js 20.19.0+` → `Node.js 22.13.0+`) to match `package.json` engines.node `">=22.13.0"` — Phase 53 / commit `22f4d4f1`
 
 ### Intelligence Engine schema groundwork (INTEL)
 
@@ -71,9 +71,9 @@
 | KANBAN-02 | Phase 52 | Pending  |
 | KANBAN-03 | Phase 52 | Pending  |
 | KANBAN-04 | Phase 52 | Pending  |
-| BUNDLE-05 | Phase 53 | Pending  |
-| BUNDLE-06 | Phase 53 | Pending  |
-| BUNDLE-07 | Phase 53 | Pending  |
+| BUNDLE-05 | Phase 53 | Verified |
+| BUNDLE-06 | Phase 53 | Verified (origin force-push deferred D-26) |
+| BUNDLE-07 | Phase 53 | Verified |
 | INTEL-01  | Phase 54 | Pending  |
 | INTEL-02  | Phase 54 | Pending  |
 | INTEL-03  | Phase 54 | Pending  |
