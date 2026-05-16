@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DragEndEvent } from '@dnd-kit/core'
 import {
   Dialog,
   DialogContent,
@@ -18,7 +17,8 @@ import {
   KanbanHeader,
   KanbanCards,
   KanbanCard,
-} from '@/components/kibo-ui/kanban'
+  type DragEndEvent,
+} from '@/components/kanban'
 import { KanbanTaskCard } from './KanbanTaskCard'
 
 interface KanbanStats {
@@ -48,7 +48,7 @@ export function EngagementKanbanDialog({
   onDragEnd,
 }: EngagementKanbanDialogProps): React.JSX.Element {
   const { t } = useTranslation('assignments')
-  // Transform columns to kibo-ui format
+  // Transform columns to shared Kanban primitive format
   const kanbanColumns = useMemo(
     () => [
       { id: 'todo', name: t('kanban.todo', 'To Do') },
@@ -72,7 +72,7 @@ export function EngagementKanbanDialog({
     return map
   }, [columns])
 
-  // Transform assignments to kibo-ui format (with id, name, column for KanbanItemProps)
+  // Transform assignments to shared Kanban primitive format (with id, name, column for KanbanItemProps)
   const kanbanData = useMemo(() => {
     if (!columns)
       return [] as Array<{ id: string; name: string; column: string; [key: string]: unknown }>
@@ -99,7 +99,7 @@ export function EngagementKanbanDialog({
     return allAssignments
   }, [columns])
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = (event: DragEndEvent): void => {
     const { active, over } = event
 
     if (!over || !onDragEnd) return
@@ -165,7 +165,7 @@ export function EngagementKanbanDialog({
             className="min-w-[1200px] pb-2 gap-3"
           >
             {(column) => (
-              <KanbanBoard key={column.id} id={column.id} className="bg-muted/30 border-muted">
+              <KanbanBoard key={column.id} id={column.id} isCancelled={column.id === 'cancelled'}>
                 <KanbanHeader className="bg-muted/50 font-semibold text-sm px-4 py-3 border-b">
                   <div className="flex items-center justify-between">
                     <span>{column.name}</span>
@@ -175,7 +175,7 @@ export function EngagementKanbanDialog({
                   </div>
                 </KanbanHeader>
                 <KanbanCards id={column.id} className="p-3 gap-3 min-h-[400px]">
-                  {(assignment: any) => {
+                  {(assignment) => {
                     // assignment here is KanbanItemProps; find the full data for the card
                     const fullAssignment = assignmentMap.get(assignment.id as string)
                     return (
@@ -184,9 +184,9 @@ export function EngagementKanbanDialog({
                         id={assignment.id}
                         name={assignment.name}
                         column={assignment.column}
-                        className="bg-background hover:shadow-md transition-shadow border-border"
+                        className="bg-background hover:bg-surface-raised hover:border-line-soft transition-all"
                       >
-                        {fullAssignment && <KanbanTaskCard assignment={fullAssignment} />}
+                        {fullAssignment != null && <KanbanTaskCard assignment={fullAssignment} />}
                       </KanbanCard>
                     )
                   }}
