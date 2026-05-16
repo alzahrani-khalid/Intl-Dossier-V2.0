@@ -81,7 +81,7 @@ Before declaring any UI task complete:
 ## Core Tech Stack
 
 - **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS v4, IntelDossier Design System (`frontend/design-system/inteldossier_handoff_design/`), i18next, React Flow (network graphs)
-- **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
+- **Backend**: Node.js 22.13.0+, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
 - **Database**: PostgreSQL 15+ with pgvector, pg_trgm, pg_tsvector extensions
 - **AI/ML**: AnythingLLM (self-hosted), vector embeddings (1536 dimensions)
 - **Additional**: @dnd-kit/core (drag-and-drop), Vite (build tool)
@@ -454,7 +454,7 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 ## Technology Stack
 
-- **Runtime**: Node.js 20.19.0+, pnpm 10.29.1+ (monorepo via Turbo)
+- **Runtime**: Node.js 22.13.0+, pnpm 10.29.1+ (monorepo via Turbo)
 - **Languages**: TypeScript 5.5+ (backend) / 5.9+ (frontend) strict mode, SQL, Bash
 - **Testing**: Vitest (unit/integration), Playwright (E2E), @testing-library/react, axe-core (a11y)
 
