@@ -132,7 +132,7 @@ Full details: [v6.2-ROADMAP.md](milestones/v6.2-ROADMAP.md)
 
 - [ ] **Phase 50: Test Infrastructure Repair** (TEST-01..04) — Fix `vi.mock("react-i18next")` factory, restore 4 wizard tests, audit module-eval failures, document setup
 - [x] **Phase 51: Design-Token Compliance Gate** (DESIGN-01..04) — ESLint rules ban raw hex + Tailwind color literals, fix all violations, register PR-blocking CI context — SEALED 2026-05-16 (smoke PR #12 closed: Lint=FAILURE, mergeStateStatus=BLOCKED; 271 Tier-C files annotated; D-09 no-PUT honored)
-- [ ] **Phase 52: HeroUI v3 Kanban Migration** (KANBAN-01..04) — Migrate `TasksTab.tsx` + `EngagementKanbanDialog.tsx` off kibo-ui to HeroUI v3 + `@dnd-kit/core`, regenerate visual baselines
+- [ ] **Phase 52: HeroUI v3 Kanban Migration** (KANBAN-01..04) — Plans 01-04 complete: shared `@/components/kanban` primitive live, `TasksTab.tsx` + `EngagementKanbanDialog.tsx` migrated off kibo-ui, `tunnel-rat` removed, local kibo-ui imports banned; Plan 05 visual/a11y baselines pending
 - [ ] **Phase 53: Bundle Tightening + Tag Provenance** (BUNDLE-05..07) — React vendor 349 → ~285 KB, re-tag `phase-47/48/49-base` annotated/signed, update CLAUDE.md Node note
 - [ ] **Phase 54: Intelligence Engine Schema Groundwork** (INTEL-01..05) — `intelligence_signal` + `intelligence_digest` + polymorphic junction + source enum + regenerated TS types (schema only — no API, no UI)
 

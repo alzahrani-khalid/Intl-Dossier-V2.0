@@ -4,13 +4,13 @@ milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
 status: executing
 stopped_at: Phase 52 UI-SPEC approved
-last_updated: '2026-05-16T08:47:32.277Z'
+last_updated: '2026-05-16T09:02:00.000Z'
 last_activity: 2026-05-16
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 36
-  completed_plans: 34
+  completed_plans: 35
   percent: 83
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 52 (heroui-v3-kanban-migration) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-05-16
 
@@ -44,14 +44,9 @@ None — Phase 51 sealed. Plan 50-05 Task 3 follow-up superseded by Phase 51 smo
 
 ## Next Action
 
-Open follow-ups recorded in 51-SUMMARY.md §9:
+Execute Phase 52 Plan 05: seed/capture the Playwright Kanban visual and accessibility baselines for `TasksTab` and `EngagementKanbanDialog`, run the Phase 39 regression anchor, update `52-VALIDATION.md`, and write the final Phase 52 summary.
 
-1. Fix pre-existing test-assertion drift in `SLAIndicator.test.tsx` + `TaskCard.test.tsx` (palette literal → token utility class assertions).
-2. Promote Tier-C cleanup placeholders (`TBD-design-token-tier-c-cleanup-wave-N`) to roadmap entries.
-3. Optional: re-validate smoke gate from `main` after DesignV2 merges, upgrading evidence from BEHIND→BLOCKED capture path.
-4. Wire bad-fixture positive-failure CI check.
-
-Milestone v6.3 is now complete. Next milestone (v7.0) per ROADMAP.
+Phase 52 Plan 04 is complete: kibo-ui Kanban was deleted, `tunnel-rat` was removed from `frontend/package.json` and root `pnpm-lock.yaml`, ESLint now bans `@/components/kibo-ui/*`, `scripts/check-deleted-components.sh` asserts the deletion, and Phase 51 audit rows are closed in `51-DESIGN-AUDIT.md`.
 
 ### Outstanding follow-ups (small)
 
