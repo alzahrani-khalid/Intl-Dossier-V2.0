@@ -634,3 +634,9 @@ Plan 51-04 populates row slugs from the Tier-C Disposition Table. Slugs are base
 - WorkItemCard — pages/my-work/components/WorkItemCard.tsx
 - WorkItemFiltersBar — pages/my-work/components/WorkItemFiltersBar.tsx
 - WorkSummaryHeader — pages/my-work/components/WorkSummaryHeader.tsx
+
+## Resolved during Phase 52 migration
+
+Five Tier-C `eslint-disable-next-line no-restricted-syntax` directives in `frontend/src/pages/engagements/workspace/TasksTab.tsx` (formerly the `STAGE_COLORS` palette literals) were resolved by deletion-of-need per Phase 52 D-05. The `STAGE_COLORS` map was dropped entirely; the new shared kanban primitive (`frontend/src/components/kanban/KanbanBoard.tsx`) ships flat surfaces (`bg-muted/30 border-muted`) across all stages with a `border-danger/30` ring on the cancelled column (D-07). Resolved in commit `6f20264c` and documented in `52-03-SUMMARY.md`.
+
+Four Tier-C `eslint-disable-next-line no-restricted-syntax` directives in `frontend/src/components/assignments/KanbanTaskCard.tsx` (formerly the SLA-state palette literals) were resolved by token swap per Phase 52 D-13 narrow-blast-radius clause. Replaced the red/orange/yellow/emerald Tailwind palette literals with semantic SLA-state token classes (`text-danger`, `text-warn`, `text-ok`) plus soft CSS-token backgrounds (`bg-[var(--danger-soft)]`, `bg-[var(--warn-soft)]`, `bg-[var(--ok-soft)]`). KanbanTaskCard's only consumers are TasksTab and EngagementKanbanDialog; no rippling. Resolved in commit `445c3574` and documented in `52-03-SUMMARY.md`.

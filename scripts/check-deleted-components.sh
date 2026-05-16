@@ -111,4 +111,10 @@ if [ -f frontend/src/components/calendar/shared-week-list.css ] && [ -f frontend
   fi
 fi
 
+# Phase 52 KANBAN-03: kibo-ui kanban directory must remain deleted post-Plan-04
+if [ -d "frontend/src/components/kibo-ui/kanban" ]; then
+  echo "FAIL: frontend/src/components/kibo-ui/kanban/ re-introduced (banned per Phase 52 D-18)" >&2
+  FAIL=1
+fi
+
 exit "$FAIL"
