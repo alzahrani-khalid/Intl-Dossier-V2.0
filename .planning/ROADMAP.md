@@ -210,7 +210,7 @@ Plans:
 3. `@/components/kibo-ui/kanban` directory and the kibo-ui npm dependency are deleted from the repo; `no-restricted-imports` bans both `kibo-ui` and the deleted local path; `pnpm lint` and `pnpm type-check` exit 0.
 4. EN + AR Playwright visual baselines for both Kanban surfaces are regenerated, human-reviewed, and committed; Kanban Playwright specs pass green in CI.
 
-**Plans:** 1/5 plans executed
+**Plans:** 2/5 plans executed
 
 Plans:
 
@@ -220,7 +220,7 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 52-02-PLAN.md — Build new shared `frontend/src/components/kanban/*` primitive (5 components + barrel; native DragOverlay; WorkBoard sensor stack) (Wave 2)
+- [x] 52-02-PLAN.md — Build new shared `frontend/src/components/kanban/*` primitive (5 components + barrel; native DragOverlay; WorkBoard sensor stack) (Wave 2)
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
@@ -306,7 +306,7 @@ Phase 54 is independent of Phases 51–53 and may execute in parallel with any o
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50 | v6.3 | 0/0 | Not started | — |
 | 51 | v6.3 | 1/4 | In Progress|  |
-| 52 | v6.3 | 1/5 | In Progress|  |
+| 52 | v6.3 | 2/5 | In Progress|  |
 | 53 | v6.3 | 0/0 | Not started | — |
 | 54 | v6.3 | 0/0 | Not started | — |
 
