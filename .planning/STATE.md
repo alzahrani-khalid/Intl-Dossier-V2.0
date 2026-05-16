@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
 status: executing
-stopped_at: Phase 52 UI-SPEC approved
-last_updated: '2026-05-16T09:02:00.000Z'
-last_activity: 2026-05-16
+stopped_at: Phase 52 shipped PASS-WITH-DEVIATION
+last_updated: '2026-05-16T15:00:00.000Z'
+last_activity: 2026-05-16 -- Phase 52 closed; Phase 53 unblocked
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 36
-  completed_plans: 35
-  percent: 83
+  completed_plans: 36
+  percent: 100
 ---
 
 # Project State
@@ -25,14 +25,34 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 
 ## Current Position
 
-Phase: 52 (heroui-v3-kanban-migration) — EXECUTING
-Plan: 5 of 5
-Status: Ready to execute
-Last activity: 2026-05-16
+Phase: 52 (heroui-v3-kanban-migration) — SHIPPED PASS-WITH-DEVIATION
+Plan: 5 of 5 — complete
+Status: Phase 52 closed; v6.3 milestone at 6/6 phases / 36/36 plans
+Last activity: 2026-05-16 -- Phase 52 closed; Phase 53 unblocked
 
 ## Current Blocker
 
-None — Phase 51 sealed. Plan 50-05 Task 3 follow-up superseded by Phase 51 smoke-PR evidence and the live `main` branch-protection re-verification captured in 51-SUMMARY.md (pre/post JSON byte-identical, MD5 `4ed9db6d47e9a49d2bdb501a8a5c18ac`).
+None — Phase 52 sealed. Phase 53 (bundle-tightening-tag-provenance) is next; ready to plan.
+
+### Phase 52 summary
+
+| Wave | Plans | Status              | Notes                                                                                                                                                                                                                                                                                                                                           |
+| ---- | ----- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | 52-01 | PASS                | Kanban test scaffold: unit seeds + e2e skeletons + kibo-ui import ban fixture                                                                                                                                                                                                                                                                   |
+| 1    | 52-02 | PASS                | Shared `@dnd-kit/core` primitive at `frontend/src/components/kanban/` (KanbanBoard/Card/Provider, pointer+keyboard sensors, token-bound)                                                                                                                                                                                                        |
+| 1    | 52-03 | PASS                | TasksTab consumer rewired to shared primitive (`6f20264c`); no other live consumer                                                                                                                                                                                                                                                              |
+| 2    | 52-04 | PASS                | kibo-ui Kanban deleted, `tunnel-rat` removed from `frontend/package.json` + lockfile, ESLint bans `@/components/kibo-ui/*`, CI gate `check-deleted-components.sh` asserts absence                                                                                                                                                               |
+| 3    | 52-05 | PASS-WITH-DEVIATION | 6 Wave-0 fixme→real; `data-droppable-id`/`data-card-id` selectors on primitive; 8 staging fixture rows seeded (todo:2/in_progress:2/review:1/done:2/cancelled:1); 4 tasks-tab baselines committed; responsive overflow fix (`da89f932`); `EngagementKanbanDialog` + `EngagementDossierPage` deleted as dead code (D-20); 8 orphan specs deleted |
+
+**Totals:** 5/5 plans complete; 4/4 KANBAN-\* requirements closed; 5 documented deviations (D-19..D-23); 0 open blockers. Workspace gate green (lint/type-check/build/check-deleted-components). Playwright enumerate clean: 30 tests / 12 files (16 Phase 52 + 14 Phase 39).
+
+**Verdict:** PASS-WITH-DEVIATION — code-level invariants ship; live tasks-tab Playwright execution deferred to host operator (D-23); Phase 39 `kanban-*.spec.ts` regression failures deferred to Phase 39 follow-up (D-21). Phase 53 (bundle-tightening-tag-provenance) unblocked.
+
+### Outstanding follow-ups (Phase 52 carryover)
+
+1. **D-22 RTL flip** — `tasks-tab-visual.spec.ts` LTR/RTL pairs byte-identical. Switch to `?lng=ar` URL gate or render-after-language-load. Phase 53 candidate.
+2. **D-23 live tasks-tab E2E** — host operator runs four `tasks-tab-*.spec.ts` files against seeded staging (52-FIXTURE.md).
+3. **Phase 39 follow-up** — re-baseline `kanban-visual.spec.ts` (4 viewports), verify `kanban-dnd`/`kanban-a11y` against current `/kanban` route.
 
 ## Phase 51 Close Summary
 
@@ -44,9 +64,9 @@ None — Phase 51 sealed. Plan 50-05 Task 3 follow-up superseded by Phase 51 smo
 
 ## Next Action
 
-Execute Phase 52 Plan 05: seed/capture the Playwright Kanban visual and accessibility baselines for `TasksTab` and `EngagementKanbanDialog`, run the Phase 39 regression anchor, update `52-VALIDATION.md`, and write the final Phase 52 summary.
+Plan Phase 53 (bundle-tightening-tag-provenance) — `tunnel-rat` removal opens vendor-chunk slot reclaim; BUNDLE-05..07 cover ceiling re-baseline, vendor-chunk hygiene, and tag-provenance enforcement on `size-limit` CI gate.
 
-Phase 52 Plan 04 is complete: kibo-ui Kanban was deleted, `tunnel-rat` was removed from `frontend/package.json` and root `pnpm-lock.yaml`, ESLint now bans `@/components/kibo-ui/*`, `scripts/check-deleted-components.sh` asserts the deletion, and Phase 51 audit rows are closed in `51-DESIGN-AUDIT.md`.
+Phase 52 Plan 05 closed PASS-WITH-DEVIATION 2026-05-16: 4 tasks-tab baselines committed, `EngagementKanbanDialog` retired as dead code, workspace gate green, 5 documented deviations (D-19..D-23) inherited to Phase 53 + Phase 39 follow-ups.
 
 ### Outstanding follow-ups (small)
 
@@ -426,10 +446,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T08:47:32.269Z
-Stopped at: Phase 52 UI-SPEC approved
+Last session: 2026-05-16T15:00:00.000Z
+Stopped at: Phase 52 shipped PASS-WITH-DEVIATION; Phase 53 ready to plan
 Resume file: None
-Resume command: (no resume needed — v6.2 milestone shipped)
+Resume command: `/gsd:plan-phase 53`
 
 ### v6.0 Phase Map (11 phases, 52 requirements)
 
