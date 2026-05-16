@@ -3,7 +3,6 @@
 import { SortableContext } from '@dnd-kit/sortable'
 import { useContext, type HTMLAttributes, type ReactElement, type ReactNode } from 'react'
 
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 
 import { KanbanContext, type KanbanContextProps, type KanbanItemProps } from './KanbanProvider'
@@ -26,14 +25,22 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
   const filteredData = data.filter((item) => item.column === id)
   const items = filteredData.map((item) => item.id)
 
+  // Plain div instead of Radix ScrollArea. ScrollArea's Viewport renders a
+  // `display: table` wrapper with `min-width: 100%`, which lets card content
+  // expand horizontally past the column boundary at narrow viewports (Phase
+  // 52 Plan 05 finding). A plain overflow-y-auto + overflow-x-hidden gives
+  // vertical-only scroll with proper width constraint.
   return (
-    <ScrollArea className="overflow-hidden">
+    <div className="w-full min-w-0 max-w-full overflow-y-auto overflow-x-hidden">
       <SortableContext items={items}>
-        <div className={cn('flex flex-grow flex-col gap-2 p-2', className)} id={id} {...props}>
+        <div
+          className={cn('flex flex-grow flex-col gap-2 p-2 w-full min-w-0 max-w-full', className)}
+          id={id}
+          {...props}
+        >
           {filteredData.map(children)}
         </div>
       </SortableContext>
-      <ScrollBar orientation="vertical" />
-    </ScrollArea>
+    </div>
   )
 }

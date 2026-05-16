@@ -162,10 +162,15 @@ export function EngagementKanbanDialog({
             columns={kanbanColumns}
             data={kanbanData}
             onDragEnd={handleDragEnd}
-            className="min-w-[1200px] pb-2 gap-3"
+            className="pb-2 gap-2"
           >
             {(column) => (
-              <KanbanBoard key={column.id} id={column.id} isCancelled={column.id === 'cancelled'}>
+              <KanbanBoard
+                key={column.id}
+                id={column.id}
+                isCancelled={column.id === 'cancelled'}
+                className="min-w-[240px] flex-1"
+              >
                 <KanbanHeader className="bg-muted/50 font-semibold text-sm px-4 py-3 border-b">
                   <div className="flex items-center justify-between">
                     <span>{column.name}</span>

@@ -25,6 +25,18 @@ test.describe('Phase 52: Tasks tab Kanban visual regression', () => {
       })
       await page.goto(`/engagements/${SEEDED_ENGAGEMENT_ID}`)
       await page.waitForLoadState('networkidle')
+
+      // Engagement workspace defaults to Overview tab; click Tasks tab to surface the kanban.
+      const tasksTab = page.getByRole('tab', { name: /tasks|مهام/i }).first()
+      await tasksTab.waitFor({ state: 'visible', timeout: 15_000 })
+      await tasksTab.click()
+
+      // Wait for the "8 tasks" / "8 مهام" header to hydrate (TasksTab top bar).
+      await page
+        .getByText(/\d+\s*(tasks|مهام)/i)
+        .first()
+        .waitFor({ state: 'visible', timeout: 20_000 })
+      await page.waitForTimeout(500)
       await page.evaluate((): Promise<FontFaceSet> => document.fonts.ready)
 
       await expect(page).toHaveScreenshot(`tasks-tab-${dir}-${viewport.width}.png`, {

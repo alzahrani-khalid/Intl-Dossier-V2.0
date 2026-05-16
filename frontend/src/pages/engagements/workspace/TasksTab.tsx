@@ -174,21 +174,21 @@ export default function TasksTab(): ReactElement {
         </div>
       </div>
 
-      {/* Desktop Kanban Board (md+) */}
-      <div className="hidden md:block">
-        <div className="overflow-x-auto scrollbar-thin pb-2">
+      {/* Desktop Kanban Board (lg+) — 5 cols only fit cleanly ≥1024px */}
+      <div className="hidden lg:block">
+        <div className="pb-2">
           <KanbanProvider
             columns={kanbanColumns}
             data={kanbanData}
             onDragEnd={onKanbanDragEnd}
-            className="min-w-[1000px] pb-2 gap-3"
+            className="pb-2 gap-2 grid-cols-5"
           >
             {(column) => (
               <KanbanBoard
                 key={column.id}
                 id={column.id}
                 isCancelled={column.id === 'cancelled'}
-                className="min-w-[280px]"
+                className="min-w-0"
               >
                 <KanbanHeader className="bg-muted/50 font-semibold text-sm px-4 py-3 border-b">
                   <div className="flex items-center justify-between">
@@ -220,8 +220,8 @@ export default function TasksTab(): ReactElement {
         </div>
       </div>
 
-      {/* Mobile Stacked View (< md) */}
-      <div className="block md:hidden space-y-3">
+      {/* Mobile Stacked View (< lg) */}
+      <div className="block lg:hidden space-y-3">
         {activeStages.map((stage) => (
           <MobileStageSection
             key={stage}
@@ -271,6 +271,7 @@ function MobileStageSection({
 
   return (
     <div
+      data-mobile-stage={stage}
       className={cn(
         'rounded-lg border bg-muted/30 border-muted overflow-hidden',
         stage === 'cancelled' && 'border-danger/30',

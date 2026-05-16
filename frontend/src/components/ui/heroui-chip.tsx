@@ -26,7 +26,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: 'chip-accent',
-        secondary: '',
+        secondary: 'chip-default',
         destructive: 'chip-danger',
         outline: 'chip-default',
         warning: 'chip-warn',

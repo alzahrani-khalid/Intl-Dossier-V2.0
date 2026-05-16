@@ -17,6 +17,21 @@ test.describe('Phase 52: EngagementKanbanDialog visual regression', () => {
     }): Promise<void> => {
       await page.addInitScript((d: string): void => {
         localStorage.setItem('i18nextLng', d === 'rtl' ? 'ar' : 'en')
+        // Belt-and-braces tour dismissal beyond global-setup (which doesn't cover
+        // the engagement-dossier tour triggered by /dossiers/engagements/<id>).
+        localStorage.setItem('intl-dossier-onboarding-seen', 'true')
+        localStorage.setItem('intl-dossier-onboarding-completed', 'true')
+        localStorage.setItem('intl-dossier-tours-enabled', 'false')
+        localStorage.setItem(
+          'intl-dossier-tours-dismissed',
+          JSON.stringify([
+            'onboarding',
+            'dossier-hub',
+            'engagement-wizard',
+            'engagement-dossier',
+            'engagement-workspace',
+          ]),
+        )
       }, dir)
       await page.setViewportSize(viewport)
       await page.addStyleTag({
@@ -25,10 +40,16 @@ test.describe('Phase 52: EngagementKanbanDialog visual regression', () => {
       })
       await page.goto(`/dossiers/engagements/${SEEDED_ENGAGEMENT_ID}`)
       await page.waitForLoadState('networkidle')
+
+      const trigger = page.getByRole('button', { name: /kanban|board|اللوحة|كانبان/i }).first()
+      await trigger.waitFor({ state: 'visible', timeout: 15_000 })
+      await trigger.click()
+
+      // Wait for the dialog's kanban columns to render.
       await page
-        .getByRole('button', { name: /kanban|board/i })
+        .locator('[data-droppable-id]')
         .first()
-        .click()
+        .waitFor({ state: 'visible', timeout: 15_000 })
       await page.evaluate((): Promise<FontFaceSet> => document.fonts.ready)
 
       await expect(page).toHaveScreenshot(`engagement-kanban-dialog-${dir}-${viewport.width}.png`, {

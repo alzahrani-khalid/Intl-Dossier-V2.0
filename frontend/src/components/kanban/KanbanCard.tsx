@@ -37,17 +37,18 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
       data-card-id={id}
       ref={setNodeRef}
       style={style}
+      className="w-full min-w-0"
       {...listeners}
       {...attributes}
     >
       <Card
         className={cn(
-          'cursor-grab gap-4 rounded-md p-3 transition-all hover:bg-surface-raised hover:border-line-soft',
+          'w-full min-w-0 overflow-hidden cursor-grab gap-2 rounded-md p-3 transition-all hover:bg-surface-raised hover:border-line-soft',
           isDragging && 'pointer-events-none cursor-grabbing opacity-30',
           className,
         )}
       >
-        {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
+        {children ?? <p className="m-0 truncate font-medium text-sm">{name}</p>}
       </Card>
     </div>
   )

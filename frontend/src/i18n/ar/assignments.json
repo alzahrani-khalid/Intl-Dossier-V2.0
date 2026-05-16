@@ -317,7 +317,8 @@
       "todo": "للقيام به",
       "in_progress": "قيد التنفيذ",
       "review": "المراجعة",
-      "done": "منجز"
+      "done": "منجز",
+      "cancelled": "ملغى"
     },
     "column_count": "{{count}} مهام",
     "current_assignment": "التعيين الحالي",
