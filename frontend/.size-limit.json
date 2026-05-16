@@ -9,7 +9,7 @@
   {
     "name": "React vendor",
     "path": "dist/assets/react-vendor-*.js",
-    "limit": "349 KB",
+    "limit": "285 KB",
     "gzip": true,
     "running": false
   },

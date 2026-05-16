@@ -17,7 +17,6 @@ Three narrow hygiene tasks that close v6.2/v6.3 carryover before v7.0 Intelligen
 Scope is hygiene only — no new build tooling, no chunk strategy changes beyond the ceiling number, no CI workflow edits beyond what BUNDLE-05 already requires. v7.0 Intelligence Engine work (Phase 54+) is explicitly out of scope.
 
 Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit):
-
 - React vendor gz: **279.92 KB** (current ceiling 349 KB — overshoot 69 KB)
 - Initial JS gz: 412.06 KB (ceiling 450, untouched in this phase)
 - Total JS gz: 2.42 MB (ceiling 2.45, untouched in this phase)
@@ -56,7 +55,7 @@ Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit
   - `phase-47-base` → "Phase 47 diff anchor — type-check-zero"
   - `phase-48-base` → "Phase 48 diff anchor — lint-config-alignment"
   - `phase-49-base` → "Phase 49 diff anchor — bundle-budget-reset" (unchanged)
-    No expansion to multi-line bodies, no "re-issued 2026-05-XX" suffix — the re-issue paper trail lives in the Phase 53 plan SUMMARY.md and git tag object dates.
+  No expansion to multi-line bodies, no "re-issued 2026-05-XX" suffix — the re-issue paper trail lives in the Phase 53 plan SUMMARY.md and git tag object dates.
 
 - **D-10:** **Force-push all three tags to `origin`** after local re-issue. Remote and local must agree so a fresh clone can `git tag -v` successfully without the user needing local fixup. Tag refs are not shared-history like branches — `--force` push on tags is the standard re-issue idiom, not a destructive operation in the branch-rewrite sense. No two-step delete-then-push is needed; `--force` is atomic and clearer.
 
@@ -65,7 +64,7 @@ Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit
 - **D-11:** **Update both** stale Node references in `CLAUDE.md` to `Node.js 22.13.0+`:
   - Line ~84 (Core Tech Stack → Backend): `"Node.js 18+ LTS"` → `"Node.js 22.13.0+"`. Reading "18+ LTS" was a v2.0-era looser description; aligning to engines.node removes drift between docs and the lockfile floor.
   - Line ~457 (Technology Stack → Runtime): `"Node.js 20.19.0+"` → `"Node.js 22.13.0+"`. This is the explicit runtime floor; was bumped post-engines update but not synchronized with engines.node.
-    Both lines now match `package.json` `engines.node: ">=22.13.0"`. Mechanical edit; no rewording of surrounding prose.
+  Both lines now match `package.json` `engines.node: ">=22.13.0"`. Mechanical edit; no rewording of surrounding prose.
 
 ### Claude's Discretion
 
@@ -76,7 +75,6 @@ Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit
 </decisions>
 
 <canonical_refs>
-
 ## Canonical References
 
 **Downstream agents MUST read these before planning or implementing.**
@@ -89,7 +87,7 @@ Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit
 
 ### Prior phase context (carried forward — read for posture and rules)
 
-- `.planning/phases/49-bundle-budget-reset/49-CONTEXT.md` — **MUST READ**. D-03 establishes the `min(current, measured + 5 KB)` rebaseline rule applied verbatim in Phase 53 D-01. D-09 establishes the `bundle-budget.md` living-rationale doc. D-14 establishes the "zero net-new ceiling raises" suppression policy (Phase 53 honors this; the lone change is a _lowering_).
+- `.planning/phases/49-bundle-budget-reset/49-CONTEXT.md` — **MUST READ**. D-03 establishes the `min(current, measured + 5 KB)` rebaseline rule applied verbatim in Phase 53 D-01. D-09 establishes the `bundle-budget.md` living-rationale doc. D-14 establishes the "zero net-new ceiling raises" suppression policy (Phase 53 honors this; the lone change is a *lowering*).
 - `.planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md` — Phase 49's full audit artifact; reference for the per-chunk methodology Phase 53's narrower re-measurement follows.
 - `.planning/phases/47-type-check-zero/47-CONTEXT.md` — D-13 smoke-PR pattern (not applied here; BUNDLE-05 doesn't add a new gate). Read for `enforce_admins: true` posture context.
 - `.planning/phases/48-lint-config-alignment/48-CONTEXT.md` — D-14 single-CI-job posture; D-17 zero-net-new-suppression rule (Phase 53 carries this for the ceiling-lowering, not raising).
@@ -122,7 +120,6 @@ Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit
 </canonical_refs>
 
 <code_context>
-
 ## Existing Code Insights
 
 ### Reusable Assets
@@ -139,7 +136,7 @@ Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit
 - **Surgical single-row edits to `bundle-budget.md`** — Phase 49 D-09 set the precedent: edit only the row that changed, keep the rest of the doc stable.
 - **Phase-base tags as diff anchors** — every phase since 47 has had `phase-NN-base` to anchor pre-phase diffs. Phase 53 normalizes the provenance of the three existing tags; new tags going forward are created annotated + signed from the start (out-of-scope for Phase 53 but worth noting for Phase 54+).
 - **Solo-dev SSH-signed commits/tags** — no GPG keyring infra in the project; SSH is the lighter, faster path. CLAUDE.md's "Deployment Configuration" already documents SSH-key-based DigitalOcean access — same posture.
-- **Zero net-new ceiling raises per Phase 49 D-14** — Phase 53 is a _lowering_ (not a raise) and a one-line CLAUDE.md edit (not a suppression). Honors the suppression-policy spirit by definition.
+- **Zero net-new ceiling raises per Phase 49 D-14** — Phase 53 is a *lowering* (not a raise) and a one-line CLAUDE.md edit (not a suppression). Honors the suppression-policy spirit by definition.
 
 ### Integration Points
 
@@ -169,7 +166,7 @@ Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit
 <deferred>
 ## Deferred Ideas
 
-- **Tighten all other size-limit entries by D-03** — only React vendor is the named BUNDLE-05 target. Other chunks (Initial JS, HeroUI, Sentry, DnD, signature-visuals/\*) may have headroom worth reclaiming, but a full re-audit is its own phase. Captured as "v7.0+ bundle hygiene follow-up".
+- **Tighten all other size-limit entries by D-03** — only React vendor is the named BUNDLE-05 target. Other chunks (Initial JS, HeroUI, Sentry, DnD, signature-visuals/*) may have headroom worth reclaiming, but a full re-audit is its own phase. Captured as "v7.0+ bundle hygiene follow-up".
 - **`tag.gpgsign = true` global config** — making future tags signed-by-default. Useful but not required by BUNDLE-06. Leave for the executor or a v7.0 onboarding doc.
 - **CI gate for `git tag -v` on `phase-*-base` tags** — would enforce provenance permanently. BUNDLE-06 only requires "succeeds locally"; CI enforcement is scope creep into a CI-policy phase.
 - **Standardize tag message format across the project** (currently only `phase-NN-base` follows the `"Phase NN diff anchor — <slug>"` shape; other ad-hoc tags do not). Belongs in a tags/governance phase, not a hygiene phase.
@@ -180,5 +177,5 @@ Measured starting points (from `frontend/docs/bundle-budget.md` 2026-05-12 audit
 
 ---
 
-_Phase: 53-bundle-tightening-tag-provenance_
-_Context gathered: 2026-05-16_
+*Phase: 53-bundle-tightening-tag-provenance*
+*Context gathered: 2026-05-16*

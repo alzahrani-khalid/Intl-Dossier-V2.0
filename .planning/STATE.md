@@ -4,7 +4,7 @@ milestone: v6.3
 milestone_name: Carryover Sweep & v7.0 Prep
 status: executing
 stopped_at: Phase 53 context gathered
-last_updated: '2026-05-16T12:23:06.760Z'
+last_updated: "2026-05-16T12:23:06.760Z"
 last_activity: 2026-05-16 -- Phase 53 planning complete
 progress:
   total_phases: 7
