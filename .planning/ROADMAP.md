@@ -134,7 +134,7 @@ Full details: [v6.2-ROADMAP.md](milestones/v6.2-ROADMAP.md)
 - [x] **Phase 51: Design-Token Compliance Gate** (DESIGN-01..04) — ESLint rules ban raw hex + Tailwind color literals, fix all violations, register PR-blocking CI context — SEALED 2026-05-16 (smoke PR #12 closed: Lint=FAILURE, mergeStateStatus=BLOCKED; 271 Tier-C files annotated; D-09 no-PUT honored)
 - [ ] **Phase 52: HeroUI v3 Kanban Migration** (KANBAN-01..04) — Plans 01-04 complete: shared `@/components/kanban` primitive live, `TasksTab.tsx` + `EngagementKanbanDialog.tsx` migrated off kibo-ui, `tunnel-rat` removed, local kibo-ui imports banned; Plan 05 visual/a11y baselines pending
 - [ ] **Phase 53: Bundle Tightening + Tag Provenance** (BUNDLE-05..07) — React vendor 349 → ~285 KB, re-tag `phase-47/48/49-base` annotated/signed, update CLAUDE.md Node note
-- [ ] **Phase 54: Intelligence Engine Schema Groundwork** (INTEL-01..05) — `intelligence_signal` + `intelligence_digest` + polymorphic junction + source enum + regenerated TS types (schema only — no API, no UI)
+- [ ] **Phase 54: Intelligence Engine Schema Groundwork** (INTEL-01..05) — `intelligence_event` + `intelligence_digest` + polymorphic junction + source enum + regenerated TS types (schema only — no API, no UI)
 
 </details>
 
@@ -255,32 +255,32 @@ Plans:
 
 ### Phase 54: Intelligence Engine Schema Groundwork
 
-**Goal:** v7.0 Intelligence Engine has its data layer ready — `intelligence_signal` + `intelligence_digest` + polymorphic dossier linking + source enum + regenerated TS types — applied to staging via Supabase MCP. Schema only; no API, no UI.
+**Goal:** v7.0 Intelligence Engine has its data layer ready — `intelligence_event` + `intelligence_digest` + polymorphic dossier linking + source enum + regenerated TS types — applied to staging via Supabase MCP. Schema only; no API, no UI.
 **Depends on:** Nothing (groundwork for v7.0; can run in parallel with Phases 51–53. Soft-depends on Phase 50 only for green test infra during type regen.)
 **Requirements:** INTEL-01, INTEL-02, INTEL-03, INTEL-04, INTEL-05
 **Success Criteria** (what must be TRUE):
 
-1. `intelligence_signal` table exists on staging with full column set (id, source_type, source_ref, content, occurred_at, ingested_at, severity, tenant_id, created_by), required indexes, and tenant-scoped RLS policies.
-2. `intelligence_digest` table exists on staging with full column set (id, dossier_type, dossier_id, period_start, period_end, summary, generated_by, tenant_id, generated_at), required indexes, and tenant-scoped RLS policies.
-3. `intelligence_signal_dossiers` polymorphic junction table enforces a `dossier_type` enum constraint matching the 8 existing dossier types (`country`, `organization`, `forum`, `engagement`, `topic`, `working_group`, `person`, `elected_official`) and supports many-to-many signal ↔ dossier linking.
-4. `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`) is created and applied to `intelligence_signal.source_type`.
+1. `intelligence_event` table exists on staging with full column set (id, source_type, source_ref, content, occurred_at, ingested_at, severity, organization_id, created_by), required indexes, and tenant-scoped RLS policies (renamed from spec `intelligence_signal` to avoid collision with existing curated `intelligence_signals` plural table).
+2. `intelligence_digest` table exists on staging with full column set (id, dossier_type, dossier_id, period_start, period_end, summary, generated_by, organization_id, generated_at), required indexes, and tenant-scoped RLS policies (the prior Phase-45 `intelligence_digest` was renamed to `dashboard_digest` in plan 54-01 to free this canonical name).
+3. `intelligence_event_dossiers` polymorphic junction table enforces a `dossier_type` CHECK constraint matching the 7 canonical dossier types (`country`, `organization`, `forum`, `engagement`, `topic`, `working_group`, `person`) and supports many-to-many event ↔ dossier linking.
+4. `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`) is created and applied to `intelligence_event.source_type`.
 5. `database.types.ts` regenerated from staging includes all new tables/enum; `pnpm type-check` exits 0 on both backend and frontend workspaces.
 
-**Plans:** 4 plans across 4 waves
+**Plans:** 3/4 plans executed
 
 Plans:
 
 **Wave 1**
 
-- [ ] 54-01-PLAN.md — Phase-54-base signed tag + rename `intelligence_digest` → `dashboard_digest` + lockstep frontend hook/test/widget rename (Wave 1; one human-action checkpoint for SSH tag signing)
+- [x] 54-01-PLAN.md — Phase-54-base signed tag + rename `intelligence_digest` → `dashboard_digest` + lockstep frontend hook/test/widget rename (Wave 1; one human-action checkpoint for SSH tag signing)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 54-02-PLAN.md — `signal_source_type` enum + `intelligence_event` table + new `intelligence_digest` table + 4-policy RLS + Wave-0 RLS integration test (Wave 2)
+- [x] 54-02-PLAN.md — `signal_source_type` enum + `intelligence_event` table + new `intelligence_digest` table + 4-policy RLS + Wave-0 RLS integration test (Wave 2)
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 54-03-PLAN.md — `intelligence_event_dossiers` polymorphic junction with EXISTS-via-parent RLS + CASCADE + 7-value `dossier_type` CHECK + Wave-0 junction integration test (Wave 3)
+- [x] 54-03-PLAN.md — `intelligence_event_dossiers` polymorphic junction with EXISTS-via-parent RLS + CASCADE + 7-value `dossier_type` CHECK + Wave-0 junction integration test (Wave 3)
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
@@ -336,7 +336,7 @@ Phase 54 is independent of Phases 51–53 and may execute in parallel with any o
 | 51 | v6.3 | 1/4 | In Progress|  |
 | 52 | v6.3 | 3/5 | In Progress|  |
 | 53 | v6.3 | 3/3 | Complete    | 2026-05-16 |
-| 54 | v6.3 | 0/0 | Not started | — |
+| 54 | v6.3 | 3/4 | In Progress|  |
 
 <!-- gsd:progress:end -->
 
