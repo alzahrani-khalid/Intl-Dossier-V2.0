@@ -1,7 +1,7 @@
 /**
- * useIntelligenceDigest — Phase 45 plan 02 hook contract.
+ * useDashboardDigest — Phase 45 plan 02 hook contract (renamed in Phase 54).
  *
- * Pins the dashboard digest read path to the intelligence_digest table and
+ * Pins the dashboard digest read path to the dashboard_digest table and
  * the source_publication field before wiring the Digest widget to it.
  */
 
@@ -21,7 +21,7 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 
-import { useIntelligenceDigest } from '../useIntelligenceDigest'
+import { useDashboardDigest } from '../useDashboardDigest'
 
 const createWrapper = (): { wrapper: React.FC<{ children: React.ReactNode }> } => {
   const client = new QueryClient({
@@ -46,8 +46,8 @@ beforeEach((): void => {
   fromMock.mockReset()
 })
 
-describe('useIntelligenceDigest', (): void => {
-  it('queries intelligence_digest with publication source fields and default limit', async (): Promise<void> => {
+describe('useDashboardDigest', (): void => {
+  it('queries dashboard_digest with publication source fields and default limit', async (): Promise<void> => {
     buildBuilder({
       data: [
         {
@@ -66,13 +66,13 @@ describe('useIntelligenceDigest', (): void => {
     })
 
     const { wrapper } = createWrapper()
-    const { result } = renderHook(() => useIntelligenceDigest(), { wrapper })
+    const { result } = renderHook(() => useDashboardDigest(), { wrapper })
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(fromMock).toHaveBeenCalledWith('intelligence_digest')
+    expect(fromMock).toHaveBeenCalledWith('dashboard_digest')
     expect(selectMock).toHaveBeenCalledWith(
       'id, headline_en, headline_ar, summary_en, summary_ar, source_publication, occurred_at, dossier_id, created_at',
     )
@@ -85,7 +85,7 @@ describe('useIntelligenceDigest', (): void => {
     buildBuilder({ data: null, error: { message: 'permission denied' } })
 
     const { wrapper } = createWrapper()
-    const { result } = renderHook(() => useIntelligenceDigest(), { wrapper })
+    const { result } = renderHook(() => useDashboardDigest(), { wrapper })
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true)
@@ -93,7 +93,7 @@ describe('useIntelligenceDigest', (): void => {
 
     expect(result.current.error).toBeInstanceOf(Error)
     expect(result.current.error?.message).toMatch(
-      /^Failed to fetch intelligence digest: permission denied/,
+      /^Failed to fetch dashboard digest: permission denied/,
     )
   })
 })

@@ -22,7 +22,7 @@ import { RefreshCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { GlobeSpinner } from '@/components/signature-visuals'
-import { useIntelligenceDigest, type IntelligenceDigestRow } from '@/hooks/useIntelligenceDigest'
+import { useDashboardDigest, type DashboardDigestRow } from '@/hooks/useDashboardDigest'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
 interface DigestRow {
@@ -33,7 +33,7 @@ interface DigestRow {
   timestamp: string
 }
 
-function mapDigestToRow(row: IntelligenceDigestRow, lang: string, tag: string): DigestRow {
+function mapDigestToRow(row: DashboardDigestRow, lang: string, tag: string): DigestRow {
   const isAr = lang === 'ar'
   const headline =
     isAr && row.headline_ar !== null && row.headline_ar.trim() !== ''
@@ -50,7 +50,7 @@ function mapDigestToRow(row: IntelligenceDigestRow, lang: string, tag: string): 
 
 export function Digest(): ReactElement {
   const { t, i18n } = useTranslation('dashboard-widgets')
-  const { data, isLoading, error, refetch } = useIntelligenceDigest()
+  const { data, isLoading, error, refetch } = useDashboardDigest()
   const [clicked, setClicked] = useState<boolean>(false)
 
   const busy = clicked

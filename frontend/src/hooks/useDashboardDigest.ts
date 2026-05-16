@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 
-export interface IntelligenceDigestRow {
+export interface DashboardDigestRow {
   id: string
   headline_en: string
   headline_ar: string | null
@@ -13,26 +13,26 @@ export interface IntelligenceDigestRow {
   created_at: string
 }
 
-const INTELLIGENCE_DIGEST_SELECT =
+const DASHBOARD_DIGEST_SELECT =
   'id, headline_en, headline_ar, summary_en, summary_ar, source_publication, occurred_at, dossier_id, created_at'
 
-export function useIntelligenceDigest(
+export function useDashboardDigest(
   limit: number = 6,
-): ReturnType<typeof useQuery<IntelligenceDigestRow[], Error>> {
-  return useQuery<IntelligenceDigestRow[], Error>({
-    queryKey: ['dashboard', 'intelligence-digest', limit],
-    queryFn: async (): Promise<IntelligenceDigestRow[]> => {
+): ReturnType<typeof useQuery<DashboardDigestRow[], Error>> {
+  return useQuery<DashboardDigestRow[], Error>({
+    queryKey: ['dashboard', 'dashboard-digest', limit],
+    queryFn: async (): Promise<DashboardDigestRow[]> => {
       const { data, error } = await supabase
-        .from('intelligence_digest')
-        .select(INTELLIGENCE_DIGEST_SELECT)
+        .from('dashboard_digest')
+        .select(DASHBOARD_DIGEST_SELECT)
         .order('occurred_at', { ascending: false })
         .limit(limit)
 
       if (error !== null && error !== undefined) {
-        throw new Error(`Failed to fetch intelligence digest: ${error.message}`)
+        throw new Error(`Failed to fetch dashboard digest: ${error.message}`)
       }
 
-      return (data as IntelligenceDigestRow[]) ?? []
+      return (data as DashboardDigestRow[]) ?? []
     },
     staleTime: 5 * 60_000,
     gcTime: 10 * 60_000,
