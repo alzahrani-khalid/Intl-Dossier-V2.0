@@ -23,7 +23,7 @@
 ### Test infrastructure (TEST)
 
 - [ ] **TEST-01**: `frontend/tests/setup.ts:6` `vi.mock("react-i18next")` factory exports `initReactI18next` so module-eval succeeds for all consumers
-- [ ] **TEST-02**: 4 previously-failing wizard tests pass green
+- [x] **TEST-02**: 4 previously-failing wizard tests pass green
 - [ ] **TEST-03**: Audit complete for other module-eval test failures across frontend + backend test suites; findings logged or fixed
 - [ ] **TEST-04**: Vitest setup files reviewed for similar mock-factory gaps; documented in `frontend/docs/test-setup.md`
 
@@ -57,27 +57,27 @@
 
 ## Traceability
 
-| REQ-ID    | Phase    | Status                                     |
-| --------- | -------- | ------------------------------------------ |
-| TEST-01   | Phase 50 | Pending                                    |
-| TEST-02   | Phase 50 | Pending                                    |
-| TEST-03   | Phase 50 | Pending                                    |
-| TEST-04   | Phase 50 | Pending                                    |
-| DESIGN-01 | Phase 51 | Complete                                   |
-| DESIGN-02 | Phase 51 | Complete                                   |
-| DESIGN-03 | Phase 51 | Pending                                    |
-| DESIGN-04 | Phase 51 | Pending                                    |
-| KANBAN-01 | Phase 52 | Pending                                    |
-| KANBAN-02 | Phase 52 | Pending                                    |
-| KANBAN-03 | Phase 52 | Pending                                    |
-| KANBAN-04 | Phase 52 | Pending                                    |
-| BUNDLE-05 | Phase 53 | Verified                                   |
-| BUNDLE-06 | Phase 53 | Verified (origin force-push deferred D-26) |
-| BUNDLE-07 | Phase 53 | Verified                                   |
-| INTEL-01  | Phase 54 | Verified                                   |
-| INTEL-02  | Phase 54 | Verified                                   |
-| INTEL-03  | Phase 54 | Verified                                   |
-| INTEL-04  | Phase 54 | Verified                                   |
-| INTEL-05  | Phase 54 | Verified                                   |
+| REQ-ID    | Phase    | Status                                                                           |
+| --------- | -------- | -------------------------------------------------------------------------------- |
+| TEST-01   | Phase 50 | Pending                                                                          |
+| TEST-02   | Phase 50 | Verified (closed by quick-task 260516-rcm — SLAIndicator/TaskCard palette drift) |
+| TEST-03   | Phase 50 | Pending                                                                          |
+| TEST-04   | Phase 50 | Pending                                                                          |
+| DESIGN-01 | Phase 51 | Complete                                                                         |
+| DESIGN-02 | Phase 51 | Complete                                                                         |
+| DESIGN-03 | Phase 51 | Pending                                                                          |
+| DESIGN-04 | Phase 51 | Pending                                                                          |
+| KANBAN-01 | Phase 52 | Pending                                                                          |
+| KANBAN-02 | Phase 52 | Pending                                                                          |
+| KANBAN-03 | Phase 52 | Pending                                                                          |
+| KANBAN-04 | Phase 52 | Pending                                                                          |
+| BUNDLE-05 | Phase 53 | Verified                                                                         |
+| BUNDLE-06 | Phase 53 | Verified (origin force-push deferred D-26)                                       |
+| BUNDLE-07 | Phase 53 | Verified                                                                         |
+| INTEL-01  | Phase 54 | Verified                                                                         |
+| INTEL-02  | Phase 54 | Verified                                                                         |
+| INTEL-03  | Phase 54 | Verified                                                                         |
+| INTEL-04  | Phase 54 | Verified                                                                         |
+| INTEL-05  | Phase 54 | Verified                                                                         |
 
 **Coverage:** 20/20 v6.3 requirements mapped — every REQ-ID assigned to exactly one phase. No orphans, no duplicates.

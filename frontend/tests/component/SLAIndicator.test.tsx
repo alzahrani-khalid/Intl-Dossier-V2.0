@@ -49,7 +49,7 @@ describe('SLAIndicator Component', () => {
       renderSLAIndicator({ deadline: safeDeadline })
 
       const indicator = getBadge()
-      expect(indicator).toHaveClass('bg-green-100')
+      expect(indicator).toHaveClass('bg-success/10')
       expect(indicator).toHaveTextContent('Safe')
     })
 
@@ -58,7 +58,7 @@ describe('SLAIndicator Component', () => {
       renderSLAIndicator({ deadline: approachingDeadline })
 
       const indicator = getBadge()
-      expect(indicator).toHaveClass('bg-amber-100')
+      expect(indicator).toHaveClass('bg-warning/10')
       expect(indicator).toHaveTextContent('Approaching')
     })
 
@@ -67,7 +67,7 @@ describe('SLAIndicator Component', () => {
       renderSLAIndicator({ deadline: warningDeadline })
 
       const indicator = getBadge()
-      expect(indicator).toHaveClass('bg-yellow-100')
+      expect(indicator).toHaveClass('bg-warning/10')
       expect(indicator).toHaveTextContent('Warning')
     })
 
@@ -76,7 +76,7 @@ describe('SLAIndicator Component', () => {
       renderSLAIndicator({ deadline: breachedDeadline })
 
       const indicator = getBadge()
-      expect(indicator).toHaveClass('bg-red-100')
+      expect(indicator).toHaveClass('bg-danger/10')
       expect(indicator).toHaveTextContent('Breached')
     })
 
@@ -91,7 +91,7 @@ describe('SLAIndicator Component', () => {
       })
 
       const indicator = getBadge()
-      expect(indicator).toHaveClass('bg-blue-100')
+      expect(indicator).toHaveClass('bg-info/10')
       expect(indicator).toHaveTextContent('Completed on time')
     })
 
@@ -106,7 +106,7 @@ describe('SLAIndicator Component', () => {
       })
 
       const indicator = getBadge()
-      expect(indicator).toHaveClass('bg-gray-100')
+      expect(indicator).toHaveClass('bg-muted')
       expect(indicator).toHaveTextContent('Completed late')
     })
 

@@ -114,7 +114,7 @@ describe('TaskCard Component', () => {
       renderTaskCard({ task: safeTask })
 
       const indicator = screen.getByRole('status')
-      expect(indicator).toHaveClass('bg-green-100')
+      expect(indicator).toHaveClass('bg-success/10')
     })
 
     it('should show warning status for task approaching deadline', () => {
@@ -124,7 +124,7 @@ describe('TaskCard Component', () => {
       renderTaskCard({ task: warningTask })
 
       const indicator = screen.getByRole('status')
-      expect(indicator).toHaveClass('bg-amber-100')
+      expect(indicator).toHaveClass('bg-warning/10')
     })
 
     it('should show breached status for overdue task', () => {
@@ -134,7 +134,7 @@ describe('TaskCard Component', () => {
       renderTaskCard({ task: breachedTask })
 
       const indicator = screen.getByRole('status')
-      expect(indicator).toHaveClass('bg-red-100')
+      expect(indicator).toHaveClass('bg-danger/10')
     })
 
     it('should not display SLA indicator when no deadline', () => {

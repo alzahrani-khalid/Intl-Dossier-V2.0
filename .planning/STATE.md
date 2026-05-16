@@ -441,10 +441,11 @@ None yet.
 
 ### Quick Tasks Completed
 
-| #          | Description                                                                                                      | Date       | Commit     | Directory                                                                                                           |
-| ---------- | ---------------------------------------------------------------------------------------------------------------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
-| 260513-dds | Close v6.2 paperwork gaps: 47-VERIFICATION.md + SUMMARY frontmatter backfill + REQUIREMENTS.md traceability flip | 2026-05-13 | `8b5bec1b` | [260513-dds-close-v6-2-paperwork-gaps-write-47-verif](./quick/260513-dds-close-v6-2-paperwork-gaps-write-47-verif/) |
-| 260514-tv7 | Split Phase 50 Plan 50-13 into 50-13a + 50-13b after ceiling halt                                                | 2026-05-14 | `8f811709` | [260514-tv7-split-phase-50-plan-50-13-into-50-13a-50](./quick/260514-tv7-split-phase-50-plan-50-13-into-50-13a-50/) |
+| #          | Description                                                                                                                                | Date       | Commit     | Directory                                                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| 260513-dds | Close v6.2 paperwork gaps: 47-VERIFICATION.md + SUMMARY frontmatter backfill + REQUIREMENTS.md traceability flip                           | 2026-05-13 | `8b5bec1b` | [260513-dds-close-v6-2-paperwork-gaps-write-47-verif](./quick/260513-dds-close-v6-2-paperwork-gaps-write-47-verif/) |
+| 260514-tv7 | Split Phase 50 Plan 50-13 into 50-13a + 50-13b after ceiling halt                                                                          | 2026-05-14 | `8f811709` | [260514-tv7-split-phase-50-plan-50-13-into-50-13a-50](./quick/260514-tv7-split-phase-50-plan-50-13-into-50-13a-50/) |
+| 260516-rcm | Close v6.3 TEST-02 blocker: update SLAIndicator + TaskCard test assertions from pre-Phase-51 palette literals to token utilities (9 lines) | 2026-05-16 | _pending_  | [260516-rcm-fix-phase-51-deviation-5-carryover-updat](./quick/260516-rcm-fix-phase-51-deviation-5-carryover-updat/) |
 
 ## Session Continuity
 
