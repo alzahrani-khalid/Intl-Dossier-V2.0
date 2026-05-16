@@ -265,7 +265,30 @@ Plans:
 3. `intelligence_signal_dossiers` polymorphic junction table enforces a `dossier_type` enum constraint matching the 8 existing dossier types (`country`, `organization`, `forum`, `engagement`, `topic`, `working_group`, `person`, `elected_official`) and supports many-to-many signal ↔ dossier linking.
 4. `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`) is created and applied to `intelligence_signal.source_type`.
 5. `database.types.ts` regenerated from staging includes all new tables/enum; `pnpm type-check` exits 0 on both backend and frontend workspaces.
-   **Plans:** TBD
+
+**Plans:** 4 plans across 4 waves
+
+Plans:
+
+**Wave 1**
+
+- [ ] 54-01-PLAN.md — Phase-54-base signed tag + rename `intelligence_digest` → `dashboard_digest` + lockstep frontend hook/test/widget rename (Wave 1; one human-action checkpoint for SSH tag signing)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 54-02-PLAN.md — `signal_source_type` enum + `intelligence_event` table + new `intelligence_digest` table + 4-policy RLS + Wave-0 RLS integration test (Wave 2)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [ ] 54-03-PLAN.md — `intelligence_event_dossiers` polymorphic junction with EXISTS-via-parent RLS + CASCADE + 7-value `dossier_type` CHECK + Wave-0 junction integration test (Wave 3)
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [ ] 54-04-PLAN.md — REQUIREMENTS.md + ROADMAP.md text patches (post-Phase-54 wording) + TS regen via MCP to both workspaces + dual `pnpm type-check` + `rls-audit.test.ts` sensitiveTables extension (Wave 4)
+
+**Cross-cutting constraints:**
+
+- D-15: Migration applied to staging (`zkrcjzdemdmwhearhfgg`) via Supabase MCP `apply_migration` — NOT local CLI.
 
 ## v6.3 Coverage Validation
 
