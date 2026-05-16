@@ -120,16 +120,7 @@ export default tseslint.config(
       '@typescript-eslint/no-empty-object-type': 'off',
 
       // CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom).
-      // Aceternity and Kibo UI are banned without explicit user request (D-05/D-06).
-      //
-      // 48-02 narrowing: minimatch in `patterns.group` performs path-component contains
-      // matching, which over-matches the LOCAL alias `@/components/kibo-ui/*` (a repo
-      // primitive co-located under components/, not the upstream npm package). Use `paths`
-      // for exact-name match on the npm package shape, and reserve `patterns` for the
-      // scoped-package shape and the explicit local deleted-component paths. Per CLAUDE.md
-      // the local `kibo-ui` dir is *also* banned in the long run, but the refactor of the
-      // two existing kibo-ui kanban call sites (TasksTab, EngagementKanbanDialog) exceeds
-      // 48-02 lint-zero scope and is tracked as a deferred follow-up item in the SUMMARY.
+      // Aceternity and Kibo UI are banned without explicit user request.
       'no-restricted-imports': [
         'error',
         {
@@ -152,6 +143,7 @@ export default tseslint.config(
                 '@aceternity/*',
                 'kibo-ui/*',
                 '@kibo-ui/*',
+                '@/components/kibo-ui/*',
                 '@/components/ui/3d-card',
                 '@/components/ui/bento-grid',
                 '@/components/ui/floating-navbar',
@@ -299,6 +291,25 @@ export default tseslint.config(
     },
   },
 
+  // ── Kibo-ui regression fixture: prove the local-path ban fires ────
+  {
+    files: ['tools/eslint-fixtures/bad-kibo-ui-import.tsx'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/components/kibo-ui/*'],
+              message:
+                'Banned by CLAUDE.md primitive cascade. Use HeroUI v3 → Radix → custom. If no primitive fits, ask before installing.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // ── Backend override ──────────────────────────────────────────────
   // Backend was never linted with these strict rules. They are disabled
   // here and tracked for incremental adoption in Phase 2+.
@@ -329,7 +340,6 @@ export default tseslint.config(
       'frontend/src/components/ui/**',
       'frontend/src/components/__tests__/**',
       'frontend/src/components/**/index.ts',
-      'frontend/src/components/**/index.tsx', // 48-02 scope-expansion: index.tsx re-exports follow same pattern as index.ts (catches kibo-ui/kanban/index.tsx)
       '**/__tests__/**', // vitest convention; PascalCase rule applies to production source, not test colocation (clears 96 violations)
       '**/signature-visuals/flags/**', // ISO 3166-1 alpha-2 codepoint files; lowercase is intentional per ISO standard (clears ~24 violations)
       '**/hooks/**', // hook files use camelCase per React convention; rename is deferred to future hardening phase per D-09

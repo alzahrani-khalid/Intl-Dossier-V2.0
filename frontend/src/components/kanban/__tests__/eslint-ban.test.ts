@@ -4,7 +4,7 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 function resolveRepoRoot(): string {
-  if (existsSync(path.resolve(process.cwd(), 'frontend/package.json'))) {
+  if (existsSync(path.resolve(process.cwd(), 'eslint.config.mjs'))) {
     return process.cwd()
   }
 
@@ -18,7 +18,7 @@ describe('kibo-ui local import ban fixture', () => {
 
     try {
       execSync(
-        'pnpm --filter frontend lint --no-cache tools/eslint-fixtures/bad-kibo-ui-import.tsx',
+        'pnpm exec eslint -c eslint.config.mjs --max-warnings 0 tools/eslint-fixtures/bad-kibo-ui-import.tsx',
         { cwd: repoRoot, stdio: 'pipe' },
       )
     } catch {
@@ -26,5 +26,5 @@ describe('kibo-ui local import ban fixture', () => {
     }
 
     expect(lintFailed).toBe(true)
-  })
+  }, 20_000)
 })

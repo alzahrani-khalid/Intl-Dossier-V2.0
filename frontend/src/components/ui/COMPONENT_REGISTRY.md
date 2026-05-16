@@ -15,7 +15,7 @@ Per CLAUDE.md "Component Library Strategy":
 ### Banned without explicit user request
 
 - **Aceternity UI** — animation-heavy, marketing aesthetic. Conflicts with IntelDossier's restrained motion language. Do not install or import. Existing legacy files are scheduled for removal.
-- **Kibo UI** — different visual system. Do not install or import. The local `@/components/kibo-ui/*` alias is a legacy re-export and is also banned for new code.
+- **Kibo UI** — different visual system. Do not install or import. Local kibo-ui aliases are banned for new code.
 - **shadcn/ui defaults** — the wrappers in `components/ui/heroui-*.tsx` exist for API compatibility, not visual fidelity. Re-skin them via tokens.
 
 If a feature seems to require Aceternity-style motion or shadcn defaults, **stop and ask** before installing anything.
@@ -123,9 +123,9 @@ Phase 48 deleted three orphan wrappers (`3d-card.tsx`, `bento-grid.tsx`, `floati
 
 ### Kibo-UI (BANNED)
 
-| Component | File         | Active call sites (refactor pending)                                                                                                                  |
-| --------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Kanban    | `kanban.tsx` | `pages/engagements/workspace/TasksTab.tsx`, `components/assignments/EngagementKanbanDialog.tsx` — both queued for HeroUI/Radix + @dnd-kit replacement |
+| Component | File                | Active call sites (refactor pending)                                                              |
+| --------- | ------------------- | ------------------------------------------------------------------------------------------------- |
+| Kanban    | removed in Phase 52 | Replaced by `frontend/src/components/kanban/` using HeroUI/Radix-compatible primitives + @dnd-kit |
 
 ---
 
