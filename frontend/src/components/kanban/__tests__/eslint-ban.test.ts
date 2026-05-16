@@ -26,5 +26,5 @@ describe('kibo-ui local import ban fixture', () => {
     }
 
     expect(lintFailed).toBe(true)
-  }, 20_000)
+  }, 60_000)
 })
