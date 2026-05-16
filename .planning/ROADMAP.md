@@ -266,7 +266,7 @@ Plans:
 4. `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`) is created and applied to `intelligence_event.source_type`.
 5. `database.types.ts` regenerated from staging includes all new tables/enum; `pnpm type-check` exits 0 on both backend and frontend workspaces.
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 
@@ -284,7 +284,7 @@ Plans:
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
-- [ ] 54-04-PLAN.md — REQUIREMENTS.md + ROADMAP.md text patches (post-Phase-54 wording) + TS regen via MCP to both workspaces + dual `pnpm type-check` + `rls-audit.test.ts` sensitiveTables extension (Wave 4)
+- [x] 54-04-PLAN.md — REQUIREMENTS.md + ROADMAP.md text patches (post-Phase-54 wording) + TS regen via MCP to both workspaces + dual `pnpm type-check` + `rls-audit.test.ts` sensitiveTables extension (Wave 4)
 
 **Cross-cutting constraints:**
 
@@ -336,7 +336,7 @@ Phase 54 is independent of Phases 51–53 and may execute in parallel with any o
 | 51 | v6.3 | 1/4 | In Progress|  |
 | 52 | v6.3 | 3/5 | In Progress|  |
 | 53 | v6.3 | 3/3 | Complete    | 2026-05-16 |
-| 54 | v6.3 | 3/4 | In Progress|  |
+| 54 | v6.3 | 4/4 | Complete    | 2026-05-16 |
 
 <!-- gsd:progress:end -->
 

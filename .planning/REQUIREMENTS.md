@@ -35,11 +35,11 @@
 
 ### Intelligence Engine schema groundwork (INTEL)
 
-- [ ] **INTEL-01**: `intelligence_event` table migration applied with columns (id, source_type, source_ref, content, occurred_at, ingested_at, severity, organization_id, created_by) with indexes + RLS policies (renamed from spec `intelligence_signal` to avoid collision with existing curated `intelligence_signals` plural table)
-- [ ] **INTEL-02**: `intelligence_digest` table migration applied with columns (id, dossier_type, dossier_id, period_start, period_end, summary, generated_by, organization_id, generated_at) with indexes + RLS policies (Phase-45's prior `intelligence_digest` was renamed to `dashboard_digest` in plan 54-01 to free this canonical name)
-- [ ] **INTEL-03**: `intelligence_event_dossiers` polymorphic junction table for many-to-many event ↔ dossier linking with `dossier_type` CHECK constraint matching the 7 canonical dossier types (`country`, `organization`, `forum`, `engagement`, `topic`, `working_group`, `person`)
-- [ ] **INTEL-04**: `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`) created and applied to `intelligence_event.source_type`
-- [ ] **INTEL-05**: Supabase TypeScript types regenerated (`database.types.ts` includes new tables); `pnpm type-check` exits 0
+- [x] **INTEL-01**: `intelligence_event` table migration applied with columns (id, source_type, source_ref, content, occurred_at, ingested_at, severity, organization_id, created_by) with indexes + RLS policies (renamed from spec `intelligence_signal` to avoid collision with existing curated `intelligence_signals` plural table)
+- [x] **INTEL-02**: `intelligence_digest` table migration applied with columns (id, dossier_type, dossier_id, period_start, period_end, summary, generated_by, organization_id, generated_at) with indexes + RLS policies (Phase-45's prior `intelligence_digest` was renamed to `dashboard_digest` in plan 54-01 to free this canonical name)
+- [x] **INTEL-03**: `intelligence_event_dossiers` polymorphic junction table for many-to-many event ↔ dossier linking with `dossier_type` CHECK constraint matching the 7 canonical dossier types (`country`, `organization`, `forum`, `engagement`, `topic`, `working_group`, `person`)
+- [x] **INTEL-04**: `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`) created and applied to `intelligence_event.source_type`
+- [x] **INTEL-05**: Supabase TypeScript types regenerated (`database.types.ts` includes new tables); `pnpm type-check` exits 0
 
 ## Future Requirements (deferred to later milestones)
 
@@ -74,10 +74,10 @@
 | BUNDLE-05 | Phase 53 | Verified                                   |
 | BUNDLE-06 | Phase 53 | Verified (origin force-push deferred D-26) |
 | BUNDLE-07 | Phase 53 | Verified                                   |
-| INTEL-01  | Phase 54 | Pending                                    |
-| INTEL-02  | Phase 54 | Pending                                    |
-| INTEL-03  | Phase 54 | Pending                                    |
-| INTEL-04  | Phase 54 | Pending                                    |
-| INTEL-05  | Phase 54 | Pending                                    |
+| INTEL-01  | Phase 54 | Verified                                   |
+| INTEL-02  | Phase 54 | Verified                                   |
+| INTEL-03  | Phase 54 | Verified                                   |
+| INTEL-04  | Phase 54 | Verified                                   |
+| INTEL-05  | Phase 54 | Verified                                   |
 
 **Coverage:** 20/20 v6.3 requirements mapped — every REQ-ID assigned to exactly one phase. No orphans, no duplicates.
